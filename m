@@ -2,144 +2,193 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCCC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A80C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCECA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAA72187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfGCHNX (ORCPT
+        id S1727203AbfGCHOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 03:13:23 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:53762 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfGCHNX (ORCPT
+        Wed, 3 Jul 2019 03:14:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42908 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfGCHOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 03:13:23 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x637DKYn012691, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x637DKYn012691
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 3 Jul 2019 15:13:21 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
- 15:13:19 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net] r8152: move calling r8153b_rx_agg_chg_indicate()
-Date:   Wed, 3 Jul 2019 15:11:56 +0800
-Message-ID: <1394712342-15778-287-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+        Wed, 3 Jul 2019 03:14:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so760331pff.9;
+        Wed, 03 Jul 2019 00:14:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B1kQvrQoHFPsOT1yXoo85QIU6lm9lrhuL5yM9gcXKZ0=;
+        b=JxLUAig19YnjUmw6ALYfzgLrHOVjeo17HvEdychfmCmtybaGadTrbQYN3LyWwk7Wh8
+         gNgPlRn+3SP41Nx1QXz+LUkeHziuOMY/GbX7QH5wfBJcMR7AcfmJii3hvOLuUnjZWIdZ
+         ho0UBvwZZA8BLZnx3v3PwhWbM7Wms5kfZqbMjV+Z5pmz7oSMEf9gO53yPQrP1hY9jcbY
+         ptvL0DN5BR51wI6MivzqiXjslUKqLzmo4cpeIlda7hpPYHqS9Po7lOhS8Uz1tlYSpCn6
+         Y2/7CN1uHo+4kFdzY1Uo7Nkfz4Wl0PST7h0XzUv+0oyFZJk5p96mUAzGShaOkFFGuR+j
+         DKQQ==
+X-Gm-Message-State: APjAAAW0I2skziGMJK8aBQE6bg1PWdHIwyLy1hAuwsC5cAbG4spf9Nv5
+        utTeYli6jEnyy/qq675++68=
+X-Google-Smtp-Source: APXvYqwUyamaUZpHybk6nfj2wr4zAu1x6OPqmfFZEMCShOUOWld0YXW8Rb4mD/UbT+YdTI4jAfzbyg==
+X-Received: by 2002:a17:90a:22ef:: with SMTP id s102mr11149274pjc.2.1562138042451;
+        Wed, 03 Jul 2019 00:14:02 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id j21sm1256593pfh.86.2019.07.03.00.14.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 00:14:01 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Nadav Amit <namit@vmware.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v2 0/9] x86: Concurrent TLB flushes
+Date:   Tue,  2 Jul 2019 16:51:42 -0700
+Message-Id: <20190702235151.4377-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-r8153b_rx_agg_chg_indicate() needs to be called after enabling TX/RX and
-before calling rxdy_gated_en(tp, false). Otherwise, the change of the
-settings of RX aggregation wouldn't work.
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
-Besides, adjust rtl8152_set_coalesce() for the same reason. If
-rx_coalesce_usecs is changed, restart TX/RX to let the setting work.
+In addition, there are various small optimizations to avoid unwarranted
+false-sharing and atomic operations.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 36 ++++++++++++++++++++++++++----------
- 1 file changed, 26 insertions(+), 10 deletions(-)
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 101d1325f3f1..e887ac86fbef 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -2367,6 +2367,12 @@ static int rtl_stop_rx(struct r8152 *tp)
- 	return 0;
- }
- 
-+static inline void r8153b_rx_agg_chg_indicate(struct r8152 *tp)
-+{
-+	ocp_write_byte(tp, MCU_TYPE_USB, USB_UPT_RXDMA_OWN,
-+		       OWN_UPDATE | OWN_CLEAR);
-+}
-+
- static int rtl_enable(struct r8152 *tp)
- {
- 	u32 ocp_data;
-@@ -2377,6 +2383,15 @@ static int rtl_enable(struct r8152 *tp)
- 	ocp_data |= CR_RE | CR_TE;
- 	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CR, ocp_data);
- 
-+	switch (tp->version) {
-+	case RTL_VER_08:
-+	case RTL_VER_09:
-+		r8153b_rx_agg_chg_indicate(tp);
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	rxdy_gated_en(tp, false);
- 
- 	return 0;
-@@ -2393,12 +2408,6 @@ static int rtl8152_enable(struct r8152 *tp)
- 	return rtl_enable(tp);
- }
- 
--static inline void r8153b_rx_agg_chg_indicate(struct r8152 *tp)
--{
--	ocp_write_byte(tp, MCU_TYPE_USB, USB_UPT_RXDMA_OWN,
--		       OWN_UPDATE | OWN_CLEAR);
--}
--
- static void r8153_set_rx_early_timeout(struct r8152 *tp)
- {
- 	u32 ocp_data = tp->coalesce / 8;
-@@ -2421,7 +2430,6 @@ static void r8153_set_rx_early_timeout(struct r8152 *tp)
- 			       128 / 8);
- 		ocp_write_word(tp, MCU_TYPE_USB, USB_RX_EXTRA_AGGR_TMR,
- 			       ocp_data);
--		r8153b_rx_agg_chg_indicate(tp);
- 		break;
- 
- 	default:
-@@ -2445,7 +2453,6 @@ static void r8153_set_rx_early_size(struct r8152 *tp)
- 	case RTL_VER_09:
- 		ocp_write_word(tp, MCU_TYPE_USB, USB_RX_EARLY_SIZE,
- 			       ocp_data / 8);
--		r8153b_rx_agg_chg_indicate(tp);
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-@@ -4919,8 +4926,17 @@ static int rtl8152_set_coalesce(struct net_device *netdev,
- 	if (tp->coalesce != coalesce->rx_coalesce_usecs) {
- 		tp->coalesce = coalesce->rx_coalesce_usecs;
- 
--		if (netif_running(tp->netdev) && netif_carrier_ok(netdev))
--			r8153_set_rx_early_timeout(tp);
-+		if (netif_running(netdev) && netif_carrier_ok(netdev)) {
-+			netif_stop_queue(netdev);
-+			napi_disable(&tp->napi);
-+			tp->rtl_ops.disable(tp);
-+			tp->rtl_ops.enable(tp);
-+			rtl_start_rx(tp);
-+			clear_bit(RTL8152_SET_RX_MODE, &tp->flags);
-+			_rtl8152_set_rx_mode(netdev);
-+			napi_enable(&tp->napi);
-+			netif_wake_queue(netdev);
-+		}
- 	}
- 
- 	mutex_unlock(&tp->control);
+Running sysbench on dax/ext4 w/emulated-pmem, write-cache disabled on
+2-socket, 48-logical-cores (24+SMT) Haswell-X, 5 repetitions:
+
+ sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+  --file-io-mode=mmap --threads=X --file-fsync-mode=fdatasync run
+
+  Th.	tip-jun28 avg (stdev)	+patch-set avg (stdev)	change
+  ---	---------------------	----------------------	------
+  1	1267765 (14146)		1299253 (5715)		+2.4%
+  2	1734644 (11936)		1799225 (19577)		+3.7%
+  4	2821268 (41184)		2919132 (40149)		+3.4%
+  8	4171652 (31243)		4376925 (65416)		+4.9%
+  16	5590729 (24160)		5829866 (8127)		+4.2%
+  24	6250212 (24481)		6522303 (28044)		+4.3%
+  32	3994314 (26606)		4077543 (10685)		+2.0%
+  48	4345177 (28091)		4417821 (41337)		+1.6%
+
+(Note that on configurations with up to 24 threads numactl was used to
+set all threads on socket 1, which explains the drop in performance when
+going to 32 threads).
+
+Running the same benchmark with security mitigations disabled (PTI,
+Spectre, MDS):
+
+  Th.	tip-jun28 avg (stdev)	+patch-set avg (stdev)	change
+  ---	---------------------	----------------------	------
+  1	1598896 (5174)		1607903 (4091)		+0.5%
+  2	2109472 (17827)		2224726 (4372)		+5.4%
+  4	3448587 (11952)		3668551 (30219)		+6.3%
+  8	5425778 (29641)		5606266 (33519)		+3.3%
+  16	6931232 (34677)		7054052 (27873)		+1.7%
+  24	7612473 (23482)		7783138 (13871)		+2.2%
+  32	4296274 (18029)		4283279 (32323)		-0.3%
+  48	4770029 (35541)		4764760 (13575)		-0.1%
+
+Presumably, PTI requires two invalidations of each mapping, which allows
+to get higher benefits from concurrency when PTI is on. At the same
+time, when mitigations are on, other overheads reduce the potential
+speedup.
+
+I tried to reduce the size of the code of the main patch, which required
+restructuring of the series.
+
+v1 -> v2:
+* Removing the patches that Thomas took [tglx]
+* Adding hyper-v, Xen compile-tested implementations [Dave]
+* Removing UV [Andy]
+* Adding lazy optimization, removing inline keyword [Dave]
+* Restructuring patch-set
+
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kvm@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+
+Nadav Amit (9):
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Remove reason as argument for flush_tlb_func_local()
+  x86/mm/tlb: Open-code on_each_cpu_cond_mask() for tlb_is_not_lazy()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Privatize cpu_tlbstate
+  x86/mm/tlb: Do not make is_lazy dirty for no reason
+  cpumask: Mark functions as pure
+  x86/mm/tlb: Remove UV special case
+  x86/mm/tlb: Remove unnecessary uses of the inline keyword
+
+ arch/x86/hyperv/mmu.c                 |  13 ++-
+ arch/x86/include/asm/paravirt.h       |   6 +-
+ arch/x86/include/asm/paravirt_types.h |   4 +-
+ arch/x86/include/asm/tlbflush.h       |  48 +++++----
+ arch/x86/include/asm/trace/hyperv.h   |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 +-
+ arch/x86/kernel/paravirt.c            |   2 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 147 ++++++++++++++++----------
+ arch/x86/xen/mmu_pv.c                 |  20 ++--
+ include/linux/cpumask.h               |   6 +-
+ include/linux/smp.h                   |  27 +++--
+ include/trace/events/xen.h            |   2 +-
+ kernel/smp.c                          | 133 +++++++++++------------
+ 14 files changed, 245 insertions(+), 178 deletions(-)
+
 -- 
-2.21.0
+2.17.1
 
