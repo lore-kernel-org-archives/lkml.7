@@ -2,199 +2,256 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F53C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09F5C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE59E206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA73321848
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CdWC7kb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfGBP1I (ORCPT
+        id S1726825AbfGBP1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:27:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36947 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfGBP1H (ORCPT
+        Tue, 2 Jul 2019 11:27:12 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:5855 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGBP1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:27:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id j18so19241790ioj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:27:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Oirv5tvI28Y/2P5/D//E+9UIAiSWk3he7f7mxriBA74=;
-        b=iqvqMpY9cZuAh9591t0SwZSfmTD5Dnv802JqJQcE4Q/niQGcAZFSydekX/tK4jmm3m
-         PWhhMt0Y1TXTJtibvRXYvMtNw9MjHbM3UL/GSKEbuH5CtrZpyltM93ty/rmW3owWE2VV
-         5JST69BiKuBwcx7jc0JQcLhANbFKkv6IETzlB7VaBvCyqUxh1F1e7t7z5nkyuVtAjBp5
-         ld5qeKwzQlJG7lH5oGdQVHsEpJgIR13Tb6tdN+V7moWwvh71jmDoGem59+YYcRmuP1x5
-         /LpzC5bL4all2JxALE6nv8H7oXQW6+K99NHV0jHSeWDCE7w0PtwZjd3glLsv9ufGKRLw
-         cnXA==
-X-Gm-Message-State: APjAAAUHpRrxtR70FbQ9/yWzkjJZtc8Jwt6T3XMwdyDL2sfIKAdutv7r
-        DrImbitbUJR7wim9/XwRDt8aMO5PYj/befMHRGx/GGirUF5K
-X-Google-Smtp-Source: APXvYqxv7gu3pohlc+pqZedRwSU1QtjtXvFgV65KO/my/6TNLIFWUpJYb7nr2EHYtPwt+AXGX/E7tONzTUI3iR4Wl++AExbA3uMe
+        Tue, 2 Jul 2019 11:27:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1b77cc0000>; Tue, 02 Jul 2019 08:27:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 02 Jul 2019 08:27:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 08:27:09 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
+ 2019 15:27:07 +0000
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+ <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+ <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
+ <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
+ <e7199039-c4e5-304d-3d60-58ecd6648771@nvidia.com>
+ <bed3994a-d0d3-8d3b-4388-092d79b71540@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <019762ad-79e0-50ad-76f2-86bc3e107caa@nvidia.com>
+Date:   Tue, 2 Jul 2019 16:27:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8f99:: with SMTP id l25mr1214309iol.92.1562081226426;
- Tue, 02 Jul 2019 08:27:06 -0700 (PDT)
-Date:   Tue, 02 Jul 2019 08:27:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009c93d5058cb46073@google.com>
-Subject: INFO: task hung in blkdev_issue_flush (2)
-From:   syzbot <syzbot+e7624af9c1ef3b617512@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, idryomov@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sagi@grimberg.me, snitzer@redhat.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        wgh@torlan.ru, zkabelac@redhat.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <bed3994a-d0d3-8d3b-4388-092d79b71540@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562081228; bh=x5gkT3yANst93Zh4OqckcOeEpw+YeX95j1KUBqZLmoM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CdWC7kb7YRb6Vs+WhhEGYzIsJoJa/3TC6VycDDj36pGQoyQI1VctmEQ0Wh8RgnI65
+         d+3uVx5iyMTuSwXujD+Bh7juy3UT40zicWPH6foo6+qC3H6DCfF0K6nSx7OuQB61D8
+         tnt5nj/BuZwgj7RzNjP5rXAgCNR8In+EZZccGV9W53LjnRjwEtP1tjUX/PfC/3OTsn
+         8RIx6ZADuu7+zcxOpECWucdtPOoMgREi4xDpQGWc16D67E9pzDK/g3R1d1uS2X2Mjp
+         9hc17mxcAamMOI8jzsszNgsZ+8WJOERV9BtsyETrlkMsSUuzQ7+2t361+b+WllYCcy
+         2y9qrA881UV8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On 02/07/2019 15:41, Dmitry Osipenko wrote:
+> 02.07.2019 16:41, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 02/07/2019 14:22, Dmitry Osipenko wrote:
+>>> 02.07.2019 15:54, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>
+>>>> On 02/07/2019 12:37, Dmitry Osipenko wrote:
+>>>>> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>
+>>>>>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>>>>>>> Tegra's APB DMA engine updates words counter after each transferred=
+ burst
+>>>>>>> of data, hence it can report transfer's residual with more fidelity=
+ which
+>>>>>>> may be required in cases like audio playback. In particular this fi=
+xes
+>>>>>>> audio stuttering during playback in a chromium web browser. The pat=
+ch is
+>>>>>>> based on the original work that was made by Ben Dooks and a patch f=
+rom
+>>>>>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>>>>>>
+>>>>>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks=
+@codethink.co.uk/
+>>>>>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcom=
+mit;h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> Changelog:
+>>>>>>>
+>>>>>>> v3:  Added workaround for a hardware design shortcoming that result=
+s
+>>>>>>>      in a words counter wraparound before end-of-transfer bit is se=
+t
+>>>>>>>      in a cyclic mode.
+>>>>>>>
+>>>>>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't t=
+ry
+>>>>>>>      to get words count if dma_desc is on free list as it will resu=
+lt
+>>>>>>>      in a NULL dereference because this case wasn't handled properl=
+y.
+>>>>>>>
+>>>>>>>      The residual value is now updated properly, avoiding potential
+>>>>>>>      integer overflow by adding the "bytes" to the "bytes_transferr=
+ed"
+>>>>>>>      instead of the subtraction.
+>>>>>>>
+>>>>>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++=
+----
+>>>>>>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-ap=
+b-dma.c
+>>>>>>> index 79e9593815f1..71473eda28ee 100644
+>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>>>>>  	bool				last_sg;
+>>>>>>>  	struct list_head		node;
+>>>>>>>  	struct tegra_dma_desc		*dma_desc;
+>>>>>>> +	unsigned int			words_xferred;
+>>>>>>>  };
+>>>>>>> =20
+>>>>>>>  /*
+>>>>>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct=
+ tegra_dma_channel *tdc,
+>>>>>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>>>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>>>>>  	nsg_req->configured =3D true;
+>>>>>>> +	nsg_req->words_xferred =3D 0;
+>>>>>>> =20
+>>>>>>>  	tegra_dma_resume(tdc);
+>>>>>>>  }
+>>>>>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma=
+_channel *tdc)
+>>>>>>>  					typeof(*sg_req), node);
+>>>>>>>  	tegra_dma_start(tdc, sg_req);
+>>>>>>>  	sg_req->configured =3D true;
+>>>>>>> +	sg_req->words_xferred =3D 0;
+>>>>>>>  	tdc->busy =3D true;
+>>>>>>>  }
+>>>>>>> =20
+>>>>>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_=
+chan *dc)
+>>>>>>>  	return 0;
+>>>>>>>  }
+>>>>>>> =20
+>>>>>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_ch=
+annel *tdc,
+>>>>>>> +					       struct tegra_dma_sg_req *sg_req)
+>>>>>>> +{
+>>>>>>> +	unsigned long status, wcount =3D 0;
+>>>>>>> +
+>>>>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>>> +		return 0;
+>>>>>>> +
+>>>>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>>> +
+>>>>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>>> +
+>>>>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount =3D status;
+>>>>>>> +
+>>>>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>>> +		return sg_req->req_len;
+>>>>>>> +
+>>>>>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>>> +
+>>>>>>> +	if (!wcount) {
+>>>>>>> +		/*
+>>>>>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>>>>>> +		 * simply assume that transfer hasn't started yet.
+>>>>>>> +		 *
+>>>>>>> +		 * Otherwise it's the end of the transfer.
+>>>>>>> +		 *
+>>>>>>> +		 * The alternative would be to poll the status register
+>>>>>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>>>>>> +		 * because EOC bit is getting set only after the last
+>>>>>>> +		 * burst's completion and counter is less than the actual
+>>>>>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>>>>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>>>>>> +		 * distinguish start of transfer from its end.
+>>>>>>> +		 */
+>>>>>>> +		if (sg_req->words_xferred)
+>>>>>>> +			wcount =3D sg_req->req_len - 4;
+>>>>>>> +
+>>>>>>> +	} else if (wcount < sg_req->words_xferred) {
+>>>>>>> +		/*
+>>>>>>> +		 * This case shall not ever happen because EOC bit
+>>>>>>> +		 * must be set once next cyclic transfer is started.
+>>>>>>
+>>>>>> I am not sure I follow this and why this condition cannot happen for
+>>>>>> cyclic transfers. What about non-cyclic transfers?
+>>>>>
+>>>>> It cannot happen because the EOC bit will be set in that case. The co=
+unter wraps
+>>>>> around when the transfer of a last burst happens, EOC bit is guarante=
+ed to be set
+>>>>> after completion of the last burst. That's my observation after a tho=
+rough testing,
+>>>>> it will be very odd if EOC setting happened completely asynchronously=
+.
+>>>>
+>>>> I see how you know that the EOC is set. Anyway, you check if the EOC i=
+s
+>>>> set before and if so return sg_req->req_len prior to this test.
+>>>>
+>>>> Maybe I am missing something, but what happens if we are mid block whe=
+n
+>>>> dmaengine_tx_status() is called? That happen asynchronously right?
+>>>
+>>>
+>>> Do you mean asynchronously in regards to the ISR? Or something else?
+>>
+>> In the sense that the client can call dmaengine_tx_status() at anytime
+>> to check the status of a transfer.
+>=20
+> Should be alright, I think this patch covers all of possible cases:
+>=20
+> 1) Start of transfer, when wcount=3D0.
+> 2) Middle of transfer, when wcount!=3D0.
+> 3) End of transfer, when wcount=3D0.
+> 4) End of transfer, when wcount!=3D0 and EOC is set.
 
-HEAD commit:    6fbc7275 Linux 5.2-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1218ee83a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
-dashboard link: https://syzkaller.appspot.com/bug?extid=e7624af9c1ef3b617512
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13105d6da00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120c261ba00000
+I think I see my problem I read 'wcount < sg_req->req_len' and NOT
+'wcount < sg_req->words_xferred'. So yes this should be fine.
 
-The bug was bisected to:
+Jon
 
-commit a32e236eb93e62a0f692e79b7c3c9636689559b9
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri Aug 3 19:22:09 2018 +0000
-
-     Partially revert "block: fail op_is_write() requests to read-only  
-partitions"
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10fc732ba00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12fc732ba00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14fc732ba00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e7624af9c1ef3b617512@syzkaller.appspotmail.com
-Fixes: a32e236eb93e ("Partially revert "block: fail op_is_write() requests  
-to read-only partitions"")
-
-INFO: task syz-executor485:8568 blocked for more than 143 seconds.
-       Not tainted 5.2.0-rc7 #46
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor485 D28528  8568   8564 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:2818 [inline]
-  __schedule+0x7cb/0x1560 kernel/sched/core.c:3445
-  schedule+0xa8/0x260 kernel/sched/core.c:3509
-  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1783
-  io_schedule_timeout+0x26/0x80 kernel/sched/core.c:5119
-  do_wait_for_common kernel/sched/completion.c:83 [inline]
-  __wait_for_common kernel/sched/completion.c:104 [inline]
-  wait_for_common_io kernel/sched/completion.c:121 [inline]
-  wait_for_completion_io+0x29c/0x440 kernel/sched/completion.c:169
-  submit_bio_wait+0x11d/0x1c0 block/bio.c:1003
-  blkdev_issue_flush+0x20d/0x300 block/blk-flush.c:449
-  blkdev_fsync+0x95/0xd0 fs/block_dev.c:687
-  vfs_fsync_range+0x141/0x230 fs/sync.c:197
-  vfs_fsync fs/sync.c:211 [inline]
-  do_fsync+0x54/0xa0 fs/sync.c:221
-  __do_sys_fdatasync fs/sync.c:234 [inline]
-  __se_sys_fdatasync fs/sync.c:232 [inline]
-  __x64_sys_fdatasync+0x36/0x50 fs/sync.c:232
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x449749
-Code: Bad RIP value.
-RSP: 002b:00007fa817de2ce8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
-RAX: ffffffffffffffda RBX: 00000000006dac58 RCX: 0000000000449749
-RDX: 0000000000449749 RSI: 0000000000000000 RDI: 0000000000000009
-RBP: 00000000006dac50 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac5c
-R13: 00007fff567b6b5f R14: 00007fa817de39c0 R15: 20c49ba5e353f7cf
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1043:
-  #0: 00000000f7c610b3 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5149
-2 locks held by rsyslogd/8451:
-  #0: 00000000dfc1566f (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-  #1: 0000000054220207 (&rq->lock){-.-.}, at: rq_lock  
-kernel/sched/sched.h:1168 [inline]
-  #1: 0000000054220207 (&rq->lock){-.-.}, at: __schedule+0x1f5/0x1560  
-kernel/sched/core.c:3397
-2 locks held by getty/8541:
-  #0: 000000004ff543bd (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000002a3905f3 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8542:
-  #0: 000000006e67fcec (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000ee71e4f3 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8543:
-  #0: 00000000bd0907a0 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000000876abce (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8544:
-  #0: 00000000710d6f7d (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000af289586 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8545:
-  #0: 000000003399e62d (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000ee97f91a (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8546:
-  #0: 00000000ff2274c6 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000b96c5a9f (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8547:
-  #0: 000000005165f028 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000e89d5b4a (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1043 Comm: khungtaskd Not tainted 5.2.0-rc7 #46
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0x9b7/0xec0 kernel/hung_task.c:289
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--=20
+nvpublic
