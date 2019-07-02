@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D8BC4646D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C430FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E5D206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A55F20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055129;
-	bh=jxKyYLS206eyCqpUlU6qSBoV+PF/H1dACTeLISo2As8=;
+	s=default; t=1562055139;
+	bh=NlSMqlmoJR4RbnvehDn94i5J/shbFBdfqwERFE6rVzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNK3Xo6dghP5rgvOfQoNBm0dstoD5OcBa2A2hJfaoJ2O5KN8S1yMhbI4ePIbBHFj+
-	 /nZ/v4UlNC0cf8Ysme4IySJpxeirE0qc1NPukuZJzOSRDLN77HwkXOJPjs9sqvGsgd
-	 bkNhxk/HOG3i4tiokgrhNXF3DocrwKalcBPk7NQM=
+	b=TgIvZqLMvP6zzPynCe6OEaey/N0NlfoRnctuhZJkW5krf4YIMl25fGT19Exgmtuir
+	 XZlEJ/9FSagUsCWXap2lJXg6ZcjwZNKxjRk2Ofg2yRBEzYthzoOpcA+lEzAGGe5Q8Q
+	 DVywDTdNpy7JTjOAefJ140mPp1L7twf05b0k4doI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfGBIJa (ORCPT
+        id S1728090AbfGBIJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbfGBIJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:27 -0400
+        id S1728573AbfGBIJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36DE221479;
-        Tue,  2 Jul 2019 08:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7BC72064A;
+        Tue,  2 Jul 2019 08:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054966;
-        bh=jxKyYLS206eyCqpUlU6qSBoV+PF/H1dACTeLISo2As8=;
+        s=default; t=1562054943;
+        bh=NlSMqlmoJR4RbnvehDn94i5J/shbFBdfqwERFE6rVzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUKcAe+U4KQZ0o4k2n9mioikyvdW+d3XD4RgvNJC6zFAS4VGjbi6vyAgMrh/EwGcB
-         0+gCgtzQwgWwrKQBRH/9iO/bOf8k2B/lOL9/mBgAG1zosb73hFwEldVbT88e8lAe/2
-         YNF2KDWGrgVOukhKZP3N27Pm/skNsXDmcqJzpFxI=
+        b=aEtv4hbNDKKQmE3pcME5ueHlG3jssplSh+jA0hB2m67NJXu52GidWP4jhIOONpsB8
+         FWo7Jd9PwEhlfMUgDQAJg3exKN+PLgSO1jw9g047E5RLsHTNRRv3LsfI+c19UYqMgT
+         yz4jTkqJ+fcoukI9xjJx2bS/TuIzEOx6t2SolaKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary Leshner <Gary.S.Leshner@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/43] IB/hfi1: Close PSM sdma_progress sleep window
-Date:   Tue,  2 Jul 2019 10:01:45 +0200
-Message-Id: <20190702080124.144847078@linuxfoundation.org>
+Subject: [PATCH 4.14 14/43] qmi_wwan: Fix out-of-bounds read
+Date:   Tue,  2 Jul 2019 10:01:54 +0200
+Message-Id: <20190702080124.527160040@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -62,87 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit da9de5f8527f4b9efc82f967d29a583318c034c7 upstream.
+commit 904d88d743b0c94092c5117955eab695df8109e8 upstream.
 
-The call to sdma_progress() is called outside the wait lock.
+The syzbot reported
 
-In this case, there is a race condition where sdma_progress() can return
-false and the sdma_engine can idle.  If that happens, there will be no
-more sdma interrupts to cause the wakeup and the user_sdma xmit will hang.
+ Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  qmi_wwan_probe+0x342/0x360 drivers/net/usb/qmi_wwan.c:1417
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
 
-Fix by moving the lock to enclose the sdma_progress() call.
+Caused by too many confusing indirections and casts.
+id->driver_info is a pointer stored in a long.  We want the
+pointer here, not the address of it.
 
-Also, delete busycount. The need for this was removed by:
-commit bcad29137a97 ("IB/hfi1: Serve the most starved iowait entry first")
+Thanks-to: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com
+Cc: Kristian Evensen <kristian.evensen@gmail.com>
+Fixes: e4bf63482c30 ("qmi_wwan: Add quirk for Quectel dynamic config")
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 
-Ported to linux-4.14.y.
+[Upstream commit did not apply because I shuffled two lines in the
+backport. The fixes tag for 4.14 is 3a6a5107ceb3.]
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Gary Leshner <Gary.S.Leshner@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_sdma.c | 12 ++++--------
- drivers/infiniband/hw/hfi1/user_sdma.h |  1 -
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
-index cbe5ab26d95b..75275f9e363d 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.c
-@@ -132,25 +132,22 @@ static int defer_packet_queue(
- 	struct hfi1_user_sdma_pkt_q *pq =
- 		container_of(wait, struct hfi1_user_sdma_pkt_q, busy);
- 	struct hfi1_ibdev *dev = &pq->dd->verbs_dev;
--	struct user_sdma_txreq *tx =
--		container_of(txreq, struct user_sdma_txreq, txreq);
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index c2d6c501dd85..063daa3435e4 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1395,14 +1395,14 @@ static int qmi_wwan_probe(struct usb_interface *intf,
+ 		return -ENODEV;
+ 	}
  
--	if (sdma_progress(sde, seq, txreq)) {
--		if (tx->busycount++ < MAX_DEFER_RETRY_COUNT)
--			goto eagain;
--	}
-+	write_seqlock(&dev->iowait_lock);
-+	if (sdma_progress(sde, seq, txreq))
-+		goto eagain;
- 	/*
- 	 * We are assuming that if the list is enqueued somewhere, it
- 	 * is to the dmawait list since that is the only place where
- 	 * it is supposed to be enqueued.
+-	info = (void *)&id->driver_info;
+-
+ 	/* Several Quectel modems supports dynamic interface configuration, so
+ 	 * we need to match on class/subclass/protocol. These values are
+ 	 * identical for the diagnostic- and QMI-interface, but bNumEndpoints is
+ 	 * different. Ignore the current interface if the number of endpoints
+ 	 * equals the number for the diag interface (two).
  	 */
- 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
--	write_seqlock(&dev->iowait_lock);
- 	if (list_empty(&pq->busy.list))
- 		iowait_queue(pkts_sent, &pq->busy, &sde->dmawait);
- 	write_sequnlock(&dev->iowait_lock);
- 	return -EBUSY;
- eagain:
-+	write_sequnlock(&dev->iowait_lock);
- 	return -EAGAIN;
- }
- 
-@@ -803,7 +800,6 @@ static int user_sdma_send_pkts(struct user_sdma_request *req, unsigned maxpkts)
- 
- 		tx->flags = 0;
- 		tx->req = req;
--		tx->busycount = 0;
- 		INIT_LIST_HEAD(&tx->list);
- 
- 		/*
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.h b/drivers/infiniband/hw/hfi1/user_sdma.h
-index 2b5326d6db53..87b0c567f442 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.h
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.h
-@@ -236,7 +236,6 @@ struct user_sdma_txreq {
- 	struct list_head list;
- 	struct user_sdma_request *req;
- 	u16 flags;
--	unsigned int busycount;
- 	u64 seqnum;
- };
- 
++	info = (void *)id->driver_info;
++
+ 	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
+ 		if (desc->bNumEndpoints == 2)
+ 			return -ENODEV;
 -- 
 2.20.1
 
