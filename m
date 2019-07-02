@@ -2,120 +2,121 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D58C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF50C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4669218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1804D218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rouFNaQr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpurX42x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfGCAoH (ORCPT
+        id S1727244AbfGCAqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:44:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40391 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCAoH (ORCPT
+        Tue, 2 Jul 2019 20:46:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42680 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfGCAqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:44:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so683105wre.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:44:05 -0700 (PDT)
+        Tue, 2 Jul 2019 20:46:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so199802plb.9;
+        Tue, 02 Jul 2019 17:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YiKm32fbrJXvadhbbH8R2AC30oRr6R/vtBXdk9UU6tg=;
-        b=rouFNaQrAD+LVzdQfwSGl8KyN3XCFATAsscS1nSiY3nqrVKn88L+2X9hpP8G0LkkWC
-         NbXBVmKrNM2i/FYXzVyY65owea83CsnsL2EYq3GhtYm+wIktVkTqWtRAWOulqc+2Eijb
-         tNZhEVAQRLz89yF0sk+uF/rQSzJNULI8c49x9De777zT65pYsUUSurWdrSNR9lmy2NEt
-         9eY0VkqUb2j+lxdkUSL9dhgUIzql3NanYjEhvjtxJVfIfVj1EIEm0MIgXIiUzfQXV33O
-         rHDGqg4EVcvtwueBiup5u0kebQrjrGClyg1D+nX2fPJPU7N/NtWIDb7JpF1b7OEh92lu
-         QbyA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EEyrpPr6crLLek2K+2wB7hfBX7/xhxYts0mMWfA15n0=;
+        b=BpurX42xyJabo6XzPspPcGbdnLp922qk/W7TJX65N+dSzI5mEFHNSiMrswD1+WZp8X
+         qmv3hljs6PQg+GSAVPj657Xbo+wkPQcn3FAl5ALiYz254AGZTK8U8HTerDcv+0LL9oup
+         seDSEJiX0hufrv5lN71zFgHk+OzOClqtbYxgunQTggn+Wbfrvf6E0TwSDg6juxYqB2tn
+         DCptCNPyy6rnmaHD29kTULSJGZ0F75Q6AjC0Ucu4HsWgfFcmVAxxo5sBO6knS9rfSSeX
+         JLI/0otsKYLrFAhKW0hjMaJ5I5/1xV8avpphCfFvyYHmJOcx7wu7+Vy+5uMdCEzNNgN8
+         T3Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YiKm32fbrJXvadhbbH8R2AC30oRr6R/vtBXdk9UU6tg=;
-        b=JKr04Y4DRGCkWPLOLqEaC1kMlZUa4uNdrqoGLUETFt+4u1MOf68bJDLER26LwYqe17
-         +TvkgZLt84dnHIEwwVbFsIV9g2U/P3AMsW/oeXRrjU1qUzB2WxUVKBOSNq3DsieJVSjv
-         oq10GR/cnWn3+GAGRtDW/htNB7QwPhN9y2H6cteadCn/sjH3tIRMHSAtcdgI+sf6Vr0p
-         I8M2uRa/tLa1EPy7U7MyHVWfg3OFBi496R0eujP/kPo5zlsfQr+DxN8QtvUiEJe2mSev
-         ZSWnZImq6jY5e9080o6G+AUwgB164iQuLIhknlSHlh0e4/1wJEoDZBhYnyf/dlso64nv
-         xdbQ==
-X-Gm-Message-State: APjAAAWx+Urcjda4n8Si8NBxLEKzPR8m2qqoDhg6sq1/kK4WOC05zyOA
-        tHIorT/9VRHxMp8kXIPCHIBb1lgRzulSyxGu99XU+1a4Z2A=
-X-Google-Smtp-Source: APXvYqyzF5MuwoPkI10B4TbfC/rzEV0YiPHBluGmH1/zHhhFfHwqiAfVyxlK7Fj4GY/VFsoeVVgftVQDaSC75isjmzg=
-X-Received: by 2002:adf:b69a:: with SMTP id j26mr17416154wre.93.1562099731858;
- Tue, 02 Jul 2019 13:35:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EEyrpPr6crLLek2K+2wB7hfBX7/xhxYts0mMWfA15n0=;
+        b=Gj6b3m1mViioUAPh6vb44lkWE1EscMQzcsx80M7TFRiSULuA2ZUHZDuGsRZyS+D6r/
+         743zP9lWEUH13WpczdRxNmGOCMxdw92GdJVtddR4T2rtdmC1yIzM6m8+uT7enTOqhFEA
+         P/L2PHcEfFNFR+fKKWdvCWrXxYSXYoWMtI1OWnypgpo64/SQepwNk0yHGpB9zNmbpGPf
+         wRLFI3FhuGcE+3Tsr1hk3Ldy9AKVQ7//muUsIw1hkVinurO5Ygntm8CCoMfD6L2SF+z1
+         ktKk6V3B9w7Xrylo6NIpYh2HsbWoiobsB2A1cqZ8HNtQ06kDXXFmvSFr/6EEVm0/+YAc
+         2plw==
+X-Gm-Message-State: APjAAAVDGvNxSPL7lUYpL/VmPO5HX8FhsDUJG2YBxYSS5WD5wohKuzMw
+        TYhgMHw4/g0nfdCcyImTZo8gguzvwcg=
+X-Google-Smtp-Source: APXvYqwqXfwyfSKIUPGKCUBQYxQepOou1V+ytYU4yMV+xxkv1WLpxMrC8xgeoS1VfQyVa0jvP9K1Bg==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr18675828pls.267.1562108294798;
+        Tue, 02 Jul 2019 15:58:14 -0700 (PDT)
+Received: from continental ([189.58.144.164])
+        by smtp.gmail.com with ESMTPSA id b24sm125821pfd.98.2019.07.02.15.58.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 15:58:13 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 19:58:57 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB MASS STORAGE DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:USB MASS STORAGE DRIVER" 
+        <usb-storage@lists.one-eyed-alien.net>
+Subject: Re: [PATCH v2] usb: storage: scsiglue: Do not skip VPD if
+ try_vpd_pages is set
+Message-ID: <20190702225857.GA19791@continental>
+References: <20190618224454.16595-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
- <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 2 Jul 2019 22:35:16 +0200
-Message-ID: <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org, aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618224454.16595-1-marcos.souza.org@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 22:26, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Sun, 30 Jun 2019 at 22:36, Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > On snapdragon aarch64 laptops, a 'UEFIDisplayInfo' variable is provided
-> > to communicate some information about the display.  Crutially it has the
-> > panel-id, so the appropriate panel driver can be selected.  Read this
-> > out and stash in /chosen/panel-id so that display driver can use it to
-> > pick the appropriate panel.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
->
-> Hi Rob,
->
-> I understand why you are doing this, but this *really* belongs elsewhere.
->
-> So we are dealing with a platform that violates the UEFI spec, since
-> it does not bother to implement variable services at runtime (because
-> MS let the vendor get away with this).
->
+ping?
 
-To clarify, the above remark applies to populating the DT from the OS
-rather than from the firmware.
-
-> First of all, to pass data between the EFI stub and the OS proper, we
-> should use a configuration table rather than a DT property, since the
-> former is ACPI/DT agnostic. Also, I'd like the consumer of the data to
-> actually interpret it, i.e., just dump the whole opaque thing into a
-> config table in the stub, and do the parsing in the OS proper.
->
-> However, I am not thrilled at adding code to the stub that
-> unconditionally looks for some variable with some magic name on all
-> ARM/arm64 EFI systems, so this will need to live under a Kconfig
-> option that depends on ARM64 (and does not default to y)
->
-
-... but saving variables at boot time for consumption at runtime is
-something that we will likely see more of in the future.
+On Tue, Jun 18, 2019 at 07:44:54PM -0300, Marcos Paulo de Souza wrote:
+> If BLIST_TRY_VPD_PAGES is set for a device, even for an USB, it should
+> be honored, so only set skip_vpd_pages is try_vpd_pages is not set.
+> 
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> ---
+> 
+>  Changes from v1:
+>  changed the check of try_vpd_pages from:
+>  	sdev->try_vpd_pages == 0;
+>  to:
+>  	!sdev->try_vpd_pages;
+>  (as suggested by Alan Stern)
+> 
+>  drivers/usb/storage/scsiglue.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+> index 59190d88fa9f..30790240aec6 100644
+> --- a/drivers/usb/storage/scsiglue.c
+> +++ b/drivers/usb/storage/scsiglue.c
+> @@ -195,8 +195,11 @@ static int slave_configure(struct scsi_device *sdev)
+>  		 */
+>  		sdev->skip_ms_page_8 = 1;
+>  
+> -		/* Some devices don't handle VPD pages correctly */
+> -		sdev->skip_vpd_pages = 1;
+> +		/*
+> +		 * Some devices don't handle VPD pages correctly, so skip vpd
+> +		 * pages if not forced by SCSI layer.
+> +		 */
+> +		sdev->skip_vpd_pages = !sdev->try_vpd_pages;
+>  
+>  		/* Do not attempt to use REPORT SUPPORTED OPERATION CODES */
+>  		sdev->no_report_opcodes = 1;
+> -- 
+> 2.21.0
+> 
