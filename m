@@ -2,78 +2,112 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ACEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137E0C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18C3218EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:51:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DoR1ThEg"
+	by mail.kernel.org (Postfix) with ESMTP id D8D102089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562115187;
+	bh=kyfxYTDfXVVYVh+jLp8SPqoH6e+/on1CISn5rmKjOZ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mOb01H0y9VaNZri51LbQrK1ZMvJlJGnipSsR9DsXR/GNhF3zSB+5vtpLYLrO/NifV
+	 TQ5rwpLoploi/rkcmZpcGeWNnmnD1ZGeONsvnE+ebCKGoVXtYTC/p1b64e5YMVk4Vg
+	 lJtfZh3kpuB5l7wJxNS2qXE2aGifXHii17E7uff4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfGCAvu (ORCPT
+        id S1727276AbfGCAxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:51:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43788 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfGCAvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:51:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q10so484800otk.10;
-        Tue, 02 Jul 2019 17:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
-        b=DoR1ThEgGbjv19cCdz5BE+R5n05F1pnqjFfoBynSpfmBlQXLCSunPFhbew6NEfAxPs
-         hvktSZdshjCkXciJetywqYC7halqVs7rQ//KLFsw2G6zRA5AsIWS+MKAiB3BahXdsdnG
-         3pcSjZaiZgcd8FrveXvr89fZ0fLQgFuSogZ9Keg4qmRLU/wDp3HL5P22/Mw1kYoZQ5+G
-         fuMux96KZ77382ZmWkZNoWLAaBNs9Wxu3z9DmmEm1nfFS9MPhHQDYbiOF++COdVen6EM
-         7Bk7sB7xgr9U92H4vgfSCaES5Uuh91WVyRugW9AD2JAN7CGio1F23wG2jEvDRRzT8tfR
-         wLqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ByhsgyjfPRCaYRtGVf0X74WgyTuKcSf1bOHMoBSZqlM=;
-        b=AbBJ5Hf5VLOiGy0ijgtAXlcJWJ4IXuu6MrNs3zBYgg9qnoSD59HHOQ2aMVYiUUFc2O
-         LxXcX32WmOLPxWqcVVzS37hNZzBq/9MNf8a2L5LCpulyYKGHQJtNRz/AlE7Y3NvzN+0u
-         q/vczSzK07IBWEjVGq8cQ4IFTwj9yDTRxs85koEDyh9rnHmCueAg6UenK6PqYatv+uWj
-         BFXjQ7Gzck1EGt2gdmjXwFpmUAq26uF1M96L2LsBhJi5tddu84pZskNMTyhZP7tHCudU
-         okdPbToO8BF5T2pRzneCxa52R1aZaDLwOUbMiFyCSVtW6c3w5h3LH3wsh4JDin2P2v+h
-         fuFw==
-X-Gm-Message-State: APjAAAVuOpXUJHOgUu9p6ChPVxuUYaNFzhF85lI2EK8uCjvoHtYovZVg
-        rcisKdpQeKSrB+MQZasML6SqEq02hRTUYs9wzWh0Lowc
-X-Google-Smtp-Source: APXvYqzMU6LhYLtDxe6IzTmM1WolsPD+74qKOzIux1HcUkzeXscSddhWfH+OlTyFXLefL/eH9LreXfId+iDH0UNqUbY=
-X-Received: by 2002:a9d:6d8d:: with SMTP id x13mr4126550otp.6.1562108605726;
- Tue, 02 Jul 2019 16:03:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-9-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-9-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:03:14 +0200
-Message-ID: <CAFBinCAwvAb42uitinRr0k_Hkb_cDOc9dygQgg54E5nO69h=fg@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 08/14] clk: meson: g12a: expose CPUB clock ID for G12B
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Jul 2019 20:53:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbfGCAxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:53:05 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662352184C;
+        Tue,  2 Jul 2019 20:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562097799;
+        bh=kyfxYTDfXVVYVh+jLp8SPqoH6e+/on1CISn5rmKjOZ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tiln9LxMX1fNAo2/Ddp+J6EQL7IwtJ9uvLaA5tNsAMv7HWx786TfZZ+Zg2iwEa3zy
+         7DBc6NmB8eX7vXDjNIm9YVca7qmERe9+BWTzyahQE+3k8jNzrBotulWcBmvPHIX2uk
+         qZiUwdYXD/LKMhpngm7ibkztyOQiF7ErCvRr6OuA=
+Date:   Tue, 2 Jul 2019 13:03:18 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+Message-Id: <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
+In-Reply-To: <20190702183730.14461-1-longman@redhat.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Tue,  2 Jul 2019 14:37:30 -0400 Waiman Long <longman@redhat.com> wrote:
+
+> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
+> file to shrink the slab by flushing all the per-cpu slabs and free
+> slabs in partial lists. This applies only to the root caches, though.
+> 
+> Extends this capability by shrinking all the child memcg caches and
+> the root cache when a value of '2' is written to the shrink sysfs file.
+
+Why?
+
+Please fully describe the value of the proposed feature to or users. 
+Always.
+
+> 
+> ...
 >
-> Expose the CPUB clock id to add DVFS to the second CPU cluster of
-> the Amlogic G12B SoC.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> --- a/Documentation/ABI/testing/sysfs-kernel-slab
+> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
+> @@ -429,10 +429,12 @@ KernelVersion:	2.6.22
+>  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+>  		Christoph Lameter <cl@linux-foundation.org>
+>  Description:
+> -		The shrink file is written when memory should be reclaimed from
+> -		a cache.  Empty partial slabs are freed and the partial list is
+> -		sorted so the slabs with the fewest available objects are used
+> -		first.
+> +		A value of '1' is written to the shrink file when memory should
+> +		be reclaimed from a cache.  Empty partial slabs are freed and
+> +		the partial list is sorted so the slabs with the fewest
+> +		available objects are used first.  When a value of '2' is
+> +		written, all the corresponding child memory cgroup caches
+> +		should be shrunk as well.  All other values are invalid.
+
+One would expect this to be a bitfield, like /proc/sys/vm/drop_caches. 
+So writing 3 does both forms of shrinking.
+
+Yes, it happens to be the case that 2 is a superset of 1, but what
+about if we add "4"?
+
