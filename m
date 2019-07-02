@@ -2,121 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E66C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3F3C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDA02063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mc9Zgzxi"
+	by mail.kernel.org (Postfix) with ESMTP id DEEB32063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfGCBcQ (ORCPT
+        id S1727519AbfGCBcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:32:16 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40432 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfGCBcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:32:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so259957pla.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eB6S4cIG2ic7xIJ0b0BVpA8z0egoMH0hNtHA1F0tef4=;
-        b=Mc9Zgzxi7WpN1Y0XEo1iD+dNo1ILtatcJksAae4nWOPbWm7s2Ed/HD0mGWbza1EhPs
-         f9+5ef3wLIriMDbYvAeVswhba6w815dbKYeDrem+W/TdNTlX9rJYEzgxE+XVttyzoTgt
-         a+QZZCoV7jcLA1bE9U/R0g1i0+VJUSz6AH6hU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eB6S4cIG2ic7xIJ0b0BVpA8z0egoMH0hNtHA1F0tef4=;
-        b=ZaKwL/0PgG4tqIwELtudWuBeAlNemy3OnQumtr743RwF+0Wdg3WxGTmlmT71f9mp5b
-         cFSJlWz7DgmNlnYe2tYyfvhGzGtoi5DOxXbnl2d1iZGKW4JkOKuzD8WmwTsDKZ7mF+og
-         NfuDBKpMznDMJVCnbRy/aQhivoFzG2PBMnIaXRC8uxt6OKbYaHOeouNogNlTBedl9dmQ
-         mLn66NF6pf8jd/I8qJvduVGapH2whvpCxYHNpGMQ6iynTJUCXraSU0CNLzOgt9zK66cd
-         A3STvTp/fBkCoBJyL80GQlCEN5zpSYXOyTM8gWit9dZ3D+xh51hraFCY0DKwzIIxljN9
-         IFog==
-X-Gm-Message-State: APjAAAVfEE5S6/O+TneBVj6tO6hqZSUzxTGk5J7cyBkyDF/ThQxOjmGF
-        rVeIK9G8kQ6KCSpvjhJ1L+EFzqyrb+k=
-X-Google-Smtp-Source: APXvYqwmPOBAaXQUnvIdrwl5iMJ1KFOaDS7/wjSob7es+yD/2C7SqHepeXjWMhCH7KaKi48XGbBdkA==
-X-Received: by 2002:a17:902:8d97:: with SMTP id v23mr10594527plo.157.1562102157592;
-        Tue, 02 Jul 2019 14:15:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s193sm62332pgc.32.2019.07.02.14.15.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 14:15:56 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 09:03:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
-        andreyknvl@google.com, hans.verkuil@cisco.com, mchehab@kernel.org,
-        skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] media: usb: technisat-usb2: fix buffer overflow
-Message-ID: <201907020858.66B63B24@keescook>
-References: <000000000000089d7f058683115e@google.com>
- <20190702140211.28399-1-tranmanphong@gmail.com>
+        Tue, 2 Jul 2019 21:32:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44392 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727304AbfGCBcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:32:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 68284309174E;
+        Tue,  2 Jul 2019 20:44:33 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67346183E0;
+        Tue,  2 Jul 2019 20:44:25 +0000 (UTC)
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+ <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <78879b79-1b8f-cdfd-d4fa-610afe5e5d48@redhat.com>
+Date:   Tue, 2 Jul 2019 16:44:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702140211.28399-1-tranmanphong@gmail.com>
+In-Reply-To: <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 02 Jul 2019 20:44:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 09:02:11PM +0700, Phong Tran wrote:
-> The buffer will be overflow in case of the while loop can not break.
-> Add the checking buffer condition in while loop for avoiding
-> overlooping index.
-> 
-> This issue was reported by syzbot
-> 
-> Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
-> 
-> Tested by:
-> https://groups.google.com/d/msg/syzkaller-bugs/CySBCKuUOOs/0hKq1CdjCwAJ
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  drivers/media/usb/dvb-usb/technisat-usb2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> index c659e18b358b..4e0b6185666a 100644
-> --- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-> +++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> @@ -655,7 +655,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
->  #endif
->  
->  	ev.pulse = 0;
-> -	while (1) {
-> +	while (b != (buf + 63)) {
+On 7/2/19 4:03 PM, Andrew Morton wrote:
+> On Tue,  2 Jul 2019 14:37:30 -0400 Waiman Long <longman@redhat.com> wrote:
+>
+>> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
+>> file to shrink the slab by flushing all the per-cpu slabs and free
+>> slabs in partial lists. This applies only to the root caches, though.
+>>
+>> Extends this capability by shrinking all the child memcg caches and
+>> the root cache when a value of '2' is written to the shrink sysfs file.
+> Why?
+>
+> Please fully describe the value of the proposed feature to or users. 
+> Always.
 
-This matches the "62" from the earlier read -- instead of these literal
-numbers, could you replace the "62"s with a named define for whatever
-would make sense for this driver (maybe "IR_MAX_EVENTS"?), and then you
-can make the above be something like:
+Sure. Essentially, the sysfs shrink interface is not complete. It allows
+the root cache to be shrunk, but not any of the memcg caches. 
 
-	while (b <= buf + IR_MAX_EVENTS) {
+The same can also be said for others slab sysfs files which show current
+cache status. I don't think sysfs files are created for the memcg
+caches, but I may be wrong. In many cases, information can be available
+elsewhere like the slabinfo file. The shrink operation, however, has no
+other alternative available.
 
+>> ...
+>>
+>> --- a/Documentation/ABI/testing/sysfs-kernel-slab
+>> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
+>> @@ -429,10 +429,12 @@ KernelVersion:	2.6.22
+>>  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+>>  		Christoph Lameter <cl@linux-foundation.org>
+>>  Description:
+>> -		The shrink file is written when memory should be reclaimed from
+>> -		a cache.  Empty partial slabs are freed and the partial list is
+>> -		sorted so the slabs with the fewest available objects are used
+>> -		first.
+>> +		A value of '1' is written to the shrink file when memory should
+>> +		be reclaimed from a cache.  Empty partial slabs are freed and
+>> +		the partial list is sorted so the slabs with the fewest
+>> +		available objects are used first.  When a value of '2' is
+>> +		written, all the corresponding child memory cgroup caches
+>> +		should be shrunk as well.  All other values are invalid.
+> One would expect this to be a bitfield, like /proc/sys/vm/drop_caches. 
+> So writing 3 does both forms of shrinking.
+>
+> Yes, it happens to be the case that 2 is a superset of 1, but what
+> about if we add "4"?
+>
+Yes, I can make it into a bit fields of 2 bits, just like
+/proc/sys/vm/drop_caches.
 
->  		ev.pulse = !ev.pulse;
->  		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
->  		ir_raw_event_store(d->rc_dev, &ev);
-> -- 
-> 2.11.0
-> 
+Cheers,
+Longman
 
--- 
-Kees Cook
