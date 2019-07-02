@@ -2,106 +2,127 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=3.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85828C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D484C20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4804620673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyZTRJk1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rHd762Ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfGCBpJ (ORCPT
+        id S1727121AbfGCBrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:45:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45317 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBpI (ORCPT
+        Tue, 2 Jul 2019 21:47:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40852 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:45:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so578184ioc.12;
-        Tue, 02 Jul 2019 18:45:08 -0700 (PDT)
+        Tue, 2 Jul 2019 21:47:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a21so568883ljh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:47:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2dHY1JEDP4p/Iin7PE911+goagiVJlOgF+4JmS/qJI=;
-        b=fyZTRJk1EU58W3X9rMzFfX/rWwLk6qDxZqQwcdvO1B+WhX5Ay/UJIb48NnkcP5NLcS
-         ceblxUmOFxSPlx1GBeqmcDjUbH6sB6hrn9ORIMObg1R8IvxgkKwhM0eHPX8TqeaCFty8
-         N1KWPAjaJlmDjw1YCme0ht1QbwjJUJm/C7jaXTjMhpiThgVwTaGdpllJwhVOfBbta9Qe
-         iEOIk5xCVFOv1RNqmaZTN85pB/FACzYDacf0MfBCtismFZAJ99Yag41k6NHrbx4zHk4l
-         ARNK8o0PJYPNErN/pE8MUBWWxADpIOzOOzbW9BqxwCooNLIvnGGGb//TGKGEF4OATYas
-         R7kg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EFkIeXpXPtkmklqfCJHZIPWaUa8k7rvjDvZooschSt0=;
+        b=rHd762UbGnahCLryJGa1V5ZeMAyD36SkyUs4X1frl2y0FBAOLBIKwlDdCGSIX+hgSg
+         7z8NSWAyAhzTaBnGoD867ymuPf7oKh1xsQ3AO/qVbuZ7CZVSe6/bXtG02w+gL3hZiVdW
+         wHvLUC7q04HYqiktxHNa/1RcLQlxu9ARjJL81i5JQ9fyu6LlDsMD5PscYhUzNUw/0o+1
+         8dvpVT68hyVAf+bHgmM8erO+vZEYj1j4JcRjpSl8XTFwHKw1wZX2zGB4Herk/S4pQ9QB
+         c7UwBmgkfh+TznGgYrX7ROflI9fKIZIVhDky8Gd3QvzLI9Ur+jRgi8QM+sw15pXkASv9
+         Uz7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2dHY1JEDP4p/Iin7PE911+goagiVJlOgF+4JmS/qJI=;
-        b=oOOz2HUqFrPw/wteX/d3dkFmUpo31fqug9S9NZ0/kpIn2yfpB8KPAOaMSEmwVDUiZb
-         ULrjoq28SJ7RVO7tdfbpe8jqFmCyAaVre0/RLIqOdoDNnIrzkNoKIy8g3dyJNZSY1lCZ
-         X42QmC/bqv3gxpH1fJ1RkUEvHO9kXtm+jSMkRnr4x0U4kgg8nzEy7ZPSZ+sWmTnkAzWU
-         5lOWkDOrvpIgQCubD1QUjAEPYrDq0xrGBxX9tLu1gu+I9/I0pLqzLEg64fR1IDrlSQlk
-         8y73Vh2YKYKC8xUgpDivQKl3HbmSYjiqjm605kdJ3MWuIqSbZOth+wU+jbYPSaVMzajh
-         qaiQ==
-X-Gm-Message-State: APjAAAX5cDPVTAkVXWbKHowTP9x2wMJdmi5H18I8Gtga0fgblGR+0WM2
-        9FyMt75IxS3FxZnvi0HpMIe4NTENa9Sb3KXK4K4hOXyl
-X-Google-Smtp-Source: APXvYqwXnBozA4Eg8repxRDmwc7v+ie6ZVutTX66BvuZfbKmO1Vnft8PUGkmnX5djxbfa6rxW7cPYo1M3PTW7hEaw/k=
-X-Received: by 2002:a6b:f607:: with SMTP id n7mr7314656ioh.263.1562099449824;
- Tue, 02 Jul 2019 13:30:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=EFkIeXpXPtkmklqfCJHZIPWaUa8k7rvjDvZooschSt0=;
+        b=U39Z2wENO3kzC6seax1a+mb1uqm2ISokaAgK9R8rKmqp16GfrSpdftOlMubZOB2wg1
+         ETmqmpq3cUvHY0xfmN6g2+vaeENLXEu2IYwvc3bAgWGu6B/NClGHvyWm9hjxgeRhzOyM
+         rpCq5noG/IZgW0MOWzixGODx0qbZ/x7LvGkJ33dU0KHHUpr3BOjvICcyTACZmqqmNuss
+         DrTyeh4yA9ZH5JtsxNeGlEUK6TNxuv9K4EhYfFm1F+eePi+5tJgmiJdAsMiFTYV2GAO3
+         8+5SdyGVEErvr5x2w9wV7BQnWxOIBUe3zXzCNHwHZmZfEORHNG4CbJKS4RTZ/H6FmA2V
+         rpIg==
+X-Gm-Message-State: APjAAAWCxlWSKx3EAbdI9k/vfY4xdz6lgiC9qp8EtN/unWtZ+3YJM6ak
+        P5Nbhv3JTEcLBUXeA/n05qvfgg==
+X-Google-Smtp-Source: APXvYqyK8XCk0LNPfZc7yl0eXnoTmmXKNuF5DgLOtCrcIhwHjVb42s/ttUXt6h2tWcidM5ZqBmX1tg==
+X-Received: by 2002:a2e:80c8:: with SMTP id r8mr4089003ljg.168.1562103706177;
+        Tue, 02 Jul 2019 14:41:46 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id h23sm40479ljg.17.2019.07.02.14.41.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 14:41:45 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 00:41:43 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, netdev@vger.kernel.org,
+        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
+ page_pool_destroy
+Message-ID: <20190702214142.GJ4510@khorivan>
+Mail-Followup-To: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>, netdev@vger.kernel.org,
+        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+References: <156207778364.29180.5111562317930943530.stgit@firesoul>
+ <20190702144426.GD4510@khorivan>
+ <20190702165230.6caa36e3@carbon>
+ <20190702145612.GF4510@khorivan>
+ <20190702171029.76c60538@carbon>
+ <20190702152112.GG4510@khorivan>
+ <20190702202907.15fb30ce@carbon>
+ <20190702185839.GH4510@khorivan>
+ <20190702230241.3be6d787@carbon>
+ <20190702211536.GA22618@apalos>
 MIME-Version: 1.0
-References: <20190630131445.25712-1-robdclark@gmail.com> <20190630131445.25712-4-robdclark@gmail.com>
-In-Reply-To: <20190630131445.25712-4-robdclark@gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 2 Jul 2019 14:30:39 -0600
-Message-ID: <CAOCk7NpyYSiDHP84E4bQiTA1Wk9Sd4w-F8-Zqu9tKtDoUTsFDw@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 3/3] drm/msm/dsi: make sure we have panel or
- bridge earlier
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>, Sean Paul <sean@poorly.run>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190702211536.GA22618@apalos>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 30, 2019 at 7:16 AM Rob Clark <robdclark@gmail.com> wrote:
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -1824,6 +1824,20 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
->                 goto fail;
->         }
+On Wed, Jul 03, 2019 at 12:15:36AM +0300, Ilias Apalodimas wrote:
+>Hi Jesper,
+>Getting late here, i'll respond in detail tomorrow. One point though
 >
-> +       /*
-> +        * Make sure we have panel or bridge early, before we start
-> +        * touching the hw.  If bootloader enabled the display, we
-> +        * want to be sure to keep it running until the bridge/panel
-> +        * is probed and we are all ready to go.  Otherwise we'll
-> +        * kill the display and then -EPROBE_DEFER
-> +        */
-> +       if (IS_ERR(of_drm_find_panel(msm_host->device_node)) &&
-> +                       !of_drm_find_bridge(msm_host->device_node)) {
-> +               pr_err("%s: no panel or bridge yet\n", __func__);
+>[...]
+>>
+>> This special use-case, seems confined to your driver. And Ilias told me
+>> that XDP is not really a performance benefit for this driver as the HW
+>> PPS-limit is hit before the XDP and netstack limit.  I ask, does it
+>> make sense to add XDP to this driver, if it complicates the code for
+>> everybody else?
+>I think yes. This is a widely used driver on TI embedded devices so having XDP
+>to play along is a nice feature. It's also the first and only armv7 we have
+>supporting this. Ivan already found a couple of issues due to the 32-bit
+>architecture he is trying to fix, i think there's real benefit in having that,
+>performance aside.
+>I fully agree we should not impact the performance of the API to support a
+>special hardware though. I'll have a look on the 2 solutions tomorrow, but the
+>general approach on this one should be 'the simpler the better'
+>
+>Cheers
+>/Ilias
 
-pr_err() doesn't seem right for a probe defer condition.  pr_dbg?
+BTW even w/o optimization it has close to 300kpps (but with increased number of
+descs) on drop which is very close to netsec measurements Ilias sent. But from
+what I know there is no h/w limit on cpsw at all that this CPU can serve, so
+my assumption it's rather s/w limit. But that's not main here and XDP usage
+has not been estimated enough yet in embedded, where hi speed not only benefit
+that can be taken from XDP.
 
-> +               return -EPROBE_DEFER;
-> +       }
-> +
-> +
+I need more clear circumstances to send v6 ...
 
-Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+-- 
+Regards,
+Ivan Khoronzhuk
