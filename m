@@ -2,124 +2,139 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532BFC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3B1C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272B92064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQ79Hkh/"
+	by mail.kernel.org (Postfix) with ESMTP id BED832064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGBNyB (ORCPT
+        id S1727078AbfGBNym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:54:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45906 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfGBNyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:54:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r1so8276492pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 06:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=w2BNPQwh7S/nFGeH+ms7w19rWgUYaTkEZzHk2Qdx8+0=;
-        b=gQ79Hkh/BFF778AYW0KVlVtHqMRepoo0B1ji+zXqPLbUaZWpmlnMucSvl6y+CN4+3k
-         qYx78jLBkZO0JEaaMprEJ34ZMs4EsSKBKI0AMbO7wL7lyagjvRK9q8Py0s2/VagR4jFG
-         uTfQ/JTl53KoIzXhnrMcRtOqFVGvd+oyiw2+Ii02zSLeI3H7b8kOom3hSc0SrxA4GsYz
-         PZHa2a2uoByUvW/qj5NCw9eO73gC4/kxbxHOvbbkxi9XCqJdpikpXPyQVEl82YRQtVhv
-         hDfA4Psa1uJkyAB1VDTPN1+nJD9qT8AkDxucUvAuNQo1ggHgYxR21vKbDpHIPNhbP5Gp
-         gZOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=w2BNPQwh7S/nFGeH+ms7w19rWgUYaTkEZzHk2Qdx8+0=;
-        b=UE4YEzIMipetTTAMTOQPalu6kdJgPhiGjvai3Y1IzbyNr4IKZG2IFMfsB0MXaP4j+H
-         wVXYX4esx3G/v4VD4scb6MJ9cyqyqju2TpnJTdsytTUAjPV1F6CZPja4zF6N5rYLY9MB
-         wZAngfH5RZ3YyzVhxLQry/rLJl7qoTRxvKUvGOMq28emFprEDhQMK0B78gbsf3bKyrka
-         Zv3NGCrG/OllOVfw3kv6IR7gmfw2LXqsyiIKeZ5Az/ejuWOzt1p/F/DE5F4ROHDdhhAH
-         C6ao0oTXrr7YsFNnPmSnmIv5JSDIvtE8yaFFWpWP3YWkJu2gYZGJ+j2/hrAuKw4J39tg
-         FtJQ==
-X-Gm-Message-State: APjAAAUxFx4GERrdIrLMOcJ29DKG/EdTTXmUSUciL2jlnPYjHH26AbIG
-        tslAtdCSHunUsdP7glnoQA==
-X-Google-Smtp-Source: APXvYqxthi/Anqcspql3AIVjs7d8XDbWIPItCvqC6SzOFphrFA9bEN6ceq5EwcqWj1z9QjuO5vVWZQ==
-X-Received: by 2002:a17:90a:a489:: with SMTP id z9mr5598087pjp.24.1562075640093;
-        Tue, 02 Jul 2019 06:54:00 -0700 (PDT)
-Received: from mylaptop.redhat.com ([2408:8207:782e:f8f0:635f:8a20:82ca:fda3])
-        by smtp.gmail.com with ESMTPSA id g66sm7955419pfb.44.2019.07.02.06.53.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 06:53:59 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/page_isolate: change the prototype of undo_isolate_page_range()
-Date:   Tue,  2 Jul 2019 21:53:24 +0800
-Message-Id: <1562075604-8979-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
+        Tue, 2 Jul 2019 09:54:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52626 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbfGBNyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:54:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0DD9D308620E;
+        Tue,  2 Jul 2019 13:54:36 +0000 (UTC)
+Received: from krava (unknown [10.43.17.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F256919730;
+        Tue,  2 Jul 2019 13:54:32 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 15:54:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+Message-ID: <20190702135432.GC12694@krava>
+References: <20190702022616.1259-1-acme@kernel.org>
+ <20190702022616.1259-24-acme@kernel.org>
+ <20190702121240.GB12694@krava>
+ <20190702134603.GA15462@kernel.org>
+ <20190702134815.GB15462@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190702134815.GB15462@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 02 Jul 2019 13:54:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-undo_isolate_page_range() never fails, so no need to return value.
+On Tue, Jul 02, 2019 at 10:48:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
+> > > On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > 
+> > > > Same implementation, will be used to replace ad-hoc equivalent code in
+> > > > tools/.
+> > > > 
+> > > > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > > > Cc: André Goddard Rosa <andre.goddard@gmail.com>
+> > > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
+> > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > ---
+> > > >  tools/include/linux/string.h |  4 +++-
+> > > >  tools/lib/string.c           | 14 ++++++++++++++
+> > > >  2 files changed, 17 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> > > > index 6c3e2cc274c5..cee239350a6b 100644
+> > > > --- a/tools/include/linux/string.h
+> > > > +++ b/tools/include/linux/string.h
+> > > > @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
+> > > >  	return strncmp(str, prefix, strlen(prefix)) == 0;
+> > > >  }
+> > > >  
+> > > > -#endif /* _LINUX_STRING_H_ */
+> > > > +extern char * __must_check skip_spaces(const char *);
+> > > > +
+> > > > +#endif /* _TOOLS_LINUX_STRING_H_ */
+> > > > diff --git a/tools/lib/string.c b/tools/lib/string.c
+> > > > index 93b3d4b6feac..50d400822bb3 100644
+> > > > --- a/tools/lib/string.c
+> > > > +++ b/tools/lib/string.c
+> > > > @@ -17,6 +17,7 @@
+> > > >  #include <string.h>
+> > > >  #include <errno.h>
+> > > >  #include <linux/string.h>
+> > > > +#include <linux/ctype.h>
+> > > >  #include <linux/compiler.h>
+> > > >  
+> > > >  /**
+> > > > @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+> > > >  	}
+> > > >  	return ret;
+> > > >  }
+> > > > +
+> > > > +/**
+> > > > + * skip_spaces - Removes leading whitespace from @str.
+> > > > + * @str: The string to be stripped.
+> > > > + *
+> > > > + * Returns a pointer to the first non-whitespace character in @str.
+> > > > + */
+> > > > +char *skip_spaces(const char *str)
+> > > > +{
+> > > > +	while (isspace(*str))
+> > > > +		++str;
+> > > > +	return (char *)str;
+> > > > +}
+> > > > -- 
+> > > > 2.20.1
+> > > > 
+> > > 
+> > > this breaks objtool build, because it adds _ctype dependency via isspace call
+> > > patch below fixes it for me
+> > 
+> > Thanks for  spotting this, I'll have it in my next pull request.
+> 
+> I'm adding a Signed-off-by: you, ok?
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/page-isolation.h | 2 +-
- mm/page_isolation.c            | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+sure, I did not post full patch, because I thought you might thought
+of some other solution
 
-diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-index 280ae96..1099c2f 100644
---- a/include/linux/page-isolation.h
-+++ b/include/linux/page-isolation.h
-@@ -50,7 +50,7 @@ start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
-  * Changes MIGRATE_ISOLATE to MIGRATE_MOVABLE.
-  * target range is [start_pfn, end_pfn)
-  */
--int
-+void
- undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 			unsigned migratetype);
- 
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index e3638a5..89c19c0 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -230,7 +230,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- /*
-  * Make isolated pages available again.
-  */
--int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
-+void undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 			    unsigned migratetype)
- {
- 	unsigned long pfn;
-@@ -247,7 +247,6 @@ int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 			continue;
- 		unset_migratetype_isolate(page, migratetype);
- 	}
--	return 0;
- }
- /*
-  * Test all pages in the range is free(means isolated) or not.
--- 
-2.7.5
-
+thanks,
+jirka
