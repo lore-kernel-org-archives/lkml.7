@@ -2,82 +2,79 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD6FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47288C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3DD2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B382173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPK6Bl22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGBQf7 (ORCPT
+        id S1726473AbfGBQhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:35:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51448 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfGBQf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:35:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7AC55B9B1;
-        Tue,  2 Jul 2019 16:35:57 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 2B879E0159; Tue,  2 Jul 2019 18:35:57 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 18:35:57 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 01/15] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
-Message-ID: <20190702163557.GF20101@unicorn.suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <b6e0aefbcb58297b3ec0a12ee4be8e5194eee61a.1562067622.git.mkubecek@suse.cz>
- <20190702075500.1b9845e1@hermes.lan>
+        Tue, 2 Jul 2019 12:37:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33650 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfGBQhC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 12:37:02 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so14724644qkc.0;
+        Tue, 02 Jul 2019 09:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XKVooiwPN88g+MgS3WlV5s1dsy7KSlDL3nSO/dSDKhQ=;
+        b=TPK6Bl22nFAB5oGJu/i/fTzKhlfesH6ItfqRaoCzPS+A8ZDdwhG14ZDkHK642HV+hP
+         gYYCeVbeIO5ZqUykWzhYTY1YfSPEmK/c0xSp3IFZWi910gsGHEq1eOcfV50+wLtnNlaB
+         dVIlZLpjydcmWfOeSp5ZZoFV7EcuqXu8StP6B2K/vr3BQ/AdwDbHVVIbQ+fWDOF7s450
+         9Es4yPfEvwgwrXo/zpYjB+gJ/JYb45siZ1wksjdqe2jV7dEhOogbY5FdV7ePntzgaqQN
+         AHBtWE0nhIcgs6jmRhPeRAScPdr+13OpJTm2E/uJkjWHyD5IfQa5CBJZcw0WAS+DGw4l
+         2Dxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XKVooiwPN88g+MgS3WlV5s1dsy7KSlDL3nSO/dSDKhQ=;
+        b=Giy7RAeuk/b//tkbycaMxZeMjw6xifFNZq6w1e5RfFXhN5N2XPyG5Y4g3HhxkrtxI0
+         30tj+nykA07QJIdTKmiaslzR3KgqUkupHLuUnb3W3kU4GjWEnCzGePhkg8gCckvLWjFL
+         ZMmd4DLJWC92JFVQiizjpcuavoV27XJhdp09HKGF6Hw4hf0uVYMkmlB6oEHNORPdqtOM
+         D/n8CSL0E+Dyqkg7wZF3WgvuZAzoSrm5Um8CosWq98VBRwAoBKOBXxL+sjc3Jsq2qPow
+         IkqPwSiWG7c4V2AhclQoaQiZE36+2556Zq4PcYvvnMQB2teQB1CfxoI1/GFwmFdujso2
+         MnDA==
+X-Gm-Message-State: APjAAAWFL0fNXyIItBDYaPYmJkTYAp4kthTwuY0QwYADS8jmmhkiz4nr
+        oEq8kQC/sHvue8MqMvzxLhircW9ZD9T4qhX5PR8=
+X-Google-Smtp-Source: APXvYqzSpJT1KCefnuTJ7ckiwvQe1Ni9mcyQHvPIyggQyr3AHqsH9gpU81HUpRWrIV1yF3Fgpyy7diUi4FBQKDeeEhc=
+X-Received: by 2002:a37:ea0c:: with SMTP id t12mr24632370qkj.117.1562085421923;
+ Tue, 02 Jul 2019 09:37:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702075500.1b9845e1@hermes.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190702161253.12016-1-smuchun@gmail.com>
+In-Reply-To: <20190702161253.12016-1-smuchun@gmail.com>
+From:   Muchun Song <smuchun@gmail.com>
+Date:   Wed, 3 Jul 2019 00:36:50 +0800
+Message-ID: <CAPSr9jGo2ZLXS__B8oiiSBf0aTOivk1weUApxKrf20MZLz8G-A@mail.gmail.com>
+Subject: Re: [PATCH] PM: Move disabling/enabling runtime PM to noirq
+ suspend/early resume
+To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pm@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 07:55:00AM -0700, Stephen Hemminger wrote:
-> On Tue,  2 Jul 2019 13:49:44 +0200 (CEST)
-> Michal Kubecek <mkubecek@suse.cz> wrote:
-> 
-> > Permanent hardware address of a network device was traditionally provided
-> > via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
-> > ethtool netlink interface, rtnetlink is much more suitable for it so let's
-> > add it to the RTM_NEWLINK message.
-> > 
-> > Add IFLA_PERM_ADDRESS attribute to RTM_NEWLINK messages unless the
-> > permanent address is all zeros (i.e. device driver did not fill it). As
-> > permanent address is not modifiable, reject userspace requests containing
-> > IFLA_PERM_ADDRESS attribute.
-> > 
-> > Note: we already provide permanent hardware address for bond slaves;
-> > unfortunately we cannot drop that attribute for backward compatibility
-> > reasons.
-> > 
-> > v5 -> v6: only add the attribute if permanent address is not zero
-> > 
-> > Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> 
-> Do you want to make an iproute patch to display this?
+Sorry, There are some problems with the subject, I have re-edited and
+sent the v2 patch.
 
-Yes, I'm going to submit it once this patch gets into net-next.
-
-Michal
-
-> Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+Update subject from:
+           "PM: Move disabling/enabling runtime PM to noirq
+suspend/early resume"
+to:
+           "PM: Move disabling/enabling runtime PM to suspend/resume noirq"
