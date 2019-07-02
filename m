@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E506C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD7C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A33021479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C428520659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055097;
-	bh=6MKCz6Ifr0JfPt0WF5NQ3z2Rr8RfEXbqtc7xMphbvw0=;
+	s=default; t=1562055102;
+	bh=tVprYKvwsxtoCkfLdUffkAHSvZ+eIPJRLl2ZFbDPPyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xWYcvT7H5SOrB68/a32ubiCh/Gzke01phcMd93oFRiysguB+JGigJBe+vSgd6CeYI
-	 sp1vSSqc7xcsOx+gvH1I2wcSSPtbdDk7JxcCd2e2woZjxRXAOMtuKcKPE4WhJz2tlp
-	 6vZraWLro6HXTk3sDFPAxdPmJUQKLyOWNABJ53H0=
+	b=j58QYk91wSStL75S5w8VOKnbPSnvynNXq/LbItiLaEv2FydMXNtQhmoGX5OnsbUor
+	 bnfq93EW4fogHHlw+gxCTYuPkwtKJxn+37NBIpSeMMISGMcr/G/XtGxXeMqyJPwV67
+	 n84duUmqGvH/0oGMnz5Jnvn/UWz/8Lu76Guwbs8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfGBILg (ORCPT
+        id S1728784AbfGBIKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58800 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfGBIK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:10:26 -0400
+        id S1728162AbfGBIKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4259B206A2;
-        Tue,  2 Jul 2019 08:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CDD2184B;
+        Tue,  2 Jul 2019 08:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055024;
-        bh=6MKCz6Ifr0JfPt0WF5NQ3z2Rr8RfEXbqtc7xMphbvw0=;
+        s=default; t=1562055003;
+        bh=tVprYKvwsxtoCkfLdUffkAHSvZ+eIPJRLl2ZFbDPPyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUpHtDFSMjA8ZLQeymYk6GIJ+7SF/E9Dv02Fx6I3V54CgBsc/rPnXsWFfWXHiLkhi
-         9uEsXPvKEw69Wd8hDv9WHYR1HECQne9S3lmN0iZdTuWgF6nwdKo1OgArB5Re0hqEsR
-         fZ/uvZmIllj6oPPXdJe+NGg+OD0NKxBrX0of01/A=
+        b=CMRQWj9U9JlBTTha7YhABUQDLqVNrL0AkKR3oqqixPncVMEUWhSzny4lm4pu2aYlm
+         k5cEcn7doC3VIzpNxQRiZ7BSOjZtLZmztdpaTGeXW6LKoB8EOhfzSONIMF62/4H8JO
+         7tkuB6YmMtyx3a9qhCu3oJmlMH/Hp0LmIEypqFV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.14 41/43] bpf, arm64: use more scalable stadd over ldxr / stxr loop in xadd
-Date:   Tue,  2 Jul 2019 10:02:21 +0200
-Message-Id: <20190702080126.040996074@linuxfoundation.org>
+        stable@vger.kernel.org, Fei Li <lifei.shirley@bytedance.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 35/43] tun: wake up waitqueues after IFF_UP is set
+Date:   Tue,  2 Jul 2019 10:02:15 +0200
+Message-Id: <20190702080125.732708948@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -61,165 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Fei Li <lifei.shirley@bytedance.com>
 
-commit 34b8ab091f9ef57a2bb3c8c8359a0a03a8abf2f9 upstream.
+[ Upstream commit 72b319dc08b4924a29f5e2560ef6d966fa54c429 ]
 
-Since ARMv8.1 supplement introduced LSE atomic instructions back in 2016,
-lets add support for STADD and use that in favor of LDXR / STXR loop for
-the XADD mapping if available. STADD is encoded as an alias for LDADD with
-XZR as the destination register, therefore add LDADD to the instruction
-encoder along with STADD as special case and use it in the JIT for CPUs
-that advertise LSE atomics in CPUID register. If immediate offset in the
-BPF XADD insn is 0, then use dst register directly instead of temporary
-one.
+Currently after setting tap0 link up, the tun code wakes tx/rx waited
+queues up in tun_net_open() when .ndo_open() is called, however the
+IFF_UP flag has not been set yet. If there's already a wait queue, it
+would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
+Then the saving vhost_poll_start() will add the wq into wqh until it
+is waken up again. Although this works when IFF_UP flag has been set
+when tun_chr_poll detects; this is not true if IFF_UP flag has not
+been set at that time. Sadly the latter case is a fatal error, as
+the wq will never be waken up in future unless later manually
+setting link up on purpose.
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix this by moving the wakeup process into the NETDEV_UP event
+notifying process, this makes sure IFF_UP has been set before all
+waited queues been waken up.
+
+Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/include/asm/insn.h |    8 ++++++++
- arch/arm64/kernel/insn.c      |   40 ++++++++++++++++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit.h      |    4 ++++
- arch/arm64/net/bpf_jit_comp.c |   28 +++++++++++++++++++---------
- 4 files changed, 71 insertions(+), 9 deletions(-)
+ drivers/net/tun.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/arch/arm64/include/asm/insn.h
-+++ b/arch/arm64/include/asm/insn.h
-@@ -271,6 +271,7 @@ __AARCH64_INSN_FUNCS(adrp,	0x9F000000, 0
- __AARCH64_INSN_FUNCS(prfm,	0x3FC00000, 0x39800000)
- __AARCH64_INSN_FUNCS(prfm_lit,	0xFF000000, 0xD8000000)
- __AARCH64_INSN_FUNCS(str_reg,	0x3FE0EC00, 0x38206800)
-+__AARCH64_INSN_FUNCS(ldadd,	0x3F20FC00, 0xB8200000)
- __AARCH64_INSN_FUNCS(ldr_reg,	0x3FE0EC00, 0x38606800)
- __AARCH64_INSN_FUNCS(ldr_lit,	0xBF000000, 0x18000000)
- __AARCH64_INSN_FUNCS(ldrsw_lit,	0xFF000000, 0x98000000)
-@@ -383,6 +384,13 @@ u32 aarch64_insn_gen_load_store_ex(enum
- 				   enum aarch64_insn_register state,
- 				   enum aarch64_insn_size_type size,
- 				   enum aarch64_insn_ldst_type type);
-+u32 aarch64_insn_gen_ldadd(enum aarch64_insn_register result,
-+			   enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size);
-+u32 aarch64_insn_gen_stadd(enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size);
- u32 aarch64_insn_gen_add_sub_imm(enum aarch64_insn_register dst,
- 				 enum aarch64_insn_register src,
- 				 int imm, enum aarch64_insn_variant variant,
---- a/arch/arm64/kernel/insn.c
-+++ b/arch/arm64/kernel/insn.c
-@@ -793,6 +793,46 @@ u32 aarch64_insn_gen_load_store_ex(enum
- 					    state);
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -831,18 +831,8 @@ static void tun_net_uninit(struct net_de
+ /* Net device open. */
+ static int tun_net_open(struct net_device *dev)
+ {
+-	struct tun_struct *tun = netdev_priv(dev);
+-	int i;
+-
+ 	netif_tx_start_all_queues(dev);
+ 
+-	for (i = 0; i < tun->numqueues; i++) {
+-		struct tun_file *tfile;
+-
+-		tfile = rtnl_dereference(tun->tfiles[i]);
+-		tfile->socket.sk->sk_write_space(tfile->socket.sk);
+-	}
+-
+ 	return 0;
  }
  
-+u32 aarch64_insn_gen_ldadd(enum aarch64_insn_register result,
-+			   enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size)
-+{
-+	u32 insn = aarch64_insn_get_ldadd_value();
+@@ -2826,6 +2816,7 @@ static int tun_device_event(struct notif
+ {
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct tun_struct *tun = netdev_priv(dev);
++	int i;
+ 
+ 	if (dev->rtnl_link_ops != &tun_link_ops)
+ 		return NOTIFY_DONE;
+@@ -2835,6 +2826,14 @@ static int tun_device_event(struct notif
+ 		if (tun_queue_resize(tun))
+ 			return NOTIFY_BAD;
+ 		break;
++	case NETDEV_UP:
++		for (i = 0; i < tun->numqueues; i++) {
++			struct tun_file *tfile;
 +
-+	switch (size) {
-+	case AARCH64_INSN_SIZE_32:
-+	case AARCH64_INSN_SIZE_64:
++			tfile = rtnl_dereference(tun->tfiles[i]);
++			tfile->socket.sk->sk_write_space(tfile->socket.sk);
++		}
 +		break;
-+	default:
-+		pr_err("%s: unimplemented size encoding %d\n", __func__, size);
-+		return AARCH64_BREAK_FAULT;
-+	}
-+
-+	insn = aarch64_insn_encode_ldst_size(size, insn);
-+
-+	insn = aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RT, insn,
-+					    result);
-+
-+	insn = aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RN, insn,
-+					    address);
-+
-+	return aarch64_insn_encode_register(AARCH64_INSN_REGTYPE_RS, insn,
-+					    value);
-+}
-+
-+u32 aarch64_insn_gen_stadd(enum aarch64_insn_register address,
-+			   enum aarch64_insn_register value,
-+			   enum aarch64_insn_size_type size)
-+{
-+	/*
-+	 * STADD is simply encoded as an alias for LDADD with XZR as
-+	 * the destination register.
-+	 */
-+	return aarch64_insn_gen_ldadd(AARCH64_INSN_REG_ZR, address,
-+				      value, size);
-+}
-+
- static u32 aarch64_insn_encode_prfm_imm(enum aarch64_insn_prfm_type type,
- 					enum aarch64_insn_prfm_target target,
- 					enum aarch64_insn_prfm_policy policy,
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -100,6 +100,10 @@
- #define A64_STXR(sf, Rt, Rn, Rs) \
- 	A64_LSX(sf, Rt, Rn, Rs, STORE_EX)
- 
-+/* LSE atomics */
-+#define A64_STADD(sf, Rn, Rs) \
-+	aarch64_insn_gen_stadd(Rn, Rs, A64_SIZE(sf))
-+
- /* Add/subtract (immediate) */
- #define A64_ADDSUB_IMM(sf, Rd, Rn, imm12, type) \
- 	aarch64_insn_gen_add_sub_imm(Rd, Rn, imm12, \
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -330,7 +330,7 @@ static int build_insn(const struct bpf_i
- 	const int i = insn - ctx->prog->insnsi;
- 	const bool is64 = BPF_CLASS(code) == BPF_ALU64;
- 	const bool isdw = BPF_SIZE(code) == BPF_DW;
--	u8 jmp_cond;
-+	u8 jmp_cond, reg;
- 	s32 jmp_offset;
- 
- #define check_imm(bits, imm) do {				\
-@@ -706,18 +706,28 @@ emit_cond_jmp:
- 			break;
- 		}
+ 	default:
  		break;
-+
- 	/* STX XADD: lock *(u32 *)(dst + off) += src */
- 	case BPF_STX | BPF_XADD | BPF_W:
- 	/* STX XADD: lock *(u64 *)(dst + off) += src */
- 	case BPF_STX | BPF_XADD | BPF_DW:
--		emit_a64_mov_i(1, tmp, off, ctx);
--		emit(A64_ADD(1, tmp, tmp, dst), ctx);
--		emit(A64_LDXR(isdw, tmp2, tmp), ctx);
--		emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
--		emit(A64_STXR(isdw, tmp2, tmp, tmp3), ctx);
--		jmp_offset = -3;
--		check_imm19(jmp_offset);
--		emit(A64_CBNZ(0, tmp3, jmp_offset), ctx);
-+		if (!off) {
-+			reg = dst;
-+		} else {
-+			emit_a64_mov_i(1, tmp, off, ctx);
-+			emit(A64_ADD(1, tmp, tmp, dst), ctx);
-+			reg = tmp;
-+		}
-+		if (cpus_have_cap(ARM64_HAS_LSE_ATOMICS)) {
-+			emit(A64_STADD(isdw, reg, src), ctx);
-+		} else {
-+			emit(A64_LDXR(isdw, tmp2, reg), ctx);
-+			emit(A64_ADD(isdw, tmp2, tmp2, src), ctx);
-+			emit(A64_STXR(isdw, tmp2, reg, tmp3), ctx);
-+			jmp_offset = -3;
-+			check_imm19(jmp_offset);
-+			emit(A64_CBNZ(0, tmp3, jmp_offset), ctx);
-+		}
- 		break;
- 
- 	/* R0 = ntohx(*(size *)(((struct sk_buff *)R6)->data + imm)) */
+ 	}
 
 
