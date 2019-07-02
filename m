@@ -2,146 +2,203 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E70C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97683C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AD120989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KuxZdBhb"
+	by mail.kernel.org (Postfix) with ESMTP id 7889A20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfGBQkn (ORCPT
+        id S1726621AbfGBQni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:40:43 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39170 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725972AbfGBQkn (ORCPT
+        Tue, 2 Jul 2019 12:43:38 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35783 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfGBQnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:40:43 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 23AC0C0BE5;
-        Tue,  2 Jul 2019 16:40:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562085642; bh=9IoJlF0bpOR5UbhByS88AdDEz43pdCkSBVjHAo4Jav0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KuxZdBhbSw2w0rHtbuX+g5sQGuRW6Y8bhNAGbPqR7vdfL+DwzjAhHjqlwQu/zHFGh
-         eQ7InYW9hWVzNRcicRoZDnCpysZ0xp/x5xiyKgFGO76fGzSLowUj288cbkWQKApI3C
-         MJrJiI6k++K73xJYpmXZ7RC5TrxrIss2ewNQTfbqzI4EVCmIHljwfUW7cALp2CYzAo
-         AX7eMAdybeyRMYzG3fJMgTvAmXf66HaEPIdeIUnrvOQgYiJEvCE8nqnXA8OOr9I3yx
-         nuVRWEzdlSASeWuXnBHUTDJGr/AYslBArXqzTlx7MtVw0uwtmzBeMqgNgr9SnH3esJ
-         fc2LcARFvIBfQ==
-Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 4DF49A0057;
-        Tue,  2 Jul 2019 16:40:39 +0000 (UTC)
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH] ARC: [haps] Add Virtio support
-Date:   Tue,  2 Jul 2019 19:40:33 +0300
-Message-Id: <20190702164033.43933-1-abrodkin@synopsys.com>
-X-Mailer: git-send-email 2.16.2
+        Tue, 2 Jul 2019 12:43:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c27so10932345wrb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:43:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kV2rDBr8f3q9kLby6YRxl8ZXleRdsPAklKANirTDrb4=;
+        b=BtY0TyB7W1mIGsHa26owqlwL4sPnP0O0CKoIS0hGtee/0d44LfWqf8KluiJKPhiaJQ
+         l+6v7OMas7H5/bNxOcnmCnqN9S3skEjOgfXnR9PsP7LSU6eHuAMjNmzbI1oHQaOaXhmn
+         ostgPinZg0i5vq0czBXVWFWBSzhsz/9J+vSXs//mx9GqVAKemWNZZbRYzXRXtoWnE8R8
+         esLQwWHhu2+sd1ytHM8maZC2ZIRNzuWr7U/otPbwGQHnFlaQlDDvMYldrmgG5yLPGxBu
+         Z8Wg8q50nE2CgufMCVZnXdZTbDRvlirLIHd464gOVnXfR5nvuAl/Th1gvw70I77gFkYG
+         B7VA==
+X-Gm-Message-State: APjAAAUa+vskDvLSJOFYQhwTw2S/Romoz892xA7hpacIlGM1ij7psef8
+        4zl0itJxVtGenR5qc2gIB17jWw==
+X-Google-Smtp-Source: APXvYqyCjkw4IWIQFh2eWCekFXDCVrk3wVqWTz5BvaxR3YLEORVKvovktt+CsNcs/+L6TdZmGAhXPg==
+X-Received: by 2002:a5d:500f:: with SMTP id e15mr12587591wrt.41.1562085814230;
+        Tue, 02 Jul 2019 09:43:34 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
+        by smtp.gmail.com with ESMTPSA id z1sm15403353wrv.90.2019.07.02.09.43.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 09:43:33 -0700 (PDT)
+Subject: Re: [PATCH] KVM: LAPIC: Fix pending interrupt in IRR blocked by
+ software disable LAPIC
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Feng Tang <feng.tang@intel.com>, stable@vger.kernel.org
+References: <1562059502-8581-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c75371c8-7dbc-7ce8-c0f3-0396305b896b@redhat.com>
+Date:   Tue, 2 Jul 2019 18:43:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1562059502-8581-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a preparation for QEMU usage for ARC let's add basic Virtio-MMIO
-peripherals support for the platform we're going to use.
+On 02/07/19 11:25, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Thomas reported that:
+> 
+>  | Background:
+>  | 
+>  |    In preparation of supporting IPI shorthands I changed the CPU offline
+>  |    code to software disable the local APIC instead of just masking it.
+>  |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
+>  |    register.
+>  | 
+>  | Failure:
+>  | 
+>  |    When the CPU comes back online the startup code triggers occasionally
+>  |    the warning in apic_pending_intr_clear(). That complains that the IRRs
+>  |    are not empty.
+>  | 
+>  |    The offending vector is the local APIC timer vector who's IRR bit is set
+>  |    and stays set.
+>  | 
+>  | It took me quite some time to reproduce the issue locally, but now I can
+>  | see what happens.
+>  | 
+>  | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
+>  | (and hardware support) it behaves correctly.
+>  | 
+>  | Here is the series of events:
+>  | 
+>  |     Guest CPU
+>  | 
+>  |     goes down
+>  | 
+>  |       native_cpu_disable()		
+>  | 
+>  | 			apic_soft_disable();
+>  | 
+>  |     play_dead()
+>  | 
+>  |     ....
+>  | 
+>  |     startup()
+>  | 
+>  |       if (apic_enabled())
+>  |         apic_pending_intr_clear()	<- Not taken
+>  | 
+>  |      enable APIC
+>  | 
+>  |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
+>  | 
+>  | When this happens then the deadline timer or the regular APIC timer -
+>  | happens with both, has fired shortly before the APIC is disabled, but the
+>  | interrupt was not serviced because the guest CPU was in an interrupt
+>  | disabled region at that point.
+>  | 
+>  | The state of the timer vector ISR/IRR bits:
+>  | 
+>  |     	     	       	        ISR     IRR
+>  | before apic_soft_disable()    0	      1
+>  | after apic_soft_disable()     0	      1
+>  | 
+>  | On startup		      		 0	      1
+>  | 
+>  | Now one would assume that the IRR is cleared after the INIT reset, but this
+>  | happens only on CPU0.
+>  | 
+>  | Why?
+>  | 
+>  | Because our CPU0 hotplug is just for testing to make sure nothing breaks
+>  | and goes through an NMI wakeup vehicle because INIT would send it through
+>  | the boots-trap code which is not really working if that CPU was not
+>  | physically unplugged.
+>  | 
+>  | Now looking at a real world APIC the situation in that case is:
+>  | 
+>  |     	     	       	      	ISR     IRR
+>  | before apic_soft_disable()    0	      1
+>  | after apic_soft_disable()     0	      1
+>  | 
+>  | On startup		      		 0	      0
+>  | 
+>  | Why?
+>  | 
+>  | Once the dying CPU reenables interrupts the pending interrupt gets
+>  | delivered as a spurious interupt and then the state is clear.
+>  | 
+>  | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+>  | emulation is still wrong, Even if the play_dead() code would not enable
+>  | interrupts then the pending IRR bit would turn into an ISR .. interrupt
+>  | when the APIC is reenabled on startup.
+> 
+> 
+> From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+> * Pending interrupts in the IRR and ISR registers are held and require
+>   masking or handling by the CPU.
+> 
+> In Thomas's testing, hardware cpu will not respect soft disable LAPIC 
+> when IRR has already been set or APICv posted-interrupt is in flight, 
+> so we can skip soft disable APIC checking when clearing IRR and set ISR,
+> continue to respect soft disable APIC when attempting to set IRR.
+> 
+> Reported-by: Rong Chen <rong.a.chen@intel.com>
+> Reported-by: Feng Tang <feng.tang@intel.com>
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Tested-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rong Chen <rong.a.chen@intel.com>
+> Cc: Feng Tang <feng.tang@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 05d8934..f857a12 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2376,7 +2376,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  	u32 ppr;
+>  
+> -	if (!apic_enabled(apic))
+> +	if (!kvm_apic_hw_enabled(apic))
+>  		return -1;
+>  
+>  	__apic_update_ppr(apic, &ppr);
+> 
 
-For now we add 5 Virtio slots in .dts and enable block and network devices
-via Virtio-MMIO.
+Queued, thanks.
 
-Note even though typically Virtio register set fits in 0x200 bytes
-we "allocate" here 0x2000 so that it matches ARC's default 8KiB page size
-and so remapping of that area is done clearly.
-
-We also enable DEVTMPFS automount for more convenient use
-of external root file-stystem. Before that we used to use built-in
-Initramfs which didn't automount DEVTMPFS anyways so we didn't need
-that option, while now it starts making sense.
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
----
- arch/arc/boot/dts/haps_hs.dts      | 30 ++++++++++++++++++++++++++++++
- arch/arc/configs/haps_hs_defconfig |  5 ++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arc/boot/dts/haps_hs.dts b/arch/arc/boot/dts/haps_hs.dts
-index 1ebfa046492b..44bc522fdec8 100644
---- a/arch/arc/boot/dts/haps_hs.dts
-+++ b/arch/arc/boot/dts/haps_hs.dts
-@@ -62,5 +62,35 @@
- 			#interrupt-cells = <1>;
- 			interrupts = <20>;
- 		};
-+
-+		virtio0: virtio@f0100000 {
-+			compatible = "virtio,mmio";
-+			reg = <0xf0100000 0x2000>;
-+			interrupts = <31>;
-+		};
-+
-+		virtio1: virtio@f0102000 {
-+			compatible = "virtio,mmio";
-+			reg = <0xf0102000 0x2000>;
-+			interrupts = <32>;
-+		};
-+
-+		virtio2: virtio@f0104000 {
-+			compatible = "virtio,mmio";
-+			reg = <0xf0104000 0x2000>;
-+			interrupts = <33>;
-+		};
-+
-+		virtio3: virtio@f0106000 {
-+			compatible = "virtio,mmio";
-+			reg = <0xf0106000 0x2000>;
-+			interrupts = <34>;
-+		};
-+
-+		virtio4: virtio@f0108000 {
-+			compatible = "virtio,mmio";
-+			reg = <0xf0108000 0x2000>;
-+			interrupts = <35>;
-+		};
- 	};
- };
-diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
-index b117e6c16d41..436f2135bdc1 100644
---- a/arch/arc/configs/haps_hs_defconfig
-+++ b/arch/arc/configs/haps_hs_defconfig
-@@ -35,10 +35,12 @@ CONFIG_INET=y
- # CONFIG_IPV6 is not set
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
- # CONFIG_STANDALONE is not set
- # CONFIG_PREVENT_FIRMWARE_BUILD is not set
--# CONFIG_BLK_DEV is not set
-+CONFIG_VIRTIO_BLK=y
- CONFIG_NETDEVICES=y
-+CONFIG_VIRTIO_NET=y
- # CONFIG_NET_VENDOR_ARC is not set
- # CONFIG_NET_VENDOR_BROADCOM is not set
- # CONFIG_NET_VENDOR_INTEL is not set
-@@ -68,6 +70,7 @@ CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
-+CONFIG_VIRTIO_MMIO=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
--- 
-2.16.2
-
+Paolo
