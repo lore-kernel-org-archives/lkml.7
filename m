@@ -2,113 +2,178 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1619BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9A9C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21192184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA3D20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T37MiJh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfGBRjK (ORCPT
+        id S1726908AbfGBRkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfGBRjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:39:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B0E20659;
-        Tue,  2 Jul 2019 17:39:08 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 13:39:05 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
- unnecessarily
-Message-ID: <20190702133905.1482b87e@gandalf.local.home>
-In-Reply-To: <20190702113355.5be9ebfe@gandalf.local.home>
-References: <20190702053151.26922-1-devel@etsukata.com>
-        <20190702072821.GX3419@hirez.programming.kicks-ass.net>
-        <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
-        <20190702113355.5be9ebfe@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 2 Jul 2019 13:40:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45570 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfGBRkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:40:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so17758729lje.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WgB+9uuiwuE9iCPhDcp1r+yxpmY9+6ZZHpbOM7YQ+TA=;
+        b=T37MiJh8nO+YDgjXezLnaciz5dqZad77dEPrp9dUeBYTRXYgKSmhw8zElp8hYaWsCp
+         /KdJvPoLny0Dg2Penje3iLPexUQZo/Ph09iKzr/0Vb5Ik6k34GvrOyxLokJoSN5KdPrB
+         znI7l1+1y9YLTXhpzqpl1qAULYPP8G0ajTlGNzhu/DYfAjmY5TU3YhgqsR4ma5lVYuz0
+         VjAs/aIKd//X/r5mJPHr1/p9Un58OzK0wGwUVYI8DvH1NoXRnmLpeCmOtOutGqzs0YYl
+         40oSh19/LccsP6+XpQWs2kiPQABUCJOEcazrIbBbFMGvpnD4jmT98bgQvzCNMZdqh67X
+         BC8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WgB+9uuiwuE9iCPhDcp1r+yxpmY9+6ZZHpbOM7YQ+TA=;
+        b=kjs9CgyNHUIlkSa7nopqEIRIYkeHLV2h2whvW9+bwXeHfbKBNexjlxhuSzZh2J3gQl
+         7g5gCrp2sym2xm+bvwVcmk9a5chBKoc92e2AJd9ZSvVHTXuouDaVfZhLwkJD425GUMH4
+         8UFtsVL3XRuQFeRzquD5VSrqYiTG4xvFiGwJr/ZITfduimGbYWHsBzZfeNjokLzDWQ0Y
+         7UK5VJlxErv4XXJ6h+vR7XEu0Z2hBnOESPfzZNMWbmvhSZ9fmYTxXi3Ycb5MXDrO/SOO
+         5U//sOo7QFlUwwSCzC3Df1HRCUxrdGo8WB7s6/6K615U9uYo8qAX/supHay22xF3A3nL
+         cG5A==
+X-Gm-Message-State: APjAAAVD/N/S05zbeLDwySarAUV+/xtQam3bUyirfxgW9AW1z8KMF8Sy
+        M8KiTobUtM+vHii1ywCRr7U1bYvH1IGqCH0qCwmcadwCoyk=
+X-Google-Smtp-Source: APXvYqx5fya33C0VkYYC8y7sQrZrJFa/B4MLV/ngGgJ/0WV4+e8DE5U3frO6+aYycclUGEd2lfUQO7TZPOu6kzX0J+M=
+X-Received: by 2002:a2e:85d7:: with SMTP id h23mr18348940ljj.53.1562089198721;
+ Tue, 02 Jul 2019 10:39:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190702080124.103022729@linuxfoundation.org>
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 2 Jul 2019 23:09:47 +0530
+Message-ID: <CA+G9fYsJjfb2HakVDzUyuf9G9cQeO2DD0ErPQNHfVmKCv47BTA@mail.gmail.com>
+Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 11:33:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 2 Jul 2019 at 13:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.1.16 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.1.16-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-> On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
-> >   
-> > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:    
-> > > > Put the boundary check before it accesses user space to prevent unnecessary
-> > > > access which might crash the machine.
-> > > > 
-> > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
-> > > > option can trigger SEGV in pid 1 which leads to panic.    
-> 
-> Note, I'm only able to trigger this crash with the irq_disable event.
-> The irq_enable and preempt_disable/enable events work just fine. This
-> leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
-> trampoline) may have some issues and is probably the place to look at.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I figured it out.
+Summary
+------------------------------------------------------------------------
 
-It's another "corruption of the cr2" register issue. The following
-patch makes the issue go away. I'm not suggesting that we use this
-patch, but it shows where the bug lies.
+kernel: 5.1.16-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.1.y
+git commit: be6a5acaf4fb84829cc456c77af78ef981fb6db2
+git describe: v5.1.15-56-gbe6a5acaf4fb
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
+ld/v5.1.15-56-gbe6a5acaf4fb
 
-IIRC, there was patches posted before that fixed this issue. I'll go
-look to see if I can dig them up. Was it Joel that sent them?
 
--- Steve
+No regressions (compared to build v5.1.15)
 
-diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-index be36bf4e0957..dd79256badb2 100644
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -40,7 +40,7 @@
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
--	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
-+	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller_cr2,1
- #endif
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 46df4c6aae46..b42ca3fc569d 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1555,3 +1555,13 @@ do_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	exception_exit(prev_state);
- }
- NOKPROBE_SYMBOL(do_page_fault);
-+
-+void trace_hardirqs_off_caller(unsigned long addr);
-+
-+void notrace trace_hardirqs_off_caller_cr2(unsigned long addr)
-+{
-+	unsigned long address = read_cr2(); /* Get the faulting address */
-+
-+	trace_hardirqs_off_caller(addr);
-+	write_cr2(address);
-+}
 
+No fixes (compared to build v5.1.15)
+
+Ran 22032 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-containers-tests
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
