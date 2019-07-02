@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F01C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984E0C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338782183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D55D21850
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034468;
-	bh=0gp0hhSKGr51ybaJ2Ay2poQc8sbI4neS9U5RU3MTndo=;
+	s=default; t=1562034472;
+	bh=2Ao3hUKmTlKGsmD8Lyk1U16zAJ7ULSFrqcD1YOz+Vd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHGSb4kWn3vhN/KR2lgOmpLLtwtE6KH4rmrnTzMQpcOYk+hiEFXZSWD/q1ORrh/cO
-	 4Cnwatnery8NZhPujjWovM5AKbpLclTLtWm7zHiEwKOs1cWeAhiFwBWIA5bxLPQ+mw
-	 dcr/SVmbfdX0Fle0y7IlA1OBttGH9Vx0/LpuxjI4=
+	b=TzZ4QcldPRpJz6WDeojLt1a13puuM3St3QlRWZ7NjujMBuowdX+bi8sImPFAhmXoL
+	 Gl12MxMVhkPjcb3INvznNsrka0SSsWWerRHAe3l7sNrn/pSi0uh7DMVHGzV2TCMjSC
+	 zdaGDy/ofpDugrhQ3P/QuV2qcTQD0L90WrzFLs/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfGBC1r (ORCPT
+        id S1727503AbfGBC1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfGBC1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:27:45 -0400
+        id S1727469AbfGBC1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:27:49 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 416352184B;
-        Tue,  2 Jul 2019 02:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409D32173E;
+        Tue,  2 Jul 2019 02:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034464;
-        bh=0gp0hhSKGr51ybaJ2Ay2poQc8sbI4neS9U5RU3MTndo=;
+        s=default; t=1562034468;
+        bh=2Ao3hUKmTlKGsmD8Lyk1U16zAJ7ULSFrqcD1YOz+Vd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EaxmhF5Sx6HRLr2q1LlmMga4t92C213XrTAGMX04+FK88IcQXx8UC9p1pMKFV0Wrh
-         fLNtXM5qz1lHFaC2NoFrMxmITZ/kcqhZDSu8EP2zXTaBpJZWmBY3KXKmYeHeBRK6rp
-         X3d150St4fqwtlWyhtiYB78lOvPB9Ws/HpL+uT1E=
+        b=DRmkf/0TyXNb5aYeO02Kw3IjqePOlD1Y2BzeQeA8XViklA8mw2EuFrHAbd1XWJwdI
+         XPM7KIBqVII8gcXagKop8v+b0GfZYlicU6jmfIC1Tlwbncp2jh8pplBGXKGTYMs1SY
+         i1MPRM9zR8Ut7mr53Zx0mLWkAwmvXVvXH36yJDpo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,11 +47,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 26/43] perf time-utils: Use skip_spaces()
-Date:   Mon,  1 Jul 2019 23:25:59 -0300
-Message-Id: <20190702022616.1259-27-acme@kernel.org>
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 27/43] perf probe: Use skip_spaces() for argv handling
+Date:   Mon,  1 Jul 2019 23:26:00 -0300
+Message-Id: <20190702022616.1259-28-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -64,43 +63,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-No change in behaviour intended.
+The skip_sep() routine has the same implementation as skip_spaces(),
+recently adopted from the kernel, sources, switch to it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-cpugv7qd5vzhbtvnlydo90jv@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0ix211a81z2016dl5nmtdci4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/perf/util/string.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 369fa19dd596..c2abc259b51d 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <stdlib.h>
- #include <string.h>
-+#include <linux/string.h>
- #include <sys/time.h>
- #include <linux/time64.h>
- #include <time.h>
-@@ -141,10 +142,7 @@ static int perf_time__parse_strs(struct perf_time_interval *ptime,
- 	for (i = 0, p = str; i < num - 1; i++) {
- 		arg = p;
- 		/* Find next comma, there must be one */
--		p = strchr(p, ',') + 1;
--		/* Skip white space */
--		while (isspace(*p))
--			p++;
-+		p = skip_spaces(strchr(p, ',') + 1);
- 		/* Skip the value, must not contain space or comma */
- 		while (*p && !isspace(*p)) {
- 			if (*p++ == ',') {
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index 084c3e4e9400..d28e723e2790 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -69,18 +69,6 @@ s64 perf_atoll(const char *str)
+ 	return -1;
+ }
+ 
+-/*
+- * Helper function for splitting a string into an argv-like array.
+- * originally copied from lib/argv_split.c
+- */
+-static const char *skip_sep(const char *cp)
+-{
+-	while (*cp && isspace(*cp))
+-		cp++;
+-
+-	return cp;
+-}
+-
+ static const char *skip_arg(const char *cp)
+ {
+ 	while (*cp && !isspace(*cp))
+@@ -94,7 +82,7 @@ static int count_argc(const char *str)
+ 	int count = 0;
+ 
+ 	while (*str) {
+-		str = skip_sep(str);
++		str = skip_spaces(str);
+ 		if (*str) {
+ 			count++;
+ 			str = skip_arg(str);
+@@ -148,7 +136,7 @@ char **argv_split(const char *str, int *argcp)
+ 	argvp = argv;
+ 
+ 	while (*str) {
+-		str = skip_sep(str);
++		str = skip_spaces(str);
+ 
+ 		if (*str) {
+ 			const char *p = str;
 -- 
 2.20.1
 
