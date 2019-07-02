@@ -2,170 +2,187 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B9DC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE319C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7EE21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC06C21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCsTmrn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfGBO7T (ORCPT
+        id S1727069AbfGBPBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:59:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53531 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfGBO7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:59:19 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED90585A03;
-        Tue,  2 Jul 2019 14:59:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D8AB7854B;
-        Tue,  2 Jul 2019 14:59:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix send on a connected, but unbound socket
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com,
-        Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jul 2019 15:59:12 +0100
-Message-ID: <156207955265.1655.13658692984261290810.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 2 Jul 2019 11:01:43 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33942 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfGBPBn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:01:43 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l12so13291145oil.1;
+        Tue, 02 Jul 2019 08:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wu4n6rt8dpZFT6Rp38QtTJKHyefNt4oXtkanq1KfYnk=;
+        b=eCsTmrn1/4HhdFxlat2QV5hCplRz6CB9F27W1WRgR6BU6rnPsWmXFAYkH2Ky3l2Mxn
+         XcNUt0BbtOaRvRhLj+W0YrE/BMReTe79kFT8VsAnDODOBr+adj55iQyv81dBjfxFTifW
+         d3s11jzxStz+7/Qy2Lr8LAkR71rx/nv56g0dgHrn6aevgkmgPUsL3qcftHMZxS9UFryP
+         k80FNBKkVi7EClYuhk9lnkw5aatMej5nNX/jvIHPneqPIX/0u6E3OGA0rmELTsvtHx/C
+         /qZ7UZQLPe3+HTA7qw2UPLnFATxEJze8ilimKRIsKsenhUObwnW1N933Wtx02wKIAoPC
+         Oy3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wu4n6rt8dpZFT6Rp38QtTJKHyefNt4oXtkanq1KfYnk=;
+        b=alE+Kh7OW0V0G0gEISvCAYQagZmgU8YrFOQi73F9RS67xnMLMKu12aSeR6I2uH1kxj
+         wZixl6cVCFVI2ZAMpf/YJ0TkAlbRpgIdAEnlcI9iZ8edMRuP82ogtlodHO0MX5nRFdRH
+         NLGZ8zvXvlFNefErYgQhAEy0ZZySetDMrepuInOxhnxLmX1NATsrg7/jl26bVj0W0tGY
+         8ilbiePBTypIEzV9h/3ss0W+3ePoCkA0XyjSoBqPvspoElBV3/9EQVPa9o/zOU0UVlOA
+         nzw1+YJJpcbm91PK61CtadSVJO6TLEABA6a2p79zE68yhWMMpR4WiTm0Gh4Gyxt0dl9J
+         clrQ==
+X-Gm-Message-State: APjAAAUOtmKwLlHvOyCmILla3zGpyCisgMIHzZBuarKrNxHe9BCeV6+W
+        TMzEOu6JcEd/QkDzcHvPlnFim2jQRWabz89QFjw=
+X-Google-Smtp-Source: APXvYqys/5PUoAJe+X6a6JgO6aiyne8nF8T9en3E395817ZJ1kIeIrjteFy3bHIb7hlImllnPR88MjC1/nD2nfDbfKM=
+X-Received: by 2002:a05:6808:8c2:: with SMTP id k2mr3154282oij.98.1562079702002;
+ Tue, 02 Jul 2019 08:01:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 02 Jul 2019 14:59:18 +0000 (UTC)
+References: <CGME20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad@eucas1p2.samsung.com>
+ <20190702143634.19688-1-i.maximets@samsung.com>
+In-Reply-To: <20190702143634.19688-1-i.maximets@samsung.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Tue, 2 Jul 2019 17:01:30 +0200
+Message-ID: <CAJ8uoz34wS-Ut=TiULN32Zs-terBkzSiEws65jsd=f4S_rp43Q@mail.gmail.com>
+Subject: Re: [PATCH bpf] xdp: fix race on generic receive path
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If sendmsg() or sendmmsg() is called on a connected socket that hasn't had
-bind() called on it, then an oops will occur when the kernel tries to
-connect the call because no local endpoint has been allocated.
+On Tue, Jul 2, 2019 at 4:36 PM Ilya Maximets <i.maximets@samsung.com> wrote:
+>
+> Unlike driver mode, generic xdp receive could be triggered
+> by different threads on different CPU cores at the same time
+> leading to the fill and rx queue breakage. For example, this
+> could happen while sending packets from two processes to the
+> first interface of veth pair while the second part of it is
+> open with AF_XDP socket.
+>
+> Need to take a lock for each generic receive to avoid race.
 
-Fix this by implicitly binding the socket if it is in the
-RXRPC_CLIENT_UNBOUND state, just like it does for the RXRPC_UNBOUND state.
+Thanks for this catch Ilya. Do you have any performance numbers you
+could share of the impact of adding this spin lock? The reason I ask
+is that if the impact is negligible, then let us just add it. But if
+it is too large, we might want to brain storm about some other
+possible solutions.
 
-Further, the state should be transitioned to RXRPC_CLIENT_BOUND after this
-to prevent further attempts to bind it.
+Thanks: Magnus
 
-This can be tested with:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include <sys/socket.h>
-	#include <arpa/inet.h>
-	#include <linux/rxrpc.h>
-	static const unsigned char inet6_addr[16] = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0xac, 0x14, 0x14, 0xaa
-	};
-	int main(void)
-	{
-		struct sockaddr_rxrpc srx;
-		struct cmsghdr *cm;
-		struct msghdr msg;
-		unsigned char control[16];
-		int fd;
-		memset(&srx, 0, sizeof(srx));
-		srx.srx_family = 0x21;
-		srx.srx_service = 0;
-		srx.transport_type = AF_INET;
-		srx.transport_len = 0x1c;
-		srx.transport.sin6.sin6_family = AF_INET6;
-		srx.transport.sin6.sin6_port = htons(0x4e22);
-		srx.transport.sin6.sin6_flowinfo = htons(0x4e22);
-		srx.transport.sin6.sin6_scope_id = htons(0xaa3b);
-		memcpy(&srx.transport.sin6.sin6_addr, inet6_addr, 16);
-		cm = (struct cmsghdr *)control;
-		cm->cmsg_len	= CMSG_LEN(sizeof(unsigned long));
-		cm->cmsg_level	= SOL_RXRPC;
-		cm->cmsg_type	= RXRPC_USER_CALL_ID;
-		*(unsigned long *)CMSG_DATA(cm) = 0;
-		msg.msg_name = NULL;
-		msg.msg_namelen = 0;
-		msg.msg_iov = NULL;
-		msg.msg_iovlen = 0;
-		msg.msg_control = control;
-		msg.msg_controllen = cm->cmsg_len;
-		msg.msg_flags = 0;
-		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET);
-		connect(fd, (struct sockaddr *)&srx, sizeof(srx));
-		sendmsg(fd, &msg, 0);
-		return 0;
-	}
-
-
-Leading to the following oops:
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000018
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	...
-	RIP: 0010:rxrpc_connect_call+0x42/0xa01
-	...
-	Call Trace:
-	 ? mark_held_locks+0x47/0x59
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 rxrpc_new_client_call+0x3b1/0x762
-	 ? rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_do_sendmsg+0x3c0/0x92e
-	 rxrpc_sendmsg+0x16b/0x1b5
-	 sock_sendmsg+0x2d/0x39
-	 ___sys_sendmsg+0x1a4/0x22a
-	 ? release_sock+0x19/0x9e
-	 ? reacquire_held_locks+0x136/0x160
-	 ? release_sock+0x19/0x9e
-	 ? find_held_lock+0x2b/0x6e
-	 ? __lock_acquire+0x268/0xf73
-	 ? rxrpc_connect+0xdd/0xe4
-	 ? __local_bh_enable_ip+0xb6/0xba
-	 __sys_sendmsg+0x5e/0x94
-	 do_syscall_64+0x7d/0x1bf
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 2341e0775747 ("rxrpc: Simplify connect() implementation and simplify sendmsg() op")
-Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
----
-
- net/rxrpc/af_rxrpc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index f9f4721cdfa7..d09eaf153544 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -545,6 +545,7 @@ static int rxrpc_sendmsg(struct socket *sock, struct msghdr *m, size_t len)
- 
- 	switch (rx->sk.sk_state) {
- 	case RXRPC_UNBOUND:
-+	case RXRPC_CLIENT_UNBOUND:
- 		rx->srx.srx_family = AF_RXRPC;
- 		rx->srx.srx_service = 0;
- 		rx->srx.transport_type = SOCK_DGRAM;
-@@ -569,10 +570,9 @@ static int rxrpc_sendmsg(struct socket *sock, struct msghdr *m, size_t len)
- 		}
- 
- 		rx->local = local;
--		rx->sk.sk_state = RXRPC_CLIENT_UNBOUND;
-+		rx->sk.sk_state = RXRPC_CLIENT_BOUND;
- 		/* Fall through */
- 
--	case RXRPC_CLIENT_UNBOUND:
- 	case RXRPC_CLIENT_BOUND:
- 		if (!m->msg_name &&
- 		    test_bit(RXRPC_SOCK_CONNECTED, &rx->flags)) {
-
+> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> ---
+>  include/net/xdp_sock.h |  2 ++
+>  net/xdp/xsk.c          | 32 +++++++++++++++++++++++---------
+>  2 files changed, 25 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+> index d074b6d60f8a..ac3c047d058c 100644
+> --- a/include/net/xdp_sock.h
+> +++ b/include/net/xdp_sock.h
+> @@ -67,6 +67,8 @@ struct xdp_sock {
+>          * in the SKB destructor callback.
+>          */
+>         spinlock_t tx_completion_lock;
+> +       /* Protects generic receive. */
+> +       spinlock_t rx_lock;
+>         u64 rx_dropped;
+>  };
+>
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index a14e8864e4fa..19f41d2b670c 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -119,17 +119,22 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>  {
+>         u32 metalen = xdp->data - xdp->data_meta;
+>         u32 len = xdp->data_end - xdp->data;
+> +       unsigned long flags;
+>         void *buffer;
+>         u64 addr;
+>         int err;
+>
+> -       if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
+> -               return -EINVAL;
+> +       spin_lock_irqsave(&xs->rx_lock, flags);
+> +
+> +       if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
+> +               err = -EINVAL;
+> +               goto out_unlock;
+> +       }
+>
+>         if (!xskq_peek_addr(xs->umem->fq, &addr) ||
+>             len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
+> -               xs->rx_dropped++;
+> -               return -ENOSPC;
+> +               err = -ENOSPC;
+> +               goto out_drop;
+>         }
+>
+>         addr += xs->umem->headroom;
+> @@ -138,13 +143,21 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>         memcpy(buffer, xdp->data_meta, len + metalen);
+>         addr += metalen;
+>         err = xskq_produce_batch_desc(xs->rx, addr, len);
+> -       if (!err) {
+> -               xskq_discard_addr(xs->umem->fq);
+> -               xsk_flush(xs);
+> -               return 0;
+> -       }
+> +       if (err)
+> +               goto out_drop;
+> +
+> +       xskq_discard_addr(xs->umem->fq);
+> +       xskq_produce_flush_desc(xs->rx);
+>
+> +       spin_unlock_irqrestore(&xs->rx_lock, flags);
+> +
+> +       xs->sk.sk_data_ready(&xs->sk);
+> +       return 0;
+> +
+> +out_drop:
+>         xs->rx_dropped++;
+> +out_unlock:
+> +       spin_unlock_irqrestore(&xs->rx_lock, flags);
+>         return err;
+>  }
+>
+> @@ -765,6 +778,7 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+>
+>         xs = xdp_sk(sk);
+>         mutex_init(&xs->mutex);
+> +       spin_lock_init(&xs->rx_lock);
+>         spin_lock_init(&xs->tx_completion_lock);
+>
+>         mutex_lock(&net->xdp.lock);
+> --
+> 2.17.1
+>
