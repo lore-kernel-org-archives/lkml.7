@@ -2,59 +2,55 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB554C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD00C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DDA2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5980420645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055266;
-	bh=S1kh1bXZ5dfYqxiow65Xl1WwtAYi5ustmwpUQVQ3SRY=;
+	s=default; t=1562055270;
+	bh=CB5n+a0I0IeR56VJdQ4Is5/pAx6Z9g+uxpADhmcURPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOQPR4yiRXlpTFT21xWCQUfjUr98h/VPlHO8aT3r05HkPo+ePS3zKbsvF7+EccrzR
-	 0U9ZXqjOXh21ULC+iwQjj8BlO5dHj+Ri0MYaTedO6on1O4cWLzPYNhjsYt0cejD5TP
-	 4oNZoeR4kj+AghsL+8KPzQn/gMB/eX+kmzhdU1pY=
+	b=PhY2Wb/7f/mh9xybfw8TdoeOn1XvZeLoi4ShJUHDCEA2/QvlzOVnJfJK2anxN8+w9
+	 WwR0Dyo0E9PNgNnTkYNyZgGCvQV18J0cWAwIXxnA4rrslfBj5XCzEQm/+svi71aM46
+	 45AVbfwqEO1mckAMQ+/z4yQyjX4Jo0nnlkAIGQBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfGBIOY (ORCPT
+        id S1728068AbfGBIGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727735AbfGBIGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:06:22 -0400
+        id S1727560AbfGBIGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:06:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C7E21850;
-        Tue,  2 Jul 2019 08:06:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 598A920659;
+        Tue,  2 Jul 2019 08:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054781;
-        bh=S1kh1bXZ5dfYqxiow65Xl1WwtAYi5ustmwpUQVQ3SRY=;
+        s=default; t=1562054766;
+        bh=CB5n+a0I0IeR56VJdQ4Is5/pAx6Z9g+uxpADhmcURPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQADX3kCfSyNXtmEaebJPRvfPZ7BVLKsmQ1cJwnjvEy+drgls86xqABsywPev1DQS
-         MuKc7pDlZ6101dGu2BcmydxaCDimWNUgKXByaNxXCY/q2yGJZho8wVZN9AwCBUjoNR
-         AX66bmgZV1xpkXPmeeOzxoe2dwKwkt8J+gO4RfHE=
+        b=m79YMNG+4JFt41RzygCFD2lpaep8Y2pzgaRC+DhKaB/SsRNqk/odM6SYmeHhClON3
+         PCI96k17V5irwXd5OLZg0HGtqNtNtJ5zkaxoR6l6fNd0yrpXdO71BuW/FcTR6ctmnG
+         Q3aD9jAcHjL0oEnnfYCqX72hHq7OsnG5U6GYfkRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 33/72] mm/mempolicy.c: fix an incorrect rebind node in mpol_rebind_nodemask
-Date:   Tue,  2 Jul 2019 10:01:34 +0200
-Message-Id: <20190702080126.378403171@linuxfoundation.org>
+        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 28/72] usb: dwc3: gadget: introduce cancelled_list
+Date:   Tue,  2 Jul 2019 10:01:29 +0200
+Message-Id: <20190702080126.132412439@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -67,62 +63,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+commit d5443bbf5fc8f8389cce146b1fc2987cdd229d12 upstream
 
-commit 29b190fa774dd1b72a1a6f19687d55dc72ea83be upstream.
+This list will host cancelled requests who still have TRBs being
+processed.
 
-mpol_rebind_nodemask() is called for MPOL_BIND and MPOL_INTERLEAVE
-mempoclicies when the tasks's cpuset's mems_allowed changes.  For
-policies created without MPOL_F_STATIC_NODES or MPOL_F_RELATIVE_NODES,
-it works by remapping the policy's allowed nodes (stored in v.nodes)
-using the previous value of mems_allowed (stored in
-w.cpuset_mems_allowed) as the domain of map and the new mems_allowed
-(passed as nodes) as the range of the map (see the comment of
-bitmap_remap() for details).
-
-The result of remapping is stored back as policy's nodemask in v.nodes,
-and the new value of mems_allowed should be stored in
-w.cpuset_mems_allowed to facilitate the next rebind, if it happens.
-
-However, 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies
-when updating cpusets") introduced a bug where the result of remapping
-is stored in w.cpuset_mems_allowed instead.  Thus, a mempolicy's
-allowed nodes can evolve in an unexpected way after a series of
-rebinding due to cpuset mems_allowed changes, possibly binding to a
-wrong node or a smaller number of nodes which may e.g.  overload them.
-This patch fixes the bug so rebinding again works as intended.
-
-[vbabka@suse.cz: new changlog]
-  Link: http://lkml.kernel.org/r/ef6a69c6-c052-b067-8f2c-9d615c619bb9@suse.cz
-Link: http://lkml.kernel.org/r/1558768043-23184-1-git-send-email-zhongjiang@huawei.com
-Fixes: 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets")
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Anshuman Khandual <khandual@linux.vnet.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Fei Yang <fei.yang@intel.com>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.19.y
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+(cherry picked from commit d5443bbf5fc8f8389cce146b1fc2987cdd229d12)
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.h   |  2 ++
+ drivers/usb/dwc3/gadget.c |  1 +
+ drivers/usb/dwc3/gadget.h | 15 +++++++++++++++
+ 3 files changed, 18 insertions(+)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -306,7 +306,7 @@ static void mpol_rebind_nodemask(struct
- 	else {
- 		nodes_remap(tmp, pol->v.nodes,pol->w.cpuset_mems_allowed,
- 								*nodes);
--		pol->w.cpuset_mems_allowed = tmp;
-+		pol->w.cpuset_mems_allowed = *nodes;
- 	}
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 0de78cb29f2c..24f0b108b7f6 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -636,6 +636,7 @@ struct dwc3_event_buffer {
+ /**
+  * struct dwc3_ep - device side endpoint representation
+  * @endpoint: usb endpoint
++ * @cancelled_list: list of cancelled requests for this endpoint
+  * @pending_list: list of pending requests for this endpoint
+  * @started_list: list of started requests on this endpoint
+  * @wait_end_transfer: wait_queue_head_t for waiting on End Transfer complete
+@@ -659,6 +660,7 @@ struct dwc3_event_buffer {
+  */
+ struct dwc3_ep {
+ 	struct usb_ep		endpoint;
++	struct list_head	cancelled_list;
+ 	struct list_head	pending_list;
+ 	struct list_head	started_list;
  
- 	if (nodes_empty(tmp))
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 46aa20b376cd..c2169bc626c8 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2144,6 +2144,7 @@ static int dwc3_gadget_init_endpoint(struct dwc3 *dwc, u8 epnum)
+ 
+ 	INIT_LIST_HEAD(&dep->pending_list);
+ 	INIT_LIST_HEAD(&dep->started_list);
++	INIT_LIST_HEAD(&dep->cancelled_list);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/usb/dwc3/gadget.h b/drivers/usb/dwc3/gadget.h
+index 2aacd1afd9ff..023a473648eb 100644
+--- a/drivers/usb/dwc3/gadget.h
++++ b/drivers/usb/dwc3/gadget.h
+@@ -79,6 +79,21 @@ static inline void dwc3_gadget_move_started_request(struct dwc3_request *req)
+ 	list_move_tail(&req->list, &dep->started_list);
+ }
+ 
++/**
++ * dwc3_gadget_move_cancelled_request - move @req to the cancelled_list
++ * @req: the request to be moved
++ *
++ * Caller should take care of locking. This function will move @req from its
++ * current list to the endpoint's cancelled_list.
++ */
++static inline void dwc3_gadget_move_cancelled_request(struct dwc3_request *req)
++{
++	struct dwc3_ep		*dep = req->dep;
++
++	req->started = false;
++	list_move_tail(&req->list, &dep->cancelled_list);
++}
++
+ void dwc3_gadget_giveback(struct dwc3_ep *dep, struct dwc3_request *req,
+ 		int status);
+ 
+-- 
+2.20.1
+
 
 
