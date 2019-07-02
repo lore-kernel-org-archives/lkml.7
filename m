@@ -2,199 +2,556 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA6CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261A1C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821F420881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99162146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562046229;
+	bh=YJ/uwGoa62xkSSwJfyvmsvOAT9fNUAUhZzzGpoag+jA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pCYfk7oD+46ns2+ovlbK9D7B8I+ELIcneh+Xn/KDyocB/UGLgwk8P2m35TgbFMTtL
+	 6l0M/SwKppbX+XRgLcbNnjlnRqVM4EoIVGxm/RDmBp+wchACr4l9+K7JBb2RNX08Oh
+	 Y4+i3TvFF9k70bvq9gnCIuH+7JDJioyweWRNzbtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfGBFmD (ORCPT
+        id S1726305AbfGBFnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:42:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40888 "EHLO mx1.redhat.com"
+        Tue, 2 Jul 2019 01:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:42:02 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725775AbfGBFnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:43:47 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 26186308429B;
-        Tue,  2 Jul 2019 05:42:02 +0000 (UTC)
-Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C431160BF3;
-        Tue,  2 Jul 2019 05:42:01 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 23:42:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Kirti Wankhede <kwankhede@nvidia.com>
-Cc:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-Message-ID: <20190701234201.47b6f23a@x1.home>
-In-Reply-To: <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
-        <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
-        <20190701112442.176a8407@x1.home>
-        <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
-        <20190701140436.45eabf07@x1.home>
-        <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id B24B720881;
+        Tue,  2 Jul 2019 05:43:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562046224;
+        bh=YJ/uwGoa62xkSSwJfyvmsvOAT9fNUAUhZzzGpoag+jA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mDq5EhGUxdjOyzGLMYBO435mswyVz6AYx0r+LdJ3teNbMzho6FVAwXRCbTWpqrej+
+         OmoX6udFVMVDa7YR2CkAN5NOEGKurAiPxDImL2Y38xOMEepEgtIJ84uOzy74yC+S4f
+         N8fqUPXl96avUDTB8eV+goEsH5q4CcMhH/6GTy5c=
+Date:   Mon, 1 Jul 2019 22:43:42 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Reminder: 22 open syzbot bugs in perf subsystem
+Message-ID: <20190702054342.GB27702@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 02 Jul 2019 05:42:02 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 10:25:04 +0530
-Kirti Wankhede <kwankhede@nvidia.com> wrote:
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-> On 7/2/2019 1:34 AM, Alex Williamson wrote:
-> > On Mon, 1 Jul 2019 23:20:35 +0530
-> > Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >   
-> >> On 7/1/2019 10:54 PM, Alex Williamson wrote:  
-> >>> On Mon, 1 Jul 2019 22:43:10 +0530
-> >>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >>>     
-> >>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:    
-> >>>>> This allows udev to trigger rules when a parent device is registered
-> >>>>> or unregistered from mdev.
-> >>>>>
-> >>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> >>>>> ---
-> >>>>>
-> >>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
-> >>>>>     removing them is only tangential to the goal of this change.
-> >>>>>       
-> >>>>
-> >>>> Thanks.
-> >>>>
-> >>>>    
-> >>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
-> >>>>>  1 file changed, 8 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> >>>>> index ae23151442cb..7fb268136c62 100644
-> >>>>> --- a/drivers/vfio/mdev/mdev_core.c
-> >>>>> +++ b/drivers/vfio/mdev/mdev_core.c
-> >>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >>>>>  {
-> >>>>>  	int ret;
-> >>>>>  	struct mdev_parent *parent;
-> >>>>> +	char *env_string = "MDEV_STATE=registered";
-> >>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>  
-> >>>>>  	/* check for mandatory ops */
-> >>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
-> >>>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >>>>>  	mutex_unlock(&parent_list_lock);
-> >>>>>  
-> >>>>>  	dev_info(dev, "MDEV: Registered\n");
-> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> >>>>> +
-> >>>>>  	return 0;
-> >>>>>  
-> >>>>>  add_dev_err:
-> >>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
-> >>>>>  void mdev_unregister_device(struct device *dev)
-> >>>>>  {
-> >>>>>  	struct mdev_parent *parent;
-> >>>>> +	char *env_string = "MDEV_STATE=unregistered";
-> >>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>  
-> >>>>>  	mutex_lock(&parent_list_lock);
-> >>>>>  	parent = __find_parent_device(dev);
-> >>>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
-> >>>>>  	up_write(&parent->unreg_sem);
-> >>>>>  
-> >>>>>  	mdev_put_parent(parent);
-> >>>>> +
-> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);      
-> >>>>
-> >>>> mdev_put_parent() calls put_device(dev). If this is the last instance
-> >>>> holding device, then on put_device(dev) dev would get freed.
-> >>>>
-> >>>> This event should be before mdev_put_parent()    
-> >>>
-> >>> So you're suggesting the vendor driver is calling
-> >>> mdev_unregister_device() without a reference to the struct device that
-> >>> it's passing to unregister?  Sounds bogus to me.  We take a
-> >>> reference to the device so that it can't disappear out from under us,
-> >>> the caller cannot rely on our reference and the caller provided the
-> >>> struct device.  Thanks,
-> >>>     
-> >>
-> >> 1. Register uevent is sent after mdev holding reference to device, then
-> >> ideally, unregister path should be mirror of register path, send uevent
-> >> and then release the reference to device.  
-> > 
-> > I don't see the relevance here.  We're marking an event, not unwinding
-> > state of the device from the registration process.  Additionally, the
-> > event we're trying to mark is the completion of each process, so the
-> > notion that we need to mirror the ordering between the two is invalid.
-> >   
-> >> 2. I agree that vendor driver shouldn't call mdev_unregister_device()
-> >> without holding reference to device. But to be on safer side, if ever
-> >> such case occur, to avoid any segmentation fault in kernel, better to
-> >> send event before mdev release the reference to device.  
-> > 
-> > I know that get_device() and put_device() are GPL symbols and that's a
-> > bit of an issue, but I don't think we should be kludging the code for a
-> > vendor driver that might have problems with that.  A) we're using the
-> > caller provided device  for the uevent, B) we're only releasing our own
-> > reference to the device that was acquired during registration, the
-> > vendor driver must have other references,  
-> 
-> Are you going to assume that someone/vendor driver is always going to do
-> right thing?
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 22 of them as possibly being bugs in the perf subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-mdev is a kernel driver, we make reasonable assumptions that other
-drivers interact with it correctly.
+Of these 22 bugs, 7 were seen in mainline in the last week.
 
-> > C) the parent device
-> > generally lives on a bus, with a vendor driver, there's an entire
-> > ecosystem of references to the device below mdev.  Is this a paranoia
-> > request or are you really concerned that your PCI device suddenly
-> > disappears when mdev's reference to it disappears.   
-> 
-> mdev infrastructure is not always used by PCI devices. It is designed to
-> be generic, so that other devices (other than PCI devices) can also use
-> this framework.
+Of these 22 bugs, 2 were bisected to commits from the following people:
 
-Obviously mdev is not PCI specific, I only mention it because I'm
-asking if you have a specific concern in mind.  If you did, I'd assume
-it's related to a PCI backed vGPU.  Any physical parent device of an
-mdev is likely to have some sort of bus infrastructure behind it
-holding references to the device (ie. a probe and release where an
-implicit reference is held between these points).  A virtual device
-would be similar, it's created as part of a module init and destroyed
-as part of a module exit, where mdev registration would exist between
-these points.
+	Song Liu <songliubraving@fb.com>
+	Kan Liang <kan.liang@linux.intel.com>
 
-> If there is a assumption that user of mdev framework or vendor drivers
-> are always going to use mdev in right way, then there is no need for
-> mdev core to held reference of the device?
-> This is not a "paranoia request". This is more of a ideal scenario, mdev
-> should use device by holding its reference rather than assuming (or
-> relying on) someone else holding the reference of device.
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-In fact, at one point Parav was proposing removing these references
-entirely, but Connie and I both felt uncomfortable about that.  I think
-it's good practice that mdev indicates the use of the parent device by
-incrementing the reference count, with each child mdev device also
-taking a reference, but those references balance out within the mdev
-core.  Their purpose is not to maintain the device for outside callers,
-nor should outside callers assume mdev's use of references to release
-their own.  I don't think it's unreasonable to assume that the caller
-should have a legitimate reference to the object it's providing to this
-function and therefore we should be able to use it after mdev's
-internal references are balanced out.  Thanks,
+If you believe I misattributed a bug to the perf subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
-Alex
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              WARNING in perf_group_attach
+Last occurred:      0 days ago
+Reported:           185 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=bc574683e1e3241992f8460c82ddac937e3c88b9
+Original thread:    https://lkml.kernel.org/lkml/0000000000001282e1057e14848e@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+23fe48cbe532abffa52e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001282e1057e14848e@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in sys_sendfile64 (2)
+Last occurred:      0 days ago
+Reported:           163 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=6a6553c3d34bb00172b5cbd32f4912151b6133dc
+Original thread:    https://lkml.kernel.org/lkml/00000000000010b2fc057fcdfaba@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 15 replies; the last was 103 days ago.
+
+I'm not confident this bug is really in the perf subsystem.  I also think it
+might be in the fs/ext4 subsystem.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000010b2fc057fcdfaba@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in ext4_file_write_iter
+Last occurred:      2 days ago
+Reported:           125 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=bc195cf62ac17381792072c72a692bf133c528d4
+Original thread:    https://lkml.kernel.org/lkml/0000000000009a01370582c6772a@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 4 replies; the last was 123 days ago.
+
+I'm not confident this bug is really in the perf subsystem.  I also think it
+might be in the fs/ext4 subsystem.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+7d19c5fe6a3f1161abb7@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009a01370582c6772a@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: stack-out-of-bounds Read in update_stack_state
+Last occurred:      7 days ago
+Reported:           495 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=51b058f4d86b9045d31b6bbe97211d3ebc96d4fa
+Original thread:    https://lkml.kernel.org/lkml/001a1143e62e6f71d20565bf329f@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2990ca6e76c080858a9c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a1143e62e6f71d20565bf329f@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in __do_page_fault (2)
+Last occurred:      6 days ago
+Reported:           247 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9e5eb5f575324225d04b9b3095f5c3fc71700f08
+Original thread:    https://lkml.kernel.org/lkml/0000000000006e31980579315914@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006e31980579315914@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in do_exit
+Last occurred:      1 day ago
+Reported:           79 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3e6c42e24155e5f0125368e609bee32f2b7394fe
+Original thread:    https://lkml.kernel.org/lkml/000000000000e02bf505866414ae@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug has received 1 reply, 78 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e02bf505866414ae@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in add_event_to_ctx
+Last occurred:      0 days ago
+Reported:           11 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c0b2e13c4e106f405e56cc89843b0e54eb6d9e52
+Original thread:    https://lkml.kernel.org/lkml/000000000000946842058bc1291d@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit 33ea4b24277b06dbc55d7f5772a46f029600255e
+	Author: Song Liu <songliubraving@fb.com>
+	Date:   Wed Dec 6 22:45:16 2017 +0000
+
+	  perf/core: Implement the 'perf_uprobe' PMU
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000946842058bc1291d@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in perf_tp_event
+Last occurred:      0 days ago
+Reported:           424 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=db96e8cebcedb255a170187c8add3ea0745db13b
+Original thread:    https://lkml.kernel.org/lkml/000000000000c39de9056b5a46ca@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2f86b8550eb66cbd5808@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c39de9056b5a46ca@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in perf_reg_value
+Last occurred:      3 days ago
+Reported:           12 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=629d95983fbba49821af91acf780387bca180546
+Original thread:    https://lkml.kernel.org/lkml/000000000000734545058bb27ebb@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit 878068ea270ea82767ff1d26c91583263c81fba0
+	Author: Kan Liang <kan.liang@linux.intel.com>
+	Date:   Tue Apr 2 19:44:59 2019 +0000
+
+	  perf/x86: Support outputting XMM registers
+
+The original thread for this bug has received 3 replies; the last was 11 days
+ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 11 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000734545058bb27ebb@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in tracepoint_probe_register_prio (3)
+Last occurred:      0 days ago
+Reported:           409 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=63e3738079e5b2a71cd19820e454b8ac315c7550
+Original thread:    https://lkml.kernel.org/lkml/000000000000ab6f84056c786b93@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ab6f84056c786b93@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in exit_mm
+Last occurred:      4 days ago
+Reported:           0 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=dd115babf1498c3370fab8758d58940b7c6bffa4
+Original thread:    https://lkml.kernel.org/lkml/000000000000a193aa058c9a6499@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 1 reply, 22 hours ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8cc1843d4eec9c0dfb35@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 22 hours ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000a193aa058c9a6499@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in _free_event
+Last occurred:      9 days ago
+Reported:           7 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=178d9570289a3e1aaf929f00e78b0d9596fccc7c
+Original thread:    https://lkml.kernel.org/lkml/000000000000dea828058c0d815d@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug has received 1 reply, 7 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+37100ea87beb0cac28f4@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 7 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000dea828058c0d815d@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in refcount_sub_and_test_checked (2)
+Last occurred:      74 days ago
+Reported:           180 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=eaf7abde8e5497bbf7403a3d2afb9226005362cf
+Original thread:    https://lkml.kernel.org/lkml/0000000000004a6d7c057e77e97e@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b0775615fa4c4479b691@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004a6d7c057e77e97e@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Write in _free_event
+Last occurred:      120 days ago
+Reported:           357 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=e4223c174b5ef17b309798050835bafb6d6520b0
+Original thread:    https://lkml.kernel.org/lkml/000000000000ccdf0605708a9ccc@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 14 replies; the last was 13 hours ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 13 hours ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000ccdf0605708a9ccc@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in arch_install_hw_breakpoint
+Last occurred:      100 days ago
+Reported:           99 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7250aa28cb43ada4cba944fe46d80f67435022ef
+Original thread:    https://lkml.kernel.org/lkml/000000000000639f6a0584d11b82@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 8 replies; the last was 95 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000639f6a0584d11b82@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in uprobe_perf_close
+Last occurred:      136 days ago
+Reported:           455 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3fb9c4777053e79a6d2a65ac3738664c87629a21
+Original thread:    https://lkml.kernel.org/lkml/001a113f8bf6a9acd90568e8ea59@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+cef9473c7fa0fe8ab95e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a113f8bf6a9acd90568e8ea59@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ODEBUG bug in __do_softirq
+Last occurred:      73 days ago
+Reported:           499 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=26c9593893aa8625f556867ea71649010a07e74d
+Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/001a1143e62eb6a9510565640e76%40google.com
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+For some reason the original report email for this bug is missing from the LKML
+archive at lore.kernel.org, so my script couldn't check whether anyone has
+replied to it or not.  The Google Groups link above should still work, though. 
+Also try searching for the bug title.
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in __perf_sw_event
+Last occurred:      81 days ago
+Reported:           144 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c97097e0408c6c6f60ac89b78faaf0e42663cbac
+Original thread:    https://lkml.kernel.org/lkml/00000000000003cadb05814f3284@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 2 replies; the last was 95 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000003cadb05814f3284@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in event_function_local
+Last occurred:      264 days ago
+Reported:           520 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ea9e1f49354606d70d272294fcc1d80a86ea0e6b
+Original thread:    https://lkml.kernel.org/lkml/001a1140589435c9b60563c76e3f@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 8 replies; the last was 138 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+352bd10e338d9a90e5e0@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a1140589435c9b60563c76e3f@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in uprobe_start_dup_mmap
+Last occurred:      84 days ago
+Reported:           298 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4432696d9b58dd75ab7ea39171bfaaed10f44d47
+Original thread:    https://lkml.kernel.org/lkml/000000000000d83699057536ce5b@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+cad3df271fa4d88da051@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000d83699057536ce5b@google.com
+
+--------------------------------------------------------------------------------
+Title:              possible deadlock in percpu_down_write
+Last occurred:      172 days ago
+Reported:           260 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=041178b4b3a51686e1d5920a3d660b3e5b9d8ab3
+Original thread:    https://lkml.kernel.org/lkml/000000000000b5911105783c8a39@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+7bf81a3e18fab8a61966@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b5911105783c8a39@google.com
+
+--------------------------------------------------------------------------------
+Title:              possible deadlock in uprobe_clear_state
+Last occurred:      164 days ago
+Reported:           201 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a1ce9b3da349209c5085bb8c4fee753d68c3697f
+Original thread:    https://lkml.kernel.org/lkml/00000000000010a9fb057cd14174@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000010a9fb057cd14174@google.com
+
