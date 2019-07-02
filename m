@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717DAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95901C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4312184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A88121850
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054999;
-	bh=nHuwhUTRAxfjXPVHa1/B3FzGKUEmmVuofCaXCYoxoko=;
+	s=default; t=1562055002;
+	bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5XVTjJWyt05P8U8C9q8q6HeLtpDx6EgZAyyNVz5ZFzyMMyv4DCa5sIFPjsKJcDsF
-	 /KD3z/NdUpb4yOdJAwA23Qn6c/CSQ+NEnKAS3aOXEW9VMEfhqorS6tQ34aTG2GVUl/
-	 7NQRzs/YZ5xqI+Qm4BnR+TttdXzsk403RaIviIM4=
+	b=nqCB26HxxI9gSosuQoPNuXLd+KfqS2KWM/AJGWBWBScBxNGqXWLBEGnx3Dkz0Vtsq
+	 tzB6kft9aBeACiOxLFRfm71KkFPUChprG2CZ+68bPZKO2pNWgB3TSsB6StLr2nZjo1
+	 Jss89M/OaqUcCfKSOreGLITa4w70ph/iahfs6hXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfGBIJ5 (ORCPT
+        id S1728767AbfGBIKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58006 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfGBIJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:55 -0400
+        id S1728757AbfGBIJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB3A3206A2;
-        Tue,  2 Jul 2019 08:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7772E21479;
+        Tue,  2 Jul 2019 08:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054994;
-        bh=nHuwhUTRAxfjXPVHa1/B3FzGKUEmmVuofCaXCYoxoko=;
+        s=default; t=1562054996;
+        bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTS3U7zyfBD8HbvCLSAbbs+A653M2UqwYFhGuBtnTzqdJLDuiCE9geqv762de5Dhe
-         zeX0IGTSjbkERLbvYJe8+0kSoSNW0EgghuF3kfXgHQKwyBIVg0fZhBAFIXJy8XaajD
-         kfnHdzudLM5/QV6hEpiuBg0OTsFimiJRrKdcOME8=
+        b=EZh7h5orqir4udYjbdeEGctNqAKl1eA2lVyWrQHpcyo2rOuffAi4Z8eF7iDzQFU/+
+         fOtbQ5NUFQVkr/M2RgG8o16zNp2GJBRl+SrtPj/O+7Hq9C+n6wtkbwhuD8oaF5+5sW
+         eEcWC0iJ/DpRoBvZo826rNh+AIZCQwCmQ+WONHvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
-        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
         Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@redhat.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 32/43] sctp: change to hold sk after auth shkey is created successfully
-Date:   Tue,  2 Jul 2019 10:02:12 +0200
-Message-Id: <20190702080125.545121575@linuxfoundation.org>
+Subject: [PATCH 4.14 33/43] tipc: change to use register_pernet_device
+Date:   Tue,  2 Jul 2019 10:02:13 +0200
+Message-Id: <20190702080125.605529529@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -65,49 +63,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 25bff6d5478b2a02368097015b7d8eb727c87e16 ]
+[ Upstream commit c492d4c74dd3f87559883ffa0f94a8f1ae3fe5f5 ]
 
-Now in sctp_endpoint_init(), it holds the sk then creates auth
-shkey. But when the creation fails, it doesn't release the sk,
-which causes a sk defcnf leak,
+This patch is to fix a dst defcnt leak, which can be reproduced by doing:
 
-Here to fix it by only holding the sk when auth shkey is created
-successfully.
+  # ip net a c; ip net a s; modprobe tipc
+  # ip net e s ip l a n eth1 type veth peer n eth1 netns c
+  # ip net e c ip l s lo up; ip net e c ip l s eth1 up
+  # ip net e s ip l s lo up; ip net e s ip l s eth1 up
+  # ip net e c ip a a 1.1.1.2/8 dev eth1
+  # ip net e s ip a a 1.1.1.1/8 dev eth1
+  # ip net e c tipc b e m udp n u1 localip 1.1.1.2
+  # ip net e s tipc b e m udp n u1 localip 1.1.1.1
+  # ip net d c; ip net d s; rmmod tipc
 
-Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
-Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
-Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
+and it will get stuck and keep logging the error:
+
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+The cause is that a dst is held by the udp sock's sk_rx_dst set on udp rx
+path with udp_early_demux == 1, and this dst (eventually holding lo dev)
+can't be released as bearer's removal in tipc pernet .exit happens after
+lo dev's removal, default_device pernet .exit.
+
+ "There are two distinct types of pernet_operations recognized: subsys and
+  device.  At creation all subsys init functions are called before device
+  init functions, and at destruction all device exit functions are called
+  before subsys exit function."
+
+So by calling register_pernet_device instead to register tipc_net_ops, the
+pernet .exit() will be invoked earlier than loopback dev's removal when a
+netns is being destroyed, as fou/gue does.
+
+Note that vxlan and geneve udp tunnels don't have this issue, as the udp
+sock is released in their device ndo_stop().
+
+This fix is also necessary for tipc dst_cache, which will hold dsts on tx
+path and I will introduce in my next patch.
+
+Reported-by: Li Shuang <shuali@redhat.com>
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@redhat.com>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/endpointola.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/tipc/core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/sctp/endpointola.c
-+++ b/net/sctp/endpointola.c
-@@ -126,10 +126,6 @@ static struct sctp_endpoint *sctp_endpoi
- 	/* Initialize the bind addr area */
- 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -128,7 +128,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_sysctl;
  
--	/* Remember who we are attached to.  */
--	ep->base.sk = sk;
--	sock_hold(ep->base.sk);
--
- 	/* Create the lists of associations.  */
- 	INIT_LIST_HEAD(&ep->asocs);
+-	err = register_pernet_subsys(&tipc_net_ops);
++	err = register_pernet_device(&tipc_net_ops);
+ 	if (err)
+ 		goto out_pernet;
  
-@@ -167,6 +163,10 @@ static struct sctp_endpoint *sctp_endpoi
- 	ep->prsctp_enable = net->sctp.prsctp_enable;
- 	ep->reconf_enable = net->sctp.reconf_enable;
+@@ -136,7 +136,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_socket;
  
-+	/* Remember who we are attached to.  */
-+	ep->base.sk = sk;
-+	sock_hold(ep->base.sk);
-+
- 	return ep;
+-	err = register_pernet_subsys(&tipc_topsrv_net_ops);
++	err = register_pernet_device(&tipc_topsrv_net_ops);
+ 	if (err)
+ 		goto out_pernet_topsrv;
  
- nomem_hmacs:
+@@ -147,11 +147,11 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+ out_sysctl:
+@@ -166,9 +166,9 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
+ 	tipc_unregister_sysctl();
 
 
