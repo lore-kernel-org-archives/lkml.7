@@ -2,168 +2,210 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599B5C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBDD218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2963F218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562114011;
+	bh=wATDrZHVWhpPLtBeufdGgAHA08DHSyOqLPshf0r3wFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iU98XO+1OGx3hrNIvs4RbthE1Ss3RhJbHuzAr5eUqFjj222xQV5cqMiYzICe+4zDz
+	 W1MqLu8WnIK7p891D4S0pfO05JXbchFNs9B+yICHeXB8o4BeiGlJrTqW7qKyt/dqZP
+	 FxFPs479XxinTsNWcF8clJ/EgHufMsCxKsEut8y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfGCAdT (ORCPT
+        id S1727353AbfGCAda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:33:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39293 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfGCAdN (ORCPT
+        Tue, 2 Jul 2019 20:33:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38689 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfGCAd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:33:13 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hiRbc-0004Lu-2V; Tue, 02 Jul 2019 22:50:32 +0000
-Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
- "FAIL"
-To:     shuah <shuah@kernel.org>, Andy Lutomirski <luto@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190701130431.13391-1-colin.king@canonical.com>
- <CALCETrVo0rJVxsYvo=abDfFCZHBuCiB0coSBXoDeP_emSZgESg@mail.gmail.com>
- <6e5a9bed-4f7f-4851-0421-2b440ff1f584@kernel.org>
- <9ba791d5-0d67-9834-90e9-e1dca307d386@kernel.org>
- <0031e09b-e309-3976-09b1-dc8d10365aee@canonical.com>
- <aec8c4b5-a82a-74c0-f60f-869786e4a2fa@kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4a82a57a-9f36-d525-6271-4da01bfd5241@canonical.com>
-Date:   Tue, 2 Jul 2019 23:50:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 20:33:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v186so564474oie.5;
+        Tue, 02 Jul 2019 17:33:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8Yr9yB1AZWsS/mXrXMLz4bQ3WuzbAZMzXcbw5fV8dFU=;
+        b=fCMtcAqwIA42N7v5UaHJgxBXWbBpJEJ9TRcCUuj9G1HbeNJWuo0ngmGsmlpLMoXi/p
+         tOoQoYbCVXHn90lUO47Yg+s8bjoT3EYU6l7kiGY2vYaErwBS/+yUP/w6vbuDI5ywUb76
+         nnEbTuhOYAQ6wRDJgY6v7BePVGNSEjO0JojT23qUCNST5UmLHvRm7bIJXIf2Y+drOQS3
+         559Ctjj28DFOGbQjIkS/SfQek00VkNZDMb0/bYue3Ht850UADjD5nKjrfGi5WXgIFMpU
+         XWca17OJXpKJENHyYNqHufDAT0WWKyUIy6sBgstPhM1X8Ze9quBQDQIjJjv+sqM+xkER
+         fSAw==
+X-Gm-Message-State: APjAAAUT+pp8CpEx1cRYa8EubtU6Jp3pNpyNzr8INX9UonTa2fp8aELJ
+        C3HhOi8lycv3PMGpmzS/C12BKvdI2PE=
+X-Google-Smtp-Source: APXvYqy5KGKngrSYbRV/7vvhT1vc4EmSL/bLYZA8Z4fnRwFodgiMd2Azhb2Gluj5lLc2OYYuLDfJ4Q==
+X-Received: by 2002:a63:506:: with SMTP id 6mr20283387pgf.434.1562100668863;
+        Tue, 02 Jul 2019 13:51:08 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g1sm36264pgg.27.2019.07.02.13.51.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:51:07 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 744EC40251; Tue,  2 Jul 2019 20:51:06 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 20:51:06 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Cristina Moraru <cristina.moraru09@gmail.com>,
+        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
+        Valentin Rothberg <valentinrothberg@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <mmarek@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Tejun Heo <tj@kernel.org>,
+        Jej B <James.Bottomley@hansenpartnership.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Daniel Jonsson <danijons@student.chalmers.se>,
+        Andrzej Wasowski <wasowski@itu.dk>
+Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
+Message-ID: <20190702205106.GR19023@42.do-not-panic.com>
+References: <1471462023-119645-1-git-send-email-cristina.moraru09@gmail.com>
+ <20160818175505.GM3296@wotan.suse.de>
+ <20160825074313.GC18622@lst.de>
+ <20160825201919.GE3296@wotan.suse.de>
+ <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
+ <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
+ <20190627045052.GA7594@lst.de>
+ <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
+ <20190629084257.GA1227@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <aec8c4b5-a82a-74c0-f60f-869786e4a2fa@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190629084257.GA1227@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2019 23:48, shuah wrote:
-> On 7/2/19 4:42 PM, Colin Ian King wrote:
->> On 02/07/2019 20:25, shuah wrote:
->>> On 7/2/19 8:22 AM, shuah wrote:
->>>> On 7/1/19 11:48 AM, Andy Lutomirski wrote:
->>>>> On Mon, Jul 1, 2019 at 6:04 AM Colin King <colin.king@canonical.com>
->>>>> wrote:
->>>>>>
->>>>>> From: Colin Ian King <colin.king@canonical.com>
->>>>>>
->>>>>> There is an spelling mistake in an a test error message. Fix it.
->>>>>>
->>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>>>> ---
->>>>>>    tools/testing/selftests/x86/test_vsyscall.c | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
->>>>>> b/tools/testing/selftests/x86/test_vsyscall.c
->>>>>> index 4602326b8f5b..a4f4d4cf22c3 100644
->>>>>> --- a/tools/testing/selftests/x86/test_vsyscall.c
->>>>>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
->>>>>> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
->>>>>>                   printf("[OK]\tExecuting the vsyscall page failed:
->>>>>> #PF(0x%lx)\n",
->>>>>>                          segv_err);
->>>>>>           } else {
->>>>>> -               printf("[FAILT]\tExecution failed with the wrong
->>>>>> error: #PF(0x%lx)\n",
->>>>>> +               printf("[FAIL]\tExecution failed with the wrong
->>>>>> error: #PF(0x%lx)\n",
->>>>>>                          segv_err);
->>>>>>                   return 1;
->>>>>>           }
->>>>>> -- 
->>>>>> 2.20.1
->>>>>>
->>>>>
->>>>> Acked-by: Andy Lutomirski <luto@kernel.org>
->>>>>
->>>>
->>>> Thanks Andy!
->>>>
->>>> I will queue this up for 5.3
->>>>
->>>> -- Shuah
->>>>
->>>
->>> Hi Colin,
->>>
->>> Checkpatch warning on this. Probably failed on the original patch.
->>> Could you please fix the checkpatch warn, and send v2.
->>
->> If I split the line, I get another checkpatch warning:
->>
->> "WARNING: quoted string split across lines"
->>
->> Either way checkpatch emits a warning. The convention is to not break
->> literal strings, and the line is only a few chars over the 80 char
->> boundary, so the V1 of the patch is the way it should be IMHO.
->>
+On Sat, Jun 29, 2019 at 10:42:57AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Jun 28, 2019 at 11:40:22AM -0700, Luis Chamberlain wrote:
+> > On Wed, Jun 26, 2019 at 9:51 PM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > On Wed, Jun 26, 2019 at 03:21:08PM -0700, Luis Chamberlain wrote:
+> > > > On Tue, Feb 5, 2019 at 2:07 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > > > In lieu of no Luke Skywalker, if you will, for a large kconfig revamp
+> > > > > on this, I'm inclined to believe *at least* having some kconfig_symb
+> > > > > exposed for some modules is better than nothing. Christoph are you
+> > > > > totally opposed to this effort until we get a non-reverse engineered
+> > > > > effort in place? It just seems like an extraordinary amount of work
+> > > > > and I'm not quite sure who's volunteering to do it.
+> > > > >
+> > > > > Other stakeholders may benefit from at least having some config -->
+> > > > > module mapping for now. Not just backports or building slimmer
+> > > > > kernels.
+> > > >
+> > > > Christoph, *poke*
+> > >
+> > > Yes, I'm still totally opposed to a half-backed hack like this.
+> > 
+> > The solution puts forward a mechanism to add a kconfig_symb where we
+> > are 100% certain we have a direct module --> config mapping.
+> > 
+> > This is *currently* determined when the streamline_config.pl finds
+> > that an object has only *one* associated config symbol associated. As
+> > Cristina noted, of 62 modules on a running system 58 of them ended up
+> > getting the kconfig_symb assigned, that is 93.5% of all modules on the
+> > system being tested. For the other modules, if they did want this
+> > association, we could allow a way for modules to define their own
+> > KBUILD_KCONF variable so that this could be considered as well, or
+> > they can look at their own kconfig stuff to try to fit the model that
+> > does work. To be clear, the heuristics *can* be updated if there is
+> > confidence in alternative methods for resolution. But since it is
+> > reflective of our current situation, I cannot consider it a hack.
+> > 
+> > This implementation is a reflection of our reality in the kernel, and
+> > as has been discussed in this thread, if we want to correct the gaps
+> > we need to do a lot of work. And *no one* is working towards these
+> > goals.
+> > 
+> > That said, even if you go forward with an intrusive solution like the
+> > one you proposed we could still use the same kconfig_symb...
+> > 
+> > So no, I don't see this as a hack. It's a reflection as to our current
+> > reality. And I cannot see how the kconfig_symb can lie or be
+> > incorrect. So in fact I think that pushing this forward also makes the
+> > problem statement clearer for the future of what semantics needs to be
+> > addressed, and helps us even annotate the problematic areas of the
+> > kernel.
+> > 
+> > What negative aspects do you see with this being merged in practice?
 > 
-> As such this existed before your patch. I will apply v1.
+> I'm trying to see what the actual problem that you are wanting to solve
+> here with this.  What exactly is it?
 
-Cool, thanks Shuah.
-> 
-> thanks,
-> -- Shuah
+The problem is that there is no current maping of a module to respective
+kconfig symbol.
 
+> Who needs to determine the
+> "singular" configuration option that caused a kernel module to be built
+> at the expense of all other options?
+
+Folks wanting to slim down their kernel build, and users of backports.
+
+> What can that be used for and who will use it?
+
+Without a mapping there is no clean way to let you slim down your kernel
+using a distro kernel as a base, enabling only those things you really
+need.
+
+Historically those interested would just have streamline_config.pl at
+their disposal, but it isn't perfect. Although Cristina extended
+streamline_config.pl, the proper approach here would be to see if the
+heuristics in streamline_config.pl which she made use of to map a config
+symbol for a module could be written in C. The safe heuristic used is
+that for modules where there was only one kconfig symbol associated,
+we'd be certain that kconfig symbol was the one needed for that module.
+
+A side benefit is also that by having a modinfo section for the kconfib
+symbol we'd have access to it via sysfs, an example is
+/sys/module/e1000/section/kconfig_symb, and then streamline_config.pl
+could be simplified further by not having to parse Makefiles in perl.
+The reason for using a modinfo section also is you could get the
+information about configs needed for modules without requiring your
+kernel sources, and this information then also becomes available to
+augment udevadm for its own hardware db info.
+
+Another set of users of this would be users of backports. For instance
+users on distro kernels but their current kernel lacks updated drivers
+for one of your devices, and you want to use a backports release, but
+just want to build / only the drivers you really need for the release.
+Backports then could easily scrape for the sysfs attribute / udevadm db
+to let you build and install only the modules you need.
+
+Long term users are developers working on trying to clear up kconfig
+semantics. Having a clear indicator in our tree about modules where a
+direct mapping was not possible (say with a KBUILD_KCONF definition in
+their Makefiles to clarify which config symbol enables it) gives us an
+idea of kconfig entries which may be contrived and could use some
+clarifications.
+
+  Luis
