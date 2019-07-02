@@ -2,139 +2,103 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3B1C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43289C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED832064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC962064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562075797;
+	bh=UxFBcUgdQ2MnSSCxNKZ4FC7b6asPEDWx2T4Ad1T7Q9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MsmCRpDGh9fD6AXkLqjAN+RVsxRErQHHtGUZSkA2igiJi1TAocgo7nbsnB/SdBFKo
+	 WUm+UagFf+DP2IBX3+Uq5RfJg4uKdr085KemFjnF3hvRGavYMcgirdEeDq2J7s9ecX
+	 KzRw/OHzP1f5ZDrrbeGgi7FmP2Bh5XaEKjyjPaOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfGBNym (ORCPT
+        id S1726960AbfGBN4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:54:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52626 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbfGBNyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:54:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0DD9D308620E;
-        Tue,  2 Jul 2019 13:54:36 +0000 (UTC)
-Received: from krava (unknown [10.43.17.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F256919730;
-        Tue,  2 Jul 2019 13:54:32 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 15:54:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
-Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
- sources
-Message-ID: <20190702135432.GC12694@krava>
-References: <20190702022616.1259-1-acme@kernel.org>
- <20190702022616.1259-24-acme@kernel.org>
- <20190702121240.GB12694@krava>
- <20190702134603.GA15462@kernel.org>
- <20190702134815.GB15462@kernel.org>
+        Tue, 2 Jul 2019 09:56:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42484 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGBN4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:56:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T1Q+VpjeyZlNwEne8y2hkSC/ONhFvAnTgrUVHUcvIzs=; b=G79xDe25sJCl45zOekFuPBjnt
+        GqdZyzwaiLr85kK4dh8LqQTVB7e5AqFw2fVMWHzVZ8DZypcnZ5naOuiEI9FUHFbvjzpdCMtBeR3kl
+        w8kgxFZ3IJ9qkZS48xWxqTIzbVoKPKTFfckvg4msXfxxdM4fGW5mSq3HqfEUwim6s87/o=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hiJG6-0002Sq-BT; Tue, 02 Jul 2019 13:55:46 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id B7978440046; Tue,  2 Jul 2019 14:55:45 +0100 (BST)
+Date:   Tue, 2 Jul 2019 14:55:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        dgreid@chromium.org, cychiang@chromium.org
+Subject: Re: [PATCH v6] ASoC: max98090: remove 24-bit format support if RJ is
+ 0
+Message-ID: <20190702135545.GN2793@sirena.org.uk>
+References: <20190618022411.208156-1-yuhsuan@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4OpS+d6oOtUQaRm1"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190702134815.GB15462@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 02 Jul 2019 13:54:41 +0000 (UTC)
+In-Reply-To: <20190618022411.208156-1-yuhsuan@chromium.org>
+X-Cookie: This sentence no verb.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 10:48:15AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
-> > > On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > 
-> > > > Same implementation, will be used to replace ad-hoc equivalent code in
-> > > > tools/.
-> > > > 
-> > > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > > Cc: André Goddard Rosa <andre.goddard@gmail.com>
-> > > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
-> > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > ---
-> > > >  tools/include/linux/string.h |  4 +++-
-> > > >  tools/lib/string.c           | 14 ++++++++++++++
-> > > >  2 files changed, 17 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> > > > index 6c3e2cc274c5..cee239350a6b 100644
-> > > > --- a/tools/include/linux/string.h
-> > > > +++ b/tools/include/linux/string.h
-> > > > @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
-> > > >  	return strncmp(str, prefix, strlen(prefix)) == 0;
-> > > >  }
-> > > >  
-> > > > -#endif /* _LINUX_STRING_H_ */
-> > > > +extern char * __must_check skip_spaces(const char *);
-> > > > +
-> > > > +#endif /* _TOOLS_LINUX_STRING_H_ */
-> > > > diff --git a/tools/lib/string.c b/tools/lib/string.c
-> > > > index 93b3d4b6feac..50d400822bb3 100644
-> > > > --- a/tools/lib/string.c
-> > > > +++ b/tools/lib/string.c
-> > > > @@ -17,6 +17,7 @@
-> > > >  #include <string.h>
-> > > >  #include <errno.h>
-> > > >  #include <linux/string.h>
-> > > > +#include <linux/ctype.h>
-> > > >  #include <linux/compiler.h>
-> > > >  
-> > > >  /**
-> > > > @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
-> > > >  	}
-> > > >  	return ret;
-> > > >  }
-> > > > +
-> > > > +/**
-> > > > + * skip_spaces - Removes leading whitespace from @str.
-> > > > + * @str: The string to be stripped.
-> > > > + *
-> > > > + * Returns a pointer to the first non-whitespace character in @str.
-> > > > + */
-> > > > +char *skip_spaces(const char *str)
-> > > > +{
-> > > > +	while (isspace(*str))
-> > > > +		++str;
-> > > > +	return (char *)str;
-> > > > +}
-> > > > -- 
-> > > > 2.20.1
-> > > > 
-> > > 
-> > > this breaks objtool build, because it adds _ctype dependency via isspace call
-> > > patch below fixes it for me
-> > 
-> > Thanks for  spotting this, I'll have it in my next pull request.
-> 
-> I'm adding a Signed-off-by: you, ok?
 
-sure, I did not post full patch, because I thought you might thought
-of some other solution
+--4OpS+d6oOtUQaRm1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks,
-jirka
+On Tue, Jun 18, 2019 at 10:24:11AM +0800, Yu-Hsuan Hsu wrote:
+
+> +	/*
+> +	 * When TDM = 0, remove 24-bit format support if it is not in right
+> +	 * justified mode.
+> +	 */
+> +	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J &&
+> +			!max98090->tdm_slots)
+> +		substream->runtime->hw.formats &= ~SNDRV_PCM_FMTBIT_S24_LE;
+
+Why do this and not add a constraint (which doesn't modify any
+constant data structures)?
+
+--4OpS+d6oOtUQaRm1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0bYmAACgkQJNaLcl1U
+h9DMTgf+PYAum94WJNy/d7fNa5ky+hsLP7iR/oIMWfHTiiNRsNfXCy/3qjz3HleI
+B+VON17KVufcU6Yi6GhITx/05AB2mbtk15C8fgFrOFv+GN/bP0jklpx05wo07q81
+REn5TG8B3YDD14t1akxcZxdrc63/gIHMZTuZ56g1GRTNeTEd7F3/Vyz/G2p0Csgi
+V4DAb54G1b17MrAre6LG9So1NWcUQT3i/rmSIy60AswQK2Za55P2j2UHNySFpby7
+I4jL4ujieJ2L3Mb8AE/U49ioJ2YIGp481ABjMxJPB3cYE/BKVZ96WzKCnCDFa9jW
+RxxZhCWx051gBV63t6mJ6/UzZESDgw==
+=1nES
+-----END PGP SIGNATURE-----
+
+--4OpS+d6oOtUQaRm1--
