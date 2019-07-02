@@ -2,120 +2,83 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC628C46478
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C51C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86081218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD59A218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="QWyJjuDY"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YWDFyFRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfGCAml (ORCPT
+        id S1727254AbfGCAnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:42:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36702 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGCAml (ORCPT
+        Tue, 2 Jul 2019 20:43:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38562 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGCAnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:42:41 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so506873oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:42:40 -0700 (PDT)
+        Tue, 2 Jul 2019 20:43:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v186so580144oie.5;
+        Tue, 02 Jul 2019 17:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0AGSyMvf0zexOMokX4EpC11/R6d7poyoJeo3TShyztM=;
-        b=QWyJjuDYJNyB44jlcWkT2Do84tRKoTgiiRWbe8c+iRWLpEQXaFEgT0w9ZSZH2Cs9Tf
-         NgpgZ8pPPSpSGIZa0MJeB+dtoragQ2H4oPc7bonqaiiNZhCo2ZOJ7wWuogIDhfx9e4s/
-         ZfZgI41C2VLSea49134z094gXVVtjlcxZP9bHzuIY6XmQJlEzTwh4QKqYp1GvIhzTBqP
-         C0rfgeI6tqW1a8lFZkStsJB+FEkRAIaU3kaEYBQPQGtfGa8CabE6/0FtfDI1lC7Xc0F+
-         6+LCGjufHIildbzfwK5DH2jwZiLcBGxTCOHmP+FN42+bD0bPJuwOEVfltIw786Xw5ebf
-         Gk3Q==
+        bh=WW5toOARIQ7duYOFcBhdjxTG2zu+PE3OJ8IsJFKcDaY=;
+        b=YWDFyFReOw5A20APKlPQm/STRGBj1lG8LHOh65917g5mJ3CVlnwLCbF3t8dJye81lq
+         oBJDlbCvbynivEGV4PL+f6H1f+PwDRR2RC/aizii/HSO9X3qXEQC6DPoDrUfkBwl7Fop
+         KmwDaeMAHWqt98M95ZV8rrFrjSD+TKIEmZefdO31XSn3yR15GT7keP1JvWMCx22492B6
+         FYUCfHIAxRzKnEFDA3X37E4vpLk2rp4sNL3+/JIE41uTisDieiRtHKV3CGYtQrRlDNEc
+         Y3WJl3IN0GHOQ2mesZlcHEbpaiy3jLjvP+baLuRY0ouxYEb0aUDLd/4e/1DBL/UVmzci
+         swfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0AGSyMvf0zexOMokX4EpC11/R6d7poyoJeo3TShyztM=;
-        b=W0uXxpdT0MiHTijrpMKCfM9ihAbVhgXfhVnbIfOpUzrCN48ZL93lXsF/Wdvneh5fnJ
-         hBwOrFLStv9xXsv3oIBLtPsWy2xWu5XyXfjy9WEepnpAKKvSn+EINf93N2dJmhufiOrv
-         D89VeOQNw2+Lcj/iVhlEwk+cCeZ0UILlnfzl6ZZMLTv/Skj6C1CF0DOCp1rdcAQwkxp9
-         V6IcFkVzKKWhawmQNaMOuwNnpykEIOr98Rv5BV+cl4TkvVcnxKRSRZUJsYKzYDb5i+EI
-         kibXenSHx7zVoNyw3X/ahhPtMxMXshZmEk4PUoZO4w87M30APsuQlO09kiJpVSiuzfPz
-         TFeQ==
-X-Gm-Message-State: APjAAAVtkpz+Es9WSNIbV0RRyrQn0hSH/o65QYIO8d+UGKBAOYTgnfKN
-        qEwP/24K4mz48F3aHgV/QM3f47aaK8uMUBjJCPiG3g==
-X-Google-Smtp-Source: APXvYqwt/AruSNRNxTjRUQk6hQeRuA06O8pI4+Ci7eZfCus0eFiY7ywxyleud1COJr+2irFyLNDBtxvmvCpYM8UHPzM=
-X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr25111745otn.247.1562114560450;
- Tue, 02 Jul 2019 17:42:40 -0700 (PDT)
+        bh=WW5toOARIQ7duYOFcBhdjxTG2zu+PE3OJ8IsJFKcDaY=;
+        b=X9DpjZboItSmzeTr7VjHIftPeXGGK+kXJ2IgHrduyYqEwcheh74CJbZ466bhjyXS2M
+         qSrPx61CXRPzG21MUSwmrolxFil2ZwTjgCk1APfnUcqJWk6IFwIL4uJl95k6HB8QDbzy
+         C84v2QVPhYMT0K9mwV84YJQWenTuSb89Wu1GzAlfJlbIFMkiuDdXlc9+RLtk2PgI/U5U
+         Da5PsOJ5M2xfv5uDB2eMUiVV8hVAEPTRbOlwDRT1vUdaD76ZFFlu0cnnHOIhgRnf8JbA
+         u9RauEWUzZERAbmDjQ+lKTEW70k/aYaYK9mRz5gW0s9qHeZtg7um9w5ablW1gS6WjrWY
+         DhBA==
+X-Gm-Message-State: APjAAAXnoy+Es9sNwMWwysUmR142Fhdzlj44gTX6qubAYSgnjPpQB2lJ
+        jTPG4F5iYyIn79OovR7ZdH0B/9lsDBdCNkV/PYdBp56V
+X-Google-Smtp-Source: APXvYqxlJf85RIzJ3+TzKp9rzx1O65T6vzrzCJARARCucN2vc1cY/g5Vzo1gF94okc60g5IoCN8PVau32fspA3+GGy0=
+X-Received: by 2002:aca:5c55:: with SMTP id q82mr1435225oib.15.1562108742686;
+ Tue, 02 Jul 2019 16:05:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
- <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
- <20190629160336.GB1180@bombadil.infradead.org> <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
- <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
- <20190630152324.GA15900@bombadil.infradead.org> <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
- <20190702033410.GB1729@bombadil.infradead.org> <CAPcyv4iEkN1o5HD6Gb9m5ohdAVQhmtiTDcFE+PMQczYx635Vwg@mail.gmail.com>
- <fa9b9165-7910-1fbd-fb5b-78023936d2f2@gmail.com>
-In-Reply-To: <fa9b9165-7910-1fbd-fb5b-78023936d2f2@gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Jul 2019 17:42:28 -0700
-Message-ID: <CAPcyv4ihQ9djQvgnqZoTLRH3CwFhpWK_uUrmWSLH_3-Fi1g1qw@mail.gmail.com>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-To:     Boaz Harrosh <openosd@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-3-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-3-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 01:05:31 +0200
+Message-ID: <CAFBinCCVCd1OT1AUCRtm2FB=ZzjuD3Gfs0vcQYLWd=gFqTHugQ@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 02/14] clk: core: introduce clk_hw_set_parent()
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 5:23 PM Boaz Harrosh <openosd@gmail.com> wrote:
+On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> On 02/07/2019 18:37, Dan Williams wrote:
-> <>
-> >
-> > I'd be inclined to do the brute force fix of not trying to get fancy
-> > with separate PTE/PMD waitqueues and then follow on with a more clever
-> > performance enhancement later. Thoughts about that?
-> >
+> Introduce the clk_hw_set_parent() provider call to change parent of
+> a clock by using the clk_hw pointers.
 >
-> Sir Dan
+> This eases the clock reparenting from clock rate notifiers and
+> implementing DVFS with simpler code avoiding the boilerplates
+> functions as __clk_lookup(clk_hw_get_name()) then clk_set_parent().
 >
-> I do not understand how separate waitqueues are any performance enhancement?
-> The all point of the waitqueues is that there is enough of them and the hash
-> function does a good radomization spread to effectively grab a single locker
-> per waitqueue unless the system is very contended and waitqueues are shared.
-
-Right, the fix in question limits the input to the hash calculation by
-masking the input to always be 2MB aligned.
-
-> Which is good because it means you effectively need a back pressure to the app.
-> (Because pmem IO is mostly CPU bound with no long term sleeps I do not think
->  you will ever get to that situation)
->
-> So the way I understand it having twice as many waitqueues serving two types
-> will be better performance over all then, segregating the types each with half
-> the number of queues.
-
-Yes, but the trick is how to manage cases where someone waiting on one
-type needs to be woken up by an event on the other. So all I'm saying
-it lets live with more hash collisions until we can figure out a race
-free way to better scale waitqueue usage.
-
->
-> (Regardless of the above problem of where the segregation is not race clean)
->
-> Thanks
-> Boaz
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+for the same reason this is handy for the meson8b clock driver as well, so:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
