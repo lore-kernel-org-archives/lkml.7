@@ -2,133 +2,94 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A9BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F364C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32D12184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562072697;
-	bh=HEXOfV2QuRNPUj0Jc596UBJLVdorcuFCa+oAXqoWxlU=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=lYx2Y+DtPlIPugzKWgo/LQlAZxx/D0AXk0juflohTO8BDKS/DK6pEWk2cy1a+Gl+Q
-	 xe01SHJ2HanAGN5GshVcwWb1HIeS3wssMhhXMzhG4M3zU9rA7Kq4XaVrf79gQSIxFt
-	 YYd6WaWl34wkgopP69Ttmu1iSc9hhpXoSGeRk2jU=
+	by mail.kernel.org (Postfix) with ESMTP id 78EA42184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfGBNEz (ORCPT
+        id S1727108AbfGBNE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Jul 2019 09:04:56 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8682 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726623AbfGBNEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 09:04:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40302 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfGBNEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:04:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VrK8RqyESLo3WlpxCq2cSsDNMbC4+p4MWk5KU0cJU3I=; b=EFokFO1nfOpY
-        fIPeXvkxo9ueAg1wwWdUeSqMydAEiBJW4BFfTklU0Cj/EXyrw6c+ZtqrCkNyZRClA+SaPzEfB2kvj
-        LvCgjxz1vj7acGPsO6CIIjsT9hFCJDJzg+kEPPzkhMw/nk7kcP7P9At15JE+eX3YAAcHuUvUZj0b8
-        uAOg8=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hiISn-0002O4-3p; Tue, 02 Jul 2019 13:04:49 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 6E65A44004B; Tue,  2 Jul 2019 14:04:48 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>, <stable@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Applied "regulator: s2mps11: Fix buck7 and buck8 wrong voltages" to the regulator tree
-In-Reply-To: <20190629114446.11381-1-krzk@kernel.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190702130448.6E65A44004B@finisterre.sirena.org.uk>
-Date:   Tue,  2 Jul 2019 14:04:48 +0100 (BST)
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4C35869C953EE121C7D9;
+        Tue,  2 Jul 2019 21:01:45 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 21:01:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <megaraidlinux.pdl@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: megaraid_sas: Make some symbols static
+Date:   Tue, 2 Jul 2019 21:01:14 +0800
+Message-ID: <20190702130114.29356-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Fix sparse warnings:
 
-   regulator: s2mps11: Fix buck7 and buck8 wrong voltages
+drivers/scsi/megaraid/megaraid_sas_base.c:271:1: warning: symbol 'megasas_issue_dcmd' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_base.c:2227:6: warning: symbol 'megasas_do_ocr' was not declared. Should it be static?
+drivers/scsi/megaraid/megaraid_sas_base.c:3194:25: warning: symbol 'megaraid_host_attrs' was not declared. Should it be static?
 
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 16da0eb5ab6ef2dd1d33431199126e63db9997cc Mon Sep 17 00:00:00 2001
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Sat, 29 Jun 2019 13:44:45 +0200
-Subject: [PATCH] regulator: s2mps11: Fix buck7 and buck8 wrong voltages
-
-On S2MPS11 device, the buck7 and buck8 regulator voltages start at 750
-mV, not 600 mV.  Using wrong minimal value caused shifting of these
-regulator values by 150 mV (e.g. buck7 usually configured to v1.35 V was
-reported as 1.2 V).
-
-On most of the boards these regulators are left in default state so this
-was only affecting reported voltage.  However if any driver wanted to
-change them, then effectively it would set voltage 150 mV higher than
-intended.
-
-Cc: <stable@vger.kernel.org>
-Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/regulator/s2mps11.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index af9bf10b4c33..7a89030187a4 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -372,8 +372,8 @@ static const struct regulator_desc s2mps11_regulators[] = {
- 	regulator_desc_s2mps11_buck1_4(4),
- 	regulator_desc_s2mps11_buck5,
- 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
--	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
--	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(7, MIN_750_MV, STEP_12_5_MV),
-+	regulator_desc_s2mps11_buck67810(8, MIN_750_MV, STEP_12_5_MV),
- 	regulator_desc_s2mps11_buck9,
- 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
- };
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 80ab970..49e0f3d 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -280,7 +280,7 @@ void megasas_set_dma_settings(struct megasas_instance *instance,
+ 	}
+ }
+ 
+-void
++static void
+ megasas_issue_dcmd(struct megasas_instance *instance, struct megasas_cmd *cmd)
+ {
+ 	instance->instancet->fire_cmd(instance,
+@@ -2237,7 +2237,7 @@ megasas_internal_reset_defer_cmds(struct megasas_instance *instance);
+ static void
+ process_fw_state_change_wq(struct work_struct *work);
+ 
+-void megasas_do_ocr(struct megasas_instance *instance)
++static void megasas_do_ocr(struct megasas_instance *instance)
+ {
+ 	if ((instance->pdev->device == PCI_DEVICE_ID_LSI_SAS1064R) ||
+ 	(instance->pdev->device == PCI_DEVICE_ID_DELL_PERC5) ||
+@@ -3303,7 +3303,7 @@ static DEVICE_ATTR_RO(fw_cmds_outstanding);
+ static DEVICE_ATTR_RO(dump_system_regs);
+ static DEVICE_ATTR_RO(raid_map_id);
+ 
+-struct device_attribute *megaraid_host_attrs[] = {
++static struct device_attribute *megaraid_host_attrs[] = {
+ 	&dev_attr_fw_crash_buffer_size,
+ 	&dev_attr_fw_crash_buffer,
+ 	&dev_attr_fw_crash_state,
 -- 
-2.20.1
+2.7.4
+
 
