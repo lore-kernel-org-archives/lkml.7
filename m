@@ -2,121 +2,129 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95233C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A90C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6512321721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063C9206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fqdIMhxj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRvYez1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfGBDIc (ORCPT
+        id S1727072AbfGBDKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 23:08:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36645 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfGBDIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 23:08:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45d8MK3zhKz9s3Z;
-        Tue,  2 Jul 2019 13:08:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562036909;
-        bh=b+pxQIHEwABrogiJc5St+07sp0mTOhDIyp585ZClwlg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fqdIMhxjfHobGOSwMF30nwNL90Ufd75otaArEqsJ3tThJdnhNR0f8chYVdj4eD7NB
-         VH3MgZAFTko55Z7v3xkhe0kppqBYYhVohQdgjHqIutYzAGB3QsZr0+nnCbL2iYz9WV
-         v769UXPhuzOB7NMOWIWHizVlkm1DCzcaDGuvXGv4LKZ6XP+BIVMQ43Lw3Wb7h9aCxF
-         X+84Iso8DMr4WjFJ/YQ0rqn9FZPzUxfErER7L/ep3H5mAam0IAJ7yoYoCqLGshs2o/
-         I1lgEiR9bmlXV6vDivF8nofypbHBVMcf3nAKsYJO89JECUz+g90V0rR5acHUMdc1Dh
-         9G6j7ukLkCfRQ==
-Date:   Tue, 2 Jul 2019 13:08:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Bodong Wang <bodong@mellanox.com>
-Subject: linux-next: manual merge of the mlx5-next tree with Linus' tree
-Message-ID: <20190702130828.5f2f7f4a@canb.auug.org.au>
+        Mon, 1 Jul 2019 23:10:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45172 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfGBDKt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 23:10:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so7505286pfq.12;
+        Mon, 01 Jul 2019 20:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qBzA8EczuD3348ecJI29hXjW3DrArL1vFtQRztYBPjs=;
+        b=fRvYez1lO4TaRoT+244gk1rO9gTLKr9mSpN6AiZq5ETNaEikk5g2cnuY4HId7XZcma
+         1qbyvb0RNTTopf91ve7MXTuxP4VpdH2Ba6VAmbf5Mgda82jljjtPegflkRcmOztkiS3G
+         bU5a88rUfiu+25qi9bhvsybzBImqiXGmmo+ZJHa1h2qZqp4s6/l/XV6z88kpkTVmnwqG
+         9bEhaUzua58UHSNhAaldimGHi5taAndkzgUYSBwdNVeBVXTcA3TEM9uzP3MK5wSnTS19
+         vsJVYzkB+rHhVtqAFpqLIkZUXufLwH/TOIozIQEpA2U/+4epYdPCvUPS+EzleJJfjuOq
+         d8Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qBzA8EczuD3348ecJI29hXjW3DrArL1vFtQRztYBPjs=;
+        b=XopvEt9UwKob6DegJHqzCSYD8YFugsvqjWynWkOzDDe6oxr1NJmXHRp5G3eMeLPsiF
+         ttwF2PFfSC4kcjZ6gT1jabJsyGZOD/tVC3IWU2TAjNI3ADzElkhhNUzWWK+lFqlftYtD
+         bjn7GP0zaznLg/O52Gn/tPKMb/e9zAevnpB2xdGoWJ6ghE+cHC7lh1RCGiha4jR3N4eP
+         C7KWl4XTKtzCm4olayQX7VufOW0h98HL0FtsjlX3kJ+0zhgJCCod7k2817JY5kNtZ8TA
+         vU/00r+IPn7RmcZmXFKLh573tLeBsPqc+6abvyaXd3WNVas7541JaDOD4d0t0gE1vB1l
+         t2EQ==
+X-Gm-Message-State: APjAAAVqaAlzYyeGByDppubsjMSBlGh1zNCGU/Ijljzaboc0aHC9uOov
+        AMSFzKoKN3F1T7wa/dkX23c=
+X-Google-Smtp-Source: APXvYqxvioSgACsFQVT2hUwgNbvLXKb6Hdh7EcLnmFquo+d6vd7JMzZhXeZ53g4tiK23wwTPAlvYig==
+X-Received: by 2002:a63:224a:: with SMTP id t10mr28035908pgm.289.1562037048555;
+        Mon, 01 Jul 2019 20:10:48 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id b15sm11965592pfi.141.2019.07.01.20.10.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 20:10:47 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 08:40:43 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: btrfs: extent_map: Change return type of
+ unpin_extent_cache
+Message-ID: <20190702031043.GA24334@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/MnKInLvmYLmnZ=2ThzO1.yq"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MnKInLvmYLmnZ=2ThzO1.yq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+As unpin_extent_cache never fails and Caller does not expect return
+value we can change return value from int to void.
 
-Hi all,
+Issue identified with coccicheck
+fs/btrfs/extent_map.c:284:5-8: Unneeded variable: "ret". Return "0" on
+line 316
 
-Today's linux-next merge of the mlx5-next tree got conflicts in:
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ fs/btrfs/extent_map.c | 5 +----
+ fs/btrfs/extent_map.h | 2 +-
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-  drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+diff --git a/fs/btrfs/extent_map.c b/fs/btrfs/extent_map.c
+index 9558d79..2b0eaa1 100644
+--- a/fs/btrfs/extent_map.c
++++ b/fs/btrfs/extent_map.c
+@@ -278,10 +278,9 @@ static void try_merge_map(struct extent_map_tree *tree, struct extent_map *em)
+  * to the generation that actually added the file item to the inode so we know
+  * we need to sync this extent when we call fsync().
+  */
+-int unpin_extent_cache(struct extent_map_tree *tree, u64 start, u64 len,
++void unpin_extent_cache(struct extent_map_tree *tree, u64 start, u64 len,
+ 		       u64 gen)
+ {
+-	int ret = 0;
+ 	struct extent_map *em;
+ 	bool prealloc = false;
+ 
+@@ -313,8 +312,6 @@ int unpin_extent_cache(struct extent_map_tree *tree, u64 start, u64 len,
+ 	free_extent_map(em);
+ out:
+ 	write_unlock(&tree->lock);
+-	return ret;
+-
+ }
+ 
+ void clear_em_logging(struct extent_map_tree *tree, struct extent_map *em)
+diff --git a/fs/btrfs/extent_map.h b/fs/btrfs/extent_map.h
+index 473f039..9d752ce 100644
+--- a/fs/btrfs/extent_map.h
++++ b/fs/btrfs/extent_map.h
+@@ -96,7 +96,7 @@ struct extent_map *alloc_extent_map(void);
+ void free_extent_map(struct extent_map *em);
+ int __init extent_map_init(void);
+ void __cold extent_map_exit(void);
+-int unpin_extent_cache(struct extent_map_tree *tree, u64 start, u64 len, u64 gen);
++void unpin_extent_cache(struct extent_map_tree *tree, u64 start, u64 len, u64 gen);
+ void clear_em_logging(struct extent_map_tree *tree, struct extent_map *em);
+ struct extent_map *search_extent_mapping(struct extent_map_tree *tree,
+ 					 u64 start, u64 len);
+-- 
+2.7.4
 
-between commits:
-
-  02f3afd97556 ("net/mlx5: E-Switch, Correct type to u16 for vport_num and =
-int for vport_index")
-
-from Linus' tree and commit:
-
-  5f5d2536be8d ("net/mlx5: E-Switch, Use correct flags when configuring vla=
-n")
-
-from the mlx5-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 67e76979bb42,89f52370e770..000000000000
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@@ -1552,7 -1552,8 +1552,8 @@@ static void node_guid_gen_from_mac(u64=20
-  static void esw_apply_vport_conf(struct mlx5_eswitch *esw,
-  				 struct mlx5_vport *vport)
-  {
- -	int vport_num =3D vport->vport;
- +	u16 vport_num =3D vport->vport;
-+ 	int flags;
- =20
-  	if (esw->manager_vport =3D=3D vport_num)
-  		return;
-
---Sig_/MnKInLvmYLmnZ=2ThzO1.yq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ayq0ACgkQAVBC80lX
-0GxcPQgAlQYGwrpY5OgM1JDKJQeTwI8Sc80eTB2OFsxDRBNniRKS4MYFtekVm13a
-YmlXmP/LdQWhs6ie61s92/A68fzVBqM8zRg34ZizKfUdvDBC+KDs4VBSLBTBEvs6
-05kZA5BpeZnfTKaJUKF0nHJVvXJIRRWUErChC2B7mE4PEXon17AYZ1LwR5Lqs1JE
-WvtYs9V2fwJP9SIbvOxMmsqF7K0am23+3QRDKe27XYhDuXCpgGHUCHbkkJBtPxFL
-S6Vc100n3de++Gw5PDwkvq9uIwKB+gpK/iKsmq56MnaaV1bmell2wY6eVFWznnHX
-A0MShSj9PVkmUdS+FhHmpivWCzSFWw==
-=HxpG
------END PGP SIGNATURE-----
-
---Sig_/MnKInLvmYLmnZ=2ThzO1.yq--
