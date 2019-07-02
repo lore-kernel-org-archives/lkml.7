@@ -2,59 +2,59 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E068BC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985FCC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99EF2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA3D2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kl6cvJ0z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qmeaKVWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfGBKfo (ORCPT
+        id S1727329AbfGBKfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:35:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41393 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBKfn (ORCPT
+        Tue, 2 Jul 2019 06:35:51 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39449 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfGBKfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:35:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g7so12618800oia.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:42 -0700 (PDT)
+        Tue, 2 Jul 2019 06:35:50 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m202so12622923oig.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V5qTJJXMX1ZTj5uDhYEBO+OiJyquQwYXAx7tq46WL+E=;
-        b=kl6cvJ0zlfJ4KIzgl8/M2GfhjusvmgoE9v0c+xjgfAU4sjiJCtTNEv2yzhWtVB8AI+
-         gVbM8Qqsd7hSC9h0YewLPNreo18mQdKFVsH7a/QDGIyl2Bx1MoYHbh/qxkHoMHpiHQQZ
-         vGOf5QD+aLwBNctZy/pFQEZGJbP+OIpBoWjVd7U6ksXP+Kq7VHvzUoFQcrbYXG+R4IXC
-         T2VkFAs1O1gftEP2gLOO9Rw0MVuxO3GxyeHuurTVufDtKMAqN1fYRoKPEeS15cpCs1uV
-         ZLkVdcbR1CFwm0XLj32S+RmS5gWwfsNv0VOqqgjvUahAMaBkQgFnEolKo5Cz/8uEdTmr
-         yehA==
+        bh=zTwTfXNgxTmrGRUjBKcfiXIJvV7RcQHKF6DIe75zo+I=;
+        b=qmeaKVWdYJMzo5niBo8eJXFwzM8pytrY9m8n2B5/m28fbL9VJT6KWdOOE86JBx8ntL
+         +vff4tW/HcSWI7kaAKHhD3u+0ivKHodubYbUbLUSilYabfc3gbGl+4nWUvaSCp+zj0ay
+         QqIfGyD6iwhac5mxyv5FSMGGKbIK/XJMfsOKX7YTs0KXvUGx3Xqz2PBqs9avL+DCOH1T
+         u2Rw3lY5ZSgrrfRnnMQ3rc/w8GuoaGJeh8U3W4jhpwrnZBbWCuFQ9EE2Jjd6sudTm7VX
+         aH3e9GH6StNynB4j47dNPlpAEuRgXbbHp7/vr3dv9cCdgf8TtuiNQ3k71NfaNui1NR6/
+         8FrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=V5qTJJXMX1ZTj5uDhYEBO+OiJyquQwYXAx7tq46WL+E=;
-        b=acWDy8EZ1JCm0F7Ic8GDu20suVPFVL2KVuU0akvDhGmmrCHD+cGVP1Qm+WHqk9wLh9
-         wyWzzx13n7d94PDcJAi3RrA4eBhLkKnqFPgUXqIgNkeSVC65tXnjofpq96WWajClOTqE
-         G3/lQonenCugIJ5rPg+PYaMyOVnzhP4mo/ObB0eCTwqaw1JQXnms17K8AsekHZMF37yl
-         /u0iJO01doXDJx0eDcSSvgXDLkMd9ZvYEhbJW8T8TvjyflUQRMOqqtxxVX5i5zpKmqVu
-         Jcud13un8Ld8PwHGpuRY6RMdmO96Fs5LrNjLHsIU4VCdkoTceYiYSPoo0cMssK9GAb7Y
-         DFiw==
-X-Gm-Message-State: APjAAAUSOmd78AD2lj4FQRIzyQCKtxZGO2ZBNEZIGvv7tRknUp+MW0MI
-        BMZReAQDJ4MBycDdpNfMJ56Omw==
-X-Google-Smtp-Source: APXvYqz59VS9CDs0uFQjkuuAuV2DBtWVLiGfaY9BCu/0Bna+d2JpT5qQdBt2XFFh/CRMcG2+5UHiYg==
-X-Received: by 2002:aca:c5d0:: with SMTP id v199mr2313436oif.144.1562063742299;
-        Tue, 02 Jul 2019 03:35:42 -0700 (PDT)
+        bh=zTwTfXNgxTmrGRUjBKcfiXIJvV7RcQHKF6DIe75zo+I=;
+        b=iRKow5t+3ToaxGjePoa0Davl2rlJmGPDnm4q7veSmBVbm9OxqpeL2sE/Fi7be7o7h+
+         QJeX2hVFV4TIb2S6lxZBEu24fuZIDsq+JJkClrvRfoVUHJ5MVf2qth7O5BO0gk5c7R+6
+         a3170zOLeexo5aXodVpgJHT0h4FxU7QfQlOkbhQbC6yhskSDr8fw9uvylKCQ9RqulcKs
+         x4i7tBVmJPgXhk2r+5LJpfMLS+hsX9m8agIL3zaKoy6HY3J18c0ze7l03CmpX1gx86oY
+         MefbB/jpBKbU7NwNISQCEbcIS7FF9/+j0W3jDBt2XXR+2l1ooEPcfiDKBKKeRaerNJEB
+         glSA==
+X-Gm-Message-State: APjAAAWrpyTKOpDK7hGpfTM8pLpS+pGvBMXWjhG+ZtOATGvAKmIbShWm
+        A7UVxdHru+9Y2TYihU3ben/fjA==
+X-Google-Smtp-Source: APXvYqzadH2JYmTLt475KdiZ+RY+YlPJ1tAhSwr9KnjUX2mXMzimmxW9XG9aSGOZZ3INH1wy364PFg==
+X-Received: by 2002:aca:5241:: with SMTP id g62mr2474775oib.41.1562063749790;
+        Tue, 02 Jul 2019 03:35:49 -0700 (PDT)
 Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.34
+        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 03:35:41 -0700 (PDT)
+        Tue, 02 Jul 2019 03:35:49 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -80,9 +80,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 07/11] perf map: Smatch: Fix potential NULL pointer dereference
-Date:   Tue,  2 Jul 2019 18:34:16 +0800
-Message-Id: <20190702103420.27540-8-leo.yan@linaro.org>
+Subject: [PATCH v1 08/11] perf session: Smatch: Fix potential NULL pointer dereference
+Date:   Tue,  2 Jul 2019 18:34:17 +0800
+Message-Id: <20190702103420.27540-9-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190702103420.27540-1-leo.yan@linaro.org>
 References: <20190702103420.27540-1-leo.yan@linaro.org>
@@ -94,55 +94,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Based on the following report from Smatch, fix the potential
 NULL pointer dereference check.
 
-  tools/perf/util/map.c:479
-  map__fprintf_srccode() error: we previously assumed 'state' could be
-  null (see line 466)
+  tools/perf/util/session.c:1252
+  dump_read() error: we previously assumed 'evsel' could be null
+  (see line 1249)
 
-tools/perf/util/map.c
-465         /* Avoid redundant printing */
-466         if (state &&
-467             state->srcfile &&
-468             !strcmp(state->srcfile, srcfile) &&
-469             state->line == line) {
-470                 free(srcfile);
-471                 return 0;
-472         }
-473
-474         srccode = find_sourceline(srcfile, line, &len);
-475         if (!srccode)
-476                 goto out_free_line;
-477
-478         ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
-479         state->srcfile = srcfile;
-            ^^^^^^^
-480         state->line = line;
-            ^^^^^^^
+tools/perf/util/session.c
+1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+1241 {
+1242         struct read_event *read_event = &event->read;
+1243         u64 read_format;
+1244
+1245         if (!dump_trace)
+1246                 return;
+1247
+1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+1250                event->read.value);
+1251
+1252         read_format = evsel->attr.read_format;
+                           ^^^^^^^
 
-This patch validates 'state' pointer before access its elements.
+'evsel' could be NULL pointer, for this case this patch directly bails
+out without dumping read_event.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/map.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 6fce983c6115..5f87975d2562 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -476,8 +476,11 @@ int map__fprintf_srccode(struct map *map, u64 addr,
- 		goto out_free_line;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 54cf163347f7..2e61dd6a3574 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+ 	       evsel ? perf_evsel__name(evsel) : "FAIL",
+ 	       event->read.value);
  
- 	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
--	state->srcfile = srcfile;
--	state->line = line;
++	if (!evsel)
++		return;
 +
-+	if (state) {
-+		state->srcfile = srcfile;
-+		state->line = line;
-+	}
- 	return ret;
+ 	read_format = evsel->attr.read_format;
  
- out_free_line:
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.17.1
 
