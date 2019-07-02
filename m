@@ -2,246 +2,643 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D94C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C4C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934A821852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364632089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L35R/ge5"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hZyOeqf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfGCA4i (ORCPT
+        id S1727391AbfGCA5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:56:38 -0400
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:39655 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCA4i (ORCPT
+        Tue, 2 Jul 2019 20:57:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40032 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCA5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:56:38 -0400
-Received: by mail-pf1-f171.google.com with SMTP id j2so302965pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:56:37 -0700 (PDT)
+        Tue, 2 Jul 2019 20:57:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so416237wmj.5;
+        Tue, 02 Jul 2019 17:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=sEx63LvR4BWkxhu/+3MOIZIo4BncDbL9NJkv7plBdd0=;
-        b=L35R/ge5Q13Hy2heBrAKxF7fJYBq3s1m7YjXYwWp1d6H4/AzYv6rGG3cf0WKDCW31d
-         dFcMorKZSEXe7aACw7vb4YebkzqOUYXHXJpxT32x5FXdckI3P/TOX3+G3ceNCJkYx6Q4
-         gzcp2blyYp8B6LlpsyIdkQpb1oCXoSYq8CSfOiiJt/xx3BSO5tn9oA+fY7HFwAEjzmky
-         YD5lAV7sk7zNZT20IDCxntI/QJOL6G3FTWz/CPLrXK/8xDR6nWCLEi21sBzN0dQn0MtJ
-         uEmV4stlcFtHBSTwvrQQUZSennQXfHR+vv7yMltzqImRqImJPVqCQpt08rn3uiTHAwGw
-         y1ug==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YwEcGN7KZag+iEWh2VXMduAIZVq0tiburqHuz/ZbrC4=;
+        b=hZyOeqf8ZxQj9nM2pyJnqYuph9RUjeEuui0J84PZMv6KQ1Zy+sf8DUjgmoalcREn13
+         hZKTxUz5JK80NdGhBFxZDtpMUexrMPiYabkvpB91qAnE7d0M9QoEtobRJO26SfxWKLpS
+         vPpBlnzwBdVS8MVZoXTFOssw4ovnSudK4/cHctlCydzSKaeeLwIKZ9RBylSSTj7cKU4E
+         NHf4mAgQNv37GfSoq18MDtNJwGqRXNCTAWogBgoKShKxs5PfYFa6c+18fDHbQtkITsUM
+         A5poTRMkivROYYPN+N+uA+XV9OWXd3PipnSNOUxqC3Fpr0EaxFx9jJwbd9LKCFIT+Y9N
+         1EDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=sEx63LvR4BWkxhu/+3MOIZIo4BncDbL9NJkv7plBdd0=;
-        b=Fem75n4hfKJ6uPpH5Re0gv4H0UvAFuC+DOrjQY5RuGPAB6cryDIs8CDM2wfzhc2k4K
-         vmx4B2WrltvpvsEUdHbMLDE3gGVcMCHpJILGJa5HqLapYP08uiVsjDf2Uz1qbQeCULGM
-         MMzmWC/baxkwQODUfZqnyscY0pn6E9VAkIp2LsAfHPmHX3lMr/IVIOYPjyZ7ktiq7Sbq
-         pV9ns0Jl21HZwdqGGRkqEwm+S7Kd2AT7iKzslmek3oLbNjhFByBj4Wgvy+Zi5bTK+8ah
-         LZpdenb5akWF8ED6JZiNfhnw+HpJjIIDKtdsknX49bI4M4prJIA9ftleiT1+gneekdHX
-         nDew==
-X-Gm-Message-State: APjAAAWL6aQSwAzv6TdkHrthpKBcJP2CO7uXVxkJBMWNoLdccvKWsbun
-        6OC41wge1dnmVItdnR+2rTTSxsTADqDDt4mQPxUz5NqZeP5Eew==
-X-Google-Smtp-Source: APXvYqwAM84/AUv/sKtAKB6tbhh6WV4xxpbE1U0ENIOo7ULNCAO8KbUD827+UrxjaY5041tMLI5hnNfru/Ayz4uLyho=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr7843834pjs.73.1562100842616;
- Tue, 02 Jul 2019 13:54:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YwEcGN7KZag+iEWh2VXMduAIZVq0tiburqHuz/ZbrC4=;
+        b=iiaERsmK/NfvC2HPdFavegUWv4F8C8fLdQPcXcTkwYRQWj9bvmzpwmBRNusnezkWhW
+         zqXQrnggdgeqrmzqASg1y2VctuhotkgJfb1TKj2bNwwELXUhXpY8wHI9aGJtJluhioLE
+         pB9KuKGqU0XzEUcIYmqjQCGc8KfL+6M4/ER/MN4x5TJcxVqnFFZscR9kx/PIYRGacqAS
+         jUS3lUbqFEny8Euu4eUDoNaLLQcNVe3HHU97etqmJCzUzuoZiqc6k9GnC8TdCjQ6jJpb
+         /YImLCqnZxs95b4xQDzAfl71b5zRbAQPgjNWn84NFmuoSdzJoZEaHac1SGqDdlrpRm+Y
+         ALNA==
+X-Gm-Message-State: APjAAAUnQaz3uPlAs0nytA7NY9g42aVsVKr3WpR0qDMv9iAKAkRunJ2r
+        BsnWnxFUl8GGbtTYmr6IDemFyANi
+X-Google-Smtp-Source: APXvYqwjSjOz0wJS4sqGyP13QVz6U0E5P7RFHd4XHO/iBmT+8hnaDak7GlmwkSlrcrK2C5XRF4MTBQ==
+X-Received: by 2002:a7b:c106:: with SMTP id w6mr4903932wmi.80.1562099731939;
+        Tue, 02 Jul 2019 13:35:31 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id s12sm100041wmh.34.2019.07.02.13.35.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:35:30 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com,
+        ms@dev.tdt.de,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/4] phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
+Date:   Tue,  2 Jul 2019 22:35:21 +0200
+Message-Id: <20190702203523.2412-3-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 2 Jul 2019 13:53:51 -0700
-Message-ID: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
-Subject: objtool warnings in prerelease clang-9
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Craig Topper <craig.topper@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Stephen Hines <srhines@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TL;DR
-LLVM currently has a bug when unrolling loops containing asm goto and
-we have a fix in hand.
+The Lantiq VRX200 SoCs embed a PCIe PHY in the "sram" bus. Unlike most
+other IP blocks on this SoC the register values are only 16-bit wide.
+Like other IP blocks on this SoC the register values are in big endian.
 
-Following up from our thread last week (https://lkml.org/lkml/2019/6/29/14).
+The PHY embeds a PLL which can be configured in various modes. Only the
+36MHz mode is supported for now, the other modes can be implemented when
+there's a board which actually needs them. OpenWrt uses the out-of-tree
+vendor driver and all supported boards there only need the 36MHz mode.
 
-With an x86 defconfig (6fbc7275c7a9) +clang 9 (e1006259d84d), I see
-the following 4 warnings from objtool:
-arch/x86/events/intel/core.o: warning: objtool:
-intel_pmu_nhm_workaround()+0xa8: unreachable instruction
-arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool:
-get_fixed_ranges()+0x9b: unreachable instruction
-arch/x86/kernel/platform-quirks.o: warning: objtool:
-x86_early_init_platform_quirks()+0x84: unreachable instruction
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool:
-.altinstr_replacement+0x88: redundant UACCESS disable
+There are two input clocks:
+- the "pdi" clock enables the register access
+- the "phy" clock is the clock input and enables the internal PLL
 
-Peter mentioned seeing 6 cases:
-https://lkml.org/lkml/2019/6/27/118
+There are two reset lines:
+- "phy" resets the PHY itself
+- the "pcie" reset line is shared between the PHY and the PCIe
+  controller
 
-We have 21 open reports (mostly unverified, I think someone was
-testing -O3 -march=native):
-https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aissue+is%3Aopen+label%3Aobjtool
+While the VRX200 SoC has only one PCIe controller and PHY the ARX300
+uses two identical PCIe controllers and PHYs which are compatible with
+the PCIe controller and PHY on VRX200.
+Add a driver for this PHY so PCIe support can be enabled on these SoCs.
 
-Taking a look specifically at arch/x86/kernel/cpu/mtrr/generic.o (as
-tglx and Peter did in https://lkml.org/lkml/2019/6/27/118:
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/phy/lantiq/Kconfig                  |  11 +
+ drivers/phy/lantiq/Makefile                 |   1 +
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c | 495 ++++++++++++++++++++
+ 3 files changed, 507 insertions(+)
+ create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
 
-Disassembly and jump table:
-https://gist.github.com/nickdesaulniers/395129e75d9f7afe028db832145594d8
-More concise snippet:
-https://gist.github.com/nickdesaulniers/a3159782908cb6e50e26ea9563b14c20
-
-Of interest are the disassembled __jump_table entries; in groups of
-three, there is a group for which the second element is duplicated
-with a previous group.  This is bad because (as explained by Peter in
-https://lkml.org/lkml/2019/6/27/118) the triples are in the form (code
-location, jump target, pointer to key).  Duplicate or repeated jump
-targets are unexpected, and will lead to incorrect control flow after
-patching such code locations.  Also, the jump target should be 0x7
-bytes ahead of the location, IIUC.
-
-I've annotated the concise snippet:
-https://gist.github.com/nickdesaulniers/c0cb8fc67720a5abbadf42fde5440a8e
-we can see that two groups in the __jump_table share a similar jump
-target, unexpectedly.
-
-Now that we can identify what's bad (duplicate __jump_table entries),
-we can try to creduce the input.
-(https://nickdesaulniers.github.io/blog/2019/01/18/finding-compiler-bugs-with-c-reduce/)
-
-The preprocessed input is 37497 lines long.  We want to reduce it
-down, but I haven't been able to write a correct "interestingness
-test" for creduce where I was then able to make sense of the output.
-Instead, I'm looking into program slicing:
-https://en.wikipedia.org/wiki/Program_slicing.  We'd want to do this
-for C code, and it should be possible to implement with libclang, but
-since it doesn't exist yet AFAICT and llvm-extract does, we can do the
-program slicing on the LLVM IR level.  This will also give us a test
-case to add to the compiler's test suite.
-
-$ clang <same c flags kernel uses via `make V=`> \
-  -emit-llvm -S -Xclang -disable-llvm- passes -o get_fixed_ranges generic.ll
-$ llvm-extract -func get_fixed_ranges generic.ll -o
-generic.get_fixed_ranges.ll -S --recursive
-
-is a more manageable 541 lines of LLVM IR.
-https://gist.github.com/nickdesaulniers/73aef95e9735a50765f654ebdcbb99dd
-
-`callbr` is the LLVM IR instruction representing `asm goto`.
-https://llvm.org/docs/LangRef.html#callbr-instruction
-The gist of the instruction is:
-callbr ... <list of block addresses from the label list> to
-<fallthrough basic block [<list of block addresses from the label
-list>].  IIUC, the repeated list of addresses better match.
-
-We can then observe the middle end work its optimizations:
-$ opt -O2 -print-before-all -print-after-all
-generic.get_fixed_ranges.ll -S -o - 2>&1 | less
-(27199 lines of output, omitted)
-Here's the relevant snippet of the 27199 lines:
-https://gist.github.com/nickdesaulniers/089bf56165675065bca830cd7da767d8
-
-grepping through the output and looking for the first pass which
-contains non-matching list of block addresses in the label list, we
-come upon:
-
-```
-callbr void asm sideeffect "1:.byte
-0x0f,0x1f,0x44,0x00,0\0A\09.pushsection __jump_table,  \22aw\22 \0A\09
-.balign 8 \0A\09.long 1b - ., ${2:l} - . \0A\09 .quad ${0:c} + ${1:c}
-- .\0A\09.popsection \0A\09",
-"i,i,X,~{dirflag},~{fpsr},~{flags}"(%struct.static_key* getelementptr
-inbounds (%struct.tracepoint, %struct.tracepoint*
-@__tracepoint_read_msr, i64 0, i32 1), i1 false, i8*
-blockaddress(@get_fixed_ranges, %20)) #6
-          to label %native_read_msr.exit31.1 [label %49], !srcloc !4
-```
-
-(particularly I would have expected the `%20` and `%49` to match.)
-
-which occurs before "MergedLoadStoreMotion," but due to what looks
-like a bug in the pass printer
-(https://lists.llvm.org/pipermail/cfe-dev/2019-July/062795.html)
-doesn't print the results of loop unrolling, which runs just before
-"MergedLoadStoreMotion."
-
-I see that `get_fixed_ranges` is a loop that gets unrolled to have a
-trip count of two.
-$ opt -O2 -debug-only=loop-unroll generic.get_fixed_ranges.ll -S -o /dev/null
-...
-Loop Unroll: F[get_fixed_ranges] Loop %
-  Loop Size = 27
-  Trip Count = 2
-  Trip Multiple = 2
-COMPLETELY UNROLLING loop % with trip count 2!
-
-If I manually add some print statements to loop unrolling, I can see
-that before we unroll the loop, things look good. After unrolling the
-loop, things look bad.  Indeed, if I kneecap loop unrolling the
-problem goes away:
-
-$ opt -O2 -debug-only=loop-unroll -unroll-full-max-count=0
-generic.get_fixed_ranges.ll -S -o -
-
-So this is a bug in our loop unroller when unrolling IR
-representations of asm goto.  Peter's guess that this was a bug in
-inlining was very close!  Function inlining and loop unrolling are
-closely related and probably share a lot of machinery related to
-cloning of basic blocks and instructions.  In this case, if we have a
-loop with asm goto and we unroll the loop, the referenced labels from
-the asm goto statement need to reflect the newly duplicated labels.
-In this case, the new duplicated asm goto is referencing the initial
-asm goto's label, which would result in non-sensical control flow at
-runtime.
-
-In the loop unroller, I can see that we skip loop unrolling in the
-event of "indirectbr" instructions.
-https://github.com/llvm/llvm-project/blob/97316fff5d6a7c3d2c072301a118ac0cb5094ad8/llvm/lib/Transforms/Utils/LoopUnroll.cpp#L294
-https://github.com/llvm/llvm-project/blob/97316fff5d6a7c3d2c072301a118ac0cb5094ad8/llvm/lib/Analysis/LoopInfo.cpp#L432
-
-Conservatively, we can block loop unrolling when we see asm goto in a loop:
-diff --git a/llvm/lib/Analysis/LoopInfo.cpp b/llvm/lib/Analysis/LoopInfo.cpp
-index 00dbe30c2b3d..f800c890d1db 100644
---- a/llvm/lib/Analysis/LoopInfo.cpp
-+++ b/llvm/lib/Analysis/LoopInfo.cpp
-@@ -433,7 +433,8 @@ bool Loop::isSafeToClone() const {
-   // Return false if any loop blocks contain indirectbrs, or there
-are any calls
-   // to noduplicate functions.
-   for (BasicBlock *BB : this->blocks()) {
--    if (isa<IndirectBrInst>(BB->getTerminator()))
-+    if (isa<IndirectBrInst>(BB->getTerminator()) ||
-+        isa<CallBrInst>(BB->getTerminator()))
-       return false;
-
-     for (Instruction &I : *BB)
-
-This causes objtool to not find any issues in
-arch/x86/kernel/cpu/mtrr/generic.o.  I don't observe any duplication
-in the __jump_table section of the resulting .o file.  It also cuts
-down the objtool warnings I observe in a defconfig (listed at the
-beginning of the email) from 4 to 2. (platform-quirks.o predates asm
-goto, i915_gem_execbuffer.o is likely a separate bug).
-
-Coincidentally, Alexander and Bill just found what I think is the same bug:
-https://bugs.llvm.org/show_bug.cgi?id=42489
-
-So for now we'll be conservative/correct and disable unrolling of
-loops that contain asm goto; then we can use the same test case to
-permit unrolling with the correct code transformations added.
+diff --git a/drivers/phy/lantiq/Kconfig b/drivers/phy/lantiq/Kconfig
+index eb66c857ce25..c4df9709d53f 100644
+--- a/drivers/phy/lantiq/Kconfig
++++ b/drivers/phy/lantiq/Kconfig
+@@ -2,6 +2,17 @@
+ #
+ # Phy drivers for Lantiq / Intel platforms
+ #
++config PHY_LANTIQ_VRX200_PCIE
++	tristate "Lantiq VRX200/ARX300 PCIe PHY"
++	depends on SOC_TYPE_XWAY || COMPILE_TEST
++	depends on OF && HAS_IOMEM
++	select GENERIC_PHY
++	select REGMAP_MMIO
++	help
++	  Support for the PCIe PHY(s) on the Lantiq / Intel VRX200 and ARX300
++	  family SoCs.
++	  If unsure, say N.
++
+ config PHY_LANTIQ_RCU_USB2
+ 	tristate "Lantiq XWAY SoC RCU based USB PHY"
+ 	depends on OF && (SOC_TYPE_XWAY || COMPILE_TEST)
+diff --git a/drivers/phy/lantiq/Makefile b/drivers/phy/lantiq/Makefile
+index 540049039092..7c14eb24ab73 100644
+--- a/drivers/phy/lantiq/Makefile
++++ b/drivers/phy/lantiq/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_PHY_LANTIQ_RCU_USB2)	+= phy-lantiq-rcu-usb2.o
++obj-$(CONFIG_PHY_LANTIQ_VRX200_PCIE)	+= phy-lantiq-vrx200-pcie.o
+diff --git a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+new file mode 100644
+index 000000000000..eda165088e95
+--- /dev/null
++++ b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+@@ -0,0 +1,495 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * PCIe PHY driver for Lantiq VRX200 and ARX300 SoCs.
++ *
++ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ *
++ * Based on the BSP (called "UGW") driver:
++ *  Copyright (C) 2009-2015 Lei Chuanhua <chuanhua.lei@lantiq.com>
++ *  Copyright (C) 2016 Intel Corporation
++ *
++ * TODO: PHY modes other than 36MHz (without "SSC")
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++#include <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
++
++#define PCIE_PHY_PLL_CTRL1				0x44
++
++#define PCIE_PHY_PLL_CTRL2				0x46
++#define PCIE_PHY_PLL_CTRL2_CONST_SDM_MASK		GENMASK(7, 0)
++#define PCIE_PHY_PLL_CTRL2_CONST_SDM_EN			BIT(8)
++#define PCIE_PHY_PLL_CTRL2_PLL_SDM_EN			BIT(9)
++
++#define PCIE_PHY_PLL_CTRL3				0x48
++#define PCIE_PHY_PLL_CTRL3_EXT_MMD_DIV_RATIO_EN		BIT(1)
++#define PCIE_PHY_PLL_CTRL3_EXT_MMD_DIV_RATIO_MASK	GENMASK(6, 4)
++
++#define PCIE_PHY_PLL_CTRL4				0x4a
++#define PCIE_PHY_PLL_CTRL5				0x4c
++#define PCIE_PHY_PLL_CTRL6				0x4e
++#define PCIE_PHY_PLL_CTRL7				0x50
++#define PCIE_PHY_PLL_A_CTRL1				0x52
++
++#define PCIE_PHY_PLL_A_CTRL2				0x54
++#define PCIE_PHY_PLL_A_CTRL2_LF_MODE_EN			BIT(14)
++
++#define PCIE_PHY_PLL_A_CTRL3				0x56
++#define PCIE_PHY_PLL_A_CTRL3_MMD_MASK			GENMASK(15, 13)
++
++#define PCIE_PHY_PLL_STATUS				0x58
++
++#define PCIE_PHY_TX1_CTRL1				0x60
++#define PCIE_PHY_TX1_CTRL1_FORCE_EN			BIT(3)
++#define PCIE_PHY_TX1_CTRL1_LOAD_EN			BIT(4)
++
++#define PCIE_PHY_TX1_CTRL2				0x62
++#define PCIE_PHY_TX1_CTRL3				0x64
++#define PCIE_PHY_TX1_A_CTRL1				0x66
++#define PCIE_PHY_TX1_A_CTRL2				0x68
++#define PCIE_PHY_TX1_MOD1				0x6a
++#define PCIE_PHY_TX1_MOD2				0x6c
++#define PCIE_PHY_TX1_MOD3				0x6e
++
++#define PCIE_PHY_TX2_CTRL1				0x70
++#define PCIE_PHY_TX2_CTRL1_LOAD_EN			BIT(4)
++
++#define PCIE_PHY_TX2_CTRL2				0x72
++#define PCIE_PHY_TX2_A_CTRL1				0x76
++#define PCIE_PHY_TX2_A_CTRL2				0x78
++#define PCIE_PHY_TX2_MOD1				0x7a
++#define PCIE_PHY_TX2_MOD2				0x7c
++#define PCIE_PHY_TX2_MOD3				0x7e
++
++#define PCIE_PHY_RX1_CTRL1				0xa0
++#define PCIE_PHY_RX1_CTRL1_LOAD_EN			BIT(1)
++
++#define PCIE_PHY_RX1_CTRL2				0xa2
++#define PCIE_PHY_RX1_CDR				0xa4
++#define PCIE_PHY_RX1_EI					0xa6
++#define PCIE_PHY_RX1_A_CTRL				0xaa
++
++struct ltq_vrx200_pcie_phy_priv {
++	struct phy			*phy;
++	unsigned int			mode;
++	struct device			*dev;
++	struct regmap			*phy_regmap;
++	struct regmap			*rcu_regmap;
++	struct clk			*pdi_clk;
++	struct clk			*phy_clk;
++	struct reset_control		*phy_reset;
++	struct reset_control		*pcie_reset;
++	u32				rcu_ahb_endian_offset;
++	u32				rcu_ahb_endian_big_endian_mask;
++};
++
++static void ltq_vrx200_pcie_phy_common_setup(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++
++	/* PLL Setting */
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_A_CTRL1, 0x120e);
++
++	/* increase the bias reference voltage */
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_A_CTRL2, 0x39d7);
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_A_CTRL3, 0x0900);
++
++	/* Endcnt */
++	regmap_write(priv->phy_regmap, PCIE_PHY_RX1_EI, 0x0004);
++	regmap_write(priv->phy_regmap, PCIE_PHY_RX1_A_CTRL, 0x6803);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_TX1_CTRL1,
++			   PCIE_PHY_TX1_CTRL1_FORCE_EN,
++			   PCIE_PHY_TX1_CTRL1_FORCE_EN);
++
++	/* predrv_ser_en */
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX1_A_CTRL2, 0x0706);
++
++	/* ctrl_lim */
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX1_CTRL3, 0x1fff);
++
++	/* ctrl */
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX1_A_CTRL1, 0x0810);
++
++	/* predrv_ser_en */
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_TX2_A_CTRL2, 0x7f00,
++			   0x4700);
++
++	/* RTERM */
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX1_CTRL2, 0x2e00);
++
++	/* Improved 100MHz clock output  */
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX2_CTRL2, 0x3096);
++	regmap_write(priv->phy_regmap, PCIE_PHY_TX2_A_CTRL2, 0x4707);
++
++	/* Reduced CDR BW to avoid glitches */
++	regmap_write(priv->phy_regmap, PCIE_PHY_RX1_CDR, 0x0235);
++}
++
++static void pcie_phy_36mhz_mode_setup(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_CTRL3,
++			   PCIE_PHY_PLL_CTRL3_EXT_MMD_DIV_RATIO_EN, 0x0000);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_CTRL3,
++			   PCIE_PHY_PLL_CTRL3_EXT_MMD_DIV_RATIO_MASK, 0x0000);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_CTRL2,
++			   PCIE_PHY_PLL_CTRL2_PLL_SDM_EN,
++			   PCIE_PHY_PLL_CTRL2_PLL_SDM_EN);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_CTRL2,
++			   PCIE_PHY_PLL_CTRL2_CONST_SDM_EN,
++			   PCIE_PHY_PLL_CTRL2_CONST_SDM_EN);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_A_CTRL3,
++			   PCIE_PHY_PLL_A_CTRL3_MMD_MASK,
++			   FIELD_PREP(PCIE_PHY_PLL_A_CTRL3_MMD_MASK, 0x1));
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_A_CTRL2,
++			   PCIE_PHY_PLL_A_CTRL2_LF_MODE_EN, 0x0000);
++
++	/* const_sdm */
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_CTRL1, 0x38e4);
++
++	regmap_update_bits(priv->phy_regmap, PCIE_PHY_PLL_CTRL2,
++			   PCIE_PHY_PLL_CTRL2_CONST_SDM_MASK,
++			   FIELD_PREP(PCIE_PHY_PLL_CTRL2_CONST_SDM_MASK,
++				      0xee));
++
++	/* pllmod */
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_CTRL7, 0x0002);
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_CTRL6, 0x3a04);
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_CTRL5, 0xfae3);
++	regmap_write(priv->phy_regmap, PCIE_PHY_PLL_CTRL4, 0x1b72);
++}
++
++static int ltq_vrx200_pcie_phy_wait_for_pll(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++	unsigned int tmp;
++	int ret;
++
++	ret = regmap_read_poll_timeout(priv->phy_regmap, PCIE_PHY_PLL_STATUS,
++				       tmp, ((tmp & 0x0070) == 0x0070), 10,
++				       10000);
++	if (ret) {
++		dev_err(priv->dev, "PLL Link timeout, PLL status = 0x%04x\n",
++			tmp);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void ltq_vrx200_pcie_phy_apply_workarounds(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++	static const struct reg_default slices[] =  {
++		{
++			.reg = PCIE_PHY_TX1_CTRL1,
++			.def = PCIE_PHY_TX1_CTRL1_LOAD_EN,
++		},
++		{
++			.reg = PCIE_PHY_TX2_CTRL1,
++			.def = PCIE_PHY_TX2_CTRL1_LOAD_EN,
++		},
++		{
++			.reg = PCIE_PHY_RX1_CTRL1,
++			.def = PCIE_PHY_RX1_CTRL1_LOAD_EN,
++		}
++	};
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(slices); i++) {
++		/* enable load_en */
++		regmap_update_bits(priv->phy_regmap, slices[i].reg,
++				   slices[i].def, slices[i].def);
++
++		udelay(1);
++
++		/* disable load_en */
++		regmap_update_bits(priv->phy_regmap, slices[i].reg,
++				   slices[i].def, 0x0);
++
++	}
++
++	for (i = 0; i < 5; i++) {
++		/* TX2 modulation */
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX2_MOD1, 0x1ffe);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX2_MOD2, 0xfffe);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX2_MOD3, 0x0601);
++		mdelay(1);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX2_MOD3, 0x0001);
++
++		/* TX1 modulation */
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX1_MOD1, 0x1ffe);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX1_MOD2, 0xfffe);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX1_MOD3, 0x0601);
++		mdelay(1);
++		regmap_write(priv->phy_regmap, PCIE_PHY_TX1_MOD3, 0x0001);
++	}
++}
++
++static int ltq_vrx200_pcie_phy_init(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	if (of_device_is_big_endian(priv->dev->of_node))
++		regmap_update_bits(priv->rcu_regmap,
++				   priv->rcu_ahb_endian_offset,
++				   priv->rcu_ahb_endian_big_endian_mask,
++				   priv->rcu_ahb_endian_big_endian_mask);
++	else
++		regmap_update_bits(priv->rcu_regmap,
++				   priv->rcu_ahb_endian_offset,
++				   priv->rcu_ahb_endian_big_endian_mask, 0x0);
++
++	ret = reset_control_assert(priv->phy_reset);
++	if (ret)
++		goto err;
++
++	udelay(1);
++
++	ret = reset_control_deassert(priv->phy_reset);
++	if (ret)
++		goto err;
++
++	udelay(1);
++
++	ret = reset_control_deassert(priv->pcie_reset);
++	if (ret)
++		goto err_assert_phy_reset;
++
++	/* Make sure PHY PLL is stable */
++	usleep_range(20, 40);
++
++	return 0;
++
++err_assert_phy_reset:
++	reset_control_assert(priv->phy_reset);
++err:
++	return ret;
++}
++
++static int ltq_vrx200_pcie_phy_exit(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = reset_control_assert(priv->pcie_reset);
++	if (ret)
++		return ret;
++
++	ret = reset_control_assert(priv->phy_reset);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int ltq_vrx200_pcie_phy_power_on(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	/* Enable PDI to access PCIe PHY register */
++	ret = clk_prepare_enable(priv->pdi_clk);
++	if (ret)
++		goto err;
++
++	/* Configure PLL and PHY clock */
++	ltq_vrx200_pcie_phy_common_setup(phy);
++
++	pcie_phy_36mhz_mode_setup(phy);
++
++	/* Enable the PCIe PHY and make PLL setting take effect */
++	ret = clk_prepare_enable(priv->phy_clk);
++	if (ret)
++		goto err_disable_pdi_clk;
++
++	/* Check if we are in "startup ready" status */
++	if (ltq_vrx200_pcie_phy_wait_for_pll(phy) != 0)
++		goto err_disable_phy_clk;
++
++	ltq_vrx200_pcie_phy_apply_workarounds(phy);
++
++	return 0;
++
++err_disable_phy_clk:
++	clk_disable_unprepare(priv->phy_clk);
++err_disable_pdi_clk:
++	clk_disable_unprepare(priv->pdi_clk);
++err:
++	return ret;
++}
++
++static int ltq_vrx200_pcie_phy_power_off(struct phy *phy)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(priv->phy_clk);
++	clk_disable_unprepare(priv->pdi_clk);
++
++	return 0;
++}
++
++static struct phy_ops ltq_vrx200_pcie_phy_ops = {
++	.init		= ltq_vrx200_pcie_phy_init,
++	.exit		= ltq_vrx200_pcie_phy_exit,
++	.power_on	= ltq_vrx200_pcie_phy_power_on,
++	.power_off	= ltq_vrx200_pcie_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static struct phy *ltq_vrx200_pcie_phy_xlate(struct device *dev,
++					 struct of_phandle_args *args)
++{
++	struct ltq_vrx200_pcie_phy_priv *priv = dev_get_drvdata(dev);
++	unsigned int mode;
++
++	if (args->args_count != 1) {
++		dev_err(dev, "invalid number of arguments\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	mode = args->args[0];
++
++	switch (mode) {
++	case LANTIQ_PCIE_PHY_MODE_36MHZ:
++		priv->mode = mode;
++		break;
++
++	case LANTIQ_PCIE_PHY_MODE_25MHZ:
++	case LANTIQ_PCIE_PHY_MODE_25MHZ_SSC:
++	case LANTIQ_PCIE_PHY_MODE_36MHZ_SSC:
++	case LANTIQ_PCIE_PHY_MODE_100MHZ:
++	case LANTIQ_PCIE_PHY_MODE_100MHZ_SSC:
++		dev_err(dev, "PHY mode not implemented yet: %u\n", mode);
++		return ERR_PTR(-EINVAL);
++
++	default:
++		dev_err(dev, "invalid PHY mode %u\n", mode);
++		return ERR_PTR(-EINVAL);
++	};
++
++	return priv->phy;
++}
++
++static int ltq_vrx200_pcie_phy_probe(struct platform_device *pdev)
++{
++	static const struct regmap_config regmap_config = {
++		.reg_bits = 8,
++		.val_bits = 16,
++		.reg_stride = 2,
++		.max_register = PCIE_PHY_RX1_A_CTRL,
++	};
++	struct ltq_vrx200_pcie_phy_priv *priv;
++	struct device *dev = &pdev->dev;
++	struct phy_provider *provider;
++	struct resource *res;
++	void __iomem *base;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	priv->phy_regmap = devm_regmap_init_mmio(dev, base, &regmap_config);
++	if (IS_ERR(priv->phy_regmap))
++		return PTR_ERR(priv->phy_regmap);
++
++	priv->rcu_regmap = syscon_regmap_lookup_by_phandle(dev->of_node,
++							   "lantiq,rcu");
++	if (IS_ERR(priv->rcu_regmap))
++		return PTR_ERR(priv->rcu_regmap);
++
++	ret = device_property_read_u32(dev, "lantiq,rcu-endian-offset",
++				       &priv->rcu_ahb_endian_offset);
++	if (ret) {
++		dev_err(dev,
++			"failed to parse the 'lantiq,rcu-endian-offset' property\n");
++		return ret;
++	}
++
++	ret = device_property_read_u32(dev, "lantiq,rcu-big-endian-mask",
++				       &priv->rcu_ahb_endian_big_endian_mask);
++	if (ret) {
++		dev_err(dev,
++			"failed to parse the 'lantiq,rcu-big-endian-mask' property\n");
++		return ret;
++	}
++
++	priv->pdi_clk = devm_clk_get(dev, "pdi");
++	if (IS_ERR(priv->pdi_clk))
++		return PTR_ERR(priv->pdi_clk);
++
++	priv->phy_clk = devm_clk_get(dev, "phy");
++	if (IS_ERR(priv->phy_clk))
++		return PTR_ERR(priv->phy_clk);
++
++	priv->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
++	if (IS_ERR(priv->phy_reset))
++		return PTR_ERR(priv->phy_reset);
++
++	priv->pcie_reset = devm_reset_control_get_shared(dev, "pcie");
++	if (IS_ERR(priv->pcie_reset))
++		return PTR_ERR(priv->pcie_reset);
++
++	priv->dev = dev;
++
++	priv->phy = devm_phy_create(dev, dev->of_node,
++				    &ltq_vrx200_pcie_phy_ops);
++	if (IS_ERR(priv->phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(priv->phy);
++	}
++
++	phy_set_drvdata(priv->phy, priv);
++	dev_set_drvdata(dev, priv);
++
++	provider = devm_of_phy_provider_register(dev,
++						 ltq_vrx200_pcie_phy_xlate);
++
++	return PTR_ERR_OR_ZERO(provider);
++}
++
++static const struct of_device_id ltq_vrx200_pcie_phy_of_match[] = {
++	{ .compatible = "lantiq,vrx200-pcie-phy", },
++	{ .compatible = "lantiq,arx300-pcie-phy", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ltq_vrx200_pcie_phy_of_match);
++
++static struct platform_driver ltq_vrx200_pcie_phy_driver = {
++	.probe	= ltq_vrx200_pcie_phy_probe,
++	.driver = {
++		.name	= "ltq-vrx200-pcie-phy",
++		.of_match_table	= ltq_vrx200_pcie_phy_of_match,
++	}
++};
++module_platform_driver(ltq_vrx200_pcie_phy_driver);
++
++MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
++MODULE_DESCRIPTION("Lantiq VRX200 and ARX300 PCIe PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Thanks,
-~Nick Desaulniers
+2.22.0
+
