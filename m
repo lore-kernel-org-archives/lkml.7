@@ -2,132 +2,359 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F052C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC1D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:32:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gyFIyQee"
+	by mail.kernel.org (Postfix) with ESMTP id 52E2021479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfGBQc6 (ORCPT
+        id S1726732AbfGBQem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:32:58 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59514 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfGBQc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:32:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62GSjVN126940;
-        Tue, 2 Jul 2019 16:32:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=V6zyJ4bO2QMT00Z6oYGNErrb5xIXIwQiZGKmcQuzSec=;
- b=gyFIyQeeU5V1VJjfKmFjM/pM6f4ampcnzQOlLRpS+gt7MbfLfyVcaBzfCE8SeCxLbySp
- 1xUrQmltUD4dDLQr0ccuHPXpE6x632WkOgiCgLIGmgp/At38DyNXffTtgaULh7ZPHuXv
- 91YymBTqLrozEf6sZxI9nP0qjSGce1poGN2GV0P4ZfIAsfszsCiAsdrBGlzcUrC3nvg/
- cdpjzESaxvP+ruG5xc8THyz1Ty8ecUA3mA8bXaFEdgnU/Hvvvy3BRO3XpDRu38Gh0EAF
- c5iNnj20Q3GwASLouGMl8/TBDOZDK+iRv5QgCxbdl/DxnMR4DUrGRFI8JxQ46R2iZscJ qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2te61pvrn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 16:32:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62GWXgl149557;
-        Tue, 2 Jul 2019 16:32:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2tebakv5k3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 16:32:33 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x62GWVaa019385;
-        Tue, 2 Jul 2019 16:32:31 GMT
-Received: from Subhras-MacBook-Pro.local (/73.252.215.155)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jul 2019 09:32:30 -0700
-Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        steven.sistare@oracle.com, songliubraving@fb.com
-References: <cover.1561523542.git.viresh.kumar@linaro.org>
- <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
- <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
- <20190701080349.homlsgia4fuaitek@vireshk-i7>
- <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
- <20190702083517.GY3419@hirez.programming.kicks-ass.net>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <1fe415a7-a396-508c-f459-0ddcc36f3360@oracle.com>
-Date:   Tue, 2 Jul 2019 09:32:27 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Tue, 2 Jul 2019 12:34:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50740 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726046AbfGBQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 12:34:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C6524B94B;
+        Tue,  2 Jul 2019 16:34:39 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id D57E4E0159; Tue,  2 Jul 2019 18:34:37 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 18:34:37 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 05/15] ethtool: helper functions for netlink
+ interface
+Message-ID: <20190702163437.GE20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <44957b13e8edbced71aca893908d184eb9e57341.1562067622.git.mkubecek@suse.cz>
+ <20190702130515.GO2250@nanopsycho>
 MIME-Version: 1.0
-In-Reply-To: <20190702083517.GY3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702130515.GO2250@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 02, 2019 at 03:05:15PM +0200, Jiri Pirko wrote:
+> Tue, Jul 02, 2019 at 01:50:04PM CEST, mkubecek@suse.cz wrote:
+> > 
+> >+/* request header */
+> >+
+> >+/* use compact bitsets in reply */
+> >+#define ETHTOOL_RF_COMPACT		(1 << 0)
+> 
+> "COMPACT_BITSETS"?
+> 
+> >+/* provide optional reply for SET or ACT requests */
+> >+#define ETHTOOL_RF_REPLY		(1 << 1)
+> 
+> "OPTIONAL_REPLY"?
 
-On 7/2/19 1:35 AM, Peter Zijlstra wrote:
-> On Mon, Jul 01, 2019 at 03:08:41PM -0700, Subhra Mazumdar wrote:
->> On 7/1/19 1:03 AM, Viresh Kumar wrote:
->>> On 28-06-19, 18:16, Subhra Mazumdar wrote:
->>>> On 6/25/19 10:06 PM, Viresh Kumar wrote:
->>>>> @@ -5376,6 +5376,15 @@ static struct {
->>>>>     #endif /* CONFIG_NO_HZ_COMMON */
->>>>> +/* CPU only has SCHED_IDLE tasks enqueued */
->>>>> +static int sched_idle_cpu(int cpu)
->>>>> +{
->>>>> +	struct rq *rq = cpu_rq(cpu);
->>>>> +
->>>>> +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
->>>>> +			rq->nr_running);
->>>>> +}
->>>>> +
->>>> Shouldn't this check if rq->curr is also sched idle?
->>> Why wouldn't the current set of checks be enough to guarantee that ?
->> I thought nr_running does not include the on-cpu thread.
-> It very much does.
->
->>>> And why not drop the rq->nr_running non zero check?
->>> Because CPU isn't sched-idle if nr_running and idle_h_nr_running are both 0,
->>> i.e. it is an IDLE cpu in that case. And so I thought it is important to have
->>> this check as well.
->>>
->> idle_cpu() not only checks nr_running is 0 but also rq->curr == rq->idle
-> idle_cpu() will try very hard to declare a CPU !idle. But I don't see
-> how that it relevant. sched_idle_cpu() will only return true if there
-> are only SCHED_IDLE tasks on the CPU. Viresh's test is simple and
-> straight forward.
+OK
 
-OK makes sense.
+> >+	ret = nla_parse_nested(tb, ETHTOOL_A_HEADER_MAX, nest,
+> >+			       policy ?: dflt_header_policy, extack);
+> >+	if (ret < 0)
+> 
+> if (ret)
+> 
+> Same remark goes to the rest of the code (also the rest of the patches),
+> in case called function cannot return positive values.
 
-Thanks,
-Subhra
+The "if (ret < 0)" idiom for "on error do ..." is so ubiquitous through
+the whole kernel that I don't think it's worth it to carefully check
+which function can return a positive value and which cannot and risk
+that one day I overlook that some function. And yet another question is
+what exactly "cannot return" means: is it whenever the function does not
+return a positive value or only if it's explicitly documented not to?
 
+Looking at existing networking code, e.g. net/netfilter (except ipvs),
+net/sched or net/core/rtnetlink.c are using "if (ret < 0)" rather
+uniformly. And (as you objected to the check of genl_register_family()
+previous patch) even genetlink itself has
+
+	err = genl_register_family(&genl_ctrl);
+	if (err < 0)
+		goto problem;
+
+in genl_init().
+
+> 
+> 
+> >+		return ret;
+> >+	devname_attr = tb[ETHTOOL_A_HEADER_DEV_NAME];
+> >+
+> >+	if (tb[ETHTOOL_A_HEADER_DEV_INDEX]) {
+> >+		u32 ifindex = nla_get_u32(tb[ETHTOOL_A_HEADER_DEV_INDEX]);
+> >+
+> >+		dev = dev_get_by_index(net, ifindex);
+> >+		if (!dev) {
+> >+			NL_SET_ERR_MSG_ATTR(extack,
+> >+					    tb[ETHTOOL_A_HEADER_DEV_INDEX],
+> >+					    "no device matches ifindex");
+> >+			return -ENODEV;
+> >+		}
+> >+		/* if both ifindex and ifname are passed, they must match */
+> >+		if (devname_attr &&
+> >+		    strncmp(dev->name, nla_data(devname_attr), IFNAMSIZ)) {
+> >+			dev_put(dev);
+> >+			NL_SET_ERR_MSG_ATTR(extack, nest,
+> >+					    "ifindex and name do not match");
+> >+			return -ENODEV;
+> >+		}
+> >+	} else if (devname_attr) {
+> >+		dev = dev_get_by_name(net, nla_data(devname_attr));
+> >+		if (!dev) {
+> >+			NL_SET_ERR_MSG_ATTR(extack, devname_attr,
+> >+					    "no device matches name");
+> >+			return -ENODEV;
+> >+		}
+> >+	} else if (require_dev) {
+> >+		NL_SET_ERR_MSG_ATTR(extack, nest,
+> >+				    "neither ifindex nor name specified");
+> >+		return -EINVAL;
+> >+	}
+> >+
+> >+	if (dev && !netif_device_present(dev)) {
+> >+		dev_put(dev);
+> >+		NL_SET_ERR_MSG(extack, "device not present");
+> >+		return -ENODEV;
+> >+	}
+> >+
+> >+	req_info->dev = dev;
+> >+	ethnl_update_u32(&req_info->req_mask, tb[ETHTOOL_A_HEADER_INFOMASK]);
+> >+	ethnl_update_u32(&req_info->global_flags, tb[ETHTOOL_A_HEADER_GFLAGS]);
+> >+	ethnl_update_u32(&req_info->req_flags, tb[ETHTOOL_A_HEADER_RFLAGS]);
+> 
+> Just:
+> 	req_info->req_mask = nla_get_u32(tb[ETHTOOL_A_HEADER_INFOMASK];
+> 	...
+> 
+> Not sure what ethnl_update_u32() is good for, but it is not needed here.
+
+That would result in null pointer dereference if the attribute is
+missing. So you would need at least
+
+	if (tb[ETHTOOL_A_HEADER_INFOMASK])
+		req_info->req_mask = nla_get_u32(tb[ETHTOOL_A_HEADER_INFOMASK]);
+	if (tb[ETHTOOL_A_HEADER_GFLAGS])
+		req_info->global_flags =
+			nla_get_u32(tb[ETHTOOL_A_HEADER_GFLAGS]);
+	if (tb[ETHTOOL_A_HEADER_RFLAGS])
+		req_info->req_flags = nla_get_u32(tb[ETHTOOL_A_HEADER_RFLAGS]);
+
+I don't think it looks better.
+
+> >+
+> >+	return 0;
+> >+}
+> >+
+> >+/**
+> >+ * ethnl_fill_reply_header() - Put standard header into a reply message
+> >+ * @skb:      skb with the message
+> >+ * @dev:      network device to describe in header
+> >+ * @attrtype: attribute type to use for the nest
+> >+ *
+> >+ * Create a nested attribute with attributes describing given network device.
+> >+ * Clean up on error.
+> 
+> Cleanup is obvious, no need to mention it in API docs.
+
+OK
+
+> >+ *
+> >+ * Return: 0 on success, error value (-EMSGSIZE only) on error
+> >+ */
+> >+int ethnl_fill_reply_header(struct sk_buff *skb, struct net_device *dev,
+> >+			    u16 attrtype)
+> >+{
+> >+	struct nlattr *nest;
+> >+
+> >+	if (!dev)
+> >+		return 0;
+> >+	nest = nla_nest_start(skb, attrtype);
+> >+	if (!nest)
+> >+		return -EMSGSIZE;
+> >+
+> >+	if (nla_put_u32(skb, ETHTOOL_A_HEADER_DEV_INDEX, (u32)dev->ifindex) ||
+> >+	    nla_put_string(skb, ETHTOOL_A_HEADER_DEV_NAME, dev->name))
+> >+		goto nla_put_failure;
+> >+	/* If more attributes are put into reply header, ethnl_header_size()
+> >+	 * must be updated to account for them.
+> >+	 */
+> >+
+> >+	nla_nest_end(skb, nest);
+> >+	return 0;
+> >+
+> >+nla_put_failure:
+> >+	nla_nest_cancel(skb, nest);
+> >+	return -EMSGSIZE;
+> >+}
+> >+
+> >+/**
+> >+ * ethnl_reply_init() - Create skb for a reply and fill device identification
+> >+ * @payload: payload length (without netlink and genetlink header)
+> >+ * @dev:     device the reply is about (may be null)
+> >+ * @cmd:     ETHTOOL_MSG_* message type for reply
+> >+ * @info:    genetlink info of the received packet we respond to
+> >+ * @ehdrp:   place to store payload pointer returned by genlmsg_new()
+> >+ *
+> >+ * Return: pointer to allocated skb on success, NULL on error
+> >+ */
+> >+struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
+> >+				 u16 hdr_attrtype, struct genl_info *info,
+> >+				 void **ehdrp)
+> >+{
+> >+	struct sk_buff *skb;
+> >+
+> >+	skb = genlmsg_new(payload, GFP_KERNEL);
+> >+	if (!skb)
+> >+		goto err;
+> >+	*ehdrp = genlmsg_put_reply(skb, info, &ethtool_genl_family, 0, cmd);
+> >+	if (!*ehdrp)
+> >+		goto err_free;
+> >+
+> >+	if (dev) {
+> >+		int ret;
+> >+
+> >+		ret = ethnl_fill_reply_header(skb, dev, hdr_attrtype);
+> >+		if (ret < 0)
+> >+			goto err;
+> >+	}
+> >+	return skb;
+> >+
+> >+err_free:
+> >+	nlmsg_free(skb);
+> >+	if (info)
+> >+		GENL_SET_ERR_MSG(info, "failed to setup reply message");
+> >+err:
+> 
+> Why also not fillup extack msg here?
+
+Right, err label should be right below the nlmsg_free(skb), thanks. And
+now I noticed another mistake: on ethnl_fill_reply_header() failure, we
+should go to err_free, not err.
+
+> >+static inline int ethnl_str_size(const char *s)
+> 
+> If you really need this helper, put it into netlink code. There's nothing
+> ethtool-specific about this.
+
+OK, I'll look into it. I've been already thinking about some kind of
+NLA_SIZEOF() macro as about 1/3 of all uses of nla_total_size() follow
+the nla_total_size(sizeof(...)) pattern (and lot more should follow it
+but are written like e.g. nla_total_size(4) instead). This is another
+common pattern.
+
+> >+/* The ethnl_update_* helpers set value pointed to by @dst to the value of
+> >+ * netlink attribute @attr (if attr is not null). They return true if *dst
+> >+ * value was changed, false if not.
+> >+ */
+> >+static inline bool ethnl_update_u32(u32 *dst, struct nlattr *attr)
+> 
+> I'm still not sure I'm convinced about these "update helpers" :)
+
+Just imagine what would e.g.
+
+	if (ethnl_update_u32(&data.rx_pending, tb[ETHTOOL_A_RING_RX_PENDING]))
+		mod = true;
+	if (ethnl_update_u32(&data.rx_mini_pending,
+			     tb[ETHTOOL_A_RING_RX_MINI_PENDING]))
+		mod = true;
+	if (ethnl_update_u32(&data.rx_jumbo_pending,
+			     tb[ETHTOOL_A_RING_RX_JUMBO_PENDING]))
+		mod = true;
+	if (ethnl_update_u32(&data.tx_pending, tb[ETHTOOL_A_RING_TX_PENDING]))
+		mod = true;
+	if (!mod)
+		return 0;
+
+look like without them. And coalescing parameters would be much worse
+(22 attributes / struct members).
+
+> >+{
+> >+	u32 val;
+> >+
+> >+	if (!attr)
+> >+		return false;
+> >+	val = nla_get_u32(attr);
+> >+	if (*dst == val)
+> >+		return false;
+> >+
+> >+	*dst = val;
+> >+	return true;
+> >+}
+...
+> >+static inline bool ethnl_update_binary(u8 *dst, unsigned int len,
+> 
+> void *dst
+
+OK.
+
+> >+/**
+> >+ * ethnl_is_privileged() - check if request has sufficient privileges
+> >+ * @skb: skb with client request
+> >+ *
+> >+ * Checks if client request has CAP_NET_ADMIN in its netns. Unlike the flags
+> >+ * in genl_ops, this allows finer access control, e.g. allowing or denying
+> >+ * the request based on its contents or witholding only part of the data
+> >+ * from unprivileged users.
+> >+ *
+> >+ * Return: true if request is privileged, false if not
+> >+ */
+> >+static inline bool ethnl_is_privileged(struct sk_buff *skb)
+> 
+> I wonder why you need this helper. Genetlink uses
+> ops->flags & GENL_ADMIN_PERM for this. 
+
+It's explained in the function description. Sometimes we need finer
+control than by request message type. An example is the WoL password:
+ETHTOOL_GWOL is privileged because of it but I believe there si no
+reason why unprivileged user couldn't see enabled WoL modes, we can
+simply omit the password for him. (Also, it allows to combine query for
+WoL settings with other unprivileged settings.)
+
+> >+/**
+> >+ * ethnl_reply_header_size() - total size of reply header
+> >+ *
+> >+ * This is an upper estimate so that we do not need to hold RTNL lock longer
+> >+ * than necessary (to prevent rename between size estimate and composing the
+> 
+> I guess this description is not relevant anymore. I don't see why to
+> hold rtnl mutex for this function...
+
+You don't need it for this function, it's the other way around: unless
+you hold RTNL lock for the whole time covering both checking needed
+message size and filling the message - and we don't - the device could
+be renamed in between. Thus if we returned size based on current device
+name, it might not be sufficient at the time the header is filled.
+That's why this function returns maximum possible size (which is
+actually a constant).
+
+Michal
+
+> >+ * message). Accounts only for device ifindex and name as those are the only
+> >+ * attributes ethnl_fill_reply_header() puts into the reply header.
+> >+ */
+> >+static inline unsigned int ethnl_reply_header_size(void)
+> >+{
+> >+	return nla_total_size(nla_total_size(sizeof(u32)) +
+> >+			      nla_total_size(IFNAMSIZ));
+> >+}
