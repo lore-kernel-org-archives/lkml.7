@@ -2,121 +2,133 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D02C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0343DC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73990208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5162054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/XwH55N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGBMjd convert rfc822-to-8bit (ORCPT
+        id S1727065AbfGBMkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:39:33 -0400
-Received: from mailout02.agenturserver.de ([185.15.192.33]:38720 "EHLO
-        mailout02.agenturserver.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726636AbfGBMjd (ORCPT
+        Tue, 2 Jul 2019 08:40:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37966 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfGBMkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:39:33 -0400
-X-Greylist: delayed 409 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 08:39:30 EDT
-Received: from mail02.agenturserver.de (mail02.internal [172.16.51.35])
-        by mailout02.agenturserver.de (Postfix) with ESMTP id 64F3112614C;
-        Tue,  2 Jul 2019 14:32:38 +0200 (CEST)
-Received: from localhost (ac02.internal [172.16.51.82])
-        by mail02.agenturserver.de (Postfix) with ESMTP id 1818180753;
-        Tue,  2 Jul 2019 14:32:37 +0200 (CEST)
-Received: from mail.agenturserver.de ([172.16.51.35])
-        by localhost (ac02.mittwald.de [172.16.51.82]) (amavisd-new, port 10026)
-        with ESMTP id wKItvphULAwB; Tue,  2 Jul 2019 14:32:36 +0200 (CEST)
-Received: from karo-electronics.de (unknown [89.1.81.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: lw@karo-electronics.de)
-        by mail.agenturserver.de (Postfix) with ESMTPSA;
-        Tue,  2 Jul 2019 14:32:26 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 14:32:25 +0200
-From:   Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        Christian Hoff <christian_hoff@gmx.net>,
-        Enrico Weigelt <info@metux.net>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use
- dev_get_drvdata()
-Message-ID: <20190702143225.12b0fe07@karo-electronics.de>
-In-Reply-To: <CABXRUiQ77feNzEdQ7GqNxLS9YAMybVG3eAWWSDPFdGvERaxCyg@mail.gmail.com>
-References: <20190701032342.25971-1-huangfq.daxian@gmail.com>
-        <20190701075255.GD172968@dtor-ws>
-        <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
-        <CAHp75VeUo2Au66tETo3zneBpeaVU+Y+-h5zghpo+hPuB=a6-eA@mail.gmail.com>
-        <CABXRUiQ77feNzEdQ7GqNxLS9YAMybVG3eAWWSDPFdGvERaxCyg@mail.gmail.com>
-Organization: Ka-Ro electronics GmbH
+        Tue, 2 Jul 2019 08:40:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so6440606wro.5;
+        Tue, 02 Jul 2019 05:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XWX5YYP1CNCT9e/dIGU0i3ZnwA5tEC0AyVRX+7SK6lw=;
+        b=b/XwH55NMOZSeol8hUdl7s8+9MNvt25FwAvIKkjn8gLsUeAd8wx8U4In9vAjQGNQ66
+         xYdpJP0am9FkBYaK54YKsNF01TFgWk2QfTmy5tHtf5nkg3MuXYQpV/8XCXNcHQFTy0Qm
+         kMTJoAKR3BZmkJgsesFPmjKdASQG2RzkFRvw0Eo7QQ9hbk+jeXm28flyeoXL0idx9d4g
+         Dwcpf2R+vKAYLFmmprGBnLTCsMflKJ4FSdgxmFCUjhMSTYG5E0Z/oicFe/U5L4gtkf3A
+         yv7CpnzFlTy+sYMa0C/XUIxZqtiTmKVglM3VdtHNpkctEOku/xGln9sSUikdUov+mcwA
+         kxDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XWX5YYP1CNCT9e/dIGU0i3ZnwA5tEC0AyVRX+7SK6lw=;
+        b=MgLUDhBgdDRddmBttApajsHM1qDf62O0BSBsrn2Xv92q3z4Tm79FfTFgCtrdTK9PF/
+         bU1pDFJXde0r1E5oFHkh7yrHpjhZZrubQ4xCdbCv+Gh+R7x7hAIO+R6WGMAbhFId+eht
+         kUDjfjaOjkGBqpQn37N63BhBoLgXmMA2T53yCIZGCwJHNwoWE4EFlgjMiUc7slHgNIgh
+         Lu2P5Zfg3z4IXd2pVcqzMrZFaSkZknbcd1ATAz8kKcSelfHQRkIQmzve79Y+wn1yNPwB
+         zOdEFCTNj7SlH+SIZoVigm0JT98MUWyqJlYAgzTQIwmsdm812qkBTtnyDn6VEtcI28T7
+         rrJw==
+X-Gm-Message-State: APjAAAUVapyUVvxFuI2xOp5eQyb00g6Vym5NuIyrxttUED8V3u3QfsRj
+        MQPVS35jDMZ6Oy0PCScSaIf/q+o3PiJJjg7ydEs=
+X-Google-Smtp-Source: APXvYqwN7H5OuDdNXdoNXzu2dimkV8ct5pJbj57BHREg3taMw4HvwJusECpbPxShilr7quxy0JxRfexKoEAdrV0/3UU=
+X-Received: by 2002:adf:b69a:: with SMTP id j26mr15952442wre.93.1562071234542;
+ Tue, 02 Jul 2019 05:40:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190702114102.1254-1-andradanciu1997@gmail.com> <20190702114542.2eoc6nm2kyhode43@fsr-ub1664-175>
+In-Reply-To: <20190702114542.2eoc6nm2kyhode43@fsr-ub1664-175>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 2 Jul 2019 15:40:23 +0300
+Message-ID: <CAEnQRZBtAOzuF0L1iKKTRdR_A5skbnZFb=B1io8f_pdHcnvbyg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add sai6 node
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Andra Danciu <andradanciu1997@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jul 2, 2019 at 2:46 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> On 19-07-02 14:41:02, Andra Danciu wrote:
+>
+> Missing commit message here. Please add one.
 
-On Tue, 2 Jul 2019 19:47:16 +0800 Fuqian Huang wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> 於 2019年7月2日週二 下午5:51寫道：
+Agree. Also, please add SAI3. As you noticed our pico pi board has
+pins exposed on for SAI2/SAI3.
+
+As for the description you can say:
+
+SAI3/6 supports up to 2-channels TX (1 dataline) and 2-channels RX (1 dataline).
+
+>
+> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
 > >
-> > On Tue, Jul 2, 2019 at 11:20 AM Fuqian Huang <huangfq.daxian@gmail.com> wrote:  
-> > >
-> > > I am not an expert on this. I just write a coccinelle script to search
-> > > this kind of misuse and fix it in a naive way.
-> > > Could you tell me about how to use the proper bus accessors? Then I
-> > > will fix it up and resend a v2 patch set.  
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index d09b808eff87..1ff664523f56 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -278,6 +278,20 @@
+> >                       #size-cells = <1>;
+> >                       ranges = <0x30000000 0x30000000 0x400000>;
 > >
-> > First, don't top post.
-> > And answering to this, simple drop the patch.
-> > Proper bus accessors is exactly what it's used in the current code.  
-> 
-> But why not use dev_get_drvdata directly.
-> It simplifies getting the 'driver_data' from 'struct device' directly.
-> And the platform_device here is not required.
-> Replace it can remove the unnecessary step back and forth. (dev -> pdev -> dev).
-> 
-Did you check whether the compiler generates different (better) code
-with and without your patch? My guess is it won't.
-
-
-Lothar Waßmann
+> > +                     sai6: sai@30030000 {
+> > +                             compatible = "fsl,imx8mq-sai",
+> > +                                     "fsl,imx6sx-sai";
+> > +                             reg = <0x30030000 0x10000>;
+> > +                             interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> > +                             clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
+> > +                                     <&clk IMX8MQ_CLK_SAI6_ROOT>,
+> > +                                     <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> > +                             clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> > +                             dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
+> > +                             dma-names = "rx", "tx";
+> > +                             status = "disabled";
+> > +                     };
+> > +
+> >                       gpio1: gpio@30200000 {
+> >                               compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+> >                               reg = <0x30200000 0x10000>;
+> > --
+> > 2.11.0
+> >
