@@ -2,143 +2,90 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D21C46478
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15576C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E7C2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D259221841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H04Lwc19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfGBBEV (ORCPT
+        id S1727132AbfGBBO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:04:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58523 "EHLO mga05.intel.com"
+        Mon, 1 Jul 2019 21:14:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:54639 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfGBBEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:04:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 18:04:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,441,1557212400"; 
-   d="scan'208";a="184379133"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Jul 2019 18:04:18 -0700
-Date:   Tue, 2 Jul 2019 09:14:44 +0800
-From:   Yu Chen <yu.c.chen@intel.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
-Message-ID: <20190702011443.GA19902@chenyu-office.sh.intel.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <20190702003740.75970-2-luzmaximilian@gmail.com>
+        id S1726966AbfGBBO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:14:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45d5rH5wHPz9s00;
+        Tue,  2 Jul 2019 11:14:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562030096;
+        bh=6DINRxab0oepeYG4X9g8db4n+wH/d8FRBfdW4MiWGDw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H04Lwc19GDwA5Sps+VblYB//0TrpIn2EOae0P3HIQMZVaV05ZnoSg99ZmL5K18xlq
+         h9X5eJauKGbeKFJOBI3x/QtmAxcoCkfOVVUfYpajL1ykvfCG1itTom8xQf7YRdHm+w
+         MHcFqJ0TtgM6m3WJ1XbCn5aHYIWzPQrU+KE6hqoSYTVHXCON2Y8tEDku03ZigM7ZsK
+         pRWia+bd92d+0Q66qiIkvS0uUIvSBUhg8eo1KBtxagKbdEW7IYsibPOP5XsfQ/5Ans
+         oZFdZ0TZi3xd2dCmBxXEtfeAYxotr3ccRQbWBECziQDHueDD0RPDRn3Iw+OBCPmDZL
+         GcXtWGU+wcBGw==
+Date:   Tue, 2 Jul 2019 11:14:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the clk tree
+Message-ID: <20190702111455.4ef3494f@canb.auug.org.au>
+In-Reply-To: <20190702100103.12c132da@canb.auug.org.au>
+References: <20190702100103.12c132da@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702003740.75970-2-luzmaximilian@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/dC.eE9hnONbxkU8d1qv2LhA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Tue, Jul 02, 2019 at 02:37:39AM +0200, Maximilian Luz wrote:
-> Do not use the surfacepro3_button driver on newer Microsoft Surface
-> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> and possibly future generations) use the same device as the Surface Pro
-> 4 to represent their volume and power buttons (MSHW0040), but their
-> acutal implementation is significantly different. This patch ensures
-> that the surfacepro3_button driver is only used on the Pro 3 and 4
-> models, allowing a different driver to bind on other models.
->
-This method overall looks ok to me.
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
->  drivers/platform/x86/surfacepro3_button.c | 38 +++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
-> index 47c6d000465a..0e2c7dfafd9f 100644
-> --- a/drivers/platform/x86/surfacepro3_button.c
-> +++ b/drivers/platform/x86/surfacepro3_button.c
-> @@ -20,6 +20,12 @@
->  #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
->  #define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
->  
-> +#define MSHW0040_DSM_REVISION		0x01
-> +#define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
-> +static const guid_t MSHW0040_DSM_UUID =
-> +	GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
-> +		  0x49, 0x80, 0x35);
-> +
->  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE	0xc8
->  
->  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
-> @@ -142,6 +148,34 @@ static int surface_button_resume(struct device *dev)
->  }
->  #endif
->  
-> +/*
-> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-> + * device by checking for the _DSM method and OEM Platform Revision.
-> + */
-> +static int surface_button_check_MSHW0040(struct acpi_device *dev)
-> +{
-> +	acpi_handle handle = dev->handle;
-> +	union acpi_object *result;
-> +	u64 oem_platform_rev = 0;
-> +
-> +	// get OEM platform revision
-> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> +					 MSHW0040_DSM_REVISION,
-> +					 MSHW0040_DSM_GET_OMPR,
-> +					 NULL, ACPI_TYPE_INTEGER);
-> +
-Does it mean, only 5th, 6th and newer platforms have OEM platform revision?
-3rd/4th will get NULL result? Or the opposite?
-> +	if (result) {
-> +		oem_platform_rev = result->integer.value;
-> +		ACPI_FREE(result);
-> +	}
-> +
-> +	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> +
-> +	return oem_platform_rev == 0 ? 0 : -ENODEV;
-if 3rd/4th do not have this oem rev information while 5th/newer have,
-why the latter returns NODEV(it actually has this info)?
-> +}
-> +
-> +
->  static int surface_button_add(struct acpi_device *device)
->  {
->  	struct surface_button *button;
-> @@ -154,6 +188,10 @@ static int surface_button_add(struct acpi_device *device)
->  	    strlen(SURFACE_BUTTON_OBJ_NAME)))
->  		return -ENODEV;
->  
-> +	error = surface_button_check_MSHW0040(device);
-> +	if (error)
-> +		return error;
-> +
-ditto, 3rd/4th get error=0?
->  	button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
->  	if (!button)
->  		return -ENOMEM;
-> -- 
-> 2.22.0
-> 
-Best,
-Yu
+--Sig_/dC.eE9hnONbxkU8d1qv2LhA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Tue, 2 Jul 2019 10:01:03 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> We need something like this (untested):
+
+simple testing shows build errors ... we need something better.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dC.eE9hnONbxkU8d1qv2LhA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0asA8ACgkQAVBC80lX
+0Gzz6QgAn58oRLE1K7cpckXuctX0SQq2ZLchwZZ8oyIu6bio96qRGNXbiOkSSvyS
+87YtYBV5uwz6i2sZ4W69GmZeGg1J14k8mdUfNhfZMrEhaIEaw5PNlKYZJxVylpP6
+IzAfmttnu9J2ehEDNa9kC8j/TozGRLE6ygZt+bOSfY9oG/u9DoUSczVVKw7+Hwsk
+32kPscyRYyBMkMjrmdpCrbVcazoKoqMvEBCvEGR5ANC2z2IQ5E7SwIGUHl1PF/OE
+hyP1net2+j9/tmssTOrz8H5tR97mL8isBHyKqOJhXx8Mya/Q32G6rkZdLU9LNEaY
+XY5X6ktZS0zvLHZK6fl91LFTRFCOwg==
+=a9Op
+-----END PGP SIGNATURE-----
+
+--Sig_/dC.eE9hnONbxkU8d1qv2LhA--
