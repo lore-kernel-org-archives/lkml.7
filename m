@@ -2,203 +2,102 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C748C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56708C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC02620673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DC320673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QHcgFWZu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MbCpvr69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfGCBmR (ORCPT
+        id S1727360AbfGCBn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:42:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37571 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBmR (ORCPT
+        Tue, 2 Jul 2019 21:43:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55816 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfGCBnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:42:17 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so494242wme.2;
-        Tue, 02 Jul 2019 18:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QD7PTDoTKJ7Xg819N/X9fbQ0hWhUP/U0zNIc8U8b15M=;
-        b=QHcgFWZuIAWVxoHoyptyZ0vhwJGPMgbUT4AOymWxPnjHiwDGeLycngPGR62hMJXRsW
-         oFuOJ7ugVuC/+Eh9Ssm8I+MzGlI8dYOdaXgGJVARGU0icUeSe957hDhmJPVE8rAKa5pi
-         SK6zRYV1aSTXnCLc5tWWmAFwg4vIjDMe/rLu0pkSoUkLTVer1SDFw8YpL5g1Vkn9TYMF
-         ST2EZM+gaP9AfL9uqzvR2cRHDbHMFVm10EUBd6j8ThaYmHkgHEZIp28Rp/Pwgt/EBnWa
-         OeWCbx7iqHBCJ7ZS6jGC99ohwVxFdmMmbO+ArhAKASGRW260fcpfumHpm4mvk2dRNnM1
-         fSJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QD7PTDoTKJ7Xg819N/X9fbQ0hWhUP/U0zNIc8U8b15M=;
-        b=CaqJFNJOGlN47WeMCK3yixvUehLHCrmM9N7+HcZubUWPY0Seya35F1mcd1ETbczV/a
-         iAyuFk/X6mZ5+/DoQrDNpo7FZT4SXT8L1i/4eC+nWfNpWF+hoBLoUqIY14jCZlv96SYC
-         WcLCwQmuIIgKMYRrYOXbtzkGHaS8zm87SX8YVK6IOSlCyIusifejHcjAwXBVlzYukhAK
-         fSNVePOGT4RF3wv/esY3SoWbFb9qjT4VDhrOp1ajZqCKbCAUJxl147cvYisAyB/qE0Ve
-         Pjb7Rh9SBR+dy5RKZweBmX+zOZLyS2Wj7icvktw48rWs0ZAApmo65z0cloH07WLAJpyy
-         TH/w==
-X-Gm-Message-State: APjAAAXec0+sNXndZ/kYmdJQVWv3nCONZxjWBigIQHVAfS8rDw0oEGkE
-        wZ2NfRfn4ZVj1G/gSK7LjyBmTiXi
-X-Google-Smtp-Source: APXvYqz8QYHBVW4jvwhPk0+4Sg4vtY8mm4+L3Sxs8VHy/Dsb9SdqndHsmTjxO09mij/b/DclZsRk6w==
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr4772701wme.81.1562099730087;
-        Tue, 02 Jul 2019 13:35:30 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id s12sm100041wmh.34.2019.07.02.13.35.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 13:35:29 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, hauke@hauke-m.de,
-        paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com,
-        ms@dev.tdt.de,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe PHYs
-Date:   Tue,  2 Jul 2019 22:35:20 +0200
-Message-Id: <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
-References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+        Tue, 2 Jul 2019 21:43:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Upd1K9b6gYlAnA97u9qb4P9fFZj9SCrhC9d0+nLfQPA=; b=MbCpvr69N4Ov9IP8oVzALxdjn
+        EI3CdYNQMTfWzhePtTYmwR+7J+FDmHKJdrbv+wVK8Zb+rP/e4hHE6h4zVTaf+fwR8zrdSdq12os+o
+        HIxlqbYzR4jBuZdiqcGN7L7yNjnFzQwF5jhGr4BJnXOJGI3QFwLgMdft7+8lYlBUxZPEWl2qBhJa4
+        2opG9GsTH2+kCUMZUoVmVbOWPQWoM7jw6ddY0UjDYiK1Irr6o7o0PW45EKo9WSThHyPwj6jt18NRe
+        YNPJ1kUlOrEIIb+4PSx/2F27ugyY2rCbcqxcwCdIrVGKC3ZzctIVpD2E5vcdcIYMW3zo9UaIFWwkO
+        Q6SdsZxcQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiPEU-0000vQ-EL; Tue, 02 Jul 2019 20:18:31 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AD9C5207B53F0; Tue,  2 Jul 2019 22:18:27 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 22:18:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
+ unnecessarily
+Message-ID: <20190702201827.GF3402@hirez.programming.kicks-ass.net>
+References: <20190702053151.26922-1-devel@etsukata.com>
+ <20190702072821.GX3419@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
+ <20190702113355.5be9ebfe@gandalf.local.home>
+ <20190702133905.1482b87e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702133905.1482b87e@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
-The IP block contains settings for the PHY and a PLL.
-The PLL mode is configurable through a dedicated #phy-cell in .dts.
+On Tue, Jul 02, 2019 at 01:39:05PM -0400, Steven Rostedt wrote:
+> On Tue, 2 Jul 2019 11:33:55 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
+> > >   
+> > > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:    
+> > > > > Put the boundary check before it accesses user space to prevent unnecessary
+> > > > > access which might crash the machine.
+> > > > > 
+> > > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
+> > > > > option can trigger SEGV in pid 1 which leads to panic.    
+> > 
+> > Note, I'm only able to trigger this crash with the irq_disable event.
+> > The irq_enable and preempt_disable/enable events work just fine. This
+> > leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
+> > trampoline) may have some issues and is probably the place to look at.
+> 
+> I figured it out.
+> 
+> It's another "corruption of the cr2" register issue. The following
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
- .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
- 2 files changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
- create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+Arrggghhh..
 
-diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-new file mode 100644
-index 000000000000..b7b222e772d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+properties:
-+  "#phy-cells":
-+    const: 1
-+    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
-+
-+  compatible:
-+    enum:
-+      - lantiq,vrx200-pcie-phy
-+      - lantiq,arx300-pcie-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: PHY module clock
-+      - description: PDI register clock
-+
-+  clock-names:
-+    items:
-+      - const: phy
-+      - const: pdi
-+
-+  resets:
-+    items:
-+      - description: exclusive PHY reset line
-+      - description: shared reset line between the PCIe PHY and PCIe controller
-+
-+  resets-names:
-+    items:
-+      - const: phy
-+      - const: pcie
-+
-+  lantiq,rcu:
-+    maxItems: 1
-+    description: phandle to the RCU syscon
-+
-+  lantiq,rcu-endian-offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: the offset of the endian registers for this PHY instance in the RCU syscon
-+
-+  lantiq,rcu-big-endian-mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
-+
-+required:
-+  - "#phy-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - lantiq,rcu
-+  - lantiq,rcu-endian-offset
-+  - lantiq,rcu-big-endian-mask
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pcie0_phy: phy@106800 {
-+        compatible = "lantiq,vrx200-pcie-phy";
-+        reg = <0x106800 0x100>;
-+        lantiq,rcu = <&rcu0>;
-+        lantiq,rcu-endian-offset = <0x4c>;
-+        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
-+        big-endian;
-+        clocks = <&pmu PCIE_PHY>, <&pmu PCIE_PHY_PDI>;
-+        clock-names = "phy", "pdi";
-+        resets = <&reset0 12 24>, <&reset0 22 22>;
-+        reset-names = "phy", "pcie";
-+        #phy-cells = <1>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-new file mode 100644
-index 000000000000..95a7896356d6
---- /dev/null
-+++ b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#define LANTIQ_PCIE_PHY_MODE_25MHZ		0
-+#define LANTIQ_PCIE_PHY_MODE_25MHZ_SSC		1
-+#define LANTIQ_PCIE_PHY_MODE_36MHZ		2
-+#define LANTIQ_PCIE_PHY_MODE_36MHZ_SSC		3
-+#define LANTIQ_PCIE_PHY_MODE_100MHZ		4
-+#define LANTIQ_PCIE_PHY_MODE_100MHZ_SSC		5
--- 
-2.22.0
+> patch makes the issue go away. I'm not suggesting that we use this
+> patch, but it shows where the bug lies.
+> 
+> IIRC, there was patches posted before that fixed this issue. I'll go
+> look to see if I can dig them up. Was it Joel that sent them?
 
+https://lkml.kernel.org/r/20190320221534.165ab87b@oasis.local.home
+
+I think; lemme re-read that thread.
