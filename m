@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AAAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8600BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BAC2184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD9D2184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054974;
-	bh=3gW9ZjiU8utGDj75DA2lbQz8zKSXQmmL5BoOTTOKORc=;
+	s=default; t=1562054977;
+	bh=Kc0XjGKfQdfmxSYJmjju9/pGuuC4ceI9CF999iOOnW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1vFR1Ej1T3CbK/RUjIb1WT/0Ow7oJrw7IAvBsw+1XIBY9eKpXBSw0Vs5BsmsVFbSt
-	 vt4EZrEPRpH+DbF5qwg3U5tEC/ohTg5ei8Cfe/4NtaO+vyzy1UqlvblWPpXmjLJ/GQ
-	 rEDFZDRXEyR1Zkexrb3phMSf84zLziQ6Lw6n7+uU=
+	b=FJx0zzp9LM8jyCSlqklTFcALpXEXZ/ub0D2F34QbLFvBOUt0o9mY02SFIS4IYgHWJ
+	 oMX/5vl0YL2E+XrEeafcI0/W/82Ck3yG8HWDfNSgAlWGytItHBwEyHAZ2HNgCWT9C6
+	 Swm6hpVP2p46JSf9tp86X5akpNRcVMfyXyZ5FlAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfGBIJd (ORCPT
+        id S1728705AbfGBIJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbfGBIJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:30 -0400
+        id S1728671AbfGBIJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F03C206A2;
-        Tue,  2 Jul 2019 08:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A824A21479;
+        Tue,  2 Jul 2019 08:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054969;
-        bh=3gW9ZjiU8utGDj75DA2lbQz8zKSXQmmL5BoOTTOKORc=;
+        s=default; t=1562054972;
+        bh=Kc0XjGKfQdfmxSYJmjju9/pGuuC4ceI9CF999iOOnW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWZfNfRjR50VO5zyZpv/nT3uxH2wJurq9xBUgHWjNc88UqRckJP2H2cZ1QQdLEmok
-         m6ORLdhWaOcwvRH65kmRiwFka7Q70kZCUuOycicEk2ZoRctofS3MBwGrgjapN8GU11
-         3Atg0bOZcdPDO7lM4VfiuGgnjypFx2Xryyn5g+1U=
+        b=UQcq+gCpAkoeZ7loTWxgbBA8HqSfIdloOOviN+fDvNmDoQa/iwVKa1d00ye0LFcF2
+         sWn90B7hm/gs5icl3XzBHFYscwfQ6i9yJDmU176qQk/lEGraCBNGh1TnYuu5vu/DvO
+         thul8EoHRfxCyJaaF/MauXUxkMjIMt9BR8zTRqn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Martin Wilck <mwilck@suse.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/43] block: add a lower-level bio_add_page interface
-Date:   Tue,  2 Jul 2019 10:01:46 +0200
-Message-Id: <20190702080124.186376743@linuxfoundation.org>
+Subject: [PATCH 4.14 07/43] block: bio_iov_iter_get_pages: pin more pages for multi-segment IOs
+Date:   Tue,  2 Jul 2019 10:01:47 +0200
+Message-Id: <20190702080124.234196405@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -61,181 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0aa69fd32a5f766e997ca8ab4723c5a1146efa8b ]
+[ Upstream commit 17d51b10d7773e4618bcac64648f30f12d4078fb ]
 
-For the upcoming removal of buffer heads in XFS we need to keep track of
-the number of outstanding writeback requests per page.  For this we need
-to know if bio_add_page merged a region with the previous bvec or not.
-Instead of adding additional arguments this refactors bio_add_page to
-be implemented using three lower level helpers which users like XFS can
-use directly if they care about the merge decisions.
+bio_iov_iter_get_pages() currently only adds pages for the next non-zero
+segment from the iov_iter to the bio. That's suboptimal for callers,
+which typically try to pin as many pages as fit into the bio. This patch
+converts the current bio_iov_iter_get_pages() into a static helper, and
+introduces a new helper that allocates as many pages as
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+ 1) fit into the bio,
+ 2) are present in the iov_iter,
+ 3) and can be pinned by MM.
+
+Error is returned only if zero pages could be pinned. Because of 3), a
+zero return value doesn't necessarily mean all pages have been pinned.
+Callers that have to pin every page in the iov_iter must still call this
+function in a loop (this is currently the case).
+
+This change matters most for __blkdev_direct_IO_simple(), which calls
+bio_iov_iter_get_pages() only once. If it obtains less pages than
+requested, it returns a "short write" or "short read", and
+__generic_file_write_iter() falls back to buffered writes, which may
+lead to data corruption.
+
+Fixes: 72ecad22d9f1 ("block: support a full bio worth of IO for simplified bdev direct-io")
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio.c         | 96 +++++++++++++++++++++++++++++----------------
- include/linux/bio.h |  9 +++++
- 2 files changed, 72 insertions(+), 33 deletions(-)
+ block/bio.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index d01ab919b313..c1386ce2c014 100644
+index c1386ce2c014..1384f9790882 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -773,7 +773,7 @@ int bio_add_pc_page(struct request_queue *q, struct bio *bio, struct page
- 			return 0;
- 	}
- 
--	if (bio->bi_vcnt >= bio->bi_max_vecs)
-+	if (bio_full(bio))
- 		return 0;
- 
- 	/*
-@@ -821,52 +821,82 @@ int bio_add_pc_page(struct request_queue *q, struct bio *bio, struct page
- EXPORT_SYMBOL(bio_add_pc_page);
+@@ -902,14 +902,16 @@ int bio_add_page(struct bio *bio, struct page *page,
+ EXPORT_SYMBOL(bio_add_page);
  
  /**
-- *	bio_add_page	-	attempt to add page to bio
-- *	@bio: destination bio
-- *	@page: page to add
-- *	@len: vec entry length
-- *	@offset: vec entry offset
-+ * __bio_try_merge_page - try appending data to an existing bvec.
-+ * @bio: destination bio
-+ * @page: page to add
-+ * @len: length of the data to add
-+ * @off: offset of the data in @page
+- * bio_iov_iter_get_pages - pin user or kernel pages and add them to a bio
++ * __bio_iov_iter_get_pages - pin user or kernel pages and add them to a bio
+  * @bio: bio to add pages to
+  * @iter: iov iterator describing the region to be mapped
   *
-- *	Attempt to add a page to the bio_vec maplist. This will only fail
-- *	if either bio->bi_vcnt == bio->bi_max_vecs or it's a cloned bio.
-+ * Try to add the data at @page + @off to the last bvec of @bio.  This is a
-+ * a useful optimisation for file systems with a block size smaller than the
-+ * page size.
-+ *
-+ * Return %true on success or %false on failure.
+- * Pins as many pages from *iter and appends them to @bio's bvec array. The
++ * Pins pages from *iter and appends them to @bio's bvec array. The
+  * pages will have to be released using put_page() when done.
++ * For multi-segment *iter, this function only adds pages from the
++ * the next non-empty segment of the iov iterator.
   */
--int bio_add_page(struct bio *bio, struct page *page,
--		 unsigned int len, unsigned int offset)
-+bool __bio_try_merge_page(struct bio *bio, struct page *page,
-+		unsigned int len, unsigned int off)
+-int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
++static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
  {
--	struct bio_vec *bv;
--
--	/*
--	 * cloned bio must not modify vec list
--	 */
- 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
--		return 0;
-+		return false;
- 
--	/*
--	 * For filesystems with a blocksize smaller than the pagesize
--	 * we will often be called with the same page as last time and
--	 * a consecutive offset.  Optimize this special case.
--	 */
- 	if (bio->bi_vcnt > 0) {
--		bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
-+		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
--		if (page == bv->bv_page &&
--		    offset == bv->bv_offset + bv->bv_len) {
-+		if (page == bv->bv_page && off == bv->bv_offset + bv->bv_len) {
- 			bv->bv_len += len;
--			goto done;
-+			bio->bi_iter.bi_size += len;
-+			return true;
- 		}
- 	}
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(__bio_try_merge_page);
- 
--	if (bio->bi_vcnt >= bio->bi_max_vecs)
--		return 0;
-+/**
-+ * __bio_add_page - add page to a bio in a new segment
-+ * @bio: destination bio
-+ * @page: page to add
-+ * @len: length of the data to add
-+ * @off: offset of the data in @page
-+ *
-+ * Add the data at @page + @off to @bio as a new bvec.  The caller must ensure
-+ * that @bio has space for another bvec.
-+ */
-+void __bio_add_page(struct bio *bio, struct page *page,
-+		unsigned int len, unsigned int off)
-+{
-+	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt];
- 
--	bv		= &bio->bi_io_vec[bio->bi_vcnt];
--	bv->bv_page	= page;
--	bv->bv_len	= len;
--	bv->bv_offset	= offset;
-+	WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED));
-+	WARN_ON_ONCE(bio_full(bio));
-+
-+	bv->bv_page = page;
-+	bv->bv_offset = off;
-+	bv->bv_len = len;
- 
--	bio->bi_vcnt++;
--done:
- 	bio->bi_iter.bi_size += len;
-+	bio->bi_vcnt++;
-+}
-+EXPORT_SYMBOL_GPL(__bio_add_page);
+ 	unsigned short nr_pages = bio->bi_max_vecs - bio->bi_vcnt, idx;
+ 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
+@@ -946,6 +948,33 @@ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 	iov_iter_advance(iter, size);
+ 	return 0;
+ }
 +
 +/**
-+ *	bio_add_page	-	attempt to add page to bio
-+ *	@bio: destination bio
-+ *	@page: page to add
-+ *	@len: vec entry length
-+ *	@offset: vec entry offset
++ * bio_iov_iter_get_pages - pin user or kernel pages and add them to a bio
++ * @bio: bio to add pages to
++ * @iter: iov iterator describing the region to be mapped
 + *
-+ *	Attempt to add a page to the bio_vec maplist. This will only fail
-+ *	if either bio->bi_vcnt == bio->bi_max_vecs or it's a cloned bio.
++ * Pins pages from *iter and appends them to @bio's bvec array. The
++ * pages will have to be released using put_page() when done.
++ * The function tries, but does not guarantee, to pin as many pages as
++ * fit into the bio, or are requested in *iter, whatever is smaller.
++ * If MM encounters an error pinning the requested pages, it stops.
++ * Error is returned only if 0 pages could be pinned.
 + */
-+int bio_add_page(struct bio *bio, struct page *page,
-+		 unsigned int len, unsigned int offset)
++int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
 +{
-+	if (!__bio_try_merge_page(bio, page, len, offset)) {
-+		if (bio_full(bio))
-+			return 0;
-+		__bio_add_page(bio, page, len, offset);
-+	}
- 	return len;
- }
- EXPORT_SYMBOL(bio_add_page);
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index d4b39caf081d..e260f000b9ac 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -123,6 +123,11 @@ static inline void *bio_data(struct bio *bio)
- 	return NULL;
- }
- 
-+static inline bool bio_full(struct bio *bio)
-+{
-+	return bio->bi_vcnt >= bio->bi_max_vecs;
-+}
++	unsigned short orig_vcnt = bio->bi_vcnt;
 +
- /*
-  * will die
-  */
-@@ -459,6 +464,10 @@ void bio_chain(struct bio *, struct bio *);
- extern int bio_add_page(struct bio *, struct page *, unsigned int,unsigned int);
- extern int bio_add_pc_page(struct request_queue *, struct bio *, struct page *,
- 			   unsigned int, unsigned int);
-+bool __bio_try_merge_page(struct bio *bio, struct page *page,
-+		unsigned int len, unsigned int off);
-+void __bio_add_page(struct bio *bio, struct page *page,
-+		unsigned int len, unsigned int off);
- int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter);
- struct rq_map_data;
- extern struct bio *bio_map_user_iov(struct request_queue *,
++	do {
++		int ret = __bio_iov_iter_get_pages(bio, iter);
++
++		if (unlikely(ret))
++			return bio->bi_vcnt > orig_vcnt ? 0 : ret;
++
++	} while (iov_iter_count(iter) && !bio_full(bio));
++
++	return 0;
++}
+ EXPORT_SYMBOL_GPL(bio_iov_iter_get_pages);
+ 
+ struct submit_bio_ret {
 -- 
 2.20.1
 
