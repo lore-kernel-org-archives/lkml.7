@@ -2,121 +2,82 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6A2C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05EBC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DA12082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hz9BIU2A"
+	by mail.kernel.org (Postfix) with ESMTP id B686C21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562090370;
+	bh=jldOSORjTXuV/e+V0eHEheGdoG2uE9kVM1Mc0/gseU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WAbBqhjsb6iutDvAuNS7AIBLOIM1d8CPOyeay0kPmAZHD3IGtEDTFTCeUMnxDak01
+	 XYX8r5KH2WAdkvu/ixXaddGD/2mJgsKnZD1W5obKxokYU9TCcpEpw1y+Zwkk99/9ZX
+	 W2bN0eddmA5+4utzZjKZi1xyAMzwmXa2AmZAUoHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfGBR5b (ORCPT
+        id S1726936AbfGBR73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:57:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56596 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGBR5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:57:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+ahNi2HxAhGkWgnbOtQn1Bz7SyXdYLczH+wsKwNvLNw=; b=Hz9BIU2AICwcJllrZaeL/YFGd
-        LMeLTLdbianYtjq/4Vn43w2iMMliWpV5remUoYvE5ndDrkVvYI3ShZMtHTzbySy4Xc5lcn4Gea3+/
-        uQydZlZAJBE8cu0eKQ6a04TNBJY+GLk5uytNLE7BE+6V4E/ER62JdXeVt7eJ381Sxphp0y8zUAZQx
-        pmNi393HmWOH+Ldx2M3HT2LXxMTn+B18gMLticPzXtuxLvWh/fsgt9HkFeA5ti+4ridfcTSysfEXX
-        jpViWgbv6C0xhPTnp1uzrNGEoLQQVVZqwrJ0cz8ZP2OFWrS/xHN3nZYkDunjNvF/brjBOzVOU3iXB
-        9/lBK8k+w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiN21-0006vi-Or; Tue, 02 Jul 2019 17:57:29 +0000
-Date:   Tue, 2 Jul 2019 10:57:29 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] Documentation/filesystems: add binderfs
-Message-ID: <20190702175729.GF1729@bombadil.infradead.org>
-References: <20190111134100.24095-1-christian@brauner.io>
- <20190114172401.018afb9c@lwn.net>
+        Tue, 2 Jul 2019 13:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGBR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:59:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53BAF2089C;
+        Tue,  2 Jul 2019 17:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562090368;
+        bh=jldOSORjTXuV/e+V0eHEheGdoG2uE9kVM1Mc0/gseU8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MMJxnI+oKrOaX7UXDex/RrGc4wTuulzbRR5SePPm6B+euF/XT5o0vXXvN+avPrbsD
+         OZny2AqNPaPzl+N+wkXePhb4m5UEI9mrDnFVFs2daxv+mDiYwvw4gB6i1wCQ7j8dy3
+         YHYi7fRFryZwCe1AGoDGIrds0kd97X2t5cwcTJec=
+Date:   Tue, 2 Jul 2019 19:59:24 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        kernel-janitors@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] openpromfs: Adjust three seq_printf() calls in
+ property_show()
+Message-ID: <20190702175924.GA20949@kroah.com>
+References: <22563348-fefa-8540-9d71-de37764f0596@web.de>
+ <c26343465261e636ef029b8d0d7cb46183a23d23.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190114172401.018afb9c@lwn.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <c26343465261e636ef029b8d0d7cb46183a23d23.camel@perches.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 05:24:01PM -0700, Jonathan Corbet wrote:
-> On Fri, 11 Jan 2019 14:40:59 +0100
-> Christian Brauner <christian@brauner.io> wrote:
-> > This documents the Android binderfs filesystem used to dynamically add and
-> > remove binder devices that are private to each instance.
+On Tue, Jul 02, 2019 at 09:08:04AM -0700, Joe Perches wrote:
+> On Tue, 2019-07-02 at 17:40 +0200, Markus Elfring wrote:
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Tue, 2 Jul 2019 17:24:27 +0200
+> > 
+> > A bit of information should be put into a sequence.
+> > Thus improve the execution speed for this data output by better usage
+> > of corresponding functions.
+> > 
+> > This issue was detected by using the Coccinelle software.
 > 
-> You didn't add it to index.rst, so it won't actually become part of the
-> docs build.
+> (wasn't Markus perma-banned?)
 
-I think you added it in the wrong place.
+He's in my kill-file, I recommend you doing the same, it's much easier
+that way :)
 
-From 8167b80c950834da09a9204b6236f238197c197b Mon Sep 17 00:00:00 2001
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Date: Tue, 2 Jul 2019 13:54:38 -0400
-Subject: [PATCH] docs: Move binderfs to admin-guide
+thanks,
 
-The documentation is more appropriate for the administrator than for
-the internal kernel API section it is currently in.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- .../{filesystems => admin-guide}/binderfs.rst          |  0
- Documentation/admin-guide/index.rst                    |  1 +
- Documentation/filesystems/index.rst                    | 10 ----------
- 3 files changed, 1 insertion(+), 10 deletions(-)
- rename Documentation/{filesystems => admin-guide}/binderfs.rst (100%)
-
-diff --git a/Documentation/filesystems/binderfs.rst b/Documentation/admin-guide/binderfs.rst
-similarity index 100%
-rename from Documentation/filesystems/binderfs.rst
-rename to Documentation/admin-guide/binderfs.rst
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 8001917ee012..24fbe0568eff 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
-    ras
-    bcache
-    ext4
-+   binderfs
-    pm/index
-    thunderbolt
-    LSM/index
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 1131c34d77f6..970c0a3ec377 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -31,13 +31,3 @@ filesystem implementations.
- 
-    journalling
-    fscrypt
--
--Filesystem-specific documentation
--=================================
--
--Documentation for individual filesystem types can be found here.
--
--.. toctree::
--   :maxdepth: 2
--
--   binderfs.rst
--- 
-2.20.1
-
+greg k-h
