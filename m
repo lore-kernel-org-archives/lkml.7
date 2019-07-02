@@ -7,31 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71573C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15172C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4586F2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E795C2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBGTG (ORCPT
+        id S1726475AbfGBGUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:19:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43162 "EHLO huawei.com"
+        Tue, 2 Jul 2019 02:20:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44432 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfGBGTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:19:05 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C16D8DE93E71B9707C08
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2019 14:19:01 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 14:18:51 +0800
+        id S1725775AbfGBGUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 02:20:48 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D31A995C6CEF97FA6E31;
+        Tue,  2 Jul 2019 14:20:45 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 14:20:38 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tglx@linutronix.de>, <ferdinand.blomqvist@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] rslib: Make some functions static
-Date:   Tue, 2 Jul 2019 14:18:47 +0800
-Message-ID: <20190702061847.26060-1-yuehaibing@huawei.com>
+To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
+        <intel-wired-lan@lists.osuosl.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] iavf: remove unused debug function iavf_debug_d
+Date:   Tue, 2 Jul 2019 14:20:21 +0800
+Message-ID: <20190702062021.41524-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,55 +44,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
-
-lib/reed_solomon/test_rslib.c:313:5: warning: symbol 'ex_rs_helper' was not declared. Should it be static?
-lib/reed_solomon/test_rslib.c:349:5: warning: symbol 'exercise_rs' was not declared. Should it be static?
-lib/reed_solomon/test_rslib.c:407:5: warning: symbol 'exercise_rs_bc' was not declared. Should it be static?
+There is no caller of function iavf_debug_d() in tree since
+commit 75051ce4c5d8 ("iavf: Fix up debug print macro"),
+so it can be removed.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- lib/reed_solomon/test_rslib.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/iavf/iavf_main.c | 22 ----------------------
+ 1 file changed, 22 deletions(-)
 
-diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
-index eb62e03..4eb29f3 100644
---- a/lib/reed_solomon/test_rslib.c
-+++ b/lib/reed_solomon/test_rslib.c
-@@ -310,8 +310,8 @@ static void test_uc(struct rs_control *rs, int len, int errs,
- 	stat->nwords += trials;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+index 881561b..327dda8 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_main.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+@@ -143,28 +143,6 @@ enum iavf_status iavf_free_virt_mem_d(struct iavf_hw *hw,
  }
  
--int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
--		int len, int trials, int method)
-+static int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
-+			int len, int trials, int method)
- {
- 	static const char * const desc[] = {
- 		"Testing correction buffer interface...",
-@@ -346,8 +346,8 @@ int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
- 	return retval;
- }
- 
--int exercise_rs(struct rs_control *rs, struct wspace *ws,
--		int len, int trials)
-+static int exercise_rs(struct rs_control *rs, struct wspace *ws,
-+		       int len, int trials)
- {
- 
- 	int retval = 0;
-@@ -404,8 +404,8 @@ static void test_bc(struct rs_control *rs, int len, int errs,
- 	stat->nwords += trials;
- }
- 
--int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
--		int len, int trials)
-+static int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
-+			  int len, int trials)
- {
- 	struct bcstat stat = {0, 0, 0, 0};
- 	int nroots = rs->codec->nroots;
+ /**
+- * iavf_debug_d - OS dependent version of debug printing
+- * @hw:  pointer to the HW structure
+- * @mask: debug level mask
+- * @fmt_str: printf-type format description
+- **/
+-void iavf_debug_d(void *hw, u32 mask, char *fmt_str, ...)
+-{
+-	char buf[512];
+-	va_list argptr;
+-
+-	if (!(mask & ((struct iavf_hw *)hw)->debug_mask))
+-		return;
+-
+-	va_start(argptr, fmt_str);
+-	vsnprintf(buf, sizeof(buf), fmt_str, argptr);
+-	va_end(argptr);
+-
+-	/* the debug string is already formatted with a newline */
+-	pr_info("%s", buf);
+-}
+-
+-/**
+  * iavf_schedule_reset - Set the flags and schedule a reset event
+  * @adapter: board private structure
+  **/
 -- 
 2.7.4
 
