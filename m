@@ -2,138 +2,156 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0835AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB6C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13A6219BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C09B219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAAAHHf5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4QfsUpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfGCAaq (ORCPT
+        id S1727379AbfGCAay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:30:46 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40287 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfGCAap (ORCPT
+        Tue, 2 Jul 2019 20:30:54 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42467 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfGCAaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:30:45 -0400
-Received: by mail-pf1-f195.google.com with SMTP id p184so273178pfp.7;
-        Tue, 02 Jul 2019 17:30:44 -0700 (PDT)
+        Tue, 2 Jul 2019 20:30:52 -0400
+Received: by mail-ed1-f65.google.com with SMTP id z25so289911edq.9;
+        Tue, 02 Jul 2019 17:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t3kvAYxZ9YfB3CErs/a0pOWO4ZDaH45y/5BXSbrPysE=;
-        b=nAAAHHf5Jhq0CPzmiVQ+diqs3YNFkJMpwWivvfs3Z3TeIdRyFEWlDUKogew+cbhhB4
-         MuNhbAT5rEZQKQXWE4Z8DXIVx3jqoIVYiJqftA/B2m1oe+Nmfww6QVm8ARClFuZwalX3
-         xGhV9BEeNzq7e7+0Jt0LfSvDBFEIw/aO7RvXX16XMJFXncbMFpmRGTKiEfXWnXmmBOwz
-         v9tCNDgE7AyS25BrN3cxAJcIZHrg0eMfK/Yra3lEWDjnCbAXuI3NOSdTbAj8AnVgqPaH
-         +vMwJUSzkOzdWQl2DyWy77wiuWDbr87YobkqS9PYQnNL8ON2MyQY0aAxIMtG7bkc1zHY
-         C2HQ==
+        bh=SUMBHjqHxfFISJ4tsGh6gHnVJafzY5uBObk9/M1SI6Y=;
+        b=p4QfsUpxZBUPSNbm9a2ya6+yOVBLb06CncvEKO0qxtLknZ9dc5s45n/yCCCk8pVAGr
+         kTtuJCFsVLSmNXI13tt/3c+qkzMeuAESDbdCbiFxU8ZGu73hjgvAB7S/EKz0qJg50PM0
+         mggd9oJOp7fMPe31Y0DXLnsbQg44FXj8SGYjCyvHT1W/uN6YXAprbpsjvRGAUJjnYqRY
+         UbDxAZ046ar2qRfBKMqC0yk+pCMu82zzkmqLwb0ooQKB2mTZVaIkovBFit3MwyXI7wOa
+         w8KYcr5NOXHJ2fqa9bjhrPr+UG3CdQ92BH7V+3eVd900MzHNSuuuaZW55wl9e7h6e4PB
+         vpLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t3kvAYxZ9YfB3CErs/a0pOWO4ZDaH45y/5BXSbrPysE=;
-        b=Evjtu0ktXuHi14sXZ7POp4VnPgqGhOAuHEinAFAyTj/nJtN2iqEKuWT+sMEiFqWW4e
-         KLUMteKUAvaREBX5Unnc9bfPYc93Tfl4rkpfCFWh5KIxVy8a7ZR7aWIIGNtIp3LIf5VP
-         28nqy8T7HVjDzbwf8BVfg5lRKxcWzRf2j9eO5MNSx/nOWkPN7y+2KndxdS6v61KeKz/R
-         7o4t5ZDP5YN2OzPbJtdIbdJpDDw6LimlxYYoDx1fQmR6EB8w5W3YK5s4MzCnJ8PUv0YA
-         gK6f6p/Hddy1gCNpgYR7Cm+qoQkos0Z/Fq+JV0vOAMKygW9rbv+W7wb5d/28ce1GqEzL
-         GS6Q==
-X-Gm-Message-State: APjAAAUlj7c0PHUZCGYx3YoPmJF+7WcZYhbN7zp7R0r29HSUXoWiIqFM
-        7C8hUQdYW7npKXZyemGwQmZ+Z95mwcn1SIuKHFuKj5Hd
-X-Google-Smtp-Source: APXvYqzbHumWotK093sUi124dPGbA3soHvzWAIdlOwFN2MycCmHQQWsEBzSp3Ct0ygT1bevzBTdPflT84VNatn18ojU=
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr7742124pjb.138.1562102962310;
- Tue, 02 Jul 2019 14:29:22 -0700 (PDT)
+        bh=SUMBHjqHxfFISJ4tsGh6gHnVJafzY5uBObk9/M1SI6Y=;
+        b=aVNjQ3aZKn5OZO6na5MU7plZ2bIrRI4uKGXUdogHKc83QwSguIIWojeTQ6a98RJsoY
+         seUCji2cu6dDrRoai6omiLtnJNGl9aCP8lokwtBo0iHvcEfeNNaiMRwxbf55M1jjmjZ/
+         wKrZ6vd7qOi5YS9fXauI1ZGNUoypzd5cKYVawj1/qa79TGAndm5st5RctIA83j4tKex6
+         +MCqM1iFMMjZAkvGK1dUYUsmZMJVbMMK4xsR5ToS6E9fcO5s1uYN7YjgOj+SkJwI1gi8
+         mRqrLXCigMVnFiSPCjeyNPoc4qB7TUtCz/AuF7TFimruNZhHteLUdS7r1yW5KT6uKT7G
+         sR0Q==
+X-Gm-Message-State: APjAAAUEb3xclV+iEMHuPIodvsXJzHwrFrAskdb9Mv29M+8tmv8+1g1g
+        TVlQIbeBrkovOrG7/E0htTtfVmNDeORQGsqLuL+4aToXaVs=
+X-Google-Smtp-Source: APXvYqx4j4OCiYpTjzpwx7oNckBn+SqKRP14iTHp1P6MaiYoDQDLUnA3ecoEITujxJ6YGjIOt/liDhVugoLpxJ8Knu0=
+X-Received: by 2002:a50:9468:: with SMTP id q37mr38323779eda.163.1562107743736;
+ Tue, 02 Jul 2019 15:49:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702182001.GA11497@hari-Inspiron-1545>
-In-Reply-To: <20190702182001.GA11497@hari-Inspiron-1545>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 2 Jul 2019 16:29:10 -0500
-Message-ID: <CAH2r5mtrVbTP-iO6XebrXXL83aS80RDiYS7G4-FZC43-ieUk8w@mail.gmail.com>
-Subject: Re: [PATCH] fs: cifs: cifsssmb: Change return type of convert_ace_to_cifs_ace
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
+ <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
+ <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+ <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com> <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
+In-Reply-To: <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 2 Jul 2019 15:48:48 -0700
+Message-ID: <CAF6AEGvm62rcm4Lp4a+QmqFweVQ0QWXLDoN2CP8=40BdwiiVbQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
+To:     Leif Lindholm <leif.lindholm@linaro.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Alexander Graf <agraf@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
-
-On Tue, Jul 2, 2019 at 1:20 PM Hariprasad Kelam
-<hariprasad.kelam@gmail.com> wrote:
+On Tue, Jul 2, 2019 at 2:59 PM Leif Lindholm <leif.lindholm@linaro.org> wrote:
 >
-> Change return from int to void of  convert_ace_to_cifs_ace as it never
-> fails.
+> On Tue, Jul 02, 2019 at 02:01:49PM -0700, Rob Clark wrote:
+> > > > So we are dealing with a platform that violates the UEFI spec, since
+> > > > it does not bother to implement variable services at runtime (because
+> > > > MS let the vendor get away with this).
+> > >
+> > > To clarify, the above remark applies to populating the DT from the OS
+> > > rather than from the firmware.
+> >
+> > yeah, it isn't pretty, but there *are* some other similar cases where
+> > efi-stub is populating DT.. (like update_fdt_memmap() and
+> > kaslr-seed)..
 >
-> fixes below issue reported by coccicheck
-> fs/cifs/cifssmb.c:3606:7-9: Unneeded variable: "rc". Return "0" on line
-> 3620
+> The problem isn't with the stub updating the DT, the problem is what
+> it updates it with.
 >
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  fs/cifs/cifssmb.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
+> update_fdt_memmap() is the stub filling in the information it
+> communicates to the main kernel.
 >
-> diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-> index 2ea2855..6228719 100644
-> --- a/fs/cifs/cifssmb.c
-> +++ b/fs/cifs/cifssmb.c
-> @@ -3600,11 +3600,9 @@ static int cifs_copy_posix_acl(char *trgt, char *src, const int buflen,
->         return size;
->  }
+> kaslr-seed sets a standard property using a standard interface if that
+> interface is available to it at the point of execution.
 >
-> -static __u16 convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
-> +static void convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
->                                      const struct posix_acl_xattr_entry *local_ace)
->  {
-> -       __u16 rc = 0; /* 0 = ACL converted ok */
-> -
->         cifs_ace->cifs_e_perm = le16_to_cpu(local_ace->e_perm);
->         cifs_ace->cifs_e_tag =  le16_to_cpu(local_ace->e_tag);
->         /* BB is there a better way to handle the large uid? */
-> @@ -3617,7 +3615,6 @@ static __u16 convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
->         cifs_dbg(FYI, "perm %d tag %d id %d\n",
->                  ace->e_perm, ace->e_tag, ace->e_id);
->  */
-> -       return rc;
->  }
+> Since what we're doing here is dressing up an ACPI platform to make it
+> look like it was a DT platform, and since we have the ability to tweak
+> the DT before ever passing it to the kernel, let's just do that.
 >
->  /* Convert ACL from local Linux POSIX xattr to CIFS POSIX ACL wire format */
-> @@ -3653,13 +3650,8 @@ static __u16 ACL_to_cifs_posix(char *parm_data, const char *pACL,
->                 cifs_dbg(FYI, "unknown ACL type %d\n", acl_type);
->                 return 0;
->         }
-> -       for (i = 0; i < count; i++) {
-> -               rc = convert_ace_to_cifs_ace(&cifs_acl->ace_array[i], &ace[i]);
-> -               if (rc != 0) {
-> -                       /* ACE not converted */
-> -                       break;
-> -               }
-> -       }
-> +       for (i = 0; i < count; i++)
-> +               convert_ace_to_cifs_ace(&cifs_acl->ace_array[i], &ace[i]);
->         if (rc == 0) {
->                 rc = (__u16)(count * sizeof(struct cifs_posix_ace));
->                 rc += sizeof(struct cifs_posix_acl);
-> --
-> 2.7.4
+> Yes, I know I said I'd rather not, but it's way nicer than sticking
+> platform-specific hacks into the EFI stub.
+>
+> (If adding it as a DT property is indeed the thing to do.)
+>
+> > > ... but saving variables at boot time for consumption at runtime is
+> > > something that we will likely see more of in the future.
+> >
+> > I think this will be nice, but it also doesn't address the need for a
+> > quirk to get this into /chosen..  I guess we *could* use a shim or
+> > something that runs before the kernel to do this.  But that just seems
+> > like a logistical/support nightmare.
+> >
+> > There is one kernel, and there
+> > are N distro's, so debugging a users "I don't get a screen at boot"
+> > problem because their distro missed some shim patch really just
+> > doesn't seem like a headache I want to have.
+>
+> The distros should not need to be aware *at all* of the hacks required
+> to disguise these platforms as DT platforms.
+>
+> If they do, they're already device-specific installers and have
+> already accepted the logistical/support nightmare.
 >
 
+I guess I'm not *against* a DT loader shim populating the panel-id
+over into /chosen.. I had it in mind as a backup plan.  Ofc still need
+to get dt folks to buy into /chosen/panel-id but for DT boot I think
+that is the best option.  (At least the /chosen/panel-id approach
+doesn't require the shim to be aware of how the panel is wired up to
+dsi controller and whether their is a bridge in between, and that
+short of thing, so the panel-id approach seems more maintainable that
+other options.)
 
--- 
-Thanks,
+I am a bit fearful of problems arising from different distros and
+users using different versions of shim, and how to manage that.  I
+guess if somehow "shim thing" was part of the kernel, there would by
+one less moving part... I'd know if user had kernel vX.Y.Z they'd be
+good to go vs not.  But *also* depending on a new-enough version of a
+shim, where the version # is probably not easily apparent to the end
+user, sounds a bit scary from the "all the things that can go wrong"
+point of view.  Maybe I'm paranoid, but I'm a bit worried about how to
+manage that.
 
-Steve
+BR,
+-R
