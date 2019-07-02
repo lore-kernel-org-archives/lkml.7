@@ -2,171 +2,123 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9774C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951BBC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AD8205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055423;
-	bh=GZ6x7zr+8FH2xCGjotD8waIYCou0HOtehOKgUnqZdoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oz5/E9pbxhETVzeCbNNVhDw9uWJt1dw/vXPq2ONeYGRzI7g/2ATgF39JFL2BrTT5D
-	 82WOSXV0Pb5IZ2RgVcx2pw3E3u+Ev3CckwovOCqyLBtn+uhORWSeNb7Aq42l4DMHI9
-	 0/mnCLyGoiklbvKjIrVVwNespBo+4rkCLXNKYrP0=
+	by mail.kernel.org (Postfix) with ESMTP id 5F1CC20645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwZV5NXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfGBIDI (ORCPT
+        id S1727153AbfGBISp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbfGBIDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB5F21855;
-        Tue,  2 Jul 2019 08:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054581;
-        bh=GZ6x7zr+8FH2xCGjotD8waIYCou0HOtehOKgUnqZdoc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwIVU5kD2j1ZdkG1OEFUQaeX6R55GkFEUJ2eoHCzaqyy92qnNiorqNzDulYybE3wo
-         7WCMWOxD6sf4hfjmvzDZeCv+h63QhbzDxh+y7zTvWrzlLfWjQb2wSRUqkoywfikMr+
-         2rYh8zUiFSJuPGbGPD/DqH8S7M8WvQko8V3wBdec=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Bates <sbates@raithlin.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 19/55] io_uring: ensure req->file is cleared on allocation
-Date:   Tue,  2 Jul 2019 10:01:27 +0200
-Message-Id: <20190702080125.041640340@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
-References: <20190702080124.103022729@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 2 Jul 2019 04:18:45 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:36293 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfGBISo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:18:44 -0400
+Received: by mail-yb1-f193.google.com with SMTP id t10so1023712ybk.3;
+        Tue, 02 Jul 2019 01:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HAdClOUcHZ3IYsbl5G0rdG7nEVZII6d9JlEQ/5XRWdk=;
+        b=FwZV5NXMNI5saJ1G6bx15kCv6z1R0kIQ/OlYpnallmC4052OFYRIMUdar2Pnl7GUFT
+         Q3bKhIRB0X9PALZKZh8ZbQGLPGGBaGTdk3nXfc/IZuBhK2i3ge+qe8vSc+czhI9SiGWm
+         oqj+2aBO/F6z9BoxoDfIJI37e9B7gRULfaQsthCZfuUL5r7pwHHCxQ/nspoLDRVJzrCZ
+         f2aJRey0bxy9ncHKWSneF8WW4QPHPrgarhs9/N/Zwy1bziHC/quawgJGgzu61s5nIMiO
+         RRGAi91FpAYcHZZbHGNcMElnzDj+5BIK9LJpBavEQoVi9ZmQx/vPu4FwOhh1Dk6UfHqV
+         XUhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HAdClOUcHZ3IYsbl5G0rdG7nEVZII6d9JlEQ/5XRWdk=;
+        b=I2KJ2vC9VrqspMTsQUK6WWHE+4O7upxJTNilMq8vAyXEp8H8apt0hSyV/YK4ep7JCU
+         nomP2noIZFcAGnwnFCtd9RSBj3sxjfUiRW/ehxdlNw+QvgKboDxGRofT/OYbn7tMLKFq
+         tJeSG+RMcUdxpSf72fZDJWH1egvc5ssFAZ9Hg3iqcf832ARSkB3VkRVDPFcv453/e8EU
+         MBuw8IgAN12xcM2QlTbUdACIXFpUS5plAy1k+ZRwWpLK0J7FFiLA21JKdoUXCa3R/PHP
+         2P3AMXrjVHZcdy/koHXKGVb475CfxQOtq65ugx3X2/ZSIGh75cMeQOKe9IEClwcxLAc5
+         Zp7A==
+X-Gm-Message-State: APjAAAUz1sC/srvOzg1VYacCvPxU52+gDG/wW6NLGlnLMDGXTe4kmBJF
+        JgP0ym/X/4gyKwQDDc3HytYZqoaNA/pQN8fJHiw=
+X-Google-Smtp-Source: APXvYqwClpSzv6om5yiHw+9Sq3JuKWwAJ3+EDe4nfSlCRU988YJhWO0Q93wVfyW/7gxXqZfMBwixd3t50uVQ5DNxGB4=
+X-Received: by 2002:a25:9347:: with SMTP id g7mr5943206ybo.277.1562055523517;
+ Tue, 02 Jul 2019 01:18:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190701032342.25971-1-huangfq.daxian@gmail.com> <20190701075255.GD172968@dtor-ws>
+In-Reply-To: <20190701075255.GD172968@dtor-ws>
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Date:   Tue, 2 Jul 2019 16:18:32 +0800
+Message-ID: <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use dev_get_drvdata()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Olof Johansson <olof@lixom.net>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Christian Hoff <christian_hoff@gmx.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Gabriel Fernandez <gabriel.fernandez@st.com>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+I am not an expert on this. I just write a coccinelle script to search
+this kind of misuse and fix it in a naive way.
+Could you tell me about how to use the proper bus accessors? Then I
+will fix it up and resend a v2 patch set.
 
-commit 60c112b0ada09826cc4ae6a4e55df677f76f1313 upstream.
+Thanks.
 
-Stephen reports:
-
-I hit the following General Protection Fault when testing io_uring via
-the io_uring engine in fio. This was on a VM running 5.2-rc5 and the
-latest version of fio. The issue occurs for both null_blk and fake NVMe
-drives. I have not tested bare metal or real NVMe SSDs. The fio script
-used is given below.
-
-[io_uring]
-time_based=1
-runtime=60
-filename=/dev/nvme2n1 (note /dev/nullb0 also fails)
-ioengine=io_uring
-bs=4k
-rw=readwrite
-direct=1
-fixedbufs=1
-sqthread_poll=1
-sqthread_poll_cpu=0
-
-general protection fault: 0000 [#1] SMP PTI
-CPU: 0 PID: 872 Comm: io_uring-sq Not tainted 5.2.0-rc5-cpacket-io-uring #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-RIP: 0010:fput_many+0x7/0x90
-Code: 01 48 85 ff 74 17 55 48 89 e5 53 48 8b 1f e8 a0 f9 ff ff 48 85 db 48 89 df 75 f0 5b 5d f3 c3 0f 1f 40 00 0f 1f 44 00 00 89 f6 <f0> 48 29 77 38 74 01 c3 55 48 89 e5 53 48 89 fb 65 48 \
-
-RSP: 0018:ffffadeb817ebc50 EFLAGS: 00010246
-RAX: 0000000000000004 RBX: ffff8f46ad477480 RCX: 0000000000001805
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: f18b51b9a39552b5
-RBP: ffffadeb817ebc58 R08: ffff8f46b7a318c0 R09: 000000000000015d
-R10: ffffadeb817ebce8 R11: 0000000000000020 R12: ffff8f46ad4cd000
-R13: 00000000fffffff7 R14: ffffadeb817ebe30 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff8f46b7a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055828f0bbbf0 CR3: 0000000232176004 CR4: 00000000003606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- ? fput+0x13/0x20
- io_free_req+0x20/0x40
- io_put_req+0x1b/0x20
- io_submit_sqe+0x40a/0x680
- ? __switch_to_asm+0x34/0x70
- ? __switch_to_asm+0x40/0x70
- io_submit_sqes+0xb9/0x160
- ? io_submit_sqes+0xb9/0x160
- ? __switch_to_asm+0x40/0x70
- ? __switch_to_asm+0x34/0x70
- ? __schedule+0x3f2/0x6a0
- ? __switch_to_asm+0x34/0x70
- io_sq_thread+0x1af/0x470
- ? __switch_to_asm+0x34/0x70
- ? wait_woken+0x80/0x80
- ? __switch_to+0x85/0x410
- ? __switch_to_asm+0x40/0x70
- ? __switch_to_asm+0x34/0x70
- ? __schedule+0x3f2/0x6a0
- kthread+0x105/0x140
- ? io_submit_sqes+0x160/0x160
- ? kthread+0x105/0x140
- ? io_submit_sqes+0x160/0x160
- ? kthread_destroy_worker+0x50/0x50
- ret_from_fork+0x35/0x40
-
-which occurs because using a kernel side submission thread isn't valid
-without using fixed files (registered through io_uring_register()). This
-causes io_uring to put the request after logging an error, but before
-the file field is set in the request. If it happens to be non-zero, we
-attempt to fput() garbage.
-
-Fix this by ensuring that req->file is initialized when the request is
-allocated.
-
-Cc: stable@vger.kernel.org # 5.1+
-Reported-by: Stephen Bates <sbates@raithlin.com>
-Tested-by: Stephen Bates <sbates@raithlin.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/io_uring.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -533,6 +533,7 @@ static struct io_kiocb *io_get_req(struc
- 		state->cur_req++;
- 	}
- 
-+	req->file = NULL;
- 	req->ctx = ctx;
- 	req->flags = 0;
- 	/* one is dropped after submission, the other at completion */
-@@ -1684,10 +1685,8 @@ static int io_req_set_file(struct io_rin
- 	flags = READ_ONCE(s->sqe->flags);
- 	fd = READ_ONCE(s->sqe->fd);
- 
--	if (!io_op_needs_file(s->sqe)) {
--		req->file = NULL;
-+	if (!io_op_needs_file(s->sqe))
- 		return 0;
--	}
- 
- 	if (flags & IOSQE_FIXED_FILE) {
- 		if (unlikely(!ctx->user_files ||
-
-
+Dmitry Torokhov <dmitry.torokhov@gmail.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=
+=881=E6=97=A5=E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:52=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> Hi Fuqian,
+>
+> On Mon, Jul 01, 2019 at 11:23:12AM +0800, Fuqian Huang wrote:
+> > Using dev_get_drvdata directly.
+> >
+>
+> I prefer using proper bus accessors.
+>
+> Thanks.
+>
+> --
+> Dmitry
