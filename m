@@ -2,141 +2,172 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F1DC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB60C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EF121721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:47:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vqu1lugr"
+	by mail.kernel.org (Postfix) with ESMTP id 1A66D2184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfGBRrt (ORCPT
+        id S1727086AbfGBRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:47:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40518 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfGBRrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:47:48 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62HhUbV086726;
-        Tue, 2 Jul 2019 17:46:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=sdxS7LaByVAl+46kpQmm1/QM0mY8OXrUyrZQCdcDG6Q=;
- b=vqu1lugrSbY8s5G6YYJdX/JBDJImnSFiMrGO7byfWHtXO1clkv0+3gsxLzzRh+fgbKpa
- yk6uTy4dc3NByKZPLgHAy2A6OPcetVu/vluViXEGfdiwr8W2Uo9SebgDBex8u3R7XjZw
- nkFNucAyZHACbHu+rPQ5i9U2h0v2V5sT7X5XgE6cQjTFOVmMHnZRX/wrK/RwqIyilXqa
- GXLKXgAK6rDOUeeM/KD+vKaxCEbM2VWSiOABGjoZcoh7BbD7s4akl0UiCgdEtNHCb0UB
- U0s1RBmctg74PJQfdiOobvnIM4BdWo/PquMC4NBDB3l5rHU3yRxvKkGn+pTWlhkQw7Zt 2g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2te5tbn5uk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 17:46:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62HgvrO040155;
-        Tue, 2 Jul 2019 17:46:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2tebkuddj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 17:46:49 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x62HkklO009482;
-        Tue, 2 Jul 2019 17:46:46 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Jul 2019 10:46:46 -0700
-Subject: Re: [PATCH v4 2/5] x86: Add nopv parameter to disable PV extensions
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, jgross@suse.com,
-        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, Jan Kiszka <jan.kiszka@siemens.com>
-References: <1561958399-28906-1-git-send-email-zhenzhong.duan@oracle.com>
- <1561958399-28906-3-git-send-email-zhenzhong.duan@oracle.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <95b0b6fa-23e2-eb9a-c74d-bfd87c8f4164@oracle.com>
-Date:   Tue, 2 Jul 2019 13:47:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Jul 2019 13:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGBRsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:48:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBB1721721;
+        Tue,  2 Jul 2019 17:48:00 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 13:47:59 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
+ unnecessarily
+Message-ID: <20190702134759.4c147d9b@gandalf.local.home>
+In-Reply-To: <20190702133905.1482b87e@gandalf.local.home>
+References: <20190702053151.26922-1-devel@etsukata.com>
+        <20190702072821.GX3419@hirez.programming.kicks-ass.net>
+        <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
+        <20190702113355.5be9ebfe@gandalf.local.home>
+        <20190702133905.1482b87e@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1561958399-28906-3-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=784
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020195
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=837 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 1:19 AM, Zhenzhong Duan wrote:
->
-> There is already 'xen_nopv' parameter for XEN platform but not for
-> others. 'xen_nopv' can then be removed with this change.
+On Tue, 2 Jul 2019 13:39:05 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This is no longer true.
+> On Tue, 2 Jul 2019 11:33:55 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >   
+> > > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
+> > >     
+> > > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:      
+> > > > > Put the boundary check before it accesses user space to prevent unnecessary
+> > > > > access which might crash the machine.
+> > > > > 
+> > > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
+> > > > > option can trigger SEGV in pid 1 which leads to panic.      
+> > 
+> > Note, I'm only able to trigger this crash with the irq_disable event.
+> > The irq_enable and preempt_disable/enable events work just fine. This
+> > leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
+> > trampoline) may have some issues and is probably the place to look at.  
+> 
+> I figured it out.
+> 
+> It's another "corruption of the cr2" register issue. The following
+> patch makes the issue go away. I'm not suggesting that we use this
+> patch, but it shows where the bug lies.
+> 
+> IIRC, there was patches posted before that fixed this issue. I'll go
+> look to see if I can dig them up. Was it Joel that sent them?
 
--boris
+Although with this patch, I just triggered this:
 
+[ 1331.706273] WARNING: can't dereference registers at 00000000cb0cab6d for ip interrupt_entry+0xc1/0xf0
+[ 1439.850235] ------------[ cut here ]------------
+[ 1439.854848] General protection fault in user access. Non-canonical address?
+[ 1439.854861] WARNING: CPU: 6 PID: 1620 at arch/x86/mm/extable.c:125 ex_handler_uaccess+0x62/0x70
+[ 1439.870455] Modules linked in: ip6t_REJECT nf_reject_ipv6 xt_state nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic snd_hda_intel i915 snd_hda_codec hp_wmi snd_hwdep wmi_bmof sparse_keymap snd_hda_core rfkill i2c_algo_bit snd_seq iosf_mbi snd_seq_device snd_pcm drm_kms_helper x86_pkg_temp_thermal syscopyarea sysfillrect coretemp sysimgblt snd_timer fb_sys_fops snd drm crc32c_intel tpm_infineon soundcore e1000e ptp tpm_tis pps_core lpc_ich i2c_i801 mfd_core i2c_core tpm_tis_core tpm pcspkr serio_raw wmi video
+[ 1439.922501] CPU: 6 PID: 1620 Comm: dhclient Not tainted 5.2.0-rc1-test+ #8
+[ 1439.929350] Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+[ 1439.938277] RIP: 0010:ex_handler_uaccess+0x62/0x70
+[ 1439.943055] Code: 80 00 00 00 b8 01 00 00 00 5b 5d 41 5c c3 80 3d 09 f3 ed 01 00 75 c5 48 c7 c7 80 bc 24 82 c6 05 f9 f2 ed 01 01 e8 ea ce 06 00 <0f> 0b eb ae 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 80 3d d9
+[ 1439.961724] RSP: 0018:ffff8880c7fff4f0 EFLAGS: 00010082
+[ 1439.966934] RAX: 0000000000000000 RBX: ffffffff820024b8 RCX: 0000000000000000
+[ 1439.974045] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffffffff83e12fc0
+[ 1439.981156] RBP: ffff8880c7fff578 R08: fffffbfff0561631 R09: fffffbfff0561630
+[ 1439.988265] R10: fffffbfff0561630 R11: ffffffff82b0b183 R12: ffffffff820024b8
+[ 1439.995368] R13: 000000000000000d R14: 0000000000000000 R15: 0000000000000000
+[ 1440.002479] FS:  00007fdc180a2e80(0000) GS:ffff8880d4780000(0000) knlGS:0000000000000000
+[ 1440.010537] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1440.016268] CR2: 0000000000001010 CR3: 00000000adad0001 CR4: 00000000001606e0
+[ 1440.023379] Call Trace:
+[ 1440.025827]  ? ex_handler_refcount+0xb0/0xb0
+[ 1440.030089]  fixup_exception+0x60/0x7b
+[ 1440.033837]  do_general_protection+0x68/0x1f0
+[ 1440.038189]  general_protection+0x1e/0x30
+[ 1440.042193] RIP: 0010:arch_stack_walk_user+0x6c/0x110
+[ 1440.047231] Code: d8 22 00 00 48 83 e8 10 49 39 c7 77 44 4d 89 fd 31 db 65 48 8b 04 25 80 ee 01 00 83 80 e8 21 00 00 01 0f 1f 00 0f ae e8 89 d8 <4d> 8b 75 00 85 c0 0f 85 82 00 00 00 49 8b 75 08 0f 1f 00 85 c0 74
+[ 1440.065903] RSP: 0018:ffff8880c7fff620 EFLAGS: 00010002
+[ 1440.071117] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff811c5258
+[ 1440.078226] RDX: 0000000000000003 RSI: dffffc0000000000 RDI: ffff8880ce9c99c4
+[ 1440.085341] RBP: ffffffff811c5200 R08: 1ffff11019d39338 R09: ffffed1019bf2924
+[ 1440.092449] R10: ffffed1019bf2924 R11: ffff8880cdf94927 R12: ffff8880c7ffff58
+[ 1440.099562] R13: 62696c2f7273752f R14: 62696c2f7273752f R15: 62696c2f7273752f
+[ 1440.106679]  ? profile_setup.cold.11+0xa1/0xa1
+[ 1440.111115]  ? stack_trace_consume_entry+0x58/0x80
+[ 1440.115914]  stack_trace_save_user+0xb6/0xe8
+[ 1440.120180]  ? stack_trace_save_tsk_reliable+0x1c0/0x1c0
+[ 1440.125489]  trace_buffer_unlock_commit_regs+0x286/0x3f0
+[ 1440.130791]  trace_event_buffer_commit+0xd0/0x300
+[ 1440.135482]  ? trace_event_buffer_reserve+0xc6/0xf0
+[ 1440.140353]  ? 0xffffffff81000000
+[ 1440.143662]  trace_event_raw_event_preemptirq_template+0xe1/0x150
+[ 1440.149743]  ? perf_trace_preemptirq_template+0x230/0x230
+[ 1440.155135]  ? rcu_dynticks_curr_cpu_in_eqs+0x46/0x60
+[ 1440.160174]  ? perf_trace_preemptirq_template+0x230/0x230
+[ 1440.165558]  ? ktime_get_coarse_real_ts64+0x7f/0xf0
+[ 1440.170428]  trace_hardirqs_off+0xbb/0x100
+[ 1440.174519]  ktime_get_coarse_real_ts64+0x7f/0xf0
+[ 1440.179217]  current_time+0x68/0xf0
+[ 1440.182706]  ? timespec64_trunc+0x110/0x110
+[ 1440.186902]  ? iov_iter_zero+0x7e0/0x7e0
+[ 1440.190822]  ? preempt_count_sub+0xb0/0x100
+[ 1440.194995]  ? match_held_lock+0x1b/0x230
+[ 1440.199004]  atime_needs_update+0xdf/0x1b0
+[ 1440.203093]  touch_atime+0x91/0x170
+[ 1440.206576]  ? atime_needs_update+0x1b0/0x1b0
+[ 1440.210924]  ? copy_page_to_iter+0x31d/0x560
+[ 1440.215179]  ? pagecache_get_page+0x2f/0x3b0
+[ 1440.219447]  generic_file_read_iter+0xe00/0x1110
+[ 1440.224073]  ? arch_stack_walk+0x92/0xe0
+[ 1440.227996]  ? filemap_write_and_wait_range+0x80/0x80
+[ 1440.233034]  ? xattr_resolve_name+0x107/0x180
+[ 1440.237385]  ? __vfs_getxattr+0xb2/0x100
+[ 1440.241304]  ? __vfs_setxattr+0x110/0x110
+[ 1440.245319]  new_sync_read+0x24f/0x370
+[ 1440.249067]  ? __ia32_sys_llseek+0x1d0/0x1d0
+[ 1440.253332]  ? fsnotify+0x690/0x6d0
+[ 1440.256835]  ? __fsnotify_update_child_dentry_flags.part.4+0x170/0x170
+[ 1440.263389]  vfs_read+0xa6/0x1a0
+[ 1440.266631]  kernel_read+0x69/0xa0
+[ 1440.270048]  prepare_binprm+0x258/0x2c0
+[ 1440.273894]  ? install_exec_creds+0xb0/0xb0
+[ 1440.278081]  __do_execve_file.isra.42+0x990/0xfc0
+[ 1440.282813]  ? copy_strings_kernel+0x90/0x90
+[ 1440.287089]  ? strncpy_from_user+0xd6/0x1f0
+[ 1440.291281]  __x64_sys_execve+0x54/0x60
+[ 1440.295120]  do_syscall_64+0x68/0x190
+[ 1440.298780]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 1440.303815] RIP: 0033:0x7fdc18501b0b
+[ 1440.307392] Code: 41 89 01 eb da 66 2e 0f 1f 84 00 00 00 00 00 f7 d8 64 41 89 01 eb d6 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 3b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4d 63 0f 00 f7 d8 64 89 01 48
+[ 1440.326068] RSP: 002b:00007fff5c5819f8 EFLAGS: 00000202 ORIG_RAX: 000000000000003b
+[ 1440.333610] RAX: ffffffffffffffda RBX: 0000563a5d884f60 RCX: 00007fdc18501b0b
+[ 1440.340724] RDX: 0000563a5d88d4a0 RSI: 00007fff5c581a10 RDI: 00007fff5c584e89
+[ 1440.347825] RBP: 00007fff5c584e89 R08: 0000563a5d832290 R09: 0000000000000001
+[ 1440.354931] R10: 00007fdc180a2e80 R11: 0000000000000202 R12: 0000563a5d88d4a0
+[ 1440.362042] R13: 0000000000000000 R14: 0000563a5bb4fbe0 R15: 0000000000000136
+[ 1440.369166] ---[ end trace e37d5da069ab7362 ]---
 
+-- Steve
