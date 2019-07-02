@@ -2,102 +2,70 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC4C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC2BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6EF2089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3732089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfGCAy7 (ORCPT
+        id S1727456AbfGCAzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:54:59 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48638 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbfGCAy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:54:58 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hiRdk-0001o8-HO; Tue, 02 Jul 2019 16:52:46 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
- <20190628045705.GD3705@ziepe.ca>
- <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
- <20190628172926.GA3877@ziepe.ca>
- <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
- <20190628190931.GC3877@ziepe.ca>
- <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
- <20190702224530.GD11860@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <49c7f848-3cd5-7225-0821-b19fb4547ad9@deltatee.com>
-Date:   Tue, 2 Jul 2019 16:52:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190702224530.GD11860@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
+        Tue, 2 Jul 2019 20:55:36 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45368 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfGCAzf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:55:35 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EDD7A1400EF15;
+        Tue,  2 Jul 2019 15:25:09 -0700 (PDT)
+Date:   Tue, 02 Jul 2019 15:25:09 -0700 (PDT)
+Message-Id: <20190702.152509.767279980793826503.davem@davemloft.net>
+To:     tranmanphong@gmail.com
+Cc:     dcbw@redhat.com, netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        glider@google.com, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, lynxis@fe80.eu,
+        marcel.ziswiler@toradex.com, skhan@linuxfoundation.org,
+        syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, yang.wei9@zte.com.cn,
+        zhang.run@zte.com.cn
+Subject: Re: [PATCH V2] net: usb: asix: init MAC address buffers
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190702001008.26048-1-tranmanphong@gmail.com>
+References: <20190630234533.15089-1-tranmanphong@gmail.com>
+        <20190702001008.26048-1-tranmanphong@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 02 Jul 2019 15:25:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Phong Tran <tranmanphong@gmail.com>
+Date: Tue,  2 Jul 2019 07:10:08 +0700
 
-
-On 2019-07-02 4:45 p.m., Jason Gunthorpe wrote:
-> On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
+> This is for fixing bug KMSAN: uninit-value in ax88772_bind
 > 
->>> However, I'd feel more comfortable about that assumption if we had
->>> code to support the IOMMU case, and know for sure it doesn't require
->>> more info :(
->>
->> The example I posted *does* support the IOMMU case. That was case (b1)
->> in the description. The idea is that pci_p2pdma_dist() returns a
->> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
->> mapping is required and the appropriate flag tells it to call
->> dma_map_resource(). This way, it supports both same-segment and
->> different-segments without needing any look ups in the map step.
+> Tested by
+> https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/eB_HlNhhCwAJ
 > 
-> I mean we actually have some iommu drivers that can setup P2P in real
-> HW. I'm worried that real IOMMUs will need to have the BDF of the
-> completer to route completions back to the requester - which we can't
-> trivially get through this scheme.
+> Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+> git tree:       kmsan
+ ...
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 
-I've never seen such an IOMMU but I guess, in theory, it could exist.
-The IOMMUs that setup P2P-like transactions in real hardware make use of
-dma_map_resource(). There aren't a lot of users of this function (it's
-actually been broken with the Intel IOMMU until I fixed it recently and
-I'd expect there are other broken implementations); but, to my
-knowledge, none of them have needed the BDF of the provider to date.
-
-> However, maybe that is just a future problem, and certainly we can see
-> that with an interval tree or otherwise such a IOMMU could get the
-> information it needs.
-
-Yup, the rule of thumb is to design for the needs we have today not
-imagined future problems.
-
-Logan
+Applied, thanks.
