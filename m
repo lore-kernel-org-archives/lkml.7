@@ -6,53 +6,48 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56E8C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5193C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04FF2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD9D21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562044148;
-	bh=qD/cPgBzB+Tff1DoDVD2ln4oue0nPLIwH/PxdReN9xo=;
+	s=default; t=1562044242;
+	bh=4GlxId9YdbFjT52X/hvaAqjT79EiXpf7emdd7hFBdic=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=c8FUcjT/HIEuNFlmlLOSZSA9QElVF2vS8aR1wx6F8jV+8bKaW+HHdFInQcZd0Or/l
-	 Ie8p0tW+ZJYBlfPBUtAG2fc9AtalM8au+ZZ1mdLWu/9JEX0dcEVhpbQBXoUmF2I4hf
-	 YoWemqUnBrj9sHEjZkmyr9gNOR+muNeGiOhdYpOE=
+	b=iT4F0qdQKl4cpgvECuzDxqO1BBRvvXSL1JylJcFID+rjkqKLEaJk37zUS0jCvGOd1
+	 MiQqGxs2GqM0UkLQKR+VnhOGamo+ZUSFlacMunwLBt3BaB+jVp2gtLDaGM8PKH8gR4
+	 fpN9oR7vjmDWvM+dj+oPeZfu0qq2pcJWMiwBtiUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbfGBFJH (ORCPT
+        id S1726434AbfGBFKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:09:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 01:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:09:07 -0400
+        id S1725775AbfGBFKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:10:40 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D21DA216C8;
-        Tue,  2 Jul 2019 05:09:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EFAB216C8;
+        Tue,  2 Jul 2019 05:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562044146;
-        bh=qD/cPgBzB+Tff1DoDVD2ln4oue0nPLIwH/PxdReN9xo=;
+        s=default; t=1562044239;
+        bh=4GlxId9YdbFjT52X/hvaAqjT79EiXpf7emdd7hFBdic=;
         h=Date:From:To:Cc:Subject:From;
-        b=LYNSzhC2SmdfHPSQk0J93Mo7zK4p1VS1/JUUXSW12cD0PkyWKF6A46oEwaWsA4ed7
-         W6yV4nPiEoHlEGqC2k6CrLRd+QAe7i8szAIV7M63MyJ+VZzasc8gny9pQg4MGXnEiO
-         EdhTbv34J0E/+fRY5P2YzR2S9euCetTUTgqtKK8Q=
-Date:   Mon, 1 Jul 2019 22:09:04 -0700
+        b=EPLNmdsIaRIi9UZuIJBoJw1UDpeqVMgqzgTDzXxWwmk8eiv/QUpA+yiUfFTINPzW2
+         Dgfwby28AMWubdbDqO84jre/PCJrsKTxeo5Ol95PKM8FjSToXQS3ylZpTOXXOSwefN
+         NI0DS+mGHYy95f61CuBAiW/D1nQoIWAGkRqlDBso=
+Date:   Mon, 1 Jul 2019 22:10:38 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shayenne Moura <shayenneluzmoura@gmail.com>
+To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 1 open syzbot bug in drm subsystem
-Message-ID: <20190702050904.GB23743@sol.localdomain>
+Subject: Reminder: 1 open syzbot bug in rtc subsystem
+Message-ID: <20190702051038.GC23743@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,42 +58,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 1 of them as possibly being a bug in the drm subsystem.
+marked 1 of them as possibly being a bug in the rtc subsystem.
 
 If you believe this bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed this bug to the drm subsystem, please let me
+If you believe I misattributed this bug to the rtc subsystem, please let me
 know, and if possible forward the report to the correct people or mailing list.
 
 Here is the bug:
 
 --------------------------------------------------------------------------------
-Title:              WARNING in vkms_vblank_simulate
-Last occurred:      0 days ago
-Reported:           140 days ago
+Title:              BUG: workqueue lockup (4)
+Last occurred:      19 days ago
+Reported:           267 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0ba17d70d062b2595e1f061231474800f076c7cb
-Original thread:    https://lkml.kernel.org/lkml/00000000000011c9310581a579e8@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0041bf1423916e9ae458b08b760e269a33c14960
+Original thread:    https://lkml.kernel.org/lkml/0000000000005764090577a27486@google.com/T/#u
 
 This bug has a C reproducer.
 
-This bug was bisected to:
-
-	commit 09ef09b4ab95dc405ad4171ec2cd8a4ff5227108
-	Author: Shayenne Moura <shayenneluzmoura@gmail.com>
-	Date:   Wed Feb 6 20:08:13 2019 +0000
-
-	  drm/vkms: WARN when hrtimer_forward_now fails
-
-The original thread for this bug received 1 reply, 112 days ago.
+The original thread for this bug received 4 replies; the last was 20 days ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0871b14ca2e2fb64f6e3@syzkaller.appspotmail.com
+    Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000011c9310581a579e8@google.com
+https://lkml.kernel.org/r/0000000000005764090577a27486@google.com
 
