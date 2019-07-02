@@ -8,106 +8,126 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEA7C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB517C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26979206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A238F206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSHIWLXS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZmsk2ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfGBNbe (ORCPT
+        id S1726975AbfGBNdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:31:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44868 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBNbd (ORCPT
+        Tue, 2 Jul 2019 09:33:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40894 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfGBNdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:31:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e3so8306210wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 06:31:32 -0700 (PDT)
+        Tue, 2 Jul 2019 09:33:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so17866152wre.7;
+        Tue, 02 Jul 2019 06:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:to:cc:message-id:user-agent:date;
-        bh=4VPnLBfnP+yE8XWhPk6Z0NZmIvwwW0UIFWDe0blP3PA=;
-        b=SSHIWLXSCz2J4XKgqcuB4HuhMgP+BgSjUvlvTI1SfIECDv8eAnmm7cP4x6cRFpdbRd
-         e+z2Qtim/Mny+j7W4rH6z1xj4EWXisZqMg5DdWH/AVWl1rbE26SK5Ern1cohCsDP/qBE
-         /SYTm60q5UUSpE5YlgVQciF57ibUm+YAddrQEFsjiS3BSooSXp/9lfufr4CgL6tRF+vM
-         qShTZpZ847UuD/66QU6Dt84odNmrjud0aJrMXVondjAUKB4QHvPBwlo/x0j1jxreVUge
-         D29IP3CehKILhPMAWtxsPXahwDBbpwfIGD6r+h47ZFwVIVG2aBSTLrTCx+tg/SUaJJo+
-         ssuw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w0OYaXyIMcAAJ4gBJEOEXLofDRzjGVAncXahqHJtr3g=;
+        b=jZmsk2apK9wWaC1Jwi8eJ+VpNeeqK9vyCI2z4YLKZy0UMQiklfvEJVTrYVsIE1tAoL
+         Y0mxMn9PXmVbH/NBkukGPC7y0H/BBRFTvNqfGcb6L2DEcT68IJb+Tno6Sy2dbcfXF35q
+         EYTpbUzAwTBib2rn38pMmYI7wgZXsOBsHf7d12NDK5rlNm1mLqrrvfLa0bpKw++S3JJW
+         nmGOJnDN4flQWKyQ2INLpigpyMPRSa9KHhhIMB3wFazz2VGW/XO6KJlsgowT23b+pR+w
+         +XCGBbRduRTbvzTTfwVMn2bBa69lj94fYKOEH8G7r345mzWJr0kHUuhILLc9d0GFZdHN
+         ZeFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:to:cc:message-id:user-agent
-         :date;
-        bh=4VPnLBfnP+yE8XWhPk6Z0NZmIvwwW0UIFWDe0blP3PA=;
-        b=OWYak9dqurEr6EZif5sJCI6ej1f0DV8aSZT+kIwPnJtE9hxjUIl7BLSVEMkbZf3q4y
-         GkbbxSFtYCVo8pAkxE2qU/O0CCzipSIbzAuiBHt4UQBwGnKA2zmSfBwRHDrYkPnWG03A
-         J9/b0lirqAjdJO546pZSl1pk2KzjH4nUO0ZxMSwfK4JKivZf6Kl+pbtyjlZuNzD1GY6h
-         gf2GS06YsThcL9VS27PLpCM+c6XcZDfieyzlUm+yURQataCoSQEoK7dzV2I+S+6YQsdh
-         7XkYX/a1l9uyB8rRWdIft8HvIdR5wIUSLIOoyOvgNCQiPu7Kh7US6P/aLqEU5izUp8vx
-         JfvA==
-X-Gm-Message-State: APjAAAWoPASVNR4XNcqB0uaeR19PyGfr45rK4DlBCIGV80+Pdg6BNapt
-        cyBQKbn5XPc1cOnaHzv4Hd0LxHnV
-X-Google-Smtp-Source: APXvYqwq06G0czPEPLmYLoGzD2jqc2jTMs8sD6Gj1glkXKfoUr2VN70FHXc0dZ5zI3VGNbqDHyFU3Q==
-X-Received: by 2002:adf:e5c2:: with SMTP id a2mr1799223wrn.91.1562074291836;
-        Tue, 02 Jul 2019 06:31:31 -0700 (PDT)
-Received: from localhost ([151.237.18.226])
-        by smtp.gmail.com with ESMTPSA id b8sm2412981wmh.46.2019.07.02.06.31.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 06:31:31 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w0OYaXyIMcAAJ4gBJEOEXLofDRzjGVAncXahqHJtr3g=;
+        b=l8esMl3Vl5/RvA0eFg4q2t5xYbfFBtcGPce3pWDJRrKLfaZN2Aqgo4Qn/Aitk169Ep
+         UWP7WzX94QdZ/3sP4hGx7VdmNzMZyxze8RP+gWVGfPygV1mmlqFhOI5E6p0cumqWhEM+
+         8+tRIDPMcKlvw9TMkL1rKWsSgOeChvuoGdWKTLHVA/4JYToKEdJ/2C+j7EUCWtGqlX92
+         nd4pmyT2HYLdTx0ng5B5PdcQc51C+nn05+pVX5h3wEny7KKBq+3Q7IrqFDpatnd8Yoyn
+         sK5DbWOuj9FYTzcA5nou9SPmTe2Cn7nx1rmt1GCXA7MH4ZcsBXRLY8T02e2zGQgSl5O4
+         MTIA==
+X-Gm-Message-State: APjAAAW8kGU4rknYTk8BAKGMsQtQ350RD4aq+9YccifXwMotnU+5WxxX
+        cVamGFzRXPqEeG+B87edpRoMjx65tgQMD8fl1os=
+X-Google-Smtp-Source: APXvYqwoFV/2mmIUnIen+iGNTWGL2iKe81qUb57QjAm12sViws9Te4KN/ERYebT9jYy+13diP//7AXRCkx/uQgDHlLE=
+X-Received: by 2002:adf:db12:: with SMTP id s18mr23027525wri.335.1562074397596;
+ Tue, 02 Jul 2019 06:33:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190702095918.12852-1-ihor.matushchak@foobox.net>
-References: <20190702095918.12852-1-ihor.matushchak@foobox.net>
-Subject: Re: [PATCH] virtio-mmio: add error check for platform_get_irq
-From:   "Ivan T. Ivanov" <iivanov.xz@gmail.com>
-To:     Ihor Matushchak <ihor.matushchak@foobox.net>, mst@redhat.com
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, ihor.matushchak@foobox.net
-Message-ID: <156207429000.5051.5975712347598980745@silver>
-User-Agent: alot/0.8.1
-Date:   Tue, 02 Jul 2019 16:31:30 +0300
+References: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
+ <CAEnQRZCVQ0+pRh6akiZJXU-fRugEXmnthZp8Q2=aXFXCO3vcUg@mail.gmail.com> <20190702132647.3kyfl5gx6ghdiizl@fsr-ub1664-175>
+In-Reply-To: <20190702132647.3kyfl5gx6ghdiizl@fsr-ub1664-175>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 2 Jul 2019 16:33:06 +0300
+Message-ID: <CAEnQRZDn83HDR+k101UA9MVnCmQevAQcFTCRoS__Xf0PwCCSFQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mm: Init rates and parents configs for clocks
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 2, 2019 at 4:26 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> On 19-06-26 15:45:15, Daniel Baluta wrote:
+> > On Tue, Jun 25, 2019 at 4:42 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+> > >
+> > > Add the initial configuration for clocks that need default parent and rate
+> > > setting. This is based on the vendor tree clock provider parents and rates
+> > > configuration except this is doing the setup in dts rather than using clock
+> > > consumer API in a clock provider driver.
+> > >
+> > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > > index 232a741..ab92108 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > > @@ -451,6 +451,42 @@
+> > >                                          <&clk_ext3>, <&clk_ext4>;
+> > >                                 clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+> > >                                               "clk_ext3", "clk_ext4";
+> > > +                               assigned-clocks = <&clk IMX8MM_CLK_AUDIO_AHB>,
+> > > +                                               <&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
+> > > +                                               <&clk IMX8MM_SYS_PLL3>,
+> > > +                                               <&clk IMX8MM_VIDEO_PLL1>,
+> > > +                                               <&clk IMX8MM_CLK_NOC>,
+> > > +                                               <&clk IMX8MM_CLK_PCIE1_CTRL>,
+> > > +                                               <&clk IMX8MM_CLK_PCIE1_PHY>,
+> > > +                                               <&clk IMX8MM_CLK_CSI1_CORE>,
+> > > +                                               <&clk IMX8MM_CLK_CSI1_PHY_REF>,
+> > > +                                               <&clk IMX8MM_CLK_CSI1_ESC>,
+> > > +                                               <&clk IMX8MM_CLK_DISP_AXI>,
+> > > +                                               <&clk IMX8MM_CLK_DISP_APB>;
+> > > +                               assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
+> > > +                                               <0>,
+> > Isn't there a macro for 0? (dummy clock?)
+>
+> I don't know about any such macro. If you're referring to IMX8MM_CLK_DUMMY,
+> that can't be used here since all I want here is to skip setting a parent to
+> the  IMX8MM_CLK_IPG_AUDIO_ROOT. If I use IMX8MM_CLK_DUMMY (along with &clk)
+> it will set the parent to IMX8MM_CLK_DUMMY and that's not what's needed here.
+>
+> This is in accordance to the documentation:
+>
+> Documentation/devicetree/bindings/clock/clock-bindings.txt:
+>
+> "To skip setting parent or rate of a clock its corresponding entry should be
+> set to 0, or can be omitted if it is not followed by any non-zero entry."
 
-Hi,
-
-Quoting Ihor Matushchak (2019-07-02 12:59:18)
-> in vm_find_vqs() irq has a wrong type
-> so, in case of no IRQ resource defined,
-> wrong parameter will be passed to request_irq()
->=20
-> Signed-off-by: Ihor Matushchak <ihor.matushchak@foobox.net>
-> ---
->  drivers/virtio/virtio_mmio.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index f363fbeb5ab0..60dde8ed163b 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -463,9 +463,14 @@ static int vm_find_vqs(struct virtio_device *vdev, u=
-nsigned nvqs,
->                        struct irq_affinity *desc)
->  {
->         struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> -       unsigned int irq =3D platform_get_irq(vm_dev->pdev, 0);
-> +       int irq =3D platform_get_irq(vm_dev->pdev, 0);
->         int i, err, queue_idx =3D 0;
-> =20
-> +       if (irq < 0) {
-> +               dev_err(&vdev->dev, "no IRQ resource defined\n");
-> +               return -ENODEV;
-
-Don't overwrite error code value. Just return it as it is.
-
-Regards,
-Ivan
-
+You are right. Thanks for the explanation!
