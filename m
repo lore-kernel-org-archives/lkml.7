@@ -2,203 +2,150 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97683C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B20EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7889A20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F1E21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fzB5MVLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfGBQni (ORCPT
+        id S1726522AbfGBQrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:43:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35783 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfGBQnh (ORCPT
+        Tue, 2 Jul 2019 12:47:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36853 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfGBQrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:43:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c27so10932345wrb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:43:35 -0700 (PDT)
+        Tue, 2 Jul 2019 12:47:15 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c13so7958590pgg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AwqtYCgoVgMFd7zLHFhWGcqejisGWIssWVV7qBN5clA=;
+        b=fzB5MVLqWtyuS6TrHWjeVZWCRt7xTFDG2hc/XyaXBc42/GpMFNc0clWc7wyZC3/x9k
+         lKWMANDwnbugpxtIihI9PPsv7PZU6CAqFs74AAgSzug0hb03S3WTAXUqkf6OA2TLqj/F
+         lAVi3uicaXPR015jxEg0o8Lz9CCKLPKG65XS0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kV2rDBr8f3q9kLby6YRxl8ZXleRdsPAklKANirTDrb4=;
-        b=BtY0TyB7W1mIGsHa26owqlwL4sPnP0O0CKoIS0hGtee/0d44LfWqf8KluiJKPhiaJQ
-         l+6v7OMas7H5/bNxOcnmCnqN9S3skEjOgfXnR9PsP7LSU6eHuAMjNmzbI1oHQaOaXhmn
-         ostgPinZg0i5vq0czBXVWFWBSzhsz/9J+vSXs//mx9GqVAKemWNZZbRYzXRXtoWnE8R8
-         esLQwWHhu2+sd1ytHM8maZC2ZIRNzuWr7U/otPbwGQHnFlaQlDDvMYldrmgG5yLPGxBu
-         Z8Wg8q50nE2CgufMCVZnXdZTbDRvlirLIHd464gOVnXfR5nvuAl/Th1gvw70I77gFkYG
-         B7VA==
-X-Gm-Message-State: APjAAAUa+vskDvLSJOFYQhwTw2S/Romoz892xA7hpacIlGM1ij7psef8
-        4zl0itJxVtGenR5qc2gIB17jWw==
-X-Google-Smtp-Source: APXvYqyCjkw4IWIQFh2eWCekFXDCVrk3wVqWTz5BvaxR3YLEORVKvovktt+CsNcs/+L6TdZmGAhXPg==
-X-Received: by 2002:a5d:500f:: with SMTP id e15mr12587591wrt.41.1562085814230;
-        Tue, 02 Jul 2019 09:43:34 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
-        by smtp.gmail.com with ESMTPSA id z1sm15403353wrv.90.2019.07.02.09.43.33
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:43:33 -0700 (PDT)
-Subject: Re: [PATCH] KVM: LAPIC: Fix pending interrupt in IRR blocked by
- software disable LAPIC
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Feng Tang <feng.tang@intel.com>, stable@vger.kernel.org
-References: <1562059502-8581-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c75371c8-7dbc-7ce8-c0f3-0396305b896b@redhat.com>
-Date:   Tue, 2 Jul 2019 18:43:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AwqtYCgoVgMFd7zLHFhWGcqejisGWIssWVV7qBN5clA=;
+        b=qHMDuuZe/AW8XM6PboWxtXcswrBPRcUvk4e6F3q/6CI12+/tj6dBqnrkDP+E2LMuWQ
+         5MjX9RO5UN1L9Sy7jIb5N6D/ffN3OPlAfjOQjrFjS3dX83COY4T4Pohvag+NeYvoW3Jg
+         yZNQaXiGS1BcX1AH1T21dn0gb+CghCAyAyJXuL9sIKRjN46U3rkSX41UpIQPRZVb/XBy
+         7xhEl59vrNnavppWIRzeyBx5QP20XwfV5KQ/0uKtGCjOicoXWIZzfbv2mjzC1NdUubQD
+         +O+VlFw96QneOc3aAuoV8BQDOV1KWKt5STlyQ/opA1b262NnS+r/2eVTECj7CETXahSm
+         XesQ==
+X-Gm-Message-State: APjAAAWjd07BX28iJS7SvcbK7421hHPhmfkv+Y+TIoErMlvAZ5c+8vEO
+        Bx/0C2PppeeWL2Fs2WT4l2y8iw==
+X-Google-Smtp-Source: APXvYqzQ8uHzZ6YNkTzdPuzkj3M5yMySr4CirEds9hca/3caI4D9NArfxglQSOD3nsK4x9A5ZVXEgQ==
+X-Received: by 2002:a63:bd0a:: with SMTP id a10mr17207509pgf.55.1562086034555;
+        Tue, 02 Jul 2019 09:47:14 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q1sm20178917pfg.84.2019.07.02.09.47.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 09:47:13 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 12:47:12 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Tony Luck <tony.luck@intel.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Colin Cross <ccross@android.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 7/7] kbuild: compile-test kernel headers to ensure they
+ are self-contained
+Message-ID: <20190702164712.GA98338@google.com>
+References: <20190701005845.12475-1-yamada.masahiro@socionext.com>
+ <20190701005845.12475-8-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <1562059502-8581-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701005845.12475-8-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/19 11:25, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Mon, Jul 01, 2019 at 09:58:45AM +0900, Masahiro Yamada wrote:
+> The headers in include/ are globally used in the kernel source tree
+> to provide common APIs. They are included from external modules, too.
 > 
-> Thomas reported that:
+> It will be useful to make as many headers self-contained as possible
+> so that we do not have to rely on a specific include order.
 > 
->  | Background:
->  | 
->  |    In preparation of supporting IPI shorthands I changed the CPU offline
->  |    code to software disable the local APIC instead of just masking it.
->  |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
->  |    register.
->  | 
->  | Failure:
->  | 
->  |    When the CPU comes back online the startup code triggers occasionally
->  |    the warning in apic_pending_intr_clear(). That complains that the IRRs
->  |    are not empty.
->  | 
->  |    The offending vector is the local APIC timer vector who's IRR bit is set
->  |    and stays set.
->  | 
->  | It took me quite some time to reproduce the issue locally, but now I can
->  | see what happens.
->  | 
->  | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
->  | (and hardware support) it behaves correctly.
->  | 
->  | Here is the series of events:
->  | 
->  |     Guest CPU
->  | 
->  |     goes down
->  | 
->  |       native_cpu_disable()		
->  | 
->  | 			apic_soft_disable();
->  | 
->  |     play_dead()
->  | 
->  |     ....
->  | 
->  |     startup()
->  | 
->  |       if (apic_enabled())
->  |         apic_pending_intr_clear()	<- Not taken
->  | 
->  |      enable APIC
->  | 
->  |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
->  | 
->  | When this happens then the deadline timer or the regular APIC timer -
->  | happens with both, has fired shortly before the APIC is disabled, but the
->  | interrupt was not serviced because the guest CPU was in an interrupt
->  | disabled region at that point.
->  | 
->  | The state of the timer vector ISR/IRR bits:
->  | 
->  |     	     	       	        ISR     IRR
->  | before apic_soft_disable()    0	      1
->  | after apic_soft_disable()     0	      1
->  | 
->  | On startup		      		 0	      1
->  | 
->  | Now one would assume that the IRR is cleared after the INIT reset, but this
->  | happens only on CPU0.
->  | 
->  | Why?
->  | 
->  | Because our CPU0 hotplug is just for testing to make sure nothing breaks
->  | and goes through an NMI wakeup vehicle because INIT would send it through
->  | the boots-trap code which is not really working if that CPU was not
->  | physically unplugged.
->  | 
->  | Now looking at a real world APIC the situation in that case is:
->  | 
->  |     	     	       	      	ISR     IRR
->  | before apic_soft_disable()    0	      1
->  | after apic_soft_disable()     0	      1
->  | 
->  | On startup		      		 0	      0
->  | 
->  | Why?
->  | 
->  | Once the dying CPU reenables interrupts the pending interrupt gets
->  | delivered as a spurious interupt and then the state is clear.
->  | 
->  | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
->  | emulation is still wrong, Even if the play_dead() code would not enable
->  | interrupts then the pending IRR bit would turn into an ISR .. interrupt
->  | when the APIC is reenabled on startup.
+> There are more than 4000 headers in include/. In my rough analysis,
+> 70% of them are already self-contained. With efforts, most of them
+> can be self-contained.
 > 
+> For now, we must exclude more than 1000 headers just because they
+> cannot be compiled as standalone units. I added them to header-test-.
+> The blacklist was mostly generated by a script, so the reason of the
+> breakage should be checked later.
 > 
-> From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
-> * Pending interrupts in the IRR and ISR registers are held and require
->   masking or handling by the CPU.
-> 
-> In Thomas's testing, hardware cpu will not respect soft disable LAPIC 
-> when IRR has already been set or APICv posted-interrupt is in flight, 
-> so we can skip soft disable APIC checking when clearing IRR and set ISR,
-> continue to respect soft disable APIC when attempting to set IRR.
-> 
-> Reported-by: Rong Chen <rong.a.chen@intel.com>
-> Reported-by: Feng Tang <feng.tang@intel.com>
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Rong Chen <rong.a.chen@intel.com>
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Tested-by: Jani Nikula <jani.nikula@intel.com>
 > ---
->  arch/x86/kvm/lapic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 05d8934..f857a12 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -2376,7 +2376,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  	u32 ppr;
->  
-> -	if (!apic_enabled(apic))
-> +	if (!kvm_apic_hw_enabled(apic))
->  		return -1;
->  
->  	__apic_update_ppr(apic, &ppr);
+> Changes in v4:
+>   - Fix vmlinux build error
+>   - Exclude more headers for sparc
 > 
+> Changes in v3:
+>   - Exclude more headers
+>    (Tested for allnoconfig + CONFIG_HEADER_TEST=y)
+> 
+> Changes in v2:
+>   - Add everything to test coverage, and exclude broken ones
+>   - Rename 'Makefile' to 'Kbuild'
+>   - Add CONFIG_KERNEL_HEADER_TEST option
+> 
+>  Makefile       |    1 +
+>  include/Kbuild | 1253 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  init/Kconfig   |   11 +
+>  3 files changed, 1265 insertions(+)
+>  create mode 100644 include/Kbuild
+[snip
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 74192de8ada6..e2e99544da8d 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -108,6 +108,17 @@ config HEADER_TEST
+>  	  If you are a developer or tester and want to ensure the requested
+>  	  headers are self-contained, say Y here. Otherwise, choose N.
+>  
+> +config KERNEL_HEADER_TEST
+> +	bool "Compile test kernel headers"
+> +	depends on HEADER_TEST
+> +	help
+> +	  Headers in include/ are used to build external moduls.
 
-Queued, thanks.
+Nit:
+							 modules.
 
-Paolo
+Otherwise lgtm, thanks for the cc.
+
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
