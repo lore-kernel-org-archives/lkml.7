@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9158FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B261BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F742183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8815121841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054773;
-	bh=FE+f3XSKY1HJoAhc4roae3H3YR1STBtAYQXgL3bvoTY=;
+	s=default; t=1562054779;
+	bh=laaMfB6GJi+RjTfheKYuRjfFtHFXzzuj98IyPvCP3RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rU8l0dvH3PiYHiLahdz0UBu6QxleBogzcVk82QODsrQznrkIgBlHg40bfL/bIWKVO
-	 6kMQY8iIAsawB0BU71oshC2lyl76IQLvB4uzbePygx1gseWTxkMWl444sKGVwIQ3qO
-	 xhJr0ORQZQCp3DUK+bTAbEjE/67C3uUiA3SAFSuw=
+	b=gFuq6+gQ5BtWHT/55llCi4pPbTe35OiTt7N2DNkTH1h6Tbfx4VK9b6CQre13qtmWE
+	 IKp3Vtgzv8tOdZG6Rc+Zb74x/teyPTwXGjbS197wkebIVfcCz1QqZqpmBZ161P2xWT
+	 6/n/fmIaygFahU0i7kb3u07flwuGhWxiY6k8o+5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfGBIGM (ORCPT
+        id S1728078AbfGBIGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52402 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:06:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727342AbfGBIGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:06:04 -0400
+        id S1727638AbfGBIGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA4B21841;
-        Tue,  2 Jul 2019 08:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF8152183F;
+        Tue,  2 Jul 2019 08:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054763;
-        bh=FE+f3XSKY1HJoAhc4roae3H3YR1STBtAYQXgL3bvoTY=;
+        s=default; t=1562054769;
+        bh=laaMfB6GJi+RjTfheKYuRjfFtHFXzzuj98IyPvCP3RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YKGao9t0vXN87ZSFk98aXX187Wm+aEhqe5bJ0/hUC2ftoPiMUszyyaL1QbNw43FOF
-         vwDIt34d0FpO9EqDC0YHOrvYo3jK++PO1/TUfXrL0QfQq/8Ut+GpcAQOPNBzN1eO6F
-         FuQOxvOt04JsW3oQuwOPolWXqgcmjLEoMRyhWgrY=
+        b=REAFnLjTXEnP0xIrT4FV6hxw8YJVDIOhZb4hAdlNzOvZq4Q4HXUIAI1UrQuMRyE3/
+         LA2maqD3NHG/ixYERhDExq5100FETvzO0ND9wpEIp1kQNsTxRXI+4t0loMC3ocwHAH
+         eB/9zbrURt1A8X9vTlQG47jga34YwUoJy0iPgu60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
+        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        John Stultz <john.stultz@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/72] 9p/trans_fd: abort p9_read_work if req status changed
-Date:   Tue,  2 Jul 2019 10:01:20 +0200
-Message-Id: <20190702080125.656500245@linuxfoundation.org>
+Subject: [PATCH 4.19 29/72] usb: dwc3: gadget: move requests to cancelled_list
+Date:   Tue,  2 Jul 2019 10:01:30 +0200
+Message-Id: <20190702080126.178119054@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -63,62 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e4ca13f7d075e551dc158df6af18fb412a1dba0a ]
+commit d4f1afe5e896c18ae01099a85dab5e1a198bd2a8 upstream
 
-p9_read_work would try to handle an errored req even if it got put to
-error state by another thread between the lookup (that worked) and the
-time it had been fully read.
-The request itself is safe to use because we hold a ref to it from the
-lookup (for m->rreq, so it was safe to read into the request data buffer
-until this point), but the req_list has been deleted at the same time
-status changed, and client_cb already has been called as well, so we
-should not do either.
+Whenever we have a request in flight, we can move it to the cancelled
+list and later simply iterate over that list and skip over any TRBs we
+find.
 
-Link: http://lkml.kernel.org/r/1539057956-23741-1-git-send-email-asmadeus@codewreck.org
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Reported-by: syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com
-Cc: Eric Van Hensbergen <ericvh@gmail.com>
-Cc: Latchesar Ionkov <lucho@ionkov.net>
+Cc: Fei Yang <fei.yang@intel.com>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.19.y
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+(cherry picked from commit d4f1afe5e896c18ae01099a85dab5e1a198bd2a8)
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/usb/dwc3/gadget.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 12559c474dde..a0317d459cde 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -292,7 +292,6 @@ static void p9_read_work(struct work_struct *work)
- 	__poll_t n;
- 	int err;
- 	struct p9_conn *m;
--	int status = REQ_STATUS_ERROR;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index c2169bc626c8..8291fa1624e1 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1364,6 +1364,17 @@ static void dwc3_gadget_ep_skip_trbs(struct dwc3_ep *dep, struct dwc3_request *r
+ 	}
+ }
  
- 	m = container_of(work, struct p9_conn, rq);
++static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep)
++{
++	struct dwc3_request		*req;
++	struct dwc3_request		*tmp;
++
++	list_for_each_entry_safe(req, tmp, &dep->cancelled_list, list) {
++		dwc3_gadget_ep_skip_trbs(dep, req);
++		dwc3_gadget_giveback(dep, req, -ECONNRESET);
++	}
++}
++
+ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 		struct usb_request *request)
+ {
+@@ -1400,8 +1411,9 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 			if (!r->trb)
+ 				goto out0;
  
-@@ -375,11 +374,17 @@ static void p9_read_work(struct work_struct *work)
- 		p9_debug(P9_DEBUG_TRANS, "got new packet\n");
- 		m->rreq->rc.size = m->rc.offset;
- 		spin_lock(&m->client->lock);
--		if (m->rreq->status != REQ_STATUS_ERROR)
--			status = REQ_STATUS_RCVD;
--		list_del(&m->rreq->req_list);
--		/* update req->status while holding client->lock  */
--		p9_client_cb(m->client, m->rreq, status);
-+		if (m->rreq->status == REQ_STATUS_SENT) {
-+			list_del(&m->rreq->req_list);
-+			p9_client_cb(m->client, m->rreq, REQ_STATUS_RCVD);
-+		} else {
-+			spin_unlock(&m->client->lock);
-+			p9_debug(P9_DEBUG_ERROR,
-+				 "Request tag %d errored out while we were reading the reply\n",
-+				 m->rc.tag);
-+			err = -EIO;
-+			goto error;
-+		}
- 		spin_unlock(&m->client->lock);
- 		m->rc.sdata = NULL;
- 		m->rc.offset = 0;
+-			dwc3_gadget_ep_skip_trbs(dep, r);
+-			goto out1;
++			dwc3_gadget_move_cancelled_request(req);
++			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++			goto out0;
+ 		}
+ 		dev_err(dwc->dev, "request %pK was not queued to %s\n",
+ 				request, ep->name);
+@@ -1409,7 +1421,6 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 		goto out0;
+ 	}
+ 
+-out1:
+ 	dwc3_gadget_giveback(dep, req, -ECONNRESET);
+ 
+ out0:
 -- 
 2.20.1
 
