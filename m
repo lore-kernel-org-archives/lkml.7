@@ -2,166 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A44C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A86CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C78218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D142218B0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brvYuF63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfGCAjx (ORCPT
+        id S1727283AbfGCAkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:39:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49796 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfGCAjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:39:53 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 844B53084042;
-        Tue,  2 Jul 2019 21:02:49 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D13545D9C6;
-        Tue,  2 Jul 2019 21:02:43 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 23:02:41 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        brouer@redhat.com
-Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
- page_pool_destroy
-Message-ID: <20190702230241.3be6d787@carbon>
-In-Reply-To: <20190702185839.GH4510@khorivan>
-References: <20190702153902.0e42b0b2@carbon>
-        <156207778364.29180.5111562317930943530.stgit@firesoul>
-        <20190702144426.GD4510@khorivan>
-        <20190702165230.6caa36e3@carbon>
-        <20190702145612.GF4510@khorivan>
-        <20190702171029.76c60538@carbon>
-        <20190702152112.GG4510@khorivan>
-        <20190702202907.15fb30ce@carbon>
-        <20190702185839.GH4510@khorivan>
+        Tue, 2 Jul 2019 20:40:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35613 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfGCAkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:40:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id m24so748874ioo.2;
+        Tue, 02 Jul 2019 17:40:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gxgpqisjxGX1NQhc+oEHzkp0Zrr5sdSyWxeNq8ViN3Q=;
+        b=brvYuF6336+MvV6Rl+OgHj6qWWi1HZ87beirMYQkIt4k6U7HTER6QLORVWLOdYTNA4
+         ZDxfZ9KNdeojeDX8XDaDvS2S48nCuPOUF/f3j0Z2eMKOWDqb2umejDty9Jdk3kJQpxq6
+         GfROBqles/joqch/zNUZ51XSpkgeEOrSZssBWksZP5Ai65Ng4KDgR3zqcUQC6SQhuENa
+         +i/Bv4mlWU7hv9EYl1NK9RXsQ0BIU12RgCPR/nI+s9xYiVIUGMJ2nbmiW2vpXk1P5fGB
+         GRBwO3npLYEK0DGSYAJkdb/IMCfY/1ZcIMOmP+8nCAP46S2/MEXFbamg72B2e370HZfT
+         Tgqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gxgpqisjxGX1NQhc+oEHzkp0Zrr5sdSyWxeNq8ViN3Q=;
+        b=oCeFH2IMYtE+E1IMRLaKO15BcK6VPl/T8na0Mqgvs1GFMJtvAGn+r4EcpWYrOBgF5p
+         qIk/ynLn/psG5fdoNomFQqKqjXY5RJwzbADGRvDZWjztqMlvbc4jR0b/CzVKxuf7lwrM
+         OmBFH9zeBQ2MeZmdKZEKgWnRCvXpOdpzpw0GODK1tX1+7Eu9CAnktGTTe50IYATSMTqD
+         8jsMnYUXowUf2snAdFHn125VsmesucOe61fZzlA6oehHYtBIIvKmLlGfnB/kib625G9+
+         rp53N092f2A9Y4EFSYs/yocFQwg6//x36ipSfdoAsv2j67IJJKNq+2GodNsR6uHScdPV
+         UtzQ==
+X-Gm-Message-State: APjAAAW/AIvN5TSww4GK7KtpTpeUckdCRxO7dSMRf57gDzE7pEnEfcG/
+        u2e78J6TWUFwajNaOlVhdKAV2aUz5jzAvQ==
+X-Google-Smtp-Source: APXvYqz3qNjH/vYRE4IZRh/zTsFYAjRbz7EXQDFLoHotD4f1bS+zWsmRZIBWdwsBwUpG5lnIPKRPdA==
+X-Received: by 2002:a5e:9308:: with SMTP id k8mr35030511iom.143.1562101718512;
+        Tue, 02 Jul 2019 14:08:38 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id f20sm108363ioh.17.2019.07.02.14.08.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 14:08:37 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 15:08:36 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/72] 4.19.57-stable review
+Message-ID: <20190702210834.GA2368@JATN>
+References: <20190702080124.564652899@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 02 Jul 2019 21:03:00 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 21:58:40 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-
-> On Tue, Jul 02, 2019 at 08:29:07PM +0200, Jesper Dangaard Brouer wrote:
-> >On Tue, 2 Jul 2019 18:21:13 +0300
-> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >  
-> >> On Tue, Jul 02, 2019 at 05:10:29PM +0200, Jesper Dangaard Brouer wrote:  
-> >> >On Tue, 2 Jul 2019 17:56:13 +0300
-> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >> >  
-> >> >> On Tue, Jul 02, 2019 at 04:52:30PM +0200, Jesper Dangaard Brouer wrote:  
-> >> >> >On Tue, 2 Jul 2019 17:44:27 +0300
-> >> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >> >> >  
-> >> >> >> On Tue, Jul 02, 2019 at 04:31:39PM +0200, Jesper Dangaard Brouer wrote:  
-> >> >> >> >From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >> >> >> >
-> >> >> >> >Jesper recently removed page_pool_destroy() (from driver invocation) and
-> >> >> >> >moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
-> >> >> >> >handle in-flight packets/pages. This created an asymmetry in drivers
-> >> >> >> >create/destroy pairs.
-> >> >> >> >
-> >> >> >> >This patch add page_pool user refcnt and reintroduce page_pool_destroy.
-> >> >> >> >This serves two purposes, (1) simplify drivers error handling as driver now
-> >> >> >> >drivers always calls page_pool_destroy() and don't need to track if
-> >> >> >> >xdp_rxq_info_reg_mem_model() was unsuccessful. (2) allow special cases
-> >> >> >> >where a single RX-queue (with a single page_pool) provides packets for two
-> >> >> >> >net_device'es, and thus needs to register the same page_pool twice with two
-> >> >> >> >xdp_rxq_info structures.  
-> >> >> >>
-> >> >> >> As I tend to use xdp level patch there is no more reason to mention (2) case
-> >> >> >> here. XDP patch serves it better and can prevent not only obj deletion but also
-> >> >> >> pool flush, so, this one patch I could better leave only for (1) case.  
-> >> >> >
-> >> >> >I don't understand what you are saying.
-> >> >> >
-> >> >> >Do you approve this patch, or do you reject this patch?
-> >> >> >  
-> >> >> It's not reject, it's proposition to use both, XDP and page pool patches,
-> >> >> each having its goal.  
-> >> >
-> >> >Just to be clear, if you want this patch to get accepted you have to
-> >> >reply with your Signed-off-by (as I wrote).
-> >> >
-> >> >Maybe we should discuss it in another thread, about why you want two
-> >> >solutions to the same problem.  
-> >>
-> >> If it solves same problem I propose to reject this one and use this:
-> >> https://lkml.org/lkml/2019/7/2/651  
-> >
-> >No, I propose using this one, and rejecting the other one.  
+On Tue, Jul 02, 2019 at 10:01:01AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.57 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> There is at least several arguments against this one (related (2) purpose)
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
 > 
-> It allows:
-> - avoid changes to page_pool/mlx5/netsec
-> - save not only allocator obj but allocator "page/buffer flush"
-> - buffer flush can be present not only in page_pool but for other allocators
->   that can behave differently and not so simple solution.
-> - to not limit cpsw/(potentially others) to use "page_pool" allocator only
-> ....
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.57-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
 > 
-> This patch better leave also, as it simplifies error path for page_pool and
-> have more error prone usage comparing with existent one.
+> thanks,
 > 
-> Please, don't limit cpsw and potentially other drivers to use only
-> page_pool it can be zca or etc... I don't won't to modify each allocator.
-> I propose to add both as by fact they solve different problems with common
-> solution.
+> greg k-h
 
 
-I'm trying to limit the scope of your changes, for your special case,
-because I'm afraid this more common solution is going to limit our
-options, painting ourselves into a corner.
+Compiled, booted, and no regressions on my system.
 
-E.g. for correct lifetime handling, I think we actually need to do a
-dev_hold() on the net_device. (Changes in f71fec47c2 might not be
-enough, but I first need to dig into the details and ask Hellwig about
-some details).  Adding that after your patch is more complicated (if
-even doable).
-
-E.g. doing dev_hold() on the net_device, can also turn into a
-performance advantage, when/if page_pool is extended to also "travel"
-into SKBs. (Allowing to elide such dev_hold() calls in netstack).
-
-I also worry about the possible performance impact these changes will
-have down the road.  (For the RX/alloc side it should be clear by now
-that we gain a lot of performance with the single RX-queue binding and
-napi protection).  On the return/free side performance *need* to be
-improved (it doesn't scale).  I'm basically looking at different ways
-to bulk return pages into the ptr_ring, which requires changes in
-page_pool and likely in xdp_allocator structure.  Which your changes
-are complicating.
-
-This special use-case, seems confined to your driver. And Ilias told me
-that XDP is not really a performance benefit for this driver as the HW
-PPS-limit is hit before the XDP and netstack limit.  I ask, does it
-make sense to add XDP to this driver, if it complicates the code for
-everybody else?
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+-Kelsey
