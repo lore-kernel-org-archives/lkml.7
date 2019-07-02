@@ -8,148 +8,100 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFABEC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBC4C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6C52064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A0D2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHZrJP4S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNncWwvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfGBNOv (ORCPT
+        id S1727074AbfGBNPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:14:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53896 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfGBNOu (ORCPT
+        Tue, 2 Jul 2019 09:15:00 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33566 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfGBNO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:14:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x15so822110wmj.3;
-        Tue, 02 Jul 2019 06:14:49 -0700 (PDT)
+        Tue, 2 Jul 2019 09:14:59 -0400
+Received: by mail-io1-f68.google.com with SMTP id u13so36905777iop.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 06:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=43iWKH6jifytF6JFVgfLHPopXRcvvg3jKXLdEufvKFw=;
-        b=XHZrJP4SOb5CVeG/E/xOCKM4DLp2Kmo4x9pWHCOlVjK45UA7ZmotrdUT/FpN5jf7j9
-         qOpebsH/AJqMB8gFlQFEOReSsbmofA5CMNpe/82pJghUrdHdsgU2vSg+dnhowSv96oS8
-         LK6v9QXiVAu355xmxFUEj+jfHAP4wWxWJCas00Ga3VcrhyZyZHw6khXDvKWNBU5CXjQH
-         3BSvwbvAJbEgsCf4iaXiLLKvtVX1jaKGh+a7EuVJ55wlAx/2f5uF6Mcr2NixW95XbcV2
-         lA8MjLt2kYklqra+H7kFMEYda+ZNRV5URE5AnIFvksujftfUeiDtoopSYkpemp3xSRME
-         qD2g==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=0ztf1PZrt5oedAcicUONlFjNaMMVTARFA+N8wrNUA0Q=;
+        b=iNncWwvr3JS+GVKMI8sE6eC6JPeOW0+/n7i58LiHB012ztLksHRJlxh3Dx/feaC/c8
+         WLDKUGg8QbTbvSU/T7QUCZ8szt5D05PzsX95kpiHiZVQUMqclatZAuKUzRcp0eaPFyII
+         GUEEFK5XISpOKmQLQ1HShxxuEOWypcMZgih5/2c/WKpCMa6YuJ/8dyTC3Q2JEGhPFGdh
+         fa2PtercOCt01XjTcsrJ+dte3/XLQvFruM3ctguP8K5igwqz458wdgeWwn+YbNLoLRig
+         2/zL9MfdnX87SJ5xAJjT6E/Njspq4/rtAFOnwC+4l9xtdn90Jpexxthdt60OOGN/Rz2c
+         8bUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=43iWKH6jifytF6JFVgfLHPopXRcvvg3jKXLdEufvKFw=;
-        b=CxhW0YWUWqDMzB/M9SLFpYdJ1Fu0cgoad1pznJSHdYZ9ggYcAUULkABgMA4DOi2gBU
-         rwYTCI4Uxmnvz0a7KlvMBdZ/EytfGFoM8YAbW61ulKyGLRUbVRFCu9n/Cpuvpk4noIa3
-         GOXjBrUYFufEwFciL7wfmCEvnEqcTIFfesp1TYW9X5WZQSWbUfBg8feaXQZaPCNBQCCK
-         jF8S8UqEfWXn+iDQizrc8ELg2f7OZDYS9YNwnpTv3CbYi8sCoad17DawcLtmnIXdr2hm
-         GZH9WiHb95OCozXmMCNMw1o4dKLw3uiyD/lN1TMIstMTXGJLZQZNr/KrUJqYpQbmNTjn
-         o3LQ==
-X-Gm-Message-State: APjAAAVYzu5tHb3T+u5uGQaGnwnPoDH5Ju6qSR6FZ7G1AJICAwwZYZDo
-        yexQspMgwZydzj2nIu4nsTA6JIe3EmBz21AlX5o=
-X-Google-Smtp-Source: APXvYqxWyXlIkUu8b3u0rYozO679+E2AsoRAzxugCAL/051AnSJ56YHrOmAaSBvKviIHxzKsoTLBzEQBGqT0b1X6Hc8=
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr3394953wmc.25.1562073288730;
- Tue, 02 Jul 2019 06:14:48 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=0ztf1PZrt5oedAcicUONlFjNaMMVTARFA+N8wrNUA0Q=;
+        b=L6/5LrQikU7qy6f7eqfJFdnjvu+vgExA0gz+Qly/KQRWvcFDRiKC3gVk7Z6ap4VqFV
+         8lGXPJOroXohNYJmTxxsWzos5Qp3HhsLTsEvHBfzKYgEaVa5Ni5olZfEBsS2CDq7xRUi
+         dRTq3+GnP/gPDrvwSG+aBXavBataL4fxywIEFeQ9DfCoqjE0ZuIZ9hXyWgVLLtY5fPv0
+         3AaM8L4DYEqtWIw9Aiqt9pAuyGACwayQVV4y4MgKS4CaqVkRc+m/RNMo33kxa4WZfika
+         V0tY+UahGZCgUp9M3x1hmcnz3ShuaeAuawZyosv8mBBjwNSSKBK7pRkt2vXteofvkd0x
+         ewbQ==
+X-Gm-Message-State: APjAAAVyTvpm4XolUkR54YUdOfJ7HnZYMXc2lxXqc+vFC7w495S9cx8l
+        Lw3rqet8jDzDdpohEuXrLg4i5oeFF/lRPc1Xmw==
+X-Google-Smtp-Source: APXvYqxx7+xmweS9/gtiu7nUJE63to7JLzDZUwYe4YWkIkWVeq2Xdqecgw6rkU3/6F3u8u3XKiPu4y4tT5b/AxDTXrA=
+X-Received: by 2002:a02:b914:: with SMTP id v20mr35251356jan.83.1562073299013;
+ Tue, 02 Jul 2019 06:14:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702131155.18170-1-andradanciu1997@gmail.com>
-In-Reply-To: <20190702131155.18170-1-andradanciu1997@gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 2 Jul 2019 16:14:37 +0300
-Message-ID: <CAEnQRZDC_wxHbs4ZpeKTo9z7T-tdgeDLwgcf+DLRfZmXDga20A@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add sai3 and sai6 nodes
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Tue, 2 Jul 2019 16:14:16 +0300
+Message-ID: <CAKKbWA4jw9xiHkfF3bk4KTZPazPM5hb9ZANT6hjZyLuv8DM+mA@mail.gmail.com>
+Subject: [PATCH] mtd: spi-nor: Add Winbond w25q256jvm
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tomer Maimon <tmaimon77@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Avi Fishman <avifishman70@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks better now. One comment inline:
+Similar to w25q256 (besides not supporting QPI mode) but with different ID.
+The "JVM" suffix is in the datasheet.
+The datasheet indicates DUAL and QUAD are supported.
+https://www.winbond.com/resource-files/w25q256jv%20spi%20revi%2010232018%20plus.pdf
 
-On Tue, Jul 2, 2019 at 4:12 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
->
-> SAI3 and SAI6 nodes are used to connect to an external codec.
-> They have 1 Tx and 1 Rx dataline.
->
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
-> Changes since v1:
->         - Added sai3 node because we need it to enable audio on pico-pi-8m
->         - Added commit description
->
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index d09b808eff87..2d489c5cdc26 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -278,6 +278,20 @@
->                         #size-cells = <1>;
->                         ranges = <0x30000000 0x30000000 0x400000>;
->
-> +                       sai6: sai@30030000 {
-> +                               compatible = "fsl,imx8mq-sai",
-> +                                       "fsl,imx6sx-sai";
-> +                               reg = <0x30030000 0x10000>;
-> +                               interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +                               clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
-> +                                       <&clk IMX8MQ_CLK_SAI6_ROOT>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +                               dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
-> +                               dma-names = "rx", "tx";
-> +                               status = "disabled";
-> +                       };
-> +
->                         gpio1: gpio@30200000 {
->                                 compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
->                                 reg = <0x30200000 0x10000>;
-> @@ -728,6 +742,22 @@
->                                 status = "disabled";
->                         };
->
-> +                       sai3: sai@308c0000 {
-> +                               compatible = "fsl,imx8mq-sai",
-> +                                            "fsl,imx6sx-sai";
-> +                               reg = <0x308c0000 0x10000>;
-> +                               interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +                               clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>,
-> +                                       <&clk IMX8MQ_CLK_SAI3_ROOT>,
-> +                                       <&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +                               clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +                               dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
-> +                               dma-names = "rx", "tx";
-> +                               status = "disabled";
-> +                       };
-> +
-> +
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+---
+ drivers/mtd/spi-nor/spi-nor.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Please don't use multiple blank lines here.
+diff --git a/drivers/mtd/spi-nor/spi-nor.c
+b/drivers/mtd/spi-nor/spi-nor.c index 0c2ec1c21434..ccb217a24404
+100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2120,6 +2120,8 @@ static const struct flash_info spi_nor_ids[] = {
+  { "w25q80bl", INFO(0xef4014, 0, 64 * 1024,  16, SECT_4K) },
+  { "w25q128", INFO(0xef4018, 0, 64 * 1024, 256, SECT_4K) },
+  { "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K |
+SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
++ { "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
++ SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+  { "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+  SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
 
->                         i2c1: i2c@30a20000 {
->                                 compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
->                                 reg = <0x30a20000 0x10000>;
-> --
-> 2.11.0
->
+--
+2.18.0
+
+
+-- 
+Regards,
+Avi
