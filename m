@@ -2,132 +2,102 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64D3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FC4C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4F72089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rc6IiNmv"
+	by mail.kernel.org (Postfix) with ESMTP id 6A6EF2089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfGCAys (ORCPT
+        id S1727431AbfGCAy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:54:48 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:53186 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGCAym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:54:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1562115282; x=1593651282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Wy7yC5O2tmsY73xSrxj13jbMBblMeVDokHmeqGBlXTw=;
-  b=rc6IiNmvFTTZgqISSh+6pMluu6hlokptQpg8ZvEDhDuZk1eb7c0ZCxa+
-   /tXrJeh1eGliN1MRbdG5/RchB0/eX7IWPUf6I+09pWBRcot8LWO9o2/61
-   gicuZBhI5LDjGvnnS9rqY2j3u8eV1+1OHBCAE3bjvL4wY2V3q6pDnD5iO
-   /kc3ARuzck7lsy2YfVVg1D9KmSLPUGvBqhQk0BzTnmk6J8EHxng00gXkK
-   v1PV2sPZmp8BU6tz3D5Zg1CZ0QMxoIg47E3rX9wJPEOLl4tSRYzXiy0hG
-   pWJPInvo53XONoa8Y3ldhz/bwOshe42+Ll0uLu/VvpFwllvzCeGKRsDIb
-   A==;
-IronPort-SDR: wh5FT19IPbpqFeWdKG1RDdU3c8hVyZQM2ilddF7AepHOYwAGxFSJ5qNMNNGYKNdpJo19LeGa0Q
- hqzGV0XFtIWWQvx9rCGe9NECZ1ifiJUqaObmft4shnT6MjeYsgftqmXjUuuIvNBHcTGmQaK3JT
- jn9UUBQT91bJbYDp5W0oIILekgtlKT104DSgmwEyeNIrLYhn9coBDG93SrqCilLXmYqpjC5sKm
- OROKSt1VfoyOqwypPIPOQF36cc3dPfeHoRLkS2p6lxNdu09fWAapqIvsIgxcv+kMwjjt1CgtRg
- j5o=
-X-IronPort-AV: E=Sophos;i="5.63,445,1557158400"; 
-   d="scan'208";a="113716745"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2019 08:54:41 +0800
-IronPort-SDR: R96qTjlI+HZzO4zp4OmDPPi6AmCvV0yhj+RhLlx3ufv7WFaVae3WZ3xG8TWcS3MA0PxW0yyN5f
- RwJ7Evd6FkqSJU9mImBEIDAA0gh5mLWcpqxH/dxqbX97n2Sq9HmqEq/bLzrb43KxRtldd+8l/n
- CIYD5TCbBiMwrNkgKCy7K0T9uw4Py6KXMRqEJLqydUQGJ5bJ3qu4ReVziijFkitq3c0GLat8WT
- b7ZQU0uayRWb9H3XsTyjiLGd26YU2hMS4TZ0btLI7/y05TGQujJcMIhjzQeYcSJmK064xdW5Hh
- 5Jng+PQlw1smOLdGH6Al2qIF
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 02 Jul 2019 17:53:42 -0700
-IronPort-SDR: Vas0ZmY2WTLD4D32wsiC0idNWk2cEvWjiEvuKcoTH7iaPOOiiIfGMUfQGFBsTdaEhdnmTm6L9M
- XbHVpKx2ryuFhZ6ghamcNSTUIizdK/F4l4gDpsY8JI79LPmpikqxk9qq/7SmADCrfP4KjCIfuJ
- OTK60S9lo+MUCN++J+E+OgrPCawor07uRnS+OwkPCSb9c1Vxt9gVwOFMyiqCnZx5Z2gE4JDR7H
- dJSz3XOjIAaAMjEGAsPD1cO5dSzzHIcQp8zoMMJAHnGpddrxWh/IkSvrQwS92uc6wkCxq26qjK
- 9M4=
-Received: from risc6-mainframe.sdcorp.global.sandisk.com (HELO risc6-mainframe.int.fusionio.com) ([10.196.157.140])
-  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jul 2019 17:54:41 -0700
-From:   Alistair Francis <alistair.francis@wdc.com>
-To:     linux-riscv@lists.infradead.org, arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, alistair23@gmail.com,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH RESEND 2/2] riscv/include/uapi: Define a custom __SIGINFO struct for RV32
-Date:   Tue,  2 Jul 2019 17:52:02 -0700
-Message-Id: <20190703005202.7578-3-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190703005202.7578-1-alistair.francis@wdc.com>
-References: <20190703005202.7578-1-alistair.francis@wdc.com>
+        Tue, 2 Jul 2019 20:54:59 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:48638 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbfGCAy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:54:58 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hiRdk-0001o8-HO; Tue, 02 Jul 2019 16:52:46 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190627063223.GA7736@ziepe.ca>
+ <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+ <20190627163504.GB9568@ziepe.ca>
+ <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
+ <20190628045705.GD3705@ziepe.ca>
+ <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
+ <20190628172926.GA3877@ziepe.ca>
+ <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
+ <20190628190931.GC3877@ziepe.ca>
+ <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+ <20190702224530.GD11860@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <49c7f848-3cd5-7225-0821-b19fb4547ad9@deltatee.com>
+Date:   Tue, 2 Jul 2019 16:52:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190702224530.GD11860@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The glibc implementation of siginfo_t results in an allignment of 8 bytes
-for the union _sifields on RV32. The kernel has an allignment of 4 bytes
-for the _sifields union. This results in information being lost when
-glibc parses the siginfo_t struct.
 
-To fix the issue add a pad variable to the struct to avoid allignment
-mismatches.
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
----
- arch/riscv/include/uapi/asm/siginfo.h | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 arch/riscv/include/uapi/asm/siginfo.h
+On 2019-07-02 4:45 p.m., Jason Gunthorpe wrote:
+> On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
+> 
+>>> However, I'd feel more comfortable about that assumption if we had
+>>> code to support the IOMMU case, and know for sure it doesn't require
+>>> more info :(
+>>
+>> The example I posted *does* support the IOMMU case. That was case (b1)
+>> in the description. The idea is that pci_p2pdma_dist() returns a
+>> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
+>> mapping is required and the appropriate flag tells it to call
+>> dma_map_resource(). This way, it supports both same-segment and
+>> different-segments without needing any look ups in the map step.
+> 
+> I mean we actually have some iommu drivers that can setup P2P in real
+> HW. I'm worried that real IOMMUs will need to have the BDF of the
+> completer to route completions back to the requester - which we can't
+> trivially get through this scheme.
 
-diff --git a/arch/riscv/include/uapi/asm/siginfo.h b/arch/riscv/include/uapi/asm/siginfo.h
-new file mode 100644
-index 000000000000..0854ad97bf44
---- /dev/null
-+++ b/arch/riscv/include/uapi/asm/siginfo.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _ASM_RISCV_SIGINFO_H
-+#define _ASM_RISCV_SIGINFO_H
-+
-+/* Add a pad element for RISC-V 32-bit. We need this as the
-+ * _sifields union is 8 byte allgined in usperace.
-+ */
-+#if __riscv_xlen == 32
-+#ifndef __ARCH_HAS_SWAPPED_SIGINFO
-+#define __SIGINFO 			\
-+struct {				\
-+	int si_signo;			\
-+	int si_errno;			\
-+	int si_code;			\
-+	int pad;			\
-+	union __sifields _sifields;	\
-+}
-+#else
-+#define __SIGINFO 			\
-+struct {				\
-+	int si_signo;			\
-+	int si_code;			\
-+	int si_errno;			\
-+	int pad;			\
-+	union __sifields _sifields;	\
-+}
-+#endif /* __ARCH_HAS_SWAPPED_SIGINFO */
-+#endif
-+
-+#include <asm-generic/siginfo.h>
-+
-+#endif /* _ASM_RISCV_SIGINFO_H */
--- 
-2.22.0
+I've never seen such an IOMMU but I guess, in theory, it could exist.
+The IOMMUs that setup P2P-like transactions in real hardware make use of
+dma_map_resource(). There aren't a lot of users of this function (it's
+actually been broken with the Intel IOMMU until I fixed it recently and
+I'd expect there are other broken implementations); but, to my
+knowledge, none of them have needed the BDF of the provider to date.
 
+> However, maybe that is just a future problem, and certainly we can see
+> that with an interval tree or otherwise such a IOMMU could get the
+> information it needs.
+
+Yup, the rule of thumb is to design for the needs we have today not
+imagined future problems.
+
+Logan
