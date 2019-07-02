@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1799DC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04358C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DC821871
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A2C2184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054825;
-	bh=PwDS63IozS34PatsKZ+K/OUuNN5/IbEOeNXmXngO5FY=;
+	s=default; t=1562054828;
+	bh=9I0J9Q9BNRma8ZT/GTjIET7njTTlPZtA+u6Uyvd4U58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B4opmlzI6W528IuREkcXvFhQI5z1p6mTVSVBc9n04vdVqtH8S3btZCcs4fv/gRZgw
-	 5LoNVwsDyLLFfzSySpw63lvGt0BTOt3ZId4yrpQYimeXWqCjsXTOyFuQQJXYTe/V+E
-	 2/fuXat1Xy6PECR12+CX+S2mX3ZBaWAdt871JjIY=
+	b=n/AcB71jsspXwCdGi/+13kwt9h+8ok6ptSgwJ4s9ifxT/VEs6EOe0DzoW6uiBXOWQ
+	 kWveSRZfpHkZeHC5sjBSGlBzCApRZ3KgIMBlrY3GiKUx3+3d+Fmc8n+ftCGF7s7IqJ
+	 QAucRCdliGhHcLMqPR/IHRQG977kPvXopiGgldm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfGBIHE (ORCPT
+        id S1728201AbfGBIHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbfGBIHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:01 -0400
+        id S1728190AbfGBIHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE54821479;
-        Tue,  2 Jul 2019 08:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8663321852;
+        Tue,  2 Jul 2019 08:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054820;
-        bh=PwDS63IozS34PatsKZ+K/OUuNN5/IbEOeNXmXngO5FY=;
+        s=default; t=1562054823;
+        bh=9I0J9Q9BNRma8ZT/GTjIET7njTTlPZtA+u6Uyvd4U58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjSertbKYRHfBX6phdl6zK8JbVJYM9N/96eeJV4hHHGaMTNbpz70WsZeCufsp1LXJ
-         +9jd8SBTw5l3E12krzIYe6XGr34ee6ykvEADqUQq7JF21EAgg7eXrQlY4RQx/jfvg1
-         ePKCbOrxl18K7ob0+Enb4AXMm2/YRKrgH8dhpcIs=
+        b=LD/m4SYMtMeI2b0q8McB9X+sDVJl5WoIiBPUxzBIxDpsRrUOTDwKRG9ihvl1tuxlt
+         Y1u503d3HuuoUhJLheq/KGB1aSOFeCVcinwZlfnGu8oUOJJp8WUzsfA0Kd21sKWon5
+         pGfD41PoYZ/NIkbJC0ChJUfl1fRb40s2ap5YsNCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Palecek <jpalecek@web.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 44/72] KVM: x86/mmu: Allocate PAE root array when using SVMs 32-bit NPT
-Date:   Tue,  2 Jul 2019 10:01:45 +0200
-Message-Id: <20190702080126.920551180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.19 45/72] NFS/flexfiles: Use the correct TCP timeout for flexfiles I/O
+Date:   Tue,  2 Jul 2019 10:01:46 +0200
+Message-Id: <20190702080126.958242334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -60,45 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit b6b80c78af838bef17501416d5d383fedab0010a upstream.
+commit 68f461593f76bd5f17e87cdd0bea28f4278c7268 upstream.
 
-SVM's Nested Page Tables (NPT) reuses x86 paging for the host-controlled
-page walk.  For 32-bit KVM, this means PAE paging is used even when TDP
-is enabled, i.e. the PAE root array needs to be allocated.
+Fix a typo where we're confusing the default TCP retrans value
+(NFS_DEF_TCP_RETRANS) for the default TCP timeout value.
 
-Fixes: ee6268ba3a68 ("KVM: x86: Skip pae_root shadow allocation if tdp enabled")
-Cc: stable@vger.kernel.org
-Reported-by: Jiri Palecek <jpalecek@web.de>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Jiri Palecek <jpalecek@web.de>
+Fixes: 15d03055cf39f ("pNFS/flexfiles: Set reasonable default ...")
+Cc: stable@vger.kernel.org # 4.8+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -5386,7 +5386,16 @@ static int alloc_mmu_pages(struct kvm_vc
- 	struct page *page;
- 	int i;
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -18,7 +18,7 @@
  
--	if (tdp_enabled)
-+	/*
-+	 * When using PAE paging, the four PDPTEs are treated as 'root' pages,
-+	 * while the PDP table is a per-vCPU construct that's allocated at MMU
-+	 * creation.  When emulating 32-bit mode, cr3 is only 32 bits even on
-+	 * x86_64.  Therefore we need to allocate the PDP table in the first
-+	 * 4GB of memory, which happens to fit the DMA32 zone.  Except for
-+	 * SVM's 32-bit NPT support, TDP paging doesn't use PAE paging and can
-+	 * skip allocating the PDP table.
-+	 */
-+	if (tdp_enabled && kvm_x86_ops->get_tdp_level(vcpu) > PT32E_ROOT_LEVEL)
- 		return 0;
+ #define NFSDBG_FACILITY		NFSDBG_PNFS_LD
  
- 	/*
+-static unsigned int dataserver_timeo = NFS_DEF_TCP_RETRANS;
++static unsigned int dataserver_timeo = NFS_DEF_TCP_TIMEO;
+ static unsigned int dataserver_retrans;
+ 
+ static bool ff_layout_has_available_ds(struct pnfs_layout_segment *lseg);
 
 
