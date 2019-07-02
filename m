@@ -2,174 +2,143 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E5DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B9BC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04A02173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ZIxqhT7j"
+	by mail.kernel.org (Postfix) with ESMTP id 46FED2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfGBDpJ (ORCPT
+        id S1727028AbfGBDrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 23:45:09 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40035 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfGBDpI (ORCPT
+        Mon, 1 Jul 2019 23:47:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726434AbfGBDrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 23:45:08 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c70so12857995qkg.7;
-        Mon, 01 Jul 2019 20:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y786NAXu4PJ1/yOc0m6s682Iasf3FFvLwD+AU2zpzZA=;
-        b=ZIxqhT7j4xKrbb3zciPjTwX8LXukbJXaGLHmMTW5D3IH3l1uurvxd+IRHm2E05cqQb
-         jCdF2Mro7GRvUnsR+N+/dyWTNxjPhnalwbf2pVKUfsetqi3dAwPbfzJFnQISKhEbznRU
-         JSz69cdkkvQOb9mTRsVMEeSTWuKhh33/UxMyE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y786NAXu4PJ1/yOc0m6s682Iasf3FFvLwD+AU2zpzZA=;
-        b=YWGx//Kc5NAg7lLO9vkQ5yQ3PwCunVtbIAijW9XOsDbZLgWm3bRNJqh2vAeeXrg+Mt
-         aerUjCquav7rHRRREbyNSSzZcA7h0thmRR5M8/Kgr1C0zf6wChHVfY+GxC+mZatqGaku
-         URSlCNHtQKqo369wkpx341bwWFpowm4a9atris/KCoYtzxjA3TT+gQRXNeyggeIb7Fp7
-         5nc7m9Q1iEofdBl6R8gak8ZxZMJDycWV0TmnLgPGf//yLKzDAG/M/1MTC8lfHIX9Hew1
-         RtLRpBpdgRNU8bHbQublGn0RnfWoUcv3VyOlCzlzlOCgy+asojiZgS3+PaeqCtr6kbAr
-         RxbQ==
-X-Gm-Message-State: APjAAAXzf1F3uP9sLwmPNiDG2zsLU1YP6+/qTaJQUNwVPx/sthi8TTGq
-        AiVL7nMghdh9rWLJ9T5pq6gvSbJOKeulQBGp3Lg=
-X-Google-Smtp-Source: APXvYqx5IUtQ53M7iPJ4jpmAI5O8gIP8mKdvEhWkhsLgtoHu8TAM3VUWAHT2PDNR4TMI36k4H+c2ZjSMfI7PgxNRq5E=
-X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr23910647qkn.414.1562039107762;
- Mon, 01 Jul 2019 20:45:07 -0700 (PDT)
+        Mon, 1 Jul 2019 23:47:37 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x623kTUq074550
+        for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2019 23:47:36 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfwgg4j3v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:47:35 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 2 Jul 2019 04:47:35 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Jul 2019 04:47:31 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x623lUXt54460762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jul 2019 03:47:30 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72336B2067;
+        Tue,  2 Jul 2019 03:47:30 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51694B2065;
+        Tue,  2 Jul 2019 03:47:30 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.179.41])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Jul 2019 03:47:30 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1F3C216C3620; Mon,  1 Jul 2019 20:47:30 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 20:47:30 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC 1/3] rcu: Expedite the rcu quiescent state reporting if
+ help needed
+Reply-To: paulmck@linux.ibm.com
+References: <20190701040415.219001-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <1561576395-6429-1-git-send-email-eajames@linux.ibm.com> <20190626194048.GA7374@roeck-us.net>
-In-Reply-To: <20190626194048.GA7374@roeck-us.net>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 2 Jul 2019 03:44:54 +0000
-Message-ID: <CACPK8Xf9MC=3oDS4=+Zr3YFW2kKL9X7P8=bDoG_jLTr9=eawkA@mail.gmail.com>
-Subject: Re: [PATCH] OCC: FSI and hwmon: Add sequence numbering
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Lei YU <mine260309@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701040415.219001-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19070203-0064-0000-0000-000003F5F3B2
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011363; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226195; UDB=6.00645517; IPR=6.01007407;
+ MB=3.00027546; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-02 03:47:35
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070203-0065-0000-0000-00003E1B39A1
+Message-Id: <20190702034730.GI26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907020040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 at 19:41, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Wed, Jun 26, 2019 at 02:13:15PM -0500, Eddie James wrote:
-> > Sequence numbering of the commands submitted to the OCC is required by
-> > the OCC interface specification. Add sequence numbering and check for
-> > the correct sequence number on the response.
-> >
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
->
-> For hwmon:
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> I assume this will be pushed through drivers/fsi.
+On Mon, Jul 01, 2019 at 12:04:13AM -0400, Joel Fernandes (Google) wrote:
+> The t->rcu_read_unlock_special union's need_qs bit can be set by the
+> scheduler tick (in rcu_flavor_sched_clock_irq) to indicate that help is
+> needed from the rcu_read_unlock path. When this help arrives however, we
+> can do better to speed up the quiescent state reporting which if
+> rcu_read_unlock_special::need_qs is set might be quite urgent. Make use
+> of this information in deciding when to do heavy-weight softirq raising
+> where possible.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Yes. Eddie, can you please collect the acks and send to Greg?
+Cute thought, but I am going to have to pass on this one.  The reason
+is that by the time that ->rcu_read_unlock_special.b.need_qs gets set,
+the grace period is already one full second old.  At that point, the
+extra tick of waiting is down in the noise.
 
-Cheers,
+Right now, we do the extra work if we really are blocking an expedited
+grace period (the first two lines of the original condition) or we are
+running on a nohz_full CPU (which might never execute a scheduling clock
+tick, thus potentially delaying forever).  And expedited grace periods
+are supposed to complete in tens or maybe hundreds of microseconds,
+assuming the RCU readers are being cooperative, which is a whole
+different level of urgent.
 
-Joel
+Nevertheless, thank you for looking into this!
 
->
-> Guenter
->
-> > ---
-> >  drivers/fsi/fsi-occ.c      | 15 ++++++++++++---
-> >  drivers/hwmon/occ/common.c |  4 ++--
-> >  drivers/hwmon/occ/common.h |  1 +
-> >  3 files changed, 15 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-> > index a2301ce..7da9c81 100644
-> > --- a/drivers/fsi/fsi-occ.c
-> > +++ b/drivers/fsi/fsi-occ.c
-> > @@ -412,6 +412,7 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
-> >               msecs_to_jiffies(OCC_CMD_IN_PRG_WAIT_MS);
-> >       struct occ *occ = dev_get_drvdata(dev);
-> >       struct occ_response *resp = response;
-> > +     u8 seq_no;
-> >       u16 resp_data_length;
-> >       unsigned long start;
-> >       int rc;
-> > @@ -426,6 +427,8 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
-> >
-> >       mutex_lock(&occ->occ_lock);
-> >
-> > +     /* Extract the seq_no from the command (first byte) */
-> > +     seq_no = *(const u8 *)request;
-> >       rc = occ_putsram(occ, OCC_SRAM_CMD_ADDR, request, req_len);
-> >       if (rc)
-> >               goto done;
-> > @@ -441,11 +444,17 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
-> >               if (rc)
-> >                       goto done;
-> >
-> > -             if (resp->return_status == OCC_RESP_CMD_IN_PRG) {
-> > +             if (resp->return_status == OCC_RESP_CMD_IN_PRG ||
-> > +                 resp->seq_no != seq_no) {
-> >                       rc = -ETIMEDOUT;
-> >
-> > -                     if (time_after(jiffies, start + timeout))
-> > -                             break;
-> > +                     if (time_after(jiffies, start + timeout)) {
-> > +                             dev_err(occ->dev, "resp timeout status=%02x "
-> > +                                     "resp seq_no=%d our seq_no=%d\n",
-> > +                                     resp->return_status, resp->seq_no,
-> > +                                     seq_no);
-> > +                             goto done;
-> > +                     }
-> >
-> >                       set_current_state(TASK_UNINTERRUPTIBLE);
-> >                       schedule_timeout(wait_time);
-> > diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-> > index d593517..a7d2b16 100644
-> > --- a/drivers/hwmon/occ/common.c
-> > +++ b/drivers/hwmon/occ/common.c
-> > @@ -124,12 +124,12 @@ struct extended_sensor {
-> >  static int occ_poll(struct occ *occ)
-> >  {
-> >       int rc;
-> > -     u16 checksum = occ->poll_cmd_data + 1;
-> > +     u16 checksum = occ->poll_cmd_data + occ->seq_no + 1;
-> >       u8 cmd[8];
-> >       struct occ_poll_response_header *header;
-> >
-> >       /* big endian */
-> > -     cmd[0] = 0;                     /* sequence number */
-> > +     cmd[0] = occ->seq_no++;         /* sequence number */
-> >       cmd[1] = 0;                     /* cmd type */
-> >       cmd[2] = 0;                     /* data length msb */
-> >       cmd[3] = 1;                     /* data length lsb */
-> > diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
-> > index fc13f3c..67e6968 100644
-> > --- a/drivers/hwmon/occ/common.h
-> > +++ b/drivers/hwmon/occ/common.h
-> > @@ -95,6 +95,7 @@ struct occ {
-> >       struct occ_sensors sensors;
-> >
-> >       int powr_sample_time_us;        /* average power sample time */
-> > +     u8 seq_no;
-> >       u8 poll_cmd_data;               /* to perform OCC poll command */
-> >       int (*send_cmd)(struct occ *occ, u8 *cmd);
-> >
-> > --
-> > 1.8.3.1
-> >
+							Thanx, Paul
+
+> ---
+>  kernel/rcu/tree_plugin.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index c588ef98efd3..bff6410fac06 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -622,7 +622,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
+>  		t->rcu_read_unlock_special.b.exp_hint = false;
+>  		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
+>  		      (rdp->grpmask & rnp->expmask) ||
+> -		      tick_nohz_full_cpu(rdp->cpu);
+> +		      tick_nohz_full_cpu(rdp->cpu)  ||
+> +		      t->rcu_read_unlock_special.b.need_qs;
+>  		// Need to defer quiescent state until everything is enabled.
+>  		if (irqs_were_disabled && use_softirq &&
+>  		    (in_interrupt() ||
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+
