@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97190C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB99216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C82B216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054605;
-	bh=FWX6yoUmqpeNc3UXbOoiOv73WGfgMq7r2DRCslZmUHM=;
+	s=default; t=1562054608;
+	bh=9I0J9Q9BNRma8ZT/GTjIET7njTTlPZtA+u6Uyvd4U58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PpimFSzmZtLSxULf50h+vP7jgtuXYk+CX6AekXuUHa4xOpz45GdgqXXLIrrFCuX+h
-	 O8Vxyud5m10qlVWAi9CPx7KZEgr2xTSb11j7DvWNOEqorI2EOFENfei0DXNjDP6iED
-	 T82o1RY9tpuCbG9AjJ/yg0vBXSkU7BJqLivH6LT0=
+	b=Z9Kcy31Ei1rzBia1YYmOZX9xocSIZ6n4BM+OdDMwRH/QvrIhKxYFX/gqCo9VI10xI
+	 MuJEOk1yFaMT4CwxbWNkv3qtnVBX1LJbxdNVwMl4RQMI600cHJA9Rkt7psHWm76OXV
+	 RMXF8BOjKVnvA/fyAJ4UNOKAsgAlsUQW+PVa/wvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfGBIDY (ORCPT
+        id S1727435AbfGBID1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbfGBIDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:22 -0400
+        id S1727422AbfGBIDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B823C21841;
-        Tue,  2 Jul 2019 08:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D2421479;
+        Tue,  2 Jul 2019 08:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054601;
-        bh=FWX6yoUmqpeNc3UXbOoiOv73WGfgMq7r2DRCslZmUHM=;
+        s=default; t=1562054604;
+        bh=9I0J9Q9BNRma8ZT/GTjIET7njTTlPZtA+u6Uyvd4U58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=byqQbkwwIW/3aHxCXxjoOwLbGJXfJLjIz3/cvVLLYBsCHsAN86/XsDldBiPQ4KEjG
-         8TYZ9AHrJZlsUPb5gM+ffGy3g0G9ot08TZ7O9HZFk6GeuKQByro8y4ipxS3t3tZAdY
-         Q73i9R2H2zrWMbEflzTgt/Kv8VDey8Ej51ZqJitQ=
+        b=q7kcFz8A6nBzbJgpEO+p8cru5ah4txclAPyODS1jpHHKD0ZUDPM8TwDI/nmBcp1AQ
+         rY4pXgVtDN9XcB655Vc7q1/XDSV/8PqziG8H5VJZFMHBrPcyFGdvUjPFKBWd9cQY71
+         Qtf+A803i/BoFh7/Bw7CPWsCy8U50jMa+ah6xf3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jonathan Richardson <jonathan.richardson@broadcom.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 5.1 25/55] efi/memreserve: deal with memreserve entries in unmapped memory
-Date:   Tue,  2 Jul 2019 10:01:33 +0200
-Message-Id: <20190702080125.373828717@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.1 26/55] NFS/flexfiles: Use the correct TCP timeout for flexfiles I/O
+Date:   Tue,  2 Jul 2019 10:01:34 +0200
+Message-Id: <20190702080125.439806920@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -60,60 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 18df7577adae6c6c778bf774b3aebcacbc1fb439 upstream.
+commit 68f461593f76bd5f17e87cdd0bea28f4278c7268 upstream.
 
-Ensure that the EFI memreserve entries can be accessed, even if they
-are located in memory that the kernel (e.g., a crashkernel) omits from
-the linear map.
+Fix a typo where we're confusing the default TCP retrans value
+(NFS_DEF_TCP_RETRANS) for the default TCP timeout value.
 
-Fixes: 80424b02d42b ("efi: Reduce the amount of memblock reservations ...")
-Cc: <stable@vger.kernel.org> # 5.0+
-Reported-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Reviewed-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 15d03055cf39f ("pNFS/flexfiles: Set reasonable default ...")
+Cc: stable@vger.kernel.org # 4.8+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efi.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -1007,14 +1007,16 @@ int __ref efi_mem_reserve_persistent(phy
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -18,7 +18,7 @@
  
- 	/* first try to find a slot in an existing linked list entry */
- 	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
--		rsv = __va(prsv);
-+		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
- 		index = atomic_fetch_add_unless(&rsv->count, 1, rsv->size);
- 		if (index < rsv->size) {
- 			rsv->entry[index].base = addr;
- 			rsv->entry[index].size = size;
+ #define NFSDBG_FACILITY		NFSDBG_PNFS_LD
  
-+			memunmap(rsv);
- 			return 0;
- 		}
-+		memunmap(rsv);
- 	}
+-static unsigned int dataserver_timeo = NFS_DEF_TCP_RETRANS;
++static unsigned int dataserver_timeo = NFS_DEF_TCP_TIMEO;
+ static unsigned int dataserver_retrans;
  
- 	/* no slot found - allocate a new linked list entry */
-@@ -1022,7 +1024,13 @@ int __ref efi_mem_reserve_persistent(phy
- 	if (!rsv)
- 		return -ENOMEM;
- 
--	rsv->size = EFI_MEMRESERVE_COUNT(PAGE_SIZE);
-+	/*
-+	 * The memremap() call above assumes that a linux_efi_memreserve entry
-+	 * never crosses a page boundary, so let's ensure that this remains true
-+	 * even when kexec'ing a 4k pages kernel from a >4k pages kernel, by
-+	 * using SZ_4K explicitly in the size calculation below.
-+	 */
-+	rsv->size = EFI_MEMRESERVE_COUNT(SZ_4K);
- 	atomic_set(&rsv->count, 1);
- 	rsv->entry[0].base = addr;
- 	rsv->entry[0].size = size;
+ static bool ff_layout_has_available_ds(struct pnfs_layout_segment *lseg);
 
 
