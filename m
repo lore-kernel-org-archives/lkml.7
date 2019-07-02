@@ -2,122 +2,143 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F33C5B578
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D21C46478
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F7C206A2
+	by mail.kernel.org (Postfix) with ESMTP id A6E7C2173E
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0GY9y8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfGBBAo (ORCPT
+        id S1727138AbfGBBEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:00:44 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:35863 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfGBBAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:00:43 -0400
-Received: by mail-yb1-f196.google.com with SMTP id t10so741399ybk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 18:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YLKaclKnF/wxygehnw0ZhA/GQEsmphWVTGozX4zGxLc=;
-        b=S0GY9y8C/Fi0sdyS/zcdqZr9tVAkG5ce7/IOGJ3enKy5/OPj2sokEMJIsSjkOxTADB
-         +PtoAyiTYcYXDCup7vpukfHspqp6SPItVVG7fCAF9A7iH/K7i3vvprAhA5I61pfwHIct
-         o0ZHa1L67jnNDgQ7MUaWUBb2jJbsO1a1qzkko2H6PTDkLBNOFIUlXB1hdoYyLycvv5uN
-         g7VyrmxhBLq94kxQgJ39x6KgRKFiBHeg9BQNXXjtYiTLC8ExSo86WvdKD6UrovqjrGFG
-         VzdM3uYqXrjYPX/v6yBewSkqjx/4mfssMGnUzTKLgYPCc3fgIIBf3gUIRChLsfhcY2Yp
-         Mutg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YLKaclKnF/wxygehnw0ZhA/GQEsmphWVTGozX4zGxLc=;
-        b=FnRTh4aGd+hOwuIAYrJmfpbZOWIJq3i6aG/L9VgJklmYCPESMsYCQFHDk6XsEtm6Pj
-         hIZU8KH5Y5bEInIZfdOrrrswZIpJyPIDw4jNWPT11g4YpMb3mYmOZiMlltMUyyZ+tUv8
-         j7gnwbewSYsG9ZuQvG2lUs/p2MU/WfDBSIMzJWuO+WE0+t9cigMn8dIY4DHwUdET/J2q
-         BTLuy39ROB32AnYR4APanv+d9qNACS3Lg8XhHwEsUKtKrVhpqEQJ9baKNszug2sKzAh1
-         KvhhrmfLAj5oZajg2bdix2ify61VlCo4r1olGW/5FtjOQMGXpbPBmSd50x9V/C5lW5nh
-         uGKg==
-X-Gm-Message-State: APjAAAU+OKNLSZbwTD7PLKDDADEmWMh8cPYx5C60Lx0/3N5a0KcxZjYK
-        H3XUY5+OjWcZ8uHB2XM6hv9YuNKHPpFZ0MED06+faA==
-X-Google-Smtp-Source: APXvYqzOaefDFiVFWymQi9oWxw+On0j/dhwOjHPPdiSEDz5QwOyBU1Adr/aXtUeEIa5jaD4wiTcCCpEQKsZhQTgq9tw=
-X-Received: by 2002:a25:7c05:: with SMTP id x5mr17362245ybc.358.1562029242861;
- Mon, 01 Jul 2019 18:00:42 -0700 (PDT)
+        Mon, 1 Jul 2019 21:04:21 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58523 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727047AbfGBBEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:04:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 18:04:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,441,1557212400"; 
+   d="scan'208";a="184379133"
+Received: from chenyu-office.sh.intel.com ([10.239.158.163])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Jul 2019 18:04:18 -0700
+Date:   Tue, 2 Jul 2019 09:14:44 +0800
+From:   Yu Chen <yu.c.chen@intel.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
+Message-ID: <20190702011443.GA19902@chenyu-office.sh.intel.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-2-luzmaximilian@gmail.com>
 MIME-Version: 1.0
-References: <20190702005122.41036-1-henryburns@google.com>
-In-Reply-To: <20190702005122.41036-1-henryburns@google.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 1 Jul 2019 18:00:31 -0700
-Message-ID: <CALvZod5Fb+2mR_KjKq06AHeRYyykZatA4woNt_K5QZNETvw4nw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before __SetPageMovable()
-To:     Henry Burns <henryburns@google.com>
-Cc:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702003740.75970-2-luzmaximilian@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 5:51 PM Henry Burns <henryburns@google.com> wrote:
+Hi,
+On Tue, Jul 02, 2019 at 02:37:39AM +0200, Maximilian Luz wrote:
+> Do not use the surfacepro3_button driver on newer Microsoft Surface
+> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
+> and possibly future generations) use the same device as the Surface Pro
+> 4 to represent their volume and power buttons (MSHW0040), but their
+> acutal implementation is significantly different. This patch ensures
+> that the surfacepro3_button driver is only used on the Pro 3 and 4
+> models, allowing a different driver to bind on other models.
 >
-> __SetPageMovable() expects it's page to be locked, but z3fold.c doesn't
-> lock the page. Following zsmalloc.c's example we call trylock_page() and
-> unlock_page(). Also makes z3fold_page_migrate() assert that newpage is
-> passed in locked, as documentation.
->
-> Signed-off-by: Henry Burns <henryburns@google.com>
-> Suggested-by: Vitaly Wool <vitalywool@gmail.com>
+This method overall looks ok to me.
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 > ---
->  Changelog since v1:
->  - Added an if statement around WARN_ON(trylock_page(page)) to avoid
->    unlocking a page locked by a someone else.
->
->  mm/z3fold.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/z3fold.c b/mm/z3fold.c
-> index e174d1549734..6341435b9610 100644
-> --- a/mm/z3fold.c
-> +++ b/mm/z3fold.c
-> @@ -918,7 +918,10 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
->                 set_bit(PAGE_HEADLESS, &page->private);
->                 goto headless;
->         }
-> -       __SetPageMovable(page, pool->inode->i_mapping);
-> +       if (!WARN_ON(!trylock_page(page))) {
-> +               __SetPageMovable(page, pool->inode->i_mapping);
-> +               unlock_page(page);
-> +       }
-
-Can you please comment why lock_page() is not used here?
-
->         z3fold_page_lock(zhdr);
->
->  found:
-> @@ -1325,6 +1328,7 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
->
->         VM_BUG_ON_PAGE(!PageMovable(page), page);
->         VM_BUG_ON_PAGE(!PageIsolated(page), page);
-> +       VM_BUG_ON_PAGE(!PageLocked(newpage), newpage);
->
->         zhdr = page_address(page);
->         pool = zhdr_to_pool(zhdr);
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+>  drivers/platform/x86/surfacepro3_button.c | 38 +++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+> index 47c6d000465a..0e2c7dfafd9f 100644
+> --- a/drivers/platform/x86/surfacepro3_button.c
+> +++ b/drivers/platform/x86/surfacepro3_button.c
+> @@ -20,6 +20,12 @@
+>  #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+>  #define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
+>  
+> +#define MSHW0040_DSM_REVISION		0x01
+> +#define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
+> +static const guid_t MSHW0040_DSM_UUID =
+> +	GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
+> +		  0x49, 0x80, 0x35);
+> +
+>  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE	0xc8
+>  
+>  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+> @@ -142,6 +148,34 @@ static int surface_button_resume(struct device *dev)
+>  }
+>  #endif
+>  
+> +/*
+> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
+> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
+> + * device by checking for the _DSM method and OEM Platform Revision.
+> + */
+> +static int surface_button_check_MSHW0040(struct acpi_device *dev)
+> +{
+> +	acpi_handle handle = dev->handle;
+> +	union acpi_object *result;
+> +	u64 oem_platform_rev = 0;
+> +
+> +	// get OEM platform revision
+> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +					 MSHW0040_DSM_REVISION,
+> +					 MSHW0040_DSM_GET_OMPR,
+> +					 NULL, ACPI_TYPE_INTEGER);
+> +
+Does it mean, only 5th, 6th and newer platforms have OEM platform revision?
+3rd/4th will get NULL result? Or the opposite?
+> +	if (result) {
+> +		oem_platform_rev = result->integer.value;
+> +		ACPI_FREE(result);
+> +	}
+> +
+> +	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+> +
+> +	return oem_platform_rev == 0 ? 0 : -ENODEV;
+if 3rd/4th do not have this oem rev information while 5th/newer have,
+why the latter returns NODEV(it actually has this info)?
+> +}
+> +
+> +
+>  static int surface_button_add(struct acpi_device *device)
+>  {
+>  	struct surface_button *button;
+> @@ -154,6 +188,10 @@ static int surface_button_add(struct acpi_device *device)
+>  	    strlen(SURFACE_BUTTON_OBJ_NAME)))
+>  		return -ENODEV;
+>  
+> +	error = surface_button_check_MSHW0040(device);
+> +	if (error)
+> +		return error;
+> +
+ditto, 3rd/4th get error=0?
+>  	button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+>  	if (!button)
+>  		return -ENOMEM;
+> -- 
+> 2.22.0
+> 
+Best,
+Yu
