@@ -2,98 +2,184 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDFEC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D28C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B12206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a+Z9cFdl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a+Z9cFdl"
+	by mail.kernel.org (Postfix) with ESMTP id 70318206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfGBOqz (ORCPT
+        id S1727063AbfGBOrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:46:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45626 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfGBOqz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:46:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A9D786083E; Tue,  2 Jul 2019 14:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562078814;
-        bh=GL5oxwciHlPA4OKTaH0DTDL7syhHG0cECRKJ9aG3R9M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=a+Z9cFdlhKPQwzMIsRxLHEH3TpnV8NRbwR/8+QhI7YAn5uPsI0Jx424723D6+uFYh
-         nE9OcXG1Uag94sQ9ZwYNvw3t1wseLY1Enw5Sy/M9bcvqTP1e+MTzASeRzt8LT2+Ez0
-         DN2fs6orHEsIQAyCTceQiogti/BilIF43KrHvbtU=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 2 Jul 2019 10:47:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43666 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbfGBOrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:47:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 401436025A;
-        Tue,  2 Jul 2019 14:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562078814;
-        bh=GL5oxwciHlPA4OKTaH0DTDL7syhHG0cECRKJ9aG3R9M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=a+Z9cFdlhKPQwzMIsRxLHEH3TpnV8NRbwR/8+QhI7YAn5uPsI0Jx424723D6+uFYh
-         nE9OcXG1Uag94sQ9ZwYNvw3t1wseLY1Enw5Sy/M9bcvqTP1e+MTzASeRzt8LT2+Ez0
-         DN2fs6orHEsIQAyCTceQiogti/BilIF43KrHvbtU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 401436025A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH v4 0/4] media: venus: Update clock scaling and core selection
-Date:   Tue,  2 Jul 2019 20:16:23 +0530
-Message-Id: <1562078787-516-1-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 4BA9B300DA2B;
+        Tue,  2 Jul 2019 14:46:59 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBDA91001DDC;
+        Tue,  2 Jul 2019 14:46:50 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 16:46:48 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v5 net-next 1/6] xdp: allow same allocator usage
+Message-ID: <20190702164648.56ff0761@carbon>
+In-Reply-To: <20190702102700.GA4510@khorivan>
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+        <20190630172348.5692-2-ivan.khoronzhuk@linaro.org>
+        <20190701134059.71757892@carbon>
+        <20190702102700.GA4510@khorivan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 02 Jul 2019 14:46:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this patch series, clock scaling and core selection methods are
-updated. Current clock scaling and core selection methods are same
-for vpu4 and previous versions. Introducing load calculations using
-vpp cycles, which indicates the cycles required by video hardware to
-process each macroblock. Also adding vsp cycles, cycles require by
-stream processor. Clock scaling is now done more precisely using vpp
-and vsp cycles. Instance is assigned to core with minimum load, instead
-of static assignment.
+On Tue, 2 Jul 2019 13:27:07 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-Changes since v3:
- - vsp_cycles and vpp_cyles are now unsigned long.
- - Core number counting aligned with VIDC_CORE_ID_.
- - Aligned hardware overload handling of scale_clocks_v4 with scale_clocks.
- - Added bitrate based clock scaling patch in this patch series.
- - Instance state check is now moved from scale_clocks to load_scale_clocks.
+> On Mon, Jul 01, 2019 at 01:40:59PM +0200, Jesper Dangaard Brouer wrote:
+> >
+> >I'm very skeptical about this approach.
+> >
+> >On Sun, 30 Jun 2019 20:23:43 +0300
+> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >  
+> >> XDP rxqs can be same for ndevs running under same rx napi softirq.
+> >> But there is no ability to register same allocator for both rxqs,
+> >> by fact it can same rxq but has different ndev as a reference.  
+> >
+> >This description is not very clear. It can easily be misunderstood.
+> >
+> >It is an absolute requirement that each RX-queue have their own
+> >page_pool object/allocator. (This where the performance comes from) as
+> >the page_pool have NAPI protected array for alloc and XDP_DROP recycle.
+> >
+> >Your driver/hardware seems to have special case, where a single
+> >RX-queue can receive packets for two different net_device'es.
+> >
+> >Do you violate this XDP devmap redirect assumption[1]?
+> >[1] https://github.com/torvalds/linux/blob/v5.2-rc7/kernel/bpf/devmap.c#L324-L329  
+> Seems that yes, but that's used only for trace for now.
+> As it runs under napi and flush clear dev_rx i must do it right in the
+> rx_handler. So next patchset version will have one patch less.
+> 
+> Thanks!
+> 
+> >
+> >  
+> >> Due to last changes allocator destroy can be defered till the moment
+> >> all packets are recycled by destination interface, afterwards it's
+> >> freed. In order to schedule allocator destroy only after all users are
+> >> unregistered, add refcnt to allocator object and schedule to destroy
+> >> only it reaches 0.  
+> >
+> >The guiding principles when designing an API, is to make it easy to
+> >use, but also make it hard to misuse.
+> >
+> >Your API change makes it easy to misuse the API.  As it make it easy to
+> >(re)use the allocator pointer (likely page_pool) for multiple
+> >xdp_rxq_info structs.  It is only valid for your use-case, because you
+> >have hardware where a single RX-queue delivers to two different
+> >net_devices.  For other normal use-cases, this will be a violation.
+> >
+> >If I was a user of this API, and saw your xdp_allocator_get(), then I
+> >would assume that this was the normal case.  As minimum, we need to add
+> >a comment in the code, about this specific/intended use-case.  I
+> >through about detecting the misuse, by adding a queue_index to
+> >xdp_mem_allocator, that can be checked against, when calling
+> >xdp_rxq_info_reg_mem_model() with another xdp_rxq_info struct (to catch
+> >the obvious mistake where queue_index mismatch).  
+> 
+> I can add, but not sure if it has or can have some conflicts with another
+> memory allocators, now or in future. Main here to not became a cornerstone
+> in some not obvious use-cases.
+> 
+> So, for now, let it be in this way:
+> 
+> --- a/include/net/xdp_priv.h
+> +++ b/include/net/xdp_priv.h
+> @@ -19,6 +19,7 @@ struct xdp_mem_allocator {
+>         struct delayed_work defer_wq;
+>         unsigned long defer_warn;
+>         unsigned long refcnt;
+> +       u32 queue_index;
+>  };
+> 
+>  #endif /* __LINUX_NET_XDP_PRIV_H__ */
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index a44621190fdc..c4bf29810f4d 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -324,7 +324,7 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
+>         return true;
+>  }
+> 
+> -static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
+> +static struct xdp_mem_allocator *xdp_allocator_find(void *allocator)
+>  {
+>         struct xdp_mem_allocator *xae, *xa = NULL;
+>         struct rhashtable_iter iter;
+> @@ -336,7 +336,6 @@ static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
+> 
+>                 while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
+>                         if (xae->allocator == allocator) {
+> -                               xae->refcnt++;
+>                                 xa = xae;
+>                                 break;
+>                         }
+> @@ -386,9 +385,13 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>                 }
+>         }
+> 
+> -       xdp_alloc = xdp_allocator_get(allocator);
+> +       xdp_alloc = xdp_allocator_find(allocator);
+>         if (xdp_alloc) {
+> +               if (xdp_alloc->queue_index != xdp_rxq->queue_index)
+> +                       return -EINVAL;
+> +
+>                 xdp_rxq->mem.id = xdp_alloc->mem.id;
+> +               xdp_alloc->refcnt++;
 
-Aniket Masule (4):
-  media: venus: Add codec data table
-  media: venus: Update clock scaling
-  media: venus: Update to bitrate based clock scaling
-  media: venus: Update core selection
+This is now adjusted outside lock, not good.
 
- drivers/media/platform/qcom/venus/core.c       |  13 ++
- drivers/media/platform/qcom/venus/core.h       |  16 ++
- drivers/media/platform/qcom/venus/helpers.c    | 213 +++++++++++++++++++++++--
- drivers/media/platform/qcom/venus/helpers.h    |   3 +-
- drivers/media/platform/qcom/venus/hfi_helper.h |   1 +
- drivers/media/platform/qcom/venus/hfi_parser.h |   5 +
- drivers/media/platform/qcom/venus/vdec.c       |   6 +-
- drivers/media/platform/qcom/venus/venc.c       |   6 +-
- 8 files changed, 250 insertions(+), 13 deletions(-)
+>                 return 0;
+>         }
+> 
+> @@ -406,6 +409,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>         xdp_alloc->mem  = xdp_rxq->mem;
+>         xdp_alloc->allocator = allocator;
+>         xdp_alloc->refcnt = 1;
+> +       xdp_alloc->queue_index = xdp_rxq->queue_index;
+> 
+>         /* Insert allocator into ID lookup table */
+>         ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+> 
+> Jesper, are you Ok with this version?
+
+Please see my other patch, this is based on our first refcnt attempt.
+I think that other patch is a better way forward.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
