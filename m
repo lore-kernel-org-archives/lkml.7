@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A554CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA8C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0F7205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2980205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055329;
-	bh=jIOQbsCP4X+3mrOpraffnVNqY8f0gWvNEEoEDdaJRt8=;
+	s=default; t=1562055335;
+	bh=JXLrTMyeRZdR8Tz9O6emJCMGlBucOV6CQTFmjD3gLUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0RYjPO+IDpikNKrZMr+eCeJ8Bd9u9bqE7TOkDcqu1T1EqnRf2gdibCZPcmq3eBlG
-	 rvO31zLZMFilpFpA90BuQTmVA6AEWNBzmkc27GEMwsfv8ansQvoepMDVPgUQwHbWE0
-	 ZEZlJHHyg2/BiUIdXxioIRKD1Wim12fWnvFO3sQw=
+	b=AOlCYaPO4O+ZHl2fo8NkbSMR4vd2mtOucPlciEDPV1wL3Jo2YbEwsZRQIVQLat2U/
+	 1wxOtU09/NnaRZQdYl99tBCAy+HlQ1u4E/5HWCzW+BIfPQ/g23B6unDkrNknPZmtiT
+	 bL13rkZqOd5pCdLeacYje4qTxXeCsyn1MoxnFd+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfGBIP1 (ORCPT
+        id S1727800AbfGBIEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfGBIEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:55 -0400
+        id S1727774AbfGBIEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D5F420659;
-        Tue,  2 Jul 2019 08:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56F2821479;
+        Tue,  2 Jul 2019 08:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054694;
-        bh=jIOQbsCP4X+3mrOpraffnVNqY8f0gWvNEEoEDdaJRt8=;
+        s=default; t=1562054676;
+        bh=JXLrTMyeRZdR8Tz9O6emJCMGlBucOV6CQTFmjD3gLUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VxvUyvpHByVje9LmkQ2WBwt3pKC11e/VDsRcd3ZyKmH/0L0e85IpodulHin9h/ZD9
-         YeIb58WFdixCo+5tn3cwq+2StYHsdFvtYHxta8Pir9fByz7RzxNiwO2hG4tvwUu/tL
-         3Oh6J3dNMnRoKf39bBDOoNBgNsFrryIj+VuNc/y8=
+        b=aRS5p238/gxePig6hKRmYXMjQ2FYp8PDX77UpgCc/z2FTf+TyaPnlU1vVvVc4Hkna
+         azEYeKYl7HSqVlGcbmyCeCN/2p0TCY6169k5gF0UUjCuyyJsbdC0ZdhYj5kjLB+moQ
+         IIkKxXLODrb+TnpsYmmEy1zWvjO6Dgh/Eh0+k0I0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
-        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@redhat.com>,
+        Roland Hii <roland.king.guan.hii@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 38/55] sctp: change to hold sk after auth shkey is created successfully
-Date:   Tue,  2 Jul 2019 10:01:46 +0200
-Message-Id: <20190702080126.103992090@linuxfoundation.org>
+Subject: [PATCH 5.1 35/55] net: stmmac: fixed new system time seconds value calculation
+Date:   Tue,  2 Jul 2019 10:01:43 +0200
+Message-Id: <20190702080125.946169882@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -63,51 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Roland Hii <roland.king.guan.hii@intel.com>
 
-[ Upstream commit 25bff6d5478b2a02368097015b7d8eb727c87e16 ]
+[ Upstream commit a1e5388b4d5fc78688e5e9ee6641f779721d6291 ]
 
-Now in sctp_endpoint_init(), it holds the sk then creates auth
-shkey. But when the creation fails, it doesn't release the sk,
-which causes a sk defcnf leak,
+When ADDSUB bit is set, the system time seconds field is calculated as
+the complement of the seconds part of the update value.
 
-Here to fix it by only holding the sk when auth shkey is created
-successfully.
+For example, if 3.000000001 seconds need to be subtracted from the
+system time, this field is calculated as
+2^32 - 3 = 4294967296 - 3 = 0x100000000 - 3 = 0xFFFFFFFD
 
-Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
-Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
-Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@redhat.com>
+Previously, the 0x100000000 is mistakenly written as 100000000.
+
+This is further simplified from
+  sec = (0x100000000ULL - sec);
+to
+  sec = -sec;
+
+Fixes: ba1ffd74df74 ("stmmac: fix PTP support for GMAC4")
+Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/endpointola.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/endpointola.c
-+++ b/net/sctp/endpointola.c
-@@ -133,10 +133,6 @@ static struct sctp_endpoint *sctp_endpoi
- 	/* Initialize the bind addr area */
- 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -122,7 +122,7 @@ static int adjust_systime(void __iomem *
+ 		 * programmed with (2^32 – <new_sec_value>)
+ 		 */
+ 		if (gmac4)
+-			sec = (100000000ULL - sec);
++			sec = -sec;
  
--	/* Remember who we are attached to.  */
--	ep->base.sk = sk;
--	sock_hold(ep->base.sk);
--
- 	/* Create the lists of associations.  */
- 	INIT_LIST_HEAD(&ep->asocs);
- 
-@@ -169,6 +165,10 @@ static struct sctp_endpoint *sctp_endpoi
- 	ep->prsctp_enable = net->sctp.prsctp_enable;
- 	ep->reconf_enable = net->sctp.reconf_enable;
- 
-+	/* Remember who we are attached to.  */
-+	ep->base.sk = sk;
-+	sock_hold(ep->base.sk);
-+
- 	return ep;
- 
- nomem_shkey:
+ 		value = readl(ioaddr + PTP_TCR);
+ 		if (value & PTP_TCR_TSCTRLSSR)
 
 
