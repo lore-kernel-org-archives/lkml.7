@@ -2,130 +2,187 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BCBC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9EC06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA2C21850
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95912184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgi/EVQT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dUveXvl3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jJVKbTNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfGBSUH (ORCPT
+        id S1727047AbfGBSVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:20:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39738 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGBSUH (ORCPT
+        Tue, 2 Jul 2019 14:21:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33078 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfGBSVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:20:07 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b7so807398pls.6;
-        Tue, 02 Jul 2019 11:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Jd8xYP3fG+KhX6g7bNBS4eWXzd05+Eza9a78A930Hq0=;
-        b=bgi/EVQTd5450nG5gU42dXnAW6I5Rm4Q8TjxB2Q1cSqxTP0yO9bMY9881nuWVJ7uwb
-         9/SYbUpu0/QsxTr+WJwrRT6Wt1GIUvByj4L5r1KZY0UOHZxC4YGC9y/lwyzBWS8JnUzh
-         E97mb7q+4HvYFE/1H19B6gKv/rL7zX38ywAeKAh/gKOGUu0+wzCuK02YZJIKy/Wr7NFk
-         1/2iamcT7Bc7PG6y2Adshl6g/jbf0Vw0ydVvXQ84CryAoD8wrXmplTlYuIQ4W9mmT1AG
-         ns4OGeT7dxIGq5dupRd+IqcvmlMG1qUbaBKsOx7OgB8CfxVMzkEj3uLzledgHqaeYPX3
-         J0Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Jd8xYP3fG+KhX6g7bNBS4eWXzd05+Eza9a78A930Hq0=;
-        b=FrB064wA8U28UJVe2plNfpW+7aejogXMIYD0vGes7q0q6XbklnjSQG3KQnbGP3+n4T
-         LsggWAxUoFez6/SrjaqtvbvZR8FZ3qII83nMJE+tnEw4xToDPCDK6gDE1H1V7jKXsrJL
-         AwrwHB9gmGk6iNlFXRmx8wQzrYHalR+Vheb1Rz2B7ojfyrwvP44QMY+ZulQzgkSbxkdP
-         EyDGNzUWD9NLsEpFSePe/2XSWtC1L6yhKElsbdHNedwL+6DWXCawx5nZu4PiSA0smuQw
-         83gSd1NedxyVlhcd8HPb9kbbbIsAO5Tf0IkuhAEsomN4lf+L7C0bZW9z73/skhlszJAn
-         vMqg==
-X-Gm-Message-State: APjAAAXYZLf8wYIEhJEwMhxTEkSgK3Pa8WiE50DxJcYF4PRVgWvhsLxs
-        cbnYuM5sCSu/RDMbU1ahSIipZ9K2
-X-Google-Smtp-Source: APXvYqybg1FjokTgrM9gNGTLuXeT/G/dMsG6LdcUxxdF9deI7XtjdnPgXoOnqNPbrt3BC3+G1F+ocw==
-X-Received: by 2002:a17:902:b20c:: with SMTP id t12mr37175998plr.285.1562091606504;
-        Tue, 02 Jul 2019 11:20:06 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id t96sm2881313pjb.1.2019.07.02.11.20.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 11:20:05 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 23:50:02 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: cifs: cifsssmb: Change return type of
- convert_ace_to_cifs_ace
-Message-ID: <20190702182001.GA11497@hari-Inspiron-1545>
+        Tue, 2 Jul 2019 14:21:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5591F6087F; Tue,  2 Jul 2019 18:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562091681;
+        bh=5bw1EVJiV5G7vG0aSJmf9KC+cBmeMriFWWIIYfkAxaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dUveXvl3aOLY0Ix+FPaftcYkfHXgtF4kFQKZcdPNQ4prjaGlA6j/n2DjfVXUscLS+
+         Tx1wY/2fxDc5vuWuSxRNzCYN08EUuxPTBw7XABle00JWnICa5O9mJIaPRPrckzQ4ZZ
+         wCc1HICzRkXm1Zh+grRzZ7W+uIwvYXGpKjya2k+0=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 5784A60746;
+        Tue,  2 Jul 2019 18:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562091680;
+        bh=5bw1EVJiV5G7vG0aSJmf9KC+cBmeMriFWWIIYfkAxaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jJVKbTNiLwcBEnl15Wbh5d0IKLKGs7dMcuiMoIZfiLStYTw5XyVDGmZZIbF6tb1oY
+         UTDYNZ6ChD589JQAwr1DLE1U6zodF3S+otZZ53QncHG3s3YVHsNdXths8WIqgTUtIg
+         3vvGmZi4bNPY3JmLIsHTRbI8wfmj8DWxn2cYwPuI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 02 Jul 2019 11:21:20 -0700
+From:   Jeykumar Sankaran <jsanka@codeaurora.org>
+To:     dhar@codeaurora.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, chandanu@codeaurora.org,
+        nganji@codeaurora.org, jshekhar@codeaurora.org
+Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
+In-Reply-To: <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
+References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+ <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
+ <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
+ <627144af54459a203f1583d2ad9b390c@codeaurora.org>
+ <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
+Message-ID: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
+X-Sender: jsanka@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change return from int to void of  convert_ace_to_cifs_ace as it never
-fails.
+On 2019-07-01 03:29, dhar@codeaurora.org wrote:
+> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
+>> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
+>>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
+>>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
+>>>>> dpu encoder spinlock should be initialized during dpu encoder
+>>>>> init instead of dpu encoder setup which is part of commit.
+>>>>> There are chances that vblank control uses the uninitialized
+>>>>> spinlock if not initialized during encoder init.
+>>>> Not much can be done if someone is performing a vblank operation
+>>>> before encoder_setup is done.
+>>>> Can you point to the path where this lock is acquired before
+>>>> the encoder_setup?
+>>>> 
+>>>> Thanks
+>>>> Jeykumar S.
+>>>>> 
+>>> 
+>>> When running some dp usecase, we are hitting this callstack.
+>>> 
+>>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
+>>> Call trace:
+>>>  spin_dump+0x84/0x8c
+>>>  spin_dump+0x0/0x8c
+>>>  do_raw_spin_lock+0x80/0xb0
+>>>  _raw_spin_lock_irqsave+0x34/0x44
+>>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
+>>>  dpu_crtc_vblank+0x168/0x1a0
+>>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
+>>>  process_one_work+0x16c/0x2d8
+>>>  worker_thread+0x1d8/0x2b0
+>>>  kthread+0x124/0x134
+>>> 
+>>> Looks like vblank is getting enabled earlier causing this issue and 
+>>> we
+>>> are using the spinlock without initializing it.
+>>> 
+>>> Thanks,
+>>> Shubhashree
+>>> 
+>> DP calls into set_encoder_mode during hotplug before even notifying 
+>> the
+>> u/s. Can you trace out the original caller of this stack?
+>> 
+>> Even though the patch is harmless, I am not entirely convinced to move 
+>> this
+>> initialization. Any call which acquires the lock before encoder_setup
+>> will be a no-op since there will not be any physical encoder to work 
+>> with.
+>> 
+>> Thanks and Regards,
+>> Jeykumar S.
+>> 
+>>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
+>>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+>>>>> ---
+>>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
+>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>> 
+>>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> index 5f085b5..22938c7 100644
+>>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
+>>>>> struct
+>>>>> drm_encoder *enc,
+>>>>>  	if (ret)
+>>>>>  		goto fail;
+>>>>> 
+>>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>> -
+>>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
+>>>>>  	timer_setup(&dpu_enc->frame_done_timer,
+>>>>>  			dpu_encoder_frame_done_timeout, 0);
+>>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
+>>>>> drm_device *dev,
+>>>>> 
+>>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
+>>>>> &dpu_encoder_helper_funcs);
+>>>>> 
+>>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>>  	dpu_enc->enabled = false;
+>>>>> 
+>>>>>  	return &dpu_enc->base;
+> 
+> In dpu_crtc_vblank(), we are looping through all the encoders in the
+> present mode_config:
+> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+> 1/dpu_crtc.c#L1082
+> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
+> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
+> the spinlock, we will do a early return for
+> the encoders which are not currently assigned to our crtc:
+> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+> 1/dpu_encoder.c#L1318.
+> Since the encoder_setup for the secondary encoder(dp encoder in this
+> case) is not called until dp hotplug, we are hitting kernel panic
+> while acquiring the lock.
+This is the sequence in which the events are expected to happen:
 
-fixes below issue reported by coccicheck
-fs/cifs/cifssmb.c:3606:7-9: Unneeded variable: "rc". Return "0" on line
-3620
+1) DP connector is instantiated with an inactive state
+2) Hot plug on DP
+3) DP connector is activated
+4) User space attaches a CRTC to the activated connector
+5) CRTC is enabled
+6) CRTC_VBLANK_ON is called
+7) dpu_crtc_vblank is called.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- fs/cifs/cifssmb.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+So can you help tracing out why dpu_crtc_vblank is called when the 
+connector
+is not activated yet (no hotplug)?
 
-diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-index 2ea2855..6228719 100644
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -3600,11 +3600,9 @@ static int cifs_copy_posix_acl(char *trgt, char *src, const int buflen,
- 	return size;
- }
- 
--static __u16 convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
-+static void convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
- 				     const struct posix_acl_xattr_entry *local_ace)
- {
--	__u16 rc = 0; /* 0 = ACL converted ok */
--
- 	cifs_ace->cifs_e_perm = le16_to_cpu(local_ace->e_perm);
- 	cifs_ace->cifs_e_tag =  le16_to_cpu(local_ace->e_tag);
- 	/* BB is there a better way to handle the large uid? */
-@@ -3617,7 +3615,6 @@ static __u16 convert_ace_to_cifs_ace(struct cifs_posix_ace *cifs_ace,
- 	cifs_dbg(FYI, "perm %d tag %d id %d\n",
- 		 ace->e_perm, ace->e_tag, ace->e_id);
- */
--	return rc;
- }
- 
- /* Convert ACL from local Linux POSIX xattr to CIFS POSIX ACL wire format */
-@@ -3653,13 +3650,8 @@ static __u16 ACL_to_cifs_posix(char *parm_data, const char *pACL,
- 		cifs_dbg(FYI, "unknown ACL type %d\n", acl_type);
- 		return 0;
- 	}
--	for (i = 0; i < count; i++) {
--		rc = convert_ace_to_cifs_ace(&cifs_acl->ace_array[i], &ace[i]);
--		if (rc != 0) {
--			/* ACE not converted */
--			break;
--		}
--	}
-+	for (i = 0; i < count; i++)
-+		convert_ace_to_cifs_ace(&cifs_acl->ace_array[i], &ace[i]);
- 	if (rc == 0) {
- 		rc = (__u16)(count * sizeof(struct cifs_posix_ace));
- 		rc += sizeof(struct cifs_posix_acl);
 -- 
-2.7.4
-
+Jeykumar S
