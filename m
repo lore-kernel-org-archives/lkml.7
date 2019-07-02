@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A4CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E51C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E05A20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDA420665
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055070;
-	bh=PkOp1tK8MXcfqqgY3v2HBpAJUAf1o5pm3r1aqb8Awwc=;
+	s=default; t=1562055074;
+	bh=JzhaEiPOMzUPEDdCttlNaZQHACR4FpyS+c4Ey6GXKhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmSxIVNnJiUFMsNUDg8jtQ0M8y8YCApTDaPdAG+PuLRJroe3Bfxw1faOQZfZwrcc1
-	 6wf7TIRrgkVOWI3WQBDy+qG4NWnDFJovFapIwxhY8OOrux89CCRrwUC2OO/F3daahX
-	 v1aKRM989StwnHG3i5OEfbp/sNTNjLNN8SkF8mh8=
+	b=YxJ1tZCgJz7/KdzAVvhZlqkQKxaGMyIUckMP4/TbPBKBNZCvRtJziPelkODKPKVUH
+	 7JNpSyohVzUbok4qYtDRTXztc3Eg5af6uEeGtqUpmW1EU5lEaxfFoCnsC5Yrx7k/Bf
+	 ha6dzuDhdRbjSgXOvaqGA+zaWCfpmqbJwSv9Z2gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfGBILI (ORCPT
+        id S1728870AbfGBIKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:11:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbfGBIKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:10:49 -0400
+        id S1727844AbfGBIKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:10:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40ACA2184B;
-        Tue,  2 Jul 2019 08:10:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E1021852;
+        Tue,  2 Jul 2019 08:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055048;
-        bh=PkOp1tK8MXcfqqgY3v2HBpAJUAf1o5pm3r1aqb8Awwc=;
+        s=default; t=1562055033;
+        bh=JzhaEiPOMzUPEDdCttlNaZQHACR4FpyS+c4Ey6GXKhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bjvgyxqGKcrEOz2cEyB0vOGm8kXOzTRfsPx7yefVwzXyn0rucRLnUYHb5+WItR08c
-         EeZkGuuYakolzGHLyYxkEYIF2J41EUl+xSNV614yZG/RB0ToOS4f3XX1oGJXA2bx+2
-         rjE960PVOa/dvK9ywLGIZ18smruWb6wiSCSOFoZw=
+        b=UYaL0caHGGZOPL/IAH/RHafBj3bu7CKbFJz+CnsML+dIdn4TPTBlUU5kxaH6WEuPP
+         NP1JzQO7D2CTnZiLWDZtHfinsDReQthsk/KSURifvcOquAbxwEog2YYB8xo4HrSVk0
+         xrkldG0C7WslH/7awFqRIxDOgU740ayAI3WUwWjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 27/43] af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
-Date:   Tue,  2 Jul 2019 10:02:07 +0200
-Message-Id: <20190702080125.248065085@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alejandro Jimenez <alejandro.j.jimenez@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, bp@alien8.de,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
+Subject: [PATCH 4.14 22/43] x86/speculation: Allow guests to use SSBD even if host does not
+Date:   Tue,  2 Jul 2019 10:02:02 +0200
+Message-Id: <20190702080124.964149146@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -61,153 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
 
-[ Upstream commit 89ed5b519004a7706f50b70f611edbd3aaacff2c ]
+commit c1f7fec1eb6a2c86d01bc22afce772c743451d88 upstream.
 
-When an application is run that:
-a) Sets its scheduler to be SCHED_FIFO
-and
-b) Opens a memory mapped AF_PACKET socket, and sends frames with the
-MSG_DONTWAIT flag cleared, its possible for the application to hang
-forever in the kernel.  This occurs because when waiting, the code in
-tpacket_snd calls schedule, which under normal circumstances allows
-other tasks to run, including ksoftirqd, which in some cases is
-responsible for freeing the transmitted skb (which in AF_PACKET calls a
-destructor that flips the status bit of the transmitted frame back to
-available, allowing the transmitting task to complete).
+The bits set in x86_spec_ctrl_mask are used to calculate the guest's value
+of SPEC_CTRL that is written to the MSR before VMENTRY, and control which
+mitigations the guest can enable.  In the case of SSBD, unless the host has
+enabled SSBD always on mode (by passing "spec_store_bypass_disable=on" in
+the kernel parameters), the SSBD bit is not set in the mask and the guest
+can not properly enable the SSBD always on mitigation mode.
 
-However, when the calling application is SCHED_FIFO, its priority is
-such that the schedule call immediately places the task back on the cpu,
-preventing ksoftirqd from freeing the skb, which in turn prevents the
-transmitting task from detecting that the transmission is complete.
+This has been confirmed by running the SSBD PoC on a guest using the SSBD
+always on mitigation mode (booted with kernel parameter
+"spec_store_bypass_disable=on"), and verifying that the guest is vulnerable
+unless the host is also using SSBD always on mode. In addition, the guest
+OS incorrectly reports the SSB vulnerability as mitigated.
 
-We can fix this by converting the schedule call to a completion
-mechanism.  By using a completion queue, we force the calling task, when
-it detects there are no more frames to send, to schedule itself off the
-cpu until such time as the last transmitted skb is freed, allowing
-forward progress to be made.
+Always set the SSBD bit in x86_spec_ctrl_mask when the host CPU supports
+it, allowing the guest to use SSBD whether or not the host has chosen to
+enable the mitigation in any of its modes.
 
-Tested by myself and the reporter, with good results
-
-Change Notes:
-
-V1->V2:
-	Enhance the sleep logic to support being interruptible and
-allowing for honoring to SK_SNDTIMEO (Willem de Bruijn)
-
-V2->V3:
-	Rearrage the point at which we wait for the completion queue, to
-avoid needing to check for ph/skb being null at the end of the loop.
-Also move the complete call to the skb destructor to avoid needing to
-modify __packet_set_status.  Also gate calling complete on
-packet_read_pending returning zero to avoid multiple calls to complete.
-(Willem de Bruijn)
-
-	Move timeo computation within loop, to re-fetch the socket
-timeout since we also use the timeo variable to record the return code
-from the wait_for_complete call (Neil Horman)
-
-V3->V4:
-	Willem has requested that the control flow be restored to the
-previous state.  Doing so lets us eliminate the need for the
-po->wait_on_complete flag variable, and lets us get rid of the
-packet_next_frame function, but introduces another complexity.
-Specifically, but using the packet pending count, we can, if an
-applications calls sendmsg multiple times with MSG_DONTWAIT set, each
-set of transmitted frames, when complete, will cause
-tpacket_destruct_skb to issue a complete call, for which there will
-never be a wait_on_completion call.  This imbalance will lead to any
-future call to wait_for_completion here to return early, when the frames
-they sent may not have completed.  To correct this, we need to re-init
-the completion queue on every call to tpacket_snd before we enter the
-loop so as to ensure we wait properly for the frames we send in this
-iteration.
-
-	Change the timeout and interrupted gotos to out_put rather than
-out_status so that we don't try to free a non-existant skb
-	Clean up some extra newlines (Willem de Bruijn)
-
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Reported-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: be6fcb5478e9 ("x86/bugs: Rework spec_ctrl base and mask logic")
+Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: bp@alien8.de
+Cc: rkrcmar@redhat.com
+Cc: kvm@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1560187210-11054-1-git-send-email-alejandro.j.jimenez@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/packet/af_packet.c |   20 +++++++++++++++++---
- net/packet/internal.h  |    1 +
- 2 files changed, 18 insertions(+), 3 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2438,6 +2438,9 @@ static void tpacket_destruct_skb(struct
- 
- 		ts = __packet_set_timestamp(po, ph, skb);
- 		__packet_set_status(po, ph, TP_STATUS_AVAILABLE | ts);
-+
-+		if (!packet_read_pending(&po->tx_ring))
-+			complete(&po->skb_completion);
+---
+ arch/x86/kernel/cpu/bugs.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -821,6 +821,16 @@ static enum ssb_mitigation __init __ssb_
  	}
  
- 	sock_wfree(skb);
-@@ -2632,7 +2635,7 @@ static int tpacket_parse_header(struct p
- 
- static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
- {
--	struct sk_buff *skb;
-+	struct sk_buff *skb = NULL;
- 	struct net_device *dev;
- 	struct virtio_net_hdr *vnet_hdr = NULL;
- 	struct sockcm_cookie sockc;
-@@ -2647,6 +2650,7 @@ static int tpacket_snd(struct packet_soc
- 	int len_sum = 0;
- 	int status = TP_STATUS_AVAILABLE;
- 	int hlen, tlen, copylen = 0;
-+	long timeo = 0;
- 
- 	mutex_lock(&po->pg_vec_lock);
- 
-@@ -2693,12 +2697,21 @@ static int tpacket_snd(struct packet_soc
- 	if ((size_max > dev->mtu + reserve + VLAN_HLEN) && !po->has_vnet_hdr)
- 		size_max = dev->mtu + reserve + VLAN_HLEN;
- 
-+	reinit_completion(&po->skb_completion);
+ 	/*
++	 * If SSBD is controlled by the SPEC_CTRL MSR, then set the proper
++	 * bit in the mask to allow guests to use the mitigation even in the
++	 * case where the host does not enable it.
++	 */
++	if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++	    static_cpu_has(X86_FEATURE_AMD_SSBD)) {
++		x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
++	}
 +
- 	do {
- 		ph = packet_current_frame(po, &po->tx_ring,
- 					  TP_STATUS_SEND_REQUEST);
- 		if (unlikely(ph == NULL)) {
--			if (need_wait && need_resched())
--				schedule();
-+			if (need_wait && skb) {
-+				timeo = sock_sndtimeo(&po->sk, msg->msg_flags & MSG_DONTWAIT);
-+				timeo = wait_for_completion_interruptible_timeout(&po->skb_completion, timeo);
-+				if (timeo <= 0) {
-+					err = !timeo ? -ETIMEDOUT : -ERESTARTSYS;
-+					goto out_put;
-+				}
-+			}
-+			/* check for additional frames */
- 			continue;
++	/*
+ 	 * We have three CPU feature flags that are in play here:
+ 	 *  - X86_BUG_SPEC_STORE_BYPASS - CPU is susceptible.
+ 	 *  - X86_FEATURE_SSBD - CPU is able to turn off speculative store bypass
+@@ -837,7 +847,6 @@ static enum ssb_mitigation __init __ssb_
+ 			x86_amd_ssb_disable();
+ 		} else {
+ 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
+-			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
+ 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
  		}
- 
-@@ -3252,6 +3265,7 @@ static int packet_create(struct net *net
- 	sock_init_data(sock, sk);
- 
- 	po = pkt_sk(sk);
-+	init_completion(&po->skb_completion);
- 	sk->sk_family = PF_PACKET;
- 	po->num = proto;
- 	po->xmit = dev_queue_xmit;
---- a/net/packet/internal.h
-+++ b/net/packet/internal.h
-@@ -128,6 +128,7 @@ struct packet_sock {
- 	unsigned int		tp_hdrlen;
- 	unsigned int		tp_reserve;
- 	unsigned int		tp_tstamp;
-+	struct completion	skb_completion;
- 	struct net_device __rcu	*cached_dev;
- 	int			(*xmit)(struct sk_buff *skb);
- 	struct packet_type	prot_hook ____cacheline_aligned_in_smp;
+ 	}
 
 
