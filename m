@@ -2,52 +2,53 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6402C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A80C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF20421841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3587021841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054741;
-	bh=6JELlpdRtT2e5Cin9nm3qRVbutrGHWvR+qFky6gYlj4=;
+	s=default; t=1562054749;
+	bh=P4gngWAm/oQwGpJFLyM9AT+69qGMzIOeTXRMv4eSdiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzvjmqlvd161IU5epv7je87+RUfAsVP11hV+WxLnG0YPe7z7+Yg6G9asiZPApVNJA
-	 hKSZ24KooR2FBRchSEJ+Sqyia8gHGm8sJ7V+e3OnCdsIvC4/pxks8dnIvkhgdWslxv
-	 Av0xZITDwk4Oo+0UmQ0M3RTon2fILDl0/9QsrGH4=
+	b=tAvbh0rLIQ5A++ZSt3cYsy3u+xr29CdQ0kejqM8SzuOE/ujR1EWFum/W7N4aJ0EB1
+	 +vdLs8ykbXyeNx3heNvJmenJSu+If6WNapd2gfwGtpjNRLZXk1F6ntH1t2+UMQmU6v
+	 DyyEduBgiw/qcv+9vzBWPLlYr9x18s5SJxUTIASo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfGBIFl (ORCPT
+        id S1727529AbfGBIFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727454AbfGBIFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:34 -0400
+        id S1727983AbfGBIFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2522621841;
-        Tue,  2 Jul 2019 08:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01C2821479;
+        Tue,  2 Jul 2019 08:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054733;
-        bh=6JELlpdRtT2e5Cin9nm3qRVbutrGHWvR+qFky6gYlj4=;
+        s=default; t=1562054739;
+        bh=P4gngWAm/oQwGpJFLyM9AT+69qGMzIOeTXRMv4eSdiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqG3J1xHOXDYXTkbDKyGpKpk5MBxe3vvIjwpWNsjR5aHk49q2UydBmi3hQbI61tPI
-         VeUPJMkbpv7G6vDOA0cQ9ZpLi9jJ32L7ycF2wbAik+6rxQg8xoAqQ1wUTU40nmNjaH
-         UgSz6NA72iscUPuBgKt8InmSVMlWVeino995qcoU=
+        b=KKYll/S7r+fsScD7YV8nwdSgZhfLBkng67FNQVjAqu77OjsFLSMYRS+F4vgUpGbuy
+         TUgwZpDh0jR2MZDPUeipuXtakRDzOeQhgJ0dBUuEZ1lhNYWt62Ts1qgiFAKGuKX7hh
+         +g897K/4wfF2ly6IBmpRq0vI2rANi+rgA+Ld8YYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/72] 9p: p9dirent_read: check network-provided name length
-Date:   Tue,  2 Jul 2019 10:01:18 +0200
-Message-Id: <20190702080125.531909802@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 03/72] perf header: Fix unchecked usage of strncpy()
+Date:   Tue,  2 Jul 2019 10:01:04 +0200
+Message-Id: <20190702080124.744956462@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -60,52 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ef5305f1f72eb1cfcda25c382bb0368509c0385b ]
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-strcpy to dirent->d_name could overflow the buffer, use strscpy to check
-the provided string length and error out if the size was too big.
+commit 5192bde7d98c99f2cd80225649e3c2e7493722f7 upstream.
 
-While we are here, make the function return an error when the pdu
-parsing failed, instead of returning the pdu offset as if it had been a
-success...
+The strncpy() function may leave the destination string buffer
+unterminated, better use strlcpy() that we have a __weak fallback
+implementation for systems without it.
 
-Link: http://lkml.kernel.org/r/1536339057-21974-4-git-send-email-asmadeus@codewreck.org
-Addresses-Coverity-ID: 139133 ("Copy into fixed size buffer")
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+
+  util/header.c: In function 'perf_event__synthesize_event_update_name':
+  util/header.c:3625:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy(ev->data, evsel->name, len);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  util/header.c:3618:15: note: length computed here
+    size_t len = strlen(evsel->name);
+                 ^~~~~~~~~~~~~~~~~~~
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
+Link: https://lkml.kernel.org/n/tip-wycz66iy8dl2z3yifgqf894p@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/9p/protocol.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ tools/perf/util/header.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/protocol.c b/net/9p/protocol.c
-index b4d80c533f89..462ba144cb39 100644
---- a/net/9p/protocol.c
-+++ b/net/9p/protocol.c
-@@ -623,13 +623,19 @@ int p9dirent_read(struct p9_client *clnt, char *buf, int len,
- 	if (ret) {
- 		p9_debug(P9_DEBUG_9P, "<<< p9dirent_read failed: %d\n", ret);
- 		trace_9p_protocol_dump(clnt, &fake_pdu);
--		goto out;
-+		return ret;
- 	}
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3562,7 +3562,7 @@ perf_event__synthesize_event_update_name
+ 	if (ev == NULL)
+ 		return -ENOMEM;
  
--	strcpy(dirent->d_name, nameptr);
-+	ret = strscpy(dirent->d_name, nameptr, sizeof(dirent->d_name));
-+	if (ret < 0) {
-+		p9_debug(P9_DEBUG_ERROR,
-+			 "On the wire dirent name too long: %s\n",
-+			 nameptr);
-+		kfree(nameptr);
-+		return ret;
-+	}
- 	kfree(nameptr);
- 
--out:
- 	return fake_pdu.offset;
- }
- EXPORT_SYMBOL(p9dirent_read);
--- 
-2.20.1
-
+-	strncpy(ev->data, evsel->name, len);
++	strlcpy(ev->data, evsel->name, len + 1);
+ 	err = process(tool, (union perf_event*) ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
 
 
