@@ -2,109 +2,136 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508BAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A70AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2091D206E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F097208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p49ufNmq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2u2YMm9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfGBEhQ (ORCPT
+        id S1726319AbfGBEit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 00:37:16 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44267 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfGBEhP (ORCPT
+        Tue, 2 Jul 2019 00:38:49 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39608 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfGBEis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 00:37:15 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t7so8446263plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 21:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DC7T/1epSdwbqDWlhU77s7p6S8E3+rl5WhjQziUAp3Y=;
-        b=p49ufNmqYf8JRR5G6e2SINTKVPTvV4SdImOKWOUQp+vXexeQ7fRafUiq5Poy0V8faU
-         E/zc1Hz+LB3WE/ZeYL1gGnHssal6w69pUfEsCQs9S2NBzgYx71J08wHTa3RBBk3GkPhg
-         sHfnlB12M0vzbcGXRBRifYiulW4GgmIcOVhdcttHxbBuTFj2zCBrX+v5J2XYixHEOg5G
-         pZRMnz3STMwCz4B1tVcbthRgK97BjO6HP9qisr8Y/aTrUdhV7V2dVDyN6F2aCP6rFjRc
-         AnXg2HLD15oh6JfPU3Y3ALXdTDCwkz2vYsWHu2JfBAiB6aGtrOZFGo+LbrZ8UVAbJigK
-         +icg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=DC7T/1epSdwbqDWlhU77s7p6S8E3+rl5WhjQziUAp3Y=;
-        b=TR35EhHz59mk7bozO3/S+bOlX0XEjpDP3iq1zHvpBPvcv1ZwpGkKwHIPiVVsRf9SRX
-         xz/3Wj0ijnBRzICmmWMiPrshVplyZSCci0fiqJuZFxHShfc80591dJGW8tnNPk7gu/FW
-         M2PhBSDrSd1vXNUF2ojQOFU/TGNmVmPoZPVWxMVQdGJDKYMqPU84XMROZMsl+gwiEwBK
-         NOK4jIDJ2JVziiRCXGyRNy0QHskqYtElB9KMG0ZJgZpcX4wIpOII4jy0VZytunn8JJnK
-         MgdKFiaeeNshJp9VsgwbNirq/N5i3bY7+9n6lvOS9zIfn4mGdYhne+uCeeeCns6ZG2nA
-         rKRA==
-X-Gm-Message-State: APjAAAVCjeG3idvZiVZqhdx8r9IKLGCCVc/XVK+Yhy8RvTK9AQjny11Y
-        B7rDJEC1RWu9CrmZK2526maY8jJf
-X-Google-Smtp-Source: APXvYqyP+V1ZurARnQp09iaSwvmVd8yk1r5uiFEKPm0Rcd48E+ZKhTidU8KQ1RokPwypizlrDtRFSw==
-X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr33525329plp.168.1562042234468;
-        Mon, 01 Jul 2019 21:37:14 -0700 (PDT)
-Received: from voyager.au.ibm.com (bh02i525f01.au.ibm.com. [202.81.18.30])
-        by smtp.gmail.com with ESMTPSA id 85sm16028873pfv.130.2019.07.01.21.37.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 21:37:13 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Jeremy Kerr <jk@ozlabs.org>
-Cc:     Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-fsi@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: [PATCH] MAINTAINERS: Add FSI subsystem
-Date:   Tue,  2 Jul 2019 14:07:05 +0930
-Message-Id: <20190702043706.15069-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.20.1
+        Tue, 2 Jul 2019 00:38:48 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x624XkMF095873;
+        Tue, 2 Jul 2019 04:38:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=/2LHMY9wbAor8bZR0fN9L8PLrX6qbsO7NNpH1UIpzQU=;
+ b=2u2YMm9yy8nU9Tj9/2jKRysJLa0L214kwYtqOm702YTP9ieMWzyWFaTZLt1iNPcCxwK5
+ LVb9NZ5W2K58B/Pk4X3UgbiRfUWwOztBOpBcCccttEFsozG4K7P8tgiM0sj+sg+i1N01
+ oJKxHESsIu1+4Fp1MIVZEj1nsTJAsRL46RSD/anNvT3JMOKaA45oYAE9dwTf12iwtmIB
+ yzi+CUqmAin56MKWNtpWpMgoeDAygYpfhtQjArH6aan1x0qIGHDQZoAgqCH29mZLsMe2
+ cZJScYZEMhQKbSwpwS5xYDcXAR6Bc+cnDSe1Mej+ACaOU/n0+G2pJA6z691EkG3Mk+RM Bg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2te61e111w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jul 2019 04:38:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x624bxdW124275;
+        Tue, 2 Jul 2019 04:38:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tebqg98m3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jul 2019 04:38:07 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x624c6Yr020828;
+        Tue, 2 Jul 2019 04:38:06 GMT
+Received: from [10.191.19.75] (/10.191.19.75)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 01 Jul 2019 21:38:05 -0700
+Subject: Re: [PATCH v3 3/4] Revert "xen: Introduce 'xen_nopv' to disable PV
+ extensions for HVM guests."
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.co, jgross@suse.com, sstabellini@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+References: <1561947628-1147-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1561947628-1147-4-git-send-email-zhenzhong.duan@oracle.com>
+ <20190702034818.GB8003@bostrovs-us.us.oracle.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <454f55e9-176c-2ac0-8422-09811f80cdde@oracle.com>
+Date:   Tue, 2 Jul 2019 12:38:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190702034818.GB8003@bostrovs-us.us.oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907020049
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907020048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subsystem was merged some time ago but we did not have a maintainers
-entry.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+On 2019/7/2 11:48, Boris Ostrovsky wrote:
+> On Mon, Jul 01, 2019 at 10:20:27AM +0800, Zhenzhong Duan wrote:
+>> This reverts commit 8d693b911bb9c57009c24cb1772d205b84c7985c.
+>>
+>> Instead we use an unified parameter 'nopv' for all the hypervisor
+>> platforms.
+>>
+>> Signed-off-by: Zhenzhong Duan<zhenzhong.duan@oracle.com>
+>> Reviewed-by: Juergen Gross<jgross@suse.com>
+>> Cc: Boris Ostrovsky<boris.ostrovsky@oracle.com>
+>> Cc: Juergen Gross<jgross@suse.com>
+>> Cc: Stefano Stabellini<sstabellini@kernel.org>
+>> Cc: Thomas Gleixner<tglx@linutronix.de>
+>> Cc: Ingo Molnar<mingo@redhat.com>
+>> Cc: Borislav Petkov<bp@alien8.de>
+>> ---
+>>   Documentation/admin-guide/kernel-parameters.txt |  4 ----
+>>   arch/x86/xen/enlighten_hvm.c                    | 12 +-----------
+>>   2 files changed, 1 insertion(+), 15 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 21e08af..d5c3dcc 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -5251,10 +5251,6 @@
+>>   			Disables the ticketlock slowpath using Xen PV
+>>   			optimizations.
+>>   
+>> -	xen_nopv	[X86]
+>> -			Disables the PV optimizations forcing the HVM guest to
+>> -			run as generic HVM guest with no PV drivers.
+>> -
+> So someone upgrades the kernel and suddenly things work differently?
+>
+> At least there should be a warning that the option has been replaced
+> with 'nopv' (but I would actually keep this option working as well).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 01a52fc964da..2a5df9c20ecb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6498,6 +6498,19 @@ F:	fs/crypto/
- F:	include/linux/fscrypt*.h
- F:	Documentation/filesystems/fscrypt.rst
- 
-+FSI SUBSYSTEM
-+M:	Jeremy Kerr <jk@ozlabs.org>
-+M:	Joel Stanley <joel@jms.id.au>
-+R:	Alistar Popple <alistair@popple.id.au>
-+R:	Eddie James <eajames@linux.ibm.com>
-+L:	linux-fsi@lists.ozlabs.org
-+T:	git git://git.kernel.org/pub/scm/joel/fsi.git
-+Q:	http://patchwork.ozlabs.org/project/linux-fsi/list/
-+S:	Supported
-+F:	drivers/fsi/
-+F:	include/linux/fsi*.h
-+F:	include/trace/events/fsi*.h
-+
- FSI-ATTACHED I2C DRIVER
- M:	Eddie James <eajames@linux.ibm.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.20.1
+OK, I'll add new patch to map xen_nopv to nopv. So if 'xen_nopv' is 
+used, we go
+
+to the path for 'nopv'. I will be same effect.
+
+Thanks
+
+Zhenzhong
 
