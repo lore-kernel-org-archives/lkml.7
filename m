@@ -2,64 +2,70 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0477C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508BAC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989F221721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2091D206E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:37:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P20RLyZz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P20RLyZz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p49ufNmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfGBEgz (ORCPT
+        id S1726830AbfGBEhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 00:36:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52254 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfGBEgx (ORCPT
+        Tue, 2 Jul 2019 00:37:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44267 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfGBEhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 00:36:53 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6EBA1607DF; Tue,  2 Jul 2019 04:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562042213;
-        bh=zZPzUmRssl1hYuGZRP1UExVBZhx+79WmuCJUsSBCzIc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P20RLyZzIpSH9VRUgrmeq0uC5hMqayEPXybdCoQoKDd8McNnRuc4rukJNwXNnk1NK
-         YnIIf2Pv/PSlpXu+vwZrTuLOUKupjLAtajU+98aDpBLHsZIHUbetD8RljYuRFFDzRR
-         19rWcQ3+yxlPkp+LCTUFD6P6JOXDWHyQ06RGmvsM=
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5DD606028D;
-        Tue,  2 Jul 2019 04:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562042213;
-        bh=zZPzUmRssl1hYuGZRP1UExVBZhx+79WmuCJUsSBCzIc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P20RLyZzIpSH9VRUgrmeq0uC5hMqayEPXybdCoQoKDd8McNnRuc4rukJNwXNnk1NK
-         YnIIf2Pv/PSlpXu+vwZrTuLOUKupjLAtajU+98aDpBLHsZIHUbetD8RljYuRFFDzRR
-         19rWcQ3+yxlPkp+LCTUFD6P6JOXDWHyQ06RGmvsM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5DD606028D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     vireshk@kernel.org, sboyd@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 2/2] opp: Manage empty OPP tables with clk handle
-Date:   Tue,  2 Jul 2019 10:06:43 +0530
-Message-Id: <20190702043643.1746-2-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190702043643.1746-1-rnayak@codeaurora.org>
-References: <20190702043643.1746-1-rnayak@codeaurora.org>
+        Tue, 2 Jul 2019 00:37:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t7so8446263plr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 21:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DC7T/1epSdwbqDWlhU77s7p6S8E3+rl5WhjQziUAp3Y=;
+        b=p49ufNmqYf8JRR5G6e2SINTKVPTvV4SdImOKWOUQp+vXexeQ7fRafUiq5Poy0V8faU
+         E/zc1Hz+LB3WE/ZeYL1gGnHssal6w69pUfEsCQs9S2NBzgYx71J08wHTa3RBBk3GkPhg
+         sHfnlB12M0vzbcGXRBRifYiulW4GgmIcOVhdcttHxbBuTFj2zCBrX+v5J2XYixHEOg5G
+         pZRMnz3STMwCz4B1tVcbthRgK97BjO6HP9qisr8Y/aTrUdhV7V2dVDyN6F2aCP6rFjRc
+         AnXg2HLD15oh6JfPU3Y3ALXdTDCwkz2vYsWHu2JfBAiB6aGtrOZFGo+LbrZ8UVAbJigK
+         +icg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=DC7T/1epSdwbqDWlhU77s7p6S8E3+rl5WhjQziUAp3Y=;
+        b=TR35EhHz59mk7bozO3/S+bOlX0XEjpDP3iq1zHvpBPvcv1ZwpGkKwHIPiVVsRf9SRX
+         xz/3Wj0ijnBRzICmmWMiPrshVplyZSCci0fiqJuZFxHShfc80591dJGW8tnNPk7gu/FW
+         M2PhBSDrSd1vXNUF2ojQOFU/TGNmVmPoZPVWxMVQdGJDKYMqPU84XMROZMsl+gwiEwBK
+         NOK4jIDJ2JVziiRCXGyRNy0QHskqYtElB9KMG0ZJgZpcX4wIpOII4jy0VZytunn8JJnK
+         MgdKFiaeeNshJp9VsgwbNirq/N5i3bY7+9n6lvOS9zIfn4mGdYhne+uCeeeCns6ZG2nA
+         rKRA==
+X-Gm-Message-State: APjAAAVCjeG3idvZiVZqhdx8r9IKLGCCVc/XVK+Yhy8RvTK9AQjny11Y
+        B7rDJEC1RWu9CrmZK2526maY8jJf
+X-Google-Smtp-Source: APXvYqyP+V1ZurARnQp09iaSwvmVd8yk1r5uiFEKPm0Rcd48E+ZKhTidU8KQ1RokPwypizlrDtRFSw==
+X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr33525329plp.168.1562042234468;
+        Mon, 01 Jul 2019 21:37:14 -0700 (PDT)
+Received: from voyager.au.ibm.com (bh02i525f01.au.ibm.com. [202.81.18.30])
+        by smtp.gmail.com with ESMTPSA id 85sm16028873pfv.130.2019.07.01.21.37.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 21:37:13 -0700 (PDT)
+From:   Joel Stanley <joel@jms.id.au>
+To:     Jeremy Kerr <jk@ozlabs.org>
+Cc:     Alistar Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-fsi@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: [PATCH] MAINTAINERS: Add FSI subsystem
+Date:   Tue,  2 Jul 2019 14:07:05 +0930
+Message-Id: <20190702043706.15069-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,37 +73,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With OPP core now supporting DVFS for IO devices, we have instances of
-IO devices (same IP block) with require an OPP on some platforms/SoCs
-while just needing to scale the clock on some others.
-In order to avoid conditional code in every driver, (to check for 
-availability of OPPs and then deciding to do either dev_pm_opp_set_rate()
-or clk_set_rate()) add support to manage empty OPP tables with a clk handle.
-This makes dev_pm_opp_set_rate() equivalent of a clk_set_rate() for devices
-with just a clk and no OPPs specified.
+The subsystem was merged some time ago but we did not have a maintainers
+entry.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/opp/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index ae033bb1e5b7..fa7d4d6d37b3 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -801,6 +801,11 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		goto put_opp_table;
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01a52fc964da..2a5df9c20ecb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6498,6 +6498,19 @@ F:	fs/crypto/
+ F:	include/linux/fscrypt*.h
+ F:	Documentation/filesystems/fscrypt.rst
  
-+	if (!_get_opp_count(opp_table)) {
-+		ret = _generic_set_opp_clk_only(dev, clk, freq);
-+		goto put_opp_table;
-+	}
++FSI SUBSYSTEM
++M:	Jeremy Kerr <jk@ozlabs.org>
++M:	Joel Stanley <joel@jms.id.au>
++R:	Alistar Popple <alistair@popple.id.au>
++R:	Eddie James <eajames@linux.ibm.com>
++L:	linux-fsi@lists.ozlabs.org
++T:	git git://git.kernel.org/pub/scm/joel/fsi.git
++Q:	http://patchwork.ozlabs.org/project/linux-fsi/list/
++S:	Supported
++F:	drivers/fsi/
++F:	include/linux/fsi*.h
++F:	include/trace/events/fsi*.h
 +
- 	temp_freq = old_freq;
- 	old_opp = _find_freq_ceil(opp_table, &temp_freq);
- 	if (IS_ERR(old_opp)) {
+ FSI-ATTACHED I2C DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-i2c@vger.kernel.org
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
 
