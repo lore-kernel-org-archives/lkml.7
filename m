@@ -2,239 +2,119 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E16C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95BEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53402218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C92218DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="ebhomM77"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chfL2Y+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfGCAl5 (ORCPT
+        id S1727210AbfGCAmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:41:57 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:34124 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726430AbfGCAl4 (ORCPT
+        Tue, 2 Jul 2019 20:42:03 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44026 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCAmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:41:56 -0400
-Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
-        by m0050093.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x63075lj032474;
-        Wed, 3 Jul 2019 01:11:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=jan2016.eng;
- bh=dQnGPKV3yYltUgfU2I+Fw3Qje3Qs8IZ53UNxxwHARwA=;
- b=ebhomM77vVDM11MEiu4z/6eNRpizeKNIUe3nNpL36L1ZrENcDzq+p8c1NW8j2q5nHrRN
- uwMN3ZdFGfzITCLytCecvWIxDEN8m1xlZIfgMyhke4FtFswH/9Lg/1xNmaH8Y+CvV+gi
- y/zOtqdu/BC0Ci4APgRUJr5MPCPcG1G9BRAdxhZXsxHbgcFsUn17s0PYHsuv8u3B9+1p
- bmkypYpqpLjRpvEnH6LgXbL8XLXIGcwsh1SFqxmpO9JcL1J9dQyyaKhTfticDYPNzJ1H
- o4bJfQ84+kuPQlyPT18/dIA8i5xTyz7wnGCXSgWcxOX9NYhuV1LSdmBMRYfhZgka0U85 5Q== 
-Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
-        by m0050093.ppops.net-00190b01. with ESMTP id 2tg2tkusbn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jul 2019 01:11:15 +0100
-Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
-        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x6302MSR021891;
-        Tue, 2 Jul 2019 20:11:14 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.34])
-        by prod-mail-ppoint3.akamai.com with ESMTP id 2te3b09eb1-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 20:11:13 -0400
-Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
- usma1ex-dag1mb4.msg.corp.akamai.com (172.27.123.104) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 2 Jul 2019 20:10:49 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 2 Jul 2019 17:10:49 -0700
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id A83D461E4A; Tue,  2 Jul 2019 20:10:47 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH 1/3] perf: Add capability-related utilities
-Date:   Tue, 2 Jul 2019 20:10:03 -0400
-Message-ID: <1562112605-6235-2-git-send-email-ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
-References: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
+        Tue, 2 Jul 2019 20:42:02 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so441897ljv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uy9P4Bv7MoU15f1hxa9HUk41ddeWB4vxhHhX7nu5AF8=;
+        b=chfL2Y+vcu0HLio56W5yCpYcO12fzccTTuvBbkGhkNe/aF5ZgcfKOE24xS40HsFMlc
+         Ut8Bz0uCuff4zpfBt474goph+OPSk+NhNQVgLSimuL3/Ah0v11JGh/8rGaKti0yddSiM
+         q/0fOfoab+9/DUCSuDVGXRkPBEodmSnVOEGRZxSGePAp5QYIi/4446bzXKyWwa+Z9QVU
+         JorSbzfYLEjhFTeRYS7/jv30gSLerU7/hW/VDodF7UL5D3eT6ZP0fWQXg/OaUFUv2/fn
+         GcIo0P7LqaWgUcqGlOiipgnrK233+5QeGPJ94GG6q7nHRhDMqNxm2bzPhj2Qys7AxdxL
+         UO4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uy9P4Bv7MoU15f1hxa9HUk41ddeWB4vxhHhX7nu5AF8=;
+        b=ndhbB+FpJZRAmEZQZu1U6nL8iy6bGys7/0YvZWk8oQ7Qtib4fqzpaGLJ/gmCwVhvWI
+         N14gJCQcHGZzX6f8ciUMmFuhsTcZyP2z9s7aCcMOeZgzEYxmcqbafTWnUurGXffrAHYg
+         c+Sd3qplK1swv8vIoa9d1LR/DCCQ6BVx48qvs2WEAYYMDBk2Penlgcrz3LCQFkX4fNsg
+         AbsDehSRYJRB21eOL9Ainc+/JD4g2aZTrDh6k6r0+C+KJzBBqgQZ+g1GjOY4bzGf2e6w
+         jrqPCnAF6dp5+yeORPlbG/apX6+6fUswsayLJ9RTaW0IM68vX5cV3OO6aJr1w+QC79Nf
+         620g==
+X-Gm-Message-State: APjAAAWgDx8ZdhXDyXaO0uj8VgILd9q7IpZha9UE0kViRGez7v+2J8Ia
+        GUGIqL7tnalM1jbXyJ35AwxaG1VzMmPEQF+NrN4BVabN
+X-Google-Smtp-Source: APXvYqybYGFXeKm3HudJJDld+RvqFOCnrMTby4Ii2vx9EH9qEyc7WekPspTFOFMLIfLcDmLdtXWyHbCAfNQSt4Z3QxE=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr167967ljg.62.1562104610089;
+ Tue, 02 Jul 2019 14:56:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020268
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020269
+References: <20190617221134.9930-1-f.fainelli@gmail.com> <20190617221134.9930-3-f.fainelli@gmail.com>
+In-Reply-To: <20190617221134.9930-3-f.fainelli@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 2 Jul 2019 23:56:38 +0200
+Message-ID: <CACRpkdb3P6oQTK9FGUkMj4kax8us3rKH6c36pX=HD1_wMqcoJQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] ARM: Disable instrumentation for some code
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Abbott Liu <liuwenliang@huawei.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>, christoffer.dall@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Kees Cook <keescook@chromium.org>, jinb.park7@gmail.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Rob Landley <rob@landley.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>, thgarnie@google.com,
+        David Howells <dhowells@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        julien.thierry@arm.com, drjones@redhat.com, philip@cog.systems,
+        mhocko@suse.com, kirill.shutemov@linux.intel.com,
+        kasan-dev@googlegroups.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvmarm@lists.cs.columbia.edu,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add utilities to help checking capabilities of the running process.
-Make perf link with libcap.
+On Tue, Jun 18, 2019 at 12:11 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
----
- tools/perf/Makefile.config         |  2 +-
- tools/perf/util/Build              |  1 +
- tools/perf/util/cap.c              | 24 ++++++++++++++++++++++++
- tools/perf/util/cap.h              | 10 ++++++++++
- tools/perf/util/event.h            |  1 +
- tools/perf/util/python-ext-sources |  1 +
- tools/perf/util/util.c             |  9 +++++++++
- 7 files changed, 47 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/util/cap.c
- create mode 100644 tools/perf/util/cap.h
+> @@ -236,7 +236,8 @@ static int unwind_pop_register(struct unwind_ctrl_block *ctrl,
+>                 if (*vsp >= (unsigned long *)ctrl->sp_high)
+>                         return -URC_FAILURE;
+>
+> -       ctrl->vrs[reg] = *(*vsp)++;
+> +       ctrl->vrs[reg] = READ_ONCE_NOCHECK(*(*vsp));
+> +       (*vsp)++;
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 85fbcd265351..21470a50ed39 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -259,7 +259,7 @@ CXXFLAGS += -Wno-strict-aliasing
- # adding assembler files missing the .GNU-stack linker note.
- LDFLAGS += -Wl,-z,noexecstack
- 
--EXTLIBS = -lpthread -lrt -lm -ldl
-+EXTLIBS = -lpthread -lrt -lm -ldl -lcap
- 
- ifeq ($(FEATURES_DUMP),)
- include $(srctree)/tools/build/Makefile.feature
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 6d5bbc8b589b..9cc6e9b34ebd 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,6 +1,7 @@
- perf-y += annotate.o
- perf-y += block-range.o
- perf-y += build-id.o
-+perf-y += cap.o
- perf-y += config.o
- perf-y += ctype.o
- perf-y += db-export.o
-diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-new file mode 100644
-index 000000000000..c42ea32663cf
---- /dev/null
-+++ b/tools/perf/util/cap.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Capability utilities
-+ */
-+#include "cap.h"
-+#include <stdbool.h>
-+#include <sys/capability.h>
-+
-+bool perf_cap__capable(cap_value_t cap)
-+{
-+	cap_flag_value_t val;
-+	cap_t caps = cap_get_proc();
-+
-+	if (!caps)
-+		return false;
-+
-+	if (cap_get_flag(caps, cap, CAP_EFFECTIVE, &val) != 0)
-+		val = CAP_CLEAR;
-+
-+	if (cap_free(caps) != 0)
-+		return false;
-+
-+	return val == CAP_SET;
-+}
-diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-new file mode 100644
-index 000000000000..5521de78b228
---- /dev/null
-+++ b/tools/perf/util/cap.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_CAP_H
-+#define __PERF_CAP_H
-+
-+#include <stdbool.h>
-+#include <sys/capability.h>
-+
-+bool perf_cap__capable(cap_value_t cap);
-+
-+#endif /* __PERF_CAP_H */
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 9e999550f247..013d9e28fcac 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -849,6 +849,7 @@ void  cpu_map_data__synthesize(struct cpu_map_data *data, struct cpu_map *map,
- void event_attr_init(struct perf_event_attr *attr);
- 
- int perf_event_paranoid(void);
-+bool perf_event_paranoid_check(int max_level);
- 
- extern int sysctl_perf_event_max_stack;
- extern int sysctl_perf_event_max_contexts_per_stack;
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index 7aa0ea64544e..4545eaf018b5 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -6,6 +6,7 @@
- #
- 
- util/python.c
-+util/cap.c
- util/ctype.c
- util/evlist.c
- util/evsel.c
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index d388f80d8703..cde538ec727d 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -16,10 +16,12 @@
- #include <string.h>
- #include <errno.h>
- #include <limits.h>
-+#include <linux/capability.h>
- #include <linux/kernel.h>
- #include <linux/log2.h>
- #include <linux/time64.h>
- #include <unistd.h>
-+#include "cap.h"
- #include "strlist.h"
- #include "string2.h"
- 
-@@ -456,6 +458,13 @@ int perf_event_paranoid(void)
- 
- 	return value;
- }
-+
-+bool perf_event_paranoid_check(int max_level)
-+{
-+	return perf_cap__capable(CAP_SYS_ADMIN) ||
-+			perf_event_paranoid() <= max_level;
-+}
-+
- static int
- fetch_ubuntu_kernel_version(unsigned int *puint)
- {
--- 
-2.7.4
+I would probably even put in a comment here so it is clear why we
+do this. Passers-by may not know that READ_ONCE_NOCHECK() is
+even related to KASan.
 
+Other than that,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
