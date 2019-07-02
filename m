@@ -2,178 +2,119 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4081DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1710FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB1120881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562048801;
-	bh=6pZ6iJpOc1ZTWUbGVsDBw5d6tYWFi40wN8o7XSwebAU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Pco2wrNSaxSzGhEZOlxpCNeHMlZ1bXu47q+zNlQ7E5pckREi9oxFfpSqqUy52rhbl
-	 6JjWh70NawpEA11OeIemy9SbepRH6S3FQSj00uvfaaodD2Sx8FVfk7C3VI04meaY9l
-	 9tehA3ka4g6Mz/hhk6hfoc37gv66q0I+WFiXoURU=
+	by mail.kernel.org (Postfix) with ESMTP id DF17A216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUrTPTpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfGBG0j (ORCPT
+        id S1726305AbfGBG1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBG0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:26:39 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D5920881;
-        Tue,  2 Jul 2019 06:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562048797;
-        bh=6pZ6iJpOc1ZTWUbGVsDBw5d6tYWFi40wN8o7XSwebAU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a2Lisoh3oqhqx3C9sD23kkdayqOrMXRzozveGIjf9YtYpGLaHpHyFE9UnYv+YK2lb
-         WgL9zQ+tloeVqisUx8f/0HhchYyLbqkZ4+6vvbloMvDi7S39uGpFfhNrYlRAlWbNpG
-         /U+9XO77qfuUtgKBgQM5DYsbsF89QWPUexWT7790=
-Date:   Mon, 1 Jul 2019 23:26:36 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     netdev@vger.kernel.org, Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "net/hsr" subsystem
-Message-ID: <20190702062636.GC3054@sol.localdomain>
+        Tue, 2 Jul 2019 02:27:09 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38517 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfGBG1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 02:27:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z75so7173617pgz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EuejUuvkcT0encYrvFlmXEqjXG50bA0a3JTt1nvk284=;
+        b=SUrTPTpxZQWzoc8xTD8MV2EteX90mj48aZsU+pGX5yAGF16EQHrZQDK/GBKw3jOg92
+         1SltWro5BRtXqRDHomNrtTRJ2oZiBRrcCOwyg0aIlmrqWCmamn/de4sTTkqz3wZwUzRw
+         R6etkEFn4ZdfTuIAUnnVcR/5Sug0HdzBfRieNTsr1y4BqAhBL6Z+P/7beZC50k2P4Mvv
+         dQkgsT/FzLFzuDl6hGrJYVnkXlxwFRt4vxDqUSO9SmBhllum7KPE8d1U02FF+ThVYkT3
+         Tgii0iXStS3K6tuNl/Q3wX4FFk/5GzDN/CeQAq1pVbhJYIdY4pQsknE0xgHpcj0o5btW
+         eyow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EuejUuvkcT0encYrvFlmXEqjXG50bA0a3JTt1nvk284=;
+        b=mHWTFO0onAuZVT8GWvH7Vj9TBrzxV2O8+WQoaU7dD3FT0zMqm5mKnEsuylRsJbsAh0
+         s9J3T1clVO2frzcqEypjO/fdONYMYyj69tfmcqaJkOCO51WCDzYr645Np+wSx4kfBWNL
+         oTokxPWu99bgwjwhB5KAmE+Xf2/E17XzI/OHXElYOSH/9BaoxTsHEtYdBpyaw32zPTdX
+         rj1+kXv/v0nE9i0gh15pKfYf4LvFXALOyNo/cJtCYdjVEj6b+mTrOHMSsuo5FOOzcG/2
+         qT+OJva8dndfPR4tCHHnzaDTd+4MmwIn85K+48srn2xAE/Xo3wTYthz9dr9/Dl8MfVSQ
+         xITg==
+X-Gm-Message-State: APjAAAX3FLk/VvFwso0O2HNEcg2F78SNlHBO7mr7aYxEbflXNQqhbg4O
+        HQ/Hy00Zx+6Q0wWZ5eSKqumYBg==
+X-Google-Smtp-Source: APXvYqzn990jfIj5vkMAV1wfDm7OU+D+4BFoi7MQmUCzx2hStv2aQET+Y2RagVAIh/1G1I9NwHthRQ==
+X-Received: by 2002:a63:6089:: with SMTP id u131mr29778864pgb.314.1562048828621;
+        Mon, 01 Jul 2019 23:27:08 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a10sm5644142pgq.2.2019.07.01.23.27.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Jul 2019 23:27:07 -0700 (PDT)
+Date:   Mon, 1 Jul 2019 23:27:05 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>
+Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
+Message-ID: <20190702062705.GG1263@builder>
+References: <20190612095521.4703-1-cleger@kalray.eu>
+ <20190701070245.32083-1-cleger@kalray.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190701070245.32083-1-cleger@kalray.eu>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On Mon 01 Jul 00:02 PDT 2019, Clement Leger wrote:
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "net/hsr" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+> When preparing the subdevice for the vdev, also copy dma_pfn_offset
+> since this is used for sub device dma allocations. Without that, there
+> is incoherency between the parent dma settings and the childs one,
+> potentially leading to dma_alloc_coherent failure (due to phys_to_dma
+> using dma_pfn_offset for translation).
+> 
+> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> Acked-by: Loic Pallardy <loic.pallardy@st.com>
 
-Of these 5 bugs, 4 were seen in mainline in the last week.
+Thanks for the update. Applied
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
+Regards,
+Bjorn
 
-If you believe I misattributed a bug to the "net/hsr" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in hsr_register_frame_in
-Last occurred:      1 day ago
-Reported:           140 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2ad30d6cef7180728e401174df99d001bae578fe
-Original thread:    https://lkml.kernel.org/lkml/0000000000003bb1540581a55575@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b8152ab439b9c5174ffd@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003bb1540581a55575@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in hsr_addr_subst_dest
-Last occurred:      0 days ago
-Reported:           180 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=924b5574f42ebeddc94fad06f2fa329b199d58d3
-Original thread:    https://lkml.kernel.org/lkml/0000000000001b1a1d057e776c92@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 2 replies; the last was 111 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b92e4f1472a54e1c7dec@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001b1a1d057e776c92@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in hsr_forward_skb
-Last occurred:      0 days ago
-Reported:           180 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=13de4605e86ebcf39093017dc255aa0fd6c2f12d
-Original thread:    https://lkml.kernel.org/lkml/0000000000009f94c1057e772431@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 4 replies; the last was 110 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+fdce8f2a8903f3ba0e6b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009f94c1057e772431@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in hsr_create_self_node
-Last occurred:      4 days ago
-Reported:           35 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=291f241bec2fdf1bc2418cca91cc1d4e7f36027b
-Original thread:    https://lkml.kernel.org/lkml/000000000000ea09dd0589e3af1a@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c6167ec3de7def23d1e8@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ea09dd0589e3af1a@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: corrupted list in hsr_prune_nodes
-Last occurred:      78 days ago
-Reported:           78 days ago
-Branches:           bpf-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=583fd57905151af7bc057ec47208d4873e953db7
-Original thread:    https://lkml.kernel.org/lkml/000000000000ca5ede0586804c42@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+99ad9e40137a83c70ee3@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ca5ede0586804c42@google.com
-
+> ---
+> Changes in v2:
+>  - Fix typo in commit message
+>  - Add "Fixes" in commit message
+>  - Add Signed-off
+>  - Add Acked-by Loic Pallardy
+> 
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 48feebd6d0a2..06837b1f2d60 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -520,6 +520,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+>  	/* Initialise vdev subdevice */
+>  	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+>  	rvdev->dev.parent = rproc->dev.parent;
+> +	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+>  	rvdev->dev.release = rproc_rvdev_release;
+>  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+>  	dev_set_drvdata(&rvdev->dev, rvdev);
+> -- 
+> 2.15.0.276.g89ea799
+> 
