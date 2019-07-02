@@ -2,111 +2,112 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BC5C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F7EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4B5206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562076157;
-	bh=MZgX5sU/XRjeAzDp56w/YlqBRVrZHRQIP5z1yX/tNhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xEySxeL/ntCVvRxNNKsGVPoSHO92e5bTRNnkeayvs1Pif2jtYA8TTO6ndt2aaqf8m
-	 UNscQbCZMo/qC3/HiTnv3YIhyx72K41ulCD37Sai5otkc+3Gwm+BovGGWTFRF6OiRW
-	 z6A8AgeIGyBMATZ0YphOnCl8vUu/Jio+fVm7Zeic=
+	by mail.kernel.org (Postfix) with ESMTP id 9618D206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVfAGx1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfGBOCg (ORCPT
+        id S1727096AbfGBODB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:02:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50036 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfGBOCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:02:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1C2CB6FE;
-        Tue,  2 Jul 2019 14:02:34 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 16:02:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_isolate: change the prototype of
- undo_isolate_page_range()
-Message-ID: <20190702140232.GH978@dhcp22.suse.cz>
-References: <1562075604-8979-1-git-send-email-kernelfans@gmail.com>
+        Tue, 2 Jul 2019 10:03:01 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46051 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfGBODA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:03:00 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s22so13995552qkj.12;
+        Tue, 02 Jul 2019 07:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EpOO0LgQ0rvdUVXjo4gLJe9UVHPVTcCTFqX491FET28=;
+        b=vVfAGx1jU5j+/G/3DyyXDcgOVlCke9Imj7QjpWlV46J5DubTI5Hr6Kqkho5gJJT+P6
+         Mu5PZeYjTMzGLZKvxZgpsHtx7/epPWE+un1WO4s7fFdN/jY/wTbaRZRlYRtuJBX2Ccey
+         0ryViQj1znwdHLCvfyNjh6S2xthNb9geyqTgRFtNw3tF7jP3I5dNYxpffw08gi8FJFEO
+         m/+XGR93aNCTLrzCoShmQDLrUpubIPsByES4GU0arSPNcxld6tZ9LhDuDx5hrhBAJJtd
+         l8gU8D7pG1XwQfJjuSJ82zieGXCWtUwAxmiDX390S584r885EYq4fh1fktqaxjqrMlgq
+         kdpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EpOO0LgQ0rvdUVXjo4gLJe9UVHPVTcCTFqX491FET28=;
+        b=oTsEcd3Gn9rpO23MoDpFpjvGG+36bEZAd5L68W3Imr0zAk0555a2H3mLFl7hNcTaM3
+         qxeENQH5JVeR07fdjgT1nHVkBTA1zaT4YYFxnnKAc/S+MCBveA4CNSjpbeyLlCNz59dp
+         dA7GSTzAQZH1rOmCLjHTQN2S2CmmZgG7GZEcZAOTPmtqxW1zrmmvK+aIKPl77Z/NlAqn
+         s0cCjNLNXQtpXmI4gUwtJHZanUR88VeTosgzSj52ucBy+/DY4kL3ayhePGljeMKep0vX
+         jWNBVvA1tj+aFF0M4xPK5xTRw+5RoRAWONVqFoXUtP64qfAdBBShSKR8vDzpoLtLqTf2
+         W5qA==
+X-Gm-Message-State: APjAAAUVaqOPWRvOOqHgSrMZefqTulrHmK0NkZLBFc0zrLWa+rLv86h6
+        rwhePIaDJkA3kHls9ZTgHmg=
+X-Google-Smtp-Source: APXvYqzpXcje/3MXWSlcYg9rZ5SHv/lpd6mI6QrIE3CEOcd2uRqQ12IbI1AhpK6nsg5b0Sbl1fVfZA==
+X-Received: by 2002:a37:6650:: with SMTP id a77mr26428586qkc.452.1562076179200;
+        Tue, 02 Jul 2019 07:02:59 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id p23sm5724451qkm.55.2019.07.02.07.02.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 07:02:58 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D27F641153; Tue,  2 Jul 2019 11:02:55 -0300 (-03)
+Date:   Tue, 2 Jul 2019 11:02:55 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+Message-ID: <20190702140255.GC15462@kernel.org>
+References: <20190702022616.1259-1-acme@kernel.org>
+ <20190702022616.1259-24-acme@kernel.org>
+ <20190702121240.GB12694@krava>
+ <20190702134603.GA15462@kernel.org>
+ <20190702134815.GB15462@kernel.org>
+ <20190702135432.GC12694@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562075604-8979-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190702135432.GC12694@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 02-07-19 21:53:24, Pingfan Liu wrote:
-> undo_isolate_page_range() never fails, so no need to return value.
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: linux-kernel@vger.kernel.org
+Em Tue, Jul 02, 2019 at 03:54:32PM +0200, Jiri Olsa escreveu:
+> On Tue, Jul 02, 2019 at 10:48:15AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
+> > > > this breaks objtool build, because it adds _ctype dependency via isspace call
+> > > > patch below fixes it for me
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+> > > Thanks for  spotting this, I'll have it in my next pull request.
 
-> ---
->  include/linux/page-isolation.h | 2 +-
->  mm/page_isolation.c            | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-> index 280ae96..1099c2f 100644
-> --- a/include/linux/page-isolation.h
-> +++ b/include/linux/page-isolation.h
-> @@ -50,7 +50,7 @@ start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->   * Changes MIGRATE_ISOLATE to MIGRATE_MOVABLE.
->   * target range is [start_pfn, end_pfn)
->   */
-> -int
-> +void
->  undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  			unsigned migratetype);
->  
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index e3638a5..89c19c0 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -230,7 +230,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  /*
->   * Make isolated pages available again.
->   */
-> -int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
-> +void undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  			    unsigned migratetype)
->  {
->  	unsigned long pfn;
-> @@ -247,7 +247,6 @@ int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  			continue;
->  		unset_migratetype_isolate(page, migratetype);
->  	}
-> -	return 0;
->  }
->  /*
->   * Test all pages in the range is free(means isolated) or not.
-> -- 
-> 2.7.5
+> > I'm adding a Signed-off-by: you, ok?
 
--- 
-Michal Hocko
-SUSE Labs
+> sure, I did not post full patch, because I thought you might thought
+> of some other solution
+
+I think this is it for now, at some point we need to make a
+tools/lib/liblinux.{a,so} to group what we're getting from the linux
+lib/ directory to adapt and use in tools/ living code and then, as a
+a starter, tools/objtool/ and tools/perf/ should link with it.
+
+- Arnaldo
