@@ -2,129 +2,151 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704C0C0650E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1895CC5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C0A216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB52F20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PHuaCxD0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpRaLkOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGBBcg (ORCPT
+        id S1727040AbfGBBdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:32:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33238 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfGBBcf (ORCPT
+        Mon, 1 Jul 2019 21:33:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52868 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfGBBdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:32:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x621IeTc170139;
-        Tue, 2 Jul 2019 01:32:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=CTmK2bG4LfuAj+OGk5lCbn5r1g3VskoESmcpOd+WCVk=;
- b=PHuaCxD02WjFRnUJ0yL8NVZgO4T7q7BEmHAMOV5o9R9/JS8Q+ePLiaUb2NCNYvk/mUMC
- pQnfRR5Ko7UcMlbnXNbAe2rjXBr62NZHhOpAD5k1aT5bWjazZtUvKheBop1Y/eOMozHO
- Ub5k3EToCB2v6o4SkEc+JRpDkEUmpW+UEnZoDoqzNyN6oiEQJTD0oGxWUpy7ACDzEk93
- RkIuy4JL8XIXg6EnfgwGnMa9pxdbyl9yomSdTjoulOmiNs6WTxPf/0AAsDQwa1SlwWCN
- +9APY4EzjyIUIXo9sumxogh/scE9JS597BkUUtLMOClQsEY2tCVyovnNMCBRFbRfJ3l3 vw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2te61prhk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 01:32:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x621N30L022377;
-        Tue, 2 Jul 2019 01:30:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2tebqg7pkm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 01:30:14 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x621UAkk007677;
-        Tue, 2 Jul 2019 01:30:11 GMT
-Received: from [10.159.132.152] (/10.159.132.152)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 18:30:10 -0700
-Subject: Re: [PATCH] soc: ti: fix irq-ti-sci link error
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20190617130149.1782930-1-arnd@arndb.de>
- <7a96a4d2-25e7-f9cf-1109-23c5495325a8@oracle.com>
- <CAOesGMi5urJPF3cKfF+UB_KrK50_VQw+MMS5w_UqKzEMYKeXFA@mail.gmail.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <f767335b-eed9-13fd-3a85-774bde43eba4@oracle.com>
-Date:   Mon, 1 Jul 2019 18:30:09 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Mon, 1 Jul 2019 21:33:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so1254472wms.2;
+        Mon, 01 Jul 2019 18:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VgvgzmIVrDSUjOY8EuC931M5g5ggSix1hpz5q9juADs=;
+        b=LpRaLkOJ1zbdPPz+gCkN8fxSUmSH610Tv0OGF+prqAfFrtP3Bo0nGQ5sKjF6Bc0rXm
+         +5D8vp/xyXW3BjMtjKoiL5w5dqBnQcag6ynIhdwxsidkV4SBzoLXWXOmFospadmg1b7+
+         KM+NeUzC/m7R48n7lWfwwm6qO2aKiqjZHgTo+BYc4n8rn8rL+ieSaFDALZaqHOjxvWSh
+         744r6B1VcoP0syIJMwrtiXmE4H/7Mcv9dE1ecRMnTB0Rha5TKq4ck8AIAnHwTcAHJjcN
+         zagpv0sEHcwka9FY5aZcNi0WJh/AllPcT8AASvwj8zBH6W3aB7x3HZ5L/SpmMBQpgUA+
+         UHKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VgvgzmIVrDSUjOY8EuC931M5g5ggSix1hpz5q9juADs=;
+        b=jjZjpWK8pmgSpJPCOtu/h847aY1O1BL/mz9KNbqENk7aX7P24e5DT5KhNC6dw7GSwK
+         kgmclpCYJlOXkVRiLSWobE7msYe8riaN7fI4JJCurbCo1j7ojeqcmRXrMmWtr/ofhPa1
+         gHszoageZAiNYlFO9UvDL8kQs0ntwkMM6SykqZTrg3eQFjjIy/wNAun2mC+dqoawQWdr
+         u7LgQugyGPO2n8vqlOe+wQIb95UIA6uC9qkihhNAFT2pmtuiC462kawoPYRp1F3HWBN3
+         nmBNQ0JnM3eHoahKDwb700rRnJFaUtpqLbGCtksfmBxbZ7nQh5yHAIQ9D3H+KNilTAlz
+         2UmQ==
+X-Gm-Message-State: APjAAAX98uZ9DMGI2NRwo43Pf0Rwo1S41kdMuAA32TMj7U3siTCzkC2J
+        6Udgf6Q4++YyccYs7mMY/9w=
+X-Google-Smtp-Source: APXvYqxoONF1T1GoeykizBu5RbG/Y58GKftODvSI+mFlqeZ0Wqc+blYee3SgczTmb5ueBCwoi4QKxg==
+X-Received: by 2002:a1c:5a56:: with SMTP id o83mr1040541wmb.103.1562031202570;
+        Mon, 01 Jul 2019 18:33:22 -0700 (PDT)
+Received: from [192.168.2.202] (p5487BBD4.dip0.t-ipconnect.de. [84.135.187.212])
+        by smtp.gmail.com with ESMTPSA id u13sm10089367wrq.62.2019.07.01.18.33.21
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 18:33:21 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Yu Chen <yu.c.chen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-2-luzmaximilian@gmail.com>
+ <20190702011443.GA19902@chenyu-office.sh.intel.com>
+ <91349d00-e7e2-887b-45e5-4689a401aa2f@gmail.com>
+Message-ID: <d7e17f54-4c33-fa8d-be03-9e507da8e495@gmail.com>
+Date:   Tue, 2 Jul 2019 03:33:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMi5urJPF3cKfF+UB_KrK50_VQw+MMS5w_UqKzEMYKeXFA@mail.gmail.com>
+In-Reply-To: <91349d00-e7e2-887b-45e5-4689a401aa2f@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020012
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 3:24 PM, Olof Johansson wrote:
-> On Mon, Jul 1, 2019 at 10:36 AM <santosh.shilimkar@oracle.com> wrote:
->>
->> On 6/17/19 6:01 AM, Arnd Bergmann wrote:
->>> The irqchip driver depends on the SoC specific driver, but we want
->>> to be able to compile-test it elsewhere:
->>>
->>> WARNING: unmet direct dependencies detected for TI_SCI_INTA_MSI_DOMAIN
->>>     Depends on [n]: SOC_TI [=n]
->>>     Selected by [y]:
->>>     - TI_SCI_INTA_IRQCHIP [=y] && TI_SCI_PROTOCOL [=y]
->>>
->>> drivers/irqchip/irq-ti-sci-inta.o: In function `ti_sci_inta_irq_domain_probe':
->>> irq-ti-sci-inta.c:(.text+0x204): undefined reference to `ti_sci_inta_msi_create_irq_domain'
->>>
->>> Rearrange the Kconfig and Makefile so we build the soc driver whenever
->>> its users are there, regardless of the SOC_TI option.
->>>
->>> Fixes: 49b323157bf1 ("soc: ti: Add MSI domain bus support for Interrupt Aggregator")
->>> Fixes: f011df6179bd ("irqchip/ti-sci-inta: Add msi domain support")
->>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>> ---
->> Thanks Arnd. Will you be able to add it to your fixes queue.
->>
->> FWIW, Acked-by: Santosh Shilimkar <ssantosh@kernle.org>
+On 7/2/19 3:25 AM, Maximilian Luz wrote:
+> On 7/2/19 3:14 AM, Yu Chen wrote:
+>> On Tue, Jul 02, 2019 at 02:37:39AM +0200, Maximilian Luz wrote:
+>>> +/*
+>>> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
+>>> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
+>>> + * device by checking for the _DSM method and OEM Platform Revision.
+>>> + */
+>>> +static int surface_button_check_MSHW0040(struct acpi_device *dev)
+>>> +{
+>>> +    acpi_handle handle = dev->handle;
+>>> +    union acpi_object *result;
+>>> +    u64 oem_platform_rev = 0;
+>>> +
+>>> +    // get OEM platform revision
+>>> +    result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+>>> +                     MSHW0040_DSM_REVISION,
+>>> +                     MSHW0040_DSM_GET_OMPR,
+>>> +                     NULL, ACPI_TYPE_INTEGER);
+>>> +
+>> Does it mean, only 5th, 6th and newer platforms have OEM platform revision?
+>> 3rd/4th will get NULL result? Or the opposite?
 > 
-> Cc:ing to arm@kernel.org is the best way to make sure it surfaces.
+> Correct, from my testing (with limited sample size) and AML code: 5th
+> and 6th generation devices have a non-zero OEM platform revision,
+> whereas 3rd and 4th gen. devices do not have any (i.e. result will be
+> NULL).
 > 
-> Also, please do Acked-by on separate line so the tools catch it next
-Will do..
+>>> +    if (result) {
+>>> +        oem_platform_rev = result->integer.value;
+>>> +        ACPI_FREE(result);
+>>> +    }
+>>> +
+>>> +    dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+>>> +
+>>> +    return oem_platform_rev == 0 ? 0 : -ENODEV;
+>> if 3rd/4th do not have this oem rev information while 5th/newer have,
+>> why the latter returns NODEV(it actually has this info)?
+> 
+> Since we always expect a non-zero platform revision (for 5th/6th gen.),
+> we can initialize it to zero and use that as "unknown"/"not available".
+> So if it can not be determined, we return NODEV.
 
-> time (also, check for typos. :)
-> 
-:- )
+Sorry, small mistake here: If it can be determined (i.e. is 5th or 6th
+gen.) then we return NODEV. Not the other way around.
 
-> Applying to fixes.
-Thanks for picking it up.
+Also to clarify on your last question:
+
+On 7/2/19 3:14 AM, Yu Chen wrote:
+>>   static int surface_button_add(struct acpi_device *device)
+>>   {
+>>   	struct surface_button *button;
+>> @@ -154,6 +188,10 @@ static int surface_button_add(struct acpi_device *device)
+>>   	    strlen(SURFACE_BUTTON_OBJ_NAME)))
+>>   		return -ENODEV;
+>>   
+>> +	error = surface_button_check_MSHW0040(device);
+>> +	if (error)
+>> +		return error;
+>> +
+> ditto, 3rd/4th get error=0?
+
+You are correct.
+
+Maximilian
