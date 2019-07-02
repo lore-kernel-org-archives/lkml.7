@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1841FC5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD403C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56BB2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13DF2184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034440;
-	bh=gOVFpnyMtMW7GFJCMLnkF/L5/5b/1oUgeN2sDgIbY44=;
+	s=default; t=1562034446;
+	bh=pt7M9IAWzut9bbShKb0iHaCS031KBTWvctm+4G6dj5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=alCjfugrfWoJ/AwDy8LJigJNwZnGTYQqcu8bTQB2axB428hWs4t3tumB/PZdohynW
-	 ovzk3knfinREfzYh4u/gLWBfcqt55+WrqS9/R4eQjAs3dk9o8t6aXHZCTUV1r1aZZg
-	 lODCvZL6K/E+B1sE2+tp0anR/GlmkWuW28an5jTM=
+	b=B6bcf8ieq4w0y7Q/9Tni1na0fvdJ1jsTYWEY9lPDRmlw1CE791QYZUN9GRFC/DWZQ
+	 YFbwda52PXnk5mOKmUyXqF+esKzma7/xdjE99en2CA9PzkrNjAtP1Pqdfzp5/15fyD
+	 vQUur2ugqHW+01tS+LMNA1aJP8ZsAOl0V056vXtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfGBC1S (ORCPT
+        id S1727390AbfGBC1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbfGBC1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:27:14 -0400
+        id S1727361AbfGBC1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:27:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 623912184E;
-        Tue,  2 Jul 2019 02:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D151421848;
+        Tue,  2 Jul 2019 02:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034433;
-        bh=gOVFpnyMtMW7GFJCMLnkF/L5/5b/1oUgeN2sDgIbY44=;
+        s=default; t=1562034442;
+        bh=pt7M9IAWzut9bbShKb0iHaCS031KBTWvctm+4G6dj5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xnMFvTigwm2IxaUO9YeYrboFgs4xpEfx5XaYv3n4m5t4DcvhePRRCoaNCYr7Rotnn
-         tqeZ9hTRAuxshv0S+DirfGcplR+QudR2pDcnQoqB6O9/gzXTRAYtGKeWnhoBqS/ocp
-         lccjykDJf+XoVILdv5wVrodmSFvFhDi2wALTLHXY=
+        b=qRn5aPqT8V9GBWMPdzLEQSDeh7VnOnnnS4/BrMSBbrq37n8hOePfvPtQ9fotBHAzu
+         Sniktz8jYcCRM91kl38wBvQC3kJjnzK0KhmBr10UkL4AkZrDXzM3PdB0eBB8K+pd+P
+         D/+hj/o8GE6eKVrSz79RbaUsuPgKv7rCM1z/W4yo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 16/43] tools x86 machine: Add missing util.h to pick up 'page_size'
-Date:   Mon,  1 Jul 2019 23:25:49 -0300
-Message-Id: <20190702022616.1259-17-acme@kernel.org>
+Subject: [PATCH 19/43] perf tools: Remove old baggage that is util/include/linux/ctype.h
+Date:   Mon,  1 Jul 2019 23:25:52 -0300
+Message-Id: <20190702022616.1259-20-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -62,30 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We're getting it by sheer luck, add that util.h to get the 'page_size'
-definition.
+It was just including a ../util.h that wasn't even there:
+
+  $ cat tools/perf/util/include/linux/../util.h
+  cat: tools/perf/util/include/linux/../util.h: No such file or directory
+  $
+
+This would make kallsyms.h get util.h somehow and then files including
+it would get util.h defined stuff, a mess, fix it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-347078mgj3d2jfygtxs4ntti@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-wlzwken4psiat4zvfbvaoqiw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/machine.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/symbol/kallsyms.h           | 1 -
+ tools/perf/util/include/linux/ctype.h | 1 -
+ 2 files changed, 2 deletions(-)
+ delete mode 100644 tools/perf/util/include/linux/ctype.h
 
-diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
-index 4520ac53caa9..0e508f26f83a 100644
---- a/tools/perf/arch/x86/util/machine.c
-+++ b/tools/perf/arch/x86/util/machine.c
-@@ -3,6 +3,7 @@
- #include <linux/string.h>
- #include <stdlib.h>
+diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
+index bd988f7b18d4..2b238f181d97 100644
+--- a/tools/lib/symbol/kallsyms.h
++++ b/tools/lib/symbol/kallsyms.h
+@@ -3,7 +3,6 @@
+ #define __TOOLS_KALLSYMS_H_ 1
  
-+#include "../../util/util.h"
- #include "../../util/machine.h"
- #include "../../util/map.h"
- #include "../../util/symbol.h"
+ #include <elf.h>
+-#include <linux/ctype.h>
+ #include <linux/types.h>
+ 
+ #ifndef KSYM_NAME_LEN
+diff --git a/tools/perf/util/include/linux/ctype.h b/tools/perf/util/include/linux/ctype.h
+deleted file mode 100644
+index a53d4ee1e0b7..000000000000
+--- a/tools/perf/util/include/linux/ctype.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include "../util.h"
 -- 
 2.20.1
 
