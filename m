@@ -2,32 +2,32 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACEAC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911BBC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9843820836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3EE20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfGBLHs (ORCPT
+        id S1726767AbfGBLH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:07:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57818 "EHLO mx1.redhat.com"
+        Tue, 2 Jul 2019 07:07:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34606 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfGBLHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:07:48 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1725774AbfGBLH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 07:07:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E79EA120D7;
-        Tue,  2 Jul 2019 11:07:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D63E88313;
+        Tue,  2 Jul 2019 11:07:53 +0000 (UTC)
 Received: from krava (unknown [10.43.17.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2AB116F921;
-        Tue,  2 Jul 2019 11:07:29 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 13:07:28 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id 345422D351;
+        Tue,  2 Jul 2019 11:07:44 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 13:07:43 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -52,67 +52,72 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 06/11] perf hists: Smatch: Fix potential NULL pointer
- dereference
-Message-ID: <20190702110728.GA15322@krava>
+Subject: Re: [PATCH v1 00/11] perf: Fix errors detected by Smatch
+Message-ID: <20190702110743.GA12694@krava>
 References: <20190702103420.27540-1-leo.yan@linaro.org>
- <20190702103420.27540-7-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190702103420.27540-7-leo.yan@linaro.org>
+In-Reply-To: <20190702103420.27540-1-leo.yan@linaro.org>
 User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 02 Jul 2019 11:07:48 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 02 Jul 2019 11:07:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 06:34:15PM +0800, Leo Yan wrote:
-> Based on the following report from Smatch, fix the potential
-> NULL pointer dereference check.
+On Tue, Jul 02, 2019 at 06:34:09PM +0800, Leo Yan wrote:
+> When I used static checker Smatch for perf building, the main target is
+> to check if there have any potential issues in Arm cs-etm code.  So
+> finally I get many reporting for errors/warnings.
 > 
->   tools/perf/ui/browsers/hists.c:641
->   hist_browser__run() error: we previously assumed 'hbt' could be
->   null (see line 625)
+> I used below command for using static checker with perf building:
 > 
->   tools/perf/ui/browsers/hists.c:3088
->   perf_evsel__hists_browse() error: we previously assumed
->   'browser->he_selection' could be null (see line 2902)
+>   # make VF=1 CORESIGHT=1 -C tools/perf/ \
+>     CHECK="/root/Work/smatch/smatch --full-path" \
+>     CC=/root/Work/smatch/cgcc | tee smatch_reports.txt
 > 
->   tools/perf/ui/browsers/hists.c:3272
->   perf_evsel_menu__run() error: we previously assumed 'hbt' could be
->   null (see line 3260)
+> I reviewed the errors one by one, if I understood some of these errors
+> so changed the code as I can, this patch set is the working result; but
+> still leave some errors due to I don't know what's the best way to fix
+> it.  There also have many inconsistent indenting warnings.  So I firstly
+> send out this patch set and let's see what's the feedback from public
+> reviewing.
 > 
-> This patch firstly validating the pointers before access them, so can
-> fix potential NULL pointer dereference.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/ui/browsers/hists.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index 3421ecbdd3f0..2ba33040ddd8 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -638,7 +638,9 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
->  		switch (key) {
->  		case K_TIMER: {
+> Leo Yan (11):
+>   perf report: Smatch: Fix potential NULL pointer dereference
+>   perf stat: Smatch: Fix use-after-freed pointer
+>   perf top: Smatch: Fix potential NULL pointer dereference
+>   perf annotate: Smatch: Fix dereferencing freed memory
+>   perf trace: Smatch: Fix potential NULL pointer dereference
+>   perf hists: Smatch: Fix potential NULL pointer dereference
+>   perf map: Smatch: Fix potential NULL pointer dereference
+>   perf session: Smatch: Fix potential NULL pointer dereference
+>   perf intel-bts: Smatch: Fix potential NULL pointer dereference
+>   perf intel-pt: Smatch: Fix potential NULL pointer dereference
+>   perf cs-etm: Smatch: Fix potential NULL pointer dereference
 
-not sure this can really happen, perhaps WARN_ON_ONCE(!hbt) would be
-good in here
+from quick look it all looks good to me, nice tool ;-)
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 jirka
 
->  			u64 nr_entries;
-> -			hbt->timer(hbt->arg);
-> +
-> +			if (hbt)
-> +				hbt->timer(hbt->arg);
->  
->  			if (hist_browser__has_filter(browser) ||
->  			    symbol_conf.report_hierarchy)
-
-SNIP
+> 
+>  tools/perf/builtin-report.c    |  4 ++--
+>  tools/perf/builtin-stat.c      |  2 +-
+>  tools/perf/builtin-top.c       |  8 ++++++--
+>  tools/perf/builtin-trace.c     |  5 +++--
+>  tools/perf/ui/browsers/hists.c | 13 +++++++++----
+>  tools/perf/util/annotate.c     |  6 ++----
+>  tools/perf/util/cs-etm.c       |  2 +-
+>  tools/perf/util/intel-bts.c    |  5 ++---
+>  tools/perf/util/intel-pt.c     |  5 ++---
+>  tools/perf/util/map.c          |  7 +++++--
+>  tools/perf/util/session.c      |  3 +++
+>  11 files changed, 36 insertions(+), 24 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
