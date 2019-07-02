@@ -2,69 +2,40 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2759C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E20DC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10D320663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vw0rmvr/"
+	by mail.kernel.org (Postfix) with ESMTP id 19A2E2063F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfGBNsZ (ORCPT
+        id S1727039AbfGBNtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:48:25 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43426 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfGBNsW (ORCPT
+        Tue, 2 Jul 2019 09:49:32 -0400
+Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:52281 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726375AbfGBNtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:48:22 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w17so18457464qto.10;
-        Tue, 02 Jul 2019 06:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GO4Vg2til1nElp5DRfNnuFT7Rw5WIEiWdeeZ4LbvAJM=;
-        b=Vw0rmvr/J9ckr+9RalqxdUJdKpzmGyOSDcYEApS2Z8UB6CTa1OxjSYkpPT9XcLtxi7
-         3qUh6tFPsAlEBzHlGdSjrNzjRlYV3DYd9YJ/m0bxEagmDY0lWyD1UMDgGgW0gZCvVDIg
-         QepqDW5/L2Gp3ZXt0deS8nPIuXo/OUURtYdIPJxxpYCJpAEHzGnRl7zh6DqNOiXzfMfG
-         FvCCL8btzvQkqs6h2mQXmkg6Uy4zQHcloFF5WFb5h02p2mj+oVJunG5O8xH+bYvTIe27
-         Ptdilw+a6QY64QZ2X6SbPrAIB9/QTd3KUq9SzFBvhaqfjqYezU14MQTe+qS0TdiKWiS8
-         HZZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GO4Vg2til1nElp5DRfNnuFT7Rw5WIEiWdeeZ4LbvAJM=;
-        b=mWzP1iCXsvB9mYy65VvKrJdi6CV4RyT8N1eg4hKowjLR4qc8yVO1pQT9njlAsnayHE
-         AN7x8//wnc9YTvhIsT8EKYcaltV+3O9divALmCl2s8OsqNJEjVPsxBC9J2MRYWi2YIum
-         A99/09nwuIs5ZMy4LOqJWxEjrLE+O1ewytUVc4uSMXuBApD2BAqMy/zgVHBySPFKsMXm
-         wafw4TTclweDaqA/iXejn5CZ5AEIEADZD/RaFMv58CvaDrk0Qt++9OW5I/AJuCIru3FB
-         t3zxRYb8Lv1mE0kMk246/05lyZn/6NmeyQLxBq1MrmWzEqIWbL1ujrWuyZzkiwBIvDWE
-         yXBg==
-X-Gm-Message-State: APjAAAVSXWEz9wS5ggG0Pasu73sbqWdMJTIOSdK3i/HzYEIKYU5Qbp4j
-        BzNfm1m785Bp0wjvl8SV98k=
-X-Google-Smtp-Source: APXvYqzHGBX/HxWCXe4hw3Wi1SPYacl4jsxKYnHlbfjSWFDy3TAajLZuidNnuMOEm/KOOLGfT5Bdmw==
-X-Received: by 2002:ac8:43d8:: with SMTP id w24mr25372224qtn.25.1562075300699;
-        Tue, 02 Jul 2019 06:48:20 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id o71sm6151445qke.18.2019.07.02.06.48.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 06:48:20 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0430941153; Tue,  2 Jul 2019 10:48:15 -0300 (-03)
-Date:   Tue, 2 Jul 2019 10:48:15 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
+        Tue, 2 Jul 2019 09:49:32 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id BADAA180A8153;
+        Tue,  2 Jul 2019 13:49:30 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wire67_35a6136ca5946
+X-Filterd-Recvd-Size: 2297
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  2 Jul 2019 13:49:28 +0000 (UTC)
+Message-ID: <5bb30e0ddefe71cdb845b83b43ac6d5f0bd92ad0.camel@perches.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+From:   Joe Perches <joe@perches.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -73,69 +44,31 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
-Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
- sources
-Message-ID: <20190702134815.GB15462@kernel.org>
-References: <20190702022616.1259-1-acme@kernel.org>
- <20190702022616.1259-24-acme@kernel.org>
- <20190702121240.GB12694@krava>
- <20190702134603.GA15462@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        =?ISO-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Date:   Tue, 02 Jul 2019 06:49:26 -0700
 In-Reply-To: <20190702134603.GA15462@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190702022616.1259-1-acme@kernel.org>
+         <20190702022616.1259-24-acme@kernel.org> <20190702121240.GB12694@krava>
+         <20190702134603.GA15462@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
+On Tue, 2019-07-02 at 10:46 -0300, Arnaldo Carvalho de Melo wrote:
 > Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
 > > On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
 > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > > > 
 > > > Same implementation, will be used to replace ad-hoc equivalent code in
 > > > tools/.
-> > > 
-> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > > Cc: André Goddard Rosa <andre.goddard@gmail.com>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > ---
-> > >  tools/include/linux/string.h |  4 +++-
-> > >  tools/lib/string.c           | 14 ++++++++++++++
-> > >  2 files changed, 17 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> > > index 6c3e2cc274c5..cee239350a6b 100644
-> > > --- a/tools/include/linux/string.h
-> > > +++ b/tools/include/linux/string.h
-> > > @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
-> > >  	return strncmp(str, prefix, strlen(prefix)) == 0;
-> > >  }
-> > >  
-> > > -#endif /* _LINUX_STRING_H_ */
-> > > +extern char * __must_check skip_spaces(const char *);
-> > > +
-> > > +#endif /* _TOOLS_LINUX_STRING_H_ */
+[]
 > > > diff --git a/tools/lib/string.c b/tools/lib/string.c
-> > > index 93b3d4b6feac..50d400822bb3 100644
-> > > --- a/tools/lib/string.c
-> > > +++ b/tools/lib/string.c
-> > > @@ -17,6 +17,7 @@
-> > >  #include <string.h>
-> > >  #include <errno.h>
-> > >  #include <linux/string.h>
-> > > +#include <linux/ctype.h>
-> > >  #include <linux/compiler.h>
-> > >  
-> > >  /**
+[]
 > > > @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
 > > >  	}
 > > >  	return ret;
@@ -153,53 +86,7 @@ Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
 > > > +		++str;
 > > > +	return (char *)str;
 > > > +}
-> > > -- 
-> > > 2.20.1
-> > > 
-> > 
-> > this breaks objtool build, because it adds _ctype dependency via isspace call
-> > patch below fixes it for me
-> 
-> Thanks for  spotting this, I'll have it in my next pull request.
 
-I'm adding a Signed-off-by: you, ok?
+pity about duplicating losing the const
 
-- Arnaldo
- 
-> - Arnaldo
->  
-> > jirka
-> > 
-> > 
-> > ---
-> > diff --git a/tools/objtool/Build b/tools/objtool/Build
-> > index 749becdf5b90..8dc4f0848362 100644
-> > --- a/tools/objtool/Build
-> > +++ b/tools/objtool/Build
-> > @@ -9,6 +9,7 @@ objtool-y += special.o
-> >  objtool-y += objtool.o
-> >  
-> >  objtool-y += libstring.o
-> > +objtool-y += libctype.o
-> >  objtool-y += str_error_r.o
-> >  
-> >  CFLAGS += -I$(srctree)/tools/lib
-> > @@ -17,6 +18,10 @@ $(OUTPUT)libstring.o: ../lib/string.c FORCE
-> >  	$(call rule_mkdir)
-> >  	$(call if_changed_dep,cc_o_c)
-> >  
-> > +$(OUTPUT)libctype.o: ../lib/ctype.c FORCE
-> > +	$(call rule_mkdir)
-> > +	$(call if_changed_dep,cc_o_c)
-> > +
-> >  $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
-> >  	$(call rule_mkdir)
-> >  	$(call if_changed_dep,cc_o_c)
-> 
-> -- 
-> 
-> - Arnaldo
 
--- 
-
-- Arnaldo
