@@ -2,126 +2,116 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6670C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6201C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F25920836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hSI/B3SJ"
+	by mail.kernel.org (Postfix) with ESMTP id B66CB20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBLKE (ORCPT
+        id S1726627AbfGBLMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:10:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39762 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfGBLKE (ORCPT
+        Tue, 2 Jul 2019 07:12:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48804 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfGBLMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:10:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so523927wma.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 04:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=M9H324FRjdDrfn1BGXOWUaO+bADzpYuWXteAhSQNEJU=;
-        b=hSI/B3SJ9f3PcffRsqmfICqElS4D/1J7CzSsBmvkuaJw2PRnotdeyasfArFdsOXIq6
-         cJgIEeuAgo5NVPOOaaR3NKjmC40YZCiSgoS+wPZlOCu23koM5nk7E1uWY+K+kUojcbwj
-         mH9ozbFgwtETXk8PNOAtj2xNF/yOway+NnzdnLafo/o3VC2es8/XgGjhMvGXtH60CuUJ
-         UPkyHlzqseIsj3r+WbfchZtKazOKHlc3W6CEa/e5UHy45sBu9wIUyP8gExK+GDM5ehRg
-         1Yyo4EH6WUrySydDbhIbH6ajgTDlDHkalA3dKFUXBJEHS3YnkGaWsdvo62BnEq8CIwhG
-         /S2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=M9H324FRjdDrfn1BGXOWUaO+bADzpYuWXteAhSQNEJU=;
-        b=oATqqFxTym51z8APYprJt8d6Ern2wMfAq2zUOWQj9uhIvTa3ss+roFsKVF7BK6YZhh
-         BAvwroEFkEDgmgQynee6gVcYOCpuWTlncTHc/2Bhi/P1Uy/W113AYnNySmoXaHW5Z1lR
-         HOOxFAp9GYcbN3lBPvT+KVB35i30z408cLAxrMp4JqOAqzacfHzEGAG7PGMRSaStv0Q2
-         rz0pd+8YO0+eC3BmBgEoQyMFYMB6MHLOuNDeADjjfyj9FEffgMTmTv12MFhwc2xrldK7
-         vYSeNFxSb+qlvY5uj7orv74B80TuOzqavQc0QuHEuxsfXfXtz6nxTlpAF5DnyYrHA9Be
-         pEYQ==
-X-Gm-Message-State: APjAAAVJZPY/UA9FZcRvuXV3VP08ny3qx07SD5n5QKbh+AyY/krnTFPp
-        Ctp7ETp5iA4E/JUv1nso8Uv/qg==
-X-Google-Smtp-Source: APXvYqx/h/NKywgbs2fPNux/OZHTt4/o6YuD6C3CEv0y+eQOHU7oMXOUIA8dDSI8+luOIUS+dn2Nfw==
-X-Received: by 2002:a1c:e28b:: with SMTP id z133mr2918147wmg.136.1562065801695;
-        Tue, 02 Jul 2019 04:10:01 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id b9sm7342304wrx.57.2019.07.02.04.10.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 04:10:00 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 12:09:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Keerthy <j-keerthy@ti.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        gustavo@embeddedor.com, keescook@chromium.org
-Subject: Re: linux-next: build warning after merge of the mfd tree
-Message-ID: <20190702110959.GF4652@dell>
-References: <20190627151140.232a87e2@canb.auug.org.au>
- <1b5aa183-6e33-ee15-4c65-5b4cdf7655af@ti.com>
- <20190702184916.5f0f9e99@canb.auug.org.au>
+        Tue, 2 Jul 2019 07:12:13 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hiGhm-0000du-RL; Tue, 02 Jul 2019 11:12:10 +0000
+Subject: Re: [PATCH][next] regulator: lp87565: fix missing break in switch
+ statement
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190627131639.6394-1-colin.king@canonical.com>
+ <20190628143628.GJ5379@sirena.org.uk>
+ <4cb0e4ab-66c7-2b3d-27d3-fd5cfde8988f@canonical.com>
+ <20190702104420.GD4652@dell>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4a0a50be-1465-0554-f787-dec72bc07a00@canonical.com>
+Date:   Tue, 2 Jul 2019 12:12:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190702104420.GD4652@dell>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190702184916.5f0f9e99@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 02 Jul 2019, Stephen Rothwell wrote:
-
-> Hi all,
+On 02/07/2019 11:44, Lee Jones wrote:
+> On Fri, 28 Jun 2019, Colin Ian King wrote:
 > 
-> On Thu, 27 Jun 2019 11:29:18 +0530 Keerthy <j-keerthy@ti.com> wrote:
-> >
-> > On 27/06/19 10:41 AM, Stephen Rothwell wrote:
-> > > Hi Lee,
-> > > 
-> > > After merging the mfd tree, today's linux-next build (x86_64 allmodconfig)
-> > > produced this warning:
-> > > 
-> > > drivers/regulator/lp87565-regulator.c: In function 'lp87565_regulator_probe':
-> > > drivers/regulator/lp87565-regulator.c:182:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> > >     max_idx = LP87565_BUCK_3210;  
-> > 
-> > Missed adding a break here. Can i send a patch on top of linux-next?
-> > 
-> > >     ~~~~~~~~^~~~~~~~~~~~~~~~~~~
-> > > drivers/regulator/lp87565-regulator.c:183:2: note: here
-> > >    default:
-> > >    ^~~~~~~
-> > > 
-> > > Introduced by commit
-> > > 
-> > >    7ee63bd74750 ("regulator: lp87565: Add 4-phase lp87561 regulator support")
-> > > 
-> > > I get these warnings because I am building with -Wimplicit-fallthrough
-> > > in attempt to catch new additions early.  The gcc warning can be turned
-> > > off by adding a /* fall through */ comment at the point the fall through
-> > > happens (assuming that the fall through is intentional).
-> > >   
+>> On 28/06/2019 15:36, Mark Brown wrote:
+>>> On Thu, Jun 27, 2019 at 02:16:39PM +0100, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> Currently the LP87565_DEVICE_TYPE_LP87561_Q1 case does not have a
+>>>> break statement, causing it to fall through to a dev_err message.
+>>>> Fix this by adding in the missing break statement.
+>>>
+>>> This doesn't apply against current code, please check and resend.
+>>>
+>> So it applies cleanly against linux-next, I think the original code
+>> landed in mfd/for-mfd-next - c.f. https://lkml.org/lkml/2019/5/28/550
 > 
-> I am still seeing this warning ...
+> Applied, thanks Colin.
+> 
+I'm confused, who is the official maintainer of the regulator patches
+nowadays?
 
-Just pushed the fix for this.
-
-Thank you Stephen.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Colin
