@@ -1,106 +1,88 @@
 Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6578FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8E1C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323C52184E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562091783;
-	bh=uHUZTL92LdnoiyeyNIsKdrW3LnHKW31MgQHdErGZMAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I0oyeB3muQLprmbqqZWb/n64Q+RYhPOIxUYHDnBWRp20lO6oOIYiMumEqHWVDl/og
-	 a5odfm/EazrwPyS9VQRtQ3aAIi9mW3h2WQHBD6cLAy7WI2+tZkeVAuWAzAbWYBS0Q9
-	 ciaA+RWbes/iCS7xjbcEo7gQ0XL50E8TRB83JZJc=
+	by mail.kernel.org (Postfix) with ESMTP id 868E22184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfGBSXB (ORCPT
+        id S1727050AbfGBSXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 14:23:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48182 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGBSXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:23:01 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725851AbfGBSXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:23:55 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDB3C2184B;
-        Tue,  2 Jul 2019 18:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562091781;
-        bh=uHUZTL92LdnoiyeyNIsKdrW3LnHKW31MgQHdErGZMAg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X8lhXrdGVEeshXHO0KIaw6jBzwotwBKbK6n8N7I94erVXoyIB+IMaphZ6AzqqnPnP
-         9ZHuRIQQwQmj7dfGs76xzKhLe0hr0Q/V4gFydJ+SdFSu3CAAcP4D2dk2rq/oRAU/6C
-         lcDosjNJld/LfsxlU13xAVSN4jt7UgYudHmJM4Ww=
-Date:   Tue, 2 Jul 2019 11:22:59 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] vfs: move_mount: reject moving kernel internal mounts
-Message-ID: <20190702182258.GB110306@gmail.com>
-References: <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com>
- <20190629202744.12396-1-ebiggers@kernel.org>
- <20190701164536.GA202431@gmail.com>
- <20190701182239.GA17978@ZenIV.linux.org.uk>
+        by mx1.redhat.com (Postfix) with ESMTPS id 7343058E5B;
+        Tue,  2 Jul 2019 18:23:55 +0000 (UTC)
+Received: from redhat.com (ovpn-124-209.rdu2.redhat.com [10.10.124.209])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C944F5D968;
+        Tue,  2 Jul 2019 18:23:53 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 14:23:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Ihor Matushchak <ihor.matushchak@foobox.net>
+Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iivanov.xz@gmail.com
+Subject: Re: [PATCH v2] virtio-mmio: add error check for platform_get_irq
+Message-ID: <20190702142329-mutt-send-email-mst@kernel.org>
+References: <156207429000.5051.5975712347598980745@silver>
+ <20190702144818.32648-1-ihor.matushchak@foobox.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701182239.GA17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190702144818.32648-1-ihor.matushchak@foobox.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 02 Jul 2019 18:23:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 07:22:39PM +0100, Al Viro wrote:
-> On Mon, Jul 01, 2019 at 09:45:37AM -0700, Eric Biggers wrote:
-> > On Sat, Jun 29, 2019 at 01:27:44PM -0700, Eric Biggers wrote:
-> > > 
-> > > Reproducer:
-> > > 
-> > >     #include <unistd.h>
-> > > 
-> > >     #define __NR_move_mount         429
-> > >     #define MOVE_MOUNT_F_EMPTY_PATH 0x00000004
-> > > 
-> > >     int main()
-> > >     {
-> > >     	  int fds[2];
-> > > 
-> > >     	  pipe(fds);
-> > >         syscall(__NR_move_mount, fds[0], "", -1, "/", MOVE_MOUNT_F_EMPTY_PATH);
-> > >     }
-> > 
-> > David, I'd like to add this as a regression test somewhere.
-> > 
-> > Can you point me to the tests for the new mount syscalls?
-> > 
-> > I checked LTP, kselftests, and xfstests, but nothing to be found.
+On Tue, Jul 02, 2019 at 05:48:18PM +0300, Ihor Matushchak wrote:
+> in vm_find_vqs() irq has a wrong type
+> so, in case of no IRQ resource defined,
+> wrong parameter will be passed to request_irq()
 > 
-> FWIW, it's not just move_mount(2) - I'd expect
-> 
-> 	int fds[2];
-> 	char s[80];
-> 
-> 	pipe(fds);
-> 	sprintf(s, "/dev/fd/%d", fds[0]);
-> 	mount(s, "/dev/null", NULL, MS_MOVE, 0);
-> 
-> to step into exactly the same thing.  mount(2) does follow symlinks -
-> always had...
+> Signed-off-by: Ihor Matushchak <ihor.matushchak@foobox.net>
 
-Sure, but the new mount syscalls still need tests.  Where are the tests?
+Thanks!
+pls don't make v2 a response to v1 in the future though.
 
-Also, since the case of a fd with an internal mount was overlooked, probably the
-man page needs to be updated clarify that move_mount(2) fails with EINVAL in
-this case.  Where is the man page?
-
-- Eric
+> ---
+> Changes in v2:
+> Don't overwrite error code value.
+> 
+>  drivers/virtio/virtio_mmio.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index f363fbeb5ab0..e09edb5c5e06 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -463,9 +463,14 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  		       struct irq_affinity *desc)
+>  {
+>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+> -	unsigned int irq = platform_get_irq(vm_dev->pdev, 0);
+> +	int irq = platform_get_irq(vm_dev->pdev, 0);
+>  	int i, err, queue_idx = 0;
+>  
+> +	if (irq < 0) {
+> +		dev_err(&vdev->dev, "Cannot get IRQ resource\n");
+> +		return irq;
+> +	}
+> +
+>  	err = request_irq(irq, vm_interrupt, IRQF_SHARED,
+>  			dev_name(&vdev->dev), vm_dev);
+>  	if (err)
+> -- 
+> 2.17.1
