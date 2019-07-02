@@ -2,112 +2,117 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A924C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69366C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C5C2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E2C2184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfGBS3U (ORCPT
+        id S1727060AbfGBS3u convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:29:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33934 "EHLO mx1.redhat.com"
+        Tue, 2 Jul 2019 14:29:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41571 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbfGBS3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:29:20 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1725851AbfGBS3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:29:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CAA2137EE0;
-        Tue,  2 Jul 2019 18:29:14 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F7DA5C29A;
-        Tue,  2 Jul 2019 18:29:08 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 20:29:07 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        brouer@redhat.com
-Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
- page_pool_destroy
-Message-ID: <20190702202907.15fb30ce@carbon>
-In-Reply-To: <20190702152112.GG4510@khorivan>
-References: <20190702153902.0e42b0b2@carbon>
-        <156207778364.29180.5111562317930943530.stgit@firesoul>
-        <20190702144426.GD4510@khorivan>
-        <20190702165230.6caa36e3@carbon>
-        <20190702145612.GF4510@khorivan>
-        <20190702171029.76c60538@carbon>
-        <20190702152112.GG4510@khorivan>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C2C88552A;
+        Tue,  2 Jul 2019 18:29:50 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F6E1422C;
+        Tue,  2 Jul 2019 18:29:49 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Eric Biggers" <ebiggers@kernel.org>
+Cc:     syzbot <syzbot+7fe11b49c1cc30e3fce2@syzkaller.appspotmail.com>,
+        anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        trond.myklebust@hammerspace.com
+Subject: Re: memory leak in nfs_get_client
+Date:   Tue, 02 Jul 2019 14:29:48 -0400
+Message-ID: <83F17B36-F557-45CD-B59B-30335D33E49B@redhat.com>
+In-Reply-To: <20190702161110.GD895@sol.localdomain>
+References: <000000000000f8a345058b046657@google.com>
+ <223AB0C9-D93E-4D3C-BBBB-4AF40D8EA436@redhat.com>
+ <20190702063140.GE3054@sol.localdomain>
+ <13A4AF36-1649-41C0-A789-DC35853D2FB1@redhat.com>
+ <20190702161110.GD895@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 02 Jul 2019 18:29:20 +0000 (UTC)
+Content-Type: text/plain; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 02 Jul 2019 18:29:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 18:21:13 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+On 2 Jul 2019, at 12:11, Eric Biggers wrote:
 
-> On Tue, Jul 02, 2019 at 05:10:29PM +0200, Jesper Dangaard Brouer wrote:
-> >On Tue, 2 Jul 2019 17:56:13 +0300
-> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >  
-> >> On Tue, Jul 02, 2019 at 04:52:30PM +0200, Jesper Dangaard Brouer wrote:  
-> >> >On Tue, 2 Jul 2019 17:44:27 +0300
-> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >> >  
-> >> >> On Tue, Jul 02, 2019 at 04:31:39PM +0200, Jesper Dangaard Brouer wrote:  
-> >> >> >From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >> >> >
-> >> >> >Jesper recently removed page_pool_destroy() (from driver invocation) and
-> >> >> >moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
-> >> >> >handle in-flight packets/pages. This created an asymmetry in drivers
-> >> >> >create/destroy pairs.
-> >> >> >
-> >> >> >This patch add page_pool user refcnt and reintroduce page_pool_destroy.
-> >> >> >This serves two purposes, (1) simplify drivers error handling as driver now
-> >> >> >drivers always calls page_pool_destroy() and don't need to track if
-> >> >> >xdp_rxq_info_reg_mem_model() was unsuccessful. (2) allow special cases
-> >> >> >where a single RX-queue (with a single page_pool) provides packets for two
-> >> >> >net_device'es, and thus needs to register the same page_pool twice with two
-> >> >> >xdp_rxq_info structures.  
-> >> >>
-> >> >> As I tend to use xdp level patch there is no more reason to mention (2) case
-> >> >> here. XDP patch serves it better and can prevent not only obj deletion but also
-> >> >> pool flush, so, this one patch I could better leave only for (1) case.  
-> >> >
-> >> >I don't understand what you are saying.
-> >> >
-> >> >Do you approve this patch, or do you reject this patch?
-> >> >  
-> >> It's not reject, it's proposition to use both, XDP and page pool patches,
-> >> each having its goal.  
-> >
-> >Just to be clear, if you want this patch to get accepted you have to
-> >reply with your Signed-off-by (as I wrote).
-> >
-> >Maybe we should discuss it in another thread, about why you want two
-> >solutions to the same problem.  
-> 
-> If it solves same problem I propose to reject this one and use this:
-> https://lkml.org/lkml/2019/7/2/651
+> On Tue, Jul 02, 2019 at 07:23:32AM -0400, Benjamin Coddington wrote:
+>> On 2 Jul 2019, at 2:31, Eric Biggers wrote:
+>>
+>>> On Tue, Jun 11, 2019 at 12:23:12PM -0400, Benjamin Coddington wrote:
+>>>> Ugh.. Now that you can cancel the wait, you have to also handle if
+>>>> "new" was
+>>>> allocated.  I think this needs:
+>>>>
+>>>> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+>>>> index d7e4f0848e28..4d90f5bf0b0a 100644
+>>>> --- a/fs/nfs/client.c
+>>>> +++ b/fs/nfs/client.c
+>>>> @@ -406,10 +406,10 @@ struct nfs_client *nfs_get_client(const 
+>>>> struct
+>>>> nfs_client_initdata *cl_init)
+>>>>                 clp = nfs_match_client(cl_init);
+>>>>                 if (clp) {
+>>>>                         spin_unlock(&nn->nfs_client_lock);
+>>>> -                       if (IS_ERR(clp))
+>>>> -                               return clp;
+>>>>                         if (new)
+>>>>                                 new->rpc_ops->free_client(new);
+>>>> +                       if (IS_ERR(clp))
+>>>> +                               return clp;
+>>>>                         return nfs_found_client(cl_init, clp);
+>>>>                 }
+>>>>                 if (new) {
+>>>>
+>>>> I'll patch/test and send it along.
+>>>>
+>>>> Ben
+>>>
+>>> Hi Ben, what happened to this patch?
+>>
+>> I sent it along:
+>>
+>> https://lore.kernel.org/linux-nfs/65b675cec79d140df64bc30def88b1def32bf87e.1560272160.git.bcodding@redhat.com/
+>>
+>> I don't think it will go in 5.2.. it's not a huge problem.
+>>
+>> Ben
+>
+> Okay, great.  I didn't see it in linux-next and there was no further 
+> reply to
+> this thread, which usually (having seen it happen on lots of syzbot 
+> bugs) means
+> the person forgot about it.
+>
+> Tip: you can use the '--in-reply-to=<MESSAGE_ID>' option to 'git 
+> send-email' or
+> 'git format-patch' to send the patch in response to the original 
+> thread, which
+> makes it very easy to see that a patch was actually sent out.
 
-No, I propose using this one, and rejecting the other one.
+Yep, that's nice for those following along, but sometimes I think that 
+makes
+it harder for the maintainers to scrape the patches off the list.  I've 
+had
+patches get dropped that were buried at the end of a long discussion, so
+I've made a habit of always making patches the top.
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Ben
