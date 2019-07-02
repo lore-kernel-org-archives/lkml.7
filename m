@@ -2,88 +2,109 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3A2C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE04C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE8A206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B3A21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Da1vGZYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfGBN7B (ORCPT
+        id S1726967AbfGBOC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:59:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48450 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726963AbfGBN7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:59:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 057A4AFC3;
-        Tue,  2 Jul 2019 13:58:59 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Ilya Dryomov" <idryomov@gmail.com>, "Sage Weil" <sage@redhat.com>,
-        "Zheng Yan" <zyan@redhat.com>, "zhengbin" <zhengbin13@huawei.com>,
-        <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ceph: fix end offset in truncate_inode_pages_range call
-References: <20190701171634.20290-1-lhenriques@suse.com>
-        <85689b9674e96c15602f6a1829142273868250df.camel@kernel.org>
-Date:   Tue, 02 Jul 2019 14:58:57 +0100
-In-Reply-To: <85689b9674e96c15602f6a1829142273868250df.camel@kernel.org> (Jeff
-        Layton's message of "Tue, 02 Jul 2019 09:48:16 -0400")
-Message-ID: <87y31g7d26.fsf@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 2 Jul 2019 10:02:26 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45021 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfGBOC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:02:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so3069516pgl.11;
+        Tue, 02 Jul 2019 07:02:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=2rKTJik0bNrJcZfdY1VXO0Y12wZ+rcUxHFgolJg0Bi0=;
+        b=Da1vGZYhN+2O3HqnlZp780wKxET6aFyhHJqF8YuGzSU1pCYGwypekf40WmSCXWoY0B
+         GcuvasW+OWm6p5Iw1KN0AvSeCAujDcLzs+vYNG9j2AqwF/DF32JSQhnFTur2qOBotwla
+         S5sb6M7XDCKzuiWVpxNzh5tVTt6/Wjw67XJKEdk9Ykr99CMaKfoE2hb4Aa2IUf7xeL49
+         lW7ca7Qb+xXrhgHMyHk7qFUCkPfC65Sc9O+e9A1lK1HFgLSpcAxDsryVbh+cSf5ysLTK
+         C8ApVpNi4d4HF5AZE9AWODuJiOp/U862aVVYDhOkqG5oZfaeNPNaS1AZ52b1Ag0MnWjM
+         ja4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=2rKTJik0bNrJcZfdY1VXO0Y12wZ+rcUxHFgolJg0Bi0=;
+        b=RYO8ffNGlFoitbrIJgLXnLHBqALQXXEjC4vD4UaSMrFakkz0fd253y2N4nzWZdp+wI
+         tcRvhkwknPBVCrD78Y0omarPCbFsAONCnI1bCah4bA2EkBRWFApasD6uWi6MiQqLVVAe
+         jMMo93mUN2ChHEBkQZu63Q7eTNO4Es9hOaMutsYw5vA7p2ubM/ZYnuYNBXFb+gYd0DAB
+         J9u1mPtOoYPvvqvc/WLldi7aLb2d/F36naBv/0udSI+KCqMg6lK1XpZzYg8C2llDuxeP
+         t4hP0T493tm1Achy8WDygIJ65POhFnhcPrvT/Tl3Om6CDxzc6NFrmQDD9evnVZOYFvL3
+         7mjQ==
+X-Gm-Message-State: APjAAAWpDOCc30hjMdzslVTUCx3CCbpaL9KLaqzz34DCfYYsmYvHcfD5
+        Ku8WW4J/bsxQ0Ca9fUc2HeU=
+X-Google-Smtp-Source: APXvYqzM/ofHTj8Se67LGNZ4KP+h+Rm8WYTXnfvZFHewiHXWwm9hMzAV+SOpR8z/M8dW6iGAvuCVAA==
+X-Received: by 2002:a17:90a:ca0f:: with SMTP id x15mr5696221pjt.82.1562076145506;
+        Tue, 02 Jul 2019 07:02:25 -0700 (PDT)
+Received: from debian.net.fpt ([2405:4800:58f7:57a9:d288:4a68:7763:f51e])
+        by smtp.gmail.com with ESMTPSA id j2sm16587685pfn.135.2019.07.02.07.02.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 07:02:24 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
+        andreyknvl@google.com, hans.verkuil@cisco.com, mchehab@kernel.org,
+        skhan@linuxfoundation.org, gregkh@linuxfoundation.org
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] media: usb: technisat-usb2: fix buffer overflow
+Date:   Tue,  2 Jul 2019 21:02:11 +0700
+Message-Id: <20190702140211.28399-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <000000000000089d7f058683115e@google.com>
+References: <000000000000089d7f058683115e@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Jeff Layton" <jlayton@kernel.org> writes:
+The buffer will be overflow in case of the while loop can not break.
+Add the checking buffer condition in while loop for avoiding
+overlooping index.
 
-> On Mon, 2019-07-01 at 18:16 +0100, Luis Henriques wrote:
->> Commit e450f4d1a5d6 ("ceph: pass inclusive lend parameter to
->> filemap_write_and_wait_range()") fixed the end offset parameter used to
->> call filemap_write_and_wait_range and invalidate_inode_pages2_range.
->> Unfortunately it missed truncate_inode_pages_range, introducing a
->> regression that is easily detected by xfstest generic/130.
->> 
->> The problem is that when doing direct IO it is possible that an extra page
->> is truncated from the page cache when the end offset is page aligned.
->> This can cause data loss if that page hasn't been sync'ed to the OSDs.
->> 
->> While there, change code to use PAGE_ALIGN macro instead.
->> 
->> Fixes: e450f4d1a5d6 ("ceph: pass inclusive lend parameter to filemap_write_and_wait_range()")
->> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> ---
->>  fs/ceph/file.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
->> index 183c37c0a8fc..7a57db8e2fa9 100644
->> --- a/fs/ceph/file.c
->> +++ b/fs/ceph/file.c
->> @@ -1007,7 +1007,7 @@ ceph_direct_read_write(struct kiocb *iocb, struct iov_iter *iter,
->>  			 * may block.
->>  			 */
->>  			truncate_inode_pages_range(inode->i_mapping, pos,
->> -					(pos+len) | (PAGE_SIZE - 1));
->> +						   PAGE_ALIGN(pos + len) - 1);
->>  
->>  			req->r_mtime = mtime;
->>  		}
->
-> Luis, should this be sent to stable? It seems like a data corruption
-> problem...
+This issue was reported by syzbot
 
-Yes, I believe so.  But I believe all the active stable kernels that
-include commit e450f4d1a5d6 (or a backport of it) will pick it anyway
-due to the 'Fixes:' tag.  AFAIK only 5.1 and 5.2 are affected.
+Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
 
-Cheers,
+Tested by:
+https://groups.google.com/d/msg/syzkaller-bugs/CySBCKuUOOs/0hKq1CdjCwAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ drivers/media/usb/dvb-usb/technisat-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
+index c659e18b358b..4e0b6185666a 100644
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -655,7 +655,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ #endif
+ 
+ 	ev.pulse = 0;
+-	while (1) {
++	while (b != (buf + 63)) {
+ 		ev.pulse = !ev.pulse;
+ 		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+ 		ir_raw_event_store(d->rc_dev, &ev);
 -- 
-Luis
+2.11.0
+
