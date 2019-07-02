@@ -2,296 +2,307 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F50C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36353C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A342089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6E720836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IB819Vhu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eacPMb3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfGBJGQ (ORCPT
+        id S1727127AbfGBJHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:06:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53418 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGBJGP (ORCPT
+        Tue, 2 Jul 2019 05:07:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35149 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfGBJHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:06:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0nFUY5hBWQnU/0KnaaTSzDpQTbifXBGeCvPBpM47RMU=; b=IB819VhuQOZh+ELa6mJi43ZtA
-        6eE+LHayKMacsMlm+kt496BsmYcJC+iyFPKCvOAMpy2JFq16y8Whmiox39Poa5h8yvFz7Ea2kccNx
-        eBRVNtAf+MLK0puRS65nvll38+b6tB75QDOMVEVTEhZr9OudRR6n4Sk7k8ebH2/Udl7Wsw08vbhAd
-        9jaP6CLB1tnp2OzVXONjK3stkLEmdpPGuGDxgdCl/+TcOqfPo38syxTVN8YsrKOLHdq6zZKF/Cbkg
-        dw2yboYUWF7nmWAKo1gf0RZVYN/EbS9vtRg5GeO+vaAIqirvy6bzSeZEUrTVEkiKxnsvVKU9+6m0h
-        Q3OmiMxIQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiEjq-0004Xc-Vm; Tue, 02 Jul 2019 09:06:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A07252021E58F; Tue,  2 Jul 2019 11:06:08 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 11:06:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     syzbot <syzbot+8cc1843d4eec9c0dfb35@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, avagin@gmail.com, davem@davemloft.net,
-        ebiederm@xmission.com, linux-kernel@vger.kernel.org,
-        oleg@redhat.com, prsood@codeaurora.org,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: INFO: task hung in exit_mm
-Message-ID: <20190702090608.GA3419@hirez.programming.kicks-ass.net>
-References: <000000000000a193aa058c9a6499@google.com>
- <20190701171412.d0c69b9d1657bf632f44e6de@linux-foundation.org>
+        Tue, 2 Jul 2019 05:07:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c6so107463wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 02:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V4HxjVvwI55coPU+osq21qWtWbtvr2h0ZIAaAI4JjGc=;
+        b=eacPMb3RtzXRp0MoZuWr+7eXy8QPTEQUq8PzIf4QEBQB6z/a9RyRz4oZQMpc8ucKbb
+         8N/OCmMMFbtAStQng3VxWPIUI8ToXUBzNpWT0m4ldAx4DFUhpC/gujPXqTrx2W0hO500
+         2Q911NwCnUViWlewXOykBBvnLyfnZQQf1axOcn5ggoVomi5YHcOvkQvohaaN+WSqpeem
+         RY7525xh3th6HNIFxZMRkfozh5fGl+9pI9LGhzicDPoUDnqSjwJerulSv3n5mWeR1YUz
+         MVCg+Q1nQLPqA58SV5IZbX+KN5aGux/PZkAIbbx3m1tEzBNadIwaMoF35DtReDLGAn04
+         FVDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=V4HxjVvwI55coPU+osq21qWtWbtvr2h0ZIAaAI4JjGc=;
+        b=ZIG34K9e+f9vP7iXnwXRx+3iINaqHRW6E0SFVJ9h0jrtSLHsZXTLekHypiQzQtL0Yf
+         brTdwIeDeS6wJxuzAHItCGqoFSs4EcRHbiCby+0Vr1EI/a6kkpC0gAxYI5NZ6b+McWpA
+         zDqT5TjLRHgHyKuU7PIAN9nK1NYVcGVx/VubZiG0vdxlFG6QbEO0ZPQJU6f75iGm9yLx
+         tZxP85CPeBF1RNiwcq1vrpt0nqfANz5qIqjxfxfTB87Dnncri5ffss+JaPvyMUcvtHC1
+         FLlt4j56Iyvks81k5FmUPBxJX3KwE6nfJzGkw65CbcKrW1L0p+2syQOmzhYfeWt4A1Ls
+         EATA==
+X-Gm-Message-State: APjAAAVmOTJBdQOWIt/BLnbSPt4k5g4f7mQ21jqMV76FkZQu7PuMn1ya
+        vmP0VLSbGoLCD1HrUloQHvyUOQ==
+X-Google-Smtp-Source: APXvYqyn3uOazHwJTQdZXGCSxlU7zGJstVqFVi8qJ6rrSXzE+pfr7rjZWbLXpcnnEWduyGPZuMOtFw==
+X-Received: by 2002:a1c:407:: with SMTP id 7mr2808751wme.113.1562058463367;
+        Tue, 02 Jul 2019 02:07:43 -0700 (PDT)
+Received: from [192.168.0.41] (132.97.130.77.rev.sfr.net. [77.130.97.132])
+        by smtp.googlemail.com with ESMTPSA id u1sm2426957wml.14.2019.07.02.02.07.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:07:42 -0700 (PDT)
+Subject: Re: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting
+ clock frequency from DT
+To:     Anson Huang <anson.huang@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <20190702075513.17451-1-Anson.Huang@nxp.com>
+ <c7ff76e5-d73d-e71e-c3f4-445bdd2c5b93@linaro.org>
+ <DB3PR0402MB39166F04BAF9BA9D6C75B3A8F5F80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0540a255-93e5-d68f-5bf5-31f9043fb3ad@linaro.org>
+Date:   Tue, 2 Jul 2019 11:07:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701171412.d0c69b9d1657bf632f44e6de@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <DB3PR0402MB39166F04BAF9BA9D6C75B3A8F5F80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 05:14:12PM -0700, Andrew Morton wrote:
-> On Mon, 01 Jul 2019 01:27:04 -0700 syzbot <syzbot+8cc1843d4eec9c0dfb35@syzkaller.appspotmail.com> wrote:
+On 02/07/2019 11:03, Anson Huang wrote:
+> Hi, Daniel
 > 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
+>> Hi Anson,
+>>
+>> why did you resend the series?
 > 
-> At a guess I'd say that perf_mmap() hit a deadlock on event->mmap_mutex
-> while holding down_write(mmap_sem) (via vm_mmap_pgoff).  The
-> down_read(mmap_sem) in do_exit() happened to stumble across this and
-> that's what got reported.
+> Previous patch series has build warning and I did NOT notice, sorry for that,
+> 
+> drivers/clocksource/timer-of.c: In function ‘timer_of_init’:
+> drivers/clocksource/timer-of.c:185:30: warning: suggest parentheses around comparison in operand of ‘&’ [-Wparentheses]
+>   if (to->flags & clock_flags == clock_flags)
+>                               ^
+> 
+> so I resend the patch series with below, sorry for missing mention of the changes in resent patch series.
+> 
+>  +	if ((to->flags & clock_flags) == clock_flags)
+> 
+> Sorry for mail storm...
 
-lockdep never reported that and I don't see event->mmap_mutex being held
-anywhere.
+No problem at all, I prefer this caught and fixed early :)
 
-AFAICT CPU0 is running 8355 and only 'has' mmap_sem -- it's blocked
-waiting to acquire.
+Next time just send a V5 because 'resend' means there is no change but
+there was a problem with the email (could be also interpreted as a
+gentle ping).
 
-CPU1 is running 8354 and has mmap_sem and is waiting to acquire
-event->mmap_mutex.
+>> On 02/07/2019 09:55, Anson.Huang@nxp.com wrote:
+>>> From: Anson Huang <Anson.Huang@nxp.com>
+>>>
+>>> More and more platforms use platform driver model for clock driver, so
+>>> the clock driver is NOT ready during timer initialization phase, it
+>>> will cause timer initialization failed.
+>>>
+>>> To support those platforms with upper scenario, introducing a new flag
+>>> TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
+>>> TIMER_OF_CLOCK flag to support getting timer clock frequency from DT's
+>>> timer node, the property name should be "clock-frequency", then of_clk
+>>> operations can be skipped.
+>>>
+>>> User needs to select either TIMER_OF_CLOCK_FREQUENCY or
+>> TIMER_OF_CLOCK
+>>> flag if want to use timer-of driver to initialize the clock rate.
+>>>
+>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>> ---
+>>> Changes since V3:
+>>> 	- use hardcoded "clock-frequency" instead of adding new variable
+>> prop_name;
+>>> 	- add pre-condition check for TIMER_OF_CLOCK and
+>> TIMER_OF_CLOCK_FREQUENCY, they MUST be exclusive.
+>>> ---
+>>>  drivers/clocksource/timer-of.c | 29 +++++++++++++++++++++++++++++
+>>> drivers/clocksource/timer-of.h |  7 ++++---
+>>>  2 files changed, 33 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/clocksource/timer-of.c
+>>> b/drivers/clocksource/timer-of.c index 8054228..858f684 100644
+>>> --- a/drivers/clocksource/timer-of.c
+>>> +++ b/drivers/clocksource/timer-of.c
+>>> @@ -161,11 +161,30 @@ static __init int timer_of_base_init(struct
+>> device_node *np,
+>>>  	return 0;
+>>>  }
+>>>
+>>> +static __init int timer_of_clk_frequency_init(struct device_node *np,
+>>> +					      struct of_timer_clk *of_clk) {
+>>> +	int ret;
+>>> +	u32 rate;
+>>> +
+>>> +	ret = of_property_read_u32(np, "clock-frequency", &rate);
+>>> +	if (!ret) {
+>>> +		of_clk->rate = rate;
+>>> +		of_clk->period = DIV_ROUND_UP(rate, HZ);
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>>  int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>>> {
+>>> +	unsigned long clock_flags = TIMER_OF_CLOCK |
+>>> +TIMER_OF_CLOCK_FREQUENCY;
+>>>  	int ret = -EINVAL;
+>>>  	int flags = 0;
+>>>
+>>> +	if ((to->flags & clock_flags) == clock_flags)
+>>> +		return ret;
+>>> +
+>>>  	if (to->flags & TIMER_OF_BASE) {
+>>>  		ret = timer_of_base_init(np, &to->of_base);
+>>>  		if (ret)
+>>> @@ -180,6 +199,13 @@ int __init timer_of_init(struct device_node *np,
+>> struct timer_of *to)
+>>>  		flags |= TIMER_OF_CLOCK;
+>>>  	}
+>>>
+>>> +	if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
+>>> +		ret = timer_of_clk_frequency_init(np, &to->of_clk);
+>>> +		if (ret)
+>>> +			goto out_fail;
+>>> +		flags |= TIMER_OF_CLOCK_FREQUENCY;
+>>> +	}
+>>> +
+>>>  	if (to->flags & TIMER_OF_IRQ) {
+>>>  		ret = timer_of_irq_init(np, &to->of_irq);
+>>>  		if (ret)
+>>> @@ -201,6 +227,9 @@ int __init timer_of_init(struct device_node *np,
+>> struct timer_of *to)
+>>>  	if (flags & TIMER_OF_CLOCK)
+>>>  		timer_of_clk_exit(&to->of_clk);
+>>>
+>>> +	if (flags & TIMER_OF_CLOCK_FREQUENCY)
+>>> +		to->of_clk.rate = 0;
+>>> +
+>>>  	if (flags & TIMER_OF_BASE)
+>>>  		timer_of_base_exit(&to->of_base);
+>>>  	return ret;
+>>> diff --git a/drivers/clocksource/timer-of.h
+>>> b/drivers/clocksource/timer-of.h index a5478f3..a08e108 100644
+>>> --- a/drivers/clocksource/timer-of.h
+>>> +++ b/drivers/clocksource/timer-of.h
+>>> @@ -4,9 +4,10 @@
+>>>
+>>>  #include <linux/clockchips.h>
+>>>
+>>> -#define TIMER_OF_BASE	0x1
+>>> -#define TIMER_OF_CLOCK	0x2
+>>> -#define TIMER_OF_IRQ	0x4
+>>> +#define TIMER_OF_BASE			0x1
+>>> +#define TIMER_OF_CLOCK			0x2
+>>> +#define TIMER_OF_IRQ			0x4
+>>> +#define TIMER_OF_CLOCK_FREQUENCY	0x8
+>>>
+>>>  struct of_timer_irq {
+>>>  	int irq;
 
-But nobody is actually owning it
 
-We take mmap_mutex in:
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-  perf_mmap() - called with mmap_sem held
-  perf_mmap_close() - called with mmap_sem held
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-  _free_event() - no faults/mmap while holding it
-  perf_poll() - idem
-  perf_event_set_output() - idem
-
-I don't see any of those functions in the below stacktrace, and having
-just looked them over, I don't see how they would end up trying to
-acquire mmap_sem and AB-BA.
-
-Now, clearly there's something screwy, but I'm not seeing a deadlock.
-Let me go play with that reproducer.
-
-> > HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1306be61a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=8cc1843d4eec9c0dfb35
-> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a85379a00000
-> > 
-> > Bisection is inconclusive: the bug happens on the oldest tested release.
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119f6249a00000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=139f6249a00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=159f6249a00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+8cc1843d4eec9c0dfb35@syzkaller.appspotmail.com
-> > 
-> > INFO: task syz-executor.0:8352 blocked for more than 143 seconds.
-> >        Not tainted 5.2.0-rc6+ #7
-> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > syz-executor.0  D24576  8352   8340 0x80004000
-> > Call Trace:
-> >   context_switch kernel/sched/core.c:2818 [inline]
-> >   __schedule+0x658/0x9e0 kernel/sched/core.c:3445
-> >   schedule+0x131/0x1d0 kernel/sched/core.c:3509
-> >   __rwsem_down_read_failed_common+0x345/0x790 kernel/locking/rwsem-xadd.c:495
-> >   rwsem_down_read_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:515
-> >   __down_read+0x72/0x1a0 kernel/locking/rwsem.h:178
-> >   down_read+0x45/0x50 kernel/locking/rwsem.c:26
-> >   exit_mm+0xdb/0x630 kernel/exit.c:513
-> >   do_exit+0x5c3/0x2300 kernel/exit.c:864
-> >   do_group_exit+0x15c/0x2a0 kernel/exit.c:981
-> >   __do_sys_exit_group+0x17/0x20 kernel/exit.c:992
-> >   __se_sys_exit_group+0x14/0x20 kernel/exit.c:990
-> >   __x64_sys_exit_group+0x3b/0x40 kernel/exit.c:990
-> >   do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x459519
-> > Code: Bad RIP value.
-> > RSP: 002b:00007ffdb1483048 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> > RAX: ffffffffffffffda RBX: 000000000000001e RCX: 0000000000459519
-> > RDX: 0000000000413201 RSI: fffffffffffffff7 RDI: 0000000000000000
-> > RBP: 0000000000000000 R08: ffffffffffffffff R09: 00007ffdb14830a0
-> > R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000001
-> > R13: 00007ffdb14830a0 R14: 0000000000000000 R15: 00007ffdb14830b0
-> > INFO: task syz-executor.0:8355 blocked for more than 143 seconds.
-> >        Not tainted 5.2.0-rc6+ #7
-> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > syz-executor.0  D25512  8355   8340 0x80004000
-> > Call Trace:
-> >   context_switch kernel/sched/core.c:2818 [inline]
-> >   __schedule+0x658/0x9e0 kernel/sched/core.c:3445
-> >   schedule+0x131/0x1d0 kernel/sched/core.c:3509
-> >   __rwsem_down_read_failed_common+0x345/0x790 kernel/locking/rwsem-xadd.c:495
-> >   rwsem_down_read_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:515
-> >   __down_read+0x72/0x1a0 kernel/locking/rwsem.h:178
-> >   down_read+0x45/0x50 kernel/locking/rwsem.c:26
-> >   exit_mm+0xdb/0x630 kernel/exit.c:513
-> >   do_exit+0x5c3/0x2300 kernel/exit.c:864
-> >   do_group_exit+0x15c/0x2a0 kernel/exit.c:981
-> >   get_signal+0x6df/0x21f0 kernel/signal.c:2640
-> >   do_signal+0x7b/0x750 arch/x86/kernel/signal.c:815
-> >   exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
-> >   prepare_exit_to_usermode+0x2f5/0x4f0 arch/x86/entry/common.c:199
-> >   syscall_return_slowpath+0x110/0x440 arch/x86/entry/common.c:279
-> >   do_syscall_64+0x126/0x140 arch/x86/entry/common.c:304
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x459519
-> > Code: Bad RIP value.
-> > RSP: 002b:00007f33b051bcf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-> > RAX: fffffffffffffe00 RBX: 000000000075bfd0 RCX: 0000000000459519
-> > RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000075bfd0
-> > RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bfd4
-> > R13: 00007ffdb1482e3f R14: 00007f33b051c9c0 R15: 000000000075bfd4
-> > 
-> > Showing all locks held in the system:
-> > 1 lock held by khungtaskd/1043:
-> >   #0: 000000004a05a158 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30  
-> > include/linux/rcupdate.h:207
-> > 1 lock held by rsyslogd/7880:
-> >   #0: 00000000946eafbf (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2e0  
-> > fs/file.c:801
-> > 2 locks held by getty/7970:
-> >   #0: 00000000837c576c (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 000000008890c3b0 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7971:
-> >   #0: 00000000b66a4c98 (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 00000000d588511a (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7972:
-> >   #0: 00000000881b5f61 (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 00000000343a7af4 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7973:
-> >   #0: 000000009862f21e (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 0000000033c60fb7 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7974:
-> >   #0: 00000000b1abdc0b (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 0000000040853254 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7975:
-> >   #0: 00000000fff02dba (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 0000000036cfe603 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 2 locks held by getty/7976:
-> >   #0: 0000000059ae43cb (&tty->ldisc_sem){++++}, at:  
-> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
-> >   #1: 0000000032d54919 (&ldata->atomic_read_lock){+.+.}, at:  
-> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
-> > 1 lock held by syz-executor.0/8352:
-> >   #0: 0000000049c5e979 (&mm->mmap_sem#2){++++}, at: exit_mm+0xdb/0x630  
-> > kernel/exit.c:513
-> > 2 locks held by syz-executor.0/8354:
-> > 1 lock held by syz-executor.0/8355:
-> >   #0: 0000000049c5e979 (&mm->mmap_sem#2){++++}, at: exit_mm+0xdb/0x630  
-> > kernel/exit.c:513
-> > 
-> > =============================================
-> > 
-> > NMI backtrace for cpu 1
-> > CPU: 1 PID: 1043 Comm: khungtaskd Not tainted 5.2.0-rc6+ #7
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-> >   nmi_cpu_backtrace+0x89/0x160 lib/nmi_backtrace.c:101
-> >   nmi_trigger_cpumask_backtrace+0x125/0x230 lib/nmi_backtrace.c:62
-> >   arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-> >   trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
-> >   check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-> >   watchdog+0xbb9/0xbd0 kernel/hung_task.c:289
-> >   kthread+0x325/0x350 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Sending NMI from CPU 1 to CPUs 0:
-> > NMI backtrace for cpu 0
-> > CPU: 0 PID: 8354 Comm: syz-executor.0 Not tainted 5.2.0-rc6+ #7
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > RIP: 0010:lock_is_held_type+0x26c/0x2b0 kernel/locking/lockdep.c:4346
-> > Code: c7 c7 90 63 aa 88 e8 43 4a 54 00 48 83 3d 9b d2 4f 07 00 74 56 4c 89  
-> > e7 57 9d 0f 1f 44 00 00 89 d8 48 83 c4 28 5b 41 5c 41 5d <41> 5e 41 5f 5d  
-> > c3 44 89 e9 80 e1 07 80 c1 03 38 c1 7c a8 4c 89 ef
-> > RSP: 0018:ffff8880a4d87708 EFLAGS: 00000296
-> > RAX: 0000000000000000 RBX: ffff88809f0c6040 RCX: 1ffff110149b0f10
-> > RDX: dffffc0000000000 RSI: ffff88809f0c68e0 RDI: 0000000000000286
-> > RBP: ffff8880a4d87718 R08: ffffffff818fd4ed R09: 0000000000000000
-> > R10: ffffed101155a22f R11: 1ffff1101155a22e R12: 0000000000000000
-> > R13: 1ffff11013e18c0a R14: dffffc0000000000 R15: 1ffff11013e18d17
-> > FS:  00007f33b053d700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 00000000941bd000 CR4: 00000000001406f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >   lock_is_held include/linux/lockdep.h:356 [inline]
-> >   ___might_sleep+0x84/0x530 kernel/sched/core.c:6103
-> >   __might_sleep+0x8f/0x100 kernel/sched/core.c:6091
-> >   __mutex_lock_common+0xc8/0x2fc0 kernel/locking/mutex.c:909
-> >   __mutex_lock kernel/locking/mutex.c:1073 [inline]
-> >   mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1088
-> >   perf_mmap+0x76d/0x16c0 kernel/events/core.c:5672
-> >   call_mmap include/linux/fs.h:1877 [inline]
-> >   mmap_region+0x186d/0x1d80 mm/mmap.c:1788
-> >   do_mmap+0x9de/0x1010 mm/mmap.c:1561
-> >   do_mmap_pgoff include/linux/mm.h:2402 [inline]
-> >   vm_mmap_pgoff+0x190/0x240 mm/util.c:363
-> >   ksys_mmap_pgoff+0x4ed/0x5f0 mm/mmap.c:1611
-> >   __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
-> >   __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
-> >   __x64_sys_mmap+0x103/0x120 arch/x86/kernel/sys_x86_64.c:91
-> >   do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x459519
-> > Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-> > ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f33b053cc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-> > RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000459519
-> > RDX: 0000000000000000 RSI: 0000000000003000 RDI: 0000000020ffd000
-> > RBP: 000000000075bf20 R08: 0000000000000003 R09: 0000000000000000
-> > R10: 0080000000000011 R11: 0000000000000246 R12: 00007f33b053d6d4
-> > R13: 00000000004c5822 R14: 00000000004d9ed8 R15: 00000000ffffffff
