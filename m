@@ -2,53 +2,53 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02663C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7670C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF143205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1917205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055201;
-	bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
+	s=default; t=1562055214;
+	bh=LoOKtAgepXKzWcYBQN33AmbiFaYTUFQBsBgFCyk3CbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19iSqtOwUKem+5wwlNS20nqfWqElbt0lhVEhNgCibLQZ4KYgxGIRs9kubzhKAH8WY
-	 ISJdxJYyoO5ypPfS0UiL6A5j9Ov7SXEQUZE0PcAHK+HzOjvXbQv1s+mbiT6qkj8yl8
-	 dMOLXdHuC0f4EnmB2T1TZ72dlnFwtSRqWsxpXqFE=
+	b=FYxm1FJeYcr/5bI0qSZYl5hyeKkduykfS0ZH1cKSCtO/b/kTbKSgou6YwQUukbWK/
+	 +3dwAo1huZ7w8KijSypPyp1ZG92TvBP/u8gCfhLsYNkWgQKcVqzCVuzWqtfIQICINN
+	 1TLzt6+E9LRhZLJiXfhmJIu/M1pYvELGyc0eFNpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfGBINU (ORCPT
+        id S1728236AbfGBIHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbfGBIHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:55 -0400
+        id S1727601AbfGBIHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE7A721479;
-        Tue,  2 Jul 2019 08:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F09A2206A2;
+        Tue,  2 Jul 2019 08:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054874;
-        bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
+        s=default; t=1562054832;
+        bh=LoOKtAgepXKzWcYBQN33AmbiFaYTUFQBsBgFCyk3CbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2KCTUyzzqi2PwfnrwS2YWXwVInJucHXVfwdM0k81e7jOxQVITXpJA0gbbiwjo924
-         uSphx3XFEF0ibM3Af6YpqFtRQJ6QLqQsNT4UraWrABYLhmZ52aOkwhcCCMoSr5tjWF
-         XCKrZURTY8NU4mkCp6nZwQENJ6wicFHvcqUNfBRM=
+        b=zyJqFeMD66JVj1BEPbpuz8iMaoPZOqB7UHrIbRC7pP8xDTlQk2iG8gxXVIgzgoW3m
+         bUOxlVHpvqHaFzQPQkw89qfH8BCMV9aYdD7c/KD0X+q2MoXyeTlQRyMd/LbMAlj0b2
+         N80SqAxABiKNFFMcVG/aghOM/xRxiKw/vQcOFJ5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 60/72] tipc: check msg->req data len in tipc_nl_compat_bearer_disable
-Date:   Tue,  2 Jul 2019 10:02:01 +0200
-Message-Id: <20190702080127.737966746@linuxfoundation.org>
+        =?UTF-8?q?Adeodato=20Sim=C3=B3?= <dato@net.com.org.es>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 21/72] net/9p: include trans_common.h to fix missing prototype warning.
+Date:   Tue,  2 Jul 2019 10:01:22 +0200
+Message-Id: <20190702080125.769419227@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -61,88 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+[ Upstream commit 52ad259eaac0454c1ac7123e7148cf8d6e6f5301 ]
 
-[ Upstream commit 4f07b80c973348a99b5d2a32476a2e7877e94a05 ]
+This silences -Wmissing-prototypes when defining p9_release_pages.
 
-This patch is to fix an uninit-value issue, reported by syzbot:
-
-  BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:981
-  Call Trace:
-    __dump_stack lib/dump_stack.c:77 [inline]
-    dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-    kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-    __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-    memchr+0xce/0x110 lib/string.c:981
-    string_is_valid net/tipc/netlink_compat.c:176 [inline]
-    tipc_nl_compat_bearer_disable+0x2a1/0x480 net/tipc/netlink_compat.c:449
-    __tipc_nl_compat_doit net/tipc/netlink_compat.c:327 [inline]
-    tipc_nl_compat_doit+0x3ac/0xb00 net/tipc/netlink_compat.c:360
-    tipc_nl_compat_handle net/tipc/netlink_compat.c:1178 [inline]
-    tipc_nl_compat_recv+0x1b1b/0x27b0 net/tipc/netlink_compat.c:1281
-
-TLV_GET_DATA_LEN() may return a negtive int value, which will be
-used as size_t (becoming a big unsigned long) passed into memchr,
-cause this issue.
-
-Similar to what it does in tipc_nl_compat_bearer_enable(), this
-fix is to return -EINVAL when TLV_GET_DATA_LEN() is negtive in
-tipc_nl_compat_bearer_disable(), as well as in
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-
-v1->v2:
-  - add the missing Fixes tags per Eric's request.
-
-Fixes: 0762216c0ad2 ("tipc: fix uninit-value in tipc_nl_compat_bearer_enable")
-Fixes: 8b66fee7f8ee ("tipc: fix uninit-value in tipc_nl_compat_link_reset_stats")
-Reported-by: syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/b1c4df8f21689b10d451c28fe38e860722d20e71.1542089696.git.dato@net.com.org.es
+Signed-off-by: Adeodato Simó <dato@net.com.org.es>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/9p/trans_common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -445,7 +445,11 @@ static int tipc_nl_compat_bearer_disable
- 	if (!bearer)
- 		return -EMSGSIZE;
+diff --git a/net/9p/trans_common.c b/net/9p/trans_common.c
+index b718db2085b2..3dff68f05fb9 100644
+--- a/net/9p/trans_common.c
++++ b/net/9p/trans_common.c
+@@ -14,6 +14,7 @@
  
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
+ #include <linux/mm.h>
+ #include <linux/module.h>
++#include "trans_common.h"
  
-@@ -537,7 +541,11 @@ static int tipc_nl_compat_link_stat_dump
- 
- 	name = (char *)TLV_DATA(msg->req);
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -815,7 +823,11 @@ static int tipc_nl_compat_link_reset_sta
- 	if (!link)
- 		return -EMSGSIZE;
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
+ /**
+  *  p9_release_pages - Release pages after the transaction.
+-- 
+2.20.1
+
 
 
