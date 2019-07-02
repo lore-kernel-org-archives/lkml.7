@@ -4,60 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AF9C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237CCC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579A9208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E01208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562072713;
-	bh=tccxaV4NKvFoM/IOK/V+VkCHSJMd0PgS6CBM5zxuLVQ=;
+	s=default; t=1562072720;
+	bh=xeUCCAuI8XFlgnMuuNWMEjcZqnk87LzbxBcEjd+qNSU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2U3JWbs/RKnAVlBLAMLNYOTLzXXO5QpgBUCOHMvWE+qGKOArUFITG0Guhp6BgUihY
-	 0jA9x6lvYwgfB4/9zLkU60RVmIcAqsXumiL3Z1PkgDqtlQhA51jNDiA+V3qzCW8JwB
-	 uCy9LYcka5zPT2d8GnpntB59dXtNZkfjdoTh9mk4=
+	b=wdDxkj89985zzaMGQ8Vo6+WGx2qpUwR/T9E63AfZDYLXy+gQLgoGPPVgPmG4oPNJW
+	 fQ9IyEoMiv5E33Ex/Gr+5f1JKa1qjktNz86a2B7cYvDKGKnLYJLHjPxSpWxl/3CTCq
+	 T3JD7GT/sLSsAWf189j0RZ8paCESD3dIJGu86KrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfGBNFM (ORCPT
+        id S1727212AbfGBNFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:05:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40458 "EHLO
+        Tue, 2 Jul 2019 09:05:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40304 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfGBNE6 (ORCPT
+        with ESMTP id S1727033AbfGBNEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:04:58 -0400
+        Tue, 2 Jul 2019 09:04:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=JZq94gVIt9OPiVxwVhfvMyRq1d3OQdO0lv56n1fIsjc=; b=EMBcbEPBSq8o
-        hdUjNnoxW33yRHf9zmJfoX3ct4oTDoxdyITuD0Clwqjf8jaRnpJZ3BJHETs9KXk/fW8HR+Q54S8AI
-        r8azab9HKgiC08jnSKKRLFvI4MV9QB4RJJ0NnZPRBDNRthSQ6SQJ2IGtJKuwl58ybyGlPklM/bY2a
-        iy0G8=;
+        List-Archive; bh=J6di5hKSvm2U7x0iTDHc1tDKkTElop7GVRgvSTGDsGY=; b=X0Dz1xWmCu7M
+        icmPZahvfRBHoQss9hogkiOZ51LLsy/GGpcOfkGTHDIiBWOl0lmSZx96E8XUAKiUfNVhAwE0ZkVhN
+        Vh9bHqIoB0jtNmUoQ6WxouzbOBThgV7KcdzormDc8LEV6EPjqD952mmmry3TmNkAvC5FSjXQVwi14
+        M2w4o=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hiISm-0002O1-Ii; Tue, 02 Jul 2019 13:04:48 +0000
+        id 1hiISm-0002O3-Si; Tue, 02 Jul 2019 13:04:48 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 1B37D440046; Tue,  2 Jul 2019 14:04:48 +0100 (BST)
+        id 51BF944004A; Tue,  2 Jul 2019 14:04:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     alexandre.torgue@st.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, fabrice.gasnier@st.com,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org
-Subject: Applied "dt-bindings: regulator: add support for the stm32-booster" to the regulator tree
-In-Reply-To: <1561968865-22037-2-git-send-email-fabrice.gasnier@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>
+Subject: Applied "regulator: s2mps11: Adjust supported buck voltages to real values" to the regulator tree
+In-Reply-To: <20190629114446.11381-2-krzk@kernel.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190702130448.1B37D440046@finisterre.sirena.org.uk>
+Message-Id: <20190702130448.51BF944004A@finisterre.sirena.org.uk>
 Date:   Tue,  2 Jul 2019 14:04:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: regulator: add support for the stm32-booster
+   regulator: s2mps11: Adjust supported buck voltages to real values
 
 has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,49 +90,128 @@ to this mail.
 Thanks,
 Mark
 
-From d6d02bc6e80453ca004e101eae28d741bde54426 Mon Sep 17 00:00:00 2001
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Date: Mon, 1 Jul 2019 10:14:22 +0200
-Subject: [PATCH] dt-bindings: regulator: add support for the stm32-booster
+From 9d83dcb3e4553f34ee1c4f09d65173159f9eb7a7 Mon Sep 17 00:00:00 2001
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Date: Sat, 29 Jun 2019 13:44:46 +0200
+Subject: [PATCH] regulator: s2mps11: Adjust supported buck voltages to real
+ values
 
-Document the 3.3V booster regulator embedded in stm32h7 and stm32mp1
-devices, that can be used to supply ADC analog input switches.
-It's controlled by using system configuration registers (SYSCFG).
-Introduce two compatibles as the booster regulator is controlled by:
-- a unique register/bit in STM32H7
-- a set/clear register pair in STM32MP1
+The driver was registering buck regulators with unsupported range of
+voltages for S2MPS11 devices.  Basically it assumed that all 256 values
+are possible for a single 8-bit I2C register controlling buck's voltage.
+This is not true, as datasheet describes subset of these which can be
+used.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+For example for buck[12346] the minimum voltage is 650 mV which
+corresponds to register value of 0x8.  The driver was however
+registering regulator starting at 600 mV, so for a step of 6.25 mV this
+gave the same result.  However this allowed to try to configure
+regulators to unsupported values.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/regulator/st,stm32-booster.txt    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
+ drivers/regulator/s2mps11.c         | 27 +++++++++++++++++----------
+ include/linux/mfd/samsung/core.h    |  1 +
+ include/linux/mfd/samsung/s2mps11.h |  4 +++-
+ 3 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt b/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-new file mode 100644
-index 000000000000..479ad4c8758e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-@@ -0,0 +1,18 @@
-+STM32 BOOSTER - Booster for ADC analog input switches
-+
-+Some STM32 devices embed a 3.3V booster supplied by Vdda, that can be used
-+to supply ADC analog input switches.
-+
-+Required properties:
-+- compatible: Should be one of:
-+  "st,stm32h7-booster"
-+  "st,stm32mp1-booster"
-+- st,syscfg: Phandle to system configuration controller.
-+- vdda-supply: Phandle to the vdda input analog voltage.
-+
-+Example:
-+	booster: regulator-booster {
-+		compatible = "st,stm32mp1-booster";
-+		st,syscfg = <&syscfg>;
-+		vdda-supply = <&vdda>;
-+	};
+diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
+index 7a89030187a4..5b7ba7c6c4f6 100644
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -269,9 +269,10 @@ static const struct regulator_ops s2mps11_buck_ops = {
+ 	.ops		= &s2mps11_buck_ops,			\
+ 	.type		= REGULATOR_VOLTAGE,			\
+ 	.owner		= THIS_MODULE,				\
+-	.min_uV		= MIN_600_MV,				\
++	.min_uV		= MIN_650_MV,				\
+ 	.uV_step	= STEP_6_25_MV,				\
+-	.n_voltages	= S2MPS11_BUCK_N_VOLTAGES,		\
++	.linear_min_sel	= 8,					\
++	.n_voltages	= S2MPS11_BUCK12346_N_VOLTAGES,		\
+ 	.ramp_delay	= S2MPS11_RAMP_DELAY,			\
+ 	.vsel_reg	= S2MPS11_REG_B1CTRL2 + (num - 1) * 2,	\
+ 	.vsel_mask	= S2MPS11_BUCK_VSEL_MASK,		\
+@@ -285,9 +286,10 @@ static const struct regulator_ops s2mps11_buck_ops = {
+ 	.ops		= &s2mps11_buck_ops,			\
+ 	.type		= REGULATOR_VOLTAGE,			\
+ 	.owner		= THIS_MODULE,				\
+-	.min_uV		= MIN_600_MV,				\
++	.min_uV		= MIN_650_MV,				\
+ 	.uV_step	= STEP_6_25_MV,				\
+-	.n_voltages	= S2MPS11_BUCK_N_VOLTAGES,		\
++	.linear_min_sel	= 8,					\
++	.n_voltages	= S2MPS11_BUCK5_N_VOLTAGES,		\
+ 	.ramp_delay	= S2MPS11_RAMP_DELAY,			\
+ 	.vsel_reg	= S2MPS11_REG_B5CTRL2,			\
+ 	.vsel_mask	= S2MPS11_BUCK_VSEL_MASK,		\
+@@ -295,7 +297,7 @@ static const struct regulator_ops s2mps11_buck_ops = {
+ 	.enable_mask	= S2MPS11_ENABLE_MASK			\
+ }
+ 
+-#define regulator_desc_s2mps11_buck67810(num, min, step) {	\
++#define regulator_desc_s2mps11_buck67810(num, min, step, min_sel, voltages) {	\
+ 	.name		= "BUCK"#num,				\
+ 	.id		= S2MPS11_BUCK##num,			\
+ 	.ops		= &s2mps11_buck_ops,			\
+@@ -303,7 +305,8 @@ static const struct regulator_ops s2mps11_buck_ops = {
+ 	.owner		= THIS_MODULE,				\
+ 	.min_uV		= min,					\
+ 	.uV_step	= step,					\
+-	.n_voltages	= S2MPS11_BUCK_N_VOLTAGES,		\
++	.linear_min_sel	= min_sel,				\
++	.n_voltages	= voltages,				\
+ 	.ramp_delay	= S2MPS11_RAMP_DELAY,			\
+ 	.vsel_reg	= S2MPS11_REG_B6CTRL2 + (num - 6) * 2,	\
+ 	.vsel_mask	= S2MPS11_BUCK_VSEL_MASK,		\
+@@ -371,11 +374,15 @@ static const struct regulator_desc s2mps11_regulators[] = {
+ 	regulator_desc_s2mps11_buck1_4(3),
+ 	regulator_desc_s2mps11_buck1_4(4),
+ 	regulator_desc_s2mps11_buck5,
+-	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(7, MIN_750_MV, STEP_12_5_MV),
+-	regulator_desc_s2mps11_buck67810(8, MIN_750_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(6, MIN_650_MV, STEP_6_25_MV, 8,
++					 S2MPS11_BUCK12346_N_VOLTAGES),
++	regulator_desc_s2mps11_buck67810(7, MIN_750_MV, STEP_12_5_MV, 0,
++					 S2MPS11_BUCK7810_N_VOLTAGES),
++	regulator_desc_s2mps11_buck67810(8, MIN_750_MV, STEP_12_5_MV, 0,
++					 S2MPS11_BUCK7810_N_VOLTAGES),
+ 	regulator_desc_s2mps11_buck9,
+-	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV, 0,
++					 S2MPS11_BUCK7810_N_VOLTAGES),
+ };
+ 
+ static const struct regulator_ops s2mps14_reg_ops;
+diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
+index 3ca17eb89aa2..f1631a39acfc 100644
+--- a/include/linux/mfd/samsung/core.h
++++ b/include/linux/mfd/samsung/core.h
+@@ -20,6 +20,7 @@
+ #define MIN_850_MV		850000
+ #define MIN_800_MV		800000
+ #define MIN_750_MV		750000
++#define MIN_650_MV		650000
+ #define MIN_600_MV		600000
+ #define MIN_500_MV		500000
+ 
+diff --git a/include/linux/mfd/samsung/s2mps11.h b/include/linux/mfd/samsung/s2mps11.h
+index 6e7668a389a1..fc67c9e75bba 100644
+--- a/include/linux/mfd/samsung/s2mps11.h
++++ b/include/linux/mfd/samsung/s2mps11.h
+@@ -170,7 +170,9 @@ enum s2mps11_regulators {
+ #define S2MPS11_ENABLE_MASK	(0x03 << S2MPS11_ENABLE_SHIFT)
+ #define S2MPS11_ENABLE_SHIFT	0x06
+ #define S2MPS11_LDO_N_VOLTAGES	(S2MPS11_LDO_VSEL_MASK + 1)
+-#define S2MPS11_BUCK_N_VOLTAGES (S2MPS11_BUCK_VSEL_MASK + 1)
++#define S2MPS11_BUCK12346_N_VOLTAGES	153
++#define S2MPS11_BUCK5_N_VOLTAGES	216
++#define S2MPS11_BUCK7810_N_VOLTAGES	225
+ #define S2MPS11_BUCK9_N_VOLTAGES (S2MPS11_BUCK9_VSEL_MASK + 1)
+ #define S2MPS11_RAMP_DELAY	25000		/* uV/us */
+ 
 -- 
 2.20.1
 
