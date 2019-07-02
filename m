@@ -2,53 +2,55 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A80C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90319C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3587021841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9902184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054749;
-	bh=P4gngWAm/oQwGpJFLyM9AT+69qGMzIOeTXRMv4eSdiA=;
+	s=default; t=1562054757;
+	bh=S+DIEFDqaSmUJzNhm1v6tI65Wx7tRIHzy5KPod8TXuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tAvbh0rLIQ5A++ZSt3cYsy3u+xr29CdQ0kejqM8SzuOE/ujR1EWFum/W7N4aJ0EB1
-	 +vdLs8ykbXyeNx3heNvJmenJSu+If6WNapd2gfwGtpjNRLZXk1F6ntH1t2+UMQmU6v
-	 DyyEduBgiw/qcv+9vzBWPLlYr9x18s5SJxUTIASo=
+	b=GUwAFWYuaVS//VZ5CpHren8H90CmUmRiSw5xIXvijycsfrLwZhOOS9CL+PRR9jYlC
+	 9NZ6YfTDd+WgWcDORcV3Kq+rYMOzj8nb8SIUKmoj3Od/BpkRiHs7V3L/vOrBAWaL2d
+	 v/C1wpousLxt/GZdVzNgB4xalqnYd+IQyjJRLbZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfGBIFr (ORCPT
+        id S1728018AbfGBIFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfGBIFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:40 -0400
+        id S1728005AbfGBIFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01C2821479;
-        Tue,  2 Jul 2019 08:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE13121479;
+        Tue,  2 Jul 2019 08:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054739;
-        bh=P4gngWAm/oQwGpJFLyM9AT+69qGMzIOeTXRMv4eSdiA=;
+        s=default; t=1562054751;
+        bh=S+DIEFDqaSmUJzNhm1v6tI65Wx7tRIHzy5KPod8TXuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKYll/S7r+fsScD7YV8nwdSgZhfLBkng67FNQVjAqu77OjsFLSMYRS+F4vgUpGbuy
-         TUgwZpDh0jR2MZDPUeipuXtakRDzOeQhgJ0dBUuEZ1lhNYWt62Ts1qgiFAKGuKX7hh
-         +g897K/4wfF2ly6IBmpRq0vI2rANi+rgA+Ld8YYA=
+        b=O6jY+/ntDCuvr3ultDbUmfg0KQyP9N0pEzF11KgNQlDOOPF0Phbx2/R2s81o9VLVO
+         4KYdMhgeSeqQyED0e/pnYdk7Ac03VWidvRqxXYIRVnh+L7mQV3dHpa9v+ivJhbNct6
+         VDrqS+HbtoK2h6e+mv0hfEnxTN6fPv+zNtzqRIi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 03/72] perf header: Fix unchecked usage of strncpy()
-Date:   Tue,  2 Jul 2019 10:01:04 +0200
-Message-Id: <20190702080124.744956462@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/72] 9p/xen: fix check for xenbus_read error in front_probe
+Date:   Tue,  2 Jul 2019 10:01:08 +0200
+Message-Id: <20190702080124.947283085@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -61,46 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+[ Upstream commit 2f9ad0ac947ccbe3ffe7c6229c9330f2a7755f64 ]
 
-commit 5192bde7d98c99f2cd80225649e3c2e7493722f7 upstream.
+If the xen bus exists but does not expose the proper interface, it is
+possible to get a non-zero length but still some error, leading to
+strcmp failing trying to load invalid memory addresses e.g.
+fffffffffffffffe.
 
-The strncpy() function may leave the destination string buffer
-unterminated, better use strlcpy() that we have a __weak fallback
-implementation for systems without it.
+There is then no need to check length when there is no error, as the
+xenbus driver guarantees that the string is nul-terminated.
 
-This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
-
-  util/header.c: In function 'perf_event__synthesize_event_update_name':
-  util/header.c:3625:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
-    strncpy(ev->data, evsel->name, len);
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/header.c:3618:15: note: length computed here
-    size_t len = strlen(evsel->name);
-                 ^~~~~~~~~~~~~~~~~~~
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
-Link: https://lkml.kernel.org/n/tip-wycz66iy8dl2z3yifgqf894p@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/1534236007-10170-1-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Eric Van Hensbergen <ericvh@gmail.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/9p/trans_xen.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3562,7 +3562,7 @@ perf_event__synthesize_event_update_name
- 	if (ev == NULL)
- 		return -ENOMEM;
+diff --git a/net/9p/trans_xen.c b/net/9p/trans_xen.c
+index c2d54ac76bfd..843cb823d9b9 100644
+--- a/net/9p/trans_xen.c
++++ b/net/9p/trans_xen.c
+@@ -391,8 +391,8 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
+ 	unsigned int max_rings, max_ring_order, len = 0;
  
--	strncpy(ev->data, evsel->name, len);
-+	strlcpy(ev->data, evsel->name, len + 1);
- 	err = process(tool, (union perf_event*) ev, NULL, NULL);
- 	free(ev);
- 	return err;
+ 	versions = xenbus_read(XBT_NIL, dev->otherend, "versions", &len);
+-	if (!len)
+-		return -EINVAL;
++	if (IS_ERR(versions))
++		return PTR_ERR(versions);
+ 	if (strcmp(versions, "1")) {
+ 		kfree(versions);
+ 		return -EINVAL;
+-- 
+2.20.1
+
 
 
