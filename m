@@ -2,210 +2,188 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F4CC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B26BC06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D2C2184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CF42184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JidW4dYb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gf9AynaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfGBTHa (ORCPT
+        id S1727033AbfGBTJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 15:07:30 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46958 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfGBTH3 (ORCPT
+        Tue, 2 Jul 2019 15:09:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45408 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfGBTJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 15:07:29 -0400
-Received: by mail-qt1-f196.google.com with SMTP id h21so19788792qtn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 12:07:28 -0700 (PDT)
+        Tue, 2 Jul 2019 15:09:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so3645202pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 12:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wQ2eWjX8ogKBuOp00qcklecjDoXf2f54BF8WB0/TWII=;
-        b=JidW4dYbE0QUxwzFXcMc939F1GeiSl4e29Kjjwnj2aeiUe6IK1U7BDRoGAV8NQJDKV
-         phtHtav1J/2VH88H6UKTt2gA3G0RDqkzeXKle1ef4Yc7ZSuBBoUen/LPm0nzPLEC+iNQ
-         6+GaheRF7e42NzWfkmYuwBBKK8svcphuuNpuegyfFhApLCub3L0U6P3C11+fpdNRFl4d
-         psWX+6K/X1I9hcXsB+Ia8S4t7uoC60O0s7kpD/JZUy4QXb8cAUwUPZrro0aLhy3kCITa
-         UrgdkqRBH3vvS5IrCyz0RL/uxl26qJnyDE9WLCUyQO7FyoAEhLq8+w/pz57X2er0aHjB
-         PQbA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=7MbyDYqaqvSFQxOK+144mOVh5/lF6H2bN9YDe1mqXsE=;
+        b=gf9AynaRipCPNwL4fqUj1Kgn+M7Ben9Z5cpa9swnWQpDwgucDeCPC01FXDrDkJ6uY0
+         NSSCVdOhd5rccsRnUlWJ3ltnJlP3CpkB1Z4l9dmROza6n7s9SAwfvaIofJOW+IwiIL9D
+         rzCy4GxgcbCFYjvq+xCwL1krM+FxBF9je/WbpobhrRQYa2zVlcD4/XurltNaGbLN9rvS
+         ede+qAXNcAhTef1SGO6BUKHn/q2Nvk/NaAg2z6OGVU+ZBiu/dqAHr+Q4jibrC9xFD2D6
+         NHug/qhQbzlj3lSwkRlT7jw6/nXJDtW+gVpRHI/qNjTEGJuGadXUqOSUe5XpcXv/SWGi
+         fj7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wQ2eWjX8ogKBuOp00qcklecjDoXf2f54BF8WB0/TWII=;
-        b=lhD2ac2xT40Nzmf6zIlr6NToeh3lIYRVX7QufSONCveBwI8S+JBgGSF5cPH9JvZR0w
-         z6ePUdHeBuTNkRw8QzGBjcqnHUFXb+Qq8IvN0TQ7Qm7lRx9cR3OdKreRJvSoNNPQNI6k
-         kLLmcCuZOE6o97nwHJpF0TzKW6DuxM3emRXiSnlsnEk2WKTOaxdYw05S0zHVjMF9FcVX
-         dGWD9XKozlvguj/vbm7vyt22zX1QSg1WcX6oEcR9Sa/NJqTYCKEZMJOIc6g+eZRREyGZ
-         OYVFaXtct+R4bsjwp5dz76qX7L3nnlO5F7e1RE3waU8aOx7QB+76k2RbekwqHUhTZZxQ
-         /UJQ==
-X-Gm-Message-State: APjAAAVFvWMtWRhRuY2kkrblx5n2agIt6OzlPmpdlVLzeVzGATiS/TGz
-        ElMDUCH2Tlj1FljShcFanHA=
-X-Google-Smtp-Source: APXvYqxRqnveK4LS61gzxzKAUfw9a3vS/qQpkVFcSgqTTeVnfX3pBapPH+oWlUIM5GvOlQwetS6gFg==
-X-Received: by 2002:a0c:9687:: with SMTP id a7mr28868074qvd.163.1562094448043;
-        Tue, 02 Jul 2019 12:07:28 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id 5sm7522929qkr.68.2019.07.02.12.07.26
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=7MbyDYqaqvSFQxOK+144mOVh5/lF6H2bN9YDe1mqXsE=;
+        b=TQxVd2fNDxLO+yh7Do3pCDzEkk5QHpjp2X4RM3DUeR4rkrod8Mx8TQqpMlGNZaJMts
+         nFM3pyYxExWnanePj16/HQaMip1kN5peWkG07yjcNHTywfpqExkiIUYYCNz8gRzmDwdT
+         5x3UDRO7xoAZJgJNJgKdLrv6myIXzUJy1+nXbGtTcXUyNhE5K+JQmWtOedTWMR9ETHAl
+         QAvkAly0k2aEfuEEQrQ6KcEaV0dO6/h/jM5ZShX8QPDQS6J6YxvvB11/vgbMvk+Eboie
+         xs3LcyDhjLXxXie5vASljcBQgF4mxDvH8DKGuw4/ZiGa6Vqv7i6/e1jR3iJke2qRi1tw
+         X5OA==
+X-Gm-Message-State: APjAAAXqLnvT3JNcKHXZgC4mG8/T1m/G/HiaKy1bj3lxHHZO7tAmaExX
+        //V37VrRnScnYzVfMkoX+fIpOA==
+X-Google-Smtp-Source: APXvYqx9wyjGr3gEZi8btnw1XM/Out5qiZEDMv6+jCbc/ZJawA+a4NDQhc2TqwqowTNEDVgPQ/xJhA==
+X-Received: by 2002:a17:90a:338b:: with SMTP id n11mr7294382pjb.21.1562094569110;
+        Tue, 02 Jul 2019 12:09:29 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id y22sm29677631pfo.39.2019.07.02.12.09.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 12:07:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 80F8741153; Tue,  2 Jul 2019 16:07:24 -0300 (-03)
-Date:   Tue, 2 Jul 2019 16:07:24 -0300
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tmricht@linux.ibm.com,
-        brueckner@linux.ibm.com, kan.liang@linux.intel.com,
-        ben@decadent.org.uk, mathieu.poirier@linaro.org,
-        mark.rutland@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        linux-arm-kernel@lists.infradead.org, zhangshaokun@hisilicon.com,
-        ak@linux.intel.com
-Subject: Re: [PATCH v3 1/4] perf pmu: Support more complex PMU event aliasing
-Message-ID: <20190702190724.GM15462@kernel.org>
-References: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
- <1561732552-143038-2-git-send-email-john.garry@huawei.com>
+        Tue, 02 Jul 2019 12:09:27 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 12:09:27 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Waiman Long <longman@redhat.com>
+cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+In-Reply-To: <20190702183730.14461-1-longman@redhat.com>
+Message-ID: <alpine.DEB.2.21.1907021206000.67286@chino.kir.corp.google.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561732552-143038-2-git-send-email-john.garry@huawei.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jun 28, 2019 at 10:35:49PM +0800, John Garry escreveu:
-> The jevent "Unit" field is used for uncore PMU alias definition.
-> 
-> The form uncore_pmu_example_X is supported, where "X" is a wildcard,
-> to support multiple instances of the same PMU in a system.
-> 
-> Unfortunately this format not suitable for all uncore PMUs; take the Hisi
-> DDRC uncore PMU for example, where the name is in the form
-> hisi_scclX_ddrcY.
-> 
-> For for current jevent parsing, we would be required to hardcode an uncore
-> alias translation for each possible value of X. This is not scalable.
-> 
-> Instead, add support for "Unit" field in the form "hisi_sccl,ddrc", where
-> we can match by hisi_scclX and ddrcY. Tokens  in Unit field
-> are delimited by ','.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  tools/perf/util/pmu.c | 46 ++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 7e7299fee550..cfc916819c59 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -700,6 +700,46 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
->  	return map;
->  }
+On Tue, 2 Jul 2019, Waiman Long wrote:
+
+> diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
+> index 29601d93a1c2..2a3d0fc4b4ac 100644
+> --- a/Documentation/ABI/testing/sysfs-kernel-slab
+> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
+> @@ -429,10 +429,12 @@ KernelVersion:	2.6.22
+>  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+>  		Christoph Lameter <cl@linux-foundation.org>
+>  Description:
+> -		The shrink file is written when memory should be reclaimed from
+> -		a cache.  Empty partial slabs are freed and the partial list is
+> -		sorted so the slabs with the fewest available objects are used
+> -		first.
+> +		A value of '1' is written to the shrink file when memory should
+> +		be reclaimed from a cache.  Empty partial slabs are freed and
+> +		the partial list is sorted so the slabs with the fewest
+> +		available objects are used first.  When a value of '2' is
+> +		written, all the corresponding child memory cgroup caches
+> +		should be shrunk as well.  All other values are invalid.
 >  
-> +static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+
+This should likely call out that '2' also does '1', that might not be 
+clear enough.
+
+>  What:		/sys/kernel/slab/cache/slab_size
+>  Date:		May 2007
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 3b22931bb557..a16b2c7ff4dd 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -174,6 +174,7 @@ int __kmem_cache_shrink(struct kmem_cache *);
+>  void __kmemcg_cache_deactivate(struct kmem_cache *s);
+>  void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
+>  void slab_kmem_cache_release(struct kmem_cache *);
+> +int kmem_cache_shrink_all(struct kmem_cache *s);
+>  
+>  struct seq_file;
+>  struct file;
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 464faaa9fd81..493697ba1da5 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -981,6 +981,49 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
+>  }
+>  EXPORT_SYMBOL(kmem_cache_shrink);
+>  
+> +/**
+> + * kmem_cache_shrink_all - shrink a cache and all its memcg children
+> + * @s: The root cache to shrink.
+> + *
+> + * Return: 0 if successful, -EINVAL if not a root cache
+> + */
+> +int kmem_cache_shrink_all(struct kmem_cache *s)
 > +{
-> +	char *tmp, *tok, *str;
-> +	bool res;
+> +	struct kmem_cache *c;
 > +
-> +	str = strdup(pmu_name);
-> +	if (!str)
-> +		return false;
+> +	if (!IS_ENABLED(CONFIG_MEMCG_KMEM)) {
+> +		kmem_cache_shrink(s);
+> +		return 0;
+> +	}
+> +	if (!is_root_cache(s))
+> +		return -EINVAL;
 > +
 > +	/*
-> +	 * uncore alias may be from different PMU with common prefix
+> +	 * The caller should have a reference to the root cache and so
+> +	 * we don't need to take the slab_mutex. We have to take the
+> +	 * slab_mutex, however, to iterate the memcg caches.
 > +	 */
-> +	tok = strtok_r(str, ",", &tmp);
-
-In some places, e.g. gcc version 4.1.2:
-
-  CC       /tmp/build/perf/util/pmu.o
-cc1: warnings being treated as errors
-util/pmu.c: In function ‘pmu_lookup’:
-util/pmu.c:706: warning: ‘tmp’ may be used uninitialized in this function
-mv: cannot stat `/tmp/build/perf/util/.pmu.o.tmp': No such file or directory
-
-This silences it, adding.
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 913633ae0bf8..55f4de6442e3 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -703,7 +703,7 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
- 
- static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
- {
--	char *tmp, *tok, *str;
-+	char *tmp = NULL, *tok, *str;
- 	bool res;
- 
- 	str = strdup(pmu_name);
-
-
-> +	if (strncmp(pmu_name, tok, strlen(tok))) {
-> +		res = false;
-> +		goto out;
-> +	}
+> +	get_online_cpus();
+> +	get_online_mems();
+> +	kasan_cache_shrink(s);
+> +	__kmem_cache_shrink(s);
 > +
-> +	/*
-> +	 * Match more complex aliases where the alias name is a comma-delimited
-> +	 * list of tokens, orderly contained in the matching PMU name.
-> +	 *
-> +	 * Example: For alias "socket,pmuname" and PMU "socketX_pmunameY", we
-> +	 *	    match "socket" in "socketX_pmunameY" and then "pmuname" in
-> +	 *	    "pmunameY".
-> +	 */
-> +	for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",", &tmp)) {
-> +		name = strstr(name, tok);
-> +		if (!name) {
-> +			res = false;
-> +			goto out;
-> +		}
+> +	mutex_lock(&slab_mutex);
+> +	for_each_memcg_cache(c, s) {
+> +		/*
+> +		 * Don't need to shrink deactivated memcg caches.
+> +		 */
+> +		if (s->flags & SLAB_DEACTIVATED)
+> +			continue;
+> +		kasan_cache_shrink(c);
+> +		__kmem_cache_shrink(c);
 > +	}
-> +
-> +	res = true;
-> +out:
-> +	free(str);
-> +	return res;
+> +	mutex_unlock(&slab_mutex);
+> +	put_online_mems();
+> +	put_online_cpus();
+> +	return 0;
 > +}
 > +
->  /*
->   * From the pmu_events_map, find the table of PMU events that corresponds
->   * to the current running CPU. Then, add all PMU events from that table
-> @@ -730,12 +770,8 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
->  			break;
->  		}
->  
-> -		/*
-> -		 * uncore alias may be from different PMU
-> -		 * with common prefix
-> -		 */
->  		if (pmu_is_uncore(name) &&
-> -		    !strncmp(pname, name, strlen(pname)))
-> +		    pmu_uncore_alias_match(pname, name))
->  			goto new_alias;
->  
->  		if (strcmp(pname, name))
-> -- 
-> 2.17.1
+>  bool slab_is_available(void)
+>  {
+>  	return slab_state >= UP;
 
--- 
+I'm wondering how long this could take, i.e. how long we hold slab_mutex 
+while we traverse each cache and shrink it.
 
-- Arnaldo
+Acked-by: David Rientjes <rientjes@google.com>
