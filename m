@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F609C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E89C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CAC2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7A12184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055173;
-	bh=IHVZSb+9KZcY+NwRW1gMyaH2wKojBuiMeGUOBuwWubw=;
+	s=default; t=1562055177;
+	bh=Z0XCsJ+5mTRDINcSV7Sao44MlHUB4G73F9YpQhFyVMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwY/GJZGpGf3a+idGQm0rGWY7SDyb/xJ/Hi2l6Ju4nsC0BesJqVs6z4/CyA0AClo2
-	 Z1K+J1H42GeBXEU0M6c51bMzeAd6PMPierhHFAue3oT6fRkMhkKgaRvTuAnPugTaCc
-	 1mqIDnHh7Zg36NOxDkAWGGROTsuVhQ+5jEgjg194=
+	b=mvUeq8KAaIl3MQ8n3OHzEehjJa4dHNTdwRJk3bwai0zhw0JFngG7NIQ2OzjJbHV0w
+	 4UGBdDwgU74E/BzeHYdr8Pc26DmEnvAUi3Us0KGETlG78h29InnjT/MyneYOIULEBJ
+	 GiNL2IE08ip3e40DBkIlbbYGtIoiJlMHbmYfQoR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfGBIMv (ORCPT
+        id S1728224AbfGBIM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfGBIMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:12:48 -0400
+        id S1727643AbfGBIMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:12:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3998020659;
-        Tue,  2 Jul 2019 08:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE07820665;
+        Tue,  2 Jul 2019 08:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055166;
-        bh=IHVZSb+9KZcY+NwRW1gMyaH2wKojBuiMeGUOBuwWubw=;
+        s=default; t=1562055169;
+        bh=Z0XCsJ+5mTRDINcSV7Sao44MlHUB4G73F9YpQhFyVMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYSzjOoMYQju2yxPLk+HaOFIrGzeXuXbx6IPT6ucuVR6QnQAG46a3FTOrXqwXP1ia
-         rmf5v8ympIcEsDQWUWjEWGBymyhGwOWgKcp6FroTbeiQWjoeCcJZfcVKi/+If5o5TF
-         bJH5upf2SDB6C5NIDb8SuOCHUmfUyO0E5JGgqKY8=
+        b=PAo9sP6Vhpan2D4cipYvLJA98aRs+dGHjwf01Eb/vfAs/cfwAFTV7nUeAR2uh8PF5
+         kyS0lXby9HOADL1BI+8UEKl0uSLe6oIaoC1XF7dvdw7Xu8j0vUuPlnaT05Fhl9PsZT
+         kqrYz5Z05TKupE2j0mzcqozYNZw7Nikm/8hO1dow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,12 +52,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 14/55] mm: hugetlb: soft-offline: dissolve_free_huge_page() return zero on !PageHuge
-Date:   Tue,  2 Jul 2019 10:01:22 +0200
-Message-Id: <20190702080124.778004694@linuxfoundation.org>
+Subject: [PATCH 4.19 37/72] mm: hugetlb: soft-offline: dissolve_free_huge_page() return zero on !PageHuge
+Date:   Tue,  2 Jul 2019 10:01:38 +0200
+Message-Id: <20190702080126.593773732@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
-References: <20190702080124.103022729@linuxfoundation.org>
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+References: <20190702080124.564652899@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -131,7 +131,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -1491,16 +1491,29 @@ static int free_pool_huge_page(struct hs
+@@ -1489,16 +1489,29 @@ static int free_pool_huge_page(struct hs
  
  /*
   * Dissolve a given free hugepage into free buddy pages. This function does
@@ -165,7 +165,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		struct page *head = compound_head(page);
  		struct hstate *h = page_hstate(head);
  		int nid = page_to_nid(head);
-@@ -1545,11 +1558,9 @@ int dissolve_free_huge_pages(unsigned lo
+@@ -1543,11 +1556,9 @@ int dissolve_free_huge_pages(unsigned lo
  
  	for (pfn = start_pfn; pfn < end_pfn; pfn += 1 << minimum_order) {
  		page = pfn_to_page(pfn);
@@ -182,7 +182,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	return rc;
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -1859,11 +1859,8 @@ static int soft_offline_in_use_page(stru
+@@ -1857,11 +1857,8 @@ static int soft_offline_in_use_page(stru
  
  static int soft_offline_free_page(struct page *page)
  {
