@@ -2,107 +2,167 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0F6C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13A5C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE8D20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beufamAH"
+	by mail.kernel.org (Postfix) with ESMTP id 786BF20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfGBPop (ORCPT
+        id S1726621AbfGBPr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:44:45 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37352 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGBPol (ORCPT
+        Tue, 2 Jul 2019 11:47:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55806 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725972AbfGBPr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:44:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y57so18967319qtk.4;
-        Tue, 02 Jul 2019 08:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JEGJ7Jmmm4upED98C8kMEX5v02Mgo/GN/6JJfLKfS2Y=;
-        b=beufamAHtcBoZt+Gwf86QpSPtt4WbjVUwHCf2J3m0/Ebb+ttFl5pzogaS/c+qjPv3v
-         pBxg445g7S25YCjqZCD21hiVGf4r3GV2DfoZV0HCPb5Y0k+nsn/vP2ZX7RPUCroJ7E/2
-         MP8z4inC06IWSaP1Yg9tkV6xe1nbciIh33iZrAJxgE1dzhZ1I+GMa0tjOZm2q6vx8GRB
-         G3ipziXB7UDxBtjdYrV/w600Ndcm3OkRopY+Gn5fcrC3IXJjLvLKDbxSHzNtMyj9ZLa4
-         qgscQ1owPKfAyORLW/xqf+nuvPkkEOjPpQfWTnjWaXbmR85AFbLr2JAn5uzAT7wpcOED
-         kRDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JEGJ7Jmmm4upED98C8kMEX5v02Mgo/GN/6JJfLKfS2Y=;
-        b=PnZ3GtGqPG/oKf156RR2dpduNMw64svEbWaiXfVfz9jQJKDSb1F3wsT4k1viDovP0E
-         VIcsCZDaGTwXOXeGbWj34lrXeunO9uIlDvLImyZyMZWvI2JW+nyduZ79Ad94bYHlcftR
-         y786yVfzBZM9YZ5lnBzYPWWfj0VWPawaRm05prmjotm+HUn6pOCuq2jUkEqu3SRXn6ZQ
-         JyOPftxw+58Ov6qO0NXxgNshdNLX+y9t3KS7vVP7hqob2rEQVrQ4vClMVnJY8r941/kd
-         B5d/nMkKvajcUWXRyNuCP8qbrFUE1Qflb06ETqO/MNbs3bqrIyLFi5R7jP5UP6IFFzbw
-         8+wg==
-X-Gm-Message-State: APjAAAVkwRNS1wsIhKCh9JaTETHROgnEA1Vt43AL/sz768fZukl2OETa
-        eTH/efXYI5qC1CbRn2rhCRs=
-X-Google-Smtp-Source: APXvYqwrwmnTDvlh5LTDRzlineemj5kLLsGRS9iB6zoJcKryU4/iFBumhY4Vv/4jDgkmSlqD0v5qsw==
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr26019845qtc.143.1562082279992;
-        Tue, 02 Jul 2019 08:44:39 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id d123sm6828508qkb.94.2019.07.02.08.44.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 08:44:39 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] drm/bridge: ti-sn65dsi86: correct dsi mode_flags
-Date:   Tue,  2 Jul 2019 08:44:18 -0700
-Message-Id: <20190702154419.20812-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190702154419.20812-1-robdclark@gmail.com>
-References: <20190702154419.20812-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Jul 2019 11:47:57 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62FkvgH003563
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2019 11:47:56 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tg8qscq4k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:47:56 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Tue, 2 Jul 2019 16:47:55 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Jul 2019 16:47:52 +0100
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62FlpXC58982844
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jul 2019 15:47:51 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A108413604F;
+        Tue,  2 Jul 2019 15:47:51 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49126136051;
+        Tue,  2 Jul 2019 15:47:51 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.179.222])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Jul 2019 15:47:51 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, joel@jms.id.au, linux@roeck-us.net,
+        mine260309@gmail.com, Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH] OCC: FSI and hwmon: Add sequence numbering
+Date:   Tue,  2 Jul 2019 10:47:42 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19070215-0016-0000-0000-000009C9B5A0
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011366; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226427; UDB=6.00645661; IPR=6.01007648;
+ MB=3.00027555; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-02 15:47:54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070215-0017-0000-0000-000043DE4FED
+Message-Id: <1562082462-23794-1-git-send-email-eajames@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907020172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Sequence numbering of the commands submitted to the OCC is required by
+the OCC interface specification. Add sequence numbering and check for
+the correct sequence number on the response.
 
-Noticed while comparing register dump of how bootloader configures DSI
-vs how kernel configures.  It seems the bridge still works either way,
-but fixing this clears the 'CHA_DATATYPE_ERR' error status bit.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Lei YU <mine260309@gmail.com>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/fsi/fsi-occ.c      | 15 ++++++++++++---
+ drivers/hwmon/occ/common.c |  4 ++--
+ drivers/hwmon/occ/common.h |  1 +
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index a6f27648c015..c8fb45e7b06d 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -342,8 +342,7 @@ static int ti_sn_bridge_attach(struct drm_bridge *bridge)
- 	/* TODO: setting to 4 lanes always for now */
- 	dsi->lanes = 4;
- 	dsi->format = MIPI_DSI_FMT_RGB888;
--	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
--			  MIPI_DSI_MODE_EOT_PACKET | MIPI_DSI_MODE_VIDEO_HSE;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
+diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
+index a2301ce..7da9c81 100644
+--- a/drivers/fsi/fsi-occ.c
++++ b/drivers/fsi/fsi-occ.c
+@@ -412,6 +412,7 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
+ 		msecs_to_jiffies(OCC_CMD_IN_PRG_WAIT_MS);
+ 	struct occ *occ = dev_get_drvdata(dev);
+ 	struct occ_response *resp = response;
++	u8 seq_no;
+ 	u16 resp_data_length;
+ 	unsigned long start;
+ 	int rc;
+@@ -426,6 +427,8 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
  
- 	/* check if continuous dsi clock is required or not */
- 	pm_runtime_get_sync(pdata->dev);
+ 	mutex_lock(&occ->occ_lock);
+ 
++	/* Extract the seq_no from the command (first byte) */
++	seq_no = *(const u8 *)request;
+ 	rc = occ_putsram(occ, OCC_SRAM_CMD_ADDR, request, req_len);
+ 	if (rc)
+ 		goto done;
+@@ -441,11 +444,17 @@ int fsi_occ_submit(struct device *dev, const void *request, size_t req_len,
+ 		if (rc)
+ 			goto done;
+ 
+-		if (resp->return_status == OCC_RESP_CMD_IN_PRG) {
++		if (resp->return_status == OCC_RESP_CMD_IN_PRG ||
++		    resp->seq_no != seq_no) {
+ 			rc = -ETIMEDOUT;
+ 
+-			if (time_after(jiffies, start + timeout))
+-				break;
++			if (time_after(jiffies, start + timeout)) {
++				dev_err(occ->dev, "resp timeout status=%02x "
++					"resp seq_no=%d our seq_no=%d\n",
++					resp->return_status, resp->seq_no,
++					seq_no);
++				goto done;
++			}
+ 
+ 			set_current_state(TASK_UNINTERRUPTIBLE);
+ 			schedule_timeout(wait_time);
+diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+index d593517..a7d2b16 100644
+--- a/drivers/hwmon/occ/common.c
++++ b/drivers/hwmon/occ/common.c
+@@ -124,12 +124,12 @@ struct extended_sensor {
+ static int occ_poll(struct occ *occ)
+ {
+ 	int rc;
+-	u16 checksum = occ->poll_cmd_data + 1;
++	u16 checksum = occ->poll_cmd_data + occ->seq_no + 1;
+ 	u8 cmd[8];
+ 	struct occ_poll_response_header *header;
+ 
+ 	/* big endian */
+-	cmd[0] = 0;			/* sequence number */
++	cmd[0] = occ->seq_no++;		/* sequence number */
+ 	cmd[1] = 0;			/* cmd type */
+ 	cmd[2] = 0;			/* data length msb */
+ 	cmd[3] = 1;			/* data length lsb */
+diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
+index fc13f3c..67e6968 100644
+--- a/drivers/hwmon/occ/common.h
++++ b/drivers/hwmon/occ/common.h
+@@ -95,6 +95,7 @@ struct occ {
+ 	struct occ_sensors sensors;
+ 
+ 	int powr_sample_time_us;	/* average power sample time */
++	u8 seq_no;
+ 	u8 poll_cmd_data;		/* to perform OCC poll command */
+ 	int (*send_cmd)(struct occ *occ, u8 *cmd);
+ 
 -- 
-2.20.1
+1.8.3.1
 
