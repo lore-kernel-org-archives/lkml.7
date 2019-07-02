@@ -2,53 +2,53 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE994C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519BEC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FA521871
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273A321851
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054622;
-	bh=TAkJYB91yOEDblcgAejjCpOfdTn56OBx8AXvo5ZgU4k=;
+	s=default; t=1562054626;
+	bh=BRP7Ql1eActHI1tbBOAzaSFubYS8GkEJ87I9ftlT1/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJqGyZEFDZt5iRdqtSxhm8RrQ2GaV206ZJCbZq5wOJ0mKn2ZkkX38emtlELvnsP2/
-	 mug9e8XhVRGuYKSaFgpAxl1TI8gH5zxkm51ccs52g/dRmfCZPMR3TK5Hln+W4eb5Hh
-	 vBV5E4O7D2cJOFF/Q+KCO1Xv/iDeKVnKNzAB1bDY=
+	b=YT2RgjH3x5UwkJAQ0+IQb5Ua+uBZgWa1g5nHr/X0fWZevBZkylnQnHHhThH6iDWCD
+	 j4DDpURBKw1cAjFY6P9zNevW8wrZe1Wav/6wX+ioBOlV+9nQDTZooyNOGXT2+kY6N0
+	 2I3IHYon1yZRJEMkcNzxKM3cXwBGJNpd2NhiCbdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfGBIDl (ORCPT
+        id S1727510AbfGBIDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48690 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfGBIDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:38 -0400
+        id S1727485AbfGBIDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC45221850;
-        Tue,  2 Jul 2019 08:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930AC21874;
+        Tue,  2 Jul 2019 08:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054617;
-        bh=TAkJYB91yOEDblcgAejjCpOfdTn56OBx8AXvo5ZgU4k=;
+        s=default; t=1562054620;
+        bh=BRP7Ql1eActHI1tbBOAzaSFubYS8GkEJ87I9ftlT1/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HWebh0Y6xQAjXuHlaZ+PRt2+lEV+/VQA37FAijaX4YaV3iasmZQDjfUbF9DkbM5Tz
-         TFAS8JPvwPzHJUhp+QWMJX7Dyh5oGvbvjaX8HbyHPo328ZRbxTA+WAXmDAj41KzSVH
-         uGSb8uBM3lU7QzvKEId2aos7fGFvdWAhs8ybTjZ4=
+        b=H/xUv6cmxlNwSBAQGzYoJ18b8qUqNRzBEzNfdn1I+ACY1v8P52oGBhw+zWvjt97z/
+         /NwP4b5UGWjCCdBv21bodm+Sz/8zGHyrZmujr2yH+kNS3FYunMCOQn8vrouyfbMLwO
+         52smwMk/x/0tf6Of9Jl9LL1zIuze52F7olcIa3Ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Matteo Croce <mcroce@redhat.com>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 30/55] af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
-Date:   Tue,  2 Jul 2019 10:01:38 +0200
-Message-Id: <20190702080125.689522346@linuxfoundation.org>
+Subject: [PATCH 5.1 31/55] bonding: Always enable vlan tx offload
+Date:   Tue,  2 Jul 2019 10:01:39 +0200
+Message-Id: <20190702080125.750796171@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -61,153 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 89ed5b519004a7706f50b70f611edbd3aaacff2c ]
+[ Upstream commit 30d8177e8ac776d89d387fad547af6a0f599210e ]
 
-When an application is run that:
-a) Sets its scheduler to be SCHED_FIFO
-and
-b) Opens a memory mapped AF_PACKET socket, and sends frames with the
-MSG_DONTWAIT flag cleared, its possible for the application to hang
-forever in the kernel.  This occurs because when waiting, the code in
-tpacket_snd calls schedule, which under normal circumstances allows
-other tasks to run, including ksoftirqd, which in some cases is
-responsible for freeing the transmitted skb (which in AF_PACKET calls a
-destructor that flips the status bit of the transmitted frame back to
-available, allowing the transmitting task to complete).
+We build vlan on top of bonding interface, which vlan offload
+is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+BOND_XMIT_POLICY_ENCAP34.
 
-However, when the calling application is SCHED_FIFO, its priority is
-such that the schedule call immediately places the task back on the cpu,
-preventing ksoftirqd from freeing the skb, which in turn prevents the
-transmitting task from detecting that the transmission is complete.
+Because vlan tx offload is off, vlan tci is cleared and skb push
+the vlan header in validate_xmit_vlan() while sending from vlan
+devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
+get information from protocol headers encapsulated within vlan,
+because 'nhoff' is points to IP header, so bond hashing is based
+on layer 2 info, which fails to distribute packets across slaves.
 
-We can fix this by converting the schedule call to a completion
-mechanism.  By using a completion queue, we force the calling task, when
-it detects there are no more frames to send, to schedule itself off the
-cpu until such time as the last transmitted skb is freed, allowing
-forward progress to be made.
+This patch always enable bonding's vlan tx offload, pass the vlan
+packets to the slave devices with vlan tci, let them to handle
+vlan implementation.
 
-Tested by myself and the reporter, with good results
-
-Change Notes:
-
-V1->V2:
-	Enhance the sleep logic to support being interruptible and
-allowing for honoring to SK_SNDTIMEO (Willem de Bruijn)
-
-V2->V3:
-	Rearrage the point at which we wait for the completion queue, to
-avoid needing to check for ph/skb being null at the end of the loop.
-Also move the complete call to the skb destructor to avoid needing to
-modify __packet_set_status.  Also gate calling complete on
-packet_read_pending returning zero to avoid multiple calls to complete.
-(Willem de Bruijn)
-
-	Move timeo computation within loop, to re-fetch the socket
-timeout since we also use the timeo variable to record the return code
-from the wait_for_complete call (Neil Horman)
-
-V3->V4:
-	Willem has requested that the control flow be restored to the
-previous state.  Doing so lets us eliminate the need for the
-po->wait_on_complete flag variable, and lets us get rid of the
-packet_next_frame function, but introduces another complexity.
-Specifically, but using the packet pending count, we can, if an
-applications calls sendmsg multiple times with MSG_DONTWAIT set, each
-set of transmitted frames, when complete, will cause
-tpacket_destruct_skb to issue a complete call, for which there will
-never be a wait_on_completion call.  This imbalance will lead to any
-future call to wait_for_completion here to return early, when the frames
-they sent may not have completed.  To correct this, we need to re-init
-the completion queue on every call to tpacket_snd before we enter the
-loop so as to ensure we wait properly for the frames we send in this
-iteration.
-
-	Change the timeout and interrupted gotos to out_put rather than
-out_status so that we don't try to free a non-existant skb
-	Clean up some extra newlines (Willem de Bruijn)
-
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Reported-by: Matteo Croce <mcroce@redhat.com>
+Fixes: 278339a42a1b ("bonding: propogate vlan_features to bonding master")
+Suggested-by: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   20 +++++++++++++++++---
- net/packet/internal.h  |    1 +
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ drivers/net/bonding/bond_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2409,6 +2409,9 @@ static void tpacket_destruct_skb(struct
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4321,12 +4321,12 @@ void bond_setup(struct net_device *bond_
+ 	bond_dev->features |= NETIF_F_NETNS_LOCAL;
  
- 		ts = __packet_set_timestamp(po, ph, skb);
- 		__packet_set_status(po, ph, TP_STATUS_AVAILABLE | ts);
-+
-+		if (!packet_read_pending(&po->tx_ring))
-+			complete(&po->skb_completion);
- 	}
+ 	bond_dev->hw_features = BOND_VLAN_FEATURES |
+-				NETIF_F_HW_VLAN_CTAG_TX |
+ 				NETIF_F_HW_VLAN_CTAG_RX |
+ 				NETIF_F_HW_VLAN_CTAG_FILTER;
  
- 	sock_wfree(skb);
-@@ -2593,7 +2596,7 @@ static int tpacket_parse_header(struct p
+ 	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
+ 	bond_dev->features |= bond_dev->hw_features;
++	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
+ }
  
- static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
- {
--	struct sk_buff *skb;
-+	struct sk_buff *skb = NULL;
- 	struct net_device *dev;
- 	struct virtio_net_hdr *vnet_hdr = NULL;
- 	struct sockcm_cookie sockc;
-@@ -2608,6 +2611,7 @@ static int tpacket_snd(struct packet_soc
- 	int len_sum = 0;
- 	int status = TP_STATUS_AVAILABLE;
- 	int hlen, tlen, copylen = 0;
-+	long timeo = 0;
- 
- 	mutex_lock(&po->pg_vec_lock);
- 
-@@ -2654,12 +2658,21 @@ static int tpacket_snd(struct packet_soc
- 	if ((size_max > dev->mtu + reserve + VLAN_HLEN) && !po->has_vnet_hdr)
- 		size_max = dev->mtu + reserve + VLAN_HLEN;
- 
-+	reinit_completion(&po->skb_completion);
-+
- 	do {
- 		ph = packet_current_frame(po, &po->tx_ring,
- 					  TP_STATUS_SEND_REQUEST);
- 		if (unlikely(ph == NULL)) {
--			if (need_wait && need_resched())
--				schedule();
-+			if (need_wait && skb) {
-+				timeo = sock_sndtimeo(&po->sk, msg->msg_flags & MSG_DONTWAIT);
-+				timeo = wait_for_completion_interruptible_timeout(&po->skb_completion, timeo);
-+				if (timeo <= 0) {
-+					err = !timeo ? -ETIMEDOUT : -ERESTARTSYS;
-+					goto out_put;
-+				}
-+			}
-+			/* check for additional frames */
- 			continue;
- 		}
- 
-@@ -3215,6 +3228,7 @@ static int packet_create(struct net *net
- 	sock_init_data(sock, sk);
- 
- 	po = pkt_sk(sk);
-+	init_completion(&po->skb_completion);
- 	sk->sk_family = PF_PACKET;
- 	po->num = proto;
- 	po->xmit = dev_queue_xmit;
---- a/net/packet/internal.h
-+++ b/net/packet/internal.h
-@@ -128,6 +128,7 @@ struct packet_sock {
- 	unsigned int		tp_hdrlen;
- 	unsigned int		tp_reserve;
- 	unsigned int		tp_tstamp;
-+	struct completion	skb_completion;
- 	struct net_device __rcu	*cached_dev;
- 	int			(*xmit)(struct sk_buff *skb);
- 	struct packet_type	prot_hook ____cacheline_aligned_in_smp;
+ /* Destroy a bonding device.
 
 
