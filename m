@@ -2,70 +2,69 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D35C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C890CC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D3820836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D8A2183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfGBM2h (ORCPT
+        id S1726762AbfGBMap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:28:37 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:47591 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBM2g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:28:36 -0400
-X-Greylist: delayed 436 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 08:28:35 EDT
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 787F8100D9405;
-        Tue,  2 Jul 2019 14:21:18 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id E20E6132E3E; Tue,  2 Jul 2019 14:21:17 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 14:21:17 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: A question about shpcp.
-Message-ID: <20190702122117.vl2opo55zpsykjf6@wunner.de>
-References: <d87dfa281d0d4e7da3f6bf714a7c2e5a@huawei.com>
+        Tue, 2 Jul 2019 08:30:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:48752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfGBMap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:30:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C0B7344;
+        Tue,  2 Jul 2019 05:30:44 -0700 (PDT)
+Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.178])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7094E3F703;
+        Tue,  2 Jul 2019 05:30:43 -0700 (PDT)
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Ofir Drang <ofir.drang@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] checkpatch: add *_NOTIFIER_HEAD as var definition
+Date:   Tue,  2 Jul 2019 15:30:37 +0300
+Message-Id: <20190702123037.28174-1-gilad@benyossef.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d87dfa281d0d4e7da3f6bf714a7c2e5a@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:16:18PM +0000, linmiaohe wrote:
-> In qemu+shpcp+pcie scene, hotplug a network card(virtio) would take more
-> than 5 seconds. It's because 5 seconds delayed_work in func
-> handle_button_press_event with case STATIC_STATE. And this will break some
-> protocols with timeout within 5 seconds.
-> It's very nice of you if you could tell me why is 5*HZ there and if this
-> delay can be reduced?
+Add *_NOTIFIER_HEAD as variable definition to avoid code like this:
 
-According to Table 2-4 of the PCI Standard Hot-Plug Controller and
-Subsystem Specification, "System software is waiting 5 seconds to
-provide the user with an opportunity to cancel the hot-plug operation."
-(http://drydkim.com/MyDocuments/PCI%20Spec/specifications/shpc1_0.pdf)
+ATOMIC_NOTIFIER_HEAD(foo);
+EXPORT_SYMBOL_GPL(foo);
 
-So the reason the delay can't be reduced or removed is because the spec
-mandates it.
+From triggering the the following warning:
+WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
 
-Thanks,
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+---
+ scripts/checkpatch.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Lukas
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 342c7c781ba5..2377707f4441 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3864,6 +3864,7 @@ sub process {
+ 				^.DEFINE_$Ident\(\Q$name\E\)|
+ 				^.DECLARE_$Ident\(\Q$name\E\)|
+ 				^.LIST_HEAD\(\Q$name\E\)|
++				^.$Ident._NOTIFIER_HEAD\(\Q$name\E\)|
+ 				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
+ 				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
+ 			    )/x) {
+-- 
+2.21.0
+
