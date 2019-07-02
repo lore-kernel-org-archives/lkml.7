@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134EFC5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC43C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA482186A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AD221851
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034512;
-	bh=A889iXTdPC4n4ajMCNbDuzhf+q+8gZ8KYVXv29JVgBA=;
+	s=default; t=1562034516;
+	bh=oinelY0MFGhMldycJ8mbSfvHGFrzwwPGNPuoXeDNglE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfh/olGSNGiHc2QL7fvwg1M8O5MOHU5z41wcHhKebiVFvHVUZ5LxwrDjMDhBsqAmL
-	 iLMT3hK21xDndkigZK2QLm0tUXzPWnd0pKqY15+zXUtK8KgltJisgJh1NqfcvWE7Q9
-	 zwnocPm9bwfxepERX6jYgmJQiWTJ4gI5Qsm6S4Ao=
+	b=YbdC0gMmeKPUUvnoENAAC9f0U303tDuXC12cMXQeOIDhbHAulZhBP7QAFT63H9mZ1
+	 8H2054cBoyeU/RWFJ/6/uNytGZFijBk8mVyRGWROtBLancjbVcWexo4BPGU8UdfLNa
+	 toJ6MV00FUVq+tuix6H2Sl0QK3rsBMMx5kZr+/Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfGBC2b (ORCPT
+        id S1727639AbfGBC2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727197AbfGBC23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:28:29 -0400
+        id S1727197AbfGBC2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:28:32 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC2521841;
-        Tue,  2 Jul 2019 02:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68597206A2;
+        Tue,  2 Jul 2019 02:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034508;
-        bh=A889iXTdPC4n4ajMCNbDuzhf+q+8gZ8KYVXv29JVgBA=;
+        s=default; t=1562034511;
+        bh=oinelY0MFGhMldycJ8mbSfvHGFrzwwPGNPuoXeDNglE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKLBMG2SDUJrK9cry3NqJJvA0DUkNGXTWIxY5BZiEUcKAW81yLA1qHlAjB2mYzMT2
-         us3Mvon+zev5xk/2NZ9MfhHZ66GB15oaeqKRrNna0oXy7LRPh588sY0KGZbyIUiD1X
-         +Sp+zSfl5ZdfJJcX/h5HOI0EX5/eisSxwLFNe/hE=
+        b=nEOEBdCkSmwhTzhIweAnc9z280IAHcUNwZYqAz/m8nVNAL8yjWM6iP/5TrKLuypoR
+         3UBmZ2CsQPDB4j+FYodBFvrN/CcHMh2Q2gDfzX2GTKL9/novEtn4FfiUthGBn5SXiU
+         d3mIiNSH/vPCNh/rsaj8LO8BZyt9B67OkEI+2Rzw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 38/43] perf stat: Make metric event lookup more robust
-Date:   Mon,  1 Jul 2019 23:26:11 -0300
-Message-Id: <20190702022616.1259-39-acme@kernel.org>
+Subject: [PATCH 39/43] perf stat: Don't merge events in the same PMU
+Date:   Mon,  1 Jul 2019 23:26:12 -0300
+Message-Id: <20190702022616.1259-40-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -63,46 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-After setting up metric groups through the event parser, the metricgroup
-code looks them up again in the event list.
+Event merging is mainly to collapse similar events in lots of different
+duplicated PMUs.
 
-Make sure we only look up events that haven't been used by some other
-metric. The data structures currently cannot handle more than one metric
-per event. This avoids problems with multiple events partially
-overlapping.
+It can break metric displaying. It's possible for two metrics to have
+the same event, and when the two events happen in a row the second
+wouldn't be displayed.  This would also not show the second metric.
+
+To avoid this don't merge events in the same PMU. This makes sense, if
+we have multiple events in the same PMU there is likely some reason for
+it (e.g. using multiple groups) and we better not merge them.
+
+While in theory it would be possible to construct metrics that have
+events with the same name in different PMU no current metrics have this
+problem.
+
+This is the fix for perf stat -M UPI,IPC (needs also another bug fix to
+completely work)
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Fixes: 430daf2dc7af ("perf stat: Collapse identically named events")
+Link: http://lkml.kernel.org/r/20190624193711.35241-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/stat-display.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 027b09aaa4cf..3f8fd127d31e 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -304,7 +304,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
- 	struct perf_evsel *c2;
- 
- 	evlist__for_each_entry (evsel_list, c2) {
--		if (!strcasecmp(c2->name, name))
-+		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
- 			return c2;
- 	}
- 	return NULL;
-@@ -343,7 +343,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
- 			if (leader) {
- 				/* Search in group */
- 				for_each_group_member (oc, leader) {
--					if (!strcasecmp(oc->name, metric_names[i])) {
-+					if (!strcasecmp(oc->name, metric_names[i]) &&
-+						!oc->collect_stat) {
- 						found = true;
- 						break;
- 					}
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 90df41169113..58df6a0dbb9f 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -554,7 +554,8 @@ static void collect_all_aliases(struct perf_stat_config *config, struct perf_evs
+ 		    alias->scale != counter->scale ||
+ 		    alias->cgrp != counter->cgrp ||
+ 		    strcmp(alias->unit, counter->unit) ||
+-		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter))
++		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter) ||
++		    !strcmp(alias->pmu_name, counter->pmu_name))
+ 			break;
+ 		alias->merged_stat = true;
+ 		cb(config, alias, data, false);
 -- 
 2.20.1
 
