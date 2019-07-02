@@ -2,103 +2,199 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1AEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA6CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DF820881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821F420881
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfGBFjp (ORCPT
+        id S1726963AbfGBFmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:39:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60984 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:39:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 97769ADEC;
-        Tue,  2 Jul 2019 05:39:42 +0000 (UTC)
-Subject: Re: [PATCH] fs: btrfs: extent_map: Change return type of
- unpin_extent_cache
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190702031043.GA24334@hari-Inspiron-1545>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fa67e273-1f0a-15ae-c6df-98fc3060dcbe@suse.com>
-Date:   Tue, 2 Jul 2019 08:39:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 2 Jul 2019 01:42:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40888 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfGBFmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:42:02 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 26186308429B;
+        Tue,  2 Jul 2019 05:42:02 +0000 (UTC)
+Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C431160BF3;
+        Tue,  2 Jul 2019 05:42:01 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 23:42:01 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Kirti Wankhede <kwankhede@nvidia.com>
+Cc:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
+Message-ID: <20190701234201.47b6f23a@x1.home>
+In-Reply-To: <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
+References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
+        <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
+        <20190701112442.176a8407@x1.home>
+        <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
+        <20190701140436.45eabf07@x1.home>
+        <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190702031043.GA24334@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 02 Jul 2019 05:42:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2 Jul 2019 10:25:04 +0530
+Kirti Wankhede <kwankhede@nvidia.com> wrote:
 
-
-On 2.07.19 г. 6:10 ч., Hariprasad Kelam wrote:
-> As unpin_extent_cache never fails and Caller does not expect return
-> value we can change return value from int to void.
+> On 7/2/2019 1:34 AM, Alex Williamson wrote:
+> > On Mon, 1 Jul 2019 23:20:35 +0530
+> > Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> >   
+> >> On 7/1/2019 10:54 PM, Alex Williamson wrote:  
+> >>> On Mon, 1 Jul 2019 22:43:10 +0530
+> >>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> >>>     
+> >>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:    
+> >>>>> This allows udev to trigger rules when a parent device is registered
+> >>>>> or unregistered from mdev.
+> >>>>>
+> >>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> >>>>> ---
+> >>>>>
+> >>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
+> >>>>>     removing them is only tangential to the goal of this change.
+> >>>>>       
+> >>>>
+> >>>> Thanks.
+> >>>>
+> >>>>    
+> >>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
+> >>>>>  1 file changed, 8 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> >>>>> index ae23151442cb..7fb268136c62 100644
+> >>>>> --- a/drivers/vfio/mdev/mdev_core.c
+> >>>>> +++ b/drivers/vfio/mdev/mdev_core.c
+> >>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >>>>>  {
+> >>>>>  	int ret;
+> >>>>>  	struct mdev_parent *parent;
+> >>>>> +	char *env_string = "MDEV_STATE=registered";
+> >>>>> +	char *envp[] = { env_string, NULL };
+> >>>>>  
+> >>>>>  	/* check for mandatory ops */
+> >>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+> >>>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+> >>>>>  	mutex_unlock(&parent_list_lock);
+> >>>>>  
+> >>>>>  	dev_info(dev, "MDEV: Registered\n");
+> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+> >>>>> +
+> >>>>>  	return 0;
+> >>>>>  
+> >>>>>  add_dev_err:
+> >>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
+> >>>>>  void mdev_unregister_device(struct device *dev)
+> >>>>>  {
+> >>>>>  	struct mdev_parent *parent;
+> >>>>> +	char *env_string = "MDEV_STATE=unregistered";
+> >>>>> +	char *envp[] = { env_string, NULL };
+> >>>>>  
+> >>>>>  	mutex_lock(&parent_list_lock);
+> >>>>>  	parent = __find_parent_device(dev);
+> >>>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
+> >>>>>  	up_write(&parent->unreg_sem);
+> >>>>>  
+> >>>>>  	mdev_put_parent(parent);
+> >>>>> +
+> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);      
+> >>>>
+> >>>> mdev_put_parent() calls put_device(dev). If this is the last instance
+> >>>> holding device, then on put_device(dev) dev would get freed.
+> >>>>
+> >>>> This event should be before mdev_put_parent()    
+> >>>
+> >>> So you're suggesting the vendor driver is calling
+> >>> mdev_unregister_device() without a reference to the struct device that
+> >>> it's passing to unregister?  Sounds bogus to me.  We take a
+> >>> reference to the device so that it can't disappear out from under us,
+> >>> the caller cannot rely on our reference and the caller provided the
+> >>> struct device.  Thanks,
+> >>>     
+> >>
+> >> 1. Register uevent is sent after mdev holding reference to device, then
+> >> ideally, unregister path should be mirror of register path, send uevent
+> >> and then release the reference to device.  
+> > 
+> > I don't see the relevance here.  We're marking an event, not unwinding
+> > state of the device from the registration process.  Additionally, the
+> > event we're trying to mark is the completion of each process, so the
+> > notion that we need to mirror the ordering between the two is invalid.
+> >   
+> >> 2. I agree that vendor driver shouldn't call mdev_unregister_device()
+> >> without holding reference to device. But to be on safer side, if ever
+> >> such case occur, to avoid any segmentation fault in kernel, better to
+> >> send event before mdev release the reference to device.  
+> > 
+> > I know that get_device() and put_device() are GPL symbols and that's a
+> > bit of an issue, but I don't think we should be kludging the code for a
+> > vendor driver that might have problems with that.  A) we're using the
+> > caller provided device  for the uevent, B) we're only releasing our own
+> > reference to the device that was acquired during registration, the
+> > vendor driver must have other references,  
 > 
-> Issue identified with coccicheck
-> fs/btrfs/extent_map.c:284:5-8: Unneeded variable: "ret". Return "0" on
-> line 316
+> Are you going to assume that someone/vendor driver is always going to do
+> right thing?
+
+mdev is a kernel driver, we make reasonable assumptions that other
+drivers interact with it correctly.
+
+> > C) the parent device
+> > generally lives on a bus, with a vendor driver, there's an entire
+> > ecosystem of references to the device below mdev.  Is this a paranoia
+> > request or are you really concerned that your PCI device suddenly
+> > disappears when mdev's reference to it disappears.   
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> mdev infrastructure is not always used by PCI devices. It is designed to
+> be generic, so that other devices (other than PCI devices) can also use
+> this framework.
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Obviously mdev is not PCI specific, I only mention it because I'm
+asking if you have a specific concern in mind.  If you did, I'd assume
+it's related to a PCI backed vGPU.  Any physical parent device of an
+mdev is likely to have some sort of bus infrastructure behind it
+holding references to the device (ie. a probe and release where an
+implicit reference is held between these points).  A virtual device
+would be similar, it's created as part of a module init and destroyed
+as part of a module exit, where mdev registration would exist between
+these points.
 
+> If there is a assumption that user of mdev framework or vendor drivers
+> are always going to use mdev in right way, then there is no need for
+> mdev core to held reference of the device?
+> This is not a "paranoia request". This is more of a ideal scenario, mdev
+> should use device by holding its reference rather than assuming (or
+> relying on) someone else holding the reference of device.
+
+In fact, at one point Parav was proposing removing these references
+entirely, but Connie and I both felt uncomfortable about that.  I think
+it's good practice that mdev indicates the use of the parent device by
+incrementing the reference count, with each child mdev device also
+taking a reference, but those references balance out within the mdev
+core.  Their purpose is not to maintain the device for outside callers,
+nor should outside callers assume mdev's use of references to release
+their own.  I don't think it's unreasonable to assume that the caller
+should have a legitimate reference to the object it's providing to this
+function and therefore we should be able to use it after mdev's
+internal references are balanced out.  Thanks,
+
+Alex
