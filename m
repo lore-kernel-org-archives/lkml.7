@@ -2,149 +2,82 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A295C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0D6C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2522183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3024720659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfGBIgj (ORCPT
+        id S1726936AbfGBIhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:36:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55766 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfGBIgg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:36:36 -0400
-Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:8ae7:f3be:9ccd:d8f9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 06BAF27F6C8;
-        Tue,  2 Jul 2019 09:36:33 +0100 (BST)
-Message-ID: <411513a99af62b51828500a75ee0970bc763efd4.camel@collabora.com>
-Subject: Re: [PATCH v3 1/1] iio: common: cros_ec_sensors: determine protocol
- version
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     egranata@chromium.org, kernel@collabora.com,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gwendal@chromium.org
-Date:   Tue, 02 Jul 2019 10:36:30 +0200
-In-Reply-To: <e74cb88645a02a3e84445b0567d72e8b90f18335.1561968653.git.fabien.lahoudere@collabora.com>
-References: <cover.1561968653.git.fabien.lahoudere@collabora.com>
-         <e74cb88645a02a3e84445b0567d72e8b90f18335.1561968653.git.fabien.lahoudere@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Jul 2019 04:37:33 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:56440 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfGBIhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:37:32 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id EC3B720BC5;
+        Tue,  2 Jul 2019 10:37:28 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 74BF22079D;
+        Tue,  2 Jul 2019 10:37:28 +0200 (CEST)
+Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brad Love <brad@nextdimension.cc>
+References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
+Message-ID: <5cdfcd0d-067b-16f0-1860-36997c1f04ee@free.fr>
+Date:   Tue, 2 Jul 2019 10:37:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jul  2 10:37:28 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 01/07/2019 13:44, Marc Gonzalez wrote:
 
-There is a double semi colon in that patch.
-Let me send a v4 without it.
-
-Le lundi 01 juillet 2019 à 10:14 +0200, Fabien Lahoudere a écrit :
-> This patch adds a function to determine which version of the
-> protocol is used to communicate with EC.
+> By refactoring the command setup code, we can let the compiler
+> determine the size of each command.
 > 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 > ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
-> ++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
+>  drivers/media/dvb-frontends/si2168.c | 142 ++++++++-------------------
+>  1 file changed, 41 insertions(+), 101 deletions(-)
 > 
-> diff --git
-> a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 130362ca421b..2e0f97448e64 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
->  	[MOTIONSENSE_LOC_MAX] = "unknown",
->  };
+> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+> index 168c503e9154..19398f041c79 100644
+> --- a/drivers/media/dvb-frontends/si2168.c
+> +++ b/drivers/media/dvb-frontends/si2168.c
+> @@ -11,6 +11,12 @@
 >  
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device
-> *ec_dev,
-> +					     u16 cmd_offset, u16 cmd,
-> u32 *mask)
-> +{
-> +	int ret;
-> +	struct {
-> +		struct cros_ec_command msg;
-> +		union {
-> +			struct ec_params_get_cmd_versions params;
-> +			struct ec_response_get_cmd_versions resp;
-> +		};
-> +	} __packed buf = {
-> +		.msg = {
-> +			.command = EC_CMD_GET_CMD_VERSIONS +
-> cmd_offset,
-> +			.insize = sizeof(struct
-> ec_response_get_cmd_versions),
-> +			.outsize = sizeof(struct
-> ec_params_get_cmd_versions)
-> +			},
-> +		.params = {.cmd = cmd}
-> +	};
+>  static const struct dvb_frontend_ops si2168_ops;
+>  
+> +#define CMD_SETUP(cmd, __args, __rlen) do {	\
+> +	int wlen = sizeof(__args) - 1;		\
+> +	memcpy(cmd.args, __args, wlen);		\
+> +	cmd.wlen = wlen; cmd.rlen = __rlen;	\
+> +} while (0)
 > +
-> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> +	if (ret >= 0)
-> +		*mask = buf.resp.version_mask;
-> +	return ret;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->  			      struct iio_dev *indio_dev,
->  			      bool physical_device)
-> @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
-> platform_device *pdev,
->  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->  	struct cros_ec_sensor_platform *sensor_platform =
-> dev_get_platdata(dev);
-> +	u32 ver_mask;
-> +	int ret;
->  
->  	platform_set_drvdata(pdev, indio_dev);
->  
-> @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
-> platform_device *pdev,
->  
->  	mutex_init(&state->cmd_lock);
->  
-> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +						ec->cmd_offset,
-> +						EC_CMD_MOTION_SENSE_CMD
-> ,
-> +						&ver_mask);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/* Set up the host command structure. */
-> -	state->msg->version = 2;
-> +	state->msg->version = fls(ver_mask) - 1;;
 
-Unneeded semi colon.
+I'm planning on sending a v2 where drivers/media/tuners/si2157.c
+is refactored the same way. Not sure where to store the macro.
+Maybe include/media/dvb_frontend.h ?
 
->  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
->  
-
+Regards.
