@@ -2,187 +2,139 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3159FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EFCC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B3C20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF6820673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0c3Zbx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfGCBuH (ORCPT
+        id S1727321AbfGCBuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:50:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59472 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGCBuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:50:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 18:50:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
-   d="scan'208";a="184630185"
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2019 18:50:02 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Date:   Wed,  3 Jul 2019 17:50:04 +0800
-Message-Id: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 2 Jul 2019 21:50:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38685 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:50:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n11so826062qtl.5;
+        Tue, 02 Jul 2019 18:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aM7TEuKumvUMe3SbB3+XmY4I8aQKFrST7xx8ZApBOcM=;
+        b=Y0c3Zbx/HklkB3ZQUMPUnd3cuD2+CXBd/qv6pY0OkEJTg/+z03wi0oF1CvFJYsaUkZ
+         4zHdADC6xI/bjao5kJDJAheklnpxnkP641vjkWWAD6dXp83EK+bgIBqRrhp5R+e9GhCz
+         zCGy7sAlE3XsPTlqcBMQPxFhUYqm5Yg2JhxtQejc7AlhxkxL1xSYYXRVk6l4V/OzXbVr
+         F2N4nVUleb2SyZc8sgC2poSaaQ+CgHZiuCRWIi+78YgA4bpPN5KzS8h7SHnC0qrpdgs/
+         YZxrEttZo98QKBCnwb20wNLc3UgkTsaMpeRea2ivIhOm1ixPyotAxAUbQecsF1pxUnqv
+         E1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aM7TEuKumvUMe3SbB3+XmY4I8aQKFrST7xx8ZApBOcM=;
+        b=WdoTkpU5Tgrc0jYoCvIk/+u664gzb+skwTTi/c56O9eaQZ0+T85W5dskBAOmrnrhNW
+         mfQgDIJHVUpe9uobnMnLfhnocWJMfeaF9CnBnxQQprsFc5NO7wHbKsozH8+KI2Q+etoN
+         /PfKntP/PDmi5mk57UKO+ZZs0BRYCMyfHnVWzYr6u+4JV2oLGt66joD57jBgumVQZm1z
+         rY7J6bHPya7aWFwA548AtRHPMosjHGu7RzguMatpBziJqUT7QK8aZ4kH/dek1Jk6w4wh
+         mpabUIkYEDyzOmsxSHArDDQGuq1/hY6YrvF9IyW6zEVt50vHOceoti00QMIZwzZDR5od
+         TbdQ==
+X-Gm-Message-State: APjAAAXNigybF3xK/JP6c8AdRgkeUEIyJJ0xaWRlauTIljPm6KEN4wFw
+        oCt+VpSIpm+GXzoMEknZrVTKiod2xDnNDg==
+X-Google-Smtp-Source: APXvYqxHJBmk2g0xpgV4VUHGsLMtAzHIfVL3nv7QBsGBAXs8stUf9sYJU+dbtd2Yxf85Z4tgzUX1Cw==
+X-Received: by 2002:a0c:b755:: with SMTP id q21mr27605171qve.92.1562099204529;
+        Tue, 02 Jul 2019 13:26:44 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
+        by smtp.gmail.com with ESMTPSA id f6sm6267017qkk.79.2019.07.02.13.26.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:26:44 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org
+Cc:     aarch64-laptops@lists.linaro.org,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Joe Perches <joe@perches.com>, Joerg Roedel <jroedel@suse.de>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list),
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH 0/2] iommu: handle drivers that manage iommu directly
+Date:   Tue,  2 Jul 2019 13:26:17 -0700
+Message-Id: <20190702202631.32148-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kweh Hock Leong <hock.leong.kweh@intel.com>
+From: Rob Clark <robdclark@chromium.org>
 
-DWMAC4 is capable to support clause 45 mdio communication.
-This patch enable the feature on stmmac_mdio_write() and
-stmmac_mdio_read() by following phy_write_mmd() and
-phy_read_mmd() mdiobus read write implementation format.
+One of the challenges we need to handle to enable the aarch64 laptops
+upstream is dealing with the fact that the bootloader enables the
+display and takes the corresponding SMMU context-bank out of BYPASS.
+Unfortunately, currently, the IOMMU framework attaches a DMA (or
+potentially an IDENTITY) domain before the driver is probed and has
+a chance to intervene and shutdown[1] scanout.  Which makes things go
+horribly wrong.
 
-Reviewed-by: Li, Yifan <yifan2.li@intel.com>
-Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
+This also happens to solve a problem that is blocking us from supporting
+per-context pagetables on the GPU, due to domain that is attached before
+driver has a chance to attach it's own domain for the GPU.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 18cadf0b0d66..b9edb18769f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -24,11 +24,27 @@
- 
- #define MII_BUSY 0x00000001
- #define MII_WRITE 0x00000002
-+#define MII_DATA_MASK GENMASK(15, 0)
- 
- /* GMAC4 defines */
- #define MII_GMAC4_GOC_SHIFT		2
-+#define MII_GMAC4_REG_ADDR_SHIFT	16
- #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
- #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
-+#define MII_GMAC4_C45E			BIT(1)
-+
-+static void stmmac_mdio_c45_setup(struct stmmac_priv *priv, int phyreg,
-+				  u32 *val, u32 *data)
-+{
-+	unsigned int reg_shift = priv->hw->mii.reg_shift;
-+	unsigned int reg_mask = priv->hw->mii.reg_mask;
-+
-+	*val |= MII_GMAC4_C45E;
-+	*val &= ~reg_mask;
-+	*val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
-+
-+	*data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
-+}
- 
- /* XGMAC defines */
- #define MII_XGMAC_SADDR			BIT(18)
-@@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
--	u32 v;
--	int data;
- 	u32 value = MII_BUSY;
-+	int data = 0;
-+	u32 v;
- 
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
- 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
- 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
- 		& priv->hw->mii.clk_csr_mask;
--	if (priv->plat->has_gmac4)
-+	if (priv->plat->has_gmac4) {
- 		value |= MII_GMAC4_READ;
-+		if (phyreg & MII_ADDR_C45)
-+			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
-+	}
- 
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
- 			       100, 10000))
- 		return -EBUSY;
- 
-+	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
-@@ -178,7 +198,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 		return -EBUSY;
- 
- 	/* Read the data from the MII data register */
--	data = (int)readl(priv->ioaddr + mii_data);
-+	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
- 
- 	return data;
- }
-@@ -198,8 +218,9 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
--	u32 v;
- 	u32 value = MII_BUSY;
-+	int data = phydata;
-+	u32 v;
- 
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
-@@ -207,10 +228,13 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 
- 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
- 		& priv->hw->mii.clk_csr_mask;
--	if (priv->plat->has_gmac4)
-+	if (priv->plat->has_gmac4) {
- 		value |= MII_GMAC4_WRITE;
--	else
-+		if (phyreg & MII_ADDR_C45)
-+			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
-+	} else {
- 		value |= MII_WRITE;
-+	}
- 
- 	/* Wait until any existing MII operation is complete */
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
-@@ -218,7 +242,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 		return -EBUSY;
- 
- 	/* Set the MII address register to write */
--	writel(phydata, priv->ioaddr + mii_data);
-+	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
- 	/* Wait until any existing MII operation is complete */
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index d0af7d37fdf9..1739c6dc470e 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -195,6 +195,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
-    IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
- #define MII_ADDR_C45 (1<<30)
-+#define MII_DEVADDR_C45_SHIFT	16
-+#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
- 
- struct device;
- struct phylink;
+But since the driver is managing it's own iommu domains directly, and
+does not use dev->iommu_group->default_domain at all, the simple
+solution to both problems is to just avoid attaching that domain in the
+first place.
+
+[1] Eventually we want to be able to do a seemless transition from
+    efifb to drm/msm... but first step is to get the core (iommu,
+    clk, genpd) pieces in place, so a first step of disabling the
+    display before first modeset enables us to get all of the
+    dependencies outside of drm/msm in place.  And this at least
+    gets us parity with windows (which also appears to do a modeset
+    between bootloader and HLSO).  After that there is a bunch of
+    drm/msm work that is probably not interesting to folks outside
+    of dri-devel.
+
+Rob Clark (2):
+  iommu: add support for drivers that manage iommu explicitly
+  drm/msm: mark devices where iommu is managed by driver
+
+ drivers/gpu/drm/msm/adreno/adreno_device.c |  1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    |  1 +
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   |  1 +
+ drivers/gpu/drm/msm/msm_drv.c              |  1 +
+ drivers/iommu/iommu.c                      | 11 +++++++++++
+ include/linux/device.h                     |  3 ++-
+ 6 files changed, 17 insertions(+), 1 deletion(-)
+
 -- 
-1.9.1
+2.20.1
 
