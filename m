@@ -2,53 +2,52 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFBBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7926DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853E421850
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAD22187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055005;
-	bh=cW6dXEbzQ5FFfEr+2oS4Oy2c+x2zJXY56Pe7Lr47RDM=;
+	s=default; t=1562055009;
+	bh=jBVB3WzKRU53r2hTnkZMtlZ8EDAE5zf3xnFZfNvLmJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0M/FdC1iKa/ehQjd/CyfJO4jK1AUgfrqKbOVEGWgodtqRM4eTtSiEGV028Q1qXbH
-	 rnE0+VzIMni8Zaw0ez3xTm7lsvToA9Q8ONLnzRO8BltKPzK/mHOVCKUxVl6ZtptEZN
-	 88o3EhIR4QnO27T5Ssy9nX3+LddQW4HosMULaozI=
+	b=QAelXwS3VX9sS9JLqTew26YKVVmkqZR3417sPUNc6WDhWEwpX+EmWQIsgwlaAZiBY
+	 R92SpKaJ0cz8JVbH4+b077mSGJ8ZJn3MDvvJRlJ/nmAlX8BYX4tT1vdRHikfzQRBDO
+	 Lxd76QVZ2w02dmv4DxZrKw/yxkqkWgl+Ra9m+Er0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfGBIKD (ORCPT
+        id S1728796AbfGBIKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58170 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728766AbfGBIKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:10:01 -0400
+        id S1728780AbfGBIKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 094F12184B;
-        Tue,  2 Jul 2019 08:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0201D21850;
+        Tue,  2 Jul 2019 08:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055000;
-        bh=cW6dXEbzQ5FFfEr+2oS4Oy2c+x2zJXY56Pe7Lr47RDM=;
+        s=default; t=1562055006;
+        bh=jBVB3WzKRU53r2hTnkZMtlZ8EDAE5zf3xnFZfNvLmJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1BJKRwoBYIa8bxEAPA8czE+SsYioSkPS80SuogAruxWJvBrvtcgQc22DgCDchlrzv
-         d/RsOZJpKU5RNI3FjwVSzkuJ1YZyAbeX+wYjb7Xyf+H+gRW+rE3nMmk4uYtGkUUalx
-         WUmKg+K+2dQLd/ubgKNeHLTk4S3GLQL7U5paeGEE=
+        b=lqk9+917YB0AWw91xOiPlAGogDlhNy3KHzVwYsr6mFnHso2Ynvr+HKcpizlaJH/c6
+         pxIlrFzJ0P837P9nb0U2yVUTD8u+TiOro4ojI+ofFcv3+ueMv1cObHjkm335PxTJaf
+         znchOiL6KmOW0/U93/tFUe/EED68e7VAiEwEjRdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 34/43] tipc: check msg->req data len in tipc_nl_compat_bearer_disable
-Date:   Tue,  2 Jul 2019 10:02:14 +0200
-Message-Id: <20190702080125.678554102@linuxfoundation.org>
+Subject: [PATCH 4.14 36/43] team: Always enable vlan tx offload
+Date:   Tue,  2 Jul 2019 10:02:16 +0200
+Message-Id: <20190702080125.785807949@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -61,88 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 4f07b80c973348a99b5d2a32476a2e7877e94a05 ]
+[ Upstream commit ee4297420d56a0033a8593e80b33fcc93fda8509 ]
 
-This patch is to fix an uninit-value issue, reported by syzbot:
+We should rather have vlan_tci filled all the way down
+to the transmitting netdevice and let it do the hw/sw
+vlan implementation.
 
-  BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:981
-  Call Trace:
-    __dump_stack lib/dump_stack.c:77 [inline]
-    dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-    kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-    __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-    memchr+0xce/0x110 lib/string.c:981
-    string_is_valid net/tipc/netlink_compat.c:176 [inline]
-    tipc_nl_compat_bearer_disable+0x2a1/0x480 net/tipc/netlink_compat.c:449
-    __tipc_nl_compat_doit net/tipc/netlink_compat.c:327 [inline]
-    tipc_nl_compat_doit+0x3ac/0xb00 net/tipc/netlink_compat.c:360
-    tipc_nl_compat_handle net/tipc/netlink_compat.c:1178 [inline]
-    tipc_nl_compat_recv+0x1b1b/0x27b0 net/tipc/netlink_compat.c:1281
-
-TLV_GET_DATA_LEN() may return a negtive int value, which will be
-used as size_t (becoming a big unsigned long) passed into memchr,
-cause this issue.
-
-Similar to what it does in tipc_nl_compat_bearer_enable(), this
-fix is to return -EINVAL when TLV_GET_DATA_LEN() is negtive in
-tipc_nl_compat_bearer_disable(), as well as in
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-
-v1->v2:
-  - add the missing Fixes tags per Eric's request.
-
-Fixes: 0762216c0ad2 ("tipc: fix uninit-value in tipc_nl_compat_bearer_enable")
-Fixes: 8b66fee7f8ee ("tipc: fix uninit-value in tipc_nl_compat_link_reset_stats")
-Reported-by: syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Suggested-by: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/team/team.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -436,7 +436,11 @@ static int tipc_nl_compat_bearer_disable
- 	if (!bearer)
- 		return -EMSGSIZE;
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2131,12 +2131,12 @@ static void team_setup(struct net_device
+ 	dev->features |= NETIF_F_NETNS_LOCAL;
  
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
+ 	dev->hw_features = TEAM_VLAN_FEATURES |
+-			   NETIF_F_HW_VLAN_CTAG_TX |
+ 			   NETIF_F_HW_VLAN_CTAG_RX |
+ 			   NETIF_F_HW_VLAN_CTAG_FILTER;
  
-@@ -528,7 +532,11 @@ static int tipc_nl_compat_link_stat_dump
+ 	dev->hw_features |= NETIF_F_GSO_ENCAP_ALL;
+ 	dev->features |= dev->hw_features;
++	dev->features |= NETIF_F_HW_VLAN_CTAG_TX;
+ }
  
- 	name = (char *)TLV_DATA(msg->req);
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -806,7 +814,11 @@ static int tipc_nl_compat_link_reset_sta
- 	if (!link)
- 		return -EMSGSIZE;
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
+ static int team_newlink(struct net *src_net, struct net_device *dev,
 
 
