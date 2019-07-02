@@ -7,151 +7,175 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D2FC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C09B219BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC0C219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4QfsUpx"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aW71dvXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGCAay (ORCPT
+        id S1727281AbfGCAax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:30:54 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42467 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfGCAaw (ORCPT
+        Tue, 2 Jul 2019 20:30:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35051 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfGCAaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 20:30:52 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so289911edq.9;
-        Tue, 02 Jul 2019 17:30:51 -0700 (PDT)
+Received: by mail-ot1-f65.google.com with SMTP id j19so489506otq.2;
+        Tue, 02 Jul 2019 17:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SUMBHjqHxfFISJ4tsGh6gHnVJafzY5uBObk9/M1SI6Y=;
-        b=p4QfsUpxZBUPSNbm9a2ya6+yOVBLb06CncvEKO0qxtLknZ9dc5s45n/yCCCk8pVAGr
-         kTtuJCFsVLSmNXI13tt/3c+qkzMeuAESDbdCbiFxU8ZGu73hjgvAB7S/EKz0qJg50PM0
-         mggd9oJOp7fMPe31Y0DXLnsbQg44FXj8SGYjCyvHT1W/uN6YXAprbpsjvRGAUJjnYqRY
-         UbDxAZ046ar2qRfBKMqC0yk+pCMu82zzkmqLwb0ooQKB2mTZVaIkovBFit3MwyXI7wOa
-         w8KYcr5NOXHJ2fqa9bjhrPr+UG3CdQ92BH7V+3eVd900MzHNSuuuaZW55wl9e7h6e4PB
-         vpLQ==
+        bh=Q0DTSEoJfAoRh/DNOfvOIAUC0JkelgBbLHyDpxdWx4k=;
+        b=aW71dvXzx3/OZ2dyur8K2R3t59hdwnCvtsuhJGdee/nm9r6PCmqTtx+JWgAIJLo2/d
+         Y21AhbIEphVmstcZOwfTGkQASbWx10y4fsfburjD7qorfBw7J73NAYnWdXDN5k5epES2
+         9xsxotFn9XmfaHw9GsQaebN96U6pHmRUkIvbu0rqpCA3ltYn9AaqBA81bvwfZWb2bRXK
+         PGExbAEeQJBbEYszopwMOpV+S9XN0z12R0Vy2r2L+ErpKfnQnxV/0MIwpTrNI/wPBJUQ
+         Q4OJpy3R867Yl9+XNBz9RWRkL9MFWnLifF6/SdKW9uCH6tpmnrx4YKPqcv3J2LmnI790
+         wFfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SUMBHjqHxfFISJ4tsGh6gHnVJafzY5uBObk9/M1SI6Y=;
-        b=aVNjQ3aZKn5OZO6na5MU7plZ2bIrRI4uKGXUdogHKc83QwSguIIWojeTQ6a98RJsoY
-         seUCji2cu6dDrRoai6omiLtnJNGl9aCP8lokwtBo0iHvcEfeNNaiMRwxbf55M1jjmjZ/
-         wKrZ6vd7qOi5YS9fXauI1ZGNUoypzd5cKYVawj1/qa79TGAndm5st5RctIA83j4tKex6
-         +MCqM1iFMMjZAkvGK1dUYUsmZMJVbMMK4xsR5ToS6E9fcO5s1uYN7YjgOj+SkJwI1gi8
-         mRqrLXCigMVnFiSPCjeyNPoc4qB7TUtCz/AuF7TFimruNZhHteLUdS7r1yW5KT6uKT7G
-         sR0Q==
-X-Gm-Message-State: APjAAAUEb3xclV+iEMHuPIodvsXJzHwrFrAskdb9Mv29M+8tmv8+1g1g
-        TVlQIbeBrkovOrG7/E0htTtfVmNDeORQGsqLuL+4aToXaVs=
-X-Google-Smtp-Source: APXvYqx4j4OCiYpTjzpwx7oNckBn+SqKRP14iTHp1P6MaiYoDQDLUnA3ecoEITujxJ6YGjIOt/liDhVugoLpxJ8Knu0=
-X-Received: by 2002:a50:9468:: with SMTP id q37mr38323779eda.163.1562107743736;
- Tue, 02 Jul 2019 15:49:03 -0700 (PDT)
+        bh=Q0DTSEoJfAoRh/DNOfvOIAUC0JkelgBbLHyDpxdWx4k=;
+        b=JyqDon+pTlje8hOecDtTi3T1tCiHKDoBqevjUXlT0QD1tKYWqRkUhzQiOIu46AsPOC
+         7aEf+Xw9mBFZUaueoCQX03NjIg/mlgCQN66hA9SCfLWjrYM8QSL6IdNH75pkWwUq7ngY
+         d1S0PqqAoGWjWunvwVCQUeWOgO8l14EX9uVWxX8UK2Y+AysM+Gcvx5al4rBFhQSoYV0/
+         YMYyOcenwhKEv3jIepvyC7HlqUf5aNOSLmr6SJvJq3q9aGZs6m5Anom1Xh3RPtXWj34s
+         uo8X2+8vK5qH8FaxvIBvC3x3euBkezXX7O073ONwiEhwFWO026xvKCOecHHhB55A+8Wj
+         Yc1A==
+X-Gm-Message-State: APjAAAXy6O1lSAnOZ4zZQfXUjHvcjK0SaQK1tqhBtMl1fn73k6DskWNj
+        OlsdcuHptjogpcmfkBxc3T4yQWJMEOqtsOostw1gH1bH
+X-Google-Smtp-Source: APXvYqy/QQUN0J6b4O2bTl3SYceaajLNKXdMQ4/wzOnMkRg4M4DkLByhdEGK3wJrQJDIJWZll9ZaCAX1i1L6mFoN5Ec=
+X-Received: by 2002:a9d:39a6:: with SMTP id y35mr27395004otb.81.1562110146329;
+ Tue, 02 Jul 2019 16:29:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
- <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
- <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
- <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com> <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
-In-Reply-To: <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 2 Jul 2019 15:48:48 -0700
-Message-ID: <CAF6AEGvm62rcm4Lp4a+QmqFweVQ0QWXLDoN2CP8=40BdwiiVbQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
-To:     Leif Lindholm <leif.lindholm@linaro.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Alexander Graf <agraf@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-8-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-8-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 01:28:55 +0200
+Message-ID: <CAFBinCAnKeGYkyCmEMugWuQaSxgBp4DqtHN3b0rLJY6jwOF0QA@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 07/14] clk: meson: g12a: add notifiers to handle cpu
+ clock change
+To:     sboyd@codeaurora.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 2:59 PM Leif Lindholm <leif.lindholm@linaro.org> wrote:
->
-> On Tue, Jul 02, 2019 at 02:01:49PM -0700, Rob Clark wrote:
-> > > > So we are dealing with a platform that violates the UEFI spec, since
-> > > > it does not bother to implement variable services at runtime (because
-> > > > MS let the vendor get away with this).
-> > >
-> > > To clarify, the above remark applies to populating the DT from the OS
-> > > rather than from the firmware.
-> >
-> > yeah, it isn't pretty, but there *are* some other similar cases where
-> > efi-stub is populating DT.. (like update_fdt_memmap() and
-> > kaslr-seed)..
->
-> The problem isn't with the stub updating the DT, the problem is what
-> it updates it with.
->
-> update_fdt_memmap() is the stub filling in the information it
-> communicates to the main kernel.
->
-> kaslr-seed sets a standard property using a standard interface if that
-> interface is available to it at the point of execution.
->
-> Since what we're doing here is dressing up an ACPI platform to make it
-> look like it was a DT platform, and since we have the ability to tweak
-> the DT before ever passing it to the kernel, let's just do that.
->
-> Yes, I know I said I'd rather not, but it's way nicer than sticking
-> platform-specific hacks into the EFI stub.
->
-> (If adding it as a DT property is indeed the thing to do.)
->
-> > > ... but saving variables at boot time for consumption at runtime is
-> > > something that we will likely see more of in the future.
-> >
-> > I think this will be nice, but it also doesn't address the need for a
-> > quirk to get this into /chosen..  I guess we *could* use a shim or
-> > something that runs before the kernel to do this.  But that just seems
-> > like a logistical/support nightmare.
-> >
-> > There is one kernel, and there
-> > are N distro's, so debugging a users "I don't get a screen at boot"
-> > problem because their distro missed some shim patch really just
-> > doesn't seem like a headache I want to have.
->
-> The distros should not need to be aware *at all* of the hacks required
-> to disguise these platforms as DT platforms.
->
-> If they do, they're already device-specific installers and have
-> already accepted the logistical/support nightmare.
->
+Hi Stephen, Hi Neil,
 
-I guess I'm not *against* a DT loader shim populating the panel-id
-over into /chosen.. I had it in mind as a backup plan.  Ofc still need
-to get dt folks to buy into /chosen/panel-id but for DT boot I think
-that is the best option.  (At least the /chosen/panel-id approach
-doesn't require the shim to be aware of how the panel is wired up to
-dsi controller and whether their is a bridge in between, and that
-short of thing, so the panel-id approach seems more maintainable that
-other options.)
+On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> In order to implement clock switching for the CLKID_CPU_CLK and
+> CLKID_CPUB_CLK, notifiers are added on specific points of the
+> clock tree :
+>
+> cpu_clk / cpub_clk
+> |   \- cpu_clk_dyn
+> |      |  \- cpu_clk_premux0
+> |      |        |- cpu_clk_postmux0
+> |      |        |    |- cpu_clk_dyn0_div
+> |      |        |    \- xtal/fclk_div2/fclk_div3
+> |      |        \- xtal/fclk_div2/fclk_div3
+> |      \- cpu_clk_premux1
+> |            |- cpu_clk_postmux1
+> |            |    |- cpu_clk_dyn1_div
+> |            |    \- xtal/fclk_div2/fclk_div3
+> |            \- xtal/fclk_div2/fclk_div3
+> \ sys_pll / sys1_pll
+>
+> This for each cluster, a single one for G12A, two for G12B.
+>
+> Each cpu_clk_premux1 tree is marked as read-only and CLK_SET_RATE_NO_REPARENT,
+> to be used as "parking" clock in a safe clock frequency.
+it seems that this is one case where the "coordinated clocks" feature
+would come handy: [0]
+Stephen, do you know if those patches stopped in March or if there's
+still some ongoing effort to get them ready?
 
-I am a bit fearful of problems arising from different distros and
-users using different versions of shim, and how to manage that.  I
-guess if somehow "shim thing" was part of the kernel, there would by
-one less moving part... I'd know if user had kernel vX.Y.Z they'd be
-good to go vs not.  But *also* depending on a new-enough version of a
-shim, where the version # is probably not easily apparent to the end
-user, sounds a bit scary from the "all the things that can go wrong"
-point of view.  Maybe I'm paranoid, but I'm a bit worried about how to
-manage that.
+[...]
+> -/*
+> - * Internal sys pll emulation configuration parameters
+> - */
+> -static const struct reg_sequence g12a_sys_init_regs[] = {
+> -       { .reg = HHI_SYS_PLL_CNTL1,     .def = 0x00000000 },
+> -       { .reg = HHI_SYS_PLL_CNTL2,     .def = 0x00000000 },
+> -       { .reg = HHI_SYS_PLL_CNTL3,     .def = 0x48681c00 },
+> -       { .reg = HHI_SYS_PLL_CNTL4,     .def = 0x88770290 },
+> -       { .reg = HHI_SYS_PLL_CNTL5,     .def = 0x39272000 },
+> -       { .reg = HHI_SYS_PLL_CNTL6,     .def = 0x56540000 },
+> +static const struct pll_mult_range g12a_sys_pll_mult_range = {
+> +       .min = 128,
+> +       .max = 250,
+>  };
+>
+>  static struct clk_regmap g12a_sys_pll_dco = {
+> @@ -124,14 +118,15 @@ static struct clk_regmap g12a_sys_pll_dco = {
+>                         .shift   = 29,
+>                         .width   = 1,
+>                 },
+> -               .init_regs = g12a_sys_init_regs,
+> -               .init_count = ARRAY_SIZE(g12a_sys_init_regs),
+> +               .range = &g12a_sys_pll_mult_range,
+Neil, I believe that this should be a separate patch with a
+description which explains why we don't need the "init regs" anymore
 
-BR,
--R
+>         },
+>         .hw.init = &(struct clk_init_data){
+>                 .name = "sys_pll_dco",
+> -               .ops = &meson_clk_pll_ro_ops,
+> +               .ops = &meson_clk_pll_ops,
+>                 .parent_names = (const char *[]){ IN_PREFIX "xtal" },
+>                 .num_parents = 1,
+> +               /* This clock feeds the CPU, avoid disabling it */
+> +               .flags = CLK_IS_CRITICAL,
+maybe we should have a separate patch for making the CPU clock tree
+mutable as well
+
+[...]
+> +/* This divider uses bit 26 to take change in account */
+> +static int g12b_cpub_clk_mux0_div_set_rate(struct clk_hw *hw,
+> +                                          unsigned long rate,
+> +                                          unsigned long parent_rate)
+> +{
+> +       struct clk_regmap *clk = to_clk_regmap(hw);
+> +       struct clk_regmap_div_data *div = clk_get_regmap_div_data(clk);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       ret = divider_get_val(rate, parent_rate, div->table, div->width,
+> +                             div->flags);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       val = (unsigned int)ret << div->shift;
+> +
+> +       regmap_update_bits(clk->map, HHI_SYS_CPUB_CLK_CNTL,
+> +                          SYS_CPU_DYN_ENABLE, SYS_CPU_DYN_ENABLE);
+> +
+> +       return regmap_update_bits(clk->map, div->offset,
+> +                                 clk_div_mask(div->width) << div->shift |
+> +                                 SYS_CPU_DYN_ENABLE, val);
+> +};
+the public S922X datasheet doesn't mention bit 26
+do I understand the semantics correctly?:
+- set SYS_CPU_DYN_ENABLE
+- update the divider
+- unset SYS_CPU_DYN_ENABLE
+
+too bad it's not a gate which we could model with
+CLK_SET_RATE_GATE/CLK_SET_RATE_UNGATE
+
+
+Martin
+
+[0] https://patchwork.kernel.org/patch/10838949/
