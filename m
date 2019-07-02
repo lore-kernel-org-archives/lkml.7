@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF08C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4790C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7123206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7369E2184E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034497;
-	bh=41GNa/T8HHn+m8L/+OJ7P1C9YyZxDuxwGcxk9QS+4aE=;
+	s=default; t=1562034501;
+	bh=tIomsXKG3r8CfZK9jgMo11Xyz/N+kCfADAtMFsQdlqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y67Z30AJrEc83C8NxlKiwRQuM3XQB0rwkDsXxloNN3142Yjtj5PJsneL6PfEt61WP
-	 /BovoV2CnWaO80cs2k50wrwI3eG4EIifrsvapOm3QlnJFp4FDBg2tuZqZkeZ4XLokH
-	 LnfT1dfa8oIISddUfzJUNmMNEbiXVPBUo7frMbOs=
+	b=Pbc7pV6LqhfdWG1tU7jOX1+BDUsrnsNk+dCJKhG2M9a3Ldsb4fVHDS7/V9TWCvT/b
+	 b9YVUxXD5N9wDNTQEv6gDlSvR7UXSxj2womVLgl1lQdim1/mD7/LUzYXsQM13uGF5s
+	 t5qL2NEuiA81j2IRhiP7azqBNCUQLTFH0/ZBTsNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfGBC2P (ORCPT
+        id S1727577AbfGBC2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:28:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:28:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbfGBC2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:28:14 -0400
+        id S1727174AbfGBC2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:28:18 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA3621852;
-        Tue,  2 Jul 2019 02:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A614521841;
+        Tue,  2 Jul 2019 02:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034494;
-        bh=41GNa/T8HHn+m8L/+OJ7P1C9YyZxDuxwGcxk9QS+4aE=;
+        s=default; t=1562034497;
+        bh=tIomsXKG3r8CfZK9jgMo11Xyz/N+kCfADAtMFsQdlqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nEfLPO/hEIGy1o2SPTJCnigEhYMyL8DqFztETPug/tNTCMqdtVOwsZt3fzifAgY33
-         DcpKzPoF+9cAuiD0xyIk/L4mX5GkZYkHQmQiu2OlnzuNk3YjXRarUby55XHX9htMDP
-         qh6EB0FokNeLWA1LLshc3g5PTuF/D1B2UkYwTsdI=
+        b=YbLBhs0HcdY4Be/MUTgt9gowafoVBtV+dNyqMQqN3AICZxcToyBzorn9DU/zFQunx
+         pKd/AXkYkqEcunC5tOdom0Tt/MqCeR/ChbtQUhDTaI5J8/aGpdNGi7Q5QMylbajKPl
+         EumPFpau6cgYRZK3RtwKVxlzPBqFDCzjW4HwejhM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 33/43] perf tools: Remove trim() implementation, use tools/lib's strim()
-Date:   Mon,  1 Jul 2019 23:26:06 -0300
-Message-Id: <20190702022616.1259-34-acme@kernel.org>
+Subject: [PATCH 34/43] perf tools: Ditch rtrim(), use strim() from tools/lib
+Date:   Mon,  1 Jul 2019 23:26:07 -0300
+Message-Id: <20190702022616.1259-35-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -62,122 +62,206 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Moving more stuff out of tools/perf/util/ and using the kernel idiom.
+Cleaning up a bit more tools/perf/util/ by using things we got from the
+kernel and have in tools/lib/
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-wpj8rktj62yse5dq6ckny6de@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-7hluuoveryoicvkclshzjf1k@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 3 ++-
- tools/perf/ui/browsers/hists.c  | 3 ++-
- tools/perf/ui/gtk/hists.c       | 5 +++--
- tools/perf/ui/stdio/hist.c      | 2 +-
- tools/perf/util/string2.h       | 5 -----
- 5 files changed, 8 insertions(+), 10 deletions(-)
+ tools/perf/ui/browsers/hists.c     |  3 ++-
+ tools/perf/util/annotate.c         |  3 ++-
+ tools/perf/util/header.c           |  6 +++---
+ tools/perf/util/pmu.c              |  2 +-
+ tools/perf/util/python-ext-sources |  1 +
+ tools/perf/util/srcline.c          |  3 ++-
+ tools/perf/util/string.c           | 23 -----------------------
+ tools/perf/util/string2.h          |  2 --
+ tools/perf/util/thread_map.c       |  3 ++-
+ 9 files changed, 13 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index cd72ff0f7658..66a82badc1d1 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -22,6 +22,7 @@
- #include "string2.h"
- #include "symbol.h"
- #include <linux/kernel.h>
-+#include <linux/string.h>
- #include <subcmd/exec-cmd.h>
- 
- static bool dont_fork;
-@@ -438,7 +439,7 @@ static const char *shell_test__description(char *description, size_t size,
- 	description = fgets(description, size, fp);
- 	fclose(fp);
- 
--	return description ? trim(description + 1) : NULL;
-+	return description ? strim(description + 1) : NULL;
- }
- 
- #define for_each_shell_test(dir, base, ent)	\
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 04a56114df92..10243408f3dc 100644
+index 10243408f3dc..33e67aa91347 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -6,6 +6,7 @@
- #include <stdlib.h>
+@@ -2071,7 +2071,8 @@ static int hist_browser__fprintf_hierarchy_entry(struct hist_browser *browser,
+ 		advance_hpp(&hpp, ret);
+ 	}
+ 
+-	printed += fprintf(fp, "%s\n", rtrim(s));
++	strim(s);
++	printed += fprintf(fp, "%s\n", s);
+ 
+ 	if (he->leaf && folded_sign == '-') {
+ 		printed += hist_browser__fprintf_callchain(browser, he, fp,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 783e2628cc8e..2d08c4b62c63 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -35,6 +35,7 @@
+ #include <pthread.h>
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
++#include <linux/string.h>
+ #include <bpf/libbpf.h>
+ 
+ /* FIXME: For the HE_COLORSET */
+@@ -1495,7 +1496,7 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
+ 		return -1;
+ 
+ 	line_ip = -1;
+-	parsed_line = rtrim(line);
++	parsed_line = strim(line);
+ 
+ 	/* /filename:linenr ? Save line number and ignore. */
+ 	if (regexec(&file_lineno, parsed_line, 2, match, 0) == 0) {
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 1eb15f7517b0..bf26dc85eaaa 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1048,7 +1048,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 		return -1;
+ 
+ 	cache->type[len] = 0;
+-	cache->type = rtrim(cache->type);
++	cache->type = strim(cache->type);
+ 
+ 	scnprintf(file, PATH_MAX, "%s/size", path);
+ 	if (sysfs__read_str(file, &cache->size, &len)) {
+@@ -1057,7 +1057,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 	}
+ 
+ 	cache->size[len] = 0;
+-	cache->size = rtrim(cache->size);
++	cache->size = strim(cache->size);
+ 
+ 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
+ 	if (sysfs__read_str(file, &cache->map, &len)) {
+@@ -1067,7 +1067,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 	}
+ 
+ 	cache->map[len] = 0;
+-	cache->map = rtrim(cache->map);
++	cache->map = strim(cache->map);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 38dc0c6e28b8..8139a1f3ed39 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -395,7 +395,7 @@ static int perf_pmu__new_alias(struct list_head *list, char *dir, char *name, FI
+ 	buf[ret] = 0;
+ 
+ 	/* Remove trailing newline from sysfs file */
+-	rtrim(buf);
++	strim(buf);
+ 
+ 	return __perf_pmu__new_alias(list, dir, name, NULL, buf, NULL, NULL, NULL,
+ 				     NULL, NULL, NULL);
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 648bcd80b475..2237bac9fadb 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -16,6 +16,7 @@ util/namespaces.c
+ ../lib/bitmap.c
+ ../lib/find_bit.c
+ ../lib/hweight.c
++../lib/string.c
+ ../lib/vsprintf.c
+ util/thread_map.c
+ util/util.c
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 10ca1533937e..1824cabe3512 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -5,6 +5,7 @@
  #include <string.h>
- #include <linux/rbtree.h>
-+#include <linux/string.h>
- #include <sys/ttydefaults.h>
- #include <linux/time64.h>
  
-@@ -1686,7 +1687,7 @@ static int hists_browser__scnprintf_hierarchy_headers(struct hist_browser *brows
- 			ret = fmt->header(fmt, &dummy_hpp, hists, 0, NULL);
- 			dummy_hpp.buf[ret] = '\0';
- 
--			start = trim(dummy_hpp.buf);
-+			start = strim(dummy_hpp.buf);
- 			ret = strlen(start);
- 
- 			if (start != dummy_hpp.buf)
-diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
-index 6341c421a8f7..3955ed1d1bd9 100644
---- a/tools/perf/ui/gtk/hists.c
-+++ b/tools/perf/ui/gtk/hists.c
-@@ -9,6 +9,7 @@
- #include "../string2.h"
- #include "gtk.h"
- #include <signal.h>
+ #include <linux/kernel.h>
 +#include <linux/string.h>
  
- #define MAX_COLUMNS			32
+ #include "util/dso.h"
+ #include "util/util.h"
+@@ -464,7 +465,7 @@ static struct inline_node *addr2inlines(const char *dso_name, u64 addr,
+ 		char *srcline;
+ 		struct symbol *inline_sym;
  
-@@ -459,7 +460,7 @@ static void perf_gtk__add_hierarchy_entries(struct hists *hists,
- 			advance_hpp(hpp, ret + 2);
- 		}
+-		rtrim(funcname);
++		strim(funcname);
  
--		gtk_tree_store_set(store, &iter, col_idx, trim(bf), -1);
-+		gtk_tree_store_set(store, &iter, col_idx, strim(bf), -1);
+ 		if (getline(&filename, &filelen, fp) == -1)
+ 			goto out;
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index 99a555ea4a9f..93a5340424df 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -318,29 +318,6 @@ char *strxfrchar(char *s, char from, char to)
+ 	return s;
+ }
  
- 		if (!he->leaf) {
- 			hpp->buf = bf;
-@@ -555,7 +556,7 @@ static void perf_gtk__show_hierarchy(GtkWidget *window, struct hists *hists,
- 			first_col = false;
- 
- 			fmt->header(fmt, &hpp, hists, 0, NULL);
--			strcat(buf, trim(hpp.buf));
-+			strcat(buf, strim(hpp.buf));
- 		}
- 	}
- 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 594e56628904..9eb0131c3ade 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -620,7 +620,7 @@ static int hists__fprintf_hierarchy_headers(struct hists *hists,
- 
- 			fmt->header(fmt, hpp, hists, 0, NULL);
- 
--			header_width += fprintf(fp, "%s", trim(hpp->buf));
-+			header_width += fprintf(fp, "%s", strim(hpp->buf));
- 		}
- 	}
- 
+-/**
+- * rtrim - Removes trailing whitespace from @s.
+- * @s: The string to be stripped.
+- *
+- * Note that the first trailing whitespace is replaced with a %NUL-terminator
+- * in the given string @s. Returns @s.
+- */
+-char *rtrim(char *s)
+-{
+-	size_t size = strlen(s);
+-	char *end;
+-
+-	if (!size)
+-		return s;
+-
+-	end = s + size - 1;
+-	while (end >= s && isspace(*end))
+-		end--;
+-	*(end + 1) = '\0';
+-
+-	return s;
+-}
+-
+ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints)
+ {
+ 	/*
 diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-index db02059e31c5..5bc3fea52cdc 100644
+index 5bc3fea52cdc..6da835ad8f5b 100644
 --- a/tools/perf/util/string2.h
 +++ b/tools/perf/util/string2.h
-@@ -25,11 +25,6 @@ char *strxfrchar(char *s, char from, char to);
+@@ -23,8 +23,6 @@ static inline bool strisglob(const char *str)
+ int strtailcmp(const char *s1, const char *s2);
+ char *strxfrchar(char *s, char from, char to);
  
- char *rtrim(char *s);
- 
--static inline char *trim(char *s)
--{
--	return skip_spaces(rtrim(s));
--}
+-char *rtrim(char *s);
 -
  char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints);
  
  static inline char *asprintf_expr_in_ints(const char *var, size_t nints, int *ints)
+diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+index 5d467d8ae9ab..281bf06f10f2 100644
+--- a/tools/perf/util/thread_map.c
++++ b/tools/perf/util/thread_map.c
+@@ -12,6 +12,7 @@
+ #include "strlist.h"
+ #include <string.h>
+ #include <api/fs/fs.h>
++#include <linux/string.h>
+ #include "asm/bug.h"
+ #include "thread_map.h"
+ #include "util.h"
+@@ -392,7 +393,7 @@ static int get_comm(char **comm, pid_t pid)
+ 		 * mark the end of the string.
+ 		 */
+ 		(*comm)[size] = 0;
+-		rtrim(*comm);
++		strim(*comm);
+ 	}
+ 
+ 	free(path);
 -- 
 2.20.1
 
