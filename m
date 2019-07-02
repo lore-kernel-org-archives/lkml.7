@@ -6,45 +6,47 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5193C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6A1C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD9D21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A456E21721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562044242;
-	bh=4GlxId9YdbFjT52X/hvaAqjT79EiXpf7emdd7hFBdic=;
+	s=default; t=1562044308;
+	bh=rr8H9JYWkIOXWScAGyk9eAclmqL84aYzmS6To8J5bq0=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iT4F0qdQKl4cpgvECuzDxqO1BBRvvXSL1JylJcFID+rjkqKLEaJk37zUS0jCvGOd1
-	 MiQqGxs2GqM0UkLQKR+VnhOGamo+ZUSFlacMunwLBt3BaB+jVp2gtLDaGM8PKH8gR4
-	 fpN9oR7vjmDWvM+dj+oPeZfu0qq2pcJWMiwBtiUA=
+	b=P1I76dMe8YZVikSHUNp38l1V+l2r8BLCdG0WXKZLeTi6canOrWHWU47tTadDScWHz
+	 DmGqs0LLw/Eov1BN8L6DaFGeFZBGSOHh6SBu7Hg9f9gN7Ip6dfjvHjlmu08K1MetaD
+	 aDjdnIqKvZ0lg0x8HA7Jewa8fj88EF2ERZrnPhTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfGBFKl (ORCPT
+        id S1726861AbfGBFLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 01:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:10:40 -0400
+        id S1725775AbfGBFLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:11:47 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EFAB216C8;
-        Tue,  2 Jul 2019 05:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04344216C8;
+        Tue,  2 Jul 2019 05:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562044239;
-        bh=4GlxId9YdbFjT52X/hvaAqjT79EiXpf7emdd7hFBdic=;
+        s=default; t=1562044306;
+        bh=rr8H9JYWkIOXWScAGyk9eAclmqL84aYzmS6To8J5bq0=;
         h=Date:From:To:Cc:Subject:From;
-        b=EPLNmdsIaRIi9UZuIJBoJw1UDpeqVMgqzgTDzXxWwmk8eiv/QUpA+yiUfFTINPzW2
-         Dgfwby28AMWubdbDqO84jre/PCJrsKTxeo5Ol95PKM8FjSToXQS3ylZpTOXXOSwefN
-         NI0DS+mGHYy95f61CuBAiW/D1nQoIWAGkRqlDBso=
-Date:   Mon, 1 Jul 2019 22:10:38 -0700
+        b=SdQEh2YVo78/UfumZBJZLbJNYXTfvWFuLvUxX2LxvxOTndbg/vMJgAGpxsfWaEH08
+         rhbwc/Yso9SGpBs9mgUwCy69+FSDtX76cSl7ZQaJgt7OBZh2m9uGQGZoRnElAQdXTP
+         fDri70yb/ruVfYyaLKSAxwMlWJ4AAqCCzVA/bnZw=
+Date:   Mon, 1 Jul 2019 22:11:44 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 1 open syzbot bug in rtc subsystem
-Message-ID: <20190702051038.GC23743@sol.localdomain>
+Subject: Reminder: 1 open syzbot bug in "security/smack" subsystem
+Message-ID: <20190702051144.GD23743@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -58,34 +60,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 1 of them as possibly being a bug in the rtc subsystem.
+marked 1 of them as possibly being a bug in the "security/smack" subsystem.
 
 If you believe this bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed this bug to the rtc subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
+If you believe I misattributed this bug to the "security/smack" subsystem,
+please let me know, and if possible forward the report to the correct people or
+mailing list.
 
 Here is the bug:
 
 --------------------------------------------------------------------------------
-Title:              BUG: workqueue lockup (4)
-Last occurred:      19 days ago
-Reported:           267 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0041bf1423916e9ae458b08b760e269a33c14960
-Original thread:    https://lkml.kernel.org/lkml/0000000000005764090577a27486@google.com/T/#u
+Title:              possible deadlock in ext4_evict_inode
+Last occurred:      259 days ago
+Reported:           298 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9eda6092f146cb23cb9109f675a2e2cb743ee48b
+Original thread:    https://lkml.kernel.org/lkml/00000000000091615e0575368e33@google.com/T/#u
 
-This bug has a C reproducer.
+This bug has a syzkaller reproducer only.
 
-The original thread for this bug received 4 replies; the last was 20 days ago.
+The original thread for this bug received 2 replies; the last was 298 days ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+    Reported-by: syzbot+0eefc1e06a77d327a056@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005764090577a27486@google.com
+https://lkml.kernel.org/r/00000000000091615e0575368e33@google.com
 
