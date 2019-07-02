@@ -2,141 +2,92 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B044CC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A51C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895DA21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562069009;
-	bh=lYy0biRRuIMTFPxZzKn1vOvJk9GO14ibys/DKnoKX4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pki55Xm24mMc5G2vTYFpfIveAi9wqLg70dNR6CDcRD13HJYamugC9tVEn2zxhgtcs
-	 JTT1K+W+T0436yOErCG0khP6X1T0keCxI1IJwzP/SbVHrJU9fFBBnwnDjAJYIzKc7S
-	 dmwLU0ZSLs2n2uwL563qonvDk1gLIep6KImZwZwE=
+	by mail.kernel.org (Postfix) with ESMTP id 254C321721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="bQ8Ccg7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfGBMD2 (ORCPT
+        id S1726733AbfGBMDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfGBMD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:03:27 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E4E2064B;
-        Tue,  2 Jul 2019 12:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562069006;
-        bh=lYy0biRRuIMTFPxZzKn1vOvJk9GO14ibys/DKnoKX4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lMEpgyG6/0TGoxHxLutiQ3X8vIzEj/RQA7zp7oGwIadFBGwATD0vzjnJ3rOfaz4qe
-         K3hqrN6iJ3azFUrZcbWV5XvbhqgqaUDmD7jdcNEwPJ7YpSWSPaKO9it2+AV5Z2W2f3
-         nSOiywtaGGPfdtqIxoJ6w4EyOSI+GBho71qBPDks=
-Date:   Tue, 2 Jul 2019 13:03:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Zhangshaokun <zhangshaokun@hisilicon.com>, joro@8bytes.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jul 2
-Message-ID: <20190702120321.v3224ofd4aaxvytk@willie-the-truck>
-References: <20190702195158.79aa5517@canb.auug.org.au>
- <000f56ac-2abc-bc6a-e2db-5ae38779d276@hisilicon.com>
+        Tue, 2 Jul 2019 08:03:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38452 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfGBMDi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:03:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s15so710872wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 05:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gm6GhJ7gb2LUevWRbLpcuyKEIGbt2fZGuGZRBRjtrqo=;
+        b=bQ8Ccg7NMvFz5SZ6bdMtcHci+tw+AVpOAcAvig717mhKAU267n1pDLGerYlOyaF/l/
+         GlxVJVT+q9H9/5/2WnKqW2xmPMzmC68pRIhvKQ/EuvGokbZ/6C065TC3eQxl65Eo433N
+         ESC/7CWXCxK7A/UwMJJACnJ+qqKjOQEBvzcOKti2c5cm69YOZFf+QOhcXTi42Rk3nyTP
+         vb5ZjqySvu9iQcU5U8uCRP6n7OuTXCsLy1UbM04HCVP5W3D+ornDtdGemnIcjNtwxff/
+         +FJkcvuItvzJTuKIEAnnDGKT+bHuHgnAmKMSEB8mrfm9fgG5cnpON3IPIWj/PjCjsrvN
+         ZbEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gm6GhJ7gb2LUevWRbLpcuyKEIGbt2fZGuGZRBRjtrqo=;
+        b=CAf9vipv+KgM/+a7UdbdXB9UXTCeF7xXxEdVjeuXGB5thFi8jTWPEOLHyhuQVWQV7/
+         EqKN0+sTRKwsi9VUXZofZ61SI4XggN1FUE0Q+WQO6tPFmzpflQjvE9wJF8SN1NxGJYt7
+         bOT89uk8b3I1q6wTbKOmpUresLtVpbvn6l7z/5HkUWk7mlRQy4RQyZzg+cq9OxoRutGV
+         7TdRTP9Rs1cTrBiIvqBc5GkCGCtzE1yylLZ53m+PbfUnedH+PSEw7XMBhXXu/iAjTtZU
+         Rt+An+VaLiGGq8dYwJX8z+mZcn62u7vevkvCc1IhnUYhUTTjqN5y69bxAyHDxw+MaQrb
+         xpkA==
+X-Gm-Message-State: APjAAAV1u3+RUwL4XKMA2XTMu0E8S3dcJl5ipExNVDQd6JEI0gEb9X8Y
+        oi9hqWqWBl6Nn8MSpvyniAQ=
+X-Google-Smtp-Source: APXvYqzY1WIZXqGwqXvHrmdMUEorT4psdCq6z0c+xvUPrw4/kcZzicISqdSJdPPkYLHuIAf54uR9IQ==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr3351914wmg.7.1562069016717;
+        Tue, 02 Jul 2019 05:03:36 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id y16sm10463591wru.28.2019.07.02.05.03.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 05:03:36 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 14:03:35 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 02/15] netlink: rename
+ nl80211_validate_nested() to nla_validate_nested()
+Message-ID: <20190702120335.GM2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <d0c23ac629c4a0343acc9f09484e078962c55402.1562067622.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <000f56ac-2abc-bc6a-e2db-5ae38779d276@hisilicon.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <d0c23ac629c4a0343acc9f09484e078962c55402.1562067622.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Joerg]
+Tue, Jul 02, 2019 at 01:49:49PM CEST, mkubecek@suse.cz wrote:
+>Function nl80211_validate_nested() is not specific to nl80211, it's
+>a counterpart to nla_validate_nested_deprecated() with strict validation.
+>For consistency with other validation and parse functions, rename it to
+>nla_validate_nested().
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-On Tue, Jul 02, 2019 at 06:40:45PM +0800, Zhangshaokun wrote:
-> +Cc: Will Deacon
-> 
-> There is a compiler failure on arm64 platform, as follow:
-> In file included from ./include/linux/list.h:9:0,
->                  from ./include/linux/kobject.h:19,
->                  from ./include/linux/of.h:17,
->                  from ./include/linux/irqdomain.h:35,
->                  from ./include/linux/acpi.h:13,
->                  from drivers/iommu/arm-smmu-v3.c:12:
-> drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
-> drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
->  #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
->                                         ^
-> It's the commit <d25f6ead162e> ("iommu/arm-smmu-v3: Increase maximum size of queues")
-
-Thanks for the report. I've provided a fix below.
-
-Joerg -- please can you take this on top of the SMMUv3 patches queued
-for 5.3?
-
-Cheers,
-
-Will
-
---->8
-
-From e8f9d8229e3aaa4817bfb72752e804eec97a3d8d Mon Sep 17 00:00:00 2001
-From: Will Deacon <will@kernel.org>
-Date: Tue, 2 Jul 2019 12:53:18 +0100
-Subject: [PATCH] iommu/arm-smmu-v3: Fix compilation when CONFIG_CMA=n
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-When compiling a kernel without support for CMA, CONFIG_CMA_ALIGNMENT
-is not defined which results in the following build failure:
-
-In file included from ./include/linux/list.h:9:0
-                 from ./include/linux/kobject.h:19,
-                 from ./include/linux/of.h:17
-                 from ./include/linux/irqdomain.h:35,
-                 from ./include/linux/acpi.h:13,
-                 from drivers/iommu/arm-smmu-v3.c:12:
-drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
-drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
- #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
-
-Fix the breakage by capping the maximum queue size based on MAX_ORDER
-when CMA is not enabled.
-
-Reported-by: Zhangshaokun <zhangshaokun@hisilicon.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- drivers/iommu/arm-smmu-v3.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 57fb4e080d6b..8e73a7615bf5 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -191,7 +191,13 @@
- #define Q_BASE_RWA			(1UL << 62)
- #define Q_BASE_ADDR_MASK		GENMASK_ULL(51, 5)
- #define Q_BASE_LOG2SIZE			GENMASK(4, 0)
-+
-+/* Ensure DMA allocations are naturally aligned */
-+#ifdef CONFIG_CMA_ALIGNMENT
- #define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
-+#else
-+#define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + MAX_ORDER - 1)
-+#endif
- 
- /*
-  * Stream table.
--- 
-2.11.0
-
+Acked-by: Jiri Pirko <jiri@mellanox.com>
