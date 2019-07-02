@@ -2,179 +2,104 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3958C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A2AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8846A20881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+uuMuAV"
+	by mail.kernel.org (Postfix) with ESMTP id AA4A420881
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfGBGhg (ORCPT
+        id S1726011AbfGBGkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:37:36 -0400
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:32806 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfGBGhg (ORCPT
+        Tue, 2 Jul 2019 02:40:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43540 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfGBGkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:37:36 -0400
-Received: by mail-pf1-f180.google.com with SMTP id x15so7759957pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=ZhvKZPBHtqlWYn5aQ+LHumK996S+XHbvPSVeWsaVn+Q=;
-        b=d+uuMuAVs0xdXgQBW0Ib5RbKb2idX1BA+YdEAA6m21/+x6g59r0ikdCAKdl66g46i9
-         4YxijYOFF+jdPv2VzrHyxnWrSlmOybtYgEncUTDIuTkQ7WPFjdOI9v6L5mPsUcqYSg9F
-         VzGl2t07CQSj1caH4WFL7KsFjFmr72eLdWQQF1HcuzPiQ+5fmTfJmdBOq4khC0vq9IKE
-         rygM+XCNw/pC4pmNrP6r/QX6BvuC0HAIFMySrLAS43FFe8Z2Dj6gsHOPMpeNj9t6nF+8
-         iiZSQd4ehI3+aqU5GH7AxzzEIJV3QL0dxu3TKOaF2Druv9dSUmkcLO8NeG4/1kdcPm3i
-         ThVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=ZhvKZPBHtqlWYn5aQ+LHumK996S+XHbvPSVeWsaVn+Q=;
-        b=ZV/iy/8tgC7dRDc+/Ni9W6fzitZrq05Db/ByK1GSvRk99CAnGBhsrt1SJSCTo8yoUY
-         iBGFms0eq8iHjiBMA/DH+KGvrNwTZB649/65o7d2ZACnBiEpe8Pa2n099+In08Uwf98d
-         KnhWr2+Ejh4hreMeOfo3eLD0UtrZODp9UeEM9nhZ/jaFo8tFfldcirIMBkwkDuJXtPOx
-         ggh9Vmlnb7/RxjxY6sgPhU6ciTgifiF2l0p19TOo56TkzPe7ntD1XmqSdcjNcJDwS6k8
-         ge1RQKWax9/Oh6P449NfrO+feEEwKtfVmzc19Infqq1oKgzVwm+gE35jK6/2VzGStY05
-         T0MQ==
-X-Gm-Message-State: APjAAAUgAtSZ6uAucuW9mRbmxS3gthbLlKwPXHL6dd7TO8DR75/rwSGN
-        ul+mMoALrBFAZo4GnzluK0kO4mum
-X-Google-Smtp-Source: APXvYqyBNH7kgsggP7hgvoNIjLAazXPBrAU3O7/+xZOUiiwKVm7RrMKFq8ppt8SOdiDLBRImLjWPoA==
-X-Received: by 2002:a63:c14c:: with SMTP id p12mr29124787pgi.138.1562049455708;
-        Mon, 01 Jul 2019 23:37:35 -0700 (PDT)
-Received: from ?IPv6:2601:641:c100:83a0:50b6:82f3:beba:8d5e? ([2601:641:c100:83a0:50b6:82f3:beba:8d5e])
-        by smtp.gmail.com with ESMTPSA id i36sm12697781pgl.70.2019.07.01.23.37.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 23:37:35 -0700 (PDT)
-X-Mozilla-News-Host: news://gmane.comp.lib.uclibc.buildroot:119
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-From:   Tinchu <tinchu.nitrpr@gmail.com>
-Subject: ARM setting up secure mode vector table
-Message-ID: <4fb7db36-bce6-ea42-7dd8-91d71857697c@gmail.com>
-Date:   Mon, 1 Jul 2019 23:37:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 2 Jul 2019 02:40:45 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hiCSv-0007m3-QT; Tue, 02 Jul 2019 08:40:33 +0200
+Date:   Tue, 2 Jul 2019 08:40:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Wanpeng Li <kernellwp@gmail.com>
+cc:     Rong Chen <rong.a.chen@intel.com>, Feng Tang <feng.tang@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "tipbuild@zytor.com" <tipbuild@zytor.com>,
+        "lkp@01.org" <lkp@01.org>, Ingo Molnar <mingo@kernel.org>,
+        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [BUG] kvm: APIC emulation problem - was Re: [LKP] [x86/hotplug]
+ ...
+In-Reply-To: <CANRm+CyQy+=fzY7jn6Q=q6C4ucHS-Z37rq87sOJT-yO0ECiHFw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907020837020.1802@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1906250821220.32342@nanos.tec.linutronix.de> <f5c36f89-61bf-a82e-3d3b-79720b2da2ef@intel.com> <alpine.DEB.2.21.1906251330330.32342@nanos.tec.linutronix.de> <20190628063231.GA7766@shbuild999.sh.intel.com>
+ <alpine.DEB.2.21.1906280929010.32342@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906290912390.1802@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906301334290.1802@nanos.tec.linutronix.de> <20190630130347.GB93752@shbuild999.sh.intel.com>
+ <alpine.DEB.2.21.1906302021320.1802@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907010829590.1802@nanos.tec.linutronix.de> <20190701083654.GB12486@shbuild999.sh.intel.com> <alpine.DEB.2.21.1907011123220.1802@nanos.tec.linutronix.de>
+ <d08d55c5-bb02-f832-4306-9daf234428a8@intel.com> <alpine.DEB.2.21.1907012011460.1802@nanos.tec.linutronix.de> <CANRm+CyQy+=fzY7jn6Q=q6C4ucHS-Z37rq87sOJT-yO0ECiHFw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Wanpeng,
 
-Apologies in advance for extra CC list.
+On Tue, 2 Jul 2019, Wanpeng Li wrote:
+> On Tue, 2 Jul 2019 at 06:44, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+> > emulation is still wrong, Even if the play_dead() code would not enable
+> > interrupts then the pending IRR bit would turn into an ISR .. interrupt
+> > when the APIC is reenabled on startup.
+> 
+> >From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+> * Pending interrupts in the IRR and ISR registers are held and require
+> masking or handling by the CPU.
 
-I'm trying to hack linux kernel (v4.14 LTS) for Raspberry PI 3 (ARM32 build), to
-enable early boot code switch to secure mode using SMC #0 instruction and return
-(and later tinker with some secure mode registers).
+Correct.
+ 
+> In your testing, hardware cpu will not respect soft disable APIC when
+> IRR has already been set or APICv posted-interrupt is in flight, so we
+> can skip soft disable APIC checking when clearing IRR and set ISR,
+> continue to respect soft disable APIC when attempting to set IRR.
+> Could you try below fix?
 
-While this may generally not be possible, it seems it just might for this platform
-(i can do this on a baremetal library, but not kernel proper. Apparently the
-current BCM firmware sets up secure, non secure  and monitor vector base addresses
-to 0x00000000 before calling into zImage and all mem is writable for non secure
-mode. See the gory details in ultibo pascal library code comments [1]. The trick
-is to copy a vector table with SMC vector to address 0. I'm suspecting this not
-working for linux as having to write the code in true position independent way.
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 05d8934..f857a12 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2376,7 +2376,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
+>      struct kvm_lapic *apic = vcpu->arch.apic;
+>      u32 ppr;
+> 
+> -    if (!apic_enabled(apic))
+> +    if (!kvm_apic_hw_enabled(apic))
+>          return -1;
+> 
+>      __apic_update_ppr(apic, &ppr);
 
-Here's a rough hack to arch/arm/kernel/hyp-stub.S
-I'm simply hacking in a vector entry into existing hyp vector table and then
-copying it over to 0 (I've tried using a completely different table, which fails
-in same way).
+Yes. That fixes it and works as expected. Thanks for the quick
+resolution. I surely stared at that function, but was not sure how to fix
+it proper.
 
-+	.macro sec_vec_install_run
-+
-+		mrc p15, #0, r4, c12, c0, #0
-+		ldr r5, .LSecureVectorTable
-+
-+		/* 8 bytes of vector */
-+		ldmia r5!, {r6-r7}
-+		stmia r4!, {r6-r7}
-+
-+		ldmia r5!, {r6-r7}
-+		stmia r4!, {r6-r7}
-+
-+		ldmia r5!, {r6-r7}
-+		stmia r4!, {r6-r7}
-+
-+		ldmia r5!, {r6-r7}
-+		stmia r4!, {r6-r7}
-+
-+		/* 1 word for secondary table */
-+		ldmia r5!, {r6-r7}
-+		stmia r4!, {r6-r7}
-+
-+		/*Clean Data Cache MVA */
-+		mov r5, #0
-+		mcr p15, #0, r5, cr7, cr10, #1
-+
-+		dsb
-+
-+		//Invalidate Instruction Cache
-+		mov r5, #0
-+		mcr p15, #0, r5, cr7, cr5, #0
-+
-+		//Flush Branch Target Cache
-+		mov r5, #0
-+		mcr p15, #0, r5, cr7, cr5, #6
-+
-+		dsb
-+		isb
-+
-+		.arch_extension sec
-+		smc #0
-+
-+	.endm
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
 
+Please add a Cc: stable... tag when you post the patch.
 
-ENTRY(__hyp_stub_install_secondary)
+Thanks,
 
-+	sec_vec_install_run
-...
-
-+smc_hdlr:
-+	/* do stuff later */
-+	ret	lr
-+ENDPROC(smc_hdlr)
-
-.align 5
-ENTRY(__hyp_stub_vectors)
-__hyp_stub_reset:	W(b)	.
-__hyp_stub_und:		W(b)	.
-+ __hyp_stub_svc:	ldr pc, .Lhdlr2
-- __hyp_stub_svc:	W(b)	.
-
-...
-
-+.Lhdlr2:
-+	.word smc_hdlr
-+.LSecureVectorTable:
-+	.long  __hyp_stub_vectors
-
-
-Can someone please tell me what part of code is wrong. Pretty much similar code
-works in baremetal setup.
-
-TIA
-
-[1] https://github.com/ultibohub/Core/blob/master/source/rtl/ultibo/core/bootrpi2.pas
-
-
+	tglx
