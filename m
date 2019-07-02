@@ -2,64 +2,60 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7DFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FFC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175C520645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F790205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055387;
-	bh=+KOctI49aA/Jfk0yYhu/MdiIcGQL4shlTnsHiVVK3x0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mYy6ua0eoTp2j5mWCVna9T4jr/Pw/lY2o4W5fZCAxMTmB/h1OOesHivBkoDxYLfUL
-	 thXzuqcOo1gbZwSN1NfLSdgJsd7I9+10jPhdZVib45hmUHb+dcSItShYp9gGC+UulB
-	 ACFzR4z++VxZAgAvDvNQptQmavGPjOamw1+J4gj4=
+	s=default; t=1562055405;
+	bh=F0z/Qt1OUgKcq+NpAv5Pu2gellH7RLZ46sZaWd1mOUw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2AJmYRDnA+LVQknsUSBbYCZSHum4Cwhw/8u9QYnMCP65G4rVK+PVV9u1B4JYJbvjH
+	 YdWXADpjKuUqSnFNFQ4EzRhoLdAMH7PVikNQY0hOQcVprXrc37/GYSzjp97HMir/c1
+	 LOogTIYUMcrAgfOjCyS03gdxZV7ZbzqTrOzzA5dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfGBIQZ (ORCPT
+        id S1727882AbfGBIQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfGBIEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:04 -0400
+        id S1727125AbfGBIDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB46F21479;
-        Tue,  2 Jul 2019 08:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 450012184C;
+        Tue,  2 Jul 2019 08:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054643;
-        bh=+KOctI49aA/Jfk0yYhu/MdiIcGQL4shlTnsHiVVK3x0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EBCYpT+0xrwDrH3mtikZ96xqxWRGaW91nGF/DuQGX2CBu5e/WM7r1P6IuBP+ujI5k
-         GjWs51LoPL9zchEwsZoGrKNEiIfdjE0DtsxTu9uGrhg3ByaSIlUkDxruUaD3uqkRN7
-         KmWXWp6Rkhyezh/H50+bxqe+5GFBeaHeZQWsPUGg=
+        s=default; t=1562054614;
+        bh=F0z/Qt1OUgKcq+NpAv5Pu2gellH7RLZ46sZaWd1mOUw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ykwC6kPyTSi43oQ06XUupOH/7b7A0fYmCq/ipJoUpcjuXqurDoRC+zj1DOlwMUZdX
+         A/fUl8dyps6tBh5Z/zVydSuJlvGxD/TLo0iI83TaK99dqGNCabpnyoTBODyyy7tzRF
+         slj/E1uGXTbB5BvGNgLy6Iv7ukV5490FlfpZiOq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.1 00/55] 5.1.16-stable review
-Date:   Tue,  2 Jul 2019 10:01:08 +0200
-Message-Id: <20190702080124.103022729@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 03/55] qmi_wwan: Fix out-of-bounds read
+Date:   Tue,  2 Jul 2019 10:01:11 +0200
+Message-Id: <20190702080124.249874731@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+References: <20190702080124.103022729@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.1.16-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.1.16-rc1
-X-KernelTest-Deadline: 2019-07-04T08:01+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,276 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.1.16 release.
-There are 55 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+[ Upstream commit 904d88d743b0c94092c5117955eab695df8109e8 ]
+
+The syzbot reported
+
+ Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  qmi_wwan_probe+0x342/0x360 drivers/net/usb/qmi_wwan.c:1417
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+
+Caused by too many confusing indirections and casts.
+id->driver_info is a pointer stored in a long.  We want the
+pointer here, not the address of it.
+
+Thanks-to: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com
+Cc: Kristian Evensen <kristian.evensen@gmail.com>
+Fixes: e4bf63482c30 ("qmi_wwan: Add quirk for Quectel dynamic config")
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/usb/qmi_wwan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index d9a6699abe59..e657d8947125 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1412,7 +1412,7 @@ static int qmi_wwan_probe(struct usb_interface *intf,
+ 	 * different. Ignore the current interface if the number of endpoints
+ 	 * equals the number for the diag interface (two).
+ 	 */
+-	info = (void *)&id->driver_info;
++	info = (void *)id->driver_info;
+ 
+ 	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
+ 		if (desc->bNumEndpoints == 2)
+-- 
+2.20.1
 
-Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.1.16-rc1
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
-
-Amir Goldstein <amir73il@gmail.com>
-    fanotify: update connector fsid cache on add mark
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    RDMA: Directly cast the sockaddr union to sockaddr
-
-Will Deacon <will.deacon@arm.com>
-    futex: Update comments and docs about return values of arch futex code
-
-Daniel Borkmann <daniel@iogearbox.net>
-    bpf, arm64: use more scalable stadd over ldxr / stxr loop in xadd
-
-Will Deacon <will.deacon@arm.com>
-    arm64: futex: Avoid copying out uninitialised stack in failed cmpxchg()
-
-Martin KaFai Lau <kafai@fb.com>
-    bpf: udp: ipv6: Avoid running reuseport's bpf_prog from __udp6_lib_err
-
-Martin KaFai Lau <kafai@fb.com>
-    bpf: udp: Avoid calling reuseport's bpf_prog from udp_gro
-
-Daniel Borkmann <daniel@iogearbox.net>
-    bpf: fix unconnected udp hooks
-
-Matt Mullins <mmullins@fb.com>
-    bpf: fix nested bpf tracepoints with per-cpu data
-
-Jonathan Lemon <jonathan.lemon@gmail.com>
-    bpf: lpm_trie: check left child of last leftmost node for NULL
-
-Martynas Pumputis <m@lambda.lt>
-    bpf: simplify definition of BPF_FIB_LOOKUP related flags
-
-Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-    net: aquantia: fix vlans not working over bridged network
-
-Fei Li <lifei.shirley@bytedance.com>
-    tun: wake up waitqueues after IFF_UP is set
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: check msg->req data len in tipc_nl_compat_bearer_disable
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: change to use register_pernet_device
-
-YueHaibing <yuehaibing@huawei.com>
-    team: Always enable vlan tx offload
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: change to hold sk after auth shkey is created successfully
-
-Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-    net/tls: fix page double free on TX cleanup
-
-Roland Hii <roland.king.guan.hii@intel.com>
-    net: stmmac: set IC bit when transmitting frames with HW timestamp
-
-Roland Hii <roland.king.guan.hii@intel.com>
-    net: stmmac: fixed new system time seconds value calculation
-
-JingYi Hou <houjingyi647@gmail.com>
-    net: remove duplicate fetch in sock_getsockopt
-
-Eric Dumazet <edumazet@google.com>
-    net/packet: fix memory leak in packet_set_ring()
-
-Stephen Suryaputra <ssuryaextr@gmail.com>
-    ipv4: Use return value of inet_iif() for __raw_v4_lookup in the while loop
-
-YueHaibing <yuehaibing@huawei.com>
-    bonding: Always enable vlan tx offload
-
-Neil Horman <nhorman@tuxdriver.com>
-    af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
-
-Paul Burton <paul.burton@mips.com>
-    irqchip/mips-gic: Use the correct local interrupt map registers
-
-Trond Myklebust <trondmy@gmail.com>
-    SUNRPC: Fix up calculation of client message length
-
-Geert Uytterhoeven <geert@linux-m68k.org>
-    cpu/speculation: Warn on unsupported mitigations= parameter
-
-Trond Myklebust <trondmy@gmail.com>
-    NFS/flexfiles: Use the correct TCP timeout for flexfiles I/O
-
-Ard Biesheuvel <ard.biesheuvel@linaro.org>
-    efi/memreserve: deal with memreserve entries in unmapped memory
-
-Johannes Weiner <hannes@cmpxchg.org>
-    mm: fix page cache convergence regression
-
-Reinette Chatre <reinette.chatre@intel.com>
-    x86/resctrl: Prevent possible overrun during bitmap operations
-
-Thomas Gleixner <tglx@linutronix.de>
-    x86/microcode: Fix the microcode load on CPU hotplug for real
-
-Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
-    x86/speculation: Allow guests to use SSBD even if host does not
-
-Jan Kara <jack@suse.cz>
-    scsi: vmw_pscsi: Fix use-after-free in pvscsi_queue_lck()
-
-Jens Axboe <axboe@kernel.dk>
-    io_uring: ensure req->file is cleared on allocation
-
-zhangyi (F) <yi.zhang@huawei.com>
-    dm log writes: make sure super sector log updates are written in order
-
-Gen Zhang <blackgod016574@gmail.com>
-    dm init: fix incorrect uses of kstrndup()
-
-Huang Ying <ying.huang@intel.com>
-    mm, swap: fix THP swap out
-
-Colin Ian King <colin.king@canonical.com>
-    mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
-
-Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-    mm: hugetlb: soft-offline: dissolve_free_huge_page() return zero on !PageHuge
-
-Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-    mm: soft-offline: return -EBUSY if set_hwpoison_free_buddy_page() fails
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    drm/i915: Skip modeset for cdclk changes if possible
-
-Imre Deak <imre.deak@intel.com>
-    drm/i915: Remove redundant store of logical CDCLK state
-
-Imre Deak <imre.deak@intel.com>
-    drm/i915: Save the old CDCLK atomic state
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    drm/i915: Force 2*96 MHz cdclk on glk/cnl when audio power is enabled
-
-Dinh Nguyen <dinguyen@kernel.org>
-    clk: socfpga: stratix10: fix divider entry for the emac clocks
-
-Jon Hunter <jonathanh@nvidia.com>
-    clk: tegra210: Fix default rates for HDA clocks
-
-Jann Horn <jannh@google.com>
-    fs/binfmt_flat.c: make load_flat_shared_library() work
-
-zhong jiang <zhongjiang@huawei.com>
-    mm/mempolicy.c: fix an incorrect rebind node in mpol_rebind_nodemask
-
-John Ogness <john.ogness@linutronix.de>
-    fs/proc/array.c: allow reporting eip/esp for all coredumping threads
-
-Bjørn Mork <bjorn@mork.no>
-    qmi_wwan: Fix out-of-bounds read
-
-Sasha Levin <sashal@kernel.org>
-    Revert "x86/uaccess, ftrace: Fix ftrace_likely_update() vs. SMAP"
-
-Nathan Chancellor <natechancellor@gmail.com>
-    arm64: Don't unconditionally add -Wno-psabi to KBUILD_CFLAGS
-
-
--------------
-
-Diffstat:
-
- Documentation/robust-futexes.txt                   |   3 +-
- Makefile                                           |   4 +-
- arch/arm64/Makefile                                |   2 +-
- arch/arm64/include/asm/futex.h                     |   4 +-
- arch/arm64/include/asm/insn.h                      |   8 +
- arch/arm64/kernel/insn.c                           |  40 +++++
- arch/arm64/net/bpf_jit.h                           |   4 +
- arch/arm64/net/bpf_jit_comp.c                      |  28 +++-
- arch/mips/include/asm/mips-gic.h                   |  30 ++++
- arch/x86/kernel/cpu/bugs.c                         |  11 +-
- arch/x86/kernel/cpu/microcode/core.c               |  15 +-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c             |  35 ++--
- drivers/clk/socfpga/clk-s10.c                      |   4 +-
- drivers/clk/tegra/clk-tegra210.c                   |   2 +
- drivers/firmware/efi/efi.c                         |  12 +-
- drivers/gpu/drm/i915/i915_drv.h                    |   6 +-
- drivers/gpu/drm/i915/intel_audio.c                 |  62 ++++++-
- drivers/gpu/drm/i915/intel_cdclk.c                 | 185 +++++++++++++++------
- drivers/gpu/drm/i915/intel_display.c               |  57 ++++++-
- drivers/gpu/drm/i915/intel_drv.h                   |  21 ++-
- drivers/infiniband/core/addr.c                     |  16 +-
- drivers/infiniband/hw/ocrdma/ocrdma_ah.c           |   5 +-
- drivers/infiniband/hw/ocrdma/ocrdma_hw.c           |   5 +-
- drivers/irqchip/irq-mips-gic.c                     |   4 +-
- drivers/md/dm-init.c                               |   6 +-
- drivers/md/dm-log-writes.c                         |  23 ++-
- drivers/net/bonding/bond_main.c                    |   2 +-
- .../net/ethernet/aquantia/atlantic/aq_filters.c    |  10 +-
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c    |   1 +
- drivers/net/ethernet/aquantia/atlantic/aq_nic.h    |   1 +
- .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  |  19 ++-
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  |   2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  22 ++-
- drivers/net/team/team.c                            |   2 +-
- drivers/net/tun.c                                  |  19 +--
- drivers/net/usb/qmi_wwan.c                         |   2 +-
- drivers/scsi/vmw_pvscsi.c                          |   6 +-
- fs/binfmt_flat.c                                   |  23 +--
- fs/inode.c                                         |   2 +-
- fs/io_uring.c                                      |   5 +-
- fs/nfs/flexfilelayout/flexfilelayoutdev.c          |   2 +-
- fs/notify/fanotify/fanotify.c                      |   4 +
- fs/notify/mark.c                                   |  14 +-
- fs/proc/array.c                                    |   2 +-
- include/asm-generic/futex.h                        |   8 +-
- include/linux/bpf-cgroup.h                         |   8 +
- include/linux/fsnotify_backend.h                   |   4 +-
- include/linux/xarray.h                             |   1 +
- include/net/tls.h                                  |  15 --
- include/uapi/linux/bpf.h                           |   6 +-
- kernel/bpf/lpm_trie.c                              |   9 +-
- kernel/bpf/syscall.c                               |   8 +
- kernel/bpf/verifier.c                              |  12 +-
- kernel/cpu.c                                       |   3 +
- kernel/trace/bpf_trace.c                           | 100 +++++++++--
- kernel/trace/trace_branch.c                        |   4 -
- lib/xarray.c                                       |  12 +-
- mm/hugetlb.c                                       |  29 +++-
- mm/memory-failure.c                                |   7 +-
- mm/mempolicy.c                                     |   2 +-
- mm/page_idle.c                                     |   4 +-
- mm/page_io.c                                       |   7 +-
- net/core/filter.c                                  |   2 +
- net/core/sock.c                                    |   3 -
- net/ipv4/raw.c                                     |   2 +-
- net/ipv4/udp.c                                     |  10 +-
- net/ipv6/udp.c                                     |   8 +-
- net/packet/af_packet.c                             |  23 ++-
- net/packet/internal.h                              |   1 +
- net/sctp/endpointola.c                             |   8 +-
- net/sunrpc/xprtsock.c                              |  16 +-
- net/tipc/core.c                                    |  12 +-
- net/tipc/netlink_compat.c                          |  18 +-
- net/tipc/udp_media.c                               |   8 +-
- net/tls/tls_main.c                                 |   3 +-
- tools/testing/selftests/bpf/test_lpm_map.c         |  41 ++++-
- 76 files changed, 830 insertions(+), 294 deletions(-)
 
 
