@@ -2,157 +2,243 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC05C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920B4C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F1421721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561F121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034555;
-	bh=FS3KrvQy4+lzn8Fj5tIqLR8J8LzZ1514EQfN2igxvkg=;
+	s=default; t=1562034569;
+	bh=sIi7JzdlsTo1iHliJsIjDsN9QdPzoosxI9hpQTH4r1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HR3N4ugYSL9MZDb20etwBZ4OOR+7pVOMB2FEKFSu4GhO0jn2liOoOKqiS6+A7YXQL
-	 hbHnApAECXQf2ZNZussSpWt3tuslVg5hA0/OzBouQpFMebUWYiV7Jvlix0RpfU/h4u
-	 bVXTVXl3lfBfxJT1ZpJLrxaSKUJGdJTAgqMZUIWY=
+	b=oV71KP25pe2IXPu9WTQWV8SpBnOvb+WL+JfMIfApwtNDOQLo9KWXBCsK1jA1dAlgX
+	 EpgxIk/5Fn9YwEjS+1T/OEldjJzHuEGZJWsm1qUxI8ybwf6XfOI8ap4j/WMsMJwSJE
+	 RDKPeBi/FhYEg2D+mqbWP8uRk2bcpl4tDxFl4ES0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfGBC1X (ORCPT
+        id S1727091AbfGBC0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39924 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbfGBC1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:27:17 -0400
+        id S1727059AbfGBC0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:26:31 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 324C42183F;
-        Tue,  2 Jul 2019 02:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C21E621721;
+        Tue,  2 Jul 2019 02:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034436;
-        bh=FS3KrvQy4+lzn8Fj5tIqLR8J8LzZ1514EQfN2igxvkg=;
+        s=default; t=1562034390;
+        bh=sIi7JzdlsTo1iHliJsIjDsN9QdPzoosxI9hpQTH4r1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rvg3OWCGpi11zh49MNZbT2TWwu4WqCfCMQz1Yx+ZhfG1ZmqSQ2eKYns545mC+WE11
-         QET3wjKA6206akfMr0cn+K9ofns42hlDMG29JoswkgwOBftxm+Xzu/kY+H4vKIY3ZV
-         YEhoTFYF5T5d2qeZZFOeHaKQiQ7+kbXwaaXRpAkE=
+        b=g5A12Qyujq3xmBzQGsMnKow6eBHo2CAtK7MLz1rPj5SsuwVknRsGz69R2z4R00VNp
+         qwxRmErmtdQO2Xn5MGuJn2BHSmgJFTKIayl1OvkBOk4KpKrD73NBdF+6rMUN2c6UQ2
+         BY/rRcdLfNIPKKCP/80SEv+eeHMvIsiQ3VhyetRU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 17/43] perf kallsyms: Adopt hex2u64 from tools/perf/util/util.h
-Date:   Mon,  1 Jul 2019 23:25:50 -0300
-Message-Id: <20190702022616.1259-18-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH 02/43] perf thread-stack: Fix thread stack return from kernel for kernel-only case
+Date:   Mon,  1 Jul 2019 23:25:35 -0300
+Message-Id: <20190702022616.1259-3-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Just removing more stuff from tools/perf/, this is mostly used in the
-kallsyms parsing and in places in perf where kallsyms is involved, so we
-get it for free there.
+Commit f08046cb3082 ("perf thread-stack: Represent jmps to the start of a
+different symbol") had the side-effect of introducing more stack entries
+before return from kernel space.
 
-With this we reduce a bit more util.h.
+When user space is also traced, those entries are popped before entry to
+user space, but when user space is not traced, they get stuck at the
+bottom of the stack, making the stack grow progressively larger.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5mc1zg0jqdwgkn8c358kaba6@git.kernel.org
+Fix by detecting a return-from-kernel branch type, and popping kernel
+addresses from the stack then.
+
+Note, the problem and fix affect the exported Call Graph / Tree but not
+the callindent option used by "perf script --call-trace".
+
+Example:
+
+  perf-with-kcore record example -e intel_pt//k -- ls
+  perf-with-kcore script example --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py example.db branches calls
+  ~/libexec/perf-core/scripts/python/exported-sql-viewer.py example.db
+
+  Menu option: Reports -> Context-Sensitive Call Graph
+
+  Before: (showing Call Path column only)
+
+    Call Path
+    ▶ perf
+    ▼ ls
+      ▼ 12111:12111
+        ▶ setup_new_exec
+        ▶ __task_pid_nr_ns
+        ▶ perf_event_pid_type
+        ▶ perf_event_comm_output
+        ▶ perf_iterate_ctx
+        ▶ perf_iterate_sb
+        ▶ perf_event_comm
+        ▶ __set_task_comm
+        ▶ load_elf_binary
+        ▶ search_binary_handler
+        ▶ __do_execve_file.isra.41
+        ▶ __x64_sys_execve
+        ▶ do_syscall_64
+        ▼ entry_SYSCALL_64_after_hwframe
+          ▼ swapgs_restore_regs_and_return_to_usermode
+            ▼ native_iret
+              ▶ error_entry
+              ▶ do_page_fault
+              ▼ error_exit
+                ▼ retint_user
+                  ▶ prepare_exit_to_usermode
+                  ▼ native_iret
+                    ▶ error_entry
+                    ▶ do_page_fault
+                    ▼ error_exit
+                      ▼ retint_user
+                        ▶ prepare_exit_to_usermode
+                        ▼ native_iret
+                          ▶ error_entry
+                          ▶ do_page_fault
+                          ▼ error_exit
+                            ▼ retint_user
+                              ▶ prepare_exit_to_usermode
+                              ▶ native_iret
+
+  After: (showing Call Path column only)
+
+    Call Path
+    ▶ perf
+    ▼ ls
+      ▼ 12111:12111
+        ▶ setup_new_exec
+        ▶ __task_pid_nr_ns
+        ▶ perf_event_pid_type
+        ▶ perf_event_comm_output
+        ▶ perf_iterate_ctx
+        ▶ perf_iterate_sb
+        ▶ perf_event_comm
+        ▶ __set_task_comm
+        ▶ load_elf_binary
+        ▶ search_binary_handler
+        ▶ __do_execve_file.isra.41
+        ▶ __x64_sys_execve
+        ▶ do_syscall_64
+        ▶ entry_SYSCALL_64_after_hwframe
+        ▶ page_fault
+        ▼ entry_SYSCALL_64
+          ▼ do_syscall_64
+            ▶ __x64_sys_brk
+            ▶ __x64_sys_access
+            ▶ __x64_sys_openat
+            ▶ __x64_sys_newfstat
+            ▶ __x64_sys_mmap
+            ▶ __x64_sys_close
+            ▶ __x64_sys_read
+            ▶ __x64_sys_mprotect
+            ▶ __x64_sys_arch_prctl
+            ▶ __x64_sys_munmap
+            ▶ exit_to_usermode_loop
+            ▶ __x64_sys_set_tid_address
+            ▶ __x64_sys_set_robust_list
+            ▶ __x64_sys_rt_sigaction
+            ▶ __x64_sys_rt_sigprocmask
+            ▶ __x64_sys_prlimit64
+            ▶ __x64_sys_statfs
+            ▶ __x64_sys_ioctl
+            ▶ __x64_sys_getdents64
+            ▶ __x64_sys_write
+            ▶ __x64_sys_exit_group
+
+Committer notes:
+
+The first arg to the perf-with-kcore needs to be the same for the
+'record' and 'script' lines, otherwise we'll record the perf.data file
+and kcore_dir/ files in one directory ('example') to then try to use it
+from the 'bep' directory, fix the instructions above it so that both use
+'example'.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: f08046cb3082 ("perf thread-stack: Represent jmps to the start of a different symbol")
+Link: http://lkml.kernel.org/r/20190619064429.14940-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/symbol/kallsyms.c | 13 +++++++++++++
- tools/lib/symbol/kallsyms.h |  2 ++
- tools/perf/util/util.c      | 13 -------------
- tools/perf/util/util.h      |  1 -
- 4 files changed, 15 insertions(+), 14 deletions(-)
+ tools/perf/util/thread-stack.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-index 96d830545bbb..7501611abee4 100644
---- a/tools/lib/symbol/kallsyms.c
-+++ b/tools/lib/symbol/kallsyms.c
-@@ -16,6 +16,19 @@ bool kallsyms__is_function(char symbol_type)
- 	return symbol_type == 'T' || symbol_type == 'W';
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index c485186a8b6d..4c826a2e08d8 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -628,6 +628,23 @@ static int thread_stack__bottom(struct thread_stack *ts,
+ 				     true, false);
  }
  
-+/*
-+ * While we find nice hex chars, build a long_val.
-+ * Return number of chars processed.
-+ */
-+int hex2u64(const char *ptr, u64 *long_val)
++static int thread_stack__pop_ks(struct thread *thread, struct thread_stack *ts,
++				struct perf_sample *sample, u64 ref)
 +{
-+	char *p;
++	u64 tm = sample->time;
++	int err;
 +
-+	*long_val = strtoull(ptr, &p, 16);
++	/* Return to userspace, so pop all kernel addresses */
++	while (thread_stack__in_kernel(ts)) {
++		err = thread_stack__call_return(thread, ts, --ts->cnt,
++						tm, ref, true);
++		if (err)
++			return err;
++	}
 +
-+	return p - ptr;
++	return 0;
 +}
 +
- int kallsyms__parse(const char *filename, void *arg,
- 		    int (*process_symbol)(void *arg, const char *name,
- 					  char type, u64 start))
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index 72ab9870454b..bd988f7b18d4 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -18,6 +18,8 @@ static inline u8 kallsyms2elf_binding(char type)
- 	return isupper(type) ? STB_GLOBAL : STB_LOCAL;
- }
+ static int thread_stack__no_call_return(struct thread *thread,
+ 					struct thread_stack *ts,
+ 					struct perf_sample *sample,
+@@ -910,7 +927,18 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 			ts->rstate = X86_RETPOLINE_DETECTED;
  
-+int hex2u64(const char *ptr, u64 *long_val);
+ 	} else if (sample->flags & PERF_IP_FLAG_RETURN) {
+-		if (!sample->ip || !sample->addr)
++		if (!sample->addr) {
++			u32 return_from_kernel = PERF_IP_FLAG_SYSCALLRET |
++						 PERF_IP_FLAG_INTERRUPT;
 +
- u8 kallsyms2elf_type(char type);
++			if (!(sample->flags & return_from_kernel))
++				return 0;
++
++			/* Pop kernel stack */
++			return thread_stack__pop_ks(thread, ts, sample, ref);
++		}
++
++		if (!sample->ip)
+ 			return 0;
  
- bool kallsyms__is_function(char symbol_type);
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index d388f80d8703..a61535cf1bca 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -434,19 +434,6 @@ size_t hex_width(u64 v)
- 	return n;
- }
- 
--/*
-- * While we find nice hex chars, build a long_val.
-- * Return number of chars processed.
-- */
--int hex2u64(const char *ptr, u64 *long_val)
--{
--	char *p;
--
--	*long_val = strtoull(ptr, &p, 16);
--
--	return p - ptr;
--}
--
- int perf_event_paranoid(void)
- {
- 	int value;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 09c1b0f91f65..125e215dd3d8 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -43,7 +43,6 @@ ssize_t readn(int fd, void *buf, size_t n);
- ssize_t writen(int fd, const void *buf, size_t n);
- 
- size_t hex_width(u64 v);
--int hex2u64(const char *ptr, u64 *val);
- 
- extern unsigned int page_size;
- int __pure cacheline_size(void);
+ 		/* x86 retpoline 'return' doesn't match the stack */
 -- 
 2.20.1
 
