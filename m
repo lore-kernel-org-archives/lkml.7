@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECD9C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A554CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985D420645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0F7205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055321;
-	bh=H3AGDmzp0Zp1pSbvJRNNH0Kcv9iuWLBCIvSBDtcO4X0=;
+	s=default; t=1562055329;
+	bh=jIOQbsCP4X+3mrOpraffnVNqY8f0gWvNEEoEDdaJRt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqICEDnj2PdAhMVmRHy0rP+f/Wpy6F3qF+ClPdwXTSMxDCzZEIN5lrcxhRYivDppP
-	 W3b5QGGluG/Op1ffd5YERERK2IyE9QnqZS5NsdMcPfBWnFKj5SsO7jTOPB1LYlNmsE
-	 9rHNxogmrTH74aE/RfKSn2DlACRxw+03XMTMD4O0=
+	b=q0RYjPO+IDpikNKrZMr+eCeJ8Bd9u9bqE7TOkDcqu1T1EqnRf2gdibCZPcmq3eBlG
+	 rvO31zLZMFilpFpA90BuQTmVA6AEWNBzmkc27GEMwsfv8ansQvoepMDVPgUQwHbWE0
+	 ZEZlJHHyg2/BiUIdXxioIRKD1Wim12fWnvFO3sQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfGBIPU (ORCPT
+        id S1728242AbfGBIP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50952 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:15:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbfGBIFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:07 -0400
+        id S1727164AbfGBIEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F20AB2184B;
-        Tue,  2 Jul 2019 08:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5F420659;
+        Tue,  2 Jul 2019 08:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054706;
-        bh=H3AGDmzp0Zp1pSbvJRNNH0Kcv9iuWLBCIvSBDtcO4X0=;
+        s=default; t=1562054694;
+        bh=jIOQbsCP4X+3mrOpraffnVNqY8f0gWvNEEoEDdaJRt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2pUQHdh1ZN1IqY0M6/TEKr/J1tdlpg5tplyg6LXSBMYDC37lzwGUNAq4+na1dweT
-         rKIuHx5NXqK+LcUjKDxTdqYL1oCCj+XFyBc6+/9zbkFE4lu0cd2lUktxNaL95Kw7RY
-         K8vmDa8HyF73aWlwDkSgfpzUl90zW8GCDgrl+Ops=
+        b=VxvUyvpHByVje9LmkQ2WBwt3pKC11e/VDsRcd3ZyKmH/0L0e85IpodulHin9h/ZD9
+         YeIb58WFdixCo+5tn3cwq+2StYHsdFvtYHxta8Pir9fByz7RzxNiwO2hG4tvwUu/tL
+         3Oh6J3dNMnRoKf39bBDOoNBgNsFrryIj+VuNc/y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fei Li <lifei.shirley@bytedance.com>,
-        Jason Wang <jasowang@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
+        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 42/55] tun: wake up waitqueues after IFF_UP is set
-Date:   Tue,  2 Jul 2019 10:01:50 +0200
-Message-Id: <20190702080126.295927263@linuxfoundation.org>
+Subject: [PATCH 5.1 38/55] sctp: change to hold sk after auth shkey is created successfully
+Date:   Tue,  2 Jul 2019 10:01:46 +0200
+Message-Id: <20190702080126.103992090@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -60,76 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Li <lifei.shirley@bytedance.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 72b319dc08b4924a29f5e2560ef6d966fa54c429 ]
+[ Upstream commit 25bff6d5478b2a02368097015b7d8eb727c87e16 ]
 
-Currently after setting tap0 link up, the tun code wakes tx/rx waited
-queues up in tun_net_open() when .ndo_open() is called, however the
-IFF_UP flag has not been set yet. If there's already a wait queue, it
-would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
-Then the saving vhost_poll_start() will add the wq into wqh until it
-is waken up again. Although this works when IFF_UP flag has been set
-when tun_chr_poll detects; this is not true if IFF_UP flag has not
-been set at that time. Sadly the latter case is a fatal error, as
-the wq will never be waken up in future unless later manually
-setting link up on purpose.
+Now in sctp_endpoint_init(), it holds the sk then creates auth
+shkey. But when the creation fails, it doesn't release the sk,
+which causes a sk defcnf leak,
 
-Fix this by moving the wakeup process into the NETDEV_UP event
-notifying process, this makes sure IFF_UP has been set before all
-waited queues been waken up.
+Here to fix it by only holding the sk when auth shkey is created
+successfully.
 
-Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
+Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
+Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ net/sctp/endpointola.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1024,18 +1024,8 @@ static void tun_net_uninit(struct net_de
- /* Net device open. */
- static int tun_net_open(struct net_device *dev)
- {
--	struct tun_struct *tun = netdev_priv(dev);
--	int i;
--
- 	netif_tx_start_all_queues(dev);
+--- a/net/sctp/endpointola.c
++++ b/net/sctp/endpointola.c
+@@ -133,10 +133,6 @@ static struct sctp_endpoint *sctp_endpoi
+ 	/* Initialize the bind addr area */
+ 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
  
--	for (i = 0; i < tun->numqueues; i++) {
--		struct tun_file *tfile;
+-	/* Remember who we are attached to.  */
+-	ep->base.sk = sk;
+-	sock_hold(ep->base.sk);
 -
--		tfile = rtnl_dereference(tun->tfiles[i]);
--		tfile->socket.sk->sk_write_space(tfile->socket.sk);
--	}
--
- 	return 0;
- }
+ 	/* Create the lists of associations.  */
+ 	INIT_LIST_HEAD(&ep->asocs);
  
-@@ -3636,6 +3626,7 @@ static int tun_device_event(struct notif
- {
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct tun_struct *tun = netdev_priv(dev);
-+	int i;
+@@ -169,6 +165,10 @@ static struct sctp_endpoint *sctp_endpoi
+ 	ep->prsctp_enable = net->sctp.prsctp_enable;
+ 	ep->reconf_enable = net->sctp.reconf_enable;
  
- 	if (dev->rtnl_link_ops != &tun_link_ops)
- 		return NOTIFY_DONE;
-@@ -3645,6 +3636,14 @@ static int tun_device_event(struct notif
- 		if (tun_queue_resize(tun))
- 			return NOTIFY_BAD;
- 		break;
-+	case NETDEV_UP:
-+		for (i = 0; i < tun->numqueues; i++) {
-+			struct tun_file *tfile;
++	/* Remember who we are attached to.  */
++	ep->base.sk = sk;
++	sock_hold(ep->base.sk);
 +
-+			tfile = rtnl_dereference(tun->tfiles[i]);
-+			tfile->socket.sk->sk_write_space(tfile->socket.sk);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
+ 	return ep;
+ 
+ nomem_shkey:
 
 
