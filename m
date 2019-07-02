@@ -2,55 +2,59 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7987C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF88C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A742F21848
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1D321479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054780;
-	bh=+xS1LmssqxErT9qWaTx18oNA8+k4W6Pln922osslIXs=;
+	s=default; t=1562054786;
+	bh=cCBhwgoIit/dyguMJVOpnTShQ/wzIKfPyyIC+BFGoQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XG6qzvwU0CAtWQV6DCrhr86nhsnUeglPBU8PDNXepxR2DQdHZ6TKc0h7WBegcA+M3
-	 /LgIDmtzsKLLoilFGVy3KQgrjN6riBxrHkRZYdk0NWTyR8+zYQDkvS/g/+LyGlrgGS
-	 DMS50y0XDs+lsysvJPPPuCS5RNbEG+aFYKTaUEK0=
+	b=0hv+WnGFm0CVEgxhTd1fGUDkklDhewo1eXXjt3Yv40AlhrUB7p4mcEQEVwxBbt2N+
+	 EKvVqCtWj3rrQk7wdeOu3fJwFUjfa0CRzMFiQXxwn+NZ/LucOlf/F0nq+Q4zG4uzsZ
+	 hkkTnXBEeFYybWIg8gNiNFp0Lr9b/CuhbM0qj43c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfGBIET (ORCPT
+        id S1728093AbfGBIGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49668 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbfGBIEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:16 -0400
+        id S1727560AbfGBIGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:06:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DCD121848;
-        Tue,  2 Jul 2019 08:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF34221841;
+        Tue,  2 Jul 2019 08:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054654;
-        bh=+xS1LmssqxErT9qWaTx18oNA8+k4W6Pln922osslIXs=;
+        s=default; t=1562054775;
+        bh=cCBhwgoIit/dyguMJVOpnTShQ/wzIKfPyyIC+BFGoQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBtUvZeGXD79EEkW96Zh7hwzxf2fJAbp8t16GBrY5hQp+ewM+Xc+cM5YEJSsuIAbl
-         YjUPQnSq0w1iDz4lftM38+oDhVo80YP7XjYx/iZrTJICWGnfrzKzZgzzPXIWUHd8ha
-         nRbPcsQAkfW6BXaVhNBGez9lbGqkw3OtBXoxe7tc=
+        b=NMZEz04Rfa26fqnVRSFWEjGksMmHyvZZgXFkT7f9L5OUHxHLa/vl/YByyloLF1v5i
+         /ZJnUoDU4a5C1/4Qm0UW9iSCafEn8GTNgFOC+ZFUCSdG74P9N1I2MkVvhc05TgOU6C
+         wrmAGbVHSfHURZdiHOrCAy/z9uqVeCbUra07u/0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.1 45/55] bpf: lpm_trie: check left child of last leftmost node for NULL
-Date:   Tue,  2 Jul 2019 10:01:53 +0200
-Message-Id: <20190702080126.431826442@linuxfoundation.org>
+        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Jack Pham <jackp@codeaurora.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/72] usb: dwc3: gadget: Clear req->needs_extra_trb flag on cleanup
+Date:   Tue,  2 Jul 2019 10:01:32 +0200
+Message-Id: <20190702080126.279660004@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
-References: <20190702080124.103022729@linuxfoundation.org>
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+References: <20190702080124.564652899@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,127 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+commit bd6742249b9ca918565e4e3abaa06665e587f4b5 upstream
 
-commit da2577fdd0932ea4eefe73903f1130ee366767d2 upstream.
+OUT endpoint requests may somtimes have this flag set when
+preparing to be submitted to HW indicating that there is an
+additional TRB chained to the request for alignment purposes.
+If that request is removed before the controller can execute the
+transfer (e.g. ep_dequeue/ep_disable), the request will not go
+through the dwc3_gadget_ep_cleanup_completed_request() handler
+and will not have its needs_extra_trb flag cleared when
+dwc3_gadget_giveback() is called.  This same request could be
+later requeued for a new transfer that does not require an
+extra TRB and if it is successfully completed, the cleanup
+and TRB reclamation will incorrectly process the additional TRB
+which belongs to the next request, and incorrectly advances the
+TRB dequeue pointer, thereby messing up calculation of the next
+requeust's actual/remaining count when it completes.
 
-If the leftmost parent node of the tree has does not have a child
-on the left side, then trie_get_next_key (and bpftool map dump) will
-not look at the child on the right.  This leads to the traversal
-missing elements.
+The right thing to do here is to ensure that the flag is cleared
+before it is given back to the function driver.  A good place
+to do that is in dwc3_gadget_del_and_unmap_request().
 
-Lookup is not affected.
-
-Update selftest to handle this case.
-
-Reproducer:
-
- bpftool map create /sys/fs/bpf/lpm type lpm_trie key 6 \
-     value 1 entries 256 name test_lpm flags 1
- bpftool map update pinned /sys/fs/bpf/lpm key  8 0 0 0  0   0 value 1
- bpftool map update pinned /sys/fs/bpf/lpm key 16 0 0 0  0 128 value 2
- bpftool map dump   pinned /sys/fs/bpf/lpm
-
-Returns only 1 element. (2 expected)
-
-Fixes: b471f2f1de8b ("bpf: implement MAP_GET_NEXT_KEY command for LPM_TRIE")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c6267a51639b ("usb: dwc3: gadget: align transfers to wMaxPacketSize")
+Cc: Fei Yang <fei.yang@intel.com>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org # 4.19.y
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+(cherry picked from commit bd6742249b9ca918565e4e3abaa06665e587f4b5)
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/lpm_trie.c                      |    9 ++++--
- tools/testing/selftests/bpf/test_lpm_map.c |   41 ++++++++++++++++++++++++++---
- 2 files changed, 45 insertions(+), 5 deletions(-)
+ drivers/usb/dwc3/gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -715,9 +715,14 @@ find_leftmost:
- 	 * have exact two children, so this function will never return NULL.
- 	 */
- 	for (node = search_root; node;) {
--		if (!(node->flags & LPM_TREE_NODE_FLAG_IM))
-+		if (node->flags & LPM_TREE_NODE_FLAG_IM) {
-+			node = rcu_dereference(node->child[0]);
-+		} else {
- 			next_node = node;
--		node = rcu_dereference(node->child[0]);
-+			node = rcu_dereference(node->child[0]);
-+			if (!node)
-+				node = rcu_dereference(next_node->child[1]);
-+		}
- 	}
- do_copy:
- 	next_key->prefixlen = next_node->prefixlen;
---- a/tools/testing/selftests/bpf/test_lpm_map.c
-+++ b/tools/testing/selftests/bpf/test_lpm_map.c
-@@ -573,13 +573,13 @@ static void test_lpm_get_next_key(void)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 843586f20572..e7122b5199d2 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -177,6 +177,7 @@ static void dwc3_gadget_del_and_unmap_request(struct dwc3_ep *dep,
+ 	req->started = false;
+ 	list_del(&req->list);
+ 	req->remaining = 0;
++	req->needs_extra_trb = false;
  
- 	/* add one more element (total two) */
- 	key_p->prefixlen = 24;
--	inet_pton(AF_INET, "192.168.0.0", key_p->data);
-+	inet_pton(AF_INET, "192.168.128.0", key_p->data);
- 	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
- 
- 	memset(key_p, 0, key_size);
- 	assert(bpf_map_get_next_key(map_fd, NULL, key_p) == 0);
- 	assert(key_p->prefixlen == 24 && key_p->data[0] == 192 &&
--	       key_p->data[1] == 168 && key_p->data[2] == 0);
-+	       key_p->data[1] == 168 && key_p->data[2] == 128);
- 
- 	memset(next_key_p, 0, key_size);
- 	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-@@ -592,7 +592,7 @@ static void test_lpm_get_next_key(void)
- 
- 	/* Add one more element (total three) */
- 	key_p->prefixlen = 24;
--	inet_pton(AF_INET, "192.168.128.0", key_p->data);
-+	inet_pton(AF_INET, "192.168.0.0", key_p->data);
- 	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
- 
- 	memset(key_p, 0, key_size);
-@@ -628,6 +628,41 @@ static void test_lpm_get_next_key(void)
- 	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
- 	assert(next_key_p->prefixlen == 24 && next_key_p->data[0] == 192 &&
- 	       next_key_p->data[1] == 168 && next_key_p->data[2] == 1);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 24 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 128);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 16 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == -1 &&
-+	       errno == ENOENT);
-+
-+	/* Add one more element (total five) */
-+	key_p->prefixlen = 28;
-+	inet_pton(AF_INET, "192.168.1.128", key_p->data);
-+	assert(bpf_map_update_elem(map_fd, key_p, &value, 0) == 0);
-+
-+	memset(key_p, 0, key_size);
-+	assert(bpf_map_get_next_key(map_fd, NULL, key_p) == 0);
-+	assert(key_p->prefixlen == 24 && key_p->data[0] == 192 &&
-+	       key_p->data[1] == 168 && key_p->data[2] == 0);
-+
-+	memset(next_key_p, 0, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 28 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 1 &&
-+	       next_key_p->data[3] == 128);
-+
-+	memcpy(key_p, next_key_p, key_size);
-+	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
-+	assert(next_key_p->prefixlen == 24 && next_key_p->data[0] == 192 &&
-+	       next_key_p->data[1] == 168 && next_key_p->data[2] == 1);
- 
- 	memcpy(key_p, next_key_p, key_size);
- 	assert(bpf_map_get_next_key(map_fd, key_p, next_key_p) == 0);
+ 	if (req->request.status == -EINPROGRESS)
+ 		req->request.status = status;
+-- 
+2.20.1
+
 
 
