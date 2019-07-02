@@ -2,69 +2,179 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B20C06517
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D713C4647F
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F30421848
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E1D218A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFTZp006"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfGBOWK (ORCPT
+        id S1727142AbfGBOYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:22:10 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:37289 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726803AbfGBOWK (ORCPT
+        Tue, 2 Jul 2019 10:24:53 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41735 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfGBOYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:22:10 -0400
-X-Greylist: delayed 2725 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 10:22:09 EDT
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x62DZ7Dh025485;
-        Tue, 2 Jul 2019 16:35:07 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 8441)
-        id 75DD761FCC; Tue,  2 Jul 2019 16:35:07 +0300 (IDT)
-From:   Avi Fishman <avifishman70@gmail.com>
-To:     tudor.ambarus@microchip.com, dwmw2@infradead.org,
-        computersforpeace@gmail.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org
-Cc:     avifishman70@gmail.com, linux-kernel@vger.kernel.org,
-        tmaimon77@gmail.com, openbmc@lists.ozlabs.org
-Subject: [PATCH] mtd: spi-nor: Add Winbond w25q256jvm
-Date:   Tue,  2 Jul 2019 16:34:44 +0300
-Message-Id: <20190702133444.444440-1-avifishman70@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 2 Jul 2019 10:24:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 205so17100352ljj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 07:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bSHjqClvRfHK2U9qiOj5LIMtdVJcukiMxcH2n03yaCU=;
+        b=HFTZp006q8TZVX5sIuJIMOkk1C9wJQO4rJGRAiNBk/2WlyfUJ1rdVQY+PYz0ZhQz3Q
+         wT17e2X0kch1+uP8KvE/V1ET2jlNw8aK4cHsN9Zf832n78lQJQUY75gbrep4TC2UbVpA
+         axaAvW+VgyPKfoktsN3yY2BkGI/5aoxuUHGyQG0WSr2OOvsF8q/VePxkmkaj/PJRO9vE
+         rGWXVn0dbCitwyb/iSKcxQgRgC7wf16i4cJRuO/qWn8T4MKiDjladJV35U+7gNDPkgpt
+         /fHPgF/QGWi5AyHp75MflzSGf05Yw5Z8bbdVS03YBHG/wVa/f2iIl+T0k5Bb5yqMYZdq
+         I35A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=bSHjqClvRfHK2U9qiOj5LIMtdVJcukiMxcH2n03yaCU=;
+        b=IzzFaG6en1Lj0pOe/4h92RXvLo5gwlZ2bg5kBfPFDESyueBFgdXTs2zp+S5FVyWwHD
+         do8kTH4EywE7DTdMOZeRh4uUCaBPscouYU6X15B0V09Gt1XW8LbY+Gk3SqZTw8BGPl3i
+         OWKZWWT1P5wgu6lnc0Hhv1GD8RsJRpc/zkkfLepXM12ulKbhDuQlIxIWOpnVykin4XZD
+         aDYBKHYnxM5sEDI+4Q5gpwFU2hsnivo8IQ9f4owgvsh53X+NVMsoW9Caq6qmy7hNKvvM
+         BlpHxthAOw2gut5DrLTr0A7kr9OhIlE+6X5rjd3n/c3VTpm/ymcv0KPbKLnbNh8Bnpq7
+         oGLQ==
+X-Gm-Message-State: APjAAAX2q1j0CPISP0ODlr8DjlffbY9hHNFILSNkQCnFotQgng9UB9fK
+        xgzhUlSBQi9EkbmZFBIyyUYQyQ==
+X-Google-Smtp-Source: APXvYqznUXLZarmJq51xBmcNdfHn/7nzoCiQ/8SROQ+yDmBZCj4RCuLLzIa94kh5HISHvcZ/J8lmOA==
+X-Received: by 2002:a2e:9a96:: with SMTP id p22mr17345327lji.57.1562077488680;
+        Tue, 02 Jul 2019 07:24:48 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id w28sm3817013ljd.12.2019.07.02.07.24.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 07:24:48 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 17:24:46 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190702142444.GC4510@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+ <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+ <20190701181901.150c0b71@carbon>
+ <20190702113738.GB4510@khorivan>
+ <20190702153902.0e42b0b2@carbon>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190702153902.0e42b0b2@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to w25q256 (besides not supporting QPI mode) but with different ID.
-The "JVM" suffix is in the datasheet.
-The datasheet indicates DUAL and QUAD are supported.
-https://www.winbond.com/resource-files/w25q256jv%20spi%20revi%2010232018%20plus.pdf
+On Tue, Jul 02, 2019 at 03:39:02PM +0200, Jesper Dangaard Brouer wrote:
+>On Tue, 2 Jul 2019 14:37:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> On Mon, Jul 01, 2019 at 06:19:01PM +0200, Jesper Dangaard Brouer wrote:
+>> >On Sun, 30 Jun 2019 20:23:48 +0300
+>> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>> >
+>> >> +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
+>> >> +{
+>> >> +	struct cpsw_common *cpsw = priv->cpsw;
+>> >> +	int ret, new_pool = false;
+>> >> +	struct xdp_rxq_info *rxq;
+>> >> +
+>> >> +	rxq = &priv->xdp_rxq[ch];
+>> >> +
+>> >> +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
+>> >> +	if (ret)
+>> >> +		return ret;
+>> >> +
+>> >> +	if (!cpsw->page_pool[ch]) {
+>> >> +		ret =  cpsw_create_rx_pool(cpsw, ch);
+>> >> +		if (ret)
+>> >> +			goto err_rxq;
+>> >> +
+>> >> +		new_pool = true;
+>> >> +	}
+>> >> +
+>> >> +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
+>> >> +					 cpsw->page_pool[ch]);
+>> >> +	if (!ret)
+>> >> +		return 0;
+>> >> +
+>> >> +	if (new_pool) {
+>> >> +		page_pool_free(cpsw->page_pool[ch]);
+>> >> +		cpsw->page_pool[ch] = NULL;
+>> >> +	}
+>> >> +
+>> >> +err_rxq:
+>> >> +	xdp_rxq_info_unreg(rxq);
+>> >> +	return ret;
+>> >> +}
+>> >
+>> >Looking at this, and Ilias'es XDP-netsec error handling path, it might
+>> >be a mistake that I removed page_pool_destroy() and instead put the
+>> >responsibility on xdp_rxq_info_unreg().
+>>
+>> As for me this is started not from page_pool_free, but rather from calling
+>> unreg_mem_model from rxq_info_unreg. Then, if page_pool_free is hidden
+>> it looks more a while normal to move all chain to be self destroyed.
+>>
+>> >
+>> >As here, we have to detect if page_pool_create() was a success, and then
+>> >if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
+>> >page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
+>> >the page_pool object given it was not registered.
+>>
+>> Yes, it looked a little bit ugly from the beginning, but, frankly,
+>> I have got used to this already.
+>>
+>> >
+>> >Ivan's patch in[1], might be a better approach, which forced all
+>> >drivers to explicitly call page_pool_free(), even-though it just
+>> >dec-refcnt and the real call to page_pool_free() happened via
+>> >xdp_rxq_info_unreg().
+>> >
+>> >To better handle error path, I would re-introduce page_pool_destroy(),
+>>
+>> So, you might to do it later as I understand, and not for my special
+>> case but becouse it makes error path to look a little bit more pretty.
+>> I'm perfectly fine with this, and better you add this, for now my
+>> implementation requires only "xdp: allow same allocator usage" patch,
+>> but if you insist I can resend also patch in question afterwards my
+>> series is applied (with modification to cpsw & netsec & mlx5 & page_pool).
+>>
+>> What's your choice? I can add to your series patch needed for cpsw to
+>> avoid some misuse.
+>
+>I will try to create a cleaned-up version of your patch[1] and
+>re-introduce page_pool_destroy() for drivers to use, then we can build
+>your driver on top of that.
 
-Signed-off-by: Avi Fishman <avifishman70@gmail.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 ++
- 1 file changed, 2 insertions(+)
+I've corrected patch to xdp core and tested. The "page pool API" change
+seems is orthogonal now. So no limits to send v6 that is actually done
+and no more strict dependency on page pool API changes whenever that
+can happen.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 0c2ec1c21434..ccb217a24404 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2120,6 +2120,8 @@ static const struct flash_info spi_nor_ids[] = {
- 	{ "w25q80bl", INFO(0xef4014, 0, 64 * 1024,  16, SECT_4K) },
- 	{ "w25q128", INFO(0xef4018, 0, 64 * 1024, 256, SECT_4K) },
- 	{ "w25q256", INFO(0xef4019, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-+	{ "w25q256jvm", INFO(0xef7019, 0, 64 * 1024, 512,
-+			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
- 			SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
- 
 -- 
-2.18.0
-
+Regards,
+Ivan Khoronzhuk
