@@ -2,205 +2,198 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5856C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150D2C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC44321473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D081021721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKYbE+Za"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FqVp5GV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfGBLhP (ORCPT
+        id S1725972AbfGBLhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:37:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:32936 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfGBLhO (ORCPT
+        Tue, 2 Jul 2019 07:37:45 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44377 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfGBLhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:37:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h10so16546949ljg.0;
-        Tue, 02 Jul 2019 04:37:12 -0700 (PDT)
+        Tue, 2 Jul 2019 07:37:45 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k18so16502164ljc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 04:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RVW2FdzXw7IWAsWcBRuagl+hxUvRiRMD922epoknQCM=;
-        b=tKYbE+Za3AZxB4dM7bixtl7BHgStxwXDC22wujXRCvpvwqUL/XGTIMoY/OGrBvc1sO
-         iJhOwnJzL0gLsUF2VH4btWvIk4JN65p4o6BfWhRmuYmi2XIghFSt0TVfrtMngxkxsuh0
-         UfExq1dN5U+Ae5uZrD9hrgr37NcRy1TUIxLwMsAhkFt7N10G9zhaJtT6MHhpUU4MHzDM
-         QT31lKNLK2SxiOKKUytF8c2on8OaIACqeCh59JADvAv7cE73cQwFaVBosRmDpmLHkE+s
-         zfQzYxpJFldcB8mo3MWxyJh8oVzUDIg7iPqpST7glnUkYQKorTCppvkBmrsshxKOgTLW
-         cvaA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZFgp+qJ/j22ILu0xrjnvZPHOj6PUWhsFcPpe+e4Y7bU=;
+        b=FqVp5GV3gJryDY3UmmOF4FJLcHhVIXPZ9oMw8qcdcSKg6ztJ6HRJRg98o5gddvyV40
+         vAiOvXNF1UDxC5Fasoz/E8danEk7p3dE7Sh1TVfsO5r/0135uOY/EaO+7Z0b5K02KfwO
+         fPhkhVlEmtqRg9OwQ0pnBRLb6U0G6OSzQRlYk6es1ZI4Vtmc08vQ6HQHWkNIcwXTEfky
+         kp6k7SGse7YejOE0jGnAEXVwMMGRQ73g/UuENgRz/oRZe5eJeuPmXPTmNig/mLzTDd9T
+         9amKmQvJA1mmajihWheI4aKqYmUEJnXjW1vIjIjdEeGmAhLfiSrK6/69qFEUtifNgOXP
+         JUlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RVW2FdzXw7IWAsWcBRuagl+hxUvRiRMD922epoknQCM=;
-        b=M9qUg7P1Uk+BJVhDwYiWqer8N4zY3UCVrFkuixKBffQkCoolxJaaB2NMOXWjQpLTZw
-         piWumqgl0u9jA0jPcAk6k+LTv+0OKW0mooN48wg/Iy94JZgSE5hqXDd/cbQpZtXxr8nU
-         rBpniS4ZeGKwmUIwkxkCxDgX8aYMGCufnElbwESuaT7SbJ6CwS4PqhidLJzihzCnLAe3
-         FuNTFq5LEU32eBBOU+Q2ICZ/8Jk9K6OBQVZRuaZqAwv8LDksRZWHIY+V95s0Kdy6mlQN
-         Kv6IKs/8HhAjIZDQLAbueQu+ePwuLgYfrKcJ4fJWC5fEXatjEhpUzqmxoWysadvOhVHc
-         xGGw==
-X-Gm-Message-State: APjAAAUuhVV3oil1LC1/+MWxliBmepa2aIzrF8K8fr+O29Hj3B/neDYW
-        SYoEuBy6SoKc9te8/ZP3ED3YfNUz
-X-Google-Smtp-Source: APXvYqzeLbz2pBZxRON5Y3UnXQuJTAMZJyrEBFh1h4CxNMBedXbCVR2UccTg6SJdCnfagaTghMYliA==
-X-Received: by 2002:a2e:994:: with SMTP id 142mr16784100ljj.130.1562067431812;
-        Tue, 02 Jul 2019 04:37:11 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id k4sm3816148ljg.59.2019.07.02.04.37.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 04:37:11 -0700 (PDT)
-Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190627194728.8948-1-digetx@gmail.com>
- <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
-Date:   Tue, 2 Jul 2019 14:37:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ZFgp+qJ/j22ILu0xrjnvZPHOj6PUWhsFcPpe+e4Y7bU=;
+        b=pte5RsUn+GIE341S7pwaDRXSZHFCDSc9bk3f+mXKK70iwSJTCBnSpHcdrKQrcOrRZF
+         8hBniAeXaOe395QykU5c0oCVyZDLlc5BJcqUEeL9HyVe2NFF5xyutNqctcIvgFghEMQE
+         vrjrnxrrvRxCj0hIXXV8+yxEGfg+/oGh1Mp4r13ltAIpHG1AdUXYfxx+rzdxa0XPQz2W
+         d6wOlJYtvCAc08anxYg9TYUxH/B3eOhKIjchhj+xJ9R/Jd2cJ94OXmBq3Mu2v0NdU/x3
+         GSWV/IQHF0NQo44I+wzJO6igTlsf7uwlSWTJ50btsv2LYcmfBfiVFyaos08cflHRm988
+         537A==
+X-Gm-Message-State: APjAAAWBFv7xTioPbeHlvporpyU7CsxQ8suwMRjw5ctPyWuUmfa4Jkpb
+        cxvJwhmtrRXY9G8eti0UfjQT2w==
+X-Google-Smtp-Source: APXvYqwgxkawZGohpYPdKCeEogT1H8dr5eFxYTigT5z5pSlK9j0WWi+02uK6h2/vnsR3M1nH7v7+0A==
+X-Received: by 2002:a2e:9857:: with SMTP id e23mr16694622ljj.217.1562067462281;
+        Tue, 02 Jul 2019 04:37:42 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id l25sm3699985lja.76.2019.07.02.04.37.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 04:37:41 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 14:37:39 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190702113738.GB4510@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+ <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+ <20190701181901.150c0b71@carbon>
 MIME-Version: 1.0
-In-Reply-To: <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190701181901.150c0b71@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.07.2019 14:20, Jon Hunter пишет:
-> 
-> On 27/06/2019 20:47, Dmitry Osipenko wrote:
->> Tegra's APB DMA engine updates words counter after each transferred burst
->> of data, hence it can report transfer's residual with more fidelity which
->> may be required in cases like audio playback. In particular this fixes
->> audio stuttering during playback in a chromium web browser. The patch is
->> based on the original work that was made by Ben Dooks and a patch from
->> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
->>
->> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>
->> Changelog:
->>
->> v3:  Added workaround for a hardware design shortcoming that results
->>      in a words counter wraparound before end-of-transfer bit is set
->>      in a cyclic mode.
->>
->> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
->>      to get words count if dma_desc is on free list as it will result
->>      in a NULL dereference because this case wasn't handled properly.
->>
->>      The residual value is now updated properly, avoiding potential
->>      integer overflow by adding the "bytes" to the "bytes_transferred"
->>      instead of the subtraction.
->>
->>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
->>  1 file changed, 62 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index 79e9593815f1..71473eda28ee 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->>  	bool				last_sg;
->>  	struct list_head		node;
->>  	struct tegra_dma_desc		*dma_desc;
->> +	unsigned int			words_xferred;
->>  };
->>  
->>  /*
->> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->>  	nsg_req->configured = true;
->> +	nsg_req->words_xferred = 0;
->>  
->>  	tegra_dma_resume(tdc);
->>  }
->> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->>  					typeof(*sg_req), node);
->>  	tegra_dma_start(tdc, sg_req);
->>  	sg_req->configured = true;
->> +	sg_req->words_xferred = 0;
->>  	tdc->busy = true;
->>  }
->>  
->> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>  	return 0;
->>  }
->>  
->> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
->> +					       struct tegra_dma_sg_req *sg_req)
+On Mon, Jul 01, 2019 at 06:19:01PM +0200, Jesper Dangaard Brouer wrote:
+>On Sun, 30 Jun 2019 20:23:48 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> +static int cpsw_ndev_create_xdp_rxq(struct cpsw_priv *priv, int ch)
 >> +{
->> +	unsigned long status, wcount = 0;
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int ret, new_pool = false;
+>> +	struct xdp_rxq_info *rxq;
 >> +
->> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>> +	rxq = &priv->xdp_rxq[ch];
+>> +
+>> +	ret = xdp_rxq_info_reg(rxq, priv->ndev, ch);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (!cpsw->page_pool[ch]) {
+>> +		ret =  cpsw_create_rx_pool(cpsw, ch);
+>> +		if (ret)
+>> +			goto err_rxq;
+>> +
+>> +		new_pool = true;
+>> +	}
+>> +
+>> +	ret = xdp_rxq_info_reg_mem_model(rxq, MEM_TYPE_PAGE_POOL,
+>> +					 cpsw->page_pool[ch]);
+>> +	if (!ret)
 >> +		return 0;
 >> +
->> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>> +	if (new_pool) {
+>> +		page_pool_free(cpsw->page_pool[ch]);
+>> +		cpsw->page_pool[ch] = NULL;
+>> +	}
 >> +
->> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->> +
->> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->> +		wcount = status;
->> +
->> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->> +		return sg_req->req_len;
->> +
->> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
->> +
->> +	if (!wcount) {
->> +		/*
->> +		 * If wcount wasn't ever polled for this SG before, then
->> +		 * simply assume that transfer hasn't started yet.
->> +		 *
->> +		 * Otherwise it's the end of the transfer.
->> +		 *
->> +		 * The alternative would be to poll the status register
->> +		 * until EOC bit is set or wcount goes UP. That's so
->> +		 * because EOC bit is getting set only after the last
->> +		 * burst's completion and counter is less than the actual
->> +		 * transfer size by 4 bytes. The counter value wraps around
->> +		 * in a cyclic mode before EOC is set(!), so we can't easily
->> +		 * distinguish start of transfer from its end.
->> +		 */
->> +		if (sg_req->words_xferred)
->> +			wcount = sg_req->req_len - 4;
->> +
->> +	} else if (wcount < sg_req->words_xferred) {
->> +		/*
->> +		 * This case shall not ever happen because EOC bit
->> +		 * must be set once next cyclic transfer is started.
-> 
-> I am not sure I follow this and why this condition cannot happen for
-> cyclic transfers. What about non-cyclic transfers?
+>> +err_rxq:
+>> +	xdp_rxq_info_unreg(rxq);
+>> +	return ret;
+>> +}
+>
+>Looking at this, and Ilias'es XDP-netsec error handling path, it might
+>be a mistake that I removed page_pool_destroy() and instead put the
+>responsibility on xdp_rxq_info_unreg().
+As for me this is started not from page_pool_free, but rather from calling
+unreg_mem_model from rxq_info_unreg. Then, if page_pool_free is hidden
+it looks more a while normal to move all chain to be self destroyed.
 
-It cannot happen because the EOC bit will be set in that case. The counter wraps
-around when the transfer of a last burst happens, EOC bit is guaranteed to be set
-after completion of the last burst. That's my observation after a thorough testing,
-it will be very odd if EOC setting happened completely asynchronously.
+>
+>As here, we have to detect if page_pool_create() was a success, and then
+>if xdp_rxq_info_reg_mem_model() was a failure, explicitly call
+>page_pool_free() because the xdp_rxq_info_unreg() call cannot "free"
+>the page_pool object given it was not registered.
+Yes, it looked a little bit ugly from the beginning, but, frankly,
+I have got used to this already.
 
-For a non-cyclic transfers it doesn't matter.. because they are not cyclic and thus
-counter will be stopped by itself. It will be a disaster if all of sudden a
-non-cyclic transfer becomes cyclic, don't you think so? :)
+>
+>Ivan's patch in[1], might be a better approach, which forced all
+>drivers to explicitly call page_pool_free(), even-though it just
+>dec-refcnt and the real call to page_pool_free() happened via
+>xdp_rxq_info_unreg().
+>
+>To better handle error path, I would re-introduce page_pool_destroy(),
+So, you might to do it later as I understand, and not for my special
+case but becouse it makes error path to look a little bit more pretty.
+I'm perfectly fine with this, and better you add this, for now my
+implementation requires only "xdp: allow same allocator usage" patch,
+but if you insist I can resend also patch in question afterwards my
+series is applied (with modification to cpsw & netsec & mlx5 & page_pool).
+
+What's your choice? I can add to your series patch needed for cpsw to
+avoid some misuse.
+
+>as a driver API, that would gracefully handle NULL-pointer case, and
+>then call page_pool_free() with the atomic_dec_and_test().  (It should
+>hopefully simplify the error handling code a bit)
+>
+>[1] https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
+>
+>
+>> +void cpsw_ndev_destroy_xdp_rxqs(struct cpsw_priv *priv)
+>> +{
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	struct xdp_rxq_info *rxq;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < cpsw->rx_ch_num; i++) {
+>> +		rxq = &priv->xdp_rxq[i];
+>> +		if (xdp_rxq_info_is_reg(rxq))
+>> +			xdp_rxq_info_unreg(rxq);
+>> +	}
+>> +}
+>
+>Are you sure you need to test xdp_rxq_info_is_reg() here?
+Yes it's required in my case as it's used in error path where
+an rx queue can be even not registered and no need in this warn.
+
+>
+>You should just call xdp_rxq_info_unreg(rxq), if you know that this rxq
+>should be registered.  If your assumption failed, you will get a
+>WARNing, and discover your driver level bug.  This is one of the ways
+>the API is designed to "detect" misuse of the API.  (I found this
+>rather useful, when I converted the approx 12 drivers using this
+>xdp_rxq_info API).
+>
+>-- 
+>Best regards,
+>  Jesper Dangaard Brouer
+>  MSc.CS, Principal Kernel Engineer at Red Hat
+>  LinkedIn: http://www.linkedin.com/in/brouer
+
+-- 
+Regards,
+Ivan Khoronzhuk
