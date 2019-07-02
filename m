@@ -2,79 +2,89 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91D7C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9573CC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F882064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF3A21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562064852;
+	bh=p/6kpZRVuYcmAKV9AA32HXPzBIcdjFZSr6MNglqmZU4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=K2YmfE3r47PSy7XkrKAwP8mK8eSHMn+CEtmFOmc1c86AFood2eMQRkldm6+ZddgeQ
+	 U7bcPfqflEClPpUqjJ9MIM2Wug6QMlQ/EjENs/lW+OMpr+LYoTwMB+xUtbb4iBylq6
+	 iqBT8aqfgr7t/KToy8nvDTpHsRk2lvwdmGGRqZok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfGBKxT (ORCPT
+        id S1726831AbfGBKyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:53:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60493 "EHLO mga02.intel.com"
+        Tue, 2 Jul 2019 06:54:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfGBKxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:53:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 03:00:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,442,1557212400"; 
-   d="scan'208";a="157585477"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by orsmga008.jf.intel.com with ESMTP; 02 Jul 2019 02:59:59 -0700
-Subject: Re: buildbot status?
-To:     Philip Li <philip.li@intel.com>, Kalle Valo <kvalo@codeaurora.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>,
+        id S1725767AbfGBKyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 06:54:10 -0400
+Received: from vkoul-mobl.Dlink (unknown [49.207.58.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37A3020659;
+        Tue,  2 Jul 2019 10:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562064849;
+        bh=p/6kpZRVuYcmAKV9AA32HXPzBIcdjFZSr6MNglqmZU4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=s10W2HPOfV17SKau5EJj3XHdMNWutjyA2L8emWuqeBcgNjN4wv2AlsdoM++r4WWaf
+         JxgVJ3z5dd0JaZK8oM8zpKAwfpZgxNxxbzBL0ZHd1+EuqK32wQ0wGMS41DFgD6R2UO
+         7gkppgnp7T9gFLTb8f2W2JAdJJQYJtNDTlErxNy4=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190628142859.GA4844@lst.de> <87h887qu2t.fsf@codeaurora.org>
- <20190630134944.GA22324@intel.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <f5f5409b-eaca-d38c-bd31-c54ef69b3833@intel.com>
-Date:   Tue, 2 Jul 2019 18:00:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Subject: [PATCH v2 0/3] ipinctrl: qcom: Add support for SM8150
+Date:   Tue,  2 Jul 2019 16:20:42 +0530
+Message-Id: <20190702105045.27646-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190630134944.GA22324@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/19 9:49 PM, Philip Li wrote:
-> On Sun, Jun 30, 2019 at 12:51:54PM +0300, Kalle Valo wrote:
->> Christoph Hellwig <hch@lst.de> writes:
->>
->>> Hi buildbot maintainers,
->>>
->>> lately I usually get no, in some case a few very delayed build bot
->>> results for my repos.  Is this as known issue?
->> I have the same problem, I did receive few reports on Wednesday but
->> nothing after that. I rely a lot for buildbot doing build checks on
->> wireless-drivers patches so I hope it comes back soon.
-> hi Kalle and Christoph, sorry for inconvenience. We will check this as
-> early as possible which may be due to certain issue in our side. +Rong
-> to help check the exact problem.
+This series adds binding and driver for SM8150 pinctrl block. Also fixes one
+binding missing gpio node for msm8998.
 
-Hi all,
+Changes since v2:
+ - Order the function names and squash functions
+ - document gpio-ranges and gpio-reserved-ranges
+ - change ufs reset to be after gpios
+ - fix pin58 having qdss_cti twice
+ - remove .owner
+ - Add one patch for missing gpio nodes
 
-There's a problem with the network in our side, we're trying to solve it.
-Sorry for the inconvenience that may have caused to you.
+Prasad Sodagudi (2):
+  dt-bindings: pinctrl: qcom: Add SM8150 pinctrl binding
+  pinctrl: qcom: Add SM8150 pinctrl driver
 
-Best Regards,
-Rong Chen
+Vinod Koul (1):
+  dt-bindings: pinctrl: qcom: Document missing gpio nodes
 
+ .../bindings/pinctrl/qcom,msm8998-pinctrl.txt |   10 +
+ .../bindings/pinctrl/qcom,sm8150-pinctrl.txt  |  190 ++
+ drivers/pinctrl/qcom/Kconfig                  |    9 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sm8150.c         | 1548 +++++++++++++++++
+ 5 files changed, 1758 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8150.c
 
->
->> -- 
->> Kalle Valo
+-- 
+2.20.1
+
