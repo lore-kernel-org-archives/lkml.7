@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FDDC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D09CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F354F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7E621721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N9ZBzTlq"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UhBu9cW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfGBGt6 (ORCPT
+        id S1726957AbfGBGup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:49:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52667 "EHLO
+        Tue, 2 Jul 2019 02:50:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36369 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfGBGt6 (ORCPT
+        with ESMTP id S1725868AbfGBGup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:49:58 -0400
+        Tue, 2 Jul 2019 02:50:45 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x626njBH2680303
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x626oQS32680406
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 1 Jul 2019 23:49:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x626njBH2680303
+        Mon, 1 Jul 2019 23:50:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x626oQS32680406
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562050186;
-        bh=70HKby+9x+b9astIMUJmnz4LELiPsGhC6DGfic4pAgc=;
+        s=2019061801; t=1562050227;
+        bh=dMoFTRvS86LPmZa4tUjD8/8R+ZdhbMDdXuUXDuSvgpg=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=N9ZBzTlqMGIAgnmvTRrT6S/y4EomFS7qfLmCJsjCeBLv+UwTxQrUiYTu3ff25kR6E
-         dAxHyp867L7zCUQjnBlIVabmgdwDdxI3c2oroOvyuNZP5Rxko8R7bc/ACo1JqjGrjz
-         8rhnSYh+F3iYO10VoyzJxxWWSm1jQ4vYXqE6i0rAt81N7gclnA7L8I9KR1cWx1WQ2Y
-         N2vZ8d8FTQPXCGIAS83WJnFHGpEiYBzutHWo1nJhysHaiB3JupSj2WDX/NgyRlZ4sz
-         29i8j0sBkLDSf2D61/rkMa03RdjJffzidKhT5WSwVomjhsylXNX4/FaN060Tkn7gdf
-         /Yo3qNSZIbEhw==
+        b=UhBu9cW3kzrZKxQQPsS7zQoefHpfnArn3A43gknMpO4ETSCqkmjAN/ZI1di2/kSFq
+         9ev7lix+Di+znzEoGgPcwps2dz3q7UgpMZG1+RZ1BJAPS/15LBPRxJ1S1a20trk6DW
+         lkNFXhac3hF2uCZrOfOZskl7psfq2J8X8HWiIefoQdfV/bfoNkzTRugSDpacj5TXwf
+         PlNQzWL3w52uE5TNvJsMGkERifQI9uw/InHATUTJvDs1DHNnq/QUx8O1L15jVU48N8
+         Zz0kbmqTwHcqSDsMOIMZC25+PkwbrTuCJvwijeWg4hyDqwiJE6r8YSVsSULxSlUTPR
+         T3JBjG52xHWQQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x626njHo2680300;
-        Mon, 1 Jul 2019 23:49:45 -0700
-Date:   Mon, 1 Jul 2019 23:49:45 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x626oQ3i2680403;
+        Mon, 1 Jul 2019 23:50:26 -0700
+Date:   Mon, 1 Jul 2019 23:50:26 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
-Message-ID: <tip-dffb3f9db6b593f3ed6ab4c8d8f10e0aa6aa7a88@git.kernel.org>
-Cc:     peterz@infradead.org, mingo@kernel.org, bp@alien8.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com, chang.seok.bae@intel.com
-Reply-To: peterz@infradead.org, mingo@kernel.org, tglx@linutronix.de,
-          chang.seok.bae@intel.com, hpa@zytor.com, bp@alien8.de,
-          linux-kernel@vger.kernel.org, luto@kernel.org
-In-Reply-To: <0f7dafa72fe7194689de5ee8cfe5d83509fabcf5.1562035429.git.luto@kernel.org>
-References: <0f7dafa72fe7194689de5ee8cfe5d83509fabcf5.1562035429.git.luto@kernel.org>
+Message-ID: <tip-539bca535decb11a0861b6205c6684b8e908589b@git.kernel.org>
+Cc:     mingo@kernel.org, vegard.nossum@oracle.com, bp@alien8.de,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com,
+        ak@linux.intel.com, hpa@zytor.com, luto@kernel.org,
+        tglx@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Reply-To: chang.seok.bae@intel.com, ak@linux.intel.com, hpa@zytor.com,
+          mingo@kernel.org, vegard.nossum@oracle.com, bp@alien8.de,
+          ravi.v.shankar@intel.com, luto@kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <59725ceb08977359489fbed979716949ad45f616.1562035429.git.luto@kernel.org>
+References: <59725ceb08977359489fbed979716949ad45f616.1562035429.git.luto@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/entry/64: Don't compile ignore_sysret if 32-bit
- emulation is enabled
-Git-Commit-ID: dffb3f9db6b593f3ed6ab4c8d8f10e0aa6aa7a88
+Subject: [tip:x86/cpu] x86/entry/64: Fix and clean up paranoid_exit
+Git-Commit-ID: 539bca535decb11a0861b6205c6684b8e908589b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,49 +72,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  dffb3f9db6b593f3ed6ab4c8d8f10e0aa6aa7a88
-Gitweb:     https://git.kernel.org/tip/dffb3f9db6b593f3ed6ab4c8d8f10e0aa6aa7a88
+Commit-ID:  539bca535decb11a0861b6205c6684b8e908589b
+Gitweb:     https://git.kernel.org/tip/539bca535decb11a0861b6205c6684b8e908589b
 Author:     Andy Lutomirski <luto@kernel.org>
-AuthorDate: Mon, 1 Jul 2019 20:43:20 -0700
+AuthorDate: Mon, 1 Jul 2019 20:43:21 -0700
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Tue, 2 Jul 2019 08:45:20 +0200
 
-x86/entry/64: Don't compile ignore_sysret if 32-bit emulation is enabled
+x86/entry/64: Fix and clean up paranoid_exit
 
-It's only used if !CONFIG_IA32_EMULATION, so disable it in normal
-configs.  This will save a few bytes of text and reduce confusion.
+paranoid_exit needs to restore CR3 before GSBASE.  Doing it in the opposite
+order crashes if the exception came from a context with user GSBASE and
+user CR3 -- RESTORE_CR3 cannot resture user CR3 if run with user GSBASE.
+This results in infinitely recursing exceptions if user code does SYSENTER
+with TF set if both FSGSBASE and PTI are enabled.
 
+The old code worked if user code just set TF without SYSENTER because #DB
+from user mode is special cased in idtentry and paranoid_exit doesn't run.
+
+Fix it by cleaning up the spaghetti code.  All that paranoid_exit needs to
+do is to disable IRQs, handle IRQ tracing, then restore CR3, and restore
+GSBASE.  Simply do those actions in that order.
+
+Fixes: 708078f65721 ("x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit")
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc:  "BaeChang Seok" <chang.seok.bae@intel.com>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Bae, Chang Seok" <chang.seok.bae@intel.com>
-Link: https://lkml.kernel.org/r/0f7dafa72fe7194689de5ee8cfe5d83509fabcf5.1562035429.git.luto@kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/59725ceb08977359489fbed979716949ad45f616.1562035429.git.luto@kernel.org
 
 ---
- arch/x86/entry/entry_64.S | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/entry/entry_64.S | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 7f9f5119d6b1..54b1b0468b2b 100644
+index 54b1b0468b2b..670306f588bf 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1743,11 +1743,17 @@ nmi_restore:
- 	iretq
- END(nmi)
+@@ -1256,31 +1256,32 @@ END(paranoid_entry)
+ ENTRY(paranoid_exit)
+ 	UNWIND_HINT_REGS
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
+-	TRACE_IRQS_OFF_DEBUG
  
-+#ifndef CONFIG_IA32_EMULATION
-+/*
-+ * This handles SYSCALL from 32-bit code.  There is no way to program
-+ * MSRs to fully disable 32-bit SYSCALL.
-+ */
- ENTRY(ignore_sysret)
- 	UNWIND_HINT_EMPTY
- 	mov	$-ENOSYS, %eax
- 	sysret
- END(ignore_sysret)
-+#endif
+-	/* Handle GS depending on FSGSBASE availability */
+-	ALTERNATIVE "jmp .Lparanoid_exit_checkgs", "nop",X86_FEATURE_FSGSBASE
++	/*
++	 * The order of operations is important.  IRQ tracing requires
++	 * kernel GSBASE and CR3.  RESTORE_CR3 requires kernel GS base.
++	 *
++	 * NB to anyone to tries to optimize this code: this code does
++	 * not execute at all for exceptions coming from user mode.  Those
++	 * exceptions go through error_exit instead.
++	 */
++	TRACE_IRQS_IRETQ_DEBUG
++	RESTORE_CR3	scratch_reg=%rax save_reg=%r14
++
++	/* Handle the three GSBASE cases. */
++	ALTERNATIVE "jmp .Lparanoid_exit_checkgs", "", X86_FEATURE_FSGSBASE
  
- ENTRY(rewind_stack_do_exit)
- 	UNWIND_HINT_FUNC
+ 	/* With FSGSBASE enabled, unconditionally restore GSBASE */
+ 	wrgsbase	%rbx
+-	jmp	.Lparanoid_exit_no_swapgs;
++	jmp	restore_regs_and_return_to_kernel
+ 
+ .Lparanoid_exit_checkgs:
+ 	/* On non-FSGSBASE systems, conditionally do SWAPGS */
+ 	testl	%ebx, %ebx
+-	jnz	.Lparanoid_exit_no_swapgs
+-	TRACE_IRQS_IRETQ
+-	/* Always restore stashed CR3 value (see paranoid_entry) */
+-	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
+-	SWAPGS_UNSAFE_STACK
+-	jmp	.Lparanoid_exit_restore
+-
+-.Lparanoid_exit_no_swapgs:
+-	TRACE_IRQS_IRETQ_DEBUG
+-	/* Always restore stashed CR3 value (see paranoid_entry) */
+-	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
++	jnz	restore_regs_and_return_to_kernel
+ 
+-.Lparanoid_exit_restore:
++	/* We are returning to a context with user GSBASE. */
++	SWAPGS_UNSAFE_STACK
+ 	jmp	restore_regs_and_return_to_kernel
+ END(paranoid_exit)
+ 
