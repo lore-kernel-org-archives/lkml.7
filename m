@@ -2,81 +2,104 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36542C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F2EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BEA20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AF621479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T127DeqE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/SfDAFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfGBPob (ORCPT
+        id S1727070AbfGBPog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:44:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42490 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGBPob (ORCPT
+        Tue, 2 Jul 2019 11:44:36 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]:35926 "EHLO
+        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGBPof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:44:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yNPjqLdRTJCzgCZVeC3z+YefMIDSKzflp7zcy3fLwqs=; b=T127DeqEzG8CkEzFsFjGbAebE
-        motUh25iUQewOFQHvknqYG2eDCh0zjdY7q0TCfFwAExGnZPD2C9Qquo0AZgieACMJQRZMVp6246L5
-        sA23h3NrnMxHZTijEXwt/v9JYgGVCR4B40Xflz5mJeU7nQhuaEja8z63y9Gb9PS3GAHAZccaY+cht
-        OYqBCWn40sLRWSVCweGwfZOQdFebYwoUSzKai0IjbTNb54SFw3gjA4Z+GKCOfYXf3Kmrx1xAHl7tV
-        tu4p+fVRKxwAdSY4bWQi6zNb+bowRFQbmDv9VdGxpOekg29NE7yf07YVDhzyswriLKM8dUIuvmf+y
-        Bg4kihsaQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiKxE-0007gr-E5; Tue, 02 Jul 2019 15:44:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 23DB92013A3B6; Tue,  2 Jul 2019 17:44:22 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 17:44:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, patrick.bellasi@arm.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20190702154422.GV3436@hirez.programming.kicks-ass.net>
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
+        Tue, 2 Jul 2019 11:44:35 -0400
+Received: by mail-qk1-f175.google.com with SMTP id g18so14488659qkl.3;
+        Tue, 02 Jul 2019 08:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0SNIqZ1eXNTXTiBWnYdzokV/6s0LphXPV28wgFgO7+Y=;
+        b=A/SfDAFXG8B33NLAuR2aHJKfJq4Yy7L2nviUpcX6L2uRGij6Mq2/MxO7ekS9lkxJ1X
+         e1S7zhlW85oULhG1Dfxve8SFAOlLmOGKCkEfOJ9efMIUlS7JC5S1XOhhToUtbZugfnfP
+         q+vSwNgnRZTFRjkg+B3LXhmTWckczqo0qf7A1iiV33mCAnUWdonnm/dQc4trsf9lzEyS
+         M4KmtaNo6J9m3X2NP++/fVQX4pIwZ/9msZdflOc9RmJoHoksAXDDxYx8B+cBYMXwMkXf
+         Pi1RF8ffg6LSphQ6nPrFZoFMGq4a9bPJ+5h+iYhVMCA5cQwi2A67s8YGsQwRH1PuDmmr
+         LXtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0SNIqZ1eXNTXTiBWnYdzokV/6s0LphXPV28wgFgO7+Y=;
+        b=rp3lu7yGJcVPku590YZvUiCW/nHnR/UBcVbilQ7MGFAq8fSnbCsGNo/jXIrZiiRGfu
+         Q55nNDJyhXIQ3izLsM9oNviIfwlcRc5G77ZqS6Ajwa6n/dL6smbQpKDg1hGe+uucG50L
+         PdiaASIq88DQjSo6iMNhiE78KSNOXd8n6KokgwV0tbi8NmDMsFMD5ZvISSmeWFnge7tZ
+         hXhO/qqpAAG0LU6JO6QAEWNkSQsPgFuQZHj+ais46EfY+CGOiFZmfRp7hIbRFPohJheq
+         jr2eAsSenbPSFuRIuy0KJ6wGPYmbH3q2QeW7JIS3EmYsHLd4h2vlXoE/wYv1DMxcDRv5
+         YEug==
+X-Gm-Message-State: APjAAAXlOHF+bSUV2k13Z6svLTjQLd2axclLntp+eHtBfGrc7M9idsFM
+        NQvjw6YBSVXXIwSrJHaRl74Nhun67z8=
+X-Google-Smtp-Source: APXvYqy/DQiaFs1LsX0WgEbqxRdbnX6EGJXOOnXyMa0gYPhm28oRBjSKtRB4pJgIl/8V5uuGMGyMYg==
+X-Received: by 2002:a37:8741:: with SMTP id j62mr23578387qkd.78.1562082274356;
+        Tue, 02 Jul 2019 08:44:34 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
+        by smtp.gmail.com with ESMTPSA id c192sm6389184qkg.33.2019.07.02.08.44.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 08:44:33 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] drm/bridge: ti-sn65dsi86: add link to datasheet
+Date:   Tue,  2 Jul 2019 08:44:16 -0700
+Message-Id: <20190702154419.20812-2-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190702154419.20812-1-robdclark@gmail.com>
+References: <20190702154419.20812-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627171603.14767-1-douglas.raillard@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
-> Make schedutil cpufreq governor energy-aware.
-> 
-> - patch 1 introduces a function to retrieve a frequency given a base
->   frequency and an energy cost margin.
-> - patch 2 links Energy Model perf_domain to sugov_policy.
-> - patch 3 updates get_next_freq() to make use of the Energy Model.
+From: Rob Clark <robdclark@chromium.org>
 
-> 
-> 1) Selecting the highest possible frequency for a given cost. Some
->    platforms can have lower frequencies that are less efficient than
->    higher ones, in which case they should be skipped for most purposes.
->    They can still be useful to give more freedom to thermal throttling
->    mechanisms, but not under normal circumstances.
->    note: the EM framework will warn about such OPPs "hertz/watts ratio
->    non-monotonically decreasing"
+The bridge has pretty good docs, lets add a link to make them easier to
+find.
 
-Humm, for some reason I was thinking we explicitly skipped those OPPs
-and they already weren't used.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This isn't in fact so, and these first few patches make it so?
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index bcca9173c72a..f1a2493b86d9 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * datasheet: http://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
+  */
+ 
+ #include <linux/clk.h>
+-- 
+2.20.1
+
