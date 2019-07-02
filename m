@@ -2,55 +2,55 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C37C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F790205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6D9205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055405;
-	bh=F0z/Qt1OUgKcq+NpAv5Pu2gellH7RLZ46sZaWd1mOUw=;
+	s=default; t=1562055408;
+	bh=c43FvKQyIGggJWe3cFvt6aywY7QSwZwhDAgmHHoL9gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AJmYRDnA+LVQknsUSBbYCZSHum4Cwhw/8u9QYnMCP65G4rVK+PVV9u1B4JYJbvjH
-	 YdWXADpjKuUqSnFNFQ4EzRhoLdAMH7PVikNQY0hOQcVprXrc37/GYSzjp97HMir/c1
-	 LOogTIYUMcrAgfOjCyS03gdxZV7ZbzqTrOzzA5dQ=
+	b=uAUbUjdsBf4x0JoigsIS6iRVR6QP+apxKf+Mchv8OoGl6QyQHB9BL+0Sz9h2KTMEZ
+	 Y8umGjjUGJlGylUubvzYLdIjBYNFEKhdnQ6dFnaji8B6/FhpCkQPenZwo6xCUZxVOU
+	 mbXIruzC2Py0eh/s3NemCcsREV55eq2jwlqLgGlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfGBIQo (ORCPT
+        id S1727451AbfGBIDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfGBIDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:35 -0400
+        id S1727434AbfGBID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 450012184C;
-        Tue,  2 Jul 2019 08:03:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DF2321479;
+        Tue,  2 Jul 2019 08:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054614;
-        bh=F0z/Qt1OUgKcq+NpAv5Pu2gellH7RLZ46sZaWd1mOUw=;
+        s=default; t=1562054606;
+        bh=c43FvKQyIGggJWe3cFvt6aywY7QSwZwhDAgmHHoL9gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykwC6kPyTSi43oQ06XUupOH/7b7A0fYmCq/ipJoUpcjuXqurDoRC+zj1DOlwMUZdX
-         A/fUl8dyps6tBh5Z/zVydSuJlvGxD/TLo0iI83TaK99dqGNCabpnyoTBODyyy7tzRF
-         slj/E1uGXTbB5BvGNgLy6Iv7ukV5490FlfpZiOq8=
+        b=I3kFQ6YW2UK8ffvRLSVQrJZc+ZPqceCtVy3nJDqRfWwJ8jt/OfSspdxofDw+Vvy3A
+         DVbOqrsDCz/0zjZHSO0KziXm+bZMJzTLU9uSV0Nrn1lmDoqukErgNbmnE2lRTXvg+w
+         zkEpahrU9jUk/nZhfHIXFvoKmF+bU7CfjTFnjAwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 03/55] qmi_wwan: Fix out-of-bounds read
-Date:   Tue,  2 Jul 2019 10:01:11 +0200
-Message-Id: <20190702080124.249874731@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 5.1 27/55] cpu/speculation: Warn on unsupported mitigations= parameter
+Date:   Tue,  2 Jul 2019 10:01:35 +0200
+Message-Id: <20190702080125.502302944@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -63,53 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 904d88d743b0c94092c5117955eab695df8109e8 ]
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-The syzbot reported
+commit 1bf72720281770162c87990697eae1ba2f1d917a upstream.
 
- Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  qmi_wwan_probe+0x342/0x360 drivers/net/usb/qmi_wwan.c:1417
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+Currently, if the user specifies an unsupported mitigation strategy on the
+kernel command line, it will be ignored silently.  The code will fall back
+to the default strategy, possibly leaving the system more vulnerable than
+expected.
 
-Caused by too many confusing indirections and casts.
-id->driver_info is a pointer stored in a long.  We want the
-pointer here, not the address of it.
+This may happen due to e.g. a simple typo, or, for a stable kernel release,
+because not all mitigation strategies have been backported.
 
-Thanks-to: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com
-Cc: Kristian Evensen <kristian.evensen@gmail.com>
-Fixes: e4bf63482c30 ("qmi_wwan: Add quirk for Quectel dynamic config")
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Inform the user by printing a message.
+
+Fixes: 98af8452945c5565 ("cpu/speculation: Add 'mitigations=' cmdline option")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190516070935.22546-1-geert@linux-m68k.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/usb/qmi_wwan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cpu.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index d9a6699abe59..e657d8947125 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1412,7 +1412,7 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * different. Ignore the current interface if the number of endpoints
- 	 * equals the number for the diag interface (two).
- 	 */
--	info = (void *)&id->driver_info;
-+	info = (void *)id->driver_info;
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2315,6 +2315,9 @@ static int __init mitigations_parse_cmdl
+ 		cpu_mitigations = CPU_MITIGATIONS_AUTO;
+ 	else if (!strcmp(arg, "auto,nosmt"))
+ 		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
++	else
++		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
++			arg);
  
- 	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
- 		if (desc->bNumEndpoints == 2)
--- 
-2.20.1
-
+ 	return 0;
+ }
 
 
