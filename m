@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CCC06513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49BDC46478
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1AB20836
+	by mail.kernel.org (Postfix) with ESMTP id B4B9520836
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b3Ynb3mm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BFh3rrWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfGBKfD (ORCPT
+        id S1727218AbfGBKfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:35:03 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46048 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBKfC (ORCPT
+        Tue, 2 Jul 2019 06:35:19 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33543 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfGBKfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:35:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x21so16635304otq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:02 -0700 (PDT)
+        Tue, 2 Jul 2019 06:35:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so16655149otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KMNCKIxUd7C3QCEkBdcu4g6ofRmUIVRG/BHPe4FFBiI=;
-        b=b3Ynb3mmyQPqXrGhUFTeBcfcKHtyocPl8Z41p2F8I32GBNu0jF2BwO2+v3JgI33/vX
-         jdTP5yPdtLr0AmtRijQulnFrapU3F7Wo1t9ouWCA8DB3JJmF+5U2+qFa/t67GXudzCMz
-         ly/Us9RlBLH/YWRpgziYH+onbCeHqjhF+Jsx8f+BdbQnJpk0sZsc1lMdFG2vqOxBUmi3
-         zREazE8Zg6hRzYOeK/wcN6BSghqPHghcuZXM/aLU82P664LzADeiNUaoRo96TUXapNFl
-         VMQxHdl/BOL+DLppX1ABrQiPd4KpJ6Qar4Ka5KVHxxtBxrd0PruJ1D9m2pAFFESgzNds
-         V19Q==
+        bh=Ntf4e24cY15lCTdagT3iS0+VMjBOYWf7Iw92R3PEKUw=;
+        b=BFh3rrWH1Q7vw8K9KiTKC5WaEVtLH0hxOlQ8lYb+DxjHbhrG8G/LElcvUvV9Z5bMjY
+         PvFP3WCg4pEAT++5wHCFpR6vuJg14wqFr8xkqfLzZtDJAbaIKzIL7uG+cj1GqzhMO2oz
+         lWopsH2r9uZgOt0L6Hl1QCAUtH7Cy7js2lqRCrJnKKpRi0tuHwlSYpEodH9GQE/iUnc2
+         FTPTtbK8H85AKdlBWYas0YUdufWuQAxbJ10khbih9MAd2Fmr+Mu5q6+8HCD70UpIv4LS
+         kxPqAejefCAGovMeEGJzkcsjEhjSPfW3Vd90Z4GpmBWL3WYYkgjneF7Yov6E3seeRjaq
+         gy1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KMNCKIxUd7C3QCEkBdcu4g6ofRmUIVRG/BHPe4FFBiI=;
-        b=T3LRONcddq5FYPLtvwQLApURaiguPuBowGSFl2dgVmnxcCwvT44VxM+oHZb9pUYVKt
-         wd+mvxW8A9e91ecPpFyBygXZxbVx8w9dfTAmGknctLxsQ9H5wT8yJNEyzZiZvSUJmJz4
-         prTFlOl/kSNFGczsEsNWgVfv9z2n/91It1OJrWVLmfIuvNH36gF78/wB5012sgAHdqOa
-         MyD6S/84q9kb4dkM7lv2TSNWqAbYEnCSZt2/h1pot1Ur6rwSCUqlZB2xIt/FNhToVAv/
-         TZNikutlWu/sNAnLYpMxOrUGZ0JXmm/4Rt3qj8vsV153WyeRBIQS8l1Iql2GYE8EDTGt
-         xElA==
-X-Gm-Message-State: APjAAAVBzDy6XLDPKFEU5Q544cFy2KKhu6n/J/tRzHwVV0Q++MzSEt6A
-        LbH18aI/VtH0AFrYgUzZbM+aUA==
-X-Google-Smtp-Source: APXvYqwRW1eo9HwE7l93QclNUXgFCxIkpcB0HGbeFgij2hTMSad7SU3toR850JGxhkFCj/Cfl4JFQA==
-X-Received: by 2002:a9d:6ac9:: with SMTP id m9mr19994522otq.242.1562063701875;
-        Tue, 02 Jul 2019 03:35:01 -0700 (PDT)
+        bh=Ntf4e24cY15lCTdagT3iS0+VMjBOYWf7Iw92R3PEKUw=;
+        b=OKHJaSxIPBv3/GJBkw5vPJuydtvu6d/t7FjwStj8OU0XvM+WqCHQEhlddHz9LFAxs8
+         FamvqslAQJqmCHmKpwSGdN13o5NCfWrHzAQDBFyJkF9nVQuDPBRZv6hYgFgunDX0KnU0
+         sbRAoD6U3WJ4jPWU5w0ngNwm0wgEwITxGDuSCblvQZjyQBkwV8dI7yjyJbzPc/gf4VJg
+         8zZMOEV+Uya6Jhnj7WylfRNhHqf4PsG2SHFxwYWTRTX5fhyBsph6fnEXh9eQ0OfsTovJ
+         5aF1ClEbPpuJKXyPZdrldtokJYVgwV64MnlH+MEBQD93k5T+mE+0HRBozUXKJ3fu5DS4
+         kuAw==
+X-Gm-Message-State: APjAAAV9m8BxyBGbznD2w5YKp+DULzrcihmx6empNVpBdfYCXQ6L7UwB
+        4F1bPOGi5UB41dfW6Qdr3zGRXA==
+X-Google-Smtp-Source: APXvYqw3zAInzH4cTXbdXL/Li2f0QnMXGWwp1X9151d8/cPhARYLEWYsz7hEiShYCg/05pNO094M+Q==
+X-Received: by 2002:a9d:6853:: with SMTP id c19mr1570455oto.213.1562063718005;
+        Tue, 02 Jul 2019 03:35:18 -0700 (PDT)
 Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.34.54
+        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 03:35:01 -0700 (PDT)
+        Tue, 02 Jul 2019 03:35:17 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -80,9 +80,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 02/11] perf stat: Smatch: Fix use-after-freed pointer
-Date:   Tue,  2 Jul 2019 18:34:11 +0800
-Message-Id: <20190702103420.27540-3-leo.yan@linaro.org>
+Subject: [PATCH v1 04/11] perf annotate: Smatch: Fix dereferencing freed memory
+Date:   Tue,  2 Jul 2019 18:34:13 +0800
+Message-Id: <20190702103420.27540-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190702103420.27540-1-leo.yan@linaro.org>
 References: <20190702103420.27540-1-leo.yan@linaro.org>
@@ -91,35 +91,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the following report from Smatch, fix the use-after-freed
-pointer.
+Based on the following report from Smatch, fix the potential
+dereferencing freed memory check.
 
-  tools/perf/builtin-stat.c:1353
-  add_default_attributes() warn: passing freed memory 'str'.
+  tools/perf/util/annotate.c:1125
+  disasm_line__parse() error: dereferencing freed memory 'namep'
 
-The pointer 'str' has been freed but later it is still passed into the
-function parse_events_print_error().  This patch fixes this
-use-after-freed issue.
+tools/perf/util/annotate.c
+1100 static int disasm_line__parse(char *line, const char **namep, char **rawp)
+1101 {
+1102         char tmp, *name = ltrim(line);
+
+[...]
+
+1114         *namep = strdup(name);
+1115
+1116         if (*namep == NULL)
+1117                 goto out_free_name;
+
+[...]
+
+1124 out_free_name:
+1125         free((void *)namep);
+                          ^^^^^
+1126         *namep = NULL;
+             ^^^^^^
+1127         return -1;
+1128 }
+
+If strdup() fails to allocate memory space for *namep, we don't need to
+free memory with pointer 'namep', which is resident in data structure
+disasm_line::ins::name; and *namep is NULL pointer for this failure, so
+it's pointless to assign NULL to *namep again.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 8a35fc5a7281..de0f6d0e96a2 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1349,8 +1349,8 @@ static int add_default_attributes(void)
- 				fprintf(stderr,
- 					"Cannot set up top down events %s: %d\n",
- 					str, err);
--				free(str);
- 				parse_events_print_error(&errinfo, str);
-+				free(str);
- 				return -1;
- 			}
- 		} else {
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index c8ce13419d9b..b8dfcfe08bb1 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1113,16 +1113,14 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ 	*namep = strdup(name);
+ 
+ 	if (*namep == NULL)
+-		goto out_free_name;
++		goto out;
+ 
+ 	(*rawp)[0] = tmp;
+ 	*rawp = ltrim(*rawp);
+ 
+ 	return 0;
+ 
+-out_free_name:
+-	free((void *)namep);
+-	*namep = NULL;
++out:
+ 	return -1;
+ }
+ 
 -- 
 2.17.1
 
