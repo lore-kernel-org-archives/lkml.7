@@ -2,100 +2,221 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8DCC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214CFC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985CF2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16D02183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rBcRkx/y"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GEpq5goX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfGBM5q (ORCPT
+        id S1727079AbfGBM5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:57:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:59525 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfGBM5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:57:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dPR91RCrz9sND;
-        Tue,  2 Jul 2019 22:57:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562072263;
-        bh=c8HFSJIbsKhcHkqCQUcnR2C5+bu7b0qkiVXwqTZscWs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rBcRkx/yrmxHYVuNH6+gydiCLE+EpDprNWuw58Lg+rF/UuhVuGNSMoewj0gcu/fE/
-         Nv3wa+Ufh0XXnN01KKF5Oz/DHskBSLqEGARnM3tLIds3d10niZz7ZPLoNmLCyd6NVd
-         qVmrmuIZs5P1ekloF5bQW+nhc+Nse9CBZ/UHTCuguBdSUGDdb3eB3s1TCZwsXoXcCL
-         ORhNAjEknpLlvQAdtN+95w+/8Unjtqz8w3ALi/QxVaSdEPmEpBqBPgL9F3id+DwlrJ
-         hau6/yX4FhVfOlKzuCXSfkiVi2NhgJAQnN0P9zNVnOzibSFSU2981ZK9reMDn04Lyp
-         ontWmwVP14QgQ==
-Date:   Tue, 2 Jul 2019 22:57:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20190702225739.729332c4@canb.auug.org.au>
-In-Reply-To: <20190702102832.GP20977@suse.cz>
-References: <20190702153302.28e7948d@canb.auug.org.au>
-        <20190702102832.GP20977@suse.cz>
+        Tue, 2 Jul 2019 08:57:49 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:17870 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfGBM5r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:57:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1b54ce0000>; Tue, 02 Jul 2019 05:57:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 02 Jul 2019 05:57:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 05:57:46 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
+ 2019 12:57:43 +0000
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+ <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+ <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
+Message-ID: <892f4ec3-c063-7e75-a891-3f814db2b9ff@nvidia.com>
+Date:   Tue, 2 Jul 2019 13:57:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/+carHLLokJ73STF=D9yMtk0"; protocol="application/pgp-signature"
+In-Reply-To: <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562072270; bh=szdbuE0I1A8f7TOGaXEzzSv8Ju2S8Pi0WcleCTr1KOM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GEpq5goX3WxBq4Nj0SQ+o4WMpZFRqKgoHnrwt2MI/Z80/c+6nS6dIuAxO6DkooVcN
+         jrVsZuYRLvTvIoDRjLev2GWJo+vj+BPitLsQuqjG/nfqtYQHQ0t/9llljnZ6XA38vj
+         /Yc1HH1Kag4Q4s1Ii6MmP5u8llCmd6j8M2FlKi41slz6zzKS6fbhQO5VRCgdrNZ91C
+         wnO+wB2wxykWmrcYi60IVqkP/jgXcCfurRXJ906oMFGcYpJQw6Ifp9WuxQ68/ns03E
+         kdXzeS43XEmquPpfDZfLzznN5FkPbK71lHLhBjwipZRUch7zSjhYUToLzR0pz51q6U
+         sufMdQt3zIpLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+carHLLokJ73STF=D9yMtk0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi David,
-
-On Tue, 2 Jul 2019 12:28:32 +0200 David Sterba <dsterba@suse.cz> wrote:
->
-> I can move the patches out of the for-5.3 branch and send them
-> separately after the rename gets merged, they're merely adding the
-> assertion and otherwise do not affect the rest of the code.
+On 02/07/2019 13:54, Jon Hunter wrote:
 >=20
-> Fixing that in another way would probably need more synchronization
-> between the branches but I don't think it's necessary in this case. The
-> next for-next snapshot branch will fix the compilation issue.
+> On 02/07/2019 12:37, Dmitry Osipenko wrote:
+>> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>>>> Tegra's APB DMA engine updates words counter after each transferred bu=
+rst
+>>>> of data, hence it can report transfer's residual with more fidelity wh=
+ich
+>>>> may be required in cases like audio playback. In particular this fixes
+>>>> audio stuttering during playback in a chromium web browser. The patch =
+is
+>>>> based on the original work that was made by Ben Dooks and a patch from
+>>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>>>
+>>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@co=
+dethink.co.uk/
+>>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommit=
+;h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>
+>>>> Changelog:
+>>>>
+>>>> v3:  Added workaround for a hardware design shortcoming that results
+>>>>      in a words counter wraparound before end-of-transfer bit is set
+>>>>      in a cyclic mode.
+>>>>
+>>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>>>      to get words count if dma_desc is on free list as it will result
+>>>>      in a NULL dereference because this case wasn't handled properly.
+>>>>
+>>>>      The residual value is now updated properly, avoiding potential
+>>>>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>>>>      instead of the subtraction.
+>>>>
+>>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++---=
+-
+>>>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
+ma.c
+>>>> index 79e9593815f1..71473eda28ee 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>>  	bool				last_sg;
+>>>>  	struct list_head		node;
+>>>>  	struct tegra_dma_desc		*dma_desc;
+>>>> +	unsigned int			words_xferred;
+>>>>  };
+>>>> =20
+>>>>  /*
+>>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct te=
+gra_dma_channel *tdc,
+>>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>>  	nsg_req->configured =3D true;
+>>>> +	nsg_req->words_xferred =3D 0;
+>>>> =20
+>>>>  	tegra_dma_resume(tdc);
+>>>>  }
+>>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_ch=
+annel *tdc)
+>>>>  					typeof(*sg_req), node);
+>>>>  	tegra_dma_start(tdc, sg_req);
+>>>>  	sg_req->configured =3D true;
+>>>> +	sg_req->words_xferred =3D 0;
+>>>>  	tdc->busy =3D true;
+>>>>  }
+>>>> =20
+>>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_cha=
+n *dc)
+>>>>  	return 0;
+>>>>  }
+>>>> =20
+>>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_chann=
+el *tdc,
+>>>> +					       struct tegra_dma_sg_req *sg_req)
+>>>> +{
+>>>> +	unsigned long status, wcount =3D 0;
+>>>> +
+>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>> +		return 0;
+>>>> +
+>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +
+>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +
+>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D status;
+>>>> +
+>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>> +		return sg_req->req_len;
+>>>> +
+>>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +
+>>>> +	if (!wcount) {
+>>>> +		/*
+>>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>>> +		 * simply assume that transfer hasn't started yet.
+>>>> +		 *
+>>>> +		 * Otherwise it's the end of the transfer.
+>>>> +		 *
+>>>> +		 * The alternative would be to poll the status register
+>>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>>> +		 * because EOC bit is getting set only after the last
+>>>> +		 * burst's completion and counter is less than the actual
+>>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>>> +		 * distinguish start of transfer from its end.
+>>>> +		 */
+>>>> +		if (sg_req->words_xferred)
+>>>> +			wcount =3D sg_req->req_len - 4;
+>>>> +
+>>>> +	} else if (wcount < sg_req->words_xferred) {
+>>>> +		/*
+>>>> +		 * This case shall not ever happen because EOC bit
+>>>> +		 * must be set once next cyclic transfer is started.
+>>>
+>>> I am not sure I follow this and why this condition cannot happen for
+>>> cyclic transfers. What about non-cyclic transfers?
+>>
+>> It cannot happen because the EOC bit will be set in that case. The count=
+er wraps
+>> around when the transfer of a last burst happens, EOC bit is guaranteed =
+to be set
+>> after completion of the last burst. That's my observation after a thorou=
+gh testing,
+>> it will be very odd if EOC setting happened completely asynchronously.
+>=20
+> I see how you know that the EOC is set. Anyway, you check if the EOC is
+> set before and if so return sg_req->req_len prior to this test.
 
-Its a simple enough conflict for Linus to fix up as long as someone
-tells him to expect it ...
+s/I see/I don't see/
+
+Jon
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+carHLLokJ73STF=D9yMtk0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0bVMMACgkQAVBC80lX
-0Gxg6Qf9FUPLmhiCcxi8HsFZk2wJtLaL2E1CVl5gcVJg/xsnqOQnyaIrTkjJJYJL
-oYT6P9NlfDAtQOCGQgwII5lxOVfhUzmhrEtHLITZqpAa85XJk4IdaZPEuhyDanYN
-GeutTIvmPH8jvKe3qL28yduNWiiEHC3j7KGMaPh800av1Ku/lWH7rqt9zm4t27j/
-nFl0von5HJVeEakWkik6xu7NW3ThqWcp95U+tAtex0Ya5rbPz8+b8ZlI9cTobhQf
-erKnhJLe3xb1kr+gEvM3xXwZJx4bkqNxWSKwRiFyyGGlC67FuuL/sZPlLfJnZMg8
-iH//7JCqCJSItBlGhyNaXjbqiAu/FQ==
-=rD2X
------END PGP SIGNATURE-----
-
---Sig_/+carHLLokJ73STF=D9yMtk0--
+nvpublic
