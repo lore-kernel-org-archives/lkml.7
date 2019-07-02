@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A071C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421E7C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E852184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184802183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054732;
-	bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
+	s=default; t=1562054736;
+	bh=tmrRpToP0yBZBOWOYKJ630REmNkOgHXMERgKfsDOU+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1K+pYtSi3cpAYismXBe3MCjTZ+GO2YcBKETvHddAEeb+snVdNMAZlnDXEK5oUZOLO
-	 VGIBXyNbRtxYKe10P4FsR8aqPRuePwZa8E8ljpT5V8kCc6bsOIyCG6zkIPhOqJmqvx
-	 NN1nDuBqPJljV7agGrlArvxj50VNrlpeEEpaiQ1M=
+	b=zI4ZIyHnvHjlthq9NDXZ+TXhgpbPXFWf9S+kXiCpaqMnWXHksPrTULwxjMNLB32Sg
+	 9Nf74/5xASXVeQ2a/tKQJIHM4EHXJo31xs+y0IMOfu7+h1HUJpc2cUNpiNOr8vbNm5
+	 jz9xDH6XSpYj9hx7o4ZzL4Qew6cT+fplWUKBZaPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfGBIFb (ORCPT
+        id S1727972AbfGBIFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfGBIF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:28 -0400
+        id S1727965AbfGBIFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739022183F;
-        Tue,  2 Jul 2019 08:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8415C21479;
+        Tue,  2 Jul 2019 08:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054727;
-        bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
+        s=default; t=1562054731;
+        bh=tmrRpToP0yBZBOWOYKJ630REmNkOgHXMERgKfsDOU+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1Ce/pJ74JjRYsYONZJjZQzijDDeYgMgtIdZJ/CBCeXF1W0ScE2GL3mxaXkfIu41U
-         Gr1ciBPpezUCBYk5qnAVS6rJIYjTHHgiKYZEC/QCoCTBCvNDLJKexs5hPLJoNuKMBs
-         eNEQ9x9j9mnN7sNEVTEuKPFeQJ6QiBCjVzgYHUUc=
+        b=sPlBJ/A5VTotnJYtnO+5TNWFqvkOC7I/EDN3sqdxjs6g086PS5Gr3LTJYzlVoJjs0
+         xCrzwLIiFV4WGbXGIQtU8e9Z0SX2mAmZQB9AkQxqdKCRPn9vaq//8om3pkF0o8cTgX
+         OQGj0lKAl2FMqB5WChol3wON+DGdA2Wa0o/PCT2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/72] 9p: acl: fix uninitialized iattr access
-Date:   Tue,  2 Jul 2019 10:01:16 +0200
-Message-Id: <20190702080125.404250585@linuxfoundation.org>
+Subject: [PATCH 4.19 16/72] 9p/rdma: remove useless check in cm_event_handler
+Date:   Tue,  2 Jul 2019 10:01:17 +0200
+Message-Id: <20190702080125.471040955@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -60,33 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e02a53d92e197706cad1627bd84705d4aa20a145 ]
+[ Upstream commit 473c7dd1d7b59ff8f88a5154737e3eac78a96e5b ]
 
-iattr is passed to v9fs_vfs_setattr_dotl which does send various
-values from iattr over the wire, even if it tells the server to
-only look at iattr.ia_valid fields this could leak some stack data.
+the client c is always dereferenced to get the rdma struct, so c has to
+be a valid pointer at this point.
+Gcc would optimize that away but let's make coverity happy...
 
-Link: http://lkml.kernel.org/r/1536339057-21974-2-git-send-email-asmadeus@codewreck.org
-Addresses-Coverity-ID: 1195601 ("Uninitalized scalar variable")
+Link: http://lkml.kernel.org/r/1536339057-21974-3-git-send-email-asmadeus@codewreck.org
+Addresses-Coverity-ID: 102778 ("Dereference before null check")
 Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/acl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/9p/trans_rdma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/9p/acl.c b/fs/9p/acl.c
-index 082d227fa56b..6261719f6f2a 100644
---- a/fs/9p/acl.c
-+++ b/fs/9p/acl.c
-@@ -276,7 +276,7 @@ static int v9fs_xattr_set_acl(const struct xattr_handler *handler,
- 	switch (handler->flags) {
- 	case ACL_TYPE_ACCESS:
- 		if (acl) {
--			struct iattr iattr;
-+			struct iattr iattr = { 0 };
- 			struct posix_acl *old_acl = acl;
+diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
+index 9719bc4d9424..119103bfa82e 100644
+--- a/net/9p/trans_rdma.c
++++ b/net/9p/trans_rdma.c
+@@ -274,8 +274,7 @@ p9_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 	case RDMA_CM_EVENT_DISCONNECTED:
+ 		if (rdma)
+ 			rdma->state = P9_RDMA_CLOSED;
+-		if (c)
+-			c->status = Disconnected;
++		c->status = Disconnected;
+ 		break;
  
- 			retval = posix_acl_update_mode(inode, &iattr.ia_mode, &acl);
+ 	case RDMA_CM_EVENT_TIMEWAIT_EXIT:
 -- 
 2.20.1
 
