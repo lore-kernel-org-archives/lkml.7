@@ -2,91 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83541C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D58C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59468218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4669218B0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hQ/EHaWP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rouFNaQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfGCAnx (ORCPT
+        id S1727294AbfGCAoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:43:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39117 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCAnx (ORCPT
+        Tue, 2 Jul 2019 20:44:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40391 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGCAoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:43:53 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so31981otq.6;
-        Tue, 02 Jul 2019 17:43:52 -0700 (PDT)
+        Tue, 2 Jul 2019 20:44:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so683105wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3GdscGqh/egdkRhC/e2+dFv4bjbb+RawTDhOEItQGZY=;
-        b=hQ/EHaWPZ7DY6zXD5ep3cjow9hECIwRyxvYLhtRiOBnmmGgc07CsbysXJM7KQ5D0kq
-         v7RpavAzYWdsV4rP9goQoZVFa28nRw40Jrew9a5It5qe8BzaiDMBDkEvcRMbP/rnM/yt
-         NZg2liIbBRDRGNSdUzeTiAmOfB2N4a2x1UM/lMkbWbIeDy0smc0cZyYT7PdOhFXCONj3
-         QxE8EmaexpOpMJalIOkz8PdnU6PT3tYXOMbkI3wmqDBaV+YFYgMWfMUCQzUaku9zuh/J
-         QQAJYqYW7hQ67WWIWtA3APhoa8Az1S4OShZIEyNLDXDFS9VXYk1w+EmP0cQyyLCIpKn4
-         N73w==
+        bh=YiKm32fbrJXvadhbbH8R2AC30oRr6R/vtBXdk9UU6tg=;
+        b=rouFNaQrAD+LVzdQfwSGl8KyN3XCFATAsscS1nSiY3nqrVKn88L+2X9hpP8G0LkkWC
+         NbXBVmKrNM2i/FYXzVyY65owea83CsnsL2EYq3GhtYm+wIktVkTqWtRAWOulqc+2Eijb
+         tNZhEVAQRLz89yF0sk+uF/rQSzJNULI8c49x9De777zT65pYsUUSurWdrSNR9lmy2NEt
+         9eY0VkqUb2j+lxdkUSL9dhgUIzql3NanYjEhvjtxJVfIfVj1EIEm0MIgXIiUzfQXV33O
+         rHDGqg4EVcvtwueBiup5u0kebQrjrGClyg1D+nX2fPJPU7N/NtWIDb7JpF1b7OEh92lu
+         QbyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3GdscGqh/egdkRhC/e2+dFv4bjbb+RawTDhOEItQGZY=;
-        b=ash5rukF5M2sOvPiP0tnjYSulfJLHvA4rB/g9Un4kkK7evT6/ilyjQuSbFdLaTAnuT
-         YUSt3PqKhVWTQyN6hvwlaeLZve6HQmvp11JCNm0qyEiTyg15YRJ3/2nTR5d14PBpZvQN
-         y+kFhp00fGC185QKVdi3WKQSGkWQbXI2fJYhArxhqhHjpLU/JtB3favnntRDIachh7YW
-         601SybL6FkmIHT9JmeWfYzVgm4S2wrtlmIRcxs36Rx1sv5EvVIIr9abOOJGyTVprS7Tu
-         jKCa7Z6bOZ2dzeRJ1EP+zpy7TTUQvJjGowJGo+u0bwRJ+uzevTu+1pDsfLNqrfoydVv+
-         sEBA==
-X-Gm-Message-State: APjAAAW8A5bTYYcbaoarGTv+P/Nqkv/lX3awZsA3LQuG62gzwd5Beuad
-        hKWk2oQahxES0i4bA4zgfU0T1/PRmrizJXXJrUBy3w==
-X-Google-Smtp-Source: APXvYqxsQ6td77BH829BNXfHoHJ00hWmFYkW/r/LgoW6R6eBpVJaBoDXXEdJFK4UmadzhQd7n8KvCbYnxfBy39BYuX8=
-X-Received: by 2002:a9d:226c:: with SMTP id o99mr25378901ota.42.1562111275781;
- Tue, 02 Jul 2019 16:47:55 -0700 (PDT)
+        bh=YiKm32fbrJXvadhbbH8R2AC30oRr6R/vtBXdk9UU6tg=;
+        b=JKr04Y4DRGCkWPLOLqEaC1kMlZUa4uNdrqoGLUETFt+4u1MOf68bJDLER26LwYqe17
+         +TvkgZLt84dnHIEwwVbFsIV9g2U/P3AMsW/oeXRrjU1qUzB2WxUVKBOSNq3DsieJVSjv
+         oq10GR/cnWn3+GAGRtDW/htNB7QwPhN9y2H6cteadCn/sjH3tIRMHSAtcdgI+sf6Vr0p
+         I8M2uRa/tLa1EPy7U7MyHVWfg3OFBi496R0eujP/kPo5zlsfQr+DxN8QtvUiEJe2mSev
+         ZSWnZImq6jY5e9080o6G+AUwgB164iQuLIhknlSHlh0e4/1wJEoDZBhYnyf/dlso64nv
+         xdbQ==
+X-Gm-Message-State: APjAAAWx+Urcjda4n8Si8NBxLEKzPR8m2qqoDhg6sq1/kK4WOC05zyOA
+        tHIorT/9VRHxMp8kXIPCHIBb1lgRzulSyxGu99XU+1a4Z2A=
+X-Google-Smtp-Source: APXvYqyzF5MuwoPkI10B4TbfC/rzEV0YiPHBluGmH1/zHhhFfHwqiAfVyxlK7Fj4GY/VFsoeVVgftVQDaSC75isjmzg=
+X-Received: by 2002:adf:b69a:: with SMTP id j26mr17416154wre.93.1562099731858;
+ Tue, 02 Jul 2019 13:35:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-12-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-12-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:47:44 +0200
-Message-ID: <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 11/14] arm64: dts: meson-g12a: add cpus OPP table
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
+ <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 2 Jul 2019 22:35:16 +0200
+Message-ID: <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org, aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Tue, 2 Jul 2019 at 22:26, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On Sun, 30 Jun 2019 at 22:36, Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > On snapdragon aarch64 laptops, a 'UEFIDisplayInfo' variable is provided
+> > to communicate some information about the display.  Crutially it has the
+> > panel-id, so the appropriate panel driver can be selected.  Read this
+> > out and stash in /chosen/panel-id so that display driver can use it to
+> > pick the appropriate panel.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+>
+> Hi Rob,
+>
+> I understand why you are doing this, but this *really* belongs elsewhere.
+>
+> So we are dealing with a platform that violates the UEFI spec, since
+> it does not bother to implement variable services at runtime (because
+> MS let the vendor get away with this).
+>
 
-On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+To clarify, the above remark applies to populating the DT from the OS
+rather than from the firmware.
+
+> First of all, to pass data between the EFI stub and the OS proper, we
+> should use a configuration table rather than a DT property, since the
+> former is ACPI/DT agnostic. Also, I'd like the consumer of the data to
+> actually interpret it, i.e., just dump the whole opaque thing into a
+> config table in the stub, and do the parsing in the OS proper.
 >
-> Add the OPP table taken from the vendor u200 and u211 DTS.
+> However, I am not thrilled at adding code to the stub that
+> unconditionally looks for some variable with some magic name on all
+> ARM/arm64 EFI systems, so this will need to live under a Kconfig
+> option that depends on ARM64 (and does not default to y)
 >
-> The Amlogic G12A SoC seems to available in 3 types :
-> - low-speed: up to 1,8GHz
-> - mid-speed: up to 1,908GHz
-> - high-speed: up to 2.1GHz
->
-> And the S905X2 opp voltages are slightly higher than the S905D2
-> OPP voltages for the low-speed table.
->
-> This adds the conservative OPP table with the S905X2 higher voltages
-> and the maximum low-speed OPP frequency.
-have you considered all three as separate voltage tables?
-you're other patches are assigning the OPP table to the CPU in the
-board.dts anyways, so it's easy to use different OPP tables for
-different boards
+
+... but saving variables at boot time for consumption at runtime is
+something that we will likely see more of in the future.
