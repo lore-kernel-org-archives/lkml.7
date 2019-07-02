@@ -2,113 +2,205 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DBDC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5856C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F9B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC44321473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WJarnZQl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKYbE+Za"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfGBLg1 (ORCPT
+        id S1726658AbfGBLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:36:27 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53722 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfGBLg1 (ORCPT
+        Tue, 2 Jul 2019 07:37:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32936 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfGBLhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:36:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x62BaMoU122076;
-        Tue, 2 Jul 2019 06:36:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562067382;
-        bh=gIRvrIV2Wc21BZQI/yRZvscQEln3l4qrakkgDdK8Yqw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WJarnZQlahTj1u4qn9Lq6B2GYYwT0OWR6zhM9VQ7+FoVe3/MPM1kuj/0blE/AXRbg
-         Z1Ts+Q2J3vWmWul6xfRtm9LO2UmKH6OswZ3ZOCZyK5BwlxlYrw+It6m8MdW/es4371
-         vk+/CHtnXNaT6z0o1SMDlEvw+WeZV+Gu2Cz9z3HI=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x62BaMp6036626
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jul 2019 06:36:22 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Jul
- 2019 06:36:22 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 2 Jul 2019 06:36:22 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x62BaKLS027112;
-        Tue, 2 Jul 2019 06:36:20 -0500
-Subject: Re: [PATCH][next] regulator: lp87565: fix missing break in switch
- statement
-To:     Lee Jones <lee.jones@linaro.org>,
-        Colin Ian King <colin.king@canonical.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190627131639.6394-1-colin.king@canonical.com>
- <20190628143628.GJ5379@sirena.org.uk>
- <4cb0e4ab-66c7-2b3d-27d3-fd5cfde8988f@canonical.com>
- <20190702104420.GD4652@dell>
- <4a0a50be-1465-0554-f787-dec72bc07a00@canonical.com>
- <20190702113157.GG4652@dell>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <0c0e0e49-48c3-c1af-b7c7-26603d98cfe3@ti.com>
-Date:   Tue, 2 Jul 2019 17:06:59 +0530
+        Tue, 2 Jul 2019 07:37:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h10so16546949ljg.0;
+        Tue, 02 Jul 2019 04:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RVW2FdzXw7IWAsWcBRuagl+hxUvRiRMD922epoknQCM=;
+        b=tKYbE+Za3AZxB4dM7bixtl7BHgStxwXDC22wujXRCvpvwqUL/XGTIMoY/OGrBvc1sO
+         iJhOwnJzL0gLsUF2VH4btWvIk4JN65p4o6BfWhRmuYmi2XIghFSt0TVfrtMngxkxsuh0
+         UfExq1dN5U+Ae5uZrD9hrgr37NcRy1TUIxLwMsAhkFt7N10G9zhaJtT6MHhpUU4MHzDM
+         QT31lKNLK2SxiOKKUytF8c2on8OaIACqeCh59JADvAv7cE73cQwFaVBosRmDpmLHkE+s
+         zfQzYxpJFldcB8mo3MWxyJh8oVzUDIg7iPqpST7glnUkYQKorTCppvkBmrsshxKOgTLW
+         cvaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RVW2FdzXw7IWAsWcBRuagl+hxUvRiRMD922epoknQCM=;
+        b=M9qUg7P1Uk+BJVhDwYiWqer8N4zY3UCVrFkuixKBffQkCoolxJaaB2NMOXWjQpLTZw
+         piWumqgl0u9jA0jPcAk6k+LTv+0OKW0mooN48wg/Iy94JZgSE5hqXDd/cbQpZtXxr8nU
+         rBpniS4ZeGKwmUIwkxkCxDgX8aYMGCufnElbwESuaT7SbJ6CwS4PqhidLJzihzCnLAe3
+         FuNTFq5LEU32eBBOU+Q2ICZ/8Jk9K6OBQVZRuaZqAwv8LDksRZWHIY+V95s0Kdy6mlQN
+         Kv6IKs/8HhAjIZDQLAbueQu+ePwuLgYfrKcJ4fJWC5fEXatjEhpUzqmxoWysadvOhVHc
+         xGGw==
+X-Gm-Message-State: APjAAAUuhVV3oil1LC1/+MWxliBmepa2aIzrF8K8fr+O29Hj3B/neDYW
+        SYoEuBy6SoKc9te8/ZP3ED3YfNUz
+X-Google-Smtp-Source: APXvYqzeLbz2pBZxRON5Y3UnXQuJTAMZJyrEBFh1h4CxNMBedXbCVR2UccTg6SJdCnfagaTghMYliA==
+X-Received: by 2002:a2e:994:: with SMTP id 142mr16784100ljj.130.1562067431812;
+        Tue, 02 Jul 2019 04:37:11 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id k4sm3816148ljg.59.2019.07.02.04.37.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 04:37:11 -0700 (PDT)
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+Date:   Tue, 2 Jul 2019 14:37:10 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190702113157.GG4652@dell>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+02.07.2019 14:20, Jon Hunter пишет:
+> 
+> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>> Tegra's APB DMA engine updates words counter after each transferred burst
+>> of data, hence it can report transfer's residual with more fidelity which
+>> may be required in cases like audio playback. In particular this fixes
+>> audio stuttering during playback in a chromium web browser. The patch is
+>> based on the original work that was made by Ben Dooks and a patch from
+>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>
+>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>
+>> Changelog:
+>>
+>> v3:  Added workaround for a hardware design shortcoming that results
+>>      in a words counter wraparound before end-of-transfer bit is set
+>>      in a cyclic mode.
+>>
+>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>      to get words count if dma_desc is on free list as it will result
+>>      in a NULL dereference because this case wasn't handled properly.
+>>
+>>      The residual value is now updated properly, avoiding potential
+>>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>>      instead of the subtraction.
+>>
+>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
+>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index 79e9593815f1..71473eda28ee 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>  	bool				last_sg;
+>>  	struct list_head		node;
+>>  	struct tegra_dma_desc		*dma_desc;
+>> +	unsigned int			words_xferred;
+>>  };
+>>  
+>>  /*
+>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>  	nsg_req->configured = true;
+>> +	nsg_req->words_xferred = 0;
+>>  
+>>  	tegra_dma_resume(tdc);
+>>  }
+>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>>  					typeof(*sg_req), node);
+>>  	tegra_dma_start(tdc, sg_req);
+>>  	sg_req->configured = true;
+>> +	sg_req->words_xferred = 0;
+>>  	tdc->busy = true;
+>>  }
+>>  
+>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>  	return 0;
+>>  }
+>>  
+>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+>> +					       struct tegra_dma_sg_req *sg_req)
+>> +{
+>> +	unsigned long status, wcount = 0;
+>> +
+>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>> +		return 0;
+>> +
+>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>> +
+>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>> +
+>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +		wcount = status;
+>> +
+>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>> +		return sg_req->req_len;
+>> +
+>> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
+>> +
+>> +	if (!wcount) {
+>> +		/*
+>> +		 * If wcount wasn't ever polled for this SG before, then
+>> +		 * simply assume that transfer hasn't started yet.
+>> +		 *
+>> +		 * Otherwise it's the end of the transfer.
+>> +		 *
+>> +		 * The alternative would be to poll the status register
+>> +		 * until EOC bit is set or wcount goes UP. That's so
+>> +		 * because EOC bit is getting set only after the last
+>> +		 * burst's completion and counter is less than the actual
+>> +		 * transfer size by 4 bytes. The counter value wraps around
+>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>> +		 * distinguish start of transfer from its end.
+>> +		 */
+>> +		if (sg_req->words_xferred)
+>> +			wcount = sg_req->req_len - 4;
+>> +
+>> +	} else if (wcount < sg_req->words_xferred) {
+>> +		/*
+>> +		 * This case shall not ever happen because EOC bit
+>> +		 * must be set once next cyclic transfer is started.
+> 
+> I am not sure I follow this and why this condition cannot happen for
+> cyclic transfers. What about non-cyclic transfers?
 
+It cannot happen because the EOC bit will be set in that case. The counter wraps
+around when the transfer of a last burst happens, EOC bit is guaranteed to be set
+after completion of the last burst. That's my observation after a thorough testing,
+it will be very odd if EOC setting happened completely asynchronously.
 
-On 02/07/19 5:01 PM, Lee Jones wrote:
-> On Tue, 02 Jul 2019, Colin Ian King wrote:
-> 
->> On 02/07/2019 11:44, Lee Jones wrote:
->>> On Fri, 28 Jun 2019, Colin Ian King wrote:
->>>
->>>> On 28/06/2019 15:36, Mark Brown wrote:
->>>>> On Thu, Jun 27, 2019 at 02:16:39PM +0100, Colin King wrote:
->>>>>> From: Colin Ian King <colin.king@canonical.com>
->>>>>>
->>>>>> Currently the LP87565_DEVICE_TYPE_LP87561_Q1 case does not have a
->>>>>> break statement, causing it to fall through to a dev_err message.
->>>>>> Fix this by adding in the missing break statement.
->>>>>
->>>>> This doesn't apply against current code, please check and resend.
->>>>>
->>>> So it applies cleanly against linux-next, I think the original code
->>>> landed in mfd/for-mfd-next - c.f. https://lkml.org/lkml/2019/5/28/550
->>>
->>> Applied, thanks Colin.
->>>
->> I'm confused, who is the official maintainer of the regulator patches
->> nowadays?
-> 
-> Mark.  But the patch you're fixing is currently in the MFD tree.
-> 
-> I sent him an updated pull-request.
-
-Thanks Lee!
-
-> 
-> Don't worry mate, you're in good hands. ;)
-> 
+For a non-cyclic transfers it doesn't matter.. because they are not cyclic and thus
+counter will be stopped by itself. It will be a disaster if all of sudden a
+non-cyclic transfer becomes cyclic, don't you think so? :)
