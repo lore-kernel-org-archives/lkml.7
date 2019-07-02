@@ -2,76 +2,110 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7610CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A655C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458B62089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Lgk8HxN2"
+	by mail.kernel.org (Postfix) with ESMTP id 73C1A206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562115490;
+	bh=ZncPmqJjQ5p8Nzi6KA3tSryklHFPA1+D6VokdeGHa28=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hExAohfocWUQtEsF40sioQb4EOxRR/beFdBwgp900uq2OsiC8LOPa2aFKwgActtdF
+	 6yCB2thw24rBBeoQ5PuuTwYm5+bjqoCofBALVHVNA179gk15Gu4oq1kJ2sAJSqHSNW
+	 Fk0oeHijrsqqfdJVRdO4LE6fdy/+uQkZAiXtf64I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfGCA5o (ORCPT
+        id S1727448AbfGCA6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:57:44 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43314 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfGCA5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:57:44 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w79so580480oif.10;
-        Tue, 02 Jul 2019 17:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=obK8pqGpp6ppUzwFxaYhNaIwmhJYhgnzTyLxnEMEbaE=;
-        b=Lgk8HxN2TeaySbNH6ob4UW9Y1FU9ezn/XZX87/sUbY5sGJwYYW09z7LGrLbcskZrtF
-         h+DBGDabYukmYv22IrZ+49itPNoy9cnyYJwXzXiW6ASg/lvgOvgV9xy8WSmeF0czH39O
-         EMhCzMJeDIXushtAdpqBdCjnDi4NMWsS0JZhxKSR2ci7IHbGYrw9WaE3uF7v9RYIQGF8
-         ll2bePKQibxC4pnFOZQyZC/NqU6LO7Ln0PNYeNQN9TP1H3SQfRxU8G0AJF4w0TFfuyph
-         rybCk3984T+iyvQRkaFh2kGxXryzzYsKtkAkcoIxKP07Jik8Z4QS54FQbbJbr97+pmZH
-         aDFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=obK8pqGpp6ppUzwFxaYhNaIwmhJYhgnzTyLxnEMEbaE=;
-        b=KrhuICVHZ6nc6RKL7cYhsgxGx+f7BZ5x2cFB7fm/WJDUTgaQpotawioD9hlV3/XkiC
-         /fu3KpdvrmRnNJYl19f/gUSIBUFPVHmko5bSAAX65Ovp4hiAsH7Jg80FwrHiFI4i/hrG
-         rPyXyiPpabL0yp3BD2IyaLsDPjmRINMnSzsXg1nuXe/+t8NDzMSr5Md9rnTtgKhSiILm
-         3xD0GZ9qz0ibKIrBeeSDHJEqGrGawJX4vWUIhfdLKC4mfanmvMCSPJR7jgeHsKbOWfET
-         ViQo8U/IIFR5+PtVk81wZ1H5WyTiNBeCcpYPAxLNa1dQ+uQPs+K/D06WGt98lj2oZ25p
-         KaBg==
-X-Gm-Message-State: APjAAAVehs3ygn9kpC8we7gzWOZlZ0UuZANcEJm0ZAvNmNRCP8+jobmE
-        7x1b+gJyG46kwRRs3ZEUG4Ml/sJVaqHyhLmTWScVoBbr
-X-Google-Smtp-Source: APXvYqzsU+VOw/pRzHZkbj7mE4hstsvnVzXhxSZSDwcHEbGK6duR2ysmseQ7VOXaagjXgGDyInbFMOecV+o3mcRZ56Y=
-X-Received: by 2002:aca:4306:: with SMTP id q6mr4781191oia.39.1562112106480;
- Tue, 02 Jul 2019 17:01:46 -0700 (PDT)
+        Tue, 2 Jul 2019 20:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727089AbfGCA6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:58:05 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC2DD20449;
+        Tue,  2 Jul 2019 21:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562102286;
+        bh=ZncPmqJjQ5p8Nzi6KA3tSryklHFPA1+D6VokdeGHa28=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SB5zOgdMv5+0+Y00OB/l2Jsui1egnX0iDRToH0chu73SQDnspeXPnukhhoEmUrnLn
+         1J+BRo9A3r/sqHCxARyy5JjA32jtlBzB0ijOU2DU7SGrhcMqqdeMDKnGYa4XxgYNle
+         NM7aJFyBE6dbHGDyiqMab5d1sEPNEWHorvFmP4uM=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     chetjain@in.ibm.com, "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
+        stable@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH] crypto: user - prevent operating on larval algorithms
+Date:   Tue,  2 Jul 2019 14:17:00 -0700
+Message-Id: <20190702211700.16526-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190701153154.1569c2dc@kitsune.suse.cz>
+References: <20190701153154.1569c2dc@kitsune.suse.cz>
 MIME-Version: 1.0
-References: <20190701104705.18271-1-narmstrong@baylibre.com> <20190701104705.18271-6-narmstrong@baylibre.com>
-In-Reply-To: <20190701104705.18271-6-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 02:01:35 +0200
-Message-ID: <CAFBinCBTbCf=haP=YmkmtvAxD6hgq32LPMg=OkRF3P_p+okqeQ@mail.gmail.com>
-Subject: Re: [RFC 05/11] dt-bindings: soc: amlogic: clk-measure: Add SM1 compatible
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 12:49 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Add the Amlogic SM1 Compatible for the clk-measurer IP.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Eric Biggers <ebiggers@google.com>
+
+Michal Suchanek reported [1] that running the pcrypt_aead01 test from
+LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
+alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
+The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
+
+The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
+unregister isn't a real registered algorithm, but rather is a "test
+larval", which is a special "algorithm" added to the algorithms list
+while the real algorithm is still being tested.  Larvals don't have
+initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
+doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
+to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
+
+Everything else in the "crypto user configuration" API has this same bug
+too, i.e. it inappropriately allows operating on larval algorithms
+(though it doesn't look like the other cases can cause a crash).
+
+Fix this by making crypto_alg_match() exclude larval algorithms.
+
+[1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
+[2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
+
+Reported-by: Michal Suchanek <msuchanek@suse.de>
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Cc: <stable@vger.kernel.org> # v3.2+
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/crypto_user_base.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/crypto/crypto_user_base.c b/crypto/crypto_user_base.c
+index e48da3b75c71d4..a89fcc530092a8 100644
+--- a/crypto/crypto_user_base.c
++++ b/crypto/crypto_user_base.c
+@@ -56,6 +56,9 @@ struct crypto_alg *crypto_alg_match(struct crypto_user_alg *p, int exact)
+ 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
+ 		int match = 0;
+ 
++		if (crypto_is_larval(q))
++			continue;
++
+ 		if ((q->cra_flags ^ p->cru_type) & p->cru_mask)
+ 			continue;
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
