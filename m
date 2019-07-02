@@ -2,160 +2,108 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA1AC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47132C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83084206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:13:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmNqbPkW"
+	by mail.kernel.org (Postfix) with ESMTP id 1C190206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfGBQNP (ORCPT
+        id S1726820AbfGBQPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:13:15 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36513 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBQNO (ORCPT
+        Tue, 2 Jul 2019 12:15:47 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:45776 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfGBQPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:13:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so8490289pfl.3;
-        Tue, 02 Jul 2019 09:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3l/HVHoyqGy73eeeD6DvEzq2C0B/8je+VV4n1k/A06Q=;
-        b=kmNqbPkWSB5R+Yilt2W0J2fVcegInWrLONF/46nLrL0ePl68ZR9Wwm2qz+Ldp7lkvK
-         ImMSQAX2UVP/362ZqaBS5QIk5uIH2KxiaK3lF54vVBJ2uwMGTHU2ToDcUI5IvbwrKCCj
-         5wIII9OrKoXQeVO7/0X+Efujq96hKXo3j7v5MnkG2EuZwH3Z6pTGDS+AIHFdoPWoYgWO
-         wNUX522zqQnc/di8z6PqAyCQrs2i32AKa11t637ppAbOFOp/9ZCigLSyh8JEyua3aoL/
-         mZ3l/JTtBvg4fb/Ilz0y9KG7CS1i9dxFB3gOhopcbAsbG3wbc71y3iP0csrIxtPYQiE7
-         AhZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3l/HVHoyqGy73eeeD6DvEzq2C0B/8je+VV4n1k/A06Q=;
-        b=L6WtMGF0LdHqfCEmUCSUri+08wWGpVl1nL41+xqpriieyC3Nm7R9HB8SXHsPZ8QHJ6
-         CUPinoWLimOLye3Z0f4zIh7gfA2GObDvE7aDap30NG/nIiYg5t63H6LHWZ9bGaxtxuAO
-         7wDTkADfNVBEJPGPd8Om5lHkyjy+nnR8Wa8qUxF5wEMrNtdJ5c2Thxeb/VdED5A9gQM/
-         6umdyu0C0wd48EmBcotTXKbQvPXALpT+81yyaEa4VcTsoHsE0VnQTTy3yq0lYPvUldJh
-         sT90XERXfaNLFdmmuJBzoNfRrLLdaM++tsI3mwP6S4m9sGxMcQop/1E1dSEiqw8N40q/
-         972Q==
-X-Gm-Message-State: APjAAAU3JlVMnkCVzLlS1ZiAzB86yJiggFcuDa+Yc5GXWwMIrvhqFMe9
-        1m8KKwUGYm6jSzhxNGHYtkA=
-X-Google-Smtp-Source: APXvYqyT/kyetllnwlTJlq4sfKaofH0eyOmEedM+LM6GI2Xutg/Uh5dd16I78OjZB+t/NPM2y7Dlqw==
-X-Received: by 2002:a62:8344:: with SMTP id h65mr60124pfe.85.1562083993462;
-        Tue, 02 Jul 2019 09:13:13 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.150.158])
-        by smtp.gmail.com with ESMTPSA id 196sm18115436pfy.167.2019.07.02.09.13.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:13:13 -0700 (PDT)
-From:   Muchun Song <smuchun@gmail.com>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PM: Move disabling/enabling runtime PM to noirq suspend/early resume
-Date:   Wed,  3 Jul 2019 00:12:53 +0800
-Message-Id: <20190702161253.12016-1-smuchun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jul 2019 12:15:46 -0400
+Received: from ramsan ([84.194.98.4])
+        by xavier.telenet-ops.be with bizsmtp
+        id XsFi2000t05gfCL01sFiK5; Tue, 02 Jul 2019 18:15:44 +0200
+Received: from geert (helo=localhost)
+        by ramsan with local-esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hiLRW-0003TW-LY; Tue, 02 Jul 2019 18:15:42 +0200
+Date:   Tue, 2 Jul 2019 18:15:42 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Tal Gilboa <talgi@mellanox.com>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Or Gerlitz <ogerlitz@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [for-next V2 06/10] linux/dim: Move implementation to .c files
+In-Reply-To: <20190625205701.17849-7-saeedm@mellanox.com>
+Message-ID: <alpine.DEB.2.21.1907021810220.13058@ramsan.of.borg>
+References: <20190625205701.17849-1-saeedm@mellanox.com> <20190625205701.17849-7-saeedm@mellanox.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the PM core disables runtime PM for all devices right after
-executing subsystem/driver .suspend_late() callbacks for them and
-re-enables it right before executing subsystem/driver .resume_early()
-callbacks for them. This may lead to problems when there are two devices
-such that the irq handler thread function executed for one of them
-depends on runtime PM working for the other. E.g. There are two devices,
-one is i2c slave device depends on another device which can be the i2c
-adapter device. The slave device can generate system wakeup signals and
-is enabled to wake up the system(via call enable_irq_wake()). So, the irq
-of slave device is enabled. If a wakeup signal generate after executing
-subsystem/driver .suspend_late() callbacks. Then, the irq handler thread
-function will be called(The irq is requested via request_threaded_irq())
-and the slave device reads data via i2c adapter device(via i2c_transfer()).
-In that case, it may be failed to read data because of the runtime PM
-disabled.
+ 	Hi Saeed, Tal,
 
-It is also analogously for resume. If a wakeup signal generate when the
-system is in the sleep state. The irq handler thread function may be
-called before executing subsystem/driver .resume_early(). In that case,
-it also may be failed to read data because of the runtime PM disabled.
+On Tue, 25 Jun 2019, Saeed Mahameed wrote:
+> From: Tal Gilboa <talgi@mellanox.com>
+>
+> Moved all logic from dim.h and net_dim.h to dim.c and net_dim.c.
+> This is both more structurally appealing and would allow to only
+> expose externally used functions.
+>
+> Signed-off-by: Tal Gilboa <talgi@mellanox.com>
+> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 
-To make those issues go away, make the PM core disable runtime PM for
-devices right before executing subsystem/driver .suspend_noirq() callbacks
-for them and enable runtime PM for them right after executing subsystem/
-driver .resume_noirq() callbacks for them.
+This is now commit 4f75da3666c0c572 ("linux/dim: Move implementation to
+.c files") in net-next.
 
-Signed-off-by: Muchun Song <smuchun@gmail.com>
----
- Documentation/power/runtime_pm.txt | 4 ++--
- drivers/base/power/main.c          | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+> --- a/drivers/net/ethernet/broadcom/Kconfig
+> +++ b/drivers/net/ethernet/broadcom/Kconfig
+> @@ -8,6 +8,7 @@ config NET_VENDOR_BROADCOM
+> 	default y
+> 	depends on (SSB_POSSIBLE && HAS_DMA) || PCI || BCM63XX || \
+> 		   SIBYTE_SB1xxx_SOC
+> +	select DIMLIB
 
-diff --git a/Documentation/power/runtime_pm.txt b/Documentation/power/runtime_pm.txt
-index 937e33c46211..8cca4df3adc4 100644
---- a/Documentation/power/runtime_pm.txt
-+++ b/Documentation/power/runtime_pm.txt
-@@ -691,11 +691,11 @@ out the following operations:
-     pm_runtime_barrier() is called for every device right before executing the
-     subsystem-level .suspend() callback for it.  In addition to that the PM core
-     calls  __pm_runtime_disable() with 'false' as the second argument for every
--    device right before executing the subsystem-level .suspend_late() callback
-+    device right before executing the subsystem-level .suspend_noirq() callback
-     for it.
- 
-   * During system resume pm_runtime_enable() and pm_runtime_put() are called for
--    every device right after executing the subsystem-level .resume_early()
-+    every device right after executing the subsystem-level .resume_noirq()
-     callback and right after executing the subsystem-level .complete() callback
-     for it, respectively.
- 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index dcfc0a36c8f7..ad0282d637ae 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -693,6 +693,7 @@ static int device_resume_noirq(struct device *dev, pm_message_t state, bool asyn
- 	}
- 
- Out:
-+	pm_runtime_enable(dev);
- 	complete_all(&dev->power.completion);
- 	TRACE_RESUME(error);
- 	return error;
-@@ -860,7 +861,6 @@ static int device_resume_early(struct device *dev, pm_message_t state, bool asyn
-  Out:
- 	TRACE_RESUME(error);
- 
--	pm_runtime_enable(dev);
- 	complete_all(&dev->power.completion);
- 	return error;
- }
-@@ -1299,6 +1299,8 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
- 	TRACE_DEVICE(dev);
- 	TRACE_SUSPEND(0);
- 
-+	__pm_runtime_disable(dev, false);
-+
- 	dpm_wait_for_subordinate(dev, async);
- 
- 	if (async_error)
-@@ -1508,8 +1510,6 @@ static int __device_suspend_late(struct device *dev, pm_message_t state, bool as
- 	TRACE_DEVICE(dev);
- 	TRACE_SUSPEND(0);
- 
--	__pm_runtime_disable(dev, false);
--
- 	dpm_wait_for_subordinate(dev, async);
- 
- 	if (async_error)
--- 
-2.17.1
+Merely enabling a NET_VENDOR_* symbol should not enable inclusion of
+any additional code, cfr. the help text for the NET_VENDOR_BROADCOM
+option.
 
+Hence please move the select to the config symbol(s) for the driver(s)
+that need it.
+
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -562,6 +562,14 @@ config SIGNATURE
+> 	  Digital signature verification. Currently only RSA is supported.
+> 	  Implementation is done using GnuPG MPI library
+>
+> +config DIMLIB
+> +	bool "DIM library"
+> +	default y
+
+Please drop this line, as optional library code should never be included
+by default.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
