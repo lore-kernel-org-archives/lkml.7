@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3186C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19042C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A562183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E203821479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054853;
-	bh=gx5vd93f8/k8hXxgW9ILkcK+6s7352CHCW6PXJg7i+s=;
+	s=default; t=1562054858;
+	bh=mqaPR9roc8u1JqDgLA/WT7+JVA2ReSlXZxt8V+6uY8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iq+/dfO/ePZBbTUXco6nolLGAhTTFRW592ymFwCPSV/0cf2TZX9JWE9mpkRHwvyS8
-	 JhfJTseqZVfaq97H13BG87LAxP8RVImVntRvAoSnjrR3a0hhn91SiNC18tOz8RVD/K
-	 0VIYAKe1n8tSetM1zA/g2/1RY612W4fowawAOXXk=
+	b=tF607RPkNnxIUSbz0IxRNDRuR2Mxon++ecleM6H1pL1OrAVsThz5hsosSZ+0sNPGd
+	 DiSdH4bpkn/P9AywQ28fmL43XEVFzA7/O7Sf3okf1BgeHanJBGmUmNJhdgw4a5tDdd
+	 mIjg+UtelsRkt6yzbJ96zoQxTFiR1Wkb5lK6Y5/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfGBIHc (ORCPT
+        id S1728290AbfGBIHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727724AbfGBIHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:30 -0400
+        id S1727724AbfGBIHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1947206A2;
-        Tue,  2 Jul 2019 08:07:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9257C21479;
+        Tue,  2 Jul 2019 08:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054850;
-        bh=gx5vd93f8/k8hXxgW9ILkcK+6s7352CHCW6PXJg7i+s=;
+        s=default; t=1562054853;
+        bh=mqaPR9roc8u1JqDgLA/WT7+JVA2ReSlXZxt8V+6uY8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LrZ3vjSbopsbIdxE0/iziCe7UA9xZBdi7uaaaldCqTKwQP2xQ+jq5dRep1tQcS4ri
-         S+7iHG0q36Ns5+WQtywvJqQswJYAFbd4Gtl5UMW4t1XEMewgSbh7TRAm+R8g/fQgXu
-         d3QnDHzfur+zHylSjR7y0buf+nGBrS8mEY1I/v6g=
+        b=x09wJTucT1s0XAw063SyAfdWmpHNxKNw82OikI0GfV/uCn5szNy1dyRetGTYQVtc6
+         Gqe2hTHnAeScJ1De+zcLiQ5WUxRCtKNkeQl/Wh2kzgnM+NxOJgty8jfMYnqv/vTisk
+         RUV+ybdZ+/GFem4KKc35eV3Btd8NrO/yF9BUmGY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Sowmini Varadhan <sowmini.varadhan@oracle.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, JingYi Hou <houjingyi647@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 53/72] net/packet: fix memory leak in packet_set_ring()
-Date:   Tue,  2 Jul 2019 10:01:54 +0200
-Message-Id: <20190702080127.333607089@linuxfoundation.org>
+Subject: [PATCH 4.19 54/72] net: remove duplicate fetch in sock_getsockopt
+Date:   Tue,  2 Jul 2019 10:01:55 +0200
+Message-Id: <20190702080127.383587532@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -61,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: JingYi Hou <houjingyi647@gmail.com>
 
-[ Upstream commit 55655e3d1197fff16a7a05088fb0e5eba50eac55 ]
+[ Upstream commit d0bae4a0e3d8c5690a885204d7eb2341a5b4884d ]
 
-syzbot found we can leak memory in packet_set_ring(), if user application
-provides buggy parameters.
+In sock_getsockopt(), 'optlen' is fetched the first time from userspace.
+'len < 0' is then checked. Then in condition 'SO_MEMINFO', 'optlen' is
+fetched the second time from userspace.
 
-Fixes: 7f953ab2ba46 ("af_packet: TX_RING support for TPACKET_V3")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Sowmini Varadhan <sowmini.varadhan@oracle.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+If change it between two fetches may cause security problems or unexpected
+behaivor, and there is no reason to fetch it a second time.
+
+To fix this, we need to remove the second fetch.
+
+Signed-off-by: JingYi Hou <houjingyi647@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/core/sock.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4316,7 +4316,7 @@ static int packet_set_ring(struct sock *
- 				    req3->tp_sizeof_priv ||
- 				    req3->tp_feature_req_word) {
- 					err = -EINVAL;
--					goto out;
-+					goto out_free_pg_vec;
- 				}
- 			}
- 			break;
-@@ -4380,6 +4380,7 @@ static int packet_set_ring(struct sock *
- 			prb_shutdown_retire_blk_timer(po, rb_queue);
- 	}
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1348,9 +1348,6 @@ int sock_getsockopt(struct socket *sock,
+ 	{
+ 		u32 meminfo[SK_MEMINFO_VARS];
  
-+out_free_pg_vec:
- 	if (pg_vec)
- 		free_pg_vec(pg_vec, order, req->tp_block_nr);
- out:
+-		if (get_user(len, optlen))
+-			return -EFAULT;
+-
+ 		sk_get_meminfo(sk, meminfo);
+ 
+ 		len = min_t(unsigned int, len, sizeof(meminfo));
 
 
