@@ -2,54 +2,53 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85298C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E0DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA99206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D497D205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055287;
-	bh=KcIwiM76cBXR6HzC1v2sUfIl8HXgUi3OAHBFsnfnKyw=;
+	s=default; t=1562055291;
+	bh=WagRIhX8U0ebY9ztKqEGO48qRbe5oFbzIDeNsXu6THM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=keV2I22IntnFLeaTS47SoOWBmjGEYe3TDNOP/WQUaWThokLJufcCL+L8D2Kw3Rwp5
-	 iRJfQgj/mrGpfLg/Wk1mK4+GCItZfOR8Sb2QIvA8/6/xF5DnTQv71FS6yX8n7Y2mau
-	 Zsr8n9YdGL9Uahd1dEUkar4oSpVjVPuh3H9G5zpE=
+	b=LwV/+YC9+V0YJiBodhbb9HrQ0GdnuxX1TLfyi46HnUSipON4d5YvP91Kun2hs7/+x
+	 8qQMWlDFyU7OYkTTZXLyzYGwi4mS/vBvNScl8ORe/bMFvpfOhs1zVZn/ZmcEUgwF3G
+	 azRqwpOb/oWkvE8EVACazexH6V+VbK3CCGeeHuVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfGBIOq (ORCPT
+        id S1727499AbfGBIFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52048 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727531AbfGBIFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:49 -0400
+        id S1727965AbfGBIFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 301272183F;
-        Tue,  2 Jul 2019 08:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A39C21848;
+        Tue,  2 Jul 2019 08:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054748;
-        bh=KcIwiM76cBXR6HzC1v2sUfIl8HXgUi3OAHBFsnfnKyw=;
+        s=default; t=1562054736;
+        bh=WagRIhX8U0ebY9ztKqEGO48qRbe5oFbzIDeNsXu6THM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vd1jLyNAf7vQILnWP9W/kXR7U2eFM4bDlYqGgFDO0If8lXzT0a9NavlMEro8wyYL
-         lDB3PoiSX00HsKFjeMm5STQLNpwlMc9rfHF7fpozMtdExb90C83s9Civmy9Y5VO6bA
-         dRD8MWQqsMHgUg7IIyChiuYJQHy9f3Ki7EnY1S9Q=
+        b=Bzy297anJuuPIA7Q60yWOHdb+Q4sI+bfV5PCUpMrHaGecYaaiyd1/7Bumi6VJuIWU
+         k/VddPtZDv+n69MH89TnTOgrnYtHropeZRAuni2TJIvXuLCbxYG+G5ui2bM1Zd3NG/
+         h/xFRS6eTlJCsKSK/IAAXnCYPkL69Ilh6CtG74VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary Leshner <Gary.S.Leshner@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/72] IB/hfi1: Close PSM sdma_progress sleep window
-Date:   Tue,  2 Jul 2019 10:01:07 +0200
-Message-Id: <20190702080124.894472662@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 02/72] perf help: Remove needless use of strncpy()
+Date:   Tue,  2 Jul 2019 10:01:03 +0200
+Message-Id: <20190702080124.696543714@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -62,89 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit da9de5f8527f4b9efc82f967d29a583318c034c7 upstream.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The call to sdma_progress() is called outside the wait lock.
+commit b6313899f4ed2e76b8375cf8069556f5b94fbff0 upstream.
 
-In this case, there is a race condition where sdma_progress() can return
-false and the sdma_engine can idle.  If that happens, there will be no
-more sdma interrupts to cause the wakeup and the user_sdma xmit will hang.
+Since we make sure the destination buffer has at least strlen(orig) + 1,
+no need to do a strncpy(dest, orig, strlen(orig)), just use strcpy(dest,
+orig).
 
-Fix by moving the lock to enclose the sdma_progress() call.
+This silences this gcc 8.2 warning on Alpine Linux:
 
-Also, delete busycount. The need for this was removed by:
-commit bcad29137a97 ("IB/hfi1: Serve the most starved iowait entry first")
+  In function 'add_man_viewer',
+      inlined from 'perf_help_config' at builtin-help.c:284:3:
+  builtin-help.c:192:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy((*p)->name, name, len);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  builtin-help.c: In function 'perf_help_config':
+  builtin-help.c:187:15: note: length computed here
+    size_t len = strlen(name);
+                 ^~~~~~~~~~~~
 
-Ported to linux-4.19.y.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
+Link: https://lkml.kernel.org/n/tip-2f69l7drca427ob4km8i7kvo@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Gary Leshner <Gary.S.Leshner@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_sdma.c | 12 ++++--------
- drivers/infiniband/hw/hfi1/user_sdma.h |  1 -
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ tools/perf/builtin-help.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
-index 51831bfbf90f..cbff746d9e9d 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.c
-@@ -132,25 +132,22 @@ static int defer_packet_queue(
- 	struct hfi1_user_sdma_pkt_q *pq =
- 		container_of(wait, struct hfi1_user_sdma_pkt_q, busy);
- 	struct hfi1_ibdev *dev = &pq->dd->verbs_dev;
--	struct user_sdma_txreq *tx =
--		container_of(txreq, struct user_sdma_txreq, txreq);
- 
--	if (sdma_progress(sde, seq, txreq)) {
--		if (tx->busycount++ < MAX_DEFER_RETRY_COUNT)
--			goto eagain;
--	}
-+	write_seqlock(&dev->iowait_lock);
-+	if (sdma_progress(sde, seq, txreq))
-+		goto eagain;
- 	/*
- 	 * We are assuming that if the list is enqueued somewhere, it
- 	 * is to the dmawait list since that is the only place where
- 	 * it is supposed to be enqueued.
- 	 */
- 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
--	write_seqlock(&dev->iowait_lock);
- 	if (list_empty(&pq->busy.list))
- 		iowait_queue(pkts_sent, &pq->busy, &sde->dmawait);
- 	write_sequnlock(&dev->iowait_lock);
- 	return -EBUSY;
- eagain:
-+	write_sequnlock(&dev->iowait_lock);
- 	return -EAGAIN;
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -189,7 +189,7 @@ static void add_man_viewer(const char *n
+ 	while (*p)
+ 		p = &((*p)->next);
+ 	*p = zalloc(sizeof(**p) + len + 1);
+-	strncpy((*p)->name, name, len);
++	strcpy((*p)->name, name);
  }
  
-@@ -803,7 +800,6 @@ static int user_sdma_send_pkts(struct user_sdma_request *req, unsigned maxpkts)
- 
- 		tx->flags = 0;
- 		tx->req = req;
--		tx->busycount = 0;
- 		INIT_LIST_HEAD(&tx->list);
- 
- 		/*
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.h b/drivers/infiniband/hw/hfi1/user_sdma.h
-index 91c343f91776..2c056702d975 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.h
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.h
-@@ -245,7 +245,6 @@ struct user_sdma_txreq {
- 	struct list_head list;
- 	struct user_sdma_request *req;
- 	u16 flags;
--	unsigned int busycount;
- 	u64 seqnum;
- };
- 
--- 
-2.20.1
-
+ static int supported_man_viewer(const char *name, size_t len)
 
 
