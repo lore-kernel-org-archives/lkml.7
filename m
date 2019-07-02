@@ -2,130 +2,193 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B0DC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C55C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCB12184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0562184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Sf3qzsDU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N/PcbyT5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lHcJ/6o7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGBTOt (ORCPT
+        id S1727086AbfGBTPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 15:14:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34899 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGBTOt (ORCPT
+        Tue, 2 Jul 2019 15:15:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49670 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGBTPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 15:14:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x62JDtPh2935803
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 2 Jul 2019 12:13:55 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x62JDtPh2935803
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562094836;
-        bh=6PAtDxcbxse3qWHOJN5nO+ekfSO0ovyq4RB8UeAPDu4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Sf3qzsDUIeeRheKIVfTE7/UNg0m1UHEmUHHxqpuG9kyj8UWB+afgnnCRhkXWWVsMy
-         Z9NfhmMrV98K6O31+cJog2Wcyc93K7IH3c82cq6z1bShuuBnRbS5W6f+EVUIdq1N2E
-         dJK47OcYjcvyxkxAjUdKaXTVmuRyDM7ImQyr2QQvX8HO3WnkuxjfJCs+tt3q4/YOUw
-         ankPrT7Nckz+lLWro9VPe9MH4ywy7Oo85h94SBMnOdyGMwxH0R8Ny7P+46MZghFHHk
-         XF8PPGjwJSTarX8emC2Y+1avDp63CHh3xFDXQV9lW60nPE+Ohd+X/sym5VUpoDFI6W
-         hpraKK5c1JYYg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x62JDqTq2935800;
-        Tue, 2 Jul 2019 12:13:52 -0700
-Date:   Tue, 2 Jul 2019 12:13:52 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ross Zwisler <tipbot@zytor.com>
-Message-ID: <tip-77a1619947ab31564aed54621d5b1e34af9b395d@git.kernel.org>
-Cc:     klaus.kusche@computerix.info, groeck@google.com,
-        zwisler@chromium.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, keescook@chromium.org, groeck@chromium.org,
-        johannes.hirte@datenkhaos.de, hpa@zytor.com, bp@alien8.de,
-        tglx@linutronix.de, zwisler@google.com
-Reply-To: zwisler@chromium.org, johannes.hirte@datenkhaos.de,
-          hpa@zytor.com, bp@alien8.de, tglx@linutronix.de,
-          zwisler@google.com, linux-kernel@vger.kernel.org,
-          klaus.kusche@computerix.info, mingo@kernel.org,
-          keescook@chromium.org, groeck@chromium.org, groeck@google.com
-In-Reply-To: <20190701155208.211815-1-zwisler@google.com>
-References: <20190701155208.211815-1-zwisler@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] Revert "x86/build: Move _etext to actual end of
- .text"
-Git-Commit-ID: 77a1619947ab31564aed54621d5b1e34af9b395d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 2 Jul 2019 15:15:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C8A2D607B9; Tue,  2 Jul 2019 19:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562094923;
+        bh=X8Aoljm0LYeyxBEqbEVId7mUQqHptsmMGCGTKktZVAA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N/PcbyT58Do7LICpzhWUA4B3V217FV7Ad9lbkyim+DNPhlNSr7cWqiwqV7OYKJ4hd
+         YQmrx995MCms606pArLo4LiTFwCY/wvGw228u+vz6nw/AMJ7EPyxjWp6WoxSYzuYxz
+         CFIii91QxvHmYF7aCBDJVcoU5XwhQbZPo5zJQgQU=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id C6F8C60746;
+        Tue,  2 Jul 2019 19:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562094922;
+        bh=X8Aoljm0LYeyxBEqbEVId7mUQqHptsmMGCGTKktZVAA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lHcJ/6o71zHCEADhRs23OU6NF+fNeaAPkCHRI05v5co4mdYEj3f7sPw5dx+lZhLQe
+         SRAbtSg4y9iUnsw603C34us7Wsql3rW0zwF1DPBSYa6yBz2BrRNMxmNwCMFDKg2dF4
+         gWsdl5907wyfFiDc6aRnjlssZQ3V6wedqenCYRm4=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 02 Jul 2019 12:15:22 -0700
+From:   Jeykumar Sankaran <jsanka@codeaurora.org>
+To:     dhar@codeaurora.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, chandanu@codeaurora.org,
+        nganji@codeaurora.org, jshekhar@codeaurora.org
+Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
+In-Reply-To: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
+References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
+ <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
+ <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
+ <627144af54459a203f1583d2ad9b390c@codeaurora.org>
+ <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
+ <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
+Message-ID: <87b59fd6d89f4096243770edefc5e97b@codeaurora.org>
+X-Sender: jsanka@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  77a1619947ab31564aed54621d5b1e34af9b395d
-Gitweb:     https://git.kernel.org/tip/77a1619947ab31564aed54621d5b1e34af9b395d
-Author:     Ross Zwisler <zwisler@chromium.org>
-AuthorDate: Mon, 1 Jul 2019 09:52:08 -0600
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 2 Jul 2019 21:09:44 +0200
+On 2019-07-02 11:21, Jeykumar Sankaran wrote:
+> On 2019-07-01 03:29, dhar@codeaurora.org wrote:
+>> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
+>>> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
+>>>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
+>>>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
+>>>>>> dpu encoder spinlock should be initialized during dpu encoder
+>>>>>> init instead of dpu encoder setup which is part of commit.
+>>>>>> There are chances that vblank control uses the uninitialized
+>>>>>> spinlock if not initialized during encoder init.
+>>>>> Not much can be done if someone is performing a vblank operation
+>>>>> before encoder_setup is done.
+>>>>> Can you point to the path where this lock is acquired before
+>>>>> the encoder_setup?
+>>>>> 
+>>>>> Thanks
+>>>>> Jeykumar S.
+>>>>>> 
+>>>> 
+>>>> When running some dp usecase, we are hitting this callstack.
+>>>> 
+>>>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
+>>>> Call trace:
+>>>>  spin_dump+0x84/0x8c
+>>>>  spin_dump+0x0/0x8c
+>>>>  do_raw_spin_lock+0x80/0xb0
+>>>>  _raw_spin_lock_irqsave+0x34/0x44
+>>>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
+>>>>  dpu_crtc_vblank+0x168/0x1a0
+>>>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
+>>>>  process_one_work+0x16c/0x2d8
+>>>>  worker_thread+0x1d8/0x2b0
+>>>>  kthread+0x124/0x134
+>>>> 
+>>>> Looks like vblank is getting enabled earlier causing this issue and 
+>>>> we
+>>>> are using the spinlock without initializing it.
+>>>> 
+>>>> Thanks,
+>>>> Shubhashree
+>>>> 
+>>> DP calls into set_encoder_mode during hotplug before even notifying 
+>>> the
+>>> u/s. Can you trace out the original caller of this stack?
+>>> 
+>>> Even though the patch is harmless, I am not entirely convinced to 
+>>> move this
+>>> initialization. Any call which acquires the lock before encoder_setup
+>>> will be a no-op since there will not be any physical encoder to work 
+>>> with.
+>>> 
+>>> Thanks and Regards,
+>>> Jeykumar S.
+>>> 
+>>>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
+>>>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+>>>>>> ---
+>>>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
+>>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>>> 
+>>>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>>> index 5f085b5..22938c7 100644
+>>>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>>>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device 
+>>>>>> *dev, struct
+>>>>>> drm_encoder *enc,
+>>>>>>  	if (ret)
+>>>>>>  		goto fail;
+>>>>>> 
+>>>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>>> -
+>>>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
+>>>>>>  	timer_setup(&dpu_enc->frame_done_timer,
+>>>>>>  			dpu_encoder_frame_done_timeout, 0);
+>>>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
+>>>>>> drm_device *dev,
+>>>>>> 
+>>>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
+>>>>>> &dpu_encoder_helper_funcs);
+>>>>>> 
+>>>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
+>>>>>>  	dpu_enc->enabled = false;
+>>>>>> 
+>>>>>>  	return &dpu_enc->base;
+>> 
+>> In dpu_crtc_vblank(), we are looping through all the encoders in the
+>> present mode_config:
+>> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+>> 1/dpu_crtc.c#L1082
+>> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
+>> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
+>> the spinlock, we will do a early return for
+>> the encoders which are not currently assigned to our crtc:
+>> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
+>> 1/dpu_encoder.c#L1318.
+>> Since the encoder_setup for the secondary encoder(dp encoder in this
+>> case) is not called until dp hotplug, we are hitting kernel panic
+>> while acquiring the lock.
+> This is the sequence in which the events are expected to happen:
+> 
+> 1) DP connector is instantiated with an inactive state
+> 2) Hot plug on DP
+> 3) DP connector is activated
+> 4) User space attaches a CRTC to the activated connector
+> 5) CRTC is enabled
+> 6) CRTC_VBLANK_ON is called
+> 7) dpu_crtc_vblank is called.
+> 
+> So can you help tracing out why dpu_crtc_vblank is called when the 
+> connector
+> is not activated yet (no hotplug)?
 
-Revert "x86/build: Move _etext to actual end of .text"
+Overlooked the loop which iterates through *all* the encoders 
+irrespective of their
+activated status.
 
-This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+Reviewed-by: Jeykumar Sankaran <jsanka@codeaurora.org>
 
-Per the discussion here:
-
-  https://lkml.kernel.org/r/201906201042.3BF5CD6@keescook
-
-the above referenced commit breaks kernel compilation with old GCC
-toolchains as well as current versions of the Gold linker.
-
-Revert it to fix the regression and to keep the ability to compile the
-kernel with these tools.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Johannes Hirte <johannes.hirte@datenkhaos.de>
-Cc: Klaus Kusche <klaus.kusche@computerix.info>
-Cc: samitolvanen@google.com
-Cc: Guenter Roeck <groeck@google.com>
-Link: https://lkml.kernel.org/r/20190701155208.211815-1-zwisler@google.com
-
----
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0850b5149345..4d1517022a14 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -141,10 +141,10 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--	} :text = 0x9090
- 
--	/* End of text section */
--	_etext = .;
-+		/* End of text section */
-+		_etext = .;
-+	} :text = 0x9090
- 
- 	NOTES :text :note
- 
