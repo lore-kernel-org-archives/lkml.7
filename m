@@ -2,134 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238E2C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31891C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFB5218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F73218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="dKPauEKr"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OuN/4pti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfGCA7Y (ORCPT
+        id S1727481AbfGCA7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:59:24 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:56588 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727082AbfGCA7X (ORCPT
+        Tue, 2 Jul 2019 20:59:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34452 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfGCA7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:59:23 -0400
-Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
-        by m0050096.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x630vIWU025766;
-        Wed, 3 Jul 2019 01:59:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=jan2016.eng;
- bh=9pZ9ryOnK9wPGkn/8i9iDreAG7ft/sEEwlO0Jad2gyA=;
- b=dKPauEKr1U+hKOcxAbDA3CdO7vPFfawP4q3i3TnfwGqfrGAa5bVNgS1y75IQXyuYvUl0
- ouiP1+d1bU0ABupEdIW85+F6c51eNeaJ9NAXu7nFQAfIG0jKQnUusdC3qil+Yw7wFwmM
- 8GCn/NupllEeNGO9DjraXi0Lqy98oxs7X1lN2UtrUAij4xCA7avfPu0vEAlo5dgKyhjw
- BId897T0SZbP4INdfyVZawM5JiPr1SuV/mkHQcUe5tFx+my7WxJdcq2yNKNDS+6NDuoM
- 0YAFMf4Uh1c9fZdrMCVydHEj5ifIC4P3hb8X/haEPqiLX86Oq16Yy4a2K24j97/icH0+ oA== 
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-        by m0050096.ppops.net-00190b01. with ESMTP id 2tg2s5kq8d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jul 2019 01:59:11 +0100
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x630ljCc002837;
-        Tue, 2 Jul 2019 20:59:10 -0400
-Received: from email.msg.corp.akamai.com ([172.27.25.30])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 2te3awh4vp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 20:59:09 -0400
-Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com (172.27.27.105) by
- ustx2ex-dag1mb4.msg.corp.akamai.com (172.27.27.104) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 2 Jul 2019 19:58:34 -0500
-Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com ([172.27.27.105]) by
- ustx2ex-dag1mb5.msg.corp.akamai.com ([172.27.27.105]) with mapi id
- 15.00.1473.004; Tue, 2 Jul 2019 19:58:34 -0500
-From:   "Lubashev, Igor" <ilubashe@akamai.com>
-To:     James Morris <jmorris@namei.org>
-CC:     Serge Hallyn <serge@hallyn.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 0/1] security: add SECURE_KEEP_FSUID to preserve
- fsuid/fsgid across execve
-Thread-Topic: [RFC PATCH 0/1] security: add SECURE_KEEP_FSUID to preserve
- fsuid/fsgid across execve
-Thread-Index: AQHVIkp2KrFaTjvuWkqWuYjnYmNLQ6aa7f2AgAD6xpCAAIJWAIAbwq2g
-Date:   Wed, 3 Jul 2019 00:58:34 +0000
-Message-ID: <127af0e711e747279742b2aa13a658fb@ustx2ex-dag1mb5.msg.corp.akamai.com>
-References: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
- <alpine.LRH.2.21.1906141445010.7150@namei.org>
- <720751180a9543cfa205cd527248df7c@ustx2ex-dag1mb5.msg.corp.akamai.com>
- <alpine.LRH.2.21.1906142049480.3646@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1906142049480.3646@namei.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.19.37.5]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Jul 2019 20:59:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l12so626994oil.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u5UwRiHjXkEAlhFHmvxN8ePNlS4fXC/47jr2WEGpIzo=;
+        b=OuN/4ptiyR+plJoUbh14HMfrLiUOlvumFP0tzROycbsFqfygYxNO3xqFi028k9qP6U
+         2hsxYQ/2r3+ffTRQvqv/sCf8RYf+3AvuvLqH7ogDKbeVFyv/k7MsfBkCxG4uRyEvLytD
+         3hBMhCKOWYcfttKhsfT8Y19T3NlQHBTeuu1o3bC0SKi1LDuyTUAXjHnls8TPzw595KLC
+         nNTom92Iwyk5ROjrmSXSDkHChpxbNbnGWGRWyw3laBL4fIp/E7U50dYgr8AGkfNKV1ux
+         j9NiIvFe4orlhguGifJ7Su4YhO973/sL8kBVtipoBIsWxN1zYFyjnK/YO/aROHHw66yH
+         203w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u5UwRiHjXkEAlhFHmvxN8ePNlS4fXC/47jr2WEGpIzo=;
+        b=lMc2rHrX0vbWrbwqFOwW6MV5TLFiKcBYIZFHjaTQvhjVp89uj1G16fThUi5mcc4rID
+         petsUt8Oku6EbDTDYMHwHElUSQ1hkWqjFpDWobQx8kqbZOTozTGwdgxCtot3VDYBvhtP
+         eH57MudtS0JCOplxao0xlnVjhI1dtCnGDN+iZLpBU4RGc126y9GyLIm5PjMjqX5bBL4E
+         fv6h32+d9U5OBFNBk9sxwrrmBLiZMsqWXdVIMwOcIGiuVZTnC9bW3G+Rd1ANqy7VWVeI
+         Fpfw8rDlRki3dceg4BHUgR4crvfmp4vgMXHe7/2goaMVhUYW38a+W0r1EazQh11K7EOQ
+         VIxQ==
+X-Gm-Message-State: APjAAAUpP3df9weKQGtScW/bsVCjHaAsppKrgu7soxHaLxE7mKBpWe4q
+        6Wx5EI9hF9sFMeZErU9pJ+8rwPHhN5+WlPy8tNQUGETi
+X-Google-Smtp-Source: APXvYqyLlYpHy9+AMc/X38t5BFMinZJQ01XTqDg0vHmjdWTN0eXoTzXdkzMkhqYvcnewmJArWXl9rZoSGD4d6S4ISik=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr4183998oih.73.1562109479302;
+ Tue, 02 Jul 2019 16:17:59 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907030009
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907030011
+References: <20190701062020.19239-1-hch@lst.de> <20190701082517.GA22461@lst.de>
+ <20190702184201.GO31718@mellanox.com>
+In-Reply-To: <20190702184201.GO31718@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Jul 2019 16:17:48 -0700
+Message-ID: <CAPcyv4iWXJ-c7LahPD=Qt4RuDNTU7w_8HjsitDuj3cxngzb56g@mail.gmail.com>
+Subject: Re: dev_pagemap related cleanups v4
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: James Morris <jmorris@namei.org>  on Friday, June 14, 2019 11:54 PM=
-:
-> On Sat, 15 Jun 2019, Lubashev, Igor wrote:
->=20
-> > Unfortunately, perf is using uid=3D=3D0 and euid=3D=3D0 as a "capabilit=
-y bits".
-> >
-> >
-> > In tools/perf/util/evsel.c:
-> > 	static bool perf_event_can_profile_kernel(void)
-> > 	{
-> > 		return geteuid() =3D=3D 0 || perf_event_paranoid() =3D=3D -1;
-> > 	}
-> >
-> > In tools/perf/util/symbol.c:
-> > 	static bool symbol__read_kptr_restrict(void)
-> > 	{
-> > 	...
-> > 		value =3D ((geteuid() !=3D 0) || (getuid() !=3D 0)) ?
-> > 				(atoi(line) !=3D 0) :
-> > 				(atoi(line) =3D=3D 2);
-> > 	...
-> > 	}
->=20
-> These are bugs. They should be checking for CAP_SYS_ADMIN.
+On Tue, Jul 2, 2019 at 11:42 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Mon, Jul 01, 2019 at 10:25:17AM +0200, Christoph Hellwig wrote:
+> > And I've demonstrated that I can't send patch series..  While this
+> > has all the right patches, it also has the extra patches already
+> > in the hmm tree, and four extra patches I wanted to send once
+> > this series is merged.  I'll give up for now, please use the git
+> > url for anything serious, as it contains the right thing.
+>
+> Okay, I sorted it all out and temporarily put it here:
+>
+> https://github.com/jgunthorpe/linux/commits/hmm
+>
+> Bit involved job:
+> - Took Ira's v4 patch into hmm.git and confirmed it matches what
+>   Andrew has in linux-next after all the fixups
+> - Checked your github v4 and the v3 that hit the mailing list were
+>   substantially similar (I never did get a clean v4) and largely
+>   went with the github version
+> - Based CH's v4 series on -rc7 and put back the removal hunk in swap.c
+>   so it compiles
+> - Merge'd CH's series to hmm.git and fixed all the conflicts with Ira
+>   and Ralph's patches (such that swap.c remains unchanged)
+> - Added Dan's ack's and tested-by's
 
-Thanks for the suggestion.
+Looks good. Test merge (with some collisions, see below) also passes
+my test suite.
 
-Actually, the former one should be checking CAP_SYS_ADMIN, while the latter=
- -- CAP_SYSLOG (see lib/vsprintf.c).
+>
+> I think this fairly closely follows what was posted to the mailing
+> list.
+>
+> As it was more than a simple 'git am', I'll let it sit on github until
+> I hear OK's then I'll move it to kernel.org's hmm.git and it will hit
+> linux-next. 0-day should also run on this whole thing from my github.
+>
+> What I know is outstanding:
+>  - The conflicting ARM patches, I understand Andrew will handle these
+>    post-linux-next
+>  - The conflict with AMD GPU in -next, I am waiting to hear from AMD
 
-Just posted a patch to perf (http://lists.infradead.org/pipermail/linux-arm=
--kernel/2019-July/664552.html).
-
-Thank you,
-
-- Igor
+Just a heads up that this also collides with the "sub-section" patches
+in Andrew's tree. The resolution is straightforward, mostly just
+colliding updates to arch_{add,remove}_memory() call sites in
+kernel/memremap.c and collisions with pgmap_altmap() usage.
