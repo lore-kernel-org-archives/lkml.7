@@ -2,155 +2,83 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C5BC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0B0C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9623D2089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562090479;
-	bh=kIyxmE2Mr1IyGzQ4fVM/a6nCRCw2PNXuUwGbNB+MA+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rROrbb+DrVvGUjFvwrKpssgbbc8FJZQWzOAes9tJSax7VLnvpdjfg/BG6Qf+M/vMi
-	 tH74Nb0L4COLOO+/H70rsQ9x03/U0f090h2K4FkYd79LcK8u6hCu21TV5qxtOgRQOD
-	 HEaybc51ksFAZMW92SFbbureugmC4D95F1nx9gDo=
+	by mail.kernel.org (Postfix) with ESMTP id 8409E2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfGBSBS (ORCPT
+        id S1727047AbfGBSCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38876 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 14:02:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50968 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfGBSBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:01:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726329AbfGBSCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:02:18 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15CF21721;
-        Tue,  2 Jul 2019 18:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562090476;
-        bh=kIyxmE2Mr1IyGzQ4fVM/a6nCRCw2PNXuUwGbNB+MA+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OaeHKq6Ue8uNfTzlxnZXXbihytg9QMqaUnI2S2DhsYTgdm9nOjREh0s1HoBp1xDlO
-         jMLz038dAIeYfukbzvZ+QbDEhd/+8PpFGdtXSlH3SQhtX6cp5uij9hy/245ylau6iA
-         Xi1Fyx+Rl6dX3GqKOxvYfoiCMYlh66VMbaFM4s7U=
-Date:   Tue, 2 Jul 2019 13:01:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Neftin, Sasha" <sasha.neftin@intel.com>,
-        jeffrey.t.kirsher@intel.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        intel-wired-lan@lists.osuosl.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: RX CRC errors on I219-V (6) 8086:15be
-Message-ID: <20190702180112.GB128603@google.com>
-References: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
- <3975473C-B117-4DC6-809A-6623A5A478BF@canonical.com>
- <ed4eca8e-d393-91d7-5d2f-97d42e0b75cb@intel.com>
- <1804A45E-71B5-4C41-839C-AF0CFAD0D785@canonical.com>
- <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id B10E687620;
+        Tue,  2 Jul 2019 18:02:18 +0000 (UTC)
+Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 644741799F;
+        Tue,  2 Jul 2019 18:02:18 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 12:02:17 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <kwankhede@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>
+Subject: Re: [PATCH -next] sample/mdev/mbochs: remove set but not used
+ variable 'mdev_state'
+Message-ID: <20190702120217.51ca4dfa@x1.home>
+In-Reply-To: <20190525135349.16488-1-yuehaibing@huawei.com>
+References: <20190525135349.16488-1-yuehaibing@huawei.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E29A2CD2-1632-4575-9910-0808BD15F4D3@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 02 Jul 2019 18:02:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 04:25:59PM +0800, Kai Heng Feng wrote:
-> +linux-pci
-> 
-> Hi Sasha,
-> 
-> at 6:49 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> > at 14:26, Neftin, Sasha <sasha.neftin@intel.com> wrote:
-> > 
-> > > On 6/26/2019 09:14, Kai Heng Feng wrote:
-> > > > Hi Sasha
-> > > > at 5:09 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> > > > > Hi Jeffrey,
-> > > > > 
-> > > > > We’ve encountered another issue, which causes multiple CRC
-> > > > > errors and renders ethernet completely useless, here’s the
-> > > > > network stats:
-> > > > I also tried ignore_ltr for this issue, seems like it alleviates
-> > > > the symptom a bit for a while, then the network still becomes
-> > > > useless after some usage.
-> > > > And yes, it’s also a Whiskey Lake platform. What’s the next step
-> > > > to debug this problem?
-> > > > Kai-Heng
-> > > CRC errors not related to the LTR. Please, try to disable the ME on
-> > > your platform. Hope you have this option in BIOS. Another way is to
-> > > contact your PC vendor and ask to provide NVM without ME. Let's
-> > > start debugging with these steps.
-> > 
-> > According to ODM, the ME can be physically disabled by a jumper.
-> > But after disabling the ME the same issue can still be observed.
-> 
-> We’ve found that this issue doesn’t happen to SATA SSD, it only happens when
-> NVMe SSD is in use.
-> 
-> Here are the steps:
-> - Disable NVMe ASPM, issue persists
-> - modprobe -r e1000e && modprobe e1000e, issue doesn’t happen
-> - Enabling NVMe ASPM, issue doesn’t happen
-> 
-> As long as NVMe ASPM gets enabled after e1000e gets loaded, the issue
-> doesn’t happen.
+On Sat, 25 May 2019 21:53:49 +0800
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-IIUC the problem happens with the mainline and dev-queue e1000e
-driver, but not with the out-of-tree Intel driver.  Since there is a
-working driver and there's the potential (at least in principle) for
-unifying them or bisecting between them, I have limited interest in
-debugging it from scratch.
-
-If it turns out to be a PCI core problem, I would want to know: What's
-the PCI topology?  "lspci -vv" output for the system?  Does it make a
-difference if you boot with "pcie_aspm=off"?  Collect complete dmesg,
-maybe attach it to a kernel.org bugzilla?
-
-> > > > > /sys/class/net/eno1/statistics$ grep . *
-> > > > > collisions:0
-> > > > > multicast:95
-> > > > > rx_bytes:1499851
-> > > > > rx_compressed:0
-> > > > > rx_crc_errors:1165
-> > > > > rx_dropped:0
-> > > > > rx_errors:2330
-> > > > > rx_fifo_errors:0
-> > > > > rx_frame_errors:0
-> > > > > rx_length_errors:0
-> > > > > rx_missed_errors:0
-> > > > > rx_nohandler:0
-> > > > > rx_over_errors:0
-> > > > > rx_packets:4789
-> > > > > tx_aborted_errors:0
-> > > > > tx_bytes:864312
-> > > > > tx_carrier_errors:0
-> > > > > tx_compressed:0
-> > > > > tx_dropped:0
-> > > > > tx_errors:0
-> > > > > tx_fifo_errors:0
-> > > > > tx_heartbeat_errors:0
-> > > > > tx_packets:7370
-> > > > > tx_window_errors:0
-> > > > > 
-> > > > > Same behavior can be observed on both mainline kernel and on
-> > > > > your dev-queue branch.
-> > > > > OTOH, the same issue can’t be observed on out-of-tree e1000e.
-> > > > > 
-> > > > > Is there any plan to close the gap between upstream and
-> > > > > out-of-tree version?
-> > > > > 
-> > > > > Kai-Heng
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
+> samples/vfio-mdev/mbochs.c: In function mbochs_ioctl:
+> samples/vfio-mdev/mbochs.c:1188:21: warning: variable mdev_state set but not used [-Wunused-but-set-variable]
 > 
+> It's not used any more since commit 104c7405a64d ("vfio:
+> add edid support to mbochs sample driver")
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  samples/vfio-mdev/mbochs.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+> index b038aa9f5a70..ac5c8c17b1ff 100644
+> --- a/samples/vfio-mdev/mbochs.c
+> +++ b/samples/vfio-mdev/mbochs.c
+> @@ -1185,9 +1185,6 @@ static long mbochs_ioctl(struct mdev_device *mdev, unsigned int cmd,
+>  {
+>  	int ret = 0;
+>  	unsigned long minsz, outsz;
+> -	struct mdev_state *mdev_state;
+> -
+> -	mdev_state = mdev_get_drvdata(mdev);
+>  
+>  	switch (cmd) {
+>  	case VFIO_DEVICE_GET_INFO:
+
+Applied to vfio next branch for 5.3.  Thanks!
+
+Alex
