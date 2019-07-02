@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37386C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344F5C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1067A2183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40BB206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034532;
-	bh=SVHrSuTCIkahwVIAj1H0N9C+8dYexVa3WKpcDqapCBk=;
+	s=default; t=1562034547;
+	bh=VxXLcuX2g5OoRfNrCUAXFT4E0SI6ydIeu4vtBMqTUuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iw0mfg2VYzNPkL3MfwGCFpHlqkatGqmEuUKc9PbIBk4+c7lbtUPMEWVSnB5hDlr4F
-	 YSUzvH8E4x4Lgf9rNJk771z0m6H/N4sXJdnx3Y92v0xhhRIy0dTdKMpD8CJ/XATIjT
-	 z5aqNKYuVK4UmvdFG8LgVqDQDK3UCyN7awLs4FFw=
+	b=Gfs7O2gZlaSXnnCt2Hl8eT1d2xjWDz8MJjy8HPjfSHzM76rM3iGIdoj9hIRyOhRlI
+	 K6WkxTSVfzISHRT52RnZqzNDvDgnda1kd/F6NWPzXfSUud2b9TxsiO3DOcMRwPopSK
+	 7J0F9S1k9a2dxnAJ26TTAFS3fcOh0b8SnlD6QhOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfGBC2u (ORCPT
+        id S1726984AbfGBC1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41172 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbfGBC2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:28:47 -0400
+        id S1727415AbfGBC1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:27:32 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 643E921855;
-        Tue,  2 Jul 2019 02:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A422173E;
+        Tue,  2 Jul 2019 02:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034526;
-        bh=SVHrSuTCIkahwVIAj1H0N9C+8dYexVa3WKpcDqapCBk=;
+        s=default; t=1562034451;
+        bh=VxXLcuX2g5OoRfNrCUAXFT4E0SI6ydIeu4vtBMqTUuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5ZQ8SMC9K9eryZLUHyN9/y2JXcIoP04OqBr2vsEc0aX824EBpyvsa98RRBPyDdjR
-         FVAACjEAOBLTyYeWoYOhxQc+8TvCaXm5HHP/EMzdW2UDwOKabaUOsff2McdB+GD50V
-         gcivqWB875jC0hm10P8iH3YS7ib+bEijrKBYG0LI=
+        b=A+f0EIQm0VN6+15pKZQSsEDFkNT7Yb3YNr5YhQUUCuUKZ5LBmECYejJLGONdH/2g8
+         xEksE2OJZkjMzs1qal9KmLTrWEQhIO2Vy3MvFESzXYYZiQLMXKH9EbzXMtkwNbt6xX
+         5AfDYtn2k/XJZhrHPooq3YRNFhCiKUS8PhRQcs4g=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Luke Mujica <lukemujica@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 43/43] perf jevents: Use nonlocal include statements in pmu-events.c
-Date:   Mon,  1 Jul 2019 23:26:16 -0300
-Message-Id: <20190702022616.1259-44-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 22/43] perf tools: Use linux/ctype.h in more places
+Date:   Mon,  1 Jul 2019 23:25:55 -0300
+Message-Id: <20190702022616.1259-23-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -63,48 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Mujica <lukemujica@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Change pmu-events.c to not use local include statements. The code that
-creates the include statements for pmu-events.c is in jevents.c.
+There were a few places where we still were using the libc version of
+ctype.h, switch to the one in tools/lib/ctype.c that the rest of perf
+uses.
 
-pmu-events.c is a generated file, and for build systems that put
-generated files in a separate directory, include statements with local
-pathing cannot find non-generated files.
-
-Signed-off-by: Luke Mujica <lukemujica@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: https://lkml.kernel.org/n/tip-prgnwmaoo1pv9zz4vnv1bjaj@git.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-wa4nz4kt61eze88eprk20tfd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/s390/util/header.c | 2 +-
+ tools/perf/util/metricgroup.c      | 2 +-
+ tools/perf/util/time-utils.c       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 58f77fd0f59f..a1184ea64cc6 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -841,7 +841,7 @@ static void create_empty_mapping(const char *output_file)
- 		_Exit(1);
- 	}
+diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
+index 3db85cd2069e..a25896135abe 100644
+--- a/tools/perf/arch/s390/util/header.c
++++ b/tools/perf/arch/s390/util/header.c
+@@ -11,7 +11,7 @@
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <ctype.h>
++#include <linux/ctype.h>
  
--	fprintf(outfp, "#include \"../../pmu-events/pmu-events.h\"\n");
-+	fprintf(outfp, "#include \"pmu-events/pmu-events.h\"\n");
- 	print_mapping_table_prefix(outfp);
- 	print_mapping_table_suffix(outfp);
- 	fclose(outfp);
-@@ -1096,7 +1096,7 @@ int main(int argc, char *argv[])
- 	}
+ #include "../../util/header.h"
+ #include "../../util/util.h"
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 699e020737d9..a0cf3cd95ced 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -17,7 +17,7 @@
+ #include "pmu-events/pmu-events.h"
+ #include "strlist.h"
+ #include <assert.h>
+-#include <ctype.h>
++#include <linux/ctype.h>
  
- 	/* Include pmu-events.h first */
--	fprintf(eventsfp, "#include \"../../pmu-events/pmu-events.h\"\n");
-+	fprintf(eventsfp, "#include \"pmu-events/pmu-events.h\"\n");
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct perf_evsel *evsel,
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 2b48816a2d2e..369fa19dd596 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -7,7 +7,7 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <math.h>
+-#include <ctype.h>
++#include <linux/ctype.h>
  
- 	/*
- 	 * The mapfile allows multiple CPUids to point to the same JSON file,
+ #include "perf.h"
+ #include "debug.h"
 -- 
 2.20.1
 
