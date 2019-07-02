@@ -2,61 +2,61 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F2EC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D43C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AF621479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2C920989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/SfDAFX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYevnwo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGBPog (ORCPT
+        id S1727091AbfGBPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:44:36 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:35926 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGBPof (ORCPT
+        Tue, 2 Jul 2019 11:44:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37159 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGBPoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:44:35 -0400
-Received: by mail-qk1-f175.google.com with SMTP id g18so14488659qkl.3;
-        Tue, 02 Jul 2019 08:44:34 -0700 (PDT)
+        Tue, 2 Jul 2019 11:44:39 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d15so14461675qkl.4;
+        Tue, 02 Jul 2019 08:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0SNIqZ1eXNTXTiBWnYdzokV/6s0LphXPV28wgFgO7+Y=;
-        b=A/SfDAFXG8B33NLAuR2aHJKfJq4Yy7L2nviUpcX6L2uRGij6Mq2/MxO7ekS9lkxJ1X
-         e1S7zhlW85oULhG1Dfxve8SFAOlLmOGKCkEfOJ9efMIUlS7JC5S1XOhhToUtbZugfnfP
-         q+vSwNgnRZTFRjkg+B3LXhmTWckczqo0qf7A1iiV33mCAnUWdonnm/dQc4trsf9lzEyS
-         M4KmtaNo6J9m3X2NP++/fVQX4pIwZ/9msZdflOc9RmJoHoksAXDDxYx8B+cBYMXwMkXf
-         Pi1RF8ffg6LSphQ6nPrFZoFMGq4a9bPJ+5h+iYhVMCA5cQwi2A67s8YGsQwRH1PuDmmr
-         LXtA==
+        bh=6ZJiwvjj9fDU7DxrMr8mtf6HfgbC93nAUMw1oRC2Lt8=;
+        b=LYevnwo9WIJp9bSgzwfX1XVlrHKir2ZZbBVAhgC8ARt7UfjEV6pcO+SvaWmSCTHbH3
+         KvIEGJCBFdsSasKCW3x5UxJIsdoIgNVHXLO1PqJH+KGPq2bqPiWht+fUtFs7gQkvFH+t
+         z5DfYAy5Ma2FH8PjBSw5xJDghjfQQij+Yt7uOhCGl9UTjnL2yazo269ojRjYer/lpSgo
+         RUdg5FlInIPuWgVTtvFjiD7DxwVFweVH4ASaa1ILfT2tbyQY23cM0/BdH3MOzFLdY4Mc
+         SlM9DZcwMFhPvHAALkb7CTE4F1Zh8Oj6e6pTJF3bBV0szrCGA43l5Gpi7moK1YzH0EIa
+         m1pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0SNIqZ1eXNTXTiBWnYdzokV/6s0LphXPV28wgFgO7+Y=;
-        b=rp3lu7yGJcVPku590YZvUiCW/nHnR/UBcVbilQ7MGFAq8fSnbCsGNo/jXIrZiiRGfu
-         Q55nNDJyhXIQ3izLsM9oNviIfwlcRc5G77ZqS6Ajwa6n/dL6smbQpKDg1hGe+uucG50L
-         PdiaASIq88DQjSo6iMNhiE78KSNOXd8n6KokgwV0tbi8NmDMsFMD5ZvISSmeWFnge7tZ
-         hXhO/qqpAAG0LU6JO6QAEWNkSQsPgFuQZHj+ais46EfY+CGOiFZmfRp7hIbRFPohJheq
-         jr2eAsSenbPSFuRIuy0KJ6wGPYmbH3q2QeW7JIS3EmYsHLd4h2vlXoE/wYv1DMxcDRv5
-         YEug==
-X-Gm-Message-State: APjAAAXlOHF+bSUV2k13Z6svLTjQLd2axclLntp+eHtBfGrc7M9idsFM
-        NQvjw6YBSVXXIwSrJHaRl74Nhun67z8=
-X-Google-Smtp-Source: APXvYqy/DQiaFs1LsX0WgEbqxRdbnX6EGJXOOnXyMa0gYPhm28oRBjSKtRB4pJgIl/8V5uuGMGyMYg==
-X-Received: by 2002:a37:8741:: with SMTP id j62mr23578387qkd.78.1562082274356;
-        Tue, 02 Jul 2019 08:44:34 -0700 (PDT)
+        bh=6ZJiwvjj9fDU7DxrMr8mtf6HfgbC93nAUMw1oRC2Lt8=;
+        b=hjYTSvhH3pOpLxYBbpSbBT/2cu9hcp7yYFCMHhinKCg7h4Ih5uw8tDOZrbqd87jMpc
+         rjKsVG6L0gPY/2303kVg19IEt/V0TeUyh15W4G5BiN5+/JkLTxqZ9MG3WWcyJFcG4oLL
+         VTzOndGy7KZ40eeaJBQY982CSLc1+Eol3OpWlR36zQGB7N5tYyAd4n3So1gWY+DJL91w
+         s/AW1eUh2DpcvpaZKNOcCWCg3W54D3mZDlfTiBFlfLv81PdrrsU17M7kzFLeNMwQPJwT
+         YhqWuM0Wiroz5ifHLixrcMYetiWz+JIGiPMfgnB6iWOE4izCIPKi/WH6LqLFHHudu4hS
+         btww==
+X-Gm-Message-State: APjAAAXiE1qlnyZU9QHy0cbjPH3CSSd9AMTLFkvaefqMWsfWdFEeWZzY
+        /YS59/bI8rDnwhOlH/tF7L8=
+X-Google-Smtp-Source: APXvYqzAZEkKpxeLcmDK75ZZ0trIM1JgZgt6dDfwCEhn4ru6eHZ/guN/4ysKfZB6YaWdhI5TMDfnMw==
+X-Received: by 2002:a05:620a:10b2:: with SMTP id h18mr25786034qkk.14.1562082277651;
+        Tue, 02 Jul 2019 08:44:37 -0700 (PDT)
 Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id c192sm6389184qkg.33.2019.07.02.08.44.33
+        by smtp.gmail.com with ESMTPSA id z21sm5836582qto.48.2019.07.02.08.44.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 08:44:33 -0700 (PDT)
+        Tue, 02 Jul 2019 08:44:37 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
@@ -65,9 +65,9 @@ Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] drm/bridge: ti-sn65dsi86: add link to datasheet
-Date:   Tue,  2 Jul 2019 08:44:16 -0700
-Message-Id: <20190702154419.20812-2-robdclark@gmail.com>
+Subject: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
+Date:   Tue,  2 Jul 2019 08:44:17 -0700
+Message-Id: <20190702154419.20812-3-robdclark@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702154419.20812-1-robdclark@gmail.com>
 References: <20190702154419.20812-1-robdclark@gmail.com>
@@ -80,26 +80,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-The bridge has pretty good docs, lets add a link to make them easier to
-find.
+Add a debugfs file to show status registers.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index bcca9173c72a..f1a2493b86d9 100644
+index f1a2493b86d9..a6f27648c015 100644
 --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
 +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * datasheet: http://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
+@@ -5,6 +5,7 @@
   */
  
  #include <linux/clk.h>
++#include <linux/debugfs.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/iopoll.h>
+@@ -109,6 +110,7 @@ struct ti_sn_bridge {
+ 	struct drm_dp_aux		aux;
+ 	struct drm_bridge		bridge;
+ 	struct drm_connector		connector;
++	struct dentry			*debugfs;
+ 	struct device_node		*host_node;
+ 	struct mipi_dsi_device		*dsi;
+ 	struct clk			*refclk;
+@@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
+ };
+ 
++static int status_show(struct seq_file *s, void *data)
++{
++	struct ti_sn_bridge *pdata = s->private;
++	unsigned int reg, val;
++
++	seq_puts(s, "STATUS REGISTERS:\n");
++
++	pm_runtime_get_sync(pdata->dev);
++
++	/* IRQ Status Registers, see Table 31 in datasheet */
++	for (reg = 0xf0; reg <= 0xf8; reg++) {
++		regmap_read(pdata->regmap, reg, &val);
++		seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
++	}
++
++	pm_runtime_put(pdata->dev);
++
++	return 0;
++}
++
++DEFINE_SHOW_ATTRIBUTE(status);
++
++static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
++{
++	pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
++
++	debugfs_create_file("status", 0600, pdata->debugfs, pdata,
++			&status_fops);
++}
++
++static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
++{
++	debugfs_remove_recursive(pdata->debugfs);
++	pdata->debugfs = NULL;
++}
++
+ /* Connector funcs */
+ static struct ti_sn_bridge *
+ connector_to_ti_sn_bridge(struct drm_connector *connector)
+@@ -869,6 +907,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+ 
+ 	drm_bridge_add(&pdata->bridge);
+ 
++	ti_sn_debugfs_init(pdata);
++
+ 	return 0;
+ }
+ 
+@@ -879,6 +919,8 @@ static int ti_sn_bridge_remove(struct i2c_client *client)
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
++	ti_sn_debugfs_remove(pdata);
++
+ 	of_node_put(pdata->host_node);
+ 
+ 	pm_runtime_disable(pdata->dev);
 -- 
 2.20.1
 
