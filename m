@@ -2,128 +2,102 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCA5C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9672BC5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852E9206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FF820881
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfGBBq4 (ORCPT
+        id S1727034AbfGBBw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:46:56 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23456 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfGBBq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:46:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2019 18:46:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,441,1557212400"; 
-   d="scan'208";a="165505063"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Jul 2019 18:46:52 -0700
-Date:   Tue, 2 Jul 2019 09:57:17 +0800
-From:   Yu Chen <yu.c.chen@intel.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
-Message-ID: <20190702015717.GA20346@chenyu-office.sh.intel.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <20190702003740.75970-2-luzmaximilian@gmail.com>
- <20190702011443.GA19902@chenyu-office.sh.intel.com>
- <91349d00-e7e2-887b-45e5-4689a401aa2f@gmail.com>
- <d7e17f54-4c33-fa8d-be03-9e507da8e495@gmail.com>
+        Mon, 1 Jul 2019 21:52:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60266 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726486AbfGBBw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:52:26 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 290B0A9BBE054957DE66;
+        Tue,  2 Jul 2019 09:52:24 +0800 (CST)
+Received: from huawei.com (10.175.100.202) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 09:52:18 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
+        <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netfilter-devel@vger.kernel.org>,
+        <coreteam@netfilter.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linmiaohe@huawei.com>, <mingfangsen@huawei.com>
+Subject: [PATCH v5] net: netfilter: Fix rpfilter dropping vrf packets by mistake
+Date:   Tue, 2 Jul 2019 03:59:36 +0000
+Message-ID: <1562039976-203880-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7e17f54-4c33-fa8d-be03-9e507da8e495@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.175.100.202]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 03:33:20AM +0200, Maximilian Luz wrote:
-> On 7/2/19 3:25 AM, Maximilian Luz wrote:
-> > On 7/2/19 3:14 AM, Yu Chen wrote:
-> > > On Tue, Jul 02, 2019 at 02:37:39AM +0200, Maximilian Luz wrote:
-> > > > +/*
-> > > > + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-> > > > + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-> > > > + * device by checking for the _DSM method and OEM Platform Revision.
-> > > > + */
-> > > > +static int surface_button_check_MSHW0040(struct acpi_device *dev)
-> > > > +{
-> > > > +    acpi_handle handle = dev->handle;
-> > > > +    union acpi_object *result;
-> > > > +    u64 oem_platform_rev = 0;
-> > > > +
-> > > > +    // get OEM platform revision
-> > > > +    result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> > > > +                     MSHW0040_DSM_REVISION,
-> > > > +                     MSHW0040_DSM_GET_OMPR,
-> > > > +                     NULL, ACPI_TYPE_INTEGER);
-> > > > +
-> > > Does it mean, only 5th, 6th and newer platforms have OEM platform revision?
-> > > 3rd/4th will get NULL result? Or the opposite?
-> > 
-> > Correct, from my testing (with limited sample size) and AML code: 5th
-> > and 6th generation devices have a non-zero OEM platform revision,
-> > whereas 3rd and 4th gen. devices do not have any (i.e. result will be
-> > NULL).
-> > 
-> > > > +    if (result) {
-> > > > +        oem_platform_rev = result->integer.value;
-> > > > +        ACPI_FREE(result);
-> > > > +    }
-> > > > +
-> > > > +    dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> > > > +
-> > > > +    return oem_platform_rev == 0 ? 0 : -ENODEV;
-> > > if 3rd/4th do not have this oem rev information while 5th/newer have,
-> > > why the latter returns NODEV(it actually has this info)?
-> > 
-> > Since we always expect a non-zero platform revision (for 5th/6th gen.),
-> > we can initialize it to zero and use that as "unknown"/"not available".
-> > So if it can not be determined, we return NODEV.
-> 
-> Sorry, small mistake here: If it can be determined (i.e. is 5th or 6th
-> gen.) then we return NODEV. Not the other way around.
->
-How about using a boolean, according to the function name, if a mshw0040 revison
-is detected then returns true other wise false. Other than that,
-Acked-by: Chen Yu <yu.c.chen@intel.com>
+When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+ipv4/ipv6 packets will be dropped. Vrf device will pass
+through netfilter hook twice. One with enslaved device
+and another one with l3 master device. So in device may
+dismatch witch out device because out device is always
+enslaved device.So failed with the check of the rpfilter
+and drop the packets by mistake.
 
-Best,
-Chenyu
-> Also to clarify on your last question:
-> 
-> On 7/2/19 3:14 AM, Yu Chen wrote:
-> > >   static int surface_button_add(struct acpi_device *device)
-> > >   {
-> > >   	struct surface_button *button;
-> > > @@ -154,6 +188,10 @@ static int surface_button_add(struct acpi_device *device)
-> > >   	    strlen(SURFACE_BUTTON_OBJ_NAME)))
-> > >   		return -ENODEV;
-> > > +	error = surface_button_check_MSHW0040(device);
-> > > +	if (error)
-> > > +		return error;
-> > > +
-> > ditto, 3rd/4th get error=0?
-> 
-> You are correct.
-> 
-> Maximilian
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/netfilter/ipt_rpfilter.c  | 1 +
+ net/ipv6/netfilter/ip6t_rpfilter.c | 8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
+index 59031670b16a..cc23f1ce239c 100644
+--- a/net/ipv4/netfilter/ipt_rpfilter.c
++++ b/net/ipv4/netfilter/ipt_rpfilter.c
+@@ -78,6 +78,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+ 	flow.flowi4_tos = RT_TOS(iph->tos);
+ 	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
++	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+ 
+ 	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
+ }
+diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+index 6bcaf7357183..d800801a5dd2 100644
+--- a/net/ipv6/netfilter/ip6t_rpfilter.c
++++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+@@ -55,7 +55,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+ 	if (rpfilter_addr_linklocal(&iph->saddr)) {
+ 		lookup_flags |= RT6_LOOKUP_F_IFACE;
+ 		fl6.flowi6_oif = dev->ifindex;
+-	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
++	/* Set flowi6_oif for vrf devices to lookup route in l3mdev domain. */
++	} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev) ||
++		  (flags & XT_RPFILTER_LOOSE) == 0)
+ 		fl6.flowi6_oif = dev->ifindex;
+ 
+ 	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
+@@ -70,7 +72,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+ 		goto out;
+ 	}
+ 
+-	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
++	if (rt->rt6i_idev->dev == dev ||
++	    l3mdev_master_ifindex_rcu(rt->rt6i_idev->dev) == dev->ifindex ||
++	    (flags & XT_RPFILTER_LOOSE))
+ 		ret = true;
+  out:
+ 	ip6_rt_put(rt);
+-- 
+2.21.GIT
+
