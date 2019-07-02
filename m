@@ -2,59 +2,59 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE94C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26323C06514
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8871D20836
+	by mail.kernel.org (Postfix) with ESMTP id EA33620836
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g07M7EfA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjjisz9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGBKfL (ORCPT
+        id S1727257AbfGBKf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:35:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35778 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBKfK (ORCPT
+        Tue, 2 Jul 2019 06:35:27 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39409 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfGBKf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:35:10 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a127so12617977oii.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:10 -0700 (PDT)
+        Tue, 2 Jul 2019 06:35:26 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m202so12622160oig.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=utMbP5r99vkrLRwFC9XJUF/q6Xmj0kpzfxPbj/zmwoc=;
-        b=g07M7EfAimyBJUBTxRPreg/5uLOzsLgF+3r66hneNUCiDvvGk5WbVUCT/5bnUBY+wb
-         FYofzKOxyhyHecehXrTFZp66JEf6ROxWUQ5wu2s+QCMytOkRacbVx59muNBI6eDLNZpa
-         lnexdzYvCRMZQQHS0nzPHi9N/5iQCdz5m5FyE9VEXnXVl11RMplHf2yRET+rU7XTH5As
-         Wy97HMCtEc0ir9AQEiywnG/ejR25uR4vQuPE+R2b2XrppBnvm3nq3qKb6Np/8Av7daH/
-         NJZ9kpbNTrdJVQsVpvesG5D+brZpx2D9s7NMI4g0A3BDoy+T5Rk0y41vDwNsooeaUCFW
-         ZwWA==
+        bh=j8r6zV3IEktEeBidDu6w6MpwFi6YkkHS02O0zUC0bQU=;
+        b=Qjjisz9+e7yYwO6xLzJxQ9HbSJNib4eLc/3vLq48/xqqic/aAX4AvVAU/q5Zop1wmJ
+         XkmTke4IVTLDngJtze/ZkDjaA1QU2R2D/kHisk1UxjpNfhZtzV+/+629pPbm+Ug4uQB3
+         4FUiB7Cc9UYcJjXd+1RdHn98NgTgP+CyF3zfcn8HHtP4zbskHeNvhiTO+SBYh8XED2gK
+         tgRH9S+HRPx4neVupbgOI+Jf8yoEA/nT9Hu9YsNGYeST0SZxaf7/1ytrlD2AQQgeCoI8
+         QHpmQwLSW44gvSGD2fR7zcUfA5vt3FIfsqKNmFUkJO+2QCNdtXC1KzICntwRsWO7lm+s
+         l/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=utMbP5r99vkrLRwFC9XJUF/q6Xmj0kpzfxPbj/zmwoc=;
-        b=IwNfer62tqDFk1Hvlr/OrFxXEKNnNniFp1KEijs7OEN0727JcPkgZIAZDfiDMpDlfT
-         VyEZJbaJbBAqlcrFE0moxnhTtTna6am9QhUAnTRftzo8dj2U+70IcVTynW0/3FR5XROj
-         6juP21uoeXpFBBrtPYhbo45PQkYljO0yqUPCsUHwiJ1m6Va433EmStU1vwP+MPyupOyp
-         zz5TA3Ybv24kAuVXw4DbL04jmbEAwBf2h1pA88PIzP2MaEdypf1Sm/oMiy+5iLdsN7QA
-         Y3y1OpQDpVXf4CbJAi+/9PDW6pRUV56W+RZCVpA/eXi7M0ADkS7ggcY2n5F4p68fXGVx
-         XdEA==
-X-Gm-Message-State: APjAAAVSzzZYf0rjXghSKzLNik1AtCkRtrR76atbPv3wOU3CP36wlb1o
-        /i1RbBGBMkMqPFF869uTcK01JQ==
-X-Google-Smtp-Source: APXvYqz27DHhsloV2s8JFprH1yJgfKfeYbRlyI8A/LXKmBzUKXKTnkrUL+uycpLRiZ2UmcR06WtYkA==
-X-Received: by 2002:aca:338b:: with SMTP id z133mr2465469oiz.97.1562063709968;
-        Tue, 02 Jul 2019 03:35:09 -0700 (PDT)
+        bh=j8r6zV3IEktEeBidDu6w6MpwFi6YkkHS02O0zUC0bQU=;
+        b=ZhWtOEMWNsZTy66YnUSfM+vSeMkQXQjREusRvBKXrlKSlM7PydkH7stkzRWGpHjlu6
+         +7g15x+rVWqM9g2NTLSmhkb4CCf4loZuaoTgionVeck7M/udDy2d+kLYpl1DyxW5zitj
+         UXu1kk3ZyfZYm0bqQS3WqXiuGsVJDYPY3rDbWo1AHn5dLa8cVrmvWrwAER7lVEg8IbW5
+         ZY5C2pwQ/12IgsXwczUmnPErCeckrehAWew+Q6ssMGA+EOFyOBABGsRozwf13er4CQ7v
+         3su9rsdqFLSZwngaZgU8unFEN0dJCjMJcZ1b26WOxXRT2OUM7ug81+RV0gAWm3rmMT/1
+         uQuw==
+X-Gm-Message-State: APjAAAW+W/IL6PLOMra5UOi3pBe66ryje61/6yJPjlMFjp5bxpz3xVrp
+        m9YUWwaYwUOFkiuIkqh6zXoiKg==
+X-Google-Smtp-Source: APXvYqxFBE3kxigBHHifCwiRVBNPGG9/R+BcMI2vSqv/pA1AkddGPDPye+08h6Sn5ZFJoOKfqS3Zvg==
+X-Received: by 2002:a54:4615:: with SMTP id p21mr2435033oip.22.1562063726111;
+        Tue, 02 Jul 2019 03:35:26 -0700 (PDT)
 Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.02
+        by smtp.gmail.com with ESMTPSA id 61sm5139805otx.8.2019.07.02.03.35.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 03:35:09 -0700 (PDT)
+        Tue, 02 Jul 2019 03:35:25 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -80,9 +80,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 03/11] perf top: Smatch: Fix potential NULL pointer dereference
-Date:   Tue,  2 Jul 2019 18:34:12 +0800
-Message-Id: <20190702103420.27540-4-leo.yan@linaro.org>
+Subject: [PATCH v1 05/11] perf trace: Smatch: Fix potential NULL pointer dereference
+Date:   Tue,  2 Jul 2019 18:34:14 +0800
+Message-Id: <20190702103420.27540-6-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190702103420.27540-1-leo.yan@linaro.org>
 References: <20190702103420.27540-1-leo.yan@linaro.org>
@@ -94,74 +94,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Based on the following report from Smatch, fix the potential
 NULL pointer dereference check.
 
-  tools/perf/builtin-top.c:109
-  perf_top__parse_source() warn: variable dereferenced before check 'he'
-  (see line 103)
+  tools/perf/builtin-trace.c:1044
+  thread_trace__new() error: we previously assumed 'ttrace' could be
+  null (see line 1041).
 
-  tools/perf/builtin-top.c:233
-  perf_top__show_details() warn: variable dereferenced before check 'he'
-  (see line 228)
+tools/perf/builtin-trace.c
+1037 static struct thread_trace *thread_trace__new(void)
+1038 {
+1039         struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+1040
+1041         if (ttrace)
+1042                 ttrace->files.max = -1;
+1043
+1044         ttrace->syscall_stats = intlist__new(NULL);
+             ^^^^^^^^
+1045
+1046         return ttrace;
+1047 }
 
-tools/perf/builtin-top.c
-101 static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
-102 {
-103         struct perf_evsel *evsel = hists_to_evsel(he->hists);
-                                                      ^^^^
-104         struct symbol *sym;
-105         struct annotation *notes;
-106         struct map *map;
-107         int err = -1;
-108
-109         if (!he || !he->ms.sym)
-110                 return -1;
-
-This patch moves the values assignment after validating pointer 'he'.
+This patch directly returns NULL when fail to allocate memory for
+ttrace; this can avoid potential NULL pointer dereference.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-top.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 12b6b15a9675..13234c322981 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -100,7 +100,7 @@ static void perf_top__resize(struct perf_top *top)
- 
- static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index f3532b081b31..874d78890c60 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1038,9 +1038,10 @@ static struct thread_trace *thread_trace__new(void)
  {
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct symbol *sym;
- 	struct annotation *notes;
- 	struct map *map;
-@@ -109,6 +109,8 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	if (!he || !he->ms.sym)
- 		return -1;
+ 	struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
  
-+	evsel = hists_to_evsel(he->hists);
-+
- 	sym = he->ms.sym;
- 	map = he->ms.map;
+-	if (ttrace)
+-		ttrace->files.max = -1;
++	if (ttrace == NULL)
++		return NULL;
  
-@@ -225,7 +227,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- static void perf_top__show_details(struct perf_top *top)
- {
- 	struct hist_entry *he = top->sym_filter_entry;
--	struct perf_evsel *evsel = hists_to_evsel(he->hists);
-+	struct perf_evsel *evsel;
- 	struct annotation *notes;
- 	struct symbol *symbol;
- 	int more;
-@@ -233,6 +235,8 @@ static void perf_top__show_details(struct perf_top *top)
- 	if (!he)
- 		return;
++	ttrace->files.max = -1;
+ 	ttrace->syscall_stats = intlist__new(NULL);
  
-+	evsel = hists_to_evsel(he->hists);
-+
- 	symbol = he->ms.sym;
- 	notes = symbol__annotation(symbol);
- 
+ 	return ttrace;
 -- 
 2.17.1
 
