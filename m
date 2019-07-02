@@ -2,75 +2,118 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0197C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F3CC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AD821473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C238821473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfGBNgw (ORCPT
+        id S1727033AbfGBNhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:36:52 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8124 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725922AbfGBNgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:36:52 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DB60EDE77D56B9011FC;
-        Tue,  2 Jul 2019 21:36:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 21:36:40 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
-        <faiz_abbas@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] mmc: sdhci_am654: Add dependency on MMC_SDHCI_AM654
-Date:   Tue, 2 Jul 2019 21:36:31 +0800
-Message-ID: <20190702133631.47760-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 2 Jul 2019 09:37:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58050 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfGBNhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:37:38 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 049C1A96F1;
+        Tue,  2 Jul 2019 13:37:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ACB417966;
+        Tue,  2 Jul 2019 13:37:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <0000000000004c2416058c594b30@google.com>
+References: <0000000000004c2416058c594b30@google.com>
+To:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        ebiggers@kernel.org
+Cc:     dhowells@redhat.com, davem@davemloft.net,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <24281.1562074644.1@warthog.procyon.org.uk>
+Date:   Tue, 02 Jul 2019 14:37:24 +0100
+Message-ID: <24282.1562074644@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 02 Jul 2019 13:37:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build error:
+syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com> wrote:
 
-drivers/mmc/host/sdhci_am654.o: In function `sdhci_am654_probe':
-drivers/mmc/host/sdhci_am654.c:464: undefined reference to `__devm_regmap_init_mmio_clk'
-drivers/mmc/host/sdhci_am654.o:(.debug_addr+0x3f8): undefined reference to `__devm_regmap_init_mmio_clk'
+I *think* the reproducer boils down to the attached, but I can't get syzkaller
+to work and the attached sample does not cause the oops to occur.  Can you try
+it in your environment?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: aff88ff23512 ("mmc: sdhci_am654: Add Initial Support for AM654 SDHCI driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> The bug was bisected to:
+> 
+> commit 46894a13599a977ac35411b536fb3e0b2feefa95
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Thu Oct 4 08:32:28 2018 +0000
+> 
+>     rxrpc: Use IPv4 addresses throught the IPv6
+
+This might not be the correct bisection point.  If you look at the attached
+sample, you're mixing AF_INET and AF_INET6.  If you try AF_INET throughout,
+that might get a different point.  On the other hand, since you've bound the
+socket, the AF_INET6 passed to socket() should be ignored.
+
+David
 ---
- drivers/mmc/host/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <linux/rxrpc.h>
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 931770f..14d89a1 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -996,7 +996,7 @@ config MMC_SDHCI_OMAP
- 
- config MMC_SDHCI_AM654
- 	tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
--	depends on MMC_SDHCI_PLTFM && OF
-+	depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
- 	select MMC_SDHCI_IO_ACCESSORS
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
--- 
-2.7.4
+static const unsigned char inet4_addr[4] = {
+	0xe0, 0x00, 0x00, 0x01
+};
 
+int main(void)
+{
+	struct sockaddr_rxrpc srx;
+	int fd;
 
+	memset(&srx, 0, sizeof(srx));
+	srx.srx_family			= AF_RXRPC;
+	srx.srx_service			= 0;
+	srx.transport_type		= AF_INET;
+	srx.transport_len		= sizeof(srx.transport.sin);
+	srx.transport.sin.sin_family	= AF_INET;
+	srx.transport.sin.sin_port	= htons(0x4e21);
+	memcpy(&srx.transport.sin.sin_addr, inet4_addr, 4);
+
+	fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
+	if (fd == -1) {
+		perror("socket");
+		exit(1);
+	}
+
+	if (bind(fd, (struct sockaddr *)&srx, sizeof(srx)) == -1) {
+		perror("bind");
+		exit(1);
+	}
+
+	sleep(20);
+
+	// Whilst sleeping, hit with:
+	// echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only 224.0.0.1 20001
+	
+	return 0;
+}
