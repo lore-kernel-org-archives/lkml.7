@@ -2,117 +2,101 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC3C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711B9C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B281220836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F7720836
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:35:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXpjKC1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfGBIfR (ORCPT
+        id S1726830AbfGBIfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:35:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:56562 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbfGBIfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:35:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 01:35:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,442,1557212400"; 
-   d="scan'208";a="163948244"
-Received: from xpf-desktop.sh.intel.com (HELO xpf-desktop) ([10.239.13.102])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Jul 2019 01:35:14 -0700
-Date:   Tue, 2 Jul 2019 16:40:18 +0800
-From:   Pengfei Xu <pengfei.xu@intel.com>
-To:     Li Wang <liwang@redhat.com>
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, tglx@linutronix.de,
-        kernellwp@gmail.com, ricardo.neri@intel.com,
-        LTP List <ltp@lists.linux.it>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ping Fang <pifang@redhat.com>
-Subject: Re: [Kernel BUG?] SMSW operation get success on UMIP KVM guest
-Message-ID: <20190702084018.tnwefzqzar3xiaww@xpf-desktop>
-References: <CAEemH2cg01cdz=amrCWU00Xof9+cxmfR_DqCBaQe36QoGsakmA@mail.gmail.com>
- <5622c0ac-236f-4e3e-a132-c8d3bd8fadc4@redhat.com>
- <CAEemH2fqMpoiBo+asyawHsOWgdXy-ggV0mwQs9A9EJ1kh=uhAA@mail.gmail.com>
- <20190701160352.GA19921@ranerica-svr.sc.intel.com>
- <CAEemH2fR98TBHaOM37aGmzbgdZ_XPokJeUNN6dU1r=1WhOSmEw@mail.gmail.com>
+        Tue, 2 Jul 2019 04:35:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44532 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGBIfn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:35:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fzuDJRp1GS1NXqeYiBlRbpLNKor0YyYTWdJKqC2k2W8=; b=PXpjKC1L/ZQH0U3MH0ew5Q0iK
+        os1DO7nXa0YF3DvR3UAKHdnl5aSdcQuyZXCfpwrLiluTdN8qF8R8OYhWM4OF7PHHM6X7K90YzsLOQ
+        YXKR2fbV0djPsUSJcC4KrRu8ZQ1Yyvg0anITTN4hJbUs6Hx80Pefga6eWGjv+BhBhcykOKFaYJWO6
+        rwAPWEprtgnH7zHRSyJ9YdVWyHLhepjeBsd0Jc2voDAyv5iWnYRj2N23jcuIwLypT/ibnvz7Qdqp6
+        XaqEW5IK/ZYFc37G3Zrzd7VNsGSAC1tLvI2Kwqu6/eMVbh4qYrTf7ojQCdmXINo4fMxZjkVU2kPN3
+        axIs56tHg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiEG0-0005ZG-5y; Tue, 02 Jul 2019 08:35:20 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8063F20ADAD55; Tue,  2 Jul 2019 10:35:17 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 10:35:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        quentin.perret@linaro.org, chris.redpath@arm.com,
+        steven.sistare@oracle.com, songliubraving@fb.com
+Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle
+ CPU isn't found
+Message-ID: <20190702083517.GY3419@hirez.programming.kicks-ass.net>
+References: <cover.1561523542.git.viresh.kumar@linaro.org>
+ <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
+ <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
+ <20190701080349.homlsgia4fuaitek@vireshk-i7>
+ <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEemH2fR98TBHaOM37aGmzbgdZ_XPokJeUNN6dU1r=1WhOSmEw@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seems no issue now.
+On Mon, Jul 01, 2019 at 03:08:41PM -0700, Subhra Mazumdar wrote:
+> On 7/1/19 1:03 AM, Viresh Kumar wrote:
+> > On 28-06-19, 18:16, Subhra Mazumdar wrote:
+> > > On 6/25/19 10:06 PM, Viresh Kumar wrote:
 
-Thanks all.
+> > > > @@ -5376,6 +5376,15 @@ static struct {
+> > > >    #endif /* CONFIG_NO_HZ_COMMON */
+> > > > +/* CPU only has SCHED_IDLE tasks enqueued */
+> > > > +static int sched_idle_cpu(int cpu)
+> > > > +{
+> > > > +	struct rq *rq = cpu_rq(cpu);
+> > > > +
+> > > > +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
+> > > > +			rq->nr_running);
+> > > > +}
+> > > > +
+> > > Shouldn't this check if rq->curr is also sched idle?
+> > Why wouldn't the current set of checks be enough to guarantee that ?
+> I thought nr_running does not include the on-cpu thread.
 
-On 2019-07-02 at 09:52:39 +0800, Li Wang wrote:
-> On Tue, Jul 2, 2019 at 12:04 AM Ricardo Neri <
-> ricardo.neri-calderon@linux.intel.com> wrote:
-> 
-> > On Mon, Jul 01, 2019 at 08:57:28PM +0800, Li Wang wrote:
-> > > On Mon, Jul 1, 2019 at 8:02 PM Paolo Bonzini <pbonzini@redhat.com>
-> > wrote:
-> > >
-> > > > On 01/07/19 09:50, Li Wang wrote:
-> > > > > Hello there,
-> > > > >
-> > > > > LTP/umip_basic_test get failed on KVM UMIP
-> > > > > system(kernel-v5.2-rc4.x86_64). The test is only trying to do
-> > > > >      asm volatile("smsw %0\n" : "=m" (val));
-> > > > > and expect to get SIGSEGV in this SMSW operation, but it exits with 0
-> > > > > unexpectedly.
-> > > >
-> > > > In addition to what Thomas said, perhaps you are using a host that does
-> > > > *not* have UMIP, and configuring KVM to emulate it(*).  In that case,
-> > it
-> > > > is not possible to intercept SMSW, and therefore it will incorrectly
-> > > > succeed.
-> > > >
-> > >
-> > > Right, I checked the host system, and confirmed that CPU doesn't support
-> > > UMIP.
-> > >
-> > > >
-> > > > Paolo
-> > > >
-> > > > (*) before the x86 people jump at me, this won't happen unless you
-> > > > explicitly pass an option to QEMU, such as "-cpu host,+umip". :)  The
-> > > > incorrect emulation of SMSW when CR4.UMIP=1 is why.
-> > > >
-> > > Good to know this, is there any document for that declaration? It seems
-> > > neither LTP issue nor kernel bug here. But anyway we'd better do
-> > something
-> > > to avoid the error in the test.
-> >
-> > The test case already checks for umip in /proc/cpuinfo, right? And in
-> > long mode it always expects a SIGSEGV signal. If you did not add -cpu
-> > host,+umip,
-> > how come umip was present in /proc/cpuinfo?
-> >
-> 
-> Yes, right.
-> 
-> But the KVM guest is not customized in manual, I reserved that system for
-> automation test and did not aware of the '-cpu host,+umip,' parameter until
-> Paolo points it out. In the last email, I was hoping to find a way to
-> recognize this situation for the LTP test intelligently.
-> 
-> Thank you all for a reply to this.
-> 
-> -- 
-> Regards,
-> Li Wang
+It very much does.
+
+> > > And why not drop the rq->nr_running non zero check?
+> > Because CPU isn't sched-idle if nr_running and idle_h_nr_running are both 0,
+> > i.e. it is an IDLE cpu in that case. And so I thought it is important to have
+> > this check as well.
+> > 
+> idle_cpu() not only checks nr_running is 0 but also rq->curr == rq->idle
+
+idle_cpu() will try very hard to declare a CPU !idle. But I don't see
+how that it relevant. sched_idle_cpu() will only return true if there
+are only SCHED_IDLE tasks on the CPU. Viresh's test is simple and
+straight forward.
+
