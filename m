@@ -2,151 +2,83 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50791C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA86C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160982146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:41:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mfYKBa3F"
+	by mail.kernel.org (Postfix) with ESMTP id 8E2792184C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562039005;
+	bh=GI6ro7Nu3o6bB6TVX0IWB7UAbyym6bHooL49aoT6EtA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MBEf+Eftq7PHP5vKu7LuCviq+A+pLEHWmoAkbZcmPTSsMKMdq05Ov+OuHG9tc8rm7
+	 ZjOOdrI2flVM6jttQnbOAYJsCVys4eIGKhljG+WSWlP5L8Wc2A9S86P6uCxF8Jguic
+	 UuBBy7hc7jEagOAzz8WtG9LFhuBs8PCAO1Gep5uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGBDl1 (ORCPT
+        id S1726963AbfGBDnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 23:41:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46603 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfGBDl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 23:41:27 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z23so15721701ote.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 20:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwFMvNlDZyc812vrg+bp/ViMSNpSgttyG5YsRP7U/zs=;
-        b=mfYKBa3Fe+hxUiDN022gH0lEGTEMq3JXVnwiUnLyW6FqMu7SRaHkzGumur2mcma+i3
-         p0RofUHDm3aCF+7v7SRVceN74CHTceHz7LgkcmbYg3hmSireatVhaTiKBHNk3muKza5C
-         KNIrfHTCeFuL07S2xdESCkaeQy+DDBVXD6UKvHj0rGw+yrt9Wjyn7eaKZHjDPQg7ykr1
-         iNxuu/kAR/Fxr9Agl85nh5t39bo4SpthylP2XjKGz+CJtH6wO1d1iSAg1kbMyMRfOQ9C
-         zkeKZi0gxjbXGgYU7a9ZhKjmWxzPuggcWw2JJp7MkXF9s4pj00IbtYMJsu5LjNMMpl59
-         mEqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwFMvNlDZyc812vrg+bp/ViMSNpSgttyG5YsRP7U/zs=;
-        b=ebIeDDsSMiXxmShffvDdPteYQhzAEMOMTpMfKhEzyShg9nlKT23vZnnLD/0FrN0vd9
-         musGEfYhBPSm1+MUcZRtAZysvZWJvRANDzcEepwalZpHnttcVu8pGkQBrg56bALTuMJ7
-         X31w2+q10AzZ6NA7xE0ikfAPmS/5Q3T7442p2aryCFJUU9DtZLH94KAazukQeCXqEDOX
-         yDFD0ZcQm02uaprLDBO6Cxbb+pSDICSMZy+3zmAS7DfCfsVxQE9IFJGE0q/Pypm6kxoy
-         M9ACiEw+As40THFDih9KVQ3TS/pyOe7i+xDhPBku45kTnTpLJm+skKWgCn7RzpasyfS6
-         uNCg==
-X-Gm-Message-State: APjAAAWrjAjImV7EFpP2kQ0J02iuDZprWLvkMSqrnUIaLhAHx8w6hS9g
-        bSz3jxv/e+lci4DbSOSuw0bruRuCfPJJcydGaeDS0w==
-X-Google-Smtp-Source: APXvYqzaTQmQ+2ZZdku7sIVKLWcpaRAB4YyGNBeZcAlNsV3Vt05L27tpBfdujxcXoF6JYx6GEVFUFZr3VLm6h/L6d5A=
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr24058948otr.231.1562038886315;
- Mon, 01 Jul 2019 20:41:26 -0700 (PDT)
+        Mon, 1 Jul 2019 23:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbfGBDnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 23:43:24 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85A882146F;
+        Tue,  2 Jul 2019 03:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562039003;
+        bh=GI6ro7Nu3o6bB6TVX0IWB7UAbyym6bHooL49aoT6EtA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wkvH+CXlwlOD04eYycPV3k5MMeoKcqFQ5CtPEtWzGTpskEJjg9CZAtpS6Nlqroi0f
+         XQMCCg+EXhmUJpbO2xrid/4PhQsP4zoVGpk2c2lIK7uSuo8m+rF91YURfDWMcUEpka
+         +5yqv58mNvpLPIU3vOOe71OP8dKCs7Adl7KUEsds=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 0/3] FSGSBASE fix, test, and a semi-related cleanup
+Date:   Mon,  1 Jul 2019 20:43:18 -0700
+Message-Id: <cover.1562035429.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-5-saravanak@google.com>
- <CAL_JsqKAn2uD4DC2wqJtkqLTFJ54yG_qaQjgfg=YrQfSEhJw+g@mail.gmail.com>
-In-Reply-To: <CAL_JsqKAn2uD4DC2wqJtkqLTFJ54yG_qaQjgfg=YrQfSEhJw+g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 1 Jul 2019 20:40:50 -0700
-Message-ID: <CAGETcx8_rXX+PJUq6JqMVquejg_T9rrbCCCP62p4XtSbV2EUYw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] driver core: Add edit_links() callback for drivers
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 6:46 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jul 1, 2019 at 6:48 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > The driver core/bus adding dependencies by default makes sure that
-> > suppliers don't sync the hardware state with software state before all the
-> > consumers have their drivers loaded (if they are modules) and are probed.
-> >
-> > However, when the bus incorrectly adds dependencies that it shouldn't have
-> > added, the devices might never probe.
-> >
-> > For example, if device-C is a consumer of device-S and they have phandles
-> > to each other in DT, the following could happen:
-> >
-> > 1.  Device-S get added first.
-> > 2.  The bus add_links() callback will (incorrectly) try to link it as
-> >     a consumer of device-C.
-> > 3.  Since device-C isn't present, device-S will be put in
-> >     "waiting-for-supplier" list.
-> > 4.  Device-C gets added next.
-> > 5.  All devices in "waiting-for-supplier" list are retried for linking.
-> > 6.  Device-S gets linked as consumer to Device-C.
-> > 7.  The bus add_links() callback will (correctly) try to link it as
-> >     a consumer of device-S.
-> > 8.  This isn't allowed because it would create a cyclic device links.
-> >
-> > So neither devices will get probed since the supplier is dependent on a
-> > consumer that'll never probe (because it can't get resources from the
-> > supplier).
-> >
-> > Without this patch, things stay in this broken state. However, with this
-> > patch, the execution will continue like this:
-> >
-> > 9.  Device-C's driver is loaded.
-> > 10. Device-C's driver removes Device-S as a consumer of Device-C.
-> > 11. Device-C's driver adds Device-C as a consumer of Device-S.
-> > 12. Device-S probes.
-> > 13. Device-S sync_state() isn't called because Device-C hasn't probed yet.
-> > 14. Device-C probes.
-> > 15. Device-S's sync_state() callback is called.
->
-> We already have some DT unittests around platform devices. It would be
-> nice to extend them to demonstrate this problem. Could be a follow-up
-> patch though.
->
-> In the case a driver hasn't been updated, couldn't the driver core
-> just remove all the links of C to S and S to C so that progress can be
-> made and we retain the status quo of what we have today?
+In -tip, if FSGSBASE and PTI are on, the kernel crashes if SYSENTER
+happens with TF set.  It also crashes under if a non-NMI paranoid
+entry happens for any other reason from kernel mode with user GSBASE
+and user CR3, e.g. due to MOV SS shenanigans.
 
-The problem is knowing which of those links to delete and when.
+This series fixes the bug.  It also adds another test to make sure
+we exercise SYSENTER with TF set regardless of what vendor's CPU
+we're on, although the test isn't needed to detect the bug: the
+single_step_syscall_32 and mov_ss_trap_* tests also trigger it.  And
+it compiles ignore_sysret out on IA32_EMULATION kernels -- I wasted
+a couple minutes while debugging this wondering whether I was
+accidentally triggering ignore_sysret.
 
-If a link between S and C fails, how do we know and keep track of
-which of the other 100 links in the system are causing a cycle? It can
-get unwieldy real quick. We could delete all the links to fall back to
-status quo, but how do we tell at what point in time we can delete
-them all?
+Andy Lutomirski (3):
+  selftests/x86: Test SYSCALL and SYSENTER manually with TF set
+  x86/entry/64: Don't compile ignore_sysret if 32-bit emulation is
+    enabled
+  x86/entry/64: Fix and clean up paranoid_exit
 
-> That would
-> lessen the chances of breaking platforms and reduce the immediate need
-> to fix them.
+ arch/x86/entry/entry_64.S                     |  39 +++---
+ tools/testing/selftests/x86/Makefile          |   5 +-
+ .../testing/selftests/x86/syscall_arg_fault.c | 112 +++++++++++++++++-
+ 3 files changed, 133 insertions(+), 23 deletions(-)
 
-Which is why I think we need to have a commandline/config option to
-turn this series on. Keep in mind that once this patch is merged, the
-API for the supplier drivers would be the same whether the feature is
-enabled or not. They just fallback to status quo behavior (do their
-stuff in late_initcall_sync() like they do today).
+-- 
+2.21.0
 
-This patch series has a huge impact on the behavior and I don't think
-there's a sound reason to force it on everyone right away. This is
-something that needs incremental changes to bring in more and more
-platforms/drivers into the new scheme. At a minimum Qualcomm seems
-pretty interested in using this to solve their "when do I change/turn
-off this clock/interconnect after boot?" question.
-
--Saravana
