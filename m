@@ -2,69 +2,55 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732DEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE9EC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D90921874
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064812089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562115790;
-	bh=c/MyoEL1y9iSRH8tUqhzcXV9ntk3My2ap/3Dn7awyKw=;
+	s=default; t=1562115795;
+	bh=JSSTummgovKzjJ78cGvRjxWkWBFR6+oqkDGCqnix+5g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dT+jAwsbtRDhflJbZYm5N9b8k9gbpDBP5TLebS5nH+ZBQ9bG8U9qDV/wBX6ZKkiI/
-	 5LGZLqoeK/Hz5N/pDeLADLwXaB81cP8GSmY/ZAdZZy2I2L2BxDR/3UamkUf2UH+x7q
-	 38FF/1uQItlrDWbMeTHcUQYmzyiaEIxX06FoHKlc=
+	b=lCptYPMnMqIl3CTCLQ4nsy1Z+jOuZfblK96gm8NqypvafRCajSOFadyAQqYOl+C5V
+	 tUk176Gtr7ra9Lgd0slC84IGvjZQS5IKfuM+GR+ko2VrZ+SSSJz+cjcyce9qLtDOuK
+	 IVWTdfGCzFz3yaU/rwAl5U/YaUaYRcZUNfr+zPxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfGCBDJ (ORCPT
+        id S1727316AbfGCBDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 21:03:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbfGCBDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726652AbfGCBDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 21:03:05 -0400
 Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F38A21904;
-        Tue,  2 Jul 2019 22:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF65A21874;
+        Tue,  2 Jul 2019 20:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562106936;
-        bh=c/MyoEL1y9iSRH8tUqhzcXV9ntk3My2ap/3Dn7awyKw=;
+        s=default; t=1562098428;
+        bh=JSSTummgovKzjJ78cGvRjxWkWBFR6+oqkDGCqnix+5g=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l01hbVKK1DS91crh+dWLCuA/4HwJhhjblV3ZmG7+ToSZt2H6+9chb5C6lWKcVbpZT
-         6yf7b0ESc5qYx1xKDTnqLzeOjjZhZFZwE/7x1lR6/PQ/5qZQPNx1I+vWXKWbwacqes
-         0uz8JuzySX1Z2Xp+A47oGKzrXsLwsUNXRd+bPFwo=
-Date:   Tue, 2 Jul 2019 15:35:35 -0700
+        b=pVL9BX1mfkWNMZ4JuOXEP1bLnhu3I9BVToumxa1kjdZNRBH56OgKPIrtlVhivYmCX
+         ByFpnYvXObta8eYhxDF+YD3vem2AyauZtEzCHZHVRal/nPjba1ZSg4n+ipbJJB+Ury
+         uo7TwFjCDC96bjssFiG+pA6PpZbeBceSeH91LZd4=
+Date:   Tue, 2 Jul 2019 13:13:48 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@mellanox.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
-Message-Id: <20190702153535.228365fea7f0063cceec96cd@linux-foundation.org>
-In-Reply-To: <CAPcyv4h90DAVHbZ4bgvJwpfB8wr2K28oEes6HcdQOpf02+NL=g@mail.gmail.com>
-References: <20190626122724.13313-17-hch@lst.de>
-        <20190628153827.GA5373@mellanox.com>
-        <CAPcyv4joSiFMeYq=D08C-QZSkHz0kRpvRfseNQWrN34Rrm+S7g@mail.gmail.com>
-        <20190628170219.GA3608@mellanox.com>
-        <CAPcyv4ja9DVL2zuxuSup8x3VOT_dKAOS8uBQweE9R81vnYRNWg@mail.gmail.com>
-        <CAPcyv4iWTe=vOXUqkr_CguFrFRqgA7hJSt4J0B3RpuP-Okz0Vw@mail.gmail.com>
-        <20190628182922.GA15242@mellanox.com>
-        <CAPcyv4g+zk9pnLcj6Xvwh-svKM+w4hxfYGikcmuoBAFGCr-HAw@mail.gmail.com>
-        <20190628185152.GA9117@lst.de>
-        <CAPcyv4i+b6bKhSF2+z7Wcw4OUAvb1=m289u9QF8zPwLk402JVg@mail.gmail.com>
-        <20190628190207.GA9317@lst.de>
-        <CAPcyv4h90DAVHbZ4bgvJwpfB8wr2K28oEes6HcdQOpf02+NL=g@mail.gmail.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Aaron Tomlin <atomlin@redhat.com>
+Subject: Re: [PATCH] proc/sysctl: add shared variables for range check
+Message-Id: <20190702131348.9004db6da7e1cbeb7db5ca9f@linux-foundation.org>
+In-Reply-To: <CAGnkfhxPhHxmNFCMHj8QTYKtLi08O8C5-6Qua8zRz4FX=8g+pw@mail.gmail.com>
+References: <20190702170228.GA4404@avx2>
+        <CAGnkfhxPhHxmNFCMHj8QTYKtLi08O8C5-6Qua8zRz4FX=8g+pw@mail.gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -74,13 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 12:14:44 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On Tue, 2 Jul 2019 19:21:33 +0200 Matteo Croce <mcroce@redhat.com> wrote:
 
-> I believe -mm auto drops patches when they appear in the -next
-> baseline. So it should "just work" to pull it into the series and send
-> it along for -next inclusion.
+> On Tue, Jul 2, 2019 at 7:13 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >
+> > > -static long zero;
+> > >  static long long_max = LONG_MAX;
+> > >
+> > >  struct ctl_table epoll_table[] = {
+> > > @@ -301,7 +300,7 @@ struct ctl_table epoll_table[] = {
+> > >                 .maxlen         = sizeof(max_user_watches),
+> > >                 .mode           = 0644,
+> > >                 .proc_handler   = proc_doulongvec_minmax,
+> > > -               .extra1         = &zero,
+> > > +               .extra1         = SYSCTL_ZERO,
+> > >                 .extra2         = &long_max,
+> >
+> > This looks wrong: proc_doulongvec_minmax() expects "long"s.
+> > The whole patch needs rechecking.
+> >
+> > > +/* shared constants to be used in various sysctls */
+> > > +const =======>int<========== sysctl_vals[] = { 0, 1, INT_MAX };
+> > > +EXPORT_SYMBOL(sysctl_vals);
+> 
+> Yes, you're right, that chunk must be dropped.
+> Anyway I've checked the patch, this was the only long field touched.
 
-Yup.  Although it isn't very "auto" - I manually check that the patch
-which turned up in -next was identical to the version which I had.  If
-not, I go find out why...
+Yup.
 
+akpm3:/usr/src/25> find . -name "*.c" | xargs grep -C4 SYSCTL_ZERO|grep long
+./fs/eventpoll.c-               .proc_handler   = proc_doulongvec_minmax,
+./fs/eventpoll.c-               .extra2         = &long_max,
+
+I did this:
+
+--- a/fs/eventpoll.c~proc-sysctl-add-shared-variables-for-range-check-fix-4
++++ a/fs/eventpoll.c
+@@ -291,6 +291,7 @@ static LIST_HEAD(tfile_check_list);
+ 
+ #include <linux/sysctl.h>
+ 
++static long long_zero;
+ static long long_max = LONG_MAX;
+ 
+ struct ctl_table epoll_table[] = {
+@@ -300,7 +301,7 @@ struct ctl_table epoll_table[] = {
+ 		.maxlen		= sizeof(max_user_watches),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_doulongvec_minmax,
+-		.extra1		= SYSCTL_ZERO,
++		.extra1		= &long_zero,
+ 		.extra2		= &long_max,
+ 	},
+ 	{ }
+
+I renamed it to avoid using "&zero," in this situation.
