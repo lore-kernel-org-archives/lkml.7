@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82CAC5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0159C0650E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6AE21851
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A105921721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562034422;
-	bh=6twMUHcD6og42d8hAhF3dmZ0VKhQv87lWGOA4hB7I3c=;
+	s=default; t=1562034424;
+	bh=im28FKwudCSuS2AwmS7Mv9eXk1U7tb782Sve9SzId6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QnEPcRAvi/mDH/6BcpmFbT1zTy8Ib7zVpar0kMvx7Qr7zG977if1JPYycRZUeIcYN
-	 KqYart+tGkGb2iP/HIVHIPAC/3FujecJdVZzbDvB3jB9cmRg2bIsmbOWQTBQy0jCn/
-	 sxUd8sDgQIR4vb9p+BqNnBWDe68Z36ADtbwFnke4=
+	b=ZRgIQxceAl3Iiu4wGW+/h1WEHViD8gc1h2N5KP/XeJY8PADaffr8pV44Ur0YoJFge
+	 Juqp06V/TwiETW7PEEKjyzZnCFs/Wu2w9bWxyDDnxgWMTNmVMPxnX5LAw9eqPRmQi7
+	 R4KBmrXlxjXuUMuKLkBITtZxGUAYI3WX0IztTknY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfGBC1B (ORCPT
+        id S1727271AbfGBC1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39612 "EHLO mail.kernel.org"
+        Mon, 1 Jul 2019 22:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfGBC05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:26:57 -0400
+        id S1727206AbfGBC1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:27:00 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4B321721;
-        Tue,  2 Jul 2019 02:26:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C292173E;
+        Tue,  2 Jul 2019 02:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562034415;
-        bh=6twMUHcD6og42d8hAhF3dmZ0VKhQv87lWGOA4hB7I3c=;
+        s=default; t=1562034419;
+        bh=im28FKwudCSuS2AwmS7Mv9eXk1U7tb782Sve9SzId6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iw5N6k/E/J6PARESO6oK/2irkSpw8WVnEWyh0ReFfVCaXwFB/1Gf06kL6BfFZ01ZK
-         IJ1qWX1XxLgltsns2CFxIqiU5DZ5pwl7prX6Tko9gxEO0SusfyD1tFXurAq+Nq7bNS
-         d6oAU/o3rlV41UddPyAY8ympKhocvpYcw2EzU7DQ=
+        b=p01u6UR/D+WJKllIbt4Tgpi/eZZ51tGcC0U+Ss6g9ksNHukQ2R8Dnftoinm+CtVd1
+         lmGpoonWJlOOTRWNaA7A71w5gqZW9XWT+tPwxGXLrI0BfvAvRXwZZKTnoGvoMps7Ri
+         69sPe2FKUBzXutJtbLHTVw47QjfTrAwoBWrP5gUg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/43] perf scripts python: export-to-sqlite.py: Export Intel PT power and ptwrite events
-Date:   Mon,  1 Jul 2019 23:25:43 -0300
-Message-Id: <20190702022616.1259-11-acme@kernel.org>
+Subject: [PATCH 11/43] perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events
+Date:   Mon,  1 Jul 2019 23:25:44 -0300
+Message-Id: <20190702022616.1259-12-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
@@ -78,57 +78,57 @@ support cbr.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190622093248.581-7-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190622093248.581-8-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 239 ++++++++++++++++++
- 1 file changed, 239 insertions(+)
+ .../scripts/python/export-to-postgresql.py    | 251 ++++++++++++++++++
+ 1 file changed, 251 insertions(+)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 4542ce89034b..3222a83f4184 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -271,6 +271,38 @@ if perf_db_export_calls:
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 93225c02117e..4447f0d7c754 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -447,6 +447,38 @@ if perf_db_export_calls:
  		'insn_count	bigint,'
  		'cyc_count	bigint)')
  
 +do_query(query, 'CREATE TABLE ptwrite ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'payload	bigint,'
-+		'exact_ip	integer)')
++	'id		bigint		NOT NULL,'
++	'payload	bigint,'
++	'exact_ip	boolean)')
 +
 +do_query(query, 'CREATE TABLE cbr ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'cbr		integer,'
-+		'mhz		integer,'
-+		'percent	integer)')
++	'id		bigint		NOT NULL,'
++	'cbr		integer,'
++	'mhz		integer,'
++	'percent	integer)')
 +
 +do_query(query, 'CREATE TABLE mwait ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'hints		integer,'
-+		'extensions	integer)')
++	'id		bigint		NOT NULL,'
++	'hints		integer,'
++	'extensions	integer)')
 +
 +do_query(query, 'CREATE TABLE pwre ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'cstate		integer,'
-+		'subcstate	integer,'
-+		'hw		integer)')
++	'id		bigint		NOT NULL,'
++	'cstate		integer,'
++	'subcstate	integer,'
++	'hw		boolean)')
 +
 +do_query(query, 'CREATE TABLE exstop ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'exact_ip	integer)')
++	'id		bigint		NOT NULL,'
++	'exact_ip	boolean)')
 +
 +do_query(query, 'CREATE TABLE pwrx ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'deepest_cstate	integer,'
-+		'last_cstate	integer,'
-+		'wake_reason	integer)')
++	'id		bigint		NOT NULL,'
++	'deepest_cstate	integer,'
++	'last_cstate	integer,'
++	'wake_reason	integer)')
 +
- # printf was added to sqlite in version 3.8.3
- sqlite_has_printf = False
- try:
-@@ -399,6 +431,102 @@ do_query(query, 'CREATE VIEW samples_view AS '
- 		'CASE WHEN cyc_count=0 THEN CAST(0 AS FLOAT) ELSE ROUND(CAST(insn_count AS FLOAT) / cyc_count, 2) END AS IPC'
+ do_query(query, 'CREATE VIEW machines_view AS '
+ 	'SELECT '
+ 		'id,'
+@@ -561,6 +593,104 @@ do_query(query, 'CREATE VIEW samples_view AS '
+ 		'CASE WHEN cyc_count=0 THEN CAST(0 AS NUMERIC(20, 2)) ELSE CAST((CAST(insn_count AS FLOAT) / cyc_count) AS NUMERIC(20, 2)) END AS IPC'
  	' FROM samples')
  
 +do_query(query, 'CREATE VIEW ptwrite_view AS '
@@ -136,8 +136,8 @@ index 4542ce89034b..3222a83f4184 100644
 +		'ptwrite.id,'
 +		'time,'
 +		'cpu,'
-+		+ emit_to_hex('payload') + ' AS payload_hex,'
-+		'CASE WHEN exact_ip=0 THEN \'False\' ELSE \'True\' END AS exact_ip'
++		'to_hex(payload) AS payload_hex,'
++		'CASE WHEN exact_ip=FALSE THEN \'False\' ELSE \'True\' END AS exact_ip'
 +	' FROM ptwrite'
 +	' INNER JOIN samples ON samples.id = ptwrite.id')
 +
@@ -157,8 +157,8 @@ index 4542ce89034b..3222a83f4184 100644
 +		'mwait.id,'
 +		'time,'
 +		'cpu,'
-+		+ emit_to_hex('hints') + ' AS hints_hex,'
-+		+ emit_to_hex('extensions') + ' AS extensions_hex'
++		'to_hex(hints) AS hints_hex,'
++		'to_hex(extensions) AS extensions_hex'
 +	' FROM mwait'
 +	' INNER JOIN samples ON samples.id = mwait.id')
 +
@@ -169,7 +169,7 @@ index 4542ce89034b..3222a83f4184 100644
 +		'cpu,'
 +		'cstate,'
 +		'subcstate,'
-+		'CASE WHEN hw=0 THEN \'False\' ELSE \'True\' END AS hw'
++		'CASE WHEN hw=FALSE THEN \'False\' ELSE \'True\' END AS hw'
 +	' FROM pwre'
 +	' INNER JOIN samples ON samples.id = pwre.id')
 +
@@ -178,7 +178,7 @@ index 4542ce89034b..3222a83f4184 100644
 +		'exstop.id,'
 +		'time,'
 +		'cpu,'
-+		'CASE WHEN exact_ip=0 THEN \'False\' ELSE \'True\' END AS exact_ip'
++		'CASE WHEN exact_ip=FALSE THEN \'False\' ELSE \'True\' END AS exact_ip'
 +	' FROM exstop'
 +	' INNER JOIN samples ON samples.id = exstop.id')
 +
@@ -193,7 +193,7 @@ index 4542ce89034b..3222a83f4184 100644
 +			' WHEN wake_reason=2 THEN \'Timer Deadline\''
 +			' WHEN wake_reason=4 THEN \'Monitored Address\''
 +			' WHEN wake_reason=8 THEN \'HW\''
-+			' ELSE wake_reason '
++			' ELSE CAST ( wake_reason AS VARCHAR(2) )'
 +		'END AS wake_reason'
 +	' FROM pwrx'
 +	' INNER JOIN samples ON samples.id = pwrx.id')
@@ -201,55 +201,51 @@ index 4542ce89034b..3222a83f4184 100644
 +do_query(query, 'CREATE VIEW power_events_view AS '
 +	'SELECT '
 +		'samples.id,'
-+		'time,'
-+		'cpu,'
++		'samples.time,'
++		'samples.cpu,'
 +		'selected_events.name AS event,'
-+		'CASE WHEN selected_events.name=\'cbr\' THEN (SELECT cbr FROM cbr WHERE cbr.id = samples.id) ELSE "" END AS cbr,'
-+		'CASE WHEN selected_events.name=\'cbr\' THEN (SELECT mhz FROM cbr WHERE cbr.id = samples.id) ELSE "" END AS mhz,'
-+		'CASE WHEN selected_events.name=\'cbr\' THEN (SELECT percent FROM cbr WHERE cbr.id = samples.id) ELSE "" END AS percent,'
-+		'CASE WHEN selected_events.name=\'mwait\' THEN (SELECT ' + emit_to_hex('hints') + ' FROM mwait WHERE mwait.id = samples.id) ELSE "" END AS hints_hex,'
-+		'CASE WHEN selected_events.name=\'mwait\' THEN (SELECT ' + emit_to_hex('extensions') + ' FROM mwait WHERE mwait.id = samples.id) ELSE "" END AS extensions_hex,'
-+		'CASE WHEN selected_events.name=\'pwre\' THEN (SELECT cstate FROM pwre WHERE pwre.id = samples.id) ELSE "" END AS cstate,'
-+		'CASE WHEN selected_events.name=\'pwre\' THEN (SELECT subcstate FROM pwre WHERE pwre.id = samples.id) ELSE "" END AS subcstate,'
-+		'CASE WHEN selected_events.name=\'pwre\' THEN (SELECT hw FROM pwre WHERE pwre.id = samples.id) ELSE "" END AS hw,'
-+		'CASE WHEN selected_events.name=\'exstop\' THEN (SELECT exact_ip FROM exstop WHERE exstop.id = samples.id) ELSE "" END AS exact_ip,'
-+		'CASE WHEN selected_events.name=\'pwrx\' THEN (SELECT deepest_cstate FROM pwrx WHERE pwrx.id = samples.id) ELSE "" END AS deepest_cstate,'
-+		'CASE WHEN selected_events.name=\'pwrx\' THEN (SELECT last_cstate FROM pwrx WHERE pwrx.id = samples.id) ELSE "" END AS last_cstate,'
-+		'CASE WHEN selected_events.name=\'pwrx\' THEN (SELECT '
-+			'CASE     WHEN wake_reason=1 THEN \'Interrupt\''
-+				' WHEN wake_reason=2 THEN \'Timer Deadline\''
-+				' WHEN wake_reason=4 THEN \'Monitored Address\''
-+				' WHEN wake_reason=8 THEN \'HW\''
-+				' ELSE wake_reason '
-+			'END'
-+		' FROM pwrx WHERE pwrx.id = samples.id) ELSE "" END AS wake_reason'
-+	' FROM samples'
-+	' INNER JOIN selected_events ON selected_events.id = evsel_id'
-+	' WHERE selected_events.name IN (\'cbr\',\'mwait\',\'exstop\',\'pwre\',\'pwrx\')')
-+
- do_query(query, 'END TRANSACTION')
++		'FORMAT(\'%6s\', cbr.cbr) AS cbr,'
++		'FORMAT(\'%6s\', cbr.mhz) AS MHz,'
++		'FORMAT(\'%5s\', cbr.percent) AS percent,'
++		'to_hex(mwait.hints) AS hints_hex,'
++		'to_hex(mwait.extensions) AS extensions_hex,'
++		'FORMAT(\'%3s\', pwre.cstate) AS cstate,'
++		'FORMAT(\'%3s\', pwre.subcstate) AS subcstate,'
++		'CASE WHEN pwre.hw=FALSE THEN \'False\' WHEN pwre.hw=TRUE THEN \'True\' ELSE NULL END AS hw,'
++		'CASE WHEN exstop.exact_ip=FALSE THEN \'False\' WHEN exstop.exact_ip=TRUE THEN \'True\' ELSE NULL END AS exact_ip,'
++		'FORMAT(\'%3s\', pwrx.deepest_cstate) AS deepest_cstate,'
++		'FORMAT(\'%3s\', pwrx.last_cstate) AS last_cstate,'
++		'CASE     WHEN pwrx.wake_reason=1 THEN \'Interrupt\''
++			' WHEN pwrx.wake_reason=2 THEN \'Timer Deadline\''
++			' WHEN pwrx.wake_reason=4 THEN \'Monitored Address\''
++			' WHEN pwrx.wake_reason=8 THEN \'HW\''
++			' ELSE FORMAT(\'%2s\', pwrx.wake_reason)'
++		'END AS wake_reason'
++	' FROM cbr'
++	' FULL JOIN mwait ON mwait.id = cbr.id'
++	' FULL JOIN pwre ON pwre.id = cbr.id'
++	' FULL JOIN exstop ON exstop.id = cbr.id'
++	' FULL JOIN pwrx ON pwrx.id = cbr.id'
++	' INNER JOIN samples ON samples.id = coalesce(cbr.id, mwait.id, pwre.id, exstop.id, pwrx.id)'
++	' INNER JOIN selected_events ON selected_events.id = samples.evsel_id'
++	' ORDER BY samples.id')
  
- evsel_query = QSqlQuery(db)
-@@ -428,6 +556,18 @@ if perf_db_export_calls or perf_db_export_callchains:
+ file_header = struct.pack("!11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
+ file_trailer = b"\377\377"
+@@ -620,6 +750,12 @@ if perf_db_export_calls or perf_db_export_callchains:
+ 	call_path_file		= open_output_file("call_path_table.bin")
  if perf_db_export_calls:
- 	call_query = QSqlQuery(db)
- 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-+ptwrite_query = QSqlQuery(db)
-+ptwrite_query.prepare("INSERT INTO ptwrite VALUES (?, ?, ?)")
-+cbr_query = QSqlQuery(db)
-+cbr_query.prepare("INSERT INTO cbr VALUES (?, ?, ?, ?)")
-+mwait_query = QSqlQuery(db)
-+mwait_query.prepare("INSERT INTO mwait VALUES (?, ?, ?)")
-+pwre_query = QSqlQuery(db)
-+pwre_query.prepare("INSERT INTO pwre VALUES (?, ?, ?, ?)")
-+exstop_query = QSqlQuery(db)
-+exstop_query.prepare("INSERT INTO exstop VALUES (?, ?)")
-+pwrx_query = QSqlQuery(db)
-+pwrx_query.prepare("INSERT INTO pwrx VALUES (?, ?, ?, ?)")
+ 	call_file		= open_output_file("call_table.bin")
++ptwrite_file		= open_output_file("ptwrite_table.bin")
++cbr_file		= open_output_file("cbr_table.bin")
++mwait_file		= open_output_file("mwait_table.bin")
++pwre_file		= open_output_file("pwre_table.bin")
++exstop_file		= open_output_file("exstop_table.bin")
++pwrx_file		= open_output_file("pwrx_table.bin")
  
  def trace_begin():
- 	printdate("Writing records...")
-@@ -446,6 +586,16 @@ def trace_begin():
+ 	printdate("Writing to intermediate files...")
+@@ -637,6 +773,16 @@ def trace_begin():
  
  unhandled_count = 0
  
@@ -264,12 +260,64 @@ index 4542ce89034b..3222a83f4184 100644
 +	do_query(query, 'DROP TABLE ' + table_name);
 +
  def trace_end():
- 	do_query(query, 'END TRANSACTION')
+ 	printdate("Copying to database...")
+ 	copy_output_file(evsel_file,		"selected_events")
+@@ -652,6 +798,12 @@ def trace_end():
+ 		copy_output_file(call_path_file,	"call_paths")
+ 	if perf_db_export_calls:
+ 		copy_output_file(call_file,		"calls")
++	copy_output_file(ptwrite_file,		"ptwrite")
++	copy_output_file(cbr_file,		"cbr")
++	copy_output_file(mwait_file,		"mwait")
++	copy_output_file(pwre_file,		"pwre")
++	copy_output_file(exstop_file,		"exstop")
++	copy_output_file(pwrx_file,		"pwrx")
  
-@@ -454,6 +604,18 @@ def trace_end():
+ 	printdate("Removing intermediate files...")
+ 	remove_output_file(evsel_file)
+@@ -667,6 +819,12 @@ def trace_end():
+ 		remove_output_file(call_path_file)
+ 	if perf_db_export_calls:
+ 		remove_output_file(call_file)
++	remove_output_file(ptwrite_file)
++	remove_output_file(cbr_file)
++	remove_output_file(mwait_file)
++	remove_output_file(pwre_file)
++	remove_output_file(exstop_file)
++	remove_output_file(pwrx_file)
+ 	os.rmdir(output_dir_name)
+ 	printdate("Adding primary keys")
+ 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
+@@ -682,6 +840,12 @@ def trace_end():
+ 		do_query(query, 'ALTER TABLE call_paths      ADD PRIMARY KEY (id)')
+ 	if perf_db_export_calls:
+ 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE ptwrite         ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE cbr             ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE mwait           ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE pwre            ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE exstop          ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE pwrx            ADD PRIMARY KEY (id)')
+ 
+ 	printdate("Adding foreign keys")
+ 	do_query(query, 'ALTER TABLE threads '
+@@ -717,6 +881,30 @@ def trace_end():
+ 					'ADD CONSTRAINT parent_call_pathfk FOREIGN KEY (parent_call_path_id) REFERENCES call_paths (id)')
  		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
  		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
++	do_query(query, 'ALTER TABLE ptwrite '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  cbr '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  mwait '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  pwre '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  exstop '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  pwrx '
++					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++
 +	printdate("Dropping unused tables")
 +	if is_table_empty("ptwrite"):
 +		drop("ptwrite")
@@ -281,45 +329,37 @@ index 4542ce89034b..3222a83f4184 100644
 +		do_query(query, 'DROP VIEW power_events_view');
 +		if is_table_empty("cbr"):
 +			drop("cbr")
-+
+ 
  	if (unhandled_count):
  		printdate("Warning: ", unhandled_count, " unhandled events")
- 	printdate("Done")
-@@ -509,3 +671,80 @@ def call_path_table(*x):
- 
- def call_return_table(*x):
- 	bind_exec(call_query, 14, x)
+@@ -800,3 +988,66 @@ def call_return_table(cr_id, thread_id, comm_id, call_path_id, call_time, return
+ 	fmt = "!hiqiqiqiqiqiqiqiqiqiqiiiqiqiq"
+ 	value = struct.pack(fmt, 14, 8, cr_id, 8, thread_id, 8, comm_id, 8, call_path_id, 8, call_time, 8, return_time, 8, branch_count, 8, call_id, 8, return_id, 8, parent_call_path_id, 4, flags, 8, parent_id, 8, insn_cnt, 8, cyc_cnt)
+ 	call_file.write(value)
 +
 +def ptwrite(id, raw_buf):
 +	data = struct.unpack_from("<IQ", raw_buf)
 +	flags = data[0]
 +	payload = data[1]
 +	exact_ip = flags & 1
-+	ptwrite_query.addBindValue(str(id))
-+	ptwrite_query.addBindValue(str(payload))
-+	ptwrite_query.addBindValue(str(exact_ip))
-+	do_query_(ptwrite_query)
++	value = struct.pack("!hiqiqiB", 3, 8, id, 8, payload, 1, exact_ip)
++	ptwrite_file.write(value)
 +
 +def cbr(id, raw_buf):
 +	data = struct.unpack_from("<BBBBII", raw_buf)
 +	cbr = data[0]
 +	MHz = (data[4] + 500) / 1000
 +	percent = ((cbr * 1000 / data[2]) + 5) / 10
-+	cbr_query.addBindValue(str(id))
-+	cbr_query.addBindValue(str(cbr))
-+	cbr_query.addBindValue(str(MHz))
-+	cbr_query.addBindValue(str(percent))
-+	do_query_(cbr_query)
++	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, cbr, 4, MHz, 4, percent)
++	cbr_file.write(value)
 +
 +def mwait(id, raw_buf):
 +	data = struct.unpack_from("<IQ", raw_buf)
 +	payload = data[1]
 +	hints = payload & 0xff
 +	extensions = (payload >> 32) & 0x3
-+	mwait_query.addBindValue(str(id))
-+	mwait_query.addBindValue(str(hints))
-+	mwait_query.addBindValue(str(extensions))
-+	do_query_(mwait_query)
++	value = struct.pack("!hiqiiii", 3, 8, id, 4, hints, 4, extensions)
++	mwait_file.write(value)
 +
 +def pwre(id, raw_buf):
 +	data = struct.unpack_from("<IQ", raw_buf)
@@ -327,19 +367,15 @@ index 4542ce89034b..3222a83f4184 100644
 +	hw = (payload >> 7) & 1
 +	cstate = (payload >> 12) & 0xf
 +	subcstate = (payload >> 8) & 0xf
-+	pwre_query.addBindValue(str(id))
-+	pwre_query.addBindValue(str(cstate))
-+	pwre_query.addBindValue(str(subcstate))
-+	pwre_query.addBindValue(str(hw))
-+	do_query_(pwre_query)
++	value = struct.pack("!hiqiiiiiB", 4, 8, id, 4, cstate, 4, subcstate, 1, hw)
++	pwre_file.write(value)
 +
 +def exstop(id, raw_buf):
 +	data = struct.unpack_from("<I", raw_buf)
 +	flags = data[0]
 +	exact_ip = flags & 1
-+	exstop_query.addBindValue(str(id))
-+	exstop_query.addBindValue(str(exact_ip))
-+	do_query_(exstop_query)
++	value = struct.pack("!hiqiB", 2, 8, id, 1, exact_ip)
++	exstop_file.write(value)
 +
 +def pwrx(id, raw_buf):
 +	data = struct.unpack_from("<IQ", raw_buf)
@@ -347,11 +383,8 @@ index 4542ce89034b..3222a83f4184 100644
 +	deepest_cstate = payload & 0xf
 +	last_cstate = (payload >> 4) & 0xf
 +	wake_reason = (payload >> 8) & 0xf
-+	pwrx_query.addBindValue(str(id))
-+	pwrx_query.addBindValue(str(deepest_cstate))
-+	pwrx_query.addBindValue(str(last_cstate))
-+	pwrx_query.addBindValue(str(wake_reason))
-+	do_query_(pwrx_query)
++	value = struct.pack("!hiqiiiiii", 4, 8, id, 4, deepest_cstate, 4, last_cstate, 4, wake_reason)
++	pwrx_file.write(value)
 +
 +def synth_data(id, config, raw_buf, *x):
 +	if config == 0:
