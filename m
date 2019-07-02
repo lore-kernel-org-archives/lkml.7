@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4A2C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D1EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119FC21852
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93A12184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054915;
-	bh=OO9Rp1X39EjFLg7+EAA1EibB1PSIee88OfKJHs0ugiU=;
+	s=default; t=1562054918;
+	bh=emvwUdVW0+nZbV6MltQoEQlRpt9QAeRJY2O4pV29Klw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAruVraD7yvRcC/L58GGB+YXgaoSJQS+zyjT3zEcvsM9qUSHHVHLFvTA6KjniVXM5
-	 xDw2uCBg9nb7Yc+46IAaDKRhM/QPSaitndUJSWtIJQ6Sr3xA4rTQNeKdzn8l47p21g
-	 4asLvgR8mnfOy6IMReklLDmZoqYAZMThZv/QUph4=
+	b=m9KaHTSeu3ULZbbMiFmB9cJ5nVCFwP7OmW8DMX69yA38DJeJY4UYSn0L9ilBP9wG/
+	 iGn0m4IU7xTW5p0j0dbMeg4QkWrqxXrxtVYg0c5ZrYZtw8yytFiF/0XZcQ/WPC75Uk
+	 T84tb3bx2WkJQ1TKZejFX4iE6RT05WyucN7z5pZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbfGBIId (ORCPT
+        id S1728105AbfGBIIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbfGBIIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:08:31 -0400
+        id S1728456AbfGBIIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:08:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB5D2064A;
-        Tue,  2 Jul 2019 08:08:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E3132184C;
+        Tue,  2 Jul 2019 08:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054911;
-        bh=OO9Rp1X39EjFLg7+EAA1EibB1PSIee88OfKJHs0ugiU=;
+        s=default; t=1562054914;
+        bh=emvwUdVW0+nZbV6MltQoEQlRpt9QAeRJY2O4pV29Klw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOTIuXwXDOKtMSaRnpITpPQUuD9T0EbXlSHvhuvHgEde11wKOhglHBA9UlrSRWJ6k
-         1WzeCsFc+voEr3wKWJl5BYCBnlT3vdMffyXIFFyN829I83C6gbd3gUsUo2V9Pz4pBI
-         LjaiOTWhCa8LK2GBJuU9+NvTXZMNUeWJUkCZMA04=
+        b=JUWmo5WZlxN5laMKAJhO7df4PxKMDv6AJHxFjbelBhJ/1QU+UOJOdDCDXBMYjCIAR
+         em3JwSJ8VXKCbQDqT7tbi1Pi5xktKu0Veg6GfeaJqDR/lGICjeRfuT/x7KFJG00w18
+         CVNRCIWpB+B3cfYnVr7iW1h6ZTB1PoE4x4jECNXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Craig Gallek <kraig@google.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 67/72] bpf: udp: ipv6: Avoid running reuseports bpf_prog from __udp6_lib_err
-Date:   Tue,  2 Jul 2019 10:02:08 +0200
-Message-Id: <20190702080128.121471088@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 68/72] arm64: futex: Avoid copying out uninitialised stack in failed cmpxchg()
+Date:   Tue,  2 Jul 2019 10:02:09 +0200
+Message-Id: <20190702080128.167642047@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -62,50 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 4ac30c4b3659efac031818c418beb51e630d512d upstream.
+commit 8e4e0ac02b449297b86498ac24db5786ddd9f647 upstream.
 
-__udp6_lib_err() may be called when handling icmpv6 message. For example,
-the icmpv6 toobig(type=2).  __udp6_lib_lookup() is then called
-which may call reuseport_select_sock().  reuseport_select_sock() will
-call into a bpf_prog (if there is one).
+Returning an error code from futex_atomic_cmpxchg_inatomic() indicates
+that the caller should not make any use of *uval, and should instead act
+upon on the value of the error code. Although this is implemented
+correctly in our futex code, we needlessly copy uninitialised stack to
+*uval in the error case, which can easily be avoided.
 
-reuseport_select_sock() is expecting the skb->data pointing to the
-transport header (udphdr in this case).  For example, run_bpf_filter()
-is pulling the transport header.
-
-However, in the __udp6_lib_err() path, the skb->data is pointing to the
-ipv6hdr instead of the udphdr.
-
-One option is to pull and push the ipv6hdr in __udp6_lib_err().
-Instead of doing this, this patch follows how the original
-commit 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
-was done in IPv4, which has passed a NULL skb pointer to
-reuseport_select_sock().
-
-Fixes: 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
-Cc: Craig Gallek <kraig@google.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Craig Gallek <kraig@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/udp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -482,7 +482,7 @@ void __udp6_lib_err(struct sk_buff *skb,
- 	struct net *net = dev_net(skb->dev);
+---
+ arch/arm64/include/asm/futex.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -134,7 +134,9 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 	: "memory");
+ 	uaccess_disable();
  
- 	sk = __udp6_lib_lookup(net, daddr, uh->dest, saddr, uh->source,
--			       inet6_iif(skb), 0, udptable, skb);
-+			       inet6_iif(skb), 0, udptable, NULL);
- 	if (!sk) {
- 		__ICMP6_INC_STATS(net, __in6_dev_get(skb->dev),
- 				  ICMP6_MIB_INERRORS);
+-	*uval = val;
++	if (!ret)
++		*uval = val;
++
+ 	return ret;
+ }
+ 
 
 
