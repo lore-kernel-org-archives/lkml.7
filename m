@@ -2,89 +2,137 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C536C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB0CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EEA218EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:49:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dQE6ToJh"
+	by mail.kernel.org (Postfix) with ESMTP id 7CCA5218EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfGCAtK (ORCPT
+        id S1727385AbfGCAtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:49:10 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40410 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfGCAtJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:49:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w196so578786oie.7;
-        Tue, 02 Jul 2019 17:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PmEB/x0Lo8kjE6XO29I6yQcxMJdkJpBobZcgW1H9skM=;
-        b=dQE6ToJhgtp1wCfPTOfOeyy3Wlzl33q0h9WcnIJA48XtbfKqzHONGYC3W61NGQfNim
-         wJaXkOCEQLLrI2TSIZQwvLCc1Rqhy7tkKbFJItgpBZmmCqqY0TzvUJ2rx0vWwv7zrFmZ
-         kZ5OII7eqEx3/ovCXbefJGBE8F7LYBJp3Eh1m81WkMA/alEl+TNmkxdUWAI5Udj6A0C+
-         vsbKbIDFDrMiyP7vv46AElwnFPDzMcamevSZp3I5khh3FwrFUuoHiTauuxpXCu4bPH8a
-         8Vi37k2YDn8vy9Meo0Fcg75al7N0hdAtajz3wPYu473GTV9bU6aDJ8XppI7nkwKlrfGl
-         vp9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PmEB/x0Lo8kjE6XO29I6yQcxMJdkJpBobZcgW1H9skM=;
-        b=Nkge5JFPMbBhxkKLnomdjb0OuYJasblpM6mVT3pkNPasJZwukEVqumayLJE+9MKRlm
-         IWLgGQloBjmF5O55JR8BH+mxSXvNiV+rz3tKOI3eQ2SyJ31Z2O9trS4YwB9IUiD/DAVM
-         m8uPLVBb7du/jTeBy3mfc8Ifq5Pg1Q+Fcz3O7VTYoE8GRTufM00muyYnkGrhPChek8RH
-         yL5bVy/wpaq/yMwAQn/3ohwh55iikhcM7l6MUI7JF0FMujwkkrhI3oUXVVaj2DUst5lp
-         rdi5Vq2RUdMJ4R70UVQCp6LfdgRsK3YrPG+jKDiSBzWtNPIg3KSg3PfmHRYDLs4iC67t
-         Eo0A==
-X-Gm-Message-State: APjAAAW9bSRK9yobiTm9ANnrAmvLtSpLv7K4bEpIJ4eMaU4kY2TtH0CO
-        yLsPsALcKtgTJXy7Pg7IyxP3wesklckhrsu626LwR8jD
-X-Google-Smtp-Source: APXvYqwGO400fcqFqegu43ZWYESJ1x0EcFHLkunurhz/yLrGFeET/1sUvrRHA32DeHN9rz4+lxZGWrgg9XsKuY7U36c=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr1514748oib.15.1562111016670;
- Tue, 02 Jul 2019 16:43:36 -0700 (PDT)
+        Tue, 2 Jul 2019 20:49:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41298 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfGCAtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:49:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 04758307CDF0;
+        Tue,  2 Jul 2019 22:23:50 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 75D565D9DE;
+        Tue,  2 Jul 2019 22:23:49 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 0DAED10516E;
+        Tue,  2 Jul 2019 19:23:32 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x62MNUrh028441;
+        Tue, 2 Jul 2019 19:23:30 -0300
+Date:   Tue, 2 Jul 2019 19:23:30 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v5 0/4] KVM: LAPIC: Implement Exitless Timer
+Message-ID: <20190702222330.GB26621@amt.cnet>
+References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+ <1fbd236a-f7f9-e66a-e08c-bf2bac901d15@redhat.com>
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-13-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-13-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:43:25 +0200
-Message-ID: <CAFBinCByCn1NMz4ATnR66114jYj8=KG-tY5S4iRfoPEw3uLF8g@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 12/14] arm64: dts: meson-g12a: enable DVFS on G12A boards
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1fbd236a-f7f9-e66a-e08c-bf2bac901d15@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 02 Jul 2019 22:23:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Enable DVFS for the U200, SEI520 and X96-Max Amlogic G12A based board
-> by setting the clock, OPP and supply for each CPU cores.
->
-> The CPU cluster power supply can achieve 0.73V to 1.01V using a PWM
-> output clocked at 800KHz with an inverse duty-cycle.
->
-> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
-> between all the possible cpufreq translations and checking the final
-> frequency using the clock-measurer, script at [2].
->
-> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, Jul 02, 2019 at 06:38:56PM +0200, Paolo Bonzini wrote:
+> On 21/06/19 11:39, Wanpeng Li wrote:
+> > Dedicated instances are currently disturbed by unnecessary jitter due 
+> > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+> > There is no hardware virtual timer on Intel for guest like ARM. Both 
+> > programming timer in guest and the emulated timer fires incur vmexits.
+> > This patchset tries to avoid vmexit which is incurred by the emulated 
+> > timer fires in dedicated instance scenario. 
+> > 
+> > When nohz_full is enabled in dedicated instances scenario, the unpinned 
+> > timer will be moved to the nearest busy housekeepers after commit
+> > 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit 
+> > 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However, 
+> > KVM always makes lapic timer pinned to the pCPU which vCPU residents, the 
+> > reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer 
+> > pinned). Actually, these emulated timers can be offload to the housekeeping 
+> > cpus since APICv is really common in recent years. The guest timer interrupt 
+> > is injected by posted-interrupt which is delivered by housekeeping cpu 
+> > once the emulated timer fires. 
+> > 
+> > The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+> > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+> > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
+> > mode, ~3% redis performance benefit can be observed on Skylake server.
+> 
+> Marcelo,
+> 
+> does this patch work for you or can you still see the oops?
+
+Hi Paolo,
+
+No more oopses with kvm/queue. Can you include:
+
+Index: kvm/arch/x86/kvm/lapic.c
+===================================================================
+--- kvm.orig/arch/x86/kvm/lapic.c
++++ kvm/arch/x86/kvm/lapic.c
+@@ -124,8 +124,7 @@ static inline u32 kvm_x2apic_id(struct k
+ 
+ bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+ {
+-	return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+-		kvm_hlt_in_guest(vcpu->kvm);
++	return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
+ }
+ EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+ 
+However, for some reason (hrtimer subsystems responsability) with cyclictest -i 200
+on the guest, the timer runs on the local CPU:
+
+       CPU 1/KVM-9454  [003] d..2   881.674196: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674200: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d.h.   881.674387: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   881.674393: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674395: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674399: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d.h.   881.674586: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   881.674593: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674595: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674599: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d.h.   881.674787: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   881.674793: get_nohz_timer_target: get_nohz_timer_target 3->0
+       CPU 1/KVM-9454  [003] d..2   881.674795: get_nohz_timer_target: get_nohz_timer_target 3->0
+
+But on boot:
+
+       CPU 1/KVM-9454  [003] d..2   578.625394: get_nohz_timer_target: get_nohz_timer_target 3->0
+          <idle>-0     [000] d.h1   578.626390: apic_timer_fn <-__hrtimer_run_queues
+          <idle>-0     [000] d.h1   578.626394: apic_timer_fn<-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   578.626401: get_nohz_timer_target: get_nohz_timer_target 3->0
+          <idle>-0     [000] d.h1   578.628397: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   578.628407: get_nohz_timer_target: get_nohz_timer_target 3->0
+          <idle>-0     [000] d.h1   578.631403: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   578.631413: get_nohz_timer_target: get_nohz_timer_target 3->0
+          <idle>-0     [000] d.h1   578.635409: apic_timer_fn <-__hrtimer_run_queues
+       CPU 1/KVM-9454  [003] d..2   578.635419: get_nohz_timer_target: get_nohz_timer_target 3->0
+          <idle>-0     [000] d.h1   578.640415: apic_timer_fn <-__hrtimer_run_queues
+
+Thanks.
+
+
