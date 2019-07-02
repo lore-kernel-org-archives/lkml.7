@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EB0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6700C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A23521851
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA0B2183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054709;
-	bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
+	s=default; t=1562054712;
+	bh=gQX+DVkqG6yaLGDxJKzMrllW8YDLl8e5CRQcMSUTfdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KW/hIIcMLUZNg206Wyy8BiMznadF45TvewxMwcKAay+iMfE7iEz41/NR4n8na3A8/
-	 ZbE26kQe7CF44iH59AyBzxeRcX5BAfrGBH4V9R0GTB1KqnxUHGv28uHIlfmgR6/1XD
-	 uFUPV0WX1DNgVUpMT4qfxWzb9Zb9K1osXaWsuT/g=
+	b=uUUHWs+BTqxAYShhXofv2ZwvYQbEmAHhmu6T2eS7p3nj9ajVmoo1bYeLcDSutwVSN
+	 xoD/ZSMg7p0BGARiS/v7VqUsSFHZlQM0EwNgRvAEChvP2fF3IJVDtusDs/WdiUrSSE
+	 VbJT99b7V/gwUSWNG7Zp79WVvO9hPdXwpi2YbTMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfGBIFI (ORCPT
+        id S1727887AbfGBIFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfGBIFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:04 -0400
+        id S1727025AbfGBIFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2A6C2184C;
-        Tue,  2 Jul 2019 08:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A1220659;
+        Tue,  2 Jul 2019 08:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054703;
-        bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
+        s=default; t=1562054709;
+        bh=gQX+DVkqG6yaLGDxJKzMrllW8YDLl8e5CRQcMSUTfdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQo9yHTbgEI1541U0Gz9oFA3mZlMf5Cv9hs92pV/hZ0j1HP8akS1RCnKx+XvRFj0N
-         D6mfXh2c2Mp8G2+etjVOeqtfWWBFJ+NA3nWcENtkKrdhmUVmoJ38U8AAuqculza9Vc
-         BN+V8JGfhwHYuv5ua/XaeCnOrCrfcj3ROAOWEyPw=
+        b=Tx9MjGV2LEqwhRZPF1ptCM33P29LXHvBg2cPQxkqLYEDYrykcJU5V4HhfLgJHG9FL
+         iboJnCJJ8qz7jN+PquDfDa6Ii9K9Cpuc9HPXENPCB/eFcZUf85JJPwNEm4hhhYr4ci
+         h/F6bI0f9NzEuCrH4M4lA9hgIZhj47Q8VH1jsSFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Sowmini Varadhan <sowmini.varadhan@oracle.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 41/55] tipc: check msg->req data len in tipc_nl_compat_bearer_disable
-Date:   Tue,  2 Jul 2019 10:01:49 +0200
-Message-Id: <20190702080126.249219143@linuxfoundation.org>
+Subject: [PATCH 5.1 33/55] net/packet: fix memory leak in packet_set_ring()
+Date:   Tue,  2 Jul 2019 10:01:41 +0200
+Message-Id: <20190702080125.852953548@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -61,88 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4f07b80c973348a99b5d2a32476a2e7877e94a05 ]
+[ Upstream commit 55655e3d1197fff16a7a05088fb0e5eba50eac55 ]
 
-This patch is to fix an uninit-value issue, reported by syzbot:
+syzbot found we can leak memory in packet_set_ring(), if user application
+provides buggy parameters.
 
-  BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:981
-  Call Trace:
-    __dump_stack lib/dump_stack.c:77 [inline]
-    dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-    kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-    __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-    memchr+0xce/0x110 lib/string.c:981
-    string_is_valid net/tipc/netlink_compat.c:176 [inline]
-    tipc_nl_compat_bearer_disable+0x2a1/0x480 net/tipc/netlink_compat.c:449
-    __tipc_nl_compat_doit net/tipc/netlink_compat.c:327 [inline]
-    tipc_nl_compat_doit+0x3ac/0xb00 net/tipc/netlink_compat.c:360
-    tipc_nl_compat_handle net/tipc/netlink_compat.c:1178 [inline]
-    tipc_nl_compat_recv+0x1b1b/0x27b0 net/tipc/netlink_compat.c:1281
-
-TLV_GET_DATA_LEN() may return a negtive int value, which will be
-used as size_t (becoming a big unsigned long) passed into memchr,
-cause this issue.
-
-Similar to what it does in tipc_nl_compat_bearer_enable(), this
-fix is to return -EINVAL when TLV_GET_DATA_LEN() is negtive in
-tipc_nl_compat_bearer_disable(), as well as in
-tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
-
-v1->v2:
-  - add the missing Fixes tags per Eric's request.
-
-Fixes: 0762216c0ad2 ("tipc: fix uninit-value in tipc_nl_compat_bearer_enable")
-Fixes: 8b66fee7f8ee ("tipc: fix uninit-value in tipc_nl_compat_link_reset_stats")
-Reported-by: syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: 7f953ab2ba46 ("af_packet: TX_RING support for TPACKET_V3")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Sowmini Varadhan <sowmini.varadhan@oracle.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/packet/af_packet.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -445,7 +445,11 @@ static int tipc_nl_compat_bearer_disable
- 	if (!bearer)
- 		return -EMSGSIZE;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4341,7 +4341,7 @@ static int packet_set_ring(struct sock *
+ 				    req3->tp_sizeof_priv ||
+ 				    req3->tp_feature_req_word) {
+ 					err = -EINVAL;
+-					goto out;
++					goto out_free_pg_vec;
+ 				}
+ 			}
+ 			break;
+@@ -4405,6 +4405,7 @@ static int packet_set_ring(struct sock *
+ 			prb_shutdown_retire_blk_timer(po, rb_queue);
+ 	}
  
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -537,7 +541,11 @@ static int tipc_nl_compat_link_stat_dump
- 
- 	name = (char *)TLV_DATA(msg->req);
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
-@@ -815,7 +823,11 @@ static int tipc_nl_compat_link_reset_sta
- 	if (!link)
- 		return -EMSGSIZE;
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(name, len))
- 		return -EINVAL;
- 
++out_free_pg_vec:
+ 	if (pg_vec)
+ 		free_pg_vec(pg_vec, order, req->tp_block_nr);
+ out:
 
 
