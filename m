@@ -2,123 +2,151 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09C3C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF49C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FCD21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J08daGH6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jZq88CHD"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1692146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfGBMMs (ORCPT
+        id S1726908AbfGBMMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:12:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35732 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfGBMMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:12:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 718D6607CA; Tue,  2 Jul 2019 12:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562069566;
-        bh=RLBvnxM+OVbNv4r5AYHQOxPu145fE2liFYRI6/iiGbU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J08daGH6gIrUYLRP0hlqHmrTtP68/8CkE4bEd2q5+AQ4K8gOmB03MnzeXvBcORbSe
-         62rqnfpvym72/rxCulhpq6NjZZpy2UQqBfQ7tpeM7D2ZB9Q1u3YdVEpvihBd44jmbQ
-         Y3lxSETWvroB6ZhlCTjTcPNBBJwgnGloUMduDTWo=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 2 Jul 2019 08:12:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47676 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbfGBMMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:12:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E35AD607B9;
-        Tue,  2 Jul 2019 12:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562069565;
-        bh=RLBvnxM+OVbNv4r5AYHQOxPu145fE2liFYRI6/iiGbU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jZq88CHDAP2GN0GIQdcRABMvIW/2zjcU2ARY+JZNyQpT92erEpVBr35mSDR4fGjmG
-         ajue6NMTi4E77O7gpnbcxajVRJ+CQeMmr4J3FFKoaxLkMzRZ2FnX82GfKojbQH90SF
-         w1kduKUmPBlIDaEDglnE4SgnJ1yP1xxdExFFMFis=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E35AD607B9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-Subject: [PATCH v3] arm64: dts: sdm845: Add video nodes
-Date:   Tue,  2 Jul 2019 17:42:29 +0530
-Message-Id: <1562069549-25384-1-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 14358307D874;
+        Tue,  2 Jul 2019 12:12:45 +0000 (UTC)
+Received: from krava (unknown [10.43.17.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D41755D6A9;
+        Tue,  2 Jul 2019 12:12:40 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 14:12:40 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+Message-ID: <20190702121240.GB12694@krava>
+References: <20190702022616.1259-1-acme@kernel.org>
+ <20190702022616.1259-24-acme@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190702022616.1259-24-acme@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 02 Jul 2019 12:12:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malathi Gottam <mgottam@codeaurora.org>
+On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Same implementation, will be used to replace ad-hoc equivalent code in
+> tools/.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: André Goddard Rosa <andre.goddard@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/include/linux/string.h |  4 +++-
+>  tools/lib/string.c           | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> index 6c3e2cc274c5..cee239350a6b 100644
+> --- a/tools/include/linux/string.h
+> +++ b/tools/include/linux/string.h
+> @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
+>  	return strncmp(str, prefix, strlen(prefix)) == 0;
+>  }
+>  
+> -#endif /* _LINUX_STRING_H_ */
+> +extern char * __must_check skip_spaces(const char *);
+> +
+> +#endif /* _TOOLS_LINUX_STRING_H_ */
+> diff --git a/tools/lib/string.c b/tools/lib/string.c
+> index 93b3d4b6feac..50d400822bb3 100644
+> --- a/tools/lib/string.c
+> +++ b/tools/lib/string.c
+> @@ -17,6 +17,7 @@
+>  #include <string.h>
+>  #include <errno.h>
+>  #include <linux/string.h>
+> +#include <linux/ctype.h>
+>  #include <linux/compiler.h>
+>  
+>  /**
+> @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+>  	}
+>  	return ret;
+>  }
+> +
+> +/**
+> + * skip_spaces - Removes leading whitespace from @str.
+> + * @str: The string to be stripped.
+> + *
+> + * Returns a pointer to the first non-whitespace character in @str.
+> + */
+> +char *skip_spaces(const char *str)
+> +{
+> +	while (isspace(*str))
+> +		++str;
+> +	return (char *)str;
+> +}
+> -- 
+> 2.20.1
+> 
 
-This adds video nodes to sdm845 based on the examples
-in the bindings.
+this breaks objtool build, because it adds _ctype dependency via isspace call
+patch below fixes it for me
 
-Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
-Co-developed-by: Aniket Masule <amasule@codeaurora.org>
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+jirka
+
+
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index fcb9330..f3cd94f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1893,6 +1893,36 @@
- 			};
- 		};
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index 749becdf5b90..8dc4f0848362 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -9,6 +9,7 @@ objtool-y += special.o
+ objtool-y += objtool.o
  
-+		video-codec@aa00000 {
-+			compatible = "qcom,sdm845-venus";
-+			reg = <0 0x0aa00000 0 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>;
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-+			clock-names = "core", "iface", "bus";
-+			iommus = <&apps_smmu 0x10a0 0x8>,
-+				 <&apps_smmu 0x10b0 0x0>;
-+			memory-region = <&venus_mem>;
+ objtool-y += libstring.o
++objtool-y += libctype.o
+ objtool-y += str_error_r.o
+ 
+ CFLAGS += -I$(srctree)/tools/lib
+@@ -17,6 +18,10 @@ $(OUTPUT)libstring.o: ../lib/string.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
+ 
++$(OUTPUT)libctype.o: ../lib/ctype.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
 +
-+			video-core0 {
-+				compatible = "venus-decoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC0_GDSC>;
-+			};
-+
-+			video-core1 {
-+				compatible = "venus-encoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC1_GDSC>;
-+			};
-+		};
-+
- 		videocc: clock-controller@ab00000 {
- 			compatible = "qcom,sdm845-videocc";
- 			reg = <0 0x0ab00000 0 0x10000>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+ $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
