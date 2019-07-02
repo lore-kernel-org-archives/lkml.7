@@ -2,181 +2,203 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C30C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C748C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0AF20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC02620673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="L2NSC7tq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TQZ5cIrX"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="QHcgFWZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGCBmH (ORCPT
+        id S1727275AbfGCBmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:42:07 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:41841 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbfGCBmG (ORCPT
+        Tue, 2 Jul 2019 21:42:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37571 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:42:06 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7C8252026A;
-        Tue,  2 Jul 2019 21:42:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 02 Jul 2019 21:42:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        6iMTUaaizD8KI2RsIcyBSJADq/ZjHbcx9ocwHE4/HvA=; b=L2NSC7tqTMTvdvaT
-        i091LhDbbR2HTaIByIeb55CbQLbp3Iq49P+FF9RDJK+/fLsk6qQ2XEHZZfWvI8gY
-        CZRiCCl++6MgZXeaaMhr0CDvnRBVZiw55ppt77iXuM9KpGkDjwMkM4gbYRnuiiDF
-        bVokw+IFMmq+2kSBxL/poplyVg0OKvdzuPPKIg+rV0w0XUMGou9SPO/30obQz6Yu
-        MsVq/t6LqM0TCH7q7hMwaekXT/VtW1m/8hyA5fDkORWf0qKnzsQICbXodUGg0kPa
-        gXjqhpFeXgCMikY0hUN7KZzWSVE3djK0ynRQBkPSWLnVR78aSV+9EkizVVZ9fw2V
-        nnwhOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=6iMTUaaizD8KI2RsIcyBSJADq/ZjHbcx9ocwHE4/H
-        vA=; b=TQZ5cIrXXnri9Xs16QNOMwn8t1BZhch9wQiauuAYaFfnwUivmO/iENKUd
-        x+FhG7onPZF69nFpyxVRY11zLEjGb7PndHli9MQfVC8mTh30Md0iiy/h/Fquf/rC
-        PXqXSrzUWIJLf9e1SbgGD1oBPD80J08nsovLar/4pflNWwsAGx8Ztkr8oFoqWAlf
-        ZF0O4ObC1k95tJY+2BB2cz35G5sSmPmYSEgD3fXYdvz6rNQUJGQSJTSpZ69tsS5u
-        BJiCrYEghny22QZJZZetauWR1PI+zU2XPHBzUJgDK3zDlRBDobbUEtRkMMafKZMK
-        fq65V/ZWh3r7faZ3md5lqdDj8dGdw==
-X-ME-Sender: <xms:7AccXabb9Yot5WPVf0e5rMz9fbiPu01IDkh66dTWRb7bdkxERcBv5Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdelgdeglecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    dujeegrdeiudenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
-    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:7AccXRqfMiBknFzxY38detRH96kvnckyjRz5YZlyioGXPhJtaiaTmg>
-    <xmx:7AccXf8GIirsBqFT_OAktMeXL_jo5cmyzpLieJ84SVP--488HRubWw>
-    <xmx:7AccXQ8e2SZMp-Qls0qssnKRqefxSImobbXM28h0Tqe7X-lzjZIf-g>
-    <xmx:7QccXfqe5kI5GmrXC2KfVwZvkasC9jEN_MsRNRQ0OdAubijLXE_kEw>
-Received: from pluto.themaw.net (unknown [118.208.174.61])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3E476380075;
-        Tue,  2 Jul 2019 21:42:04 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by pluto.themaw.net (Postfix) with ESMTP id 8277D1C014E;
-        Wed,  3 Jul 2019 09:42:00 +0800 (AWST)
-Message-ID: <e9c60b25a1df6dfaec1f5613845695d6416bea0d.camel@themaw.net>
-Subject: Re: [PATCH 4/6] vfs: Allow mount information to be queried by
- fsinfo() [ver #15]
-From:   Ian Kent <raven@themaw.net>
-To:     christian@brauner.io, David Howells <dhowells@redhat.com>,
-        viro@zeniv.linux.org.uk
-Cc:     mszeredi@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 03 Jul 2019 09:42:00 +0800
-In-Reply-To: <2daf229272884deaf139be510f5842f0689c18a6.camel@themaw.net>
-References: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
-         <156173685496.14728.9606180227161368035.stgit@warthog.procyon.org.uk>
-         <8c70abf248d5ac07f334730af70d64235185b109.camel@themaw.net>
-         <2daf229272884deaf139be510f5842f0689c18a6.camel@themaw.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 2 Jul 2019 21:42:17 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so494242wme.2;
+        Tue, 02 Jul 2019 18:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QD7PTDoTKJ7Xg819N/X9fbQ0hWhUP/U0zNIc8U8b15M=;
+        b=QHcgFWZuIAWVxoHoyptyZ0vhwJGPMgbUT4AOymWxPnjHiwDGeLycngPGR62hMJXRsW
+         oFuOJ7ugVuC/+Eh9Ssm8I+MzGlI8dYOdaXgGJVARGU0icUeSe957hDhmJPVE8rAKa5pi
+         SK6zRYV1aSTXnCLc5tWWmAFwg4vIjDMe/rLu0pkSoUkLTVer1SDFw8YpL5g1Vkn9TYMF
+         ST2EZM+gaP9AfL9uqzvR2cRHDbHMFVm10EUBd6j8ThaYmHkgHEZIp28Rp/Pwgt/EBnWa
+         OeWCbx7iqHBCJ7ZS6jGC99ohwVxFdmMmbO+ArhAKASGRW260fcpfumHpm4mvk2dRNnM1
+         fSJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QD7PTDoTKJ7Xg819N/X9fbQ0hWhUP/U0zNIc8U8b15M=;
+        b=CaqJFNJOGlN47WeMCK3yixvUehLHCrmM9N7+HcZubUWPY0Seya35F1mcd1ETbczV/a
+         iAyuFk/X6mZ5+/DoQrDNpo7FZT4SXT8L1i/4eC+nWfNpWF+hoBLoUqIY14jCZlv96SYC
+         WcLCwQmuIIgKMYRrYOXbtzkGHaS8zm87SX8YVK6IOSlCyIusifejHcjAwXBVlzYukhAK
+         fSNVePOGT4RF3wv/esY3SoWbFb9qjT4VDhrOp1ajZqCKbCAUJxl147cvYisAyB/qE0Ve
+         Pjb7Rh9SBR+dy5RKZweBmX+zOZLyS2Wj7icvktw48rWs0ZAApmo65z0cloH07WLAJpyy
+         TH/w==
+X-Gm-Message-State: APjAAAXec0+sNXndZ/kYmdJQVWv3nCONZxjWBigIQHVAfS8rDw0oEGkE
+        wZ2NfRfn4ZVj1G/gSK7LjyBmTiXi
+X-Google-Smtp-Source: APXvYqz8QYHBVW4jvwhPk0+4Sg4vtY8mm4+L3Sxs8VHy/Dsb9SdqndHsmTjxO09mij/b/DclZsRk6w==
+X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr4772701wme.81.1562099730087;
+        Tue, 02 Jul 2019 13:35:30 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id s12sm100041wmh.34.2019.07.02.13.35.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:35:29 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com,
+        ms@dev.tdt.de,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe PHYs
+Date:   Tue,  2 Jul 2019 22:35:20 +0200
+Message-Id: <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 09:24 +0800, Ian Kent wrote:
-> On Wed, 2019-07-03 at 09:09 +0800, Ian Kent wrote:
-> > Hi Christian,
-> > 
-> > About the propagation attributes you mentioned ...
-> 
-> Umm ... how did you work out if a mount is unbindable from proc
-> mountinfo?
-> 
-> I didn't notice anything that could be used for that when I was
-> looking at this.
+Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+The IP block contains settings for the PHY and a PLL.
+The PLL mode is configurable through a dedicated #phy-cell in .dts.
 
-Oh wait, fs/proc_namespace.c:show_mountinfo() has:
-        if (IS_MNT_UNBINDABLE(r))
-                seq_puts(m, " unbindable");
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+ 2 files changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
 
-I missed that, probably because I didn't have any unbindable mounts
-at the time I was looking at it, oops!
-
-That's missing and probably should be added too.
-
-> 
-> > On Fri, 2019-06-28 at 16:47 +0100, David Howells wrote:
-> > 
-> > snip ...
-> > 
-> > > +
-> > > +#ifdef CONFIG_FSINFO
-> > > +int fsinfo_generic_mount_info(struct path *path, struct fsinfo_kparams
-> > > *params)
-> > > +{
-> > > +	struct fsinfo_mount_info *p = params->buffer;
-> > > +	struct super_block *sb;
-> > > +	struct mount *m;
-> > > +	struct path root;
-> > > +	unsigned int flags;
-> > > +
-> > > +	if (!path->mnt)
-> > > +		return -ENODATA;
-> > > +
-> > > +	m = real_mount(path->mnt);
-> > > +	sb = m->mnt.mnt_sb;
-> > > +
-> > > +	p->f_sb_id		= sb->s_unique_id;
-> > > +	p->mnt_id		= m->mnt_id;
-> > > +	p->parent_id		= m->mnt_parent->mnt_id;
-> > > +	p->change_counter	= atomic_read(&m->mnt_change_counter);
-> > > +
-> > > +	get_fs_root(current->fs, &root);
-> > > +	if (path->mnt == root.mnt) {
-> > > +		p->parent_id = p->mnt_id;
-> > > +	} else {
-> > > +		rcu_read_lock();
-> > > +		if (!are_paths_connected(&root, path))
-> > > +			p->parent_id = p->mnt_id;
-> > > +		rcu_read_unlock();
-> > > +	}
-> > > +	if (IS_MNT_SHARED(m))
-> > > +		p->group_id = m->mnt_group_id;
-> > > +	if (IS_MNT_SLAVE(m)) {
-> > > +		int master = m->mnt_master->mnt_group_id;
-> > > +		int dom = get_dominating_id(m, &root);
-> > > +		p->master_id = master;
-> > > +		if (dom && dom != master)
-> > > +			p->from_id = dom;
-> > 
-> > This provides information about mount propagation (well mostly).
-> > 
-> > My understanding of this was that:
-> > "If a mount is propagation private (or slave) the group_id will
-> > be zero otherwise it's propagation shared and it's group id will
-> > be non-zero.
-> > 
-> > If a mount is propagation slave and propagation peers exist then
-> > the mount field mnt_master will be non-NULL. Then mnt_master
-> > (slave's master) can be used to set master_id. If the group id
-> > of the propagation source is not that of the master then set
-> > the from_id group as well."
-> > 
-> > This parallels the way in which these values are reported in
-> > the proc pseudo file system.
-> > 
-> > Perhaps adding flags as well as setting the fields would be
-> > useful too, since interpreting the meaning of the structure
-> > fields isn't obvious, ;)
-> > 
-> > David, Al, thoughts?
-> > 
-> > Ian
+diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+new file mode 100644
+index 000000000000..b7b222e772d0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
++
++maintainers:
++  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
++
++  compatible:
++    enum:
++      - lantiq,vrx200-pcie-phy
++      - lantiq,arx300-pcie-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: PHY module clock
++      - description: PDI register clock
++
++  clock-names:
++    items:
++      - const: phy
++      - const: pdi
++
++  resets:
++    items:
++      - description: exclusive PHY reset line
++      - description: shared reset line between the PCIe PHY and PCIe controller
++
++  resets-names:
++    items:
++      - const: phy
++      - const: pcie
++
++  lantiq,rcu:
++    maxItems: 1
++    description: phandle to the RCU syscon
++
++  lantiq,rcu-endian-offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the offset of the endian registers for this PHY instance in the RCU syscon
++
++  lantiq,rcu-big-endian-mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - lantiq,rcu
++  - lantiq,rcu-endian-offset
++  - lantiq,rcu-big-endian-mask
++
++additionalProperties: false
++
++examples:
++  - |
++    pcie0_phy: phy@106800 {
++        compatible = "lantiq,vrx200-pcie-phy";
++        reg = <0x106800 0x100>;
++        lantiq,rcu = <&rcu0>;
++        lantiq,rcu-endian-offset = <0x4c>;
++        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
++        big-endian;
++        clocks = <&pmu PCIE_PHY>, <&pmu PCIE_PHY_PDI>;
++        clock-names = "phy", "pdi";
++        resets = <&reset0 12 24>, <&reset0 22 22>;
++        reset-names = "phy", "pcie";
++        #phy-cells = <1>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+new file mode 100644
+index 000000000000..95a7896356d6
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++#define LANTIQ_PCIE_PHY_MODE_25MHZ		0
++#define LANTIQ_PCIE_PHY_MODE_25MHZ_SSC		1
++#define LANTIQ_PCIE_PHY_MODE_36MHZ		2
++#define LANTIQ_PCIE_PHY_MODE_36MHZ_SSC		3
++#define LANTIQ_PCIE_PHY_MODE_100MHZ		4
++#define LANTIQ_PCIE_PHY_MODE_100MHZ_SSC		5
+-- 
+2.22.0
 
