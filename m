@@ -2,143 +2,81 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD9FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE07CC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE1A206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94068206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfGBQRG (ORCPT
+        id S1727050AbfGBQRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:17:06 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:43924 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfGBQRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:17:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id y5so19351480ioj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:17:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Qmk524b00MU6ToPqGyWqdEyJ+Ug/dqtjf66MdS9xRbE=;
-        b=URxiFMxbQZkS1LNmsXCq6rlgsfMUVT9hm1te0mo3vxbbAmX+Lcz54T7W9T4reGKhGu
-         dhRxfCjjU3Fu3mqgJmyre+8OByM9kiZQXx3fodnpaDh8pI1bF+TkQ2wJDp+D7HePxdA3
-         k32OKJc/5oVxWsVNQDkiYwHk6ZXaIAl2a3Zb5atFYdxjRNweCGXNJ32gRV/AyIYSrZMS
-         rrygG3Q1KLdfY15GemLI/Uh91IMNaJNa+7VHo3B/h04odtdNFN4PG0lZ9QP5VNaJnLoH
-         P4ctdGBwVxNkrf/3sTPXiN6iSJLfUf1CII2KEh4fbA3VioLjJJc5/ZwzIJnKAGwhIs52
-         R82Q==
-X-Gm-Message-State: APjAAAV+FLgrtNmrfVTXQCCQvu0s3vPWPeEytskPGDK/dRQJspUdZL8Y
-        iMfzDNAn6hqEVZgBZJzSTdaz6zFUVI4lBHJf2I7WmraPKrhu
-X-Google-Smtp-Source: APXvYqxm+NCBJzRexTyr89ra9l5S7Wa2AwoWb0Qqilvic84NY/mtTpUU6u1F/U3jFonumZb4Q8LmvfFzsrlUYTdROFO8//4Br0FB
+        Tue, 2 Jul 2019 12:17:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:52906 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfGBQRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 12:17:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D41228;
+        Tue,  2 Jul 2019 09:17:13 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF22E3F246;
+        Tue,  2 Jul 2019 09:17:12 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 17:17:10 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] stacktrace: Use PF_KTHREAD to check for kernel threads
+Message-ID: <20190702161710.GB34718@lakrids.cambridge.arm.com>
+References: <alpine.DEB.2.21.1907021750100.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a02:ccdc:: with SMTP id k28mr34239336jaq.41.1562084225610;
- Tue, 02 Jul 2019 09:17:05 -0700 (PDT)
-Date:   Tue, 02 Jul 2019 09:17:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000607bf4058cb5135c@google.com>
-Subject: WARNING: locking bug in do_ipv6_getsockopt
-From:   syzbot <syzbot+babfdd7368c72aac3875@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907021750100.1802@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jul 02, 2019 at 05:53:35PM +0200, Thomas Gleixner wrote:
+> !current->mm is not a reliable indicator for kernel threads as they might
+> temporarily use a user mm. Check for PF_KTHREAD instead.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-syzbot found the following crash on:
+FWIW:
 
-HEAD commit:    6fbc7275 Linux 5.2-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13fb8fe5a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
-dashboard link: https://syzkaller.appspot.com/bug?extid=babfdd7368c72aac3875
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1460390ba00000
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+babfdd7368c72aac3875@syzkaller.appspotmail.com
+As a heads-up, I started looking into cleaning up bogus mm checks
+tree-wide, since there are a number that look suspicious (e.g. arm64's
+arch_dup_task_struct() and x86's __kernel_fpu_begin()).
 
-WARNING: CPU: 1 PID: 18374 at kernel/locking/lockdep.c:735  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:762 [inline]
-WARNING: CPU: 1 PID: 18374 at kernel/locking/lockdep.c:735  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:760 [inline]
-WARNING: CPU: 1 PID: 18374 at kernel/locking/lockdep.c:735  
-look_up_lock_class kernel/locking/lockdep.c:726 [inline]
-WARNING: CPU: 1 PID: 18374 at kernel/locking/lockdep.c:735  
-register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1079
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 18374 Comm: syz-executor.0 Not tainted 5.2.0-rc7 #65
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x744 kernel/panic.c:219
-  __warn.cold+0x20/0x4d kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:735 [inline]
-RIP: 0010:register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1079
-Code: 00 48 89 da 4d 8b 76 c0 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80  
-3c 02 00 0f 85 23 07 00 00 4c 89 33 e9 e3 f4 ff ff 0f 0b <0f> 0b e9 ea f3  
-ff ff 44 89 e0 4c 8b 95 50 ff ff ff 83 c0 01 4c 8b
-RSP: 0018:ffff88809ea3f678 EFLAGS: 00010087
-RAX: dffffc0000000000 RBX: ffff888090b948e0 RCX: 0000000000000000
-RDX: 1ffff1101217291f RSI: 0000000000000000 RDI: ffff888090b948f8
-RBP: ffff88809ea3f740 R08: 1ffff11013d47ed7 R09: ffffffff8a65ad40
-R10: ffffffff8a2e9180 R11: 0000000000000000 R12: ffffffff8a3243a0
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff88023e60
-  __lock_acquire+0x116/0x5490 kernel/locking/lockdep.c:3674
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  lock_sock_nested+0x41/0x120 net/core/sock.c:2913
-  lock_sock include/net/sock.h:1522 [inline]
-  do_ipv6_getsockopt.isra.0+0x289/0x2590 net/ipv6/ipv6_sockglue.c:1167
-  ipv6_getsockopt+0x186/0x280 net/ipv6/ipv6_sockglue.c:1391
-  udpv6_getsockopt+0x68/0xa0 net/ipv6/udp.c:1590
-  sock_common_getsockopt+0x94/0xd0 net/core/sock.c:3085
-  __sys_getsockopt+0x15f/0x240 net/socket.c:2109
-  __do_sys_getsockopt net/socket.c:2120 [inline]
-  __se_sys_getsockopt net/socket.c:2117 [inline]
-  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2117
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4597c9
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb5fd78ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00000000004597c9
-RDX: 0000000000000036 RSI: 0000000000000029 RDI: 0000000000000004
-RBP: 000000000075bfc8 R08: 0000000020000080 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb5fd78b6d4
-R13: 00000000004c0803 R14: 00000000004d2b88 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+I was hoping to add an is_kthread(tsk) helper to push people in the
+right direction [1].
 
+Thanks,
+Mark.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=sched/kthread-cleanup
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -228,7 +228,7 @@ unsigned int stack_trace_save_user(unsig
+>  	};
+>  
+>  	/* Trace user stack if not a kernel thread */
+> -	if (!current->mm)
+> +	if (current->flags & PF_KTHREAD)
+>  		return 0;
+>  
+>  	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
