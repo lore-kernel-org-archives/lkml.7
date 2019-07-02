@@ -2,125 +2,125 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD8C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C9DC0650E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27426206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC5D216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="USO0exH9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YXzIkke6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGBCMd (ORCPT
+        id S1727070AbfGBCOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:12:33 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33291 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfGBCMb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:12:31 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r6so12779632qkc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 19:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=cj7wYTbvxnOnmHnqTJFv0AkyAjuHBNH14abJUWzp+Go=;
-        b=USO0exH9MPPma5wAH9tFFR07DfHKFygkjzscnPlfF1jZOmZudiBtyJUS5eZ8fc+SF6
-         pvFf6EzLfmQ4bKj2ypW5EukVBjgcTxVuOQU4iUawamB4pyVKw6G+xIquQWyL+9bz0YF9
-         nEJRYPJQrHXnFIEddwbXG/4c6vX02M0ykL/oVooYYqkdN+GNlVJ5FLGchHBqW9jdHoDi
-         hpB2XKZakLzaHdREL2pYVTt8906FjaFvXcq3bDlcERPxbVUMOoIwZyPORSTuhQ87pvBa
-         9GbzVCA7piNnINBAu8CXJWmsLJAMwkDqAMZEHIzC6TWYtWgCpuxMazSfwA0vJjSU4jvd
-         Q7XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=cj7wYTbvxnOnmHnqTJFv0AkyAjuHBNH14abJUWzp+Go=;
-        b=QJhLfLN+8Az8hA2HkUcgemWilGeAdeA2QZw6QfiAD+4kxa/E2GTj3tjCEf4dQS7xN7
-         M6iQJu61pvUA5pdZTiLXyhG6KbLdJwoXZFRsBMGjpyy7Vh7GTY83ZtGKlABai3jr+WBV
-         /UiNtcn0N+8SeADvkyp602Jy/8y0Vz+KDKjIhZOlnUd6scIS28/JuqzksIX8UiICExRJ
-         gl9upY32+fHIHLO4GDZukz9q3wp+wjo4M0zNAzx1Ob0ZP2+keWaWeNmr28kwOL0hRgTE
-         KTMqDRSqlRy11EOlamAOyobT/JIM2ynIPigUkXs9uR2F+H9XUzOarf808Swdmc8fc6Gn
-         /pMA==
-X-Gm-Message-State: APjAAAVrZyrl22CveZP4EYKeV282BzbXR7RsSfeArI39OUqTbgRI7ySF
-        S0G0TfJfMT7xOnNEWDZpVcsYCA==
-X-Google-Smtp-Source: APXvYqw2RoGRLtjCCqUbo7Hx/iTMR8uEqpEDnFYow3PjRtVJX7gIQ/g7VPU8xWFpGep/veNhEy3c3Q==
-X-Received: by 2002:ae9:e41a:: with SMTP id q26mr23331738qkc.361.1562033550408;
-        Mon, 01 Jul 2019 19:12:30 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id o22sm5322133qkk.50.2019.07.01.19.12.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 19:12:30 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 19:12:25 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Xue Chaojing <xuechaojing@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH net-next v2] hinic: implement the statistical interface
- of ethtool
-Message-ID: <20190701191225.68510307@cakuba.netronome.com>
-In-Reply-To: <20190624120519.4ec22e19@cakuba.netronome.com>
-References: <20190624035012.7221-1-xuechaojing@huawei.com>
-        <20190624120519.4ec22e19@cakuba.netronome.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 1 Jul 2019 22:14:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:57601 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbfGBCOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:14:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45d78Q1cP6z9s3Z;
+        Tue,  2 Jul 2019 12:13:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562033639;
+        bh=WohRocbKc1/BYUZ1CZ0fjG50w3K0ohtYN8fEqw9/btQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YXzIkke6BuLN9R+kWiShZtgGXRM61FsQeOLYUs9NuomaDKB/BFKEVnC+HdrJVAtJD
+         TmLC+BeQy/ZCdLXFi4xgC5Y8Wb/347rsmCD5jdq3c6oHyPnC3kWiYnfWK3pUw0cKak
+         Smd/js4IVvIlSnwbU/cGL2vlE0hbPXXyvIARndJTMIoU7wF/+XXk9YNOAPpsFrBLWp
+         DUDq5j7FlN+jIfqiWvZ775QfpvQgERBgGj0ZBEksTkcSmdXI6NSSGxSa0S1IuBiNyU
+         xTtvlZTsnaK1IVB1pRox+6GsapdpGRMQOejSGh5mjCUai5uxMkYSmaC32jCwYEEYKl
+         ydLkAc0ad3ykw==
+Date:   Tue, 2 Jul 2019 12:13:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Florian Westphal <fw@strlen.de>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20190702121357.65f9b0b4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/cJcBb_F.weJj.YnDE.cMylQ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 12:05:19 -0700, Jakub Kicinski wrote:
-> On Mon, 24 Jun 2019 03:50:12 +0000, Xue Chaojing wrote:
-> > diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-> > index be28a9a7f033..8d98f37c88a8 100644
-> > --- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-> > +++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-> > @@ -438,6 +438,344 @@ static u32 hinic_get_rxfh_indir_size(struct net_device *netdev)
-> >  	return HINIC_RSS_INDIR_SIZE;
-> >  }
-> >  
-> > +#define ARRAY_LEN(arr) ((int)((int)sizeof(arr) / (int)sizeof(arr[0])))
-> > +
-> > +#define HINIC_NETDEV_STAT(_stat_item) { \
-> > +	.name = #_stat_item, \
-> > +	.size = FIELD_SIZEOF(struct rtnl_link_stats64, _stat_item), \
-> > +	.offset = offsetof(struct rtnl_link_stats64, _stat_item) \
-> > +}
-> > +
-> > +static struct hinic_stats hinic_netdev_stats[] = {
-> > +	HINIC_NETDEV_STAT(rx_packets),
-> > +	HINIC_NETDEV_STAT(tx_packets),
-> > +	HINIC_NETDEV_STAT(rx_bytes),
-> > +	HINIC_NETDEV_STAT(tx_bytes),
-> > +	HINIC_NETDEV_STAT(rx_errors),
-> > +	HINIC_NETDEV_STAT(tx_errors),
-> > +	HINIC_NETDEV_STAT(rx_dropped),
-> > +	HINIC_NETDEV_STAT(tx_dropped),
-> > +	HINIC_NETDEV_STAT(multicast),
-> > +	HINIC_NETDEV_STAT(collisions),
-> > +	HINIC_NETDEV_STAT(rx_length_errors),
-> > +	HINIC_NETDEV_STAT(rx_over_errors),
-> > +	HINIC_NETDEV_STAT(rx_crc_errors),
-> > +	HINIC_NETDEV_STAT(rx_frame_errors),
-> > +	HINIC_NETDEV_STAT(rx_fifo_errors),
-> > +	HINIC_NETDEV_STAT(rx_missed_errors),
-> > +	HINIC_NETDEV_STAT(tx_aborted_errors),
-> > +	HINIC_NETDEV_STAT(tx_carrier_errors),
-> > +	HINIC_NETDEV_STAT(tx_fifo_errors),
-> > +	HINIC_NETDEV_STAT(tx_heartbeat_errors),
-> > +};  
-> 
-> I think we wanted to stop duplicating standard netdev stats in ethtool
-> -S.  Chaojing please post a patch to remove this part, the other stats
-> are good.
+--Sig_/cJcBb_F.weJj.YnDE.cMylQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please address this comment or I will send a revert of the entire patch.
+Hi all,
+
+Today's linux-next merge of the net-next tree got a conflict in:
+
+  net/ipv4/devinet.c
+
+between commit:
+
+  2e6054636816 ("ipv4: don't set IPv6 only flags to IPv4 addresses")
+
+from the net tree and commit:
+
+  2638eb8b50cf ("net: ipv4: provide __rcu annotation for ifa_list")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/ipv4/devinet.c
+index c5ebfa199794,137d1892395d..000000000000
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@@ -473,11 -482,10 +487,13 @@@ static int __inet_insert_ifa(struct in_
+  	ifa->ifa_flags &=3D ~IFA_F_SECONDARY;
+  	last_primary =3D &in_dev->ifa_list;
+ =20
+ +	/* Don't set IPv6 only flags to IPv4 addresses */
+ +	ifa->ifa_flags &=3D ~IPV6ONLY_FLAGS;
+ +
+- 	for (ifap =3D &in_dev->ifa_list; (ifa1 =3D *ifap) !=3D NULL;
+- 	     ifap =3D &ifa1->ifa_next) {
++ 	ifap =3D &in_dev->ifa_list;
++ 	ifa1 =3D rtnl_dereference(*ifap);
++=20
++ 	while (ifa1) {
+  		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
+  		    ifa->ifa_scope <=3D ifa1->ifa_scope)
+  			last_primary =3D &ifa1->ifa_next;
+
+--Sig_/cJcBb_F.weJj.YnDE.cMylQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0aveUACgkQAVBC80lX
+0GxJoQf/WarVGNz/Zgngol0mMUT9nAZnvqMDw6GEEmUY+axJQ3mRjrp3C4gtYu8S
+o/z9qGntzvQx6oo1xw5KcxFpFwjgZ3DlNIlBxOKFcF6JeMTRc752I+IyWyznE4J1
+K5b11CYiMMiTJ3gr2G7Yw0kxGr6W0U5JVZ0bIovIKw7AVMZdPbBXFahDX0BQHaFz
+RDy5KdkyKqmu+9HEd8/nB3oGZGmroJPlQu5L5oq8fZXmar9xhgpyrtitbYr5i1Uk
+1Vchsul63zfrPizy6HQEY2WcZPMtD19Z7mtsnax4Ud6n4iWbjdBO9UBsMkYGFRQa
+Zh5yRoHYjCUMSeTfaDuzdeTPtuZ8pg==
+=/Xl9
+-----END PGP SIGNATURE-----
+
+--Sig_/cJcBb_F.weJj.YnDE.cMylQ--
