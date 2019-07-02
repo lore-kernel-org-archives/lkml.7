@@ -2,93 +2,93 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E885C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE0C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA8121721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+GRL2o3"
+	by mail.kernel.org (Postfix) with ESMTP id 5975121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGBS6w (ORCPT
+        id S1727060AbfGBS77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:58:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36333 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfGBS6v (ORCPT
+        Tue, 2 Jul 2019 14:59:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59216 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726457AbfGBS76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:58:51 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so869177plt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=NoPQm7BhluIQixsWy6jjw3GeJMnTyieWyQFDmLwmwJ4=;
-        b=L+GRL2o36NtPs2femln+N8HVw/kCQfXaqfis0fXDHxD/9YaQS/UQyEEms9tRuHu4sG
-         AQ/COT6gGNIL97ops6sXUkIvBWkWPKwpcRkKrWvZOtlChMJUZ1slW/YWRBnuTIjqQWYG
-         L3m6awM0Ef3ffxm2Z6hzQnkE17/rJ5hn3mDclRhMRxMEkfFTa6DvrFqutyBemXokpU2R
-         aB1JKz2hvWC3uk6LNFnLyJzB9mBQG2EqN+8IpSwBNXTL+/kK1P2SZqwlx9zndbu6bK4D
-         FAz16WRHLJwbxZwuIMwUdFP2XTHVM1y7UOTUbnrc3jVnLZsUHW+YY/dNyJ3G/tZAdZPe
-         LxaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=NoPQm7BhluIQixsWy6jjw3GeJMnTyieWyQFDmLwmwJ4=;
-        b=acMgLlxX662i0VB38g7sj2pY6Uc7a93Q2Pu1mGOZso3IJqlVdeYueQeshvJ+PXj54m
-         oTK0XfmBzaKpRgLoqW8do00r4rMZW34YfgZ6b7OHMOfrCbnuIKmWvSG/hmMUlIqyX/St
-         y+bDC6dJw95B/V8GEbEpJj6t0dHb0frA73mjzJJFpfTYNCV+S0hp5mtVODnOLbAsDGyw
-         eL0x68fNwIdiB9mte98PdG970RqiPPm6JbJnvh7ZIee6XxUIU34uGqxj6hheBw5sYjiE
-         x7VxTICBNvGKF4vb2DWyLHTngqxdLuezQwx0+6nv3chr6bSCvPFKQ8x94FWuJABuPLc+
-         8hqg==
-X-Gm-Message-State: APjAAAXtOigVmUnojf3gh5tGhF9Z120K9euhzZccEWvfnr4oGbIjpucH
-        jxyJk1wJD7Jtp10MW4ZTf27M9w==
-X-Google-Smtp-Source: APXvYqw8dPKGUwJocSZOV9TVMQyFfZPDSfOEdfcX1CMRr/CyHjcQzbd3apmIL9aFvsRRF68+qlj8AA==
-X-Received: by 2002:a17:902:ac88:: with SMTP id h8mr37313013plr.12.1562093930455;
-        Tue, 02 Jul 2019 11:58:50 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id q36sm12654814pgl.23.2019.07.02.11.58.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 11:58:49 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 11:58:48 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Henry Burns <henryburns@google.com>
-cc:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before 
- __SetPageMovable()
-In-Reply-To: <20190702005122.41036-1-henryburns@google.com>
-Message-ID: <alpine.DEB.2.21.1907021158360.67286@chino.kir.corp.google.com>
-References: <20190702005122.41036-1-henryburns@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 2 Jul 2019 14:59:58 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B91032639CD;
+        Tue,  2 Jul 2019 19:59:57 +0100 (BST)
+Date:   Tue, 2 Jul 2019 20:59:55 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        kernel@pengutronix.de
+Subject: Re: nvmem creates multiple devices with the same name
+Message-ID: <20190702205955.65f1bce2@collabora.com>
+In-Reply-To: <20190521085641.i6g5aijwa5zbolah@pengutronix.de>
+References: <20190521085641.i6g5aijwa5zbolah@pengutronix.de>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Jul 2019, Henry Burns wrote:
+On Tue, 21 May 2019 10:56:41 +0200
+Sascha Hauer <s.hauer@pengutronix.de> wrote:
 
-> __SetPageMovable() expects it's page to be locked, but z3fold.c doesn't
-> lock the page. Following zsmalloc.c's example we call trylock_page() and
-> unlock_page(). Also makes z3fold_page_migrate() assert that newpage is
-> passed in locked, as documentation.
+> Hi all,
 > 
-> Signed-off-by: Henry Burns <henryburns@google.com>
-> Suggested-by: Vitaly Wool <vitalywool@gmail.com>
+> nvmem derives the device name directly from the partition name of the
+> underlying device. IMO this is wrong since it's not possible to create
+> two partitions with the same name on different devices. In my case I
+> have a NAND device and a SPI NOR device which both happen to have a
+> partition named 'barebox'. This ends up with:
 
-Acked-by: David Rientjes <rientjes@google.com>
+Hm, I think I had suggested to use dev_name(&mtd->dev) instead of
+mtd->name at some point. But then you have the problem that MTD
+numbering is dependent on the probe order which is not guaranteed to
+stay the same, so exposing nvmem devices using "mtdXX" name is not super
+user-friendly.
+
+> 
+> [   11.222196] sysfs: cannot create duplicate filename '/bus/nvmem/devices/barebox'
+> [   11.230136] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W         5.2.0-rc1-00014-g793f23e5adb0-dirty #676
+> [   11.240414] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> [   11.247174] [<c0112928>] (unwind_backtrace) from [<c010d140>] (show_stack+0x10/0x14)
+> [   11.255171] [<c010d140>] (show_stack) from [<c0bd65cc>] (dump_stack+0xd8/0x110)
+> [   11.262722] [<c0bd65cc>] (dump_stack) from [<c031682c>] (sysfs_warn_dup+0x50/0x64)
+> [   11.270527] [<c031682c>] (sysfs_warn_dup) from [<c0316b34>] (sysfs_do_create_link_sd+0xcc/0xd8)
+> [   11.279487] [<c0316b34>] (sysfs_do_create_link_sd) from [<c06792a0>] (bus_add_device+0x80/0xfc)
+> [   11.288441] [<c06792a0>] (bus_add_device) from [<c0676208>] (device_add+0x328/0x608)
+> [   11.296423] [<c0676208>] (device_add) from [<c08bde64>] (nvmem_register.part.1+0x168/0x5e4)
+> [   11.305030] [<c08bde64>] (nvmem_register.part.1) from [<c06edb34>] (add_mtd_device+0x1e8/0x404)
+> [   11.313988] [<c06edb34>] (add_mtd_device) from [<c06f1004>] (add_mtd_partitions+0x74/0x15c)
+> [   11.322589] [<c06f1004>] (add_mtd_partitions) from [<c06f0da8>] (parse_mtd_partitions+0x180/0x368)
+> [   11.331807] [<c06f0da8>] (parse_mtd_partitions) from [<c06ede68>] (mtd_device_parse_register+0x40/0x164)
+> [   11.341560] [<c06ede68>] (mtd_device_parse_register) from [<c070654c>] (m25p_probe+0x118/0x200)
+> [   11.350513] [<c070654c>] (m25p_probe) from [<c073863c>] (spi_drv_probe+0x80/0xa4)
+> 
+> While it's easy to rename the partitions I see no reason why it should
+> be illegal to have two different (mtd) devices with eqeally named
+> partitions. Are there any suggestions how to register the nvmem devices
+> with a different name?
+
+Note that some MTD users are expecting MTD names to be unique to work
+properly, the example I have in mind is UBI that can be passed the
+partition to attach to using the ubi:<part-name> format, but I'm pretty
+sure we have other places making the same assumption. I guess not
+enforcing mtd->name uniqueness was a bad idea, but I'm not sure we can
+change that now.
