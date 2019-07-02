@@ -2,133 +2,105 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E242C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A492C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2602146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A6C2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1R5QsTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbfGBHm4 (ORCPT
+        id S1726291AbfGBHqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 03:42:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:28180 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGBHm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 03:42:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C5270356D3;
-        Tue,  2 Jul 2019 07:42:55 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-129.pek2.redhat.com [10.72.12.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 016915D9D6;
-        Tue,  2 Jul 2019 07:42:50 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 15:42:46 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     David Airlie <airlied@redhat.com>, kexec@lists.infradead.org,
-        x86@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>
-Subject: Re: mgag200 fails kdump kernel booting
-Message-ID: <20190702074246.GB16436@localhost.localdomain>
-References: <20190626081522.GX24419@MiWiFi-R3L-srv>
- <20190626082907.GY24419@MiWiFi-R3L-srv>
- <CAMwc25oeskFG4bbrb3rwotqi1a5z4wYsGW=Qs_XJmhX_vAdNfQ@mail.gmail.com>
- <20190702014158.GC3178@localhost.localdomain>
- <20190702031715.GB3327@dhcp-128-65.nay.redhat.com>
- <20190702053443.GE3178@localhost.localdomain>
+        Tue, 2 Jul 2019 03:46:00 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41893 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfGBHp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 03:45:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 205so15863202ljj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 00:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5IrBPD0J3ThoKKFU4/FQRnog7nkm0QgrOR9tIqfG3FY=;
+        b=d1R5QsTYa5MTtTEHHeCBzlMg9hZoSTCrw52r1zZF5ZH3HtRyfd1fMwfCVSWnHKA2kG
+         4yOBQgQwFxAfrJAoRCkpslMVYXq4M4qzZEhhN5eAueF6CDd47bf1YGy7CVMb4QD9NZ6N
+         9FFBS5L6sLobrCnhGda6f/KzikGGytL1t7rQamquIJyhjAVuuWEx7we3wKkf24HvN7Nl
+         6GDP08kRaJ2X8lBBU/kp/7dw40Kwc2TysdxBYOdxkhkWZwSAlHYNiQ6QQDdXumAjceiA
+         re/bUmjD12UwXfzamlmxA5GbyLp1Ijx3uuJh4MGTHoBwxSrc7K+2vWPk15rDH77JGhPb
+         yT2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5IrBPD0J3ThoKKFU4/FQRnog7nkm0QgrOR9tIqfG3FY=;
+        b=XUnwkB5n6mdCye1ieIbxgxqwlGFMf0KeklLQ3z5A8NgNDgKHiH+LH0YjgVJC4Q+ALW
+         ifvcphP/6H6MFGwCl/FD/d8h0zCXR8jCkx5Ta+qUGNWM85rvwplRIakCpom4xoZgQLlt
+         HdbtDlVb7+iHyv8F/lg6RO73cBucMrc4xsVNLhQADaIeBvViflq90ROjhry2fYihw2z9
+         bQQkkR/vYEDnwacH3gxQuxRkENGWVk9MHKaPg2GkZrTq28dFOyPe+WyhuPqVSEj755G4
+         fdS/iMfi/CrrEMVczqzlbyTGbCqyiODNoHUF/gttSnwcaytt4QG/6WMO83o4Pe+d0iMY
+         Ly/A==
+X-Gm-Message-State: APjAAAUE+NCxO+EHFFaoGx5NhkOj8LLafJqUSRhXsmkh7hjYvvVflS77
+        TY9bgkCr02i/Q3l67oSKzHEPtM7IdLt/IHBuRD4=
+X-Google-Smtp-Source: APXvYqxJ4w6Wee+ZufWo6q87k8jBVJa0des3If6bhXo6eBuX5YbcNlItTrHcH+egqRL+ObwM7oDMNYBaEiKXghKcdow=
+X-Received: by 2002:a2e:86cc:: with SMTP id n12mr16247419ljj.146.1562053557722;
+ Tue, 02 Jul 2019 00:45:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702053443.GE3178@localhost.localdomain>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 02 Jul 2019 07:42:55 +0000 (UTC)
+References: <20190701173042.221453-1-henryburns@google.com>
+In-Reply-To: <20190701173042.221453-1-henryburns@google.com>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Tue, 2 Jul 2019 10:45:46 +0300
+Message-ID: <CAMJBoFPbRcdZ+NnX17OQ-sOcCwe+ZAsxcDJoR0KDkgBY9WXvpg@mail.gmail.com>
+Subject: Re: [PATCH] mm/z3fold: Fix z3fold_buddy_slots use after free
+To:     Henry Burns <henryburns@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Xidong Wang <wangxidong_97@163.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/19 at 01:34pm, Baoquan He wrote:
-> On 07/02/19 at 11:17am, Dave Young wrote:
-> > On 07/02/19 at 09:41am, Baoquan He wrote:
-> > > On 07/02/19 at 06:51am, David Airlie wrote:
-> > > > On Wed, Jun 26, 2019 at 6:29 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > >
-> > > > > On 06/26/19 at 04:15pm, Baoquan He wrote:
-> > > > > > Hi Dave,
-> > > > > >
-> > > > > > We met an kdump kernel boot failure on a lenovo system. Kdump kernel
-> > > > > > failed to boot, but just reset to firmware to reboot system. And nothing
-> > > > > > is printed out.
-> > > > > >
-> > > > > > The machine is a big server, with 6T memory and many cpu, its graphic
-> > > > > > driver module is mgag200.
-> > > > > >
-> > > > > > When added 'earlyprintk=ttyS0' into kernel command line, it printed
-> > > > > > out only one line to console during kdump kernel booting:
-> > > > > >      KASLR disabled: 'nokaslr' on cmdline.
-> > > > > >
-> > > > > > Then reset to firmware to reboot system.
-> > > > > >
-> > > > > > By further code debugging, the failure happened in
-> > > > > > arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
-> > > > > > triggered by the vga printing. As you can see, in __putstr() of
-> > > > > > arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
-> > > > > > specified, and print out to the target. And no matter if earlyprintk= is
-> > > > > > added or not, it will print to VGA. And printing to VGA caused it to
-> > > > > > reset to firmware. That's why we see nothing when didn't specify
-> > > > > > earlyprintk=, but see only one line of printing about the 'KASLR
-> > > > > > disabled'.
-> > > > >
-> > > > > Here I mean:
-> > > > > That's why we see nothing when didn't specify earlyprintk=, but see only
-> > > > > one line of printing about the 'KASLR disabled' message when
-> > > > > earlyprintk=ttyS0 added.
-> > > > 
-> > > > Just to clarify, the original kernel is booted with mgag200 turned
-> > > > off, then kexec works, but if the original kernel loads mgag200, the
-> > > > kexec kernels resets hard when the VGA is used to write stuff out.
-> > > 
-> > > Thanks for looking into this, Dave.
-> > > 
-> > > Yeah, in fact the issue was found in kdump kernel. I haven't checked the
-> > > kexec jumping. Kexec jumping will call device_shutdown() to attempt to
-> > > shutdown all devices before jumping to the 2nd kernel. But kdump jumping
-> > > won't.
-> > > 
-> > > > 
-> > > > This *might* be fixable in the controlled kexec case, but having an
-> > > > mgag200 shutdown path that tries to put the gpu back into a state
-> > > > where VGA doesn't die, but for the uncontrolled kexec it'll still be a
-> > > > problem, since once the gpu is up and running and VGA is disabled, it
-> > > > doesn't expect to see anymore VGA transactions.
-> > > 
-> > > Yes, I see. It should have been shutdown by device_shutdown() in kexec
-> > > case. The uncontrolled case, I guess you mean the kdump case. In
-> > > kdump case, we don't call device_shutdown() before jumping because the
-> > > 1st kernel has been in crashed state, we just want to switch to kdump
-> > > kernel asap. So wondering how other GPU/VGA device/driver bebahve,
-> > > currently haven't got report about them. Probably mgag200 is very new,
-> > > or we may not meet them. This issue was met on a new bought server.
-> > 
-> > I assumed the vga writing only take effect when earlyprintk is provided.
-> > eg. earlyprintk=ttyS0, then x86 early decompress code will write to both
-> > vga and ttyS0.  So if one does not use earlyprintk, he/she still get
-> > nothing.  But if one provides earlyprintk, then he/she should provide a
-> > correct param he want, instead of blindly assume kernel will write to
-> > vga even if he use ttyS0.
-> 
-> No, the vga printing takes effect always, otherwise those warn() and
-> error() won't work. It takes effect no matter if CONFIG_EARLY_PRINTK
-> is enabled, and if any earlyprintk= specified.
-> 
-> That's why I prefer to pursuit fix in driver side. It's making the
-> error/warn print out even though nothing specific needed, that's make
-> sense to me.
+Hi Henry,
 
-Ok, thanks for explanation.  A driver fix is better.
+On Mon, Jul 1, 2019 at 8:31 PM Henry Burns <henryburns@google.com> wrote:
+>
+> Running z3fold stress testing with address sanitization
+> showed zhdr->slots was being used after it was freed.
+>
+> z3fold_free(z3fold_pool, handle)
+>   free_handle(handle)
+>     kmem_cache_free(pool->c_handle, zhdr->slots)
+>   release_z3fold_page_locked_list(kref)
+>     __release_z3fold_page(zhdr, true)
+>       zhdr_to_pool(zhdr)
+>         slots_to_pool(zhdr->slots)  *BOOM*
+
+Thanks for looking into this. I'm not entirely sure I'm all for
+splitting free_handle() but let me think about it.
+
+> Instead we split free_handle into two functions, release_handle()
+> and free_slots(). We use release_handle() in place of free_handle(),
+> and use free_slots() to call kmem_cache_free() after
+> __release_z3fold_page() is done.
+
+A little less intrusive solution would be to move backlink to pool
+from slots back to z3fold_header. Looks like it was a bad idea from
+the start.
+
+Best regards,
+   Vitaly
