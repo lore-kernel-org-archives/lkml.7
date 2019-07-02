@@ -2,146 +2,85 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740EDC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A16BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AEB21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E930C21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDXsug2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGBPEX (ORCPT
+        id S1727123AbfGBPEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:04:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59770 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfGBPEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:04:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B47730860B0;
-        Tue,  2 Jul 2019 15:04:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFFD978361;
-        Tue,  2 Jul 2019 15:04:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix oops in tracepoint
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jul 2019 16:04:19 +0100
-Message-ID: <156207985906.2089.12488693451155589820.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 02 Jul 2019 15:04:22 +0000 (UTC)
+        Tue, 2 Jul 2019 11:04:40 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:42983 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfGBPEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:04:40 -0400
+Received: by mail-wr1-f49.google.com with SMTP id x17so18219392wrl.9;
+        Tue, 02 Jul 2019 08:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=w6oeN0lwMMIDvt5ODAWsSxkGGt6NY5q9LUZe/Yv8zy0=;
+        b=YDXsug2VS2rjuMsdC+vDNqU3DexN46o3g/AJfl7kcBpIXfg9Vo+vbMDbiMijUaIvY2
+         9zRpKVEfMpBWXloTLBZzypAucT6DbcXMFrgUaUvVGJ6ZRVaDFAaMXrGl6EeA0B5rv6es
+         udb2RRgKAt1Hx6gmY2SI7L6Z9lWRBLjGRwAbke6VycNVCXnUgeCrrwdaIWu24FdrqSh3
+         kDBesjktzmnN91KkM/Cf/qrQg1YMjun6iwq53GT3c3JMMjt++MyEfMOuUkLJoNdmZkiz
+         Lf5QFeHJzkjnJRjb9nG8/TgOEV9l61tLcmSgxyCKKpLTbBHPaeUMS56LWmxk3EuideiT
+         IOqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=w6oeN0lwMMIDvt5ODAWsSxkGGt6NY5q9LUZe/Yv8zy0=;
+        b=lgc6mwPCsBVnvOjdRDsm7bnBgwMXsS6VDWYQqD4xub3pJgliAXhOgIUEBaEUdB/rGW
+         v1zLfFYyQAPns/V3MHzVqjU6z7Pt1YXNmDw5jHIHRx4ikHz5ae/9Pb4fWxIzViXGfk15
+         T1VBkUR4qOfIf9TYOwOP/qpLDgTK2GTPQ2PkX2XELNf18saZ7HYmDkEU4u8J0ICKDRNs
+         kp6pK7uHyaHHfg4Letqj4kSyIFEkWPN8uePLiJ5oFrv5y4ailKiMBmveNQRaAW8u8vh5
+         p7bDyCeqjyg7wFfZChEN1kfugyozwjgKe6LZnenBO9QCBKsF2DPqLZcEdXzUOndpjgfN
+         gt1Q==
+X-Gm-Message-State: APjAAAXLzY87qARCGyIwA4t7/sQ1iQO2dIVKUBY+IUOul2p83WtiGMat
+        1uOA6rGd6VCQMNBMplbDu/OHPMf4Xvk=
+X-Google-Smtp-Source: APXvYqwKtuDjbtQFYDAFF93pprS4mfM6YAOekEBNnNbHoBx6PkGEExRI1H8HI7qrfQkOr/l2uwUnKQ==
+X-Received: by 2002:adf:9e89:: with SMTP id a9mr23901675wrf.78.1562079877769;
+        Tue, 02 Jul 2019 08:04:37 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id b203sm3494191wmd.41.2019.07.02.08.04.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 08:04:37 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH 0/3] KVM: nVMX: fixes for host get/set MSR
+Date:   Tue,  2 Jul 2019 17:04:33 +0200
+Message-Id: <1562079876-20756-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the rxrpc_eproto tracepoint is enabled, an oops will be cause by the
-trace line that rxrpc_extract_header() tries to emit when a protocol error
-occurs (typically because the packet is short) because the call argument is
-NULL.
+These are three small bugs that were found while implementing QEMU
+support for user-specified VMX features.
 
-Fix this by using ?: to assume 0 as the debug_id if call is NULL.
+Paolo
 
-This can then be induced by:
+Paolo Bonzini (3):
+  KVM: nVMX: include conditional controls in /dev/kvm KVM_GET_MSRS
+  KVM: nVMX: allow setting the VMFUNC controls MSR
+  KVM: nVMX: list VMX MSRs in KVM_GET_MSR_INDEX_LIST
 
-	echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only <addr> 20001
+ arch/x86/kvm/svm.c        |  1 +
+ arch/x86/kvm/vmx/nested.c | 12 +++++++++++-
+ arch/x86/kvm/vmx/vmx.c    |  2 ++
+ arch/x86/kvm/x86.c        | 20 ++++++++++++++++++++
+ 4 files changed, 34 insertions(+), 1 deletion(-)
 
-where addr has the following program running on it:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include <unistd.h>
-	#include <sys/socket.h>
-	#include <arpa/inet.h>
-	#include <linux/rxrpc.h>
-	int main(void)
-	{
-		struct sockaddr_rxrpc srx;
-		int fd;
-		memset(&srx, 0, sizeof(srx));
-		srx.srx_family			= AF_RXRPC;
-		srx.srx_service			= 0;
-		srx.transport_type		= AF_INET;
-		srx.transport_len		= sizeof(srx.transport.sin);
-		srx.transport.sin.sin_family	= AF_INET;
-		srx.transport.sin.sin_port	= htons(0x4e21);
-		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
-		bind(fd, (struct sockaddr *)&srx, sizeof(srx));
-		sleep(20);
-		return 0;
-	}
-
-It results in the following oops.
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000340
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	...
-	RIP: 0010:trace_event_raw_event_rxrpc_rx_eproto+0x47/0xac
-	...
-	Call Trace:
-	 <IRQ>
-	 rxrpc_extract_header+0x86/0x171
-	 ? rcu_read_lock_sched_held+0x5d/0x63
-	 ? rxrpc_new_skb+0xd4/0x109
-	 rxrpc_input_packet+0xef/0x14fc
-	 ? rxrpc_input_data+0x986/0x986
-	 udp_queue_rcv_one_skb+0xbf/0x3d0
-	 udp_unicast_rcv_skb.isra.8+0x64/0x71
-	 ip_protocol_deliver_rcu+0xe4/0x1b4
-	 ip_local_deliver+0xf0/0x154
-	 __netif_receive_skb_one_core+0x50/0x6c
-	 netif_receive_skb_internal+0x26b/0x2e9
-	 napi_gro_receive+0xf8/0x1da
-	 rtl8169_poll+0x303/0x4c4
-	 net_rx_action+0x10e/0x333
-	 __do_softirq+0x1a5/0x38f
-	 irq_exit+0x54/0xc4
-	 do_IRQ+0xda/0xf8
-	 common_interrupt+0xf/0xf
-	 </IRQ>
-	 ...
-	 ? cpuidle_enter_state+0x23c/0x34d
-	 cpuidle_enter+0x2a/0x36
-	 do_idle+0x163/0x1ea
-	 cpu_startup_entry+0x1d/0x1f
-	 start_secondary+0x157/0x172
-	 secondary_startup_64+0xa4/0xb0
-
-Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
----
-
- include/trace/events/rxrpc.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index d85816878a52..cc1d060cbf13 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1379,7 +1379,7 @@ TRACE_EVENT(rxrpc_rx_eproto,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->call = call->debug_id;
-+		    __entry->call = call ? call->debug_id : 0;
- 		    __entry->serial = serial;
- 		    __entry->why = why;
- 			   ),
+-- 
+1.8.3.1
 
