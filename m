@@ -2,280 +2,884 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2174C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C0DC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F722146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBE3208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ODoAOfoV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBZRXec2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfGBNCL (ORCPT
+        id S1727049AbfGBNC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:02:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38330 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfGBNCJ (ORCPT
+        Tue, 2 Jul 2019 09:02:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33064 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfGBNC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:02:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so929943wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 06:02:07 -0700 (PDT)
+        Tue, 2 Jul 2019 09:02:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n9so17781287wru.0;
+        Tue, 02 Jul 2019 06:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L0Augh0CTTlBAZvDCLRt1s60tklJose8OaxiKCFG9bA=;
-        b=ODoAOfoVY7D/edoPBEz9W5Dc2Vzada7CCUyfZ29qxGJ6VUV6i8OPR5SRxBt608IKw4
-         KqrWa4wX7Wzm6EqrliBA+cheRPVHjYsCK3LXHzhW2N7Ve/DOIf5UWKpMMfkCbBtfX/y3
-         mQn7CWXAtGuWybFtsf4j3n16MxOI38EfeBr4Dk7jh5yo7PWcjyEIk5YW4yI7kHNzyeDt
-         RBneMnqbCkaY+h8ZQ4J9n6MWPElmvqTHD7hWatVGpEVn5YGfzEpwbtOICKi0SBcUp5gt
-         /XH+7XmQ7lbcZsU5rVxBVbPrOk4CC4aD+Opgy/jy/pdt89t07FfcU4snwlPjo3VEaR6j
-         pmHQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=myU+XZnl1dtXil8LJEfAOj5EYClom6cJqr/lwOnFqIE=;
+        b=MBZRXec2/Gkkjiw2bk0zkltDzPnaWx80Fw9RvIvm6py+9VlacluQ+1xiCc9WSuuVeq
+         YvEvWhfkt5pRaogbrRLuuou3HboNTnOo6BBq6ZHMlRh/zl+jO1nax61zRumNEeDVmW0r
+         F7zwEDUPPj6CmA9kaotWV8TOWXc9jz2xUnW+GNjU4YcVl5PgljEwfBiUXOMDu/bVH7ke
+         PLKdCA/tMM71rvKSzMkoVnhDUnjQ6pKpnK0yD9X8npNndC088GLfFbZtA/9VdBBwgqGR
+         ceLISKbvEIE4bzMz62XI+RaVCCDo9Jqx0j1yjkTYdwg1CXAFYJLPfIVtqHFagkefsvEj
+         mEnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L0Augh0CTTlBAZvDCLRt1s60tklJose8OaxiKCFG9bA=;
-        b=KH0lV/6pv6d2VbV8dHaQG/mTTqbDQ7xXjo2IcHreSWVAMcdntNjHWkJoBqGskTI04l
-         r6lJu7RTJkDMCPEY99DEjND9WavPMkTzPCUmiv8ovGhqtC5gPz8WRodcQIpE2QaBLuet
-         DqVKVDsam/srWKru/nc8eJo/9YCZdobN0c3dl9bNM2dONNy98uLZSnEL08cU52i30JD3
-         Wf3QOISXytCLxmbQvtJk56Fj8lDIp6XWrfpyHCt7Z9XgNQBiOcaMo5CXcmZc7rLdysN5
-         Se8lnHF9M3MG6/5bp6al7i3TpkpE09W8neAR2VkUMnAYowJUaP0GHNPkFy+276oKqOCx
-         NkVg==
-X-Gm-Message-State: APjAAAUX/TSYpG0AxB/F3TrYPVWFJm+lppz5nRuIKOzKhusEDODdsKYS
-        bXktGYFUbDlO2dZ2Z0wHlAI=
-X-Google-Smtp-Source: APXvYqzGiT1dnuyjzcIGZsLj8N0vAeiCBK3JzMXo+y+oTKC9M8Wu2gTJyFM3f4tYLJrgDBXsIolhTA==
-X-Received: by 2002:a1c:2302:: with SMTP id j2mr3324521wmj.174.1562072526202;
-        Tue, 02 Jul 2019 06:02:06 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id g5sm14462728wrp.29.2019.07.02.06.02.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 06:02:05 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 15:02:04 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/11] vfs: syscall: Add fsinfo() to query filesystem
- information [ver #15]
-Message-ID: <20190702130203.rz5mlnsvabvvenpk@brauner.io>
-References: <156173661696.14042.17822154531324224780.stgit@warthog.procyon.org.uk>
- <156173662509.14042.3867242748127323502.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <156173662509.14042.3867242748127323502.stgit@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=myU+XZnl1dtXil8LJEfAOj5EYClom6cJqr/lwOnFqIE=;
+        b=AVKyRS0T3af7EgdZ9H6Hi6ep+Rr35E5BXiWJEhOgaQFE/N6opN01CvySox4UBdejoL
+         6IVjRT64Z0ev0wwrvq+S7lYc8nHiSipBMYXo5X3kKD1tECW98CAxRNlSs2UxFTXPzoOp
+         n/7WJODr5mSItCDB00pSmeIZGeodGb8CssrYl/CiX/CZVIkBq2RmGKJjk5gcwG+b3/r9
+         ny9a1K7SNZ2CqVaQ7zwUAahHWSnjBoPW/EWrK/rFVqUpZ8JlaiCSr/Ti9JDIFgDpxdP5
+         x8iPtIJCFcPtONBS7dhGxFoW25+fZUoAAVp9NvgX/HYHDnLvyyJUE9uk3yff3N+hYvPG
+         K54A==
+X-Gm-Message-State: APjAAAXhy07srhFdZzDa9ndcMz+NwCb9HTg5ep72qhFjMUlZioGn7xG/
+        I7EU6SeQmLp2UF+CCSQKlCY=
+X-Google-Smtp-Source: APXvYqzCqvOJIGUDwgJNnhIe8WqgvZqGTactdqnVE9ck103tKfJ8bQsFD+tE+KUfctzM71zWesb0Hw==
+X-Received: by 2002:adf:b605:: with SMTP id f5mr9854806wre.305.1562072571318;
+        Tue, 02 Jul 2019 06:02:51 -0700 (PDT)
+Received: from localhost.localdomain ([212.146.100.6])
+        by smtp.gmail.com with ESMTPSA id e4sm1957685wme.16.2019.07.02.06.02.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 06:02:48 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com, Anson.Huang@nxp.com,
+        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
+        agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM64: dts: freescale: add wand-pi-8m dtb
+Date:   Tue,  2 Jul 2019 16:02:39 +0300
+Message-Id: <20190702130239.17864-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:43:45PM +0100, David Howells wrote:
-> Add a system call to allow filesystem information to be queried.  A request
-> value can be given to indicate the desired attribute.  Support is provided
-> for enumerating multi-value attributes.
-> 
-> ===============
-> NEW SYSTEM CALL
-> ===============
-> 
-> The new system call looks like:
-> 
-> 	int ret = fsinfo(int dfd,
-> 			 const char *filename,
-> 			 const struct fsinfo_params *params,
-> 			 void *buffer,
-> 			 size_t buf_size);
-> 
-> The params parameter optionally points to a block of parameters:
-> 
-> 	struct fsinfo_params {
-> 		__u32	at_flags;
-> 		__u32	request;
-> 		__u32	Nth;
-> 		__u32	Mth;
-> 		__u64	__reserved[3];
-> 	};
-> 
-> If params is NULL, it is assumed params->request should be
-> fsinfo_attr_statfs, params->Nth should be 0, params->Mth should be 0 and
-> params->at_flags should be 0.
-> 
-> If params is given, all of params->__reserved[] must be 0.
-> 
-> dfd, filename and params->at_flags indicate the file to query.  There is no
-> equivalent of lstat() as that can be emulated with fsinfo() by setting
-> AT_SYMLINK_NOFOLLOW in params->at_flags.  There is also no equivalent of
-> fstat() as that can be emulated by passing a NULL filename to fsinfo() with
-> the fd of interest in dfd.  AT_NO_AUTOMOUNT can also be used to an allow
-> automount point to be queried without triggering it.
-> 
-> params->request indicates the attribute/attributes to be queried.  This can
-> be one of:
-> 
-> 	FSINFO_ATTR_STATFS		- statfs-style info
-> 	FSINFO_ATTR_FSINFO		- Information about fsinfo()
-> 	FSINFO_ATTR_IDS			- Filesystem IDs
-> 	FSINFO_ATTR_LIMITS		- Filesystem limits
-> 	FSINFO_ATTR_SUPPORTS		- What's supported in statx(), IOC flags
-> 	FSINFO_ATTR_CAPABILITIES	- Filesystem capabilities
-> 	FSINFO_ATTR_TIMESTAMP_INFO	- Inode timestamp info
-> 	FSINFO_ATTR_VOLUME_ID		- Volume ID (string)
-> 	FSINFO_ATTR_VOLUME_UUID		- Volume UUID
-> 	FSINFO_ATTR_VOLUME_NAME		- Volume name (string)
-> 	FSINFO_ATTR_NAME_ENCODING	- Filename encoding (string)
-> 	FSINFO_ATTR_NAME_CODEPAGE	- Filename codepage (string)
-> 
-> Some attributes (such as the servers backing a network filesystem) can have
-> multiple values.  These can be enumerated by setting params->Nth and
-> params->Mth to 0, 1, ... until ENODATA is returned.
-> 
-> buffer and buf_size point to the reply buffer.  The buffer is filled up to
-> the specified size, even if this means truncating the reply.  The full size
-> of the reply is returned.  In future versions, this will allow extra fields
-> to be tacked on to the end of the reply, but anyone not expecting them will
-> only get the subset they're expecting.  If either buffer of buf_size are 0,
-> no copy will take place and the data size will be returned.
-> 
-> At the moment, this will only work on x86_64 and i386 as it requires the
-> system call to be wired up.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: linux-api@vger.kernel.org
-> ---
-> 
->  arch/x86/entry/syscalls/syscall_32.tbl |    1 
->  arch/x86/entry/syscalls/syscall_64.tbl |    1 
->  fs/Kconfig                             |    7 
->  fs/Makefile                            |    1 
->  fs/fsinfo.c                            |  545 ++++++++++++++++++++++++++++++++
->  include/linux/fs.h                     |    5 
->  include/linux/fsinfo.h                 |   65 ++++
->  include/linux/syscalls.h               |    4 
->  include/uapi/asm-generic/unistd.h      |    4 
->  include/uapi/linux/fsinfo.h            |  219 +++++++++++++
->  kernel/sys_ni.c                        |    1 
->  samples/vfs/Makefile                   |    4 
->  samples/vfs/test-fsinfo.c              |  551 ++++++++++++++++++++++++++++++++
->  13 files changed, 1407 insertions(+), 1 deletion(-)
->  create mode 100644 fs/fsinfo.c
->  create mode 100644 include/linux/fsinfo.h
->  create mode 100644 include/uapi/linux/fsinfo.h
->  create mode 100644 samples/vfs/test-fsinfo.c
-> 
-> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> index ad968b7bac72..03decae51513 100644
-> --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> @@ -438,3 +438,4 @@
->  431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
->  432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
->  433	i386	fspick			sys_fspick			__ia32_sys_fspick
-> +434	i386	fsinfo			sys_fsinfo			__ia32_sys_fsinfo
-> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> index b4e6f9e6204a..ea63df9a1020 100644
-> --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -355,6 +355,7 @@
->  431	common	fsconfig		__x64_sys_fsconfig
->  432	common	fsmount			__x64_sys_fsmount
->  433	common	fspick			__x64_sys_fspick
-> +434	common	fsinfo			__x64_sys_fsinfo
->  
->  #
->  # x32-specific system call numbers start at 512 to avoid cache impact
-> diff --git a/fs/Kconfig b/fs/Kconfig
-> index cbbffc8b9ef5..9e7d2f2c0111 100644
-> --- a/fs/Kconfig
-> +++ b/fs/Kconfig
-> @@ -15,6 +15,13 @@ config VALIDATE_FS_PARSER
->  	  Enable this to perform validation of the parameter description for a
->  	  filesystem when it is registered.
->  
-> +config FSINFO
-> +	bool "Enable the fsinfo() system call"
-> +	help
-> +	  Enable the file system information querying system call to allow
-> +	  comprehensive information to be retrieved about a filesystem,
-> +	  superblock or mount object.
-> +
->  if BLOCK
->  
->  config FS_IOMAP
-> diff --git a/fs/Makefile b/fs/Makefile
-> index c9aea23aba56..26eaeae4b9a1 100644
-> --- a/fs/Makefile
-> +++ b/fs/Makefile
-> @@ -53,6 +53,7 @@ obj-$(CONFIG_SYSCTL)		+= drop_caches.o
->  
->  obj-$(CONFIG_FHANDLE)		+= fhandle.o
->  obj-$(CONFIG_FS_IOMAP)		+= iomap.o
-> +obj-$(CONFIG_FSINFO)		+= fsinfo.o
->  
->  obj-y				+= quota/
->  
-> diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-> new file mode 100644
-> index 000000000000..09e743b16235
-> --- /dev/null
-> +++ b/fs/fsinfo.c
-> @@ -0,0 +1,545 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Filesystem information query.
-> + *
-> + * Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
-> + * Written by David Howells (dhowells@redhat.com)
-> + */
-> +#include <linux/syscalls.h>
-> +#include <linux/fs.h>
-> +#include <linux/file.h>
-> +#include <linux/mount.h>
-> +#include <linux/namei.h>
-> +#include <linux/statfs.h>
-> +#include <linux/security.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/fsinfo.h>
-> +#include <uapi/linux/mount.h>
-> +#include "internal.h"
-> +
-> +static u32 calc_mount_attrs(u32 mnt_flags)
+From: Richard Hu <richard.hu@technexion.com>
 
-I totally forgot to mention this:
-I had a patchset that extended statfs to also report back when a
-mountpoint is shared, slave, private, or unbindable to avoid parsing
-/proc/1/mountinfo which is unreliable and slow. I've given a lengthier
-argument in the patchset I sent more than a year ago:
-https://lkml.org/lkml/2018/5/25/397
+Add dtb for WAND-PI-8M board.
+---
+ arch/arm64/boot/dts/freescale/Makefile       |   3 +-
+ arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 780 +++++++++++++++++++++++++++
+ 2 files changed, 782 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
 
-Pretty please, make it possible to retrieve propagation attributes with
-fsinfo(). We desperately need this and it's trivial to add imho.
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 7a9dae6c43f5..308bbb1caa60 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -51,7 +51,8 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += fsl-imx8mq-ddr3l-arm2.dtb \
+ 				 fsl-imx8mq-evk-dual-display.dtb \
+ 				 fsl-imx8mq-evk-ak4497.dtb \
+ 				 fsl-imx8mq-evk-audio-tdm.dtb \
+-				 fsl-imx8mq-evk-drm.dtb
++				 fsl-imx8mq-evk-drm.dtb \
++				 wand-pi-8m.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+new file mode 100644
+index 000000000000..cc1d55ee88e2
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+@@ -0,0 +1,780 @@
++/*
++ * Copyright 2018 Wandboard, Org.
++ * Copyright 2017 NXP
++ *
++ * Author: Richard Hu <hakahu@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "fsl-imx8mq.dtsi"
++
++/ {
++	model = "WAND-PI-8M";
++	compatible = "wand,imx8mq-wand-pi", "fsl,imx8mq";
++
++	chosen {
++		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
++		stdout-path = &uart1;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_usdhc2_vmmc: usdhc2_vmmc {
++			compatible = "regulator-fixed";
++			regulator-name = "VSD_3V3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++
++		reg_gpio_dvfs: regulator-gpio {
++			compatible = "regulator-gpio";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_dvfs>;
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <1000000>;
++			regulator-name = "gpio_dvfs";
++			regulator-type = "voltage";
++			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
++			states = <900000 0x1 1000000 0x0>;
++		};
++	};
++
++	modem_reset: modem-reset {
++		compatible = "gpio-reset";
++		reset-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
++		reset-delay-us = <2000>;
++		reset-post-delay-ms = <40>;
++		#reset-cells = <0>;
++	};
++
++	wm8524: wm8524 {
++		compatible = "wlf,wm8524";
++		clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++		clock-names = "mclk";
++		wlf,mute-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++	};
++
++	sound-wm8524 {
++		compatible = "fsl,imx-audio-wm8524";
++		model = "wm8524-audio";
++		audio-cpu = <&sai2>;
++		audio-codec = <&wm8524>;
++		audio-routing =
++			"Line Out Jack", "LINEVOUTL",
++			"Line Out Jack", "LINEVOUTR";
++	};
++
++	sound-hdmi {
++		compatible = "fsl,imx-audio-cdnhdmi";
++		model = "imx-audio-hdmi";
++		audio-cpu = <&sai4>;
++		protocol = <1>;
++	};
++
++	sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		spdif-controller = <&spdif1>;
++		spdif-out;
++		spdif-in;
++	};
++
++	sound-hdmi-arc {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-hdmi-arc";
++		spdif-controller = <&spdif2>;
++		spdif-in;
++	};
++};
++
++&clk {
++	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>;
++	assigned-clock-rates = <786432000>;
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++
++	wand-pi-8m {
++		pinctrl_csi1: csi1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x19
++				MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x19
++				MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x59
++			>;
++		};
++		pinctrl_csi2: csi2grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5		0x19
++				MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6		0x19
++				MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x59
++			>;
++		};
++
++		pinctrl_fec1: fec1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
++				MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x23
++				MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
++				MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
++				MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
++				MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
++				MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
++				MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
++				MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
++				MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
++				MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
++				MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
++				MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++				MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++				MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
++			>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
++				MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
++			>;
++		};
++
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
++				MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
++			>;
++		};
++
++
++		pinctrl_pcie0: pcie0grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_I2C4_SCL_GPIO5_IO20	0x16
++				MX8MQ_IOMUXC_UART4_TXD_GPIO5_IO29	0x16
++				MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28	0x16
++			>;
++		};
++
++		pinctrl_pcie1: pcie1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_I2C4_SDA_GPIO5_IO21	0x16
++				MX8MQ_IOMUXC_ECSPI2_SCLK_GPIO5_IO10	0x16
++				MX8MQ_IOMUXC_ECSPI2_MISO_GPIO5_IO12	0x16
++			>;
++		};
++
++		pinctrl_dvfs: dvfsgrp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x16
++			>;
++		};
++
++		pinctrl_qspi: qspigrp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK	0x82
++				MX8MQ_IOMUXC_NAND_CE0_B_QSPI_A_SS0_B	0x82
++				MX8MQ_IOMUXC_NAND_DATA00_QSPI_A_DATA0	0x82
++				MX8MQ_IOMUXC_NAND_DATA01_QSPI_A_DATA1	0x82
++				MX8MQ_IOMUXC_NAND_DATA02_QSPI_A_DATA2	0x82
++				MX8MQ_IOMUXC_NAND_DATA03_QSPI_A_DATA3	0x82
++
++			>;
++		};
++
++		pinctrl_typec: typecgrp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_NAND_RE_B_GPIO3_IO15	0x16
++				MX8MQ_IOMUXC_NAND_CE2_B_GPIO3_IO3	0x17059
++			>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
++				MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
++			>;
++		};
++
++		pinctrl_uart3: uart3grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX		0x49
++				MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX		0x49
++				MX8MQ_IOMUXC_ECSPI1_MISO_UART3_DCE_CTS_B	0x49
++				MX8MQ_IOMUXC_ECSPI1_SS0_UART3_DCE_RTS_B		0x49
++				MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5			0x19
++			>;
++		};
++
++		pinctrl_usdhc1: usdhc1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
++				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
++				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
++				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
++				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
++				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
++				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
++				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
++				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
++				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
++				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
++				MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++			>;
++		};
++
++		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
++				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
++				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
++				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
++				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
++				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
++				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
++				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
++				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
++				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
++				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
++				MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++			>;
++		};
++
++		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
++				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
++				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
++				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
++				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
++				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
++				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
++				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
++				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
++				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
++				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
++				MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++			>;
++		};
++
++		pinctrl_usdhc2_gpio: usdhc2grpgpio {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
++				MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
++			>;
++		};
++
++		pinctrl_usdhc2: usdhc2grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
++				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
++				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
++				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
++				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
++				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
++				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++			>;
++		};
++
++		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
++				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
++				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
++				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
++				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
++				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
++				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++			>;
++		};
++
++		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
++				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
++				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
++				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
++				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
++				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
++				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
++			>;
++		};
++
++		pinctrl_sai2: sai2grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
++				MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK	0xd6
++				MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK	0xd6
++				MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0	0xd6
++				MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8	0xd6
++			>;
++		};
++
++		pinctrl_spdif1: spdif1grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_SPDIF_TX_SPDIF1_OUT	0xd6
++				MX8MQ_IOMUXC_SPDIF_RX_SPDIF1_IN		0xd6
++			>;
++		};
++
++		pinctrl_wdog: wdoggrp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
++			>;
++		};
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++			at803x,led-act-blind-workaround;
++			at803x,eee-disabled;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3ab {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++		};
++	};
++
++	typec_ptn5100: ptn5110@50 {
++		compatible = "usb,tcpci";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_typec>;
++		reg = <0x50>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <3 8>;
++		ss-sel-gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
++		src-pdos = <0x380190c8>;
++		snk-pdos = <0x380190c8 0x3802d0c8>;
++		max-snk-mv = <9000>;
++		max-snk-ma = <1000>;
++		op-snk-mw = <9000>;
++		port-type = "drp";
++		default-role = "sink";
++	};
++
++	ov5640_mipi: ov5640_mipi@3c {
++		compatible = "ovti,ov5640_mipi";
++		reg = <0x3c>;
++		status = "okay";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_csi1>;
++		clocks = <&clk IMX8MQ_CLK_CLKO2_DIV>;
++		clock-names = "csi_mclk";
++		assigned-clocks = <&clk IMX8MQ_CLK_CLKO2_SRC>,
++				  <&clk IMX8MQ_CLK_CLKO2_DIV>;
++		assigned-clock-parents = <&clk IMX8MQ_SYS2_PLL_200M>;
++		assigned-clock-rates = <0>, <20000000>;
++		csi_id = <0>;
++		pwn-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++		rst-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		mclk = <20000000>;
++		mclk_source = <0>;
++		port {
++			ov5640_mipi1_ep: endpoint {
++				remote-endpoint = <&mipi1_sensor_ep>;
++			};
++		};
++	};
++
++	ov5640_mipi2: ov5640_mipi2@3c {
++		compatible = "ovti,ov5640_mipi";
++		reg = <0x3c>;
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_csi2>;
++		clocks = <&clk IMX8MQ_CLK_CLKO2_DIV>;
++		clock-names = "csi_mclk";
++		assigned-clocks = <&clk IMX8MQ_CLK_CLKO2_SRC>,
++				  <&clk IMX8MQ_CLK_CLKO2_DIV>;
++		assigned-clock-parents = <&clk IMX8MQ_SYS2_PLL_200M>;
++		assigned-clock-rates = <0>, <20000000>;
++		csi_id = <0>;
++		pwn-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
++		rst-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		mclk = <20000000>;
++		mclk_source = <0>;
++		port {
++			ov5640_mipi2_ep: endpoint {
++				remote-endpoint = <&mipi2_sensor_ep>;
++			};
++		};
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "disabled";
++};
++
++&pcie0{
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie0>;
++	clkreq-gpio = <&gpio5 20 GPIO_ACTIVE_LOW>;
++	disable-gpio = <&gpio5 29 GPIO_ACTIVE_LOW>;
++	reset-gpio = <&gpio5 28 GPIO_ACTIVE_LOW>;
++	ext_osc = <1>;
++	hard-wired = <1>;
++	status = "okay";
++};
++
++&pcie1{
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie1>;
++	clkreq-gpio = <&gpio5 21 GPIO_ACTIVE_LOW>;
++	disable-gpio = <&gpio5 10 GPIO_ACTIVE_LOW>;
++	reset-gpio = <&gpio5 12 GPIO_ACTIVE_LOW>;
++	ext_osc = <1>;
++	status = "okay";
++};
++
++&uart1 { /* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART1_SRC>;
++	assigned-clock-parents = <&clk IMX8MQ_CLK_25M>;
++	status = "okay";
++};
++
++&qspi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi>;
++	status = "okay";
++
++	flash0: n25q256a@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "micron,n25q256a";
++		spi-max-frequency = <29000000>;
++		spi-nor,ddr-quad-read-dummy = <6>;
++	};
++};
++
++&uart3 { /* BT */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	assigned-clocks = <&clk IMX8MQ_CLK_UART3_SRC>;
++	assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>;
++	fsl,uart-has-rtscts;
++	resets = <&modem_reset>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	bus-width = <4>;
++	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	status = "okay";
++};
++
++&usb3_phy0 {
++	status = "okay";
++};
++
++&usb3_0 {
++	status = "okay";
++};
++
++&usb_dwc3_0 {
++	status = "okay";
++	extcon = <&typec_ptn5100>;
++	dr_mode = "otg";
++};
++
++&usb3_phy1 {
++	status = "okay";
++};
++
++&usb3_1 {
++	status = "okay";
++};
++
++&usb_dwc3_1 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&sai2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	assigned-clocks = <&clk IMX8MQ_CLK_SAI2_SRC>,
++			<&clk IMX8MQ_CLK_SAI2_DIV>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <24576000>;
++	status = "okay";
++};
++
++&sai4 {
++	assigned-clocks = <&clk IMX8MQ_CLK_SAI4_SRC>,
++			<&clk IMX8MQ_CLK_SAI4_DIV>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <24576000>;
++	status = "okay";
++};
++
++&spdif1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spdif1>;
++	assigned-clocks = <&clk IMX8MQ_CLK_SPDIF1_SRC>,
++			<&clk IMX8MQ_CLK_SPDIF1_DIV>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <24576000>;
++	status = "okay";
++};
++
++&spdif2 {
++	assigned-clocks = <&clk IMX8MQ_CLK_SPDIF2_SRC>,
++			<&clk IMX8MQ_CLK_SPDIF2_DIV>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <24576000>;
++	status = "okay";
++};
++
++&gpu_pd {
++	power-supply = <&sw1a_reg>;
++};
++
++&vpu_pd {
++	power-supply = <&sw1c_reg>;
++};
++
++&gpu {
++	status = "okay";
++};
++
++&vpu {
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
++
++&mu {
++	status = "okay";
++};
++
++&rpmsg{
++	/*
++	 * 64K for one rpmsg instance:
++	 * --0xb8000000~0xb800ffff: pingpong
++	 */
++	vdev-nums = <1>;
++	reg = <0x0 0xb8000000 0x0 0x10000>;
++	status = "okay";
++};
++
++&A53_0 {
++	operating-points = <
++		/* kHz    uV */
++		1500000 1000000
++		1300000 1000000
++		1000000 900000
++		800000  900000
++	>;
++	dc-supply = <&reg_gpio_dvfs>;
++};
++
++&dcss {
++	status = "okay";
++
++	disp-dev = "hdmi_disp";
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_cec {
++	status = "okay";
++};
++
++&csi1_bridge {
++	fsl,mipi-mode;
++	fsl,two-8bit-sensor-mode;
++	status = "okay";
++
++	port {
++		csi1_ep: endpoint {
++			remote-endpoint = <&csi1_mipi_ep>;
++		};
++	};
++};
++
++&csi2_bridge {
++	fsl,mipi-mode;
++	fsl,two-8bit-sensor-mode;
++	status = "disabled";
++
++	port {
++		csi2_ep: endpoint {
++			remote-endpoint = <&csi2_mipi_ep>;
++		};
++	};
++};
++
++&mipi_csi_1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++	port {
++		mipi1_sensor_ep: endpoint1 {
++			remote-endpoint = <&ov5640_mipi1_ep>;
++			data-lanes = <1 2>;
++		};
++
++		csi1_mipi_ep: endpoint2 {
++			remote-endpoint = <&csi1_ep>;
++		};
++	};
++};
++
++&mipi_csi_2 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "disabled";
++	port {
++		mipi2_sensor_ep: endpoint1 {
++			remote-endpoint = <&ov5640_mipi2_ep>;
++			data-lanes = <1 2>;
++		};
++
++		csi2_mipi_ep: endpoint2 {
++			remote-endpoint = <&csi2_ep>;
++		};
++	};
++};
+-- 
+2.11.0
 
-> +{
-> +	u32 attrs = 0;
-> +
-> +	if (mnt_flags & MNT_READONLY)
-> +		attrs |= MOUNT_ATTR_RDONLY;
-> +	if (mnt_flags & MNT_NOSUID)
-> +		attrs |= MOUNT_ATTR_NOSUID;
-> +	if (mnt_flags & MNT_NODEV)
-> +		attrs |= MOUNT_ATTR_NODEV;
-> +	if (mnt_flags & MNT_NOEXEC)
-> +		attrs |= MOUNT_ATTR_NOEXEC;
-> +	if (mnt_flags & MNT_NODIRATIME)
-> +		attrs |= MOUNT_ATTR_NODIRATIME;
-> +
-> +	if (mnt_flags & MNT_NOATIME)
-> +		attrs |= MOUNT_ATTR_NOATIME;
-> +	else if (mnt_flags & MNT_RELATIME)
-> +		attrs |= MOUNT_ATTR_RELATIME;
-> +	else
-> +		attrs |= MOUNT_ATTR_STRICTATIME;
-> +	return attrs;
-> +}
