@@ -2,140 +2,65 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E37C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAA1C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9938F21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757F021473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PI/krrON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfGBMWv (ORCPT
+        id S1726830AbfGBMXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:22:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7687 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfGBMWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:22:50 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AC745EE7D815FCDD5B0E;
-        Tue,  2 Jul 2019 20:22:46 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 20:22:41 +0800
-Subject: Re: linux-next: Tree for Jul 2
-To:     Will Deacon <will@kernel.org>, <joro@8bytes.org>
-References: <20190702195158.79aa5517@canb.auug.org.au>
- <000f56ac-2abc-bc6a-e2db-5ae38779d276@hisilicon.com>
- <20190702120321.v3224ofd4aaxvytk@willie-the-truck>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Zhangshaokun <zhangshaokun@hisilicon.com>
-Message-ID: <8a3bea20-fe65-35ea-43f1-d8f085a097e2@hisilicon.com>
-Date:   Tue, 2 Jul 2019 20:22:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Tue, 2 Jul 2019 08:23:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52704 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfGBMXb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:23:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qKrxyQJ9SgUXm99WAZTTjGGR42eLnd0bh+xx2k6emyg=; b=PI/krrONm2KN5eB0OOM3DxRy7
+        VHoHinvVWugAGktCautlN02o/iJrv07CmHH6iiZih8czIKOr14F7lsDpPeB9w9gs7bI47+ad0LLlx
+        3XnSTfZ33d49SWRbklND4Xg9O8uVy9IuOisojt/5DZ/VyzKXtZcPqHhpadtBCoB2dmI/PpQJo2LGp
+        lK+v7InYtRaACYTvrXQOxFwwN2uL1OfhD70KvgaTM9fFJhd0vjtgHh+oBArZt5c3oiRuyGxKDe1sv
+        8kbE/axYsg+jcG9ERYzEyAApM5UeDHbPFpxKI1Xp9NtghLmDkUnLHnhUuX3wOiODrlhmxxUCk2SCL
+        pOxr7lrPw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiHof-0000yN-MT; Tue, 02 Jul 2019 12:23:21 +0000
+Date:   Tue, 2 Jul 2019 05:23:21 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     akpm@linux-foundation.org, peterz@infradead.org, urezki@gmail.com,
+        rpenyaev@suse.de, mhocko@suse.com, guro@fb.com,
+        aryabinin@virtuozzo.com, rppt@linux.ibm.com, mingo@kernel.org,
+        rick.p.edgecombe@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] mm/vmalloc.c: Rename function __find_vmap_area() for
+ readability
+Message-ID: <20190702122321.GC1729@bombadil.infradead.org>
+References: <20190630075650.8516-1-lpf.vector@gmail.com>
+ <20190630075650.8516-4-lpf.vector@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190702120321.v3224ofd4aaxvytk@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190630075650.8516-4-lpf.vector@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Sun, Jun 30, 2019 at 03:56:48PM +0800, Pengfei Li wrote:
+> Rename function __find_vmap_area to __search_va_from_busy_tree to
+> indicate that it is searching in the *BUSY* tree.
 
-On 2019/7/2 20:03, Will Deacon wrote:
-> [+Joerg]
-> 
-> On Tue, Jul 02, 2019 at 06:40:45PM +0800, Zhangshaokun wrote:
->> +Cc: Will Deacon
->>
->> There is a compiler failure on arm64 platform, as follow:
->> In file included from ./include/linux/list.h:9:0,
->>                  from ./include/linux/kobject.h:19,
->>                  from ./include/linux/of.h:17,
->>                  from ./include/linux/irqdomain.h:35,
->>                  from ./include/linux/acpi.h:13,
->>                  from drivers/iommu/arm-smmu-v3.c:12:
->> drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
->> drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
->>  #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
->>                                         ^
->> It's the commit <d25f6ead162e> ("iommu/arm-smmu-v3: Increase maximum size of queues")
-> 
-> Thanks for the report. I've provided a fix below.
-> 
-
-It works, thanks for the patch,
-Tested-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-
-Thanks,
-Shaokun
-
-> Joerg -- please can you take this on top of the SMMUv3 patches queued
-> for 5.3?
-> 
-> Cheers,
-> 
-> Will
-> 
-> --->8
-> 
->>From e8f9d8229e3aaa4817bfb72752e804eec97a3d8d Mon Sep 17 00:00:00 2001
-> From: Will Deacon <will@kernel.org>
-> Date: Tue, 2 Jul 2019 12:53:18 +0100
-> Subject: [PATCH] iommu/arm-smmu-v3: Fix compilation when CONFIG_CMA=n
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
-> 
-> When compiling a kernel without support for CMA, CONFIG_CMA_ALIGNMENT
-> is not defined which results in the following build failure:
-> 
-> In file included from ./include/linux/list.h:9:0
->                  from ./include/linux/kobject.h:19,
->                  from ./include/linux/of.h:17
->                  from ./include/linux/irqdomain.h:35,
->                  from ./include/linux/acpi.h:13,
->                  from drivers/iommu/arm-smmu-v3.c:12:
-> drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
-> drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
->  #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
-> 
-> Fix the breakage by capping the maximum queue size based on MAX_ORDER
-> when CMA is not enabled.
-> 
-> Reported-by: Zhangshaokun <zhangshaokun@hisilicon.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 57fb4e080d6b..8e73a7615bf5 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -191,7 +191,13 @@
->  #define Q_BASE_RWA			(1UL << 62)
->  #define Q_BASE_ADDR_MASK		GENMASK_ULL(51, 5)
->  #define Q_BASE_LOG2SIZE			GENMASK(4, 0)
-> +
-> +/* Ensure DMA allocations are naturally aligned */
-> +#ifdef CONFIG_CMA_ALIGNMENT
->  #define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
-> +#else
-> +#define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + MAX_ORDER - 1)
-> +#endif
->  
->  /*
->   * Stream table.
-> 
-
+Wrong preposition; you search _in_ a tree, not _from_ a tree.
