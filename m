@@ -2,95 +2,77 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EE5C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C6EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F21320989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+tny0zm"
+	by mail.kernel.org (Postfix) with ESMTP id 0918920989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfGBR0d (ORCPT
+        id S1726780AbfGBR1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:26:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33205 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfGBR0c (ORCPT
+        Tue, 2 Jul 2019 13:27:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42002 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfGBR1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:26:32 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so18810838wru.0;
-        Tue, 02 Jul 2019 10:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GJQWdYjGRJbWGQyVM/pVQ8ZoWrqzt0Iwb6wDU6NZk2g=;
-        b=O+tny0zmZLUocyLGuzn577ZQeQVqyE3IVzVoF5ClP1sMNqM3CmWSRE4DR3QvA1BGmv
-         0LEmxDnJYQ/+nLk/aCAR8MsPwAleyo06XvyhWiyAh77rTCWL1ObF9kSyoxvCty4/GrOb
-         rLeINNDhVgwvCSw05cv+UnLNJZtJbxZxpCdx+ufK8prvVHLS+pmEad6ykSmqLtl3Vw/f
-         iDx5tMCkb1sA5CzLkn/5p4xHRx6DXSo++Gvnn0ranBCmUKuonBGE76kU/ozvhLmhw7uc
-         mSR5SbuMLIAoddU3Zk6+CyxAUuqaRdpsDoYN8HUyIK9AnRnqxJo17rD5BDb9/tIhdLyZ
-         wQ8A==
+        Tue, 2 Jul 2019 13:27:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so721623plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:27:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GJQWdYjGRJbWGQyVM/pVQ8ZoWrqzt0Iwb6wDU6NZk2g=;
-        b=PbR1O0Q5TcHYwQYf9T0exynGm7TCviZlMMNJjdhzBdZVAXcLb4wphEO+dj15Hbtd8v
-         a/4Q3ELttbs+foxuVflJi31GQwJEpjVSLW0SFVrZldd7AkoFP+EapUD7vxk7bHG/MJdf
-         30mUJn2wZOJcqHkQgpkySmHEpmA8PA944ajRC1FqnYQrqbud69xtJVYhwubCfdCT3Z9v
-         AZmvzelRKyORTaO/ISbfyYzP4NUyX2dryTUbnWFbp3Q/GpeWbuIgMatQqzmd6xXvJ2OF
-         S+brZrTEUY0IdfUyFWzhakK7Ezr21OZ29WbILhOoQBeyif9iBHSQq+IJALIpRrvPYhwV
-         kLEw==
-X-Gm-Message-State: APjAAAWM+1SwCzwt2WrVQswU54/b8y1E+YW0b0Rl1i22CwcmQkCoV4uF
-        Ca3WeXRRMMD6e6UeEmIRw/A=
-X-Google-Smtp-Source: APXvYqxJuQ0kjRWoYunRRlB7QJFYv0FpgfdFcDJ22PBoD8/5tt472sT0BHd+Y3eG4bgBajESQWs2iQ==
-X-Received: by 2002:adf:de8e:: with SMTP id w14mr26028921wrl.130.1562088390364;
-        Tue, 02 Jul 2019 10:26:30 -0700 (PDT)
-Received: from [192.168.2.202] (pD9E5A169.dip0.t-ipconnect.de. [217.229.161.105])
-        by smtp.gmail.com with ESMTPSA id p26sm18738909wrp.58.2019.07.02.10.26.28
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 10:26:29 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <c50dbd58-c0d4-1a93-b292-68df209749b9@gmail.com>
-Date:   Tue, 2 Jul 2019 19:26:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4BWRhGGfD41X+BXS6YHybFemLR0f5btRLnjH/VaAfp4=;
+        b=QDAeo86ZOjwzdMaiUs8OP5BQogZ27q/Pyp5Zjcq4ng235dn7iYmoahw7r1RMYzg/4R
+         NLFe38GxJd3PeofXVq/3juXFoqlBG0Nq7lGnwaN1Mm7BoW4h0Xt+obcgMVg/gJUmdXZs
+         p0ndDWW7ZRbnmasf7/ozZ5No+XLngPA0W4ZVCIKQjNHnckuJzPOwzJEixyfzeWhkJobS
+         /FCCrMyPJzMCeEN96qMHR90eeWmCYJZE16OryozyzqSXcA+mem/gGGAzjA8sX0VcLWUb
+         ebf6ac6/jTiw02WJ0S1wnAmquJ/q9qgmMe0yzjEgb33w5SU68zWFEs6Qwj4/tmdkryjh
+         OrqQ==
+X-Gm-Message-State: APjAAAUP7m3Wosjzidzn6jsG85NX+xT9f/CuBzK5vtlwiVv3alL9ej6X
+        TQOVgHT25zCx0Ia/JkvR7/E=
+X-Google-Smtp-Source: APXvYqw+8oKnZiDm/OPgXK9Ojv0T86PA9M3eznJ0G7bYU2Peh7V61K74H9Ov9V/boi8YEZHJVRZOTg==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr29447700plc.272.1562088460406;
+        Tue, 02 Jul 2019 10:27:40 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id x14sm17331522pfq.158.2019.07.02.10.27.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 10:27:39 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Nadav Amit <namit@vmware.com>
+Subject: [PATCH] vmw_balloon: Remove Julien from the maintainers list
+Date:   Tue,  2 Jul 2019 03:05:19 -0700
+Message-Id: <20190702100519.7464-1-namit@vmware.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 7:13 PM, Andy Shevchenko wrote:
-> I re-pushed to my queue, though if you are going to send a new
-> version, check my repository for the titles of the patches (you need
-> to use correct templates for the subsystems).
+Julien will not be a maintainer anymore.
 
-Got it, sorry for the inconvenience.
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thank you!
-Maximilian
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01a52fc964da..f85874b1e653 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16886,7 +16886,6 @@ F:	drivers/vme/
+ F:	include/linux/vme*
+ 
+ VMWARE BALLOON DRIVER
+-M:	Julien Freche <jfreche@vmware.com>
+ M:	Nadav Amit <namit@vmware.com>
+ M:	"VMware, Inc." <pv-drivers@vmware.com>
+ L:	linux-kernel@vger.kernel.org
+-- 
+2.17.1
+
