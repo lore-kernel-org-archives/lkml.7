@@ -2,97 +2,190 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7AFC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B307EC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385B120836
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A6021479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RSCH5jJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfGBLMX (ORCPT
+        id S1726623AbfGBLUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:12:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50284 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726861AbfGBLMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:12:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5CB96AD1E;
-        Tue,  2 Jul 2019 11:12:20 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Mathias Nyman <mathias.nyman@intel.com>
-Cc:     oneukum@suse.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] xhci: clear port_remote_wakeup after resume failure
-Date:   Tue,  2 Jul 2019 13:12:00 +0200
-Message-Id: <20190702111200.15164-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.22.0
+        Tue, 2 Jul 2019 07:20:33 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13656 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfGBLUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 07:20:32 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1b3e010001>; Tue, 02 Jul 2019 04:20:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 02 Jul 2019 04:20:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 02 Jul 2019 04:20:30 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
+ 2019 11:20:25 +0000
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190627194728.8948-1-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+Date:   Tue, 2 Jul 2019 12:20:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627194728.8948-1-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562066434; bh=Dq9X1vgzOiGTU9ncjvT6tcogAvFK6UBwOjiod+Q2p30=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=RSCH5jJITPtkMKI3SdMzRH1ZpLmv+8AvKvkuiClEBStQcapmzmp1NMc3ZmkpYVb1G
+         zVl3QeNkwBSo9fbi2nGafwOLrdBDQugHgEDsrpguqlHSK8LxcTk8N9TnkqqNJsbHGC
+         loVqngBxoGCBqFre1dC+RRDigfJGdhr6qnRtDsTCzpw9nEIw8a0DMkOa8tq5osLNrZ
+         sLX40gluGOaFbCQgH4kKT4wdwyonrszIUB8QUU66AftunAXQYML02EqC3KfxSVRFGu
+         FDvnaSQlzLeM+nWUWfG4F2HtNvluat4pUoSH/HnQ4U+wWpOsIMIAQeiBFfcU1d0cAv
+         wL+BrklyLWpxA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was seen on a Dell Precision 5520 using it's WD15 dock. The dock's
-Ethernet connectivity is provided though USB. While idle, both the
-Ethernet device and XHCI are suspended by runtime PM. To be then resumed
-on behalf of the Ethernet device, which has remote wake-up capabilities.
 
-The Ethernet device was observed to randomly disconnect from the USB
-port shortly after submitting it's remote wake-up request. Probably a
-weird timing issue yet to be investigated. This causes runtime PM to
-busyloop causing some tangible CPU load. The reason is the port gets
-stuck in the middle of a remote wake-up operation, waiting for the
-device to switch to U0. This never happens, leaving "port_remote_wakeup"
-enabled, and automatically triggering a failure on any further suspend
-operation.
+On 27/06/2019 20:47, Dmitry Osipenko wrote:
+> Tegra's APB DMA engine updates words counter after each transferred burst
+> of data, hence it can report transfer's residual with more fidelity which
+> may be required in cases like audio playback. In particular this fixes
+> audio stuttering during playback in a chromium web browser. The patch is
+> based on the original work that was made by Ben Dooks and a patch from
+> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+> 
+> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> 
+> Changelog:
+> 
+> v3:  Added workaround for a hardware design shortcoming that results
+>      in a words counter wraparound before end-of-transfer bit is set
+>      in a cyclic mode.
+> 
+> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>      to get words count if dma_desc is on free list as it will result
+>      in a NULL dereference because this case wasn't handled properly.
+> 
+>      The residual value is now updated properly, avoiding potential
+>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>      instead of the subtraction.
+> 
+>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
+>  1 file changed, 62 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 79e9593815f1..71473eda28ee 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>  	bool				last_sg;
+>  	struct list_head		node;
+>  	struct tegra_dma_desc		*dma_desc;
+> +	unsigned int			words_xferred;
+>  };
+>  
+>  /*
+> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>  	nsg_req->configured = true;
+> +	nsg_req->words_xferred = 0;
+>  
+>  	tegra_dma_resume(tdc);
+>  }
+> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>  					typeof(*sg_req), node);
+>  	tegra_dma_start(tdc, sg_req);
+>  	sg_req->configured = true;
+> +	sg_req->words_xferred = 0;
+>  	tdc->busy = true;
+>  }
+>  
+> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>  	return 0;
+>  }
+>  
+> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+> +					       struct tegra_dma_sg_req *sg_req)
+> +{
+> +	unsigned long status, wcount = 0;
+> +
+> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+> +		return 0;
+> +
+> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+> +
+> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+> +
+> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = status;
+> +
+> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+> +		return sg_req->req_len;
+> +
+> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
+> +
+> +	if (!wcount) {
+> +		/*
+> +		 * If wcount wasn't ever polled for this SG before, then
+> +		 * simply assume that transfer hasn't started yet.
+> +		 *
+> +		 * Otherwise it's the end of the transfer.
+> +		 *
+> +		 * The alternative would be to poll the status register
+> +		 * until EOC bit is set or wcount goes UP. That's so
+> +		 * because EOC bit is getting set only after the last
+> +		 * burst's completion and counter is less than the actual
+> +		 * transfer size by 4 bytes. The counter value wraps around
+> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+> +		 * distinguish start of transfer from its end.
+> +		 */
+> +		if (sg_req->words_xferred)
+> +			wcount = sg_req->req_len - 4;
+> +
+> +	} else if (wcount < sg_req->words_xferred) {
+> +		/*
+> +		 * This case shall not ever happen because EOC bit
+> +		 * must be set once next cyclic transfer is started.
 
-This patch clears "port_remote_wakeup" upon detecting a device with a
-wrong PORT_CONNECT state. Making sure the above mentioned situation
-doesn't trigger a PM busyloop.
+I am not sure I follow this and why this condition cannot happen for
+cyclic transfers. What about non-cyclic transfers?
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+Cheers
+Jon
 
-Changes since v1:
-  - Do not trigger clear based on PLS_MASK != XDEV_RESUME to avoid a
-    potential race condition between the irq handler and hub thread.
-
- drivers/usb/host/xhci-hub.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 3abe70ff1b1e..05cd46a11c0c 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1047,8 +1047,8 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
- 		xhci_get_usb2_port_status(port, &status, raw_port_status,
- 					  flags);
- 	/*
--	 * Clear stale usb2 resume signalling variables in case port changed
--	 * state during resume signalling. For example on error
-+	 * Clear stale resume signalling variables in case port changed
-+	 * state during resume signalling. For example on error.
- 	 */
- 	if ((bus_state->resume_done[wIndex] ||
- 	     test_bit(wIndex, &bus_state->resuming_ports)) &&
-@@ -1057,6 +1057,9 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
- 		bus_state->resume_done[wIndex] = 0;
- 		clear_bit(wIndex, &bus_state->resuming_ports);
- 		usb_hcd_end_port_resume(&hcd->self, wIndex);
-+	} else if (bus_state->port_remote_wakeup & (1 << port->hcd_portnum) &&
-+		   !(raw_port_status & PORT_CONNECT)) {
-+		bus_state->port_remote_wakeup &= ~(1 << port->hcd_portnum);
- 	}
- 
- 	if (bus_state->port_c_suspend & (1 << wIndex))
 -- 
-2.22.0
-
+nvpublic
