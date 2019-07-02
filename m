@@ -2,78 +2,136 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B91C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E62C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2072221479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE1F21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/j9hre/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfGBCoa (ORCPT
+        id S1727036AbfGBCvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:44:30 -0400
-Received: from gate.crashing.org ([63.228.1.57]:56659 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfGBCoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:44:30 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x622iI61015588;
-        Mon, 1 Jul 2019 21:44:19 -0500
-Message-ID: <38d777292f5335b5ea5f8fd7c0b58c514dda525a.camel@kernel.crashing.org>
-Subject: Re: WARNING: refcount bug in kobject_add_internal
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Cc:     Muchun Song <smuchun@gmail.com>
-Date:   Tue, 02 Jul 2019 12:44:18 +1000
-In-Reply-To: <000000000000106b11058ca6f7f2@google.com>
-References: <000000000000106b11058ca6f7f2@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Mon, 1 Jul 2019 22:51:15 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41186 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfGBCvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:51:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id w25so33569039ioc.8;
+        Mon, 01 Jul 2019 19:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=057Pa4boLoPPDteo8R0KTEwSZg3CyppxjLulMTMnDsw=;
+        b=p/j9hre/GI3XCiRSCpdiyabMg8GFc6R9jAHFE9ssWcyiBjZHFVssnSPik9p4qndE7F
+         5DA1nQNjVke5uTJBAKJ7a7i5Ky7Qz1vXZBrlLWr7Vhc2a71i554xVR/eLuRnNwSYvGmt
+         qIgoIMjhGTVgz13FqbzT1G4jzb1h4StY14Ux2P6h5z8n2pzTNeFfIcUSKQiYwsi3CWSm
+         fpHW5PklxCH7Tk8pJMcZF29e1t/7IC0Oy6tudMNKkUGiLy5HdU0Us54RSZHvZkLuBrNC
+         jZPiG6HOwiBf2jEerOYfN4oQ5HAzqdjnsYu1mWSzxC9Ah553ECTCl4rEaLZKEiTSRLoj
+         fk6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=057Pa4boLoPPDteo8R0KTEwSZg3CyppxjLulMTMnDsw=;
+        b=b6Z3PYGuAjblTP0pQuIPI2++rrLHcwHviAYyTwO4qVFDNE8SMSmxCm9UCj9KCNkplr
+         SmPRmoigbT8GQ1Aql5pKXLNGNRxvERF5Wjpk31bqoZz3YuLF2nfvk9IMtbPdnKGpt3Jg
+         WATppSalMjZbHHqTkW0CtFQICzn05SAL00l5LGfojI0f9jVtkVxKs0ADYmpCzlz1+kro
+         E9pJD3TYZTjLdLAM4baK0UlHigqnZWWQQIBlNZBTrir4ggybdDLftmYet8e6yUc75aas
+         6behQqmK9KZwSTJNlr4q0f7bvHub9EM+SCsFEJVXXNa8yxHREYQSbQFTB4+QgVFc5F/4
+         UkYQ==
+X-Gm-Message-State: APjAAAVVMbbIiLMsaubxQPkaS9kBuJAN0IJWLUhsh4bZFDwMEEfJTKOD
+        1/rrrwOH7fPSgxI4VSzeRMU=
+X-Google-Smtp-Source: APXvYqwasQ2Qsk8eJeFsrpZ19yqKDk9kJpsNQX6oTygilT30vuDGJHldZ/AF/aqWKX/aL8zq3XGldA==
+X-Received: by 2002:a02:3904:: with SMTP id l4mr1311099jaa.81.1562035873543;
+        Mon, 01 Jul 2019 19:51:13 -0700 (PDT)
+Received: from [10.230.24.186] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id c81sm24959528iof.28.2019.07.01.19.51.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 19:51:12 -0700 (PDT)
+Subject: Re: [PATCH 3.16 08/10] tcp: tcp_fragment() should apply sane memory
+ limits
+To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jonathan Looney <jtl@netflix.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Bruce Curtis <brucec@netflix.com>
+References: <lsq.1560868082.489417250@decadent.org.uk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <37926faa-0f7f-621c-8ee6-ba46d34c8cfc@gmail.com>
+Date:   Mon, 1 Jul 2019 19:51:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <lsq.1560868082.489417250@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Munchun, is this what your patch fixes ?
+Hi Ben,
 
+On 6/18/2019 7:28 AM, Ben Hutchings wrote:
+> 3.16.69-rc1 review patch.  If anyone has any objections, please let me know.
+> 
+> ------------------
+> 
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> commit f070ef2ac66716357066b683fb0baf55f8191a2e upstream.
+> 
+> Jonathan Looney reported that a malicious peer can force a sender
+> to fragment its retransmit queue into tiny skbs, inflating memory
+> usage and/or overflow 32bit counters.
+> 
+> TCP allows an application to queue up to sk_sndbuf bytes,
+> so we need to give some allowance for non malicious splitting
+> of retransmit queue.
+> 
+> A new SNMP counter is added to monitor how many times TCP
+> did not allow to split an skb if the allowance was exceeded.
+> 
+> Note that this counter might increase in the case applications
+> use SO_SNDBUF socket option to lower sk_sndbuf.
+> 
+> CVE-2019-11478 : tcp_fragment, prevent fragmenting a packet when the
+> 	socket is already using more than half the allowed space
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Reported-by: Jonathan Looney <jtl@netflix.com>
+> Acked-by: Neal Cardwell <ncardwell@google.com>
+> Acked-by: Yuchung Cheng <ycheng@google.com>
+> Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+> Cc: Bruce Curtis <brucec@netflix.com>
+> Cc: Jonathan Lemon <jonathan.lemon@gmail.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> [Salvatore Bonaccorso: Adjust context for backport to 4.9.168]
+> [bwh: Backported to 3.16: adjust context]
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 
-On Mon, 2019-07-01 at 16:27 -0700, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 726e41097920a73e4c7c33385dcc0debb1281e18
-> Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Date:   Tue Jul 10 00:29:10 2018 +0000
-> 
->      drivers: core: Remove glue dirs from sysfs earlier
-> 
-> bisection log:  
-> https://syzkaller.appspot.com/x/bisect.txt?x=140d6739a00000
-> start commit:   6fbc7275 Linux 5.2-rc7
-> git tree:       upstream
-> final crash:    
-> https://syzkaller.appspot.com/x/report.txt?x=160d6739a00000
-> console output: 
-> https://syzkaller.appspot.com/x/log.txt?x=120d6739a00000
-> kernel config:  
-> https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=32259bb9bc1a487ad206
-> syz repro:      
-> https://syzkaller.appspot.com/x/repro.syz?x=115bad39a00000
-> C reproducer:   
-> https://syzkaller.appspot.com/x/repro.c?x=1241bdd5a00000
-> 
-> Reported-by: syzbot+32259bb9bc1a487ad206@syzkaller.appspotmail.com
-> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs
-> earlier")
-> 
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
+Don't we also need this patch to be backported:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=b6653b3629e5b88202be3c9abc44713973f5c4b4
+
+Thanks!
+-- 
+Florian
