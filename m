@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D4C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FBC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4472E2184E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DAA2184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054835;
-	bh=hyq6FUzos5qzO6vrkqryZl3ikMhqFOfF9lHPNQ3hmsI=;
+	s=default; t=1562054841;
+	bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gueR9/t2+oPsHt754/nJoSFKNAB82fFzcAubUQ4/bFtpwlKM1iKj99lgsBpoirfWN
-	 zAoGB6ePdBocjVHfWXjUiII1ed42cT/2totD8fQO9Drkagv8+N56SCWTpP2jkn0M3V
-	 mCA5MtATgv/3JEKaPN4T+E0evr/wQVvHBh9d+Ndk=
+	b=rOTm/J/A78PlwIPZv2t1g2CXlQB0b/B7LhxIPp00UcK2p1Pbuhsc9O4pVYUg7IFSN
+	 aLvF+6F6L0l/6KJ4vP1PBF9rxOvxXYmiu7SPF8brqJ1VL7+x6X5zJx942QpP+6WWLy
+	 TbHNHVI3OMKjYuN/cbMT73KAzS1skF7poLVI4Wco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfGBIHO (ORCPT
+        id S1728227AbfGBIHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbfGBIHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:09 -0400
+        id S1728207AbfGBIHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A8721479;
-        Tue,  2 Jul 2019 08:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A14C021479;
+        Tue,  2 Jul 2019 08:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054829;
-        bh=hyq6FUzos5qzO6vrkqryZl3ikMhqFOfF9lHPNQ3hmsI=;
+        s=default; t=1562054835;
+        bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vjp+yXQnEtgOoLrJT3mx+uCjG2BSVWCsuwic2fBaqesvRowO+J+kupyNzNhPyKHdH
-         fVWYTtUGp0soYhhcXh0OFA7BycUNPLqF0VQGIQ0zo0HSsH8/vtRFUWrInnCKxV2FOE
-         1dSjszZ0uZWDpVWPLI6cR5Cq9WSdQqrcJube5SeI=
+        b=X9TK0cdIESs94JptYVCJJSzYluaDn9liU8KX7MrIs/w95BzJT/VIBYBqkXxKTjqjT
+         QAVxL02JDTG43TXnaH+qLkFHHnE4kSrY1sH1mlT/GHkQmX0bGkXINNDtX4eC0j09t5
+         PY7q2CZO/QMaL4CSK52p0EPdZgER8UBM1hd232ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Yihao Wu <wuyihao@linux.alibaba.com>,
-        Caspar Zhang <caspar@linux.alibaba.com>
-Subject: [PATCH 4.19 47/72] SUNRPC: Clean up initialisation of the struct rpc_rqst
-Date:   Tue,  2 Jul 2019 10:01:48 +0200
-Message-Id: <20190702080127.045443226@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Archer Yan <ayan@wavecomp.com>
+Subject: [PATCH 4.19 48/72] irqchip/mips-gic: Use the correct local interrupt map registers
+Date:   Tue,  2 Jul 2019 10:01:49 +0200
+Message-Id: <20190702080127.083118366@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -61,156 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 9dc6edcf676fe188430e8b119f91280bbf285163 upstream.
+commit 6d4d367d0e9ffab4d64a3436256a6a052dc1195d upstream.
 
-Move the initialisation back into xprt.c.
+The MIPS GIC contains a block of registers used to map local interrupts
+to a particular CPU interrupt pin. Since these registers are found at a
+consecutive range of addresses we access them using an index, via the
+(read|write)_gic_v[lo]_map accessor functions. We currently use values
+from enum mips_gic_local_interrupt as those indices.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Yihao Wu <wuyihao@linux.alibaba.com>
-Cc: Caspar Zhang <caspar@linux.alibaba.com>
+Unfortunately whilst enum mips_gic_local_interrupt provides the correct
+offsets for bits in the pending & mask registers, the ordering of the
+map registers is subtly different... Compared with the ordering of
+pending & mask bits, the map registers move the FDC from the end of the
+list to index 3 after the timer interrupt. As a result the performance
+counter & software interrupts are therefore at indices 4-6 rather than
+indices 3-5.
+
+Notably this causes problems with performance counter interrupts being
+incorrectly mapped on some systems, and presumably will also cause
+problems for FDC interrupts.
+
+Introduce a function to map from enum mips_gic_local_interrupt to the
+index of the corresponding map register, and use it to ensure we access
+the map registers for the correct interrupts.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: a0dc5cb5e31b ("irqchip: mips-gic: Simplify gic_local_irq_domain_map()")
+Fixes: da61fcf9d62a ("irqchip: mips-gic: Use irq_cpu_online to (un)mask all-VP(E) IRQs")
+Reported-and-tested-by: Archer Yan <ayan@wavecomp.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/sunrpc/xprt.h |    1 
- net/sunrpc/clnt.c           |    1 
- net/sunrpc/xprt.c           |   91 ++++++++++++++++++++++++--------------------
- 3 files changed, 51 insertions(+), 42 deletions(-)
+ arch/mips/include/asm/mips-gic.h |   30 ++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-mips-gic.c   |    4 ++--
+ 2 files changed, 32 insertions(+), 2 deletions(-)
 
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -325,7 +325,6 @@ struct xprt_class {
- struct rpc_xprt		*xprt_create_transport(struct xprt_create *args);
- void			xprt_connect(struct rpc_task *task);
- void			xprt_reserve(struct rpc_task *task);
--void			xprt_request_init(struct rpc_task *task);
- void			xprt_retry_reserve(struct rpc_task *task);
- int			xprt_reserve_xprt(struct rpc_xprt *xprt, struct rpc_task *task);
- int			xprt_reserve_xprt_cong(struct rpc_xprt *xprt, struct rpc_task *task);
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1558,7 +1558,6 @@ call_reserveresult(struct rpc_task *task
- 	task->tk_status = 0;
- 	if (status >= 0) {
- 		if (task->tk_rqstp) {
--			xprt_request_init(task);
- 			task->tk_action = call_refresh;
- 			return;
- 		}
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1257,6 +1257,55 @@ void xprt_free(struct rpc_xprt *xprt)
- }
- EXPORT_SYMBOL_GPL(xprt_free);
- 
-+static __be32
-+xprt_alloc_xid(struct rpc_xprt *xprt)
-+{
-+	__be32 xid;
-+
-+	spin_lock(&xprt->reserve_lock);
-+	xid = (__force __be32)xprt->xid++;
-+	spin_unlock(&xprt->reserve_lock);
-+	return xid;
-+}
-+
-+static void
-+xprt_init_xid(struct rpc_xprt *xprt)
-+{
-+	xprt->xid = prandom_u32();
-+}
-+
-+static void
-+xprt_request_init(struct rpc_task *task)
-+{
-+	struct rpc_xprt *xprt = task->tk_xprt;
-+	struct rpc_rqst	*req = task->tk_rqstp;
-+
-+	INIT_LIST_HEAD(&req->rq_list);
-+	req->rq_timeout = task->tk_client->cl_timeout->to_initval;
-+	req->rq_task	= task;
-+	req->rq_xprt    = xprt;
-+	req->rq_buffer  = NULL;
-+	req->rq_xid	= xprt_alloc_xid(xprt);
-+	req->rq_connect_cookie = xprt->connect_cookie - 1;
-+	req->rq_bytes_sent = 0;
-+	req->rq_snd_buf.len = 0;
-+	req->rq_snd_buf.buflen = 0;
-+	req->rq_rcv_buf.len = 0;
-+	req->rq_rcv_buf.buflen = 0;
-+	req->rq_release_snd_buf = NULL;
-+	xprt_reset_majortimeo(req);
-+	dprintk("RPC: %5u reserved req %p xid %08x\n", task->tk_pid,
-+			req, ntohl(req->rq_xid));
-+}
-+
-+static void
-+xprt_do_reserve(struct rpc_xprt *xprt, struct rpc_task *task)
-+{
-+	xprt->ops->alloc_slot(xprt, task);
-+	if (task->tk_rqstp != NULL)
-+		xprt_request_init(task);
-+}
-+
- /**
-  * xprt_reserve - allocate an RPC request slot
-  * @task: RPC task requesting a slot allocation
-@@ -1276,7 +1325,7 @@ void xprt_reserve(struct rpc_task *task)
- 	task->tk_timeout = 0;
- 	task->tk_status = -EAGAIN;
- 	if (!xprt_throttle_congested(xprt, task))
--		xprt->ops->alloc_slot(xprt, task);
-+		xprt_do_reserve(xprt, task);
+--- a/arch/mips/include/asm/mips-gic.h
++++ b/arch/mips/include/asm/mips-gic.h
+@@ -315,6 +315,36 @@ static inline bool mips_gic_present(void
  }
  
  /**
-@@ -1298,45 +1347,7 @@ void xprt_retry_reserve(struct rpc_task
++ * mips_gic_vx_map_reg() - Return GIC_Vx_<intr>_MAP register offset
++ * @intr: A GIC local interrupt
++ *
++ * Determine the index of the GIC_VL_<intr>_MAP or GIC_VO_<intr>_MAP register
++ * within the block of GIC map registers. This is almost the same as the order
++ * of interrupts in the pending & mask registers, as used by enum
++ * mips_gic_local_interrupt, but moves the FDC interrupt & thus offsets the
++ * interrupts after it...
++ *
++ * Return: The map register index corresponding to @intr.
++ *
++ * The return value is suitable for use with the (read|write)_gic_v[lo]_map
++ * accessor functions.
++ */
++static inline unsigned int
++mips_gic_vx_map_reg(enum mips_gic_local_interrupt intr)
++{
++	/* WD, Compare & Timer are 1:1 */
++	if (intr <= GIC_LOCAL_INT_TIMER)
++		return intr;
++
++	/* FDC moves to after Timer... */
++	if (intr == GIC_LOCAL_INT_FDC)
++		return GIC_LOCAL_INT_TIMER + 1;
++
++	/* As a result everything else is offset by 1 */
++	return intr + 1;
++}
++
++/**
+  * gic_get_c0_compare_int() - Return cp0 count/compare interrupt virq
+  *
+  * Determine the virq number to use for the coprocessor 0 count/compare
+--- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -388,7 +388,7 @@ static void gic_all_vpes_irq_cpu_online(
+ 	intr = GIC_HWIRQ_TO_LOCAL(d->hwirq);
+ 	cd = irq_data_get_irq_chip_data(d);
  
- 	task->tk_timeout = 0;
- 	task->tk_status = -EAGAIN;
--	xprt->ops->alloc_slot(xprt, task);
--}
--
--static inline __be32 xprt_alloc_xid(struct rpc_xprt *xprt)
--{
--	__be32 xid;
--
--	spin_lock(&xprt->reserve_lock);
--	xid = (__force __be32)xprt->xid++;
--	spin_unlock(&xprt->reserve_lock);
--	return xid;
--}
--
--static inline void xprt_init_xid(struct rpc_xprt *xprt)
--{
--	xprt->xid = prandom_u32();
--}
--
--void xprt_request_init(struct rpc_task *task)
--{
--	struct rpc_xprt *xprt = task->tk_xprt;
--	struct rpc_rqst	*req = task->tk_rqstp;
--
--	INIT_LIST_HEAD(&req->rq_list);
--	req->rq_timeout = task->tk_client->cl_timeout->to_initval;
--	req->rq_task	= task;
--	req->rq_xprt    = xprt;
--	req->rq_buffer  = NULL;
--	req->rq_xid	= xprt_alloc_xid(xprt);
--	req->rq_connect_cookie = xprt->connect_cookie - 1;
--	req->rq_bytes_sent = 0;
--	req->rq_snd_buf.len = 0;
--	req->rq_snd_buf.buflen = 0;
--	req->rq_rcv_buf.len = 0;
--	req->rq_rcv_buf.buflen = 0;
--	req->rq_release_snd_buf = NULL;
--	xprt_reset_majortimeo(req);
--	dprintk("RPC: %5u reserved req %p xid %08x\n", task->tk_pid,
--			req, ntohl(req->rq_xid));
-+	xprt_do_reserve(xprt, task);
+-	write_gic_vl_map(intr, cd->map);
++	write_gic_vl_map(mips_gic_vx_map_reg(intr), cd->map);
+ 	if (cd->mask)
+ 		write_gic_vl_smask(BIT(intr));
  }
+@@ -517,7 +517,7 @@ static int gic_irq_domain_map(struct irq
+ 	spin_lock_irqsave(&gic_lock, flags);
+ 	for_each_online_cpu(cpu) {
+ 		write_gic_vl_other(mips_cm_vp_id(cpu));
+-		write_gic_vo_map(intr, map);
++		write_gic_vo_map(mips_gic_vx_map_reg(intr), map);
+ 	}
+ 	spin_unlock_irqrestore(&gic_lock, flags);
  
- /**
 
 
