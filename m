@@ -2,193 +2,173 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C55C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82076C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0562184C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N/PcbyT5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lHcJ/6o7"
+	by mail.kernel.org (Postfix) with ESMTP id 665B22186A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 19:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfGBTPZ (ORCPT
+        id S1727104AbfGBTP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 15:15:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49670 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGBTPZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 15:15:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C8A2D607B9; Tue,  2 Jul 2019 19:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562094923;
-        bh=X8Aoljm0LYeyxBEqbEVId7mUQqHptsmMGCGTKktZVAA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N/PcbyT58Do7LICpzhWUA4B3V217FV7Ad9lbkyim+DNPhlNSr7cWqiwqV7OYKJ4hd
-         YQmrx995MCms606pArLo4LiTFwCY/wvGw228u+vz6nw/AMJ7EPyxjWp6WoxSYzuYxz
-         CFIii91QxvHmYF7aCBDJVcoU5XwhQbZPo5zJQgQU=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C6F8C60746;
-        Tue,  2 Jul 2019 19:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562094922;
-        bh=X8Aoljm0LYeyxBEqbEVId7mUQqHptsmMGCGTKktZVAA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lHcJ/6o71zHCEADhRs23OU6NF+fNeaAPkCHRI05v5co4mdYEj3f7sPw5dx+lZhLQe
-         SRAbtSg4y9iUnsw603C34us7Wsql3rW0zwF1DPBSYa6yBz2BrRNMxmNwCMFDKg2dF4
-         gWsdl5907wyfFiDc6aRnjlssZQ3V6wedqenCYRm4=
+        Tue, 2 Jul 2019 15:15:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59030 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGBTPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 15:15:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 25FA9C057F2E;
+        Tue,  2 Jul 2019 19:15:50 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA0471347B;
+        Tue,  2 Jul 2019 19:15:42 +0000 (UTC)
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+To:     David Rientjes <rientjes@google.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+ <alpine.DEB.2.21.1907021206000.67286@chino.kir.corp.google.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <34af4938-f472-9d9b-e615-397217023004@redhat.com>
+Date:   Tue, 2 Jul 2019 15:15:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <alpine.DEB.2.21.1907021206000.67286@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jul 2019 12:15:22 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     dhar@codeaurora.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, chandanu@codeaurora.org,
-        nganji@codeaurora.org, jshekhar@codeaurora.org
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-In-Reply-To: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
- <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
- <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
- <627144af54459a203f1583d2ad9b390c@codeaurora.org>
- <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
- <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
-Message-ID: <87b59fd6d89f4096243770edefc5e97b@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 02 Jul 2019 19:15:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-02 11:21, Jeykumar Sankaran wrote:
-> On 2019-07-01 03:29, dhar@codeaurora.org wrote:
->> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
->>> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
->>>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
->>>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
->>>>>> dpu encoder spinlock should be initialized during dpu encoder
->>>>>> init instead of dpu encoder setup which is part of commit.
->>>>>> There are chances that vblank control uses the uninitialized
->>>>>> spinlock if not initialized during encoder init.
->>>>> Not much can be done if someone is performing a vblank operation
->>>>> before encoder_setup is done.
->>>>> Can you point to the path where this lock is acquired before
->>>>> the encoder_setup?
->>>>> 
->>>>> Thanks
->>>>> Jeykumar S.
->>>>>> 
->>>> 
->>>> When running some dp usecase, we are hitting this callstack.
->>>> 
->>>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
->>>> Call trace:
->>>>  spin_dump+0x84/0x8c
->>>>  spin_dump+0x0/0x8c
->>>>  do_raw_spin_lock+0x80/0xb0
->>>>  _raw_spin_lock_irqsave+0x34/0x44
->>>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
->>>>  dpu_crtc_vblank+0x168/0x1a0
->>>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
->>>>  process_one_work+0x16c/0x2d8
->>>>  worker_thread+0x1d8/0x2b0
->>>>  kthread+0x124/0x134
->>>> 
->>>> Looks like vblank is getting enabled earlier causing this issue and 
->>>> we
->>>> are using the spinlock without initializing it.
->>>> 
->>>> Thanks,
->>>> Shubhashree
->>>> 
->>> DP calls into set_encoder_mode during hotplug before even notifying 
->>> the
->>> u/s. Can you trace out the original caller of this stack?
->>> 
->>> Even though the patch is harmless, I am not entirely convinced to 
->>> move this
->>> initialization. Any call which acquires the lock before encoder_setup
->>> will be a no-op since there will not be any physical encoder to work 
->>> with.
->>> 
->>> Thanks and Regards,
->>> Jeykumar S.
->>> 
->>>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
->>>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->>>>>> ---
->>>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>>> 
->>>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>>> index 5f085b5..22938c7 100644
->>>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device 
->>>>>> *dev, struct
->>>>>> drm_encoder *enc,
->>>>>>  	if (ret)
->>>>>>  		goto fail;
->>>>>> 
->>>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>>> -
->>>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->>>>>>  	timer_setup(&dpu_enc->frame_done_timer,
->>>>>>  			dpu_encoder_frame_done_timeout, 0);
->>>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
->>>>>> drm_device *dev,
->>>>>> 
->>>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
->>>>>> &dpu_encoder_helper_funcs);
->>>>>> 
->>>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>>>  	dpu_enc->enabled = false;
->>>>>> 
->>>>>>  	return &dpu_enc->base;
->> 
->> In dpu_crtc_vblank(), we are looping through all the encoders in the
->> present mode_config:
->> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
->> 1/dpu_crtc.c#L1082
->> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
->> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
->> the spinlock, we will do a early return for
->> the encoders which are not currently assigned to our crtc:
->> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
->> 1/dpu_encoder.c#L1318.
->> Since the encoder_setup for the secondary encoder(dp encoder in this
->> case) is not called until dp hotplug, we are hitting kernel panic
->> while acquiring the lock.
-> This is the sequence in which the events are expected to happen:
-> 
-> 1) DP connector is instantiated with an inactive state
-> 2) Hot plug on DP
-> 3) DP connector is activated
-> 4) User space attaches a CRTC to the activated connector
-> 5) CRTC is enabled
-> 6) CRTC_VBLANK_ON is called
-> 7) dpu_crtc_vblank is called.
-> 
-> So can you help tracing out why dpu_crtc_vblank is called when the 
-> connector
-> is not activated yet (no hotplug)?
+On 7/2/19 3:09 PM, David Rientjes wrote:
+> On Tue, 2 Jul 2019, Waiman Long wrote:
+>
+>> diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
+>> index 29601d93a1c2..2a3d0fc4b4ac 100644
+>> --- a/Documentation/ABI/testing/sysfs-kernel-slab
+>> +++ b/Documentation/ABI/testing/sysfs-kernel-slab
+>> @@ -429,10 +429,12 @@ KernelVersion:	2.6.22
+>>  Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+>>  		Christoph Lameter <cl@linux-foundation.org>
+>>  Description:
+>> -		The shrink file is written when memory should be reclaimed from
+>> -		a cache.  Empty partial slabs are freed and the partial list is
+>> -		sorted so the slabs with the fewest available objects are used
+>> -		first.
+>> +		A value of '1' is written to the shrink file when memory should
+>> +		be reclaimed from a cache.  Empty partial slabs are freed and
+>> +		the partial list is sorted so the slabs with the fewest
+>> +		available objects are used first.  When a value of '2' is
+>> +		written, all the corresponding child memory cgroup caches
+>> +		should be shrunk as well.  All other values are invalid.
+>>  
+> This should likely call out that '2' also does '1', that might not be 
+> clear enough.
 
-Overlooked the loop which iterates through *all* the encoders 
-irrespective of their
-activated status.
+You are right. I will reword the text to make it clearer.
 
-Reviewed-by: Jeykumar Sankaran <jsanka@codeaurora.org>
+
+>>  What:		/sys/kernel/slab/cache/slab_size
+>>  Date:		May 2007
+>> diff --git a/mm/slab.h b/mm/slab.h
+>> index 3b22931bb557..a16b2c7ff4dd 100644
+>> --- a/mm/slab.h
+>> +++ b/mm/slab.h
+>> @@ -174,6 +174,7 @@ int __kmem_cache_shrink(struct kmem_cache *);
+>>  void __kmemcg_cache_deactivate(struct kmem_cache *s);
+>>  void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
+>>  void slab_kmem_cache_release(struct kmem_cache *);
+>> +int kmem_cache_shrink_all(struct kmem_cache *s);
+>>  
+>>  struct seq_file;
+>>  struct file;
+>> diff --git a/mm/slab_common.c b/mm/slab_common.c
+>> index 464faaa9fd81..493697ba1da5 100644
+>> --- a/mm/slab_common.c
+>> +++ b/mm/slab_common.c
+>> @@ -981,6 +981,49 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
+>>  }
+>>  EXPORT_SYMBOL(kmem_cache_shrink);
+>>  
+>> +/**
+>> + * kmem_cache_shrink_all - shrink a cache and all its memcg children
+>> + * @s: The root cache to shrink.
+>> + *
+>> + * Return: 0 if successful, -EINVAL if not a root cache
+>> + */
+>> +int kmem_cache_shrink_all(struct kmem_cache *s)
+>> +{
+>> +	struct kmem_cache *c;
+>> +
+>> +	if (!IS_ENABLED(CONFIG_MEMCG_KMEM)) {
+>> +		kmem_cache_shrink(s);
+>> +		return 0;
+>> +	}
+>> +	if (!is_root_cache(s))
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * The caller should have a reference to the root cache and so
+>> +	 * we don't need to take the slab_mutex. We have to take the
+>> +	 * slab_mutex, however, to iterate the memcg caches.
+>> +	 */
+>> +	get_online_cpus();
+>> +	get_online_mems();
+>> +	kasan_cache_shrink(s);
+>> +	__kmem_cache_shrink(s);
+>> +
+>> +	mutex_lock(&slab_mutex);
+>> +	for_each_memcg_cache(c, s) {
+>> +		/*
+>> +		 * Don't need to shrink deactivated memcg caches.
+>> +		 */
+>> +		if (s->flags & SLAB_DEACTIVATED)
+>> +			continue;
+>> +		kasan_cache_shrink(c);
+>> +		__kmem_cache_shrink(c);
+>> +	}
+>> +	mutex_unlock(&slab_mutex);
+>> +	put_online_mems();
+>> +	put_online_cpus();
+>> +	return 0;
+>> +}
+>> +
+>>  bool slab_is_available(void)
+>>  {
+>>  	return slab_state >= UP;
+> I'm wondering how long this could take, i.e. how long we hold slab_mutex 
+> while we traverse each cache and shrink it.
+
+It will depends on how many memcg caches are there. Actually, I have
+been thinking about using the show method to show the time spent in the
+last shrink operation. I am just not sure if it is worth doing. What do
+you think?
+
+-Longman
 
