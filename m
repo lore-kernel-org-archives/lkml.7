@@ -2,164 +2,93 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0AC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E885C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903BA21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA8121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RxycRGr5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+GRL2o3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfGBS6q (ORCPT
+        id S1727035AbfGBS6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:58:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43467 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfGBS6q (ORCPT
+        Tue, 2 Jul 2019 14:58:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36333 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfGBS6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:58:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so17996666ljv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:58:44 -0700 (PDT)
+        Tue, 2 Jul 2019 14:58:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so869177plt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 11:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HJRRZ7xwVWKgrrchV3QbMX/wgWRGVLbHC2E+m6l+0/o=;
-        b=RxycRGr5u5OwWuZ2gNevQdwgxs7WNYCcmy6MN0Xz79Q2tNLNs9oq+9T+GtYIaKou4x
-         ApR0Uy9q0zxgvGzaYSBJKVvkIoXFr2fitP7amOqfsC1+gzDKM5svTDQXAnLJRSi6kRsI
-         lK/ehsnPvFZW9qpq7sF5A7L+b0lAYwspjsHRHpiLcqhVBTr7D63JpIV+329tMpzh8b8p
-         TxWQUv26+Xm5H7imex4kC2lwaVpHvj+tPooHa7MKHwF4ZTeQt1PL7nBQF8/WZ2STEOsc
-         kjDlnPXKKR6HCmEvt2fYSEmuRWh39ix8wP0ttAcjK6Dw6L0e5zkxQOh8ocywsKapU8H5
-         +/Wg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=NoPQm7BhluIQixsWy6jjw3GeJMnTyieWyQFDmLwmwJ4=;
+        b=L+GRL2o36NtPs2femln+N8HVw/kCQfXaqfis0fXDHxD/9YaQS/UQyEEms9tRuHu4sG
+         AQ/COT6gGNIL97ops6sXUkIvBWkWPKwpcRkKrWvZOtlChMJUZ1slW/YWRBnuTIjqQWYG
+         L3m6awM0Ef3ffxm2Z6hzQnkE17/rJ5hn3mDclRhMRxMEkfFTa6DvrFqutyBemXokpU2R
+         aB1JKz2hvWC3uk6LNFnLyJzB9mBQG2EqN+8IpSwBNXTL+/kK1P2SZqwlx9zndbu6bK4D
+         FAz16WRHLJwbxZwuIMwUdFP2XTHVM1y7UOTUbnrc3jVnLZsUHW+YY/dNyJ3G/tZAdZPe
+         LxaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=HJRRZ7xwVWKgrrchV3QbMX/wgWRGVLbHC2E+m6l+0/o=;
-        b=Dy6mhTVMQ79WhRvtWbfd8GPSi0/7FRhpGeHVv/5pdqaeyq5IOpe7cLYAr2rClI7ceg
-         eKaiIhw6DFLaDGnpMqCsG3TLGn8CsGw1iVPQCIcTGxrNDkLEF8IhFCAGPeW+NCu0MAN0
-         nEbre6c3YVpTlSY36qua7wcHuo+yJWp0zGqJsjeJg6dFV4KFt8vXLJAxxW6WIjOkfo42
-         BTCABZOWn2WZ1Ak+0lmKGhjjh+rR8DJcvLQjF11lvnenNU4/ngFV3FVwF8vXTUbHHqd+
-         ikdUDYTdPCYfy8jP5lHRMTvVVyVBr2Tn1i1vAerz6qPxAlCbUN2U1modnDM+9fI+CUaL
-         0TEw==
-X-Gm-Message-State: APjAAAU32DL8CDuPo96LZq3SdvgVTEnKjFx97oezKN4f+KOxwtiratPI
-        K+iFVz2NdJ0pu1vhhKr0Ptp1Jg==
-X-Google-Smtp-Source: APXvYqwOnRz12ZXWfwVkH3WodU4LhkeAYjXfGRaMtJWg1mdkdc5MbazZkwv/mQfmjb288oDC/euaTw==
-X-Received: by 2002:a2e:730d:: with SMTP id o13mr517630ljc.81.1562093923391;
-        Tue, 02 Jul 2019 11:58:43 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id o8sm842315ljh.100.2019.07.02.11.58.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 11:58:42 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 21:58:40 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
- page_pool_destroy
-Message-ID: <20190702185839.GH4510@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-References: <20190702153902.0e42b0b2@carbon>
- <156207778364.29180.5111562317930943530.stgit@firesoul>
- <20190702144426.GD4510@khorivan>
- <20190702165230.6caa36e3@carbon>
- <20190702145612.GF4510@khorivan>
- <20190702171029.76c60538@carbon>
- <20190702152112.GG4510@khorivan>
- <20190702202907.15fb30ce@carbon>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=NoPQm7BhluIQixsWy6jjw3GeJMnTyieWyQFDmLwmwJ4=;
+        b=acMgLlxX662i0VB38g7sj2pY6Uc7a93Q2Pu1mGOZso3IJqlVdeYueQeshvJ+PXj54m
+         oTK0XfmBzaKpRgLoqW8do00r4rMZW34YfgZ6b7OHMOfrCbnuIKmWvSG/hmMUlIqyX/St
+         y+bDC6dJw95B/V8GEbEpJj6t0dHb0frA73mjzJJFpfTYNCV+S0hp5mtVODnOLbAsDGyw
+         eL0x68fNwIdiB9mte98PdG970RqiPPm6JbJnvh7ZIee6XxUIU34uGqxj6hheBw5sYjiE
+         x7VxTICBNvGKF4vb2DWyLHTngqxdLuezQwx0+6nv3chr6bSCvPFKQ8x94FWuJABuPLc+
+         8hqg==
+X-Gm-Message-State: APjAAAXtOigVmUnojf3gh5tGhF9Z120K9euhzZccEWvfnr4oGbIjpucH
+        jxyJk1wJD7Jtp10MW4ZTf27M9w==
+X-Google-Smtp-Source: APXvYqw8dPKGUwJocSZOV9TVMQyFfZPDSfOEdfcX1CMRr/CyHjcQzbd3apmIL9aFvsRRF68+qlj8AA==
+X-Received: by 2002:a17:902:ac88:: with SMTP id h8mr37313013plr.12.1562093930455;
+        Tue, 02 Jul 2019 11:58:50 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id q36sm12654814pgl.23.2019.07.02.11.58.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 11:58:49 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 11:58:48 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Henry Burns <henryburns@google.com>
+cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Xidong Wang <wangxidong_97@163.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before 
+ __SetPageMovable()
+In-Reply-To: <20190702005122.41036-1-henryburns@google.com>
+Message-ID: <alpine.DEB.2.21.1907021158360.67286@chino.kir.corp.google.com>
+References: <20190702005122.41036-1-henryburns@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190702202907.15fb30ce@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 08:29:07PM +0200, Jesper Dangaard Brouer wrote:
->On Tue, 2 Jul 2019 18:21:13 +0300
->Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->
->> On Tue, Jul 02, 2019 at 05:10:29PM +0200, Jesper Dangaard Brouer wrote:
->> >On Tue, 2 Jul 2019 17:56:13 +0300
->> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->> >
->> >> On Tue, Jul 02, 2019 at 04:52:30PM +0200, Jesper Dangaard Brouer wrote:
->> >> >On Tue, 2 Jul 2019 17:44:27 +0300
->> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->> >> >
->> >> >> On Tue, Jul 02, 2019 at 04:31:39PM +0200, Jesper Dangaard Brouer wrote:
->> >> >> >From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> >> >> >
->> >> >> >Jesper recently removed page_pool_destroy() (from driver invocation) and
->> >> >> >moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
->> >> >> >handle in-flight packets/pages. This created an asymmetry in drivers
->> >> >> >create/destroy pairs.
->> >> >> >
->> >> >> >This patch add page_pool user refcnt and reintroduce page_pool_destroy.
->> >> >> >This serves two purposes, (1) simplify drivers error handling as driver now
->> >> >> >drivers always calls page_pool_destroy() and don't need to track if
->> >> >> >xdp_rxq_info_reg_mem_model() was unsuccessful. (2) allow special cases
->> >> >> >where a single RX-queue (with a single page_pool) provides packets for two
->> >> >> >net_device'es, and thus needs to register the same page_pool twice with two
->> >> >> >xdp_rxq_info structures.
->> >> >>
->> >> >> As I tend to use xdp level patch there is no more reason to mention (2) case
->> >> >> here. XDP patch serves it better and can prevent not only obj deletion but also
->> >> >> pool flush, so, this one patch I could better leave only for (1) case.
->> >> >
->> >> >I don't understand what you are saying.
->> >> >
->> >> >Do you approve this patch, or do you reject this patch?
->> >> >
->> >> It's not reject, it's proposition to use both, XDP and page pool patches,
->> >> each having its goal.
->> >
->> >Just to be clear, if you want this patch to get accepted you have to
->> >reply with your Signed-off-by (as I wrote).
->> >
->> >Maybe we should discuss it in another thread, about why you want two
->> >solutions to the same problem.
->>
->> If it solves same problem I propose to reject this one and use this:
->> https://lkml.org/lkml/2019/7/2/651
->
->No, I propose using this one, and rejecting the other one.
+On Mon, 1 Jul 2019, Henry Burns wrote:
 
-There is at least several arguments against this one (related (2) purpose)
+> __SetPageMovable() expects it's page to be locked, but z3fold.c doesn't
+> lock the page. Following zsmalloc.c's example we call trylock_page() and
+> unlock_page(). Also makes z3fold_page_migrate() assert that newpage is
+> passed in locked, as documentation.
+> 
+> Signed-off-by: Henry Burns <henryburns@google.com>
+> Suggested-by: Vitaly Wool <vitalywool@gmail.com>
 
-It allows:
-- avoid changes to page_pool/mlx5/netsec
-- save not only allocator obj but allocator "page/buffer flush"
-- buffer flush can be present not only in page_pool but for other allocators
-  that can behave differently and not so simple solution.
-- to not limit cpsw/(potentially others) to use "page_pool" allocator only
-....
-
-This patch better leave also, as it simplifies error path for page_pool and
-have more error prone usage comparing with existent one.
-
-Please, don't limit cpsw and potentially other drivers to use only
-page_pool it can be zca or etc... I don't won't to modify each allocator.
-I propose to add both as by fact they solve different problems with common
-solution.
-
--- 
-Regards,
-Ivan Khoronzhuk
+Acked-by: David Rientjes <rientjes@google.com>
