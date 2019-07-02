@@ -2,40 +2,49 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86316C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC60AC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B97206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD4321479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="j13ju2ro"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="bfnF9p0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfGBQwG (ORCPT
+        id S1727085AbfGBQwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:52:06 -0400
-Received: from mail-eopbgr720137.outbound.protection.outlook.com ([40.107.72.137]:14363
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Tue, 2 Jul 2019 12:52:19 -0400
+Received: from mail-eopbgr770114.outbound.protection.outlook.com ([40.107.77.114]:16353
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfGBQwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:52:05 -0400
+        id S1726303AbfGBQwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 12:52:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=Lq6DQOJ1X34liMPc/J7LKHl+VhFbP0QIJXF1C09biBUEQ79XJwZ8yIoRu1lMvQUKsFK8OeGlqT8x0b+Pmmf4an0N9JgJZ+RPiii40NsQygBB+93N9vux//efz3gV+z1UYLRuefB27HUdfpg/XyNfyLmlkd/Uca2tPNOkVEtT7t8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qjcnB1NmeWvXESms3IZxiu5T7o6Vs49AzKWKSSKsgfI=;
+ b=i1JsPIZyIz9btdl4T3VzSqZ/uaTTdXeUpYGhs+fI29sN76FY5jQ/xJJIGSocbP8ZFK57wpKW3KD23ruz36uDDhcnDAJeNMVeEsRxKXx47KEL0+oQI4zJqZzbyxR0L2T4E4irgks7WYBTDjUq9tAY3umBrevXg6KP+Kvdbyx2wC8=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A2Pv3hk0AXEsQIwDpcRtb9dTuPNgkL3Ijw/xoePVDNI=;
- b=j13ju2rocLDoEVxMMxLL0zCvqgiyw9X+WSrMRWr3V5RIkcmPnL81QLvSjR4BIv+LGMWIjy5dTfVhi+Bos+T/zT01vcsjWMXqOwHUBY1ZK9B/1xCxOTV5zdsioVRvsfkuC4NjFZ3TSNsUB/8PrVq/fTds1N6UIFDvVqXZPMlwTxI=
+ bh=qjcnB1NmeWvXESms3IZxiu5T7o6Vs49AzKWKSSKsgfI=;
+ b=bfnF9p0AnJ2dYJJn8iDTDYS2l4lW5sZ3pjHlJZbzhgXOgXVQTPh+c7KeOOCUI/N1XiH62vADegxxaem079/Sbyo4gw/BzlStsSKg8i3P4Qaqd+7lMfWwy2vvph0adbGtfVkmMAUG7IzuQzb/rJGPLHKkIou72B6dV7Zx/M4d69Y=
 Received: from DM5PR0102MB3383.prod.exchangelabs.com (52.132.128.150) by
- DM5PR0102MB3400.prod.exchangelabs.com (52.132.129.13) with Microsoft SMTP
+ DM5PR0102MB3413.prod.exchangelabs.com (52.132.129.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Tue, 2 Jul 2019 16:52:01 +0000
+ 15.20.2008.16; Tue, 2 Jul 2019 16:51:33 +0000
 Received: from DM5PR0102MB3383.prod.exchangelabs.com
  ([fe80::2560:7ba6:c491:dcce]) by DM5PR0102MB3383.prod.exchangelabs.com
  ([fe80::2560:7ba6:c491:dcce%7]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
- 16:52:01 +0000
+ 16:51:33 +0000
 From:   Tyler Baicar OS <baicar@os.amperecomputing.com>
 To:     Open Source Submission <patches@amperecomputing.com>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -57,13 +66,11 @@ To:     Open Source Submission <patches@amperecomputing.com>,
         "Matteo.Carlini@arm.com" <Matteo.Carlini@arm.com>,
         "Andrew.Murray@arm.com" <Andrew.Murray@arm.com>
 CC:     Tyler Baicar OS <baicar@os.amperecomputing.com>
-Subject: [PATCH RFC 4/4] trace, ras: add ARM RAS extension trace event
-Thread-Topic: [PATCH RFC 4/4] trace, ras: add ARM RAS extension trace event
-Thread-Index: AQHVMPZ4sF6dKk/9qkCTbQGWCWIwpg==
-Date:   Tue, 2 Jul 2019 16:52:01 +0000
-Message-ID: <1562086280-5351-5-git-send-email-baicar@os.amperecomputing.com>
-References: <1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com>
-In-Reply-To: <1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com>
+Subject: [PATCH RFC 0/4] ARM Error Source Table Support
+Thread-Topic: [PATCH RFC 0/4] ARM Error Source Table Support
+Thread-Index: AQHVMPZnLm2MGmSII0qkVo2bsW5EMA==
+Date:   Tue, 2 Jul 2019 16:51:32 +0000
+Message-ID: <1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -77,145 +84,85 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [4.28.12.214]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c5812d0-d77c-49f7-eeeb-08d6ff0d9a6d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR0102MB3400;
-x-ms-traffictypediagnostic: DM5PR0102MB3400:
-x-microsoft-antispam-prvs: <DM5PR0102MB34000F8B833F693BAF30ACFDE3F80@DM5PR0102MB3400.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-office365-filtering-correlation-id: c28408ce-32ce-476a-094f-08d6ff0d8973
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR0102MB3413;
+x-ms-traffictypediagnostic: DM5PR0102MB3413:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR0102MB3413EECB5A773E6164CE503EE3F80@DM5PR0102MB3413.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 008663486A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(366004)(376002)(346002)(396003)(39840400004)(136003)(199004)(189003)(386003)(66066001)(26005)(486006)(186003)(5660300002)(476003)(4720700003)(446003)(99286004)(6506007)(2201001)(102836004)(2616005)(76176011)(14454004)(256004)(52116002)(53936002)(478600001)(14444005)(11346002)(66476007)(107886003)(66556008)(25786009)(66946007)(66446008)(64756008)(73956011)(6436002)(8676002)(8936002)(4326008)(6512007)(6486002)(50226002)(81166006)(6116002)(81156014)(305945005)(3846002)(7736002)(7416002)(2906002)(2501003)(68736007)(71190400001)(71200400001)(316002)(86362001)(110136005)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR0102MB3400;H:DM5PR0102MB3383.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(136003)(366004)(376002)(39850400004)(199004)(189003)(25786009)(2906002)(14454004)(6512007)(6306002)(4720700003)(81156014)(81166006)(6436002)(478600001)(6486002)(386003)(6506007)(8936002)(2201001)(7416002)(8676002)(186003)(102836004)(107886003)(52116002)(86362001)(966005)(26005)(7736002)(99286004)(53936002)(305945005)(3846002)(6116002)(66446008)(73956011)(66946007)(66476007)(66556008)(64756008)(50226002)(14444005)(256004)(2501003)(110136005)(316002)(486006)(476003)(2616005)(66066001)(71200400001)(71190400001)(4326008)(68736007)(5660300002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR0102MB3413;H:DM5PR0102MB3383.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:3;
 received-spf: None (protection.outlook.com: os.amperecomputing.com does not
  designate permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gJqqSNDPMaFF9q3Thw42y1FUSCDcahmu/L4Da1s0CvDnRX0T7Z2k/1wvWz97kKINRncoAYEo4ho33jdwb+8r4940IgyrD8dDbwbfXKuCjRRl9+T7WGLb3NMkk4tOlT5s7ROV3oW5jp0p3zcUBnXsVAN0qZxRAmf2zjH4EKPifQV6wp/7skI4dCjaBo3dRO5z1NHUMkJ063Jmu/ccoPHkpFFpfYZtVI4rgQZpl/uEwVAawICvwl4nOjHTArt97MkQJ4Exkq8J0HEMDIPLz6x9eJpMS7qvAwI2cVfuhHSa8VbisQqEA7Jqf3bAjVi9HcA3hnecbs+/5u/k+unnTcmK0IzqbDWlmNo/RtXZL8VBXzOIfp8zNbkWkEy5CJj1hNIGxssriOHbPG03aV/VjtcGwjIqdoteudoLk39/CyhKTuI=
+x-microsoft-antispam-message-info: pMLO3t5GAP6lnw0dVcyzVjI7HmYQgpUWrFMp15/1FoXm0kcPQ5YvT2nfpRnXWyWYfDixvqhk4MlLrrlqhTumYl+vW0oye/g/za1prvJiM2EpEwe3n2Q8B6H+EGQSc8dNEbySGajaH074ZpnfeYxMJ/JkkQ/+FaAgh+e8cB5uygwvn0VtNmqI7LEA/Ft2F5RQnJlmR1YlJdyloMgZyMe4i0ZlPfTMVZvNIhTewfyqyLR8I4ecKpWTCYEIKX0AwX8xXyuLmORs66lXGzXgQ6NsnvR3B64lWoF2rccUeQ7AatfxR6qzE0WTXIaWpbw+KQWFAkAj6mXHh6ilUkFRCrkKz/n3YJHTycSGcaiY+TEx/TwJxbtsNzHpvk/uLDg28lUKIUlHg2mvTuFfvYv5Izdg4aGf5CbODZNpXPFE3ZOk4q4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5812d0-d77c-49f7-eeeb-08d6ff0d9a6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 16:52:01.3925
+X-MS-Exchange-CrossTenant-Network-Message-Id: c28408ce-32ce-476a-094f-08d6ff0d8973
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 16:51:32.9416
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: Baicar@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0102MB3400
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0102MB3413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a trace event for hardware errors reported by the ARMv8.2
-RAS extension registers.
+This series adds support for the ARM Error Source Table (AEST) based on
+the latest version of the AEST from ARM [0].
 
-Signed-off-by: Tyler Baicar <baicar@os.amperecomputing.com>
----
- arch/arm64/kernel/ras.c   |  3 +++
- drivers/acpi/arm64/aest.c |  4 ++++
- include/ras/ras_event.h   | 46 +++++++++++++++++++++++++++++++++++++++++++=
-+++
- 3 files changed, 53 insertions(+)
+The AEST driver supports both memory mapped and system register interfaces.
+This series assumes system register interfaces are only registered with
+private peripheral interrupts (PPIs); otherwise there is no guarantee the
+core handling the error is the core which took the error and has the
+syndrome info in it's system registers.
 
-diff --git a/arch/arm64/kernel/ras.c b/arch/arm64/kernel/ras.c
-index ca47efa..4e34d63 100644
---- a/arch/arm64/kernel/ras.c
-+++ b/arch/arm64/kernel/ras.c
-@@ -5,6 +5,7 @@
- #include <linux/smp.h>
-=20
- #include <asm/ras.h>
-+#include <ras/ras_event.h>
-=20
- void arch_arm_ras_report_error(void)
- {
-@@ -50,6 +51,8 @@ void arch_arm_ras_report_error(void)
- 			       regs.err_misc1);
- 		}
-=20
-+		trace_arm_ras_ext_event(0, cpu_num, &regs);
-+
- 		/*
- 		 * In the future, we will treat UER conditions as potentially
- 		 * recoverable.
-diff --git a/drivers/acpi/arm64/aest.c b/drivers/acpi/arm64/aest.c
-index fd4f3b5..21ec583 100644
---- a/drivers/acpi/arm64/aest.c
-+++ b/drivers/acpi/arm64/aest.c
-@@ -13,6 +13,7 @@
- #include <linux/ratelimit.h>
-=20
- #include <asm/ras.h>
-+#include <ras/ras_event.h>
-=20
- #undef pr_fmt
- #define pr_fmt(fmt) "ACPI AEST: " fmt
-@@ -102,6 +103,9 @@ static void aest_proc(struct aest_node_data *data)
-=20
- 		aest_print(data, regs, i);
-=20
-+		trace_arm_ras_ext_event(data->node_type, data->data.proc.id,
-+					&regs);
-+
- 		if (regs.err_status & ERR_STATUS_UE)
- 			fatal =3D true;
-=20
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 36c5c5e..8b76cb1 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -339,6 +339,52 @@
- );
-=20
- /*
-+ * ARM RAS Extension Events Report
-+ *
-+ * This event is generated when an error reported by the ARM RAS extension
-+ * hardware is detected.
-+ */
-+
-+#ifdef CONFIG_ARM64
-+#include <asm/ras.h>
-+TRACE_EVENT(arm_ras_ext_event,
-+
-+	TP_PROTO(u8 type, u32 id, struct ras_ext_regs *regs),
-+
-+	TP_ARGS(type, id, regs),
-+
-+	TP_STRUCT__entry(
-+		__field(u8,  type)
-+		__field(u32, id)
-+		__field(u64, err_fr)
-+		__field(u64, err_ctlr)
-+		__field(u64, err_status)
-+		__field(u64, err_addr)
-+		__field(u64, err_misc0)
-+		__field(u64, err_misc1)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->type =3D type;
-+		__entry->id =3D id;
-+		__entry->err_fr =3D regs->err_fr;
-+		__entry->err_ctlr =3D regs->err_ctlr;
-+		__entry->err_status =3D regs->err_status;
-+		__entry->err_addr =3D regs->err_addr;
-+		__entry->err_misc0 =3D regs->err_misc0;
-+		__entry->err_misc1 =3D regs->err_misc1;
-+	),
-+
-+	TP_printk("type: %d; id: %d; ERR_FR: %llx; ERR_CTLR: %llx; "
-+		  "ERR_STATUS: %llx; ERR_ADDR: %llx; ERR_MISC0: %llx; "
-+		  "ERR_MISC1: %llx",
-+		  __entry->type, __entry->id, __entry->err_fr,
-+		  __entry->err_ctlr, __entry->err_status, __entry->err_addr,
-+		  __entry->err_misc0, __entry->err_misc1)
-+);
-+#endif
-+
-+/*
-  * memory-failure recovery action result event
-  *
-  * unsigned long pfn -	Page Frame Number of the corrupted page
+SEAs and SEIs could also have syndrome information present in the RAS
+extension system registers. That handling is tied into the system register
+handling code.
+
+This is meant to be initial support for AEST to address the current gaps
+with systems that support ARMv8.2 RAS extensions but don't have
+firmware-first support. This series simply logs all the errors it finds
+and triggers a kernel panic if there is an UE present.
+
+Future work:
+- UER handling to avoid panic
+- Looping through all external abort capable (ERR<n>FR.UE !=3D 0) error
+   nodes in SEA/SEI handling
+- ARMv8.4 extension support
+
+[0] https://static.docs.arm.com/den0085/a/DEN0085_RAS_ACPI_1.0_BETA_1.pdf
+
+Tyler Baicar (4):
+  ACPI/AEST: Initial AEST driver
+  arm64: mm: Add RAS extension system register check to SEA handling
+  arm64: traps: Add RAS extension system register check to serror
+    handling
+  trace, ras: add ARM RAS extension trace event
+
+ arch/arm64/include/asm/ras.h |  41 +++++
+ arch/arm64/kernel/Makefile   |   2 +-
+ arch/arm64/kernel/ras.c      |  70 +++++++++
+ arch/arm64/kernel/traps.c    |   3 +
+ arch/arm64/mm/fault.c        |   3 +
+ drivers/acpi/arm64/Kconfig   |   3 +
+ drivers/acpi/arm64/Makefile  |   1 +
+ drivers/acpi/arm64/aest.c    | 366 +++++++++++++++++++++++++++++++++++++++=
+++++
+ include/linux/acpi_aest.h    |  94 +++++++++++
+ include/ras/ras_event.h      |  46 ++++++
+ 10 files changed, 628 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/include/asm/ras.h
+ create mode 100644 arch/arm64/kernel/ras.c
+ create mode 100644 drivers/acpi/arm64/aest.c
+ create mode 100644 include/linux/acpi_aest.h
+
 --=20
 1.8.3.1
 
