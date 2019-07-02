@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BD1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BBEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684442186A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8422053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054581;
-	bh=GNizRBeqQ6ROLVksye5/GoG1+koTGI2044OlJYwFIRo=;
+	s=default; t=1562054584;
+	bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxYSKPKs3FGTzysScQYUdFJ5PAYmHDbqxfwCDP7HS7HVfGpmxV/FV5bmhDiwobWw0
-	 ih240TronKieslm8TLCnRszO9C8sO2xTTVkFl5IOoHSJxq72orV+rXncqARCo8VW37
-	 +fpCPLjkD5zLXklvmhHjKMmnNosm/RZWtEJ/MObk=
+	b=fIWQhdSRec+VQd3fnEMltw8qRrgN0sXHkFGiWz/nTgYVCBMQVdejzr+kmIEIryQtb
+	 LpLcwLUviwg29x8HTaKXxBS0bus5cxW/0aKVhd9MDYA2/YkDgvHCDf3I6GCDVT+I9F
+	 Y/F9PrZN4/A4jnN8LiOS/vDEhM2cTiZqk7qphF3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfGBIDA (ORCPT
+        id S1727278AbfGBIDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfGBIC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:02:56 -0400
+        id S1727253AbfGBIC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:02:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC5D216C8;
-        Tue,  2 Jul 2019 08:02:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA29121841;
+        Tue,  2 Jul 2019 08:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054575;
-        bh=GNizRBeqQ6ROLVksye5/GoG1+koTGI2044OlJYwFIRo=;
+        s=default; t=1562054578;
+        bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETX9aOg1yoJOXVcvzhT2PhY56zcZOshcIY76RP4eilX7L06JQ6O9/VF+LXtFGsEla
-         YuBIzkTIVVaEhH8WhgB17cjAOkveE/enFiewv+Jo6tgCCoW2yyfxbOnnN7j+iYaQC9
-         a0Eu4rVtOHlf2N9AGTTtzpgUL6w6EaGRkkR6LF8A=
+        b=hVMzBuPw9G+e+8QbFu+FqF+FvaWCu54Jzsvu3Tt6srn41/He+IFcn1DLWFrtxpWom
+         KgQYGQL+9czzdPXxvsN7vhJAl3UHYe0AqOnfc7aCrUZ00DZAGCmA6VA/f6SSCPInBI
+         lPd/vzi6A4O4b4Shg8ll2+HS+ML1BEe1bjAy1Wy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.1 17/55] dm init: fix incorrect uses of kstrndup()
-Date:   Tue,  2 Jul 2019 10:01:25 +0200
-Message-Id: <20190702080124.938027622@linuxfoundation.org>
+Subject: [PATCH 5.1 18/55] dm log writes: make sure super sector log updates are written in order
+Date:   Tue,  2 Jul 2019 10:01:26 +0200
+Message-Id: <20190702080125.001290277@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -59,43 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit dec7e6494e1aea6bf676223da3429cd17ce0af79 upstream.
+commit 211ad4b733037f66f9be0a79eade3da7ab11cbb8 upstream.
 
-Fix 2 kstrndup() calls with incorrect argument order.
+Currently, although we submit super bios in order (and super.nr_entries
+is incremented by each logged entry), submit_bio() is async so each
+super sector may not be written to log device in order and then the
+final nr_entries may be smaller than it should be.
 
-Fixes: 6bbc923dfcf5 ("dm: add support to directly boot to a mapped device")
-Cc: stable@vger.kernel.org # v5.1
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+This problem can be reproduced by the xfstests generic/455 with ext4:
+
+  QA output created by 455
+ -Silence is golden
+ +mark 'end' does not exist
+
+Fix this by serializing submission of super sectors to make sure each
+is written to the log disk in order.
+
+Fixes: 0e9cebe724597 ("dm: add log writes target")
+Cc: stable@vger.kernel.org
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Suggested-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-init.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/md/dm-log-writes.c |   23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-init.c
-+++ b/drivers/md/dm-init.c
-@@ -140,8 +140,8 @@ static char __init *dm_parse_table_entry
- 		return ERR_PTR(-EINVAL);
- 	}
- 	/* target_args */
--	dev->target_args_array[n] = kstrndup(field[3], GFP_KERNEL,
--					     DM_MAX_STR_SIZE);
-+	dev->target_args_array[n] = kstrndup(field[3], DM_MAX_STR_SIZE,
-+					     GFP_KERNEL);
- 	if (!dev->target_args_array[n])
- 		return ERR_PTR(-ENOMEM);
+--- a/drivers/md/dm-log-writes.c
++++ b/drivers/md/dm-log-writes.c
+@@ -60,6 +60,7 @@
  
-@@ -275,7 +275,7 @@ static int __init dm_init_init(void)
- 		DMERR("Argument is too big. Limit is %d\n", DM_MAX_STR_SIZE);
- 		return -EINVAL;
+ #define WRITE_LOG_VERSION 1ULL
+ #define WRITE_LOG_MAGIC 0x6a736677736872ULL
++#define WRITE_LOG_SUPER_SECTOR 0
+ 
+ /*
+  * The disk format for this is braindead simple.
+@@ -115,6 +116,7 @@ struct log_writes_c {
+ 	struct list_head logging_blocks;
+ 	wait_queue_head_t wait;
+ 	struct task_struct *log_kthread;
++	struct completion super_done;
+ };
+ 
+ struct pending_block {
+@@ -180,6 +182,14 @@ static void log_end_io(struct bio *bio)
+ 	bio_put(bio);
+ }
+ 
++static void log_end_super(struct bio *bio)
++{
++	struct log_writes_c *lc = bio->bi_private;
++
++	complete(&lc->super_done);
++	log_end_io(bio);
++}
++
+ /*
+  * Meant to be called if there is an error, it will free all the pages
+  * associated with the block.
+@@ -215,7 +225,8 @@ static int write_metadata(struct log_wri
+ 	bio->bi_iter.bi_size = 0;
+ 	bio->bi_iter.bi_sector = sector;
+ 	bio_set_dev(bio, lc->logdev->bdev);
+-	bio->bi_end_io = log_end_io;
++	bio->bi_end_io = (sector == WRITE_LOG_SUPER_SECTOR) ?
++			  log_end_super : log_end_io;
+ 	bio->bi_private = lc;
+ 	bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
+ 
+@@ -418,11 +429,18 @@ static int log_super(struct log_writes_c
+ 	super.nr_entries = cpu_to_le64(lc->logged_entries);
+ 	super.sectorsize = cpu_to_le32(lc->sectorsize);
+ 
+-	if (write_metadata(lc, &super, sizeof(super), NULL, 0, 0)) {
++	if (write_metadata(lc, &super, sizeof(super), NULL, 0,
++			   WRITE_LOG_SUPER_SECTOR)) {
+ 		DMERR("Couldn't write super");
+ 		return -1;
  	}
--	str = kstrndup(create, GFP_KERNEL, DM_MAX_STR_SIZE);
-+	str = kstrndup(create, DM_MAX_STR_SIZE, GFP_KERNEL);
- 	if (!str)
- 		return -ENOMEM;
+ 
++	/*
++	 * Super sector should be writen in-order, otherwise the
++	 * nr_entries could be rewritten incorrectly by an old bio.
++	 */
++	wait_for_completion_io(&lc->super_done);
++
+ 	return 0;
+ }
+ 
+@@ -531,6 +549,7 @@ static int log_writes_ctr(struct dm_targ
+ 	INIT_LIST_HEAD(&lc->unflushed_blocks);
+ 	INIT_LIST_HEAD(&lc->logging_blocks);
+ 	init_waitqueue_head(&lc->wait);
++	init_completion(&lc->super_done);
+ 	atomic_set(&lc->io_blocks, 0);
+ 	atomic_set(&lc->pending_blocks, 0);
  
 
 
