@@ -3,107 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60365C06510
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B91C5B578
 	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4220C21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2072221479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfGBCrH (ORCPT
+        id S1726970AbfGBCoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:47:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53998 "EHLO mx1.redhat.com"
+        Mon, 1 Jul 2019 22:44:30 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56659 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbfGBCrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:47:07 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4ECDE2F8BEB;
-        Tue,  2 Jul 2019 02:47:07 +0000 (UTC)
-Received: from localhost (ovpn-12-52.pek2.redhat.com [10.72.12.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B6A0A60C44;
-        Tue,  2 Jul 2019 02:47:04 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 10:47:02 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     airlied@redhat.com, kexec@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: mgag200 fails kdump kernel booting
-Message-ID: <20190702024702.GD3178@localhost.localdomain>
-References: <20190626081522.GX24419@MiWiFi-R3L-srv>
- <20190702022140.GA3327@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702022140.GA3327@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 02 Jul 2019 02:47:07 +0000 (UTC)
+        id S1726434AbfGBCoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 22:44:30 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x622iI61015588;
+        Mon, 1 Jul 2019 21:44:19 -0500
+Message-ID: <38d777292f5335b5ea5f8fd7c0b58c514dda525a.camel@kernel.crashing.org>
+Subject: Re: WARNING: refcount bug in kobject_add_internal
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Cc:     Muchun Song <smuchun@gmail.com>
+Date:   Tue, 02 Jul 2019 12:44:18 +1000
+In-Reply-To: <000000000000106b11058ca6f7f2@google.com>
+References: <000000000000106b11058ca6f7f2@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/19 at 10:21am, Dave Young wrote:
-> On 06/26/19 at 04:15pm, Baoquan He wrote:
-> > Hi Dave,
-> > 
-> > We met an kdump kernel boot failure on a lenovo system. Kdump kernel
-> > failed to boot, but just reset to firmware to reboot system. And nothing
-> > is printed out.
-> > 
-> > The machine is a big server, with 6T memory and many cpu, its graphic
-> > driver module is mgag200.
-> > 
-> > When added 'earlyprintk=ttyS0' into kernel command line, it printed
-> > out only one line to console during kdump kernel booting:
-> >      KASLR disabled: 'nokaslr' on cmdline.
-> > 
-> > Then reset to firmware to reboot system.
-> > 
-> > By further code debugging, the failure happened in
-> > arch/x86/boot/compressed/misc.c, during kernel decompressing stage. It's
-> > triggered by the vga printing. As you can see, in __putstr() of
-> > arch/x86/boot/compressed/misc.c, the code checks if earlyprintk= is
-> > specified, and print out to the target. And no matter if earlyprintk= is
-> > added or not, it will print to VGA. And printing to VGA caused it to
-> > reset to firmware. That's why we see nothing when didn't specify
-> > earlyprintk=, but see only one line of printing about the 'KASLR
-> > disabled'.
-> > 
-> > To confirm it's caused by VGA printing, I blacklist the mgag200 by
-> > writting it into /etc/modprobe.d/blacklist.conf. The kdump kernel can
-> > boot up successfully. And add 'nomodeset' can also make it work. So it's
-> > for sure mgag driver or related code have something wrong when booting
-> > code tries to re-init it.
-> > 
-> > This is the only case we ever see, tend to pursuit fix in mgag200 driver
-> > side. Any idea or suggestion? We have two machines to be able to
-> > reproduce it stablly.
-> 
-> Personally I think early code should not blindly do vga writing, there
-> are cases that does not work:
-> 1. efi booted machine,  just no output
-> 2. kdump kernel booted,  writing to vga caused undefined state, for
-> example in your case it caused a system reset.
-> 
-> So I suggest only write to vga when we see earlyprintk=vga in kernel
-> cmdline.
+Munchun, is this what your patch fixes ?
 
-I remember one customer ever attached a picture of kernel booting hang
-from monitor. I planned to disable vga when it's not specified, but
-changed my mind because not all machines are servers w/o monitor. Still
-there are many people using laptop, PC, they have vga printing, possibly
-have no console. When crash happened, maybe randomly, the vga printing
-could be the only witness. In above listed cases, case 1 doesn't output,
-seems efi need be fixed, but I can't see why it matters here. About case
-2, do you have a specific example, except of this one? Printing to vga
-has been done so long time, if it does cause troubles, we need to mute
-it now.
 
-Thanks
-Baoquan
+On Mon, 2019-07-01 at 16:27 -0700, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 726e41097920a73e4c7c33385dcc0debb1281e18
+> Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Date:   Tue Jul 10 00:29:10 2018 +0000
+> 
+>      drivers: core: Remove glue dirs from sysfs earlier
+> 
+> bisection log:  
+> https://syzkaller.appspot.com/x/bisect.txt?x=140d6739a00000
+> start commit:   6fbc7275 Linux 5.2-rc7
+> git tree:       upstream
+> final crash:    
+> https://syzkaller.appspot.com/x/report.txt?x=160d6739a00000
+> console output: 
+> https://syzkaller.appspot.com/x/log.txt?x=120d6739a00000
+> kernel config:  
+> https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=32259bb9bc1a487ad206
+> syz repro:      
+> https://syzkaller.appspot.com/x/repro.syz?x=115bad39a00000
+> C reproducer:   
+> https://syzkaller.appspot.com/x/repro.c?x=1241bdd5a00000
+> 
+> Reported-by: syzbot+32259bb9bc1a487ad206@syzkaller.appspotmail.com
+> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs
+> earlier")
+> 
+> For information about bisection process see: 
+> https://goo.gl/tpsmEJ#bisection
+
