@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980D0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A4CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4A720665
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E05A20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055061;
-	bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+	s=default; t=1562055070;
+	bh=PkOp1tK8MXcfqqgY3v2HBpAJUAf1o5pm3r1aqb8Awwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rP5cVkMZJ90q9TGlSS8PwKHqn3OIfqz2p8ANE1MYVHkiE7EBEkClGONZzCQQnmbct
-	 pegTB/DVQP9gLw/emxQW7yx/l6zTgLATrOBg+cSheV98ZwYmBAuLkuydZezXCGNMP1
-	 LcDh23Eg3DJQXIUmqPFFzbDHW0XL6YjEvwbq5O1o=
+	b=AmSxIVNnJiUFMsNUDg8jtQ0M8y8YCApTDaPdAG+PuLRJroe3Bfxw1faOQZfZwrcc1
+	 6wf7TIRrgkVOWI3WQBDy+qG4NWnDFJovFapIwxhY8OOrux89CCRrwUC2OO/F3daahX
+	 v1aKRM989StwnHG3i5OEfbp/sNTNjLNN8SkF8mh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfGBIK7 (ORCPT
+        id S1728538AbfGBILI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:10:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbfGBIKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:10:55 -0400
+        id S1728485AbfGBIKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:10:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16F7820665;
-        Tue,  2 Jul 2019 08:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40ACA2184B;
+        Tue,  2 Jul 2019 08:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055054;
-        bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+        s=default; t=1562055048;
+        bh=PkOp1tK8MXcfqqgY3v2HBpAJUAf1o5pm3r1aqb8Awwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7w7HCytnrFxoQke9wnLz3Te+AIaN++TaFmn9VMm4tVQiZuvc7TJidf7+hkFvAbTL
-         Fhd9q3Gob+J8dpedis2FXCGTwBApqJjj2UELT77yWTavVk7lKr7euhGjXTR452KYza
-         LKjVF02v6SwHQdJNuMVW+uuw6MYfGV9kKwMuXwu0=
+        b=bjvgyxqGKcrEOz2cEyB0vOGm8kXOzTRfsPx7yefVwzXyn0rucRLnUYHb5+WItR08c
+         EeZkGuuYakolzGHLyYxkEYIF2J41EUl+xSNV614yZG/RB0ToOS4f3XX1oGJXA2bx+2
+         rjE960PVOa/dvK9ywLGIZ18smruWb6wiSCSOFoZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 19/43] mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
-Date:   Tue,  2 Jul 2019 10:01:59 +0200
-Message-Id: <20190702080124.793064726@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 27/43] af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
+Date:   Tue,  2 Jul 2019 10:02:07 +0200
+Message-Id: <20190702080125.248065085@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -66,85 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-commit 7298e3b0a149c91323b3205d325e942c3b3b9ef6 upstream.
+[ Upstream commit 89ed5b519004a7706f50b70f611edbd3aaacff2c ]
 
-Currently the calcuation of end_pfn can round up the pfn number to more
-than the actual maximum number of pfns, causing an Oops.  Fix this by
-ensuring end_pfn is never more than max_pfn.
+When an application is run that:
+a) Sets its scheduler to be SCHED_FIFO
+and
+b) Opens a memory mapped AF_PACKET socket, and sends frames with the
+MSG_DONTWAIT flag cleared, its possible for the application to hang
+forever in the kernel.  This occurs because when waiting, the code in
+tpacket_snd calls schedule, which under normal circumstances allows
+other tasks to run, including ksoftirqd, which in some cases is
+responsible for freeing the transmitted skb (which in AF_PACKET calls a
+destructor that flips the status bit of the transmitted frame back to
+available, allowing the transmitting task to complete).
 
-This can be easily triggered when on systems where the end_pfn gets
-rounded up to more than max_pfn using the idle-page stress-ng stress test:
+However, when the calling application is SCHED_FIFO, its priority is
+such that the schedule call immediately places the task back on the cpu,
+preventing ksoftirqd from freeing the skb, which in turn prevents the
+transmitting task from detecting that the transmission is complete.
 
-sudo stress-ng --idle-page 0
+We can fix this by converting the schedule call to a completion
+mechanism.  By using a completion queue, we force the calling task, when
+it detects there are no more frames to send, to schedule itself off the
+cpu until such time as the last transmitted skb is freed, allowing
+forward progress to be made.
 
-  BUG: unable to handle kernel paging request at 00000000000020d8
-  #PF error: [normal kernel read fault]
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  RIP: 0010:page_idle_get_page+0xc8/0x1a0
-  Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
-  RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
-  RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
-  RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
-  RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
-  R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
-  R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
-  FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
-  Call Trace:
-    page_idle_bitmap_write+0x8c/0x140
-    sysfs_kf_bin_write+0x5c/0x70
-    kernfs_fop_write+0x12e/0x1b0
-    __vfs_write+0x1b/0x40
-    vfs_write+0xab/0x1b0
-    ksys_write+0x55/0xc0
-    __x64_sys_write+0x1a/0x20
-    do_syscall_64+0x5a/0x110
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Tested by myself and the reporter, with good results
 
-Link: http://lkml.kernel.org/r/20190618124352.28307-1-colin.king@canonical.com
-Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Change Notes:
+
+V1->V2:
+	Enhance the sleep logic to support being interruptible and
+allowing for honoring to SK_SNDTIMEO (Willem de Bruijn)
+
+V2->V3:
+	Rearrage the point at which we wait for the completion queue, to
+avoid needing to check for ph/skb being null at the end of the loop.
+Also move the complete call to the skb destructor to avoid needing to
+modify __packet_set_status.  Also gate calling complete on
+packet_read_pending returning zero to avoid multiple calls to complete.
+(Willem de Bruijn)
+
+	Move timeo computation within loop, to re-fetch the socket
+timeout since we also use the timeo variable to record the return code
+from the wait_for_complete call (Neil Horman)
+
+V3->V4:
+	Willem has requested that the control flow be restored to the
+previous state.  Doing so lets us eliminate the need for the
+po->wait_on_complete flag variable, and lets us get rid of the
+packet_next_frame function, but introduces another complexity.
+Specifically, but using the packet pending count, we can, if an
+applications calls sendmsg multiple times with MSG_DONTWAIT set, each
+set of transmitted frames, when complete, will cause
+tpacket_destruct_skb to issue a complete call, for which there will
+never be a wait_on_completion call.  This imbalance will lead to any
+future call to wait_for_completion here to return early, when the frames
+they sent may not have completed.  To correct this, we need to re-init
+the completion queue on every call to tpacket_snd before we enter the
+loop so as to ensure we wait properly for the frames we send in this
+iteration.
+
+	Change the timeout and interrupted gotos to out_put rather than
+out_status so that we don't try to free a non-existant skb
+	Clean up some extra newlines (Willem de Bruijn)
+
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/page_idle.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c |   20 +++++++++++++++++---
+ net/packet/internal.h  |    1 +
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(str
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2438,6 +2438,9 @@ static void tpacket_destruct_skb(struct
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+ 		ts = __packet_set_timestamp(po, ph, skb);
+ 		__packet_set_status(po, ph, TP_STATUS_AVAILABLE | ts);
++
++		if (!packet_read_pending(&po->tx_ring))
++			complete(&po->skb_completion);
+ 	}
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(st
+ 	sock_wfree(skb);
+@@ -2632,7 +2635,7 @@ static int tpacket_parse_header(struct p
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
+ {
+-	struct sk_buff *skb;
++	struct sk_buff *skb = NULL;
+ 	struct net_device *dev;
+ 	struct virtio_net_hdr *vnet_hdr = NULL;
+ 	struct sockcm_cookie sockc;
+@@ -2647,6 +2650,7 @@ static int tpacket_snd(struct packet_soc
+ 	int len_sum = 0;
+ 	int status = TP_STATUS_AVAILABLE;
+ 	int hlen, tlen, copylen = 0;
++	long timeo = 0;
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
+ 	mutex_lock(&po->pg_vec_lock);
+ 
+@@ -2693,12 +2697,21 @@ static int tpacket_snd(struct packet_soc
+ 	if ((size_max > dev->mtu + reserve + VLAN_HLEN) && !po->has_vnet_hdr)
+ 		size_max = dev->mtu + reserve + VLAN_HLEN;
+ 
++	reinit_completion(&po->skb_completion);
++
+ 	do {
+ 		ph = packet_current_frame(po, &po->tx_ring,
+ 					  TP_STATUS_SEND_REQUEST);
+ 		if (unlikely(ph == NULL)) {
+-			if (need_wait && need_resched())
+-				schedule();
++			if (need_wait && skb) {
++				timeo = sock_sndtimeo(&po->sk, msg->msg_flags & MSG_DONTWAIT);
++				timeo = wait_for_completion_interruptible_timeout(&po->skb_completion, timeo);
++				if (timeo <= 0) {
++					err = !timeo ? -ETIMEDOUT : -ERESTARTSYS;
++					goto out_put;
++				}
++			}
++			/* check for additional frames */
+ 			continue;
+ 		}
+ 
+@@ -3252,6 +3265,7 @@ static int packet_create(struct net *net
+ 	sock_init_data(sock, sk);
+ 
+ 	po = pkt_sk(sk);
++	init_completion(&po->skb_completion);
+ 	sk->sk_family = PF_PACKET;
+ 	po->num = proto;
+ 	po->xmit = dev_queue_xmit;
+--- a/net/packet/internal.h
++++ b/net/packet/internal.h
+@@ -128,6 +128,7 @@ struct packet_sock {
+ 	unsigned int		tp_hdrlen;
+ 	unsigned int		tp_reserve;
+ 	unsigned int		tp_tstamp;
++	struct completion	skb_completion;
+ 	struct net_device __rcu	*cached_dev;
+ 	int			(*xmit)(struct sk_buff *skb);
+ 	struct packet_type	prot_hook ____cacheline_aligned_in_smp;
 
 
