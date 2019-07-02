@@ -2,92 +2,157 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15172C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D038C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E795C2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D9E216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562048490;
+	bh=rkaeMO7B0wY1OLfb6TGU1K2ucCtlHNBMOex23ANgLRc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=eMgazXQnnOoQ7oq9o5zKxyJ16OCLI/m6AaCxhxP69SQ4W81UpTx9NJw6tkz21wtiT
+	 gGdENyWToc7PKoOO18WVrt1A7v+6eMLLWylrii+Hm6KN2O95NTb+AtYqruqhosiHQm
+	 UJzjIqzz9LWAIW0F89wa3CMUaRrwFXb18M75Tr3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfGBGUs (ORCPT
+        id S1726621AbfGBGV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:20:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44432 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfGBGUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:20:48 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D31A995C6CEF97FA6E31;
-        Tue,  2 Jul 2019 14:20:45 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 14:20:38 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
-        <intel-wired-lan@lists.osuosl.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] iavf: remove unused debug function iavf_debug_d
-Date:   Tue, 2 Jul 2019 14:20:21 +0800
-Message-ID: <20190702062021.41524-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 2 Jul 2019 02:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfGBGV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 02:21:29 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A762146F;
+        Tue,  2 Jul 2019 06:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562048487;
+        bh=rkaeMO7B0wY1OLfb6TGU1K2ucCtlHNBMOex23ANgLRc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YSrBnh1riIW5hPtDGUL+7HUMqebVjK4tFkAT+sgFcyLlRKHsQZKH0R8x6fBnstCNN
+         t25fZBHxJWiyUgnmLoS0j5gvQjOOCKH0e4c27c8HjoVW4Xshzzbbb2nCCzaTrM19uy
+         kCL9tC1kZ+ZYaFX+sN9UbeXMmTuUlvKzTdhNfAKg=
+Date:   Mon, 1 Jul 2019 23:21:26 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 3 open syzbot bugs in "net/rxrpc" subsystem
+Message-ID: <20190702062126.GA3054@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no caller of function iavf_debug_d() in tree since
-commit 75051ce4c5d8 ("iavf: Fix up debug print macro"),
-so it can be removed.
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/intel/iavf/iavf_main.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 3 of them as possibly being bugs in the "net/rxrpc" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 881561b..327dda8 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -143,28 +143,6 @@ enum iavf_status iavf_free_virt_mem_d(struct iavf_hw *hw,
- }
- 
- /**
-- * iavf_debug_d - OS dependent version of debug printing
-- * @hw:  pointer to the HW structure
-- * @mask: debug level mask
-- * @fmt_str: printf-type format description
-- **/
--void iavf_debug_d(void *hw, u32 mask, char *fmt_str, ...)
--{
--	char buf[512];
--	va_list argptr;
--
--	if (!(mask & ((struct iavf_hw *)hw)->debug_mask))
--		return;
--
--	va_start(argptr, fmt_str);
--	vsnprintf(buf, sizeof(buf), fmt_str, argptr);
--	va_end(argptr);
--
--	/* the debug string is already formatted with a newline */
--	pr_info("%s", buf);
--}
--
--/**
-  * iavf_schedule_reset - Set the flags and schedule a reset event
-  * @adapter: board private structure
-  **/
--- 
-2.7.4
+Of these 3 bugs, 1 was seen in mainline in the last week.
 
+Of these 3 bugs, 2 were bisected to commits from the following person:
+
+	David Howells <dhowells@redhat.com>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the "net/rxrpc" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in rxrpc_connect_call
+Last occurred:      14 days ago
+Reported:           159 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=41872265f1e3e0489eb0cc8762f8d48b3667afdb
+Original thread:    https://lkml.kernel.org/lkml/00000000000033d5e205801b05d3@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit 46894a13599a977ac35411b536fb3e0b2feefa95
+	Author: David Howells <dhowells@redhat.com>
+	Date:   Thu Oct 4 08:32:28 2018 +0000
+
+	  rxrpc: Use IPv4 addresses throught the IPv6
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+7966f2a0b2c7da8939b4@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000033d5e205801b05d3@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at net/rxrpc/local_object.c:LINE!
+Last occurred:      4 days ago
+Reported:           4 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=53b6555b27af2cae74e2fbdac6cadc73f9cb18aa
+Original thread:    https://lkml.kernel.org/lkml/0000000000004c2416058c594b30@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit 46894a13599a977ac35411b536fb3e0b2feefa95
+	Author: David Howells <dhowells@redhat.com>
+	Date:   Thu Oct 4 08:32:28 2018 +0000
+
+	  rxrpc: Use IPv4 addresses throught the IPv6
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004c2416058c594b30@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: locking bug in flush_workqueue_prep_pwqs
+Last occurred:      9 days ago
+Reported:           136 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4ae48f9c43f87ccf9f2f270b14d5b9284dadd05c
+Original thread:    https://lkml.kernel.org/lkml/0000000000005c7e6f0581f1b86a@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+0c4264acb66ea0484d11@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000005c7e6f0581f1b86a@google.com
 
