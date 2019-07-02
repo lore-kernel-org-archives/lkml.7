@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F9CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AF6C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B9F21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F05721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6tXprmB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZ/zGiP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfGBH5G (ORCPT
+        id S1727010AbfGBH5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 03:57:06 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33934 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBH5F (ORCPT
+        Tue, 2 Jul 2019 03:57:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37997 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfGBH5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 03:57:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c85so7860532pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 00:57:05 -0700 (PDT)
+        Tue, 2 Jul 2019 03:57:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id 9so7954993ple.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 00:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=xRxgUpoXT1ALTuAFgtLyhDcF8m82X8iHnPfbbq6cJwI=;
-        b=q6tXprmBUuV+ReG3S2QN32JZYZLMw0FgSBTzRhhwb8mQ0Z9B80tUs2NRedze1LvfHX
-         qTA9kdxkhhE59hOmJXu20GGr9jeCz55G+EdAZsW1pYtodOzafAjsCediWSBdxoPS2FkZ
-         /nWbspb52M9vG/fiOUPTcBWvODgs1u5HCp3E0GyLfZSmjf4Ff9MaxlajLEzwXBc8JM5N
-         T8OWsnRCqJ2uagmbTAkue+/PvJT5JrldY8ZVvq5EraEu8Fb0d84IN31FfKifux66dQoV
-         b44LZNxEBNhj/0BnXw2Faht68+E43LTZrHMY/v/0g/r/5wqh4PnImWbaIdj+aSQPxKKG
-         jukQ==
+        bh=DF4jW8AlvC+djlWYUd2QZGbasaSqRQZjK5QX1QiXecI=;
+        b=MZ/zGiP7VKWS/RUj5c+AqnE5pTIQ3ExmWvSeQj6qk3mb+Fa1T2iqUVnuqEk5xXoam6
+         Q2gRgaxMSorqsxSszlwPqlHXMEJF8ZY7M+6DhpzbATv7K1GTtq0Z5YWhTw7UxBKYXPuw
+         YKo7VqHUaL1qAYKMyjNA46sampnSFTaQCBeiqDOIHLMD6T8tO37l3jueTTQz+D/PFNYO
+         DzF/TwlWFm3yAwmY7E9izLv4YgXGM+FCsz9Ki+imIByEu0/pfDxz7pxs7nacUZvpUN5n
+         FtYoVuWwkMPb0m4Me0GMq+YEb03Jbkf9Ul6+UWPVNTgNDL5D6IM0aXIRs3FdxE4+W3jU
+         KAwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xRxgUpoXT1ALTuAFgtLyhDcF8m82X8iHnPfbbq6cJwI=;
-        b=NpNOScPL82TwFaxPWH7vUGEauArR8aMg0ZWGP1AQYoc9cpI9dJbznb27IWgsIypPaT
-         HfIn97YXrzsquoza6b2cRD5zDpIxvl6Be9wos2+s3Q39JwuelLrhyYmDFRG9TOe5baXW
-         2dXGP41TzitDHZirQpMYELQas8lAgHSxQtNUFcn5tCUxqCob3Qs0Xc5hNrnFvbPv9nzg
-         ldTwhQzYKnOtPm8NcbMNImknWooePD1PM2bN814T45fakQbmP211z7cebIdU7xHm1xuO
-         xu3Enp2bVRdBDk2LdmZPkIHmadVCuCt4mDTK+2ZO8f9vfQgvLp2tMQN8D1stJG3jUl80
-         pVnQ==
-X-Gm-Message-State: APjAAAX4lAbvmQ9PfEvQgoPv1VCKG4LMBMmKhe/c5hhwhIjhKGLNu7/o
-        d/lU2HKvE30OaTpEeM6dQugXNfNI/Io=
-X-Google-Smtp-Source: APXvYqzzXnIfyFzUIeSN451jsMB7+VHqB2M0rFVAb+4USZAiPCbRiWNRyxmmSMZCmds9Evs3MjRqeQ==
-X-Received: by 2002:a17:90a:cf0d:: with SMTP id h13mr4036939pju.63.1562054225157;
-        Tue, 02 Jul 2019 00:57:05 -0700 (PDT)
+        bh=DF4jW8AlvC+djlWYUd2QZGbasaSqRQZjK5QX1QiXecI=;
+        b=VMdsa9SOHEc2hFFFoxfF9fSF4pIVn4yaC3RphFGNA5xisLWaMP8FIhpe5vGINLIurw
+         UBllwizXMugkjCyTY+WSpbOQHzJh8PUTCCJWrgPvgljMGuT/ILemnFgxUEDz3o6qVpyV
+         92KT/gvXx0qj4/OnViI5NSUv2pESvtNLZyc85odf1cfxCu4MVr5slUGmUwA+L6CCtvVe
+         qC8Q4MN8yqpGxiEm5I7SWFPSer/juESQPxpJkM1GpaixIuwIOcUMqB+19c7ihbugxpub
+         VfBgJN3nMR3f/w7vDLbbcNh3yb6YHQSLdAI/7/fw6uZAALGgYQ3k1XrTSYYGvU49TuWF
+         MKcw==
+X-Gm-Message-State: APjAAAXSjDJy97GnhT9Kll0lJjdd/4qj4p67m/QVgodkm3MHfSE7tkef
+        2h11BxMrl8KYozgKQQG35TbxReB5M6Y=
+X-Google-Smtp-Source: APXvYqw8KitwquxmoZ7xkWcw4eqLqu1ROrCJgehu2iLE2o838blGsHqiMz1qCpktA+TWHsfQtuW2gw==
+X-Received: by 2002:a17:902:7247:: with SMTP id c7mr33474463pll.202.1562054234322;
+        Tue, 02 Jul 2019 00:57:14 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id e10sm13322608pfi.173.2019.07.02.00.57.03
+        by smtp.googlemail.com with ESMTPSA id r88sm1447707pjb.8.2019.07.02.00.57.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 00:57:04 -0700 (PDT)
+        Tue, 02 Jul 2019 00:57:14 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v3 03/27] atm: idt77252: remove memset after dma_alloc_coherent
-Date:   Tue,  2 Jul 2019 15:56:58 +0800
-Message-Id: <20190702075658.23648-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v3 04/27] block: remove memset after dma_alloc_coherent
+Date:   Tue,  2 Jul 2019 15:57:07 +0800
+Message-Id: <20190702075707.23695-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,21 +78,59 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v3:
   - Use actual commit rather than the merge commit in the commit message
 
- drivers/atm/idt77252.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/block/mtip32xx/mtip32xx.c | 5 -----
+ drivers/block/skd_main.c          | 1 -
+ 2 files changed, 6 deletions(-)
 
-diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
-index 43a14579e80e..df51680e8931 100644
---- a/drivers/atm/idt77252.c
-+++ b/drivers/atm/idt77252.c
-@@ -1379,7 +1379,6 @@ init_tsq(struct idt77252_dev *card)
- 		printk("%s: can't allocate TSQ.\n", card->name);
- 		return -1;
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index a14b09ab3a41..964f78cfffa0 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -1577,7 +1577,6 @@ static int exec_drive_command(struct mtip_port *port, u8 *command,
+ 				ATA_SECT_SIZE * xfer_sz);
+ 			return -ENOMEM;
+ 		}
+-		memset(buf, 0, ATA_SECT_SIZE * xfer_sz);
  	}
--	memset(card->tsq.base, 0, TSQSIZE);
  
- 	card->tsq.last = card->tsq.base + TSQ_NUM_ENTRIES - 1;
- 	card->tsq.next = card->tsq.last;
+ 	/* Build the FIS. */
+@@ -2776,7 +2775,6 @@ static int mtip_dma_alloc(struct driver_data *dd)
+ 					&port->block1_dma, GFP_KERNEL);
+ 	if (!port->block1)
+ 		return -ENOMEM;
+-	memset(port->block1, 0, BLOCK_DMA_ALLOC_SZ);
+ 
+ 	/* Allocate dma memory for command list */
+ 	port->command_list =
+@@ -2789,7 +2787,6 @@ static int mtip_dma_alloc(struct driver_data *dd)
+ 		port->block1_dma = 0;
+ 		return -ENOMEM;
+ 	}
+-	memset(port->command_list, 0, AHCI_CMD_TBL_SZ);
+ 
+ 	/* Setup all pointers into first DMA region */
+ 	port->rxfis         = port->block1 + AHCI_RX_FIS_OFFSET;
+@@ -3529,8 +3526,6 @@ static int mtip_init_cmd(struct blk_mq_tag_set *set, struct request *rq,
+ 	if (!cmd->command)
+ 		return -ENOMEM;
+ 
+-	memset(cmd->command, 0, CMD_DMA_ALLOC_SZ);
+-
+ 	sg_init_table(cmd->sg, MTIP_MAX_SG);
+ 	return 0;
+ }
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index c479235862e5..51569c199a6c 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -2694,7 +2694,6 @@ static int skd_cons_skmsg(struct skd_device *skdev)
+ 		     (FIT_QCMD_ALIGN - 1),
+ 		     "not aligned: msg_buf %p mb_dma_address %pad\n",
+ 		     skmsg->msg_buf, &skmsg->mb_dma_address);
+-		memset(skmsg->msg_buf, 0, SKD_N_FITMSG_BYTES);
+ 	}
+ 
+ err_out:
 -- 
 2.11.0
 
