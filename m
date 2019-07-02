@@ -6,50 +6,79 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A11C46481
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7976C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FC2218A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B81C21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 14:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfGBOZi (ORCPT
+        id S1727100AbfGBO3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 10:25:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:42993 "EHLO verein.lst.de"
+        Tue, 2 Jul 2019 10:29:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:50918 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfGBOZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:25:38 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A94C568BFE; Tue,  2 Jul 2019 16:25:33 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 16:25:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marta Rybczynska <mrybczyn@kalray.eu>
-Cc:     Hannes Reinecke <hare@suse.de>, kbusch <kbusch@kernel.org>,
-        axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Samuel Jones <sjones@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>
-Subject: Re: [PATCH] nvme: fix multipath crash when ANA deactivated
-Message-ID: <20190702142533.GA16763@lst.de>
-References: <708068303.29979589.1561975811341.JavaMail.zimbra@kalray.eu> <6416b503-aa20-0094-6acf-101c60e9e3c9@suse.de> <1229162251.30096937.1562061155630.JavaMail.zimbra@kalray.eu>
+        id S1726341AbfGBO3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 10:29:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 717D228;
+        Tue,  2 Jul 2019 07:29:23 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D93513F703;
+        Tue,  2 Jul 2019 07:29:22 -0700 (PDT)
+Subject: Re: [PATCH v2] sched/fair: fix imbalance due to CPU affinity
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <1561996022-28829-1-git-send-email-vincent.guittot@linaro.org>
+ <7111f9d1-62f2-504c-a7ba-958b1c659cc8@arm.com>
+ <CAKfTPtBGDZ5P91hwGdHADYpcbOPeniDLE7x3-U9dXDvFVMAi1w@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <d71ab6f7-3aab-adb3-f170-7757bde94f7c@arm.com>
+Date:   Tue, 2 Jul 2019 15:29:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1229162251.30096937.1562061155630.JavaMail.zimbra@kalray.eu>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAKfTPtBGDZ5P91hwGdHADYpcbOPeniDLE7x3-U9dXDvFVMAi1w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 11:52:35AM +0200, Marta Rybczynska wrote:
-> > They idea was to use a 'ana_log_buf == NULL' as an indicator that ANA is
-> > disabled, so there is no need to have an additional flag.
-> 
-> OK, still keeping the split of the helper functions?
 
-I think we can simplify switch nvme_ctrl_use_ana to only check for
-->ana_log_buf, and just opencode the actual capabilities check in
-the setup path.
+
+On 02/07/2019 11:00, Vincent Guittot wrote:
+>> Does that want a
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: afdeee0510db ("sched: Fix imbalance flag reset")
+> 
+> I was not sure that this has been introduced by this patch or
+> following changes. I haven't been able to test it on such old kernel
+> with my platform
+> 
+
+Right, seems like
+
+  65a4433aebe3 ("sched/fair: Fix load_balance() affinity redo path")
+
+also played in this area. From surface level it looks like it only reduced
+the amount of CPUs the load_balance() redo can use (and interestingly it
+mentions the exact same bug as you observed, through triggered slightly
+differently).
+
+I'd be inclined to say that the issue was introduced by afdeee0510db, since
+from looking at the code from that time I can see the issue happening:
+
+- try to pull from a CPU with only tasks pinned to itself
+- set sgc->imbalance
+- redo with a CPU that sees no big imbalance
+- goto out_balanced
+- env.LBF_ALL_PINNED is still set but we clear sgc->imbalance
+
+>>
+>> ?
+>>
