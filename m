@@ -2,50 +2,58 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C04C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE29C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2AC021479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5483621479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054687;
-	bh=BTSRS7krKf0ykVWMx0adRYJYzVZlruXljy9zoQppowA=;
+	s=default; t=1562054691;
+	bh=qlNER7IGKMqQxQpXoyyqHoszXTk+HOmLOJ3OAVrexkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9cZqsYid81bKItw6JiBnPWLlC2hjiZ6VY1WUPg31Ww0v7n9YA+h+aZQgpXJYEjFR
-	 p/9cKnhh8pfI6PIwrCb/T5ZpNMQbKmS2FXx5m+i+VgDWrWPxL5kSOFSo3eOFwcwpBc
-	 lMzVg94yKyO660NQE4gnPZababkrPwtjRGAs5JDM=
+	b=sWUV3/8zhHlSWx6s3v9W/JLkdZlsz9v42Br8TxUB1+CWYuS6ukNFvics1ux3HsGgM
+	 Impf/OnfrIqD54z0rBK3dHF3eAVcbnYCTxw08Ypgrho8rex/0pkzt5j4UaQXumpm9e
+	 AZd6MEOkIhXmn6CjER+pBdZcpPmf47vMHcUKbn1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGBIEq (ORCPT
+        id S1727311AbfGBIEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50262 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfGBIEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:40 -0400
+        id S1727814AbfGBIEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0989F21841;
-        Tue,  2 Jul 2019 08:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF05321479;
+        Tue,  2 Jul 2019 08:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054679;
-        bh=BTSRS7krKf0ykVWMx0adRYJYzVZlruXljy9zoQppowA=;
+        s=default; t=1562054685;
+        bh=qlNER7IGKMqQxQpXoyyqHoszXTk+HOmLOJ3OAVrexkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=urPeLJ1J2ScKfGKzkAMV1w0zYDYh1sL4jhiubadli5Ynaq/I3R/kR8q3FqKMzJID/
-         bJR6lOcmDKiOX1kg3NABP9dvK04IizGoJDpGgK7nYW2oOJOveEP+7IkMx4Vkw3fdrX
-         9cayqIVxi0z2NWUA00oE4Iv1l1hzXth3k4JyX/Nc=
+        b=L0fJnz3k5nY1w0agC+aifDEYQOXkkc8Khdxgl2Q1l2wzF/N0FX8PT7yZTY0QGTq9h
+         S21+v/e8WlGoSY48WAVTxElNbDVV86Me9gFSXIR+69iuFi+7fh9USjXsfvh+i7cSOT
+         ilvWRAa0azNor86oB6VvbBP3fIu7BYhr/cqt3HnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.1 53/55] RDMA: Directly cast the sockaddr union to sockaddr
-Date:   Tue,  2 Jul 2019 10:02:01 +0200
-Message-Id: <20190702080126.810631450@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com,
+        syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com,
+        syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com,
+        syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com,
+        syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com,
+        syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 55/55] tipc: pass tunnel dev as NULL to udp_tunnel(6)_xmit_skb
+Date:   Tue,  2 Jul 2019 10:02:03 +0200
+Message-Id: <20190702080126.904780432@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -58,118 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 641114d2af312d39ca9bbc2369d18a5823da51c6 upstream.
+commit c3bcde026684c62d7a2b6f626dc7cf763833875c upstream.
 
-gcc 9 now does allocation size tracking and thinks that passing the member
-of a union and then accessing beyond that member's bounds is an overflow.
+udp_tunnel(6)_xmit_skb() called by tipc_udp_xmit() expects a tunnel device
+to count packets on dev->tstats, a perpcu variable. However, TIPC is using
+udp tunnel with no tunnel device, and pass the lower dev, like veth device
+that only initializes dev->lstats(a perpcu variable) when creating it.
 
-Instead of using the union member, use the entire union with a cast to
-get to the sockaddr. gcc will now know that the memory extends the full
-size of the union.
+Later iptunnel_xmit_stats() called by ip(6)tunnel_xmit() thinks the dev as
+a tunnel device, and uses dev->tstats instead of dev->lstats. tstats' each
+pointer points to a bigger struct than lstats, so when tstats->tx_bytes is
+increased, other percpu variable's members could be overwritten.
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+syzbot has reported quite a few crashes due to fib_nh_common percpu member
+'nhc_pcpu_rth_output' overwritten, call traces are like:
+
+  BUG: KASAN: slab-out-of-bounds in rt_cache_valid+0x158/0x190
+  net/ipv4/route.c:1556
+    rt_cache_valid+0x158/0x190 net/ipv4/route.c:1556
+    __mkroute_output net/ipv4/route.c:2332 [inline]
+    ip_route_output_key_hash_rcu+0x819/0x2d50 net/ipv4/route.c:2564
+    ip_route_output_key_hash+0x1ef/0x360 net/ipv4/route.c:2393
+    __ip_route_output_key include/net/route.h:125 [inline]
+    ip_route_output_flow+0x28/0xc0 net/ipv4/route.c:2651
+    ip_route_output_key include/net/route.h:135 [inline]
+  ...
+
+or:
+
+  kasan: GPF could be caused by NULL-ptr deref or user memory access
+  RIP: 0010:dst_dev_put+0x24/0x290 net/core/dst.c:168
+    <IRQ>
+    rt_fibinfo_free_cpus net/ipv4/fib_semantics.c:200 [inline]
+    free_fib_info_rcu+0x2e1/0x490 net/ipv4/fib_semantics.c:217
+    __rcu_reclaim kernel/rcu/rcu.h:240 [inline]
+    rcu_do_batch kernel/rcu/tree.c:2437 [inline]
+    invoke_rcu_callbacks kernel/rcu/tree.c:2716 [inline]
+    rcu_process_callbacks+0x100a/0x1ac0 kernel/rcu/tree.c:2697
+  ...
+
+The issue exists since tunnel stats update is moved to iptunnel_xmit by
+Commit 039f50629b7f ("ip_tunnel: Move stats update to iptunnel_xmit()"),
+and here to fix it by passing a NULL tunnel dev to udp_tunnel(6)_xmit_skb
+so that the packets counting won't happen on dev->tstats.
+
+Reported-by: syzbot+9d4c12bfd45a58738d0a@syzkaller.appspotmail.com
+Reported-by: syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com
+Reported-by: syzbot+c4c4b2bb358bb936ad7e@syzkaller.appspotmail.com
+Reported-by: syzbot+0290d2290a607e035ba1@syzkaller.appspotmail.com
+Reported-by: syzbot+a43d8d4e7e8a7a9e149e@syzkaller.appspotmail.com
+Reported-by: syzbot+a47c5f4c6c00fc1ed16e@syzkaller.appspotmail.com
+Fixes: 039f50629b7f ("ip_tunnel: Move stats update to iptunnel_xmit()")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/addr.c           |   16 ++++++++--------
- drivers/infiniband/hw/ocrdma/ocrdma_ah.c |    5 ++---
- drivers/infiniband/hw/ocrdma/ocrdma_hw.c |    5 ++---
- 3 files changed, 12 insertions(+), 14 deletions(-)
+ net/tipc/udp_media.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -730,8 +730,8 @@ int roce_resolve_route_from_path(struct
- 	if (rec->roce.route_resolved)
- 		return 0;
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -176,7 +176,6 @@ static int tipc_udp_xmit(struct net *net
+ 			goto tx_error;
+ 		}
  
--	rdma_gid2ip(&sgid._sockaddr, &rec->sgid);
--	rdma_gid2ip(&dgid._sockaddr, &rec->dgid);
-+	rdma_gid2ip((struct sockaddr *)&sgid, &rec->sgid);
-+	rdma_gid2ip((struct sockaddr *)&dgid, &rec->dgid);
- 
- 	if (sgid._sockaddr.sa_family != dgid._sockaddr.sa_family)
- 		return -EINVAL;
-@@ -742,7 +742,7 @@ int roce_resolve_route_from_path(struct
- 	dev_addr.net = &init_net;
- 	dev_addr.sgid_attr = attr;
- 
--	ret = addr_resolve(&sgid._sockaddr, &dgid._sockaddr,
-+	ret = addr_resolve((struct sockaddr *)&sgid, (struct sockaddr *)&dgid,
- 			   &dev_addr, false, true, 0);
- 	if (ret)
- 		return ret;
-@@ -814,22 +814,22 @@ int rdma_addr_find_l2_eth_by_grh(const u
- 	struct rdma_dev_addr dev_addr;
- 	struct resolve_cb_context ctx;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
- 	int ret;
- 
--	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
--	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
-+	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
-+	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
- 
- 	memset(&dev_addr, 0, sizeof(dev_addr));
- 	dev_addr.net = &init_net;
- 	dev_addr.sgid_attr = sgid_attr;
- 
- 	init_completion(&ctx.comp);
--	ret = rdma_resolve_ip(&sgid_addr._sockaddr, &dgid_addr._sockaddr,
--			      &dev_addr, 1000, resolve_cb, true, &ctx);
-+	ret = rdma_resolve_ip((struct sockaddr *)&sgid_addr,
-+			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
-+			      resolve_cb, true, &ctx);
- 	if (ret)
- 		return ret;
- 
---- a/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
-@@ -83,7 +83,6 @@ static inline int set_av_attr(struct ocr
- 	struct iphdr ipv4;
- 	const struct ib_global_route *ib_grh;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
-@@ -133,9 +132,9 @@ static inline int set_av_attr(struct ocr
- 		ipv4.tot_len = htons(0);
- 		ipv4.ttl = ib_grh->hop_limit;
- 		ipv4.protocol = nxthdr;
--		rdma_gid2ip(&sgid_addr._sockaddr, sgid);
-+		rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
- 		ipv4.saddr = sgid_addr._sockaddr_in.sin_addr.s_addr;
--		rdma_gid2ip(&dgid_addr._sockaddr, &ib_grh->dgid);
-+		rdma_gid2ip((struct sockaddr*)&dgid_addr, &ib_grh->dgid);
- 		ipv4.daddr = dgid_addr._sockaddr_in.sin_addr.s_addr;
- 		memcpy((u8 *)ah->av + eth_sz, &ipv4, sizeof(struct iphdr));
- 	} else {
---- a/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
-@@ -2499,7 +2499,6 @@ static int ocrdma_set_av_params(struct o
- 	u32 vlan_id = 0xFFFF;
- 	u8 mac_addr[6], hdr_type;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
-@@ -2541,8 +2540,8 @@ static int ocrdma_set_av_params(struct o
- 
- 	hdr_type = rdma_gid_attr_network_type(sgid_attr);
- 	if (hdr_type == RDMA_NETWORK_IPV4) {
--		rdma_gid2ip(&sgid_addr._sockaddr, &sgid_attr->gid);
--		rdma_gid2ip(&dgid_addr._sockaddr, &grh->dgid);
-+		rdma_gid2ip((struct sockaddr *)&sgid_addr, &sgid_attr->gid);
-+		rdma_gid2ip((struct sockaddr *)&dgid_addr, &grh->dgid);
- 		memcpy(&cmd->params.dgid[0],
- 		       &dgid_addr._sockaddr_in.sin_addr.s_addr, 4);
- 		memcpy(&cmd->params.sgid[0],
+-		skb->dev = rt->dst.dev;
+ 		ttl = ip4_dst_hoplimit(&rt->dst);
+ 		udp_tunnel_xmit_skb(rt, ub->ubsock->sk, skb, src->ipv4.s_addr,
+ 				    dst->ipv4.s_addr, 0, ttl, 0, src->port,
+@@ -195,10 +194,9 @@ static int tipc_udp_xmit(struct net *net
+ 		if (err)
+ 			goto tx_error;
+ 		ttl = ip6_dst_hoplimit(ndst);
+-		err = udp_tunnel6_xmit_skb(ndst, ub->ubsock->sk, skb,
+-					   ndst->dev, &src->ipv6,
+-					   &dst->ipv6, 0, ttl, 0, src->port,
+-					   dst->port, false);
++		err = udp_tunnel6_xmit_skb(ndst, ub->ubsock->sk, skb, NULL,
++					   &src->ipv6, &dst->ipv6, 0, ttl, 0,
++					   src->port, dst->port, false);
+ #endif
+ 	}
+ 	return err;
 
 
