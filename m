@@ -2,154 +2,121 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26908C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82C2C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38702089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4CB2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:46:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdVby+/P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqGCSlZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfGBKpp (ORCPT
+        id S1727029AbfGBKqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:45:45 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41634 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfGBKpp (ORCPT
+        Tue, 2 Jul 2019 06:46:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39490 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGBKqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:45:45 -0400
-Received: by mail-yb1-f193.google.com with SMTP id y67so1127843yba.8;
-        Tue, 02 Jul 2019 03:45:44 -0700 (PDT)
+        Tue, 2 Jul 2019 06:46:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so17220888wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:46:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vlidC+hQ/gD/8v9eleM4nXtfiap8zhCG0j5qbLCVw18=;
-        b=kdVby+/PzZu5i6Y9UcQYatHEHHsEPhAQY+mjVHF6xlggt8o+nszbdHXCHfEBil5H5H
-         UL+/28eYKfUAOv8AvNzRMQHWK/y4MABFSamQhRwNZH1hpEc5BUQCjqITvhev6DLWRzG3
-         uOgpinFcBt7pSePpbwiWspS3cbj7dBXMod+4Z94YngJ+nIPc3qdhbsYftXAC3oBGhakE
-         Bt+6iCjbrfqQEg0SzB1WdrzlyuHEb0JfhuYdop7KFU8fbo4QPvOCj4+Z+NVkWFYsg5RT
-         IRHHoit1jxeDZWaJHULPmpdSPTutxwczS9nSE3h7MYk2MPhM/kHniCv9ovLGXWy3LfTv
-         lmfQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hO+sbYk0/T3jqctI9JR6vxxLVs1uBzFmGyJcEcM/u7Y=;
+        b=jqGCSlZ3S2DRiKfYs7CyPMFx3xD5pgHjSkZEFir+NedOMLTobyr7ozdm1t2GT34K2f
+         PUxMk87jPfURZEPfak7QFdtwvU9GSpZxLr//SV8PZv2WyZ+icEHNCESjpHeyAAvGHVMt
+         5OvKmg6cjgRQaSxB58O7OQOXWyTbri0M7Hm/jTFcKezt9FFvKAUCkebVUzmr7paluaPu
+         cXEP2NXz5TZZURRxHgTWUIPKxxw8Ccyr0hUGXm4WL3e6AGvsXEWKVvX8K9sLPv4Gpdev
+         PVQLYhvbngH92sZNcsqtgAhCIV/2p6D9dkkUQgtrNKq+FBvDU0n2ZskRiPZ/nFT4gnTG
+         IZ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlidC+hQ/gD/8v9eleM4nXtfiap8zhCG0j5qbLCVw18=;
-        b=kOQko23Rc0IeST7t53H2gjWohdZk/9tmrCy9j0Rme3aK0mIIU5LjQKBiS+ejJnCJLr
-         eXv3MY5B5zssNxt6ivw3b3ZBvK1ZL89h6U4Y+3AIy7lCyyPMsPb/G6izNdRCpd06xd6E
-         pLh/ruAZmfaEUtviP+xATCFMGfeg5ePmN+63xu/FldL9ljRQfqyluhxF2LBRFjCNOzmg
-         NH1VOREpBkgGMKCPlQ1BVPd3q1TOF4cF+KqV12p2Ladm8UDSa0rsfY1id/BS+Xr1YQRm
-         UvHTCY97g7hTBu2cu7OTDhNjAo9ZikyO8JHLd7mxjGRiEsZr/AWbSs/fESX06x1R833k
-         KGPw==
-X-Gm-Message-State: APjAAAV+qRNH++e6+G9m8S/OV+UlGtYWnV7DHAfM2HUbmIWLZUzkYUAg
-        YebvmfFBvHMYW+g+t12VT1xBFQeakkjTeDO9KTg=
-X-Google-Smtp-Source: APXvYqzMdrjXgWGhi/zPaZxEj+t8DhHrW56qP/YMhmryxOT2o02rqdhc3hQ5y4gjPvsnd8KwypjTK3Tgmn2Zfydvxjo=
-X-Received: by 2002:a25:8109:: with SMTP id o9mr16913558ybk.132.1562064343920;
- Tue, 02 Jul 2019 03:45:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hO+sbYk0/T3jqctI9JR6vxxLVs1uBzFmGyJcEcM/u7Y=;
+        b=gqdBtSV2PukLw6Wno6jA9du6zpWCebVGLQ3cqfM1vrgb0ARu/LwE2gFjp9MBe008pt
+         6r/W2dx8iYQt0WfZkiGmR5qohYjXMb83W0tTfMzAMd1bk+D+Ucvy1KP5n9TU1hoFO3uH
+         /6G1goi3BCEfryii3gkO5rAtmKjkR3PWsle9IN6P58j4fNw2OVCicicH41q3E/NNEjio
+         s9WMa+t13Mm6LjkaGJgbHD/M//8PJ4yDD32yNLtl5Sps9V0Aq5jrI7DHbGodlxIeYrh0
+         /i/pWIXrH62dRI1bWU+ZGOHPlEPOBYSqFcsJtlMDV913esiTQPOWiLyucWgY7sBmsoyG
+         kDNg==
+X-Gm-Message-State: APjAAAVmisnE+N4PMhBMN9/bzeeqYC/0BcsKthP3OGLoJeek/FuB8mPf
+        SIMHXrQ6jZluTkg3z1q1Ask6mEmjeog=
+X-Google-Smtp-Source: APXvYqwvBhx5ZJSggS8b1mH+WYdJHochpCwgOtEjyu9ydzm4KH+ZNxKOcOGbvkkK/2G8B2Kzc6Z2wA==
+X-Received: by 2002:a5d:4d10:: with SMTP id z16mr10442850wrt.112.1562064362257;
+        Tue, 02 Jul 2019 03:46:02 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id o20sm33429611wrh.8.2019.07.02.03.46.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 03:46:01 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 11:46:00 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com
+Subject: [GIT PULL v2] Immutable branch between MFD and Regulator due for the
+ v5.3 merge window
+Message-ID: <20190702104600.GE4652@dell>
+References: <20190612144620.28331-1-j-keerthy@ti.com>
+ <20190617070341.GC16364@dell>
 MIME-Version: 1.0
-References: <156174687561.1557469.7505651950825460767.stgit@magnolia>
- <156174690758.1557469.9258105121276292687.stgit@magnolia> <20190701154200.GK1404256@magnolia>
-In-Reply-To: <20190701154200.GK1404256@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 2 Jul 2019 13:45:32 +0300
-Message-ID: <CAOQ4uxizFXgSa4KzkwxmoPAvpiENg=y0=fsxEC1PkCX5J1ybag@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] vfs: don't allow most setxattr to immutable files
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, Chao Yu <yuchao0@huawei.com>,
-        Theodore Tso <tytso@mit.edu>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chris Mason <clm@fb.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Ext4 <linux-ext4@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190617070341.GC16364@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 7:31 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> From: Darrick J. Wong <darrick.wong@oracle.com>
->
-> The chattr manpage has this to say about immutable files:
->
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
->
-> However, we don't actually check the immutable flag in the setattr code,
-> which means that we can update inode flags and project ids and extent
-> size hints on supposedly immutable files.  Therefore, reject setflags
-> and fssetxattr calls on an immutable file if the file is immutable and
-> will remain that way.
->
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
-> v2: use memcmp instead of open coding a bunch of checks
+Mark,
 
+This is a subsequent pull which contains the /* fall-through */ fix.
 
-Thanks,
+Enjoy!
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-> ---
->  fs/inode.c |   17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/fs/inode.c b/fs/inode.c
-> index cf07378e5731..31f694e405fe 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -2214,6 +2214,14 @@ int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
->             !capable(CAP_LINUX_IMMUTABLE))
->                 return -EPERM;
->
-> +       /*
-> +        * We aren't allowed to change any other flags if the immutable flag is
-> +        * already set and is not being unset.
-> +        */
-> +       if ((oldflags & FS_IMMUTABLE_FL) && (flags & FS_IMMUTABLE_FL) &&
-> +           oldflags != flags)
-> +               return -EPERM;
-> +
->         /*
->          * Now that we're done checking the new flags, flush all pending IO and
->          * dirty mappings before setting S_IMMUTABLE on an inode via
-> @@ -2284,6 +2292,15 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
->             !(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)))
->                 return -EINVAL;
->
-> +       /*
-> +        * We aren't allowed to change any fields if the immutable flag is
-> +        * already set and is not being unset.
-> +        */
-> +       if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-> +           (fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-> +           memcmp(fa, old_fa, offsetof(struct fsxattr, fsx_pad)))
-> +               return -EPERM;
-> +
->         /* Extent size hints of zero turn off the flags. */
->         if (fa->fsx_extsize == 0)
->                 fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.3-1
+
+for you to fetch changes up to f3f4363b1239584efc1a22c5ca0f2308e5693c38:
+
+  regulator: lp87565: Fix missing break in switch statement (2019-07-02 11:41:23 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and Regulator due for the v5.3 merge window
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      regulator: lp87565: Fix missing break in switch statement
+
+Keerthy (3):
+      dt-bindings: mfd: lp87565: Add LP87561 configuration
+      mfd: lp87565: Add support for 4-phase LP87561 combination
+      regulator: lp87565: Add 4-phase lp87561 regulator support
+
+ Documentation/devicetree/bindings/mfd/lp87565.txt | 36 +++++++++++++++++++++++
+ drivers/mfd/lp87565.c                             |  4 +++
+ drivers/regulator/lp87565-regulator.c             | 18 +++++++++++-
+ include/linux/mfd/lp87565.h                       |  2 ++
+ 4 files changed, 59 insertions(+), 1 deletion(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
