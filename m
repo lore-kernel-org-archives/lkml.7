@@ -2,223 +2,163 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3E1C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B071C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCA020659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="fy5Qz7SD"
+	by mail.kernel.org (Postfix) with ESMTP id E8044216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562054557;
+	bh=UHj+reTeQRaOFAHNyvjjTOieOnvPAd53doWoMIt3ixE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QIeWbjg0GghE3jqhYaYCOMoyqavwyf8Np5Bqswtg+ETFIK4oNvutRIXBc/Qzz9wzF
+	 H1AQ3j2ANshuGyD62+KSPz4Lwa1639hzF5gHDz+ORSQLqf2xpYp3vbDQBgHTgXiVP3
+	 ZxUKdIsfJAPI+KEqCg8mD7dAar3dKMl7iMFJLquE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfGBIBf (ORCPT
+        id S1726970AbfGBICf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:01:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39523 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBIBe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:01:34 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so13211853qkd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g9p5xPNbhvX6rdcdMz4PJ3zSu4AdikKW+oNfOMUWzrk=;
-        b=fy5Qz7SDXY14L8WdevL9eePkSI+yeR2Q7uiqhJXE0IKwg5vnJs0gzASrqMrIeYOivA
-         8+KyFxi6L/xkrX5KErsmrt5Qwkj3fRjxG9s0lRnnRUe9Kv/2RRTdXrsJzTNSZRqchLEU
-         oWXvDahBwXwx9UD+FbE6t+yMoaB5bn4nXEOSqJpnOCTe7U9Kl99ayNyOUN3em+gouKfZ
-         jq/vg5dBwF4imPWvJavdTv81qm88N4EMMUeiMmmPUk2JYAdujNmptm1S1IA89ZB1nSOU
-         tu5/hsj3H5qdwHs0k29Ii+1fGZXxz2kWoar+MY01SYOXV8eHVUdxuLLQc1GJFo+jr4kI
-         PK2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g9p5xPNbhvX6rdcdMz4PJ3zSu4AdikKW+oNfOMUWzrk=;
-        b=i00fke2yK/idtU62MhV2Nsdx6xTcnhg4CTygVEHg7T9AZlCemZJdN5MniWiTE6/Q1b
-         qk5PjNxUw7o0UGOZcowuzCnCeqg24IhGOOi3Zh54ShnctaU+QDggZNKBgR3uFJqpxYnu
-         UopI+dB2E99ceKenrb3x903imDo2vjMsbCifKGhlhFFNJg9sy3rS9zo3e9f8kPcmSp3d
-         ZidI7HV2eiaRalZk3FJ8OqDeusRIofFwMhICeFFLei/6hqTbGstH0eRd/IcOA0Slltvj
-         wqEYITIRdoHAdwdc/+x09J14/EhYT6IAcLACDO1HfDpc7myXVU04FL9dfZHnJL0dBm2D
-         wAQw==
-X-Gm-Message-State: APjAAAW9EZ//i803PC1/cby0oX9Wv74e3e2ezkK69iB92+giWqnBoSq/
-        cIbii1OqPPTDQShBluYX7zv8tcv6OOUWV8rX6FaO5w==
-X-Google-Smtp-Source: APXvYqyu081PrF6DH3XYn8co6vd3CglY6p4fuQ+Wd1tD/kxeoB428ZroR/lHr4A33wgvO+mZ2qIrRov8ukZ6WZRFE+k=
-X-Received: by 2002:ae9:c30e:: with SMTP id n14mr22468492qkg.220.1562054492108;
- Tue, 02 Jul 2019 01:01:32 -0700 (PDT)
+        Tue, 2 Jul 2019 04:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfGBICe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:02:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5329B20659;
+        Tue,  2 Jul 2019 08:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562054553;
+        bh=UHj+reTeQRaOFAHNyvjjTOieOnvPAd53doWoMIt3ixE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bZxbbpmi+Fg7yUfcXXgy7fdpkTimEIMiLCP3rsL6q2v0GOHn/X7/qkbkc6El13qID
+         EAGFd3eurYAMPFTpYMnc+VBya9pJs9PaeByw7o1ZPerBdcGHFtR/Ktjtz/i25JkZ8E
+         s4OkHQTtSLwMSexjJZeOGmhIiHJucEyaPyMEw0fQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 01/55] arm64: Dont unconditionally add -Wno-psabi to KBUILD_CFLAGS
+Date:   Tue,  2 Jul 2019 10:01:09 +0200
+Message-Id: <20190702080124.164193086@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+References: <20190702080124.103022729@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190627095247.8792-1-chiu@endlessm.com> <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
-In-Reply-To: <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 2 Jul 2019 16:01:20 +0800
-Message-ID: <CAB4CAwcVoWffpK8xR_UbXaGyHh8ZrrX_9vvzjAkWGKXQotpmYA@mail.gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 4:28 PM Daniel Drake <drake@endlessm.com> wrote:
->
-> Hi Chris,
->
-> On Thu, Jun 27, 2019 at 5:53 PM Chris Chiu <chiu@endlessm.com> wrote:
-> > The WiFi tx power of RTL8723BU is extremely low after booting. So
-> > the WiFi scan gives very limited AP list and it always fails to
-> > connect to the selected AP. This module only supports 1x1 antenna
-> > and the antenna is switched to bluetooth due to some incorrect
-> > register settings.
-> >
-> > This commit hand over the antenna control to PTA, the wifi signal
-> > will be back to normal and the bluetooth scan can also work at the
-> > same time. However, the btcoexist still needs to be handled under
-> > different circumstances. If there's a BT connection established,
-> > the wifi still fails to connect until disconneting the BT.
-> >
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
->
-> Really nice work finding this!
->
-> I know that after this change, you plan to bring over the btcoexist
-> code from the vendor driver (or at least the minimum required code)
-> for a more complete fix, but I'm curious how you found these magic
-> register values and how they compare to the values used by the vendor
-> driver with btcoexist?
->
-> What's PTA? A type of firmware-implemented btcoexist that works for
-> scanning but doesn't work when a BT connection is actually
-> established?
->
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-When the vendor driver invokes rtw_btcoex_HAL_Initialize, which will then
-call halbtc8723b1ant_SetAntPath to configure the registers in this patch.
-From the code, the registers will have different register settings per the
-antenna position and the phase. If the driver is in the InitHwConfig phase,
-the register value is identical to what rtl8xxxu driver does in enable_rf().
-However, the vendor driver will do halbtc8723b1ant_PsTdma() twice by
-halbtc8723b1ant_ActionWifiNotConnected() with the type argument 8 for
-PTA control about 200ms after InitHwConfig. The _ActionWifiNotConnected
-is invoked by the BTCOEXIST. I keep seeing the halbtc8723b1ant_PsTdma
-with type 8 been called every 2 seconds.
+commit fa63da2ab046b885a7f70291aafc4e8ce015429b upstream.
 
-I don't know what PTA is. I presume it's the mechanism in FW for the automatic
-antenna selecting instead of manual control. Given the phenomenon that wifi
-signal still stays low even without bluetooth driver loaded, I believe
-setting the
-registers as in halbtc8723b1ant_SetAntPath with BTC_ANT_PATH_PTA also
-makes sense.
+This is a GCC only option, which warns about ABI changes within GCC, so
+unconditionally adding it breaks Clang with tons of:
+
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+
+and link time failures:
+
+ld.lld: error: undefined symbol: __efistub___stack_chk_guard
+>>> referenced by arm-stub.c:73
+(/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
+>>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
+in archive ./drivers/firmware/efi/libstub/lib.a
+
+These failures come from the lack of -fno-stack-protector, which is
+added via cc-option in drivers/firmware/efi/libstub/Makefile. When an
+unknown flag is added to KBUILD_CFLAGS, clang will noisily warn that it
+is ignoring the option like above, unlike gcc, who will just error.
+
+$ echo "int main() { return 0; }" > tmp.c
+
+$ clang -Wno-psabi tmp.c; echo $?
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+0
+
+$ gcc -Wsometimes-uninitialized tmp.c; echo $?
+gcc: error: unrecognized command line option
+‘-Wsometimes-uninitialized’; did you mean ‘-Wmaybe-uninitialized’?
+1
+
+For cc-option to work properly with clang and behave like gcc, -Werror
+is needed, which was done in commit c3f0d0bc5b01 ("kbuild, LLVMLinux:
+Add -Werror to cc-option to support clang").
+
+$ clang -Werror -Wno-psabi tmp.c; echo $?
+error: unknown warning option '-Wno-psabi'
+[-Werror,-Wunknown-warning-option]
+1
+
+As a consequence of this, when an unknown flag is unconditionally added
+to KBUILD_CFLAGS, it will cause cc-option to always fail and those flags
+will never get added:
+
+$ clang -Werror -Wno-psabi -fno-stack-protector tmp.c; echo $?
+error: unknown warning option '-Wno-psabi'
+[-Werror,-Wunknown-warning-option]
+1
+
+This can be seen when compiling the whole kernel as some warnings that
+are normally disabled (see below) show up. The full list of flags
+missing from drivers/firmware/efi/libstub are the following (gathered
+from diffing .arm64-stub.o.cmd):
+
+-fno-delete-null-pointer-checks
+-Wno-address-of-packed-member
+-Wframe-larger-than=2048
+-Wno-unused-const-variable
+-fno-strict-overflow
+-fno-merge-all-constants
+-fno-stack-check
+-Werror=date-time
+-Werror=incompatible-pointer-types
+-ffreestanding
+-fno-stack-protector
+
+Use cc-disable-warning so that it gets disabled for GCC and does nothing
+for Clang.
+
+Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Reported-by: Qian Cai <cai@lca.pw>
+Acked-by: Dave Martin <Dave.Martin@arm.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -51,7 +51,7 @@ endif
+ 
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+-KBUILD_CFLAGS	+= -Wno-psabi
++KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
+ 
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
 
 
-
-> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > index 3adb1d3d47ac..6c3c70d93ac1 100644
-> > --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
-> >         /*
-> >          * WLAN action by PTA
-> >          */
-> > -       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
-> > +       rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
->
-> The comment above this still says "WLAN action by PTA" and the vendor
-> driver has:
->         //set wlan_act control by PTA
->         pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0x4);
->
-> but then also:
->             //set wlan_act control by PTA
->             pBtCoexist->fBtcWrite1Byte(pBtCoexist, 0x76e, 0xc);
->
-> So this change seems to be at least consistent with ambiguity of the
-> vendor driver, do you have any understanding of the extra bit that is
-> now set here?
->
-I think the precise expression for 0x04 is "set wlan act to always low",
-it's configured for wifi only.
-
-> It's not easy to follow the code flow of the vendor driver to see what
-> actually happens, have you checked that, does it end up using the 0xc
-> value?
->
-
-Yes, it ends up with 0x0c not matter what antenna position type is. Unless
-it's configured wifi only.
-
-> > -        * 0x280, 0x00, 0x200, 0x80 - not clear
-> > +        * Different settings per different antenna position.
-> > +        * Antenna switch to BT: 0x280, 0x00 (inverse)
-> > +        * Antenna switch to WiFi: 0x0, 0x280 (inverse)
-> > +        * Antenna controlled by PTA: 0x200, 0x80 (inverse)
-> >          */
-> > -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-> > +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
->
-> I don't quite follow the comment here. Why are there 2 values listed
-> for each possibility, what do you mean by inverse? You say the
-> register settings were incorrect, but the previous value was 0x00
-> which you now document as "antenna switch to wifi" which sounds like
-> it was already correct?
->
-> Which value does the vendor driver use?
->
-The first column means the value for normal antenna installation, wifi
-on the main port. The second column is the value for inverse antenna
-installation. So if I want to manually switch the antenna for BT use,
-and the antenna installation is inverse, I need to set to 0x280. So 0x80
-means I want to switch to PTA and the antenna installation in inverse.
-
-The vendor driver's code about this is also in halbtc8723b1ant_SetAntPath.
-
-> >         /*
-> >          * Software control, antenna at WiFi side
-> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> > index 8136e268b4e6..87b2179a769e 100644
-> > --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> > +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-> > @@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
-> >
-> >         /* Check if MAC is already powered on */
-> >         val8 = rtl8xxxu_read8(priv, REG_CR);
-> > +       val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
-> >
-> >         /*
-> >          * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
-> >          * initialized. First MAC returns 0xea, second MAC returns 0x00
-> >          */
-> > -       if (val8 == 0xea)
-> > +       if (val8 == 0xea || !(val16 & BIT(11)))
-> >                 macpower = false;
-> >         else
-> >                 macpower = true;
->
-> At a glance I can't see which code this corresponds to in the vendor
-> driver, can you point that out?
->
-> Thanks
-> Daniel
-
-It's in rtl8723bu_hal_init and the comment says "Check if MAC has already
-power on". In vendor driver, it's just for output messages but in rtl8xxxu, it
-will determine whether if the llt_init() and tx related registers
-being correctly
-initialized. I sometimes hit the problem of connection failure after boot and
-it's because the macpower is falsely true.
-
-Chris
