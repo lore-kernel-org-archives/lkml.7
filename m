@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87703C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F935C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB6420659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EE220659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkWr6o1Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkhMHts/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfGBIAa (ORCPT
+        id S1726995AbfGBIBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:00:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43649 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfGBIA3 (ORCPT
+        Tue, 2 Jul 2019 04:01:09 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35935 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbfGBIBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:00:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so7283065pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:00:29 -0700 (PDT)
+        Tue, 2 Jul 2019 04:01:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c13so7287223pgg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=kVJn0ak8nJav0mJz+WePNaFHoPDUWoH09AGm1fKXE0w=;
-        b=SkWr6o1Zw3qYIi8uVIIaS5nkf8wnbDHV3CkdnT9vtcZkskv9hh6zJwcWotQrWOF6Ej
-         RlEVi/ylQTOkxMtfS1bA1/F5kvneDfj2MPmbEfCHKora/2BrSV76aMfp3q+QSXpft+F5
-         LwDPQadLm8vde+wCTY9M3nL0s56eTEonsK5UrOEQAU5lxKayWv1NZRdLT1W920eNvqX5
-         Q/yytUjmiAl5DDllTHYITg+gtsYdxSUB8y2QpVoP/bYRobdFk9daaa3UUz4KqY4LU8FI
-         cO6jMS4zVONxD063Xz65p0EnsTh8aoIif0qZqRbANHnx27SB6idK8x5yAyEgjA6VGHHk
-         6zjA==
+        bh=ZHcFy8+cGz5oukfe2+7Nj7Asc0mXW015dvqvbJgrv0Y=;
+        b=UkhMHts/IVSYoKasfWnD8cy7ILwQLYzR5aqdURsriXt4IU7MUXkqljj4hfpqoBHiqs
+         hdjfcUyDOhDJsPImS0tJMdzZFHOYaG90wN5tvSIg96yAhUO7NgH2LckAGaxSwrYF6sBf
+         RjqSgICeCVwjiRQmPNMNJSnYg6qmBzA83GckApnOqvpEuTt34LxspurUsRbWyOY2BTpY
+         mKtfxXT9FPoR+45IoBkDoV0Nktfad+0aKxBkixH1uqhUaxYTXkxNK3BEQMxecCX0Lr+n
+         7wtgirEeM6ZsFQCt2eDGwxmb21cPhY4Zynkmf7gGnF1iRhwJjMfEVWMX1ygLGPOSMJF3
+         A7Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kVJn0ak8nJav0mJz+WePNaFHoPDUWoH09AGm1fKXE0w=;
-        b=R8EhpL5fb52Ub+qoRW0wP+rYc28d/khAy/7sE9aJO5oRy+xDYiI5Ubub9YHJ+VqZGg
-         BMVyzsDCWG0JdrlaZze6Yjmu84YGO5FvBMhVLw3fr+oEvvn3EQW2g7stBgeBWF4kW+cJ
-         3eSB7KohufJchx7WitSa6K0/v4nAA+Eprmhag1OI17qZ7kx1nPq9pl4oeT4hogONElGJ
-         pLNdYnwPtI1QQ+LhxUBslnL8NBYdMvXNjnDk0OG1l2Z9hPhmKWfO0pTzKC47FVPcwfLS
-         0Q/LWrbFB2ja6zaavO+2CJz+r/V/tPlgo68CVTjoh8D7ks3k/0z1nUcnnyu28XskOBib
-         Wgig==
-X-Gm-Message-State: APjAAAX6OAn8cl7GnF2g+cUS2PG2CWmtm8yC3s+V1fpR2ehO7EAGrM4N
-        /zFhWjwGqw7JjZeeL/+mGqj4oUFKnR8=
-X-Google-Smtp-Source: APXvYqzkiA/nMgQD7EGwLQrFg9jl9RwZxeLB+Lzy36hLmKD8GiaxIZOsCoTmsf3Ojdmb4ILmghcbmw==
-X-Received: by 2002:a63:394:: with SMTP id 142mr21496362pgd.43.1562054428881;
-        Tue, 02 Jul 2019 01:00:28 -0700 (PDT)
+        bh=ZHcFy8+cGz5oukfe2+7Nj7Asc0mXW015dvqvbJgrv0Y=;
+        b=VMrlkLwxh4V8W9mJbrOwoz8Oz7FluYrTr0Txen+0rYf42dFNDeBd/eo5yB4hlW3rAH
+         wULDSZFUT4Op+DZl5lM70Is01NkwAW1NaMsBGtsHhQYUX7MByiZHwkyDQ5fvwFoka3L8
+         aZ5dZkCL6GhP3/h/ygnOc7o79/UuVec5NfsS5ZC25NVydHJc6fchiif9P4e6RpVDZPiy
+         6sX0fY65ua7sYZZEa4y5lbQYolOuB6vxnW3zhnyvct0FShmkGA0C/hx9v+71N7pbAh0T
+         1ZFyIV5QC4CuBWlmy8OilW68xSPcWm6LKvsrtCJ4WebiUzWz/70AEG1FTtLsDjwnp+oB
+         IFuQ==
+X-Gm-Message-State: APjAAAXCmXhNFlMVFB3s+NzIhBNC16/BvjNEaSwXQLs88oF+Zy9Xwuwp
+        wgpHgZSyTCUOQ2/JzPzNobjP6wHPGHY=
+X-Google-Smtp-Source: APXvYqyUCWnRapNIkdfOhc3lDQkKtngNOCTwli64t9i6nLCSXFA5hvaNs90kPt3DnT17gMljZ7p3iA==
+X-Received: by 2002:a17:90a:2567:: with SMTP id j94mr4053582pje.121.1562054468392;
+        Tue, 02 Jul 2019 01:01:08 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id w16sm15914863pfj.85.2019.07.02.01.00.27
+        by smtp.googlemail.com with ESMTPSA id t96sm1527001pjb.1.2019.07.02.01.01.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 01:00:28 -0700 (PDT)
+        Tue, 02 Jul 2019 01:01:08 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v3 27/27] sound: ppc: remove unneeded memset after dma_alloc_coherent
-Date:   Tue,  2 Jul 2019 16:00:23 +0800
-Message-Id: <20190702080023.24770-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v3 10/27] md: use kzalloc instead of kmalloc and memset
+Date:   Tue,  2 Jul 2019 16:01:00 +0800
+Message-Id: <20190702080100.24884-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,31 +68,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 518a2f1925c3
-("dma-mapping: zero memory returned from dma_alloc_*"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+Replace kmalloc followed by a memset with kzalloc
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
 Changes in v3:
-  - Use actual commit rather than the merge commit in the commit message
+  - Resend
 
- sound/ppc/pmac.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm-integrity.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
-index 1b11e53f6a62..1ab12f4f8631 100644
---- a/sound/ppc/pmac.c
-+++ b/sound/ppc/pmac.c
-@@ -56,7 +56,6 @@ static int snd_pmac_dbdma_alloc(struct snd_pmac *chip, struct pmac_dbdma *rec, i
- 	if (rec->space == NULL)
- 		return -ENOMEM;
- 	rec->size = size;
--	memset(rec->space, 0, rsize);
- 	rec->cmds = (void __iomem *)DBDMA_ALIGN(rec->space);
- 	rec->addr = rec->dma_base + (unsigned long)((char *)rec->cmds - (char *)rec->space);
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index 44e76cda087a..f5db89b28757 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -3358,7 +3358,7 @@ static int create_journal(struct dm_integrity_c *ic, char **error)
+ 				goto bad;
+ 			}
  
+-			crypt_iv = kmalloc(ivsize, GFP_KERNEL);
++			crypt_iv = kzalloc(ivsize, GFP_KERNEL);
+ 			if (!crypt_iv) {
+ 				*error = "Could not allocate iv";
+ 				r = -ENOMEM;
+@@ -3387,7 +3387,6 @@ static int create_journal(struct dm_integrity_c *ic, char **error)
+ 				sg_set_buf(&sg[i], va, PAGE_SIZE);
+ 			}
+ 			sg_set_buf(&sg[i], &ic->commit_ids, sizeof ic->commit_ids);
+-			memset(crypt_iv, 0x00, ivsize);
+ 
+ 			skcipher_request_set_crypt(req, sg, sg,
+ 						   PAGE_SIZE * ic->journal_pages + sizeof ic->commit_ids, crypt_iv);
 -- 
 2.11.0
 
