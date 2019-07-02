@@ -2,110 +2,91 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439AC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62898C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2115B21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EB621848
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ErLvOg6E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JnTPsPNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfGBQ5L (ORCPT
+        id S1726736AbfGBQ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:57:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39983 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfGBQ5L (ORCPT
+        Tue, 2 Jul 2019 12:57:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40783 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBQ55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:57:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so38621713ioc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:57:11 -0700 (PDT)
+        Tue, 2 Jul 2019 12:57:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so18681711wre.7;
+        Tue, 02 Jul 2019 09:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d3ruOHdYru6Rpy+BKpMXi/6c+V83W2zZQqeLjuI07mA=;
-        b=ErLvOg6Ev6zdphtHAlsPI/i4E1PAFFXuaLmpX6JcmhUUgS/xmdRuySXKCpIRtG+kX1
-         FsBNUdt7zVXIciKH78drKjYo4PYJhD0tQnv5rYwR3/PbGcFitIGiyFOgRNQv0cqHlGeu
-         9y928edF1AI0QN3d9ySA6ju08SKBpvuUyqAVUUTBKxMF/hoGVeig2TwgtMcmDhk5bwON
-         ytRV6TMwbAXFECT+G69te6UyI4Y/HZtbTAL2PPKYiox8zBVdb6HWzEWgwyGh9YaT0+o5
-         RvasPdi/clcVZRh3FzLopILMMo7MJkLlQhmUJLYkDyArxNRZCsan6cYz+PMwXxGZXyRc
-         2XAw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=i3HE+C3o7SG5oivsWvGUnER3uMcg4NiFFFCJjgaX1+M=;
+        b=JnTPsPNXMVxBdzKr+g0in7L9lGkXFy5dRAPhwiSnV26253i+ZBAPduwyMTjwQlD8B4
+         kFPlKuD4mHY7KVhhE9iCefZRt8upYJsIPnb1MKnf24GEVEMpLqocEWmEp01ZGrxRiT9h
+         5u+PTU7jRTDFuJL8YU3g7UQ0/4nQ+1yrdDaE9igV+hFbzOZkx1Szw+5nfz1I9IAq4p74
+         0NqIUvBeKlFQ35hicE6E8zd+2yIvJ16HJAHsK1ASSs8zR2UbPn10iUB2WtFVfuwzSrb0
+         6Is1NvVsDflXT3EGDsosiKuxhl3qr5apTWzjeacrAYPL5+8jzMIv5D6dKTtcDHE6oHBh
+         TYQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d3ruOHdYru6Rpy+BKpMXi/6c+V83W2zZQqeLjuI07mA=;
-        b=dfESU2jNGoMqFVRlIXDb+955pCOiQhAUjamaIRAazGKEDlyUNoyjxA2lKU5UVHB/yk
-         IxWFjMY/i1unDTAJYOWlA5Ur+F/DOz3fwUXqg6PCzX/Av5fmpmwJc39rey+yf6mPDCVU
-         RHFw060sFn/YywnU7mGYqCeakkyVJRH5ejRBlSrIgzCrn/Kfljr1srxFxjWSCbmtnPY8
-         lHlu8APy3dX5MGe5UxBVr3/te5OfuocFUaj0td2oepRtIgv55xN9jnRwopN1htuVyvI/
-         qBfZtnsYugpOAzj/VOrb2+F+4X8rZ3EHxMHuDrhVeGB/5OtP/2qQhVSXdsE2EuZ+pdcy
-         d+qQ==
-X-Gm-Message-State: APjAAAUurb68heGTDCLdVSVpmlrxA0kSG89XdGPBGfAfJWpk5afvWmja
-        sB0Shl9W1Q/b7qL05I/whaW6XO3bnaqS76QjqdnyRA==
-X-Google-Smtp-Source: APXvYqy+XdTH/NEg0tFMMzUuM/+XmEQEFt0V0klg3HtEJYTy61ahf+1pdl0T/rIL9bJh57cA1/DbyP6ClHqPxMl8h3w=
-X-Received: by 2002:a5d:9e48:: with SMTP id i8mr22818920ioi.51.1562086630549;
- Tue, 02 Jul 2019 09:57:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190701173042.221453-1-henryburns@google.com> <CAMJBoFPbRcdZ+NnX17OQ-sOcCwe+ZAsxcDJoR0KDkgBY9WXvpg@mail.gmail.com>
-In-Reply-To: <CAMJBoFPbRcdZ+NnX17OQ-sOcCwe+ZAsxcDJoR0KDkgBY9WXvpg@mail.gmail.com>
-From:   Henry Burns <henryburns@google.com>
-Date:   Tue, 2 Jul 2019 09:56:34 -0700
-Message-ID: <CAGQXPTjX=7aD9MQAs2kJthFvPdd3x8Nh53oc=wZCXH_dvDJ=Vg@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold: Fix z3fold_buddy_slots use after free
-To:     Vitaly Wool <vitalywool@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=i3HE+C3o7SG5oivsWvGUnER3uMcg4NiFFFCJjgaX1+M=;
+        b=VkaUfGyN8M9S4wq+KRuPSuty8oHMyNXmVaVXlFWj83SjD8VDpc9rQPpABzE6VvD9Yi
+         x/nF+jxDTSjA3Up5b2P3KAw0hUi2hJKjJASJbjYB38AoFqREnPhlfDx10OeViIa8vy/K
+         iY5kKA/tscI3RSbJ5HR+zaBkjKaDX5ryEnZtIfvVD/NROYbnAYgHUwMLN6/4mgRy8YRi
+         xyE2EhjrCG2PZXHLuBZCtbftRVk5hft7YkySh6XJeXiKAwDe/fQUq96sZqN9otwKmd3E
+         zJxkQNJEZTuSjRwtYz2gBSoZ5k5BlQxerqmnVEmdgt1Ya8sS5D8k2yknTUuDgJHb2wjw
+         P94w==
+X-Gm-Message-State: APjAAAUp9SHZCLtpsY9poGo17/Ii+pBqHdok3JPc0qA2QQGjuw2afRMr
+        5QK1sug11e/pNU6xrqKaeMc7/mo6JIg=
+X-Google-Smtp-Source: APXvYqwZFlIoKV/wVYtxyqalaNxF6mYyjy8vrbqIOnqAfpxwb95IPRXeLKUMDaKcM9r1sZXJRFeOhw==
+X-Received: by 2002:adf:e84d:: with SMTP id d13mr20915265wrn.88.1562086675086;
+        Tue, 02 Jul 2019 09:57:55 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id n3sm14937957wro.59.2019.07.02.09.57.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 09:57:54 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH] Documentation: kvm: document CPUID bit for MSR_KVM_POLL_CONTROL
+Date:   Tue,  2 Jul 2019 18:57:53 +0200
+Message-Id: <1562086673-30242-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 12:45 AM Vitaly Wool <vitalywool@gmail.com> wrote:
->
-> Hi Henry,
->
-> On Mon, Jul 1, 2019 at 8:31 PM Henry Burns <henryburns@google.com> wrote:
-> >
-> > Running z3fold stress testing with address sanitization
-> > showed zhdr->slots was being used after it was freed.
-> >
-> > z3fold_free(z3fold_pool, handle)
-> >   free_handle(handle)
-> >     kmem_cache_free(pool->c_handle, zhdr->slots)
-> >   release_z3fold_page_locked_list(kref)
-> >     __release_z3fold_page(zhdr, true)
-> >       zhdr_to_pool(zhdr)
-> >         slots_to_pool(zhdr->slots)  *BOOM*
->
-> Thanks for looking into this. I'm not entirely sure I'm all for
-> splitting free_handle() but let me think about it.
->
-> > Instead we split free_handle into two functions, release_handle()
-> > and free_slots(). We use release_handle() in place of free_handle(),
-> > and use free_slots() to call kmem_cache_free() after
-> > __release_z3fold_page() is done.
->
-> A little less intrusive solution would be to move backlink to pool
-> from slots back to z3fold_header. Looks like it was a bad idea from
-> the start.
->
-> Best regards,
->    Vitaly
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virtual/kvm/cpuid.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-We still want z3fold pages to be movable though. Wouldn't moving
-the backink to the pool from slots to z3fold_header prevent us from
-enabling migration?
+diff --git a/Documentation/virtual/kvm/cpuid.txt b/Documentation/virtual/kvm/cpuid.txt
+index 979a77ba5377..2bdac528e4a2 100644
+--- a/Documentation/virtual/kvm/cpuid.txt
++++ b/Documentation/virtual/kvm/cpuid.txt
+@@ -66,6 +66,10 @@ KVM_FEATURE_PV_SEND_IPI            ||    11 || guest checks this feature bit
+                                    ||       || before using paravirtualized
+                                    ||       || send IPIs.
+ ------------------------------------------------------------------------------
++KVM_FEATURE_PV_POLL_CONTROL        ||    12 || host-side polling on HLT can
++                                   ||       || be disabled by writing
++                                   ||       || to msr 0x4b564d05.
++------------------------------------------------------------------------------
+ KVM_FEATURE_PV_SCHED_YIELD         ||    13 || guest checks this feature bit
+                                    ||       || before using paravirtualized
+                                    ||       || sched yield.
+-- 
+1.8.3.1
+
