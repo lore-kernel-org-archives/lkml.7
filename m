@@ -7,65 +7,110 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C98C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FF8C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E22D2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B312064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGBNQo (ORCPT
+        id S1727013AbfGBNRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:16:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51647 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfGBNQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:16:44 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hiIeI-0003vW-Bl; Tue, 02 Jul 2019 13:16:42 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nfc: st-nci: remove redundant assignment to variable r
-Date:   Tue,  2 Jul 2019 14:16:42 +0100
-Message-Id: <20190702131642.9865-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 2 Jul 2019 09:17:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37576 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726457AbfGBNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:17:53 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9459D9F5B332EABA387F;
+        Tue,  2 Jul 2019 21:17:51 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 21:17:42 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <mpe@ellerman.id.au>, <robh@kernel.org>,
+        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <allison@lohutok.net>, <groug@kaod.org>,
+        <shilpa.bhat@linux.vnet.ibm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] powerpc/powernv: Make some sysbols static
+Date:   Tue, 2 Jul 2019 21:17:33 +0800
+Message-ID: <20190702131733.44100-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Fix sparse warnings:
 
-The variable r is being initialized with a value that is never
-read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
+arch/powerpc/platforms/powernv/opal-psr.c:20:1:
+ warning: symbol 'psr_mutex' was not declared. Should it be static?
+arch/powerpc/platforms/powernv/opal-psr.c:27:3:
+ warning: symbol 'psr_attrs' was not declared. Should it be static?
+arch/powerpc/platforms/powernv/opal-powercap.c:20:1:
+ warning: symbol 'powercap_mutex' was not declared. Should it be static?
+arch/powerpc/platforms/powernv/opal-sensor-groups.c:20:1:
+ warning: symbol 'sg_mutex' was not declared. Should it be static?
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/nfc/st-nci/i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/opal-powercap.c      | 2 +-
+ arch/powerpc/platforms/powernv/opal-psr.c           | 4 ++--
+ arch/powerpc/platforms/powernv/opal-sensor-groups.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index 67a685adfd44..55d600cd3861 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -72,7 +72,7 @@ static void st_nci_i2c_disable(void *phy_id)
-  */
- static int st_nci_i2c_write(void *phy_id, struct sk_buff *skb)
- {
--	int r = -1;
-+	int r;
- 	struct st_nci_i2c_phy *phy = phy_id;
- 	struct i2c_client *client = phy->i2c_dev;
+diff --git a/arch/powerpc/platforms/powernv/opal-powercap.c b/arch/powerpc/platforms/powernv/opal-powercap.c
+index dc599e7..c16d44f 100644
+--- a/arch/powerpc/platforms/powernv/opal-powercap.c
++++ b/arch/powerpc/platforms/powernv/opal-powercap.c
+@@ -13,7 +13,7 @@
+ 
+ #include <asm/opal.h>
+ 
+-DEFINE_MUTEX(powercap_mutex);
++static DEFINE_MUTEX(powercap_mutex);
+ 
+ static struct kobject *powercap_kobj;
+ 
+diff --git a/arch/powerpc/platforms/powernv/opal-psr.c b/arch/powerpc/platforms/powernv/opal-psr.c
+index b6ccb30..69d7e75 100644
+--- a/arch/powerpc/platforms/powernv/opal-psr.c
++++ b/arch/powerpc/platforms/powernv/opal-psr.c
+@@ -13,11 +13,11 @@
+ 
+ #include <asm/opal.h>
+ 
+-DEFINE_MUTEX(psr_mutex);
++static DEFINE_MUTEX(psr_mutex);
+ 
+ static struct kobject *psr_kobj;
+ 
+-struct psr_attr {
++static struct psr_attr {
+ 	u32 handle;
+ 	struct kobj_attribute attr;
+ } *psr_attrs;
+diff --git a/arch/powerpc/platforms/powernv/opal-sensor-groups.c b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
+index 31f13c1..f8ae1fb 100644
+--- a/arch/powerpc/platforms/powernv/opal-sensor-groups.c
++++ b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
+@@ -13,7 +13,7 @@
+ 
+ #include <asm/opal.h>
+ 
+-DEFINE_MUTEX(sg_mutex);
++static DEFINE_MUTEX(sg_mutex);
+ 
+ static struct kobject *sg_kobj;
  
 -- 
-2.20.1
+2.7.4
+
 
