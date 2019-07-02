@@ -2,181 +2,219 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CE1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5817C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050E920881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9390421721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562047234;
+	bh=UBx6SIdAqGfX4vHqNBQPIiPBmaSFrukdOede5OIscts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LvXPBIuzJHvhtTzpCGwSBufqNWnMncrSGb+OwHpbhfJOCItossxozDl3P9C6h6VNJ
+	 5XpMT+GIS2IVnz3PbP0jVA+1/VyU2PqVF9oC8Y69UIuoed9xDKMmAlFly/y49YcZH1
+	 Db3U+fEvjQlzwrTCAMt9H6s9PuiF88o4iO0fFSCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfGBFrG (ORCPT
+        id S1726144AbfGBGAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:47:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46502 "EHLO mx1.redhat.com"
+        Tue, 2 Jul 2019 02:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfGBFrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:47:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725775AbfGBGAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 02:00:33 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD8D987632;
-        Tue,  2 Jul 2019 05:47:05 +0000 (UTC)
-Received: from gondolin (ovpn-116-124.ams2.redhat.com [10.36.116.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4917A60BF3;
-        Tue,  2 Jul 2019 05:47:02 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 07:46:58 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Kirti Wankhede <kwankhede@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-Message-ID: <20190702074658.4abedcdf.cohuck@redhat.com>
-In-Reply-To: <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
-        <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
-        <20190701112442.176a8407@x1.home>
-        <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
-        <20190701140436.45eabf07@x1.home>
-        <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E2F21479;
+        Tue,  2 Jul 2019 06:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562047231;
+        bh=UBx6SIdAqGfX4vHqNBQPIiPBmaSFrukdOede5OIscts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gjPceaM5vsomT6ZdufAQjmVuQv3fiGPe/hWS8onpqho4nQ3dUFz4GBDN/jsAmJ+MD
+         EP9d8nVs/KzMo51Pcf4VxQ3yoSlbL0zwiX/TIwdz5K+whkGnhKOaymA8Qnx8QCXAuH
+         2KjaoOaS7oRkjrVfLXwIFj37zpQ/wnAXfCRT+C+g=
+Date:   Mon, 1 Jul 2019 23:00:30 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     syzbot <syzbot+94324416c485d422fe15@syzkaller.appspotmail.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Subject: Re: INFO: task hung in io_uring_release
+Message-ID: <20190702060030.GD27702@sol.localdomain>
+References: <000000000000665152058c0d7ed9@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 02 Jul 2019 05:47:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000665152058c0d7ed9@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 10:25:04 +0530
-Kirti Wankhede <kwankhede@nvidia.com> wrote:
+Jens, any idea about this?
 
-> On 7/2/2019 1:34 AM, Alex Williamson wrote:
-> > On Mon, 1 Jul 2019 23:20:35 +0530
-> > Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >   
-> >> On 7/1/2019 10:54 PM, Alex Williamson wrote:  
-> >>> On Mon, 1 Jul 2019 22:43:10 +0530
-> >>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >>>     
-> >>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:    
-> >>>>> This allows udev to trigger rules when a parent device is registered
-> >>>>> or unregistered from mdev.
-> >>>>>
-> >>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> >>>>> ---
-> >>>>>
-> >>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
-> >>>>>     removing them is only tangential to the goal of this change.
-> >>>>>       
-> >>>>
-> >>>> Thanks.
-> >>>>
-> >>>>    
-> >>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
-> >>>>>  1 file changed, 8 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> >>>>> index ae23151442cb..7fb268136c62 100644
-> >>>>> --- a/drivers/vfio/mdev/mdev_core.c
-> >>>>> +++ b/drivers/vfio/mdev/mdev_core.c
-> >>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >>>>>  {
-> >>>>>  	int ret;
-> >>>>>  	struct mdev_parent *parent;
-> >>>>> +	char *env_string = "MDEV_STATE=registered";
-> >>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>  
-> >>>>>  	/* check for mandatory ops */
-> >>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
-> >>>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >>>>>  	mutex_unlock(&parent_list_lock);
-> >>>>>  
-> >>>>>  	dev_info(dev, "MDEV: Registered\n");
-> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> >>>>> +
-> >>>>>  	return 0;
-> >>>>>  
-> >>>>>  add_dev_err:
-> >>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
-> >>>>>  void mdev_unregister_device(struct device *dev)
-> >>>>>  {
-> >>>>>  	struct mdev_parent *parent;
-> >>>>> +	char *env_string = "MDEV_STATE=unregistered";
-> >>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>  
-> >>>>>  	mutex_lock(&parent_list_lock);
-> >>>>>  	parent = __find_parent_device(dev);
-> >>>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
-> >>>>>  	up_write(&parent->unreg_sem);
-> >>>>>  
-> >>>>>  	mdev_put_parent(parent);
-> >>>>> +
-> >>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);      
-> >>>>
-> >>>> mdev_put_parent() calls put_device(dev). If this is the last instance
-> >>>> holding device, then on put_device(dev) dev would get freed.
-> >>>>
-> >>>> This event should be before mdev_put_parent()    
-> >>>
-> >>> So you're suggesting the vendor driver is calling
-> >>> mdev_unregister_device() without a reference to the struct device that
-> >>> it's passing to unregister?  Sounds bogus to me.  We take a
-> >>> reference to the device so that it can't disappear out from under us,
-> >>> the caller cannot rely on our reference and the caller provided the
-> >>> struct device.  Thanks,
-> >>>     
-> >>
-> >> 1. Register uevent is sent after mdev holding reference to device, then
-> >> ideally, unregister path should be mirror of register path, send uevent
-> >> and then release the reference to device.  
-> > 
-> > I don't see the relevance here.  We're marking an event, not unwinding
-> > state of the device from the registration process.  Additionally, the
-> > event we're trying to mark is the completion of each process, so the
-> > notion that we need to mirror the ordering between the two is invalid.
-> >   
-> >> 2. I agree that vendor driver shouldn't call mdev_unregister_device()
-> >> without holding reference to device. But to be on safer side, if ever
-> >> such case occur, to avoid any segmentation fault in kernel, better to
-> >> send event before mdev release the reference to device.  
-> > 
-> > I know that get_device() and put_device() are GPL symbols and that's a
-> > bit of an issue, but I don't think we should be kludging the code for a
-> > vendor driver that might have problems with that.  A) we're using the
-> > caller provided device  for the uevent, B) we're only releasing our own
-> > reference to the device that was acquired during registration, the
-> > vendor driver must have other references,  
+On Mon, Jun 24, 2019 at 01:21:06AM -0700, syzbot wrote:
+> Hello,
 > 
-> Are you going to assume that someone/vendor driver is always going to do
-> right thing?
+> syzbot found the following crash on:
 > 
-> > C) the parent device
-> > generally lives on a bus, with a vendor driver, there's an entire
-> > ecosystem of references to the device below mdev.  Is this a paranoia
-> > request or are you really concerned that your PCI device suddenly
-> > disappears when mdev's reference to it disappears.   
+> HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1418bf0aa00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+> dashboard link: https://syzkaller.appspot.com/bug?extid=94324416c485d422fe15
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
 > 
-> mdev infrastructure is not always used by PCI devices. It is designed to
-> be generic, so that other devices (other than PCI devices) can also use
-> this framework.
-
-But the same argument holds there: There's a whole ecosystem of
-references for other devices as well.
-
-> If there is a assumption that user of mdev framework or vendor drivers
-> are always going to use mdev in right way, then there is no need for
-> mdev core to held reference of the device?
-
-Confused. How does this follow for the general case?
-
-> This is not a "paranoia request". This is more of a ideal scenario, mdev
-> should use device by holding its reference rather than assuming (or
-> relying on) someone else holding the reference of device.
-
-I'm not really opposed to switching this around, although it's probably
-not needed.
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+94324416c485d422fe15@syzkaller.appspotmail.com
+> 
+> INFO: task syz-executor.5:8634 blocked for more than 143 seconds.
+>       Not tainted 5.2.0-rc5+ #3
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor.5  D25632  8634   8224 0x00004004
+> Call Trace:
+>  context_switch kernel/sched/core.c:2818 [inline]
+>  __schedule+0x658/0x9e0 kernel/sched/core.c:3445
+>  schedule+0x131/0x1d0 kernel/sched/core.c:3509
+>  schedule_timeout+0x9a/0x2b0 kernel/time/timer.c:1783
+>  do_wait_for_common+0x35e/0x5a0 kernel/sched/completion.c:83
+>  __wait_for_common kernel/sched/completion.c:104 [inline]
+>  wait_for_common kernel/sched/completion.c:115 [inline]
+>  wait_for_completion+0x47/0x60 kernel/sched/completion.c:136
+>  kthread_stop+0xb4/0x150 kernel/kthread.c:559
+>  io_sq_thread_stop fs/io_uring.c:2252 [inline]
+>  io_finish_async fs/io_uring.c:2259 [inline]
+>  io_ring_ctx_free fs/io_uring.c:2770 [inline]
+>  io_ring_ctx_wait_and_kill+0x268/0x880 fs/io_uring.c:2834
+>  io_uring_release+0x5d/0x70 fs/io_uring.c:2842
+>  __fput+0x2e4/0x740 fs/file_table.c:280
+>  ____fput+0x15/0x20 fs/file_table.c:313
+>  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+>  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+>  exit_to_usermode_loop arch/x86/entry/common.c:168 [inline]
+>  prepare_exit_to_usermode+0x402/0x4f0 arch/x86/entry/common.c:199
+>  syscall_return_slowpath+0x110/0x440 arch/x86/entry/common.c:279
+>  do_syscall_64+0x126/0x140 arch/x86/entry/common.c:304
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x412fb1
+> Code: 80 3b 7c 0f 84 c7 02 00 00 c7 85 d0 00 00 00 00 00 00 00 48 8b 05 cf
+> a6 24 00 49 8b 14 24 41 b9 cb 2a 44 00 48 89 ee 48 89 df <48> 85 c0 4c 0f 45
+> c8 45 31 c0 31 c9 e8 0e 5b 00 00 85 c0 41 89 c7
+> RSP: 002b:00007ffe7ee6a180 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000412fb1
+> RDX: 0000001b2d920000 RSI: 0000000000000000 RDI: 0000000000000003
+> RBP: 0000000000000001 R08: 00000000f3a3e1f8 R09: 00000000f3a3e1fc
+> R10: 00007ffe7ee6a260 R11: 0000000000000293 R12: 000000000075c9a0
+> R13: 000000000075c9a0 R14: 0000000000024c00 R15: 000000000075bf2c
+> 
+> Showing all locks held in the system:
+> 1 lock held by khungtaskd/1043:
+>  #0: 00000000ec789630 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30
+> include/linux/rcupdate.h:207
+> 1 lock held by rsyslogd/8054:
+>  #0: 00000000a1730567 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2e0
+> fs/file.c:801
+> 2 locks held by getty/8167:
+>  #0: 000000000d85b796 (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 000000006ecd2335 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8168:
+>  #0: 000000005c58bd1f (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 00000000158ead38 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8169:
+>  #0: 000000003d373884 (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 0000000026014169 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8170:
+>  #0: 00000000ba3eabbd (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 0000000003284ce2 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8171:
+>  #0: 000000009fcb2c0e (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 00000000ac5d0da7 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8172:
+>  #0: 000000003f4e772c (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 000000000c930b31 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8173:
+>  #0: 000000002a3615cf (&tty->ldisc_sem){++++}, at:
+> tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+>  #1: 00000000dd5c3618 (&ldata->atomic_read_lock){+.+.}, at:
+> n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> 
+> =============================================
+> 
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 1043 Comm: khungtaskd Not tainted 5.2.0-rc5+ #3
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+>  nmi_cpu_backtrace+0x89/0x160 lib/nmi_backtrace.c:101
+>  nmi_trigger_cpumask_backtrace+0x125/0x230 lib/nmi_backtrace.c:62
+>  arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+>  trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
+>  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+>  watchdog+0xbb9/0xbd0 kernel/hung_task.c:289
+>  kthread+0x325/0x350 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Sending NMI from CPU 0 to CPUs 1:
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 2546 Comm: kworker/u4:4 Not tainted 5.2.0-rc5+ #3
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: bat_events batadv_nc_worker
+> RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
+> RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:31 [inline]
+> RIP: 0010:atomic_read include/asm-generic/atomic-instrumented.h:27 [inline]
+> RIP: 0010:rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:292 [inline]
+> RIP: 0010:rcu_is_watching+0x62/0xa0 kernel/rcu/tree.c:872
+> Code: 4c 89 f7 e8 70 50 4c 00 48 c7 c3 b8 5f 03 00 49 03 1e 48 89 df be 04
+> 00 00 00 e8 89 25 4c 00 48 89 d8 48 c1 e8 03 42 8a 04 38 <84> c0 75 1e 8b 03
+> 65 ff 0d 5d 72 9f 7e 74 0c 83 e0 02 d1 e8 5b 41
+> RSP: 0018:ffff8880a10ffbe8 EFLAGS: 00000a02
+> RAX: 1ffff11015d66b00 RBX: ffff8880aeb35fb8 RCX: ffffffff81628ad7
+> RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880aeb35fb8
+> RBP: ffff8880a10ffc00 R08: dffffc0000000000 R09: ffffed1015d66bf8
+> R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: dffffc0000000000
+> R13: ffff8880a93c9b00 R14: ffffffff8881f258 R15: dffffc0000000000
+> FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000c434bbb720 CR3: 000000008e6fa000 CR4: 00000000001406e0
+> Call Trace:
+>  rcu_read_lock include/linux/rcupdate.h:594 [inline]
+>  batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:407 [inline]
+>  batadv_nc_worker+0x115/0x600 net/batman-adv/network-coding.c:718
+>  process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+>  worker_thread+0xc01/0x1640 kernel/workqueue.c:2415
+>  kthread+0x325/0x350 kernel/kthread.c:255
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
