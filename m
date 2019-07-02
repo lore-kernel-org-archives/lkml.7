@@ -2,134 +2,88 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A67C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389D5C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785392064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073A220673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562116697;
-	bh=jgEb1b30euRG5UhMxm9wUOKRlQBuytXTtWrKG046N4M=;
+	s=default; t=1562116700;
+	bh=ZLhz76oI3+6LOgRvK2IIo30iL+eaYYe8RicC1yllZ/Y=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=0RlwtY9QfJcAXtVZ0xSpDiTWYcUZ4+MqfJ0+5n5Zwhm6fRiB2jVCPNC2iHym0AEuw
-	 Ey+2QMu7jNqlOOA0yCg311f+fL6R0o05WV7Kz9HzJ9wNvPTwrT2erzTG0tUA1tI6DV
-	 P3bOv9+vAVAplut8AoKqq1Sf/2qWAQGVgv77OutM=
+	b=jx2z5kAG9T5kNCIse9ns3bCTwCa6jGCNtBq5TtRXrCor53rBtncSsRmfSvFBHHGeN
+	 GF4tDyCA5EOYyNW+Ib0FLLc9vcj8XlIHABFSPbwfxyMQLZgtm9TTJBhKOT0yKmQYLj
+	 7Uil9Ho8k5DsdtFgRaJM9kItrqGPiQXmxH84lkBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGCBSQ (ORCPT
+        id S1727422AbfGCBSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:18:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59110 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 21:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfGCBSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:18:06 -0400
+        id S1727375AbfGCBSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:18:05 -0400
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A97D02190F;
-        Tue,  2 Jul 2019 22:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33F9621923;
+        Tue,  2 Jul 2019 22:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562107688;
-        bh=jgEb1b30euRG5UhMxm9wUOKRlQBuytXTtWrKG046N4M=;
+        s=default; t=1562107914;
+        bh=ZLhz76oI3+6LOgRvK2IIo30iL+eaYYe8RicC1yllZ/Y=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=swV5j0FD7SXKbbH9o0nqIzNjH0j2QMqF1OQL1ZJj89P4Z3qK9Esni6llI366SN5Se
-         SNoV4p4FkH94Bxa5I2sAVxJagoytmnzCie5kUcmQzIIRh/SfoajFtaFticWSdWZKln
-         lI7X3t6Lydi4eU9yJeQnJ8R9UIyiWeyyFlHFiasY=
-Subject: Re: [PATCH][next] selftests/x86: fix spelling mistake "FAILT" ->
- "FAIL"
-To:     Colin Ian King <colin.king@canonical.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, shuah <shuah@kernel.org>
-References: <20190701130431.13391-1-colin.king@canonical.com>
- <CALCETrVo0rJVxsYvo=abDfFCZHBuCiB0coSBXoDeP_emSZgESg@mail.gmail.com>
- <6e5a9bed-4f7f-4851-0421-2b440ff1f584@kernel.org>
- <9ba791d5-0d67-9834-90e9-e1dca307d386@kernel.org>
- <0031e09b-e309-3976-09b1-dc8d10365aee@canonical.com>
+        b=A/duPnxNVesuuY0xhR0eFF83eetjxNx2p03oy4sj8wIA2YzL23SkObXX1sRI/AgRx
+         tT3q2CR5cv5Yjm0cATnXa300a8sqYcqPOoSYqk9fY5j1e/X3Z2WPfZc8AyKWMGUoGc
+         qKY7nstCD1DZE6xuKtnY4YiZ8ImF3YhogAN7BZHw=
+Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190702080123.904399496@linuxfoundation.org>
 From:   shuah <shuah@kernel.org>
-Message-ID: <aec8c4b5-a82a-74c0-f60f-869786e4a2fa@kernel.org>
-Date:   Tue, 2 Jul 2019 16:48:06 -0600
+Message-ID: <bb9b6b7e-97af-5d7d-51d4-8df6855bc6a7@kernel.org>
+Date:   Tue, 2 Jul 2019 16:51:53 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <0031e09b-e309-3976-09b1-dc8d10365aee@canonical.com>
+In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 4:42 PM, Colin Ian King wrote:
-> On 02/07/2019 20:25, shuah wrote:
->> On 7/2/19 8:22 AM, shuah wrote:
->>> On 7/1/19 11:48 AM, Andy Lutomirski wrote:
->>>> On Mon, Jul 1, 2019 at 6:04 AM Colin King <colin.king@canonical.com>
->>>> wrote:
->>>>>
->>>>> From: Colin Ian King <colin.king@canonical.com>
->>>>>
->>>>> There is an spelling mistake in an a test error message. Fix it.
->>>>>
->>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>>> ---
->>>>>    tools/testing/selftests/x86/test_vsyscall.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
->>>>> b/tools/testing/selftests/x86/test_vsyscall.c
->>>>> index 4602326b8f5b..a4f4d4cf22c3 100644
->>>>> --- a/tools/testing/selftests/x86/test_vsyscall.c
->>>>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
->>>>> @@ -451,7 +451,7 @@ static int test_vsys_x(void)
->>>>>                   printf("[OK]\tExecuting the vsyscall page failed:
->>>>> #PF(0x%lx)\n",
->>>>>                          segv_err);
->>>>>           } else {
->>>>> -               printf("[FAILT]\tExecution failed with the wrong
->>>>> error: #PF(0x%lx)\n",
->>>>> +               printf("[FAIL]\tExecution failed with the wrong
->>>>> error: #PF(0x%lx)\n",
->>>>>                          segv_err);
->>>>>                   return 1;
->>>>>           }
->>>>> -- 
->>>>> 2.20.1
->>>>>
->>>>
->>>> Acked-by: Andy Lutomirski <luto@kernel.org>
->>>>
->>>
->>> Thanks Andy!
->>>
->>> I will queue this up for 5.3
->>>
->>> -- Shuah
->>>
->>
->> Hi Colin,
->>
->> Checkpatch warning on this. Probably failed on the original patch.
->> Could you please fix the checkpatch warn, and send v2.
+On 7/2/19 2:01 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.132 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> If I split the line, I get another checkpatch warning:
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
 > 
-> "WARNING: quoted string split across lines"
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.132-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 > 
-> Either way checkpatch emits a warning. The convention is to not break
-> literal strings, and the line is only a few chars over the 80 char
-> boundary, so the V1 of the patch is the way it should be IMHO.
+> thanks,
+> 
+> greg k-h
 > 
 
-As such this existed before your patch. I will apply v1.
+Compiled and booted on my test system. No dmesg regressions.
 
 thanks,
 -- Shuah
+
