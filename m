@@ -2,221 +2,92 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DDBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11335C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4335020673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE8A20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efh0X4ll"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTdGgq+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfGCBnj (ORCPT
+        id S1727459AbfGCBn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:43:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40155 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbfGCBni (ORCPT
+        Tue, 2 Jul 2019 21:43:56 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42473 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbfGCBn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:43:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so773121wre.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:43:36 -0700 (PDT)
+        Tue, 2 Jul 2019 21:43:56 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s184so655165oie.9;
+        Tue, 02 Jul 2019 18:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4YffUmnYIYJSGCAfaNSWP1ayns5cp2QU4CpDgCgvPRE=;
-        b=efh0X4llLVWHu5Dg5iUHBFsqpiD3EAhHy0GSa4Rw1Z7MEpgWK+3Wx+qU22FGbxHH7z
-         Adqbj+oS3WaHZfvWf6Z7S+kxCLU3wfHEVZrZXPQPnhxe3AiJcZlGG/GqThd7oay8i3Lu
-         NEYlEK6E22/86kHuucUfo79XlxYDZKnuvzCEjbzM4HoeZPb33jKOfVMj79vrfpfqnJOk
-         fZI6hEX5hOZEWVoKzAxYMsbE4rVMB/nB3/IY0ffXy+zFTvD1MZeGhq7oJIEsguBrXKfD
-         uX817r4HZk99anNjIxdo0b4kaqF2C3Os/U+eWl9WkoCMVZI5nNNSfkrMJiOopDM6DQeC
-         ns6A==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x+wkNbuegwr6MAyGOrFjJgAp+Ha8Kd7476xycX8VtiU=;
+        b=LTdGgq+VERB00MRK+dACf/0Kc4y9+SpmFD6GSkk5ceT3QZnzn3Q8GbTtiGggN0u0FK
+         n11Re5m2hk+AAgvN6z7V+UdGbQYIrN5GLeDjpvkc0NuZDNBCgqsB2NkfPpEVN2sfmpHj
+         jdNiGP1+gwb+2mi/OTxViaooIHaHq5RtgNnadWkxVWsMrRYbybEvCXkVm9e/6Hbi+LiL
+         n3keELMXQUY1wdtJUfsBjCSlw4Rt5/crNwKfFhW479qtbFZ6tlGL9gbFydVKukb8rP4y
+         kQomSMikxCHvmsjlX9Y5Ki725CGGKQ7o032HXHwpdVuDQjp0smo1MLuWEyDxR4x4r5rd
+         nO1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4YffUmnYIYJSGCAfaNSWP1ayns5cp2QU4CpDgCgvPRE=;
-        b=gHmMfhf8Sx5SX1xvMc7jNNV24O2jfo8H0IDXkTvPIQwO4VGh2zwBNVVXGwD0DRAB9o
-         EKVWF8NKa6PkmP8rwn6bRR0GNokJ7vn09fDKx3bS5kpBJ6mNdkVy+JnUc4yNZ9v3RMEG
-         Xut3e+iEdsAjkeeuYw+nA8rjJw6GLModHVTBOdVU3ia2X2TL9iy85YBDWOozCK4DHlr+
-         3/TklL56zuqgwWZgw4vOhEDpzVn+9K1jKu9tow6GSMY3HnipNJFRXW2AibNBinBW5oUz
-         KO6d0AtH7/ERnPY8+7hU/9p9PZFzMlPVNsmi1RmrgTwNQmPh+0oZECnMExpcb1sktTts
-         SO6g==
-X-Gm-Message-State: APjAAAVDktVP9ck1IMcJgguJL5qCBmASIfxU9etUeZnka3XLxIimC8Pa
-        r3DDx5I7X2xUIdSxRPYM5mt6mHqwWl95zJx87kptBA==
-X-Google-Smtp-Source: APXvYqzqh9h/4RdbB/jYJGIotsVwMAaDcHyyKvBN+Zzh6AUchrrkcMUDuARE9cbiaNpeM76kcPfTnmDJ1m48uONJYvY=
-X-Received: by 2002:a5d:5589:: with SMTP id i9mr15370525wrv.198.1562099197663;
- Tue, 02 Jul 2019 13:26:37 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x+wkNbuegwr6MAyGOrFjJgAp+Ha8Kd7476xycX8VtiU=;
+        b=EDkQr67Lf2RwsKd3wco42amcotmbxEA/2n62+wvqxmuQ66GPEYfFs+gIZqfATuUfoZ
+         1ziRMcFZ6gh9B0n2Oei6um5rZsfFQ+v/IrUO/uQ1gwq6URTwpfk4IAyjPrJ/vobt87IW
+         LN/VOxyJyU7TG2s8tGuIvWUGEGgIe4E01sncg9sJq42f/nkr0N9/XlOmHamCu6A9qXgn
+         l/MORcqWUQDPYoPKQQZNr/SRfENz83lYvAlLuqztUXr1DLGaoxiTNgHJyA/B1fet13Xn
+         Jf+xHH6QVbRC/DufkzW0Gc+rm+EtBxE3hTtwFMfeAoaUkRi2SpgNtIeRQ8DpgF7altIo
+         8Tpg==
+X-Gm-Message-State: APjAAAXImp83PK2RDcr53D4sk1emYhVvpvFQY/Kn+zg8cGhn+jUxRLvM
+        a7mZhhkWgCQQajNUhWWil+rHGa5J
+X-Google-Smtp-Source: APXvYqwKVXIWxj53hj8kKp5vlcBhx76gnHnMclUvqcx2kFQRomsOjgkIpZ4fihq5UX5nWnGqW8Ro2Q==
+X-Received: by 2002:a63:d950:: with SMTP id e16mr34043340pgj.271.1562098961881;
+        Tue, 02 Jul 2019 13:22:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 135sm15311473pfb.137.2019.07.02.13.22.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 13:22:40 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 13:22:39 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
+Message-ID: <20190702202239.GA29128@roeck-us.net>
+References: <20190702080123.904399496@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
-In-Reply-To: <20190630203614.5290-3-robdclark@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 2 Jul 2019 22:26:22 +0200
-Message-ID: <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org, aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Julien Thierry <julien.thierry@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Jun 2019 at 22:36, Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Rob Clark <robdclark@chromium.org>
->
-> On snapdragon aarch64 laptops, a 'UEFIDisplayInfo' variable is provided
-> to communicate some information about the display.  Crutially it has the
-> panel-id, so the appropriate panel driver can be selected.  Read this
-> out and stash in /chosen/panel-id so that display driver can use it to
-> pick the appropriate panel.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+On Tue, Jul 02, 2019 at 10:01:40AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.132 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
+> 
 
-Hi Rob,
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 346 pass: 346 fail: 0
 
-I understand why you are doing this, but this *really* belongs elsewhere.
-
-So we are dealing with a platform that violates the UEFI spec, since
-it does not bother to implement variable services at runtime (because
-MS let the vendor get away with this).
-
-First of all, to pass data between the EFI stub and the OS proper, we
-should use a configuration table rather than a DT property, since the
-former is ACPI/DT agnostic. Also, I'd like the consumer of the data to
-actually interpret it, i.e., just dump the whole opaque thing into a
-config table in the stub, and do the parsing in the OS proper.
-
-However, I am not thrilled at adding code to the stub that
-unconditionally looks for some variable with some magic name on all
-ARM/arm64 EFI systems, so this will need to live under a Kconfig
-option that depends on ARM64 (and does not default to y)
-
-
-
-> ---
->  drivers/firmware/efi/libstub/arm-stub.c | 49 +++++++++++++++++++++++++
->  drivers/firmware/efi/libstub/efistub.h  |  2 +
->  drivers/firmware/efi/libstub/fdt.c      |  9 +++++
->  3 files changed, 60 insertions(+)
->
-> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
-> index 04e6ecd72cd9..999813252e0d 100644
-> --- a/drivers/firmware/efi/libstub/arm-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm-stub.c
-> @@ -69,6 +69,53 @@ static struct screen_info *setup_graphics(efi_system_table_t *sys_table_arg)
->         return si;
->  }
->
-> +/*
-> + * We (at least currently) don't care about most of the fields, just
-> + * panel_id:
-> + */
-> +struct mdp_disp_info {
-> +       u32 version_info;
-> +       u32 pad0[9];
-> +       u32 panel_id;
-> +       u32 pad1[17];
-> +};
-> +
-> +#define MDP_DISP_INFO_VERSION_MAGIC 0xaa
-> +
-> +static void get_panel_id(efi_system_table_t *sys_table_arg,
-> +                        unsigned long fdt_addr)
-> +{
-> +       efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-> +       efi_status_t status;
-> +       struct mdp_disp_info *disp_info;
-> +       unsigned long size = 0;
-> +
-> +       status = efi_call_runtime(get_variable, L"UEFIDisplayInfo",
-> +                                 &gop_proto, NULL, &size, NULL);
-> +       if (status == EFI_NOT_FOUND)
-> +               return;
-> +
-> +       status = efi_call_early(allocate_pool, EFI_LOADER_DATA, size,
-> +                               (void **)&disp_info);
-> +       if (status != EFI_SUCCESS)
-> +               return;
-> +
-> +       status = efi_call_runtime(get_variable, L"UEFIDisplayInfo",
-> +                                 &gop_proto, NULL, &size, disp_info);
-> +       if (status != EFI_SUCCESS)
-> +               goto cleanup;
-> +
-> +       if ((disp_info->version_info >> 16) != MDP_DISP_INFO_VERSION_MAGIC)
-> +               goto cleanup;
-> +
-> +       efi_printk(sys_table_arg, "found a panel-id!\n");
-> +
-> +       set_chosen_panel_id(fdt_addr, disp_info->panel_id);
-> +
-> +cleanup:
-> +       efi_call_early(free_pool, disp_info);
-> +}
-> +
->  void install_memreserve_table(efi_system_table_t *sys_table_arg)
->  {
->         struct linux_efi_memreserve *rsv;
-> @@ -229,6 +276,8 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table,
->         if (!fdt_addr)
->                 pr_efi(sys_table, "Generating empty DTB\n");
->
-> +       get_panel_id(sys_table, fdt_addr);
-> +
->         status = handle_cmdline_files(sys_table, image, cmdline_ptr, "initrd=",
->                                       efi_get_max_initrd_addr(dram_base,
->                                                               *image_addr),
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-> index 1b1dfcaa6fb9..8832cb9a7a40 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -39,6 +39,8 @@ void efi_char16_printk(efi_system_table_t *, efi_char16_t *);
->
->  unsigned long get_dram_base(efi_system_table_t *sys_table_arg);
->
-> +void set_chosen_panel_id(unsigned long fdt_addr, unsigned panel_id);
-> +
->  efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
->                                             void *handle,
->                                             unsigned long *new_fdt_addr,
-> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-> index 5440ba17a1c5..cb6ea160a40a 100644
-> --- a/drivers/firmware/efi/libstub/fdt.c
-> +++ b/drivers/firmware/efi/libstub/fdt.c
-> @@ -200,6 +200,15 @@ static efi_status_t update_fdt_memmap(void *fdt, struct efi_boot_memmap *map)
->         return EFI_SUCCESS;
->  }
->
-> +void set_chosen_panel_id(unsigned long fdt_addr, unsigned panel_id)
-> +{
-> +       void *fdt = (void *)fdt_addr;
-> +       int node = fdt_subnode_offset(fdt, 0, "chosen");
-> +       u32 fdt_val32 = cpu_to_fdt32(panel_id);
-> +
-> +       fdt_setprop_var(fdt, node, "panel-id", fdt_val32);
-> +}
-> +
->  #ifndef EFI_FDT_ALIGN
->  # define EFI_FDT_ALIGN EFI_PAGE_SIZE
->  #endif
-> --
-> 2.20.1
->
+Guenter
