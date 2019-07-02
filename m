@@ -2,132 +2,154 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6A7C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD1C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AA02173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C61721473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyahivUA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AaDJvTIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfGBApl (ORCPT
+        id S1727104AbfGBAsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 20:45:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45007 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbfGBApk (ORCPT
+        Mon, 1 Jul 2019 20:48:16 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:52477 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfGBAsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 20:45:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so25555110edr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 17:45:39 -0700 (PDT)
+        Mon, 1 Jul 2019 20:48:16 -0400
+Received: by mail-pl1-f201.google.com with SMTP id x23so5148906plm.19
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 17:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f9XoDf2UqqqVQm4eFJ4Eg/g7JLrPNXPmegTV8b0b65c=;
-        b=CyahivUA8ly8coHmyiKLvnegSPHmgWJ4cnXAJWYEWTWp1DomBmBPid5QNe434kTCP9
-         54k+ymolVc/Swe523+LJJjmPKDK8PsUpW8kGdxgwOvVKraJ1hKZgPt2epINFImSRZcJG
-         kmiLcQs+Td5++2Gif2HP3ohW55ZCSrQGHiimvLIbIg7Q34shUxX8lkDQBax7yki52p85
-         ValukBaG5zNBarrQnU9BSVPSPa/xLJup9dCtNq+CkbduGw03xj8hTnSXRNmeIgZNaNpd
-         YA3uMoMDqtLn7fvyDlu5PdXxlgjMZ74PFrot9pepql5VBZBLi1KKZK2rXsHlu9kQG8l8
-         BduA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=/L9yAmVa7v9LMvtv+jujjv9ExiEtRxHsz82k3fzUKOE=;
+        b=AaDJvTICePD3127X1ht7+YMl+jIB9dmcuUzK1SiD1m4bq62JYz8/F6oT2Dc9gy+ER1
+         n80/fXYAv0d6xsLLUg4h7qPFt6qBDkjDUZV8gZ2N7SkEIe16NlXyyi1yI2J2iPhOQHDO
+         SRyFZc2YXA/btiR4vLqLyKo+8aa6ooABEI83AchXC6y78xEDL5fxHLD/5q4Tt/f5h49A
+         E+NsEnSGGfWMuC31EDTkwlQC7s64BHw7YPF4xzBIITQhrrdQMAUsDgxTNwVopBgkMEgx
+         PmrXl99XGCW+7C9SOXC0fyPUsVOGKNhDY09mhM7ux0JcwzZRrOPqcvkqKuP1/U+K2J+I
+         BmOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f9XoDf2UqqqVQm4eFJ4Eg/g7JLrPNXPmegTV8b0b65c=;
-        b=hE+QC/kiOcUxWRh3tp4hSkJtxrYWY9BgS8E4vQY8h+nrqP3PJh+CuptjyYzmEwAGeO
-         A2FtTmqUkPfXyq71ci0LzPMOALITDIT7t4VZOl45mxsS3tWDieSebK3dBRiHWGtmHlWz
-         fVX/UXHDreJwcHVOS2t6xPyuE3yCAAEaf6YlBbSPah1PPo/aHqutn3mCgknkL3vyga+/
-         8Ht/EEcP2rj6tPTTcpY4SLkJ4aNlaR8om1CQujMMawkGgsrR3qNV3is7tGv19lStSwbz
-         XoF3dIw3DjWSPO9GBuFum9+SBw/B6zTiK5ZA34QTEbVfLKlgGLFE2aSv5FBE78Yllg+l
-         iWHQ==
-X-Gm-Message-State: APjAAAVc4HHLVjDwuxOwbeHO1S8qaEkfkCE4i/YksH6xSTUKEOpJ+NxP
-        E5dx7s369uSz07upAy2xu3M=
-X-Google-Smtp-Source: APXvYqyjNPdDcoNho/lEzrPtx9sDLllkBmP8SkzFS2xVXN06cJczrhuAw8oEMX4i3wlC+ewUvTuvdQ==
-X-Received: by 2002:a17:906:3497:: with SMTP id g23mr26064074ejb.70.1562028338994;
-        Mon, 01 Jul 2019 17:45:38 -0700 (PDT)
-Received: from localhost.localdomain ([89.100.119.28])
-        by smtp.gmail.com with ESMTPSA id x4sm4256392eda.22.2019.07.01.17.45.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 17:45:38 -0700 (PDT)
-From:   Nicola Lunghi <nick83ola@gmail.com>
-To:     alsa-devel@alsa-project.org
-Cc:     info@jensverwiebe.de, Nicola Lunghi <nick83ola@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Allison Randal <allison@lohutok.net>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=/L9yAmVa7v9LMvtv+jujjv9ExiEtRxHsz82k3fzUKOE=;
+        b=Of9xySVSPHHz3J/J9A57f2xJeRy0gtuKsJWFNIuLa3nTIwpWvR0wPblKR1MBZD0pNy
+         VuVOJFbPI7Gy1NjY0QZO3QPLf/kEvhR32A4J8UkB/1NAcWPd+2bdsyMx2tPpfU+RkRET
+         Ge+QjUjyReqydGlLpi+OLubW7Ew9wsTGwVhlalO2fm/ws1goQEQ52veiRoR9ncpAKaPK
+         ltFb8YLmFa0pee/1HycnQYWb1ZUCOAb1hifO5SoE+Kvj3XOZOyE5qQXCCOPODyuJHU6R
+         SS+jVoGUzIL20FFwmnnzP7fRz9IioyxcvMin74sOfjWa6ut21qo4/TsOc9coX+/sAC+i
+         jauA==
+X-Gm-Message-State: APjAAAUlElxqfa7js1Fbl7eqm1Yo9jytwmN8zWahJQOoMksEHaRGUIay
+        p2sNOeUMI2GpeG8pShhb89HW1yZwG1eyy3M=
+X-Google-Smtp-Source: APXvYqx35BfgKLie7cFomiI1nBBZDuthXNW/hqLPKSY8tkGt8fHjdK6kysLtDz5MFkaKtWqzlcYITFs0g0QR2RM=
+X-Received: by 2002:a63:4e5f:: with SMTP id o31mr28121808pgl.49.1562028495379;
+ Mon, 01 Jul 2019 17:48:15 -0700 (PDT)
+Date:   Mon,  1 Jul 2019 17:48:07 -0700
+Message-Id: <20190702004811.136450-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe ordering
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jussi Laako <jussi@sonarnerd.net>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: usb-audio: fix Line6 Helix audio format rates
-Date:   Tue,  2 Jul 2019 01:43:14 +0100
-Message-Id: <20190702004439.30131-1-nick83ola@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins <collinsd@codeaurora.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Line6 Helix and HX stomp don't support retrieving
-the number of clock sample rate.
+Add device-links to track functional dependencies between devices
+after they are created (but before they are probed) by looking at
+their common DT bindings like clocks, interconnects, etc.
 
-Add a quirk to return the default value of 48Khz.
+Having functional dependencies automatically added before the devices
+are probed, provides the following benefits:
 
-Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
----
- sound/usb/format.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+- Optimizes device probe order and avoids the useless work of
+  attempting probes of devices that will not probe successfully
+  (because their suppliers aren't present or haven't probed yet).
 
-diff --git a/sound/usb/format.c b/sound/usb/format.c
-index c02b51a82775..05442f6ada62 100644
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -313,10 +313,32 @@ static int parse_audio_format_rates_v2v3(struct snd_usb_audio *chip,
- 			      tmp, sizeof(tmp));
- 
- 	if (ret < 0) {
--		dev_err(&dev->dev,
--			"%s(): unable to retrieve number of sample rates (clock %d)\n",
-+		switch (chip->usb_id) {
-+		/* LINE 6 HX pedals don't support getting the clock sample rate.
-+		 * Set the framerate to 48khz by default
-+		 */
-+		case USB_ID(0x0E41, 0x4244): /* HELIX */
-+		case USB_ID(0x0E41, 0x4246): /* HX STOMP */
-+			dev_warn(&dev->dev,
-+				"%s(): line6 helix: unable to retrieve number of sample rates. Set it to default value (clock %d).\n",
- 				__func__, clock);
--		goto err;
-+			fp->nr_rates = 1;
-+			fp->rate_min = 48000;
-+			fp->rate_max = 48000;
-+			fp->rates = SNDRV_PCM_RATE_48000;
-+			fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
-+			if (!fp->rate_table) {
-+				ret = -ENOMEM;
-+				goto err_free;
-+			}
-+			fp->rate_table[0] = 48000;
-+			return 0;
-+		default:
-+			dev_err(&dev->dev,
-+				"%s(): unable to retrieve number of sample rates (clock %d)\n",
-+					__func__, clock);
-+			goto err;
-+		}
- 	}
- 
- 	nr_triplets = (tmp[1] << 8) | tmp[0];
+  For example, in a commonly available mobile SoC, registering just
+  one consumer device's driver at an initcall level earlier than the
+  supplier device's driver causes 11 failed probe attempts before the
+  consumer device probes successfully. This was with a kernel with all
+  the drivers statically compiled in. This problem gets a lot worse if
+  all the drivers are loaded as modules without direct symbol
+  dependencies.
+
+- Supplier devices like clock providers, interconnect providers, etc
+  need to keep the resources they provide active and at a particular
+  state(s) during boot up even if their current set of consumers don't
+  request the resource to be active. This is because the rest of the
+  consumers might not have probed yet and turning off the resource
+  before all the consumers have probed could lead to a hang or
+  undesired user experience.
+
+  Some frameworks (Eg: regulator) handle this today by turning off
+  "unused" resources at late_initcall_sync and hoping all the devices
+  have probed by then. This is not a valid assumption for systems with
+  loadable modules. Other frameworks (Eg: clock) just don't handle
+  this due to the lack of a clear signal for when they can turn off
+  resources. This leads to downstream hacks to handle cases like this
+  that can easily be solved in the upstream kernel.
+
+  By linking devices before they are probed, we give suppliers a clear
+  count of the number of dependent consumers. Once all of the
+  consumers are active, the suppliers can turn off the unused
+  resources without making assumptions about the number of consumers.
+
+By default we just add device-links to track "driver presence" (probe
+succeeded) of the supplier device. If any other functionality provided
+by device-links are needed, it is left to the consumer/supplier
+devices to change the link when they probe.
+
+v1 -> v2:
+- Drop patch to speed up of_find_device_by_node()
+- Drop depends-on property and use existing bindings
+v2 -> v3:
+- Refactor the code to have driver core initiate the linking of devs
+- Have driver core link consumers to supplier before it's probed
+- Add support for drivers to edit the device links before probing
+
+TODO:
+- For the case of consumer child sub-nodes being added by a parent
+  device after late_initcall_sync we might be able to address that by
+  recursively parsing all child nodes and adding all their suppliers as
+  suppliers of the parent node too. The parent probe will add the
+  children before its probe is completed and that will prevent the
+  supplier's sync_state from being executed before the children are
+  probed.
+
+But I'll write that part once I see how this series is received.
+
+-Saravana
+
+Saravana Kannan (4):
+  driver core: Add support for linking devices during device addition
+  of/platform: Add functional dependency link from DT bindings
+  driver core: Add sync_state driver/bus callback
+  driver core: Add edit_links() callback for drivers
+
+ drivers/base/core.c    | 142 +++++++++++++++++++++++++++++++++++++++++
+ drivers/base/dd.c      |  29 +++++++++
+ drivers/of/Kconfig     |   9 +++
+ drivers/of/platform.c  |  61 ++++++++++++++++++
+ include/linux/device.h |  45 +++++++++++++
+ 5 files changed, 286 insertions(+)
+
 -- 
-2.19.1
+2.22.0.410.gd8fdbe21b5-goog
 
