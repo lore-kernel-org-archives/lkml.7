@@ -2,150 +2,146 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E46C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E70C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B61C20989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AD120989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KuxZdBhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfGBQjA (ORCPT
+        id S1726636AbfGBQkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:39:00 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40868 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfGBQi7 (ORCPT
+        Tue, 2 Jul 2019 12:40:43 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39170 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725972AbfGBQkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:38:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so1730119wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:38:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kQCwhDkd+adrjWulJDMrfB6RaCVRg+9pt7Pln9EQadU=;
-        b=OuebUGSI8fFOEx1TvXb86iyw9aRLmSLfoV4gVchdV3z4zcBOffnX3rTQKF6DBy7geF
-         LX+2IfgasdVg6JSoKWvsLdHKSsKgWGPXazLOZnxLdhCDAJnqU7A0ZpBMajyupm5KxFSF
-         8qLnXe03nxTkEazxJNifGdgCEYtaBzvS7BWmkKsDY+bm5ENsxDbj+SDtMIXdSL4EbgWE
-         vypmqQD5fXjFCjtdKyL1JdJCBiAUnamTyZskkhq6iKz/tvqrBnke1lGDgJ0WUN1Iamht
-         ajaxtnlvBVLI0j/PA4mMtsA7050U9sqTEVVGZx64GmnDRyoKcoOkqZ6y2Qo6cZ+vO5qC
-         AkLw==
-X-Gm-Message-State: APjAAAUJ0XLIp5uixJaNBo4Rm9X8+KIhBSR/PEQBB2nlGkQs0UfJxOeq
-        A4No4bHfHzXM2ZC2UJ2JT7yGrw==
-X-Google-Smtp-Source: APXvYqxPnamW93gW07ox1CwpZBoHKRzOdtXDqbFbqsJ7PrXNkj4xiKRuUFDtjNygF4OYLSfBPSizDw==
-X-Received: by 2002:a1c:67c2:: with SMTP id b185mr3812943wmc.98.1562085537670;
-        Tue, 02 Jul 2019 09:38:57 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
-        by smtp.gmail.com with ESMTPSA id f7sm3111041wrp.55.2019.07.02.09.38.56
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:38:57 -0700 (PDT)
-Subject: Re: [PATCH v5 0/4] KVM: LAPIC: Implement Exitless Timer
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1fbd236a-f7f9-e66a-e08c-bf2bac901d15@redhat.com>
-Date:   Tue, 2 Jul 2019 18:38:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Jul 2019 12:40:43 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 23AC0C0BE5;
+        Tue,  2 Jul 2019 16:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562085642; bh=9IoJlF0bpOR5UbhByS88AdDEz43pdCkSBVjHAo4Jav0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KuxZdBhbSw2w0rHtbuX+g5sQGuRW6Y8bhNAGbPqR7vdfL+DwzjAhHjqlwQu/zHFGh
+         eQ7InYW9hWVzNRcicRoZDnCpysZ0xp/x5xiyKgFGO76fGzSLowUj288cbkWQKApI3C
+         MJrJiI6k++K73xJYpmXZ7RC5TrxrIss2ewNQTfbqzI4EVCmIHljwfUW7cALp2CYzAo
+         AX7eMAdybeyRMYzG3fJMgTvAmXf66HaEPIdeIUnrvOQgYiJEvCE8nqnXA8OOr9I3yx
+         nuVRWEzdlSASeWuXnBHUTDJGr/AYslBArXqzTlx7MtVw0uwtmzBeMqgNgr9SnH3esJ
+         fc2LcARFvIBfQ==
+Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 4DF49A0057;
+        Tue,  2 Jul 2019 16:40:39 +0000 (UTC)
+From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH] ARC: [haps] Add Virtio support
+Date:   Tue,  2 Jul 2019 19:40:33 +0300
+Message-Id: <20190702164033.43933-1-abrodkin@synopsys.com>
+X-Mailer: git-send-email 2.16.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/19 11:39, Wanpeng Li wrote:
-> Dedicated instances are currently disturbed by unnecessary jitter due 
-> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> There is no hardware virtual timer on Intel for guest like ARM. Both 
-> programming timer in guest and the emulated timer fires incur vmexits.
-> This patchset tries to avoid vmexit which is incurred by the emulated 
-> timer fires in dedicated instance scenario. 
-> 
-> When nohz_full is enabled in dedicated instances scenario, the unpinned 
-> timer will be moved to the nearest busy housekeepers after commit
-> 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit 
-> 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However, 
-> KVM always makes lapic timer pinned to the pCPU which vCPU residents, the 
-> reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer 
-> pinned). Actually, these emulated timers can be offload to the housekeeping 
-> cpus since APICv is really common in recent years. The guest timer interrupt 
-> is injected by posted-interrupt which is delivered by housekeeping cpu 
-> once the emulated timer fires. 
-> 
-> The host admin should fine tuned, e.g. dedicated instances scenario w/ 
-> nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
-> for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
-> mode, ~3% redis performance benefit can be observed on Skylake server.
+As a preparation for QEMU usage for ARC let's add basic Virtio-MMIO
+peripherals support for the platform we're going to use.
 
-Marcelo,
+For now we add 5 Virtio slots in .dts and enable block and network devices
+via Virtio-MMIO.
 
-does this patch work for you or can you still see the oops?
+Note even though typically Virtio register set fits in 0x200 bytes
+we "allocate" here 0x2000 so that it matches ARC's default 8KiB page size
+and so remapping of that area is done clearly.
 
-Thanks,
+We also enable DEVTMPFS automount for more convenient use
+of external root file-stystem. Before that we used to use built-in
+Initramfs which didn't automount DEVTMPFS anyways so we didn't need
+that option, while now it starts making sense.
 
-Paolo
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+---
+ arch/arc/boot/dts/haps_hs.dts      | 30 ++++++++++++++++++++++++++++++
+ arch/arc/configs/haps_hs_defconfig |  5 ++++-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-> w/o patchset:
-> 
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
-> 
-> EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
-> 
-> w/ patchset:
-> 
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
-> 
-> EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> 
-> v4 -> v5:
->  * update patch description in patch 1/4
->  * feed latest apic->lapic_timer.expired_tscdeadline to kvm_wait_lapic_expire()
->  * squash advance timer handling to patch 2/4
-> 
-> v3 -> v4:
->  * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
->  * don't posted inject already-expired timer
-> 
-> v2 -> v3:
->  * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
->  * check kvm_hlt_in_guest instead
-> 
-> v1 -> v2:
->  * check vcpu_halt_in_guest
->  * move module parameter from kvm-intel to kvm
->  * add housekeeping_enabled
->  * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
-> 
-> 
-> Wanpeng Li (4):
->   KVM: LAPIC: Make lapic timer unpinned
->   KVM: LAPIC: Inject timer interrupt via posted interrupt
->   KVM: LAPIC: Ignore timer migration when lapic timer is injected by pi
->   KVM: LAPIC: Don't inject already-expired timer via posted interrupt
-> 
->  arch/x86/kvm/lapic.c            | 68 +++++++++++++++++++++++++++--------------
->  arch/x86/kvm/lapic.h            |  3 +-
->  arch/x86/kvm/svm.c              |  2 +-
->  arch/x86/kvm/vmx/vmx.c          |  5 +--
->  arch/x86/kvm/x86.c              | 11 ++++---
->  arch/x86/kvm/x86.h              |  2 ++
->  include/linux/sched/isolation.h |  2 ++
->  kernel/sched/isolation.c        |  6 ++++
->  8 files changed, 67 insertions(+), 32 deletions(-)
-> 
+diff --git a/arch/arc/boot/dts/haps_hs.dts b/arch/arc/boot/dts/haps_hs.dts
+index 1ebfa046492b..44bc522fdec8 100644
+--- a/arch/arc/boot/dts/haps_hs.dts
++++ b/arch/arc/boot/dts/haps_hs.dts
+@@ -62,5 +62,35 @@
+ 			#interrupt-cells = <1>;
+ 			interrupts = <20>;
+ 		};
++
++		virtio0: virtio@f0100000 {
++			compatible = "virtio,mmio";
++			reg = <0xf0100000 0x2000>;
++			interrupts = <31>;
++		};
++
++		virtio1: virtio@f0102000 {
++			compatible = "virtio,mmio";
++			reg = <0xf0102000 0x2000>;
++			interrupts = <32>;
++		};
++
++		virtio2: virtio@f0104000 {
++			compatible = "virtio,mmio";
++			reg = <0xf0104000 0x2000>;
++			interrupts = <33>;
++		};
++
++		virtio3: virtio@f0106000 {
++			compatible = "virtio,mmio";
++			reg = <0xf0106000 0x2000>;
++			interrupts = <34>;
++		};
++
++		virtio4: virtio@f0108000 {
++			compatible = "virtio,mmio";
++			reg = <0xf0108000 0x2000>;
++			interrupts = <35>;
++		};
+ 	};
+ };
+diff --git a/arch/arc/configs/haps_hs_defconfig b/arch/arc/configs/haps_hs_defconfig
+index b117e6c16d41..436f2135bdc1 100644
+--- a/arch/arc/configs/haps_hs_defconfig
++++ b/arch/arc/configs/haps_hs_defconfig
+@@ -35,10 +35,12 @@ CONFIG_INET=y
+ # CONFIG_IPV6 is not set
+ # CONFIG_WIRELESS is not set
+ CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
+ # CONFIG_STANDALONE is not set
+ # CONFIG_PREVENT_FIRMWARE_BUILD is not set
+-# CONFIG_BLK_DEV is not set
++CONFIG_VIRTIO_BLK=y
+ CONFIG_NETDEVICES=y
++CONFIG_VIRTIO_NET=y
+ # CONFIG_NET_VENDOR_ARC is not set
+ # CONFIG_NET_VENDOR_BROADCOM is not set
+ # CONFIG_NET_VENDOR_INTEL is not set
+@@ -68,6 +70,7 @@ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_LOGO=y
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
++CONFIG_VIRTIO_MMIO=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+-- 
+2.16.2
 
