@@ -2,53 +2,52 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F62C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72014C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6675C20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A04420659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055116;
-	bh=xDodtIMsKPm6YhLyrC/CzznVosZQjbuw83e+gldJATs=;
+	s=default; t=1562055122;
+	bh=Uo50uZ0HNHNSc+tR1hSxJWNsJe8o2OszyNIR0qdkhF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQcDzW1m41Qw+H1GC32Q3zzP/2MOm1khpmxsMouwH0xWn0H3QEwQg8IJQ7QMtsYhp
-	 pf+lzPaCwv9wV7AUnS/hgJa1PFMuSZY/okPfqm0vD4V9oxVmava/fUYC1HmmaacKrj
-	 RqIBFwMo2DQf7/YJFlabVsjqSJHmV+HaVhQ3K3Nc=
+	b=cOnG1jzzOb0HyBslmx5Xja0Jlo5LWK1QvK63sDNYVN0pUF/USQoZ3EAd9mLwj3Sa/
+	 DL+L4yx+pBcU5cWxo1MpyHpVLMQlMXq6XXdFkO8Iz8iRY5riXv4rbOJ4g/KK9/wJ7e
+	 ngvXSZXGsUG9MWlg9LzCFZzvXWRvQUfYx+GPnaiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfGBILy (ORCPT
+        id S1728491AbfGBIMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57738 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727542AbfGBIJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:45 -0400
+        id S1728271AbfGBIJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C000A20665;
-        Tue,  2 Jul 2019 08:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D3D20665;
+        Tue,  2 Jul 2019 08:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054985;
-        bh=xDodtIMsKPm6YhLyrC/CzznVosZQjbuw83e+gldJATs=;
+        s=default; t=1562054977;
+        bh=Uo50uZ0HNHNSc+tR1hSxJWNsJe8o2OszyNIR0qdkhF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DRtgOtqTN2RJhAg1Zcm4230P2nv+6AglZLjFzjLhoQZ6pCrhXjLTqS1198MCKAY1k
-         8SipTZt+Q0leU2mp4+k6ukWq5WMcJJtedJgZfQF6fXA+G40L5ymxetn9kwkhmbNz+g
-         LGwKgFfRQ8rE0lZHF+gVzBflE6UOMosifd0ujknA=
+        b=hQqiRC4BF9cci4bZu4ZtVHozuaj6iTC+3mXAeB+mEfJJ6+YY3vkfCaYLJ0UmJhT8Z
+         3fp2+zg9iTn349E4fFDE92W0w7pVjWYDGjw99hywl/yaQ+6yLDHPlg7oPwYJS84BP4
+         NX3tOmszRotxN8u8vQiHObSHnj3LxPLQh77+89kI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Sowmini Varadhan <sowmini.varadhan@oracle.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 29/43] net/packet: fix memory leak in packet_set_ring()
-Date:   Tue,  2 Jul 2019 10:02:09 +0200
-Message-Id: <20190702080125.364407469@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 09/43] 9p/rdma: do not disconnect on down_interruptible EAGAIN
+Date:   Tue,  2 Jul 2019 10:01:49 +0200
+Message-Id: <20190702080124.320620684@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -61,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+[ Upstream commit 8b894adb2b7e1d1e64b8954569c761eaf3d51ab5 ]
 
-[ Upstream commit 55655e3d1197fff16a7a05088fb0e5eba50eac55 ]
+9p/rdma would sometimes drop the connection and display errors in
+recv_done when the user does ^C.
+The errors were caused by recv buffers that were posted at the time
+of disconnect, and we just do not want to disconnect when
+down_interruptible is... interrupted.
 
-syzbot found we can leak memory in packet_set_ring(), if user application
-provides buggy parameters.
-
-Fixes: 7f953ab2ba46 ("af_packet: TX_RING support for TPACKET_V3")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Sowmini Varadhan <sowmini.varadhan@oracle.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/1535625307-18019-1-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/9p/trans_rdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4354,7 +4354,7 @@ static int packet_set_ring(struct sock *
- 				    req3->tp_sizeof_priv ||
- 				    req3->tp_feature_req_word) {
- 					err = -EINVAL;
--					goto out;
-+					goto out_free_pg_vec;
- 				}
- 			}
- 			break;
-@@ -4418,6 +4418,7 @@ static int packet_set_ring(struct sock *
- 			prb_shutdown_retire_blk_timer(po, rb_queue);
- 	}
+diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
+index f58467a49090..b7648b12bb1a 100644
+--- a/net/9p/trans_rdma.c
++++ b/net/9p/trans_rdma.c
+@@ -476,7 +476,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
  
-+out_free_pg_vec:
- 	if (pg_vec)
- 		free_pg_vec(pg_vec, order, req->tp_block_nr);
- out:
+ 	err = post_recv(client, rpl_context);
+ 	if (err) {
+-		p9_debug(P9_DEBUG_FCALL, "POST RECV failed\n");
++		p9_debug(P9_DEBUG_ERROR, "POST RECV failed: %d\n", err);
+ 		goto recv_error;
+ 	}
+ 	/* remove posted receive buffer from request structure */
+@@ -545,7 +545,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
+  recv_error:
+ 	kfree(rpl_context);
+ 	spin_lock_irqsave(&rdma->req_lock, flags);
+-	if (rdma->state < P9_RDMA_CLOSING) {
++	if (err != -EINTR && rdma->state < P9_RDMA_CLOSING) {
+ 		rdma->state = P9_RDMA_CLOSING;
+ 		spin_unlock_irqrestore(&rdma->req_lock, flags);
+ 		rdma_disconnect(rdma->cm_id);
+-- 
+2.20.1
+
 
 
