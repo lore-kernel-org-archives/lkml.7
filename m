@@ -2,101 +2,131 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79246C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCD2C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528D02064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178A62064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hEaxITbD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OratZNUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfGCBTF (ORCPT
+        id S1727342AbfGCBUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:19:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40580 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfGCBTF (ORCPT
+        Tue, 2 Jul 2019 21:20:38 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:32881 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:19:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so736231wre.7;
-        Tue, 02 Jul 2019 18:19:04 -0700 (PDT)
+        Tue, 2 Jul 2019 21:20:38 -0400
+Received: by mail-pg1-f181.google.com with SMTP id m4so295404pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:20:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rWLzfbu8j4EYgy/8k30wN0dMRH7MHW+jd6HZ5Ksrd3U=;
-        b=hEaxITbD6g01GU/E4tW0b9uFqAt6dT6NrdnsjGynaCiSDczc3wBtQ6h3N5KDIjVZTs
-         bq+litxweOV0YzLcD+htddP+0KeUARG1QFlrZPaZdPOatV60kjAJGRzibtzNi4tCJ6LB
-         BCx2+cvlgKxvgtol8Y1IZtr2JRmkDwnZqCDzK6DS1vsIUyorzJuuJrPhYZlbwugny5iY
-         iHJYtLyqvTZSz1n2plu+X1bFXa7JU1nQbLEavg2aUj+SUizBeOLnB2hZ3y/LTPqDH9jG
-         44vqaZTTMpgbCGizFvZHtpQ/h3jknSoV3ETZo7RMtxtbEcxrYA2HO32qpbuGGnHhQdbU
-         WFsw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=urKLpyPs+qKmJQRSn4nY/ri+HUCn/Tsi4t/dmFYcRT0=;
+        b=OratZNUwxL044HPh468i9hQPweSr6b/xzZnT13Vl8Fa8hhsZCWJEYJvSJT3qKMhCdo
+         1rew3nQ7+30olwQ31j5P1XpiaQ/q2DCyJGFry/w6SEsPRPWx6kPg6iifmRfeelLEBp2S
+         DBJ7pPVURq9ighJQhRFqyk+ZZK/4szkLSrvTZs6+A4wYH5NqJZO68ch5OOM8kY8kWp7N
+         +vBqqyaO4V4TpZW/91j2LS4CPH2293LJol2/0HF9uBfbNuGlW95Z7S+rS0Oh3I7IKgNy
+         kwuuSdAZadBrSkUOgJaX26OmPuwQhjrk/q3KCXJpOpdXroUQnhkRU5W4J5Cq1H/XPINe
+         Tw8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rWLzfbu8j4EYgy/8k30wN0dMRH7MHW+jd6HZ5Ksrd3U=;
-        b=g+ZxcVmHJHNHNcsO9GJNMGjyauQ6AOIPzI4VeHw9ikGSKvZGLntv9xG6G9Gv01b08s
-         rlWzoqm5CRVq4a7YiTnJSnyzSGSpDLQlDGgb+77aCLULUy5Jw3IfFhYUsarDZH785nO2
-         muSHqkum5uZ6G8Kpak7XrzrvxN9l7spdxJWaUP7lv3CBkH9abEIQMrOzSCLQ533YGYje
-         NkAkyg+YdpmjtJ3VEPLr0QODq8V3SJlU9UyEvCRAYwKhT3xpR4B6rDhQf0wMlbN8/76H
-         vcOaQ15pQg++l5m5nqoky0VcOC7I5JQCyp/DE147oYVCq9tedjXZvm2wspt9Frj48jDj
-         1Sag==
-X-Gm-Message-State: APjAAAUUtPri8q2NXI3JyTXk0jNSKa3Bora0EOA6KTXm0arccsOX1w5O
-        WeCUR9Pg5O1e4xmDZx9WgrWmtS0G
-X-Google-Smtp-Source: APXvYqy1mj2CZXwhgjct0fF4qSkZ62Tn5IxLxpLT3bp0eyZredMoec+t+UbjgZuFjSB63XicwdQ2Cg==
-X-Received: by 2002:adf:e311:: with SMTP id b17mr6840692wrj.11.1562106792800;
-        Tue, 02 Jul 2019 15:33:12 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:33:12 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     blogic@openwrt.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
-Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 4/4] gpio: stp-xway: allow compile-testing
-Date:   Wed,  3 Jul 2019 00:32:48 +0200
-Message-Id: <20190702223248.31934-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
-References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=urKLpyPs+qKmJQRSn4nY/ri+HUCn/Tsi4t/dmFYcRT0=;
+        b=kyPV6bDw3LaekuO96aQ+bRH0rcsqAq7XfTD+IRKGtRtUi0oO6mRtbi9AXLilxJoHFW
+         mzDLi2vhlgQ2YWbBPRd87ABeMs6Ee5P8Bj+Sx4JlZiYgTcOE40zNckDQfN0JLRg8mb6O
+         3+4D/LvM0RzHn7vijePbVqLo37/7ZP3rYPhBTj3g1QSskzOf4khwy1GdyH6344pd9a/y
+         KNrBcclekjmq0kjM7CG6s/RCX6Vvd5OP67ENfLgTgFNfSCGZrzdPP2gif1hYzzx1Scbg
+         Bb3QQRPOPCx9RuY5BNcqFCIk61w3uWPp8VHNadOlRpHsVVKHMX+Bmnzvemzs3GbPPpHj
+         APAw==
+X-Gm-Message-State: APjAAAVh40qvkzv6SO3PifZ2tIvLu56wBA+7KgXSgZKU8ZxP3bPHefHe
+        L1TWg1+r4e17KnFnXGp2feHcXXbxuupHpJCtmJJzU1BsYhTKlQ==
+X-Google-Smtp-Source: APXvYqyGQDqM0MuXMme6vkiCcrJmmiL2Sa2JberNf3B8npxHgLRDZKGG8Q17e5PSGfAVUAY30c61qAkpqY4cazb1NSs=
+X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr7952895pje.123.1562105353944;
+ Tue, 02 Jul 2019 15:09:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
+ <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Jul 2019 15:09:02 -0700
+Message-ID: <CAKwvOdn-=u1v8B1ni8QqiOXaimhc_tG6O=8kMb4c2vv62=D42g@mail.gmail.com>
+Subject: Re: objtool warnings in prerelease clang-9
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Craig Topper <craig.topper@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Stephen Hines <srhines@google.com>,
+        Chandler Carruth <chandlerc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable compile-testing of the stp-xway GPIO driver now that it does not
-depend on any architecture specific includes anymore.
+On Tue, Jul 2, 2019 at 2:58 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Tue, 2 Jul 2019, Nick Desaulniers wrote:
+> > TL;DR
+> > LLVM currently has a bug when unrolling loops containing asm goto and
+> > we have a fix in hand.
+> >
+> > Conservatively, we can block loop unrolling when we see asm goto in a loop:
+>
+> Makes sense in order to make progress.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/gpio/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I have the conservative fix posted for review: https://reviews.llvm.org/D64101.
+I've modified the test case there for what it should look like when we
+can and do inline it:
+https://gist.github.com/nickdesaulniers/7216f6e5a17c7064285190440cb88f1d
+I feel like I'm pretty close to just fixing the block duplication in
+unrolling outright and can probably have a working fix in the next day
+or two.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f1f02dac324e..43d7d6a9d9ab 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -489,7 +489,8 @@ config GPIO_STA2X11
- 
- config GPIO_STP_XWAY
- 	bool "XWAY STP GPIOs"
--	depends on SOC_XWAY
-+	depends on SOC_XWAY || COMPILE_TEST
-+	depends on OF_GPIO
- 	help
- 	  This enables support for the Serial To Parallel (STP) unit found on
- 	  XWAY SoC. The STP allows the SoC to drive a shift registers cascade,
+> > This causes objtool to not find any issues in
+> > arch/x86/kernel/cpu/mtrr/generic.o.  I don't observe any duplication
+> > in the __jump_table section of the resulting .o file.  It also cuts
+> > down the objtool warnings I observe in a defconfig (listed at the
+> > beginning of the email) from 4 to 2. (platform-quirks.o predates asm
+> > goto,
+>
+> It does not have asm goto inside :)
+
+I think you're conflating arch/x86/kernel/cpu/mtrr/generic.o with
+arch/x86/kernel/platform-quirks.o.
+
+> platform-quirks.o:
+>
+>         if (x86_platform.set_legacy_features)
+>   74:   4c 8b 1d 00 00 00 00    mov    0x0(%rip),%r11        # 7b <x86_early_init_platform_quirks+0x7b>
+>   7b:   4d 85 db                test   %r11,%r11
+>   7e:   0f 85 00 00 00 00       jne    84 <x86_early_init_platform_quirks+0x84>
+>                 x86_platform.set_legacy_features();
+> }
+>   84:   c3                      retq
+>
+> That jne jumps to __x86_indirect_thunk_r11, aka. ratpoutine.
+
+As an American with 100% French Canadian ancestry, I approve of the
+term ratpoutine over retpoline.
+
+> No idea why objtool thinks that the instruction at 0x84 is not
+> reachable. Josh?
+
+
 -- 
-2.22.0
-
+Thanks,
+~Nick Desaulniers
