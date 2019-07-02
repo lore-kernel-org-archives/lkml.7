@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18463C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ADAC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60F62184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15BD20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055047;
-	bh=uiVFToY1J/8BCI8bn4gOJQPAGV7k0Xk67iP/xnWd0VE=;
+	s=default; t=1562055052;
+	bh=Vx9DkmCnEUQSOhGDZdt1CgFSoxs+WL6oyvc7wV8s+vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYKt4hEf4IUbcjQYwKBtUxiN9kMcqPQp8fU5B/z0SRWZvJgcHjo2oMOzxQPA7Xu0L
-	 pg1XMAwGvFaKwkO9vG7hdUoG08FABMzabWSY34VC5bV0P8zmZ+v/aoKtBGKCRILpqX
-	 rUA5A228knt95YSFGit7NXCTWGI443CbdYh4PlGY=
+	b=pIUrRDZJAcfHdOglmy4G4q2EbKiIPidnLCyUKuzJQzVZ6KgYdv4/owJhl8O+Tvh89
+	 dAd7O7Zx44dAVec5KiAEanO2TB9prciVLbOs8dOFQLU+MfSIeWdQ4aaP6FAAHF7W/+
+	 5OMa+o47Nw/tWz9Eg+kgRWfFgaO8/XCsdLLlVa68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbfGBIKp (ORCPT
+        id S1728903AbfGBIKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfGBIKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:10:43 -0400
+        id S1728895AbfGBIKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7F020665;
-        Tue,  2 Jul 2019 08:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04286206A2;
+        Tue,  2 Jul 2019 08:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562055042;
-        bh=uiVFToY1J/8BCI8bn4gOJQPAGV7k0Xk67iP/xnWd0VE=;
+        s=default; t=1562055045;
+        bh=Vx9DkmCnEUQSOhGDZdt1CgFSoxs+WL6oyvc7wV8s+vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikkpbzuqCU+wY+k1wthotoAWo098xdDbDYda3Tvi5BrD09iGBiCkyk95kSgemAk3j
-         nheHOXQGkvyP3ImJ65DDkzpsUYoFDwO1QTW/yZ2QdVBSOOB+IdWsmqEXe24TdDR9Xw
-         yQmHk+Hn95vckwdy/6nadwarrRjW3IWrYCrGOFsE=
+        b=f5oZ2/G5ZU9hI06PnLs3Ksb7M1kS7d0Px34NUtJUPg6R2HLA/MP2Gk4m0gmHEciML
+         YMTk3qr0rePtM7WkzmgOlnTG3/zuT0QFMeTF/Lft4r0Ce+q5HjusSGGQONeaX1bWn9
+         xNwul39M9G4Y+QA74sB9ERAehj3uSy+QM0xXcSio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.14 25/43] cpu/speculation: Warn on unsupported mitigations= parameter
-Date:   Tue,  2 Jul 2019 10:02:05 +0200
-Message-Id: <20190702080125.137325770@linuxfoundation.org>
+        stable@vger.kernel.org, Wang Xin <xin.wang7@cn.bosch.com>,
+        Mark Jonas <mark.jonas@de.bosch.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 4.14 26/43] eeprom: at24: fix unexpected timeout under high load
+Date:   Tue,  2 Jul 2019 10:02:06 +0200
+Message-Id: <20190702080125.196152902@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -63,47 +60,252 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Wang Xin <xin.wang7@cn.bosch.com>
 
-commit 1bf72720281770162c87990697eae1ba2f1d917a upstream.
+commit 9a9e295e7c5c0409c020088b0ae017e6c2b7df6e upstream.
 
-Currently, if the user specifies an unsupported mitigation strategy on the
-kernel command line, it will be ignored silently.  The code will fall back
-to the default strategy, possibly leaving the system more vulnerable than
-expected.
+Within at24_loop_until_timeout the timestamp used for timeout checking
+is recorded after the I2C transfer and sleep_range(). Under high CPU
+load either the execution time for I2C transfer or sleep_range() could
+actually be larger than the timeout value. Worst case the I2C transfer
+is only tried once because the loop will exit due to the timeout
+although the EEPROM is now ready.
 
-This may happen due to e.g. a simple typo, or, for a stable kernel release,
-because not all mitigation strategies have been backported.
+To fix this issue the timestamp is recorded at the beginning of each
+iteration. That is, before I2C transfer and sleep. Then the timeout
+is actually checked against the timestamp of the previous iteration.
+This makes sure that even if the timeout is reached, there is still one
+more chance to try the I2C transfer in case the EEPROM is ready.
 
-Inform the user by printing a message.
+Example:
 
-Fixes: 98af8452945c5565 ("cpu/speculation: Add 'mitigations=' cmdline option")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190516070935.22546-1-geert@linux-m68k.org
+If you have a system which combines high CPU load with repeated EEPROM
+writes you will run into the following scenario.
+
+ - System makes a successful regmap_bulk_write() to EEPROM.
+ - System wants to perform another write to EEPROM but EEPROM is still
+   busy with the last write.
+ - Because of high CPU load the usleep_range() will sleep more than
+   25 ms (at24_write_timeout).
+ - Within the over-long sleeping the EEPROM finished the previous write
+   operation and is ready again.
+ - at24_loop_until_timeout() will detect timeout and won't try to write.
+
+Signed-off-by: Wang Xin <xin.wang7@cn.bosch.com>
+Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- kernel/cpu.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2308,6 +2308,9 @@ static int __init mitigations_parse_cmdl
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO;
- 	else if (!strcmp(arg, "auto,nosmt"))
- 		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
-+	else
-+		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
-+			arg);
+---
+ drivers/misc/eeprom/at24.c |  107 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 77 insertions(+), 30 deletions(-)
+
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -113,22 +113,6 @@ MODULE_PARM_DESC(write_timeout, "Time (i
+ 	((1 << AT24_SIZE_FLAGS | (_flags)) 		\
+ 	    << AT24_SIZE_BYTELEN | ilog2(_len))
  
- 	return 0;
+-/*
+- * Both reads and writes fail if the previous write didn't complete yet. This
+- * macro loops a few times waiting at least long enough for one entire page
+- * write to work while making sure that at least one iteration is run before
+- * checking the break condition.
+- *
+- * It takes two parameters: a variable in which the future timeout in jiffies
+- * will be stored and a temporary variable holding the time of the last
+- * iteration of processing the request. Both should be unsigned integers
+- * holding at least 32 bits.
+- */
+-#define loop_until_timeout(tout, op_time)				\
+-	for (tout = jiffies + msecs_to_jiffies(write_timeout), op_time = 0; \
+-	     op_time ? time_before(op_time, tout) : true;		\
+-	     usleep_range(1000, 1500), op_time = jiffies)
+-
+ static const struct i2c_device_id at24_ids[] = {
+ 	/* needs 8 addresses as A0-A2 are ignored */
+ 	{ "24c00",	AT24_DEVICE_MAGIC(128 / 8,	AT24_FLAG_TAKE8ADDR) },
+@@ -234,7 +218,14 @@ static ssize_t at24_eeprom_read_smbus(st
+ 	if (count > I2C_SMBUS_BLOCK_MAX)
+ 		count = I2C_SMBUS_BLOCK_MAX;
+ 
+-	loop_until_timeout(timeout, read_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		read_time = jiffies;
++
+ 		status = i2c_smbus_read_i2c_block_data_or_emulated(client,
+ 								   offset,
+ 								   count, buf);
+@@ -244,7 +235,9 @@ static ssize_t at24_eeprom_read_smbus(st
+ 
+ 		if (status == count)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -284,7 +277,14 @@ static ssize_t at24_eeprom_read_i2c(stru
+ 	msg[1].buf = buf;
+ 	msg[1].len = count;
+ 
+-	loop_until_timeout(timeout, read_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		read_time = jiffies;
++
+ 		status = i2c_transfer(client->adapter, msg, 2);
+ 		if (status == 2)
+ 			status = count;
+@@ -294,7 +294,9 @@ static ssize_t at24_eeprom_read_i2c(stru
+ 
+ 		if (status == count)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -343,11 +345,20 @@ static ssize_t at24_eeprom_read_serial(s
+ 	msg[1].buf = buf;
+ 	msg[1].len = count;
+ 
+-	loop_until_timeout(timeout, read_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		read_time = jiffies;
++
+ 		status = i2c_transfer(client->adapter, msg, 2);
+ 		if (status == 2)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -374,11 +385,20 @@ static ssize_t at24_eeprom_read_mac(stru
+ 	msg[1].buf = buf;
+ 	msg[1].len = count;
+ 
+-	loop_until_timeout(timeout, read_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		read_time = jiffies;
++
+ 		status = i2c_transfer(client->adapter, msg, 2);
+ 		if (status == 2)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -420,7 +440,14 @@ static ssize_t at24_eeprom_write_smbus_b
+ 	client = at24_translate_offset(at24, &offset);
+ 	count = at24_adjust_write_count(at24, offset, count);
+ 
+-	loop_until_timeout(timeout, write_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		write_time = jiffies;
++
+ 		status = i2c_smbus_write_i2c_block_data(client,
+ 							offset, count, buf);
+ 		if (status == 0)
+@@ -431,7 +458,9 @@ static ssize_t at24_eeprom_write_smbus_b
+ 
+ 		if (status == count)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(write_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -446,7 +475,14 @@ static ssize_t at24_eeprom_write_smbus_b
+ 
+ 	client = at24_translate_offset(at24, &offset);
+ 
+-	loop_until_timeout(timeout, write_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		write_time = jiffies;
++
+ 		status = i2c_smbus_write_byte_data(client, offset, buf[0]);
+ 		if (status == 0)
+ 			status = count;
+@@ -456,7 +492,9 @@ static ssize_t at24_eeprom_write_smbus_b
+ 
+ 		if (status == count)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(write_time, timeout));
+ 
+ 	return -ETIMEDOUT;
+ }
+@@ -485,7 +523,14 @@ static ssize_t at24_eeprom_write_i2c(str
+ 	memcpy(&msg.buf[i], buf, count);
+ 	msg.len = i + count;
+ 
+-	loop_until_timeout(timeout, write_time) {
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		/*
++		 * The timestamp shall be taken before the actual operation
++		 * to avoid a premature timeout in case of high CPU load.
++		 */
++		write_time = jiffies;
++
+ 		status = i2c_transfer(client->adapter, &msg, 1);
+ 		if (status == 1)
+ 			status = count;
+@@ -495,7 +540,9 @@ static ssize_t at24_eeprom_write_i2c(str
+ 
+ 		if (status == count)
+ 			return count;
+-	}
++
++		usleep_range(1000, 1500);
++	} while (time_before(write_time, timeout));
+ 
+ 	return -ETIMEDOUT;
  }
 
 
