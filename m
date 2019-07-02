@@ -2,93 +2,211 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E12C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F728C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF702054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D35921479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkBeWI25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfGBLxc convert rfc822-to-8bit (ORCPT
+        id S1726598AbfGBL4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:53:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45586 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfGBLxb (ORCPT
+        Tue, 2 Jul 2019 07:56:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45272 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfGBL4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:53:31 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hiHLd-0008Gs-DE; Tue, 02 Jul 2019 13:53:21 +0200
-Date:   Tue, 2 Jul 2019 13:53:21 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Corey Minyard <cminyard@mvista.com>
-Cc:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Corey Minyard <minyard@acm.org>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190702115321.a7wtdovhz6hn7px2@linutronix.de>
-References: <20190628214903.6f92a9ea@oasis.local.home>
- <20190701190949.GB4336@minyard.net>
- <20190701161840.1a53c9e4@gandalf.local.home>
- <20190701204325.GD5041@minyard.net>
- <20190701170602.2fdb35c2@gandalf.local.home>
- <20190701171333.37cc0567@gandalf.local.home>
- <20190701172825.7d861e85@gandalf.local.home>
- <20190702070418.h6ynkkgk6v6s3aii@linutronix.de>
- <20190702083536.vt346ysqmq6q23iz@linutronix.de>
- <20190702114028.GE5041@minyard.net>
+        Tue, 2 Jul 2019 07:56:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so16549983lje.12;
+        Tue, 02 Jul 2019 04:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eFBmUf6ktJunPkOuUGrLnPaqAbCFTLahY8dX1bB5Z7s=;
+        b=jkBeWI256OCyzTiSvHcJPjy8YIUIfwtxcM0kHWRTDcE42PxMVQI0be0ZJUENK9Xo/V
+         PImGGsVpwrTuhCscszrkRlH/wFUc865wNmeCrZIJGqnFHA0rxwL5euqxTVNd45i6UGAC
+         PBbhxjaRVAu17ZXDyk0L2F8WIays/ND2eWrtcZrud3auQHDYOCaIIIma+QXOSvnAf5Pz
+         watqF37pBb0r1M5shGUZdoy+pDsZRoeq3eKp/HfVsU73F03FE3z8dZqEJ+PcXW4TQfLn
+         i7rbe904KVeMrUgdYsvFwg42KHoE1KI69XsIoo8dIfj+laLqzzVuzQxFWPY8LBDr8SKq
+         X/TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eFBmUf6ktJunPkOuUGrLnPaqAbCFTLahY8dX1bB5Z7s=;
+        b=TI8raI7JbnPNSVvpiBbcGp4IH/R0XI/ITp0j+o15CJxhV9eJKvwLKikYmAYJOvnGce
+         e5873h00j/VavYcBKcVH4DZ+F5mrc0fQqG4LPFaMVtBP5bUl8Djx0+ePkEnr9Um54poR
+         5sGXZgGmsfN5NkGgwgA3YVG9woFsp8LzHXlaUobR2y77JLEG330y8HK87r4wNmUJQZY+
+         AQrZjy0tNkv8LgRG5mT1HtXqUWbmVvsnG8dTLGT1wiy/p9aDIiHe3cG6RaVLrEw+mJzM
+         TLZWs+e1FREd1ydQtWYxZl5nzkEiVDOUPHQw1Z0Us5sZi9WyJqsH+symiFWot3h0d7Ci
+         gnqw==
+X-Gm-Message-State: APjAAAXlG2LCs8RqV5XTH5tKr7BWKK8uvr1xKIerrJGLp3GnSwcALGKB
+        NsmrKAc/xPSympBJjxILctlAI/Pl
+X-Google-Smtp-Source: APXvYqybo9AttS5MjvZe6ePNVoYsE8HIxeXKNsasXDxynPuZ5SiGYcdPnOHOGPz6gdUHOzTfq00yJA==
+X-Received: by 2002:a2e:9e81:: with SMTP id f1mr15953869ljk.29.1562068572490;
+        Tue, 02 Jul 2019 04:56:12 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id l29sm2997312lfp.83.2019.07.02.04.56.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 04:56:11 -0700 (PDT)
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+ <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+Message-ID: <39df67ea-d707-7181-3050-3d215f4487f6@gmail.com>
+Date:   Tue, 2 Jul 2019 14:56:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190702114028.GE5041@minyard.net>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-02 06:40:28 [-0500], Corey Minyard wrote:
-> On Tue, Jul 02, 2019 at 10:35:36AM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-07-02 09:04:18 [+0200], Kurt Kanzenbach wrote:
-> > > > In fact, my system doesn't boot with this commit in 5.0-rt.
-> > > >
-> > > > If I revert 90e1b18eba2ae4a729 ("swait: Delete the task from after a
-> > > > wakeup occured") the machine boots again.
-> > > >
-> > > > Sebastian, I think that's a bad commit, please revert it.
-> > > 
-> > > I'm having the same problem on a Cyclone V based ARM board. Reverting
-> > > this commit solves the boot issue for me as well.
-> > 
-> > Okay. So the original Corey fix as in v5.0.14-rt9 works for everyone.
-> > Peter's version as I picked it up for v5.0.21-rt14 is causing problems
-> > for two persons now.
-> > 
-> > I'm leaning towards reverting it back to old version for now…
+02.07.2019 14:37, Dmitry Osipenko пишет:
+> 02.07.2019 14:20, Jon Hunter пишет:
+>>
+>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>> of data, hence it can report transfer's residual with more fidelity which
+>>> may be required in cases like audio playback. In particular this fixes
+>>> audio stuttering during playback in a chromium web browser. The patch is
+>>> based on the original work that was made by Ben Dooks and a patch from
+>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v3:  Added workaround for a hardware design shortcoming that results
+>>>      in a words counter wraparound before end-of-transfer bit is set
+>>>      in a cyclic mode.
+>>>
+>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>>      to get words count if dma_desc is on free list as it will result
+>>>      in a NULL dereference because this case wasn't handled properly.
+>>>
+>>>      The residual value is now updated properly, avoiding potential
+>>>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>>>      instead of the subtraction.
+>>>
+>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
+>>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>> index 79e9593815f1..71473eda28ee 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>  	bool				last_sg;
+>>>  	struct list_head		node;
+>>>  	struct tegra_dma_desc		*dma_desc;
+>>> +	unsigned int			words_xferred;
+>>>  };
+>>>  
+>>>  /*
+>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>  	nsg_req->configured = true;
+>>> +	nsg_req->words_xferred = 0;
+>>>  
+>>>  	tegra_dma_resume(tdc);
+>>>  }
+>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>>>  					typeof(*sg_req), node);
+>>>  	tegra_dma_start(tdc, sg_req);
+>>>  	sg_req->configured = true;
+>>> +	sg_req->words_xferred = 0;
+>>>  	tdc->busy = true;
+>>>  }
+>>>  
+>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+>>> +					       struct tegra_dma_sg_req *sg_req)
+>>> +{
+>>> +	unsigned long status, wcount = 0;
+>>> +
+>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>> +		return 0;
+>>> +
+>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>> +
+>>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>> +
+>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount = status;
+>>> +
+>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>> +		return sg_req->req_len;
+>>> +
+>>> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
+>>> +
+>>> +	if (!wcount) {
+>>> +		/*
+>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>> +		 * simply assume that transfer hasn't started yet.
+>>> +		 *
+>>> +		 * Otherwise it's the end of the transfer.
+>>> +		 *
+>>> +		 * The alternative would be to poll the status register
+>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>> +		 * because EOC bit is getting set only after the last
+>>> +		 * burst's completion and counter is less than the actual
+>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>> +		 * distinguish start of transfer from its end.
+>>> +		 */
+>>> +		if (sg_req->words_xferred)
+>>> +			wcount = sg_req->req_len - 4;
+>>> +
+>>> +	} else if (wcount < sg_req->words_xferred) {
+>>> +		/*
+>>> +		 * This case shall not ever happen because EOC bit
+>>> +		 * must be set once next cyclic transfer is started.
+>>
+>> I am not sure I follow this and why this condition cannot happen for
+>> cyclic transfers. What about non-cyclic transfers?
 > 
-> Just to avoid confusion... it wasn't my patch 1921ea799b7dc56
-> (sched/completion: Fix a lockup in wait_for_completion()) that caused
-> the issue, nor was it Peter's version of it.  Instead, it was the patch
-> mentioned above, 90e1b18eba2ae4a729 ("swait: Delete the task from after a
-> wakeup occured"), which came from someone else.  I can verify by visual
-> inspection that that patch is broken and it should definitely be removed.
-> Just don't want someone to be confused and remove the wrong patch.
+> It cannot happen because the EOC bit will be set in that case. The counter wraps
+> around when the transfer of a last burst happens, EOC bit is guaranteed to be set
+> after completion of the last burst. That's my observation after a thorough testing,
+> it will be very odd if EOC setting happened completely asynchronously.
+> 
+> For a non-cyclic transfers it doesn't matter.. because they are not cyclic and thus
+> counter will be stopped by itself. It will be a disaster if all of sudden a
+> non-cyclic transfer becomes cyclic, don't you think so? :)
+> 
 
-The commit 90e1b18eba2ae4a729 is delta of reverting your patch and
-adding Peter's patch instead. If you look into the queue
-  https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/diff/patches/swait-Delete-the-task-from-after-a-wakeup-occured.patch?h=linux-5.0.y-rt-patches&id=8ef6644ae2ac8fc18f157c3deb70fa9acb95a486
-
-is what Peter suggested in the thread and this
-  https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/diff/patches/sched-completion-Fix-a-lockup-in-wait_for_completion.patch?h=linux-5.0.y-rt-patches&id=8ef6644ae2ac8fc18f157c3deb70fa9acb95a486
-
-is the removal.
-
-> -corey
-Sebastian
+Ah, probably I was too focused on audio playback use-case. If it's a free-running
+transfer, then that case of a wraparound seems should be legit.. hmm.
