@@ -2,94 +2,132 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556DFC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3296D2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC1D2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 16:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gyFIyQee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfGBQar (ORCPT
+        id S1726635AbfGBQc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 12:30:47 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53342 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfGBQaq (ORCPT
+        Tue, 2 Jul 2019 12:32:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59514 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfGBQc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 12:30:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so1484963wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 09:30:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7t5fxGxFhnlaD4K11RN900eA9G9cmbm1+9mO0Myb9vc=;
-        b=ohK/u29BC/vWM/YEMAISBmJxlGLyoGiFlaeXoPwHQb0IM9s4Vr2YsgvKbI4KsM88fv
-         3Zx8DdCqJyAYuiCkArwWUWWUvdh5X0RAzb+r9sVNejeys7jfA7GHZyPbRlTIe5PJjW76
-         AxIumJk9lTmH5HPX3GMx2jp/mOFBsOaP7K0RSll37VJVnKb5mt/I+xpD0OdIMlVGPdqf
-         2ZtVg8BTLCYcMd6mbiLhWa4T0iAkUu1Vzes1jqMldHTmTCj3XFlatWA6lXHFdgF15A4B
-         ej/6mS4l6P9MIwO9REqCsCDVQKyI+s2yhsA7DNaweHXjpCNp5mHu7j5oHZCa8DuDypcC
-         Alow==
-X-Gm-Message-State: APjAAAX1rDvuyhskSdtOffckDWhamPDW+x013Nc+9rJ5uuGAdbT416vv
-        z93L1eS7UHdPLjIQ+N0pNO/m/Q==
-X-Google-Smtp-Source: APXvYqzSIufNHM2Ytv+tIVnOfNtbDHMos5vGPw9lWMOfGrNOPeHY4NRc25xl6t4RrFJUaFf5q5Ow6w==
-X-Received: by 2002:a7b:ce10:: with SMTP id m16mr3928214wmc.21.1562085044674;
-        Tue, 02 Jul 2019 09:30:44 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
-        by smtp.gmail.com with ESMTPSA id z5sm1902471wmf.48.2019.07.02.09.30.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 09:30:43 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] x86/kvm/nVMX: fix Enlightened VMCLEAR
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-References: <20190628112333.31165-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <41362dc0-a4d5-93ec-848d-193a76a9bd0c@redhat.com>
-Date:   Tue, 2 Jul 2019 18:30:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 12:32:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62GSjVN126940;
+        Tue, 2 Jul 2019 16:32:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=V6zyJ4bO2QMT00Z6oYGNErrb5xIXIwQiZGKmcQuzSec=;
+ b=gyFIyQeeU5V1VJjfKmFjM/pM6f4ampcnzQOlLRpS+gt7MbfLfyVcaBzfCE8SeCxLbySp
+ 1xUrQmltUD4dDLQr0ccuHPXpE6x632WkOgiCgLIGmgp/At38DyNXffTtgaULh7ZPHuXv
+ 91YymBTqLrozEf6sZxI9nP0qjSGce1poGN2GV0P4ZfIAsfszsCiAsdrBGlzcUrC3nvg/
+ cdpjzESaxvP+ruG5xc8THyz1Ty8ecUA3mA8bXaFEdgnU/Hvvvy3BRO3XpDRu38Gh0EAF
+ c5iNnj20Q3GwASLouGMl8/TBDOZDK+iRv5QgCxbdl/DxnMR4DUrGRFI8JxQ46R2iZscJ qg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2te61pvrn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jul 2019 16:32:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x62GWXgl149557;
+        Tue, 2 Jul 2019 16:32:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tebakv5k3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Jul 2019 16:32:33 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x62GWVaa019385;
+        Tue, 2 Jul 2019 16:32:31 GMT
+Received: from Subhras-MacBook-Pro.local (/73.252.215.155)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Jul 2019 09:32:30 -0700
+Subject: Re: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
+ isn't found
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        quentin.perret@linaro.org, chris.redpath@arm.com,
+        steven.sistare@oracle.com, songliubraving@fb.com
+References: <cover.1561523542.git.viresh.kumar@linaro.org>
+ <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
+ <32bd769c-b692-8896-5cc9-d19ab0a23abb@oracle.com>
+ <20190701080349.homlsgia4fuaitek@vireshk-i7>
+ <aeaa0dd5-8512-1b60-eb10-6a4aecfaaca3@oracle.com>
+ <20190702083517.GY3419@hirez.programming.kicks-ass.net>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <1fe415a7-a396-508c-f459-0ddcc36f3360@oracle.com>
+Date:   Tue, 2 Jul 2019 09:32:27 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190628112333.31165-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190702083517.GY3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907020181
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9306 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907020180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/06/19 13:23, Vitaly Kuznetsov wrote:
-> VMCLEAR implementation for Enlightened VMCS is not entirely correct
-> when something else than the currently active eVMCS on the calling vCPU
-> is targeted. In case there's no currently active eVMCS on the calling vCPU
-> we are corrupting the targeted area by writing to the non-existent
-> launch_state field.
-> 
-> Fix the logic by always treating the targeted area as 'enlightened' in case
-> Enlightened VMEntry is enabled on the calling vCPU.
-> 
-> Changes since v1:
-> - 'evmcs_vmptr' -> 'evmcs_gpa' [Paolo Bonzini]
-> - avoid nested_release_evmcs() in handle_vmclear even for the currently
->   active eVMCS on the calling vCPU [Liran Alon], PATCH1 added to support
->   the change.
-> 
-> Vitaly Kuznetsov (2):
->   x86/KVM/nVMX: don't use clean fields data on enlightened VMLAUNCH
->   x86/kvm/nVMX: fix VMCLEAR when Enlightened VMCS is in use
-> 
->  arch/x86/kvm/vmx/evmcs.c  | 18 ++++++++++++++
->  arch/x86/kvm/vmx/evmcs.h  |  1 +
->  arch/x86/kvm/vmx/nested.c | 52 ++++++++++++++++++++++-----------------
->  3 files changed, 49 insertions(+), 22 deletions(-)
-> 
 
-Queued, thanks.
+On 7/2/19 1:35 AM, Peter Zijlstra wrote:
+> On Mon, Jul 01, 2019 at 03:08:41PM -0700, Subhra Mazumdar wrote:
+>> On 7/1/19 1:03 AM, Viresh Kumar wrote:
+>>> On 28-06-19, 18:16, Subhra Mazumdar wrote:
+>>>> On 6/25/19 10:06 PM, Viresh Kumar wrote:
+>>>>> @@ -5376,6 +5376,15 @@ static struct {
+>>>>>     #endif /* CONFIG_NO_HZ_COMMON */
+>>>>> +/* CPU only has SCHED_IDLE tasks enqueued */
+>>>>> +static int sched_idle_cpu(int cpu)
+>>>>> +{
+>>>>> +	struct rq *rq = cpu_rq(cpu);
+>>>>> +
+>>>>> +	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
+>>>>> +			rq->nr_running);
+>>>>> +}
+>>>>> +
+>>>> Shouldn't this check if rq->curr is also sched idle?
+>>> Why wouldn't the current set of checks be enough to guarantee that ?
+>> I thought nr_running does not include the on-cpu thread.
+> It very much does.
+>
+>>>> And why not drop the rq->nr_running non zero check?
+>>> Because CPU isn't sched-idle if nr_running and idle_h_nr_running are both 0,
+>>> i.e. it is an IDLE cpu in that case. And so I thought it is important to have
+>>> this check as well.
+>>>
+>> idle_cpu() not only checks nr_running is 0 but also rq->curr == rq->idle
+> idle_cpu() will try very hard to declare a CPU !idle. But I don't see
+> how that it relevant. sched_idle_cpu() will only return true if there
+> are only SCHED_IDLE tasks on the CPU. Viresh's test is simple and
+> straight forward.
 
-Paolo
+OK makes sense.
+
+Thanks,
+Subhra
+
