@@ -2,151 +2,140 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24104C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D712C46478
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EEE218FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4245E21955
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="Qfmw8rq2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pSfYXKs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfGCAuT (ORCPT
+        id S1727393AbfGCAub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:50:19 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:34862 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727099AbfGCAuS (ORCPT
+        Tue, 2 Jul 2019 20:50:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39341 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfGCAub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:50:18 -0400
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6306Sx4010435;
-        Wed, 3 Jul 2019 01:11:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=jan2016.eng;
- bh=NBhp0VNKqsN8dR0Rg+MFGXOHNBagdyx9X/DM8wfLcf4=;
- b=Qfmw8rq2YnE7ynSepSyR5vfsAcWLcD+GfT9TIsaXwBE31fWdxW+1ttuyRZcE99t0CjZX
- OWBNaF10zftvthk5Un1Ho9cMyS5qrWd0OAfevyBap3OB80DHXlrNv5g3sTsJ8+KQnY9X
- a8L+L+4I7uP7uHxet83E+lNx8H5WLdmERlXhKe6qDzwjll/sczS0x7Pbfov0wVkk9zXY
- CgHMNjPqI3SNRjZLdon8S+PXPn9sVOyCi85AKN9N7iuNIGikcYrAPgoJUJKKN55XF4xp
- rS7zsgbyWqso3B76rnqqMqfOjf34y8xZXy/p7LDn8zRAXnBj+XLZVnwDtSVuOt6HXB94 lQ== 
-Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 2tft0ddefx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jul 2019 01:11:12 +0100
-Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
-        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x6302MSK021891;
-        Tue, 2 Jul 2019 20:11:11 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.34])
-        by prod-mail-ppoint3.akamai.com with ESMTP id 2te3b09eb1-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 20:11:10 -0400
-Received: from USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) by
- usma1ex-dag1mb4.msg.corp.akamai.com (172.27.123.104) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 2 Jul 2019 20:10:49 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 2 Jul 2019 20:10:49 -0400
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id A151C61D57; Tue,  2 Jul 2019 20:10:47 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH 0/3] perf: Use capabilities instead of uid and euid
-Date:   Tue, 2 Jul 2019 20:10:02 -0400
-Message-ID: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 2 Jul 2019 20:50:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so696889wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7PbiqxZ6N1zfuiJYD7wJ93Pdo9aQh0IzeX8dcJ4X5FU=;
+        b=pSfYXKs/eqzCFbQjrWkC99dJ2GBbcgfGiqD4o3TT1CTRmGJKlgGUmxb64JYxtewy9i
+         P4m7J1uixRsx52J41BThoDYqSjJKJBBVrDWCyj9I8Ea61Y92rPgjr1pLTBd0RQJPFzmU
+         M7V32ufMqcgtq8htDIXCzupTlkp4UjI9gHxwKnnjp9I5KC8XIMpLESjEz2ky6JmdWBUZ
+         fpUrAlbfT2IsMegG37jVJuagyqNW4pkpQtkIeE58VcZQYGISG+P5AuwWh7z/Nf5nXZpG
+         e0YVm2O6FdZtWrWdqJ8y44qc1Kznwh6KOm+3xKsBu3WKOzbgEmB8k1YSrTXZcEvtEq40
+         T4Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7PbiqxZ6N1zfuiJYD7wJ93Pdo9aQh0IzeX8dcJ4X5FU=;
+        b=IuZCCVqVY+QrTd/wpcv4hmNxncUIbiyKbfGgxlMZPBrIHGmEiEwdBOeTQ34vVZmmIE
+         c8prKu+qoT+3LPObxZz5eK4yNggfmHbLqPBpHrBWOkCGjwvNN5TUopGOJKcilXowZyly
+         /8TFEVbSln9yBqU42A6Nur1djfSVdgRcYrYcmhZ9TSPXA+bv95AGoV7GZ84Q5qlRUZ43
+         p8dkuK1ttP3N/TYNVJV81gEW6u+21djelkV1fXD2bHzBeY+9XP7cdEhcnS1+zPYGIQfL
+         s/sF7tKSRaDEKEe4Wvr1RwkTkrwij+sgTW+GSCImBBT6EI9fzzwcjAsI4wmh44t3BYGB
+         R9Kg==
+X-Gm-Message-State: APjAAAW8JUhmjcBVauMxRgIgH0i1dCao9bIzW/lZzt7117fQ8fVfpdbQ
+        cwYxhO1JjgTlvCzhCBYbkZEFhA==
+X-Google-Smtp-Source: APXvYqxy3HQDztVC6uezZn9eBQs5Zkluz0+aQTRZh5ueKntVlQ8XLFFH3aUcx4MBnkHOUdh7vxHexg==
+X-Received: by 2002:a5d:6182:: with SMTP id j2mr14634480wru.275.1562104795656;
+        Tue, 02 Jul 2019 14:59:55 -0700 (PDT)
+Received: from bivouac.eciton.net (bivouac.eciton.net. [2a00:1098:0:86:1000:23:0:2])
+        by smtp.gmail.com with ESMTPSA id w25sm226281wmk.18.2019.07.02.14.59.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 14:59:54 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 22:59:53 +0100
+From:   Leif Lindholm <leif.lindholm@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Alexander Graf <agraf@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
+Message-ID: <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
+References: <20190630203614.5290-1-robdclark@gmail.com>
+ <20190630203614.5290-3-robdclark@gmail.com>
+ <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
+ <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+ <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020268
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020269
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel is using capabilities instead of uid and euid to restrict access to
-kernel pointers and tracing facilities.  This patch series updates the perf to
-better match the security model used by the kernel.
+On Tue, Jul 02, 2019 at 02:01:49PM -0700, Rob Clark wrote:
+> > > So we are dealing with a platform that violates the UEFI spec, since
+> > > it does not bother to implement variable services at runtime (because
+> > > MS let the vendor get away with this).
+> >
+> > To clarify, the above remark applies to populating the DT from the OS
+> > rather than from the firmware.
+> 
+> yeah, it isn't pretty, but there *are* some other similar cases where
+> efi-stub is populating DT.. (like update_fdt_memmap() and
+> kaslr-seed)..
 
-This series enables instructions in Documentation/admin-guide/perf-security.rst
-to actually work, even when kernel.perf_event_paranoid=2 and
-kernel.kptr_restrict=1.
+The problem isn't with the stub updating the DT, the problem is what
+it updates it with.
 
-The series consists of three patches:
+update_fdt_memmap() is the stub filling in the information it
+communicates to the main kernel.
 
-  01: perf: Add capability-related utilities
-    Add utility functions to check capabilities and perf_event_paranoid checks.
+kaslr-seed sets a standard property using a standard interface if that
+interface is available to it at the point of execution.
 
-  02: perf: Use CAP_SYS_ADMIN with perf_event_paranoid checks
-    Replace the use of euid==0 with a check for CAP_SYS_ADMIN whenever
-    perf_event_paranoid level is verified.
+Since what we're doing here is dressing up an ACPI platform to make it
+look like it was a DT platform, and since we have the ability to tweak
+the DT before ever passing it to the kernel, let's just do that.
 
-  03: perf: Use CAP_SYSLOG with kptr_restrict checks
-    Replace the use of uid and euid with a check for CAP_SYSLOG when
-    kptr_restrict is verified (similar to kernel/kallsyms.c and lib/vsprintf.c).
-    Consult perf_event_paranoid when kptr_restrict==0 (see kernel/kallsyms.c).
+Yes, I know I said I'd rather not, but it's way nicer than sticking
+platform-specific hacks into the EFI stub.
 
-I tested this by following Documentation/admin-guide/perf-security.rst
-guidelines and setting sysctls:
+(If adding it as a DT property is indeed the thing to do.)
 
-   kernel.perf_event_paranoid=2
-   kernel.kptr_restrict=1
+> > ... but saving variables at boot time for consumption at runtime is
+> > something that we will likely see more of in the future.
+> 
+> I think this will be nice, but it also doesn't address the need for a
+> quirk to get this into /chosen..  I guess we *could* use a shim or
+> something that runs before the kernel to do this.  But that just seems
+> like a logistical/support nightmare.
+>
+> There is one kernel, and there
+> are N distro's, so debugging a users "I don't get a screen at boot"
+> problem because their distro missed some shim patch really just
+> doesn't seem like a headache I want to have.
 
-As an unpriviledged user who is in perf_users group (setup via instructions
-above), I executed:
-   perf record -a -- sleep 1
+The distros should not need to be aware *at all* of the hacks required
+to disguise these platforms as DT platforms.
 
-Without the patch, perf record did not capture any kernel functions.
-With the patch, perf included all kernel funcitons.
+If they do, they're already device-specific installers and have
+already accepted the logistical/support nightmare.
 
-Igor Lubashev (3):
-  perf: Add capability-related utilities
-  perf: Use CAP_SYS_ADMIN with perf_event_paranoid checks
-  perf: Use CAP_SYSLOG with kptr_restrict checks
-
- tools/perf/Makefile.config           |  2 +-
- tools/perf/arch/arm/util/cs-etm.c    |  3 ++-
- tools/perf/arch/arm64/util/arm-spe.c |  3 ++-
- tools/perf/arch/x86/util/intel-bts.c |  3 ++-
- tools/perf/arch/x86/util/intel-pt.c  |  2 +-
- tools/perf/util/Build                |  1 +
- tools/perf/util/cap.c                | 24 ++++++++++++++++++++++++
- tools/perf/util/cap.h                | 10 ++++++++++
- tools/perf/util/event.h              |  1 +
- tools/perf/util/evsel.c              |  2 +-
- tools/perf/util/python-ext-sources   |  1 +
- tools/perf/util/symbol.c             | 15 +++++++++++----
- tools/perf/util/util.c               |  9 +++++++++
- 13 files changed, 66 insertions(+), 10 deletions(-)
- create mode 100644 tools/perf/util/cap.c
- create mode 100644 tools/perf/util/cap.h
-
--- 
-2.7.4
-
+/
+    Leif
