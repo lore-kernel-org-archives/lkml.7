@@ -2,218 +2,235 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8664DC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CF2C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DDC208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GZtB9vXb"
+	by mail.kernel.org (Postfix) with ESMTP id B6A5C208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfGBMyU (ORCPT
+        id S1726963AbfGBMy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:54:20 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16077 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBMyT (ORCPT
+        Tue, 2 Jul 2019 08:54:57 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:58286 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfGBMy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:54:19 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1b53f80000>; Tue, 02 Jul 2019 05:54:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Jul 2019 05:54:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 05:54:17 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 12:54:14 +0000
-Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190627194728.8948-1-digetx@gmail.com>
- <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
- <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
-Date:   Tue, 2 Jul 2019 13:54:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 08:54:57 -0400
+Received: from ramsan ([84.194.98.4])
+        by albert.telenet-ops.be with bizsmtp
+        id Xoup2000305gfCL06oup4h; Tue, 02 Jul 2019 14:54:54 +0200
+Received: from geert (helo=localhost)
+        by ramsan with local-esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hiIJ7-0001Wd-2N; Tue, 02 Jul 2019 14:54:49 +0200
+Date:   Tue, 2 Jul 2019 14:54:49 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Mahesh Bandewar <maheshb@google.com>
+cc:     Netdev <netdev@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Mahesh Bandewar <mahesh@bandewar.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: suspicious RCU usage (was: Re: [PATCHv3 next 1/3] loopback: create
+ blackhole net device similar to loopack.)
+In-Reply-To: <20190701213849.102759-1-maheshb@google.com>
+Message-ID: <alpine.DEB.2.21.1907021450320.5764@ramsan.of.borg>
+References: <20190701213849.102759-1-maheshb@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562072056; bh=vic1uBPssDaq0YSnnxIeJNV470HIQvh2moH7ldwH+Cc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GZtB9vXb5K6UaSG2hJ47e9TH97PgngOjsMg3u4z3raEkpF8JlOMBl+Yeh53XKrN7a
-         jpoic9wibeJuXuxkuhLdD0BqWjekkUbd/w/AQ23ogBh+tjkgm3aNbPFScqqJ56Gnh5
-         fZ/NxEsJQwLlDXiPyqXq3R3bWLXkGTJ0b1Mh0fpvV5C4/BczDyAHOs8akIxlG633rK
-         gupCqll9LTWSutxNyrAKGXHa4t0SnHcG94BYmwNTX7YRjuandQVW9hyK3lazqdCdRe
-         1ZSJ7MNUoPbtLbEDZNcdTr0dARiWtS7CaNhDsVDEkKenXcAF2VaKQW95lrOuxnF7ia
-         qFflxkSIgdh3A==
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ 	Hi Mahesh,
 
-On 02/07/2019 12:37, Dmitry Osipenko wrote:
-> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 27/06/2019 20:47, Dmitry Osipenko wrote:
->>> Tegra's APB DMA engine updates words counter after each transferred bur=
-st
->>> of data, hence it can report transfer's residual with more fidelity whi=
-ch
->>> may be required in cases like audio playback. In particular this fixes
->>> audio stuttering during playback in a chromium web browser. The patch i=
-s
->>> based on the original work that was made by Ben Dooks and a patch from
->>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
->>>
->>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@cod=
-ethink.co.uk/
->>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommit;=
-h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>
->>> Changelog:
->>>
->>> v3:  Added workaround for a hardware design shortcoming that results
->>>      in a words counter wraparound before end-of-transfer bit is set
->>>      in a cyclic mode.
->>>
->>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
->>>      to get words count if dma_desc is on free list as it will result
->>>      in a NULL dereference because this case wasn't handled properly.
->>>
->>>      The residual value is now updated properly, avoiding potential
->>>      integer overflow by adding the "bytes" to the "bytes_transferred"
->>>      instead of the subtraction.
->>>
->>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
->>>  1 file changed, 62 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
-a.c
->>> index 79e9593815f1..71473eda28ee 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->>>  	bool				last_sg;
->>>  	struct list_head		node;
->>>  	struct tegra_dma_desc		*dma_desc;
->>> +	unsigned int			words_xferred;
->>>  };
->>> =20
->>>  /*
->>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct teg=
-ra_dma_channel *tdc,
->>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->>>  	nsg_req->configured =3D true;
->>> +	nsg_req->words_xferred =3D 0;
->>> =20
->>>  	tegra_dma_resume(tdc);
->>>  }
->>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_cha=
-nnel *tdc)
->>>  					typeof(*sg_req), node);
->>>  	tegra_dma_start(tdc, sg_req);
->>>  	sg_req->configured =3D true;
->>> +	sg_req->words_xferred =3D 0;
->>>  	tdc->busy =3D true;
->>>  }
->>> =20
->>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan=
- *dc)
->>>  	return 0;
->>>  }
->>> =20
->>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channe=
-l *tdc,
->>> +					       struct tegra_dma_sg_req *sg_req)
->>> +{
->>> +	unsigned long status, wcount =3D 0;
->>> +
->>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>> +		return 0;
->>> +
->>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>> +
->>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>> +
->>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount =3D status;
->>> +
->>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>> +		return sg_req->req_len;
->>> +
->>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
->>> +
->>> +	if (!wcount) {
->>> +		/*
->>> +		 * If wcount wasn't ever polled for this SG before, then
->>> +		 * simply assume that transfer hasn't started yet.
->>> +		 *
->>> +		 * Otherwise it's the end of the transfer.
->>> +		 *
->>> +		 * The alternative would be to poll the status register
->>> +		 * until EOC bit is set or wcount goes UP. That's so
->>> +		 * because EOC bit is getting set only after the last
->>> +		 * burst's completion and counter is less than the actual
->>> +		 * transfer size by 4 bytes. The counter value wraps around
->>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
->>> +		 * distinguish start of transfer from its end.
->>> +		 */
->>> +		if (sg_req->words_xferred)
->>> +			wcount =3D sg_req->req_len - 4;
->>> +
->>> +	} else if (wcount < sg_req->words_xferred) {
->>> +		/*
->>> +		 * This case shall not ever happen because EOC bit
->>> +		 * must be set once next cyclic transfer is started.
->>
->> I am not sure I follow this and why this condition cannot happen for
->> cyclic transfers. What about non-cyclic transfers?
->=20
-> It cannot happen because the EOC bit will be set in that case. The counte=
-r wraps
-> around when the transfer of a last burst happens, EOC bit is guaranteed t=
-o be set
-> after completion of the last burst. That's my observation after a thoroug=
-h testing,
-> it will be very odd if EOC setting happened completely asynchronously.
+On Mon, 1 Jul 2019, Mahesh Bandewar wrote:
+> Create a blackhole net device that can be used for "dead"
+> dst entries instead of loopback device. This blackhole device differs
+> from loopback in few aspects: (a) It's not per-ns. (b)  MTU on this
+> device is ETH_MIN_MTU (c) The xmit function is essentially kfree_skb().
+> and (d) since it's not registered it won't have ifindex.
+>
+> Lower MTU effectively make the device not pass the MTU check during
+> the route check when a dst associated with the skb is dead.
+>
+> Signed-off-by: Mahesh Bandewar <maheshb@google.com>
 
-I see how you know that the EOC is set. Anyway, you check if the EOC is
-set before and if so return sg_req->req_len prior to this test.
+This is now commit 4de83b88c66a1e4d ("loopback: create blackhole net
+device similar to loopack.") in net-next, and causes the following
+warning on arm64:
 
-Maybe I am missing something, but what happens if we are mid block when
-dmaengine_tx_status() is called? That happen asynchronously right?
+     WARNING: suspicious RCU usage
+     5.2.0-rc6-arm64-renesas-01699-g4de83b88c66a1e4d #263 Not tainted
+     -----------------------------
+     include/linux/rtnetlink.h:85 suspicious rcu_dereference_protected() usage!
 
-Jon
+     other info that might help us debug this:
 
---=20
-nvpublic
+
+     rcu_scheduler_active = 2, debug_locks = 1
+     no locks held by swapper/0/1.
+
+     stack backtrace:
+     CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc6-arm64-renesas-01699-g4de83b88c66a1e4d #263
+     Hardware name: Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+ (DT)
+     Call trace:
+      dump_backtrace+0x0/0x148
+      show_stack+0x14/0x20
+      dump_stack+0xd4/0x11c
+      lockdep_rcu_suspicious+0xcc/0x110
+      dev_init_scheduler+0x114/0x150
+      blackhole_netdev_init+0x40/0x80
+      do_one_initcall+0x178/0x37c
+      kernel_init_freeable+0x490/0x530
+      kernel_init+0x10/0x100
+      ret_from_fork+0x10/0x1c
+
+
+> ---
+> v1->v2->v3
+>  no change
+>
+> drivers/net/loopback.c    | 76 ++++++++++++++++++++++++++++++++++-----
+> include/linux/netdevice.h |  2 ++
+> 2 files changed, 69 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/net/loopback.c b/drivers/net/loopback.c
+> index 87d361666cdd..3b39def5471e 100644
+> --- a/drivers/net/loopback.c
+> +++ b/drivers/net/loopback.c
+> @@ -55,6 +55,13 @@
+> #include <net/net_namespace.h>
+> #include <linux/u64_stats_sync.h>
+>
+> +/* blackhole_netdev - a device used for dsts that are marked expired!
+> + * This is global device (instead of per-net-ns) since it's not needed
+> + * to be per-ns and gets initialized at boot time.
+> + */
+> +struct net_device *blackhole_netdev;
+> +EXPORT_SYMBOL(blackhole_netdev);
+> +
+> /* The higher levels take care of making this non-reentrant (it's
+>  * called with bh's disabled).
+>  */
+> @@ -150,12 +157,14 @@ static const struct net_device_ops loopback_ops = {
+> 	.ndo_set_mac_address = eth_mac_addr,
+> };
+>
+> -/* The loopback device is special. There is only one instance
+> - * per network namespace.
+> - */
+> -static void loopback_setup(struct net_device *dev)
+> +static void gen_lo_setup(struct net_device *dev,
+> +			 unsigned int mtu,
+> +			 const struct ethtool_ops *eth_ops,
+> +			 const struct header_ops *hdr_ops,
+> +			 const struct net_device_ops *dev_ops,
+> +			 void (*dev_destructor)(struct net_device *dev))
+> {
+> -	dev->mtu		= 64 * 1024;
+> +	dev->mtu		= mtu;
+> 	dev->hard_header_len	= ETH_HLEN;	/* 14	*/
+> 	dev->min_header_len	= ETH_HLEN;	/* 14	*/
+> 	dev->addr_len		= ETH_ALEN;	/* 6	*/
+> @@ -174,11 +183,20 @@ static void loopback_setup(struct net_device *dev)
+> 		| NETIF_F_NETNS_LOCAL
+> 		| NETIF_F_VLAN_CHALLENGED
+> 		| NETIF_F_LOOPBACK;
+> -	dev->ethtool_ops	= &loopback_ethtool_ops;
+> -	dev->header_ops		= &eth_header_ops;
+> -	dev->netdev_ops		= &loopback_ops;
+> +	dev->ethtool_ops	= eth_ops;
+> +	dev->header_ops		= hdr_ops;
+> +	dev->netdev_ops		= dev_ops;
+> 	dev->needs_free_netdev	= true;
+> -	dev->priv_destructor	= loopback_dev_free;
+> +	dev->priv_destructor	= dev_destructor;
+> +}
+> +
+> +/* The loopback device is special. There is only one instance
+> + * per network namespace.
+> + */
+> +static void loopback_setup(struct net_device *dev)
+> +{
+> +	gen_lo_setup(dev, (64 * 1024), &loopback_ethtool_ops, &eth_header_ops,
+> +		     &loopback_ops, loopback_dev_free);
+> }
+>
+> /* Setup and register the loopback device. */
+> @@ -213,3 +231,43 @@ static __net_init int loopback_net_init(struct net *net)
+> struct pernet_operations __net_initdata loopback_net_ops = {
+> 	.init = loopback_net_init,
+> };
+> +
+> +/* blackhole netdevice */
+> +static netdev_tx_t blackhole_netdev_xmit(struct sk_buff *skb,
+> +					 struct net_device *dev)
+> +{
+> +	kfree_skb(skb);
+> +	net_warn_ratelimited("%s(): Dropping skb.\n", __func__);
+> +	return NETDEV_TX_OK;
+> +}
+> +
+> +static const struct net_device_ops blackhole_netdev_ops = {
+> +	.ndo_start_xmit = blackhole_netdev_xmit,
+> +};
+> +
+> +/* This is a dst-dummy device used specifically for invalidated
+> + * DSTs and unlike loopback, this is not per-ns.
+> + */
+> +static void blackhole_netdev_setup(struct net_device *dev)
+> +{
+> +	gen_lo_setup(dev, ETH_MIN_MTU, NULL, NULL, &blackhole_netdev_ops, NULL);
+> +}
+> +
+> +/* Setup and register the blackhole_netdev. */
+> +static int __init blackhole_netdev_init(void)
+> +{
+> +	blackhole_netdev = alloc_netdev(0, "blackhole_dev", NET_NAME_UNKNOWN,
+> +					blackhole_netdev_setup);
+> +	if (!blackhole_netdev)
+> +		return -ENOMEM;
+> +
+> +	dev_init_scheduler(blackhole_netdev);
+> +	dev_activate(blackhole_netdev);
+> +
+> +	blackhole_netdev->flags |= IFF_UP | IFF_RUNNING;
+> +	dev_net_set(blackhole_netdev, &init_net);
+> +
+> +	return 0;
+> +}
+> +
+> +device_initcall(blackhole_netdev_init);
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index eeacebd7debb..88292953aa6f 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -4870,4 +4870,6 @@ do {								\
+> #define PTYPE_HASH_SIZE	(16)
+> #define PTYPE_HASH_MASK	(PTYPE_HASH_SIZE - 1)
+>
+> +extern struct net_device *blackhole_netdev;
+> +
+> #endif	/* _LINUX_NETDEVICE_H */
+>
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
+
