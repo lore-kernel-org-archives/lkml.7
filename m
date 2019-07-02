@@ -2,272 +2,144 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419ABC5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FC9C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD6321479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F52321479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 03:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QvXLX5r0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hPiTv9Nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGBDZo (ORCPT
+        id S1727017AbfGBDeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 23:25:44 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39447 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfGBDZo (ORCPT
+        Mon, 1 Jul 2019 23:34:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34322 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfGBDeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 23:25:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so15064071otq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 20:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BHGF7VMQI7XpbRIIhAwMxS2GHFW+rRDDlK2JWUOPEgE=;
-        b=QvXLX5r0YZB9lmN2nLXR/1agzDkcATg10L5l1wPAjnSUk3yG4S0pKdJTn8ki4OXllW
-         Vxag2hu4q2FeyCR63o0yPcLgyzlAEgPStnXvUB734X7pSzS8cuyZfqREz6jwgfyHJVJo
-         RaPmo9ACBri2i2Fh4W+xU7LGDrtWPebX4v7zNSRP653WSlKqWiN8pFvH2GID1xBGbZR6
-         9hkntYcPWXxvG5RAhsvQw0pcLBVQ6QIGSK87nryn2Pi2FdEw884ZDpVsiPxzDFhhtcPe
-         RahP5UH/bfYTHAW0BdCi/+tbKSEWC7JtSl0tmqKTs0FvYnETHx64Y/QrpMf2xzVRepoI
-         KHCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BHGF7VMQI7XpbRIIhAwMxS2GHFW+rRDDlK2JWUOPEgE=;
-        b=ZEtuo2JsJaZAkTx6kiGYDhS6ThVkLDaTgB6mOc/e20DfcBLB1iKlz0/7+BKUYr1pFv
-         ayBVC4zaEWG8XRXUGzm0akTw4OMmjxhJerq02gNxijPXC68/LRY5U+K2tz0EOoe0hWqj
-         pQwMwtU7Wt3jU3MJA85Kv+zl0as2H/J4YgicXbCu5u7IHfRf9It4kUoHe0t+02oNl2ld
-         ehyiLaozPN6Mfm1S8MHdxS1qdxsmnNWzJ5rSdotWMG05As6qKBNR1me6rCkFftOvAjy+
-         r9239955u0kBeZaC1K6NqQ2QfyddcoidUeND5Cc/hpkK1+4ZCDXfQESt1uOeTcXANM++
-         CLAQ==
-X-Gm-Message-State: APjAAAWxkzBhsNnmsJj4QOHpNTL40r6xcgGZLRbOKX/CM0EqsuXc6s3O
-        s+CllE5Pj10gzaoCnbpsTCenz9o25PxFaYm2oyXPHw==
-X-Google-Smtp-Source: APXvYqxjXzORSDw2eIRGi7Dn1JJFQLdnvYvYI3ay/pRZ46abc9t0OFoCANmmhhscaXeU7MYSx98U5DYT8f8rG8cGBLk=
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr18846471otp.225.1562037942860;
- Mon, 01 Jul 2019 20:25:42 -0700 (PDT)
+        Mon, 1 Jul 2019 23:34:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Rvg0fFhiVW2SSgiiyKRZ1dYBb2123d87t9/7oxE/t3s=; b=hPiTv9NcFQT+UCy+e+gooSaND
+        sN1+wbD/4vxONjqjO+zJCyR6e8DZkzG/PQft9f18todOUGe/vHEb+N0BKS6/qFoXtRJxu3A42+9MC
+        /AHlvyjEhP2Lde+VRKdHc0Vg3dVVJ76SftLB05vR0RWNiZYt8+lw/UGWf8lFOAoRkQkcopd3sYPVD
+        hJ62GN7gHpSF0ADfjsqqdKK8DjBOkSGEt+OZrZwWW3ZS7L508/tM/0kkY8ozLmnm2M1xOoKe5K9y1
+        cSBO3tQJcMnZOm2ARmAFW/nStl5qD455jTxWoWOuGkhCbO8GWejGio1Kbev1mZRYWrJgwPBTjnvPx
+        NBXZxZd2g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hi9YY-0000SB-QV; Tue, 02 Jul 2019 03:34:10 +0000
+Date:   Mon, 1 Jul 2019 20:34:10 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+Message-ID: <20190702033410.GB1729@bombadil.infradead.org>
+References: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org>
+ <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org>
+ <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+ <20190630152324.GA15900@bombadil.infradead.org>
+ <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
- <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 1 Jul 2019 20:25:06 -0700
-Message-ID: <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
- DT bindings
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 6:32 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Jul 1, 2019 at 6:48 PM Saravana Kannan <saravanak@google.com> wrote:
+On Sun, Jun 30, 2019 at 02:37:32PM -0700, Dan Williams wrote:
+> On Sun, Jun 30, 2019 at 8:23 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > I think my theory was slightly mistaken, but your fix has the effect of
+> > fixing the actual problem too.
 > >
-> > Add device-links after the devices are created (but before they are
-> > probed) by looking at common DT bindings like clocks and
-> > interconnects.
+> > The xas->xa_index for a PMD is going to be PMD-aligned (ie a multiple of
+> > 512), but xas_find_conflict() does _not_ adjust xa_index (... which I
+> > really should have mentioned in the documentation).  So we go to sleep
+> > on the PMD-aligned index instead of the index of the PTE.  Your patch
+> > fixes this by using the PMD-aligned index for PTEs too.
 > >
-> > Automatically adding device-links for functional dependencies at the
-> > framework level provides the following benefits:
+> > I'm trying to come up with a clean fix for this.  Clearly we
+> > shouldn't wait for a PTE entry if we're looking for a PMD entry.
+> > But what should get_unlocked_entry() return if it detects that case?
+> > We could have it return an error code encoded as an internal entry,
+> > like grab_mapping_entry() does.  Or we could have it return the _locked_
+> > PTE entry, and have callers interpret that.
 > >
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
+> > At least get_unlocked_entry() is static, but it's got quite a few callers.
+> > Trying to discern which ones might ask for a PMD entry is a bit tricky.
+> > So this seems like a large patch which might have bugs.
 > >
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
-> >
-> > - Supplier devices like clock providers, interconnect providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
-> >
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources. This leads to downstream hacks to handle cases like this
-> >   that can easily be solved in the upstream kernel.
-> >
-> >   By linking devices before they are probed, we give suppliers a clear
-> >   count of the number of dependent consumers. Once all of the
-> >   consumers are active, the suppliers can turn off the unused
-> >   resources without making assumptions about the number of consumers.
-> >
-> > By default we just add device-links to track "driver presence" (probe
-> > succeeded) of the supplier device. If any other functionality provided
-> > by device-links are needed, it is left to the consumer/supplier
-> > devices to change the link when they probe.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/of/Kconfig    |  9 ++++++++
-> >  drivers/of/platform.c | 52 +++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 61 insertions(+)
-> >
-> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > index 37c2ccbefecd..7c7fa7394b4c 100644
-> > --- a/drivers/of/Kconfig
-> > +++ b/drivers/of/Kconfig
-> > @@ -103,4 +103,13 @@ config OF_OVERLAY
-> >  config OF_NUMA
-> >         bool
-> >
-> > +config OF_DEVLINKS
->
-> I'd prefer this not be a config option. After all, we want one kernel
-> build that works for all platforms.
+> > Thoughts?
+> 
+> ...but if it was a problem of just mismatched waitqueue's I would have
+> expected it to trigger prior to commit b15cd800682f "dax: Convert page
+> fault handlers to XArray".
 
-We need a lot more changes before one kernel build can work for all
-platforms. At least until then, I think we need this. Lot less chance
-of breaking existing platforms before all the missing pieces are
-created.
+That commit converts grab_mapping_entry() (called by dax_iomap_pmd_fault())
+from calling get_unlocked_mapping_entry() to calling get_unlocked_entry().
+get_unlocked_mapping_entry() (eventually) called __radix_tree_lookup()
+instead of dax_find_conflict().
 
-> A kernel command line option to disable might be useful for debugging.
+> This hunk, if I'm reading it correctly,
+> looks suspicious: @index in this case is coming directly from
+> vm->pgoff without pmd alignment adjustment whereas after the
+> conversion it's always pmd aligned from the xas->xa_index. So perhaps
+> the issue is that the lock happens at pte granularity. I expect it
+> would cause the old put_locked_mapping_entry() to WARN, but maybe that
+> avoids the lockup and was missed in the bisect.
 
-Or we can have a command line to enable this for platforms that want
-to use it and have it default off.
+I don't think that hunk is the problem.  The __radix_tree_lookup()
+is going to return a 'slot' which points to the canonical slot, no
+matter which of the 512 indices corresponding to that slot is chosen.
+So I think it's going to do essentially the same thing.
 
-> > +       bool "Device links from DT bindings"
-> > +       help
-> > +         Common DT bindings like clocks, interconnects, etc represent a
-> > +         consumer device's dependency on suppliers devices. This option
-> > +         creates device links from these common bindings so that consumers are
-> > +         probed only after all their suppliers are active and suppliers can
-> > +         tell when all their consumers are active.
-> > +
-> >  endif # OF
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 04ad312fd85b..a53717168aca 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -61,6 +61,57 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
-> >  EXPORT_SYMBOL(of_find_device_by_node);
-> >
-> >  #ifdef CONFIG_OF_ADDRESS
-> > +static int of_link_binding(struct device *dev, char *binding, char *cell)
->
-> Under CONFIG_OF_ADDRESS seems like a strange location.
-
-Yeah, but the rest of the file seems to be under this. So I'm not
-touching that. I can probably move this function further down (close
-to platform populate) if you want that.
->
-> > +{
-> > +       struct of_phandle_args sup_args;
-> > +       struct platform_device *sup_dev;
-> > +       unsigned int i = 0, links = 0;
-> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > +
-> > +       while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
-> > +                                          &sup_args)) {
-> > +               i++;
-> > +               sup_dev = of_find_device_by_node(sup_args.np);
-> > +               if (!sup_dev)
-> > +                       continue;
-> > +               if (device_link_add(dev, &sup_dev->dev, dl_flags))
-> > +                       links++;
-> > +               put_device(&sup_dev->dev);
-> > +       }
-> > +       if (links < i)
-> > +               return -ENODEV;
-> > +       return 0;
-> > +}
-> > +
-> > +/*
-> > + * List of bindings and their cell names (use NULL if no cell names) from which
-> > + * device links need to be created.
-> > + */
-> > +static char *link_bindings[] = {
->
-> const
-
-Ack
-
->
-> > +#ifdef CONFIG_OF_DEVLINKS
-> > +       "clocks", "#clock-cells",
-> > +       "interconnects", "#interconnect-cells",
->
-> Planning to add others?
-
-Not in this patch.
-
-Regulators are the other big missing piece that I'm aware of now but
-they need a lot of discussion (see email from David and my reply).
-
-Not sure what other resources are shared where they can be "turned
-off" and cause devices set up at boot to fail. For example, I don't
-think interrupts need functional dependency tracking because they
-aren't really turned off by consumer 1 in a way that breaks things for
-consumer 2. Just masked and the consumer 2 can unmask and use it once
-it probes.
-
-I'm only intimately familiar with clocks, interconnects and regulators
-(to some extent). I'm open to adding other supplier categories in
-future patches as I educate myself of those or if other people want to
-add support for more categories.
-
--Saravana
-
-> > +#endif
-> > +};
-> > +
-> > +static int of_link_to_suppliers(struct device *dev)
-> > +{
-> > +       unsigned int i = 0;
-> > +       bool done = true;
-> > +
-> > +       if (unlikely(!dev->of_node))
-> > +               return 0;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
-> > +               if (of_link_binding(dev, link_bindings[i * 2],
-> > +                                       link_bindings[i * 2 + 1]))
-> > +                       done = false;
-> > +
-> > +       if (!done)
-> > +               return -ENODEV;
-> > +       return 0;
-> > +}
-> > +
-> >  /*
-> >   * The following routines scan a subtree and registers a device for
-> >   * each applicable node.
-> > @@ -524,6 +575,7 @@ static int __init of_platform_default_populate_init(void)
-> >         if (!of_have_populated_dt())
-> >                 return -ENODEV;
-> >
-> > +       platform_bus_type.add_links = of_link_to_suppliers;
-> >         /*
-> >          * Handle certain compatibles explicitly, since we don't want to create
-> >          * platform_devices for every node in /reserved-memory with a
-> > --
-> > 2.22.0.410.gd8fdbe21b5-goog
-> >
+> @@ -884,21 +711,18 @@ static void *dax_insert_entry(struct
+> address_space *mapping,
+>                  * existing entry is a PMD, we will just leave the PMD in the
+>                  * tree and dirty it if necessary.
+>                  */
+> -               struct radix_tree_node *node;
+> -               void **slot;
+> -               void *ret;
+> -
+> -               ret = __radix_tree_lookup(pages, index, &node, &slot);
+> -               WARN_ON_ONCE(ret != entry);
+> -               __radix_tree_replace(pages, node, slot,
+> -                                    new_entry, NULL);
+> +               void *old = dax_lock_entry(xas, new_entry);
+> +               WARN_ON_ONCE(old != xa_mk_value(xa_to_value(entry) |
+> +                                       DAX_LOCKED));
+>                 entry = new_entry;
+> +       } else {
+> +               xas_load(xas);  /* Walk the xa_state */
+>         }
+> 
+>         if (dirty)
+> -               radix_tree_tag_set(pages, index, PAGECACHE_TAG_DIRTY);
+> +               xas_set_mark(xas, PAGECACHE_TAG_DIRTY);
+> 
+> -       xa_unlock_irq(pages);
+> +       xas_unlock_irq(xas);
+>         return entry;
+>  }
