@@ -2,92 +2,94 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D86C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3866C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05894206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC1C20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ivt92S6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfGBRfs (ORCPT
+        id S1726861AbfGBRhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:35:48 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:41680 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfGBRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:35:48 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hiMh0-0005wc-LA; Tue, 02 Jul 2019 11:35:47 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hiMh0-0005ik-9k; Tue, 02 Jul 2019 11:35:46 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue,  2 Jul 2019 11:35:44 -0600
-Message-Id: <20190702173544.21950-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] PCI/P2PDMA: Fix missing check for dma_virt_ops
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Tue, 2 Jul 2019 13:37:22 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:45498 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfGBRhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 13:37:22 -0400
+Received: by mail-pf1-f202.google.com with SMTP id i27so11284868pfk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=+5XT/g9T3nucL8IT9LBXdN8sUapYS1KerZVKIiU2Ja0=;
+        b=ivt92S6SyIZgafvp3dwb3sISrf333tdrT0i3gp2tt5kenvRX4zWPKppQedKCnYSgVp
+         zZtw4mLuaDT8+Y6h+ti++y1d/RWxClB+yQevb+QLAHxYpZL0syiAoUg6HqK7sEOCzV28
+         QMNe29VfR+JPs/iJKKTNTBZlDjq4IQ4M7Dj79nTnWWtgV2t0Is8e82+JjdNHBu6uEn5v
+         PANUDpPLjqvkVWG0J+c53TSS7zgmd9jqYy7Gfe/pdVfxWZqrdVhmSvXsQ1/CMPdFmVRZ
+         9AK8el7XLVcW2cR0fUwRO2a20DVvejabhabNfwK8AvKxcYrdrO/p9FGJL50bBSybl6KP
+         vqaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=+5XT/g9T3nucL8IT9LBXdN8sUapYS1KerZVKIiU2Ja0=;
+        b=SP5PcgSA/jbdUPm88YNh7YOBFq3kYuouxQMAh8nGOAvJvnfLjqCTemGSywE6B8JD6t
+         9wRVg2o/VVVFgJysociO8zQr6FO5vgfO6bDQLKerW1X/SXTvPkL/salDrNBRldgkEViK
+         qWo/yS8OJmRN30kAHCsUr4kcmGo7BKROOLGhp0QT8GbrAxrnFdu2jEeb4HkMluXNbjNK
+         JtwXxokx3ByRx3lXmGTdEcvz0m+vlDs277R1k17grmv9wlZ6lLrc8lyun+KaFFsfHRHH
+         BZPrlENrLAObuRKj/XMAbKYTi7wQFAkAswWfYfKWf1/cRScBUIgesTqsR9VLxB1UkRcJ
+         6CSg==
+X-Gm-Message-State: APjAAAUhsB462YcbHtHW1B96ib8co5KRi/lu113PqB5Rha0Vj6vzOuqe
+        99BIla/27LbF0PxGif3qHTOo+WYt
+X-Google-Smtp-Source: APXvYqwd93/UxfeW4hnumPZrXqr0xYXt1ugiJ75SjA9KSHWd+0CUWUnyheXKNNe2WzWVziVI0m6oVQq0
+X-Received: by 2002:a63:480e:: with SMTP id v14mr31161233pga.182.1562089040963;
+ Tue, 02 Jul 2019 10:37:20 -0700 (PDT)
+Date:   Tue,  2 Jul 2019 10:37:15 -0700
+Message-Id: <20190702173716.181223-1-nums@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH 1/2] Fix mmap-thread-lookup.c unitialized memory usage
+From:   Numfor Mbiziwo-Tiapo <nums@google.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
+Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
+        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers that use dma_virt_ops were meant to be rejected when testing
-compatibility for P2PDMA.
+Running the perf test command after building perf with a memory
+sanitizer causes a warning that says:
+WARNING: MemorySanitizer: use-of-uninitialized-value... in mmap-thread-lookup.c
+Initializing the go variable to 0 fixes this change.
 
-This check got inadvertantly dropped in one of the later versions of the
-original patchset, so add it back.
-
-Fixes: 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
 ---
- drivers/pci/p2pdma.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ tools/perf/tests/mmap-thread-lookup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index a4994aa3acc0..ab48babdf214 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -487,6 +487,14 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
- 		return -1;
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index 5ede9b561d32..b1abf4752f35 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -52,7 +52,7 @@ static void *thread_fn(void *arg)
+ {
+ 	struct thread_data *td = arg;
+ 	ssize_t ret;
+-	int go;
++	int go = 0;
  
- 	for (i = 0; i < num_clients; i++) {
-+		if (IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
-+		    clients[i]->dma_ops == &dma_virt_ops) {
-+			if (verbose)
-+				dev_warn(clients[i],
-+					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
-+			return -1;
-+		}
-+
- 		pci_client = find_parent_pci_dev(clients[i]);
- 		if (!pci_client) {
- 			if (verbose)
-@@ -765,7 +773,7 @@ int pci_p2pdma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
- 	 * p2pdma mappings are not compatible with devices that use
- 	 * dma_virt_ops. If the upper layers do the right thing
- 	 * this should never happen because it will be prevented
--	 * by the check in pci_p2pdma_add_client()
-+	 * by the check in pci_p2pdma_distance_many()
- 	 */
- 	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
- 			 dev->dma_ops == &dma_virt_ops))
+ 	if (thread_init(td))
+ 		return NULL;
 -- 
-2.20.1
+2.22.0.410.gd8fdbe21b5-goog
 
