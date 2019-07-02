@@ -2,144 +2,71 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5841AC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F46C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B96421479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD18E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPtQII5d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pSiKJ2Rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfGBPEt (ORCPT
+        id S1727240AbfGBPE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:04:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42067 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbfGBPEn (ORCPT
+        Tue, 2 Jul 2019 11:04:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47804 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfGBPEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:04:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so18219705wrl.9;
-        Tue, 02 Jul 2019 08:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=t56wQhmbC0eK6Si58Q9wqbieCBfEkE9Pa30U73bNL2s=;
-        b=LPtQII5df23fZnUhJhsdshpakbDmVhjyV7jWcOKOIs2e/ZHfr3fEGBH+6nvj8DsUCY
-         gLD40CWql4WreFhw2fHLTNvEji3Gr/jZMEm6Ix2brFwD5ml31Qy6rQDkTGs6RHhQnM4l
-         mUWfYlVgBPJkrrCLfbj7AuCqPAmdaQ+lgGZGMaF4RAK9JciT3l4oNA/pNxbALGatPI++
-         mJMPn864+cvRqJDTc5l9iWxqD/su98ET8kXVMtPpIWQzHLKbQPxcNgyTGlNCR9QpXO9J
-         wzAaScV8Qjj7g7guI9XzAkBxRewlLFC5xgVrcDBmsU5Lma2DAVyB8wtTXrSfYpaGEhtW
-         WlIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=t56wQhmbC0eK6Si58Q9wqbieCBfEkE9Pa30U73bNL2s=;
-        b=qyfi0xxGQF6uxRqPIPVG/3Eai+ylZCuSKI0Ea+8TcvRfxfmabpKuJtlku5grvbeuBd
-         +cBCKPdhjxzAX82i/vn77pXHNeSx00BuuCfai2/U4HKB5g0Kw4tC6cY7qY5YB4DAiAB6
-         dxswabXF4qmVdMPms0nG631L1o1u8FGY39+GjyIwRwoAAQXjS3bRh1PjQj9C0iI7qTF+
-         ZU31EBz13ueRMckIy4cwLcEmwxoSLZxGP6LFT1IqfDoZvZU5sbgGPSbRfaTSOIwju1B0
-         z+Lehbpecm4FenamCyBAbfp627OQTjYNdNCkMXa5FqiUpnugPXxfwdCU/P3G/c+wLPgr
-         A3yA==
-X-Gm-Message-State: APjAAAWkdIzMvxxSNC8//7Ll8vRswSX5YyvyAh3gUiv+zumPHJg9agFQ
-        Izhd4lT1bXHbkmX1HtxmUL+uTJJH+/w=
-X-Google-Smtp-Source: APXvYqwxRLKO+D0At4TubFsnDlNCAevYaJZOFetfxOe9d+M5+sj+wf62oBSmxnWtg7uOj+sXiB3/9g==
-X-Received: by 2002:a5d:53ca:: with SMTP id a10mr24763517wrw.131.1562079881552;
-        Tue, 02 Jul 2019 08:04:41 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id b203sm3494191wmd.41.2019.07.02.08.04.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 08:04:40 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Liran Alon <liran.alon@oracle.com>, stable@vger.kernel.org
-Subject: [PATCH 3/3] KVM: nVMX: list VMX MSRs in KVM_GET_MSR_INDEX_LIST
-Date:   Tue,  2 Jul 2019 17:04:36 +0200
-Message-Id: <1562079876-20756-4-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1562079876-20756-1-git-send-email-pbonzini@redhat.com>
-References: <1562079876-20756-1-git-send-email-pbonzini@redhat.com>
+        Tue, 2 Jul 2019 11:04:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9Ig/WhFCMmBR2xXDMpzkQiPPTqzNwwKmWS6+MbIm22w=; b=pSiKJ2RruNBH4KzEsHjV0a5ZA
+        bDxVLKFFnRFBgHKM0aj8BC3b1rHF1aozqWx0mXjhl28PYHuMuCiv/5qXj8ETrRNt+2MnO3KZtyB+w
+        XOvwnbLGhEZT90YvowYY3BfVjxsaQctlZ/juwpJunqktd6cNWKzGpANh0+M1bRwCbzMNeN1dUJPZQ
+        y6DBXHsaqTJHpWtvObwQk8prr3Pdo86frtbibbmhvYGX7D+Jk5+OfJ/rHXyTFG89IN6IwLwNKtcH8
+        4C+5BG9SvcN3XiyTxQAOBwgyeZpB/HPQtLF6MhkNS5f70+2kRlo5DUvhI6NCKOApTs52jtsGokwKC
+        B24N3RBlQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiKKy-0007jy-ON; Tue, 02 Jul 2019 15:04:52 +0000
+Date:   Tue, 2 Jul 2019 08:04:52 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     skhan@linuxfoundation.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [linux-kernel-mentees] [PATCH v5] Doc : fs : convert xfs.txt to
+ ReST
+Message-ID: <20190702150452.GD1729@bombadil.infradead.org>
+References: <20190702123040.GA30111@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702123040.GA30111@localhost>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows userspace to know which MSRs are supported by the hypervisor.
-Unfortunately userspace must resort to tricks for everything except
-MSR_IA32_VMX_VMFUNC (which was just added in the previous patch).
-One possibility is to use the feature control MSR, which is tied to nested
-VMX as well and is present on all KVM versions that support feature MSRs.
+On Tue, Jul 02, 2019 at 01:30:40PM +0100, Sheriff Esseson wrote:
+> +When mounting an XFS filesystem, the following options are accepted.  For
+> +boolean mount options, the names with the "(*)" prefix is the default behaviour.
+> +For example, take a behaviour enabled by default to be a one (1) or, a zero (0)
+> +otherwise, ``(*)[no]default`` would be 0 while ``[no](*)default`` , a 1.
+> -When mounting an XFS filesystem, the following options are accepted.
+> -For boolean mount options, the names with the (*) suffix is the
+> -default behaviour.
 
-Fixes: 1389309c811 ("KVM: nVMX: expose VMX capabilities for nested hypervisors to userspace", 2018-02-26)
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm.c     |  1 +
- arch/x86/kvm/vmx/vmx.c |  2 ++
- arch/x86/kvm/x86.c     | 20 ++++++++++++++++++++
- 3 files changed, 23 insertions(+)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index bbc31f7213ed..5db50c19d1c7 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5885,6 +5885,7 @@ static bool svm_has_emulated_msr(int index)
- {
- 	switch (index) {
- 	case MSR_IA32_MCG_EXT_CTL:
-+	case MSR_IA32_VMX_BASIC ... MSR_IA32_VMX_VMFUNC:
- 		return false;
- 	default:
- 		break;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a35459ce7e29..c43635942693 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6223,6 +6223,8 @@ static bool vmx_has_emulated_msr(int index)
- 		 * real mode.
- 		 */
- 		return enable_unrestricted_guest || emulate_invalid_guest_state;
-+	case MSR_IA32_VMX_BASIC ... MSR_IA32_VMX_VMFUNC:
-+		return nested;
- 	case MSR_AMD64_VIRT_SPEC_CTRL:
- 		/* This is AMD only.  */
- 		return false;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 8996a3131116..a02d4c244422 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1177,6 +1177,26 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
- 	MSR_AMD64_VIRT_SPEC_CTRL,
- 	MSR_IA32_POWER_CTL,
- 
-+	/*
-+	 * The following list leaves out MSRs whose values are determined
-+	 * by arch/x86/kvm/vmx/nested.c based on CPUID or other MSRs.
-+	 * We always support the "true" VMX control MSRs, even if the host
-+	 * processor does not, so I am putting these registers here rather
-+	 * than in msrs_to_save.
-+	 */
-+	MSR_IA32_VMX_BASIC,
-+	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
-+	MSR_IA32_VMX_TRUE_PROCBASED_CTLS,
-+	MSR_IA32_VMX_TRUE_EXIT_CTLS,
-+	MSR_IA32_VMX_TRUE_ENTRY_CTLS,
-+	MSR_IA32_VMX_MISC,
-+	MSR_IA32_VMX_CR0_FIXED0,
-+	MSR_IA32_VMX_CR4_FIXED0,
-+	MSR_IA32_VMX_VMCS_ENUM,
-+	MSR_IA32_VMX_PROCBASED_CTLS2,
-+	MSR_IA32_VMX_EPT_VPID_CAP,
-+	MSR_IA32_VMX_VMFUNC,
-+
- 	MSR_K7_HWCR,
- 	MSR_KVM_POLL_CONTROL,
- };
--- 
-1.8.3.1
-
+You seem to have reflowed all the text.  That means git no longer notices
+it's a rename, and quite frankly the shorter lines that were in use were
+better.  This is not an improvement; please undo it in the next version
+(which you should not post for several days to accumulate more feedback).
