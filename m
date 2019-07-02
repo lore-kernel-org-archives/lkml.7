@@ -2,164 +2,173 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744A6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E5C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F2C20645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055236;
-	bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rW6SIzC33Hn4U6JJTTFK9zsE8BvdBrHz4hi6dD0EMG85du9ps5OKFpOj+3dGrjdn1
-	 U+uFv4JIp6moVB1mt7+f4K5hM/+bzHQALOjvlVXjR+n60yckVdYcSKf2HUiVJbqFFI
-	 VXOah3OtZxahnA0H0RqU0BO+vK9/ontpKNYqrBJ8=
+	by mail.kernel.org (Postfix) with ESMTP id E054C205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfGBIGp (ORCPT
+        id S1728500AbfGBIOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:06:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfGBIGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:06:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123752184C;
-        Tue,  2 Jul 2019 08:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054800;
-        bh=8NSgKZxTWmWUF8pmUzhakLWr3ssJicyhNk8pH+WBQgA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMVmfElZNLExR46JgmJ3776wzc1/0k6vp5XLSvSEJXUoZY9RyDuhbMZSYtdf6rNbB
-         XYYbE3P5lRW7KHpFZqIpV1Dyl5UeEExmK4Vfs7A1PXVe2zglD2b9Ys6ZB92toBPU+h
-         wEEW6lj2gzBFZE5VihGb5Qqq5GWz9rJYJGat9qsI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 39/72] dm log writes: make sure super sector log updates are written in order
-Date:   Tue,  2 Jul 2019 10:01:40 +0200
-Message-Id: <20190702080126.689999193@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
-References: <20190702080124.564652899@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 2 Jul 2019 04:14:04 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58267 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGBIOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:14:02 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 29E16FF807;
+        Tue,  2 Jul 2019 08:13:47 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 10:13:46 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190702081346.4hlb53qcajhz4ckl@flea>
+References: <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+ <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ysvumhfqulaacx3l"
+Content-Disposition: inline
+In-Reply-To: <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 211ad4b733037f66f9be0a79eade3da7ab11cbb8 upstream.
+--ysvumhfqulaacx3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Currently, although we submit super bios in order (and super.nr_entries
-is incremented by each logged entry), submit_bio() is async so each
-super sector may not be written to log device in order and then the
-final nr_entries may be smaller than it should be.
+On Mon, Jul 01, 2019 at 02:27:51PM +0200, Andrzej Hajda wrote:
+> On 01.07.2019 11:58, Maxime Ripard wrote:
+> > On Fri, Jun 28, 2019 at 12:39:32PM +0200, Andrzej Hajda wrote:
+> >> On 12.06.2019 17:20, Maxime Ripard wrote:
+> >>>> I am not sure if I understand whole discussion here, but I also do not
+> >>>> understand whole edp-connector thing.
+> >>> The context is this one:
+> >>> https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
+> >>> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
+> >>> https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
+> >>>
+> >>> TL;DR: This bridge is being used on ARM laptops that can come with
+> >>> different eDP panels. Some of these panels require a regulator to be
+> >>> enabled for the panel to work, and this is obviously something that
+> >>> should be in the DT.
+> >>>
+> >>> However, we can't really describe the panel itself, since the vendor
+> >>> uses several of them and just relies on the eDP bus to do its job at
+> >>> retrieving the EDIDs. A generic panel isn't really working either
+> >>> since that would mean having a generic behaviour for all the panels
+> >>> connected to that bus, which isn't there either.
+> >>>
+> >>> The connector allows to expose this nicely.
+> >> As VESA presentation says[1] eDP is based on DP but is much more
+> >> flexible, it is up to integrator (!!!) how the connection, power
+> >> up/down, initialization sequence should be performed. Trying to cover
+> >> every such case in edp-connector seems to me similar to panel-simple
+> >> attempt failure. Moreover there is no such thing as physical standard
+> >> eDP connector. Till now I though DT connector should describe physical
+> >> connector on the device, now I am lost, are there some DT bindings
+> >> guidelines about definition of a connector?
+> > This might be semantics but I guess we're in some kind of grey area?
+> >
+> > Like, for eDP, if it's soldered I guess we could say that there's no
+> > connector. But what happens if for some other board, that signal is
+> > routed through a ribbon?
+> >
+> > You could argue that there's no physical connector in both cases, or
+> > that there's one in both, or one for the ribbon and no connector for
+> > the one soldered in.
+>
+> This is not about ribbon vs soldering. It is about usage: this
+> connection is static across the whole life of the device (except
+> exceptional things: repair, non-standard usage, etc).
 
-This problem can be reproduced by the xfstests generic/455 with ext4:
+It doesn't have to be.
 
-  QA output created by 455
- -Silence is golden
- +mark 'end' does not exist
+> And "the real connector" is (at least for me) something where
+> end-user can connect/disconnect different things: USB, HDMI,
+> ethernet, etc. And obviously to be functional it should be somehow
+> standardized. So even if there could be some grey area, I do not see
+> it here.
 
-Fix this by serializing submission of super sectors to make sure each
-is written to the log disk in order.
+Well, if there's a ribbon connector, then you have a physical
+connector, with the end user being able to connect / disconnect
+various displays. It might not be the case with actual products, but
+it's pretty common with SBCs to have that signal routed through a
+connector, and the user has several options to connect a display to
+it.
 
-Fixes: 0e9cebe724597 ("dm: add log writes target")
-Cc: stable@vger.kernel.org
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The line really is blurred.
 
----
- drivers/md/dm-log-writes.c |   23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+> >> Maybe instead of edp-connector one would introduce integrator's specific
+> >> connector, for example with compatible "olimex,teres-edp-connector"
+> >> which should follow edp abstract connector rules? This will be at least
+> >> consistent with below presentation[1] - eDP requirements depends on
+> >> integrator. Then if olimex has standard way of dealing with panels
+> >> present in olimex/teres platforms the driver would then create
+> >> drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+> >> Anyway it still looks fishy for me :), maybe because I am not
+> >> familiarized with details of these platforms.
+>
+> > That makes sense yes
+>
+> And what if some panel can be used with this pseudo-connecter and in
+> some different hw directly? Code duplication? DT overlays?
 
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -60,6 +60,7 @@
- 
- #define WRITE_LOG_VERSION 1ULL
- #define WRITE_LOG_MAGIC 0x6a736677736872ULL
-+#define WRITE_LOG_SUPER_SECTOR 0
- 
- /*
-  * The disk format for this is braindead simple.
-@@ -115,6 +116,7 @@ struct log_writes_c {
- 	struct list_head logging_blocks;
- 	wait_queue_head_t wait;
- 	struct task_struct *log_kthread;
-+	struct completion super_done;
- };
- 
- struct pending_block {
-@@ -180,6 +182,14 @@ static void log_end_io(struct bio *bio)
- 	bio_put(bio);
- }
- 
-+static void log_end_super(struct bio *bio)
-+{
-+	struct log_writes_c *lc = bio->bi_private;
-+
-+	complete(&lc->super_done);
-+	log_end_io(bio);
-+}
-+
- /*
-  * Meant to be called if there is an error, it will free all the pages
-  * associated with the block.
-@@ -215,7 +225,8 @@ static int write_metadata(struct log_wri
- 	bio->bi_iter.bi_size = 0;
- 	bio->bi_iter.bi_sector = sector;
- 	bio_set_dev(bio, lc->logdev->bdev);
--	bio->bi_end_io = log_end_io;
-+	bio->bi_end_io = (sector == WRITE_LOG_SUPER_SECTOR) ?
-+			  log_end_super : log_end_io;
- 	bio->bi_private = lc;
- 	bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
- 
-@@ -418,11 +429,18 @@ static int log_super(struct log_writes_c
- 	super.nr_entries = cpu_to_le64(lc->logged_entries);
- 	super.sectorsize = cpu_to_le32(lc->sectorsize);
- 
--	if (write_metadata(lc, &super, sizeof(super), NULL, 0, 0)) {
-+	if (write_metadata(lc, &super, sizeof(super), NULL, 0,
-+			   WRITE_LOG_SUPER_SECTOR)) {
- 		DMERR("Couldn't write super");
- 		return -1;
- 	}
- 
-+	/*
-+	 * Super sector should be writen in-order, otherwise the
-+	 * nr_entries could be rewritten incorrectly by an old bio.
-+	 */
-+	wait_for_completion_io(&lc->super_done);
-+
- 	return 0;
- }
- 
-@@ -531,6 +549,7 @@ static int log_writes_ctr(struct dm_targ
- 	INIT_LIST_HEAD(&lc->unflushed_blocks);
- 	INIT_LIST_HEAD(&lc->logging_blocks);
- 	init_waitqueue_head(&lc->wait);
-+	init_completion(&lc->super_done);
- 	atomic_set(&lc->io_blocks, 0);
- 	atomic_set(&lc->pending_blocks, 0);
- 
+Overlays are a solution, but I would advocate to always have the
+connector.
 
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ysvumhfqulaacx3l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRsSOgAKCRDj7w1vZxhR
+xULUAPsGQYzNIZSTC25p24UViIRLulmthcOhzTK4JDdmTudgfAD+LA/mKeRDEVmr
+5I2K+qvDzz8yXwdP9AtgR/XK8mhHSQ8=
+=dLkQ
+-----END PGP SIGNATURE-----
+
+--ysvumhfqulaacx3l--
