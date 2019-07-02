@@ -2,88 +2,118 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389D5C06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C674C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073A220673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F337E2064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562116700;
-	bh=ZLhz76oI3+6LOgRvK2IIo30iL+eaYYe8RicC1yllZ/Y=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=jx2z5kAG9T5kNCIse9ns3bCTwCa6jGCNtBq5TtRXrCor53rBtncSsRmfSvFBHHGeN
-	 GF4tDyCA5EOYyNW+Ib0FLLc9vcj8XlIHABFSPbwfxyMQLZgtm9TTJBhKOT0yKmQYLj
-	 7Uil9Ho8k5DsdtFgRaJM9kItrqGPiQXmxH84lkBQ=
+	s=default; t=1562116703;
+	bh=0Mw+7Os5OKZyelS8FwvvKV3593VIkrJ7dJcpLx70TbI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uTuLmJ5nWjWHEhZ0VHGow2K9yfkNdFEiRYFKSQHqOrhuivBxNKDf/VKUkoL/ReP0X
+	 4W0PCkCctkmy/IcaKJri5wCF9kVR7y5AhpOLw3/3robFJBdJA4eJskPtQNnvB3IhOr
+	 I1Wt86+bm88Llqi8+91fYESgVWbO2kfNpr5vz5Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfGCBSF (ORCPT
+        id S1727497AbfGCBSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59102 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 21:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727375AbfGCBSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726635AbfGCBSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 21:18:05 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F9621923;
-        Tue,  2 Jul 2019 22:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE40F21913;
+        Tue,  2 Jul 2019 22:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562107914;
-        bh=ZLhz76oI3+6LOgRvK2IIo30iL+eaYYe8RicC1yllZ/Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=A/duPnxNVesuuY0xhR0eFF83eetjxNx2p03oy4sj8wIA2YzL23SkObXX1sRI/AgRx
-         tT3q2CR5cv5Yjm0cATnXa300a8sqYcqPOoSYqk9fY5j1e/X3Z2WPfZc8AyKWMGUoGc
-         qKY7nstCD1DZE6xuKtnY4YiZ8ImF3YhogAN7BZHw=
-Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190702080123.904399496@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <bb9b6b7e-97af-5d7d-51d4-8df6855bc6a7@kernel.org>
-Date:   Tue, 2 Jul 2019 16:51:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        s=default; t=1562107775;
+        bh=0Mw+7Os5OKZyelS8FwvvKV3593VIkrJ7dJcpLx70TbI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yeymeREMbbnHkItA2QFK0OsQwOJ4S2KY6zwb3yiexMQPK3mYRJ3g1rL4PR773LzRh
+         IoGc92x3+hV6v24eAdWhbNI/hjjLDzKgQ9/f702ro94m4Kiu1LHS57xX0bliPFr6w9
+         c3NhEaSIHmjhkHfQR6smVApNp9irmjk3EPhcjc6k=
+Date:   Tue, 2 Jul 2019 15:49:35 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2] fat: Add nobarrier to workaround the strange
+ behavior of device
+Message-Id: <20190702154935.56f611ce988bf595412faa00@linux-foundation.org>
+In-Reply-To: <87woh5pyqh.fsf@mail.parknet.co.jp>
+References: <87woh5pyqh.fsf@mail.parknet.co.jp>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 2:01 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.132 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.132-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Fri, 28 Jun 2019 23:32:06 +0900 OGAWA Hirofumi <hirofumi@mail.parknet.co.jp> wrote:
 
-Compiled and booted on my test system. No dmesg regressions.
+> 
+> v2:
+> Just cleanup, changed the place of options under comment of fat.
+> 
+> ---
 
-thanks,
--- Shuah
+Please be careful with the "^---$" - it denotes "end of changelog", so
+I ended up without a changelog!
+
+
+> There was the report of strange behavior of device with recent
+> blkdev_issue_flush() position change.
+
+A Reported-by: would be nice, but not necessary.
+
+> The following is simplified usbmon trace.
+> 
+>  4203   9.160230         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
+>  4206   9.164911       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
+>  4207   9.323927         host -> 1.25.1       USBMS 95 SCSI: Read(10) LUN: 0x00 (LBA: 0x00279950, Len: 240)
+>  4212   9.327138       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Read(10)) (Good)
+> 
+> [...]
+> 
+>  7323  10.202167         host -> 1.25.1       USBMS 95 SCSI: Synchronize Cache(10) LUN: 0x00 (LBA: 0x00000000, Len: 0)
+>  7326  10.432266       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Synchronize Cache(10)) (Good)
+>  7327  10.769092         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
+>  7330  10.769192       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Good)
+>  7335  12.849093         host -> 1.25.1       USBMS 95 SCSI: Test Unit Ready LUN: 0x00 
+>  7338  12.849206       1.25.1 -> host         USBMS 77 SCSI: Response LUN: 0x00 (Test Unit Ready) (Check Condition)
+>  7339  12.849209         host -> 1.25.1       USBMS 95 SCSI: Request Sense LUN: 0x00
+>  
+> If "Synchronize Cache" command issued then there is idle time, the
+> device stop to process further commands, and behave as like no media.
+> (it returns NOT_READY [MEDIUM NOT PRESENT] for SENSE command, and this
+> happened on Kindle) [just a guess, the device is trying to detect the
+> "safe-unplug" operation of Windows or such?]
+> 
+> To workaround those devices and provide flexibility, this adds
+> "barrier"/"nobarrier" mount options to fat driver.
+
+I think it would be helpful if the changelog were to at least describe
+the longer-term plan which hch described.
+
+> --- linux/fs/fat/fat.h~fat-nobarrier	2019-06-28 21:22:18.146191739 +0900
+> +++ linux-hirofumi/fs/fat/fat.h	2019-06-28 23:26:04.881215721 +0900
+> @@ -51,6 +51,7 @@ struct fat_mount_options {
+>  		 tz_set:1,	   /* Filesystem timestamps' offset set */
+>  		 rodir:1,	   /* allow ATTR_RO for directory */
+>  		 discard:1,	   /* Issue discard requests on deletions */
+> +		 barrier:1,	   /* Issue FLUSH command */
+>  		 dos1xfloppy:1;	   /* Assume default BPB for DOS 1.x floppies */
+
+Documentation/filesystems/vfat.txt should be updated to describe this
+new option please.  And perhaps to mention that a device-level quirk should be
+used in preference, if it is available.
+
 
