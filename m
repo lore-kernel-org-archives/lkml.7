@@ -2,91 +2,130 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32099C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B8CC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0674B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBDD2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skSNF0YX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BptMFKNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfGBRMy (ORCPT
+        id S1726930AbfGBRNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:12:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40803 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfGBRMx (ORCPT
+        Tue, 2 Jul 2019 13:13:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41870 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfGBRNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:12:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so18735491wre.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:12:51 -0700 (PDT)
+        Tue, 2 Jul 2019 13:13:40 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m7so702164pls.8;
+        Tue, 02 Jul 2019 10:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hJpnw7hCIa1iclA3boS73/qi+CJie1UIDbfpV6vNFsI=;
-        b=skSNF0YX1iCPVBjl+LYaZx2phGmvhkrMSY9JoCHRdr0UNp74Xjc8mEYXXMo0CUJi4r
-         KRk2nRStJw7c1HcktbPctgO6qvI61bNqvE3m8s4CsL6XuqP//mQzCmYGww9ocGk996C+
-         7rDYf+05cDE+O1X8y7O37MzUtZ/nrYqbXdu07QrQSuIJrMCqnZO7L7ibcpKG1MNNUiYd
-         HxVJTYvLLvU28SDRWL1oBs7BT3oi42UpI4CpNryq/NzhPL0tVEDBbnD7cJm+WupQgWkG
-         pGoDmmRsq/TypsdFd+fPXwqaU+AOKAbGRlt3m0wJcMX90OphWsAsoh55cUkPZzCz2GfL
-         3yXQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CMmY/EmBDHRwzGOg6QKWgI4bnbMuLFbtkiBtFkYdt0g=;
+        b=BptMFKNJAX+benhstGMez9zdl8mS2nykF4E5vC1Ha2dII7WT/F+yQAzjn3PJ3FZ52T
+         9RiwURv25KYuUh0Z59AX6JHoyIgTKYNberdr/l+vOQZDIXQNNlOQNCleW90fJ4H5KxDj
+         aeZa/OZ/qnog9Oz1/n/gtoItr5Qm/GfI2nhCqy/8Lmq+lcRZWIICHjFg7DiKsVmpxzGm
+         Rb2vsPwSFQybIjGgPyc8JfaOvx3F52kw0q+XD+y4fnA7cbpJN+GZbWIH47pBz/FdkasO
+         CFea1MJCNem6xn3CcbSG+xnT98207tebxox+M8nTI+4QEyqfR8Ojj8BonKFPk5HykYWe
+         v6FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hJpnw7hCIa1iclA3boS73/qi+CJie1UIDbfpV6vNFsI=;
-        b=nrqAgO6OzNHSjsZT3RdxJj3LITZUydtFsMwaKOl/gijHMzXaqUCU8lbghIhEi3IF77
-         SsyujGGwZd2EzTf3E4cBw5VWSJL1AjAEBRzKG0YuKsiwhvsHXfCQabHPxu2nEsQ46WAU
-         zW5fCbr+JtmXC6iQyHdX5cDVtMNwVhgCXN9swBRo98hdVRzZIJ4HLt19fXA8qi9+DUjY
-         9fPbphII1HMRjoO17V3xvjGfhw+20TJd8YhRFdd9OP3ly/SoWQIZttINJi4Oq1r+8qOt
-         p8jp7asfIbdxlE8BPmaSKKRdiEp7U8mlgMKF1XlDCAA/sY5gukb+LNEVRI1XbrBjoVva
-         pAng==
-X-Gm-Message-State: APjAAAVvYSSIiqVh1sP0sBjXI6b1zAG5XFAHbfQ3l8AbTeMhNKNB7hah
-        XltXeTglzYY3cvV7lFqLwQ==
-X-Google-Smtp-Source: APXvYqyEEu4qtNoxuTGw7rtAzwvW0HbLbm8wc+ZfK9OFaKuhLTUyUiYEziVbqz3mMy4QkygKNdl61Q==
-X-Received: by 2002:adf:e8cb:: with SMTP id k11mr23772529wrn.244.1562087571285;
-        Tue, 02 Jul 2019 10:12:51 -0700 (PDT)
-Received: from avx2 ([46.53.251.222])
-        by smtp.gmail.com with ESMTPSA id i188sm4041407wma.27.2019.07.02.10.12.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 10:12:50 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 20:12:48 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     mcroce@redhat.com
-Cc:     linux-kernel@vger.kernel.org, keescook@chromium.org,
-        atomlin@redhat.com, akpm@linux-foundation.org
-Subject: Re: [PATCH] proc/sysctl: add shared variables for range check
-Message-ID: <20190702170228.GA4404@avx2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CMmY/EmBDHRwzGOg6QKWgI4bnbMuLFbtkiBtFkYdt0g=;
+        b=Jt/FJz7PotUQoQ5GvlmE6VN1aWMYeY+wa1Q0aeXL4RIsYeXj5lRBmx+Qj00BHJlGdd
+         Hk73q3DkJ0S0MB8IUgFxv/Uoqo9q1UxLeJTt4WG3LF2Jg/ckhEV1kMfu9+j9A7Xriyvd
+         0zInAvScBYv5el17kIM/eLASNDCGTrHBck+KtKK0lq+aXLJqhsJKpCYrKlm2f0gvDuAI
+         6qgeHncbi7r2uYBjIRIU9V5TQd37ob+PBFDUjMG8JlFIgEBUytTV1bb1nBGH0Hbirf9y
+         UcIuSzq2NGimYH8/7hAsvDl8k1e3OwJ58UWDdPVT0kGUc28QuB4T3AoHz4hRDzEGfDN8
+         iAIg==
+X-Gm-Message-State: APjAAAU2N0mWhxRQS+Hg1ayGb7ljs0snTh0/VdtL62KZDQvti/2ADxiK
+        KQl7hEBhg7dfVHEpBOt7xgvd1PpjOOWhv+b4XlM=
+X-Google-Smtp-Source: APXvYqwbztzyWoGiTMQMDfeT5/bfyf/ibZNPyr02y4RMWlBoY/ksPjxdsC3NfKSJXiOUiizWWVW6kqYH97ArSMcRR2M=
+X-Received: by 2002:a17:902:934a:: with SMTP id g10mr37207521plp.18.1562087619463;
+ Tue, 02 Jul 2019 10:13:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+In-Reply-To: <20190702003740.75970-1-luzmaximilian@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jul 2019 20:13:27 +0300
+Message-ID: <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -static long zero;
->  static long long_max = LONG_MAX;
-> 
->  struct ctl_table epoll_table[] = {
-> @@ -301,7 +300,7 @@ struct ctl_table epoll_table[] = {
->                 .maxlen         = sizeof(max_user_watches),
->                 .mode           = 0644,
->                 .proc_handler   = proc_doulongvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = SYSCTL_ZERO,
->                 .extra2         = &long_max,
+On Tue, Jul 2, 2019 at 3:38 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>
+> This series adds suport for power and volume buttons on 5th and 6th
+> generation Microsoft Surface devices. Specifically, it adds support for
+> the power-button on the Surface Laptop 1 and Laptop 2, as well as
+> support for power- and (on-device) volume-buttons on the Surface Pro 5
+> (2017), Pro 6, and Book 2.
+>
+> These devices use the same MSHW0040 device as on the Surface Pro 4,
+> however, whereas the Pro 4 uses an ACPI notify handler, the newer
+> devices use GPIO interrupts to signal these events.
+>
+> The first patch of this series ensures that the surfacepro3_button
+> driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+> devices. The second patch adapts soc_button_array to implement the
+> actual button support.
+>
+> I think the changes to soc_button_array in the second patch warrant a
+> thorough review. I've tried to make things a bit more generic to be able
+> to integrate arbitrary ACPI GPIO power-/volume-button devices more
+> easily, I'm not sure if there may be reasons against this.
+>
+> These patches have also been tested on various Surface devices via the
+> github.com/jakeday/linux-surface patchset.
+>
 
-This looks wrong: proc_doulongvec_minmax() expects "long"s.
-The whole patch needs rechecking.
+> Changes since v1:
+>   - [PATCH 1/2] platform: Fix device check for surfacepro3_button
+>     No changes.
+>
+>   - [PATCH 2/2] input: soc_button_array for newer surface devices
+>     Ensure the patch compiles without CONFIG_ACPI.
 
-> +/* shared constants to be used in various sysctls */
-> +const =======>int<========== sysctl_vals[] = { 0, 1, INT_MAX };
-> +EXPORT_SYMBOL(sysctl_vals);
+I re-pushed to my queue, though if you are going to send a new
+version, check my repository for the titles of the patches (you need
+to use correct templates for the subsystems).
+
+>
+> Maximilian Luz (2):
+>   platform: Fix device check for surfacepro3_button
+>   input: soc_button_array for newer surface devices
+>
+>  drivers/input/misc/soc_button_array.c     | 145 ++++++++++++++++++++--
+>  drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+>  2 files changed, 171 insertions(+), 12 deletions(-)
+>
+> --
+> 2.22.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
