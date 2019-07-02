@@ -2,102 +2,145 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C90C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A158C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E3F20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:48:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Vy0sqmA3"
+	by mail.kernel.org (Postfix) with ESMTP id 28A8D20989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfGBPsL (ORCPT
+        id S1727114AbfGBPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:48:11 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41678 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726652AbfGBPsL (ORCPT
+        Tue, 2 Jul 2019 11:48:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58360 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfGBPs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:48:11 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62FkaCa002454;
-        Tue, 2 Jul 2019 17:47:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=wsjzFOYOg3+SUAIvNOlA1VAdgNv+qv6DCsQqt2DV+dI=;
- b=Vy0sqmA3aGK+3ZfRUdzN+9BnFJKmsJHiN75j3RsI7aIoRs11wvz0VX9YIZfMKPgg6CF+
- KFHlehp2t7dbT2J9FTUgpgcRrTymRBCKonKqYemXOjS48kejRmYfD8oW+iYYAVTLSBGW
- af53uSGdFKBK8fjvmkDuxcM1SN2hvWLy/15tH1EZm1lVOtbSM3rLLTvFast6mWyRxgO6
- aQFHOVlO1dvQEVuyUpZ1ywmOx7XSp/tOAvURCRp+zuth63xcoBTODIJxVzHlRMBTJkZ8
- IXOYGVHl18a9AEvRFWuP09oV+0HjxjM/Rgz253TziwBCvFB0Gu6AolOsfOB/+dvaX2wO eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2tdwf0w4uy-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 02 Jul 2019 17:47:40 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B0A5334;
-        Tue,  2 Jul 2019 15:47:38 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C1914891;
-        Tue,  2 Jul 2019 15:47:38 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 2 Jul 2019
- 17:47:38 +0200
-Received: from localhost (10.201.23.16) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 2 Jul 2019 17:47:37
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <olivier.moysan@st.com>, <jsarha@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH 1/3] drm/bridge: sii902x: fix missing reference to mclk clock
-Date:   Tue, 2 Jul 2019 17:47:04 +0200
-Message-ID: <1562082426-14876-2-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
-References: <1562082426-14876-1-git-send-email-olivier.moysan@st.com>
+        Tue, 2 Jul 2019 11:48:59 -0400
+Received: from turingmachine.home (unknown [IPv6:2804:431:c7f4:61e7:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5D5F228A215;
+        Tue,  2 Jul 2019 16:48:54 +0100 (BST)
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
+        kernel@collabora.com, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH 0/7] media: vimc: Add a V4L2 output device
+Date:   Tue,  2 Jul 2019 12:47:45 -0300
+Message-Id: <20190702154752.14939-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_08:,,
- signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devm_clk_get call to retrieve reference to master clock.
+Hello,
 
-Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
+This patch adds a V4L2 output device on vimc, that comply with V4L2 API
+for video output. If there is an output device and a capture device at the
+same pipeline, one can get a video loopback pipeline feeding frames at
+the output and then seeing them at the capture. It's possible to insert
+vimc submodules at the pipeline to modify the image (e.g. a scaler).
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- drivers/gpu/drm/bridge/sii902x.c | 1 +
- 1 file changed, 1 insertion(+)
+If one starts a streaming at the capture, with the output off, the
+capture will display a noisy frame. If one starts a streaming at the
+output with the capture off, the output will just consume the buffers,
+without sending them to the pipeline. If both output and capture are
+streaming, the loopback will happen.
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index dd7aa466b280..36acc256e67e 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -750,6 +750,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
- 		sii902x->audio.i2s_fifo_sequence[i] |= audio_fifo_id[i] |
- 			i2s_lane_id[lanes[i]] |	SII902X_TPI_I2S_FIFO_ENABLE;
- 
-+	sii902x->audio.mclk = devm_clk_get(dev, "mclk");
- 	if (IS_ERR(sii902x->audio.mclk)) {
- 		dev_err(dev, "%s: No clock (audio mclk) found: %ld\n",
- 			__func__, PTR_ERR(sii902x->audio.mclk));
+The patches 1 and 2 provide some ground to create the output
+device. The patch 3 creates the device and modify how the vimc-streamer
+was dealing with the s_stream callback on other vimc modules, to make
+simpler implementing this callback at vimc-output. Patch 4 change the
+behavior of the pipeline in order to be closer to a real life hardware.
+Patches 5-7 updates the default pipeline and the documentation to
+include the new output device.
+
+This is the result of v4l2-compliance after this patch series:
+$ v4l2-compliance -m0 -s50
+Grand Total for vimc device /dev/media0: 476, Succeeded: 476, Failed: 0,
+Warnings: 0
+
+A git tree up to date with media-master and with this changes can be found
+at: https://gitlab.collabora.com/tonyk/linux/tree/vimc/output
+
+In order to test it, one can follow these instructions:
+
+1 - Configure the pipeline (requires v4l-utils):
+
+$ media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+$ media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+$ media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+$ media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
+$ v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+$ v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+$ v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
+$ v4l2-ctl -z platform:vimc -e "RGB/YUV Input" -v width=640,height=480
+
+2 - Use a userspace application:
+2.a gst-launch (requires gstreamer and gst-plugins-good):
+
+Feed frames into the output and grab from the capture (rescaled for
+convenience):
+
+$ gst-launch-1.0 videotestsrc pattern=ball ! \
+	video/x-raw,width=640,height=480,format=RGB \
+	! v4l2sink device=/dev/video2 v4l2src device=/dev/video3 ! \
+	video/x-raw,width=1920,height=1440,format=RGB ! videoscale ! \
+	video/x-raw,width=640,height=480 ! videoconvert ! ximagesink
+
+2.b qv4l2 (requires v4l-utils):
+
+Open the output device:
+
+$ qv4l2 -d2
+
+Open the capture device:
+
+$ qv4l2 -d3
+
+Start the streaming at both, at any order. You can change the frame
+content at "Test Pattern Generator" -> "Test Pattern" on the output.
+
+Thanks,
+	André
+
+André Almeida (7):
+  media: vimc: Create video module
+  media: vimc: video: Add write file operation
+  media: vimc: Create a V4L2 output device
+  media: vimc: Send null buffer through the pipeline
+  media: vimc: core: Add output device on the pipeline
+  media: vimc.dot: Update default topology diagram
+  media: vimc.rst: Add output device
+
+ Documentation/media/v4l-drivers/vimc.dot    |   4 +-
+ Documentation/media/v4l-drivers/vimc.rst    |  12 +-
+ drivers/media/platform/vimc/Makefile        |   4 +-
+ drivers/media/platform/vimc/vimc-capture.c  | 356 +++----------------
+ drivers/media/platform/vimc/vimc-common.h   |   5 +-
+ drivers/media/platform/vimc/vimc-core.c     |   7 +-
+ drivers/media/platform/vimc/vimc-debayer.c  |  14 +-
+ drivers/media/platform/vimc/vimc-output.c   | 362 ++++++++++++++++++++
+ drivers/media/platform/vimc/vimc-scaler.c   |  13 +-
+ drivers/media/platform/vimc/vimc-sensor.c   |  10 +-
+ drivers/media/platform/vimc/vimc-streamer.c |  24 +-
+ drivers/media/platform/vimc/vimc-video.c    | 273 +++++++++++++++
+ drivers/media/platform/vimc/vimc-video.h    | 130 +++++++
+ 13 files changed, 849 insertions(+), 365 deletions(-)
+ create mode 100644 drivers/media/platform/vimc/vimc-output.c
+ create mode 100644 drivers/media/platform/vimc/vimc-video.c
+ create mode 100644 drivers/media/platform/vimc/vimc-video.h
+
 -- 
-2.7.4
+2.22.0
 
