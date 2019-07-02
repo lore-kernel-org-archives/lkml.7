@@ -2,54 +2,59 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1165BC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7CEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61122064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BA62064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054930;
-	bh=X8qBmxlehdvV+14qxGPlkNK2zltOr+wMInZj1rbtqRU=;
+	s=default; t=1562054933;
+	bh=XBgL/AxOnIaiBDWMNPVZmAQbbKZScC6wBMWUyyDEQ0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OOwqsjn165bi//4tZUFKRMhtXS1AB/F2L7ozj2lP/D7cV4QEzXiAx2pk5GP1uR4hp
-	 D0obqoBJBXVxJ+b9tvsBvEgMrVgBiefxcCghsdQAe7nB1ppVW3Oxk+m/WqbZ1A2maM
-	 79BwT1/iBzPVR5pUCoyXV7IkWo5AX5bNey1G2vTw=
+	b=V8eUnRxe0TiPCtKXjFWFXZCylEHSOCiEBodoja2JrZeAhJrl6rJZCpeIxCCFiz/6E
+	 wzweijOCMByOrz/3Q7wUA/99OoFNQwHUOC68cotnF9uZ7cURiIDHibxgfgehE4KwmX
+	 GaRn5tjPc9K79MGZQwDxvRLkX3B2nA6FPfhF15w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfGBIIt (ORCPT
+        id S1728541AbfGBIIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:08:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56384 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfGBIIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:08:43 -0400
+        id S1728521AbfGBIIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4712184C;
-        Tue,  2 Jul 2019 08:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126592184B;
+        Tue,  2 Jul 2019 08:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054922;
-        bh=X8qBmxlehdvV+14qxGPlkNK2zltOr+wMInZj1rbtqRU=;
+        s=default; t=1562054928;
+        bh=XBgL/AxOnIaiBDWMNPVZmAQbbKZScC6wBMWUyyDEQ0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rSR0UkDHA+7ytHjh6CRJFgk+2wW1Px2osr4NHLZDq/WHWFbZ9DTegT0LNG2G9aprj
-         U40KyHd2B11j+PSjf7umyOSu2sPsP/tQXgZj/28yyzW+gwRmbflu6PS8TH34k42+uo
-         C3pS8uZeYvnzycTTm8NfeOPj0CyKip1avFVigAx8=
+        b=kxlnIFe5lVe3Rbhm8MWyVp2ljvL4OdadNrARZOOvaC5diH6ZZbQ1Xa/zBlKWr3FMj
+         9rqRQSGLyju6X8l6Z996e605HCS1iDVBFpbdBd6czyfbp3ZKrWxXGxZzCK/fIMUbRV
+         57USPGlgUzu2QgbT22F/tVuXx94KUxOkbnGuo3yU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 71/72] RDMA: Directly cast the sockaddr union to sockaddr
-Date:   Tue,  2 Jul 2019 10:02:12 +0200
-Message-Id: <20190702080128.323964036@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 01/43] perf ui helpline: Use strlcpy() as a shorter form of strncpy() + explicit set nul
+Date:   Tue,  2 Jul 2019 10:01:41 +0200
+Message-Id: <20190702080123.975460777@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
-References: <20190702080124.564652899@linuxfoundation.org>
+In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
+References: <20190702080123.904399496@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,98 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit 641114d2af312d39ca9bbc2369d18a5823da51c6 upstream.
+commit 4d0f16d059ddb91424480d88473f7392f24aebdc upstream.
 
-gcc 9 now does allocation size tracking and thinks that passing the member
-of a union and then accessing beyond that member's bounds is an overflow.
+The strncpy() function may leave the destination string buffer
+unterminated, better use strlcpy() that we have a __weak fallback
+implementation for systems without it.
 
-Instead of using the union member, use the entire union with a cast to
-get to the sockaddr. gcc will now know that the memory extends the full
-size of the union.
+In this case we are actually setting the null byte at the right place,
+but since we pass the buffer size as the limit to strncpy() and not
+it minus one, gcc ends up warning us about that, see below. So, lets
+just switch to the shorter form provided by strlcpy().
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+
+  ui/tui/helpline.c: In function 'tui_helpline__push':
+  ui/tui/helpline.c:27:2: error: 'strncpy' specified bound 512 equals destination size [-Werror=stringop-truncation]
+    strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: e6e904687949 ("perf ui: Introduce struct ui_helpline")
+Link: https://lkml.kernel.org/n/tip-d1wz0hjjsh19xbalw69qpytj@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/addr.c           |   10 +++++-----
- drivers/infiniband/hw/ocrdma/ocrdma_ah.c |    5 ++---
- drivers/infiniband/hw/ocrdma/ocrdma_hw.c |    5 ++---
- 3 files changed, 9 insertions(+), 11 deletions(-)
+ tools/perf/ui/tui/helpline.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -716,22 +716,22 @@ int rdma_addr_find_l2_eth_by_grh(const u
- 	struct rdma_dev_addr dev_addr;
- 	struct resolve_cb_context ctx;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
- 	int ret;
+--- a/tools/perf/ui/tui/helpline.c
++++ b/tools/perf/ui/tui/helpline.c
+@@ -24,7 +24,7 @@ static void tui_helpline__push(const cha
+ 	SLsmg_set_color(0);
+ 	SLsmg_write_nstring((char *)msg, SLtt_Screen_Cols);
+ 	SLsmg_refresh();
+-	strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
++	strlcpy(ui_helpline__current, msg, sz);
+ }
  
--	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
--	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
-+	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
-+	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
- 
- 	memset(&dev_addr, 0, sizeof(dev_addr));
- 	dev_addr.bound_dev_if = ndev->ifindex;
- 	dev_addr.net = &init_net;
- 
- 	init_completion(&ctx.comp);
--	ret = rdma_resolve_ip(&sgid_addr._sockaddr, &dgid_addr._sockaddr,
--			      &dev_addr, 1000, resolve_cb, &ctx);
-+	ret = rdma_resolve_ip((struct sockaddr *)&sgid_addr,
-+			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
-+			      resolve_cb, &ctx);
- 	if (ret)
- 		return ret;
- 
---- a/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
-@@ -83,7 +83,6 @@ static inline int set_av_attr(struct ocr
- 	struct iphdr ipv4;
- 	const struct ib_global_route *ib_grh;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
-@@ -133,9 +132,9 @@ static inline int set_av_attr(struct ocr
- 		ipv4.tot_len = htons(0);
- 		ipv4.ttl = ib_grh->hop_limit;
- 		ipv4.protocol = nxthdr;
--		rdma_gid2ip(&sgid_addr._sockaddr, sgid);
-+		rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
- 		ipv4.saddr = sgid_addr._sockaddr_in.sin_addr.s_addr;
--		rdma_gid2ip(&dgid_addr._sockaddr, &ib_grh->dgid);
-+		rdma_gid2ip((struct sockaddr*)&dgid_addr, &ib_grh->dgid);
- 		ipv4.daddr = dgid_addr._sockaddr_in.sin_addr.s_addr;
- 		memcpy((u8 *)ah->av + eth_sz, &ipv4, sizeof(struct iphdr));
- 	} else {
---- a/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
-@@ -2499,7 +2499,6 @@ static int ocrdma_set_av_params(struct o
- 	u32 vlan_id = 0xFFFF;
- 	u8 mac_addr[6], hdr_type;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
-@@ -2541,8 +2540,8 @@ static int ocrdma_set_av_params(struct o
- 
- 	hdr_type = rdma_gid_attr_network_type(sgid_attr);
- 	if (hdr_type == RDMA_NETWORK_IPV4) {
--		rdma_gid2ip(&sgid_addr._sockaddr, &sgid_attr->gid);
--		rdma_gid2ip(&dgid_addr._sockaddr, &grh->dgid);
-+		rdma_gid2ip((struct sockaddr *)&sgid_addr, &sgid_attr->gid);
-+		rdma_gid2ip((struct sockaddr *)&dgid_addr, &grh->dgid);
- 		memcpy(&cmd->params.dgid[0],
- 		       &dgid_addr._sockaddr_in.sin_addr.s_addr, 4);
- 		memcpy(&cmd->params.sgid[0],
+ static int tui_helpline__show(const char *format, va_list ap)
 
 
