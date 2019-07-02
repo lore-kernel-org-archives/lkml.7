@@ -2,116 +2,118 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.0 required=3.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B39C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052C3C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88F120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE3420673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AAxljt6p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHbuCUvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfGCAe0 (ORCPT
+        id S1727277AbfGCAeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:34:26 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45525 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCAe0 (ORCPT
+        Tue, 2 Jul 2019 20:34:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40599 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGCAeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:34:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s22so364845qkj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:34:25 -0700 (PDT)
+        Tue, 2 Jul 2019 20:34:36 -0400
+Received: by mail-io1-f67.google.com with SMTP id n5so676221ioc.7;
+        Tue, 02 Jul 2019 17:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
-        b=AAxljt6pnpE2phFv0au/KMXwtndrEkpi/j2/EJsMk1Ltm/znau8U4oC61EO2/d59Sk
-         xJPU1u0BtjEPFESekQuX2BJ1u/SqIZ7bMflpffyt+/cccxx1yOrusUEn8yOp2ywWrOCf
-         Lld5MDyXgnJIr3ve2Fh/w5j5fkwVyTxgAGins3VH29cEQcbzt+qyDR2bHhjmFSi3jbg6
-         /F7F3gPexkQQQsNw63xYHhsOrFz2Bzyo6kl0n9KIvQtP8bxrPZ5QJz8X1GXONm3VkV3X
-         NKNrdqQe5b84FicJ1h0fFR5CFdrR9SaWP/732ngOtvNn+h+/TB30mAQ6Zl96yTI1xlw7
-         I9fQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I1EqOkAJ16JrzJYbRJsKM2M5z/cziA7sysWiFBw1wCQ=;
+        b=cHbuCUvN+s8Lxw2Gyg3gi4DFYo+F4B8Y2Kkpc1I2sZAekDpolXvsjxL2vCLw+zBEqh
+         XqJBFdv4ZmCJk7ExnlSoa231CpUFJrcpmHzSb6QDviDzMXT80sTIefoueo7dajOTdTbi
+         aSPGfyYr4g1yfJTGDte3QRKpLEKt1aqtYlMj+ltHYK9bVYthpd6JxS8HV8gAdXOBjeLa
+         uTskqhloZdHDc8VdGHBGGTqQcEBxsoj4u5Nv/wU43dV0lo6VBVMpKiI5X6sDz/w7Ybgg
+         oCN/1Oo3aDlnsbAFjFi5ldNCfMPtrnA2qTcQ7ew+gfk4C/znPwGU2nex1jNx62tD5fmB
+         J9iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MdOAu5KOREG+EbRK6Nq+YrKhvJXs3HmUBDCrdZ5KiX8=;
-        b=htOVcMh7/q7QOFFiZrHS9XA5FCW31ZvbvZTxtggmSaOH97EK9MUNxz3qpLVdnUz/T4
-         D+NJeZUPXCHy0N2z8PUbAnsBrtuAaMfjPMZiebzvEEeruvoMHj/zB5zTq+MNEaDL/B4N
-         ueG9Hfinw3mBfxJ9EBGpKIRohqOWXB7+CvDxYa5DfotDfgN/NBL8ve7GYqgV0mMIPSZW
-         5oBczu+7BKwv0nn48f0x/LMqPC/cGpFgMWj9Ulv+fmh1I4Yf0ByysKbGRo+Ogl5/t/HP
-         trUU2lg3l980wn0ShiyQJdlr79TvCLl/RbwGGb2RosfLKr8JnHb9NDTl2FOGApnjnUqV
-         6HiA==
-X-Gm-Message-State: APjAAAVadDJSWrk3fqLRaRfvb+vBYjYMpgoI1jaWud5K/qKqJ0Hy3/VN
-        3peeScDkE3Ra2vDH+ymKUFKsSA==
-X-Google-Smtp-Source: APXvYqzUcLNxWLj8a1mpiDGB2K6z0y2WfLWUEsAEOQWJszxbWpBMhPdailzBeKZol6g1VGK7JNoCSA==
-X-Received: by 2002:a37:9904:: with SMTP id b4mr26656775qke.159.1562107531140;
-        Tue, 02 Jul 2019 15:45:31 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id j3sm141576qki.5.2019.07.02.15.45.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 15:45:30 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hiRWk-0003Lm-82; Tue, 02 Jul 2019 19:45:30 -0300
-Date:   Tue, 2 Jul 2019 19:45:30 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190702224530.GD11860@ziepe.ca>
-References: <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
- <20190627163504.GB9568@ziepe.ca>
- <4894142c-3233-a3bb-f9a3-4a4985136e9b@deltatee.com>
- <20190628045705.GD3705@ziepe.ca>
- <8022a2a4-4069-d256-11da-e6d9b2ffbf60@deltatee.com>
- <20190628172926.GA3877@ziepe.ca>
- <25a87c72-630b-e1f1-c858-9c8b417506fc@deltatee.com>
- <20190628190931.GC3877@ziepe.ca>
- <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I1EqOkAJ16JrzJYbRJsKM2M5z/cziA7sysWiFBw1wCQ=;
+        b=SU6OceEQM4IhouTK4HKhjslxEWRHAF1qrvr9w3/5SGMIxSnF2UgxRlu3d8lj6qq8dB
+         OgyiuRS+k11Poq7aDnyVCoQm9OkdvVfVWfgJOGXlbXjUiChdxbrBgikkIMOU/Qu029aJ
+         a9ACX3jr46sS/sGYlZWE+YNNzJ5e7+yqQGbgc34Urk7tftd8GziorjFH3ESdyeuX14M4
+         +d8D2C5hPW5kc+0/ZT6/aNp+4O+pDcv8ifxFcmke/Td6GFS87518EUHBidWHHoA+JHDN
+         Z3LDnEhMsy+wpl9/bldazeM9790vfNcfsRDGqo5vmnQYZ6xcokboCoYzn6tileD7QyNc
+         RGPA==
+X-Gm-Message-State: APjAAAVn2NugxIQlKqr6V4ApAi4P5+DMqebtDhd+HEDV2pQcbOzOlHtG
+        CCL2D9D0iHNMMnYOQZOLM2p/al1yJimGaC4vnNEPyA==
+X-Google-Smtp-Source: APXvYqz2ea1Co87gENT0Z1FYNhMJZ2SZm3RqcDFrMzN+sTpYjy5Oh6gRJ+UNd2Qx/1ivh+Y0WvJG4xn2CxoR0RmeRwA=
+X-Received: by 2002:a02:ac09:: with SMTP id a9mr39228087jao.48.1562102997246;
+ Tue, 02 Jul 2019 14:29:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb680437-9615-da42-ebc5-4751e024a45f@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190630131445.25712-1-robdclark@gmail.com> <20190630131445.25712-4-robdclark@gmail.com>
+ <CAOCk7NpyYSiDHP84E4bQiTA1Wk9Sd4w-F8-Zqu9tKtDoUTsFDw@mail.gmail.com>
+In-Reply-To: <CAOCk7NpyYSiDHP84E4bQiTA1Wk9Sd4w-F8-Zqu9tKtDoUTsFDw@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 2 Jul 2019 15:29:47 -0600
+Message-ID: <CAOCk7NrxsbAd9sp6m9RSfkRjwW5GZH7qJv2fd78bogas-4YMWA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 3/3] drm/msm/dsi: make sure we have panel or
+ bridge earlier
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>, Sean Paul <sean@poorly.run>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 01:35:42PM -0600, Logan Gunthorpe wrote:
+On Tue, Jul 2, 2019 at 2:30 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Sun, Jun 30, 2019 at 7:16 AM Rob Clark <robdclark@gmail.com> wrote:
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> > @@ -1824,6 +1824,20 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
+> >                 goto fail;
+> >         }
+> >
+> > +       /*
+> > +        * Make sure we have panel or bridge early, before we start
+> > +        * touching the hw.  If bootloader enabled the display, we
+> > +        * want to be sure to keep it running until the bridge/panel
+> > +        * is probed and we are all ready to go.  Otherwise we'll
+> > +        * kill the display and then -EPROBE_DEFER
+> > +        */
+> > +       if (IS_ERR(of_drm_find_panel(msm_host->device_node)) &&
+> > +                       !of_drm_find_bridge(msm_host->device_node)) {
+> > +               pr_err("%s: no panel or bridge yet\n", __func__);
+>
+> pr_err() doesn't seem right for a probe defer condition.  pr_dbg?
+>
+> > +               return -EPROBE_DEFER;
+> > +       }
+> > +
+> > +
+>
+> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-> > However, I'd feel more comfortable about that assumption if we had
-> > code to support the IOMMU case, and know for sure it doesn't require
-> > more info :(
-> 
-> The example I posted *does* support the IOMMU case. That was case (b1)
-> in the description. The idea is that pci_p2pdma_dist() returns a
-> distance with a high bit set (PCI_P2PDMA_THRU_HOST_BRIDGE) when an IOMMU
-> mapping is required and the appropriate flag tells it to call
-> dma_map_resource(). This way, it supports both same-segment and
-> different-segments without needing any look ups in the map step.
+Actually, I'm sorry, I'm now NACKing this.
 
-I mean we actually have some iommu drivers that can setup P2P in real
-HW. I'm worried that real IOMMUs will need to have the BDF of the
-completer to route completions back to the requester - which we can't
-trivially get through this scheme.
+Turns out this prevents the panel/bridge from ever probing if its a
+child node of the dsi device, since mipi_dsi_host_register() is never
+called.
 
-However, maybe that is just a future problem, and certainly we can see
-that with an interval tree or otherwise such a IOMMU could get the
-information it needs.
-
-Jason
+This probably works for you on the c630 because the bridge hangs off
+the i2c bus.
