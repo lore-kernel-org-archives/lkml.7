@@ -2,85 +2,45 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34940C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED25C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDE6206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PZuM9EJb"
+	by mail.kernel.org (Postfix) with ESMTP id 50A32206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfGBJsu (ORCPT
+        id S1727146AbfGBJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:48:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37537 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGBJsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:48:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v14so17011967wrr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
-        b=PZuM9EJbQb3YhMp+qaw+VF6BwkhSSyYMquhljCcVZSO+tjIcy06ofVIGPbwYNmREXi
-         pRcuGFWqgU+nSlEobDVIi97m26fD20LGHZVCL/m/+eGewb0yAO7NlvlF/9gBYN5Rgy0B
-         UVcUnIeulg2Ui8pzjNF76wVB55J/p/3pN/YrI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
-        b=R8kbjUbTUH0k/sQ12w0muayCkYEOTTCjrP6ZElSUCLsJpxZ2z5ZM7Fpha/Tk21GVyx
-         hX0j2gEyGMQJsV5Ej0GMbaqJ3DKZoSjA/ogwkEVYAxowV/z3ac6vqpxvkhO5x2Hr3os7
-         tX9tP02WHLAKNrcjOsuzHRN4lbcPiWCrJpqcTHEAdfHt6PeJfO9GokIQy7SPJJX5/rxM
-         rL0ERqz59FMrDMGlA4C+JnQ85kKdcDjfr0LB4WJlL+jjXn0B4kp1se4UNq8ujg5CuVQT
-         cC8Jfmfs3fPKEPaWInfsBLqug9YB6qRNyS5O2d9PI59Np7HBszjJ+UQ/0o9Eg1rbs1NM
-         /2dg==
-X-Gm-Message-State: APjAAAWHsA7fPg4vOdrVv0cMcZuo/pPlmKw9cSLYnoqQ7ZrxMCBtiys+
-        7yxivxICk2zug9H2gwLPOXL8wA==
-X-Google-Smtp-Source: APXvYqw+cs3wphtlInYiqa/iYYLL5YBkbuaWsrCFwdpkqDK8kfUrPvl8YI8TNOvUo+26MvPNs1E1Ng==
-X-Received: by 2002:adf:9487:: with SMTP id 7mr9588274wrr.114.1562060928176;
-        Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
-Received: from [10.176.68.244] ([192.19.248.250])
-        by smtp.gmail.com with ESMTPSA id l124sm2421987wmf.36.2019.07.02.02.48.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 02:48:47 -0700 (PDT)
-Subject: Re: use exact allocation for dma coherent memory
-To:     Christoph Hellwig <hch@lst.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-References: <20190614134726.3827-1-hch@lst.de> <20190701084833.GA22927@lst.de>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <74eb9d99-6aa6-d1ad-e66d-6cc9c496b2f3@broadcom.com>
-Date:   Tue, 2 Jul 2019 11:48:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 05:49:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:46874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfGBJtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 05:49:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56C71344;
+        Tue,  2 Jul 2019 02:49:32 -0700 (PDT)
+Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 677CC3F718;
+        Tue,  2 Jul 2019 02:49:31 -0700 (PDT)
+Subject: Re: [RFC V3 12/18] arm64: assembler: Add macro to annotate asm
+ function having non standard stack-frame.
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, peterz@infradead.org, will.deacon@arm.com,
+        julien.thierry@arm.com
+References: <20190624095548.8578-1-raphael.gault@arm.com>
+ <20190624095548.8578-13-raphael.gault@arm.com>
+ <20190701144039.GD21774@arrakis.emea.arm.com>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <7ddc9d27-e4ea-c07a-ad12-3fac59aeb4fc@arm.com>
+Date:   Tue, 2 Jul 2019 10:49:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190701084833.GA22927@lst.de>
+In-Reply-To: <20190701144039.GD21774@arrakis.emea.arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,38 +49,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 7/1/2019 10:48 AM, Christoph Hellwig wrote:
-> On Fri, Jun 14, 2019 at 03:47:10PM +0200, Christoph Hellwig wrote:
->> Switching to a slightly cleaned up alloc_pages_exact is pretty easy,
->> but it turns out that because we didn't filter valid gfp_t flags
->> on the DMA allocator, a bunch of drivers were passing __GFP_COMP
->> to it, which is rather bogus in too many ways to explain.  Arm has
->> been filtering it for a while, but this series instead tries to fix
->> the drivers and warn when __GFP_COMP is passed, which makes it much
->> larger than just adding the functionality.
+On 7/1/19 3:40 PM, Catalin Marinas wrote:
+> On Mon, Jun 24, 2019 at 10:55:42AM +0100, Raphael Gault wrote:
+>> --- a/arch/arm64/include/asm/assembler.h
+>> +++ b/arch/arm64/include/asm/assembler.h
+>> @@ -752,4 +752,17 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+>>   .Lyield_out_\@ :
+>>   	.endm
+>>   
+>> +	/*
+>> +	 * This macro is the arm64 assembler equivalent of the
+>> +	 * macro STACK_FRAME_NON_STANDARD define at
+>> +	 * ~/include/linux/frame.h
+>> +	 */
+>> +	.macro	asm_stack_frame_non_standard	func
+>> +#ifdef	CONFIG_STACK_VALIDATION
+>> +	.pushsection ".discard.func_stack_frame_non_standard"
+>> +	.8byte	\func
 > 
-> Dear driver maintainers,
+> Nitpicks:
 > 
-> can you look over the patches touching your drivers, please?  I'd
-> like to get as much as possible of the driver patches into this
-> merge window, so that it can you through your maintainer trees.
+> Does .quad vs .8byte make any difference?
+> 
 
-You made me look ;-) Actually not touching my drivers so I'm off the 
-hook. However, I was wondering if drivers could know so I decided to 
-look into the DMA-API.txt documentation which currently states:
+No it doesn't, I'll use .quad then.
 
-"""
-The flag parameter (dma_alloc_coherent() only) allows the caller to
-specify the ``GFP_`` flags (see kmalloc()) for the allocation (the
-implementation may choose to ignore flags that affect the location of
-the returned memory, like GFP_DMA).
-"""
+> Could we place this in include/linux/frame.h directly with a generic
+> name (and some __ASSEMBLY__ guards)? It doesn't look to be arm specific.
+> 
 
-I do expect you are going to change that description as well now that 
-you are going to issue a warning on __GFP_COMP. Maybe include that in 
-patch 15/16 where you introduce that warning.
+It might be more consistent indeed, I'll do that.
 
-Regards,
-Arend
+Thanks,
+
+-- 
+Raphael Gault
