@@ -2,141 +2,107 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555D3C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394CBC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD9E21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F36921473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cIGkhZFv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZinVKjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGBLkg (ORCPT
+        id S1726765AbfGBLlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:40:36 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42623 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbfGBLke (ORCPT
+        Tue, 2 Jul 2019 07:41:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36392 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfGBLlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:40:34 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b18so13600904qkc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 04:40:33 -0700 (PDT)
+        Tue, 2 Jul 2019 07:41:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so17450059wrs.3;
+        Tue, 02 Jul 2019 04:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d76+rBrIQU/StBU8cagTKv7l2BvLzcU1f3o2NLAUyms=;
-        b=cIGkhZFvDLliFso7QWmxHW9042AROXayE+sWsH7mIqA3lSlte5wY0A033Gz4nKLlWx
-         Hx/pl/r4pbHt2T0oVdSIEyu+Uma9Ug1HqKRsH/azxx+VTcRyh3KHihu+Q0LQ/kvDocKL
-         LueRxh2AwkA+lsRP4c7rTZD6VWZrhUYM4U1/w=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3ayARXXXxV3IZqjBDFXfm/F9xA0F1MyP5bO9yUsg2Ew=;
+        b=AZinVKjD5pKpkyAmHH7XFm1MJdG7VCz5MHEl6HNuf1p4y1EUXDtsY+8mVWGCZqLRje
+         D+nMxa/7TuZ3+NykLjkgcBza1N1XSzmFnykOEo5G8RXwP9BK2WY5Rs+yASWm+LuB6n3c
+         r0/9su+hOOvStO6ZoBA6V9b3+reXk17DZeOpTMWyhJ0qTipfFrTTIE2X8850LvYgIqQo
+         vKAcVq1E/QTU8ivbSQsa2Jj98jIGtlwUPUuLLQTgbpa0UQ+dqat7DyaaSrumZGojLGuH
+         YJ+4SPklWMHFTjU8PnGYcT7kbp/l5lLXZmIDUaTKyt6KOWitvfqey7f17442kMuoJrKB
+         x22w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d76+rBrIQU/StBU8cagTKv7l2BvLzcU1f3o2NLAUyms=;
-        b=oEWblyIXISkewnwbst2wonYj45+dydpzhZY8yKwvfe4Th2iUe633bkaP26RQjbqQNZ
-         BfGPBYXEMnrwlZfanAt+X4HznhhsW9XYyJYI/cbyaPmYSnXYhSHbIHj7TRTR69bwS0EE
-         hGjW3Kxt2IpsPNn4qltYlDBy/STLYKSbfwRE4rHaJarzgXzP89pfdH7rtqrsW/z60PUV
-         mQbiq2A4u035+ow4t7xEo7pK5fhDnigrfYrBGYZxMPxeouwzQ+a0hC1/NMEq30zNs6yd
-         gtt71N9JML8oKD6BZQvVZJh4XKoiU6rJIPXv3UjXrshPn21Oh0lLfgp5l8Wp8EYen6mS
-         cAbA==
-X-Gm-Message-State: APjAAAXYwusg1k0Px5hVtib0Se+g7VwuOxrHYsB0wvb4KPORTvJrv4nP
-        UPRCE4e1A24JBfn5LBRrFOMMtQ==
-X-Google-Smtp-Source: APXvYqy6oDQ53DK9Bb+d0Z5bMhOn790lQmOVX5Wgnb6SgVmP7KjBq+ACmgSlzcTevyjdX/7RwcE8vQ==
-X-Received: by 2002:a37:b843:: with SMTP id i64mr24028603qkf.77.1562067632950;
-        Tue, 02 Jul 2019 04:40:32 -0700 (PDT)
-Received: from localhost (c-73-216-90-110.hsd1.va.comcast.net. [73.216.90.110])
-        by smtp.gmail.com with ESMTPSA id s44sm7882269qtc.8.2019.07.02.04.40.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 04:40:32 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 11:40:30 +0000
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC 1/3] rcu: Expedite the rcu quiescent state reporting if
- help needed
-Message-ID: <20190702114030.GA5429@localhost>
-References: <20190701040415.219001-1-joel@joelfernandes.org>
- <20190702034730.GI26519@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702034730.GI26519@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3ayARXXXxV3IZqjBDFXfm/F9xA0F1MyP5bO9yUsg2Ew=;
+        b=CqQuCRDyzXCKsoEsY+/Y1AM+I+kzSmvyV8ZUgydK85GT1Hu1zXM/MyPQWHtMIrcrKM
+         KUbdbz1K0SgoAL4uFYu6Q9RbhLi0vJzsffAiEUMySXX5Wr+8cE3H5yc71scdCzEH12XD
+         rud1VOmxLKeT7OZdqZdOpfm11YaNnwOfnpnPUZtClFZaJJpjVL+F7gEmyGxqm0K1OFTd
+         AzXNxB7AAUT9YCijacmnfJvj6z/sodZ89/jjhiA9iLWmeTbJVPj9Ik9Jtg1KkRnNN30k
+         7u74o3BeF/myaNvXwDD4So9JVb0LttK8sL1Aa7MTL1+g/6RX1fgZ4fMfhbP48eNTVSzY
+         Wb1Q==
+X-Gm-Message-State: APjAAAW5pgwgvueo1GZkm+EpXfu/1IeOGDn5T7bCKCJ/Cq/Q2Sr80hBF
+        yusM3LOBnFOg+3yEzNrJ+5z02Q9dzzxFpQ==
+X-Google-Smtp-Source: APXvYqzVnJhzYVmt/0FHCQg264+pplDP2RS6ArTB3HMHwEw52k6crvLwZk7yPFAFf8XHcactQ4JYCw==
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr18970181wrq.333.1562067676248;
+        Tue, 02 Jul 2019 04:41:16 -0700 (PDT)
+Received: from localhost.localdomain ([212.146.100.6])
+        by smtp.gmail.com with ESMTPSA id 5sm2202039wmg.42.2019.07.02.04.41.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 04:41:15 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        l.stach@pengutronix.de, abel.vesa@nxp.com, Anson.Huang@nxp.com,
+        ccaione@baylibre.com, angus@akkea.ca, andrew.smirnov@gmail.com,
+        agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: imx8mq: Add sai6 node
+Date:   Tue,  2 Jul 2019 14:41:02 +0300
+Message-Id: <20190702114102.1254-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 08:47:30PM -0700, Paul E. McKenney wrote:
-> On Mon, Jul 01, 2019 at 12:04:13AM -0400, Joel Fernandes (Google) wrote:
-> > The t->rcu_read_unlock_special union's need_qs bit can be set by the
-> > scheduler tick (in rcu_flavor_sched_clock_irq) to indicate that help is
-> > needed from the rcu_read_unlock path. When this help arrives however, we
-> > can do better to speed up the quiescent state reporting which if
-> > rcu_read_unlock_special::need_qs is set might be quite urgent. Make use
-> > of this information in deciding when to do heavy-weight softirq raising
-> > where possible.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> Cute thought, but I am going to have to pass on this one.  The reason
-> is that by the time that ->rcu_read_unlock_special.b.need_qs gets set,
-> the grace period is already one full second old.  At that point, the
-> extra tick of waiting is down in the noise.
-> 
-> Right now, we do the extra work if we really are blocking an expedited
-> grace period (the first two lines of the original condition) or we are
-> running on a nohz_full CPU (which might never execute a scheduling clock
-> tick, thus potentially delaying forever).  And expedited grace periods
-> are supposed to complete in tens or maybe hundreds of microseconds,
-> assuming the RCU readers are being cooperative, which is a whole
-> different level of urgent.
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Makes sense, I agree the patch may not be that helpful right now. I mixed up
-the different levels or urgencies. No problem dropping it.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808eff87..1ff664523f56 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -278,6 +278,20 @@
+ 			#size-cells = <1>;
+ 			ranges = <0x30000000 0x30000000 0x400000>;
+ 
++			sai6: sai@30030000 {
++				compatible = "fsl,imx8mq-sai",
++					"fsl,imx6sx-sai";
++				reg = <0x30030000 0x10000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
++					<&clk IMX8MQ_CLK_SAI6_ROOT>,
++					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
++				clock-names = "bus", "mclk1", "mclk2", "mclk3";
++				dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
+ 			gpio1: gpio@30200000 {
+ 				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+ 				reg = <0x30200000 0x10000>;
+-- 
+2.11.0
 
-> 
-> Nevertheless, thank you for looking into this!
-
-My pleasure! Will keep them coming.
-
- - Joel
-
-> 
-> 							Thanx, Paul
-> 
-> > ---
-> >  kernel/rcu/tree_plugin.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index c588ef98efd3..bff6410fac06 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -622,7 +622,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
-> >  		t->rcu_read_unlock_special.b.exp_hint = false;
-> >  		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
-> >  		      (rdp->grpmask & rnp->expmask) ||
-> > -		      tick_nohz_full_cpu(rdp->cpu);
-> > +		      tick_nohz_full_cpu(rdp->cpu)  ||
-> > +		      t->rcu_read_unlock_special.b.need_qs;
-> >  		// Need to defer quiescent state until everything is enabled.
-> >  		if (irqs_were_disabled && use_softirq &&
-> >  		    (in_interrupt() ||
-> > -- 
-> > 2.22.0.410.gd8fdbe21b5-goog
-> > 
-> 
