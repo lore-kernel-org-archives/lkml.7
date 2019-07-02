@@ -2,103 +2,141 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3D6C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B044CC06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E40D21721
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:57:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="p5+MgVUg"
+	by mail.kernel.org (Postfix) with ESMTP id 895DA21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562069009;
+	bh=lYy0biRRuIMTFPxZzKn1vOvJk9GO14ibys/DKnoKX4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pki55Xm24mMc5G2vTYFpfIveAi9wqLg70dNR6CDcRD13HJYamugC9tVEn2zxhgtcs
+	 JTT1K+W+T0436yOErCG0khP6X1T0keCxI1IJwzP/SbVHrJU9fFBBnwnDjAJYIzKc7S
+	 dmwLU0ZSLs2n2uwL563qonvDk1gLIep6KImZwZwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfGBL5y (ORCPT
+        id S1726483AbfGBMD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:57:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38201 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfGBL5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:57:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so6271600wro.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 04:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twoed304bVANHmzTBGu83qACybedl04wF9pEcLlsQ7g=;
-        b=p5+MgVUg30QZOEvU3DNgmUA3aC46BhnbMqOeupqqsWTqAXZSMCgbzOB+jammgHIiJe
-         SBoanEe6kV+few/FCFhJv+wqst9rDwGhBbeUIzciEytg9mjufMW+0tBNnYkR+p4e2z57
-         tnu7X4hXVAJBD0WhvyRUp0o1AQsHAkD5OYlstXyB0waLFkOIQbf/FJTZ7r+WJfR83aGJ
-         R+VSjJugI22/GaEC5k4W7PM5UofS0vjDOqMmRKV2dTa/HOdFJEivTSQhFP7tNYSmUIRh
-         IqxjP0KexxLnKoiUM8NBQnyQcll7Swi8PFRr+AqR5vvBmJStxGkIk7jh+i//oOOrLy8B
-         8C1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twoed304bVANHmzTBGu83qACybedl04wF9pEcLlsQ7g=;
-        b=h0PtqOb5JsvKDdDMIm8j0asekpy/YPsot6rbrrrhLDLLaUIvvKZeK9T+LNl7Zp7Lpb
-         Rb8ybmdeYFfYipF95JpoQggKgb28j4d1CT9+FR6TpgYAf1YAehEAsYQouy1cVh1jyw4G
-         9JV/WcRpjL2H4ZjB1bo9q4vDVFhrr78XuE9RTLgxUVwepagxTk2j83LRLUK8vrs4uYGg
-         WVm4JaqdbdtBiByDrMsXoqJFVAn/64kAcssQOJylE6tjyov/pbR0Mdytg/Vqgl4qbQVZ
-         VdFj1VZG541v+1PQqf+vhH9J4vvIr9Zuwc4H8aQhLckO3edBCF0mc7K2WpJHw7T02sSr
-         WSrg==
-X-Gm-Message-State: APjAAAUI+JP26kC2QdZdYlGvUVJ8ilNPLHgEwLOSb86GvO5OrQlxr7o7
-        nsi10QlxH8OHqn1H6wbLKnUu+dCve2A=
-X-Google-Smtp-Source: APXvYqwikzNFnHZpdxrcgln2rDmWrFAF+J4y5fKblz1UG9SGZcsUr6O6KdmPdmTb/GLXfW8cLJTRmw==
-X-Received: by 2002:a5d:618d:: with SMTP id j13mr23127089wru.195.1562068671649;
-        Tue, 02 Jul 2019 04:57:51 -0700 (PDT)
-Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
-        by smtp.gmail.com with ESMTPSA id e20sm20148618wrc.9.2019.07.02.04.57.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 04:57:51 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 13:57:50 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 01/15] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
-Message-ID: <20190702115750.GL2250@nanopsycho>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <b6e0aefbcb58297b3ec0a12ee4be8e5194eee61a.1562067622.git.mkubecek@suse.cz>
+        Tue, 2 Jul 2019 08:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfGBMD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 08:03:27 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E4E2064B;
+        Tue,  2 Jul 2019 12:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562069006;
+        bh=lYy0biRRuIMTFPxZzKn1vOvJk9GO14ibys/DKnoKX4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lMEpgyG6/0TGoxHxLutiQ3X8vIzEj/RQA7zp7oGwIadFBGwATD0vzjnJ3rOfaz4qe
+         K3hqrN6iJ3azFUrZcbWV5XvbhqgqaUDmD7jdcNEwPJ7YpSWSPaKO9it2+AV5Z2W2f3
+         nSOiywtaGGPfdtqIxoJ6w4EyOSI+GBho71qBPDks=
+Date:   Tue, 2 Jul 2019 13:03:22 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Zhangshaokun <zhangshaokun@hisilicon.com>, joro@8bytes.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jul 2
+Message-ID: <20190702120321.v3224ofd4aaxvytk@willie-the-truck>
+References: <20190702195158.79aa5517@canb.auug.org.au>
+ <000f56ac-2abc-bc6a-e2db-5ae38779d276@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b6e0aefbcb58297b3ec0a12ee4be8e5194eee61a.1562067622.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <000f56ac-2abc-bc6a-e2db-5ae38779d276@hisilicon.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Jul 02, 2019 at 01:49:44PM CEST, mkubecek@suse.cz wrote:
->Permanent hardware address of a network device was traditionally provided
->via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
->ethtool netlink interface, rtnetlink is much more suitable for it so let's
->add it to the RTM_NEWLINK message.
->
->Add IFLA_PERM_ADDRESS attribute to RTM_NEWLINK messages unless the
->permanent address is all zeros (i.e. device driver did not fill it). As
->permanent address is not modifiable, reject userspace requests containing
->IFLA_PERM_ADDRESS attribute.
->
->Note: we already provide permanent hardware address for bond slaves;
->unfortunately we cannot drop that attribute for backward compatibility
->reasons.
->
->v5 -> v6: only add the attribute if permanent address is not zero
->
->Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+[+Joerg]
 
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+On Tue, Jul 02, 2019 at 06:40:45PM +0800, Zhangshaokun wrote:
+> +Cc: Will Deacon
+> 
+> There is a compiler failure on arm64 platform, as follow:
+> In file included from ./include/linux/list.h:9:0,
+>                  from ./include/linux/kobject.h:19,
+>                  from ./include/linux/of.h:17,
+>                  from ./include/linux/irqdomain.h:35,
+>                  from ./include/linux/acpi.h:13,
+>                  from drivers/iommu/arm-smmu-v3.c:12:
+> drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
+> drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
+>  #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
+>                                         ^
+> It's the commit <d25f6ead162e> ("iommu/arm-smmu-v3: Increase maximum size of queues")
+
+Thanks for the report. I've provided a fix below.
+
+Joerg -- please can you take this on top of the SMMUv3 patches queued
+for 5.3?
+
+Cheers,
+
+Will
+
+--->8
+
+From e8f9d8229e3aaa4817bfb72752e804eec97a3d8d Mon Sep 17 00:00:00 2001
+From: Will Deacon <will@kernel.org>
+Date: Tue, 2 Jul 2019 12:53:18 +0100
+Subject: [PATCH] iommu/arm-smmu-v3: Fix compilation when CONFIG_CMA=n
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When compiling a kernel without support for CMA, CONFIG_CMA_ALIGNMENT
+is not defined which results in the following build failure:
+
+In file included from ./include/linux/list.h:9:0
+                 from ./include/linux/kobject.h:19,
+                 from ./include/linux/of.h:17
+                 from ./include/linux/irqdomain.h:35,
+                 from ./include/linux/acpi.h:13,
+                 from drivers/iommu/arm-smmu-v3.c:12:
+drivers/iommu/arm-smmu-v3.c: In function ‘arm_smmu_device_hw_probe’:
+drivers/iommu/arm-smmu-v3.c:194:40: error: ‘CONFIG_CMA_ALIGNMENT’ undeclared (first use in this function)
+ #define Q_MAX_SZ_SHIFT   (PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
+
+Fix the breakage by capping the maximum queue size based on MAX_ORDER
+when CMA is not enabled.
+
+Reported-by: Zhangshaokun <zhangshaokun@hisilicon.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ drivers/iommu/arm-smmu-v3.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 57fb4e080d6b..8e73a7615bf5 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -191,7 +191,13 @@
+ #define Q_BASE_RWA			(1UL << 62)
+ #define Q_BASE_ADDR_MASK		GENMASK_ULL(51, 5)
+ #define Q_BASE_LOG2SIZE			GENMASK(4, 0)
++
++/* Ensure DMA allocations are naturally aligned */
++#ifdef CONFIG_CMA_ALIGNMENT
+ #define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + CONFIG_CMA_ALIGNMENT)
++#else
++#define Q_MAX_SZ_SHIFT			(PAGE_SHIFT + MAX_ORDER - 1)
++#endif
+ 
+ /*
+  * Stream table.
+-- 
+2.11.0
+
