@@ -2,157 +2,123 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6539CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E4CC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398B6206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB1420673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="GI9/HJ/s"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WMj7A9iQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfGCBQt (ORCPT
+        id S1727372AbfGCBRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:16:49 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:40998 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726150AbfGCBQt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:16:49 -0400
-Received: from pps.filterd (m0050102.ppops.net [127.0.0.1])
-        by m0050102.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x6306Stb031558;
-        Wed, 3 Jul 2019 01:10:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=jan2016.eng;
- bh=vhdroY72bGDWw4TJQf6mIBF5mLDW5ZnW83laxKxW0O8=;
- b=GI9/HJ/sX4q65adr3ojIlYnaH7gx7z+Ol2AoDu5eGNYHByt9LnkLbniiMaDeL+9m9Nhw
- lmxlKqixFxa00vLIEOQ42tZpkckrTuKUU1zF2hPvoDd24c0DAhivRPrqE72kGeYl9VoL
- 1IrXJja+WDpCIhT7xTWIBcM1/vzXqIZzjtS/WJxNlFI7vigBFmM1VLB0q/moIVHhRFMR
- 0IimNoPKlBO8WztjzZp2mvLLPY+/zONnUwtQ7NBoJQP30wNcKOo8vlDA4HvDlHZN4MX7
- MqNnmQsxzh5+/sW7Djx8iIFyKDxGg45C6lxmx94s291Ebkp5JvUjxmwAAViVbR8pwt2P 8A== 
-Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
-        by m0050102.ppops.net-00190b01. with ESMTP id 2tg8vp231q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jul 2019 01:10:51 +0100
-Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
-        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x6302JOx014179;
-        Tue, 2 Jul 2019 20:10:50 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.30])
-        by prod-mail-ppoint2.akamai.com with ESMTP id 2te3awrp2k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 20:10:50 -0400
-Received: from USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) by
- usma1ex-dag1mb1.msg.corp.akamai.com (172.27.123.101) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 2 Jul 2019 20:10:49 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 2 Jul 2019 20:10:49 -0400
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id A68C461E45; Tue,  2 Jul 2019 20:10:47 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tue, 2 Jul 2019 21:17:05 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47337 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfGCBRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:17:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dd3V6xTLz9s3Z;
+        Wed,  3 Jul 2019 07:41:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562103688;
+        bh=MorrFaVnjRPpb/j0w/ycYarnWEzNC23UdOM4rLCRAw4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WMj7A9iQnoAZ9HJYlZX8ZoOWX7U2c1Oqr19Jqz0WawEE/jMP+c5PP0lPDhDcazPgR
+         8NfPtWJJuPpybsTfuK7I6EsXbN9JwQSH4ah5VfrfYCtbAzhlMmwgFKkwBpzgx/l8/l
+         XulffRZCh++zks4Q839C5hpLZ1+e4kPr4FDo8UAbCeNvg7sZRJzcKNet9rku5I7NfI
+         B8NLjJd89BoSH28h5G/mie+6wPxEaHW0TiPYF0Y89pQXhrIZ4wTF3/t9n+n0+Bc0UF
+         xqh56sll8PunE1f6L988lwDdgrvwlXLT+rjFnGypioHp4DSCs4VcYzTFu7jp6984+b
+         s3PHqH3CFklAw==
+Date:   Wed, 3 Jul 2019 07:41:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <Jean-Philippe.Brucker@arm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH 3/3] perf: Use CAP_SYSLOG with kptr_restrict checks
-Date:   Tue, 2 Jul 2019 20:10:05 -0400
-Message-ID: <1562112605-6235-4-git-send-email-ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
-References: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
+Subject: Re: linux-next: manual merge of the char-misc tree with the
+ driver-core tree
+Message-ID: <20190703074109.4b2ca5bc@canb.auug.org.au>
+In-Reply-To: <20190702130511-mutt-send-email-mst@kernel.org>
+References: <20190701190940.7f23ac15@canb.auug.org.au>
+        <20190701200418.GA72724@archlinux-epyc>
+        <20190702141803.GA13685@ostrya.localdomain>
+        <20190702151817.GD3310@8bytes.org>
+        <20190702112125-mutt-send-email-mst@kernel.org>
+        <20190702155851.GF3310@8bytes.org>
+        <20190702130511-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020268
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020269
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/10I6MeCphAWQjths92+eNZc"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel is using CAP_SYSLOG capcbility instead of uid==0 and euid==0 when
-checking kptr_restrict. Make perf do the same.
+--Sig_/10I6MeCphAWQjths92+eNZc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Also, the kernel is a more restrictive than "no restrictions" in case of
-kptr_restrict==0, so add the same logic to perf.
+Hi all,
 
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
----
- tools/perf/util/symbol.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+On Tue, 2 Jul 2019 13:05:59 -0400 "Michael S. Tsirkin" <mst@redhat.com> wro=
+te:
+>
+> On Tue, Jul 02, 2019 at 05:58:51PM +0200, Joerg Roedel wrote:
+> > On Tue, Jul 02, 2019 at 11:23:34AM -0400, Michael S. Tsirkin wrote: =20
+> > > I can drop virtio iommu from my tree. Where's yours? I'd like to take=
+ a
+> > > last look and send an ack. =20
+> >=20
+> > It is not in my tree yet, because I was waiting for your ack on the
+> > patches wrt. the spec.
+> >=20
+> > Given that the merge window is pretty close I can't promise to take it
+> > into my tree for v5.3 when you ack it, so if it should go upstream this
+> > time its better to keep it in your tree.
+>=20
+> Hmm. But then the merge build fails. I guess I will have to include the
+> patch in the pull request then?
+>=20
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5cbad55cd99d..fd68dae3f58e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -4,6 +4,7 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
-+#include <linux/capability.h>
- #include <linux/kernel.h>
- #include <linux/mman.h>
- #include <linux/time64.h>
-@@ -15,8 +16,10 @@
- #include <inttypes.h>
- #include "annotate.h"
- #include "build-id.h"
-+#include "cap.h"
- #include "util.h"
- #include "debug.h"
-+#include "event.h"
- #include "machine.h"
- #include "map.h"
- #include "symbol.h"
-@@ -889,7 +892,11 @@ bool symbol__restricted_filename(const char *filename,
- {
- 	bool restricted = false;
- 
--	if (symbol_conf.kptr_restrict) {
-+	/* Per kernel/kallsyms.c:
-+	 * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
-+	 */
-+	if (symbol_conf.kptr_restrict ||
-+	    (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))) {
- 		char *r = realpath(filename, NULL);
- 
- 		if (r != NULL) {
-@@ -2100,9 +2107,9 @@ static bool symbol__read_kptr_restrict(void)
- 		char line[8];
- 
- 		if (fgets(line, sizeof(line), fp) != NULL)
--			value = ((geteuid() != 0) || (getuid() != 0)) ?
--					(atoi(line) != 0) :
--					(atoi(line) == 2);
-+			value = perf_cap__capable(CAP_SYSLOG) ?
-+					(atoi(line) >= 2) :
-+					(atoi(line) != 0);
- 
- 		fclose(fp);
- 	}
--- 
-2.7.4
+All you (and the driver-core maintainer) need to do is make sure you
+tell Linus that the merge requires the fix ... he can then apply it to
+the merge commit just as I have.  Linus has asked that maintainers do
+not (in general) cross merge to avoid these (semantic) conflicts.
+Sometimes, in more complex cases, it may be necessary for maintainers
+to share a (non changing) subset of their trees, but this case is
+pretty trivial.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/10I6MeCphAWQjths92+eNZc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0bz3UACgkQAVBC80lX
+0GzicQf/dn2NLumpiNgDiKhDjQHDmIflcbEz96E8ZDMp2tfw7qndD4faMaO/28aA
+MAp5jUA3oberdrKjDR8PYeNv/x3u0D4zqI/Tgqdof64aeWPeMgdE6T8khMhb4FZI
+onEPyVzZpA926K8unDteO7mfFLEqiyVJi7Iw1Wij2zm2NHTIFjMp5HYmyhaSsLxs
+/hVEm4zaNcHrw+QdE+Rm9tpT5w0NSKzBP+eXISyRsoqm7JVBVzRixApQa14wfnh4
+QknkwsrPSk+Vo4yrFhHciVs4VfweT044j8P5K30CLeNk9SQ8AQOmzcRlZUNw6I/X
+PYQLovVVb4jLn0xV4EfIULcT7gvmqg==
+=JGpW
+-----END PGP SIGNATURE-----
+
+--Sig_/10I6MeCphAWQjths92+eNZc--
