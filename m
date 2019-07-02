@@ -2,192 +2,99 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FB8C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86819C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B567A21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D2321473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 00:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRGq7VKp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L8PFD9Je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfGBADJ (ORCPT
+        id S1727035AbfGBAFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 20:03:09 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35611 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbfGBADJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 20:03:09 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c6so1299493wml.0;
-        Mon, 01 Jul 2019 17:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0oaxktBwYbCWBPSqdN0UkPZkDbNAm7KH/JUupR9080w=;
-        b=oRGq7VKp/ev5G44cgKJrJdtTZgMtAaTjzmwbmWsDX+l+moJA5+oC4k5T03y/N2NvNP
-         5R70EIlg7w8u8jqHvrX3pOWp+U4zivNz4TV2FC04n32CeL+8MJhIRi6fhP8LE4vmqRec
-         mI6wq80nTR3/3msqi64IkB8UXe1QtaEbS8BQogXnRVETtOyOWQirjoH7vItJacrekpWO
-         RVRV79t6gKrqoH2REzv7O+adaPrnzRtw3NKWP4a748USAQdBMNvnS5oy4wwz1KkMogLA
-         hchF/mS4b1UCkVDxo0ZdDP1FRZHfGylrw8ddlG5LhAf2IDtYW7CLFNUSZqI8egmJ5FUQ
-         mZQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0oaxktBwYbCWBPSqdN0UkPZkDbNAm7KH/JUupR9080w=;
-        b=lyNSYGMd7TticVvl0ohMEQae8OxihxujHQb2c90L93ROmMxQTT8JevwZS818WmuV/V
-         IlsOrsPAVeYC/xaBVlk9S5zbVee1FjSI+agJ/ZxHrV2I6jcUv4IUyvuKcZ9szJztN2gC
-         G5VBNF9LyHJ49W2YJcIVsktMGy2xCTgEfyPBvEffcXYPICRPF5E0SbvV/r7ifk01BmtV
-         6mRtdmBkeFgOUNrixSUwyDZw123nFaug6AStwyw8V02usHrQHzrmFTkBwIBrOzf0fKb7
-         MOCygf+OpLWStEJYMaDIfq7XOe24F3Q0++OqYftzG3mx2BceFYjTW8s8+qr+1pvun30h
-         vDrg==
-X-Gm-Message-State: APjAAAWuw1fI4OuXbfOO/w4OVd0FkI4SNp+/zd59dEmLnMMJ8bvj9/kU
-        TT1xgAgGAJMR27ckKoI6/m1It5w/nSC6vg0QXMg=
-X-Google-Smtp-Source: APXvYqy6YC9Qi89zIU1hYTAoVPy6IqhePQIEP0I5BDd6BFDwHK6p6hhu9oME8YwuZ9p3JG3hPNbyqVV77eUz3i9ZEj4=
-X-Received: by 2002:a05:600c:2549:: with SMTP id e9mr992279wma.46.1562025785805;
- Mon, 01 Jul 2019 17:03:05 -0700 (PDT)
+        Mon, 1 Jul 2019 20:05:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:36993 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726678AbfGBAFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 20:05:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45d4JF3l1sz9s3Z;
+        Tue,  2 Jul 2019 10:05:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562025933;
+        bh=cM4qVD6mANTz9SBGygr3+xZdq2SVjFUVmvYKFkaL9NI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L8PFD9JebAU+jdQZgTS5BiTWmdPzKuE8z6h1SOSKzOsm8P0oojbTGZUn3prHkHkWL
+         pdM1AiI7tv2KV0YYju8yVfA79I/W8Fxr+ANakQp2OZW2tEoMmjEhe4ltqys2hBd1Kz
+         pwBp0X9Gpx5EQG/eN9mqvsF6wo/LZm9yPaqEgoe3S8NxoBmvDG6mYewyw3CS/rVsU5
+         eJL/bnequdkKnLti32qEVKl4hTgK96wGk/xRRfJEx5Hoyeyu8Zl0XlAbnFH0/e/2nZ
+         5kV9yizb9+0CpimG1PcxphvIqyWwFPOJJxRZYfpCs8I2sxNtUKXaWxG788PQjrAmuk
+         BznqvhdkyawXQ==
+Date:   Tue, 2 Jul 2019 10:05:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the mlx5-next tree
+Message-ID: <20190702100533.206ea0df@canb.auug.org.au>
 MIME-Version: 1.0
-References: <00000000000008f06d058a6e9783@google.com> <20190630234533.15089-1-tranmanphong@gmail.com>
- <279519d5386680b3353b994a02475df08df13e29.camel@redhat.com>
-In-Reply-To: <279519d5386680b3353b994a02475df08df13e29.camel@redhat.com>
-From:   Phong Tran <tranmanphong@gmail.com>
-Date:   Tue, 2 Jul 2019 07:02:54 +0700
-Message-ID: <CAD3AR6EHq6+5kjyCLsu6AYbu7WGLhjE5cVL58g3SCr4b8D7UkA@mail.gmail.com>
-Subject: Re: [PATCH] net: usb: asix: init MAC address buffers
-To:     Dan Williams <dcbw@redhat.com>
-Cc:     syzbot <syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com>,
-        davem@davemloft.net, Alexander Potapenko <glider@google.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lynxis@fe80.eu, marcel.ziswiler@toradex.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yang.wei9@zte.com.cn, zhang.run@zte.com.cn,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/zHnU9/13EFoNnD84tQbSPRY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
+--Sig_/zHnU9/13EFoNnD84tQbSPRY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 1, 2019 at 10:30 PM Dan Williams <dcbw@redhat.com> wrote:
->
-> On Mon, 2019-07-01 at 06:45 +0700, Phong Tran wrote:
-> > This is for fixing bug KMSAN: uninit-value in ax88772_bind
-> >
-> > Tested by
-> > https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/cFe9nxMCCwAJ
-> >
-> > Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-> > git tree:       kmsan
-> > console output:
-> > https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
-> > kernel config:
-> > https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
-> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> > 06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-> > syz repro:
-> > https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
-> > C reproducer:
-> > https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
-> >
-> > ==================================================================
-> > BUG: KMSAN: uninit-value in is_valid_ether_addr
-> > include/linux/etherdevice.h:200 [inline]
-> > BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr
-> > drivers/net/usb/asix_devices.c:73 [inline]
-> > BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0
-> > drivers/net/usb/asix_devices.c:724
-> > CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
-> > Hardware name: Google Google Compute Engine/Google Compute Engine,
-> > BIOS
-> > Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-> >   kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-> >   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-> >   is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
-> >   asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
-> >   ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
-> >   usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-> >   usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-> >   really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-> >   driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-> >   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-> >   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-> >   __device_attach+0x454/0x730 drivers/base/dd.c:844
-> >   device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-> >   bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-> >   device_add+0x288d/0x30e0 drivers/base/core.c:2106
-> >   usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-> >   generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-> >   usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-> >   really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-> >   driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-> >   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-> >   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-> >   __device_attach+0x454/0x730 drivers/base/dd.c:844
-> >   device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-> >   bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-> >   device_add+0x288d/0x30e0 drivers/base/core.c:2106
-> >   usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-> >   port_event drivers/usb/core/hub.c:5350 [inline]
-> >   hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-> >   process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-> >   process_scheduled_works kernel/workqueue.c:2331 [inline]
-> >   worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
-> >   kthread+0x4b5/0x4f0 kernel/kthread.c:254
-> >   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-> >
-> > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> > ---
-> >  drivers/net/usb/asix_devices.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/net/usb/asix_devices.c
-> > b/drivers/net/usb/asix_devices.c
-> > index c9bc96310ed4..f514d19316b1 100644
-> > --- a/drivers/net/usb/asix_devices.c
-> > +++ b/drivers/net/usb/asix_devices.c
-> > @@ -230,6 +230,7 @@ static int ax88172_bind(struct usbnet *dev,
-> > struct usb_interface *intf)
-> >       int i;
-> >       unsigned long gpio_bits = dev->driver_info->data;
-> >
-> > +     memset(buf, 0, sizeof(buf));
->
-> For array variables defined in the function itself, isn't this usually
-> done with:
->
->          int ret = 0;
-> -        u8 buf[ETH_ALEN];
-> +        u8 buf[ETH_ALEN] = {0};
->          int i;
->          unsigned long gpio_bits = dev->driver_info->data;
->
-> eg make the compiler do it (though maybe it's smart enough to elide the
-> memset, I don't know). See drivers/net/ethernet/intel/igb/e1000_mac.c
-> for an example.
->
+Hi all,
 
-Thank suggestion, applied in v2 without using memset().
+In commit
 
-Phong
+  16fff98a7e82 ("net/mlx5: E-Switch, Reg/unreg function changed event at co=
+rrect stage")
+
+Fixes tag
+
+  Fixes: 61fc880839e6 ("net/mlx5: E-Switch, Handle representors creation in=
+ handler context")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: ac35dcd6e4bd ("net/mlx5: E-Switch, Handle representors creation in h=
+andler context")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zHnU9/13EFoNnD84tQbSPRY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0an80ACgkQAVBC80lX
+0Gx+4Af/TMAjz5vzCJhN5YA9+d6Mc1MVRKB9FsMSEwHjkEHMZkKw/lGxTatY4vMu
+XplUZR0oArqlWZPx9ZEd4GMeU6eBww4qB8UlI0FdD0iOQEuxOxWTdM6OsMRPjVz4
+IhLCBtquGFTxO722ExaD+mnXobhckfTamdEztl5g4ZFatJwNO7/d5F6xfhmppezG
+nQ8dfrCPj6alMW4cF5GLWZ0rU0+wdyOQyBgJDqPUd2Lys9tJfW3o9O7uYFAtJPaB
+RLj4XsqBdzMF8THvw+VC2fU5yO8dRPOYrSzWObUWNmlb/MumaSgyIbe5iBT8zqa+
+O8xM1Z6COHAXruoFMq5mgi1FVeDjyg==
+=j5up
+-----END PGP SIGNATURE-----
+
+--Sig_/zHnU9/13EFoNnD84tQbSPRY--
