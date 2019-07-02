@@ -2,53 +2,52 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B13C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A071C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677ED21841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E852184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054729;
-	bh=7VoB28kTHwj0Tl6LL1H7TgWAL359xaX2QKUoNu45dKM=;
+	s=default; t=1562054732;
+	bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mooey7Uzm3fC8D79yn92CN19ustarTDj3zc43qT9lkRA/XCc/DphqmlDkmYExm/HC
-	 hnRVOMtuGR12LLpjbdZ+3f70wCrLPrMQfBY4bP+RlBMffKVyNPP1LJybo2wGwU1jU4
-	 y6GLtB2rrAwXCEpV2hIvIRTeYW7hTvSx+9Au0lso=
+	b=1K+pYtSi3cpAYismXBe3MCjTZ+GO2YcBKETvHddAEeb+snVdNMAZlnDXEK5oUZOLO
+	 VGIBXyNbRtxYKe10P4FsR8aqPRuePwZa8E8ljpT5V8kCc6bsOIyCG6zkIPhOqJmqvx
+	 NN1nDuBqPJljV7agGrlArvxj50VNrlpeEEpaiQ1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfGBIF2 (ORCPT
+        id S1727963AbfGBIFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbfGBIF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:26 -0400
+        id S1727952AbfGBIF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFDA420659;
-        Tue,  2 Jul 2019 08:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739022183F;
+        Tue,  2 Jul 2019 08:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054725;
-        bh=7VoB28kTHwj0Tl6LL1H7TgWAL359xaX2QKUoNu45dKM=;
+        s=default; t=1562054727;
+        bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=grvwCBIHSGOP4EGZ1lsjytlAwSfTfYPteqYsNamuQHZpo90Quhk6uF04OVqiXmiTT
-         XVQet9hEXgIWs98UkhFmuS121kR3vCpcRdqlw0eUgFDcMW3F3y9+xOdeiAIrutPOij
-         XpgrYPWa/yb2gQiUU0P/ebvWiKZQraKWbTootl4Q=
+        b=n1Ce/pJ74JjRYsYONZJjZQzijDDeYgMgtIdZJ/CBCeXF1W0ScE2GL3mxaXkfIu41U
+         Gr1ciBPpezUCBYk5qnAVS6rJIYjTHHgiKYZEC/QCoCTBCvNDLJKexs5hPLJoNuKMBs
+         eNEQ9x9j9mnN7sNEVTEuKPFeQJ6QiBCjVzgYHUUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        Jun Piao <piaojun@huawei.com>,
+        stable@vger.kernel.org,
         Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/72] 9p: Rename req to rreq in trans_fd
-Date:   Tue,  2 Jul 2019 10:01:15 +0200
-Message-Id: <20190702080125.346857741@linuxfoundation.org>
+Subject: [PATCH 4.19 15/72] 9p: acl: fix uninitialized iattr access
+Date:   Tue,  2 Jul 2019 10:01:16 +0200
+Message-Id: <20190702080125.404250585@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -61,100 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d35190f395316916c8bb4aabd35a182890bf856 ]
+[ Upstream commit e02a53d92e197706cad1627bd84705d4aa20a145 ]
 
-In struct p9_conn, rename req to rreq as it is used by the read routine.
+iattr is passed to v9fs_vfs_setattr_dotl which does send various
+values from iattr over the wire, even if it tells the server to
+only look at iattr.ia_valid fields this could leak some stack data.
 
-Link: http://lkml.kernel.org/r/20180903160321.2181-1-tomasbortoli@gmail.com
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Suggested-by: Jun Piao <piaojun@huawei.com>
+Link: http://lkml.kernel.org/r/1536339057-21974-2-git-send-email-asmadeus@codewreck.org
+Addresses-Coverity-ID: 1195601 ("Uninitalized scalar variable")
 Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ fs/9p/acl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index aca528722183..12559c474dde 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -131,7 +131,7 @@ struct p9_conn {
- 	int err;
- 	struct list_head req_list;
- 	struct list_head unsent_req_list;
--	struct p9_req_t *req;
-+	struct p9_req_t *rreq;
- 	struct p9_req_t *wreq;
- 	char tmp_buf[7];
- 	struct p9_fcall rc;
-@@ -323,7 +323,7 @@ static void p9_read_work(struct work_struct *work)
- 	m->rc.offset += err;
+diff --git a/fs/9p/acl.c b/fs/9p/acl.c
+index 082d227fa56b..6261719f6f2a 100644
+--- a/fs/9p/acl.c
++++ b/fs/9p/acl.c
+@@ -276,7 +276,7 @@ static int v9fs_xattr_set_acl(const struct xattr_handler *handler,
+ 	switch (handler->flags) {
+ 	case ACL_TYPE_ACCESS:
+ 		if (acl) {
+-			struct iattr iattr;
++			struct iattr iattr = { 0 };
+ 			struct posix_acl *old_acl = acl;
  
- 	/* header read in */
--	if ((!m->req) && (m->rc.offset == m->rc.capacity)) {
-+	if ((!m->rreq) && (m->rc.offset == m->rc.capacity)) {
- 		p9_debug(P9_DEBUG_TRANS, "got new header\n");
- 
- 		/* Header size */
-@@ -347,23 +347,23 @@ static void p9_read_work(struct work_struct *work)
- 			 "mux %p pkt: size: %d bytes tag: %d\n",
- 			 m, m->rc.size, m->rc.tag);
- 
--		m->req = p9_tag_lookup(m->client, m->rc.tag);
--		if (!m->req || (m->req->status != REQ_STATUS_SENT)) {
-+		m->rreq = p9_tag_lookup(m->client, m->rc.tag);
-+		if (!m->rreq || (m->rreq->status != REQ_STATUS_SENT)) {
- 			p9_debug(P9_DEBUG_ERROR, "Unexpected packet tag %d\n",
- 				 m->rc.tag);
- 			err = -EIO;
- 			goto error;
- 		}
- 
--		if (!m->req->rc.sdata) {
-+		if (!m->rreq->rc.sdata) {
- 			p9_debug(P9_DEBUG_ERROR,
- 				 "No recv fcall for tag %d (req %p), disconnecting!\n",
--				 m->rc.tag, m->req);
--			m->req = NULL;
-+				 m->rc.tag, m->rreq);
-+			m->rreq = NULL;
- 			err = -EIO;
- 			goto error;
- 		}
--		m->rc.sdata = m->req->rc.sdata;
-+		m->rc.sdata = m->rreq->rc.sdata;
- 		memcpy(m->rc.sdata, m->tmp_buf, m->rc.capacity);
- 		m->rc.capacity = m->rc.size;
- 	}
-@@ -371,21 +371,21 @@ static void p9_read_work(struct work_struct *work)
- 	/* packet is read in
- 	 * not an else because some packets (like clunk) have no payload
- 	 */
--	if ((m->req) && (m->rc.offset == m->rc.capacity)) {
-+	if ((m->rreq) && (m->rc.offset == m->rc.capacity)) {
- 		p9_debug(P9_DEBUG_TRANS, "got new packet\n");
--		m->req->rc.size = m->rc.offset;
-+		m->rreq->rc.size = m->rc.offset;
- 		spin_lock(&m->client->lock);
--		if (m->req->status != REQ_STATUS_ERROR)
-+		if (m->rreq->status != REQ_STATUS_ERROR)
- 			status = REQ_STATUS_RCVD;
--		list_del(&m->req->req_list);
-+		list_del(&m->rreq->req_list);
- 		/* update req->status while holding client->lock  */
--		p9_client_cb(m->client, m->req, status);
-+		p9_client_cb(m->client, m->rreq, status);
- 		spin_unlock(&m->client->lock);
- 		m->rc.sdata = NULL;
- 		m->rc.offset = 0;
- 		m->rc.capacity = 0;
--		p9_req_put(m->req);
--		m->req = NULL;
-+		p9_req_put(m->rreq);
-+		m->rreq = NULL;
- 	}
- 
- end_clear:
+ 			retval = posix_acl_update_mode(inode, &iattr.ia_mode, &acl);
 -- 
 2.20.1
 
