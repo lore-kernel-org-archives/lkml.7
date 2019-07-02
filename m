@@ -2,198 +2,174 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8D0C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838F1C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFEA2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="AjJ3nxm/"
+	by mail.kernel.org (Postfix) with ESMTP id 5C6B12082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562090056;
+	bh=l6f5nwopB9HRDJP9zWpw8jLPnce5QOP3ehB1xW+TD0c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OOBofJ9VVQs6saKIU1eLlyr6zpz335jtxQGv58vu5JUboyJy57tqJdlepg281kvtD
+	 FIAbq4tSWOaUiCtcguFoxC+OHpUyD1PoW6myxMOSp0Ua8DKIKZFc78GPOESpboUu8S
+	 N9wqV3a62FafiufEO/BqtLgkB0MA/6x7sL0wp05A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfGBRxH (ORCPT
+        id S1727059AbfGBRyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:53:07 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45939 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfGBRxG (ORCPT
+        Tue, 2 Jul 2019 13:54:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44307 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBRyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:53:06 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so17801002lje.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 10:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cMEn3za16fAfd/FKzUgXJWhBF6QU4UvnxjnbeEXsMGQ=;
-        b=AjJ3nxm/0ds+e2hRRivY37RuUEa4V59EPE1atiQr2SXEYP2cvI8PWEN+FZ9oVOntUT
-         XehNOna7XdSk5ef3/jinBVRzP0Zgoq2nXWU3UGYsYB9ehUh1D+3vpTcj0OvQA+seZDU3
-         JCrKct+QFMpmJzw4R3IcICYfPlRQ1z1j0MHz+N34dj9P+l1gqNZyUktAudZ07GKlOlak
-         joM3F9dzbJiwS1J8pbV/0g+ni/mDtPKuRtxDgvKK6H4TmP8PVNY8odrp5u1fzRFWaBUi
-         Kev+nrvUBH6P4kht+SWadQWqeUZhn9Drib2vk3mjXbi89a1I0olyW75z856NBQ1TpbAj
-         6QMQ==
+        Tue, 2 Jul 2019 13:54:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so18051284otl.11;
+        Tue, 02 Jul 2019 10:54:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cMEn3za16fAfd/FKzUgXJWhBF6QU4UvnxjnbeEXsMGQ=;
-        b=odlDmh53t2E8LDExp0YoIzVXXhmY3qdhOwH6rZI0RFFsa+2dNbX6u/edYlOuihyQQF
-         mltXYF1F1Oqb3SHfeUazQjg/a+ZVqqB4J/fZZnldECR+vdPMHBqlMGFl/DRrlPBvKej1
-         +43AyvVyQawvmvmQlG4hEvXzAqzu6199oEVibeIzlXonNzPMrmEp5GRuin+Pf8eCusuF
-         BYBw5X584bs1Nr38HIYOFiHy6r1sfZ2Ahkx+yVXZ13fbqA3rOSgsdSRd4Oee8Kvg8BnR
-         4fjMraIkfuK2BPmSegxoveoflD6GbF4JK7T5n/d79IkWaqLr1lyHaljuL6Bq/DXsyk6V
-         9TCw==
-X-Gm-Message-State: APjAAAWf37bfzv0WKuFW6rRXGEGz12a9AkqSiDWCh8KBUesvo2XmWl8x
-        TyPFC7n3378qEGfFXwPs9xB4qg==
-X-Google-Smtp-Source: APXvYqyHA/Ov/gzsKWtHLKt+DUZw1yLzTQf05oQbnhdSu9EIi9OqdKbPqDmV3siOLcwZvcf9+6nKTA==
-X-Received: by 2002:a2e:93cc:: with SMTP id p12mr18387950ljh.11.1562089983427;
-        Tue, 02 Jul 2019 10:53:03 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:48c7:f2be:45b6:c800:b809:e0f2])
-        by smtp.gmail.com with ESMTPSA id g76sm3954000lje.43.2019.07.02.10.53.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 10:53:02 -0700 (PDT)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tokunori Ikegami <ikegami.t@gmail.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
-Organization: Cogent Embedded
-Message-ID: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
-Date:   Tue, 2 Jul 2019 20:53:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+oP0RH9kwH9LwfnhKPKaz5YexisejvCGK50RlpX1ljc=;
+        b=sljMwGXSqp3kbMx6t6jLO2w18e/4j+Q942qsy7RkSXJPiMIvAE5TczY3I+aQy5pmbe
+         +9cTUFzvMclGSd7quVdHaKaQGbGeKya/tkuxU7/1ReukSTVs7l5ZwogVOffXRLsiiZrF
+         C6EcZoqr43HoTaRKh1b6qWehszk3UGWyrCsVeHZY2wZlL2ZKu5frpTCWgOJooUrUrtcp
+         Ej/pngDWNCmxZ7E2zLwC+1/nELvW+skk1ZGuIG5va8k1lgwefoB/Y00GS6iSaOP11r+o
+         XnmbIV51EKNEssXPKGTy44n6zHE441VTYTVUa/4ss/dELFjtOjDx/OXPkMx9pWIxSXyf
+         nqiQ==
+X-Gm-Message-State: APjAAAX645URg+BZVFx/xwUy02bjlNSuPfUkyPMvg0BoSo19qF2zWURf
+        RG/yf1eCSzF8o3qGTKBDfb9CAIlFo2j8HSAcb/6/PA==
+X-Google-Smtp-Source: APXvYqzJUxyIrdJenoWjzxhItkZ4yvQWo+kbEG93MBNXTEnn+B7KldNdKnGkUL7c1jzrrHM4FV8smCzg4LfaCvUi+dQ=
+X-Received: by 2002:a9d:6b96:: with SMTP id b22mr10392785otq.262.1562090052447;
+ Tue, 02 Jul 2019 10:54:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190625075746.10439-4-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+References: <20190702163715.12649-1-smuchun@gmail.com>
+In-Reply-To: <20190702163715.12649-1-smuchun@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 2 Jul 2019 19:54:01 +0200
+Message-ID: <CAJZ5v0jzVG5X8idR7Fy8g6=UPMpZ7eK6A_Uhqrer1aJFY1hX1w@mail.gmail.com>
+Subject: Re: [PATCH v2] PM: Move disabling/enabling runtime PM to
+ suspend/resume noirq
+To:     Muchun Song <smuchun@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Tue, Jul 2, 2019 at 6:37 PM Muchun Song <smuchun@gmail.com> wrote:
+>
+> Currently, the PM core disables runtime PM for all devices right after
+> executing subsystem/driver .suspend_late() callbacks for them and
+> re-enables it right before executing subsystem/driver .resume_early()
+> callbacks for them. This may lead to problems when there are two devices
+> such that the irq handler thread function executed for one of them
+> depends on runtime PM working for the other. E.g. There are two devices,
+> one is i2c slave device depends on another device which can be the i2c
+> adapter device. The slave device can generate system wakeup signals and
+> is enabled to wake up the system(via call enable_irq_wake()). So, the irq
+> of slave device is enabled. If a wakeup signal generate after executing
+> subsystem/driver .suspend_late() callbacks. Then, the irq handler thread
+> function will be called(The irq is requested via request_threaded_irq())
+> and the slave device reads data via i2c adapter device(via i2c_transfer()).
+> In that case, it may be failed to read data because of the runtime PM
+> disabled.
+>
+> It is also analogously for resume. If a wakeup signal generate when the
+> system is in the sleep state. The irq handler thread function may be
+> called before executing subsystem/driver .resume_early(). In that case,
+> it also may be failed to read data because of the runtime PM disabled.
+>
+> To make those issues go away, make the PM core disable runtime PM for
+> devices right before executing subsystem/driver .suspend_noirq() callbacks
+> for them and enable runtime PM for them right after executing subsystem/
+> driver .resume_noirq() callbacks for them.
+>
+> Signed-off-by: Muchun Song <smuchun@gmail.com>
 
-On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+This has been discussed for a number of times, documented and no, I'm
+not going to apply this patch.
 
-> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-> Bus interface between a host system master and one or more slave
-> interfaces. HyperBus is used to connect microprocessor, microcontroller,
-> or ASIC devices with random access NOR flash memory (called HyperFlash)
-> or self refresh DRAM (called HyperRAM).
-> 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
-> 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash with respect to bits per clock
-> cycle. But HyperBus operates at >166MHz frequencies.
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> 
-> But, HyperBus memory controllers seem to abstract implementation details
-> and expose a simple MMIO interface to access connected flash.
-> 
-> Add support for registering HyperFlash devices with MTD framework. MTD
-> maps framework along with CFI chip support framework are used to support
-> communicating with flash.
-> 
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller (HBMC) drivers calls hyperbus_register_device() to
-> register a single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> Some HBMC masters need calibration/training sequence[3] to be carried
-> out, in order for DLL inside the controller to lock, by reading a known
-> string/pattern. This is done by repeatedly reading CFI Query
-> Identification String. Calibration needs to be done before trying to detect
-> flash as part of CFI flash probe.
-> 
-> HyperRAM is not supported at the moment.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[...]
+PM-runtime cannot be relied on during the "noirq" stages of suspend
+and resume, which is why it is disabled by the core in the "late" and
+"early" stages, respectively.
 
-   I have at least created my HyperBus driver and unfortunately I'm having serious
-issues with the design of the support core (see below)...
-
-[...]
-> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
-> new file mode 100644
-> index 000000000000..63a9e64895bc
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
-> @@ -0,0 +1,154 @@
-[...]
-> +int hyperbus_register_device(struct hyperbus_device *hbdev)
-> +{
-> +	const struct hyperbus_ops *ops;
-> +	struct hyperbus_ctlr *ctlr;
-> +	struct device_node *np;
-> +	struct map_info *map;
-> +	struct resource res;
-> +	struct device *dev;
-> +	int ret;
+> ---
+>
+> Change in v2:
+>        Update subject from:
+>            "PM: Move disabling/enabling runtime PM to noirq suspend/early resume"
+>        to:
+>            "PM: Move disabling/enabling runtime PM to suspend/resume noirq"
+>
+>  Documentation/power/runtime_pm.txt | 4 ++--
+>  drivers/base/power/main.c          | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/power/runtime_pm.txt b/Documentation/power/runtime_pm.txt
+> index 937e33c46211..8cca4df3adc4 100644
+> --- a/Documentation/power/runtime_pm.txt
+> +++ b/Documentation/power/runtime_pm.txt
+> @@ -691,11 +691,11 @@ out the following operations:
+>      pm_runtime_barrier() is called for every device right before executing the
+>      subsystem-level .suspend() callback for it.  In addition to that the PM core
+>      calls  __pm_runtime_disable() with 'false' as the second argument for every
+> -    device right before executing the subsystem-level .suspend_late() callback
+> +    device right before executing the subsystem-level .suspend_noirq() callback
+>      for it.
+>
+>    * During system resume pm_runtime_enable() and pm_runtime_put() are called for
+> -    every device right after executing the subsystem-level .resume_early()
+> +    every device right after executing the subsystem-level .resume_noirq()
+>      callback and right after executing the subsystem-level .complete() callback
+>      for it, respectively.
+>
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index dcfc0a36c8f7..ad0282d637ae 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -693,6 +693,7 @@ static int device_resume_noirq(struct device *dev, pm_message_t state, bool asyn
+>         }
+>
+>  Out:
+> +       pm_runtime_enable(dev);
+>         complete_all(&dev->power.completion);
+>         TRACE_RESUME(error);
+>         return error;
+> @@ -860,7 +861,6 @@ static int device_resume_early(struct device *dev, pm_message_t state, bool asyn
+>   Out:
+>         TRACE_RESUME(error);
+>
+> -       pm_runtime_enable(dev);
+>         complete_all(&dev->power.completion);
+>         return error;
+>  }
+> @@ -1299,6 +1299,8 @@ static int __device_suspend_noirq(struct device *dev, pm_message_t state, bool a
+>         TRACE_DEVICE(dev);
+>         TRACE_SUSPEND(0);
+>
+> +       __pm_runtime_disable(dev, false);
 > +
-> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
-> +		pr_err("hyperbus: please fill all the necessary fields!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	np = hbdev->np;
-> +	ctlr = hbdev->ctlr;
-> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
-> +		return -ENODEV;
-> +
-> +	hbdev->memtype = HYPERFLASH;
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-
-   Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
-like a property of the HB controller. In my case, the flash device in the DT has
-only single-cell "reg" prop (equal to the chip select #). Then this function returns 
--EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev = ctlr->dev;
-> +	map = &hbdev->map;
-> +	map->size = resource_size(&res);
-> +	map->virt = devm_ioremap_resource(dev, &res);
-> +	if (IS_ERR(map->virt))
-> +		return PTR_ERR(map->virt);
-
-   Again, I doubt that this should be done here, and not in the HB controller driver...
-
-[...]
-
-MBR, Sergei
+>         dpm_wait_for_subordinate(dev, async);
+>
+>         if (async_error)
+> @@ -1508,8 +1510,6 @@ static int __device_suspend_late(struct device *dev, pm_message_t state, bool as
+>         TRACE_DEVICE(dev);
+>         TRACE_SUSPEND(0);
+>
+> -       __pm_runtime_disable(dev, false);
+> -
+>         dpm_wait_for_subordinate(dev, async);
+>
+>         if (async_error)
+> --
+> 2.17.1
+>
