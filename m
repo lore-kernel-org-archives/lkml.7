@@ -2,127 +2,146 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C96C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740EDC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEEF21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AEB21479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGBPBw (ORCPT
+        id S1727035AbfGBPEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:01:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54489 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfGBPBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:01:52 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hiKI2-0006EM-1q; Tue, 02 Jul 2019 15:01:50 +0000
-To:     Petr Machata <petrm@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: mlxsw: spectrum: PTP: Support timestamping on Spectrum-1 -
- potential null ptr dereference
-Message-ID: <4fb676a6-1de8-8bcf-5f2e-3157827546c8@canonical.com>
-Date:   Tue, 2 Jul 2019 16:01:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 11:04:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59770 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfGBPEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:04:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B47730860B0;
+        Tue,  2 Jul 2019 15:04:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-219.rdu2.redhat.com [10.10.120.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFFD978361;
+        Tue,  2 Jul 2019 15:04:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix oops in tracepoint
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Marc Dionne <marc.dionne@auristor.com>, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Tue, 02 Jul 2019 16:04:19 +0100
+Message-ID: <156207985906.2089.12488693451155589820.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 02 Jul 2019 15:04:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If the rxrpc_eproto tracepoint is enabled, an oops will be cause by the
+trace line that rxrpc_extract_header() tries to emit when a protocol error
+occurs (typically because the packet is short) because the call argument is
+NULL.
 
-Static analysis with Coverity on today's linux-next has found a
-potential null pointer dereference bug with the following commit:
+Fix this by using ?: to assume 0 as the debug_id if call is NULL.
 
-commit d92e4e6e33c8b19635be70fb8935b627d2e4f8fe
-Author: Petr Machata <petrm@mellanox.com>
-Date:   Sun Jun 30 09:04:56 2019 +0300
+This can then be induced by:
 
-    mlxsw: spectrum: PTP: Support timestamping on Spectrum-1
+	echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only <addr> 20001
 
+where addr has the following program running on it:
 
-In function: mlxsw_sp1_ptp_packet_finish the offending code is as follows:
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <unistd.h>
+	#include <sys/socket.h>
+	#include <arpa/inet.h>
+	#include <linux/rxrpc.h>
+	int main(void)
+	{
+		struct sockaddr_rxrpc srx;
+		int fd;
+		memset(&srx, 0, sizeof(srx));
+		srx.srx_family			= AF_RXRPC;
+		srx.srx_service			= 0;
+		srx.transport_type		= AF_INET;
+		srx.transport_len		= sizeof(srx.transport.sin);
+		srx.transport.sin.sin_family	= AF_INET;
+		srx.transport.sin.sin_port	= htons(0x4e21);
+		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
+		bind(fd, (struct sockaddr *)&srx, sizeof(srx));
+		sleep(20);
+		return 0;
+	}
 
-       /* Between capturing the packet and finishing it, there is a
-window of
-        * opportunity for the originating port to go away (e.g. due to a
-        * split). Also make sure the SKB device reference is still valid.
-        */
-       mlxsw_sp_port = mlxsw_sp->ports[local_port];
-       if (!mlxsw_sp_port && (!skb->dev || skb->dev ==
-mlxsw_sp_port->dev)) {
-               dev_kfree_skb_any(skb);
-               return;
-       }
+It results in the following oops.
 
-If mlxsw_sp_port is null and skb->dev is not-null then the comparison
-"skb->dev == mlxsw_sp_port->dev" ends up with a null pointer dereference.
+	BUG: kernel NULL pointer dereference, address: 0000000000000340
+	#PF: supervisor read access in kernel mode
+	#PF: error_code(0x0000) - not-present page
+	...
+	RIP: 0010:trace_event_raw_event_rxrpc_rx_eproto+0x47/0xac
+	...
+	Call Trace:
+	 <IRQ>
+	 rxrpc_extract_header+0x86/0x171
+	 ? rcu_read_lock_sched_held+0x5d/0x63
+	 ? rxrpc_new_skb+0xd4/0x109
+	 rxrpc_input_packet+0xef/0x14fc
+	 ? rxrpc_input_data+0x986/0x986
+	 udp_queue_rcv_one_skb+0xbf/0x3d0
+	 udp_unicast_rcv_skb.isra.8+0x64/0x71
+	 ip_protocol_deliver_rcu+0xe4/0x1b4
+	 ip_local_deliver+0xf0/0x154
+	 __netif_receive_skb_one_core+0x50/0x6c
+	 netif_receive_skb_internal+0x26b/0x2e9
+	 napi_gro_receive+0xf8/0x1da
+	 rtl8169_poll+0x303/0x4c4
+	 net_rx_action+0x10e/0x333
+	 __do_softirq+0x1a5/0x38f
+	 irq_exit+0x54/0xc4
+	 do_IRQ+0xda/0xf8
+	 common_interrupt+0xf/0xf
+	 </IRQ>
+	 ...
+	 ? cpuidle_enter_state+0x23c/0x34d
+	 cpuidle_enter+0x2a/0x36
+	 do_idle+0x163/0x1ea
+	 cpu_startup_entry+0x1d/0x1f
+	 start_secondary+0x157/0x172
+	 secondary_startup_64+0xa4/0xb0
 
-I think the if statement should be:
+Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+---
 
-if (mlxsw_sp_port && (!skb->dev || skb->dev == mlxsw_sp_port->dev))
+ include/trace/events/rxrpc.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-..but I'm not 100% sure as I may be missing something a bit more subtle
-here.
-
-Colin
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index d85816878a52..cc1d060cbf13 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1379,7 +1379,7 @@ TRACE_EVENT(rxrpc_rx_eproto,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->call = call->debug_id;
++		    __entry->call = call ? call->debug_id : 0;
+ 		    __entry->serial = serial;
+ 		    __entry->why = why;
+ 			   ),
 
