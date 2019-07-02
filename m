@@ -2,96 +2,68 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE337C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F92C5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86451206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="czWLyvqq"
+	by mail.kernel.org (Postfix) with ESMTP id C28DE206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 02:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfGBCJh (ORCPT
+        id S1726993AbfGBCM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 22:09:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47672 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfGBCJh (ORCPT
+        Mon, 1 Jul 2019 22:12:28 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53946 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfGBCM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 22:09:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6228pek195172;
-        Tue, 2 Jul 2019 02:09:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=lXB2umxm4Qxv5Jy6JF1w9qFRyfyBm2ed0ppYjC/gkXs=;
- b=czWLyvqqHGd12bl13IG+KBmPKJ1vm3zTRakmWxBDGZo3Z1HQhQY0jOpEstB0hWYp/kHi
- k9pvXt3M1bQhtqYRJO43DgFxfZfM0BnZvCXQ8Hnch78Ehc+t0G2n2+cEhEnct3PPqHVV
- JrVVK59qPNCg6S/vZY6HrsXLU0XK/nbfsuuRls9/31Bi2gdtCBxxNUjXO+rMk+fwpEot
- hBwuekxknCD/cSeIGXa8/wHUekSr28UoAi5AkqXYrSiMDqr9PyPN30cG+FYpt412fzfv
- lG73z9C8s/LG2CKYBtqTq0g8Ew8R8PalL9aXYHFUf5OCvZplWHYrk30HUuMwfxdj9EjC pQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2te61e0nbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 02:09:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6228PI0117335;
-        Tue, 2 Jul 2019 02:09:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2tebku060s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Jul 2019 02:09:30 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6229SwQ025233;
-        Tue, 2 Jul 2019 02:09:29 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 01 Jul 2019 19:09:28 -0700
-Date:   Mon, 1 Jul 2019 22:09:51 -0400
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] xen/events: fix binding user event channels to cpus
-Message-ID: <20190702020951.GA8003@bostrovs-us.us.oracle.com>
-References: <20190621184703.17108-1-jgross@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621184703.17108-1-jgross@suse.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907020019
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9305 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907020020
+        Mon, 1 Jul 2019 22:12:28 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E1B8E14DE8844;
+        Mon,  1 Jul 2019 19:12:27 -0700 (PDT)
+Date:   Mon, 01 Jul 2019 19:12:27 -0700 (PDT)
+Message-Id: <20190701.191227.1363312826504012690.davem@davemloft.net>
+To:     johannes@sipsolutions.net
+Cc:     Jason@zx2c4.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netlink: use 48 byte ctx instead of 6 signed longs for
+ callback
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <0092b0b405e02ac7401ceaad2ea650abc44559ea.camel@sipsolutions.net>
+References: <20190628144022.31376-1-Jason@zx2c4.com>
+        <0092b0b405e02ac7401ceaad2ea650abc44559ea.camel@sipsolutions.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 01 Jul 2019 19:12:28 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 08:47:03PM +0200, Juergen Gross wrote:
-> When binding an interdomain event channel to a vcpu via
-> IOCTL_EVTCHN_BIND_INTERDOMAIN not only the event channel needs to be
-> bound, but the affinity of the associated IRQi must be changed, too.
-> Otherwise the IRQ and the event channel won't be moved to another vcpu
-> in case the original vcpu they were bound to is going offline.
+From: Johannes Berg <johannes@sipsolutions.net>
+Date: Fri, 28 Jun 2019 16:42:26 +0200
+
+> On Fri, 2019-06-28 at 16:40 +0200, Jason A. Donenfeld wrote:
+>> People are inclined to stuff random things into cb->args[n] because it
+>> looks like an array of integers. Sometimes people even put u64s in there
+>> with comments noting that a certain member takes up two slots. The
+>> horror! Really this should mirror the usage of skb->cb, which are just
+>> 48 opaque bytes suitable for casting a struct. Then people can create
+>> their usual casting macros for accessing strongly typed members of a
+>> struct.
+>> 
+>> As a plus, this also gives us the same amount of space on 32bit and 64bit.
+>> 
+>> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+>> Cc: Johannes Berg <johannes@sipsolutions.net>
 > 
-> Cc: <stable@vger.kernel.org> # 4.13
-> Fixes: c48f64ab472389df ("xen-evtchn: Bind dyn evtchn:qemu-dm interrupt to next online VCPU")
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
 
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-
+Applied to net-next.
