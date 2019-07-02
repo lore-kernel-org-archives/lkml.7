@@ -2,187 +2,104 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1303EC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCC8C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DDF20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA262184C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562115194;
-	bh=kyo0eoaQ9Ha/fgbOaPGSkh+lU4/GNQGtCW3mk29fTtM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OpGUVKoOzDkrRvltqulyQxcsXGowXZaDS5hk34x4Im70NoN2++S0YQztYLNJ2iBD3
-	 jhh4h7hCFCVeaCcXpAleKSgt1+hk1LTADqhYKQ4k+Li6LNI76sCMfi0TwkJzQcP6I/
-	 BE4VsAfFa9Fz5nk95ZTZGF57F5sbtjguE2MqvUVI=
+	s=default; t=1562115200;
+	bh=jOXGGlTtxKxUoZb4qZ8/SnpaBt3eFan28kHr8Q3ujSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zu9bKI6NLiw1MMBaaurV2UBPOqNwQMx0RFY+jCKNTkFWcuXak6yt8ZFpaBuFhwaf8
+	 E12m8H1xC6ITBsGoU2Ll1TQrczSZ2QZ3SaaqbE3YM2rRqKQ/MmSQ285sVfgeOVYPct
+	 PDq1WR7QR7V5mFg+2FK2xQUv32qOAU3mXF9mlLgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfGCAxO (ORCPT
+        id S1727356AbfGCAxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 20:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727025AbfGCAxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727092AbfGCAxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 20:53:05 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD5D21BF2;
-        Tue,  2 Jul 2019 23:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D9420B1F;
+        Tue,  2 Jul 2019 23:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562110455;
-        bh=kyo0eoaQ9Ha/fgbOaPGSkh+lU4/GNQGtCW3mk29fTtM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zMKkZ2iUwvFBFFgKCayDWNYa87sLl+Q8jJ0kQOrFNc7kW8nMZkXdEpUslpqFE27Vu
-         QuPL5GiJwl9Q5DeAl4/I3YyP6oFv0QIMbDb+v5SalR2BFdZqt23TBcsx8pwxkayO03
-         CcA9U3c6C3qoUMw1R7X0HkQqv3wh56/KrByGFtS0=
-Received: by mail-qt1-f174.google.com with SMTP id a15so544678qtn.7;
-        Tue, 02 Jul 2019 16:34:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAV5cmEyKD9pJQi0ZGAXYmTddQYD9SRYXLbnNYhV2O/XknWKi4Ov
-        VchDaSGGDSsZBXMP83ZUnYr83UFSN72yU0ERPg==
-X-Google-Smtp-Source: APXvYqwMCTfWzt/cQHKnUuZttwa2DgK2f5+/+x0lGfaPAIO+YrwZjCWAUf7qdAt2QRHL6vYe/2+RJeRw3PUodEdU/vM=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr27918576qtc.143.1562110455015;
- Tue, 02 Jul 2019 16:34:15 -0700 (PDT)
+        s=default; t=1562110648;
+        bh=jOXGGlTtxKxUoZb4qZ8/SnpaBt3eFan28kHr8Q3ujSc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q2qrTeTkiRv5BRUDGvR3KhEh7eRJEcJV/t9TQjTGVbuVFXawgLXl4iKY3PIevY1a5
+         gzCV0UqSy1wvthVyN7TclqnAc0jI/1yVcQ6qv1iUVY+xZEv9PREZDKygNkw6UMvMRn
+         r95Dz0RFbhYpgjUd1w35MEmic7ObUfs9KbbT5ab8=
+Date:   Tue, 2 Jul 2019 18:37:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/P2PDMA: Fix missing check for dma_virt_ops
+Message-ID: <20190702233726.GG128603@google.com>
+References: <20190702173544.21950-1-logang@deltatee.com>
 MIME-Version: 1.0
-References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com> <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 2 Jul 2019 17:34:03 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
-Message-ID: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
- and ARX300 PCIe PHYs
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702173544.21950-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 2:35 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
-> The IP block contains settings for the PHY and a PLL.
-> The PLL mode is configurable through a dedicated #phy-cell in .dts.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, Jul 02, 2019 at 11:35:44AM -0600, Logan Gunthorpe wrote:
+> Drivers that use dma_virt_ops were meant to be rejected when testing
+> compatibility for P2PDMA.
+> 
+> This check got inadvertantly dropped in one of the later versions of the
+> original patchset, so add it back.
+> 
+> Fixes: 52916982af48 ("PCI/P2PDMA: Support peer-to-peer memory")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+
+Applied to pci/peer-to-peer for v5.3, thanks!
+
 > ---
->  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
->  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
->  2 files changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
->  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
->
-> diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> new file mode 100644
-> index 000000000000..b7b222e772d0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-The preference is (GPL-2.0 OR BSD-2-Clause) for new bindings.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/pci/p2pdma.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index a4994aa3acc0..ab48babdf214 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -487,6 +487,14 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+>  		return -1;
+>  
+>  	for (i = 0; i < num_clients; i++) {
+> +		if (IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
+> +		    clients[i]->dma_ops == &dma_virt_ops) {
+> +			if (verbose)
+> +				dev_warn(clients[i],
+> +					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
+> +			return -1;
+> +		}
 > +
-> +title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 1
-> +    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
-> +
-> +  compatible:
-> +    enum:
-> +      - lantiq,vrx200-pcie-phy
-> +      - lantiq,arx300-pcie-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: PHY module clock
-> +      - description: PDI register clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: phy
-> +      - const: pdi
-> +
-> +  resets:
-> +    items:
-> +      - description: exclusive PHY reset line
-> +      - description: shared reset line between the PCIe PHY and PCIe controller
-> +
-> +  resets-names:
-> +    items:
-> +      - const: phy
-> +      - const: pcie
-> +
-> +  lantiq,rcu:
-> +    maxItems: 1
-> +    description: phandle to the RCU syscon
-
-You need to define the type (and drop maxItems):
-
-$ref: /schemas/types.yaml#/definitions/phandle
-
-> +
-> +  lantiq,rcu-endian-offset:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: the offset of the endian registers for this PHY instance in the RCU syscon
-> +
-> +  lantiq,rcu-big-endian-mask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - lantiq,rcu
-> +  - lantiq,rcu-endian-offset
-> +  - lantiq,rcu-big-endian-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie0_phy: phy@106800 {
-> +        compatible = "lantiq,vrx200-pcie-phy";
-> +        reg = <0x106800 0x100>;
-> +        lantiq,rcu = <&rcu0>;
-> +        lantiq,rcu-endian-offset = <0x4c>;
-> +        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
-> +        big-endian;
-
-The example will fail to validate because big-endian is not listed as
-a property and you have 'additionalProperties: false'. So you have to
-either list big-endian or drop additionalProperties.
-
-Note that the examples are validated against the schema in linux-next now.
-
-Rob
+>  		pci_client = find_parent_pci_dev(clients[i]);
+>  		if (!pci_client) {
+>  			if (verbose)
+> @@ -765,7 +773,7 @@ int pci_p2pdma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
+>  	 * p2pdma mappings are not compatible with devices that use
+>  	 * dma_virt_ops. If the upper layers do the right thing
+>  	 * this should never happen because it will be prevented
+> -	 * by the check in pci_p2pdma_add_client()
+> +	 * by the check in pci_p2pdma_distance_many()
+>  	 */
+>  	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_DMA_VIRT_OPS) &&
+>  			 dev->dma_ops == &dma_virt_ops))
+> -- 
+> 2.20.1
+> 
