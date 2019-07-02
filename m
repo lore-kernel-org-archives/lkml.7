@@ -2,168 +2,118 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6302C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B757C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA9B206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B64206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CN/HkxfC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfZyrUjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfGBJvi (ORCPT
+        id S1727205AbfGBJvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Jul 2019 05:51:41 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44350 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfGBJvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 05:51:38 -0400
-Received: from mout.gmx.net ([212.227.15.19]:45561 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfGBJvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:51:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562061072;
-        bh=FGM5WXyOI1pXMifsCCwhO9soc1ANArWFrlQ2lZN8tTQ=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=CN/HkxfCLv1B4CD87a9WrW6LKKkgb0CwQ3XEaBmdDQ3ObqzNk5DLrG0kALBpaOjWw
-         uA043edWLxP62RdSCvDQjGDmwLeAzpWQ7IK0gJ2qFvait18MWgfcO2riRf9tz6gE31
-         5O31tl9G//BCar1XWX38JIf6kyd7An6k+1DLg4Wc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lvkwm-1icWvk2Pds-017RP0; Tue, 02
- Jul 2019 11:51:12 +0200
-Date:   Tue, 2 Jul 2019 11:51:09 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brad Love <brad@nextdimension.cc>
-Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
-Message-ID: <20190702095109.GC22408@latitude>
-References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
+Received: by mail-pl1-f194.google.com with SMTP id t7so90293plr.11;
+        Tue, 02 Jul 2019 02:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=96/3jtqs845f5zIFwO5nxuuVCQy9SyepnoAKFsIrIMw=;
+        b=JfZyrUjlJL43ILmmdwAy6F7txZsfdzO4AQzkvU7IZPP/iF9/X6mtv5kQO6hMGe4MJV
+         2l0FeeMmm6hwQNIyj1F/HRmwbXPZJxWLb+aw+9WQ+CbJpEYfWp2N7nLI+xWWUA0TJddq
+         J1SrIjHpPakOu+/2qOzUTtgqt0GDGhKM+5lqGldG1FvUP7qTXUHsZLLs3KmEJ2mmKzc6
+         C0hgtVgTsJFWst0ts15bRtKuNlwucq4HLOHhSZuiWhCIsNxLQzP8oppYwIx6iYl5TZEl
+         3kcJwVcth2oV3/nxOU2RR9CqWxMtosf0r3x2Ok+Rq1pTgO/MbphyI9wQ0PhKI1a//55F
+         yo4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=96/3jtqs845f5zIFwO5nxuuVCQy9SyepnoAKFsIrIMw=;
+        b=HvrIYKAxGpf0qO821BMs53SIpW4laZ0gsOH++pVqhHL+9Ot6X2/oN+ebOR7AVsA2mN
+         astrVA17BR3yuDdEHUcxW/y40jB/S1Sdsc4paMeJdxK8+MZVYHbyzrPf9CP15HZK4kOi
+         IIZ7MIslvhSnVGsQkhHBeDcxndICidZuJ3BUg7CBx82i5GIFK4xuVkNj8Ban4lamoexU
+         0QFFOrk3tcCVnWjrGACEWosuX+99XQng+THNEZo3XK2rBbSGaE718RCjl5MMSQ9J8Q64
+         nN+6iLnaBOLzGetAKcKrlH8te/+fL4uBmJFLPSCy1wquJQcIbLlzCmwos6H7w+QKrjMF
+         hWgQ==
+X-Gm-Message-State: APjAAAXCIyNd+1Gx5T7jtwfIndv821+fgC2Jbw/NveLF5qZX1jcFif8w
+        hxT9XADAASJ4EVC3JTw2oAOqVsdusMDr/XKo3zs=
+X-Google-Smtp-Source: APXvYqxhyUjR0CrI9KX1v9haSzz6fkp5zqzu2IxjxZvlFO45fy5nIdN3K4RDU2J0uhXSTOlvwyIMohZj8GfA+WQFMqk=
+X-Received: by 2002:a17:902:934a:: with SMTP id g10mr34957358plp.18.1562061097869;
+ Tue, 02 Jul 2019 02:51:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
-Content-Disposition: inline
-In-Reply-To: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:meVnSL0vkDuUwFstQh5OanUzm5dthphT8V4mbTD14FxbGuHVDs6
- FeqySYV+ms5Yw43+AuYlRt9/9CHHw4z1szwTYsUW2yemNKOomvosKKGm2dhcKMJs7cGyKfP
- auUSUdQJsVEcZsmoiXExB6vQDesJoobtg2sy1Qd6IWVkKZUGtu4zzo3srS+11sQlEHN1qau
- e+fzYIbkty7SjWbfhnRew==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1037Dn98csI=:xzpDmgYxeaJVGHc3FJvXiN
- bJIQpn/qbD55TI5fpa4LXWOS78BYLi8v/denNJu9at/B5LpDuXSi1Rhfu+8G39yNyvkHr62zK
- JD/Ozn1TKpuaJcMFzimWL6EzoMMnnqQH9rCdOfUOE4s3bw3jjSkpvC1qg9Cc0xXpDlmtPSNSP
- 5zT5+BCxv08oZNjcxJF8deFxVnJ4PT9k20PM9pvq/lkFVDcXYy0e2ADXBDKu+Wrke0WqOiRrs
- OLKxG5PfSHvtfqn2DZNeRiCVlk38kcnVnE7Dbtym5G7AJxZQAPe0tjnw+82tzReiardtZgU3f
- QmLJWKCyhUTPI9QGjRTz2cXd6RSO7gp8/nS+wN4ipQj60KEgOUnvQVsUOouvvpD4djOGhSaUJ
- 9h9Mzp0EuDV8ZMrSaMupvNLjMpHDpBQ5OpYYECOZEKWARmVfbn06B0xzI7/sVccFG/hr3AYl1
- 8kASndiedP/ulQRncXEBKfYpOsFtJ9xIJB7Lr0LTPk01dWAXiA369L9n0B3GNVK98enOFkZyl
- 1TFs6DPR2Iy98xIdShnZRcOKydA0+Nj4Wn4UkoU+ydp3AzsVogkb8n8l1hUQOmcuBSGHF2PKp
- 5mSOPre4Jp32M8Zp5mU4YnPlOg6rLUqQvDECUPOdqaXB8QrzlsTtY2PGiVMSVz81uuFriZyD9
- ulrJPwuM7gFZQP23+lRl1y7YV2Il+iX/6V9rFGb3XQ8bzqZQlNSrSurCds+OTSZ4EyRG1y5OA
- /guTzcwqax9wu6zVE78ogzCyXiMU7BM2Jz4de7t4uAEPV0WZdN+LlTpKjpy8PO67/xDsvBxSB
- YFo0afMkK7rmmcjwu1fIehylG0sWuA7gsTo3j6FBhj3HxTHIgI3+zEsnaEet1PDz4bYEKf1Gl
- nEqIlAOP3XUxhAV8EYI1DrD7QAO+6SSlEBZskNR0padkK1UjX6mB7XIEduUcv/rSgNsxVC5mj
- BWFAMNVtrJa3wpFScEdqpFJPxFxBP8UM+sDOpQEZfmbjIwmitPwlTJF8cOXSkalgEsyJswD+y
- 88TGH8Sc5qzpn4mM6noKsJi0yqQE3tbxbY1Izo7mEutSWTmSm+N3q4bp3fmDXFbh4mBlIzj2j
- YhlNUT6b/2ndtU=
+References: <20190701032342.25971-1-huangfq.daxian@gmail.com>
+ <20190701075255.GD172968@dtor-ws> <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
+In-Reply-To: <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 2 Jul 2019 12:51:25 +0300
+Message-ID: <CAHp75VeUo2Au66tETo3zneBpeaVU+Y+-h5zghpo+hPuB=a6-eA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use dev_get_drvdata()
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Olof Johansson <olof@lixom.net>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Christian Hoff <christian_hoff@gmx.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Gabriel Fernandez <gabriel.fernandez@st.com>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 2, 2019 at 11:20 AM Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+>
+> I am not an expert on this. I just write a coccinelle script to search
+> this kind of misuse and fix it in a naive way.
+> Could you tell me about how to use the proper bus accessors? Then I
+> will fix it up and resend a v2 patch set.
 
---mojUlQ0s9EVzWg2t
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Jul 01, 2019 at 01:44:09PM +0200, Marc Gonzalez wrote:
-> By refactoring the command setup code, we can let the compiler
-> determine the size of each command.
-
-I like the idea, it definitely saves some code.
-
-The conversion also looks correct.
-
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
->  drivers/media/dvb-frontends/si2168.c | 142 ++++++++-------------------
->  1 file changed, 41 insertions(+), 101 deletions(-)
->=20
-> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-fro=
-ntends/si2168.c
-> index 168c503e9154..19398f041c79 100644
-> --- a/drivers/media/dvb-frontends/si2168.c
-> +++ b/drivers/media/dvb-frontends/si2168.c
-> @@ -11,6 +11,12 @@
-> =20
->  static const struct dvb_frontend_ops si2168_ops;
-> =20
-> +#define CMD_SETUP(cmd, __args, __rlen) do {	\
-> +	int wlen =3D sizeof(__args) - 1;		\
-> +	memcpy(cmd.args, __args, wlen);		\
-> +	cmd.wlen =3D wlen; cmd.rlen =3D __rlen;	\
-> +} while (0)
-
-It would be nice for casual readers to have a little comment here, that
-explains (briefly) what this macro does, and what the arguments mean,
-and their types.
-
-Why cmd rather than __cmd? This seems inconsistent.
-
-The wlen local variable can be avoided by a bit of suffling:
-
-	#define CMD_SETUP(cmd, __args, __rlen) do {	\
-		cmd.rlen =3D __rlen;			\
-		cmd.wlen =3D sizeof(__args) - 1;		\
-		memcpy(cmd.args, __args, cmd.wlen);	\
-	} while (0)
+First, don't top post.
+And answering to this, simple drop the patch.
+Proper bus accessors is exactly what it's used in the current code.
 
 
-[from the other mail]
-> I'm planning on sending a v2 where drivers/media/tuners/si2157.c
-> is refactored the same way.
-
-Makes sense.
-
-> Not sure where to store the macro. Maybe include/media/dvb_frontend.h?
-
-Then include/media/dvb_frontend.h would contain information about the
-private structs of a few (two) drivers. This doesn't seem like a good
-idea to me.
-
-
-Greetings,
-Jonathan Neusch=C3=A4fer
-
---mojUlQ0s9EVzWg2t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0bKMwACgkQCDBEmo7z
-X9v5PhAA0ywTpuolHgb0WWPyGBKYIBUbCWzyB7tfctjB1AIjKcW2/Y3pNYuAB/rQ
-AfguO8KOAP48SZD29BEYvlOIfY7xZ6MJs39cMfJbuV8YahtJZ79T6oEDFzblXo9o
-KB800d2BBB6O1tffQH465mOxHjsD32hTzRT+QZsPljNIi3x24ujBVhP6LqGjJI3z
-imBmoUuwk8RVoSFrrxWrhJuQ5OtbSxRn/oZ3A/GMXrx9RpOU62H63brSEDEv6vzw
-CpfqaIkEvpDPbbo7BZj37LYqUOWlbi/MnC5O5l0HbXbp7+xnJZcNdn6EsE+6E08S
-cbH1ySFBHp17zZdBtv4qu3zwULGNPCvM8iN1WNf3rI1U1iTjfqZmZcJkTHCRmdMh
-bSQ/EAQSEm5KTAIAvA2X62/x5SAsRursdejB7q8aLPJ6y6wKsQoN0wPGtJqT9DBQ
-I5FnKjJ7NbHpcBH8Fg2kyZxLJUVyiAcnoseKnvorRfJ+Au2TBlXc9k3NnCoZIAPs
-sP19WmTDeh3KLU24Otumut9qB5KveR763T9I0u2U9wBwgK3NJw/+S+6Y2XPUxrNW
-ArlOEtFaEi7Lznv9PmWfgyvKZz9WI24tpRPn0B//3OoYZ1la1ZboJICyeUJ8/sNc
-tZVA1Ylz3xlhzUnU2HaQ2sxwhvZzPFEv/I8EI80M90NHeCqPd5M=
-=aW/y
------END PGP SIGNATURE-----
-
---mojUlQ0s9EVzWg2t--
+-- 
+With Best Regards,
+Andy Shevchenko
