@@ -2,97 +2,91 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB665C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B6FC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0AC2063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DEC2063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="IzMsn6uv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdonMdmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfGCBaC (ORCPT
+        id S1727358AbfGCBac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:30:02 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43049 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfGCBaC (ORCPT
+        Tue, 2 Jul 2019 21:30:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37370 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfGCBab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:30:02 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w17so748593qto.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
+        Tue, 2 Jul 2019 21:30:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so346609pfa.4;
+        Tue, 02 Jul 2019 18:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=NdF561jXVNweNYUoOJz5cSdmi6GYXNKILSdaVQx92EI=;
-        b=IzMsn6uvAihHWC+xI4jQL5EXSlCpq89Da5vdBU8pF5mhxYLAaPUmIASa2aOAoImI4z
-         ZW13ivkgV55Kn0Z3u8kGsGNRnpgkewwp65DGh2RkUZezPSv7ZlUErLxqX/fHOGzlxuZD
-         VeK914OF8SpXCWrCjwBA5vVyoesm6F5V/zhjuh76NXpWTo6CbaHWisMfBk4yBSikYAJn
-         Z6GcfZje1egcCihtpUjrBHW4MyNIxEU+uuKVtY1QfRyYMKv5r+t+sqoQ4eW25NWYKZ1D
-         59tytOuMwbdGDIi9K+7/qswB5zK5rOp4cet11f1LJ1RpFzCo7h/X8QStr3ZKM6ehuNC8
-         obDw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L4pET9YsQCDoE6awsVZbNmmWVq+gXFm7LkEAIu1gcBs=;
+        b=EdonMdmdmkotg2/LT1Jpk4FL1maXE5svD0pQof+aR+UNif6NuzSKmQKlhWCSuVFz/o
+         YDGpZOnOtRlQs9XuALnqDt66Jo+K2vOLWYvyFO05BJ8qVPWrkx3c1KjAN44shkAmj3ln
+         2q5n12oi8oUC25hDtUg4u7QSXtwUaNNg8VkOVnRUb/sem22609SJWE+21KCMO6KFgqhR
+         hw1EVRnu+VLCDvrhIGYuY6X+rQyaHWnOW2ctjW2NNYeMw1U4k4z+C8VopwZPdIRYaNZo
+         w61Q8YsIr5KPhMJCWd62lMbQPNQotFj3iGFBT7OVhy1E0G5Ff2cSKM5gPfaIzWVzjIIx
+         NNRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=NdF561jXVNweNYUoOJz5cSdmi6GYXNKILSdaVQx92EI=;
-        b=MjOCrgs+h0dNZLzAxkERVQCh9Bqa0P6ATnv1hjYVkV9eoQIfwwmyapScG3oNvh6j6n
-         NJWzhXF0djAzbcWyRSTyuCzQQNGpsjW4I+//1HRKYURwtaF+QyjA+b39Z/J/kMKKH6Hh
-         aUxH2tGSWYzH3A9lfr/1Bm0Gh1hbFXI+ciNaaBDaQkPopZRlHf8rgg50PLVKjojY7lUs
-         TlOcvagFf6oM5sZ5OQKx/hqbWavkgBffie33mdWsN/jY0pDZiCnwHkMti531xmGO4p6z
-         f/jmPJQQB8rEYixJvsbTZxw2/SXEWxsBGu/RZd0vJTqFpwvrRENIt6CJzUKfBiLbjhb9
-         N/ag==
-X-Gm-Message-State: APjAAAUC76eJPHp8+RO/PRiw3A17iflE3M0Ha+7kTldo66Rbw0ZmaMyN
-        BRwVuzHBOxTWl3D4O/5EnlXBHA==
-X-Google-Smtp-Source: APXvYqzonc3yIGfK+TZvGWD04lDWPLi1g4Tt4GSAnz3bkEJTGn3ZfsU0P9piR1RT0f0L6874RQ59zg==
-X-Received: by 2002:a0c:b2da:: with SMTP id d26mr18574230qvf.48.1562117401188;
-        Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id d188sm279477qkf.40.2019.07.02.18.29.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 18:29:56 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190702182956.26435d63@cakuba.netronome.com>
-In-Reply-To: <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
-        <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L4pET9YsQCDoE6awsVZbNmmWVq+gXFm7LkEAIu1gcBs=;
+        b=JJrGyiY0e19l3jQp3J4v1zXqCuVndsmMedLgEIH8k6VumF0pH34MOT3SzrFXZvjcBu
+         3D1RuJQQTPqvfezOVtaaHXpq+KSgxbz0YCOE7kYYotdMXeepRpdhngulX8LZzD0VKHZ1
+         RQvpq5+Fep2xFDN2WPNBvZ5RiWxqC8w4V9uQKfOBg4A9N5i8tyuNqPXOOzjQ+jrL/HgW
+         n+/9XnhpUNjkgZRVbjZF1vDOmPtqQFn7UhZWxX0Conk3moGj+cO5v7AwrExk4UqdcELo
+         DI20ZAWcytBB2Y065k8wDFgNzyw4yz5pcb7AN0shb/fVeBEdnLLGa70fT3QKil+8XfG5
+         pjNg==
+X-Gm-Message-State: APjAAAUOpMvQJt2yidpLVJibZJiPmc7VKr8D98EnkGIgJRKBan70tXbN
+        v6uTzpGuTyrkVLM4ZepKy0mUa13C
+X-Google-Smtp-Source: APXvYqyXvgDCpfZwAW9HAbb/O8p8jWpGBgsXjRUHz3i/iVyqJtvIBTvUS1mUlaDrzx+mSpHGypX75Q==
+X-Received: by 2002:a17:90a:a008:: with SMTP id q8mr7786552pjp.114.1562098981736;
+        Tue, 02 Jul 2019 13:23:01 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r15sm14610899pfh.121.2019.07.02.13.23.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 13:23:01 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 13:23:00 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/72] 4.19.57-stable review
+Message-ID: <20190702202300.GB29128@roeck-us.net>
+References: <20190702080124.564652899@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Jul 2019 13:49:59 +0200 (CEST), Michal Kubecek wrote:
-> diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
-> new file mode 100644
-> index 000000000000..97c369aa290b
-> --- /dev/null
-> +++ b/Documentation/networking/ethtool-netlink.txt
-> @@ -0,0 +1,208 @@
-> +                        Netlink interface for ethtool
-> +                        =============================
-> +
-> +
-> +Basic information
-> +-----------------
+On Tue, Jul 02, 2019 at 10:01:01AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.57 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
+> 
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 364 pass: 364 fail: 0
 
-Probably not a blocker for initial merging, but please note a TODO to
-convert the documentation to ReST.
+Guenter
