@@ -2,126 +2,175 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D69C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004CFC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4228E21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67E321479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562045184;
+	bh=gjJp/4fEWiY0OBCLMYnsS1/ZKtxBUL0zaZsM3jR9aHs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ST8ZPalzB6Bep0Y3nc37QIAlqjU4wePDQSXEl9G+c9gTnk5cnVp89bGpPcwNGM4Un
+	 Aur7t8ZzqZKEwamJzjpbf7W8IDtjKy+bXyUaky0FpV/hSaxx8cbUySlvfGsJ8SFR9b
+	 SRHiQoHCctpKrRO5vv4pFbvgxX2Ci7R4P3b3medg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfGBFYw (ORCPT
+        id S1726821AbfGBF0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:24:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45318 "EHLO mx1.redhat.com"
+        Tue, 2 Jul 2019 01:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:24:52 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725775AbfGBF0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:26:23 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98DB433025F;
-        Tue,  2 Jul 2019 05:24:51 +0000 (UTC)
-Received: from [10.72.12.205] (ovpn-12-205.pek2.redhat.com [10.72.12.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 847F41001B01;
-        Tue,  2 Jul 2019 05:24:45 +0000 (UTC)
-Subject: Re: Reminder: 2 open syzbot bugs in vhost subsystem
-To:     Eric Biggers <ebiggers@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Hillf Danton <hdanton@sina.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B62521479;
+        Tue,  2 Jul 2019 05:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562045181;
+        bh=gjJp/4fEWiY0OBCLMYnsS1/ZKtxBUL0zaZsM3jR9aHs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ep2kLDQ5dmiarwfeufTwp0Bi+PdeDPL/sFpsi1OAewIWwxLURhpF8MgdKDUiquq7w
+         rkng8JJc+SGgKW7+sjG2r0aGCoYeALpsKKvKr9GLzEKSrEcExpd+dNcHg6wa2frIdS
+         Y0BhPwfdjqBy3LOka11Yz7SYVzmrpRp/slTMs9V4=
+Date:   Mon, 1 Jul 2019 22:26:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190702051707.GF23743@sol.localdomain>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e2da1124-52c3-84ff-77ce-deb017711138@redhat.com>
-Date:   Tue, 2 Jul 2019 13:24:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Subject: Reminder: 5 open syzbot bugs in "fs/fuse" subsystem
+Message-ID: <20190702052620.GG23743@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190702051707.GF23743@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 02 Jul 2019 05:24:51 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-On 2019/7/2 下午1:17, Eric Biggers wrote:
-> [This email was generated by a script.  Let me know if you have any suggestions
-> to make it better, or if you want it re-generated with the latest status.]
->
-> Of the currently open syzbot reports against the upstream kernel, I've manually
-> marked 2 of them as possibly being bugs in the vhost subsystem.  I've listed
-> these reports below, sorted by an algorithm that tries to list first the reports
-> most likely to be still valid, important, and actionable.
->
-> Of these 2 bugs, 1 was seen in mainline in the last week.
->
-> If you believe a bug is no longer valid, please close the syzbot report by
-> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> original thread, as explained at https://goo.gl/tpsmEJ#status
->
-> If you believe I misattributed a bug to the vhost subsystem, please let me know,
-> and if possible forward the report to the correct people or mailing list.
->
-> Here are the bugs:
->
-> --------------------------------------------------------------------------------
-> Title:              memory leak in vhost_net_ioctl
-> Last occurred:      0 days ago
-> Reported:           26 days ago
-> Branches:           Mainline
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=12ba349d7e26ccfe95317bc376e812ebbae2ee0f
-> Original thread:    https://lkml.kernel.org/lkml/000000000000188da1058a9c25e3@google.com/T/#u
->
-> This bug has a C reproducer.
->
-> The original thread for this bug has received 4 replies; the last was 17 days
-> ago.
->
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by: syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/000000000000188da1058a9c25e3@google.com
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 5 of them as possibly being bugs in the "fs/fuse" subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
+Of these 5 bugs, 2 were seen in mainline in the last week.
 
-Cc Hillf who should had a fix for this.
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-Hillf, would you please post a formal patch for this? (for -net)
+If you believe I misattributed a bug to the "fs/fuse" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
+Here are the bugs:
 
->
-> --------------------------------------------------------------------------------
-> Title:              INFO: task hung in vhost_init_device_iotlb
-> Last occurred:      125 days ago
-> Reported:           153 days ago
-> Branches:           Mainline and others
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=cb1ea8daf03a5942c2ab314679148cf6e128ef58
-> Original thread:    https://lkml.kernel.org/lkml/0000000000007e86fd058095533f@google.com/T/#u
->
-> Unfortunately, this bug does not have a reproducer.
->
-> The original thread for this bug received 2 replies; the last was 152 days ago.
->
-> If you fix this bug, please add the following tag to the commit:
->      Reported-by: syzbot+40e28a8bd59d10ed0c42@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/0000000000007e86fd058095533f@google.com
->
+--------------------------------------------------------------------------------
+Title:              possible deadlock in free_ioctx_users
+Last occurred:      2 days ago
+Reported:           295 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7a5eef8441d0a76d4ac12b35f3633885dbb9d04e
+Original thread:    https://lkml.kernel.org/lkml/00000000000024df4605757495a8@google.com/T/#u
 
-Can syzbot still reproduce this issue?
+This bug has a C reproducer.
 
-Thanks
+The original thread for this bug received 5 replies; the last was 294 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+d86c4426a01f60feddc7@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000024df4605757495a8@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in __device_add_disk
+Last occurred:      2 days ago
+Reported:           438 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=de24bb052989af7a72e7bf51895242e5c0fbda94
+Original thread:    https://lkml.kernel.org/lkml/0000000000001558f3056a369689@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+3337db851ace689ceb50@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001558f3056a369689@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Write in end_requests
+Last occurred:      332 days ago
+Reported:           336 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=400d6a977a0dbd8836d7c7ec8481782a674ee855
+Original thread:    https://lkml.kernel.org/lkml/000000000000d0429205723824d8@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+cd4b9b3648c78dbd7fca@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000d0429205723824d8@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in fuse_reverse_inval_entry
+Last occurred:      331 days ago
+Reported:           343 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ae8cd67e7e816f210105fee7719de41d6bcd010c
+Original thread:    https://lkml.kernel.org/lkml/000000000000bc17b60571a60434@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 14 replies; the last was 241 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+bb6d800770577a083f8c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000bc17b60571a60434@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in request_end
+Last occurred:      243 days ago
+Reported:           280 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=2318b559efec9fda6c77bd5c3d57c8fc3255d922
+Original thread:    https://lkml.kernel.org/lkml/0000000000006971fa05769d22f6@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 6 replies; the last was 100 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ef054c4d3f64cd7f7cec@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006971fa05769d22f6@google.com
 
