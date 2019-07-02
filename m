@@ -1,188 +1,106 @@
 Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9EC06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6578FC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95912184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dUveXvl3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jJVKbTNi"
+	by mail.kernel.org (Postfix) with ESMTP id 323C52184E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 18:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562091783;
+	bh=uHUZTL92LdnoiyeyNIsKdrW3LnHKW31MgQHdErGZMAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I0oyeB3muQLprmbqqZWb/n64Q+RYhPOIxUYHDnBWRp20lO6oOIYiMumEqHWVDl/og
+	 a5odfm/EazrwPyS9VQRtQ3aAIi9mW3h2WQHBD6cLAy7WI2+tZkeVAuWAzAbWYBS0Q9
+	 ciaA+RWbes/iCS7xjbcEo7gQ0XL50E8TRB83JZJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfGBSVX (ORCPT
+        id S1726962AbfGBSXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 14:21:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33078 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfGBSVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 14:21:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5591F6087F; Tue,  2 Jul 2019 18:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562091681;
-        bh=5bw1EVJiV5G7vG0aSJmf9KC+cBmeMriFWWIIYfkAxaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dUveXvl3aOLY0Ix+FPaftcYkfHXgtF4kFQKZcdPNQ4prjaGlA6j/n2DjfVXUscLS+
-         Tx1wY/2fxDc5vuWuSxRNzCYN08EUuxPTBw7XABle00JWnICa5O9mJIaPRPrckzQ4ZZ
-         wCc1HICzRkXm1Zh+grRzZ7W+uIwvYXGpKjya2k+0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 5784A60746;
-        Tue,  2 Jul 2019 18:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562091680;
-        bh=5bw1EVJiV5G7vG0aSJmf9KC+cBmeMriFWWIIYfkAxaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jJVKbTNiLwcBEnl15Wbh5d0IKLKGs7dMcuiMoIZfiLStYTw5XyVDGmZZIbF6tb1oY
-         UTDYNZ6ChD589JQAwr1DLE1U6zodF3S+otZZ53QncHG3s3YVHsNdXths8WIqgTUtIg
-         3vvGmZi4bNPY3JmLIsHTRbI8wfmj8DWxn2cYwPuI=
+        Tue, 2 Jul 2019 14:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfGBSXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 14:23:01 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDB3C2184B;
+        Tue,  2 Jul 2019 18:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562091781;
+        bh=uHUZTL92LdnoiyeyNIsKdrW3LnHKW31MgQHdErGZMAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X8lhXrdGVEeshXHO0KIaw6jBzwotwBKbK6n8N7I94erVXoyIB+IMaphZ6AzqqnPnP
+         9ZHuRIQQwQmj7dfGs76xzKhLe0hr0Q/V4gFydJ+SdFSu3CAAcP4D2dk2rq/oRAU/6C
+         lcDosjNJld/LfsxlU13xAVSN4jt7UgYudHmJM4Ww=
+Date:   Tue, 2 Jul 2019 11:22:59 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] vfs: move_mount: reject moving kernel internal mounts
+Message-ID: <20190702182258.GB110306@gmail.com>
+References: <CACT4Y+ZN8CZq7L1GQANr25extEqPASRERGVh+sD4-55cvWPOSg@mail.gmail.com>
+ <20190629202744.12396-1-ebiggers@kernel.org>
+ <20190701164536.GA202431@gmail.com>
+ <20190701182239.GA17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jul 2019 11:21:20 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     dhar@codeaurora.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, chandanu@codeaurora.org,
-        nganji@codeaurora.org, jshekhar@codeaurora.org
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-In-Reply-To: <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
- <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
- <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
- <627144af54459a203f1583d2ad9b390c@codeaurora.org>
- <ea91c2c49d73af79bd6eea93a6d00a5a@codeaurora.org>
-Message-ID: <f9a7786cce817c7d1a646b052ba1a679@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701182239.GA17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-01 03:29, dhar@codeaurora.org wrote:
-> On 2019-06-26 03:10, Jeykumar Sankaran wrote:
->> On 2019-06-24 22:44, dhar@codeaurora.org wrote:
->>> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
->>>> On 2019-06-23 23:27, Shubhashree Dhar wrote:
->>>>> dpu encoder spinlock should be initialized during dpu encoder
->>>>> init instead of dpu encoder setup which is part of commit.
->>>>> There are chances that vblank control uses the uninitialized
->>>>> spinlock if not initialized during encoder init.
->>>> Not much can be done if someone is performing a vblank operation
->>>> before encoder_setup is done.
->>>> Can you point to the path where this lock is acquired before
->>>> the encoder_setup?
->>>> 
->>>> Thanks
->>>> Jeykumar S.
->>>>> 
->>> 
->>> When running some dp usecase, we are hitting this callstack.
->>> 
->>> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
->>> Call trace:
->>>  spin_dump+0x84/0x8c
->>>  spin_dump+0x0/0x8c
->>>  do_raw_spin_lock+0x80/0xb0
->>>  _raw_spin_lock_irqsave+0x34/0x44
->>>  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
->>>  dpu_crtc_vblank+0x168/0x1a0
->>>  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
->>>  process_one_work+0x16c/0x2d8
->>>  worker_thread+0x1d8/0x2b0
->>>  kthread+0x124/0x134
->>> 
->>> Looks like vblank is getting enabled earlier causing this issue and 
->>> we
->>> are using the spinlock without initializing it.
->>> 
->>> Thanks,
->>> Shubhashree
->>> 
->> DP calls into set_encoder_mode during hotplug before even notifying 
->> the
->> u/s. Can you trace out the original caller of this stack?
->> 
->> Even though the patch is harmless, I am not entirely convinced to move 
->> this
->> initialization. Any call which acquires the lock before encoder_setup
->> will be a no-op since there will not be any physical encoder to work 
->> with.
->> 
->> Thanks and Regards,
->> Jeykumar S.
->> 
->>>>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
->>>>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->>>>> ---
->>>>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>> 
->>>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> index 5f085b5..22938c7 100644
->>>>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>>>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
->>>>> struct
->>>>> drm_encoder *enc,
->>>>>  	if (ret)
->>>>>  		goto fail;
->>>>> 
->>>>> -	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>> -
->>>>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->>>>>  	timer_setup(&dpu_enc->frame_done_timer,
->>>>>  			dpu_encoder_frame_done_timeout, 0);
->>>>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
->>>>> drm_device *dev,
->>>>> 
->>>>>  	drm_encoder_helper_add(&dpu_enc->base, 
->>>>> &dpu_encoder_helper_funcs);
->>>>> 
->>>>> +	spin_lock_init(&dpu_enc->enc_spinlock);
->>>>>  	dpu_enc->enabled = false;
->>>>> 
->>>>>  	return &dpu_enc->base;
+On Mon, Jul 01, 2019 at 07:22:39PM +0100, Al Viro wrote:
+> On Mon, Jul 01, 2019 at 09:45:37AM -0700, Eric Biggers wrote:
+> > On Sat, Jun 29, 2019 at 01:27:44PM -0700, Eric Biggers wrote:
+> > > 
+> > > Reproducer:
+> > > 
+> > >     #include <unistd.h>
+> > > 
+> > >     #define __NR_move_mount         429
+> > >     #define MOVE_MOUNT_F_EMPTY_PATH 0x00000004
+> > > 
+> > >     int main()
+> > >     {
+> > >     	  int fds[2];
+> > > 
+> > >     	  pipe(fds);
+> > >         syscall(__NR_move_mount, fds[0], "", -1, "/", MOVE_MOUNT_F_EMPTY_PATH);
+> > >     }
+> > 
+> > David, I'd like to add this as a regression test somewhere.
+> > 
+> > Can you point me to the tests for the new mount syscalls?
+> > 
+> > I checked LTP, kselftests, and xfstests, but nothing to be found.
 > 
-> In dpu_crtc_vblank(), we are looping through all the encoders in the
-> present mode_config:
-> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
-> 1/dpu_crtc.c#L1082
-> and hence calling dpu_encoder_toggle_vblank_for_crtc() for all the
-> encoders. But in dpu_encoder_toggle_vblank_for_crtc(), after acquiring
-> the spinlock, we will do a early return for
-> the encoders which are not currently assigned to our crtc:
-> https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/msm/disp/dpu
-> 1/dpu_encoder.c#L1318.
-> Since the encoder_setup for the secondary encoder(dp encoder in this
-> case) is not called until dp hotplug, we are hitting kernel panic
-> while acquiring the lock.
-This is the sequence in which the events are expected to happen:
+> FWIW, it's not just move_mount(2) - I'd expect
+> 
+> 	int fds[2];
+> 	char s[80];
+> 
+> 	pipe(fds);
+> 	sprintf(s, "/dev/fd/%d", fds[0]);
+> 	mount(s, "/dev/null", NULL, MS_MOVE, 0);
+> 
+> to step into exactly the same thing.  mount(2) does follow symlinks -
+> always had...
 
-1) DP connector is instantiated with an inactive state
-2) Hot plug on DP
-3) DP connector is activated
-4) User space attaches a CRTC to the activated connector
-5) CRTC is enabled
-6) CRTC_VBLANK_ON is called
-7) dpu_crtc_vblank is called.
+Sure, but the new mount syscalls still need tests.  Where are the tests?
 
-So can you help tracing out why dpu_crtc_vblank is called when the 
-connector
-is not activated yet (no hotplug)?
+Also, since the case of a fd with an internal mount was overlooked, probably the
+man page needs to be updated clarify that move_mount(2) fails with EINVAL in
+this case.  Where is the man page?
 
--- 
-Jeykumar S
+- Eric
