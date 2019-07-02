@@ -2,113 +2,127 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9ECC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58184C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C010920673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D50120673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="km/RUnXQ"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XUQwjWyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfGCBKo (ORCPT
+        id S1727179AbfGCBMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:10:44 -0400
-Received: from mail-oi1-f202.google.com ([209.85.167.202]:48180 "EHLO
-        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfGCBKl (ORCPT
+        Tue, 2 Jul 2019 21:12:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43181 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:10:41 -0400
-Received: by mail-oi1-f202.google.com with SMTP id a198so353004oii.15
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:10:41 -0700 (PDT)
+        Tue, 2 Jul 2019 21:12:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so713011wru.10;
+        Tue, 02 Jul 2019 18:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/i4EXGtPCOjTtUn8OcmQPQhLaKRhMOHErmPbV67RSQU=;
-        b=km/RUnXQsmM11f9u6Vj6KLdcm6YNGFElnIVjDftfoR/IS3uki7O8YPAX7hSwR6929j
-         x51ouFZg/um6bBKoBAY0YdKBqXpWk+IqgLewMKa92kH07Ada5NO+GkfFpUDoYheX8XJl
-         9bwzLgVwPNJ8Jmfq0GNodUvpY7vhnKK1tjThNpdWyMW7gkM4ReRiv0XFoM5PeklWDhJh
-         Wtfj3qWG/TfEolzalTHU2AbJlUtyU2LfjZKCtDt1KHzdh3GaANn3/7NXwh7aNKAoWFb3
-         JdKlsRtBZWE13avukcxGZZsOwmlEkx5nBOnAjj26Sfq5NB9b5tWkWtbEkYLCY/7phx3e
-         /fJw==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
+        b=XUQwjWyCmFtubExU8PzLfrARKbRw0z6VjMVgtYU+nuxrdym1bhC67W5aqZ0gvRp2RA
+         Y4QWsxI5SX8pExi6QbbpNea2gV0wgrrowlSJD162cBQ8hrAlEUwZJ6jda65+Zw33aycH
+         Bc8BEhLoPQ1HqSu743IaGvR59natR4WKtzKZlCtC7Oo1YZE9trffuFxEi49iEc8RCe2Y
+         W+fdIzsAH5jFAJotXlGdNxgq+fq2UDAASRRPmKbOdyIUXH4UPZygJMzJzTUsedDVNw8L
+         cqMGNk56GQfMOrA2HQW6S/tM146UXAwA0LJ6Q/UiLKdYfpaSKxHF2JO1Yo95MzwmMU6h
+         oSNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/i4EXGtPCOjTtUn8OcmQPQhLaKRhMOHErmPbV67RSQU=;
-        b=FwYoucYq5gsKRHif2nbe37Zft8Dhrq6VZNTxT5N7KLc1fM99TwoAXpxmLDAVmFV6zT
-         tzeoK7IdaTcesBmQFzoyBWYHYMrtJGGSK12zb8ZL6vQ4djezGyaJHGHCOLheCSUsA94O
-         0LflE2eogAWq0DZ6V7Q8AnJ1Se60kwX90FSE9109ezpX3eNxOy6J8uFMTAY+UyONiDO2
-         2kc+yjRD93EdEG0wjNYJyP3d0MWHbbGJMwdnWZbwPc4XGaqy0O7/H59cvISoFm7VTNdT
-         RKvRQ8JUb1Q77cizj2sSUdciBxN5II0r7jncf4vbpYxaA59g6SsB9TiyfhQo8RhJtn3y
-         /pBw==
-X-Gm-Message-State: APjAAAXsIGkVTSB3Aj2NhW2t8eZN5HmPazvyvN10y0zsavYVsxPCUEJh
-        m9ey52iHcUVw4F3Q1iII6ca9x/FahVbNR3A=
-X-Google-Smtp-Source: APXvYqzR1Jl6EGogA5bw9waCkseQkalNsyNyWGljAV6SnmdbV7yJAuwfhPQ/T+V5l9xBaAIX1pXO6niIfMhaSkU=
-X-Received: by 2002:a05:6808:656:: with SMTP id z22mr4715089oih.79.1562116240529;
- Tue, 02 Jul 2019 18:10:40 -0700 (PDT)
-Date:   Tue,  2 Jul 2019 18:10:19 -0700
-In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
-Message-Id: <20190703011020.151615-6-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3 5/6] dt-bindings: interconnect: Add interconnect-opp-table property
-From:   Saravana Kannan <saravanak@google.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Saravana Kannan <saravanak@google.com>, vincent.guittot@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
+        b=LJaHLe3Vn+1XpKVADLHMKBluSK+yUXW7Hli6ptxRdZjTdso+usVv3CgJgJKFyaIRd8
+         1lbYBCzgf8NIEvKbr4rW5vt4p+3VXIYr74C1fPwQT5ciS/PIdahPjxSVCOxq9IkOqEt6
+         fVYGY+mRUIP6JhGvAW//eQiQQ9w/OXfbjngiFkVe2RwQ0s+LPhlhiSiyAXPIUrSWhEsk
+         JbjTsBBS6teO3crPOFbxsDipRcz+jtRqcXNA4iWdkNYlULXlQN0oDC1UFYfUiTdd/q4V
+         eLzIfwJaSGY4n+fXaXri3ogSOC5tPEn4poQishdOWYKYacPTlTzNXVJAxEmfRPggfMVL
+         l6Rg==
+X-Gm-Message-State: APjAAAXLek65CEn2UIrzNa9u4liaV74D7NfLYcVpDYO6JcNkHUFn951W
+        2PGgBUTdLIYhYH1mt1xYe5TB1Qy/
+X-Google-Smtp-Source: APXvYqxuWTZ6QLovwtI+F2WWdSLMlSfZ3cTk0wHb/ZmTptUJUfUzP7v+CkTEDhHX8agLoms9Ecm8CQ==
+X-Received: by 2002:adf:e9c6:: with SMTP id l6mr4014wrn.216.1562106790356;
+        Tue, 02 Jul 2019 15:33:10 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 15:33:09 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     blogic@openwrt.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
+Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/4] gpio: stp-xway: improve module clock error handling
+Date:   Wed,  3 Jul 2019 00:32:46 +0200
+Message-Id: <20190702223248.31934-3-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for listing bandwidth OPP tables for each interconnect path
-listed using the interconnects property.
+Three module clock error handling improvements:
+- use devm_clk_get() so the clock instance can be freed if
+  devm_gpiochip_add_data() fails later on
+- switch to clk_prepare_enable() so the driver is ready whenever the
+  lantiq target switches to the common clock framework
+- disable the clock again (using clk_disable_unprepare()) if
+  devm_gpiochip_add_data()
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+All of these are virtually no-ops with the current lantiq target.
+However, these will be relevant if we switch to the common clock
+framework.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpio-stp-xway.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 6f5d23a605b7..fc5b75b76a2c 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
- 			 * dma-mem: Path from the device to the main memory of
- 			            the system
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index a3326255ce3c..b31e08f84681 100644
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -256,18 +256,23 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
+ 		chip->edge = XWAY_STP_FALLING;
  
-+interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-+			that specify the OPPs for the interconnect paths listed
-+			in the interconnects property. This property can only
-+			point to OPP tables that belong to the device and are
-+			listed in the device's operating-points-v2 property.
+-	clk = clk_get(&pdev->dev, NULL);
++	clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "Failed to get clock\n");
+ 		return PTR_ERR(clk);
+ 	}
+-	clk_enable(clk);
 +
- Example:
++	ret = clk_prepare_enable(clk);
++	if (ret)
++		return ret;
  
- 	sdhci@7864000 {
-+		operating-points-v2 = <&sdhc_opp_table>, <&sdhc_mem_opp_table>;
- 		...
- 		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
- 		interconnect-names = "sdhc-mem";
-+		interconnect-opp-table = <&sdhc_mem_opp_table>;
- 	};
+ 	xway_stp_hw_init(chip);
+ 
+ 	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+-	if (ret)
++	if (ret) {
++		clk_disable_unprepare(clk);
+ 		return ret;
++	}
+ 
+ 	dev_info(&pdev->dev, "Init done\n");
+ 
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.22.0
 
