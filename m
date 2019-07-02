@@ -2,165 +2,147 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4434EC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE59EC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DBD218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9885F218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEgM91d5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MW9ZpERJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfGCArt (ORCPT
+        id S1727230AbfGCAsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:47:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45433 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfGCArs (ORCPT
+        Tue, 2 Jul 2019 20:48:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44313 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfGCAsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:47:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so463604otq.12;
-        Tue, 02 Jul 2019 17:47:47 -0700 (PDT)
+        Tue, 2 Jul 2019 20:48:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so309249edr.11;
+        Tue, 02 Jul 2019 17:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YuTGE9OjScXsIDv/VUVR3Fjnrv0ray9iH433TKYeQT0=;
-        b=XEgM91d5cBYb7o4THx0NwhK9lTcNeinngzIa7nALd4ezIBXThOgnwd2UFuU5BaB6io
-         oedxVxMzgx7JFMdjhL31iTxt7oJjdgxqHLNdO09ndrL7kdMLpYoqooen0E6q52IN1Zk0
-         91H98jSYMp0ohM3NlVDKcjckWbjlKhv0DZDDleiFin0kcufgKP86VLzjUy0pt+AcYxpY
-         V/4+eKsWJH307EJkjHjUeaFjs46UVm6cK+ZpfmUTSgPV9BJMyw4gxwOxUii4HG+tHank
-         ozXbXhjs1NQopGEwGiLy7U61TKh0b9UY9QsXqnHQuy4EiX+JTVi+ipK1+mcPmIXjFzhc
-         vYLw==
+        bh=HvMK1U3mSSIhGP7RCajA7JG3xXgs2w4egMaNm/sjjUA=;
+        b=MW9ZpERJUQAII+y5hHpAXfKIB35FrQAFXdgIxpVSE/K3dtOZ8jbYpV1hW8xe8FJz+K
+         0ClnaWJEzQWyez0nkZgKubQEdncxmmkvd1669rbTlj4+KDro37xffkFpMQXDtHEIP+24
+         r1uc0v219ClLkICFhc894IOs6ubynozVJb6CSJ4oDFDRC9UpNgxOK+XECgubHiq0YIhB
+         mqqT0cpFlxHgIwN48d/VhgHnBZ3n5bc0Wrw5Dv8PDmdGmtIyfB26KN/RYZqONoFXgl1q
+         BSnW6MiWfFcbGg+YtjIVlwwFaW1zO5MIjD0vaXqVIdv1aIED6+KqqZhe5S/cGilU/WLV
+         z8Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YuTGE9OjScXsIDv/VUVR3Fjnrv0ray9iH433TKYeQT0=;
-        b=hAjjQYkP2KH+EshZCwW+/kXeR6Z3Ygi+MgyPc8sJIkroLJ9LTIcmmhO0c5+aWyl9xY
-         9TJgebTdtMOIE2JXH6ylrqiFWfKEl3BnPAxPEoO9WNiMyAHq3/PCDPOlgrKm5T2isnh3
-         mUtrgXCW9Piu49pCdLlZbIo1Z9Vppy9dYABGn//j6Z7DBgIKq5HwrvNB9S43ROeC9MN5
-         2V71UOh/l27G5FJJEQB9wmt5JD3v3FomD7TgMggHU7Hzak3w97PH6Ar/L+6ria61cU98
-         cI+u5W57dRPuI5+t9xyRB6FRK0SR7zqCXoOWObBkWFBLTiwvciqUT3SHxEfLkz6fgQbv
-         BkAw==
-X-Gm-Message-State: APjAAAVFQG3nswHZZeGnABo5LGo5Tl948qlRopvGme2I5XRMHSzb01mV
-        dLKnP4VaM3ihXm9RLOwGJ0LUUPEELpNu3YzRXpE=
-X-Google-Smtp-Source: APXvYqyL2NteRGqCFICSbenEZkA+OINjvph2blTMNQI+LLmvoIDron6BCh/dRaaNx9tf/ldh3my7ndgc5aI6VDx4h9Y=
-X-Received: by 2002:a9d:4590:: with SMTP id x16mr25082668ote.254.1562114867509;
- Tue, 02 Jul 2019 17:47:47 -0700 (PDT)
+        bh=HvMK1U3mSSIhGP7RCajA7JG3xXgs2w4egMaNm/sjjUA=;
+        b=DIusMBw91GJIARtzGU708+dTRWlv3O2CyDX5u7IssiR8DP20+C+tUK2PzpA6fQLKI1
+         i7vhotdF62c1fJ1rKrPONR3ll/i1N2YkkbKjLjcOS8JQIlI+YlOdOgBpNaQAYGgqgkdg
+         LEKiyAgY3BkejAU18COrQKPDatL93vT1B4AS7FPMlJ2Ol7jfce2/cxsyA8e2AVJ3conY
+         CiqBSnuTB4JeT5REBMBYr1gL+qBFLh/lP+H8uV07X1zuMjX5OiVyN9YSkGsWWpug3P6q
+         kPuoZMxzN1sqxS0ifQhRgVKA7rmaIBBm8q124nsrDasrWiizxiVGr2dABmaZcVqRJS+t
+         W6UQ==
+X-Gm-Message-State: APjAAAWhJqc9Sc5EacTrsC4ZrluwdIoD7rBsVwubRKXZLuZCoriYosiJ
+        ni+q5gA66anRhsuKlKJiJyHwQ6D3au+Bb0bEC/N3FS8esZf+IA==
+X-Google-Smtp-Source: APXvYqwEwOLS0R67S4CWtviQf6gj1WsabSLC1YiBzuE0hxTXO8rI+xmH/s+9mAXwppDwa/sfJAdp+Bb1LMYRy544aRI=
+X-Received: by 2002:a50:9203:: with SMTP id i3mr38838506eda.302.1562101325167;
+ Tue, 02 Jul 2019 14:02:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
- <1fbd236a-f7f9-e66a-e08c-bf2bac901d15@redhat.com> <20190702222330.GB26621@amt.cnet>
-In-Reply-To: <20190702222330.GB26621@amt.cnet>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 3 Jul 2019 08:47:40 +0800
-Message-ID: <CANRm+CyBjfa5LsMx87faKUO8XwHkNVrq4+P+vBuFGwjuFC1jxA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] KVM: LAPIC: Implement Exitless Timer
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190630203614.5290-1-robdclark@gmail.com> <20190630203614.5290-3-robdclark@gmail.com>
+ <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com> <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 2 Jul 2019 14:01:49 -0700
+Message-ID: <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com>
+Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 at 06:23, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+On Tue, Jul 2, 2019 at 1:35 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 >
-> On Tue, Jul 02, 2019 at 06:38:56PM +0200, Paolo Bonzini wrote:
-> > On 21/06/19 11:39, Wanpeng Li wrote:
-> > > Dedicated instances are currently disturbed by unnecessary jitter due
-> > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> > > There is no hardware virtual timer on Intel for guest like ARM. Both
-> > > programming timer in guest and the emulated timer fires incur vmexits.
-> > > This patchset tries to avoid vmexit which is incurred by the emulated
-> > > timer fires in dedicated instance scenario.
-> > >
-> > > When nohz_full is enabled in dedicated instances scenario, the unpinned
-> > > timer will be moved to the nearest busy housekeepers after commit
-> > > 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit
-> > > 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However,
-> > > KVM always makes lapic timer pinned to the pCPU which vCPU residents, the
-> > > reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer
-> > > pinned). Actually, these emulated timers can be offload to the housekeeping
-> > > cpus since APICv is really common in recent years. The guest timer interrupt
-> > > is injected by posted-interrupt which is delivered by housekeeping cpu
-> > > once the emulated timer fires.
-> > >
-> > > The host admin should fine tuned, e.g. dedicated instances scenario w/
-> > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
-> > > mode, ~3% redis performance benefit can be observed on Skylake server.
+> On Tue, 2 Jul 2019 at 22:26, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 > >
-> > Marcelo,
+> > On Sun, 30 Jun 2019 at 22:36, Rob Clark <robdclark@gmail.com> wrote:
+> > >
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > On snapdragon aarch64 laptops, a 'UEFIDisplayInfo' variable is provided
+> > > to communicate some information about the display.  Crutially it has the
+> > > panel-id, so the appropriate panel driver can be selected.  Read this
+> > > out and stash in /chosen/panel-id so that display driver can use it to
+> > > pick the appropriate panel.
+> > >
+> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
 > >
-> > does this patch work for you or can you still see the oops?
+> > Hi Rob,
+> >
+> > I understand why you are doing this, but this *really* belongs elsewhere.
+> >
+> > So we are dealing with a platform that violates the UEFI spec, since
+> > it does not bother to implement variable services at runtime (because
+> > MS let the vendor get away with this).
+> >
 >
-> Hi Paolo,
->
-> No more oopses with kvm/queue. Can you include:
+> To clarify, the above remark applies to populating the DT from the OS
+> rather than from the firmware.
 
-Cool, thanks for the confirm, Marcelo!
+yeah, it isn't pretty, but there *are* some other similar cases where
+efi-stub is populating DT.. (like update_fdt_memmap() and
+kaslr-seed)..
+
+it would be kinda nice to have an early-quirks mechanism where this
+could fit, but I thought that might be equally unpopular ;-)
 
 >
-> Index: kvm/arch/x86/kvm/lapic.c
-> ===================================================================
-> --- kvm.orig/arch/x86/kvm/lapic.c
-> +++ kvm/arch/x86/kvm/lapic.c
-> @@ -124,8 +124,7 @@ static inline u32 kvm_x2apic_id(struct k
->
->  bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
->  {
-> -       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> -               kvm_hlt_in_guest(vcpu->kvm);
-> +       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
->  }
->  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
->
-> However, for some reason (hrtimer subsystems responsability) with cyclictest -i 200
-> on the guest, the timer runs on the local CPU:
->
->        CPU 1/KVM-9454  [003] d..2   881.674196: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674200: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d.h.   881.674387: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   881.674393: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674395: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674399: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d.h.   881.674586: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   881.674593: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674595: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674599: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d.h.   881.674787: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   881.674793: get_nohz_timer_target: get_nohz_timer_target 3->0
->        CPU 1/KVM-9454  [003] d..2   881.674795: get_nohz_timer_target: get_nohz_timer_target 3->0
->
-> But on boot:
->
->        CPU 1/KVM-9454  [003] d..2   578.625394: get_nohz_timer_target: get_nohz_timer_target 3->0
->           <idle>-0     [000] d.h1   578.626390: apic_timer_fn <-__hrtimer_run_queues
->           <idle>-0     [000] d.h1   578.626394: apic_timer_fn<-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   578.626401: get_nohz_timer_target: get_nohz_timer_target 3->0
->           <idle>-0     [000] d.h1   578.628397: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   578.628407: get_nohz_timer_target: get_nohz_timer_target 3->0
->           <idle>-0     [000] d.h1   578.631403: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   578.631413: get_nohz_timer_target: get_nohz_timer_target 3->0
->           <idle>-0     [000] d.h1   578.635409: apic_timer_fn <-__hrtimer_run_queues
->        CPU 1/KVM-9454  [003] d..2   578.635419: get_nohz_timer_target: get_nohz_timer_target 3->0
->           <idle>-0     [000] d.h1   578.640415: apic_timer_fn <-__hrtimer_run_queues
+> > First of all, to pass data between the EFI stub and the OS proper, we
+> > should use a configuration table rather than a DT property, since the
+> > former is ACPI/DT agnostic. Also, I'd like the consumer of the data to
+> > actually interpret it, i.e., just dump the whole opaque thing into a
+> > config table in the stub, and do the parsing in the OS proper.
+> >
+> > However, I am not thrilled at adding code to the stub that
+> > unconditionally looks for some variable with some magic name on all
+> > ARM/arm64 EFI systems, so this will need to live under a Kconfig
+> > option that depends on ARM64 (and does not default to y)
 
-You have an idle housekeeping cpu(cpu 0), however, most of
-housekeeping cpus will be busy in product environment to avoid to
-waste money. get_nohz_timer_target() will find a busy housekeeping cpu
-but the timer migration will fail if the timer is the first expiring
-timer on the new target(as the comments above the function
-switch_hrtimer_base()). Please try taskset -c 0 stress --cpu 1 on your
-host, you can observe(through /proc/timer_list) apic_timer_fn running
-on cpu 0 most of the time and sporadically on local cpu.
+I defn can add this under kconfig.. is it ok if that option is
+select'd by ARCH_QCOM?
 
-Regards,
-Wanpeng Li
+(Just trying to minimize the things that can go wrong and the "I get a
+blank screen at boot" bug reports I get ;-))
+
+> ... but saving variables at boot time for consumption at runtime is
+> something that we will likely see more of in the future.
+
+I think this will be nice, but it also doesn't address the need for a
+quirk to get this into /chosen..  I guess we *could* use a shim or
+something that runs before the kernel to do this.  But that just seems
+like a logistical/support nightmare.  There is one kernel, and there
+are N distro's, so debugging a users "I don't get a screen at boot"
+problem because their distro missed some shim patch really just
+doesn't seem like a headache I want to have.
+
+BR,
+-R
