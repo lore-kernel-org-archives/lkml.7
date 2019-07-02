@@ -2,140 +2,125 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D250AC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34940C06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0B62173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562060902;
-	bh=1oN3fEDcJOO5WpXrtBAr0DvSdkhuKsbY+w9ryKcRLn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xXrOBiNK79VBylq3AxyjhePm22HanZuixXQqE3qJKkSli0db1g0iOxul+Qfy//bZn
-	 08yFtYNWYLv+yiTRGYmxnIb76VsmREYzG13n8K9z7xzmZpbpFTot832u8g2dXvg3ku
-	 +EvtVdA0LV0kT0x+GU+H5z0h/eWhe954OuSA0qnw=
+	by mail.kernel.org (Postfix) with ESMTP id 0EDE6206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PZuM9EJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfGBJsV (ORCPT
+        id S1727118AbfGBJsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfGBJsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:48:21 -0400
-Received: from localhost (unknown [49.207.58.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B151B206A2;
-        Tue,  2 Jul 2019 09:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562060899;
-        bh=1oN3fEDcJOO5WpXrtBAr0DvSdkhuKsbY+w9ryKcRLn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zmvf+OAfp3I0frwxgqCBlrfZzDVexs63/Uqe49HhJX70Bk7JuVZ3AxTGrKAAWNeU9
-         1sn66P+Cyd3A5i0tUo3QmGPiA5tEKJuIPjIvrIluHZ99OBdDsHH+nhK70q/jS3p8yy
-         v4BABf0TJvVWysjG8FGsUlWWproq+PylMFlvkDJw=
-Date:   Tue, 2 Jul 2019 15:15:10 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        bgoswami@quicinc.com
-Subject: Re: [RFC PATCH 1/5] dt-bindings: soundwire: add slave bindings
-Message-ID: <20190702094510.GO2911@vkoul-mobl>
-References: <20190611104043.22181-1-srinivas.kandagatla@linaro.org>
- <20190611104043.22181-2-srinivas.kandagatla@linaro.org>
- <20190701061155.GJ2911@vkoul-mobl>
- <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
+        Tue, 2 Jul 2019 05:48:50 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37537 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfGBJsu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 05:48:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so17011967wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
+        b=PZuM9EJbQb3YhMp+qaw+VF6BwkhSSyYMquhljCcVZSO+tjIcy06ofVIGPbwYNmREXi
+         pRcuGFWqgU+nSlEobDVIi97m26fD20LGHZVCL/m/+eGewb0yAO7NlvlF/9gBYN5Rgy0B
+         UVcUnIeulg2Ui8pzjNF76wVB55J/p/3pN/YrI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
+        b=R8kbjUbTUH0k/sQ12w0muayCkYEOTTCjrP6ZElSUCLsJpxZ2z5ZM7Fpha/Tk21GVyx
+         hX0j2gEyGMQJsV5Ej0GMbaqJ3DKZoSjA/ogwkEVYAxowV/z3ac6vqpxvkhO5x2Hr3os7
+         tX9tP02WHLAKNrcjOsuzHRN4lbcPiWCrJpqcTHEAdfHt6PeJfO9GokIQy7SPJJX5/rxM
+         rL0ERqz59FMrDMGlA4C+JnQ85kKdcDjfr0LB4WJlL+jjXn0B4kp1se4UNq8ujg5CuVQT
+         cC8Jfmfs3fPKEPaWInfsBLqug9YB6qRNyS5O2d9PI59Np7HBszjJ+UQ/0o9Eg1rbs1NM
+         /2dg==
+X-Gm-Message-State: APjAAAWHsA7fPg4vOdrVv0cMcZuo/pPlmKw9cSLYnoqQ7ZrxMCBtiys+
+        7yxivxICk2zug9H2gwLPOXL8wA==
+X-Google-Smtp-Source: APXvYqw+cs3wphtlInYiqa/iYYLL5YBkbuaWsrCFwdpkqDK8kfUrPvl8YI8TNOvUo+26MvPNs1E1Ng==
+X-Received: by 2002:adf:9487:: with SMTP id 7mr9588274wrr.114.1562060928176;
+        Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id l124sm2421987wmf.36.2019.07.02.02.48.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:48:47 -0700 (PDT)
+Subject: Re: use exact allocation for dma coherent memory
+To:     Christoph Hellwig <hch@lst.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+References: <20190614134726.3827-1-hch@lst.de> <20190701084833.GA22927@lst.de>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <74eb9d99-6aa6-d1ad-e66d-6cc9c496b2f3@broadcom.com>
+Date:   Tue, 2 Jul 2019 11:48:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce1e445e-3254-1308-8752-2cb56a7e0cc6@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190701084833.GA22927@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-07-19, 09:22, Srinivas Kandagatla wrote:
-> Thanks Vinod for taking time to review,
-> 
-> On 01/07/2019 07:11, Vinod Koul wrote:
-> > On 11-06-19, 11:40, Srinivas Kandagatla wrote:
-> > > This patch adds bindings for Soundwire Slave devices which includes how
-> > > SoundWire enumeration address is represented in SoundWire slave device
-> > > tree nodes.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   .../devicetree/bindings/soundwire/bus.txt     | 48 +++++++++++++++++++
-> > >   1 file changed, 48 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/soundwire/bus.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soundwire/bus.txt b/Documentation/devicetree/bindings/soundwire/bus.txt
-> > > new file mode 100644
-> > > index 000000000000..19a672b0d528
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soundwire/bus.txt
-> > 
-> > The bindings are for slave right and the file is bus.txt?
-> 
-> I tried to follow what I have done for SLIMBus.
-> Do you prefer them to be documented in slave.txt?
 
-Would that not be better :) We should have a master.txt for bus things
 
-> > > @@ -0,0 +1,48 @@
-> > > +SoundWire bus bindings.
-> > > +
-> > > +SoundWire is a 2-pin multi-drop interface with data and clock line.
-> > > +It facilitates development of low cost, efficient, high performance systems.
-> > > +
-> > > +SoundWire controller bindings are very much specific to vendor.
-> > > +
-> > > +Child nodes(SLAVE devices):
-> > > +Every SoundWire controller node can contain zero or more child nodes
-> > > +representing slave devices on the bus. Every SoundWire slave device is
-> > > +uniquely determined by the enumeration address containing 5 fields:
-> > > +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
-> > > +for a device. Addition to below required properties, child nodes can
-> > > +have device specific bindings.
-> > > +
-> > > +Required property for SoundWire child node if it is present:
-> > > +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
-> > > +		  SoundWire Enumeration address comprising SoundWire
-> > > +		  Version, Manufacturer ID, Part ID and Class ID,
-> > > +		  shall be in lower-case hexadecimal with leading
-> > > +		  zeroes suppressed.
-> > > +		  Version number '0x10' represents SoundWire 1.0
-> > > +		  Version number '0x11' represents SoundWire 1.1
-> > > +		  ex: "sdw10,0217,2010,0"
-> > 
-> > any reason why we want to code version number and not say sdw,1.0,...
-> > and so on?
+On 7/1/2019 10:48 AM, Christoph Hellwig wrote:
+> On Fri, Jun 14, 2019 at 03:47:10PM +0200, Christoph Hellwig wrote:
+>> Switching to a slightly cleaned up alloc_pages_exact is pretty easy,
+>> but it turns out that because we didn't filter valid gfp_t flags
+>> on the DMA allocator, a bunch of drivers were passing __GFP_COMP
+>> to it, which is rather bogus in too many ways to explain.  Arm has
+>> been filtering it for a while, but this series instead tries to fix
+>> the drivers and warn when __GFP_COMP is passed, which makes it much
+>> larger than just adding the functionality.
 > 
-> For consistency reasons, as other info in hex.
+> Dear driver maintainers,
 > 
-> > 
-> > > +
-> > > +- sdw-instance-id: Should be ('Instance ID') from SoundWire
-> > > +		  Enumeration Address. Instance ID is for the cases
-> > > +		  where multiple Devices of the same type or Class
-> > > +		  are attached to the bus.
-> > 
-> > instance id is part of the 48bit device id, so wont it make sense to add
-> > that to compatible as well?
-> > 
-> So we could have multiple instance of same IP, so adding this to compatible
-> string does not make sense! As driver has to list all the possible
-> compatible strings.
+> can you look over the patches touching your drivers, please?  I'd
+> like to get as much as possible of the driver patches into this
+> merge window, so that it can you through your maintainer trees.
 
-Yes that makes sense.
+You made me look ;-) Actually not touching my drivers so I'm off the 
+hook. However, I was wondering if drivers could know so I decided to 
+look into the DMA-API.txt documentation which currently states:
 
--- 
-~Vinod
+"""
+The flag parameter (dma_alloc_coherent() only) allows the caller to
+specify the ``GFP_`` flags (see kmalloc()) for the allocation (the
+implementation may choose to ignore flags that affect the location of
+the returned memory, like GFP_DMA).
+"""
+
+I do expect you are going to change that description as well now that 
+you are going to issue a warning on __GFP_COMP. Maybe include that in 
+patch 15/16 where you introduce that warning.
+
+Regards,
+Arend
