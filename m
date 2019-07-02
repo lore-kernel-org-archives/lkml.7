@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B49C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D66FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A1320659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7020021479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:00:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLcJ/Jnp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAqorpLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfGBIAH (ORCPT
+        id S1727335AbfGBIAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:00:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45174 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfGBIAG (ORCPT
+        Tue, 2 Jul 2019 04:00:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39806 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfGBIAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:00:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r1so7840787pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:00:06 -0700 (PDT)
+        Tue, 2 Jul 2019 04:00:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so8729377pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 01:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=xwG3zbOxSkFKwJHrQDWkyED7nmHqX361uKJrejE5+fs=;
-        b=vLcJ/JnpXqGfI3xgk5czUjy1glUD9+DQc4KFVJNSlIlj5EkUhdTlxHjYN88ydzXKlv
-         /QSFytQ8RZiuqJ9GFScCTf9QvP/GEoct7rKnqmKQPMseCmDLV13b7HbVadBNNCbWh3Le
-         ZbS3HnK9tpaRJ1GsNDTKqwd5sjCCH/U64tkIcJV944kCqJoiSJ1ginaPNpxhtDqLTZbC
-         xsIXYD54BUAmvWNYLMM2a5r1+mAyVe8rRbqzk/5erVMlXOAWvVcScSd3aNeodkTGmE66
-         Jexd+SDlbjjYW+hhDfcARzI8VU0GDKpTp/V9yQcHVWIk8mf9nS7F8woxIIsdCynaWIQF
-         IZeg==
+        bh=0upPyxx9/9vSja6hcZnmpaxw7C3Lr5c7Oi1prKW6IhE=;
+        b=pAqorpLY9WLicIJkKVrn+cmwcRCLmEd7/GAyMbT5hQODcFgre0Wr29afd+2bMzLQpu
+         7dpcKBJwgY6rrwoxJd6UzRgLHTTIFVzYBvFGwgZzQmRi8QYwhH+iyXpW69W/Zjyc47XC
+         8rFr5aXkU2kwHdavNRJhu92cSJ0L6kNaKejQVqtcgXMsrbPseVilj3oKilh9skkS5TYT
+         noaX15RaB5VvxlYKPySezv8G0DTN0wsYv3dtnqarzWy7YSPPMta6oW8wI90+YrlWjLff
+         4D/xfOOP9AdwUEYtDdMBua9JtQ9xProT+G63+zCzRx1icppgUf5chC3Luzj6JHO8F+CC
+         NPkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xwG3zbOxSkFKwJHrQDWkyED7nmHqX361uKJrejE5+fs=;
-        b=X+uVk8qHfQCgcdevrGmCPsuMWTf3laBePpvQgPlIBn2pd5/tWyHbHWzqET0PMoFh8w
-         MjlTCfO5DVtEcc+zDybGymM4KugcItqrCH4Ay42Q2rJd6RLq9zaxOB0Dvan79UytnDp+
-         F1cfpkX6u7ZTp+k+qb41c1YJMoA6RqQNIkqD9u7F2HwK4ZrR6tBVvu3fRbJv1lnuovi2
-         p8ub0l9gXNIaWeBovAxhIYt/AUNSR2n+MB3lGce4a6MgrB39vrAjUABtd3z9aFxVVrcy
-         5MxO8rnn8gFfQA/TqFEdWkxbPPFWGY6yAXvR+dsRGRIKZG26Wf3KhTMom+J+FZTzjdUl
-         eWoA==
-X-Gm-Message-State: APjAAAUkE97wptx1WQVycrtdvuy0CIWS4tdFT2ofwiwYNv4oloSL10FG
-        7hbHMGUencyOMwIbzRnrDzSUaFB0h6c=
-X-Google-Smtp-Source: APXvYqwxnM+GhdoWDX6nobPfGUeg+sdquW6+tE65QEcggyFm77ieZxdj5q+zdkatdDvvEi7O5KGJFw==
-X-Received: by 2002:a65:4808:: with SMTP id h8mr6643469pgs.22.1562054406099;
-        Tue, 02 Jul 2019 01:00:06 -0700 (PDT)
+        bh=0upPyxx9/9vSja6hcZnmpaxw7C3Lr5c7Oi1prKW6IhE=;
+        b=dEI6i72KUjVauZTU6s+9l16pY7tr0HcoyMz0xgU5NJscrlkhFQbjW/fca1U6URMtTw
+         9thfUUIIY+a/tBgi+p6e2+985CYWXUe5K8JnUOxwXAzvRfsczDRP/uehnjusHX1aBulc
+         BnJHKLrqBRuDj6H6KTYtj/jd/dP/TOfSqedI0fnmlRNoBnOB8CEvDanm71IQ2se8PheN
+         DIISljw4JELhOUdPVBt388vCIauCRkLNNspPwgBb1Ji3m37TjDtTyx0dZQsD8aDJq+SV
+         ckPYAUbIhDkqhLkxUryatnONTSWZqFqmVhe5cD5t3BXqbIeVwCzNF5ht5o0+Uxq23KS0
+         TLsA==
+X-Gm-Message-State: APjAAAVvYUH9gwKtAgJJLduNtMZHbVD9rnJOhUOJ6P5b/2ogOthXu9Ng
+        ++WBdPbcMPXyAR6GHlZb+0dVu7VNRn0=
+X-Google-Smtp-Source: APXvYqxToQKmItsfEQ3280hNqbC/cX7eFFe1LCdC1dhxv8XjbZ2arZLGFKvEZ4jaxUaSVEx0AVLSUQ==
+X-Received: by 2002:a17:902:a606:: with SMTP id u6mr10932763plq.275.1562054417034;
+        Tue, 02 Jul 2019 01:00:17 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id v12sm1448966pjk.13.2019.07.02.01.00.04
+        by smtp.googlemail.com with ESMTPSA id v28sm11063130pga.65.2019.07.02.01.00.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 01:00:05 -0700 (PDT)
+        Tue, 02 Jul 2019 01:00:16 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v3 25/27] kernel: power: use kzalloc rather than kmalloc followed with memset
-Date:   Tue,  2 Jul 2019 15:59:56 +0800
-Message-Id: <20190702075956.24678-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v3 26/27] sound: oss: use kzalloc rather than kmalloc with memset
+Date:   Tue,  2 Jul 2019 16:00:10 +0800
+Message-Id: <20190702080010.24724-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,35 +68,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use zeroing allocator instead of using allocator
-followed with memset with 0
+Use zeroing allocator instead of using allocator followed
+with memset with 0.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
 Changes in v3:
   - Resend
 
- kernel/power/swap.c | 3 +--
+ sound/core/seq/oss/seq_oss_init.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/power/swap.c b/kernel/power/swap.c
-index e1912ad13bdc..ca0fcb5ced71 100644
---- a/kernel/power/swap.c
-+++ b/kernel/power/swap.c
-@@ -974,12 +974,11 @@ static int get_swap_reader(struct swap_map_handle *handle,
- 	last = handle->maps = NULL;
- 	offset = swsusp_header->image;
- 	while (offset) {
--		tmp = kmalloc(sizeof(*handle->maps), GFP_KERNEL);
-+		tmp = kzalloc(sizeof(*handle->maps), GFP_KERNEL);
- 		if (!tmp) {
- 			release_swap_reader(handle);
- 			return -ENOMEM;
- 		}
--		memset(tmp, 0, sizeof(*tmp));
- 		if (!handle->maps)
- 			handle->maps = tmp;
- 		if (last)
+diff --git a/sound/core/seq/oss/seq_oss_init.c b/sound/core/seq/oss/seq_oss_init.c
+index 6dc94efc19c9..6e8020d4368a 100644
+--- a/sound/core/seq/oss/seq_oss_init.c
++++ b/sound/core/seq/oss/seq_oss_init.c
+@@ -66,7 +66,7 @@ snd_seq_oss_create_client(void)
+ 	struct snd_seq_port_info *port;
+ 	struct snd_seq_port_callback port_callback;
+ 
+-	port = kmalloc(sizeof(*port), GFP_KERNEL);
++	port = kzalloc(sizeof(*port), GFP_KERNEL);
+ 	if (!port) {
+ 		rc = -ENOMEM;
+ 		goto __error;
+@@ -81,7 +81,6 @@ snd_seq_oss_create_client(void)
+ 	system_client = rc;
+ 
+ 	/* create annoucement receiver port */
+-	memset(port, 0, sizeof(*port));
+ 	strcpy(port->name, "Receiver");
+ 	port->addr.client = system_client;
+ 	port->capability = SNDRV_SEQ_PORT_CAP_WRITE; /* receive only */
 -- 
 2.11.0
 
