@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEA1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B913C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A7E2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8435216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054591;
-	bh=JZqU6SbEu1G9od63bFj+X/LVOZySTd08frXzcfvf4FI=;
+	s=default; t=1562054593;
+	bh=ncsY3koxNbozow26+6W2J19rN2kZ2ukHfPyYZVg5NmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNxxREgXHwIRXnxVXkK1C+EXq/KH2OEsnF4MjjfyskXRz//MByP3dhfWBO1oGOJZm
-	 h/7rpZh25RJIRh2C7fYTq9uP3Kb2vxTHjdHcdnt33cgKtJnsV/mzgNk31mtL8IKNfn
-	 Y/HlWZOcGee4HbAVNp3FaaDyXBC3KXBu74+XOoDM=
+	b=1eZAR6yuF5FtJtZzZhfWrvdg9BbD9GEeXKgVVXwd2ptKdVPXIxaUOhxS/MgsgG5Qk
+	 /bQ4TSdT9w3wyxWsi8/jJ/cLq9WWIOraS01p/5BCJI6owHeb02eO3Ga5VoqjtxHTfK
+	 tSiabMaXGuKF+P6lQ4+dHqb8efrRCwKLlHOd+KwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfGBIDJ (ORCPT
+        id S1727365AbfGBIDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfGBIDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:07 -0400
+        id S1727346AbfGBIDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BCDD2064A;
-        Tue,  2 Jul 2019 08:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB13021855;
+        Tue,  2 Jul 2019 08:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054586;
-        bh=JZqU6SbEu1G9od63bFj+X/LVOZySTd08frXzcfvf4FI=;
+        s=default; t=1562054589;
+        bh=ncsY3koxNbozow26+6W2J19rN2kZ2ukHfPyYZVg5NmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxJXbBWy37Rgj2/UBoH8mw0qTReEJzf0XZOQUN7lcVi02bYAb5eUxZsLRrCjAt7nc
-         nwrL68gK/OTMs1+XECm4F4rP+It7F0dpFGHRr5+d0Dl7rlAMxUVIELJsNIxGVulC9m
-         AHzBu11o79JT62M688D9Bbn//xhnF7iFzgJcR88g=
+        b=1yQRhmJcVTFfxYKhQBsefpwJcRdwcG9MzNs1hsYww4WJ9qDwJ2YL2SeUZar8h6M+z
+         xWdiJvd3cEHQFprKXQX7mcA0+4NjRmfF5occjecEcQXVSqBXbfqoEUBZfPmk+KTBMi
+         YomTZVaVln67D909iQuMyuZjmVnzTWhxdEep8SQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 20/55] scsi: vmw_pscsi: Fix use-after-free in pvscsi_queue_lck()
-Date:   Tue,  2 Jul 2019 10:01:28 +0200
-Message-Id: <20190702080125.094595624@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alejandro Jimenez <alejandro.j.jimenez@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Mark Kanda <mark.kanda@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, bp@alien8.de,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
+Subject: [PATCH 5.1 21/55] x86/speculation: Allow guests to use SSBD even if host does not
+Date:   Tue,  2 Jul 2019 10:01:29 +0200
+Message-Id: <20190702080125.142975123@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -60,52 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
 
-commit 240b4cc8fd5db138b675297d4226ec46594d9b3b upstream.
+commit c1f7fec1eb6a2c86d01bc22afce772c743451d88 upstream.
 
-Once we unlock adapter->hw_lock in pvscsi_queue_lck() nothing prevents just
-queued scsi_cmnd from completing and freeing the request. Thus cmd->cmnd[0]
-dereference can dereference already freed request leading to kernel crashes
-or other issues (which one of our customers observed). Store cmd->cmnd[0]
-in a local variable before unlocking adapter->hw_lock to fix the issue.
+The bits set in x86_spec_ctrl_mask are used to calculate the guest's value
+of SPEC_CTRL that is written to the MSR before VMENTRY, and control which
+mitigations the guest can enable.  In the case of SSBD, unless the host has
+enabled SSBD always on mode (by passing "spec_store_bypass_disable=on" in
+the kernel parameters), the SSBD bit is not set in the mask and the guest
+can not properly enable the SSBD always on mitigation mode.
 
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This has been confirmed by running the SSBD PoC on a guest using the SSBD
+always on mitigation mode (booted with kernel parameter
+"spec_store_bypass_disable=on"), and verifying that the guest is vulnerable
+unless the host is also using SSBD always on mode. In addition, the guest
+OS incorrectly reports the SSB vulnerability as mitigated.
+
+Always set the SSBD bit in x86_spec_ctrl_mask when the host CPU supports
+it, allowing the guest to use SSBD whether or not the host has chosen to
+enable the mitigation in any of its modes.
+
+Fixes: be6fcb5478e9 ("x86/bugs: Rework spec_ctrl base and mask logic")
+Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: bp@alien8.de
+Cc: rkrcmar@redhat.com
+Cc: kvm@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1560187210-11054-1-git-send-email-alejandro.j.jimenez@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/vmw_pvscsi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/vmw_pvscsi.c
-+++ b/drivers/scsi/vmw_pvscsi.c
-@@ -763,6 +763,7 @@ static int pvscsi_queue_lck(struct scsi_
- 	struct pvscsi_adapter *adapter = shost_priv(host);
- 	struct pvscsi_ctx *ctx;
- 	unsigned long flags;
-+	unsigned char op;
- 
- 	spin_lock_irqsave(&adapter->hw_lock, flags);
- 
-@@ -775,13 +776,14 @@ static int pvscsi_queue_lck(struct scsi_
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -836,6 +836,16 @@ static enum ssb_mitigation __init __ssb_
  	}
  
- 	cmd->scsi_done = done;
-+	op = cmd->cmnd[0];
- 
- 	dev_dbg(&cmd->device->sdev_gendev,
--		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, cmd->cmnd[0]);
-+		"queued cmd %p, ctx %p, op=%x\n", cmd, ctx, op);
- 
- 	spin_unlock_irqrestore(&adapter->hw_lock, flags);
- 
--	pvscsi_kick_io(adapter, cmd->cmnd[0]);
-+	pvscsi_kick_io(adapter, op);
- 
- 	return 0;
- }
+ 	/*
++	 * If SSBD is controlled by the SPEC_CTRL MSR, then set the proper
++	 * bit in the mask to allow guests to use the mitigation even in the
++	 * case where the host does not enable it.
++	 */
++	if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++	    static_cpu_has(X86_FEATURE_AMD_SSBD)) {
++		x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
++	}
++
++	/*
+ 	 * We have three CPU feature flags that are in play here:
+ 	 *  - X86_BUG_SPEC_STORE_BYPASS - CPU is susceptible.
+ 	 *  - X86_FEATURE_SSBD - CPU is able to turn off speculative store bypass
+@@ -852,7 +862,6 @@ static enum ssb_mitigation __init __ssb_
+ 			x86_amd_ssb_disable();
+ 		} else {
+ 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
+-			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
+ 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+ 		}
+ 	}
 
 
