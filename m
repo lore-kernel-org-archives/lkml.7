@@ -2,200 +2,142 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BF4C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C3C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6F520989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1BE2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="QlSOKQrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfGBPtj (ORCPT
+        id S1726736AbfGBPvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:49:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:52344 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbfGBPtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:49:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22AF128;
-        Tue,  2 Jul 2019 08:49:38 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFEAD3F246;
-        Tue,  2 Jul 2019 08:49:35 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/2] Support for TI Page-based Address Translator
-To:     "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Tero Kristo <t-kristo@ti.com>,
-        William Mills <wmills@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-References: <20190607193523.25700-1-afd@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f706bfe0-fdf6-afdd-fea7-13b78b16cdee@arm.com>
-Date:   Tue, 2 Jul 2019 16:49:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Jul 2019 11:51:21 -0400
+Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:41729
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725922AbfGBPvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 11:51:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=brO73ixZOe8DGZmg5e2jQmlH+kevr1g/wfAWOvS3o+o=;
+ b=QlSOKQrB5aTAUXnr3tUCMYfLRkhiFq67wi5CVJNPI1zGuhOYB4e+B/AB6K3iRx9Ze58D8kLdnaH/39fEIj2bLtvGft1JwYxU2AABGbHGIG7cC9AIjEsO8K/nzv3kgQhVN45I9CTjyP8ZF79T7L6Rsg60pKaWYtrz/yP+5hhHuwc=
+Received: from AM6PR05MB6037.eurprd05.prod.outlook.com (20.179.2.84) by
+ AM6PR05MB4197.eurprd05.prod.outlook.com (52.135.161.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.18; Tue, 2 Jul 2019 15:51:17 +0000
+Received: from AM6PR05MB6037.eurprd05.prod.outlook.com
+ ([fe80::c5b1:6971:9d4b:d5cd]) by AM6PR05MB6037.eurprd05.prod.outlook.com
+ ([fe80::c5b1:6971:9d4b:d5cd%7]) with mapi id 15.20.2032.019; Tue, 2 Jul 2019
+ 15:51:17 +0000
+From:   Petr Machata <petrm@mellanox.com>
+To:     Colin Ian King <colin.king@canonical.com>
+CC:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: mlxsw: spectrum: PTP: Support timestamping on Spectrum-1 -
+ potential null ptr dereference
+Thread-Topic: mlxsw: spectrum: PTP: Support timestamping on Spectrum-1 -
+ potential null ptr dereference
+Thread-Index: AQHVMOcY3L7Wjb9apkGPAWlUHGBxiaa3eieA
+Date:   Tue, 2 Jul 2019 15:51:17 +0000
+Message-ID: <87r278sado.fsf@mellanox.com>
+References: <4fb676a6-1de8-8bcf-5f2e-3157827546c8@canonical.com>
+In-Reply-To: <4fb676a6-1de8-8bcf-5f2e-3157827546c8@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR10CA0070.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:209:80::47) To AM6PR05MB6037.eurprd05.prod.outlook.com
+ (2603:10a6:20b:aa::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=petrm@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [78.45.160.211]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 408e183b-4fb7-454b-cea3-08d6ff051e2a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB4197;
+x-ms-traffictypediagnostic: AM6PR05MB4197:
+x-microsoft-antispam-prvs: <AM6PR05MB4197308712FF4EF53E3BFF2CDBF80@AM6PR05MB4197.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 008663486A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(51914003)(199004)(189003)(2906002)(8936002)(52116002)(478600001)(186003)(68736007)(305945005)(2616005)(11346002)(446003)(6246003)(81166006)(6486002)(3846002)(86362001)(6116002)(5660300002)(6436002)(25786009)(8676002)(76176011)(102836004)(256004)(316002)(64756008)(71190400001)(71200400001)(6916009)(229853002)(66066001)(476003)(73956011)(99286004)(386003)(486006)(53936002)(14454004)(66476007)(66446008)(7736002)(54906003)(81156014)(66946007)(66556008)(6512007)(4326008)(36756003)(26005)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4197;H:AM6PR05MB6037.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /xmhY/JQ2JFy1WGjf40O3s61MD44c8F5/5vOPlURdhY/2FWzz0lkaJ2beTokbTh2/VNo9E4lSebxRYokIJFQzkbg8Y1nBEBmKJLK9fl08Qh2jfOEoKMFrjxHXPedF0NzXaM0m2tC2T8nzbyxUEGlVvvV7LjBKhkghZrxGHvNxLSDIHvQRXP1JwLO+tAYY0bxDNQgO5BwrpVuQxVVh+SXweQxsru0iJ9OKSMjZSBbCVuWd+4RJtOzP80vsOIT1B5i1LPPSvkq+RsQTw7O3HzWC9TKKObVRQ0Pgb3BuOxZZTQ6SsX0qYVVX+j7QJdlUV0AEvpdKBxHTChZsa786t9BzCS0FQYaHp2Gj355UZiY1uyW8Y//JDzqRC4agNsvbhijJfYbh3OzV8vKgeYlxBytom6mzIM1iK8vF1XLK/jy5EA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190607193523.25700-1-afd@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 408e183b-4fb7-454b-cea3-08d6ff051e2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 15:51:17.1501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: petrm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2019 20:35, Andrew F. Davis wrote:
-> Hello all,
-> 
-> So I've got a new IP on our new SoC I'm looking to make use of and would
-> like some help figuring out what framework best matches its function. The
-> IP is called a "Page-based Address Translator" or PAT. A PAT instance
-> (there are 5 of these things on our J721e device[0]) is basically a
-> really simple IOMMU sitting on the interconnect between the device bus
-> and what is effectively our northbridge called
-> MSMC (DRAM/SRAM/L3-Cache/Coherency controller).
-> 
-> Simplified it looks about like this:
-> 
->           CPUs
->            |
-> DRAM --- MSMC --- SRAM/L3
->            |
->          NAVSS - (PATs)
->            |
->    --- Device Bus ---------
->   |      |      |          |
-> Device  Device  Device   etc..
-> 
-> Each PAT has a set a window in high memory (about 0x48_0000_0000 area)
-> for which any transaction with an address targeting its window will be
-> routed into that PAT. The PAT then does a simple calculation based on
-> the how far into the window the address is and the current page size,
-> does a lookup to an internally held table of translations, then sends the
-> transaction back out on the interconnect with a new address. Usually this
-> address should be towards somewhere in DRAM, but can be some other device
-> or even back into PAT (I'm not sure there is a valid use-case for this
-> but just a point of interest).
-> 
-> My gut reaction is that this is an IOMMU which belongs in the IOMMU
-> subsystem. But there are a couple oddities that make me less sure it is
-> really suitable for the IOMMU framework. First it doesn't sit in front of
-> any devices, it sits in front of *all* devices, this means we would have
-> every device claim it as an IOMMU parent, even though many devices also
-> have a traditional IOMMU connected. Second, there is only a limited
-> window of address space per PAT, this means we will get fragmentation and
-> allocation failures on occasion, in this way it looks to me more like AGP
-> GART. Third, the window is in high-memory, so unlike some IOMMU devices
-> which can be used to allow DMA to high-mem from low-mem only devices, PAT
-> can't be used for that. Lastly it doesn't provide any isolation, if the
-> access does not target the PAT window it is not used (that is not to say
-> we don't have isolation, just that it is taken care of by other parts of
-> the interconnect).
-> 
-> This means, to me, that PAT has one main purpose: making
-> physically-contiguous views of scattered pages in system memory for DMA.
-> But it does that really well, the whole translation table is held in a
-> PAT-internal SRAM giving 1 bus cycle latency and at full bus bandwidth.
-> 
-> So what are my options here, is IOMMU the right way to go or not?
 
-FWIW, that sounds almost exactly like my (vague) understanding of other 
-GARTs, and as such should be pretty well manageable via the IOMMU API - 
-we already have tegra-gart, for example. The aperture contention issue 
-could certainly be mitigated by letting the firmware claim it's only 
-associated with the display and any other devices which really need it.
+Colin Ian King <colin.king@canonical.com> writes:
 
-A further interesting avenue of investigation - now that Christoph's 
-recent work has made it much more possible - would be a second set of 
-IOMMU DMA ops tailored for "GART-like" domains where force_aperture=0, 
-which could behave as dma-direct wherever possible and only use IOMMU 
-remaps when absolutely necessary.
+> Hi,
+>
+> Static analysis with Coverity on today's linux-next has found a
+> potential null pointer dereference bug with the following commit:
+>
+> commit d92e4e6e33c8b19635be70fb8935b627d2e4f8fe
+> Author: Petr Machata <petrm@mellanox.com>
+> Date:   Sun Jun 30 09:04:56 2019 +0300
+>
+>     mlxsw: spectrum: PTP: Support timestamping on Spectrum-1
+>
+>
+> In function: mlxsw_sp1_ptp_packet_finish the offending code is as follows=
+:
+>
+>        /* Between capturing the packet and finishing it, there is a
+> window of
+>         * opportunity for the originating port to go away (e.g. due to a
+>         * split). Also make sure the SKB device reference is still valid.
+>         */
+>        mlxsw_sp_port =3D mlxsw_sp->ports[local_port];
+>        if (!mlxsw_sp_port && (!skb->dev || skb->dev =3D=3D mlxsw_sp_port-=
+>dev)) {
+>                dev_kfree_skb_any(skb);
+>                return;
+>        }
+>
+> If mlxsw_sp_port is null and skb->dev is not-null then the comparison
+> "skb->dev =3D=3D mlxsw_sp_port->dev" ends up with a null pointer derefere=
+nce.
+>
+> I think the if statement should be:
+>
+> if (mlxsw_sp_port && (!skb->dev || skb->dev =3D=3D mlxsw_sp_port->dev))
+>
+> ..but I'm not 100% sure as I may be missing something a bit more subtle
+> here.
 
-Robin.
+Yes, that line is wrong. It's missing a pair of parens, it should be:
 
-> Looking around the kernel I also see the char dev ARP/GART interface
-> which looks like a good fit, but also looks quite dated and my guess
-> deprecated at this point. Moving right along..
-> 
-> Another thing I saw is we have the support upstream of the DMM device[1]
-> available in some OMAPx/AM57x SoCs. I'm a little more familiar with this
-> device. The DMM is a bundle of IPs and in fact one of them is called
-> "PAT" and it even does basically the same thing this incarnation of "PAT"
-> does. It's upstream integration design is a bit questionable
-> unfortunately, the DMM support was integrated into the OMAPDRM display
-> driver, which does make some sense then given its support for rotation
-> (using TILER IP contained in DMM). The issue with this was that the
-> DMM/TILER/PAT IP was not part of the our display IP, but instead out at
-> the end of the shared device bus, inside the external memory controller.
-> Like this new PAT this meant that any IP that could make use of it, but
-> only the display framework could actually provide buffers backed by it.
-> This meant, for instance, if we wanted to decode some video buffer using
-> our video decoder we would have to allocate from DRM framework then pass
-> that over to the V4L2 system. This doesn't make much sense and required
-> the user-space to know about this odd situation and allocate from the
-> right spot or else have to use up valuable CMA space or waste memory with
-> dedicated carveouts.
-> 
-> Another idea would be to have this as a special central allocator
-> (exposed through DMA-BUF heaps[2] or ION) that would give out normal
-> system memory as a DMA-BUF but remap it with PAT if a device that only
-> supports contiguous memory tries to attach/map that DMA-BUF.
-> 
-> One last option would be to allow user-space to choose to make the buffer
-> contiguous when it needs. That's what the driver in this series allows.
-> We expose a remapping device, user-space passes it a non-contiguous
-> DMA-BUF handle and it passes a contiguous one back. Simple as that.
-> 
-> So how do we use this, lets take Android for example, we don't know at
-> allocation time if a rendering buffer will end up going back into the GPU
-> for further processing, or if it will be consumed directly by the display.
-> This is a problem for us as our GPU can work with non-contiguous buffers
-> but our display cannot, so any buffers that could possibly go to the
-> display at some point currently needs to be allocated as contiguous from
-> the start, this leads to a lot of unneeded use of carveout/CMA memory.
-> With this driver on the other hand, we allocate regular non-contiguous
-> system memory (again using DMA-BUF heaps, but ION could work here too),
-> then only when a buffer is about to be sent to the display we pass the
-> handle to this DMA-BUF to our driver here and take the handle it gives
-> back and pass that to the display instead.
-> 
-> As said, it is probably not the ideal solution but it does work and was
-> used for some early testing of the IP.
-> 
-> Well, sorry for the wall of text.
-> Any and all suggestions very welcome and appreciated.
-> 
-> Thanks,
-> Andrew
-> 
-> [0] http://www.ti.com/lit/pdf/spruil1
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-> [2] https://lkml.org/lkml/2019/6/6/1211
-> 
-> Andrew F. Davis (2):
->    dt-bindings: soc: ti: Add TI PAT bindings
->    soc: ti: Add Support for the TI Page-based Address Translator (PAT)
-> 
->   .../devicetree/bindings/misc/ti,pat.txt       |  34 ++
->   drivers/soc/ti/Kconfig                        |   9 +
->   drivers/soc/ti/Makefile                       |   1 +
->   drivers/soc/ti/ti-pat.c                       | 569 ++++++++++++++++++
->   include/uapi/linux/ti-pat.h                   |  44 ++
->   5 files changed, 657 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/misc/ti,pat.txt
->   create mode 100644 drivers/soc/ti/ti-pat.c
->   create mode 100644 include/uapi/linux/ti-pat.h
-> 
+        if (!(mlxsw_sp_port && (!skb->dev || skb->dev =3D=3D mlxsw_sp_port-=
+>dev))) {
+
+I.e. I need a port && I need the skb->dev to still refer to that port
+(or else be NULL). If that doesn't hold, bail out.
+
+Thanks for the report, I'll spin a fix!
