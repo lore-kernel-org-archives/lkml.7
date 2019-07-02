@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F337C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CDA2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9032121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 07:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bjSS0ZC5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eiKoV90U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGBHAi (ORCPT
+        id S1727069AbfGBHAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 03:00:38 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:57031 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfGBHAg (ORCPT
+        Tue, 2 Jul 2019 03:00:41 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:36614 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfGBHAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 03:00:36 -0400
-Received: by mail-vs1-f74.google.com with SMTP id t82so4727137vst.23
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 00:00:35 -0700 (PDT)
+        Tue, 2 Jul 2019 03:00:38 -0400
+Received: by mail-qt1-f201.google.com with SMTP id q26so15578320qtr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 00:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ril5U3BPdTaZFLli/CaafQNfoHYAGw/Elz1ksNt0JHY=;
-        b=bjSS0ZC5j0EKQ2D8wPI7z/flCDiNrUvTG7r/HnVkfJJJMM5ie9rmshh/tZIb4SgIc5
-         3owzb0PHCtxwSZmWYq9V+CNrkDKmJ/V8JhxYXfEk6wOdU0e90VSvmSgIinS/BNPCMoQA
-         2XiGAB1puMqHnojyLyRdBzbjTVqVqEq4mh6MIReHPo1gUq+nL7o2Nd5yWvvVsdZi5RE7
-         mqEvQHnVHnOGKkArTb54U8Mjx5du2kPGAEejUONZDRvrW4ksILrevAOoKGqvXTLnTwZy
-         5gQN+P2aZNvdndGC8hYOv3KdvodBb5WNthVVXPtCGt0B2swtd/mStQL1YVmj8a2cK2Ap
-         +srg==
+        bh=pZKXEfyC3/D5M+q6RSbb10h/7szhfL3ngvsyGClR+a0=;
+        b=eiKoV90UVKXY/bB03YHu5pLYn8of54tTfpaI6K6eYWYRU55qzU81wAewmnE1iBjOZj
+         534uka2ZJBqhCjDIXX0/j3k1JSHIR3dqExHZGQ1Xvevj9qDYvt49KOjLAJ/XsP3TJwH9
+         PiJLeH6F1zvS6W49986wxJm+/WPERuz7GPfo3moSaBlE9jDVvHBhh+p/80Shcpnc8EJm
+         NC3svB/jDyvbSP6qjxOSrf8aSXcOQoF86WIAXgA8Q7kB7ce29Ue5sZY6FVu+KiFlIJRU
+         dbF3mNxSsfrwbsf5Oxj47qc+IR1yJ+TVXmQVWHNbghcRa6yWEIFfA2AyBFigtPGLmxbH
+         ezag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ril5U3BPdTaZFLli/CaafQNfoHYAGw/Elz1ksNt0JHY=;
-        b=CiVSVb83GKqdhdgJ9s3hvAxED8w0CUpbLjKuItP8dpOypXSvnry/ZWkrD7BxIlAIDF
-         9lWu+kPd4VufSvT7AYivlDxte6143fU6jsWGf1GqqmrLYf7XYUpNlq2BUt1fFv2gbEjV
-         sIcs7fQQ8iSX5uYlJRDKzTWuXyippOuJtp9gQjbRSCRGBPiGEnJ4DLapl1cY/yLi7GgQ
-         60LfXmf0y6ZTiWW/29TNpWUqYmbQ23yUeTpqZou3XeWXrWbTKHBKNeM886WAsCIXzH1l
-         k7kJCZqkyJNT+4zWx4NWAsXJavwbLWfDh9nOuWlj1e4eiGfOR9IobZuUtfwGQCK8Fj7G
-         uhnw==
-X-Gm-Message-State: APjAAAUy5+Zv8jqHPVYiZiApU9RjEilY0eSVKSCkb7sfhg6qnwexeqtF
-        b0N1+Gi2H4D5ryzVUjRZ4rxxne/vijz5
-X-Google-Smtp-Source: APXvYqwgQwa8PcXgGy4s3L2l3XOl+5PkJq1oCUgGzxHFlKsG4w31TqJddYWjhL9p1yJ0/NwcTE/Lx3mA6ogl
-X-Received: by 2002:ac5:c5a8:: with SMTP id f8mr2872336vkl.80.1562050835040;
- Tue, 02 Jul 2019 00:00:35 -0700 (PDT)
-Date:   Mon,  1 Jul 2019 23:59:54 -0700
+        bh=pZKXEfyC3/D5M+q6RSbb10h/7szhfL3ngvsyGClR+a0=;
+        b=RpGaZBslNERL+nr0mRvS0r0vWdKwIGkmVyTtPPSnQRB+cxh+lrAAHkObuxEFhUi7Sc
+         4jCzTECDQkVZiUlkyvaqY6MWIPWg6GaI2naL9h5EBMjoQGAV5nIjLtGKR5tWImc9xdZd
+         FKcd39KxspRlsQFbiSG/7QWxE8oF9DD7T+4m0lKDylS/+PPzWM6Vw/grfz3QaQ11x4Wx
+         TiP79LABI/aiwBwBYVr7s/4d1iYMKnsDpwDc0AmmLSK8Pqgd1uyKBhZq5mEtctaxK8iX
+         gp5r8DjC2G2BJrks9NpIe2y6MI5HK3A+Ac+hrAEe74d7rga+rcj4vz5EdGeKtWPcGI74
+         +XKg==
+X-Gm-Message-State: APjAAAVyhlhPtCYNujtL6ns8dcgQWTjgtasaK/rZ69Atf3xoxFJrHe7u
+        z2l7wz7inEuM+2scxcvmlK7OMpMOMdSA
+X-Google-Smtp-Source: APXvYqy+LRDVkqm7GI8EDjg67BTzxi/07jx0DMHwvUODaIDNjufhsfK7fRdzyiYV5/7uQcqI36b6Sbr1Scv1
+X-Received: by 2002:ac8:3636:: with SMTP id m51mr23808085qtb.102.1562050837579;
+ Tue, 02 Jul 2019 00:00:37 -0700 (PDT)
+Date:   Mon,  1 Jul 2019 23:59:55 -0700
 In-Reply-To: <20190702065955.165738-1-irogers@google.com>
-Message-Id: <20190702065955.165738-7-irogers@google.com>
+Message-Id: <20190702065955.165738-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20190702065955.165738-1-irogers@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH 6/7] perf: avoid double checking CPU and cgroup
+Subject: [PATCH 7/7] perf: rename visit_groups_merge to ctx_groups_sched_in
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,95 +77,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When ctx_groups_sched_in iterates the CPU and cgroup of events is known
-to match the current task. Avoid double checking this with
-event_filter_match by passing in an additional argument.
+The visit_groups_merge function no longer takes a function pointer,
+change the name to be similar to other sched_in functions.
+Follow Kan Liang's <kan.liang@linux.intel.com> and remove the single
+caller flexible_sched_in and pinned_sched_in, moving functionality to
+caller.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- kernel/events/core.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ include/linux/perf_event.h |  4 +-
+ kernel/events/core.c       | 77 ++++++++++++++++----------------------
+ 2 files changed, 35 insertions(+), 46 deletions(-)
 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 86fb379296cb..1dd0250d72bf 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -802,8 +802,8 @@ struct perf_cpu_context {
+ #ifdef CONFIG_CGROUP_PERF
+ 	struct perf_cgroup		*cgrp;
+ 	struct list_head		cgrp_cpuctx_entry;
+-	struct perf_event		**visit_groups_merge_iterator_storage;
+-	int			       visit_groups_merge_iterator_storage_size;
++	struct perf_event		**ctx_groups_sched_in_iterator_storage;
++	int			      ctx_groups_sched_in_iterator_storage_size;
+ #endif
+ 
+ 	struct list_head		sched_cb_entry;
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7608bd562dac..a66477ee196a 100644
+index a66477ee196a..e714c2f9ea0d 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2079,10 +2079,12 @@ static inline int pmu_filter_match(struct perf_event *event)
+@@ -2642,22 +2642,22 @@ static int  __perf_install_in_context(void *info)
+ 					event->cgrp->css.cgroup);
+ 
+ 		/*
+-		 * Ensure space for visit_groups_merge iterator storage. With
++		 * Ensure space for ctx_groups_sched_in iterator storage. With
+ 		 * cgroup profiling we may have an event at each depth plus
+ 		 * system wide events.
+ 		 */
+ 		max_iterators = perf_event_cgroup_depth(event) + 1;
+ 		if (max_iterators >
+-		    cpuctx->visit_groups_merge_iterator_storage_size) {
++		    cpuctx->ctx_groups_sched_in_iterator_storage_size) {
+ 			struct perf_event **storage =
+-			   krealloc(cpuctx->visit_groups_merge_iterator_storage,
++			  krealloc(cpuctx->ctx_groups_sched_in_iterator_storage,
+ 				    sizeof(struct perf_event *) * max_iterators,
+ 				    GFP_KERNEL);
+ 			if (storage) {
+-				cpuctx->visit_groups_merge_iterator_storage
+-						= storage;
+-				cpuctx->visit_groups_merge_iterator_storage_size
+-						= max_iterators;
++				cpuctx->ctx_groups_sched_in_iterator_storage
++				    = storage;
++			       cpuctx->ctx_groups_sched_in_iterator_storage_size
++				    = max_iterators;
+ 			} else {
+ 				WARN_ONCE(1, "Unable to increase iterator "
+ 					"storage for perf events with cgroups");
+@@ -3466,32 +3466,33 @@ static int flexible_sched_in(struct perf_event_context *ctx,
+  * Without cgroups, with a task context, there may be per-CPU and any
+  * CPU events.
+  */
+-#define MIN_VISIT_GROUP_MERGE_ITERATORS 2
++#define MIN_CTX_GROUPS_SCHED_IN_ITERATORS 2
+ 
+-static int visit_groups_merge(struct perf_event_context *ctx,
+-			      struct perf_cpu_context *cpuctx,
+-			      bool is_pinned,
+-			      int *data)
++static int ctx_groups_sched_in(struct perf_event_context *ctx,
++			       struct perf_cpu_context *cpuctx,
++			       bool is_pinned,
++			       int *data)
+ {
+ 	/*
+ 	 * A set of iterators, the iterator for the visit is chosen by the
+ 	 * group_index.
+ 	 */
+ #ifndef CONFIG_CGROUP_PERF
+-	struct perf_event *itrs[MIN_VISIT_GROUP_MERGE_ITERATORS];
++	struct perf_event *itrs[MIN_CTX_GROUPS_SCHED_IN_ITERATORS];
+ 	struct perf_event_heap heap = {
+ 		.storage = itrs,
+ 		.num_elements = 0,
+-		.max_elements = MIN_VISIT_GROUP_MERGE_ITERATORS
++		.max_elements = MIN_CTX_GROUPS_SCHED_IN_ITERATORS
+ 	};
+ #else
+ 	/*
+ 	 * With cgroups usage space in the CPU context reserved for iterators.
+ 	 */
+ 	struct perf_event_heap heap = {
+-		.storage = cpuctx->visit_groups_merge_iterator_storage,
++		.storage = cpuctx->ctx_groups_sched_in_iterator_storage,
+ 		.num_elements = 0,
+-		.max_elements = cpuctx->visit_groups_merge_iterator_storage_size
++		.max_elements =
++			cpuctx->ctx_groups_sched_in_iterator_storage_size
+ 	};
+ #endif
+ 	int ret, cpu = smp_processor_id();
+@@ -3623,27 +3624,6 @@ static int flexible_sched_in(struct perf_event_context *ctx,
+ 	return 0;
  }
  
- static inline int
--event_filter_match(struct perf_event *event)
-+event_filter_match(struct perf_event *event, bool check_cgroup_and_cpu)
- {
--	return (event->cpu == -1 || event->cpu == smp_processor_id()) &&
--	       perf_cgroup_match(event) && pmu_filter_match(event);
-+	return (!check_cgroup_and_cpu ||
-+		((event->cpu == -1 || event->cpu == smp_processor_id()) &&
-+		 perf_cgroup_match(event))) &&
-+			pmu_filter_match(event);
- }
+-static void
+-ctx_pinned_sched_in(struct perf_event_context *ctx,
+-		    struct perf_cpu_context *cpuctx)
+-{
+-	visit_groups_merge(ctx,
+-			   cpuctx,
+-			   /*is_pinned=*/true,
+-			   NULL);
+-}
+-
+-static void
+-ctx_flexible_sched_in(struct perf_event_context *ctx,
+-		      struct perf_cpu_context *cpuctx)
+-{
+-	int can_add_hw = 1;
+-
+-	visit_groups_merge(ctx,
+-			   cpuctx,
+-			   /*is_pinned=*/false,
+-			   &can_add_hw);
+-}
  
  static void
-@@ -2797,7 +2799,7 @@ static void __perf_event_enable(struct perf_event *event,
- 	if (!ctx->is_active)
- 		return;
+ ctx_sched_in(struct perf_event_context *ctx,
+@@ -3681,11 +3661,20 @@ ctx_sched_in(struct perf_event_context *ctx,
+ 	 * in order to give them the best chance of going on.
+ 	 */
+ 	if (is_active & EVENT_PINNED)
+-		ctx_pinned_sched_in(ctx, cpuctx);
++		ctx_groups_sched_in(ctx,
++				    cpuctx,
++				    /*is_pinned=*/true,
++				    NULL);
  
--	if (!event_filter_match(event)) {
-+	if (!event_filter_match(event, /*check_cpu_and_cgroup=*/true)) {
- 		ctx_sched_in(ctx, cpuctx, EVENT_TIME, current);
- 		return;
- 	}
-@@ -3573,7 +3575,10 @@ static int pinned_sched_in(struct perf_event_context *ctx,
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
+ 	/* Then walk through the lower prio flexible groups */
+-	if (is_active & EVENT_FLEXIBLE)
+-		ctx_flexible_sched_in(ctx, cpuctx);
++	if (is_active & EVENT_FLEXIBLE) {
++		int can_add_hw = 1;
++
++		ctx_groups_sched_in(ctx,
++				    cpuctx,
++				    /*is_pinned=*/false,
++				    &can_add_hw);
++	}
+ }
  
--	if (!event_filter_match(event))
-+	/* The caller already checked the CPU and cgroup before calling
-+	 * pinned_sched_in.
-+	 */
-+	if (!event_filter_match(event, /*check_cpu_and_cgroup=*/false))
- 		return 0;
- 
- 	if (group_can_go_on(event, cpuctx, 1)) {
-@@ -3599,7 +3604,10 @@ static int flexible_sched_in(struct perf_event_context *ctx,
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
--	if (!event_filter_match(event))
-+	/* The caller already checked the CPU and cgroup before calling
-+	 * felxible_sched_in.
-+	 */
-+	if (!event_filter_match(event, /*check_cpu_and_cgroup=*/false))
- 		return 0;
- 
- 	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
-@@ -3899,7 +3907,7 @@ static void perf_adjust_freq_unthr_context(struct perf_event_context *ctx,
- 		if (event->state != PERF_EVENT_STATE_ACTIVE)
- 			continue;
- 
--		if (!event_filter_match(event))
-+		if (!event_filter_match(event, /*check_cpu_and_cgroup=*/true))
- 			continue;
- 
- 		perf_pmu_disable(event->pmu);
-@@ -6929,7 +6937,8 @@ perf_iterate_ctx(struct perf_event_context *ctx,
- 		if (!all) {
- 			if (event->state < PERF_EVENT_STATE_INACTIVE)
- 				continue;
--			if (!event_filter_match(event))
-+			if (!event_filter_match(event,
-+						/*check_cpu_and_cgroup=*/true))
- 				continue;
- 		}
- 
-@@ -6953,7 +6962,7 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
- 
- 		if (event->state < PERF_EVENT_STATE_INACTIVE)
- 			continue;
--		if (!event_filter_match(event))
-+		if (!event_filter_match(event, /*check_cpu_and_cgroup=*/true))
- 			continue;
- 		output(event, data);
+ static void cpu_ctx_sched_in(struct perf_cpu_context *cpuctx,
+@@ -10243,12 +10232,12 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+ 		cpuctx->ctx.pmu = pmu;
+ 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
+ #ifdef CONFIG_CGROUP_PERF
+-		cpuctx->visit_groups_merge_iterator_storage =
+-				kmalloc_array(MIN_VISIT_GROUP_MERGE_ITERATORS,
++		cpuctx->ctx_groups_sched_in_iterator_storage =
++				kmalloc_array(MIN_CTX_GROUPS_SCHED_IN_ITERATORS,
+ 					      sizeof(struct perf_event *),
+ 					      GFP_KERNEL);
+-		cpuctx->visit_groups_merge_iterator_storage_size =
+-				MIN_VISIT_GROUP_MERGE_ITERATORS;
++		cpuctx->ctx_groups_sched_in_iterator_storage_size =
++				MIN_CTX_GROUPS_SCHED_IN_ITERATORS;
+ #endif
+ 		__perf_mux_hrtimer_init(cpuctx, cpu);
  	}
 -- 
 2.22.0.410.gd8fdbe21b5-goog
