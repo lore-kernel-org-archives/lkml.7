@@ -2,90 +2,153 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E888AC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667F6C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32A420989
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF3820989
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 17:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X3u0nH0m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIUrlL36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfGBR3E (ORCPT
+        id S1727055AbfGBR3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 13:29:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52794 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfGBR3E (ORCPT
+        Tue, 2 Jul 2019 13:29:17 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44062 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfGBR3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 13:29:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KZ9VwrqG/IRp4jX6fSDNnOQ7RxZe+lhI8MIeh/ntJvc=; b=X3u0nH0mK7iK5vfuzWUwfEpES
-        inDQvv1lBCUsjKB9eKo35Yw9CvUt/spXfQq3ez0zMFuh6Kd26gxFAPM3VPrb3pr0HOROcOSmRGeMj
-        /N1wjvNRqZKuVrVsX+aMCbOs8Hre3/hmcNkYCD+j4/Lr079GgQaFcAI2n4fC2zYRWFZpOJQsIYcdj
-        Uu76KcdxP3OZfFfe8iRE1bsKntUg231W694I2dFFrOngjF+MuKuPhnBYAZsE/RdxTCJArO1L9Lwbo
-        m/3WiFDm41OEv7QNJFZw56lvfIkdRkkkUz75ft1KiCCmMPoVliVvQhQfttZjwvx5m4RGbtYIx1qAl
-        xQsgjWMow==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiMaL-0005w3-Tk; Tue, 02 Jul 2019 17:28:54 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DCFE4207B53F0; Tue,  2 Jul 2019 19:28:51 +0200 (CEST)
-Date:   Tue, 2 Jul 2019 19:28:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     subhra mazumdar <subhra.mazumdar@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        prakash.sangappa@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, Paul Turner <pjt@google.com>
-Subject: Re: [RFC PATCH 2/3] sched: change scheduler to give preference to
- soft affinity CPUs
-Message-ID: <20190702172851.GA3436@hirez.programming.kicks-ass.net>
-References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
- <20190626224718.21973-3-subhra.mazumdar@oracle.com>
+        Tue, 2 Jul 2019 13:29:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e189so13691227oib.11;
+        Tue, 02 Jul 2019 10:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b/VodJHchTtPTwJ7u4UXy48B+Jx4LeRpv6rlLSWJCYs=;
+        b=ZIUrlL36rqsKjgHMotePAaXOU0MvxKbBHXwPN/4ciNOhSG3YChe11HDdUYn3GZahP8
+         Up+ppoUl8UIW9nT4/wRcmwcVjWd6J74V1/lAKyqVJQw8azl4HyJZdMkb0R+bafevLra3
+         GSfaD6SUApZOucM/FRc78bSdTICUV88Wyb4UILbmzSTp1t/xpQ+LOGmjUEqlxPTRGksR
+         YaFDFT86xpeI7DQameuTPO0XRxltmG9gGnnAmBAAVh5Di0mo1MK1cHDrEoguz1KVRIpm
+         Iy7HNz7sbUX4Q/4L/ykJOfvOg/vko2LwWKiKGSj//bpX9QTWi2cmTB5O67srnV4Ufw8+
+         B+dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b/VodJHchTtPTwJ7u4UXy48B+Jx4LeRpv6rlLSWJCYs=;
+        b=ogf9eCC7i/dEAmLF/YM0kr7FsrhqhUs66QX5HhdylcBmAF5jtkk/rtmh0asV57/Ak9
+         UNR70FXdUdCAx0PIVi5m0UlB48r9eduZSxTmt6v6rGpsEP/x9vFkD+RcRu1luKvMQfR4
+         1svbX1mfL3odOcjIHtegC6yxR5GqmbM/rb4RYF1PwD2hmRPehK2E3mhArPfFazY8CThS
+         cTeKE9je52pEsW8unwOD8SKaXm69AKZbAK1V/7Z8I/byQSBGPFrtmQEp72m/8Zd0y4vd
+         NMnKVEdWBVJqFvCqdJZS4Mlnyr8X+FVQmnjKifPjGXenOYzG++93m2VrLJlHLFNJSKB1
+         5Rww==
+X-Gm-Message-State: APjAAAXYtzeI2wl4G/g0C4tPU18dItDjVcjSf52Sm4tmXq8xVBBSW1QR
+        /sp2B9BjWUMDtROTLQ7AeBhjOVFy7Rm6SwcHy7c=
+X-Google-Smtp-Source: APXvYqyQW7rwE2U62EZyCpSDHSbsXQSpdyDQtGlD5HfJbPRxf1D0HBWZTWRVxGX+u3hQTI1hT9R0SdmcFXL8Y85phy8=
+X-Received: by 2002:aca:e4c9:: with SMTP id b192mr3795893oih.82.1562088555714;
+ Tue, 02 Jul 2019 10:29:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626224718.21973-3-subhra.mazumdar@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190403185310.8437-1-matwey@sai.msu.ru> <20190614164554.27679-1-matwey@sai.msu.ru>
+In-Reply-To: <20190614164554.27679-1-matwey@sai.msu.ru>
+From:   "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+Date:   Tue, 2 Jul 2019 20:29:03 +0300
+Message-ID: <CAJs94EZy7HD-ge8vKGSeMMS+WYw-U=Zxw9gXMLoobpYX6rVt4A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] musb: Improve performance for hub-attached webcams
+To:     Bin Liu <b-liu@ti.com>, Greg KH <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     "open list:MUSB MULTIPOINT HIGH SPEED DUAL-ROLE CONTROLLER" 
+        <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 03:47:17PM -0700, subhra mazumdar wrote:
-> The soft affinity CPUs present in the cpumask cpus_preferred is used by the
-> scheduler in two levels of search. First is in determining wake affine
-> which choses the LLC domain and secondly while searching for idle CPUs in
-> LLC domain. In the first level it uses cpus_preferred to prune out the
-> search space. In the second level it first searches the cpus_preferred and
-> then cpus_allowed. Using affinity_unequal flag it breaks early to avoid
-> any overhead in the scheduler fast path when soft affinity is not used.
-> This only changes the wake up path of the scheduler, the idle balancing
-> is unchanged; together they achieve the "softness" of scheduling.
+Ping?
 
-I really dislike this implementation.
+=D0=BF=D1=82, 14 =D0=B8=D1=8E=D0=BD. 2019 =D0=B3. =D0=B2 19:47, Matwey V. K=
+ornilov <matwey@sai.msu.ru>:
+>
+> The series is concerned to issues with isochronous transfer while
+> streaming the USB webcam data. I discovered the issue first time
+> when attached PWC USB webcam to AM335x-based BeagleBone Black SBC.
+> It appeared that the root issue was in numerous missed IN requests
+> during isochronous transfer where each missing leaded to the frame
+> drop. Since every IN request is triggered in MUSB driver
+> individually, it is important to queue the send IN request as
+> earlier as possible when the previous IN completed. At the same
+> time the URB giveback handler of the device driver has also to be
+> called there, that leads to arbitrarily delay depending on the
+> device driver performance. The details with the references are
+> described in [1].
+>
+> The issue has two parts:
+>
+>   1) peripheral driver URB callback performance
+>   2) MUSB host driver performance
+>
+> It appeared that the first part is related to the wrong memory
+> allocation strategy in the most USB webcam drivers. Non-cached
+> memory is used in assumption that coherent DMA memory leads to
+> the better performance than non-coherent memory in conjunction with
+> the proper synchronization. Yet the assumption might be valid for
+> x86 platforms some time ago, the issue was fixed for PWC driver in:
+>
+>     1161db6776bd ("media: usb: pwc: Don't use coherent DMA buffers for IS=
+O transfer")
+>
+> that leads to 3.5x performance gain. The more generic fix for this
+> common issue are coming for the rest drivers [2].
+>
+> The patch allowed successfully running full-speed USB PWC webcams
+> attached directly to BeagleBone Black USB port.
+>
+> However, the second part of the issue is still present for
+> peripheral device attached through the high-speed USB hub due to
+> its 125us frame time. The patch series is intended to reorganize
+> musb_advance_schedule() to allow host to send IN request quicker.
+>
+> The patch series is organized as the following. First three patches
+> improve readability of the existing code in
+> musb_advance_schedule(). Patches 4 and 5 introduce updated
+> signature for musb_start_urb(). The last patch introduce new
+> code-path in musb_advance_schedule() which allows for faster
+> response.
+>
+> References:
+>
+> [1] https://www.spinics.net/lists/linux-usb/msg165735.html
+> [2] https://www.spinics.net/lists/linux-media/msg144279.html
+>
+> Changes since v1:
+>  - Patch 6 was redone to keep URB giveback order and stop transmission at
+>    erroneous URB.
+>
+> Matwey V. Kornilov (6):
+>   usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
+>   usb: musb: Introduce musb_qh_empty() helper function
+>   usb: musb: Introduce musb_qh_free() helper function
+>   usb: musb: Rename musb_start_urb() to musb_start_next_urb()
+>   usb: musb: Introduce musb_start_urb()
+>   usb: musb: Decrease URB starting latency in musb_advance_schedule()
+>
+>  drivers/usb/musb/musb_host.c | 132 ++++++++++++++++++++++++++++---------=
+------
+>  drivers/usb/musb/musb_host.h |   1 +
+>  2 files changed, 86 insertions(+), 47 deletions(-)
+>
+> --
+> 2.16.4
+>
 
-I thought the idea was to remain work conserving (in so far as that
-we're that anyway), so changing select_idle_sibling() doesn't make sense
-to me. If there is idle, we use it.
 
-Same for newidle; which you already retained.
-
-This then leaves regular balancing, and for that we can fudge with
-can_migrate_task() and nr_balance_failed or something.
-
-And I also really don't want a second utilization tipping point; we
-already have the overloaded thing.
-
-I also still dislike how you never looked into the numa balancer, which
-already has peferred_nid stuff.
+--=20
+With best regards,
+Matwey V. Kornilov
