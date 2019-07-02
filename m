@@ -2,104 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05EC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66439C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0218C218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3924E218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8vpjBx1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKlI879d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfGCAiV (ORCPT
+        id S1727236AbfGCAi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:38:21 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37834 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfGCAiV (ORCPT
+        Tue, 2 Jul 2019 20:38:57 -0400
+Received: from mail-pl1-f180.google.com ([209.85.214.180]:39471 "EHLO
+        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfGCAi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:38:21 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so576969oih.4;
-        Tue, 02 Jul 2019 17:38:21 -0700 (PDT)
+        Tue, 2 Jul 2019 20:38:56 -0400
+Received: by mail-pl1-f180.google.com with SMTP id b7so200983pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aBBXhrXh9/4XOgm4YO50PZ7nN7ZBQawsgLFlMkXEs1w=;
-        b=V8vpjBx1kzZa2mv6jb/tVkHvFf0jcI4WTGGOotiqRdxM+1C9MhPEoVjM//rJbTykNo
-         ldSHgjY7uLogQ7N/1qWi31GeqMrPakJSE4e8mxx2PbQDlFu5D0M6I4WGF9MqRzajhdNz
-         +KXHG7yOnR8KHMDh1bRb7sAsONTXUjJn5E1iqJ3iAcXDgD5YjndFxyIznXMYfpJVweNs
-         l2jtSDIAkS/QZN5SPFRbaGQ3ZSokN7GLUrSlLYFjvCNbBt6iPaxD6ifqNqjvu4JDZ0a8
-         S4lkXFKFRQPgnzslQNCbtAx9fC4spPYhRk8nz3b1smN8oOf9QKengOCpV/VQJYI8MgF3
-         h7ig==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sIW4c2nsoK1zg9iPJ9PWWFYICxxuZVhWWS0PGONCcT8=;
+        b=tKlI879d6GOCn5/viRbA8CB+2LHjMm+LHx8vu35g2JtHmWRh1MS1K2Oq0gOO4uanyd
+         c15xofeqIVhd7SStkRQtGGQG8ogXRpToC2cmZoqBYxGBLvl9kjjYZ0xuo8mFYG1VEsLy
+         ikmPD7gHqGybsUQltdIn7Jjmkd2wmRlohhi8jmnbU3YIPRnW77+JMRLFQ8emQ6GOC9vD
+         mkgfNh+CChWY9/02UtCZY5Z4d/iptGSMjM4I4uAS4y3vUxK4UYVODhXk0yUlEZGc668+
+         VgBtNszBl2lr0RVPKRfw91a/mbIqdV4lCzbBpKDNJSCzW2vG9+iNlMhl4b9cvPnPb3/T
+         F3hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aBBXhrXh9/4XOgm4YO50PZ7nN7ZBQawsgLFlMkXEs1w=;
-        b=szJ+5hF/VfKsNPJAj1FLvqiTo65IE1ulqSdRvG7Qv5WuVFqgCP8ecc9sjeQbKoK7np
-         aLbaQguE138IYJNWuZ0btmRYwnNrJWByjplvckiNbgmYJQV3GpRV97V/ubFu0H/H6x5h
-         +zCKEx/uNwNwdtNcKhmAmUWfvQe2MgCJVdMg1LowheJlnF+w3aLci88ykNsTYhFBn0nN
-         8hdllgVByowa5yK8hvRHNwZLCqmvn42ylDL7LHiGVk62PNPLHrUEi/4TT7Yx31FoM5YH
-         pv95nG+alEmu95y8xv5bL1Sh5eJhW+541p9Wm6e6RFGfMs3JLtYjEKnTuKg6vg9ald8a
-         4G4g==
-X-Gm-Message-State: APjAAAXi+syjNNXyjDb5IyBsiHgLmlr8qJdvgYsXKyIVRom0Wv/XBbOH
-        xioi0H7dDOSZUaoEbsqV3k7udCp31CY=
-X-Google-Smtp-Source: APXvYqwnTjoGdkjeDwZ2laVOlEN4b75Fj9Qb/yLUyGM1yb/F0z2LXav1KxBP0foWkEJJqVcDI1V4lw==
-X-Received: by 2002:a63:f14:: with SMTP id e20mr33320739pgl.227.1562108916478;
-        Tue, 02 Jul 2019 16:08:36 -0700 (PDT)
-Received: from continental ([189.58.144.164])
-        by smtp.gmail.com with ESMTPSA id 2sm129227pff.174.2019.07.02.16.08.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 16:08:35 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 20:09:19 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH 1/2] scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk
- Cruzer Blade
-Message-ID: <20190702230919.GB19791@continental>
-References: <20190618013146.21961-1-marcos.souza.org@gmail.com>
- <20190618013146.21961-2-marcos.souza.org@gmail.com>
- <yq1r27quuod.fsf@oracle.com>
- <20190619094540.GA26980@continental>
- <20190619120346.GC26980@continental>
- <yq14l4kro9l.fsf@oracle.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sIW4c2nsoK1zg9iPJ9PWWFYICxxuZVhWWS0PGONCcT8=;
+        b=TmxF/S2NnJ19cSQL0rzBgOtKFuDw6d6RaHOoqOl5ZX46a4NkN9X5SkHiVOzOtFptrJ
+         q4GigkWs5p5yLkarFFQ3wAoj8GmF+SNednsY7MGfzehWlxmCpYWYgxEgScH5Q0rc6zRz
+         SP212GtjxPtJrx2AfeVX7XVY7++Qn6jxY2GIFAG2vdvW3uvxhb7kKDnjaDX5vcBp4zm8
+         WDT8zheh5CtqrpctJlqNRSnzNXPQFBMVPN6A92iIyZ0PrF/dbyR74qc8SV5JCK4KA+wr
+         tBVpz7mjsERzyuCkLhJ3nY4GRF5uGcYQU5NJdU/GcW1t+Fe6RAWtmx6HXo5Nhi2jHEVF
+         z7oQ==
+X-Gm-Message-State: APjAAAWxytzfkzqhAJl4+Hf5YMNgirrM8QgM745Y0XqxOROAaPgR4dXe
+        k6TvMMBihtCFNkbRkHFGuweLhs9r
+X-Google-Smtp-Source: APXvYqyoBXu4AyqKJhdPuz9LblEnnUpotkfLl9gMkZHnkxwo6EMqYJPvNrNLG2nCtlyB3nXPt7OwmA==
+X-Received: by 2002:a17:902:467:: with SMTP id 94mr37806898ple.131.1562110033549;
+        Tue, 02 Jul 2019 16:27:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v22sm186381pgk.69.2019.07.02.16.27.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 16:27:12 -0700 (PDT)
+Subject: Re: [PATCH -next] mm: Mark undo_dev_pagemap as __maybe_unused
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <1562072523-22311-1-git-send-email-linux@roeck-us.net>
+ <20190702135418.ce51c988e88ca0d9546a2a11@linux-foundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <fa5137e4-478a-94b6-f0ae-28d48f53825e@roeck-us.net>
+Date:   Tue, 2 Jul 2019 16:27:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq14l4kro9l.fsf@oracle.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190702135418.ce51c988e88ca0d9546a2a11@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:32:38PM -0400, Martin K. Petersen wrote:
+On 7/2/19 1:54 PM, Andrew Morton wrote:
+> On Tue,  2 Jul 2019 06:02:03 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
 > 
-> Marcos,
+>> Several mips builds generate the following build warning.
+>>
+>> mm/gup.c:1788:13: warning: 'undo_dev_pagemap' defined but not used
+>>
+>> The function is declared unconditionally but only called from behind
+>> various ifdefs. Mark it __maybe_unused.
+>>
+>> ...
+>>
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -1785,7 +1785,8 @@ static inline pte_t gup_get_pte(pte_t *ptep)
+>>   }
+>>   #endif /* CONFIG_GUP_GET_PTE_LOW_HIGH */
+>>   
+>> -static void undo_dev_pagemap(int *nr, int nr_start, struct page **pages)
+>> +static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
+>> +					    struct page **pages)
+>>   {
+>>   	while ((*nr) - nr_start) {
+>>   		struct page *page = pages[--(*nr)];
 > 
-> > My first idea was to add a vendor:product mapping at SCSI layer, but
-> > so far I haven't found one, so I added the model/vendor found by
-> > INQUIRY. Would it be better to check for prod:vendor (as values,
-> > instead of the description)?
+> It's not our preferred way of doing it but yes, it would be a bit of a
+> mess and a bit of a maintenance burden to get the ifdefs correct.
 > 
-> Your patch is functionally fine. I'm just trying to establish how risky
-> it is for me to pick it up.
+That is why I did it here. I understand that some maintainers don't like it,
+and I noticed that it wasn't used elsewhere in the file, but it seemed to be
+to most straightforward solution.
 
-I've tried to find any official document about Cruzer Blade devices, stating
-that all of them have at least SPC-3 to support VPD, but no luck so far :(
-
-So feel free to ignore the patch if you think it's too risky.
+> And really, __maybe_unused isn't a bad way at all - it ensures that the
+> function always gets build-tested and the compiler will remove it so we
+> don't have to play the chase-the-ifdefs game.
+> 
+Yes, it does have its advantages. I like it myself, but usually I would not
+impose my opinion on others. In this case, anything else would have been
+quite awkward and be prone to never-ending adjustments.
 
 Thanks,
-Marcos
-
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+Guenter
