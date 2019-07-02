@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BD5C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02663C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FD720645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF143205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055195;
-	bh=CfzKGISLy0baesUffpS+ZxMiRrjmZdabf2zmwiwTGiQ=;
+	s=default; t=1562055201;
+	bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJpWmLcSqD3oW2SU2Zg0bNanNkmQGGlSldVc5oQl4o4iEqQsetQAGSkHo+RdzXuOo
-	 vu1JjCs+y1Ibac9k1AZ8ESu0ucjIM1yZ7FSOSFipbMFZyf64QNV1DXqQBlbwne4vP5
-	 ZwTSQatB8TElThXgvbteN5oWyiouD6psWNv0Dwec=
+	b=19iSqtOwUKem+5wwlNS20nqfWqElbt0lhVEhNgCibLQZ4KYgxGIRs9kubzhKAH8WY
+	 ISJdxJYyoO5ypPfS0UiL6A5j9Ov7SXEQUZE0PcAHK+HzOjvXbQv1s+mbiT6qkj8yl8
+	 dMOLXdHuC0f4EnmB2T1TZ72dlnFwtSRqWsxpXqFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfGBINO (ORCPT
+        id S1728437AbfGBINU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55388 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbfGBIH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:57 -0400
+        id S1727825AbfGBIHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F922183F;
-        Tue,  2 Jul 2019 08:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7A721479;
+        Tue,  2 Jul 2019 08:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054877;
-        bh=CfzKGISLy0baesUffpS+ZxMiRrjmZdabf2zmwiwTGiQ=;
+        s=default; t=1562054874;
+        bh=otaSQYiXjKh+fTkj0sHdoUcmjs71OqyqyJJbv8MaroQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMnREkKWG2rCRf63EiFUjDoRRnSpsZVooy7P09Jp4PCeNr1unPQNDLDBddUFWnVVn
-         niMc6vNh/m6eg8rsSB3iEO3BwHetZfaJdM/PUJwA4nPgbJQ+9r+nAywueepX9FffNr
-         D+ZQCUr6I0QhCYXoN05pWKRJvx4EdpWEOTC/rGf4=
+        b=r2KCTUyzzqi2PwfnrwS2YWXwVInJucHXVfwdM0k81e7jOxQVITXpJA0gbbiwjo924
+         uSphx3XFEF0ibM3Af6YpqFtRQJ6QLqQsNT4UraWrABYLhmZ52aOkwhcCCMoSr5tjWF
+         XCKrZURTY8NU4mkCp6nZwQENJ6wicFHvcqUNfBRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fei Li <lifei.shirley@bytedance.com>,
-        Jason Wang <jasowang@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 61/72] tun: wake up waitqueues after IFF_UP is set
-Date:   Tue,  2 Jul 2019 10:02:02 +0200
-Message-Id: <20190702080127.788211875@linuxfoundation.org>
+Subject: [PATCH 4.19 60/72] tipc: check msg->req data len in tipc_nl_compat_bearer_disable
+Date:   Tue,  2 Jul 2019 10:02:01 +0200
+Message-Id: <20190702080127.737966746@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -60,76 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Li <lifei.shirley@bytedance.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 72b319dc08b4924a29f5e2560ef6d966fa54c429 ]
+[ Upstream commit 4f07b80c973348a99b5d2a32476a2e7877e94a05 ]
 
-Currently after setting tap0 link up, the tun code wakes tx/rx waited
-queues up in tun_net_open() when .ndo_open() is called, however the
-IFF_UP flag has not been set yet. If there's already a wait queue, it
-would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
-Then the saving vhost_poll_start() will add the wq into wqh until it
-is waken up again. Although this works when IFF_UP flag has been set
-when tun_chr_poll detects; this is not true if IFF_UP flag has not
-been set at that time. Sadly the latter case is a fatal error, as
-the wq will never be waken up in future unless later manually
-setting link up on purpose.
+This patch is to fix an uninit-value issue, reported by syzbot:
 
-Fix this by moving the wakeup process into the NETDEV_UP event
-notifying process, this makes sure IFF_UP has been set before all
-waited queues been waken up.
+  BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:981
+  Call Trace:
+    __dump_stack lib/dump_stack.c:77 [inline]
+    dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+    kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+    __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+    memchr+0xce/0x110 lib/string.c:981
+    string_is_valid net/tipc/netlink_compat.c:176 [inline]
+    tipc_nl_compat_bearer_disable+0x2a1/0x480 net/tipc/netlink_compat.c:449
+    __tipc_nl_compat_doit net/tipc/netlink_compat.c:327 [inline]
+    tipc_nl_compat_doit+0x3ac/0xb00 net/tipc/netlink_compat.c:360
+    tipc_nl_compat_handle net/tipc/netlink_compat.c:1178 [inline]
+    tipc_nl_compat_recv+0x1b1b/0x27b0 net/tipc/netlink_compat.c:1281
 
-Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+TLV_GET_DATA_LEN() may return a negtive int value, which will be
+used as size_t (becoming a big unsigned long) passed into memchr,
+cause this issue.
+
+Similar to what it does in tipc_nl_compat_bearer_enable(), this
+fix is to return -EINVAL when TLV_GET_DATA_LEN() is negtive in
+tipc_nl_compat_bearer_disable(), as well as in
+tipc_nl_compat_link_stat_dump() and tipc_nl_compat_link_reset_stats().
+
+v1->v2:
+  - add the missing Fixes tags per Eric's request.
+
+Fixes: 0762216c0ad2 ("tipc: fix uninit-value in tipc_nl_compat_bearer_enable")
+Fixes: 8b66fee7f8ee ("tipc: fix uninit-value in tipc_nl_compat_link_reset_stats")
+Reported-by: syzbot+30eaa8bf392f7fafffaf@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ net/tipc/netlink_compat.c |   18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1024,18 +1024,8 @@ static void tun_net_uninit(struct net_de
- /* Net device open. */
- static int tun_net_open(struct net_device *dev)
- {
--	struct tun_struct *tun = netdev_priv(dev);
--	int i;
--
- 	netif_tx_start_all_queues(dev);
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -445,7 +445,11 @@ static int tipc_nl_compat_bearer_disable
+ 	if (!bearer)
+ 		return -EMSGSIZE;
  
--	for (i = 0; i < tun->numqueues; i++) {
--		struct tun_file *tfile;
--
--		tfile = rtnl_dereference(tun->tfiles[i]);
--		tfile->socket.sk->sk_write_space(tfile->socket.sk);
--	}
--
- 	return 0;
- }
- 
-@@ -3443,6 +3433,7 @@ static int tun_device_event(struct notif
- {
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct tun_struct *tun = netdev_priv(dev);
-+	int i;
- 
- 	if (dev->rtnl_link_ops != &tun_link_ops)
- 		return NOTIFY_DONE;
-@@ -3452,6 +3443,14 @@ static int tun_device_event(struct notif
- 		if (tun_queue_resize(tun))
- 			return NOTIFY_BAD;
- 		break;
-+	case NETDEV_UP:
-+		for (i = 0; i < tun->numqueues; i++) {
-+			struct tun_file *tfile;
+-	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
++	len = TLV_GET_DATA_LEN(msg->req);
++	if (len <= 0)
++		return -EINVAL;
 +
-+			tfile = rtnl_dereference(tun->tfiles[i]);
-+			tfile->socket.sk->sk_write_space(tfile->socket.sk);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
++	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+ 	if (!string_is_valid(name, len))
+ 		return -EINVAL;
+ 
+@@ -537,7 +541,11 @@ static int tipc_nl_compat_link_stat_dump
+ 
+ 	name = (char *)TLV_DATA(msg->req);
+ 
+-	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
++	len = TLV_GET_DATA_LEN(msg->req);
++	if (len <= 0)
++		return -EINVAL;
++
++	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+ 	if (!string_is_valid(name, len))
+ 		return -EINVAL;
+ 
+@@ -815,7 +823,11 @@ static int tipc_nl_compat_link_reset_sta
+ 	if (!link)
+ 		return -EMSGSIZE;
+ 
+-	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_LINK_NAME);
++	len = TLV_GET_DATA_LEN(msg->req);
++	if (len <= 0)
++		return -EINVAL;
++
++	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
+ 	if (!string_is_valid(name, len))
+ 		return -EINVAL;
+ 
 
 
