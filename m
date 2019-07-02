@@ -2,123 +2,130 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E1BC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB6C46478
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36E821841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C8721721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="bDHRQdKU"
+	dkim=pass (1024-bit key) header.d=uwy.onmicrosoft.com header.i=@uwy.onmicrosoft.com header.b="D6EglCVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbfGBENs (ORCPT
+        id S1725940AbfGBEYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 00:13:48 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:54194 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfGBENr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 00:13:47 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 7EC042DC009C;
-        Tue,  2 Jul 2019 00:13:46 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1562040826;
-        bh=gOEG661SveNiRUPN4YMnmMb923gb3S61Z9MG7QJfB3A=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bDHRQdKUivQd0Z9H/c1TnPWau75xz43TVHbwOKn+JVuDU9sbeEYEAJnkGuZ16BW5Z
-         tIpz0lRWdV0z7o4K4qAoePqu2rvAvVBoIMraIxyQkSw1JmxzVePCcJ2ovqgdsCN5FP
-         f52/dPn/UgaFcen+hbl+zNyjof+c8ZXTdwvCnlrx6Z2IIjDVFEtl7pebobZiwXkHw2
-         OgN6oBobxWQa4kpJCf9nNkao7jSSZLFj4dXaO0CRRjuD1PSSs/TTMt81tDo8mw4urZ
-         azwP/bYvmBFXcn1cBpYK41rexObSU/csVCrygxEBCC4/qVa5QThohe1oVHDj1iOr9o
-         M/3fNMusHv9He8Rm2xmjVcYmo10f3etlIXVh8Ny63kQ41DRKPOypMmC4f3BoVziny1
-         mLhITM6P2L+/MTXJlDawc3qws6rCIn+Hh7lGvKEtF4kKm7OefNrxDEqZicDD0J/h0g
-         ywonyQE7d9Pw4fCJmmDTqEloUDNpAdBMxq6KtbvekBfoRQNTGVsd25+b9YebxlxWcN
-         G+vtLZ7mh8uhwU5USgEQLufzY7ujxc3u/Kv6jg/cu47fGAGjXg/mTkuFkHT4OTyDh9
-         b6XZmUuh3k0cZDCj4tSdgV13oIxCWJRDnF28/3T9YcjkIN4yT/6rqMoj9ndpD7GNEY
-         4DPLhPZw4sTeT1KYgYNvv9jY=
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x624DPBD084759
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 2 Jul 2019 14:13:41 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <7f0ac9250e6fe6318aaf0685be56b121a978ce1b.camel@d-silva.org>
-Subject: Re: [PATCH v2 1/3] mm: Trigger bug on if a section is not found in
- __section_nr
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Tue, 02 Jul 2019 14:13:25 +1000
-In-Reply-To: <20190701104658.GA6549@dhcp22.suse.cz>
-References: <20190626061124.16013-1-alastair@au1.ibm.com>
-         <20190626061124.16013-2-alastair@au1.ibm.com>
-         <20190626062113.GF17798@dhcp22.suse.cz>
-         <d4af66721ea53ce7df2d45a567d17a30575672b2.camel@d-silva.org>
-         <20190626065751.GK17798@dhcp22.suse.cz>
-         <e66e43b1fdfbff94ab23a23c48aa6cbe210a3131.camel@d-silva.org>
-         <20190627080724.GK17798@dhcp22.suse.cz>
-         <833b9675bc363342827cb8f7c76ebb911f7f960d.camel@d-silva.org>
-         <20190701104658.GA6549@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Tue, 2 Jul 2019 00:24:05 -0400
+Received: from mail-eopbgr690103.outbound.protection.outlook.com ([40.107.69.103]:55173
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfGBEYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 00:24:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uwy.onmicrosoft.com;
+ s=selector1-uwy-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UVT8WKMN/8PWHEJUuwx9PWGzRmzZ3bUEOc+u1nThTgQ=;
+ b=D6EglCVJtRGIovvYrWscNeuX5K8f4e4hln92bZCsycPB/NZv7wF5VbkKjwGEG8sEw5NLJ1Ut45DGKd7AI/ckox2DYwyDSxG231l3JWqjgqz61ZpZFrjIhJIkHsMFyj6p+L0vHUPJ95LYgJju7OLKlz2iwnvdVmDyYDBIob3FDN4=
+Received: from DM6PR05MB5259.namprd05.prod.outlook.com (20.177.223.223) by
+ DM6PR05MB6346.namprd05.prod.outlook.com (20.178.224.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.14; Tue, 2 Jul 2019 04:24:01 +0000
+Received: from DM6PR05MB5259.namprd05.prod.outlook.com
+ ([fe80::95c9:c4b0:38da:1d83]) by DM6PR05MB5259.namprd05.prod.outlook.com
+ ([fe80::95c9:c4b0:38da:1d83%3]) with mapi id 15.20.2052.010; Tue, 2 Jul 2019
+ 04:24:01 +0000
+From:   "Robert R. Howell" <RHowell@uwyo.edu>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+CC:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 1/5] PM: ACPI/PCI: Resume all devices during
+ hibernation
+Thread-Topic: [PATCH v2 1/5] PM: ACPI/PCI: Resume all devices during
+ hibernation
+Thread-Index: AQHVL/v28vh16XJ3m0qx4puqb8Ydeqa2vBmA
+Date:   Tue, 2 Jul 2019 04:24:01 +0000
+Message-ID: <848e9c1b-7775-58bf-ac12-a8618b526876@uwyo.edu>
+References: <4976412.ihyb9sT5jY@kreacher> <6191578.xJk2HsE5MX@kreacher>
+In-Reply-To: <6191578.xJk2HsE5MX@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-originating-ip: [208.45.12.32]
+x-clientproxiedby: SN4PR0401CA0033.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::19) To DM6PR05MB5259.namprd05.prod.outlook.com
+ (2603:10b6:5:7f::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=RHowell@uwyo.edu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6339e9d4-8340-449a-8a62-08d6fea51bf8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR05MB6346;
+x-ms-traffictypediagnostic: DM6PR05MB6346:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR05MB634642DB878CCD13E132E995D3F80@DM6PR05MB6346.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 008663486A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(136003)(366004)(39850400004)(346002)(376002)(396003)(189003)(199004)(7736002)(99286004)(386003)(68736007)(71190400001)(71200400001)(6506007)(6116002)(64756008)(66556008)(14454004)(66476007)(8936002)(478600001)(305945005)(52116002)(4326008)(81166006)(76176011)(64126003)(3846002)(186003)(66446008)(36756003)(102836004)(786003)(75432002)(66946007)(966005)(26005)(58126008)(31696002)(6486002)(31686004)(486006)(54906003)(81156014)(110136005)(6436002)(229853002)(6306002)(256004)(476003)(6246003)(2616005)(53936002)(25786009)(53546011)(86362001)(66066001)(65806001)(14444005)(6512007)(65956001)(72206003)(5660300002)(65826007)(80792005)(88552002)(316002)(73956011)(8676002)(446003)(2906002)(11346002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR05MB6346;H:DM6PR05MB5259.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: uwyo.edu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 67W75RFvffcHoimGd+1janQ59zcxekVGIllxUnHBcEJVwdEgx6TfzQKziWpPvYrGIAG3Aj/XK9dnkyt8znWnECOzm0956F5+CVPuXIfiuCy96GaeNWiN+U0OW+buRDBL+/ZtDeMHK+APv9fD2QbTEtxDFKFE4M+KwlHm7iJiC2NbLURv2IZPC778XniVsbSlihKBEwTNJfG/784y+XB+x0AdsgVEMTVIgsR8RlaNuke63cvHgMenD7bBq4g1m8+6HCZxk48VLIYWrBL5m664mseCp3kpYIsOQ9w6UuINn2VfYjStZ6ZPEn0hZJXbKeIHcqZ3f72nIIkhs9409MTGFRLWG/7ane2cxquwxyiRPkuGq5mBzFOdMtWsWa9wPczeUQq1B1kw0Tp7aF2236XnpDwdzvT7MXYX5TqELelkvSA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88B73A52E40DD64FA4630658FA6B968E@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 02 Jul 2019 14:13:42 +1000 (AEST)
+X-OriginatorOrg: uwyo.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6339e9d4-8340-449a-8a62-08d6fea51bf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2019 04:24:01.3734
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f9cdd7ad-825d-4601-8e9c-a325e02d52da
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RHowell@uwyo.edu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR05MB6346
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-01 at 12:46 +0200, Michal Hocko wrote:
-> On Fri 28-06-19 10:46:28, Alastair D'Silva wrote:
-> [...]
-> > Given that there is already a VM_BUG_ON in the code, how do you
-> > feel
-> > about broadening the scope from 'VM_BUG_ON(!root)' to
-> > 'VM_BUG_ON(!root
-> > > > (root_nr == NR_SECTION_ROOTS))'?
-> 
-> As far as I understand the existing VM_BUG_ON will hit when the
-> mem_section tree gets corrupted. This is a different situation to an
-> incorrect section given so I wouldn't really mix those two. And I
-> still
-> do not see much point to protect from unexpected input parameter as
-> this
-> is internal function as already pointed out.
-> 
-
-Hi Michael,
-
-I was able to hit this problem as the system firmware had assigned the
-prototype pmem device an address range above the 128TB limit that we
-originally supported. This has since been lifted to 2PB with patch
-4ffe713b7587b14695c9bec26a000fc88ef54895.
-
-As it stands, we cannot move this range lower as the high bits are
-dictated by the location the card is connected.
-
-Since the physical address of the memory is not controlled by the
-kernel, I believe we should catch (or at least make it easy to debug)
-the sitution where external firmware allocates physical addresses
-beyond that which the kernel supports.
-
--- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva    
-Twitter: @EvilDeece
-blog: http://alastair.d-silva.org
-
-
+T24gNy8xLzE5IDQ6NDQgQU0sIFJhZmFlbCBKLiBXeXNvY2tpIHdyb3RlOg0KPiBGcm9tOiBSYWZh
+ZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IA0KPiBCb3RoIHRo
+ZSBQQ0kgYnVzIHR5cGUgYW5kIHRoZSBBQ1BJIFBNIGRvbWFpbiBhdm9pZCByZXN1bWluZw0KPiBy
+dW50aW1lLXN1c3BlbmRlZCBkZXZpY2VzIHdpdGggRFBNX0ZMQUdfU01BUlRfU1VTUEVORCBzZXQg
+ZHVyaW5nDQo+IGhpYmVybmF0aW9uIChiZWZvcmUgY3JlYXRpbmcgdGhlIHNuYXBzaG90IGltYWdl
+IG9mIHN5c3RlbSBtZW1vcnkpLA0KPiBidXQgdGhhdCB0dXJucyBvdXQgdG8gYmUgYSBtaXN0YWtl
+LiAgSXQgbGVhZHMgdG8gZnVuY3Rpb25hbCBpc3N1ZXMNCj4gYW5kIGFkZHMgY29tcGxleGl0eSB0
+aGF0J3MgaGFyZCB0byBqdXN0aWZ5Lg0KPiANCj4gRm9yIHRoaXMgcmVhc29uLCByZXN1bWUgYWxs
+IHJ1bnRpbWUtc3VzcGVuZGVkIFBDSSBkZXZpY2VzIGFuZCBhbGwNCj4gZGV2aWNlcyBpbiB0aGUg
+QUNQSSBQTSBkb21haW5zIGJlZm9yZSBjcmVhdGluZyBhIHNuYXBzaG90IGltYWdlIG9mDQo+IHN5
+c3RlbSBtZW1vcnkgZHVyaW5nIGhpYmVybmF0aW9uLg0KPiANCj4gRml4ZXM6IDA1MDg3MzYwZmQ3
+YSAoQUNQSSAvIFBNOiBUYWtlIFNNQVJUX1NVU1BFTkQgZHJpdmVyIGZsYWcgaW50byBhY2NvdW50
+KQ0KPiBGaXhlczogYzRiNjUxNTdhZWVmIChQQ0kgLyBQTTogVGFrZSBTTUFSVF9TVVNQRU5EIGRy
+aXZlciBmbGFnIGludG8gYWNjb3VudCkNCj4gTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
+bGludXgtYWNwaS85MTdkNDM5OS0yZTIyLTY3YjEtOWQ1NC04MDg1NjFmOTA4M2ZAdXd5by5lZHUv
+VC8jbWFmMDY1ZmU2ZTQ5NzRmMmE5ZDc5ZjMzMmFiOTlkZmFiYTYzNWY2NGMNCj4gUmVwb3J0ZWQt
+Ynk6IFJvYmVydCBSLiBIb3dlbGwgPFJIb3dlbGxAdXd5by5lZHU+DQo+IFRlc3RlZC1ieTogUm9i
+ZXJ0IFIuIEhvd2VsbCA8Ukhvd2VsbEB1d3lvLmVkdT4NCj4gU2lnbmVkLW9mZi1ieTogUmFmYWVs
+IEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiAtLS0NCj4gDQo+IC0+
+IHYyOiBObyBjaGFuZ2VzLg0KDQpJJ3ZlIHRlc3RlZCB5b3VyIHYyIHBhdGNoIHNldCBvbiBteSBB
+U1VTIFQxMDBUQSwgYXBwbHlpbmcganVzdCB0aG9zZSA1IHBhdGNoZXMgdG8gdGhlIA0KNS4yLXJj
+NyBrZXJuZWwsIGFuZCB0aGV5IGRvIGZpeCB0aGUgaGliZXJuYXRpb24gcHJvYmxlbS4gIFRoZSBp
+MmNfZGVzaWdud2FyZSANCnRpbWVvdXQgZXJyb3JzIGFyZSBub3cgZ29uZSBhbmQgc291bmQgZG9l
+cyBub3cgd29yayBhZnRlciByZXN1bWUgZnJvbSBib3RoIA0Kc3VzcGVuZCBhbmQgaGliZXJuYXRl
+LiAgDQoNCkFzIGJlZm9yZSBJIHN0aWxsIHNlZSB0aGUgImkyY19kZXNpZ253YXJlIDgwODYwRjQx
+OjAwOiBUcmFuc2ZlciB3aGlsZSBzdXNwZW5kZWQiIGVycm9yIA0Kb24gdGhlIGZpcnN0IHJlc3Vt
+ZSBmcm9tIGVpdGhlciBzdXNwZW5kIG9yIGhpYmVybmF0ZSwgYnV0IGFsc28gYXMgYmVmb3JlIHRo
+YXQgDQpwYXJ0aWN1bGFyIGVycm9yIGRvZXNuJ3Qgc2VlbSB0byBjYXVzZSBhIHBlcnNpc3RlbnQg
+cHJvYmxlbSBhbmQgdGhlIHN5c3RlbSB3b3JrcyANCm5vcm1hbGx5IGFmdGVyIHRoZSByZXN1bWUu
+DQoNCkJvYiBIb3dlbGwNCg==
