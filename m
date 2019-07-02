@@ -2,142 +2,104 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FF3C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F7BC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79CC2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F015B2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dob6fWQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGBKkF (ORCPT
+        id S1726483AbfGBKoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:40:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:47616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfGBKkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:40:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D9BD344;
-        Tue,  2 Jul 2019 03:40:04 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A51823F246;
-        Tue,  2 Jul 2019 03:40:03 -0700 (PDT)
-Subject: Re: [PATCH] iommu/dma: Fix calculation overflow in __finalise_sg()
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20190622043814.5003-1-nicoleotsuka@gmail.com>
- <20190701122158.GE8166@8bytes.org>
- <91a389be-fd76-c87f-7613-8cc972b69685@arm.com>
- <20190701215016.GA16247@Asurada-Nvidia.nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d4bccb17-2f7a-65e4-6c89-e37cceb6d935@arm.com>
-Date:   Tue, 2 Jul 2019 11:40:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Jul 2019 06:44:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45464 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfGBKoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 06:44:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f9so17169674wre.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OPgaITAUGmErWNi8n3QqCt1GuBrNOUAjOylci0JPSQs=;
+        b=dob6fWQ/N9yWnVlG41Qy9P37vq2bO3QtyJngZQXeEvL7CpECSt2eNta3XmJ7HJ/spQ
+         u4l86afaq0zANf9OQ+STBHkkuLrkj485z/rYr6Q7KJgZH6hPDU13KEscOGUo+06N5YO4
+         7WLN/armIbWj7I9W3TEb1ylHdMNWa52/KbPRkRdHlUQ7/TWg5C7/XGjU2SailB1yqd03
+         +/om/e8Sgc0qKnrMTGcKKwkVxs6tGOiiB7bZ6DvCzqfJfNp+J9RyaZs5oIgoLUo+FcSB
+         b4a1rOR5bcck1lTFcdtCv6TNE93rHtEh2X4bN6wSZ3iJDWkLnF3iT5ZugV8cNiSApMLr
+         +dAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OPgaITAUGmErWNi8n3QqCt1GuBrNOUAjOylci0JPSQs=;
+        b=GlK4qrtA0RGVLxxMDgwwNdHm2eD9mZ6at42vlBxQkX3jqIN+pOysrimwlGYx4/csdJ
+         e0wZZp7y5glnnVWbaZrdJzlOTa4r4+xblJVAkDyIKTj63lC8J2PzkUlTBShHUsyIRzt5
+         6hP2cKIaZM8lRHBlzskyj1ioN3QmXDn8IIGlvCQ1wDApib1dcUeVOPOHAkMK4JOvlg8/
+         QSpv8R1jC5RQKiaoaDz0mCJBT8An+uGMnk9yHlav2+z5Lm/dG+6/E/D5/+xvBzxx6wyq
+         fNZoHet1VCmGlIQekoEOGiiIT/7hZKdCSpxMOe40wlv5pjOinkFnZtnxxoBecu7tHspm
+         VHvA==
+X-Gm-Message-State: APjAAAW8PUTdAeeC1o9ITUvktCwnR9G8AHYmkC8WcvubWQ+cE4awdZFD
+        nSQBLvlerC6Krk8+Nw0Msn1lRw==
+X-Google-Smtp-Source: APXvYqyLEju3wVNoXod9g6O9aDX3heGkufTtjp9FbBwFLavrJGAmqNpFBzsew0P4hqtBl4TkDNOOqw==
+X-Received: by 2002:adf:f38b:: with SMTP id m11mr392068wro.79.1562064263005;
+        Tue, 02 Jul 2019 03:44:23 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id u6sm2639685wml.9.2019.07.02.03.44.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 03:44:22 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 11:44:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Mark Brown <broonie@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] regulator: lp87565: fix missing break in switch
+ statement
+Message-ID: <20190702104420.GD4652@dell>
+References: <20190627131639.6394-1-colin.king@canonical.com>
+ <20190628143628.GJ5379@sirena.org.uk>
+ <4cb0e4ab-66c7-2b3d-27d3-fd5cfde8988f@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190701215016.GA16247@Asurada-Nvidia.nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4cb0e4ab-66c7-2b3d-27d3-fd5cfde8988f@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2019 22:50, Nicolin Chen wrote:
-> Hi Robin,
-> 
-> On Mon, Jul 01, 2019 at 01:39:55PM +0100, Robin Murphy wrote:
->>>> The max_len is a u32 type variable so the calculation on the
->>>> left hand of the last if-condition will potentially overflow
->>>> when a cur_len gets closer to UINT_MAX -- note that there're
->>>> drivers setting max_seg_size to UINT_MAX:
->>>>     drivers/dma/dw-edma/dw-edma-core.c:745:
->>>>       dma_set_max_seg_size(dma->dev, U32_MAX);
->>>>     drivers/dma/dma-axi-dmac.c:871:
->>>>       dma_set_max_seg_size(&pdev->dev, UINT_MAX);
->>>>     drivers/mmc/host/renesas_sdhi_internal_dmac.c:338:
->>>>       dma_set_max_seg_size(dev, 0xffffffff);
->>>>     drivers/nvme/host/pci.c:2520:
->>>>       dma_set_max_seg_size(dev->dev, 0xffffffff);
->>>>
->>>> So this patch just casts the cur_len in the calculation to a
->>>> size_t type to fix the overflow issue, as it's not necessary
->>>> to change the type of cur_len after all.
->>>>
->>>> Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
->>>
->>> Looks good to me, but I let Robin take a look too before I apply it,
->>> Robin?
->> I'll need to take a closer look at how exactly an overflow would happen here
-> 
-> It was triggered by a test case that was trying to map a 4GB
-> dma_buf (1000+ nents in the scatterlist). This function then
-> seemed to reduce the nents by merging most of them, probably
-> because they were contiguous.
+On Fri, 28 Jun 2019, Colin Ian King wrote:
 
-So, looking at the code now, the actual problem seems to be that this
-overflow allows segments to be merged to or beyond 4GB total length,
-thus sg->dma_length for the resulting segment also ends up wrapped and
-truncated, and the caller will end up going downhill from there; is that
-correct?
+> On 28/06/2019 15:36, Mark Brown wrote:
+> > On Thu, Jun 27, 2019 at 02:16:39PM +0100, Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> Currently the LP87565_DEVICE_TYPE_LP87561_Q1 case does not have a
+> >> break statement, causing it to fall through to a dev_err message.
+> >> Fix this by adding in the missing break statement.
+> > 
+> > This doesn't apply against current code, please check and resend.
+> > 
+> So it applies cleanly against linux-next, I think the original code
+> landed in mfd/for-mfd-next - c.f. https://lkml.org/lkml/2019/5/28/550
 
->> (just got back off some holiday), but my immediate thought is that if this
->> is a real problem, then what about 32-bit builds where size_t would still
->> overflow?
-> 
-> I think most of callers are also using size_t type for their
-> size parameters like dma_buf, so the cur_len + s_length will
-> unlikely go higher than UINT_MAX. But just in case that some
-> driver allocates a large sg with a size parameter defined in
-> 64-bit and uses this map() function, so it might be safer to
-> change to "size_t" here to "u64"?
+Applied, thanks Colin.
 
-On reflection, I don't really think that size_t fits here anyway, since
-all the members of the incoming struct scatterlist are unsigned int too.
-Does the patch below work?
-
-Robin.
-
------>8-----
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] iommu/dma: Handle SG length overflow better
-
-Since scatterlist dimensions are all unsigned ints, in the relatively
-rare cases where a device's max_segment_size is set to UINT_MAX, then
-the "cur_len + s_length <= max_len" check in __finalise_sg() will always
-return true. As a result, the corner case of such a device mapping an
-excessively large scatterlist which is mergeable to or beyond a total
-length of 4GB can lead to overflow and a bogus truncated dma_length in
-the resulting segment.
-
-As we already assume that any single segment must be no longer than
-max_len to begin with, this can easily be addressed by reshuffling the
-comparison.
-
-Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
-Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/dma-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 129c4badf9ae..8de6cf623362 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -721,7 +721,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
- 		 * - and wouldn't make the resulting output segment too long
- 		 */
- 		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
--		    (cur_len + s_length <= max_len)) {
-+		    (max_len - cur_len >= s_length)) {
- 			/* ...then concatenate it with the previous one */
- 			cur_len += s_length;
- 		} else {
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
