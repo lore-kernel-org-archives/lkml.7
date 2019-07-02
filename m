@@ -2,123 +2,121 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D02C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B142054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73990208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 12:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfGBMjJ (ORCPT
+        id S1727059AbfGBMjd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 08:39:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50493 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfGBMjJ (ORCPT
+        Tue, 2 Jul 2019 08:39:33 -0400
+Received: from mailout02.agenturserver.de ([185.15.192.33]:38720 "EHLO
+        mailout02.agenturserver.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726636AbfGBMjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 08:39:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hiI3t-0000rS-1U; Tue, 02 Jul 2019 12:39:05 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maya Erez <merez@codeaurora.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        wil6210@qti.qualcomm.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ath: fix various spelling mistakes
-Date:   Tue,  2 Jul 2019 13:39:04 +0100
-Message-Id: <20190702123904.8786-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 2 Jul 2019 08:39:33 -0400
+X-Greylist: delayed 409 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 08:39:30 EDT
+Received: from mail02.agenturserver.de (mail02.internal [172.16.51.35])
+        by mailout02.agenturserver.de (Postfix) with ESMTP id 64F3112614C;
+        Tue,  2 Jul 2019 14:32:38 +0200 (CEST)
+Received: from localhost (ac02.internal [172.16.51.82])
+        by mail02.agenturserver.de (Postfix) with ESMTP id 1818180753;
+        Tue,  2 Jul 2019 14:32:37 +0200 (CEST)
+Received: from mail.agenturserver.de ([172.16.51.35])
+        by localhost (ac02.mittwald.de [172.16.51.82]) (amavisd-new, port 10026)
+        with ESMTP id wKItvphULAwB; Tue,  2 Jul 2019 14:32:36 +0200 (CEST)
+Received: from karo-electronics.de (unknown [89.1.81.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: lw@karo-electronics.de)
+        by mail.agenturserver.de (Postfix) with ESMTPSA;
+        Tue,  2 Jul 2019 14:32:26 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 14:32:25 +0200
+From:   Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>,
+        Christian Hoff <christian_hoff@gmx.net>,
+        Enrico Weigelt <info@metux.net>,
+        Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use
+ dev_get_drvdata()
+Message-ID: <20190702143225.12b0fe07@karo-electronics.de>
+In-Reply-To: <CABXRUiQ77feNzEdQ7GqNxLS9YAMybVG3eAWWSDPFdGvERaxCyg@mail.gmail.com>
+References: <20190701032342.25971-1-huangfq.daxian@gmail.com>
+        <20190701075255.GD172968@dtor-ws>
+        <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
+        <CAHp75VeUo2Au66tETo3zneBpeaVU+Y+-h5zghpo+hPuB=a6-eA@mail.gmail.com>
+        <CABXRUiQ77feNzEdQ7GqNxLS9YAMybVG3eAWWSDPFdGvERaxCyg@mail.gmail.com>
+Organization: Ka-Ro electronics GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-There are a bunch of spelling mistakes in two ath drivers, fix
-these.
+On Tue, 2 Jul 2019 19:47:16 +0800 Fuqian Huang wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> 於 2019年7月2日週二 下午5:51寫道：
+> >
+> > On Tue, Jul 2, 2019 at 11:20 AM Fuqian Huang <huangfq.daxian@gmail.com> wrote:  
+> > >
+> > > I am not an expert on this. I just write a coccinelle script to search
+> > > this kind of misuse and fix it in a naive way.
+> > > Could you tell me about how to use the proper bus accessors? Then I
+> > > will fix it up and resend a v2 patch set.  
+> >
+> > First, don't top post.
+> > And answering to this, simple drop the patch.
+> > Proper bus accessors is exactly what it's used in the current code.  
+> 
+> But why not use dev_get_drvdata directly.
+> It simplifies getting the 'driver_data' from 'struct device' directly.
+> And the platform_device here is not required.
+> Replace it can remove the unnecessary step back and forth. (dev -> pdev -> dev).
+> 
+Did you check whether the compiler generates different (better) code
+with and without your patch? My guess is it won't.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wireless/ath/ath10k/core.c | 2 +-
- drivers/net/wireless/ath/ath10k/mac.c  | 2 +-
- drivers/net/wireless/ath/ath10k/qmi.c  | 4 ++--
- drivers/net/wireless/ath/wil6210/wmi.c | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index dc45d16e8d21..a7c25d49683b 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -2784,7 +2784,7 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
- 
- 	status = ath10k_hif_set_target_log_mode(ar, fw_diag_log);
- 	if (status && status != -EOPNOTSUPP) {
--		ath10k_warn(ar, "set traget log mode faileds: %d\n", status);
-+		ath10k_warn(ar, "set target log mode failed: %d\n", status);
- 		goto err_hif_stop;
- 	}
- 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index e43a566eef77..20f72ec95b28 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -7417,7 +7417,7 @@ static bool ath10k_mac_set_vht_bitrate_mask_fixup(struct ath10k *ar,
- 	err = ath10k_wmi_peer_set_param(ar, arvif->vdev_id, sta->addr,
- 					WMI_PEER_PARAM_FIXED_RATE, rate);
- 	if (err)
--		ath10k_warn(ar, "failed to eanble STA %pM peer fixed rate: %d\n",
-+		ath10k_warn(ar, "failed to enable STA %pM peer fixed rate: %d\n",
- 			    sta->addr, err);
- 
- 	return true;
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 3b63b6257c43..d28daa2d9449 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -643,7 +643,7 @@ int ath10k_qmi_set_fw_log_mode(struct ath10k *ar, u8 fw_log_mode)
- 			       wlfw_ini_req_msg_v01_ei, &req);
- 	if (ret < 0) {
- 		qmi_txn_cancel(&txn);
--		ath10k_err(ar, "fail to send fw log reqest: %d\n", ret);
-+		ath10k_err(ar, "failed to send fw log request: %d\n", ret);
- 		goto out;
- 	}
- 
-@@ -652,7 +652,7 @@ int ath10k_qmi_set_fw_log_mode(struct ath10k *ar, u8 fw_log_mode)
- 		goto out;
- 
- 	if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
--		ath10k_err(ar, "fw log request rejectedr: %d\n",
-+		ath10k_err(ar, "fw log request rejected: %d\n",
- 			   resp.resp.error);
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 475b1a233cc9..e1704cdfc03e 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -2688,7 +2688,7 @@ int wmi_get_all_temperatures(struct wil6210_priv *wil,
- 		return rc;
- 
- 	if (reply.evt.status == WMI_FW_STATUS_FAILURE) {
--		wil_err(wil, "Failed geting TEMP_SENSE_ALL\n");
-+		wil_err(wil, "Failed getting TEMP_SENSE_ALL\n");
- 		return -EINVAL;
- 	}
- 
--- 
-2.20.1
-
+Lothar Waßmann
