@@ -2,154 +2,225 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D69C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCDDC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563802082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A52E2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="BshvCv0z"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kADgmmiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfGBPxS (ORCPT
+        id S1727147AbfGBPxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:53:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45578 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfGBPxS (ORCPT
+        Tue, 2 Jul 2019 11:53:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25392 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726046AbfGBPxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:53:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so3385298pgp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cl0v8wIi5ckV/JFTMr62z9IJnCBwgq6PTLXNZySJFKE=;
-        b=BshvCv0z48GDRlOe7wUUakEQ7WtAa6qqMxNiKS5VyGMORJhmGXBbwBb3fYxkLSIwfX
-         t3IY+Mm2FOv7fSzVA361hclrSmxT8ykILSHq5gdRKnLKWyOJwW5DRfLgN+tmGPAIgLuG
-         wmCaW/nIZWD2mwm+1eysoj200TWQVJlqjSVQyUWDGcu7jJ28U0LWQPX8MCz98yPjtdki
-         cHC8f2S4FcWmxWZLQ64JzUEfcyy2zjRNbdtlFomOuWkANc47lZIA5LstyjRrI1imqOlJ
-         j2DSqs9//sFGOHphCtCfUYZ7XwQxNIHYojoMsnGXdXNwAltpmEdUXzp9fd65+7EkV5ry
-         ApdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cl0v8wIi5ckV/JFTMr62z9IJnCBwgq6PTLXNZySJFKE=;
-        b=BMWycIfb10UkYS3SjzHWQiQ+oEpE5zqR3NRIwjByyMPBERXYn/FzlSZf+/w7nO0sJv
-         isaLhAWW+Qz7mu5PgSJIbO3P08hq+ljLLkPp8y6WxdHhst29kwsKb2jtu/YJ9izUGmZP
-         tlij/O3zW+J/UH77NA+E5WIDLUo9CJ3Z6c+DTOVrdtFYueswOY5E68jwGxIyURqPzGzZ
-         /Dv5d8Z/yqAkuimObfUxuCkMLPso2AxMxe61yGi5oTfEf+o92YzR8H1I7f9J3jnJrk5/
-         rUeimAYdfQC4XTt2OnsbtpuH4Q7CwqOF4x38sKULUpWpbZIQaowrVb947v82ss7xPsX4
-         NfCQ==
-X-Gm-Message-State: APjAAAVuas1t5zIS8XrN2wRGQj3ekXIw2jzjroL8tjA/4P2cd4OFjtlI
-        Atz6RN+x598nFTctkSQwyZkPqxeJVG0=
-X-Google-Smtp-Source: APXvYqycrzymxcdSRUPnb+KLUWdFvBSdBC/+ZeideYCH3ZcxbIG30pYV4vOVAAIvgC9L4pK46S5UKA==
-X-Received: by 2002:a63:d301:: with SMTP id b1mr207334pgg.379.1562082797621;
-        Tue, 02 Jul 2019 08:53:17 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id m13sm11837936pgv.89.2019.07.02.08.53.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 08:53:17 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 08:53:16 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, sdf@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next] bpf: cgroup: Fix build error without CONFIG_NET
-Message-ID: <20190702155316.GJ6757@mini-arch>
-References: <20190702132913.26060-1-yuehaibing@huawei.com>
+        Tue, 2 Jul 2019 11:53:20 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62ForXY006851;
+        Tue, 2 Jul 2019 17:53:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=XIOcvogBjeCYx69E1hVuZzDFWgsxfeUEGBiLYqR1/tc=;
+ b=kADgmmiJVLALDniOad4zqBW7gPlIc/J6yPnEDj/lrSJhWmSNEECyx2Cpu3tDZFyu1YFt
+ tNsIb4iqFzz69oCeo7mUGkOsTCPG0dd0nnRRLQ6BDQY75rWo1RXWYtvODk0KwWDi8fzd
+ iyCRMrUpv6E7OPSde8bqXN1qKQPClm+FF/TnLx5ZOFfShop0d4KnYA0Ho/GOBJdrjFka
+ IA7QPhRcVK3Auk9qc+bFJZI9WVhoM1UY6i7eYSJ89pv1sSILFmYfNNDAZYYFMLHpDu4g
+ H86EgWN9PKfGn8J84x59zEOJRBD99K2vTsS+BnOVeIcl7w7pcOAMUOOyKLkRPpJSQ6lT aQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tdw49wgyb-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 02 Jul 2019 17:53:09 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5068031;
+        Tue,  2 Jul 2019 15:53:09 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2CBCF4ADC;
+        Tue,  2 Jul 2019 15:53:09 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 2 Jul 2019
+ 17:53:09 +0200
+Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 2 Jul 2019 17:53:08
+ +0200
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        "Hugues Fruchet" <hugues.fruchet@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: [PATCH v3 2/3] media: stm32-dcmi: add media controller support
+Date:   Tue, 2 Jul 2019 17:52:58 +0200
+Message-ID: <1562082779-31165-3-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1562082779-31165-1-git-send-email-hugues.fruchet@st.com>
+References: <1562082779-31165-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702132913.26060-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02, YueHaibing wrote:
-> If CONFIG_NET is not set, gcc building fails:
-> 
-> kernel/bpf/cgroup.o: In function `cg_sockopt_func_proto':
-> cgroup.c:(.text+0x237e): undefined reference to `bpf_sk_storage_get_proto'
-> cgroup.c:(.text+0x2394): undefined reference to `bpf_sk_storage_delete_proto'
-> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_getsockopt':
-> (.text+0x2a1f): undefined reference to `lock_sock_nested'
-> (.text+0x2ca2): undefined reference to `release_sock'
-> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_setsockopt':
-> (.text+0x3006): undefined reference to `lock_sock_nested'
-> (.text+0x32bb): undefined reference to `release_sock'
-> 
-> Add CONFIG_NET dependency to fix this.
-Can you share the config? Do I understand correctly that you have
-CONFIG_NET=n and CONFIG_BPF=y? What parts of BPF do you expect to
-work in this case?
+Add media controller support to dcmi in order
+to walk within remote subdevices pipeline.
 
-Less invasive fix would be something along the lines:
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Change-Id: Id6280c58ea3c6f3d03da2027ac45df9f0e7a1da9
+---
+ drivers/media/platform/Kconfig            |  2 +-
+ drivers/media/platform/stm32/stm32-dcmi.c | 52 ++++++++++++++++++++++++-------
+ 2 files changed, 41 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 76fa0076f20d..0a00eaca6fae 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -939,6 +939,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
- }
- EXPORT_SYMBOL(__cgroup_bpf_run_filter_sysctl);
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 8a19654..de7e21f 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -121,7 +121,7 @@ config VIDEO_S3C_CAMIF
  
-+#ifdef CONFIG_NET
- static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
- 					     enum bpf_attach_type attach_type)
- {
-@@ -1120,6 +1121,7 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ config VIDEO_STM32_DCMI
+ 	tristate "STM32 Digital Camera Memory Interface (DCMI) support"
+-	depends on VIDEO_V4L2 && OF
++	depends on VIDEO_V4L2 && OF && MEDIA_CONTROLLER
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select V4L2_FWNODE
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index b462f71..6f37617 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -169,6 +169,9 @@ struct stm32_dcmi {
+ 
+ 	/* Ensure DMA operations atomicity */
+ 	struct mutex			dma_lock;
++
++	struct media_device		mdev;
++	struct media_pad		vid_cap_pad;
+ };
+ 
+ static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+@@ -1551,14 +1554,6 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+ 		return ret;
+ 	}
+ 
+-	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
+-	if (ret) {
+-		dev_err(dcmi->dev, "Failed to register video device\n");
+-		return ret;
+-	}
+-
+-	dev_dbg(dcmi->dev, "Device registered as %s\n",
+-		video_device_node_name(dcmi->vdev));
+ 	return 0;
+ }
+ 
+@@ -1751,10 +1746,19 @@ static int dcmi_probe(struct platform_device *pdev)
+ 
+ 	q = &dcmi->queue;
+ 
++	dcmi->v4l2_dev.mdev = &dcmi->mdev;
++
++	/* Initialize media device */
++	strscpy(dcmi->mdev.model, DRV_NAME, sizeof(dcmi->mdev.model));
++	snprintf(dcmi->mdev.bus_info, sizeof(dcmi->mdev.bus_info),
++		 "platform:%s", DRV_NAME);
++	dcmi->mdev.dev = &pdev->dev;
++	media_device_init(&dcmi->mdev);
++
+ 	/* Initialize the top-level structure */
+ 	ret = v4l2_device_register(&pdev->dev, &dcmi->v4l2_dev);
+ 	if (ret)
+-		goto err_dma_release;
++		goto err_media_device_cleanup;
+ 
+ 	dcmi->vdev = video_device_alloc();
+ 	if (!dcmi->vdev) {
+@@ -1774,6 +1778,25 @@ static int dcmi_probe(struct platform_device *pdev)
+ 				  V4L2_CAP_READWRITE;
+ 	video_set_drvdata(dcmi->vdev, dcmi);
+ 
++	/* Media entity pads */
++	dcmi->vid_cap_pad.flags = MEDIA_PAD_FL_SINK;
++	ret = media_entity_pads_init(&dcmi->vdev->entity,
++				     1, &dcmi->vid_cap_pad);
++	if (ret) {
++		dev_err(dcmi->dev, "Failed to init media entity pad\n");
++		goto err_device_release;
++	}
++	dcmi->vdev->entity.flags |= MEDIA_ENT_FL_DEFAULT;
++
++	ret = video_register_device(dcmi->vdev, VFL_TYPE_GRABBER, -1);
++	if (ret) {
++		dev_err(dcmi->dev, "Failed to register video device\n");
++		goto err_media_entity_cleanup;
++	}
++
++	dev_dbg(dcmi->dev, "Device registered as %s\n",
++		video_device_node_name(dcmi->vdev));
++
+ 	/* Buffer queue */
+ 	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+ 	q->io_modes = VB2_MMAP | VB2_READ | VB2_DMABUF;
+@@ -1789,12 +1812,12 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	ret = vb2_queue_init(q);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to initialize vb2 queue\n");
+-		goto err_device_release;
++		goto err_media_entity_cleanup;
+ 	}
+ 
+ 	ret = dcmi_graph_init(dcmi);
+ 	if (ret < 0)
+-		goto err_device_release;
++		goto err_media_entity_cleanup;
+ 
+ 	/* Reset device */
+ 	ret = reset_control_assert(dcmi->rstc);
+@@ -1821,11 +1844,14 @@ static int dcmi_probe(struct platform_device *pdev)
+ 
+ err_cleanup:
+ 	v4l2_async_notifier_cleanup(&dcmi->notifier);
++err_media_entity_cleanup:
++	media_entity_cleanup(&dcmi->vdev->entity);
+ err_device_release:
+ 	video_device_release(dcmi->vdev);
+ err_device_unregister:
+ 	v4l2_device_unregister(&dcmi->v4l2_dev);
+-err_dma_release:
++err_media_device_cleanup:
++	media_device_cleanup(&dcmi->mdev);
+ 	dma_release_channel(dcmi->dma_chan);
+ 
  	return ret;
- }
- EXPORT_SYMBOL(__cgroup_bpf_run_filter_getsockopt);
-+#endif
+@@ -1839,7 +1865,9 @@ static int dcmi_remove(struct platform_device *pdev)
  
- static ssize_t sysctl_cpy_dir(const struct ctl_dir *dir, char **bufp,
- 			      size_t *lenp)
-@@ -1386,10 +1388,12 @@ static const struct bpf_func_proto *
- cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
- 	switch (func_id) {
-+#ifdef CONFIG_NET
- 	case BPF_FUNC_sk_storage_get:
- 		return &bpf_sk_storage_get_proto;
- 	case BPF_FUNC_sk_storage_delete:
- 		return &bpf_sk_storage_delete_proto;
-+#endif
- #ifdef CONFIG_INET
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
+ 	v4l2_async_notifier_unregister(&dcmi->notifier);
+ 	v4l2_async_notifier_cleanup(&dcmi->notifier);
++	media_entity_cleanup(&dcmi->vdev->entity);
+ 	v4l2_device_unregister(&dcmi->v4l2_dev);
++	media_device_cleanup(&dcmi->mdev);
+ 
+ 	dma_release_channel(dcmi->dma_chan);
+ 
+-- 
+2.7.4
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  init/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index e2e51b5..341cf2a 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -998,6 +998,7 @@ config CGROUP_PERF
->  config CGROUP_BPF
->  	bool "Support for eBPF programs attached to cgroups"
->  	depends on BPF_SYSCALL
-> +	depends on NET
->  	select SOCK_CGROUP_DATA
->  	help
->  	  Allow attaching eBPF programs to a cgroup using the bpf(2)
-> -- 
-> 2.7.4
-> 
-> 
