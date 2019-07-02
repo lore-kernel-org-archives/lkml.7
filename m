@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B062DC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333BFC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89BB7216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D1221841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562044490;
-	bh=87FQSshSYmL3P2tRJ1ayatkpCGG3x6MAwnW7l2pNFNY=;
+	s=default; t=1562044632;
+	bh=328TrF5pRCjfjD1mAV9V9eZFrwtYLfL03RW6PstYGLI=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=rL1Neq/euTW6s0FwZdkH1vJj5W8gFBKq/lrjEE4Mi0A/rKY+jq1VX+fywwwGmt84B
-	 ffm5yr4RWog+i8oNHpZp7xjJ0S7fTJzVyhSKqNXYivNn+8XJhzvGdgXOaY+u99PzUS
-	 Hw4ig5LSsI1DmTqkngvQl00PNXQTDX9G1YesmL28=
+	b=ynRdl6QMd6bT9WZAu5UB0L85X/etV9Zxg9aBhBS8SFZCYQa/+SE2lRBxZzQAAtaWt
+	 XGE6YUiH+aYCWG5s9dKAevaO5wh6MLw2nnGJPOR8wd9MF9IfcSW+njT8w+FTMk0XaY
+	 iZ4b8LKbN08A5k8uRflAdt1bgMbOwVYo2pO35tJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfGBFOt (ORCPT
+        id S1726964AbfGBFRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 01:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfGBFOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:14:48 -0400
+        id S1725775AbfGBFRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:17:10 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B705216C8;
-        Tue,  2 Jul 2019 05:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4BA4216C8;
+        Tue,  2 Jul 2019 05:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562044487;
-        bh=87FQSshSYmL3P2tRJ1ayatkpCGG3x6MAwnW7l2pNFNY=;
+        s=default; t=1562044628;
+        bh=328TrF5pRCjfjD1mAV9V9eZFrwtYLfL03RW6PstYGLI=;
         h=Date:From:To:Cc:Subject:From;
-        b=1e1uQFTBwEp/5Wz3baPDdv05DZV8BxTk87yPWwWt7bF5li56jL4+5bdKTDpSt2I8H
-         kH0QthflolpvrY5L3UfbmzFP9oyzdMdI56L/yE3O08nZjCB/v+ZcX9NPFylfs0Z6rG
-         3+GQbO6Ci8UG3oarfBFbG9SSXmlwOvljWztnW/QQ=
-Date:   Mon, 1 Jul 2019 22:14:45 -0700
+        b=yLiA+Zwj/S4KEhJwimGgH1N2mTLecNH36l+TnMg924rFr52FwD6oYpjMKZa9zR4KC
+         RSKJjcV1B58NnlQKcIZUjRNNv2BkpKSI3xSwKcV/482Cyzt9MO78JNypF5fwNo7xyl
+         dhs5Ooa2lkeg1nQZ/gpNyxzON74+9F3z2Tg5b/Eg=
+Date:   Mon, 1 Jul 2019 22:17:07 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-security-module@vger.kernel.org,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
+To:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 2 open syzbot bugs in "security/tomoyo" subsystem
-Message-ID: <20190702051445.GE23743@sol.localdomain>
+Subject: Reminder: 2 open syzbot bugs in vhost subsystem
+Message-ID: <20190702051707.GF23743@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,58 +59,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 2 of them as possibly being bugs in the "security/tomoyo" subsystem. 
-I've listed these reports below, sorted by an algorithm that tries to list first
-the reports most likely to be still valid, important, and actionable.
+marked 2 of them as possibly being bugs in the vhost subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
+
+Of these 2 bugs, 1 was seen in mainline in the last week.
 
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the "security/tomoyo" subsystem, please
-let me know, and if possible forward the report to the correct people or mailing
-list.
+If you believe I misattributed a bug to the vhost subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in tomoyo_realpath_from_path
-Last occurred:      6 days ago
+Title:              memory leak in vhost_net_ioctl
+Last occurred:      0 days ago
 Reported:           26 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=73d590010454403d55164cca23bd0565b1eb3b74
-Original thread:    https://lkml.kernel.org/lkml/0000000000004f43fa058a97f4d3@google.com/T/#u
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=12ba349d7e26ccfe95317bc376e812ebbae2ee0f
+Original thread:    https://lkml.kernel.org/lkml/000000000000188da1058a9c25e3@google.com/T/#u
 
-This bug has a syzkaller reproducer only.
+This bug has a C reproducer.
 
-The original thread for this bug has received 7 replies; the last was 9 days
+The original thread for this bug has received 4 replies; the last was 17 days
 ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 9 days ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/0000000000004f43fa058a97f4d3@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: invalid-free in tomoyo_realpath_from_path
-Last occurred:      35 days ago
-Reported:           34 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e9e5a1d41c3fb5d0f79aeea0e4cd535f160a6702
-Original thread:    https://lkml.kernel.org/lkml/000000000000785e9d0589ec359a@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug has received 1 reply, 34 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+9742b1c6c7aedf18beda@syzkaller.appspotmail.com
+    Reported-by: syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000785e9d0589ec359a@google.com
+https://lkml.kernel.org/r/000000000000188da1058a9c25e3@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in vhost_init_device_iotlb
+Last occurred:      125 days ago
+Reported:           153 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=cb1ea8daf03a5942c2ab314679148cf6e128ef58
+Original thread:    https://lkml.kernel.org/lkml/0000000000007e86fd058095533f@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 2 replies; the last was 152 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+40e28a8bd59d10ed0c42@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007e86fd058095533f@google.com
 
