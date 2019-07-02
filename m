@@ -2,157 +2,91 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164DEC06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F62FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12B520828
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562115503;
-	bh=2bbugPbDF5cGeZm4Qp00ViLiAZvE31dYvQi7W3tJP48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W3p9BKCzgecLpfMdj0aseTS3k9aXjHKt6drnDT046VmGS3GGGdq3jfqgzJb++DjbF
-	 1t+Z9QsVLdez8OEgepymCDzenM+sXtW7TUDHvgb6Ozv9Qxykx7+DTDEEIQddylq/Ay
-	 WJ6b0RaFooviQwgOCrN6wcX6qYZhxwEm6t6holZk=
+	by mail.kernel.org (Postfix) with ESMTP id D9FF02085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CuI2IgTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfGCA6W (ORCPT
+        id S1727349AbfGCA7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:58:22 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39114 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfGCA6V (ORCPT
+        Tue, 2 Jul 2019 20:59:02 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37699 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfGCA7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:58:21 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m202so599484oig.6;
-        Tue, 02 Jul 2019 17:58:20 -0700 (PDT)
+        Tue, 2 Jul 2019 20:59:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t76so608769oih.4;
+        Tue, 02 Jul 2019 17:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TCrBHpvs2bjlY0tZQ78kB/teoCTIaxox5gIgv2Zg7MM=;
+        b=CuI2IgTXX842IlAyxReyqFM1sRgD7KsYh/dPgH6QAHgmHFKOPh7/a3W6pU8NOrWD0i
+         r0HgT9QAhB3P0L/SWdmy2QahcMIkNdOT9sM4bcNQi4Ow67paIGHcnPZqpW4yB3lDIPYr
+         3LvXJK+WTzqu0K9DtXHI7rFi97IFGrcgRoSResKlOVMBTEYfPmMfxpIT9k+/4uJ1yP8z
+         HPI5nCrJ5EzIiMBe7xemYcyUYwvaQdSLLELy1yUsDPMaZfgnz3HGUWHwT8mgyNVshEBb
+         ruxaz1jL4/BjMVUXqdAUlRklzGjyHeKoZ/I+J8ZcWABIvPw0KHcl3yLKYqpM3asVZDIp
+         CZgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DtQmDM1bjxYXcqNKxDIhe3kpTPPYxiOv+5lbfQfOZdE=;
-        b=rdNe1uBrDpAhqLxbcDYjpTEaSwGuI+OGS7FawePaNtE4XaFxFX9LZRkySKagywu96E
-         5elS2OlM2+9SQgOMAHfPsD14tq/9GPSsyXTBQ3v1vpiNeL6mut71AVMzDUmgoKvcaFjG
-         ZkG0TM63qOs8T6VRpCXd6HLvZitCUOj8H6AqM607XGa9sNMZxcj5Tj3Dgs6HVZi8+ESR
-         xkOnd3jnmRURIOnkuqQO34Ubry6C0J+SGZG6KYYpQEfIBOlBi11jTR0PdknRRl+Zli6X
-         R2bK6l6wqZo8BNKUpi7f8TOuuWmeQSAPLRaOIjTworkSmjVLbbO8vJl2DBuaJCC4r6ZZ
-         FONQ==
-X-Gm-Message-State: APjAAAUu5rtSqVJRCWOmfmBKZQ6UUYSPd1ThQtxFvCoFJrs/jqDCbwzs
-        OVV69Bmzj+Eqt4CMigJrY+ILGKuHCGs=
-X-Google-Smtp-Source: APXvYqxgfIVc55JlioUk1yKtSLmO9ntomZUFE6/lH8QIzZr758B9lCLwgU+mAmopE2kMlm4WWSK35A==
-X-Received: by 2002:a63:f342:: with SMTP id t2mr30570356pgj.83.1562101035558;
-        Tue, 02 Jul 2019 13:57:15 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id d26sm16963231pfn.29.2019.07.02.13.57.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 13:57:13 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DC91A40251; Tue,  2 Jul 2019 20:57:12 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 20:57:12 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
-Message-ID: <20190702205712.GS19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-8-brendanhiggins@google.com>
- <20190625232249.GS19023@42.do-not-panic.com>
- <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
- <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TCrBHpvs2bjlY0tZQ78kB/teoCTIaxox5gIgv2Zg7MM=;
+        b=GtqPsYVqQG1GIEcfbhyCT37s4m+muGPBuAoyKX1PSDtJ6bN2ikU4lVR8UXCm+ykZaP
+         2QzN9ej9gcxfUsr04h9DxVk7qDVdyEZp6SWDu6q9HUjr7CRhF3R+ggO1coEn1beSEZlR
+         AHV1+2yA64iG9GqRVSDrYryTsMH0OqCEMVrpzUQ/zYOEPzaE1fmb/6UAwIbw3gV9KWoe
+         qZodJN1i/BoLSxwX2Y4KUNyeRz8JhbY/2voj/76Bv9ne2xKpPeu1ia0zprr/OEFKj+pd
+         yFHDrnpWJsNB3btb4Gixb1af99K9nZfyspv+bJM75XOPxcBbPdbVFdjqC6mieSWXGsMw
+         NY5g==
+X-Gm-Message-State: APjAAAVheCBvlaZjxSL0ddNQFfeRDe9ZW0lzpNCnxhNxzJIhyzPkElGH
+        KgLQPuIdzm1ttGagJeYVVVHttDYCsLp/BO3uFf+ymcX5
+X-Google-Smtp-Source: APXvYqwmd7VMNZTet4EgIbGsgiX7YKyruChF5ByKLBpLAB5R3TkByx3a5jpZ7+k3zDWzGsAg0iUnSr7TbRx2PMhG4lo=
+X-Received: by 2002:aca:4306:: with SMTP id q6mr4696022oia.39.1562109386381;
+ Tue, 02 Jul 2019 16:16:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g46=7OQDREdLDTiMgVWq-Xj2zfOw8cRhPJEihSbO89MDyA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-5-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-5-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 01:16:15 +0200
+Message-ID: <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        amergnat@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 10:52:50AM -0700, Brendan Higgins wrote:
-> On Wed, Jun 26, 2019 at 12:53 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Tue, Jun 25, 2019 at 4:22 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
-> > > > diff --git a/kunit/example-test.c b/kunit/example-test.c
-> > > > new file mode 100644
-> > > > index 0000000000000..f44b8ece488bb
-> > > > --- /dev/null
-> > > > +++ b/kunit/example-test.c
-> > >
-> > > <-- snip -->
-> > >
-> > > > +/*
-> > > > + * This defines a suite or grouping of tests.
-> > > > + *
-> > > > + * Test cases are defined as belonging to the suite by adding them to
-> > > > + * `kunit_cases`.
-> > > > + *
-> > > > + * Often it is desirable to run some function which will set up things which
-> > > > + * will be used by every test; this is accomplished with an `init` function
-> > > > + * which runs before each test case is invoked. Similarly, an `exit` function
-> > > > + * may be specified which runs after every test case and can be used to for
-> > > > + * cleanup. For clarity, running tests in a test module would behave as follows:
-> > > > + *
-> > >
-> > > To be clear this is not the kernel module init, but rather the kunit
-> > > module init. I think using kmodule would make this clearer to a reader.
-> >
-> > Seems reasonable. Will fix in next revision.
-> >
-> > > > + * module.init(test);
-> > > > + * module.test_case[0](test);
-> > > > + * module.exit(test);
-> > > > + * module.init(test);
-> > > > + * module.test_case[1](test);
-> > > > + * module.exit(test);
-> > > > + * ...;
-> > > > + */
-> 
-> Do you think it might be clearer yet to rename `struct kunit_module
-> *module;` to `struct kunit_suite *suite;`?
++Cc Alexandre Mergnat
 
-Yes. Definitely. Or struct kunit_test. Up to you.
+On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add a setup() callback in the eeclk structure, to call an optional
+> call() function at end of eeclk probe to setup clocks.
+>
+> It's used for the G12A clock controller to setup the CPU clock notifiers.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+this will probably work fine, but I want do double check first
 
-  Luis
+are we planning to get rid of meson-eeclk (mid-term)?
+Alex has some patches to get rid of all these IN_PREFIX logic.
+I'm asking because if we want to get rid of meson-eeclk it may be the
+time to do so now to have less logic to migrate later on
+
+
+Martin
