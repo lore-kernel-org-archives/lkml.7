@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E505DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3186C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE88A2183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A562183F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054851;
-	bh=yiP3Sq6ymMeBy7v+5x8iXCXmnDROKysut4vXujWK5R0=;
+	s=default; t=1562054853;
+	bh=gx5vd93f8/k8hXxgW9ILkcK+6s7352CHCW6PXJg7i+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qs8P5ahmui/8twMWgrMsgn8Mc9hd2TPL4I1ebk0VhSnBTtmnQOMDd3jYlOkIUExli
-	 giHljJwwX9gqzhH3/t9IsJLK7t+toqXA28LHw2rAGC0EtJKj++SLVzglNejypv6X0n
-	 NjBmwOH5Fq2oBWGdiGglefrahgqWAAHEGEm7IKgU=
+	b=Iq+/dfO/ePZBbTUXco6nolLGAhTTFRW592ymFwCPSV/0cf2TZX9JWE9mpkRHwvyS8
+	 JhfJTseqZVfaq97H13BG87LAxP8RVImVntRvAoSnjrR3a0hhn91SiNC18tOz8RVD/K
+	 0VIYAKe1n8tSetM1zA/g2/1RY612W4fowawAOXXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfGBIHa (ORCPT
+        id S1728280AbfGBIHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:07:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbfGBIH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:28 -0400
+        id S1727724AbfGBIHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAED0206A2;
-        Tue,  2 Jul 2019 08:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1947206A2;
+        Tue,  2 Jul 2019 08:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054847;
-        bh=yiP3Sq6ymMeBy7v+5x8iXCXmnDROKysut4vXujWK5R0=;
+        s=default; t=1562054850;
+        bh=gx5vd93f8/k8hXxgW9ILkcK+6s7352CHCW6PXJg7i+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqd3P0BPrvbgQTIfz2su3Jnb9Un4Q2iVJaaPhtcC0itq4bHit5r40vtTFjbbbzga2
-         lj2QkeUMU+nGWofV8GMU5NQK8bGO7CSLtZvl7ULB8k0mSeqzTXIh2BMngatTzE3+aE
-         kluzOf/scqPLCkMHbkx1uFY10Gvj4VsAjSLImxAk=
+        b=LrZ3vjSbopsbIdxE0/iziCe7UA9xZBdi7uaaaldCqTKwQP2xQ+jq5dRep1tQcS4ri
+         S+7iHG0q36Ns5+WQtywvJqQswJYAFbd4Gtl5UMW4t1XEMewgSbh7TRAm+R8g/fQgXu
+         d3QnDHzfur+zHylSjR7y0buf+nGBrS8mEY1I/v6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Sowmini Varadhan <sowmini.varadhan@oracle.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 52/72] ipv4: Use return value of inet_iif() for __raw_v4_lookup in the while loop
-Date:   Tue,  2 Jul 2019 10:01:53 +0200
-Message-Id: <20190702080127.284904613@linuxfoundation.org>
+Subject: [PATCH 4.19 53/72] net/packet: fix memory leak in packet_set_ring()
+Date:   Tue,  2 Jul 2019 10:01:54 +0200
+Message-Id: <20190702080127.333607089@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -60,34 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 38c73529de13e1e10914de7030b659a2f8b01c3b ]
+[ Upstream commit 55655e3d1197fff16a7a05088fb0e5eba50eac55 ]
 
-In commit 19e4e768064a8 ("ipv4: Fix raw socket lookup for local
-traffic"), the dif argument to __raw_v4_lookup() is coming from the
-returned value of inet_iif() but the change was done only for the first
-lookup. Subsequent lookups in the while loop still use skb->dev->ifIndex.
+syzbot found we can leak memory in packet_set_ring(), if user application
+provides buggy parameters.
 
-Fixes: 19e4e768064a8 ("ipv4: Fix raw socket lookup for local traffic")
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Fixes: 7f953ab2ba46 ("af_packet: TX_RING support for TPACKET_V3")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Sowmini Varadhan <sowmini.varadhan@oracle.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/raw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -202,7 +202,7 @@ static int raw_v4_input(struct sk_buff *
- 		}
- 		sk = __raw_v4_lookup(net, sk_next(sk), iph->protocol,
- 				     iph->saddr, iph->daddr,
--				     skb->dev->ifindex, sdif);
-+				     dif, sdif);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4316,7 +4316,7 @@ static int packet_set_ring(struct sock *
+ 				    req3->tp_sizeof_priv ||
+ 				    req3->tp_feature_req_word) {
+ 					err = -EINVAL;
+-					goto out;
++					goto out_free_pg_vec;
+ 				}
+ 			}
+ 			break;
+@@ -4380,6 +4380,7 @@ static int packet_set_ring(struct sock *
+ 			prb_shutdown_retire_blk_timer(po, rb_queue);
  	}
+ 
++out_free_pg_vec:
+ 	if (pg_vec)
+ 		free_pg_vec(pg_vec, order, req->tp_block_nr);
  out:
- 	read_unlock(&raw_v4_hashinfo.lock);
 
 
