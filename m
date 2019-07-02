@@ -2,209 +2,114 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0493BC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96CDC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB80920659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A417E2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DddQvsLh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyfd/lNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfGBJZO (ORCPT
+        id S1727206AbfGBJZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:25:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45264 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGBJZO (ORCPT
+        Tue, 2 Jul 2019 05:25:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43396 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfGBJZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:25:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so51479plb.12;
-        Tue, 02 Jul 2019 02:25:13 -0700 (PDT)
+        Tue, 2 Jul 2019 05:25:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so16094767ljv.10;
+        Tue, 02 Jul 2019 02:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PIxpwWWXerCiKBiSXfcI0F3Iq1/jaQ1QxObYQ2pXJMs=;
-        b=DddQvsLh76CykOun9Q/BEyIcbPTU3Qpd06QhFTsP8MzhvIJJVmbHJRgcbMqU6DwJNJ
-         qfbd4vTiefiNkA2cZeT8t5w3aoHpkUMUP0eR/kd6SRpYQSz3F50B0ngKD8m4hdgqXgsz
-         H12H76FOBDEJQvSrj5/6SNdz4XoQ+O4WNWhm6j2sC5bQUJkJTNRX9qBRX1tBJXnR33aT
-         odenA2GbOT9H6Ei7n7n1Y5WD1yaQDxHRY3rcLPqFJdvIgM/Inm+wXs99ymTshAVFfLxG
-         I+y7de5Db+Rb++LQZNFcgOlGRu9Z5DJYsKUDSqK4PO0ddlN1greJiW+suN/a7gA0wDF6
-         mSeQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e+ERxpd73DxC4MxlVJMnS2JsEkTIzOmmsxfHhHYhUvE=;
+        b=kyfd/lNbUDSD4OtSsZRiiSWp/BtuSHOAbUzan0lLdCe6ywHkVdn5JaTskxFiB43DJ2
+         zAh1aAGyBrc2tIQ/JTwvbqzvHnL1k+zoakSLCW6i2CEYknA01zhe2CDEalZ07ofRwqFu
+         N2q5kHhNLVB7DmdLYI4qOId/kdBCBk4s4+erxGKgc62sfbP6W0i4QIIzmvepdd+ddXWN
+         BLWxAIpLW28uq1ozZWPIk8ZLoMSZNhjtflhwHDvPrk5lx9MEb3xCWlZzitvw7m07abJM
+         mODKrGcXOqKDKa6abZusAPJ9/G1OWAOZRd9d41+yOC0hqlIU1y6bBAhUG10YjSXP/KEw
+         SX4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PIxpwWWXerCiKBiSXfcI0F3Iq1/jaQ1QxObYQ2pXJMs=;
-        b=jHi8zQv3y45q6+eDd4GSmKAC2VVfOaCV1vY0Gpc2ORtFYwX0K8SfeM2OWKxVS+80Tb
-         oQF3nMXZCDiizN37/BlzVYEkAC7we2FX/SKBHDHBZzOv1duAL4/t7HFelHrpJkdtV4oo
-         Ce0zeyvV5cHE3OyO+LQTpkULkkqhhR1Ls0t9SV4zSGZvZWmPpinfyB3tl4bcH1wNgp8Q
-         dBG/dYAfwgH0BorjyAWhAXjdv5DvFVVUulG73wB2YlnwaKugz4DYZ1Z53v3Fld8sZW2c
-         GT4DuPCE3zgvWAe53nGqBg0MYrdKm8gLzemUzLr/32ix7wREgZIAk6BlUDpNdXUUKnFy
-         kOvQ==
-X-Gm-Message-State: APjAAAUQz46uAjwk+MDfypPpl818WvbM9gWAnph4/2DhV9ZGLU1k+Tly
-        zBkfO5Y1EWHgt+fwlQpJdQUzBWDQ
-X-Google-Smtp-Source: APXvYqzqZLo+Au+ZFbXdSxlA8Ugb+OGEzJ7kjKF9NZb/zeywXmvVJ1ZgjsCP19nP2s5NFJ+FCe9P3g==
-X-Received: by 2002:a17:902:2a26:: with SMTP id i35mr33791060plb.315.1562059513141;
-        Tue, 02 Jul 2019 02:25:13 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id n89sm4020744pjc.0.2019.07.02.02.25.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 02 Jul 2019 02:25:12 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Feng Tang <feng.tang@intel.com>, stable@vger.kernel.org
-Subject: [PATCH] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
-Date:   Tue,  2 Jul 2019 17:25:02 +0800
-Message-Id: <1562059502-8581-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        bh=e+ERxpd73DxC4MxlVJMnS2JsEkTIzOmmsxfHhHYhUvE=;
+        b=OEX3REdF6h0gsqtvOrDQViiFXByk60YndetgWQcKZYzawzGgKt8NuUiqk1RfaBYCvU
+         DRXBAn4Rsy5+VgHKl8/RyhHatdaxj75vY1YGAbdhQN62m1EtPzQ7Lc3AYCKEwA+kLWFG
+         WZ+PNNnAqpwUhVgyx+SDtzM2GDDl/zxaSx7Fofhq24H8evqRaEj8AMQVGKhKMS5a8DqN
+         AFBziYa4sO0eH2llFw79e52itaXWVe7A5x9x3PIiRYZIsnoCJxFDc1bTSf3rmVwxLfNq
+         D9ZO2gt1ZC0IGJanyK8sICuvPheRcFlD9jFk8pYKXza60w/xVj/L+fTWC5MNbYTrDf3A
+         5GMQ==
+X-Gm-Message-State: APjAAAXzgxLLVhMl0OLi0hbURIts0qB0QjWSsWHDJF2GDGdyAh377goi
+        n67sda/1oYZJgRWhw9XI/dScLElk
+X-Google-Smtp-Source: APXvYqwaRUH+28spPqlheHxdwf0YCYCv9jTAwmBQawPJVNxOAaS3SGM+VwjAPjeAo3eGKhK8cqldLg==
+X-Received: by 2002:a2e:81c4:: with SMTP id s4mr16580310ljg.182.1562059518979;
+        Tue, 02 Jul 2019 02:25:18 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id y4sm1374885lfc.56.2019.07.02.02.25.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:25:18 -0700 (PDT)
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627194728.8948-1-digetx@gmail.com>
+Message-ID: <8b4fbdb5-c6fa-6481-4894-6c2c77c23195@gmail.com>
+Date:   Tue, 2 Jul 2019 12:25:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
+In-Reply-To: <20190627194728.8948-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+27.06.2019 22:47, Dmitry Osipenko пишет:
+> Tegra's APB DMA engine updates words counter after each transferred burst
+> of data, hence it can report transfer's residual with more fidelity which
+> may be required in cases like audio playback. In particular this fixes
+> audio stuttering during playback in a chromium web browser. The patch is
+> based on the original work that was made by Ben Dooks and a patch from
+> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+> 
+> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+> 
+> Changelog:
+> 
+> v3:  Added workaround for a hardware design shortcoming that results
+>      in a words counter wraparound before end-of-transfer bit is set
+>      in a cyclic mode.
+> 
+> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>      to get words count if dma_desc is on free list as it will result
+>      in a NULL dereference because this case wasn't handled properly.
+> 
+>      The residual value is now updated properly, avoiding potential
+>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>      instead of the subtraction.
 
-Thomas reported that:
-
- | Background:
- | 
- |    In preparation of supporting IPI shorthands I changed the CPU offline
- |    code to software disable the local APIC instead of just masking it.
- |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
- |    register.
- | 
- | Failure:
- | 
- |    When the CPU comes back online the startup code triggers occasionally
- |    the warning in apic_pending_intr_clear(). That complains that the IRRs
- |    are not empty.
- | 
- |    The offending vector is the local APIC timer vector who's IRR bit is set
- |    and stays set.
- | 
- | It took me quite some time to reproduce the issue locally, but now I can
- | see what happens.
- | 
- | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
- | (and hardware support) it behaves correctly.
- | 
- | Here is the series of events:
- | 
- |     Guest CPU
- | 
- |     goes down
- | 
- |       native_cpu_disable()		
- | 
- | 			apic_soft_disable();
- | 
- |     play_dead()
- | 
- |     ....
- | 
- |     startup()
- | 
- |       if (apic_enabled())
- |         apic_pending_intr_clear()	<- Not taken
- | 
- |      enable APIC
- | 
- |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
- | 
- | When this happens then the deadline timer or the regular APIC timer -
- | happens with both, has fired shortly before the APIC is disabled, but the
- | interrupt was not serviced because the guest CPU was in an interrupt
- | disabled region at that point.
- | 
- | The state of the timer vector ISR/IRR bits:
- | 
- |     	     	       	        ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- | 
- | On startup		      		 0	      1
- | 
- | Now one would assume that the IRR is cleared after the INIT reset, but this
- | happens only on CPU0.
- | 
- | Why?
- | 
- | Because our CPU0 hotplug is just for testing to make sure nothing breaks
- | and goes through an NMI wakeup vehicle because INIT would send it through
- | the boots-trap code which is not really working if that CPU was not
- | physically unplugged.
- | 
- | Now looking at a real world APIC the situation in that case is:
- | 
- |     	     	       	      	ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- | 
- | On startup		      		 0	      0
- | 
- | Why?
- | 
- | Once the dying CPU reenables interrupts the pending interrupt gets
- | delivered as a spurious interupt and then the state is clear.
- | 
- | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
- | emulation is still wrong, Even if the play_dead() code would not enable
- | interrupts then the pending IRR bit would turn into an ISR .. interrupt
- | when the APIC is reenabled on startup.
-
-
-From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
-* Pending interrupts in the IRR and ISR registers are held and require
-  masking or handling by the CPU.
-
-In Thomas's testing, hardware cpu will not respect soft disable LAPIC 
-when IRR has already been set or APICv posted-interrupt is in flight, 
-so we can skip soft disable APIC checking when clearing IRR and set ISR,
-continue to respect soft disable APIC when attempting to set IRR.
-
-Reported-by: Rong Chen <rong.a.chen@intel.com>
-Reported-by: Feng Tang <feng.tang@intel.com>
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rong Chen <rong.a.chen@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 05d8934..f857a12 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2376,7 +2376,7 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u32 ppr;
- 
--	if (!apic_enabled(apic))
-+	if (!kvm_apic_hw_enabled(apic))
- 		return -1;
- 
- 	__apic_update_ppr(apic, &ppr);
--- 
-2.7.4
+Is there still any chance to get this into 5.3? Will be very nice! Jon / Vinod ?
 
