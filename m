@@ -2,131 +2,111 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F40C5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91EBC5B578
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5000821473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYCBjdTQ"
+	by mail.kernel.org (Postfix) with ESMTP id 8B13921473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfGBBZ4 (ORCPT
+        id S1726963AbfGBB1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:25:56 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53935 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfGBBZ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:25:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so1238648wmj.3;
-        Mon, 01 Jul 2019 18:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FuJis1FsSzJytEfl3XmFKS7P3MvBNu+eiPliSkEa/HU=;
-        b=BYCBjdTQ3i+/+HmkXUs9eanM8BxiTcLLh7zyiGf5tjK9Ju9odX0Cd9ERMbXPc9TxQl
-         SRjIcZNznulUlRzkDs9c+2JeMeWVRwWbb4/z+i6cw6UvFIof2Q4Bq9DMniChbW+/tBKb
-         qfs/rT8AoRT71innyVfOXMVlYZ+vLgbJPamUDSIojVVTCXxRMMDC+JL0Shwqvk4scNka
-         Co1o2fRPx/P9n5HaGjNQ9A6BwONRVHECQdJswj//HVt0C87ySaQwsJ7fGQI1u2jLjV9A
-         tjNCyzdeZNpqLQghDdacJjvustiGbSxIk9OiLvXO42xQRpvsLu2KkBs/XazJ8acr1wni
-         7qAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FuJis1FsSzJytEfl3XmFKS7P3MvBNu+eiPliSkEa/HU=;
-        b=r995w9x2Ta37IH7N7p+Vs7BDXHKwpywYbK3OWOkrpq6gdHzYvFky1m5YbgOvpku7gA
-         hgOSoHUN+Sq79U7+/Xw8mzlL7Z1wdHRgTIBJN0+ieQv15fNWS2XX2hSsSDPRzhbmoEM7
-         W5dJLG6wrg3xlxA081No7RgmSnVOgD53GJZK7EajL2J/JHGq8JwWV3kLH3ET3+Q1JC6d
-         km8LzV+yub6WSjldriSaRBIoo13JvO/uhbgiMShqqFecB9S0JhsHJCjwbipAJ3inIzUs
-         SNtuOF3jrsZH72avFBSD2y3qCPW/K8HfN3UFMHqRBsmH7kLu+6Hcdo+LjW/Nsut2wEg2
-         offg==
-X-Gm-Message-State: APjAAAX+R07lnREohYvDjPAoDPiY20dsgqrXfFbTXzkhUgW0IlxyqDdf
-        cKODRid1AARA/AXA4B8EMWI=
-X-Google-Smtp-Source: APXvYqwDUuYI/3D8hh9aZzLORdzPRLFcimU8CTYSjgLTcdaAZa2wKa7lrH8rcc4hSK/Ylx0uZiKW7A==
-X-Received: by 2002:a1c:7d08:: with SMTP id y8mr1189470wmc.50.1562030753793;
-        Mon, 01 Jul 2019 18:25:53 -0700 (PDT)
-Received: from [192.168.2.202] (p5487BBD4.dip0.t-ipconnect.de. [84.135.187.212])
-        by smtp.gmail.com with ESMTPSA id s12sm957672wmh.34.2019.07.01.18.25.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 18:25:53 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
-To:     Yu Chen <yu.c.chen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <20190702003740.75970-2-luzmaximilian@gmail.com>
- <20190702011443.GA19902@chenyu-office.sh.intel.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <91349d00-e7e2-887b-45e5-4689a401aa2f@gmail.com>
-Date:   Tue, 2 Jul 2019 03:25:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 1 Jul 2019 21:27:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50646 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726347AbfGBB1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:27:50 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7196994F70EEB513B376;
+        Tue,  2 Jul 2019 09:27:48 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
+ 09:27:47 +0800
+Subject: Re: [PATCH v3 1/2] x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config
+ in arch/Kconfig
+To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-riscv@lists.infradead.org>
+References: <20190701175900.4034-1-alex@ghiti.fr>
+ <20190701175900.4034-2-alex@ghiti.fr>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <18144cc2-f552-b2cc-c41a-47c754de2b0d@huawei.com>
+Date:   Tue, 2 Jul 2019 09:27:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190702011443.GA19902@chenyu-office.sh.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190701175900.4034-2-alex@ghiti.fr>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 3:14 AM, Yu Chen wrote:
-> On Tue, Jul 02, 2019 at 02:37:39AM +0200, Maximilian Luz wrote:
->> +/*
->> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
->> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
->> + * device by checking for the _DSM method and OEM Platform Revision.
->> + */
->> +static int surface_button_check_MSHW0040(struct acpi_device *dev)
->> +{
->> +	acpi_handle handle = dev->handle;
->> +	union acpi_object *result;
->> +	u64 oem_platform_rev = 0;
->> +
->> +	// get OEM platform revision
->> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
->> +					 MSHW0040_DSM_REVISION,
->> +					 MSHW0040_DSM_GET_OMPR,
->> +					 NULL, ACPI_TYPE_INTEGER);
->> +
-> Does it mean, only 5th, 6th and newer platforms have OEM platform revision?
-> 3rd/4th will get NULL result? Or the opposite?
+On 2019/7/2 1:58, Alexandre Ghiti wrote:
+> ARCH_WANT_HUGE_PMD_SHARE config was declared in both architectures:
+> move this declaration in arch/Kconfig and make those architectures
+> select it.
+> 
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/Kconfig       | 3 +++
+>  arch/arm64/Kconfig | 4 +---
+>  arch/x86/Kconfig   | 4 +---
+>  3 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c47b328eada0..d2f212dc8e72 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -577,6 +577,9 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+>  config HAVE_ARCH_HUGE_VMAP
+>  	bool
+>  
+> +config ARCH_WANT_HUGE_PMD_SHARE
+> +	bool
+> +
+>  config HAVE_ARCH_SOFT_DIRTY
+>  	bool
+>  
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 697ea0510729..c862575decd3 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -71,6 +71,7 @@ config ARM64
+>  	select ARCH_SUPPORTS_NUMA_BALANCING
+>  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
+>  	select ARCH_WANT_FRAME_POINTERS
+> +	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
+>  	select ARM_AMBA
+>  	select ARM_ARCH_TIMER
+> @@ -901,9 +902,6 @@ config HW_PERF_EVENTS
+>  config SYS_SUPPORTS_HUGETLBFS
+>  	def_bool y
+>  
+> -config ARCH_WANT_HUGE_PMD_SHARE
+> -	def_bool y if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+> -
 
-Correct, from my testing (with limited sample size) and AML code: 5th
-and 6th generation devices have a non-zero OEM platform revision,
-whereas 3rd and 4th gen. devices do not have any (i.e. result will be
-NULL).
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 
->> +	if (result) {
->> +		oem_platform_rev = result->integer.value;
->> +		ACPI_FREE(result);
->> +	}
->> +
->> +	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
->> +
->> +	return oem_platform_rev == 0 ? 0 : -ENODEV;
-> if 3rd/4th do not have this oem rev information while 5th/newer have,
-> why the latter returns NODEV(it actually has this info)?
+Thanks
+Hanjun
 
-Since we always expect a non-zero platform revision (for 5th/6th gen.),
-we can initialize it to zero and use that as "unknown"/"not available".
-So if it can not be determined, we return NODEV.
-
->> +}
-
-Cheers,
-Maximilian
