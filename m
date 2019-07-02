@@ -2,125 +2,205 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5613FC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B440C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289D521479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF4021479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="E/hGutcF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3K1fX/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfGBPhK (ORCPT
+        id S1726636AbfGBPhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 11:37:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57128 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725858AbfGBPhJ (ORCPT
+        Tue, 2 Jul 2019 11:37:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37476 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGBPhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:37:09 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62FWPIc013470;
-        Tue, 2 Jul 2019 17:36:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Jbd+t0wU2HM6+Xf25FXBNwZBmjBxyRZNxSWnnTH3u0s=;
- b=E/hGutcFgCtg9uPTe+fiAWBKFad0wJFbqBxSibJH0QZP+QvwZkFb273qX370RVBy3598
- v/vQ2d+wza167qXi/XIalBFqmoLR1HbbwKa+oUpNCoNAuPzQhC6KvdC5TIVL8AVpKmUc
- T5FZjVJSL8Uz1/7yBy+usER3f7pr4tTVpdbWIeuTDL3qCeTa0EoS+FU2OwL1pCq+xZfa
- X8CP41MMud1MO6PjdyyFQHf2DVumI/wn7ISi+1DfaJK9OweUPtFFnV+8V9jb5VsaHkLZ
- oxDu2zWb8rrNeagPVhFnXirhtCvxzrYVc1hx50L3NuQyj3Vt5hXCMR9IVX4G/CLdWxiC zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2tdxvhvybs-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 02 Jul 2019 17:36:58 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C5AEC38;
-        Tue,  2 Jul 2019 15:36:56 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag7node2.st.com [10.75.127.20])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA717447C;
-        Tue,  2 Jul 2019 15:36:56 +0000 (GMT)
-Received: from SFHDAG7NODE2.st.com (10.75.127.20) by SFHDAG7NODE2.st.com
- (10.75.127.20) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
- 2019 17:36:56 +0200
-Received: from SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090]) by
- SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090%20]) with mapi id
- 15.00.1473.003; Tue, 2 Jul 2019 17:36:56 +0200
-From:   Loic PALLARDY <loic.pallardy@st.com>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Clement Leger <cleger@kalray.eu>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
-Thread-Topic: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
-Thread-Index: AQHVL9sMjAFFqcSPYUOpD1xKQA9Tl6a3MSeAgAAqZ/A=
-Date:   Tue, 2 Jul 2019 15:36:56 +0000
-Message-ID: <58c8b8bd30a949678c027eb42a1b1bbb@SFHDAG7NODE2.st.com>
-References: <20190612095521.4703-1-cleger@kalray.eu>
- <20190701070245.32083-1-cleger@kalray.eu>
- <20190702132229.GA8100@infradead.org>
-In-Reply-To: <20190702132229.GA8100@infradead.org>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Jul 2019 11:37:34 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 131so17355233ljf.4;
+        Tue, 02 Jul 2019 08:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vPxCwGeVq/zHXVFtfpmaoTyHGqj3SfIhA16kWBtFXdk=;
+        b=T3K1fX/yOe4ogEnGTYE54QAkNxmyMe9DBQ0qUq6VeokpfiOuivblul/AGD/D+GXyMI
+         w1a8w460IJPI5L6JaFm1ojJyB+BWhxwQFSk+mTpSM9f5gn6qyqjlvvQHlLELv83HSojf
+         bS/Oifp5TNN8shV5RnfvAZjTYtpliWPb2Klm0IxXcyzdmbvRfXj63niGE7bx0ol63V/1
+         I7fu3zAyn4iU5hsjl8x8OYN3J5tjxNLHTH9bQmL7wog/Zpm3CsUdNsXidKZUMcTTPadm
+         ceogCsbR9msotds9x4t4p0G4CNUXKDgL6+8vYXpSntiV0oeOw1A/S1Q/jqgNiapagpIC
+         kvBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vPxCwGeVq/zHXVFtfpmaoTyHGqj3SfIhA16kWBtFXdk=;
+        b=D71kdbq61/JeHoGtB8WXo+k6rKz/NB0ReywU3pYoiBKuECIHFVAIH4XHOO9oWKvdHf
+         kqmsGLVTJdzn5kKimgcFwI4k0ZNe0/sWROolrN1gbHjHmD3UXeKy7XVQ69JW6k8Ggv+f
+         wCO0QXJxzIy6tpjPM4t/rF6o5E8IYLnLm4wx5wwTNBQ7lxyOMbMcTTqtKEoNiwLpUHYU
+         kAaqn1zLY6qtxrLFCXDtZSUQK8+nn3L9YgDNCwzOCKbwGo5DfWjxzuSy9PUkac/5grb8
+         gb8B2sGhA0Tb+JhcdXyjuYu5j1b8BQzvnj9vVPCQf/2DrdnFqjPmNc03thFHO4L0U5FK
+         a8Fg==
+X-Gm-Message-State: APjAAAUkz0/e+hxjVjFCyxqRsppjISwIwJeOcuuRCck2+LyakdVEsIgp
+        Ht1A7Isvoay3i6eDFJ/MwjD21MS9
+X-Google-Smtp-Source: APXvYqyavnYUtp3Ei6T8TFgub1cqyT8l44AQa04IYoJsGjNzjHKqpfDu8kKq9WP8mHHwcYuqjD16hA==
+X-Received: by 2002:a2e:3604:: with SMTP id d4mr17844540lja.85.1562081851473;
+        Tue, 02 Jul 2019 08:37:31 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id p12sm3859925lja.23.2019.07.02.08.37.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 08:37:30 -0700 (PDT)
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <f60059ec-c9ed-7294-f975-25e71a273f69@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1ef44832-a263-a27a-30bf-16433c3fdb74@gmail.com>
+Date:   Tue, 2 Jul 2019 18:37:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_08:,,
- signatures=0
+In-Reply-To: <f60059ec-c9ed-7294-f975-25e71a273f69@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+02.07.2019 18:29, Jon Hunter пишет:
+> 
+> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>> Tegra's APB DMA engine updates words counter after each transferred burst
+>> of data, hence it can report transfer's residual with more fidelity which
+>> may be required in cases like audio playback. In particular this fixes
+>> audio stuttering during playback in a chromium web browser. The patch is
+>> based on the original work that was made by Ben Dooks and a patch from
+>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>
+>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>
+>> Changelog:
+>>
+>> v3:  Added workaround for a hardware design shortcoming that results
+>>      in a words counter wraparound before end-of-transfer bit is set
+>>      in a cyclic mode.
+>>
+>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>      to get words count if dma_desc is on free list as it will result
+>>      in a NULL dereference because this case wasn't handled properly.
+>>
+>>      The residual value is now updated properly, avoiding potential
+>>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>>      instead of the subtraction.
+>>
+>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
+>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index 79e9593815f1..71473eda28ee 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>  	bool				last_sg;
+>>  	struct list_head		node;
+>>  	struct tegra_dma_desc		*dma_desc;
+>> +	unsigned int			words_xferred;
+>>  };
+>>  
+>>  /*
+>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>  	nsg_req->configured = true;
+>> +	nsg_req->words_xferred = 0;
+>>  
+>>  	tegra_dma_resume(tdc);
+>>  }
+>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>>  					typeof(*sg_req), node);
+>>  	tegra_dma_start(tdc, sg_req);
+>>  	sg_req->configured = true;
+>> +	sg_req->words_xferred = 0;
+>>  	tdc->busy = true;
+>>  }
+>>  
+>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>  	return 0;
+>>  }
+>>  
+>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+>> +					       struct tegra_dma_sg_req *sg_req)
+>> +{
+>> +	unsigned long status, wcount = 0;
+>> +
+>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>> +		return 0;
+>> +
+>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>> +
+>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>> +
+>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +		wcount = status;
+>> +
+>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>> +		return sg_req->req_len;
+>> +
+>> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
+>> +
+>> +	if (!wcount) {
+>> +		/*
+>> +		 * If wcount wasn't ever polled for this SG before, then
+>> +		 * simply assume that transfer hasn't started yet.
+>> +		 *
+>> +		 * Otherwise it's the end of the transfer.
+>> +		 *
+>> +		 * The alternative would be to poll the status register
+>> +		 * until EOC bit is set or wcount goes UP. That's so
+>> +		 * because EOC bit is getting set only after the last
+>> +		 * burst's completion and counter is less than the actual
+>> +		 * transfer size by 4 bytes. The counter value wraps around
+>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>> +		 * distinguish start of transfer from its end.
+>> +		 */
+>> +		if (sg_req->words_xferred)
+>> +			wcount = sg_req->req_len - 4;
+>> +
+>> +	} else if (wcount < sg_req->words_xferred) {
+> 
+> Minor comment, why not ...
+> 
+> 	} else if WARN_ON_ONCE(wcount < sg_req->words_xferred) {
 
-> -----Original Message-----
-> From: Christoph Hellwig <hch@infradead.org>
-> Sent: mardi 2 juillet 2019 15:22
-> To: Clement Leger <cleger@kalray.eu>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>; Bjorn Andersson
-> <bjorn.andersson@linaro.org>; linux-remoteproc@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Loic PALLARDY <loic.pallardy@st.com>
-> Subject: Re: [PATCH v2] remoteproc: copy parent dma_pfn_offset for vdev
->=20
-> This is just increasing the mess remoteproc has created with the vdev.
-> It is poking its nose way to deep into the DMA layer internals, and
-> creating massive problems that way.  Can we go back to the table
-> and figure out what the root problem even was?  To me it seems if you
-> clearly need separate devices they should be declared as such in the
-> device tree.
+Because there should be parens around WARN_ON_ONCE() and that makes it to look not very
+nice, IMHO.
 
-Agree there is definitively an issue with the way virtio device are defined=
-.
-Today definition is based on rproc firmware ressource table and rproc=20
-framework is in charge of vdev creation.
-Device tree definition was discarded as vdev is not HW but SW definition.
-One solution would be to associate both resource table (which provides
-Firmware capabilities) and some virtio device tree nodes (declared as sub n=
-odes
-of remote processor with associated resources like memory carveout).
-When we have a match between resource table and rproc DT sub node, we
-can register virtio device via of_platform_populate.
-Then need to adapt virtio_rpmsg or to create a virtio_rproc to be DT probe =
-compliant
-like virtio_mmio is.
+> 
+> Otherwise ...
+> 
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-But that's breaking legacy as all platforms will have to add a virtio devic=
-e node in
-their DT file...
-
-Is it aligned with your view ?
-
-Regards,
-Loic
-
+Thanks! I'll probably make a v4 later today with words_xferred reset made after end of a
+transfer's cycle, similar to what I suggested in the other email.
