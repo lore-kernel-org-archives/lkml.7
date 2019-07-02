@@ -2,187 +2,192 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6DC4646D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D89BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B8421479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DB1208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 04:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="geX8AWtP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i6vbQWhW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QIrRc4Zn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbfGBEzS (ORCPT
+        id S1726252AbfGBEzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 00:55:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59084 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfGBEzS (ORCPT
+        Tue, 2 Jul 2019 00:55:20 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8794 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfGBEzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 00:55:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1011C607DF; Tue,  2 Jul 2019 04:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562043317;
-        bh=w2sF8iXgWePj2bNStHqCTNJzfLmiRY0Z8xqYXe5ILcc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=geX8AWtPOHKzOp4/C9uWfvk43VlA+2swZ6AIc/pDDvgEMOAyWX4WyIcXaK3zGAj5b
-         Hx+vcgC1WSlwF2440aH11gRKDiN+M09cAroISbVNB61tMRBK3JEbCdZUrUTSSHH7ef
-         Rz+C1IxjL3KZxcIYeVROduJw++EMQmChTi3iPWxg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 3E31960388;
-        Tue,  2 Jul 2019 04:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562043316;
-        bh=w2sF8iXgWePj2bNStHqCTNJzfLmiRY0Z8xqYXe5ILcc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i6vbQWhWOovelmJu+BwntQQEmQYWjwsiNY7cniohWV5FcqqJrAEe1a/R76uYKMAQy
-         omb+C2Nkv3eqdBIonEQOQoc3i5jg/xwhzDRL5gn4RbKThcP7tjUoCQ4v6BMtJeAh5B
-         mPlpab9kSH5GNWODV1fgAq77rw3DN/gMuX2IGEUI=
+        Tue, 2 Jul 2019 00:55:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1ae3b90000>; Mon, 01 Jul 2019 21:55:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Jul 2019 21:55:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Jul 2019 21:55:18 -0700
+Received: from [10.24.70.16] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
+ 2019 04:55:14 +0000
+Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
+ <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
+ <20190701112442.176a8407@x1.home>
+ <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
+ <20190701140436.45eabf07@x1.home>
+X-Nvconfidentiality: public
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+Message-ID: <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
+Date:   Tue, 2 Jul 2019 10:25:04 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190701140436.45eabf07@x1.home>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 02 Jul 2019 10:25:16 +0530
-From:   amasule@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH v3 1/4] media: venus: Add codec data table
-In-Reply-To: <d7558a12-8c38-0c91-3cea-cc3b7604b7de@linaro.org>
-References: <1561480044-11834-1-git-send-email-amasule@codeaurora.org>
- <1561480044-11834-2-git-send-email-amasule@codeaurora.org>
- <d7558a12-8c38-0c91-3cea-cc3b7604b7de@linaro.org>
-Message-ID: <2e137feb1ece7261939e3ac4901e8255@codeaurora.org>
-X-Sender: amasule@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562043321; bh=CZdkaj0XFhhMmhaSOWFllFY14IofOj9ERRNjXuWdkfg=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=QIrRc4ZnpGTLVdr9l5Wjq+vybQ4zVvZMBW5EsWqoAQQnsO7IfBggAnJHVeCemexGA
+         V1XJdaFuT+hrBxWpf+ePfP7gt/nag0d9V4XTJ1bKEuXWy+PC54Mo0HiFzX8E36oBpR
+         S8P15hTvlWPSW9I38n2/nCX6p+Y08dUmet0CbpmDTaZ4I7E7/wkMa65vrQBM7QBX4b
+         kJPe0dzyqFQGa8kbwb3y14MFxYPqBTiBYnFol+pbHj9gNL36Chp35Kj7HuAH+xG95Z
+         YPsuozpHiEKs0ESkxoR9XD4OU+DiKdCXGz2qtlEjZeuoCdA5u+kHpdN9nkWCoi1H1k
+         HzDvy8hIs7PqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stan,
-
-On 2019-07-01 17:13, Stanimir Varbanov wrote:
-> On 6/25/19 7:27 PM, Aniket Masule wrote:
->> Add vpp cycles for for different types of codec
->> It indicates the cycles required by video hardware
->> to process each macroblock. Initialize the codec
->> data with core resources.
->> 
->> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/core.c    | 13 +++++++++++++
->>  drivers/media/platform/qcom/venus/core.h    | 15 +++++++++++++++
->>  drivers/media/platform/qcom/venus/helpers.c | 30 
->> +++++++++++++++++++++++++++++
->>  drivers/media/platform/qcom/venus/helpers.h |  1 +
->>  drivers/media/platform/qcom/venus/vdec.c    |  4 ++++
->>  drivers/media/platform/qcom/venus/venc.c    |  4 ++++
->>  6 files changed, 67 insertions(+)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/core.c 
->> b/drivers/media/platform/qcom/venus/core.c
->> index 7393667..f1597d6 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -473,9 +473,22 @@ static __maybe_unused int 
->> venus_runtime_resume(struct device *dev)
->>  	{  244800, 100000000 },	/* 1920x1080@30 */
->>  };
->> 
->> +static struct codec_freq_data sdm845_codec_freq_data[] =  {
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
->> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
->> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
->> +};
->> +
->>  static const struct venus_resources sdm845_res = {
->>  	.freq_tbl = sdm845_freq_table,
->>  	.freq_tbl_size = ARRAY_SIZE(sdm845_freq_table),
->> +	.codec_freq_data = sdm845_codec_freq_data,
->> +	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
->>  	.clks = {"core", "iface", "bus" },
->>  	.clks_num = 3,
->>  	.max_load = 2563200,
->> diff --git a/drivers/media/platform/qcom/venus/core.h 
->> b/drivers/media/platform/qcom/venus/core.h
->> index 7a3feb5..2ed6496 100644
->> --- a/drivers/media/platform/qcom/venus/core.h
->> +++ b/drivers/media/platform/qcom/venus/core.h
->> @@ -35,12 +35,20 @@ struct reg_val {
->>  	u32 value;
->>  };
->> 
->> +struct codec_freq_data {
->> +	u32 pixfmt;
->> +	u32 session_type;
->> +	unsigned int vpp_freq;
-> 
-> isn't unsigned long more suitable?
-> 
-The hard-coded values for this vpp will be in few hundreds.
-So, unsigned int would be fine.
->> +};
->> +
->>  struct venus_resources {
->>  	u64 dma_mask;
->>  	const struct freq_tbl *freq_tbl;
->>  	unsigned int freq_tbl_size;
->>  	const struct reg_val *reg_tbl;
->>  	unsigned int reg_tbl_size;
->> +	const struct codec_freq_data *codec_freq_data;
->> +	unsigned int codec_freq_data_size;
->>  	const char * const clks[VIDC_CLKS_NUM_MAX];
->>  	unsigned int clks_num;
->>  	enum hfi_version hfi_version;
->> @@ -216,6 +224,12 @@ struct venus_buffer {
->>  	struct list_head ref_list;
->>  };
->> 
->> +struct clock_data {
->> +	u32 core_id;
->> +	unsigned long freq;
->> +	struct codec_freq_data *codec_freq_data;
->> +};
->> +
->>  #define to_venus_buffer(ptr)	container_of(ptr, struct venus_buffer, 
->> vb)
->> 
->>  /**
->> @@ -275,6 +289,7 @@ struct venus_inst {
->>  	struct list_head list;
->>  	struct mutex lock;
->>  	struct venus_core *core;
->> +	struct clock_data clk_data;
->>  	struct list_head dpbbufs;
->>  	struct list_head internalbufs;
->>  	struct list_head registeredbufs;
->> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
->> b/drivers/media/platform/qcom/venus/helpers.c
->> index 5cad601..f7f724b 100644
->> --- a/drivers/media/platform/qcom/venus/helpers.c
->> +++ b/drivers/media/platform/qcom/venus/helpers.c
->> @@ -715,6 +715,36 @@ int venus_helper_set_core_usage(struct venus_inst 
->> *inst, u32 usage)
->>  }
->>  EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
->> 
->> +int venus_helper_init_codec_data(struct venus_inst *inst)
->> +{
->> +	const struct codec_data *codec_data;
-> 
-> Something is wrong here, there is no prototype of struct codec_data.
-Something went wrong during git rebase, will correct this.
 
 
-Regards,
-Aniket
+On 7/2/2019 1:34 AM, Alex Williamson wrote:
+> On Mon, 1 Jul 2019 23:20:35 +0530
+> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+> 
+>> On 7/1/2019 10:54 PM, Alex Williamson wrote:
+>>> On Mon, 1 Jul 2019 22:43:10 +0530
+>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
+>>>   
+>>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:  
+>>>>> This allows udev to trigger rules when a parent device is registered
+>>>>> or unregistered from mdev.
+>>>>>
+>>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>>>>> ---
+>>>>>
+>>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
+>>>>>     removing them is only tangential to the goal of this change.
+>>>>>     
+>>>>
+>>>> Thanks.
+>>>>
+>>>>  
+>>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
+>>>>>  1 file changed, 8 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>>>>> index ae23151442cb..7fb268136c62 100644
+>>>>> --- a/drivers/vfio/mdev/mdev_core.c
+>>>>> +++ b/drivers/vfio/mdev/mdev_core.c
+>>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>>>  {
+>>>>>  	int ret;
+>>>>>  	struct mdev_parent *parent;
+>>>>> +	char *env_string = "MDEV_STATE=registered";
+>>>>> +	char *envp[] = { env_string, NULL };
+>>>>>  
+>>>>>  	/* check for mandatory ops */
+>>>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+>>>>> @@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>>>  	mutex_unlock(&parent_list_lock);
+>>>>>  
+>>>>>  	dev_info(dev, "MDEV: Registered\n");
+>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+>>>>> +
+>>>>>  	return 0;
+>>>>>  
+>>>>>  add_dev_err:
+>>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
+>>>>>  void mdev_unregister_device(struct device *dev)
+>>>>>  {
+>>>>>  	struct mdev_parent *parent;
+>>>>> +	char *env_string = "MDEV_STATE=unregistered";
+>>>>> +	char *envp[] = { env_string, NULL };
+>>>>>  
+>>>>>  	mutex_lock(&parent_list_lock);
+>>>>>  	parent = __find_parent_device(dev);
+>>>>> @@ -243,6 +249,8 @@ void mdev_unregister_device(struct device *dev)
+>>>>>  	up_write(&parent->unreg_sem);
+>>>>>  
+>>>>>  	mdev_put_parent(parent);
+>>>>> +
+>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);    
+>>>>
+>>>> mdev_put_parent() calls put_device(dev). If this is the last instance
+>>>> holding device, then on put_device(dev) dev would get freed.
+>>>>
+>>>> This event should be before mdev_put_parent()  
+>>>
+>>> So you're suggesting the vendor driver is calling
+>>> mdev_unregister_device() without a reference to the struct device that
+>>> it's passing to unregister?  Sounds bogus to me.  We take a
+>>> reference to the device so that it can't disappear out from under us,
+>>> the caller cannot rely on our reference and the caller provided the
+>>> struct device.  Thanks,
+>>>   
+>>
+>> 1. Register uevent is sent after mdev holding reference to device, then
+>> ideally, unregister path should be mirror of register path, send uevent
+>> and then release the reference to device.
+> 
+> I don't see the relevance here.  We're marking an event, not unwinding
+> state of the device from the registration process.  Additionally, the
+> event we're trying to mark is the completion of each process, so the
+> notion that we need to mirror the ordering between the two is invalid.
+> 
+>> 2. I agree that vendor driver shouldn't call mdev_unregister_device()
+>> without holding reference to device. But to be on safer side, if ever
+>> such case occur, to avoid any segmentation fault in kernel, better to
+>> send event before mdev release the reference to device.
+> 
+> I know that get_device() and put_device() are GPL symbols and that's a
+> bit of an issue, but I don't think we should be kludging the code for a
+> vendor driver that might have problems with that.  A) we're using the
+> caller provided device  for the uevent, B) we're only releasing our own
+> reference to the device that was acquired during registration, the
+> vendor driver must have other references,
+
+Are you going to assume that someone/vendor driver is always going to do
+right thing?
+
+> C) the parent device
+> generally lives on a bus, with a vendor driver, there's an entire
+> ecosystem of references to the device below mdev.  Is this a paranoia
+> request or are you really concerned that your PCI device suddenly
+> disappears when mdev's reference to it disappears. 
+
+mdev infrastructure is not always used by PCI devices. It is designed to
+be generic, so that other devices (other than PCI devices) can also use
+this framework.
+If there is a assumption that user of mdev framework or vendor drivers
+are always going to use mdev in right way, then there is no need for
+mdev core to held reference of the device?
+This is not a "paranoia request". This is more of a ideal scenario, mdev
+should use device by holding its reference rather than assuming (or
+relying on) someone else holding the reference of device.
+
+Thanks,
+Kirti
