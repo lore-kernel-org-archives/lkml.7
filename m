@@ -2,100 +2,166 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FB6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A44C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67C4218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fqxKgFLt"
+	by mail.kernel.org (Postfix) with ESMTP id D9C78218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGCAjs (ORCPT
+        id S1727269AbfGCAjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:39:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40975 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGCAjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:39:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so280322pff.8;
-        Tue, 02 Jul 2019 17:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gOTP+ZaLmXyKKyNKXioW6RTool5zGcTlIioWS0XWh/0=;
-        b=fqxKgFLtXz/y3i1XJccpf1r8OEVcFBvDBBeD+u/RiosA2OQeo7s6BpIY9TIOjicG9c
-         U88HeaU0Ng/LvQaa8nO7Gv/JnfcgGSSbkhzU8g/92RM2NjgO3h9s93BEqVr5Qr1zjrJn
-         q8ByxOhcpNXhfQxpSYR7QsG1SFw4oiONM3xTXEzkZd7PzfxXzh9qX2lSVWFXnfOz/fkW
-         SD+bw1p0PshSoyG7jMoVbs8WZ8s5ChDT2fsDrlSnwDQIQXgHwaaEi7YP+Qh193HO4HnN
-         +u5d9y8u8Ts7K9Nz5GDSvMbTMW7SOHnXfA6JoMcS0/s3jyH3GK/7PJZWH81Bzzk8dQK/
-         OvpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gOTP+ZaLmXyKKyNKXioW6RTool5zGcTlIioWS0XWh/0=;
-        b=IdxInYWtjLJ2AizWZUKD2/Uj+RDBuOvWrkl0p2Vmhnba516+h53P+yvW9fNsN/IJYJ
-         QIYHIEjYLXjAJdFZP2tfZoBHa4GzkHdpHnyrteiVluY7MJtyNwFgawls4Jc+TY0Gfm8r
-         SXwuhtGqSH5WnVyzkTLCyQfdVnOeK6d5Yu6lK8sFxH/cmVeBaoQwOLcbqqKu7m4IjH2Z
-         zx2wGGl/QkqDNaCPsFCgvCdBDkmYOO/UDIOd5qTDXSuqMHdiCQ8qT/iubk3LOdLGHMPF
-         33q7/jO2S3q44d9F/CQNGIcw9P2okeU252/1VmA5UR3jYOhnXdagqGCZ+fbRKVEvlZ4S
-         nC1Q==
-X-Gm-Message-State: APjAAAV8VNewe0RpLxf9lyOt0FE/7rfiY4eIsm30qj2++spJ8H6N4y9B
-        7FWXxUCQQXxj5Xmf6wBt4WfXpqW4x4mx68dqG/vnKg5h
-X-Google-Smtp-Source: APXvYqwD5pAmB4x2ApOe+c2vc+d9pRDSp0daWsi8O5RWBkaiMnmqlFRjUobb+dXGUccoH7FswIqUb6z3GneFdMYr2Qw=
-X-Received: by 2002:a05:6808:8f0:: with SMTP id d16mr1528711oic.47.1562111165901;
- Tue, 02 Jul 2019 16:46:05 -0700 (PDT)
+        Tue, 2 Jul 2019 20:39:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49796 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbfGCAjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:39:53 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 844B53084042;
+        Tue,  2 Jul 2019 21:02:49 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D13545D9C6;
+        Tue,  2 Jul 2019 21:02:43 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 23:02:41 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        brouer@redhat.com
+Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
+ page_pool_destroy
+Message-ID: <20190702230241.3be6d787@carbon>
+In-Reply-To: <20190702185839.GH4510@khorivan>
+References: <20190702153902.0e42b0b2@carbon>
+        <156207778364.29180.5111562317930943530.stgit@firesoul>
+        <20190702144426.GD4510@khorivan>
+        <20190702165230.6caa36e3@carbon>
+        <20190702145612.GF4510@khorivan>
+        <20190702171029.76c60538@carbon>
+        <20190702152112.GG4510@khorivan>
+        <20190702202907.15fb30ce@carbon>
+        <20190702185839.GH4510@khorivan>
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-15-narmstrong@baylibre.com>
-In-Reply-To: <20190701091258.3870-15-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 01:45:55 +0200
-Message-ID: <CAFBinCA5-5kbD-0e7Lm7FwRneWsKeW4yQrucd1PAk=s2PrtxJQ@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 14/14] arm64: dts: meson-g12b-odroid-n2: enable DVFS
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 02 Jul 2019 21:03:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Enable DVFS for the Odroid-N2 by setting the clock, OPP and supply
-> for each cores of each CPU clusters.
->
-> The first cluster uses the "VDDCPU_B" power supply, and the second
-> cluster uses the "VDDCPU_A" power supply.
->
-> Each power supply can achieve 0.73V to 1.01V using 2 distinct PWM
-> outputs clocked at 800KHz with an inverse duty-cycle.
->
-> DVFS has been tested by running the arm64 cpuburn at [1] and cycling
-> between all the possible cpufreq translations of each cluster and
-> checking the final frequency using the clock-measurer, script at [2].
->
-> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-> [2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, 2 Jul 2019 21:58:40 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-[...]
-> +       vddcpu_b: regulator-vddcpu-b {
-> +               /*
-> +                * Silergy SY8120B1ABC Regulator.
-> +                */
-interesting that they use different regulator ICs for CPU A and CPU B
-the public schematics confirm your comments
+> On Tue, Jul 02, 2019 at 08:29:07PM +0200, Jesper Dangaard Brouer wrote:
+> >On Tue, 2 Jul 2019 18:21:13 +0300
+> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >  
+> >> On Tue, Jul 02, 2019 at 05:10:29PM +0200, Jesper Dangaard Brouer wrote:  
+> >> >On Tue, 2 Jul 2019 17:56:13 +0300
+> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >> >  
+> >> >> On Tue, Jul 02, 2019 at 04:52:30PM +0200, Jesper Dangaard Brouer wrote:  
+> >> >> >On Tue, 2 Jul 2019 17:44:27 +0300
+> >> >> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >> >> >  
+> >> >> >> On Tue, Jul 02, 2019 at 04:31:39PM +0200, Jesper Dangaard Brouer wrote:  
+> >> >> >> >From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> >> >> >> >
+> >> >> >> >Jesper recently removed page_pool_destroy() (from driver invocation) and
+> >> >> >> >moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
+> >> >> >> >handle in-flight packets/pages. This created an asymmetry in drivers
+> >> >> >> >create/destroy pairs.
+> >> >> >> >
+> >> >> >> >This patch add page_pool user refcnt and reintroduce page_pool_destroy.
+> >> >> >> >This serves two purposes, (1) simplify drivers error handling as driver now
+> >> >> >> >drivers always calls page_pool_destroy() and don't need to track if
+> >> >> >> >xdp_rxq_info_reg_mem_model() was unsuccessful. (2) allow special cases
+> >> >> >> >where a single RX-queue (with a single page_pool) provides packets for two
+> >> >> >> >net_device'es, and thus needs to register the same page_pool twice with two
+> >> >> >> >xdp_rxq_info structures.  
+> >> >> >>
+> >> >> >> As I tend to use xdp level patch there is no more reason to mention (2) case
+> >> >> >> here. XDP patch serves it better and can prevent not only obj deletion but also
+> >> >> >> pool flush, so, this one patch I could better leave only for (1) case.  
+> >> >> >
+> >> >> >I don't understand what you are saying.
+> >> >> >
+> >> >> >Do you approve this patch, or do you reject this patch?
+> >> >> >  
+> >> >> It's not reject, it's proposition to use both, XDP and page pool patches,
+> >> >> each having its goal.  
+> >> >
+> >> >Just to be clear, if you want this patch to get accepted you have to
+> >> >reply with your Signed-off-by (as I wrote).
+> >> >
+> >> >Maybe we should discuss it in another thread, about why you want two
+> >> >solutions to the same problem.  
+> >>
+> >> If it solves same problem I propose to reject this one and use this:
+> >> https://lkml.org/lkml/2019/7/2/651  
+> >
+> >No, I propose using this one, and rejecting the other one.  
+> 
+> There is at least several arguments against this one (related (2) purpose)
+> 
+> It allows:
+> - avoid changes to page_pool/mlx5/netsec
+> - save not only allocator obj but allocator "page/buffer flush"
+> - buffer flush can be present not only in page_pool but for other allocators
+>   that can behave differently and not so simple solution.
+> - to not limit cpsw/(potentially others) to use "page_pool" allocator only
+> ....
+> 
+> This patch better leave also, as it simplifies error path for page_pool and
+> have more error prone usage comparing with existent one.
+> 
+> Please, don't limit cpsw and potentially other drivers to use only
+> page_pool it can be zca or etc... I don't won't to modify each allocator.
+> I propose to add both as by fact they solve different problems with common
+> solution.
+
+
+I'm trying to limit the scope of your changes, for your special case,
+because I'm afraid this more common solution is going to limit our
+options, painting ourselves into a corner.
+
+E.g. for correct lifetime handling, I think we actually need to do a
+dev_hold() on the net_device. (Changes in f71fec47c2 might not be
+enough, but I first need to dig into the details and ask Hellwig about
+some details).  Adding that after your patch is more complicated (if
+even doable).
+
+E.g. doing dev_hold() on the net_device, can also turn into a
+performance advantage, when/if page_pool is extended to also "travel"
+into SKBs. (Allowing to elide such dev_hold() calls in netstack).
+
+I also worry about the possible performance impact these changes will
+have down the road.  (For the RX/alloc side it should be clear by now
+that we gain a lot of performance with the single RX-queue binding and
+napi protection).  On the return/free side performance *need* to be
+improved (it doesn't scale).  I'm basically looking at different ways
+to bulk return pages into the ptr_ring, which requires changes in
+page_pool and likely in xdp_allocator structure.  Which your changes
+are complicating.
+
+This special use-case, seems confined to your driver. And Ilias told me
+that XDP is not really a performance benefit for this driver as the HW
+PPS-limit is hit before the XDP and netstack limit.  I ask, does it
+make sense to add XDP to this driver, if it complicates the code for
+everybody else?
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
