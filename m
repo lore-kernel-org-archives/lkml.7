@@ -2,138 +2,92 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF105C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0971EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B462173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="SmMt1JgS"
+	by mail.kernel.org (Postfix) with ESMTP id D1A5121721
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 05:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562045547;
+	bh=5nFy6GF/z0qfMNh+woe1h0Af6Gp8wAjzYHvqnhfpe4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ETXOKdXnrI+OtnNCWPDTj5GYWgWL7C7UezHRxox9jzEugTPD4+C5HLefTZaNMNJN5
+	 EoeMMsKtukyxPdAEaAo+FlQs7+8joallKFxZbvQXhheybj4hePEfqc3LlXZPBWGuYj
+	 UQCBd56bniDlFji/5EuwY3WXpRdEC9+Xx7xcfIv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfGBFcD (ORCPT
+        id S1727037AbfGBFc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 01:32:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35414 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBFcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 01:32:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so7108807pgl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 22:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DI+ZBN6ChSqbAtZm65019T9P4VT9tQrNvOg71cMTFSY=;
-        b=SmMt1JgS293R269mfBTCHcGN+JTBSaL6brVIX+JxhWKry9bTyF9faKtiIWx8hylkG8
-         KdD4h1+/WO+c3sH2DR6r9zfXEWOFLXJ0rfj5PhGWGNXeINQJNKwVADDGSHhfcnyoKWqs
-         i++/ihc9767U6YvYquutHZ/z1aEg9GQikW1uaJDJeSIXVVw0VCl5r0jX3BiH3ZUFYPoe
-         2B8fbHdMJ6kgyGtBn6slotYGJhwxGPgtA0ywHQOTmpw7xtA8Qa4+xqRKcxvxLpIsV7EW
-         zfDaztJHiIAZ6HbKP+p558xX33IJKe/IIFfUbZEjOSoVoz7+/CFoz650LS4UKZQ5SZ1+
-         ueTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DI+ZBN6ChSqbAtZm65019T9P4VT9tQrNvOg71cMTFSY=;
-        b=XDtYE9L6/4j5rpd8wcj8cr2yOx7u6asTJTEC92C5AP9Jxjakz5igmRA5f2m0DuOWcH
-         qsOIi5VzSEUFMWP7C6V3a2E1ltAs6dHNDrflCGRdlQCbjd3x05Hg8SNrTepjM399edS2
-         1a0jMr11j3HIs/nuOPodYkgaN66ROjVy2yiDBTqSkTpX8k8VJZenwkqE/ujmirSmBEjL
-         qpyMV62FR7d8X9Kuxuyl7NjtzPM6FLAJlUh3gLt8XiM8PBHIu9xlWw8QvM5+mctRwwhk
-         PDB/27sLLd63A8wTtY5c34X6Sdx4f2E5gEQnS3+Mn5ivTHgqT8Q16yvVdJ33s3pEMvPm
-         Vshw==
-X-Gm-Message-State: APjAAAV4BRIF+ZONgAzd1nWcMFXtzAdcrclet4oV49EOr4gI5nbSBJXY
-        QSncEJh4XEKfxwvbVpXGlVz/HQ==
-X-Google-Smtp-Source: APXvYqz5R3H2aatnG/iASy9NOqr4LruL0r8shyydNHGbD9q5v76hCjlHYXUhV829QE/KxznGlPMx4g==
-X-Received: by 2002:a63:5c19:: with SMTP id q25mr29206306pgb.215.1562045522046;
-        Mon, 01 Jul 2019 22:32:02 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id x7sm12857733pfa.125.2019.07.01.22.31.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 22:32:01 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     rostedt@goodmis.org, edwintorok@gmail.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] x86/stacktrace: Do not access user space memory unnecessarily
-Date:   Tue,  2 Jul 2019 14:31:51 +0900
-Message-Id: <20190702053151.26922-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 2 Jul 2019 01:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfGBFc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 01:32:26 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B1921479;
+        Tue,  2 Jul 2019 05:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562045545;
+        bh=5nFy6GF/z0qfMNh+woe1h0Af6Gp8wAjzYHvqnhfpe4w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fQnB83gcbhxh9jCa+CrKuhTBFi8jR5kt0n1/x5Ue4/gqrjWyaFKSGRr7p2imP+0BN
+         Yrrniu1rAl0OeYJsVmWcFcdSrs3NQQZLOTAkjEMkIm9FTM9tXJ+jmto5MAZHNCT0xQ
+         gcyHY0Au5F3gvE6D0B1cq1JwF9Fhw1cBSLCQkKuo=
+Date:   Mon, 1 Jul 2019 22:32:23 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Hillf Danton <hdanton@sina.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 2 open syzbot bugs in vhost subsystem
+Message-ID: <20190702053223.GA27702@sol.localdomain>
+References: <20190702051707.GF23743@sol.localdomain>
+ <e2da1124-52c3-84ff-77ce-deb017711138@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2da1124-52c3-84ff-77ce-deb017711138@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put the boundary check before it accesses user space to prevent unnecessary
-access which might crash the machine.
+On Tue, Jul 02, 2019 at 01:24:43PM +0800, Jason Wang wrote:
+> > --------------------------------------------------------------------------------
+> > Title:              INFO: task hung in vhost_init_device_iotlb
+> > Last occurred:      125 days ago
+> > Reported:           153 days ago
+> > Branches:           Mainline and others
+> > Dashboard link:     https://syzkaller.appspot.com/bug?id=cb1ea8daf03a5942c2ab314679148cf6e128ef58
+> > Original thread:    https://lkml.kernel.org/lkml/0000000000007e86fd058095533f@google.com/T/#u
+> > 
+> > Unfortunately, this bug does not have a reproducer.
+> > 
+> > The original thread for this bug received 2 replies; the last was 152 days ago.
+> > 
+> > If you fix this bug, please add the following tag to the commit:
+> >      Reported-by: syzbot+40e28a8bd59d10ed0c42@syzkaller.appspotmail.com
+> > 
+> > If you send any email or patch for this bug, please consider replying to the
+> > original thread.  For the git send-email command to use, or tips on how to reply
+> > if the thread isn't in your mailbox, see the "Reply instructions" at
+> > https://lkml.kernel.org/r/0000000000007e86fd058095533f@google.com
+> > 
+> 
+> Can syzbot still reproduce this issue?
 
-Especially, ftrace preemptirq/irq_disable event with user stack trace
-option can trigger SEGV in pid 1 which leads to panic.
+Apparently not, as it last occurred 125 days ago.
 
-Reproducer:
+That doesn't necessarily mean the bug isn't still there, though.
 
-  CONFIG_PREEMPTIRQ_TRACEPOINTS=y
-  # echo 1 > events/preemptirq/enable
-  # echo userstacktrace > trace_options
+But if you (as a person familiar with the code) think it's no longer valid or
+not actionable, you can invalidate it.
 
-Output:
-
-  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-  CPU: 1 PID: 1 Comm: systemd Not tainted 5.2.0-rc7+ #10
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-  Call Trace:
-   dump_stack+0x67/0x90
-   panic+0x100/0x2c6
-   do_exit.cold+0x4e/0x101
-   do_group_exit+0x3a/0xa0
-   get_signal+0x14a/0x8e0
-   do_signal+0x36/0x650
-   exit_to_usermode_loop+0x92/0xb0
-   prepare_exit_to_usermode+0x6f/0xb0
-   retint_user+0x8/0x18
-  RIP: 0033:0x55be7ad1c89f
-  Code: Bad RIP value.
-  RSP: 002b:00007ffe329a4b00 EFLAGS: 00010202
-  RAX: 0000000000000768 RBX: 00007ffe329a4ba0 RCX: 00007ff0063aa469
-  RDX: 00007ff0066761de RSI: 00007ffe329a4b20 RDI: 0000000000000768
-  RBP: 000000000000000b R08: 0000000000000000 R09: 00007ffe329a4e2f
-  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000768
-  R13: 0000000000000000 R14: 0000000000000004 R15: 000055be7b3d3560
-  Kernel Offset: 0x2a000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-
-Fixes: 02b67518e2b1 ("tracing: add support for userspace stacktraces in tracing/iter_ctrl")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- arch/x86/kernel/stacktrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2abf27d7df6b..6d0c608ffe34 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -123,12 +123,12 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
- 	while (1) {
- 		struct stack_frame_user frame;
- 
-+		if ((unsigned long)fp < regs->sp)
-+			break;
- 		frame.next_fp = NULL;
- 		frame.ret_addr = 0;
- 		if (!copy_stack_frame(fp, &frame))
- 			break;
--		if ((unsigned long)fp < regs->sp)
--			break;
- 		if (frame.ret_addr) {
- 			if (!consume_entry(cookie, frame.ret_addr, false))
- 				return;
--- 
-2.21.0
-
+- Eric
