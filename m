@@ -4,54 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD9C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F609C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EA720659
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CAC2184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055163;
-	bh=Mvvr+pgVu09yDC6gNxxAuwlJfAi6b/TqWbF0jSD9bRU=;
+	s=default; t=1562055173;
+	bh=IHVZSb+9KZcY+NwRW1gMyaH2wKojBuiMeGUOBuwWubw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ww/etri6JGWvP/Rr0ww8xndbNe7+thEr3hc/Esw+zi4vdtva+vY3nfvtwWLHVkVJ6
-	 8k4QDZZnZSUYv+0l+Be0e5IjM2q3jWvU4tAOnjszwJXEMmfMGgnYfxawIB0l59W5iN
-	 ogxVWQftFMCwTTm5NBKssKwvSM50cBqi4euWlyFI=
+	b=EwY/GJZGpGf3a+idGQm0rGWY7SDyb/xJ/Hi2l6Ju4nsC0BesJqVs6z4/CyA0AClo2
+	 Z1K+J1H42GeBXEU0M6c51bMzeAd6PMPierhHFAue3oT6fRkMhkKgaRvTuAnPugTaCc
+	 1mqIDnHh7Zg36NOxDkAWGGROTsuVhQ+5jEgjg194=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfGBIIb (ORCPT
+        id S1727968AbfGBIMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56010 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbfGBII2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:08:28 -0400
+        id S1727095AbfGBIMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:12:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B3C721841;
-        Tue,  2 Jul 2019 08:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3998020659;
+        Tue,  2 Jul 2019 08:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054906;
-        bh=Mvvr+pgVu09yDC6gNxxAuwlJfAi6b/TqWbF0jSD9bRU=;
+        s=default; t=1562055166;
+        bh=IHVZSb+9KZcY+NwRW1gMyaH2wKojBuiMeGUOBuwWubw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rsXNTbMomfS/zT4DPNhrVAlNIMn3DaMXEuXPJHMchjudCQTE7oId4iDdNyt7ACrxm
-         lZ3+8UUNCEf6wnutx+om3NLgxW3Y0m2RByWknDFon7Vkqp7e1kph4UlpqaHRqn2sMq
-         q31L6LUN3Tga/C8p/lDUUTAYS6gX7kkE2RPYINJY=
+        b=nYSzjOoMYQju2yxPLk+HaOFIrGzeXuXbx6IPT6ucuVR6QnQAG46a3FTOrXqwXP1ia
+         rmf5v8ympIcEsDQWUWjEWGBymyhGwOWgKcp6FroTbeiQWjoeCcJZfcVKi/+If5o5TF
+         bJH5upf2SDB6C5NIDb8SuOCHUmfUyO0E5JGgqKY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Andrey Ignatov <rdna@fb.com>, Martin KaFai Lau <kafai@fb.com>,
-        Martynas Pumputis <m@lambda.lt>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.19 65/72] bpf: fix unconnected udp hooks
-Date:   Tue,  2 Jul 2019 10:02:06 +0200
-Message-Id: <20190702080128.014501200@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Chen, Jerry T" <jerry.t.chen@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        Xishi Qiu <xishi.qiuxishi@alibaba-inc.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 14/55] mm: hugetlb: soft-offline: dissolve_free_huge_page() return zero on !PageHuge
+Date:   Tue,  2 Jul 2019 10:01:22 +0200
+Message-Id: <20190702080124.778004694@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
-References: <20190702080124.564652899@linuxfoundation.org>
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+References: <20190702080124.103022729@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,308 +67,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-commit 983695fa676568fc0fe5ddd995c7267aabc24632 upstream.
+commit faf53def3b143df11062d87c12afe6afeb6f8cc7 upstream.
 
-Intention of cgroup bind/connect/sendmsg BPF hooks is to act transparently
-to applications as also stated in original motivation in 7828f20e3779 ("Merge
-branch 'bpf-cgroup-bind-connect'"). When recently integrating the latter
-two hooks into Cilium to enable host based load-balancing with Kubernetes,
-I ran into the issue that pods couldn't start up as DNS got broken. Kubernetes
-typically sets up DNS as a service and is thus subject to load-balancing.
+madvise(MADV_SOFT_OFFLINE) often returns -EBUSY when calling soft offline
+for hugepages with overcommitting enabled.  That was caused by the
+suboptimal code in current soft-offline code.  See the following part:
 
-Upon further debugging, it turns out that the cgroupv2 sendmsg BPF hooks API
-is currently insufficient and thus not usable as-is for standard applications
-shipped with most distros. To break down the issue we ran into with a simple
-example:
+    ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
+                            MIGRATE_SYNC, MR_MEMORY_FAILURE);
+    if (ret) {
+            ...
+    } else {
+            /*
+             * We set PG_hwpoison only when the migration source hugepage
+             * was successfully dissolved, because otherwise hwpoisoned
+             * hugepage remains on free hugepage list, then userspace will
+             * find it as SIGBUS by allocation failure. That's not expected
+             * in soft-offlining.
+             */
+            ret = dissolve_free_huge_page(page);
+            if (!ret) {
+                    if (set_hwpoison_free_buddy_page(page))
+                            num_poisoned_pages_inc();
+            }
+    }
+    return ret;
 
-  # cat /etc/resolv.conf
-  nameserver 147.75.207.207
-  nameserver 147.75.207.208
+Here dissolve_free_huge_page() returns -EBUSY if the migration source page
+was freed into buddy in migrate_pages(), but even in that case we actually
+has a chance that set_hwpoison_free_buddy_page() succeeds.  So that means
+current code gives up offlining too early now.
 
-For the purpose of a simple test, we set up above IPs as service IPs and
-transparently redirect traffic to a different DNS backend server for that
-node:
+dissolve_free_huge_page() checks that a given hugepage is suitable for
+dissolving, where we should return success for !PageHuge() case because
+the given hugepage is considered as already dissolved.
 
-  # cilium service list
-  ID   Frontend            Backend
-  1    147.75.207.207:53   1 => 8.8.8.8:53
-  2    147.75.207.208:53   1 => 8.8.8.8:53
+This change also affects other callers of dissolve_free_huge_page(), which
+are cleaned up together.
 
-The attached BPF program is basically selecting one of the backends if the
-service IP/port matches on the cgroup hook. DNS breaks here, because the
-hooks are not transparent enough to applications which have built-in msg_name
-address checks:
-
-  # nslookup 1.1.1.1
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.207#53
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.208#53
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.207#53
-  [...]
-  ;; connection timed out; no servers could be reached
-
-  # dig 1.1.1.1
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.207#53
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.208#53
-  ;; reply from unexpected source: 8.8.8.8#53, expected 147.75.207.207#53
-  [...]
-
-  ; <<>> DiG 9.11.3-1ubuntu1.7-Ubuntu <<>> 1.1.1.1
-  ;; global options: +cmd
-  ;; connection timed out; no servers could be reached
-
-For comparison, if none of the service IPs is used, and we tell nslookup
-to use 8.8.8.8 directly it works just fine, of course:
-
-  # nslookup 1.1.1.1 8.8.8.8
-  1.1.1.1.in-addr.arpa	name = one.one.one.one.
-
-In order to fix this and thus act more transparent to the application,
-this needs reverse translation on recvmsg() side. A minimal fix for this
-API is to add similar recvmsg() hooks behind the BPF cgroups static key
-such that the program can track state and replace the current sockaddr_in{,6}
-with the original service IP. From BPF side, this basically tracks the
-service tuple plus socket cookie in an LRU map where the reverse NAT can
-then be retrieved via map value as one example. Side-note: the BPF cgroups
-static key should be converted to a per-hook static key in future.
-
-Same example after this fix:
-
-  # cilium service list
-  ID   Frontend            Backend
-  1    147.75.207.207:53   1 => 8.8.8.8:53
-  2    147.75.207.208:53   1 => 8.8.8.8:53
-
-Lookups work fine now:
-
-  # nslookup 1.1.1.1
-  1.1.1.1.in-addr.arpa    name = one.one.one.one.
-
-  Authoritative answers can be found from:
-
-  # dig 1.1.1.1
-
-  ; <<>> DiG 9.11.3-1ubuntu1.7-Ubuntu <<>> 1.1.1.1
-  ;; global options: +cmd
-  ;; Got answer:
-  ;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 51550
-  ;; flags: qr rd ra ad; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
-
-  ;; OPT PSEUDOSECTION:
-  ; EDNS: version: 0, flags:; udp: 512
-  ;; QUESTION SECTION:
-  ;1.1.1.1.                       IN      A
-
-  ;; AUTHORITY SECTION:
-  .                       23426   IN      SOA     a.root-servers.net. nstld.verisign-grs.com. 2019052001 1800 900 604800 86400
-
-  ;; Query time: 17 msec
-  ;; SERVER: 147.75.207.207#53(147.75.207.207)
-  ;; WHEN: Tue May 21 12:59:38 UTC 2019
-  ;; MSG SIZE  rcvd: 111
-
-And from an actual packet level it shows that we're using the back end
-server when talking via 147.75.207.20{7,8} front end:
-
-  # tcpdump -i any udp
-  [...]
-  12:59:52.698732 IP foo.42011 > google-public-dns-a.google.com.domain: 18803+ PTR? 1.1.1.1.in-addr.arpa. (38)
-  12:59:52.698735 IP foo.42011 > google-public-dns-a.google.com.domain: 18803+ PTR? 1.1.1.1.in-addr.arpa. (38)
-  12:59:52.701208 IP google-public-dns-a.google.com.domain > foo.42011: 18803 1/0/0 PTR one.one.one.one. (67)
-  12:59:52.701208 IP google-public-dns-a.google.com.domain > foo.42011: 18803 1/0/0 PTR one.one.one.one. (67)
-  [...]
-
-In order to be flexible and to have same semantics as in sendmsg BPF
-programs, we only allow return codes in [1,1] range. In the sendmsg case
-the program is called if msg->msg_name is present which can be the case
-in both, connected and unconnected UDP.
-
-The former only relies on the sockaddr_in{,6} passed via connect(2) if
-passed msg->msg_name was NULL. Therefore, on recvmsg side, we act in similar
-way to call into the BPF program whenever a non-NULL msg->msg_name was
-passed independent of sk->sk_state being TCP_ESTABLISHED or not. Note
-that for TCP case, the msg->msg_name is ignored in the regular recvmsg
-path and therefore not relevant.
-
-For the case of ip{,v6}_recv_error() paths, picked up via MSG_ERRQUEUE,
-the hook is not called. This is intentional as it aligns with the same
-semantics as in case of TCP cgroup BPF hooks right now. This might be
-better addressed in future through a different bpf_attach_type such
-that this case can be distinguished from the regular recvmsg paths,
-for example.
-
-Fixes: 1cedee13d25a ("bpf: Hooks for sys_sendmsg")
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrey Ignatov <rdna@fb.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Martynas Pumputis <m@lambda.lt>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+[n-horiguchi@ah.jp.nec.com: v3]
+  Link: http://lkml.kernel.org/r/1560761476-4651-3-git-send-email-n-horiguchi@ah.jp.nec.comLink: http://lkml.kernel.org/r/1560154686-18497-3-git-send-email-n-horiguchi@ah.jp.nec.com
+Fixes: 6bc9b56433b76 ("mm: fix race on soft-offlining")
+Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Reported-by: Chen, Jerry T <jerry.t.chen@intel.com>
+Tested-by: Chen, Jerry T <jerry.t.chen@intel.com>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Xishi Qiu <xishi.qiuxishi@alibaba-inc.com>
+Cc: "Chen, Jerry T" <jerry.t.chen@intel.com>
+Cc: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: <stable@vger.kernel.org>	[4.19+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/bpf-cgroup.h |    8 ++++++++
- include/uapi/linux/bpf.h   |    2 ++
- kernel/bpf/syscall.c       |    8 ++++++++
- kernel/bpf/verifier.c      |   12 ++++++++----
- net/core/filter.c          |    2 ++
- net/ipv4/udp.c             |    4 ++++
- net/ipv6/udp.c             |    4 ++++
- 7 files changed, 36 insertions(+), 4 deletions(-)
 
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -210,6 +210,12 @@ void bpf_cgroup_storage_release(struct b
- #define BPF_CGROUP_RUN_PROG_UDP6_SENDMSG_LOCK(sk, uaddr, t_ctx)		       \
- 	BPF_CGROUP_RUN_SA_PROG_LOCK(sk, uaddr, BPF_CGROUP_UDP6_SENDMSG, t_ctx)
+---
+ mm/hugetlb.c        |   29 ++++++++++++++++++++---------
+ mm/memory-failure.c |    5 +----
+ 2 files changed, 21 insertions(+), 13 deletions(-)
+
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1491,16 +1491,29 @@ static int free_pool_huge_page(struct hs
  
-+#define BPF_CGROUP_RUN_PROG_UDP4_RECVMSG_LOCK(sk, uaddr)			\
-+	BPF_CGROUP_RUN_SA_PROG_LOCK(sk, uaddr, BPF_CGROUP_UDP4_RECVMSG, NULL)
+ /*
+  * Dissolve a given free hugepage into free buddy pages. This function does
+- * nothing for in-use (including surplus) hugepages. Returns -EBUSY if the
+- * dissolution fails because a give page is not a free hugepage, or because
+- * free hugepages are fully reserved.
++ * nothing for in-use hugepages and non-hugepages.
++ * This function returns values like below:
++ *
++ *  -EBUSY: failed to dissolved free hugepages or the hugepage is in-use
++ *          (allocated or reserved.)
++ *       0: successfully dissolved free hugepages or the page is not a
++ *          hugepage (considered as already dissolved)
+  */
+ int dissolve_free_huge_page(struct page *page)
+ {
+ 	int rc = -EBUSY;
+ 
++	/* Not to disrupt normal path by vainly holding hugetlb_lock */
++	if (!PageHuge(page))
++		return 0;
 +
-+#define BPF_CGROUP_RUN_PROG_UDP6_RECVMSG_LOCK(sk, uaddr)			\
-+	BPF_CGROUP_RUN_SA_PROG_LOCK(sk, uaddr, BPF_CGROUP_UDP6_RECVMSG, NULL)
+ 	spin_lock(&hugetlb_lock);
+-	if (PageHuge(page) && !page_count(page)) {
++	if (!PageHuge(page)) {
++		rc = 0;
++		goto out;
++	}
 +
- #define BPF_CGROUP_RUN_PROG_SOCK_OPS(sock_ops)				       \
- ({									       \
- 	int __ret = 0;							       \
-@@ -290,6 +296,8 @@ static inline void bpf_cgroup_storage_fr
- #define BPF_CGROUP_RUN_PROG_INET6_CONNECT_LOCK(sk, uaddr) ({ 0; })
- #define BPF_CGROUP_RUN_PROG_UDP4_SENDMSG_LOCK(sk, uaddr, t_ctx) ({ 0; })
- #define BPF_CGROUP_RUN_PROG_UDP6_SENDMSG_LOCK(sk, uaddr, t_ctx) ({ 0; })
-+#define BPF_CGROUP_RUN_PROG_UDP4_RECVMSG_LOCK(sk, uaddr) ({ 0; })
-+#define BPF_CGROUP_RUN_PROG_UDP6_RECVMSG_LOCK(sk, uaddr) ({ 0; })
- #define BPF_CGROUP_RUN_PROG_SOCK_OPS(sock_ops) ({ 0; })
- #define BPF_CGROUP_RUN_PROG_DEVICE_CGROUP(type,major,minor,access) ({ 0; })
++	if (!page_count(page)) {
+ 		struct page *head = compound_head(page);
+ 		struct hstate *h = page_hstate(head);
+ 		int nid = page_to_nid(head);
+@@ -1545,11 +1558,9 @@ int dissolve_free_huge_pages(unsigned lo
  
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -172,6 +172,8 @@ enum bpf_attach_type {
- 	BPF_CGROUP_UDP4_SENDMSG,
- 	BPF_CGROUP_UDP6_SENDMSG,
- 	BPF_LIRC_MODE2,
-+	BPF_CGROUP_UDP4_RECVMSG = 19,
-+	BPF_CGROUP_UDP6_RECVMSG,
- 	__MAX_BPF_ATTACH_TYPE
- };
- 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1342,6 +1342,8 @@ bpf_prog_load_check_attach_type(enum bpf
- 		case BPF_CGROUP_INET6_CONNECT:
- 		case BPF_CGROUP_UDP4_SENDMSG:
- 		case BPF_CGROUP_UDP6_SENDMSG:
-+		case BPF_CGROUP_UDP4_RECVMSG:
-+		case BPF_CGROUP_UDP6_RECVMSG:
- 			return 0;
- 		default:
- 			return -EINVAL;
-@@ -1622,6 +1624,8 @@ static int bpf_prog_attach(const union b
- 	case BPF_CGROUP_INET6_CONNECT:
- 	case BPF_CGROUP_UDP4_SENDMSG:
- 	case BPF_CGROUP_UDP6_SENDMSG:
-+	case BPF_CGROUP_UDP4_RECVMSG:
-+	case BPF_CGROUP_UDP6_RECVMSG:
- 		ptype = BPF_PROG_TYPE_CGROUP_SOCK_ADDR;
- 		break;
- 	case BPF_CGROUP_SOCK_OPS:
-@@ -1698,6 +1702,8 @@ static int bpf_prog_detach(const union b
- 	case BPF_CGROUP_INET6_CONNECT:
- 	case BPF_CGROUP_UDP4_SENDMSG:
- 	case BPF_CGROUP_UDP6_SENDMSG:
-+	case BPF_CGROUP_UDP4_RECVMSG:
-+	case BPF_CGROUP_UDP6_RECVMSG:
- 		ptype = BPF_PROG_TYPE_CGROUP_SOCK_ADDR;
- 		break;
- 	case BPF_CGROUP_SOCK_OPS:
-@@ -1744,6 +1750,8 @@ static int bpf_prog_query(const union bp
- 	case BPF_CGROUP_INET6_CONNECT:
- 	case BPF_CGROUP_UDP4_SENDMSG:
- 	case BPF_CGROUP_UDP6_SENDMSG:
-+	case BPF_CGROUP_UDP4_RECVMSG:
-+	case BPF_CGROUP_UDP6_RECVMSG:
- 	case BPF_CGROUP_SOCK_OPS:
- 	case BPF_CGROUP_DEVICE:
- 		break;
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -4342,9 +4342,12 @@ static int check_return_code(struct bpf_
- 	struct tnum range = tnum_range(0, 1);
- 
- 	switch (env->prog->type) {
-+	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
-+		if (env->prog->expected_attach_type == BPF_CGROUP_UDP4_RECVMSG ||
-+		    env->prog->expected_attach_type == BPF_CGROUP_UDP6_RECVMSG)
-+			range = tnum_range(1, 1);
- 	case BPF_PROG_TYPE_CGROUP_SKB:
- 	case BPF_PROG_TYPE_CGROUP_SOCK:
--	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
- 	case BPF_PROG_TYPE_SOCK_OPS:
- 	case BPF_PROG_TYPE_CGROUP_DEVICE:
- 		break;
-@@ -4360,16 +4363,17 @@ static int check_return_code(struct bpf_
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn += 1 << minimum_order) {
+ 		page = pfn_to_page(pfn);
+-		if (PageHuge(page) && !page_count(page)) {
+-			rc = dissolve_free_huge_page(page);
+-			if (rc)
+-				break;
+-		}
++		rc = dissolve_free_huge_page(page);
++		if (rc)
++			break;
  	}
  
- 	if (!tnum_in(range, reg->var_off)) {
-+		char tn_buf[48];
-+
- 		verbose(env, "At program exit the register R0 ");
- 		if (!tnum_is_unknown(reg->var_off)) {
--			char tn_buf[48];
--
- 			tnum_strn(tn_buf, sizeof(tn_buf), reg->var_off);
- 			verbose(env, "has value %s", tn_buf);
- 		} else {
- 			verbose(env, "has unknown scalar value");
- 		}
--		verbose(env, " should have been 0 or 1\n");
-+		tnum_strn(tn_buf, sizeof(tn_buf), range);
-+		verbose(env, " should have been in %s\n", tn_buf);
- 		return -EINVAL;
- 	}
- 	return 0;
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5558,6 +5558,7 @@ static bool sock_addr_is_valid_access(in
- 		case BPF_CGROUP_INET4_BIND:
- 		case BPF_CGROUP_INET4_CONNECT:
- 		case BPF_CGROUP_UDP4_SENDMSG:
-+		case BPF_CGROUP_UDP4_RECVMSG:
- 			break;
- 		default:
- 			return false;
-@@ -5568,6 +5569,7 @@ static bool sock_addr_is_valid_access(in
- 		case BPF_CGROUP_INET6_BIND:
- 		case BPF_CGROUP_INET6_CONNECT:
- 		case BPF_CGROUP_UDP6_SENDMSG:
-+		case BPF_CGROUP_UDP6_RECVMSG:
- 			break;
- 		default:
- 			return false;
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1720,6 +1720,10 @@ try_again:
- 		sin->sin_addr.s_addr = ip_hdr(skb)->saddr;
- 		memset(sin->sin_zero, 0, sizeof(sin->sin_zero));
- 		*addr_len = sizeof(*sin);
-+
-+		if (cgroup_bpf_enabled)
-+			BPF_CGROUP_RUN_PROG_UDP4_RECVMSG_LOCK(sk,
-+							(struct sockaddr *)sin);
- 	}
- 	if (inet->cmsg_flags)
- 		ip_cmsg_recv_offset(msg, sk, skb, sizeof(struct udphdr), off);
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -419,6 +419,10 @@ try_again:
- 						    inet6_iif(skb));
- 		}
- 		*addr_len = sizeof(*sin6);
-+
-+		if (cgroup_bpf_enabled)
-+			BPF_CGROUP_RUN_PROG_UDP6_RECVMSG_LOCK(sk,
-+						(struct sockaddr *)sin6);
- 	}
+ 	return rc;
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1859,11 +1859,8 @@ static int soft_offline_in_use_page(stru
  
- 	if (np->rxopt.all)
+ static int soft_offline_free_page(struct page *page)
+ {
+-	int rc = 0;
+-	struct page *head = compound_head(page);
++	int rc = dissolve_free_huge_page(page);
+ 
+-	if (PageHuge(head))
+-		rc = dissolve_free_huge_page(page);
+ 	if (!rc) {
+ 		if (set_hwpoison_free_buddy_page(page))
+ 			num_poisoned_pages_inc();
 
 
