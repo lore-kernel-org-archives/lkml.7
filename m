@@ -2,169 +2,99 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F6CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14329C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCB12089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0992089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBDl/pv0"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rKpfxsJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfGCBFD (ORCPT
+        id S1727320AbfGCBGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:05:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:32921 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfGCBFD (ORCPT
+        Tue, 2 Jul 2019 21:06:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37140 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfGCBGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:05:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i11so377759edq.0;
-        Tue, 02 Jul 2019 18:05:01 -0700 (PDT)
+        Tue, 2 Jul 2019 21:06:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so739034wrr.4;
+        Tue, 02 Jul 2019 18:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pi01KzgEdIhGIrXlu8OB1kwQXoOUnrYPaRcf2PLxb/U=;
-        b=rBDl/pv0TR7OXoDLtY4qDwH4O3XAyoj4V0fiUbjGY2+xdzLZWxDB/TZMz91zWAQJlx
-         8zBLKP1eFkYs4j9t8Da2yciljUcB9aURJx3yWKCgQzqh66D6c/8XKo5SyexehiKWyNOp
-         ZWrYiq6dCaMItTH8MUNzgLBpTC7SCEuWXRPVvUjJ3B2z/XeOIcg0lCgVCD5f9hyeQDXt
-         mZ7b3IqG9l4uy2f1st4KIqnXHTMMEZdmsemj1i0fq9Y3AWXJ/MHhJJ7Dot+zWlOQOgdn
-         BcDXqV/O64Z5CiU1FS45nsKgYBjhkzK/mdulCD7+pePhPoSvgHgclOTmd+WheWRCDmAe
-         BCoA==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S20bz31fyF77AkCnu33n045r7OsD3M49ELgeQB5vs2I=;
+        b=rKpfxsJDnfWd69UQSEtuSYNwHLwMhWWZHwStq/bYSyaH6PbKVNxQURWaJgcGWFPN9m
+         u/JWYj3XXSbXBVPn/ysJyfDQiWWzEqwYJXt0mHyG4W9IAc6c1XDcPtRBCzvcTRIuMzol
+         jQ2G1QvgzZNZv2XpMUuCdqFR/hD+sdI6Hgmbs4OcnIlQOyGozzyNfRYRsmm/ENnDnmaj
+         j6q6GSXYZoB5okODrjO6w+dnZEbx5tCHLU091aDt7NmZeZ77F+ZJitaNpwgIe++MB0R5
+         MG9z4IdCowKEICdq/Bb5zIFlNoGXQWr8uaFO+lu8RgQMnMp8to7n3kyjMMsuM1q/Lkb2
+         3GBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Pi01KzgEdIhGIrXlu8OB1kwQXoOUnrYPaRcf2PLxb/U=;
-        b=r7CTgElxJYLXXsm61ybKzVBjBzcvA9nIDAX9d6c9BqirffFfjiIWd/Lsg0+Bfc2+eV
-         y5VXzrdL9VUMLUQnEYxL+stD31jbYx6EhWBUoPX4NyB5rrCfhb9Ac1ieuloHaVyi4Gxx
-         6NB48Jd7NJfZatHwZJcWVK49+BrqJT8DxoX4eZCNCtNFS+wOxjs8xDMtJARJ1M0EB9re
-         8rR964zBPzbpT7vlyP4JBgOiDaVjkNrFQKDcE/7xqvI0drdEiLlPS2tx4qxVvMMTMNSR
-         csMqfJ2p+hVButcnxikfTN8UCJrAuNPpgOncGYNt+jeQ76RQYltV8ViHQtta38KK/wRz
-         2Wbg==
-X-Gm-Message-State: APjAAAVdKorEDLo0QlmVJ8atakZJmb+ScuwVmf9SLuLVA1aDVnZt0DsI
-        bchqicUK/dq+VWqibTTa/Hk=
-X-Google-Smtp-Source: APXvYqx42CglJVsr1ZJyV/elcgmcFYXinubcozjroo+1Dkc9XOZY8Eq/do5QH5nMOg/YC2Qtqrn5Gg==
-X-Received: by 2002:aa7:ca54:: with SMTP id j20mr39393692edt.50.1562115901344;
-        Tue, 02 Jul 2019 18:05:01 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.211.18])
-        by smtp.gmail.com with ESMTPSA id p23sm136538ejl.43.2019.07.02.18.04.59
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 18:05:00 -0700 (PDT)
-Subject: [PATCH] mm: Support madvise_willneed override by Filesystems
-To:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Amir Goldstein <amir73il@gmail.com>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190619082141.GA32409@quack2.suse.cz>
-From:   Boaz Harrosh <openosd@gmail.com>
-Message-ID: <27171de5-430e-b3a8-16f1-7ce25b76c874@gmail.com>
-Date:   Wed, 3 Jul 2019 04:04:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        bh=S20bz31fyF77AkCnu33n045r7OsD3M49ELgeQB5vs2I=;
+        b=mYlkd/ZHdUUoXmtfaVGzOGgGBTVFaop78jeLky30dCFmPwFPrbyd+PE1rF6IngZkXW
+         uNk3wj3nFwYP5D5Lw5zx0v4kT4wCFW7izBVruthvnV/nuLrnkwdF9mK21pje4tISyPeM
+         AS/0aNa63GtnJEXnehOdjgrweRaKEHpgjZWcYrVxfIwVwSoYT5qU775u4uijJWh/0iWt
+         fGvfX2UmbzUlLzR8AiYDXZT7yBBtGaQPNd7vx64skeieYwfELtx6uuBAkGaYcdXfBScG
+         Xc9FNZulZxxQTfL07/NJTOf0xxXTuC24T7ePSkfM4Ac+XcAGY/dUHcsXZBaqjVg6jH9d
+         /8fA==
+X-Gm-Message-State: APjAAAWN2UIgGDqndabBf2NQu0wgX/iMzerFdu+Qpx8Xqytz+U0MgCUr
+        DzWiaKvURnMgYcsNzYTTuz6bvvp0
+X-Google-Smtp-Source: APXvYqx1Hug9iFC4i/SltSeb9jObF12BCPzD2m1B8Z2jZTjofJXOFWZBgti1p0PY0OsOf/6wXgWnHw==
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr24167876wrt.111.1562106788347;
+        Tue, 02 Jul 2019 15:33:08 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 15:33:07 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     blogic@openwrt.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
+Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] gpio: stp-xway: small cleanups and improvements
+Date:   Wed,  3 Jul 2019 00:32:44 +0200
+Message-Id: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190619082141.GA32409@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 11:21, Jan Kara wrote:
-<>
-> Yes, I have patch to make madvise(MADV_WILLNEED) go through ->fadvise() as
-> well. I'll post it soon since the rest of the series isn't really dependent
-> on it.
-> 
-> 								Honza
-> 
+This series brings a few small cleanups and improvements to the stp-xway
+driver:
+- enable compile-testing
+- preparation for whenever the lantiq target switches to the common clock
+  framework
+- easier to read (for me)
 
-Hi Jan
+None of these fixes any known bugs so there's no Fixes tag anywhere.
 
-Funny I'm sitting on the same patch since LSF last. I need it too for other
-reasons. I have not seen, have you pushed your patch yet?
-(Is based on old v4.20)
+It's probably too late for inclusion into Linux 5.3. No need to rush,
+I'm happy with 5.4 as well.
 
-~~~~~~~~~
-From fddb38169e33d23060ddd444ba6f2319f76edc89 Mon Sep 17 00:00:00 2001
-From: Boaz Harrosh <boazh@netapp.com>
-Date: Thu, 16 May 2019 20:02:14 +0300
-Subject: [PATCH] mm: Support madvise_willneed override by Filesystems
 
-In the patchset:
-	[b833a3660394] ovl: add ovl_fadvise()
-	[3d8f7615319b] vfs: implement readahead(2) using POSIX_FADV_WILLNEED
-	[45cd0faae371] vfs: add the fadvise() file operation
+Martin Blumenstingl (4):
+  gpio: stp-xway: simplify error handling in xway_stp_probe()
+  gpio: stp-xway: improve module clock error handling
+  gpio: stp-xway: get rid of the #include <lantiq_soc.h> dependency
+  gpio: stp-xway: allow compile-testing
 
-Amir Goldstein introduced a way for filesystems to overide fadvise.
-Well madvise_willneed is exactly as fadvise_willneed except it always
-returns 0.
+ drivers/gpio/Kconfig         |  3 ++-
+ drivers/gpio/gpio-stp-xway.c | 33 +++++++++++++++++----------------
+ 2 files changed, 19 insertions(+), 17 deletions(-)
 
-In this patch we call the FS vector if it exists.
-
-NOTE: I called vfs_fadvise(..,POSIX_FADV_WILLNEED);
-      (Which is my artistic preference)
-
-I could also selectively call
-	if (file->f_op->fadvise)
-		return file->f_op->fadvise(..., POSIX_FADV_WILLNEED);
-If we fear theoretical side effects. I don't mind either way.
-
-CC: Amir Goldstein <amir73il@gmail.com>
-CC: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Boaz Harrosh <boazh@netapp.com>
----
- mm/madvise.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 6cb1ca93e290..6b84ddcaaaf2 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -24,6 +24,7 @@
- #include <linux/swapops.h>
- #include <linux/shmem_fs.h>
- #include <linux/mmu_notifier.h>
-+#include <linux/fadvise.h>
- 
- #include <asm/tlb.h>
- 
-@@ -303,7 +304,8 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 		end = vma->vm_end;
- 	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
- 
--	force_page_cache_readahead(file->f_mapping, file, start, end - start);
-+	vfs_fadvise(file, start << PAGE_SHIFT, (end - start) << PAGE_SHIFT,
-+		    POSIX_FADV_WILLNEED);
- 	return 0;
- }
- 
 -- 
-2.20.1
+2.22.0
 
