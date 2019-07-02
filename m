@@ -8,159 +8,162 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4238BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6302C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01314206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA9B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 09:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Se8KBEA4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CN/HkxfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfGBJul (ORCPT
+        id S1727108AbfGBJvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 05:50:41 -0400
-Received: from mout.web.de ([212.227.17.12]:55975 "EHLO mout.web.de"
+        Tue, 2 Jul 2019 05:51:38 -0400
+Received: from mout.gmx.net ([212.227.15.19]:45561 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfGBJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:50:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562061022;
-        bh=iCyjFEsFbP9E2gjuUs9RhQNMZ4EWNf6g9m5XYPk0YGU=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=Se8KBEA4v5YnQn/pjuWWaNKziyu3i5cCnScREsyTf0bD4EUit06VboiJ9SBRiN7s3
-         F9av6xvkDCQh6QVaDnXFVvFJ62mJWdXDldBge0y+3yLNdTIWRN2YhnC84MBBAKOzmM
-         5q22bG4vLE2jc8pdociy+n/FC56IlNXQHNw4nwp4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.11.114]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvSU3-1ihC3B1Mhf-010YwQ; Tue, 02
- Jul 2019 11:50:22 +0200
-To:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list@cypress.com,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Wright Feng <wright.feng@cypress.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] brcmfmac: Replace two seq_printf() calls in
- brcmf_feat_fwcap_debugfs_read()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Message-ID: <7d96085a-76e8-c290-698a-e1473d3f4be7@web.de>
-Date:   Tue, 2 Jul 2019 11:50:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1725868AbfGBJvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 05:51:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562061072;
+        bh=FGM5WXyOI1pXMifsCCwhO9soc1ANArWFrlQ2lZN8tTQ=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=CN/HkxfCLv1B4CD87a9WrW6LKKkgb0CwQ3XEaBmdDQ3ObqzNk5DLrG0kALBpaOjWw
+         uA043edWLxP62RdSCvDQjGDmwLeAzpWQ7IK0gJ2qFvait18MWgfcO2riRf9tz6gE31
+         5O31tl9G//BCar1XWX38JIf6kyd7An6k+1DLg4Wc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx003
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lvkwm-1icWvk2Pds-017RP0; Tue, 02
+ Jul 2019 11:51:12 +0200
+Date:   Tue, 2 Jul 2019 11:51:09 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brad Love <brad@nextdimension.cc>
+Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
+Message-ID: <20190702095109.GC22408@latitude>
+References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PF5gJ1KYGE6sBYJu6b5K5HpJrPz/0D0L/G08/MsEjt5f3vN/Quq
- aRlJwgS1CIbVvoA2wAJQe27ocvjpHfm2XIYqG7TqAkVPIdgYX3wAeLjd+BeCpeQM9wejKyD
- tseU5rMVAffIbQdPxmJFHdlb7NX8Dh34BnG3TaWvhQFkrrkrkT1YXpyA0FCiOdTTCVhbnNM
- +3sVerSIlrLWrm79Fc/AA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l/G/KTK7KrY=:znOHhRCVTJSCSX1Wk1Ilp+
- jey+SCa9lIZ3T3+ATGN+0TkSSgWCgAxfXjZv2St2mNT4ioV+tEn/3zkfbwZJ+7levcLDlpuFB
- 65d9iBrKzHxMI3Zrrw37e91VMqX9TMGgG1OBtmP3q30CXnuduMb1Www8f4/senq/zli0EOBii
- ukJkvUADsNpaWgDj8cGosVspAUXAP7AoNeVKJ4/jbpLCLxjyf1qq+dSx0VvXtDRBwR5lNryB0
- N63oI7LifUozTj4INcros69b1MrSCqUaW4lioaAvEwk3pzs/fqsHcue74Pd1cNuNsyRfLH/1c
- Pn7ZQPmg12ZsBdL8EcSUAVxj8lWQCZE1Ib/FcLRxRoFlzldvJIk7Fl0BkbM4vgG3LgGQ9HAhc
- OJbI93lj0ig+ldBiUhfnBG/gQYbdatIcmsfgfWobZ1yApX449G5KS31zMPo1oPdMVGI6wyJL2
- 0LGIH1T9OhMhl2EWgiep8Pk1InVke596hFTboBdGI5q5sGc5D8pFcaOl39sCcfcdoWS+v0DNW
- 22sN6sqmjHzVU2A8dDo7T+4Athgke21NZ5RoVDB5hhsbiXYa5oeBTGMY3FSR9X07DiHvBAjtF
- QMs7iI5p41bqUsa7SSDzSToCAPBNXj8s2GNjv5vvWB3eFpFLSH/BamJ1EiMcQh+SYxOrrJTH/
- xaG+0La8R6qyCcdQFIW4fYktmh7ydmYIMcZot/lIhspHbaX4b/ZW0X0Ia3JLlR6fs6DWFWQVd
- 9h5H50KREaocdqYc7cdru2EmnP0be35ud3i1xtrfMKkXaL9Azm+QszSQRC8iBCpMhcZ8A2s9N
- iCO7EEMQrY+CtOKd87J7H7La60sRqStb/Utdc7yQI6rrsEatZjOVabtQT8PtZBDeSrik4wMOZ
- hO0rTlQ4wWQgFWq72uRBuej4y5u/AatchvmrTvb6LCa4aCSgUSk/ro2Ww6bMIAuaRWc9RbgTJ
- 14gdJkmASMWSIab62J+HMGOOfbvIUmEEIhDFBD13bahxhfou7tV5/tEw6DWdN6HcY3kOm03Cw
- eKv2vl6vNguTrj3wEdxvBcjbq5XBLuhg+IRacXHGvMoLUTN2hpfpBWtZgrkwMavek6QLSIPKX
- aHKFha+hpP2J65zxZgrn0mDSq1F4l3cF1Uw
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
+Content-Disposition: inline
+In-Reply-To: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:meVnSL0vkDuUwFstQh5OanUzm5dthphT8V4mbTD14FxbGuHVDs6
+ FeqySYV+ms5Yw43+AuYlRt9/9CHHw4z1szwTYsUW2yemNKOomvosKKGm2dhcKMJs7cGyKfP
+ auUSUdQJsVEcZsmoiXExB6vQDesJoobtg2sy1Qd6IWVkKZUGtu4zzo3srS+11sQlEHN1qau
+ e+fzYIbkty7SjWbfhnRew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1037Dn98csI=:xzpDmgYxeaJVGHc3FJvXiN
+ bJIQpn/qbD55TI5fpa4LXWOS78BYLi8v/denNJu9at/B5LpDuXSi1Rhfu+8G39yNyvkHr62zK
+ JD/Ozn1TKpuaJcMFzimWL6EzoMMnnqQH9rCdOfUOE4s3bw3jjSkpvC1qg9Cc0xXpDlmtPSNSP
+ 5zT5+BCxv08oZNjcxJF8deFxVnJ4PT9k20PM9pvq/lkFVDcXYy0e2ADXBDKu+Wrke0WqOiRrs
+ OLKxG5PfSHvtfqn2DZNeRiCVlk38kcnVnE7Dbtym5G7AJxZQAPe0tjnw+82tzReiardtZgU3f
+ QmLJWKCyhUTPI9QGjRTz2cXd6RSO7gp8/nS+wN4ipQj60KEgOUnvQVsUOouvvpD4djOGhSaUJ
+ 9h9Mzp0EuDV8ZMrSaMupvNLjMpHDpBQ5OpYYECOZEKWARmVfbn06B0xzI7/sVccFG/hr3AYl1
+ 8kASndiedP/ulQRncXEBKfYpOsFtJ9xIJB7Lr0LTPk01dWAXiA369L9n0B3GNVK98enOFkZyl
+ 1TFs6DPR2Iy98xIdShnZRcOKydA0+Nj4Wn4UkoU+ydp3AzsVogkb8n8l1hUQOmcuBSGHF2PKp
+ 5mSOPre4Jp32M8Zp5mU4YnPlOg6rLUqQvDECUPOdqaXB8QrzlsTtY2PGiVMSVz81uuFriZyD9
+ ulrJPwuM7gFZQP23+lRl1y7YV2Il+iX/6V9rFGb3XQ8bzqZQlNSrSurCds+OTSZ4EyRG1y5OA
+ /guTzcwqax9wu6zVE78ogzCyXiMU7BM2Jz4de7t4uAEPV0WZdN+LlTpKjpy8PO67/xDsvBxSB
+ YFo0afMkK7rmmcjwu1fIehylG0sWuA7gsTo3j6FBhj3HxTHIgI3+zEsnaEet1PDz4bYEKf1Gl
+ nEqIlAOP3XUxhAV8EYI1DrD7QAO+6SSlEBZskNR0padkK1UjX6mB7XIEduUcv/rSgNsxVC5mj
+ BWFAMNVtrJa3wpFScEdqpFJPxFxBP8UM+sDOpQEZfmbjIwmitPwlTJF8cOXSkalgEsyJswD+y
+ 88TGH8Sc5qzpn4mM6noKsJi0yqQE3tbxbY1Izo7mEutSWTmSm+N3q4bp3fmDXFbh4mBlIzj2j
+ YhlNUT6b/2ndtU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 2 Jul 2019 11:31:07 +0200
 
-A line break and a single string should be put into a sequence.
-Thus use the corresponding output functions.
+--mojUlQ0s9EVzWg2t
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This issue was detected by using the Coccinelle software.
+Hi,
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, Jul 01, 2019 at 01:44:09PM +0200, Marc Gonzalez wrote:
+> By refactoring the command setup code, we can let the compiler
+> determine the size of each command.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/=
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-index 73aff4e4039d..ec0e80296e43 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
-@@ -225,10 +225,10 @@ static int brcmf_feat_fwcap_debugfs_read(struct seq_=
-file *seq, void *data)
- 	}
+I like the idea, it definitely saves some code.
 
- 	/* Usually there is a space at the end of capabilities string */
--	seq_printf(seq, "%s", caps);
-+	seq_puts(seq, caps);
- 	/* So make sure we don't print two line breaks */
- 	if (tmp > caps && *(tmp - 1) !=3D '\n')
--		seq_printf(seq, "\n");
-+		seq_putc(seq, '\n');
+The conversion also looks correct.
 
- 	return 0;
- }
-=2D-
-2.22.0
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+>  drivers/media/dvb-frontends/si2168.c | 142 ++++++++-------------------
+>  1 file changed, 41 insertions(+), 101 deletions(-)
+>=20
+> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-fro=
+ntends/si2168.c
+> index 168c503e9154..19398f041c79 100644
+> --- a/drivers/media/dvb-frontends/si2168.c
+> +++ b/drivers/media/dvb-frontends/si2168.c
+> @@ -11,6 +11,12 @@
+> =20
+>  static const struct dvb_frontend_ops si2168_ops;
+> =20
+> +#define CMD_SETUP(cmd, __args, __rlen) do {	\
+> +	int wlen =3D sizeof(__args) - 1;		\
+> +	memcpy(cmd.args, __args, wlen);		\
+> +	cmd.wlen =3D wlen; cmd.rlen =3D __rlen;	\
+> +} while (0)
 
+It would be nice for casual readers to have a little comment here, that
+explains (briefly) what this macro does, and what the arguments mean,
+and their types.
+
+Why cmd rather than __cmd? This seems inconsistent.
+
+The wlen local variable can be avoided by a bit of suffling:
+
+	#define CMD_SETUP(cmd, __args, __rlen) do {	\
+		cmd.rlen =3D __rlen;			\
+		cmd.wlen =3D sizeof(__args) - 1;		\
+		memcpy(cmd.args, __args, cmd.wlen);	\
+	} while (0)
+
+
+[from the other mail]
+> I'm planning on sending a v2 where drivers/media/tuners/si2157.c
+> is refactored the same way.
+
+Makes sense.
+
+> Not sure where to store the macro. Maybe include/media/dvb_frontend.h?
+
+Then include/media/dvb_frontend.h would contain information about the
+private structs of a few (two) drivers. This doesn't seem like a good
+idea to me.
+
+
+Greetings,
+Jonathan Neusch=C3=A4fer
+
+--mojUlQ0s9EVzWg2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0bKMwACgkQCDBEmo7z
+X9v5PhAA0ywTpuolHgb0WWPyGBKYIBUbCWzyB7tfctjB1AIjKcW2/Y3pNYuAB/rQ
+AfguO8KOAP48SZD29BEYvlOIfY7xZ6MJs39cMfJbuV8YahtJZ79T6oEDFzblXo9o
+KB800d2BBB6O1tffQH465mOxHjsD32hTzRT+QZsPljNIi3x24ujBVhP6LqGjJI3z
+imBmoUuwk8RVoSFrrxWrhJuQ5OtbSxRn/oZ3A/GMXrx9RpOU62H63brSEDEv6vzw
+CpfqaIkEvpDPbbo7BZj37LYqUOWlbi/MnC5O5l0HbXbp7+xnJZcNdn6EsE+6E08S
+cbH1ySFBHp17zZdBtv4qu3zwULGNPCvM8iN1WNf3rI1U1iTjfqZmZcJkTHCRmdMh
+bSQ/EAQSEm5KTAIAvA2X62/x5SAsRursdejB7q8aLPJ6y6wKsQoN0wPGtJqT9DBQ
+I5FnKjJ7NbHpcBH8Fg2kyZxLJUVyiAcnoseKnvorRfJ+Au2TBlXc9k3NnCoZIAPs
+sP19WmTDeh3KLU24Otumut9qB5KveR763T9I0u2U9wBwgK3NJw/+S+6Y2XPUxrNW
+ArlOEtFaEi7Lznv9PmWfgyvKZz9WI24tpRPn0B//3OoYZ1la1ZboJICyeUJ8/sNc
+tZVA1Ylz3xlhzUnU2HaQ2sxwhvZzPFEv/I8EI80M90NHeCqPd5M=
+=aW/y
+-----END PGP SIGNATURE-----
+
+--mojUlQ0s9EVzWg2t--
