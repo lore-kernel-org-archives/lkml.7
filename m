@@ -2,59 +2,50 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572A5C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5416CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F11821855
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249E121855
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054960;
-	bh=Egxd7GBmipUcSfGsZsrwiyABLjDIQUu5RtV2kIjuesA=;
+	s=default; t=1562054969;
+	bh=/AfKVcBQKxvp/ClT9gPRAt5eVweWMCZhajbzZzMZ1W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tc5EKs7eqmYhKPhJLTIcNPPGv+BuKxa8VTjkIr0qKE0LRngQXBH+QQqDyrJ/JDD9w
-	 RRiFSMBUAYost+nUb7uv1IyFhpIA2AEJF3Fm+f8Gu6FIKEjR4Oku/z0IUK53F2/90h
-	 nmGPUZiTDsUcXVxn6G0I8wbnFuwN4N+tWCgNwssk=
+	b=ybMlcZdAVVXNBJbSJwiMkUBGnsdDYDtoF7cEIuWrpxUfSTtokfArQT9YfLOeo1MhA
+	 JBkYD5LArkJWe+69qKWv8+hbINgP0qUAGs3/AByTgw38RcyAhgNEsAJkAmky0+AH9V
+	 0uL+YMEFzseggI27bw14TK9ACPNwsRJgMmH4miJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfGBIJS (ORCPT
+        id S1728685AbfGBIJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:09:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbfGBIJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:15 -0400
+        id S1727917AbfGBIJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39092206A2;
-        Tue,  2 Jul 2019 08:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B6E206A2;
+        Tue,  2 Jul 2019 08:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054954;
-        bh=Egxd7GBmipUcSfGsZsrwiyABLjDIQUu5RtV2kIjuesA=;
+        s=default; t=1562054964;
+        bh=/AfKVcBQKxvp/ClT9gPRAt5eVweWMCZhajbzZzMZ1W4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FP5BYczrdRoKCHWae2Allh5qVe3m2DcK0OTCj4GZ22hUB08JHt/SDTROJujvswNxB
-         g+9GeURdAZVgeUTo0orFpoQRxWTO8/RlmrKP57mxM7OE6EBB8sQ3qngK1FRGg36pZa
-         6XeWk1x/31N/G8S4AhEppB6uiwSHQ7XKUUFPYnhk=
+        b=G+8I/8FUM2YpgTY5owb3PIeoE1EhHNNjO0y84VsAz19aUZc7SpkvSuwVPCzbwebrd
+         1O0587oJdI9VwiASNkD0xTY9w3+q2+pV8C7Xokd1TFmpSzvMwdsIEAi7d+cw+spC9D
+         Q58XOTPCS87CqN5CHvCtSzXR8Ku2JN3TqYw1R2B8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 18/43] fs/binfmt_flat.c: make load_flat_shared_library() work
-Date:   Tue,  2 Jul 2019 10:01:58 +0200
-Message-Id: <20190702080124.740115176@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/43] Revert "x86/uaccess, ftrace: Fix ftrace_likely_update() vs. SMAP"
+Date:   Tue,  2 Jul 2019 10:01:44 +0200
+Message-Id: <20190702080124.093411638@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -67,86 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+This reverts commit 8190d6fbb1e9b7fa4eb41fe7aa337c46ca514e79, which was
+upstream commit 4a6c91fbdef846ec7250b82f2eeeb87ac5f18cf9.
 
-commit 867bfa4a5fcee66f2b25639acae718e8b28b25a5 upstream.
+On Tue, Jun 25, 2019 at 09:39:45AM +0200, Sebastian Andrzej Siewior wrote:
+>Please backport commit e74deb11931ff682b59d5b9d387f7115f689698e to
+>stable _or_ revert the backport of commit 4a6c91fbdef84 ("x86/uaccess,
+>ftrace: Fix ftrace_likely_update() vs. SMAP"). It uses
+>user_access_{save|restore}() which has been introduced in the following
+>commit.
 
-load_flat_shared_library() is broken: It only calls load_flat_file() if
-prepare_binprm() returns zero, but prepare_binprm() returns the number of
-bytes read - so this only happens if the file is empty.
-
-Instead, call into load_flat_file() if the number of bytes read is
-non-negative. (Even if the number of bytes is zero - in that case,
-load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-
-In addition, remove the code related to bprm creds and stop using
-prepare_binprm() - this code is loading a library, not a main executable,
-and it only actually uses the members "buf", "file" and "filename" of the
-linux_binprm struct. Instead, call kernel_read() directly.
-
-Link: http://lkml.kernel.org/r/20190524201817.16509-1-jannh@google.com
-Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-Signed-off-by: Jann Horn <jannh@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Ungerer <gerg@linux-m68k.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/binfmt_flat.c |   23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ kernel/trace/trace_branch.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -856,9 +856,14 @@ err:
- 
- static int load_flat_shared_library(int id, struct lib_info *libs)
+diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+index 3ea65cdff30d..4ad967453b6f 100644
+--- a/kernel/trace/trace_branch.c
++++ b/kernel/trace/trace_branch.c
+@@ -205,8 +205,6 @@ void trace_likely_condition(struct ftrace_likely_data *f, int val, int expect)
+ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 			  int expect, int is_constant)
  {
-+	/*
-+	 * This is a fake bprm struct; only the members "buf", "file" and
-+	 * "filename" are actually used.
-+	 */
- 	struct linux_binprm bprm;
- 	int res;
- 	char buf[16];
-+	loff_t pos = 0;
- 
- 	memset(&bprm, 0, sizeof(bprm));
- 
-@@ -872,25 +877,11 @@ static int load_flat_shared_library(int
- 	if (IS_ERR(bprm.file))
- 		return res;
- 
--	bprm.cred = prepare_exec_creds();
--	res = -ENOMEM;
--	if (!bprm.cred)
--		goto out;
+-	unsigned long flags = user_access_save();
 -
--	/* We don't really care about recalculating credentials at this point
--	 * as we're past the point of no return and are dealing with shared
--	 * libraries.
--	 */
--	bprm.called_set_creds = 1;
+ 	/* A constant is always correct */
+ 	if (is_constant) {
+ 		f->constant++;
+@@ -225,8 +223,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 		f->data.correct++;
+ 	else
+ 		f->data.incorrect++;
 -
--	res = prepare_binprm(&bprm);
-+	res = kernel_read(bprm.file, bprm.buf, BINPRM_BUF_SIZE, &pos);
+-	user_access_restore(flags);
+ }
+ EXPORT_SYMBOL(ftrace_likely_update);
  
--	if (!res)
-+	if (res >= 0)
- 		res = load_flat_file(&bprm, libs, id, NULL);
- 
--	abort_creds(bprm.cred);
--
--out:
- 	allow_write_access(bprm.file);
- 	fput(bprm.file);
- 
+-- 
+2.20.1
+
 
 
