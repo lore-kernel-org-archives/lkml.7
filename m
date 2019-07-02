@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2E1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F160C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492DB21841
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C5621850
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054576;
-	bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+	s=default; t=1562054578;
+	bh=RaKKqX569LuBgmaHBLPgIetwk+japE1Civy0m2rrXQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJ39h0ohO0oAgmF/5gjQc13yOUPp1WGjutUzfGIgPUGMKO4p0P9eFYZjdWT2c/+1+
-	 qnPRqBFGbUe66kI/ofKZA9cQleRl10uwdKxEFZHMtKTr+mPkm9DdmsBxTX56k+wFfG
-	 G9Pfne3Ct6MU5wY0XVuqTPXrLgkZ+tGTw/KeARkQ=
+	b=HuaNw/eZiGrsqr0+6QyeuR8Edi7JBnV2PG66Y6UMHmC5YoOqXvVOGZ8zEmCJ4VeD4
+	 rwsQKCCh40t6Kc3ZjNMb4bhl0JJKd1px3VMVRbacKXgOMvxbgD1CmWbZg122a/e4oU
+	 YwmpiWersjRiRRNY+lJP6uThKWByh2IKOi8tdfZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfGBICz (ORCPT
+        id S1727232AbfGBIC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbfGBICv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:02:51 -0400
+        id S1727202AbfGBICy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:02:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E003620659;
-        Tue,  2 Jul 2019 08:02:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74A9121479;
+        Tue,  2 Jul 2019 08:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054570;
-        bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+        s=default; t=1562054573;
+        bh=RaKKqX569LuBgmaHBLPgIetwk+japE1Civy0m2rrXQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dc+FhyCS3qOV7qIcD7Roj3XLN88C17LMisEx22SAwDls+ugO8JaVSLflStNv6htE9
-         d1fDg6AwKOaDwy5OyNM33S6HguNSPcxMN50+RzS1GaGcvwzD1CE9km0RKSWb+ZFqFo
-         X7ePHRAiTbqn6UTSz6XUNr8ER6Qf0+UXqhmiljII=
+        b=kRG3rsI1i5DHovFfmjjqp6lNOKAoSrt7Tz8wDfZ/+h3d/TlJMHbDmie33cgQj5Fob
+         XS1r10H1rwUwegk09Z91GtvzeZ1qBGoD00BQlv3fpkpJ7r/nPqyFJ/vjbY2/YqkhAp
+         O2RAes+ibepIzQSK1Pf44zVz/sKEZm3FHHuPHz4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 15/55] mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
-Date:   Tue,  2 Jul 2019 10:01:23 +0200
-Message-Id: <20190702080124.830515932@linuxfoundation.org>
+Subject: [PATCH 5.1 16/55] mm, swap: fix THP swap out
+Date:   Tue,  2 Jul 2019 10:01:24 +0200
+Message-Id: <20190702080124.884746006@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -66,85 +68,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Huang Ying <ying.huang@intel.com>
 
-commit 7298e3b0a149c91323b3205d325e942c3b3b9ef6 upstream.
+commit 1a5f439c7c02837d943e528d46501564d4226757 upstream.
 
-Currently the calcuation of end_pfn can round up the pfn number to more
-than the actual maximum number of pfns, causing an Oops.  Fix this by
-ensuring end_pfn is never more than max_pfn.
+0-Day test system reported some OOM regressions for several THP
+(Transparent Huge Page) swap test cases.  These regressions are bisected
+to 6861428921b5 ("block: always define BIO_MAX_PAGES as 256").  In the
+commit, BIO_MAX_PAGES is set to 256 even when THP swap is enabled.  So the
+bio_alloc(gfp_flags, 512) in get_swap_bio() may fail when swapping out
+THP.  That causes the OOM.
 
-This can be easily triggered when on systems where the end_pfn gets
-rounded up to more than max_pfn using the idle-page stress-ng stress test:
+As in the patch description of 6861428921b5 ("block: always define
+BIO_MAX_PAGES as 256"), THP swap should use multi-page bvec to write THP
+to swap space.  So the issue is fixed via doing that in get_swap_bio().
 
-sudo stress-ng --idle-page 0
+BTW: I remember I have checked the THP swap code when 6861428921b5
+("block: always define BIO_MAX_PAGES as 256") was merged, and thought the
+THP swap code needn't to be changed.  But apparently, I was wrong.  I
+should have done this at that time.
 
-  BUG: unable to handle kernel paging request at 00000000000020d8
-  #PF error: [normal kernel read fault]
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  RIP: 0010:page_idle_get_page+0xc8/0x1a0
-  Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
-  RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
-  RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
-  RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
-  RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
-  R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
-  R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
-  FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
-  Call Trace:
-    page_idle_bitmap_write+0x8c/0x140
-    sysfs_kf_bin_write+0x5c/0x70
-    kernfs_fop_write+0x12e/0x1b0
-    __vfs_write+0x1b/0x40
-    vfs_write+0xab/0x1b0
-    ksys_write+0x55/0xc0
-    __x64_sys_write+0x1a/0x20
-    do_syscall_64+0x5a/0x110
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Link: http://lkml.kernel.org/r/20190618124352.28307-1-colin.king@canonical.com
-Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Link: http://lkml.kernel.org/r/20190624075515.31040-1-ying.huang@intel.com
+Fixes: 6861428921b5 ("block: always define BIO_MAX_PAGES as 256")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Jens Axboe <axboe@kernel.dk>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_idle.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/page_io.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(str
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -29,10 +29,9 @@
+ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 				struct page *page, bio_end_io_t end_io)
+ {
+-	int i, nr = hpage_nr_pages(page);
+ 	struct bio *bio;
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+-	bio = bio_alloc(gfp_flags, nr);
++	bio = bio_alloc(gfp_flags, 1);
+ 	if (bio) {
+ 		struct block_device *bdev;
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(st
+@@ -41,9 +40,7 @@ static struct bio *get_swap_bio(gfp_t gf
+ 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+ 		bio->bi_end_io = end_io;
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
- 
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
+-		for (i = 0; i < nr; i++)
+-			bio_add_page(bio, page + i, PAGE_SIZE, 0);
+-		VM_BUG_ON(bio->bi_iter.bi_size != PAGE_SIZE * nr);
++		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
+ 	}
+ 	return bio;
+ }
 
 
