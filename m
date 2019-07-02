@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615FBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A861C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DAA2184B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375B32184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054841;
-	bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
+	s=default; t=1562054845;
+	bh=6BV+tyk1FlETmNpb5Et3b/2RwShbENEEFowjq3hM/Og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOTm/J/A78PlwIPZv2t1g2CXlQB0b/B7LhxIPp00UcK2p1Pbuhsc9O4pVYUg7IFSN
-	 aLvF+6F6L0l/6KJ4vP1PBF9rxOvxXYmiu7SPF8brqJ1VL7+x6X5zJx942QpP+6WWLy
-	 TbHNHVI3OMKjYuN/cbMT73KAzS1skF7poLVI4Wco=
+	b=edREqQbUehZh1MBRFzyTCGjRmOqwQ6g6Y87f+P1QdZQ6LG2vAhU6SzvaeikdwkcxN
+	 vBO78qLuqMfdFfzwvPENy8qLl+Oyx0ofwDYLsOIx1FGUTjeyTHs1CRLbe8eZzw7BqI
+	 s+p+DjDG/n1VRhN6TO4y7fZJaLG7659VxNPESprg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfGBIHU (ORCPT
+        id S1728248AbfGBIHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54446 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbfGBIHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:07:16 -0400
+        id S1728232AbfGBIHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A14C021479;
-        Tue,  2 Jul 2019 08:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C6C21850;
+        Tue,  2 Jul 2019 08:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054835;
-        bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
+        s=default; t=1562054841;
+        bh=6BV+tyk1FlETmNpb5Et3b/2RwShbENEEFowjq3hM/Og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9TK0cdIESs94JptYVCJJSzYluaDn9liU8KX7MrIs/w95BzJT/VIBYBqkXxKTjqjT
-         QAVxL02JDTG43TXnaH+qLkFHHnE4kSrY1sH1mlT/GHkQmX0bGkXINNDtX4eC0j09t5
-         PY7q2CZO/QMaL4CSK52p0EPdZgER8UBM1hd232ME=
+        b=VQLMaovhTvIP/4KRXqlt+sEB7qiAbNfdWbTOgtCRONO4cM4aTtncxBgztm5gbcfBq
+         17JwraeLfbyawNOf89D2IVeCGuDIpgbOV8xHBT6uyztD/1VIU2Mli60c/+FbimUz0v
+         YvUhkNpG43D/MXOdYe+oWhN3QS5tPeGgCR7GtBMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Archer Yan <ayan@wavecomp.com>
-Subject: [PATCH 4.19 48/72] irqchip/mips-gic: Use the correct local interrupt map registers
-Date:   Tue,  2 Jul 2019 10:01:49 +0200
-Message-Id: <20190702080127.083118366@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 50/72] af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
+Date:   Tue,  2 Jul 2019 10:01:51 +0200
+Message-Id: <20190702080127.175005474@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -62,105 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-commit 6d4d367d0e9ffab4d64a3436256a6a052dc1195d upstream.
+[ Upstream commit 89ed5b519004a7706f50b70f611edbd3aaacff2c ]
 
-The MIPS GIC contains a block of registers used to map local interrupts
-to a particular CPU interrupt pin. Since these registers are found at a
-consecutive range of addresses we access them using an index, via the
-(read|write)_gic_v[lo]_map accessor functions. We currently use values
-from enum mips_gic_local_interrupt as those indices.
+When an application is run that:
+a) Sets its scheduler to be SCHED_FIFO
+and
+b) Opens a memory mapped AF_PACKET socket, and sends frames with the
+MSG_DONTWAIT flag cleared, its possible for the application to hang
+forever in the kernel.  This occurs because when waiting, the code in
+tpacket_snd calls schedule, which under normal circumstances allows
+other tasks to run, including ksoftirqd, which in some cases is
+responsible for freeing the transmitted skb (which in AF_PACKET calls a
+destructor that flips the status bit of the transmitted frame back to
+available, allowing the transmitting task to complete).
 
-Unfortunately whilst enum mips_gic_local_interrupt provides the correct
-offsets for bits in the pending & mask registers, the ordering of the
-map registers is subtly different... Compared with the ordering of
-pending & mask bits, the map registers move the FDC from the end of the
-list to index 3 after the timer interrupt. As a result the performance
-counter & software interrupts are therefore at indices 4-6 rather than
-indices 3-5.
+However, when the calling application is SCHED_FIFO, its priority is
+such that the schedule call immediately places the task back on the cpu,
+preventing ksoftirqd from freeing the skb, which in turn prevents the
+transmitting task from detecting that the transmission is complete.
 
-Notably this causes problems with performance counter interrupts being
-incorrectly mapped on some systems, and presumably will also cause
-problems for FDC interrupts.
+We can fix this by converting the schedule call to a completion
+mechanism.  By using a completion queue, we force the calling task, when
+it detects there are no more frames to send, to schedule itself off the
+cpu until such time as the last transmitted skb is freed, allowing
+forward progress to be made.
 
-Introduce a function to map from enum mips_gic_local_interrupt to the
-index of the corresponding map register, and use it to ensure we access
-the map registers for the correct interrupts.
+Tested by myself and the reporter, with good results
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: a0dc5cb5e31b ("irqchip: mips-gic: Simplify gic_local_irq_domain_map()")
-Fixes: da61fcf9d62a ("irqchip: mips-gic: Use irq_cpu_online to (un)mask all-VP(E) IRQs")
-Reported-and-tested-by: Archer Yan <ayan@wavecomp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Change Notes:
+
+V1->V2:
+	Enhance the sleep logic to support being interruptible and
+allowing for honoring to SK_SNDTIMEO (Willem de Bruijn)
+
+V2->V3:
+	Rearrage the point at which we wait for the completion queue, to
+avoid needing to check for ph/skb being null at the end of the loop.
+Also move the complete call to the skb destructor to avoid needing to
+modify __packet_set_status.  Also gate calling complete on
+packet_read_pending returning zero to avoid multiple calls to complete.
+(Willem de Bruijn)
+
+	Move timeo computation within loop, to re-fetch the socket
+timeout since we also use the timeo variable to record the return code
+from the wait_for_complete call (Neil Horman)
+
+V3->V4:
+	Willem has requested that the control flow be restored to the
+previous state.  Doing so lets us eliminate the need for the
+po->wait_on_complete flag variable, and lets us get rid of the
+packet_next_frame function, but introduces another complexity.
+Specifically, but using the packet pending count, we can, if an
+applications calls sendmsg multiple times with MSG_DONTWAIT set, each
+set of transmitted frames, when complete, will cause
+tpacket_destruct_skb to issue a complete call, for which there will
+never be a wait_on_completion call.  This imbalance will lead to any
+future call to wait_for_completion here to return early, when the frames
+they sent may not have completed.  To correct this, we need to re-init
+the completion queue on every call to tpacket_snd before we enter the
+loop so as to ensure we wait properly for the frames we send in this
+iteration.
+
+	Change the timeout and interrupted gotos to out_put rather than
+out_status so that we don't try to free a non-existant skb
+	Clean up some extra newlines (Willem de Bruijn)
+
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/mips/include/asm/mips-gic.h |   30 ++++++++++++++++++++++++++++++
- drivers/irqchip/irq-mips-gic.c   |    4 ++--
- 2 files changed, 32 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c |   20 +++++++++++++++++---
+ net/packet/internal.h  |    1 +
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
---- a/arch/mips/include/asm/mips-gic.h
-+++ b/arch/mips/include/asm/mips-gic.h
-@@ -315,6 +315,36 @@ static inline bool mips_gic_present(void
- }
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2399,6 +2399,9 @@ static void tpacket_destruct_skb(struct
  
- /**
-+ * mips_gic_vx_map_reg() - Return GIC_Vx_<intr>_MAP register offset
-+ * @intr: A GIC local interrupt
-+ *
-+ * Determine the index of the GIC_VL_<intr>_MAP or GIC_VO_<intr>_MAP register
-+ * within the block of GIC map registers. This is almost the same as the order
-+ * of interrupts in the pending & mask registers, as used by enum
-+ * mips_gic_local_interrupt, but moves the FDC interrupt & thus offsets the
-+ * interrupts after it...
-+ *
-+ * Return: The map register index corresponding to @intr.
-+ *
-+ * The return value is suitable for use with the (read|write)_gic_v[lo]_map
-+ * accessor functions.
-+ */
-+static inline unsigned int
-+mips_gic_vx_map_reg(enum mips_gic_local_interrupt intr)
-+{
-+	/* WD, Compare & Timer are 1:1 */
-+	if (intr <= GIC_LOCAL_INT_TIMER)
-+		return intr;
+ 		ts = __packet_set_timestamp(po, ph, skb);
+ 		__packet_set_status(po, ph, TP_STATUS_AVAILABLE | ts);
 +
-+	/* FDC moves to after Timer... */
-+	if (intr == GIC_LOCAL_INT_FDC)
-+		return GIC_LOCAL_INT_TIMER + 1;
-+
-+	/* As a result everything else is offset by 1 */
-+	return intr + 1;
-+}
-+
-+/**
-  * gic_get_c0_compare_int() - Return cp0 count/compare interrupt virq
-  *
-  * Determine the virq number to use for the coprocessor 0 count/compare
---- a/drivers/irqchip/irq-mips-gic.c
-+++ b/drivers/irqchip/irq-mips-gic.c
-@@ -388,7 +388,7 @@ static void gic_all_vpes_irq_cpu_online(
- 	intr = GIC_HWIRQ_TO_LOCAL(d->hwirq);
- 	cd = irq_data_get_irq_chip_data(d);
- 
--	write_gic_vl_map(intr, cd->map);
-+	write_gic_vl_map(mips_gic_vx_map_reg(intr), cd->map);
- 	if (cd->mask)
- 		write_gic_vl_smask(BIT(intr));
- }
-@@ -517,7 +517,7 @@ static int gic_irq_domain_map(struct irq
- 	spin_lock_irqsave(&gic_lock, flags);
- 	for_each_online_cpu(cpu) {
- 		write_gic_vl_other(mips_cm_vp_id(cpu));
--		write_gic_vo_map(intr, map);
-+		write_gic_vo_map(mips_gic_vx_map_reg(intr), map);
++		if (!packet_read_pending(&po->tx_ring))
++			complete(&po->skb_completion);
  	}
- 	spin_unlock_irqrestore(&gic_lock, flags);
  
+ 	sock_wfree(skb);
+@@ -2594,7 +2597,7 @@ static int tpacket_parse_header(struct p
+ 
+ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
+ {
+-	struct sk_buff *skb;
++	struct sk_buff *skb = NULL;
+ 	struct net_device *dev;
+ 	struct virtio_net_hdr *vnet_hdr = NULL;
+ 	struct sockcm_cookie sockc;
+@@ -2609,6 +2612,7 @@ static int tpacket_snd(struct packet_soc
+ 	int len_sum = 0;
+ 	int status = TP_STATUS_AVAILABLE;
+ 	int hlen, tlen, copylen = 0;
++	long timeo = 0;
+ 
+ 	mutex_lock(&po->pg_vec_lock);
+ 
+@@ -2655,12 +2659,21 @@ static int tpacket_snd(struct packet_soc
+ 	if ((size_max > dev->mtu + reserve + VLAN_HLEN) && !po->has_vnet_hdr)
+ 		size_max = dev->mtu + reserve + VLAN_HLEN;
+ 
++	reinit_completion(&po->skb_completion);
++
+ 	do {
+ 		ph = packet_current_frame(po, &po->tx_ring,
+ 					  TP_STATUS_SEND_REQUEST);
+ 		if (unlikely(ph == NULL)) {
+-			if (need_wait && need_resched())
+-				schedule();
++			if (need_wait && skb) {
++				timeo = sock_sndtimeo(&po->sk, msg->msg_flags & MSG_DONTWAIT);
++				timeo = wait_for_completion_interruptible_timeout(&po->skb_completion, timeo);
++				if (timeo <= 0) {
++					err = !timeo ? -ETIMEDOUT : -ERESTARTSYS;
++					goto out_put;
++				}
++			}
++			/* check for additional frames */
+ 			continue;
+ 		}
+ 
+@@ -3216,6 +3229,7 @@ static int packet_create(struct net *net
+ 	sock_init_data(sock, sk);
+ 
+ 	po = pkt_sk(sk);
++	init_completion(&po->skb_completion);
+ 	sk->sk_family = PF_PACKET;
+ 	po->num = proto;
+ 	po->xmit = dev_queue_xmit;
+--- a/net/packet/internal.h
++++ b/net/packet/internal.h
+@@ -128,6 +128,7 @@ struct packet_sock {
+ 	unsigned int		tp_hdrlen;
+ 	unsigned int		tp_reserve;
+ 	unsigned int		tp_tstamp;
++	struct completion	skb_completion;
+ 	struct net_device __rcu	*cached_dev;
+ 	int			(*xmit)(struct sk_buff *skb);
+ 	struct packet_type	prot_hook ____cacheline_aligned_in_smp;
 
 
