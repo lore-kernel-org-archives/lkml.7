@@ -2,113 +2,207 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA763C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BAEC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC97205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djXttW3Q"
+	by mail.kernel.org (Postfix) with ESMTP id 549E62054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 10:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfGBKAS (ORCPT
+        id S1727051AbfGBKFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 06:00:18 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46898 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGBKAR (ORCPT
+        Tue, 2 Jul 2019 06:05:21 -0400
+Received: from mailgw01.mediatek.com ([216.200.240.184]:49620 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbfGBKFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 06:00:17 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so10908130lfh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 03:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0O2BVHsC6tn3BWMM9tvDjclVi0pfMs+XMpk03vAtRUs=;
-        b=djXttW3QsZCQThfo7EDXycRWAFHyJQWfUcHO03mRTi6kje0WmEuHV3wwBOOfEnckRL
-         NjQHvBwh6JgDXk8hNGlThESzIlicMO+9PVq3rgvyk3ZYPmeiDAwIn6ov8hPwvt/icPOV
-         Jv5cglAhxV7EELHVk8ajfH2S8qCZ2bon61UUj5qHa1Oz9F5rJw9FNIG8nm8J1z3OGB1H
-         qkl7WAEHzqqA5F1dkx4IENY3ROET/fJDIPlxPAaqmwizjsMFFWXQg1HKV73k/tJX0KU2
-         esTWkqP5XGb/SzyaCBP3CyN5WbK91HgONmx4M5o5QxU43Q3qbDZ1ep7igKMi2QePBY3s
-         nuZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0O2BVHsC6tn3BWMM9tvDjclVi0pfMs+XMpk03vAtRUs=;
-        b=XGcnY0LH3dkmNgNhKX+mXi3BjYOGdQrtLCUHxS3lT1txxWnvMiVPwGhOaTcDabIWIl
-         PoVCeFlrLIVsFR3an7OMO4OWXABFJRr0zrmHdyQbGcxxAtX5Fe1JdQ68aDw1XSH7Oit1
-         G5YZ7C8AF9bTejObHIfIF0NzuTka+l2NeQmjZU1/X8e83beQLTaspodak2zLc24R/RGJ
-         YzxU4b6+2MylqdUlvBvxiUvFtT+GFeHzqgxaD/krzbeJylcixdsPq/AasZWF7MoCLB/Q
-         z8C0EuxfZc+RcgeiPpLfHAaGPbxLF/et98+o8JPVxTLSJZobCwJodaVl1dRfPygq5PsP
-         dMGA==
-X-Gm-Message-State: APjAAAWlgSxaVuyYxE6Xds3LS5+ah/8kYpsVVNNTB3IESOHIKa8/mY8e
-        IanoHk7/XYmMztS1Yhjr0GQwjgounPnzIQqR7CGZTPcs
-X-Google-Smtp-Source: APXvYqx683ucGtF7PnNTH6RhXPkD+qozULKGYRzSTJRixORBYdPb5/FigraQCtcj6iD6TGV0KToFdnCtny1YRhqiz30=
-X-Received: by 2002:a19:c7ca:: with SMTP id x193mr208648lff.151.1562061615619;
- Tue, 02 Jul 2019 03:00:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561996022-28829-1-git-send-email-vincent.guittot@linaro.org> <7111f9d1-62f2-504c-a7ba-958b1c659cc8@arm.com>
-In-Reply-To: <7111f9d1-62f2-504c-a7ba-958b1c659cc8@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 2 Jul 2019 12:00:04 +0200
-Message-ID: <CAKfTPtBGDZ5P91hwGdHADYpcbOPeniDLE7x3-U9dXDvFVMAi1w@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: fix imbalance due to CPU affinity
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
+        Tue, 2 Jul 2019 06:05:21 -0400
+X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 06:05:21 EDT
+X-UUID: 54741aff087e4c8a930e649c99b9ac13-20190702
+X-UUID: 54741aff087e4c8a930e649c99b9ac13-20190702
+Received: from mtkcas67.mediatek.inc [(172.29.193.45)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1894146130; Tue, 02 Jul 2019 02:00:18 -0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 2 Jul 2019 03:00:17 -0700
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 2 Jul 2019 18:00:15 +0800
+Message-ID: <1562061615.29303.2.camel@mtkswgap22>
+Subject: Re: [PATCH 1/3] add doc and MAINTAINERS for poweroff
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        Sean Wang <Sean.Wang@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Josef Friedl <josef.friedl@speed.at>
+Date:   Tue, 2 Jul 2019 18:00:15 +0800
+In-Reply-To: <20190702094045.3652-2-frank-w@public-files.de>
+References: <20190702094045.3652-1-frank-w@public-files.de>
+         <20190702094045.3652-2-frank-w@public-files.de>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 11:34, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 01/07/2019 16:47, Vincent Guittot wrote:
-> > The load_balance() has a dedicated mecanism to detect when an imbalance
-> > is due to CPU affinity and must be handled at parent level. In this case,
-> > the imbalance field of the parent's sched_group is set.
-> >
-> > The description of sg_imbalanced() gives a typical example of two groups
-> > of 4 CPUs each and 4 tasks each with a cpumask covering 1 CPU of the first
-> > group and 3 CPUs of the second group. Something like:
-> >
-> >       { 0 1 2 3 } { 4 5 6 7 }
-> >               *     * * *
-> >
-> > But the load_balance fails to fix this UC on my octo cores system
-> > made of 2 clusters of quad cores.
-> >
-> > Whereas the load_balance is able to detect that the imbalanced is due to
-> > CPU affinity, it fails to fix it because the imbalance field is cleared
-> > before letting parent level a chance to run. In fact, when the imbalance is
-> > detected, the load_balance reruns without the CPU with pinned tasks. But
-> > there is no other running tasks in the situation described above and
-> > everything looks balanced this time so the imbalance field is immediately
-> > cleared.
-> >
-> > The imbalance field should not be cleared if there is no other task to move
-> > when the imbalance is detected.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->
-> Does that want a
->
-> Cc: stable@vger.kernel.org
-> Fixes: afdeee0510db ("sched: Fix imbalance flag reset")
++Sean
 
-I was not sure that this has been introduced by this patch or
-following changes. I haven't been able to test it on such old kernel
-with my platform
+On Tue, 2019-07-02 at 11:40 +0200, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> poweroff for BPI-R2
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> ---
+>  .../devicetree/bindings/mfd/mt6397.txt        | 10 ++++++-
+>  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++
+>  .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++++
+>  4 files changed, 64 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 0ebd08af777d..44acb9827716 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -8,6 +8,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+>  - Clock
+>  - LED
+>  - Keys
+> +- Power controller
+> 
+>  It is interfaced to host controller using SPI interface by a proprietary hardware
+>  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+> @@ -22,8 +23,10 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
+>  Optional subnodes:
+> 
+>  - rtc
+> -	Required properties:
+> +	Required properties: Should be one of follows
+> +		- compatible: "mediatek,mt6323-rtc"
+>  		- compatible: "mediatek,mt6397-rtc"
+> +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+>  - regulators
+>  	Required properties:
+>  		- compatible: "mediatek,mt6397-regulator"
+> @@ -46,6 +49,11 @@ Optional subnodes:
+>  		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+>  	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+> 
+> +- power-controller
+> +	Required properties:
+> +		- compatible: "mediatek,mt6323-pwrc"
+> +	For details, see Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> +
+>  Example:
+>  	pwrap: pwrap@1000f000 {
+>  		compatible = "mediatek,mt8135-pwrap";
+> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> new file mode 100644
+> index 000000000000..933f0c48e887
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+> @@ -0,0 +1,20 @@
+> +Device Tree Bindings for Power Controller on MediaTek PMIC
+> +
+> +The power controller which could be found on PMIC is responsible for externally
+> +powering off or on the remote MediaTek SoC through the circuit BBPU.
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               power-controller {
+> +                       compatible = "mediatek,mt6323-pwrc";
+> +               };
+> +       }
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> new file mode 100644
+> index 000000000000..ebd1cf80dcc8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> @@ -0,0 +1,29 @@
+> +Device-Tree bindings for MediaTek PMIC based RTC
+> +
+> +MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
+> +as a type of multi-function device (MFD). The RTC can be configured and set up
+> +with PMIC wrapper bus which is a common resource shared with the other
+> +functions found on the same PMIC.
+> +
+> +For MediaTek PMIC MFD bindings, see:
+> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +
+> +For MediaTek PMIC wrapper bus bindings, see:
+> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +
+> +Required properties:
+> +- compatible: Should be one of follows
+> +       "mediatek,mt6323-rtc": for MT6323 PMIC
+> +       "mediatek,mt6397-rtc": for MT6397 PMIC
+> +
+> +Example:
+> +
+> +       pmic {
+> +               compatible = "mediatek,mt6323";
+> +
+> +               ...
+> +
+> +               rtc {
+> +                       compatible = "mediatek,mt6323-rtc";
+> +               };
+> +       };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 01a52fc964da..ec6ff342aa3c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9920,6 +9920,12 @@ S:	Maintained
+>  F:	drivers/net/dsa/mt7530.*
+>  F:	net/dsa/tag_mtk.c
+> 
+> +MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
+> +M:	Sean Wang <sean.wang@mediatek.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
 
->
-> ?
->
+It's odd that there's no Sean's SOB tag in the series but add him in the
+entry.
+
+>  MEDIATEK JPEG DRIVER
+>  M:	Rick Chang <rick.chang@mediatek.com>
+>  M:	Bin Liu <bin.liu@mediatek.com>
+> --
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
