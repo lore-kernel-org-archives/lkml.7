@@ -2,100 +2,88 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DD0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063C8C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F27A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8196206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562116989;
+	bh=7bGDyb/ptYQsM9cGc4YQsEz80eg7nJSHMN6pG4rNSxY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=UwqHwAKm3863h+zNcIv5RKLM3bDUIhIKqiGavg8oMAeuB9rZcCWt9EKvXtGStNMIv
+	 37BDdTEBaJToyhHyXtnV7wsYGvbJA1TC3lt363Ejq8NXK82UvlY9In7ULm3Cqq5vHN
+	 cv8mMsyYfnSnKMQq1KAV5NRQnRDEH2D/uH5q6t3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfGCBXF (ORCPT
+        id S1727395AbfGCBXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 21:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfGCBXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726329AbfGCBXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 21:23:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12B5B21897;
-        Tue,  2 Jul 2019 20:33:57 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 16:33:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Eiichi Tsukata <devel@etsukata.com>, edwintorok@gmail.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH] x86/stacktrace: Do not access user space memory
- unnecessarily
-Message-ID: <20190702163356.205bbe14@gandalf.local.home>
-In-Reply-To: <20190702201827.GF3402@hirez.programming.kicks-ass.net>
-References: <20190702053151.26922-1-devel@etsukata.com>
-        <20190702072821.GX3419@hirez.programming.kicks-ass.net>
-        <alpine.DEB.2.21.1907021400350.1802@nanos.tec.linutronix.de>
-        <20190702113355.5be9ebfe@gandalf.local.home>
-        <20190702133905.1482b87e@gandalf.local.home>
-        <20190702201827.GF3402@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FE5621953;
+        Tue,  2 Jul 2019 22:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562108186;
+        bh=7bGDyb/ptYQsM9cGc4YQsEz80eg7nJSHMN6pG4rNSxY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=veN6Fk7cQToKPh8Cwuq1T/G6DHwWCHohehifq47xfuYZrBufR/nyDLlrT7lU7r2cV
+         Xg0KXraDxBfn0pdgvz4airTebnJRUgPxLdOGu9ugOPdrgjo3XVo8BwPSogElVlioaZ
+         +hW7wXSSpKOBBqLp0hK/DFK2Vi6ifQZueR547Izk=
+Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190702080124.103022729@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <82a59082-af68-51e7-49c7-62d1b45df18a@kernel.org>
+Date:   Tue, 2 Jul 2019 16:56:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 22:18:27 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Tue, Jul 02, 2019 at 01:39:05PM -0400, Steven Rostedt wrote:
-> > On Tue, 2 Jul 2019 11:33:55 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > On Tue, 2 Jul 2019 16:14:05 +0200 (CEST)
-> > > Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >   
-> > > > On Tue, 2 Jul 2019, Peter Zijlstra wrote:
-> > > >     
-> > > > > On Tue, Jul 02, 2019 at 02:31:51PM +0900, Eiichi Tsukata wrote:      
-> > > > > > Put the boundary check before it accesses user space to prevent unnecessary
-> > > > > > access which might crash the machine.
-> > > > > > 
-> > > > > > Especially, ftrace preemptirq/irq_disable event with user stack trace
-> > > > > > option can trigger SEGV in pid 1 which leads to panic.      
-> > > 
-> > > Note, I'm only able to trigger this crash with the irq_disable event.
-> > > The irq_enable and preempt_disable/enable events work just fine. This
-> > > leads me to believe that the TRACE_IRQS_OFF macro (which uses a thunk
-> > > trampoline) may have some issues and is probably the place to look at.  
-> > 
-> > I figured it out.
-> > 
-> > It's another "corruption of the cr2" register issue. The following  
+On 7/2/19 2:01 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.16 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Arrggghhh..
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
 > 
-> > patch makes the issue go away. I'm not suggesting that we use this
-> > patch, but it shows where the bug lies.
-> > 
-> > IIRC, there was patches posted before that fixed this issue. I'll go
-> > look to see if I can dig them up. Was it Joel that sent them?  
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
 > 
-> https://lkml.kernel.org/r/20190320221534.165ab87b@oasis.local.home
-
-Oh, I wrote the patches. No wonder I couldn't find them in my local
-"patchwork". It doesn't include patches I write. But still, I
-completely forgot. Better send me to the nursing home :-p
-
+> thanks,
 > 
-> I think; lemme re-read that thread.
+> greg k-h
+> 
 
-I'll need to do that too.
+Compiled and booted on my test system. No dmesg regressions.
 
--- Steve
+thanks,
+-- Shuah
+
