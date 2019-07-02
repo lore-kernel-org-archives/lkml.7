@@ -2,37 +2,55 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B28C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FAEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41BA2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562047995;
-	bh=WNJFRVtXGiIsJmQmGSXzJipNnwfRDuFAi3IeLCeLlX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jcmzz0m8a5zKxToICwmv/koUzfdOjPL6Zz/Vi5rB9efnT1bASGrQ/Vw4DPjOU8+Qm
-	 TiUm2UtOptKMgWOshba330JSEemZSBoUH5ItVuc5BGo8mPpR1V2jdyo3//NWCHeaPo
-	 ESW/L+C+zVa/YZ1+UxE3mXbOgKt0m356/lz1/3Q0=
+	by mail.kernel.org (Postfix) with ESMTP id CF06021841
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="kSD9EPjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfGBGNO (ORCPT
+        id S1725981AbfGBGRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:13:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37360 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725775AbfGBGNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:13:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A75CB008;
-        Tue,  2 Jul 2019 06:13:12 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 08:13:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alastair D'Silva <alastair@d-silva.org>
+        Tue, 2 Jul 2019 02:17:07 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:60706 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfGBGRH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 02:17:07 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 1248A2DC009C;
+        Tue,  2 Jul 2019 02:17:02 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1562048223;
+        bh=jmxTkz+xmGtAbS/yxNUR0tOcP0AiHxZIRt4HYUN6bgk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=kSD9EPjwIJGSwPftuuH7di/739+wc8CPJufU+o7Nxfbv/sW0LijKap+FV5L7IUGNj
+         Fh3kViYh+G3msOxmrYk9XqF0G8vzK8I0gQgEQd6bNj9+q8oEVSUV2iD8cTcaejcimR
+         f5fwty3mfgNOE9FoRuiA+LG5q1eG667ByT/ysbwvjtsMGhswLAqOEHzcDUyWzJ7FOO
+         b+7go36ost7erc7qQcrtKbWKq1Bjl3kF3JrHGslsqhjdpLgzSKihqhTiCelqVG/W6Y
+         nsiRvodaITT2+dQohTEPyMEdh7yAjyVLQRgaDGbTcQtCYjrPJmkqk6hWS9f/yjV9vG
+         t4WV+6GEFpJmuwjxRRE44fQIY2v2YkLB502ZdT0bM6H45kNQlPUyNXkJrdGfoG5LQv
+         X8lqNfUHEj8NMIKO1Q2ceUMdk+/xeYN8vHnMHQZGu/nkvo8H7aFuSaVozHxZruOFBZ
+         gWth5ksRUmjbFGE87MShayptzaSeFsCq73NZlNW8yLUj601d1h7ouLWlCefXxWojWt
+         CrBnSX2+yYfthxDIKP6bmPEowSLCwGu492zEFKlAXON4NrodnBBpiBjOS38fmSmJHr
+         8gN7PFYReFT8Q/qlkbz3ijuIjrUsIlm+PpbWbfiAbyNAwgE0S0+BYlrGM5V0O4sE06
+         /tvbJOSAf0xysB78lETKU1bU=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x626GgYG086222
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 2 Jul 2019 16:16:58 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <caa5673459fef4152e0aea7e1a30d6027a81e652.camel@d-silva.org>
+Subject: Re: [PATCH v2 1/3] mm: Trigger bug on if a section is not found in
+ __section_nr
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Michal Hocko <mhocko@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -43,69 +61,86 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wei Yang <richard.weiyang@gmail.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 1/3] mm: Trigger bug on if a section is not found in
- __section_nr
-Message-ID: <20190702061310.GA978@dhcp22.suse.cz>
+Date:   Tue, 02 Jul 2019 16:16:42 +1000
+In-Reply-To: <20190702061310.GA978@dhcp22.suse.cz>
 References: <20190626061124.16013-1-alastair@au1.ibm.com>
- <20190626061124.16013-2-alastair@au1.ibm.com>
- <20190626062113.GF17798@dhcp22.suse.cz>
- <d4af66721ea53ce7df2d45a567d17a30575672b2.camel@d-silva.org>
- <20190626065751.GK17798@dhcp22.suse.cz>
- <e66e43b1fdfbff94ab23a23c48aa6cbe210a3131.camel@d-silva.org>
- <20190627080724.GK17798@dhcp22.suse.cz>
- <833b9675bc363342827cb8f7c76ebb911f7f960d.camel@d-silva.org>
- <20190701104658.GA6549@dhcp22.suse.cz>
- <7f0ac9250e6fe6318aaf0685be56b121a978ce1b.camel@d-silva.org>
+         <20190626061124.16013-2-alastair@au1.ibm.com>
+         <20190626062113.GF17798@dhcp22.suse.cz>
+         <d4af66721ea53ce7df2d45a567d17a30575672b2.camel@d-silva.org>
+         <20190626065751.GK17798@dhcp22.suse.cz>
+         <e66e43b1fdfbff94ab23a23c48aa6cbe210a3131.camel@d-silva.org>
+         <20190627080724.GK17798@dhcp22.suse.cz>
+         <833b9675bc363342827cb8f7c76ebb911f7f960d.camel@d-silva.org>
+         <20190701104658.GA6549@dhcp22.suse.cz>
+         <7f0ac9250e6fe6318aaf0685be56b121a978ce1b.camel@d-silva.org>
+         <20190702061310.GA978@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f0ac9250e6fe6318aaf0685be56b121a978ce1b.camel@d-silva.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 02 Jul 2019 16:16:59 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 02-07-19 14:13:25, Alastair D'Silva wrote:
-> On Mon, 2019-07-01 at 12:46 +0200, Michal Hocko wrote:
-> > On Fri 28-06-19 10:46:28, Alastair D'Silva wrote:
-> > [...]
-> > > Given that there is already a VM_BUG_ON in the code, how do you
-> > > feel
-> > > about broadening the scope from 'VM_BUG_ON(!root)' to
-> > > 'VM_BUG_ON(!root
-> > > > > (root_nr == NR_SECTION_ROOTS))'?
+On Tue, 2019-07-02 at 08:13 +0200, Michal Hocko wrote:
+> On Tue 02-07-19 14:13:25, Alastair D'Silva wrote:
+> > On Mon, 2019-07-01 at 12:46 +0200, Michal Hocko wrote:
+> > > On Fri 28-06-19 10:46:28, Alastair D'Silva wrote:
+> > > [...]
+> > > > Given that there is already a VM_BUG_ON in the code, how do you
+> > > > feel
+> > > > about broadening the scope from 'VM_BUG_ON(!root)' to
+> > > > 'VM_BUG_ON(!root
+> > > > > > (root_nr == NR_SECTION_ROOTS))'?
+> > > 
+> > > As far as I understand the existing VM_BUG_ON will hit when the
+> > > mem_section tree gets corrupted. This is a different situation to
+> > > an
+> > > incorrect section given so I wouldn't really mix those two. And I
+> > > still
+> > > do not see much point to protect from unexpected input parameter
+> > > as
+> > > this
+> > > is internal function as already pointed out.
+> > > 
 > > 
-> > As far as I understand the existing VM_BUG_ON will hit when the
-> > mem_section tree gets corrupted. This is a different situation to an
-> > incorrect section given so I wouldn't really mix those two. And I
-> > still
-> > do not see much point to protect from unexpected input parameter as
-> > this
-> > is internal function as already pointed out.
+> > Hi Michael,
 > > 
+> > I was able to hit this problem as the system firmware had assigned
+> > the
+> > prototype pmem device an address range above the 128TB limit that
+> > we
+> > originally supported. This has since been lifted to 2PB with patch
+> > 4ffe713b7587b14695c9bec26a000fc88ef54895.
+> > 
+> > As it stands, we cannot move this range lower as the high bits are
+> > dictated by the location the card is connected.
+> > 
+> > Since the physical address of the memory is not controlled by the
+> > kernel, I believe we should catch (or at least make it easy to
+> > debug)
+> > the sitution where external firmware allocates physical addresses
+> > beyond that which the kernel supports.
 > 
-> Hi Michael,
+> Just make it clear, I am not against a sanitization. I am objecting
+> to
+> put it into __section_nr because this is way too late. As already
+> explained, you already must have a bogus mem_section object in hand.
+> Why cannot you add a sanity check right there when the memory is
+> added?
+> Either when the section is registered or even sooner in
+> arch_add_memory.
 > 
-> I was able to hit this problem as the system firmware had assigned the
-> prototype pmem device an address range above the 128TB limit that we
-> originally supported. This has since been lifted to 2PB with patch
-> 4ffe713b7587b14695c9bec26a000fc88ef54895.
-> 
-> As it stands, we cannot move this range lower as the high bits are
-> dictated by the location the card is connected.
-> 
-> Since the physical address of the memory is not controlled by the
-> kernel, I believe we should catch (or at least make it easy to debug)
-> the sitution where external firmware allocates physical addresses
-> beyond that which the kernel supports.
 
-Just make it clear, I am not against a sanitization. I am objecting to
-put it into __section_nr because this is way too late. As already
-explained, you already must have a bogus mem_section object in hand.
-Why cannot you add a sanity check right there when the memory is added?
-Either when the section is registered or even sooner in arch_add_memory.
+Good point, I was thinking of a libnvdimm enhancement to check that the
+end address is in range, but a more generic solution is better.
 
 -- 
-Michal Hocko
-SUSE Labs
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
+
+
