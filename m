@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B8FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D50DF216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD8521851
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054612;
-	bh=N7yBcEA/YvP29KF0hR7aaT6DkCggrTkkAkNWfIWMvTc=;
+	s=default; t=1562054617;
+	bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYmBDpdQkmpEgP37ZuyqVCIMHf/wfMweq5MYZX1BjyvC55IcIVv3xoO18a/96nsT7
-	 dgk9X58LMVOBk0AZ0HsB1hOieJ6DNRn0N5pfZ8CC1LrqwaQ/EpqLKPluqe9/jQ01dk
-	 LrHCB5idisAcxcXp8QFVIQnsGHs/3xj61WpNrjcM=
+	b=bjCE8DCd4w39CcOHEsko6m3dSUxbwy0CCWDFX4PcGw8uKkncEG8S6sEogK8YJIpD/
+	 ohPQDsjwDqAhrNGYB7eCbxuQKuaxOTWX7Ug2f19xhX5oaFOI1ZylnESdyxLM1Fmm3Q
+	 IqgQLbh4ohwk2PU7GYoB9uj76nB7ksmk62VidkCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfGBIDb (ORCPT
+        id S1727477AbfGBIDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48532 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfGBIDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:03:30 -0400
+        id S1727444AbfGBIDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:03:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF4892183F;
-        Tue,  2 Jul 2019 08:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AEAB2184B;
+        Tue,  2 Jul 2019 08:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054609;
-        bh=N7yBcEA/YvP29KF0hR7aaT6DkCggrTkkAkNWfIWMvTc=;
+        s=default; t=1562054612;
+        bh=29iVjL43COetC4HE2QtP8mHrhTybEpva3vP4Pue+hlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6ofxhyWwHFYtiFNQVqwJfyCh5GglU3JvOa7eWbyERl3peuZB2TSblASr6QJpJpEP
-         eZNC3j6z6yAT+uVp75knsEC9KoOyGteGQyHIKnUUrze2JvfjQ5ee7yVBOkB+cubaQN
-         T9uaUdnO5FZDWIGnVfAlmVKK3u6hcn36Edd5PR4g=
+        b=x1DZkLqdvX97WxhWgSm90FSsEjHUb0kAarEqiyn0lrC5l+hoVxmw1xOab6qc+kF4z
+         ej3wapFSaU2Uenh3XVOc56cr4YZPlBvxYjv1cUkQXxF2A6FWjmmPFYNMDUzHoEkjxU
+         9QpnbV83RIH6M5PB1ND92BjG1NbzmZDhj+p6koj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.1 28/55] SUNRPC: Fix up calculation of client message length
-Date:   Tue,  2 Jul 2019 10:01:36 +0200
-Message-Id: <20190702080125.558364382@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Archer Yan <ayan@wavecomp.com>
+Subject: [PATCH 5.1 29/55] irqchip/mips-gic: Use the correct local interrupt map registers
+Date:   Tue,  2 Jul 2019 10:01:37 +0200
+Message-Id: <20190702080125.633072236@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
 References: <20190702080124.103022729@linuxfoundation.org>
@@ -60,85 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit 7e3d3620974b743b91b1f9d0660061b1de20174c upstream.
+commit 6d4d367d0e9ffab4d64a3436256a6a052dc1195d upstream.
 
-In the case where a record marker was used, xs_sendpages() needs
-to return the length of the payload + record marker so that we
-operate correctly in the case of a partial transmission.
-When the callers check return value, they therefore need to
-take into account the record marker length.
+The MIPS GIC contains a block of registers used to map local interrupts
+to a particular CPU interrupt pin. Since these registers are found at a
+consecutive range of addresses we access them using an index, via the
+(read|write)_gic_v[lo]_map accessor functions. We currently use values
+from enum mips_gic_local_interrupt as those indices.
 
-Fixes: 06b5fc3ad94e ("Merge tag 'nfs-rdma-for-5.1-1'...")
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Unfortunately whilst enum mips_gic_local_interrupt provides the correct
+offsets for bits in the pending & mask registers, the ordering of the
+map registers is subtly different... Compared with the ordering of
+pending & mask bits, the map registers move the FDC from the end of the
+list to index 3 after the timer interrupt. As a result the performance
+counter & software interrupts are therefore at indices 4-6 rather than
+indices 3-5.
+
+Notably this causes problems with performance counter interrupts being
+incorrectly mapped on some systems, and presumably will also cause
+problems for FDC interrupts.
+
+Introduce a function to map from enum mips_gic_local_interrupt to the
+index of the corresponding map register, and use it to ensure we access
+the map registers for the correct interrupts.
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: a0dc5cb5e31b ("irqchip: mips-gic: Simplify gic_local_irq_domain_map()")
+Fixes: da61fcf9d62a ("irqchip: mips-gic: Use irq_cpu_online to (un)mask all-VP(E) IRQs")
+Reported-and-tested-by: Archer Yan <ayan@wavecomp.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtsock.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/mips/include/asm/mips-gic.h |   30 ++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-mips-gic.c   |    4 ++--
+ 2 files changed, 32 insertions(+), 2 deletions(-)
 
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -950,6 +950,8 @@ static int xs_local_send_request(struct
- 	struct sock_xprt *transport =
- 				container_of(xprt, struct sock_xprt, xprt);
- 	struct xdr_buf *xdr = &req->rq_snd_buf;
-+	rpc_fraghdr rm = xs_stream_record_marker(xdr);
-+	unsigned int msglen = rm ? req->rq_slen + sizeof(rm) : req->rq_slen;
- 	int status;
- 	int sent = 0;
+--- a/arch/mips/include/asm/mips-gic.h
++++ b/arch/mips/include/asm/mips-gic.h
+@@ -315,6 +315,36 @@ static inline bool mips_gic_present(void
+ }
  
-@@ -964,9 +966,7 @@ static int xs_local_send_request(struct
+ /**
++ * mips_gic_vx_map_reg() - Return GIC_Vx_<intr>_MAP register offset
++ * @intr: A GIC local interrupt
++ *
++ * Determine the index of the GIC_VL_<intr>_MAP or GIC_VO_<intr>_MAP register
++ * within the block of GIC map registers. This is almost the same as the order
++ * of interrupts in the pending & mask registers, as used by enum
++ * mips_gic_local_interrupt, but moves the FDC interrupt & thus offsets the
++ * interrupts after it...
++ *
++ * Return: The map register index corresponding to @intr.
++ *
++ * The return value is suitable for use with the (read|write)_gic_v[lo]_map
++ * accessor functions.
++ */
++static inline unsigned int
++mips_gic_vx_map_reg(enum mips_gic_local_interrupt intr)
++{
++	/* WD, Compare & Timer are 1:1 */
++	if (intr <= GIC_LOCAL_INT_TIMER)
++		return intr;
++
++	/* FDC moves to after Timer... */
++	if (intr == GIC_LOCAL_INT_FDC)
++		return GIC_LOCAL_INT_TIMER + 1;
++
++	/* As a result everything else is offset by 1 */
++	return intr + 1;
++}
++
++/**
+  * gic_get_c0_compare_int() - Return cp0 count/compare interrupt virq
+  *
+  * Determine the virq number to use for the coprocessor 0 count/compare
+--- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -388,7 +388,7 @@ static void gic_all_vpes_irq_cpu_online(
+ 	intr = GIC_HWIRQ_TO_LOCAL(d->hwirq);
+ 	cd = irq_data_get_irq_chip_data(d);
  
- 	req->rq_xtime = ktime_get();
- 	status = xs_sendpages(transport->sock, NULL, 0, xdr,
--			      transport->xmit.offset,
--			      xs_stream_record_marker(xdr),
--			      &sent);
-+			      transport->xmit.offset, rm, &sent);
- 	dprintk("RPC:       %s(%u) = %d\n",
- 			__func__, xdr->len - transport->xmit.offset, status);
+-	write_gic_vl_map(intr, cd->map);
++	write_gic_vl_map(mips_gic_vx_map_reg(intr), cd->map);
+ 	if (cd->mask)
+ 		write_gic_vl_smask(BIT(intr));
+ }
+@@ -517,7 +517,7 @@ static int gic_irq_domain_map(struct irq
+ 	spin_lock_irqsave(&gic_lock, flags);
+ 	for_each_online_cpu(cpu) {
+ 		write_gic_vl_other(mips_cm_vp_id(cpu));
+-		write_gic_vo_map(intr, map);
++		write_gic_vo_map(mips_gic_vx_map_reg(intr), map);
+ 	}
+ 	spin_unlock_irqrestore(&gic_lock, flags);
  
-@@ -976,7 +976,7 @@ static int xs_local_send_request(struct
- 	if (likely(sent > 0) || status == 0) {
- 		transport->xmit.offset += sent;
- 		req->rq_bytes_sent = transport->xmit.offset;
--		if (likely(req->rq_bytes_sent >= req->rq_slen)) {
-+		if (likely(req->rq_bytes_sent >= msglen)) {
- 			req->rq_xmit_bytes_sent += transport->xmit.offset;
- 			transport->xmit.offset = 0;
- 			return 0;
-@@ -1097,6 +1097,8 @@ static int xs_tcp_send_request(struct rp
- 	struct rpc_xprt *xprt = req->rq_xprt;
- 	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
- 	struct xdr_buf *xdr = &req->rq_snd_buf;
-+	rpc_fraghdr rm = xs_stream_record_marker(xdr);
-+	unsigned int msglen = rm ? req->rq_slen + sizeof(rm) : req->rq_slen;
- 	bool vm_wait = false;
- 	int status;
- 	int sent;
-@@ -1122,9 +1124,7 @@ static int xs_tcp_send_request(struct rp
- 	while (1) {
- 		sent = 0;
- 		status = xs_sendpages(transport->sock, NULL, 0, xdr,
--				      transport->xmit.offset,
--				      xs_stream_record_marker(xdr),
--				      &sent);
-+				      transport->xmit.offset, rm, &sent);
- 
- 		dprintk("RPC:       xs_tcp_send_request(%u) = %d\n",
- 				xdr->len - transport->xmit.offset, status);
-@@ -1133,7 +1133,7 @@ static int xs_tcp_send_request(struct rp
- 		 * reset the count of bytes sent. */
- 		transport->xmit.offset += sent;
- 		req->rq_bytes_sent = transport->xmit.offset;
--		if (likely(req->rq_bytes_sent >= req->rq_slen)) {
-+		if (likely(req->rq_bytes_sent >= msglen)) {
- 			req->rq_xmit_bytes_sent += transport->xmit.offset;
- 			transport->xmit.offset = 0;
- 			return 0;
 
 
