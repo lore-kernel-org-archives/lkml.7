@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD58C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11DBC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF242183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5B021850
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054896;
-	bh=dBd5Gi/aU9o+YoIteL3TsGFh0gBXpK4pcIblhu743gU=;
+	s=default; t=1562054899;
+	bh=aRwZf47F5Au9hTwdY7W3PXKuPcX5jdbLZiowoiLsp9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnBsU47VlqZATc65+VHXA0PyMRuRPVihk6PKEQ4P7p0lPiXCmRXJa/w/+DoqIrxM5
-	 /qNw50P29ZaVStiyigaD+F8Ip/WVE4EqL5yGRCBKz+1xvd/gb4sHXT1tNpemi39vZT
-	 5A6Xk8UdrqmZ99xtDcNT33o+CYIpLpidekVlosH0=
+	b=ZNEwdP5vIXjoQ2RopZJbuAyw6hC+RHsqphPXATtUM6lNSWWxUU5LhP/oxLDPeYEfR
+	 1mRS03BA7wsoAp//ZPka80GNkCxUuEeaclPUrxx+atBJ5hSN66xHF7K0Dii9cpfD/A
+	 cvDAiUtiUw6Q9aTo6HFCQnAnU/wi8GvrCuMW+NX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfGBIIO (ORCPT
+        id S1728398AbfGBIIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbfGBIIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:08:09 -0400
+        id S1727442AbfGBIIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:08:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E10B206A2;
-        Tue,  2 Jul 2019 08:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66DA3206A2;
+        Tue,  2 Jul 2019 08:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054888;
-        bh=dBd5Gi/aU9o+YoIteL3TsGFh0gBXpK4pcIblhu743gU=;
+        s=default; t=1562054894;
+        bh=aRwZf47F5Au9hTwdY7W3PXKuPcX5jdbLZiowoiLsp9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVgj0T0IXwcdw7XUjrjiwwB20P33kuwPEnH0Ib0VRyROoMukTYYUKy41xtWFNtejA
-         7BUz/WbgkIkEi5ys2p8AVFcZfN2cwZ/G0dHQvkVcDI0nEp03r9Zbpt9PJ+/wKMnHUr
-         eDhHkNp5aQ3hGTbgxHo0Wf1lJKiHoR9GOU/IjNeY=
+        b=qE2KKE0R5UqD2eKAf25aHSkzQYvbn7SThjtent6SDVSnkvGHME6+8zTeq2m7sEKA8
+         XGCRI7oE3DgrcUct3ROedkvKNsrWTFaCjA2F8jZnvMzqJ21Uov0MMeNhjDTVKWzNM9
+         tPTtsWezEub+HX2JwT5rrZBSJ9ZNz5FzgVSmQxr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        John Stultz <john.stultz@linaro.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/72] usb: dwc3: gadget: use num_trbs when skipping TRBs on ->dequeue()
-Date:   Tue,  2 Jul 2019 10:01:27 +0200
-Message-Id: <20190702080126.031346654@linuxfoundation.org>
+Subject: [PATCH 4.19 18/72] 9p: potential NULL dereference
+Date:   Tue,  2 Jul 2019 10:01:19 +0200
+Message-Id: <20190702080125.601601192@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -63,82 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit c3acd59014148470dc58519870fbc779785b4bf7 upstream
+[ Upstream commit 72ea0321088df2c41eca8cc6160c24bcceb56ac7 ]
 
-Now that we track how many TRBs a request uses, it's easier to skip
-over them in case of a call to usb_ep_dequeue(). Let's do so and
-simplify the code a bit.
+p9_tag_alloc() is supposed to return error pointers, but we accidentally
+return a NULL here.  It would cause a NULL dereference in the caller.
 
-Cc: Fei Yang <fei.yang@intel.com>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org # 4.19.y
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-(cherry picked from commit c3acd59014148470dc58519870fbc779785b4bf7)
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Link: http://lkml.kernel.org/m/20180926103934.GA14535@mwanda
+Fixes: 996d5b4db4b1 ("9p: Use a slab for allocating requests")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 28 ++++------------------------
- 1 file changed, 4 insertions(+), 24 deletions(-)
+ net/9p/client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index fd91c494307c..4e08904890ed 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1368,6 +1368,8 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
- 				break;
- 		}
- 		if (r == req) {
-+			int i;
-+
- 			/* wait until it is processed */
- 			dwc3_stop_active_transfer(dep, true);
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 4becde979462..b615aae5a0f8 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -287,7 +287,7 @@ p9_tag_alloc(struct p9_client *c, int8_t type, unsigned int max_size)
+ 	int tag;
  
-@@ -1405,32 +1407,12 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
- 			if (!r->trb)
- 				goto out0;
+ 	if (!req)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
  
--			if (r->num_pending_sgs) {
-+			for (i = 0; i < r->num_trbs; i++) {
- 				struct dwc3_trb *trb;
--				int i = 0;
--
--				for (i = 0; i < r->num_pending_sgs; i++) {
--					trb = r->trb + i;
--					trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
--					dwc3_ep_inc_deq(dep);
--				}
--
--				if (r->needs_extra_trb) {
--					trb = r->trb + r->num_pending_sgs + 1;
--					trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
--					dwc3_ep_inc_deq(dep);
--				}
--			} else {
--				struct dwc3_trb *trb = r->trb;
- 
-+				trb = r->trb + i;
- 				trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
- 				dwc3_ep_inc_deq(dep);
--
--				if (r->needs_extra_trb) {
--					trb = r->trb + 1;
--					trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
--					dwc3_ep_inc_deq(dep);
--				}
- 			}
- 			goto out1;
- 		}
-@@ -1441,8 +1423,6 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
- 	}
- 
- out1:
--	/* giveback the request */
--
- 	dwc3_gadget_giveback(dep, req, -ECONNRESET);
- 
- out0:
+ 	if (p9_fcall_init(c, &req->tc, alloc_msize))
+ 		goto free_req;
 -- 
 2.20.1
 
