@@ -2,150 +2,124 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E2C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0854C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2879421479
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C90208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zs5QYHjO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvNkQbbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfGBGGa (ORCPT
+        id S1726160AbfGBGIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:06:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32806 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfGBGG3 (ORCPT
+        Tue, 2 Jul 2019 02:08:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51564 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfGBGIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:06:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so7721315pfq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:06:29 -0700 (PDT)
+        Tue, 2 Jul 2019 02:08:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so1640350wma.1;
+        Mon, 01 Jul 2019 23:08:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nNXEhYbACG3wS6zZ+/NER8qwkGIj64bXToXY5tJo9+8=;
-        b=Zs5QYHjOyP0GPhSCaojxBm5NKDm/ZBM1cNN3ukko+UckelVJV3+/MLFm/ZwbOe7VdH
-         Kg2iThAYU5eGMsdaY9lH7yvBhRUSqc4M0ukNXAnVFoP7nWp94ZKRfa17Xtej92aogHQA
-         WOYl9tqsnjN8xNxMFivqFieyF0IIN8Zdb9uFk=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lve1vjRn+vNM45mBAySyDNXYT3W/b0QVj9SHJfPanGs=;
+        b=EvNkQbbCBhYPT6j/WduVkVn8+LUaU/B/JfHuplh25DI4oTX4Npui55yQSKeHG329Hy
+         gCL9EqIlKU7jcje5b5EPrcg6vdjIeZ+u4N65WKIxXgHSzU7nBK7XA1yYS0yspuqSxQNg
+         dnAEu3wbTD9zYGH8BHPoPq1/dMHJDJaGF+mBGG8BA7O+r48NrJqczPzhQwCUr23T0rNC
+         vxwQdCvoXH8elH2k6kyIjF6EehZjgPtUPvGFWTq+U9pgX73HSbjjF5zDVUfa0lGbbh7B
+         sKn6aJt9MMiET/+fRcr+KBk73mUCXGRrv3XHdr1+8XUiUGGtrVTUbbMPAjF0DCCGCOhx
+         j6Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nNXEhYbACG3wS6zZ+/NER8qwkGIj64bXToXY5tJo9+8=;
-        b=r9ROYLobi2+eigQWweSfYeGQFvA8bx/bEK3aOCLe7rfPYdJnwVBY05/uiSZxH9w6Rz
-         L6Qdxds73aXgZlO+5rrk+3PeNoPHoD3NpDpFp/AnDIOqhIIzEGAVVkdH48I+5pM4JfG5
-         K6k7waw3+US35hanm2/GGQU4ZDbuA3q23h6Hm/Qro5OPfAqb+7riqIJSGft2CwT+52q8
-         R/PaEtCdycN3R6JxOdtQCdFKnttaGAzqXS7ep+pfGLMKEDtAVZhpKMvNqfpRyajZm269
-         q3h54bOKIGrcbvxqODoX5UEjIytsEOnZq5vY8SPguxiFcJF/6BilDUCu4wwP9VjCFg5/
-         Zgpg==
-X-Gm-Message-State: APjAAAWAw+r034fw0qSBehV4QfjlVzYeaW2O/aJyZkMxn905wUPVg27t
-        aMhIfAo1bsKnd96R4J3e3116Qg==
-X-Google-Smtp-Source: APXvYqx9q6Jq9njI2deztF53gf7lPgnmCZz9TLU5PjauoSu7fMCqseLeN/IAkEJkyNltOEZQRWj9mQ==
-X-Received: by 2002:a63:d756:: with SMTP id w22mr28152157pgi.156.1562047588891;
-        Mon, 01 Jul 2019 23:06:28 -0700 (PDT)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id d1sm10284013pgd.50.2019.07.01.23.06.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 23:06:28 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lve1vjRn+vNM45mBAySyDNXYT3W/b0QVj9SHJfPanGs=;
+        b=SlGlB784VxE1SLWVGikHXVizM3qad9RGRiqQ9uHZx9JQowyhMPML4w18eGRjYLUPk7
+         oInF9ayMas1uxDp4NRGA2sU5qSQGEx399dEFCY7GIEcIBV+5MPVmImMK2I4ddJhyIdfM
+         3bkHsG0KeYGinXL9Z2P23RIGR/oSWfcVuY/SIzQLluVuOlpepj3l2zNz8GeSCzf19W4M
+         8mXe3VI9rZ5XC3Jd4f2VeXXQyWwgGiKG2qKvDvbc2VZm5VfBZxtcrZOgrODCjGPDMjub
+         Iia+wT/hrloouOKI4oDwwLx8bBX6xOa74yPvugGVMmwBA7y6+cdhH1S7x1c83/bNlwiP
+         hiYw==
+X-Gm-Message-State: APjAAAWH7s0Vu6kheJVgqdNnVvFt6V+0W/V5WmUWMWt2vsRhR98qnVFf
+        G+6bjWTFVfO3FXT+PpXXhWU=
+X-Google-Smtp-Source: APXvYqwJvKbLRroUbMo4RgCa43Mv0w3ssqvmo6D0RZbveWlTcKdX2RcWfLq7Kn2wc8fxaCgcGtpbcA==
+X-Received: by 2002:a7b:c04f:: with SMTP id u15mr1188846wmc.106.1562047683475;
+        Mon, 01 Jul 2019 23:08:03 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:d5f3:78fc:5357:f218? (p200300EA8BD60C00D5F378FC5357F218.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:d5f3:78fc:5357:f218])
+        by smtp.googlemail.com with ESMTPSA id h19sm25332448wrb.81.2019.07.01.23.08.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 23:08:02 -0700 (PDT)
+Subject: Re: [PATCH 2/3] net: phy: realtek: Enable accessing RTL8211E
+ extension pages
+To:     Matthias Kaehlcke <mka@chromium.org>, Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S . Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v12 5/5] arm64: dts: mt8183: add scp node
-Date:   Tue,  2 Jul 2019 14:05:28 +0800
-Message-Id: <20190702060546.222934-6-pihsun@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190702060546.222934-1-pihsun@chromium.org>
-References: <20190702060546.222934-1-pihsun@chromium.org>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+References: <20190701195225.120808-1-mka@chromium.org>
+ <20190701195225.120808-2-mka@chromium.org> <20190701200248.GJ30468@lunn.ch>
+ <35db1bff-f48e-5372-06b7-3140cb7cbb71@gmail.com>
+ <20190701210902.GL30468@lunn.ch> <20190702000925.GD250418@google.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <bdacdf76-8eae-e865-9c00-8e70a12ad303@gmail.com>
+Date:   Tue, 2 Jul 2019 08:07:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190702000925.GD250418@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+On 02.07.2019 02:09, Matthias Kaehlcke wrote:
+> On Mon, Jul 01, 2019 at 11:09:02PM +0200, Andrew Lunn wrote:
+>> On Mon, Jul 01, 2019 at 10:37:16PM +0200, Heiner Kallweit wrote:
+>>> On 01.07.2019 22:02, Andrew Lunn wrote:
+>>>> On Mon, Jul 01, 2019 at 12:52:24PM -0700, Matthias Kaehlcke wrote:
+>>>>> The RTL8211E has extension pages, which can be accessed after
+>>>>> selecting a page through a custom method. Add a function to
+>>>>> modify bits in a register of an extension page and a few
+>>>>> helpers for dealing with ext pages.
+>>>>>
+>>>>> rtl8211e_modify_ext_paged() and rtl821e_restore_page() are
+>>>>> inspired by their counterparts phy_modify_paged() and
+>>>>> phy_restore_page().
+>>>>
+>>>> Hi Matthias
+>>>>
+>>>> While an extended page is selected, what happens to the normal
+>>>> registers in the range 0-0x1c? Are they still accessible?
+>>>>
+>>> AFAIK: no
+>>
+>> This it would be better to make use of the core paged access support,
+>> so that locking is done correctly.
+> 
+> Do I understand correctly that this would involve assigning
+> .read/write_page and use phy_select_page() and phy_restore_page()?
+> 
+> Besides the benefit of locking this would also result in less code and
+> we could get rid of the custom _restore_page().
+> 
+Interestingly certain Realtek PHY's (incl. RTL8211E) support two paging
+mechanisms.
 
-Add scp node to mt8183 and mt8183-evb
+1. Normal paging (set reg 0x1f to page number) - set by core paging
+2. Extended pages (set reg 0x1f to 7, and reg 0x1e to ext. page number)
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
-Changes from v11, v10:
- - No change.
-
-Changes from v9:
- - Remove extra reserve-memory-vpu_share node.
-
-Changes from v8:
- - New patch.
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index d8e555cbb5d3..e46e34ce3159 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -24,6 +24,17 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
- };
- 
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4631bc..133146b52904 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -254,6 +254,18 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x5000>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Newer Realtek PHY's use normal paging only.
