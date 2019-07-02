@@ -2,121 +2,72 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A50AC06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EBBC06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7ACE2089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562073071;
-	bh=DMh8VAiW4j23dxHBYdwqpSzt+PEHyiAYz3LBrEYgS44=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=srfAYTyL+xrkb/EqAuPcEV/TaGJSQaq2R6jigg0fzXGdfNAAJH3qOEpo2CDblRBUI
-	 skJOxfvphpZDwTtoQyZLzy7NBcvsd8zWIQoJyy/OVi9tqCEtF6LLpvc4KvVqIH8Cfh
-	 PCEhjXA+yZVp0E5clpDiYktphPoX9udl8wCzk8Wk=
+	by mail.kernel.org (Postfix) with ESMTP id DC51E2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfGBNLK (ORCPT
+        id S1727096AbfGBNLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfGBNLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:11:10 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2C62089C;
-        Tue,  2 Jul 2019 13:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562073069;
-        bh=DMh8VAiW4j23dxHBYdwqpSzt+PEHyiAYz3LBrEYgS44=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bV9Me7dkHZ2jA5IfDqhYDtI1pHt4S1XcdZswFAwxJlW6k6UFYC+l7dMTZGQLPkZJK
-         LzJ/Z4wbRqDHe7r/1ZV7PgZh6M4sG8DTR6J1ZAs9H4w82Fk0wN8Gkbjf/2JaFa762k
-         cE9yD6kaWN3Y4Z1G0+CGCxerlYTp0IxkgQ1Aqpfo=
-Received: by mail-lf1-f44.google.com with SMTP id r15so11316958lfm.11;
-        Tue, 02 Jul 2019 06:11:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAV7WAWXLMQykRsU/rJy1xdIjajAMgwLgGbkZ+o+4H8YrT5p4vxV
-        JTU0H7Gh7rsL9KXbEHZDWCsh9MgkTcBK6m5F9V0=
-X-Google-Smtp-Source: APXvYqxRfxfCOG8WBQbWTyTbYKTEBILbsprFNS3dDagJ3FUuiL9az56yVd8H9VPIQAr5aM+Tl26ahQuRD8y5f6z2qcU=
-X-Received: by 2002:ac2:44d3:: with SMTP id d19mr14432915lfm.30.1562073067826;
- Tue, 02 Jul 2019 06:11:07 -0700 (PDT)
+        Tue, 2 Jul 2019 09:11:49 -0400
+Received: from smtprelay0150.hostedemail.com ([216.40.44.150]:48448 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726623AbfGBNLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:11:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 60C83100E86CA;
+        Tue,  2 Jul 2019 13:11:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: grip38_f90b2bb5cc18
+X-Filterd-Recvd-Size: 1636
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  2 Jul 2019 13:11:46 +0000 (UTC)
+Message-ID: <613b7f1dd7244df22f677777cc946758cbd7e61c.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: add *_NOTIFIER_HEAD as var definition
+From:   Joe Perches <joe@perches.com>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     Ofir Drang <ofir.drang@arm.com>, linux-kernel@vger.kernel.org
+Date:   Tue, 02 Jul 2019 06:11:45 -0700
+In-Reply-To: <20190702123037.28174-1-gilad@benyossef.com>
+References: <20190702123037.28174-1-gilad@benyossef.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
- <CAOMZO5A-XTtMD0g0ESHA=7bM4=HQjgTpzQq2BSYnPyd_1eG=qw@mail.gmail.com>
-In-Reply-To: <CAOMZO5A-XTtMD0g0ESHA=7bM4=HQjgTpzQq2BSYnPyd_1eG=qw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 2 Jul 2019 15:10:56 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfQHVGiLsL+FZ2jk-am=Xp6L5w=tLEQsGrP2TNLPgQ=vw@mail.gmail.com>
-Message-ID: <CAJKOXPfQHVGiLsL+FZ2jk-am=Xp6L5w=tLEQsGrP2TNLPgQ=vw@mail.gmail.com>
-Subject: Re: [BUG BISECT] Net boot fails on VF50 after "dmaengine: fsl-edma:
- support little endian for edma driver"
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 15:04, Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Krzysztof,
->
-> On Tue, Jul 2, 2019 at 9:13 AM Krzysztof Koz=C5=82owski
-> <k.kozlowski.k@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > Bisect pointed commit:
-> > commit 002905eca5bedab08bafd9e325bbbb41670c7712
-> > Author: Peng Ma <peng.ma@nxp.com>
-> > Date:   Thu Jun 13 10:27:08 2019 +0000
-> >     dmaengine: fsl-edma: support little endian for edma driver
-> >
-> > as a reason of NFSv4 root boot failures. Toradex Colibri VF50 (Cortex
-> > A5) on Toradex Iris board.
-> >
-> > The user-space starts but hangs - a lot of messages are missing or
-> > seriously delayed.
-> >
-> > Please revert the patch of fix it. If needed I can provide more
-> > details about test system - let me know.
-> >
-> > Full log attached.
->
-> Does this fix the problem?
->
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -92,6 +92,7 @@
->                                 clock-names =3D "dmamux0", "dmamux1";
->                                 clocks =3D <&clks VF610_CLK_DMAMUX0>,
->                                         <&clks VF610_CLK_DMAMUX1>;
-> +                               big-endian;
->                                 status =3D "disabled";
->                         };
->
-> @@ -491,6 +492,7 @@
->                                 clock-names =3D "dmamux0", "dmamux1";
->                                 clocks =3D <&clks VF610_CLK_DMAMUX2>,
->                                         <&clks VF610_CLK_DMAMUX3>;
-> +                               big-endian;
->                                 status =3D "disabled";
->                         };
->
-> I am not saying this is the proper fix as we should not break old dtb's.
+On Tue, 2019-07-02 at 15:30 +0300, Gilad Ben-Yossef wrote:
+> Add *_NOTIFIER_HEAD as variable definition to avoid code like this:
+> 
+> ATOMIC_NOTIFIER_HEAD(foo);
+> EXPORT_SYMBOL_GPL(foo);
+> 
+> From triggering the the following warning:
+> WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -3864,6 +3864,7 @@ sub process {
+>  				^.DEFINE_$Ident\(\Q$name\E\)|
+>  				^.DECLARE_$Ident\(\Q$name\E\)|
+>  				^.LIST_HEAD\(\Q$name\E\)|
+> +				^.$Ident._NOTIFIER_HEAD\(\Q$name\E\)|
 
-Hi,
+I think you want "${Ident}_NOTIFIER_HEAD\(\Q$name\E\)
 
-No, unfortunately it does not help.
+>  				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
+>  				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
+>  			    )/x) {
 
-Best regards,
-Krzysztof
