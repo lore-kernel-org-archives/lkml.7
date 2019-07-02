@@ -2,106 +2,109 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D3BC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D05C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A782146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562082826;
-	bh=H9aGzcRIAF8z4znsY082TkkEBo8mLXRjkdpeEtNj/VE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SACwDN/tQUQPL4oMkoJLnvp+EyJ6yMp+NLQ/3LQvCU/plARM2XXLgwC4qJGsWzHjj
-	 SycySvlfmWxVc9nfp8Zgi4A3IIt8sqdRht1aI7K/yap5gbh0ODMZaOp45gphL9JUGM
-	 mYmpAyReUyS0yCkyD0l1n1WmXNqdUuJkh4LKto3E=
+	by mail.kernel.org (Postfix) with ESMTP id 589222146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 15:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBut9G4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfGBPxo (ORCPT
+        id S1727260AbfGBPxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Jul 2019 11:53:48 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45897 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfGBPxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 11:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfGBPxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 11:53:40 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C1E42082F;
-        Tue,  2 Jul 2019 15:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562082819;
-        bh=H9aGzcRIAF8z4znsY082TkkEBo8mLXRjkdpeEtNj/VE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GQyZzmZt+hAFbRuIk9/PKT9lT2fPlVjgT/gP4qos5EpIEGEgKjNF1290flNniLpBB
-         jUYizh3qkyO9Ksv+gk14yXnADZBxYDO2dnGlDns6fDwXFH6WWK+/laPgUv0xrCGcjn
-         66Torw3LgSM0m78lPcZdICvQm4e4NiR+B8veDoUw=
-Date:   Tue, 2 Jul 2019 08:53:37 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Gary R Hook <ghook@amd.com>
-Cc:     Cfir Cohen <cfir@google.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Rientjes <rientjes@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH] crypto: ccp/gcm - use const time tag comparison.
-Message-ID: <20190702155337.GA895@sol.localdomain>
-References: <20190702000132.88836-1-cfir@google.com>
- <20190702002522.GA693@sol.localdomain>
- <1eea04e4-ac19-241d-695b-61be43640509@amd.com>
+Received: by mail-qk1-f194.google.com with SMTP id s22so14499510qkj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 08:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BxB9Tl2bXtJ3atZnYg8/Qz4JqG30kxmg1I7DaT0xgrs=;
+        b=sBut9G4DQmYqBK8Lwl+wBqQHZ8JeuTwdzjcNohb+f16pi0PjIFqpOgIjPkRI8rP7Dc
+         cygwa4+ewYavgxgJ5rFjMFmFlrdIf8fcMDAfiU/lXVizLjAejFlsqponEABJmE3vQIUw
+         3zV9cP6mtuybyBO3UhBt+Kkf4yCQe8F6gmiI6MAigy64gVtbyxuOoi8yPU3eWHPijXS8
+         njsE4NINjRx2ItShIAcOsa17HAi9D862aPX2O+nMlXjyd3QlmwFYZdW3v3hICPwTiru+
+         e/jB9bx4Rn6SVFMx0oOf3Caolf4ADxfh2+jjBwfKPAp0zIZXOS+lCA89/8X9wx7yZO0U
+         jNPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BxB9Tl2bXtJ3atZnYg8/Qz4JqG30kxmg1I7DaT0xgrs=;
+        b=jOHOa0i2rybvmSFE/iqfeHs617MWOHzkfMWsG/MwmrK30Wvlu0WelH37xPdqvPhw96
+         kzHBz5rBF+PtGktQoOX8nkYHlzU/P/uREgDUPw6P+NCVMTjJ5YZYuNw31J4wHs1tJ3Eo
+         emd8hS9QjbAj7AUAaWNeEg26QsYUyNTv+qgIcjux9K3pYFy68iwJ9gO27WvuwgGCxOAg
+         QA1bG8sIpQntc4M8TSlS8a8pFc/wRpPuoQVsU19Gpdm/vPqSYZeTzqlTssjN3MHwf0KC
+         WH6FhIoHvzx1UFfiztfE5jlC8X4QbI2iyf6gJx9N03SG1w1mHZ/F2eqlqzLZAUZ3CsFs
+         GpGQ==
+X-Gm-Message-State: APjAAAWYbWm//w/r9PC3fn7ENmCeIyZOIqhsowWKj+Ldwf4evyP8G+M1
+        UEx3ifTlw88lAKVIdF7ggFg=
+X-Google-Smtp-Source: APXvYqzGuDinmE4cVK+0aPZLo2+/8f40722qYF66Je1Q5D0ovm5p0O47bSOE7a0RL58cyE1qJlnOAA==
+X-Received: by 2002:ae9:c108:: with SMTP id z8mr24722879qki.57.1562082823281;
+        Tue, 02 Jul 2019 08:53:43 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id m4sm5986120qka.70.2019.07.02.08.53.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 08:53:42 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8279841153; Tue,  2 Jul 2019 12:53:40 -0300 (-03)
+Date:   Tue, 2 Jul 2019 12:53:40 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, tmricht@linux.ibm.com,
+        brueckner@linux.ibm.com, kan.liang@linux.intel.com,
+        ben@decadent.org.uk, mathieu.poirier@linaro.org,
+        mark.rutland@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, zhangshaokun@hisilicon.com,
+        ak@linux.intel.com
+Subject: Re: [PATCH v3 0/4] Perf uncore PMU event alias support for Hisi
+ hip08 ARM64 platform
+Message-ID: <20190702155340.GE15462@kernel.org>
+References: <1561732552-143038-1-git-send-email-john.garry@huawei.com>
+ <20190628145406.GA22863@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1eea04e4-ac19-241d-695b-61be43640509@amd.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190628145406.GA22863@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 03:41:23PM +0000, Gary R Hook wrote:
-> On 7/1/19 7:25 PM, Eric Biggers wrote:
-> > On Mon, Jul 01, 2019 at 05:01:32PM -0700, Cfir Cohen wrote:
-> >> Avoid leaking GCM tag through timing side channel.
-> >>
-> >> Signed-off-by: Cfir Cohen <cfir@google.com>
-> >> ---
-> >>   drivers/crypto/ccp/ccp-ops.c | 3 ++-
-> >>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-> >> index db8de89d990f..633670220f6c 100644
-> >> --- a/drivers/crypto/ccp/ccp-ops.c
-> >> +++ b/drivers/crypto/ccp/ccp-ops.c
-> >> @@ -840,7 +840,8 @@ static int ccp_run_aes_gcm_cmd(struct ccp_cmd_queue *cmd_q,
-> >>   		if (ret)
-> >>   			goto e_tag;
-> >>   
-> >> -		ret = memcmp(tag.address, final_wa.address, AES_BLOCK_SIZE);
-> >> +		ret = crypto_memneq(tag.address, final_wa.address,
-> >> +				    AES_BLOCK_SIZE) ? -EBADMSG : 0;
-> >>   		ccp_dm_free(&tag);
-> >>   	}
-> >>   
-> >> -- 
-> >> 2.22.0.410.gd8fdbe21b5-goog
-> >>
+Em Fri, Jun 28, 2019 at 04:54:06PM +0200, Jiri Olsa escreveu:
+> On Fri, Jun 28, 2019 at 10:35:48PM +0800, John Garry wrote:
+> > This patchset adds support for uncore PMU event aliasing for HiSilicon
+> > hip08 ARM64 platform.
 > > 
-> > Looks like this needs:
+> > We can now get proper event description for uncore events for the
+> > perf tool.
 > > 
-> > 	Fixes: 36cf515b9bbe ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
-> > 	Cc: <stable@vger.kernel.org> # v4.12+
+> > For HHA, DDRC, and L3C JSONs, we don't have all the event info yet, so
+> > I will seek it out to update the JSONs later.
+> > 
+> > Changes to v3:
+> > - Omit "perf pmu: Fix uncore PMU alias list for ARM64", as it has already
+> >   been picked up
+> > - Add comment for pmu_uncore_alias_match()
 > 
-> 
-> Yes, it does. For clarity, does that mean you've taken care of this?
-> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Herbert is the person who will apply this, so he'd need to do it.  But it might
-be better just to resend.
+Thanks, applied.
 
-- Eric
+- Arnaldo
