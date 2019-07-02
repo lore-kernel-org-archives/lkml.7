@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9E4C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C799C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85342183F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A372184B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562054989;
-	bh=mEcSQA743o/+5T1M9riLJ9D6Uq5/D9wKIGLRBU3Iwiw=;
+	s=default; t=1562054992;
+	bh=rOlToZ6vzTH/OlDc5FQCdWtvbsvZqdQvaZ4azGXR+3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPa3A5f1+cVdpV0PBdQfrVDBNGZEXvW1hsfmtIE8X3LR1BJYQuUyuPu7IJ7UqIq47
-	 YD0L8yeuIXkAvsukkQssAoT1eWXqw6vXIwT242s/2+3Vcp7Kbdl93qoWxDoBGyNWuA
-	 H4MWO4VvQgNdfkjIZeBSvqGYfcFZS1c+eLT16Ikc=
+	b=oS7AYtNjpdvmdur5Z+WRmzchR5AnaV6r3v0CT9lCshNv4C7qW9HS7b+iSG5LVPBJO
+	 1zfL7PFHsCd3cVCEdWhU8Dryr63hmIUKC3jYbKKBxsPSAGS8fJtpCPHy5SJPQWO6a+
+	 F2VD3TjTsEHb551dg6ePCutrbRHQMtibjQstzRL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfGBIJs (ORCPT
+        id S1728736AbfGBIJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbfGBIJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:09:43 -0400
+        id S1727678AbfGBIJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:09:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B5A206A2;
-        Tue,  2 Jul 2019 08:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E81E62184B;
+        Tue,  2 Jul 2019 08:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054982;
-        bh=mEcSQA743o/+5T1M9riLJ9D6Uq5/D9wKIGLRBU3Iwiw=;
+        s=default; t=1562054988;
+        bh=rOlToZ6vzTH/OlDc5FQCdWtvbsvZqdQvaZ4azGXR+3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oonXpVsKejcXHekLTKIn/VMyMjZgXllMa39CgvpzeKuyUtx9VJVlaoI444oT7EDz5
-         S3wALHDzBwxjw1LBjzf+1zRPQhXiT8giT6/5TVzvOHNVRYRdM0VCRJ5LH2iHJdJjCg
-         g9cuZD9mAPo4DxxeRtEDvQ7BBkKDe8Okkwfnj8x4=
+        b=Knhug6oW0i8VaCxz23XJiHc5YY7qrSgd5xPCw37tirnvwFRcPGTiaXq6qqJm53Ljt
+         Ht2fICRkx8HhOBcrqcYZ6r5DsnfDnJ3bVOwO3K3d5USuOUeJtVCa1Zj9lZxIH2/i6R
+         I4FDiyFZIJiMDn2pDz5qyDGomzBP8qaMXgmRMxlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 20/43] dm log writes: make sure super sector log updates are written in order
-Date:   Tue,  2 Jul 2019 10:02:00 +0200
-Message-Id: <20190702080124.846911554@linuxfoundation.org>
+        stable@vger.kernel.org, JingYi Hou <houjingyi647@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 30/43] net: remove duplicate fetch in sock_getsockopt
+Date:   Tue,  2 Jul 2019 10:02:10 +0200
+Message-Id: <20190702080125.429553787@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
 References: <20190702080123.904399496@linuxfoundation.org>
@@ -60,106 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: JingYi Hou <houjingyi647@gmail.com>
 
-commit 211ad4b733037f66f9be0a79eade3da7ab11cbb8 upstream.
+[ Upstream commit d0bae4a0e3d8c5690a885204d7eb2341a5b4884d ]
 
-Currently, although we submit super bios in order (and super.nr_entries
-is incremented by each logged entry), submit_bio() is async so each
-super sector may not be written to log device in order and then the
-final nr_entries may be smaller than it should be.
+In sock_getsockopt(), 'optlen' is fetched the first time from userspace.
+'len < 0' is then checked. Then in condition 'SO_MEMINFO', 'optlen' is
+fetched the second time from userspace.
 
-This problem can be reproduced by the xfstests generic/455 with ext4:
+If change it between two fetches may cause security problems or unexpected
+behaivor, and there is no reason to fetch it a second time.
 
-  QA output created by 455
- -Silence is golden
- +mark 'end' does not exist
+To fix this, we need to remove the second fetch.
 
-Fix this by serializing submission of super sectors to make sure each
-is written to the log disk in order.
-
-Fixes: 0e9cebe724597 ("dm: add log writes target")
-Cc: stable@vger.kernel.org
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: JingYi Hou <houjingyi647@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/dm-log-writes.c |   23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ net/core/sock.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -57,6 +57,7 @@
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1358,9 +1358,6 @@ int sock_getsockopt(struct socket *sock,
+ 	{
+ 		u32 meminfo[SK_MEMINFO_VARS];
  
- #define WRITE_LOG_VERSION 1ULL
- #define WRITE_LOG_MAGIC 0x6a736677736872ULL
-+#define WRITE_LOG_SUPER_SECTOR 0
+-		if (get_user(len, optlen))
+-			return -EFAULT;
+-
+ 		sk_get_meminfo(sk, meminfo);
  
- /*
-  * The disk format for this is braindead simple.
-@@ -112,6 +113,7 @@ struct log_writes_c {
- 	struct list_head logging_blocks;
- 	wait_queue_head_t wait;
- 	struct task_struct *log_kthread;
-+	struct completion super_done;
- };
- 
- struct pending_block {
-@@ -177,6 +179,14 @@ static void log_end_io(struct bio *bio)
- 	bio_put(bio);
- }
- 
-+static void log_end_super(struct bio *bio)
-+{
-+	struct log_writes_c *lc = bio->bi_private;
-+
-+	complete(&lc->super_done);
-+	log_end_io(bio);
-+}
-+
- /*
-  * Meant to be called if there is an error, it will free all the pages
-  * associated with the block.
-@@ -212,7 +222,8 @@ static int write_metadata(struct log_wri
- 	bio->bi_iter.bi_size = 0;
- 	bio->bi_iter.bi_sector = sector;
- 	bio_set_dev(bio, lc->logdev->bdev);
--	bio->bi_end_io = log_end_io;
-+	bio->bi_end_io = (sector == WRITE_LOG_SUPER_SECTOR) ?
-+			  log_end_super : log_end_io;
- 	bio->bi_private = lc;
- 	bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
- 
-@@ -334,11 +345,18 @@ static int log_super(struct log_writes_c
- 	super.nr_entries = cpu_to_le64(lc->logged_entries);
- 	super.sectorsize = cpu_to_le32(lc->sectorsize);
- 
--	if (write_metadata(lc, &super, sizeof(super), NULL, 0, 0)) {
-+	if (write_metadata(lc, &super, sizeof(super), NULL, 0,
-+			   WRITE_LOG_SUPER_SECTOR)) {
- 		DMERR("Couldn't write super");
- 		return -1;
- 	}
- 
-+	/*
-+	 * Super sector should be writen in-order, otherwise the
-+	 * nr_entries could be rewritten incorrectly by an old bio.
-+	 */
-+	wait_for_completion_io(&lc->super_done);
-+
- 	return 0;
- }
- 
-@@ -447,6 +465,7 @@ static int log_writes_ctr(struct dm_targ
- 	INIT_LIST_HEAD(&lc->unflushed_blocks);
- 	INIT_LIST_HEAD(&lc->logging_blocks);
- 	init_waitqueue_head(&lc->wait);
-+	init_completion(&lc->super_done);
- 	atomic_set(&lc->io_blocks, 0);
- 	atomic_set(&lc->pending_blocks, 0);
- 
+ 		len = min_t(unsigned int, len, sizeof(meminfo));
 
 
