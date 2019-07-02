@@ -2,118 +2,81 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=3.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052C3C06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C369C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE3420673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1647220673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHbuCUvN"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZL/zgmk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfGCAeg (ORCPT
+        id S1727248AbfGCAfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:34:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40599 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCAeg (ORCPT
+        Tue, 2 Jul 2019 20:35:04 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46941 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCAfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:34:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id n5so676221ioc.7;
-        Tue, 02 Jul 2019 17:34:35 -0700 (PDT)
+        Tue, 2 Jul 2019 20:35:04 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z23so431793ote.13;
+        Tue, 02 Jul 2019 17:35:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=I1EqOkAJ16JrzJYbRJsKM2M5z/cziA7sysWiFBw1wCQ=;
-        b=cHbuCUvN+s8Lxw2Gyg3gi4DFYo+F4B8Y2Kkpc1I2sZAekDpolXvsjxL2vCLw+zBEqh
-         XqJBFdv4ZmCJk7ExnlSoa231CpUFJrcpmHzSb6QDviDzMXT80sTIefoueo7dajOTdTbi
-         aSPGfyYr4g1yfJTGDte3QRKpLEKt1aqtYlMj+ltHYK9bVYthpd6JxS8HV8gAdXOBjeLa
-         uTskqhloZdHDc8VdGHBGGTqQcEBxsoj4u5Nv/wU43dV0lo6VBVMpKiI5X6sDz/w7Ybgg
-         oCN/1Oo3aDlnsbAFjFi5ldNCfMPtrnA2qTcQ7ew+gfk4C/znPwGU2nex1jNx62tD5fmB
-         J9iw==
+        bh=6HvJuM18alyeMHoRBjFAJz8IVxm/LOrt6nImzFK3lsE=;
+        b=ZL/zgmk5C6P8mXBb7AQ7vp5C1Xz9VF3Onrg6rH+mPkYfq1bkn35Xn/20CUxdaHn/Ba
+         As8W8rj8MO2TPxJbLYAsV8Zr1JcXNxcB7S3nTswhG/q8JMEduSCQJcmZLLQ9zOQSQfyk
+         kx6R2lLIgaUoq7ViMRDuO36Wn2pKUGkrTuOcSp1cqtLZyOJUPgX447cc56NnfWuKJcvy
+         dk+DNAVbg9S/dYMV8QLSIJUIMiqtDPDb9aFykMXk/YpOwSbjg03XRU3rPcXWYsTdoOjF
+         TQXzWG83z4s362gpdu9ENdszdpz5ERCO3qPD4xQdAvzEluLxpKpd1AhOMkZ7qym/hOma
+         +DYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=I1EqOkAJ16JrzJYbRJsKM2M5z/cziA7sysWiFBw1wCQ=;
-        b=SU6OceEQM4IhouTK4HKhjslxEWRHAF1qrvr9w3/5SGMIxSnF2UgxRlu3d8lj6qq8dB
-         OgyiuRS+k11Poq7aDnyVCoQm9OkdvVfVWfgJOGXlbXjUiChdxbrBgikkIMOU/Qu029aJ
-         a9ACX3jr46sS/sGYlZWE+YNNzJ5e7+yqQGbgc34Urk7tftd8GziorjFH3ESdyeuX14M4
-         +d8D2C5hPW5kc+0/ZT6/aNp+4O+pDcv8ifxFcmke/Td6GFS87518EUHBidWHHoA+JHDN
-         Z3LDnEhMsy+wpl9/bldazeM9790vfNcfsRDGqo5vmnQYZ6xcokboCoYzn6tileD7QyNc
-         RGPA==
-X-Gm-Message-State: APjAAAVn2NugxIQlKqr6V4ApAi4P5+DMqebtDhd+HEDV2pQcbOzOlHtG
-        CCL2D9D0iHNMMnYOQZOLM2p/al1yJimGaC4vnNEPyA==
-X-Google-Smtp-Source: APXvYqz2ea1Co87gENT0Z1FYNhMJZ2SZm3RqcDFrMzN+sTpYjy5Oh6gRJ+UNd2Qx/1ivh+Y0WvJG4xn2CxoR0RmeRwA=
-X-Received: by 2002:a02:ac09:: with SMTP id a9mr39228087jao.48.1562102997246;
- Tue, 02 Jul 2019 14:29:57 -0700 (PDT)
+        bh=6HvJuM18alyeMHoRBjFAJz8IVxm/LOrt6nImzFK3lsE=;
+        b=szqJMGikUpqhNZjWfnCCEG1CoZQnO2s9EhLAEYk9FYBMQQV80GY1Ucj7NvjP7lG9He
+         oCesTSL4qn0a5gDvzs2yGN2KRYUr5uAz6ONbjBO9CCVdFEDyvYK8sxwl6KLw9mP+1Rbk
+         3Kl1GK0nGeF8cpjN9SJYylPcVDxZhDj6Af+fFWpieWBuGSYaMGh4tIrhz/CCQfPk5Klo
+         kY+OEHwy4fxsAu34AcX9F0eX1ovnGALa/8I6iPlLWk5CbV1PKKA828fgELaWnI6AJ4p7
+         xkPUKUOVp9A9AUtIV4MIbDGUgbNuyV8HXwvj4485nF49mTSctM153f05tG84GogWyQTl
+         3xJw==
+X-Gm-Message-State: APjAAAVvuH0gniloCtMUxKFWHd4DBS+JGwp+3aSy9IBz4epPd+gRz8L0
+        iDltOaHOyUL+lOO36yqaL1Vz13O9hj6f+eeNykwgsG1F
+X-Google-Smtp-Source: APXvYqyZYeVdqlXDt36fdhfbAYHQ2O+BsFsPr+MyhLgpJe6VJlBkHeJ6Eta6tLBIetsFlmHLbT/xvN+x6/atColGNo0=
+X-Received: by 2002:a9d:23ca:: with SMTP id t68mr26108783otb.98.1562108343442;
+ Tue, 02 Jul 2019 15:59:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190630131445.25712-1-robdclark@gmail.com> <20190630131445.25712-4-robdclark@gmail.com>
- <CAOCk7NpyYSiDHP84E4bQiTA1Wk9Sd4w-F8-Zqu9tKtDoUTsFDw@mail.gmail.com>
-In-Reply-To: <CAOCk7NpyYSiDHP84E4bQiTA1Wk9Sd4w-F8-Zqu9tKtDoUTsFDw@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 2 Jul 2019 15:29:47 -0600
-Message-ID: <CAOCk7NrxsbAd9sp6m9RSfkRjwW5GZH7qJv2fd78bogas-4YMWA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 3/3] drm/msm/dsi: make sure we have panel or
- bridge earlier
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>, Sean Paul <sean@poorly.run>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-7-narmstrong@baylibre.com>
+In-Reply-To: <20190701091258.3870-7-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 00:58:52 +0200
+Message-ID: <CAFBinCBdB96e4PzxNMbOhuiRrxGz-4vRXu3dOs7n86qoA8MDeQ@mail.gmail.com>
+Subject: Re: [RFC/RFT v3 06/14] soc: amlogic: meson-clk-measure: add G12B
+ second cluster cpu clk
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 2:30 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> On Sun, Jun 30, 2019 at 7:16 AM Rob Clark <robdclark@gmail.com> wrote:
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > @@ -1824,6 +1824,20 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
-> >                 goto fail;
-> >         }
-> >
-> > +       /*
-> > +        * Make sure we have panel or bridge early, before we start
-> > +        * touching the hw.  If bootloader enabled the display, we
-> > +        * want to be sure to keep it running until the bridge/panel
-> > +        * is probed and we are all ready to go.  Otherwise we'll
-> > +        * kill the display and then -EPROBE_DEFER
-> > +        */
-> > +       if (IS_ERR(of_drm_find_panel(msm_host->device_node)) &&
-> > +                       !of_drm_find_bridge(msm_host->device_node)) {
-> > +               pr_err("%s: no panel or bridge yet\n", __func__);
+> Add the G12B second CPU cluster CPU and SYS_PLL measure IDs.
 >
-> pr_err() doesn't seem right for a probe defer condition.  pr_dbg?
+> These IDs returns 0Hz on G12A.
 >
-> > +               return -EPROBE_DEFER;
-> > +       }
-> > +
-> > +
->
-> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-
-Actually, I'm sorry, I'm now NACKing this.
-
-Turns out this prevents the panel/bridge from ever probing if its a
-child node of the dsi device, since mipi_dsi_host_register() is never
-called.
-
-This probably works for you on the c630 because the bridge hangs off
-the i2c bus.
+> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
