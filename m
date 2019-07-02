@@ -2,128 +2,93 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC15C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF38C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1F6218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:40:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CQdsRFF1"
+	by mail.kernel.org (Postfix) with ESMTP id 6151E218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfGCAkU (ORCPT
+        id S1727174AbfGCAlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:40:20 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45559 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbfGCAkU (ORCPT
+        Tue, 2 Jul 2019 20:41:13 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:40523 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfGCAlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:40:20 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j19so640752qtr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
-        b=CQdsRFF171jO5+/s1qAUI1rgCzyTzJDs9gZOQMPyPjnK2ayU+zBw/Y1zuHJcS3Aqaa
-         DOee7yY43BfLZd8G3dM1yUpHgG+YIbD8ROTNtVfGY52fSj7ya5Ed3OQroTo8Cz47Xh/E
-         dsaGad6apPp+ZEq3MUye/V3Lzt0F7FRJxgyu40Nim3+roBef6y/zVuOZO/ydtLb1/7AV
-         V8+ae4mRJHOin7xdq2VTx5cmL15S+2G3Ry0hVPR8zpWJTpk/CBENGKyWw6bmiU1kCm0N
-         0AxXt/FTvuMJ1c1JkMO+FwHTrYgADhhuWJSrhkbmeqEKELzouSnt6TgRV1MAj0P94Sef
-         4LpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
-        b=gZkP6IL4sG8qMdLtqllF89PMV44vs46HFgwwn04A9shhVa4fOY4+x/0vDgDciU08SY
-         xEE6pXqcd1puUXbVpm/tKKVFB7Vwc5b5a8jlN6CgGJMaSWpfyjyaz5q3wXKCU9H/l2TV
-         1HPzLJWIhrVWNSzpQUyEle/Y+nXz8GbHTa6D35fzBjqTydRwKdewexR2Ut1CXSW+8cIf
-         g434yyiChkFOfJl/HBFOEQoEmXmFa46hiuHTgTx2eMj708lY0WeBjXNtKOXnXS0AQKED
-         8lPAq+ya66my0YZx1bp4z280wmbPkkD9y72OWJgDOQqeNZ+cCbg9MsstvokyE5xCDywL
-         MaiQ==
-X-Gm-Message-State: APjAAAXEy+1wcjo9lkgI2cMNwscGDaKesKnLCvuxsOuF6qaZE3v5bxzV
-        Dwkb/0pcuJ5ftxiXYb7DnYMldQ==
-X-Google-Smtp-Source: APXvYqxS8kYtvbzapj/eH76oDHlldzxbfNicv6tPtHys9nj2jiUMbU6r2kzPJt0X+uutHWhL+5s2Hg==
-X-Received: by 2002:ac8:2b14:: with SMTP id 20mr28665349qtu.295.1562114419416;
-        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id c18sm220886qkm.78.2019.07.02.17.40.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 17:40:14 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf] xdp: fix race on generic receive path
-Message-ID: <20190702174014.005a3166@cakuba.netronome.com>
-In-Reply-To: <20190702143634.19688-1-i.maximets@samsung.com>
-References: <CGME20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad@eucas1p2.samsung.com>
-        <20190702143634.19688-1-i.maximets@samsung.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 2 Jul 2019 20:41:12 -0400
+Received: from [192.168.1.110] ([95.117.57.107]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M6m1g-1hcKYA3FGQ-008H7u; Tue, 02 Jul 2019 22:26:16 +0200
+Subject: Re: [PATCH] devres: allow const resource arguments
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Enrico Weigelt <info@metux.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20190628150049.1108048-1-arnd@arndb.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <665cd853-ba34-8913-3b63-a88130eda3f8@metux.net>
+Date:   Tue, 2 Jul 2019 22:26:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190628150049.1108048-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:2EiotxMAAmjsTYjjhHFlQbtCH5AwERUvgcCE1kHa5uHuZFTKNvV
+ UGRFM0uhJrjXHwsIbIEcNhcXAMM5vWS1GTm2Umhi1OSz48FFtH46MGI4VZYLopurniDJ+ys
+ V5D08p2yqnG8BiqUaAlH3TLx/IyXqlXlzmNYxA9DKsGhUVF8ZsytjCB41D2IgUVoj5H4u0E
+ 82k93hZn3uDbROmZYe/4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Rpp3EBnTlec=:HB9r0UmrVG8WVpvM3k4C20
+ QGvr1nwEL7xBlydC4AuiBDChCpB6vw0kyzGQLA2B4Qywq8VDHIw5wEAqWrJG73vbxV1dbMHEU
+ OUsLrGuuSYyoWXm4W5TvDRlQLwk/yKjD3SD+ysSjcCuyS9kNd1QnAN0/opSSCENNOfZmtAfEN
+ IgeMWs78eIGKV+c6ftXRsJStYo6urMr4BYxJqIhT0gWg6hkhe2B/Cr1N0Not1+Pg5zILMb3Fr
+ gBOm3ENpVUVr3ttJEzr27XOp/GVMEXJI7pBuBYlAaVLXRwJVqbd14mCbJLBKZnEeEez/fZOPr
+ oPManpmN+yYbZyGO1E0YtPtm271K0RhK9mmoWCOKJAIbTS2fSpYaAGeyAPeNJjRwtrixnHf+C
+ 0bNv6jtw9bkMl9OeSGhcRuBjdzlpFDrA6Gx7UhDjqwIr+ki792JPMfz3kmrq9rw4Ko+mJPcn2
+ PqbQVIrtORcIPVTmmyDdZHzFZ0xtRGBTNofg/rZihQbGHkFgHtk9y2AswdppJn/4sm/N2xUDc
+ Iv7OU6KEadrtd29+tPfQ+0btH8XRBOQfbPBRasW8dekDYSIEnMIM60XcS1drkITW0QWUbIqYz
+ FURk3NzGRNk4pssIGeWpykiXXFJ3fcBUic8WnvMkinEc2h3bW7fkgyuI98S5bqV5kKV2kEz9z
+ htgfcUEPyobB3qc0e3/qD55fjxMx+WMzBpiiw/ZZLNxzrCHJ/yPii5AdTuREUUewianbiBk9q
+ W0XO4BK5bE08iIwO8x6GSz9OMptv6AG8ZWibVOkv/dp12weGPNoX1qVsUpg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Jul 2019 17:36:34 +0300, Ilya Maximets wrote:
-> Unlike driver mode, generic xdp receive could be triggered
-> by different threads on different CPU cores at the same time
-> leading to the fill and rx queue breakage. For example, this
-> could happen while sending packets from two processes to the
-> first interface of veth pair while the second part of it is
-> open with AF_XDP socket.
+On 28.06.19 16:59, Arnd Bergmann wrote:
+> devm_ioremap_resource() does not currently take 'const' arguments,
+> which results in a warning from the first driver trying to do it
+> anyway:
 > 
-> Need to take a lock for each generic receive to avoid race.
-> 
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
+> drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+>   priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
+>                                                  ^~~~~~~~~~~~~~~~~~~
 
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index a14e8864e4fa..19f41d2b670c 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -119,17 +119,22 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
->  {
->  	u32 metalen = xdp->data - xdp->data_meta;
->  	u32 len = xdp->data_end - xdp->data;
-> +	unsigned long flags;
->  	void *buffer;
->  	u64 addr;
->  	int err;
->  
-> -	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
-> -		return -EINVAL;
-> +	spin_lock_irqsave(&xs->rx_lock, flags);
+<snip>
 
-Why _irqsave, rather than _bh?
+I've posted quite the same some time ago - no idea why it got no
+response.
 
-> +	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
-> +		err = -EINVAL;
-> +		goto out_unlock;
-> +	}
->  
->  	if (!xskq_peek_addr(xs->umem->fq, &addr) ||
->  	    len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
-> -		xs->rx_dropped++;
-> -		return -ENOSPC;
-> +		err = -ENOSPC;
-> +		goto out_drop;
->  	}
->  
->  	addr += xs->umem->headroom;
 
+Reviwed-By: Enrico Weigelt <info@metux.net>
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
