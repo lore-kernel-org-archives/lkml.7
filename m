@@ -2,155 +2,109 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0EAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E7C46478
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C612064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B943C20645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562055369;
+	bh=B0zE+ze37peEMgxTPIJ5aLGa/EiAMNoLf4EUJG8WUcQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vthyhhSTnZmztxL+0EmTYek7otpwtGfMR7KlpzWSbcMCaw9R0IY/shVGvhGlwV8Tf
+	 HHl0Em6hMGp+C5jLHfJOPZXqUOm0EkwVzPA89YMk7rwyql6MpkMlQ3en6CbHccxDCW
+	 Y5WlxmuR/cV4Aso/YW0vZpycBLzx8fX6mLiDjQBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfGBIQD (ORCPT
+        id S1727729AbfGBIE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:16:03 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49204 "EHLO inva020.nxp.com"
+        Tue, 2 Jul 2019 04:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbfGBIEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:04:33 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A09EE1A0BBD;
-        Tue,  2 Jul 2019 10:04:30 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D25D1A0BBA;
-        Tue,  2 Jul 2019 10:04:19 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7E87E402EB;
-        Tue,  2 Jul 2019 16:04:04 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        l.stach@pengutronix.de, abel.vesa@nxp.com,
-        andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca,
-        agx@sigxcpu.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH RESEND V4 1/5] clocksource: timer-of: Support getting clock frequency from DT
-Date:   Tue,  2 Jul 2019 15:55:09 +0800
-Message-Id: <20190702075513.17451-1-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727700AbfGBIE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:04:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E71E21479;
+        Tue,  2 Jul 2019 08:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562054665;
+        bh=B0zE+ze37peEMgxTPIJ5aLGa/EiAMNoLf4EUJG8WUcQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M0ujkxYiGRd8c5Lay8sNK6uf3IJ3EbH/e6+UgojEyPUPmarMJZXrub9accQ1iETq9
+         L5A5RvluD8faog7dNpX2TXJ1lLVfBOjDSeuN4Al95sSUmb3qa3nJZ6dWQNiSxobS5R
+         guUaMJPFto292OvQdFnl7tgZqywVcNvFzT4y8DV4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Craig Gallek <kraig@google.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.1 49/55] bpf: udp: ipv6: Avoid running reuseports bpf_prog from __udp6_lib_err
+Date:   Tue,  2 Jul 2019 10:01:57 +0200
+Message-Id: <20190702080126.622025751@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
+References: <20190702080124.103022729@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Martin KaFai Lau <kafai@fb.com>
 
-More and more platforms use platform driver model for clock driver,
-so the clock driver is NOT ready during timer initialization phase,
-it will cause timer initialization failed.
+commit 4ac30c4b3659efac031818c418beb51e630d512d upstream.
 
-To support those platforms with upper scenario, introducing a new
-flag TIMER_OF_CLOCK_FREQUENCY which is mutually exclusive with
-TIMER_OF_CLOCK flag to support getting timer clock frequency from
-DT's timer node, the property name should be "clock-frequency",
-then of_clk operations can be skipped.
+__udp6_lib_err() may be called when handling icmpv6 message. For example,
+the icmpv6 toobig(type=2).  __udp6_lib_lookup() is then called
+which may call reuseport_select_sock().  reuseport_select_sock() will
+call into a bpf_prog (if there is one).
 
-User needs to select either TIMER_OF_CLOCK_FREQUENCY or TIMER_OF_CLOCK
-flag if want to use timer-of driver to initialize the clock rate.
+reuseport_select_sock() is expecting the skb->data pointing to the
+transport header (udphdr in this case).  For example, run_bpf_filter()
+is pulling the transport header.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+However, in the __udp6_lib_err() path, the skb->data is pointing to the
+ipv6hdr instead of the udphdr.
+
+One option is to pull and push the ipv6hdr in __udp6_lib_err().
+Instead of doing this, this patch follows how the original
+commit 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
+was done in IPv4, which has passed a NULL skb pointer to
+reuseport_select_sock().
+
+Fixes: 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
+Cc: Craig Gallek <kraig@google.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Craig Gallek <kraig@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-Changes since V3:
-	- use hardcoded "clock-frequency" instead of adding new variable prop_name;
-	- add pre-condition check for TIMER_OF_CLOCK and TIMER_OF_CLOCK_FREQUENCY, they MUST be exclusive.
----
- drivers/clocksource/timer-of.c | 29 +++++++++++++++++++++++++++++
- drivers/clocksource/timer-of.h |  7 ++++---
- 2 files changed, 33 insertions(+), 3 deletions(-)
+ net/ipv6/udp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 8054228..858f684 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -161,11 +161,30 @@ static __init int timer_of_base_init(struct device_node *np,
- 	return 0;
- }
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -520,7 +520,7 @@ int __udp6_lib_err(struct sk_buff *skb,
+ 	struct net *net = dev_net(skb->dev);
  
-+static __init int timer_of_clk_frequency_init(struct device_node *np,
-+					      struct of_timer_clk *of_clk)
-+{
-+	int ret;
-+	u32 rate;
-+
-+	ret = of_property_read_u32(np, "clock-frequency", &rate);
-+	if (!ret) {
-+		of_clk->rate = rate;
-+		of_clk->period = DIV_ROUND_UP(rate, HZ);
-+	}
-+
-+	return ret;
-+}
-+
- int __init timer_of_init(struct device_node *np, struct timer_of *to)
- {
-+	unsigned long clock_flags = TIMER_OF_CLOCK | TIMER_OF_CLOCK_FREQUENCY;
- 	int ret = -EINVAL;
- 	int flags = 0;
- 
-+	if ((to->flags & clock_flags) == clock_flags)
-+		return ret;
-+
- 	if (to->flags & TIMER_OF_BASE) {
- 		ret = timer_of_base_init(np, &to->of_base);
- 		if (ret)
-@@ -180,6 +199,13 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 		flags |= TIMER_OF_CLOCK;
- 	}
- 
-+	if (to->flags & TIMER_OF_CLOCK_FREQUENCY) {
-+		ret = timer_of_clk_frequency_init(np, &to->of_clk);
-+		if (ret)
-+			goto out_fail;
-+		flags |= TIMER_OF_CLOCK_FREQUENCY;
-+	}
-+
- 	if (to->flags & TIMER_OF_IRQ) {
- 		ret = timer_of_irq_init(np, &to->of_irq);
- 		if (ret)
-@@ -201,6 +227,9 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 	if (flags & TIMER_OF_CLOCK)
- 		timer_of_clk_exit(&to->of_clk);
- 
-+	if (flags & TIMER_OF_CLOCK_FREQUENCY)
-+		to->of_clk.rate = 0;
-+
- 	if (flags & TIMER_OF_BASE)
- 		timer_of_base_exit(&to->of_base);
- 	return ret;
-diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-index a5478f3..a08e108 100644
---- a/drivers/clocksource/timer-of.h
-+++ b/drivers/clocksource/timer-of.h
-@@ -4,9 +4,10 @@
- 
- #include <linux/clockchips.h>
- 
--#define TIMER_OF_BASE	0x1
--#define TIMER_OF_CLOCK	0x2
--#define TIMER_OF_IRQ	0x4
-+#define TIMER_OF_BASE			0x1
-+#define TIMER_OF_CLOCK			0x2
-+#define TIMER_OF_IRQ			0x4
-+#define TIMER_OF_CLOCK_FREQUENCY	0x8
- 
- struct of_timer_irq {
- 	int irq;
--- 
-2.7.4
+ 	sk = __udp6_lib_lookup(net, daddr, uh->dest, saddr, uh->source,
+-			       inet6_iif(skb), inet6_sdif(skb), udptable, skb);
++			       inet6_iif(skb), inet6_sdif(skb), udptable, NULL);
+ 	if (!sk) {
+ 		/* No socket for error: try tunnels before discarding */
+ 		sk = ERR_PTR(-ENOENT);
+
 
