@@ -2,173 +2,149 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E5C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466E0C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E054C205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A94220645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562055249;
+	bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z5OPJtxmHvJ/ryK67AiJdAi8C7ANOkKt9NHBdTYwEw8pOeHw10koTc4/yPLB7tyN5
+	 Zmb4RwMYJb3TirkXlT4rOoyp3xtX3hMD/3kd193D8MWmWSvtRrRpF+0R2RyGpIX27+
+	 p7ro2MkCR+gq++vbvWRnj3Y1sifbTW7pyD4BSk8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfGBIOE (ORCPT
+        id S1728365AbfGBIOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:14:04 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58267 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGBIOC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:14:02 -0400
-X-Originating-IP: 90.89.68.76
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 29E16FF807;
-        Tue,  2 Jul 2019 08:13:47 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 10:13:46 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Torsten Duwe <duwe@lst.de>, Harald Geyer <harald@ccbib.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190702081346.4hlb53qcajhz4ckl@flea>
-References: <20190605120237.ekmytfxcwbjaqy3x@flea>
- <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
+        Tue, 2 Jul 2019 04:14:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728110AbfGBIGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:06:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BBD921850;
+        Tue,  2 Jul 2019 08:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562054797;
+        bh=DcM6BvikXnZQVDyUoJmwoTLl3k6lVmvyEkQXJvPKY7s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PVEHbgNUz63MUf1GNfrusqMjeHVsAragR6akxjGVrAfBdRhOJVSu+F9VD9upjR++W
+         QRdUpi+f+TaGAvy2cXVku+JajPMJYrmsOSaKmqUH7a3A/+IqEAjCTZjMyJLM767Omw
+         8M06K8/0vlLom63Isrz0BTngXcRZEF1V28ZV34ow=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 38/72] mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
+Date:   Tue,  2 Jul 2019 10:01:39 +0200
+Message-Id: <20190702080126.637385479@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+References: <20190702080124.564652899@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ysvumhfqulaacx3l"
-Content-Disposition: inline
-In-Reply-To: <64471471-5b4d-3c1f-a0e3-e02ee78ca23c@samsung.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---ysvumhfqulaacx3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit 7298e3b0a149c91323b3205d325e942c3b3b9ef6 upstream.
 
-On Mon, Jul 01, 2019 at 02:27:51PM +0200, Andrzej Hajda wrote:
-> On 01.07.2019 11:58, Maxime Ripard wrote:
-> > On Fri, Jun 28, 2019 at 12:39:32PM +0200, Andrzej Hajda wrote:
-> >> On 12.06.2019 17:20, Maxime Ripard wrote:
-> >>>> I am not sure if I understand whole discussion here, but I also do not
-> >>>> understand whole edp-connector thing.
-> >>> The context is this one:
-> >>> https://patchwork.freedesktop.org/patch/257352/?series=51182&rev=1
-> >>> https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1
-> >>> https://patchwork.freedesktop.org/patch/286468/?series=56776&rev=2
-> >>>
-> >>> TL;DR: This bridge is being used on ARM laptops that can come with
-> >>> different eDP panels. Some of these panels require a regulator to be
-> >>> enabled for the panel to work, and this is obviously something that
-> >>> should be in the DT.
-> >>>
-> >>> However, we can't really describe the panel itself, since the vendor
-> >>> uses several of them and just relies on the eDP bus to do its job at
-> >>> retrieving the EDIDs. A generic panel isn't really working either
-> >>> since that would mean having a generic behaviour for all the panels
-> >>> connected to that bus, which isn't there either.
-> >>>
-> >>> The connector allows to expose this nicely.
-> >> As VESA presentation says[1] eDP is based on DP but is much more
-> >> flexible, it is up to integrator (!!!) how the connection, power
-> >> up/down, initialization sequence should be performed. Trying to cover
-> >> every such case in edp-connector seems to me similar to panel-simple
-> >> attempt failure. Moreover there is no such thing as physical standard
-> >> eDP connector. Till now I though DT connector should describe physical
-> >> connector on the device, now I am lost, are there some DT bindings
-> >> guidelines about definition of a connector?
-> > This might be semantics but I guess we're in some kind of grey area?
-> >
-> > Like, for eDP, if it's soldered I guess we could say that there's no
-> > connector. But what happens if for some other board, that signal is
-> > routed through a ribbon?
-> >
-> > You could argue that there's no physical connector in both cases, or
-> > that there's one in both, or one for the ribbon and no connector for
-> > the one soldered in.
->
-> This is not about ribbon vs soldering. It is about usage: this
-> connection is static across the whole life of the device (except
-> exceptional things: repair, non-standard usage, etc).
+Currently the calcuation of end_pfn can round up the pfn number to more
+than the actual maximum number of pfns, causing an Oops.  Fix this by
+ensuring end_pfn is never more than max_pfn.
 
-It doesn't have to be.
+This can be easily triggered when on systems where the end_pfn gets
+rounded up to more than max_pfn using the idle-page stress-ng stress test:
 
-> And "the real connector" is (at least for me) something where
-> end-user can connect/disconnect different things: USB, HDMI,
-> ethernet, etc. And obviously to be functional it should be somehow
-> standardized. So even if there could be some grey area, I do not see
-> it here.
+sudo stress-ng --idle-page 0
 
-Well, if there's a ribbon connector, then you have a physical
-connector, with the end user being able to connect / disconnect
-various displays. It might not be the case with actual products, but
-it's pretty common with SBCs to have that signal routed through a
-connector, and the user has several options to connect a display to
-it.
+  BUG: unable to handle kernel paging request at 00000000000020d8
+  #PF error: [normal kernel read fault]
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+  RIP: 0010:page_idle_get_page+0xc8/0x1a0
+  Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
+  RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
+  RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
+  RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
+  RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
+  R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
+  R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
+  FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
+  Call Trace:
+    page_idle_bitmap_write+0x8c/0x140
+    sysfs_kf_bin_write+0x5c/0x70
+    kernfs_fop_write+0x12e/0x1b0
+    __vfs_write+0x1b/0x40
+    vfs_write+0xab/0x1b0
+    ksys_write+0x55/0xc0
+    __x64_sys_write+0x1a/0x20
+    do_syscall_64+0x5a/0x110
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The line really is blurred.
+Link: http://lkml.kernel.org/r/20190618124352.28307-1-colin.king@canonical.com
+Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> >> Maybe instead of edp-connector one would introduce integrator's specific
-> >> connector, for example with compatible "olimex,teres-edp-connector"
-> >> which should follow edp abstract connector rules? This will be at least
-> >> consistent with below presentation[1] - eDP requirements depends on
-> >> integrator. Then if olimex has standard way of dealing with panels
-> >> present in olimex/teres platforms the driver would then create
-> >> drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-> >> Anyway it still looks fishy for me :), maybe because I am not
-> >> familiarized with details of these platforms.
->
-> > That makes sense yes
->
-> And what if some panel can be used with this pseudo-connecter and in
-> some different hw directly? Code duplication? DT overlays?
+---
+ mm/page_idle.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Overlays are a solution, but I would advocate to always have the
-connector.
+--- a/mm/page_idle.c
++++ b/mm/page_idle.c
+@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(str
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
+@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(st
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ysvumhfqulaacx3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRsSOgAKCRDj7w1vZxhR
-xULUAPsGQYzNIZSTC25p24UViIRLulmthcOhzTK4JDdmTudgfAD+LA/mKeRDEVmr
-5I2K+qvDzz8yXwdP9AtgR/XK8mhHSQ8=
-=dLkQ
------END PGP SIGNATURE-----
-
---ysvumhfqulaacx3l--
