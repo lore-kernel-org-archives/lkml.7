@@ -2,169 +2,156 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2832C06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F6C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692992063F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E432064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:53:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sMWK9XTv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRQSPxyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfGBNu5 (ORCPT
+        id S1726980AbfGBNxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:50:57 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39798 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGBNu4 (ORCPT
+        Tue, 2 Jul 2019 09:53:23 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38410 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGBNxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:50:56 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190702135054euoutp01af579163b083aaada283d49522d522c7~tm1lpm1o_0785307853euoutp01k
-        for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2019 13:50:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190702135054euoutp01af579163b083aaada283d49522d522c7~tm1lpm1o_0785307853euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562075454;
-        bh=kM0PAOZlcGdWVDnx1xJTwwuahc1a7vYgK76oZBXb47c=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sMWK9XTvKafsyBHI7tx0uIr8SZoLEztx7S8tDEdoIZDHOFsG3bXOf1mJMaAtOPoh0
-         992Thi2TiaJIb6baI43mm3rXT9Yf1aSaVAZESV2BAQRWE589pAzMrk7i7ha2xH3ju1
-         G7POYfi4QRkni/s99zEpcNLHGGnl/0DosAZvuCc4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190702135053eucas1p27fa8afa8ffd95904739239c9087ab582~tm1k-mVWV2180921809eucas1p21;
-        Tue,  2 Jul 2019 13:50:53 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id EB.36.04325.D316B1D5; Tue,  2
-        Jul 2019 14:50:53 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190702135052eucas1p11e2621af0514505789c7947b84cf133c~tm1kIZxEP3174531745eucas1p18;
-        Tue,  2 Jul 2019 13:50:52 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190702135052eusmtrp1a4023efb84b0bc0645425edbba386b10~tm1j6UDrY2300423004eusmtrp1E;
-        Tue,  2 Jul 2019 13:50:52 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-81-5d1b613d9404
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 14.CB.04140.C316B1D5; Tue,  2
-        Jul 2019 14:50:52 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190702135051eusmtip176499a97ab5902991cdda48ee3d07695~tm1jZuF-w1685916859eusmtip1b;
-        Tue,  2 Jul 2019 13:50:51 +0000 (GMT)
-Subject: Re: [PATCH v7 1/2] drm/bridge: sil_sii8620: make remote control
- optional.
-To:     =?UTF-8?Q?Ronald_Tschal=c3=a4r?= <ronald@innovation.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.input,gmane.comp.video.dri.devel
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <2d0fe94c-a2c9-a8f6-967f-c33b53e86518@samsung.com>
-Date:   Tue, 2 Jul 2019 15:50:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Tue, 2 Jul 2019 09:53:23 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so27372828edo.5;
+        Tue, 02 Jul 2019 06:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AoEb1XK5dWnAb/XBdu/lZ2XdsXhNA2v9oOFATUDjbD0=;
+        b=rRQSPxyTMuRnQn9dQ6uPjqvkwKpDvf2xgxGrMy0XuEWVzfk3IEvNkguAVRY9nRJYfo
+         gZah0iQhsaCPAwpjLSCemmq8gLLTpII+ti5c6I6TUMrtAzYuZhTP0K1rp+4RCDDgpWzE
+         bZc0osHIzLMqxhMLGZhWF899HZ4WnRIySFcnFDj5Ms0T0D+3dNcKCDkMzSF5SWga0uyP
+         VpYLcBDsXv2y3SSGlYyIshk4eC28J6M+XEqfASKd8VFtHF2FBaPTuCruVMppchbac3Ax
+         AEP45WNtQ+9COLmubIsqWyYzl1QLchUtPfD4LccbjDoAwgxuqOVjD3OBBIag2Lf/5D08
+         PWFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AoEb1XK5dWnAb/XBdu/lZ2XdsXhNA2v9oOFATUDjbD0=;
+        b=HqrLaYe8Yucz1MVcz6FqmiXKITW1gpkazj/Zj7QCXeT6Nhv7o6rRwjrNauI29r5Raf
+         3ELw65cDmgqOrA5m1D2nxitsTjz8OfpDWgTjeeh7n3mvzgQhZv+hap4QbeevCNFK1w4G
+         +Nu9zY6C0NRUPa1/0Gf7Q2z5B59KvYihJbiKr8yOPJrr/NH6zpGwn0M7VWhLqACcBwHF
+         hoEmJQ7XOKQZgSC8JXKVpJe/ePKKoYGAuvINMLiegbQhpraMSv7I1r6U/b+u4bjb7veI
+         vLsiJ9jh+l2VJWILap7NIW4SMWrbbG4YYCK28nelql0Q/eiwyGX/J6tktG61CeJlU94G
+         bD3Q==
+X-Gm-Message-State: APjAAAWFnA3qXjxhrPd2Jvdmwi/EZU52fg/09EfKIl2+KR9ugKwt2O3+
+        2nQDsiFuPeUU/qiv0tSOn0JG1GanxQCiIBMvuvbkDf9ZdWc=
+X-Google-Smtp-Source: APXvYqyI5MP1Q8XIiLRjo4pLVTzxgZBBN8zypGreqic/xheUF0/IxxIdEzjsWYjgmlEDl7MpPt0LDnPWwQX2r7zymnI=
+X-Received: by 2002:a17:906:3f87:: with SMTP id b7mr28163648ejj.164.1562075600813;
+ Tue, 02 Jul 2019 06:53:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190419081926.13567-2-ronald@innovation.ch>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zlnO1qzr6X4plG57kE3CjrdzCDhQP4wkQpFcuVhlm7KTlMr
-        MsmwObss08pNy260pFrptFypoNHSmSFKZaEzMB3Fupk3KsvtLPLf8z7v83zv88BHEzInFULv
-        Vx/kNGpFqlzsT9Y8G3u5fLMiNGFVc46EOX38oohpuuZCTOfQFzHTMvRbzORet4iZQqeBZPLP
-        3ZAwXd+HKabDVipmXAOhjKvHLWKeD18QRUxjBys+UmytsVvCmnQlFFuUD+zl5h1sQ9kdCess
-        sIvYM9YKxNb1WEl2sHIOe+lkDRU9Nc5/UxKXuj+D06wMT/RPLi8IS++WZX296iZykHW6HvnR
-        gNeCodeE9MiflmEzgvf3LJQw/EDQYrkiEYZBBJ/fWUT/LO7iPLGwuIXgmc3o87sR6Mp6KI9q
-        Jo6F0/pSryoQm0RgLzaJPAOBXQjOf2glPaoAHAN1o+1eLMZL4XdV14SDpqU4HMYLgzw0iRdA
-        Z2eNVxKEd0OH1YY8WIpnQHNJn5f3wxtg1NXvjUfgYHjbd8WH50JutYnw3AV8jgbzq4cSocM2
-        sN4bIAQ8Ez7arT5+NjjOnyIFfAyc5hM+sw5B9f1an2EjNNnbKU9QYiK0xbZSoLfCT4fnHXoC
-        B8Ab9wwhQwAU1lwkBFoKujyZoA4D54tqwoDmGye1MU5qYJzUwPj/VjkiK1Awp+VVSo5fo+Yy
-        V/AKFa9VK1fsS1NVoolv5xi3Dz1C9b/2NiJMI/k0aXl0aIKMUmTwh1SNCGhCHihtMM9KkEmT
-        FIcOc5q0PRptKsc3olCalAdLj0zpjZdhpeIgl8Jx6Zzm31ZE+4XkoLOqiGj82a+ytr/xwcJr
-        yux5fMqIJqvtz6ZdD0aGq4oNQ+nZHd+O6LmTBy4k2jrzb8qV9XFL4t9WLCg2bNl59+uTWOUW
-        3WBMq3J363je00VHAxf25jq0y3K7t8dERI6W8vMv3/7Ttm5x1KfE4cQo+evH5sgxpmidw6av
-        cmZK1FnrB+Qkn6xYvYzQ8Iq/0G+w8XIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xu7o2idKxBpeOcVv0Nk1nsji86AWj
-        xZWv79ksTn39y2bRvHg9m8Wk+xNYLDonLmG3uPnpG6vF5V1z2CxePJe2eHHvLZPFiW/TmBx4
-        PD6vesXqsXPWXXaP2R0zWT2mdEp4zDsZ6LF/7hp2j/vdx5k8+rasYvTYe28Li8fnTXIeM9q3
-        sQZwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl
-        LOhWLLgrVPFh4VvmBsYt/F2MnBwSAiYSb6e2sXUxcnEICSxllLiz5hw7REJcYvf8t8wQtrDE
-        n2tdUEWvGSV2/F/OCJIQFgiR6O2aA5YQEZjPJHHr5z92EIdZ4BWjxP3108Cq+ASCJPb+uMgC
-        YgsJZEpc33GHCcRmE9CU+Lv5JlA3BwevgJ3Ev0miIGEWARWJK1e2gZWLCkRI9LXNZgOxeQUE
-        JU7OfAIW5xSwkvjx4hnYGGYBdYk/8y4xQ9jiEreezIeKy0s0b53NPIFReBaS9llIWmYhaZmF
-        pGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwKjfduznlh2MXe+CDzEKcDAq8fB6+EnH
-        CrEmlhVX5h5ilOBgVhLh3b9CMlaINyWxsiq1KD++qDQntfgQoynQcxOZpUST84EJKa8k3tDU
-        0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+MGBofSYsVpevV8GRs3t+6K
-        KJH+z7O968a/1VMDbz1NFd9UuO2ocbfgb073u5N12jcGyXLP+d9+Nz7wnrv075TCi1/3PH67
-        30aH3dkmNyR4kuyF07EXgifzfZkjO+X13POll0Of9tnel6ubZpLpfCikSMKlO/PQ8V2XE8rF
-        5mXM+sGeaX91t6USS3FGoqEWc1FxIgC8cTM9EAMAAA==
-X-CMS-MailID: 20190702135052eucas1p11e2621af0514505789c7947b84cf133c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190702135052eucas1p11e2621af0514505789c7947b84cf133c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190702135052eucas1p11e2621af0514505789c7947b84cf133c
-References: <20190419081926.13567-1-ronald@innovation.ch>
-        <20190419081926.13567-2-ronald@innovation.ch>
-        <CGME20190702135052eucas1p11e2621af0514505789c7947b84cf133c@eucas1p1.samsung.com>
+References: <20190630150230.7878-1-robdclark@gmail.com> <20190630150230.7878-5-robdclark@gmail.com>
+ <75a2921d-bf1a-c4c1-6d9a-122474eface4@codeaurora.org> <CAF6AEGufiSU_sFZFdLH=KT5iCQGwccszURqAQCHd=dhuZafvZg@mail.gmail.com>
+ <9fbf9226-578a-90aa-693d-9ea4fcda8281@codeaurora.org>
+In-Reply-To: <9fbf9226-578a-90aa-693d-9ea4fcda8281@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 2 Jul 2019 06:53:05 -0700
+Message-ID: <CAF6AEGuze-mnUQy36UvB-JCp3KUASgTa+0dh4i_AFdmYX0tzuw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] drm/msm/dsi: get the clocks into OFF state at init
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.04.2019 10:19, Ronald Tschalär wrote:
-> commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
-> of RC_CORE) changed the driver to select both RC_CORE and INPUT.
-> However, this causes problems with other drivers, in particular an input
-> driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
-> commit):
-> 
->   drivers/clk/Kconfig:9:error: recursive dependency detected!
->   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
->   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
->   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
->   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
->   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
->   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
->   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
->   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
-> 
-> According to the docs and general consensus, select should only be used
-> for non user-visible symbols, but both RC_CORE and INPUT are
-> user-visible. Furthermore almost all other references to INPUT
-> throughout the kernel config are depends, not selects. For this reason
-> the first part of this change reverts commit d6abe6df706c.
-> 
-> In order to address the original reason for commit d6abe6df706c, namely
-> that not all boards use the remote controller functionality and hence
-> should not need have to deal with RC_CORE, the second part of this
-> change now makes the remote control support in the driver optional and
-> contingent on RC_CORE being defined. And with this the hard dependency
-> on INPUT also goes away as that is only needed if RC_CORE is defined
-> (which in turn already depends on INPUT).
-> 
-> CC: Inki Dae <inki.dae@samsung.com>
-> CC: Andrzej Hajda <a.hajda@samsung.com>
-> CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+On Mon, Jul 1, 2019 at 12:07 PM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>
+> On 7/1/2019 12:58 PM, Rob Clark wrote:
+> > On Mon, Jul 1, 2019 at 11:37 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+> >>
+> >> On 6/30/2019 9:01 AM, Rob Clark wrote:
+> >>> From: Rob Clark <robdclark@chromium.org>
+> >>>
+> >>> Do an extra enable/disable cycle at init, to get the clks into disabled
+> >>> state in case bootloader left them enabled.
+> >>>
+> >>> In case they were already enabled, the clk_prepare_enable() has no real
+> >>> effect, other than getting the enable_count/prepare_count into the right
+> >>> state so that we can disable clocks in the correct order.  This way we
+> >>> avoid having stuck clocks when we later want to do a modeset and set the
+> >>> clock rates.
+> >>>
+> >>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> >>> ---
+> >>>    drivers/gpu/drm/msm/dsi/dsi_host.c         | 18 +++++++++++++++---
+> >>>    drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c |  1 +
+> >>>    2 files changed, 16 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> index aabab6311043..d0172d8db882 100644
+> >>> --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+> >>> @@ -354,6 +354,7 @@ static int dsi_pll_10nm_lock_status(struct dsi_pll_10nm *pll)
+> >>>        if (rc)
+> >>>                pr_err("DSI PLL(%d) lock failed, status=0x%08x\n",
+> >>>                       pll->id, status);
+> >>> +rc = 0; // HACK, this will fail if PLL already running..
+> >>
+> >> Umm, why?  Is this intentional?
+> >>
+> >
+> > I need to sort out a proper solution for this.. but PLL lock will fail
+> > if the clk is already running (which, in that case, is fine since it
+> > is already running and locked), which will cause the clk_enable to
+> > fail..
+> >
+> > I guess there is some way that I can check that clk is already running
+> > and skip this check..
+>
+>
+> I'm sorry, but this makes no sense to me.  What clock are we talking
+> about here?
+>
+> If the pll is locked, the the lock check should just drop through.  If
+> the pll cannot lock, you have an issue.  I'm confused as to how any of
+> the downstream clocks can actually be running if the pll isn't locked.
+>
+> I feel like we are not yet on the same page about what situation you
+> seem to be in.  Can you describe in exacting detail?
+>
 
+So, I went back to check some of the kernel logs, and actually the
+case where we were hitting the PLL lock fail was -EPROBE_DEFER cases,
+so what was happening is the enable/disable cycle would succeed the
+first time, but then we'd -EPROBE_DEFER.  Then after a suspend/resume
+cycle, we'd try again, but this time pll's were reset to power on
+state, and we weren't setting rate.
 
-Apparently this patch was not queued to kernel yet. If there are no
-objections I will queue it via drm-misc-next tree tomorrow.
+With the other patchset[1] I sent over the weekend, this should no
+longer be a problem so I can drop the hack.
 
-Regards
-Andrzej
+BR,
+-R
+
+[1] https://patchwork.freedesktop.org/series/63000/
