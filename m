@@ -2,116 +2,121 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE9EC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD88BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064812089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562115795;
-	bh=JSSTummgovKzjJ78cGvRjxWkWBFR6+oqkDGCqnix+5g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lCptYPMnMqIl3CTCLQ4nsy1Z+jOuZfblK96gm8NqypvafRCajSOFadyAQqYOl+C5V
-	 tUk176Gtr7ra9Lgd0slC84IGvjZQS5IKfuM+GR+ko2VrZ+SSSJz+cjcyce9qLtDOuK
-	 IVWTdfGCzFz3yaU/rwAl5U/YaUaYRcZUNfr+zPxU=
+	by mail.kernel.org (Postfix) with ESMTP id A75C021880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Ob8OAm8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfGCBDF (ORCPT
+        id S1727524AbfGCBDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbfGCBDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:03:05 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF65A21874;
-        Tue,  2 Jul 2019 20:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562098428;
-        bh=JSSTummgovKzjJ78cGvRjxWkWBFR6+oqkDGCqnix+5g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pVL9BX1mfkWNMZ4JuOXEP1bLnhu3I9BVToumxa1kjdZNRBH56OgKPIrtlVhivYmCX
-         ByFpnYvXObta8eYhxDF+YD3vem2AyauZtEzCHZHVRal/nPjba1ZSg4n+ipbJJB+Ury
-         uo7TwFjCDC96bjssFiG+pA6PpZbeBceSeH91LZd4=
-Date:   Tue, 2 Jul 2019 13:13:48 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Aaron Tomlin <atomlin@redhat.com>
-Subject: Re: [PATCH] proc/sysctl: add shared variables for range check
-Message-Id: <20190702131348.9004db6da7e1cbeb7db5ca9f@linux-foundation.org>
-In-Reply-To: <CAGnkfhxPhHxmNFCMHj8QTYKtLi08O8C5-6Qua8zRz4FX=8g+pw@mail.gmail.com>
-References: <20190702170228.GA4404@avx2>
-        <CAGnkfhxPhHxmNFCMHj8QTYKtLi08O8C5-6Qua8zRz4FX=8g+pw@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Jul 2019 21:03:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54794 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfGCBDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:03:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g135so405872wme.4;
+        Tue, 02 Jul 2019 18:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LBWB6uQ0LpQxJc9ymoFNG6XGEMqz0HTQ0I21d3MdiIY=;
+        b=Ob8OAm8l+LEYVwr57X3OufsI0zkT79AT5Jut2x7UTyTugJd7r1yIb8W3bBQrg2Abru
+         3yXhkZtVb6uVC4BJ8Fx9CF87O3PO32pmt8i0eAHJpcLMz0OmL8tmtrlFthK8QgWiNeiP
+         ZtUviQ6hQxJACJ99tQ3I8eyz0zPBl5BO9xQ9tiwkdapagV0XAVHvQ9PWNDOt7W4NZHFi
+         S9umhTYjJH4M8ODI/AkEIxrM0/vWhdyFtPCmI4XA0y/qZP0O2mv/GDPF643CpgFQR5Sy
+         tuCPRygfybpytV0rhxmsfKq5sYMe1la5gSd7Gbz2Rb6s8oPXelTwdj1wjgc/jRlura4V
+         gzIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LBWB6uQ0LpQxJc9ymoFNG6XGEMqz0HTQ0I21d3MdiIY=;
+        b=Ri4HEi0PY+6ZXToUY7fshGGxErH39rQgZN8VUzaIapZ/1S6pa92NAePgP3lsCzrk+f
+         5ZvFFLq+qcxd81CTVynIEDY0YeEiirSwUkZRw8uca9jvgtnxSIbBLFjqSlGLKv0OykcK
+         EnShwLJ6QNm+XjcELgjYta+tNj8D1foNrCUxG9WfnooIfqKLVGqGOuAVzsnbRJ4NH1Ma
+         M5NiaQWjPchuQiFaIrD/UWga69cE3YZZc6X2aPqtAuRZYu/0WzIbFSjdMK/LOjw2uTTM
+         NmjM3bNSAf18OH6COckc5yy+iHeSpw2BrNYtwKmz/BgnbcX7ZnFnryHuAl8JSOm3jWUE
+         wNIA==
+X-Gm-Message-State: APjAAAWjgvQiUYlcmeRNntJprVdNocjHB/dayNmDV8YVEbIC/Z+3OSJx
+        8LwkAhaN1bRpotdha0I3wCmvUAkv
+X-Google-Smtp-Source: APXvYqxOUC2uNqK6Z/BzGBTWsn4YGIpPODSbFR6VlbGZ1L/KD+v0vnSxOXKnwHJsTkYKaXf58GCbjA==
+X-Received: by 2002:a7b:c3d5:: with SMTP id t21mr4048369wmj.87.1562099728934;
+        Tue, 02 Jul 2019 13:35:28 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
+        by smtp.googlemail.com with ESMTPSA id s12sm100041wmh.34.2019.07.02.13.35.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 13:35:28 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        john@phrozen.org, kishon@ti.com, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        paul.burton@mips.com, ralf@linux-mips.org, mark.rutland@arm.com,
+        ms@dev.tdt.de,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] Lantiq VRX200/ARX300 PCIe PHY driver
+Date:   Tue,  2 Jul 2019 22:35:19 +0200
+Message-Id: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 19:21:33 +0200 Matteo Croce <mcroce@redhat.com> wrote:
+Various Lantiq (now Intel) SoCs contain one or more PCIe controllers
+and PHYs.
+This adds a driver for the PCIe PHYs found on the Lantiq VRX200 and
+ARX300 SoCs. GRX390 should also be supported as far as I can tell,
+but I don't have any of these devices to further verify that.
 
-> On Tue, Jul 2, 2019 at 7:13 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > > -static long zero;
-> > >  static long long_max = LONG_MAX;
-> > >
-> > >  struct ctl_table epoll_table[] = {
-> > > @@ -301,7 +300,7 @@ struct ctl_table epoll_table[] = {
-> > >                 .maxlen         = sizeof(max_user_watches),
-> > >                 .mode           = 0644,
-> > >                 .proc_handler   = proc_doulongvec_minmax,
-> > > -               .extra1         = &zero,
-> > > +               .extra1         = SYSCTL_ZERO,
-> > >                 .extra2         = &long_max,
-> >
-> > This looks wrong: proc_doulongvec_minmax() expects "long"s.
-> > The whole patch needs rechecking.
-> >
-> > > +/* shared constants to be used in various sysctls */
-> > > +const =======>int<========== sysctl_vals[] = { 0, 1, INT_MAX };
-> > > +EXPORT_SYMBOL(sysctl_vals);
-> 
-> Yes, you're right, that chunk must be dropped.
-> Anyway I've checked the patch, this was the only long field touched.
+I have tested this PCIe PHY driver with the out-of-tree PCIe controller
+driver in OpenWrt: [0]
 
-Yup.
+dependencies for this series:
+none
 
-akpm3:/usr/src/25> find . -name "*.c" | xargs grep -C4 SYSCTL_ZERO|grep long
-./fs/eventpoll.c-               .proc_handler   = proc_doulongvec_minmax,
-./fs/eventpoll.c-               .extra2         = &long_max,
+patches 1-3 should go through the PHY tree
+patch 4 should go through the mips tree
 
-I did this:
+I am aware that this series is too late for the v5.3 development cycle.
+Getting review comments is still appreciated so this can be queued early
+in the v5.4 development cycle.
 
---- a/fs/eventpoll.c~proc-sysctl-add-shared-variables-for-range-check-fix-4
-+++ a/fs/eventpoll.c
-@@ -291,6 +291,7 @@ static LIST_HEAD(tfile_check_list);
- 
- #include <linux/sysctl.h>
- 
-+static long long_zero;
- static long long_max = LONG_MAX;
- 
- struct ctl_table epoll_table[] = {
-@@ -300,7 +301,7 @@ struct ctl_table epoll_table[] = {
- 		.maxlen		= sizeof(max_user_watches),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= SYSCTL_ZERO,
-+		.extra1		= &long_zero,
- 		.extra2		= &long_max,
- 	},
- 	{ }
 
-I renamed it to avoid using "&zero," in this situation.
+[0] https://github.com/xdarklight/openwrt/commits/lantiq-mainline-pcie-phy-20190702
+
+
+Martin Blumenstingl (4):
+  dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe
+    PHYs
+  phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
+  phy: enable compile-testing for the Lantiq PHY drivers
+  MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
+
+ .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  |  87 +++
+ arch/mips/lantiq/xway/sysctrl.c               |  16 +-
+ drivers/phy/Makefile                          |   2 +-
+ drivers/phy/lantiq/Kconfig                    |  11 +
+ drivers/phy/lantiq/Makefile                   |   1 +
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c   | 495 ++++++++++++++++++
+ .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  |  11 +
+ 7 files changed, 614 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+ create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+ create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+
+-- 
+2.22.0
+
