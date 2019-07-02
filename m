@@ -2,202 +2,160 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C16C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8432C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D19621E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B742721E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHh1FgYP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfGCAcv (ORCPT
+        id S1727240AbfGCAc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:32:51 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56996 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfGCAcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:32:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:32:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
-   d="scan'208";a="315414213"
-Received: from unknown (HELO [10.239.196.136]) ([10.239.196.136])
-  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2019 17:32:48 -0700
-Subject: Re: [PATCH v6 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-References: <20190621055747.17060-1-tao3.xu@intel.com>
- <20190621055747.17060-3-tao3.xu@intel.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <121358d9-f330-da38-aae3-bd194aee75b0@intel.com>
-Date:   Wed, 3 Jul 2019 08:32:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 20:32:57 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39714 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGCAcz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:32:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m10so305949edv.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NZtVuNGmIL9iaoOv0S9sHPsevjMvF/JVL4gPcjO5NUI=;
+        b=SHh1FgYPa22DIxBnLW3RbawjFoO5Ews8pSLyOZtbQLVFUITDB/8JUBPIyVCQQqif2o
+         jh0XBWcmHMPfugvHT4zk9ZjmT/ikZnm/p6VSJjTMfg4cwitT7AT/HiFcTuSR1FBLDQPa
+         rBV2OXCkJgC371eYAR/rFiKQQGs535az8ojnru1tfAIBz0Fgoj2YMtZVCdSpmLxem0pq
+         IlUoJcxyhGdbJq/Nszm0bvjhzXKF0PXEfoUwkQ6S1AxufB4AinVLqzLZI5XvXwBdawlg
+         AaKBWT7X2DMQfSWdzKY7fMrxBY/iWG0flIV3U8h2rXGA2uCmaP3WkWxPLubhXjDjb5Y8
+         CkOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NZtVuNGmIL9iaoOv0S9sHPsevjMvF/JVL4gPcjO5NUI=;
+        b=WvXPZRRLFXl1DVPh/OpJpUpciv92xYeWoPAoWrT4Xojk+JVL+OVsM4LQ6mW+AVVBkX
+         RkRybH1orMfJOB4iNnMDi952kHMMX9lHw3f2Yl/dXpma4aJBsfDT+/Fd4YngFrbh9Mf9
+         i9QfED+5MNHjWjSUiKvMuGTAPfNKriybfusUjltQG4bwaCVX/q8GiIxmy8oZImBkg9JA
+         M02ifSTFJ6Qof6XmjCBjabAr5ma5mcbvpNzeZPWNgJ0PZJYHTjbbSKt6YNtntUpaCg+J
+         ZRNVECBxJjKHnJ6vZppDP5PL+Q06TTKCpXf8UCQrl3VkQnd8qfHOskuw0uRBsHuRJ9QI
+         fseg==
+X-Gm-Message-State: APjAAAUB/bDWmuMjekCKev1QxMdzlLtRODK+r32nqgkvuNQbY2Gl1HOC
+        1jDYiC8XgA1ci0Qn8pRcwEKZfXWgKys=
+X-Google-Smtp-Source: APXvYqy+5foubNJ06De2DuMgU5AFGqLcI3pTtf/zTzuWwlpy+qCo7LSTAegL5DC5/UAsumZaZbpBRw==
+X-Received: by 2002:a50:ec03:: with SMTP id g3mr38512006edr.233.1562109902787;
+        Tue, 02 Jul 2019 16:25:02 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id s52sm135306edm.55.2019.07.02.16.25.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 16:25:01 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 16:24:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm64: mm: Fix dead assignment of old_pte
+Message-ID: <20190702232459.GA14941@archlinux-epyc>
+References: <20190702231302.60727-1-nhuck@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190621055747.17060-3-tao3.xu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702231302.60727-1-nhuck@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping ;)
-On 6/21/2019 1:57 PM, Tao Xu wrote:
-> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
-> to determines the maximum time in TSC-quanta that the processor can reside
-> in either C0.1 or C0.2.
+On Tue, Jul 02, 2019 at 04:13:02PM -0700, 'Nathan Huckleberry' via Clang Built Linux wrote:
+> When analyzed with the clang static analyzer the
+> following warning occurs
 > 
-> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
-> IA32_UMWAIT_CONTROL between host and guest. The variable
-> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
-> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
+> line 251, column 2
+> Value stored to 'old_pte' is never read
 > 
-> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+> This warning is repeated every time pgtable.h is
+> included by another file and produces ~3500
+> extra warnings.
+> 
+> Moving old_pte into preprocessor guard.
+> 
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 > ---
+>  arch/arm64/include/asm/pgtable.h | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> Changes in v6:
-> 	add check msr_info->host_initiated in get/set msr(Xiaoyao)
-> 	restore the atomic_switch_umwait_control_msr()(Xiaoyao)
-> 	rebase the patch because the kernel dependcy patch updated to
-> 	v5: https://lkml.org/lkml/2019/6/19/972
-> ---
->   arch/x86/kernel/cpu/umwait.c |  3 ++-
->   arch/x86/kvm/vmx/vmx.c       | 33 +++++++++++++++++++++++++++++++++
->   arch/x86/kvm/vmx/vmx.h       |  3 +++
->   arch/x86/kvm/x86.c           |  1 +
->   4 files changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-> index 4b2aff7b2d4d..db5c193ef136 100644
-> --- a/arch/x86/kernel/cpu/umwait.c
-> +++ b/arch/x86/kernel/cpu/umwait.c
-> @@ -15,7 +15,8 @@
->    * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
->    * is enabled
->    */
-> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
-> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
-> +EXPORT_SYMBOL_GPL(umwait_control_cached);
->   
->   /*
->    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b35bfac30a34..0d81cb9b96cf 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1679,6 +1679,13 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   #endif
->   	case MSR_EFER:
->   		return kvm_get_msr_common(vcpu, msr_info);
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!msr_info->host_initiated &&
-> +		    !guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +			return 1;
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index fca26759081a..42ca4fc67f27 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -238,8 +238,6 @@ extern void __sync_icache_dcache(pte_t pteval);
+>  static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+>  			      pte_t *ptep, pte_t pte)
+>  {
+> -	pte_t old_pte;
+> -
+>  	if (pte_present(pte) && pte_user_exec(pte) && !pte_special(pte))
+>  		__sync_icache_dcache(pte);
+>  
+> @@ -248,8 +246,11 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+>  	 * hardware updates of the pte (ptep_set_access_flags safely changes
+>  	 * valid ptes without going through an invalid entry).
+>  	 */
+> +	#if IS_ENABLED(CONFIG_DEBUG_VM)
+> +	pte_t old_pte;
 > +
-> +		msr_info->data = vmx->msr_ia32_umwait_control;
-> +		break;
->   	case MSR_IA32_SPEC_CTRL:
->   		if (!msr_info->host_initiated &&
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -1841,6 +1848,17 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   			return 1;
->   		vmcs_write64(GUEST_BNDCFGS, data);
->   		break;
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!msr_info->host_initiated &&
-> +		    !guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +			return 1;
-> +
-> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
-> +		if (data & BIT_ULL(1))
-> +			return 1;
-> +
-> +		vmx->msr_ia32_umwait_control = data;
-> +		break;
->   	case MSR_IA32_SPEC_CTRL:
->   		if (!msr_info->host_initiated &&
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -4126,6 +4144,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->   	vmx->rmode.vm86_active = 0;
->   	vmx->spec_ctrl = 0;
->   
-> +	vmx->msr_ia32_umwait_control = 0;
-> +
->   	vcpu->arch.microcode_version = 0x100000000ULL;
->   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->   	kvm_set_cr8(vcpu, 0);
-> @@ -6339,6 +6359,16 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->   					msrs[i].host, false);
->   }
->   
-> +static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
-> +{
-> +	if (vmx->msr_ia32_umwait_control != umwait_control_cached)
-> +		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
-> +			vmx->msr_ia32_umwait_control,
-> +			umwait_control_cached, false);
-> +	else
-> +		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
-> +}
-> +
->   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->   {
->   	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> @@ -6447,6 +6477,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->   
->   	atomic_switch_perf_msrs(vmx);
->   
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +		atomic_switch_umwait_control_msr(vmx);
-> +
->   	vmx_update_hv_timer(vcpu);
->   
->   	/*
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 61128b48c503..8485bec7c38a 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -14,6 +14,8 @@
->   extern const u32 vmx_msr_index[];
->   extern u64 host_efer;
->   
-> +extern u32 umwait_control_cached;
-> +
->   #define MSR_TYPE_R	1
->   #define MSR_TYPE_W	2
->   #define MSR_TYPE_RW	3
-> @@ -194,6 +196,7 @@ struct vcpu_vmx {
->   #endif
->   
->   	u64		      spec_ctrl;
-> +	u64		      msr_ia32_umwait_control;
->   
->   	u32 vm_entry_controls_shadow;
->   	u32 vm_exit_controls_shadow;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 83aefd759846..4480de459bf4 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
->   	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
->   	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
->   	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-> +	MSR_IA32_UMWAIT_CONTROL,
->   };
->   
->   static unsigned num_msrs_to_save;
+>  	old_pte = READ_ONCE(*ptep);
+> -	if (IS_ENABLED(CONFIG_DEBUG_VM) && pte_valid(old_pte) && pte_valid(pte) &&
+> +	if (pte_valid(old_pte) && pte_valid(pte) &&
+>  	   (mm == current->active_mm || atomic_read(&mm->mm_users) > 1)) {
+>  		VM_WARN_ONCE(!pte_young(pte),
+>  			     "%s: racy access flag clearing: 0x%016llx -> 0x%016llx",
+> @@ -258,6 +259,7 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+>  			     "%s: racy dirty state clearing: 0x%016llx -> 0x%016llx",
+>  			     __func__, pte_val(old_pte), pte_val(pte));
+>  	}
+> +	#endif
+>  
+>  	set_pte(ptep, pte);
+>  }
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 > 
 
+Hi Nathan,
+
+This does not apply on -next because of https://git.kernel.org/arm64/c/9b604722059039a1a3ff69fb8dfd024264046024.
+I would get into the habit of testing -next to see if the warning is
+present there first because someone may have independently fixed it
+already (I'd be surprised if it wasn't fixed by that commit from a quick
+glance).
+
+Additionally, when I do apply this patch to mainline and build, I see
+the following warning:
+
+In file included from /home/nathan/cbl/linux/arch/arm64/kernel/asm-offsets.c:10:
+In file included from /home/nathan/cbl/linux/include/linux/arm_sdei.h:14:
+In file included from /home/nathan/cbl/linux/include/acpi/ghes.h:5:
+In file included from /home/nathan/cbl/linux/include/acpi/apei.h:9:
+In file included from /home/nathan/cbl/linux/include/linux/acpi.h:34:
+In file included from /home/nathan/cbl/linux/include/acpi/acpi_io.h:5:
+In file included from /home/nathan/cbl/linux/include/linux/io.h:13:
+In file included from /home/nathan/cbl/linux/arch/arm64/include/asm/io.h:18:
+/home/nathan/cbl/linux/arch/arm64/include/asm/pgtable.h:250:8: warning: ISO C90 forbids mixing declarations and code [-Wdeclaration-after-statement]
+        pte_t old_pte;
+              ^
+1 warning generated.
+
+Cheers,
+Nathan
