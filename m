@@ -2,111 +2,87 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91EBC5B578
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F150C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B13921473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C63521479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 01:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVZtQBpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfGBB1v (ORCPT
+        id S1726980AbfGBB3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Jul 2019 21:27:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50646 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726347AbfGBB1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Jul 2019 21:27:50 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7196994F70EEB513B376;
-        Tue,  2 Jul 2019 09:27:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 2 Jul 2019
- 09:27:47 +0800
-Subject: Re: [PATCH v3 1/2] x86, arm64: Move ARCH_WANT_HUGE_PMD_SHARE config
- in arch/Kconfig
-To:     Alexandre Ghiti <alex@ghiti.fr>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>
-References: <20190701175900.4034-1-alex@ghiti.fr>
- <20190701175900.4034-2-alex@ghiti.fr>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <18144cc2-f552-b2cc-c41a-47c754de2b0d@huawei.com>
-Date:   Tue, 2 Jul 2019 09:27:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Mon, 1 Jul 2019 21:29:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37156 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfGBB3Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Jul 2019 21:29:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so7422431pfa.4;
+        Mon, 01 Jul 2019 18:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=okHXZWy1RC0s+ym/tCWI7Nmsc9E0/K/JlQNwRmoNEmY=;
+        b=pVZtQBpAOxDHgd10sbBXUOHCIDK+DWQYX1vDeFfUtDlnaHFxd5alO9XDxJRkchea5z
+         N5kae3IUDfpY4D8r78Ppo38NWqQdQ1+QsqSOoq9HMSEfRRiELec/7tb+3fSpSukuGwoh
+         WmmMQpF+8V9v/jjIXf2lD7A4cB6f8Dk7g3nXrEyaWGGDbA/3NLvF2Gb8eALkI8sqPlpW
+         0K7hH7NoRKAGOIyngaIirnxoGvsl99mtI50oA9Xhu1iL1DWeMaG/PcpZa0jC6oYSSukj
+         av4Vg4vGzKDNlurzEZo7eyEJ3YyfpIoRUauDIBPnVIovfAz6gUTOh44+a5FC/+UFL6Cd
+         kB6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=okHXZWy1RC0s+ym/tCWI7Nmsc9E0/K/JlQNwRmoNEmY=;
+        b=l9IsqHuAFVyndSosvca86reqkm+PjSxEVGGmeokTbKY3eTQtendre1gkdsuhoyJ9Jh
+         uZuJV61u4DkqI1FgBYko75xSOljxN/kmqByBfSssylGeHiPmn6mFQ1atKqgj48T23MM3
+         ebUzTTmvHLntw8jSRu+pp6QCCP/PQgRYVlCG7y1k9Y+fhHKQnI+q0PtqyzVN2zc+1d1S
+         nJ/cvuWKbhmZ+4Xh4n0of+uVIQ4wi1aA3FoR27Ib5TmK3PXu3gXEaWh2cUpWGMgXuUUp
+         SRT5wml7tGYrc84qXCEN7oA0vtC0TE6BE3VjDnY3P14G76iAoiuCLKnxv9R5dbrPEzYq
+         OXiQ==
+X-Gm-Message-State: APjAAAUByGtzaDzu7LeKXF0z9BdtQQuVdn4gSR6scoYgY8WChfz5QazB
+        HSAZ7ZcpAlF77CV0auFbZDc=
+X-Google-Smtp-Source: APXvYqwLXr0oqFlBH9jkUQd+Yo7ZVrdSGlJ11M/aBH1UN58sKxsdE/cuJlURWIyV9B19ba7PhZ6OPw==
+X-Received: by 2002:a63:7a01:: with SMTP id v1mr24664400pgc.310.1562030963395;
+        Mon, 01 Jul 2019 18:29:23 -0700 (PDT)
+Received: from localhost ([39.7.59.222])
+        by smtp.gmail.com with ESMTPSA id a16sm17634323pfd.68.2019.07.01.18.29.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 01 Jul 2019 18:29:22 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 10:29:19 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steve French <smfrench@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] cifs: fix build by selecting CONFIG_KEYS
+Message-ID: <20190702012919.GA8040@jagdpanzerIV>
+References: <20190701030325.18188-1-sergey.senozhatsky@gmail.com>
+ <CAH2r5mutRM0d9oLG0rpRAzTC9DMWL61i0ewbri8v7Lgu1Ud5yQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190701175900.4034-2-alex@ghiti.fr>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5mutRM0d9oLG0rpRAzTC9DMWL61i0ewbri8v7Lgu1Ud5yQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/2 1:58, Alexandre Ghiti wrote:
-> ARCH_WANT_HUGE_PMD_SHARE config was declared in both architectures:
-> move this declaration in arch/Kconfig and make those architectures
-> select it.
+On (07/01/19 16:04), Steve French wrote:
 > 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->  arch/Kconfig       | 3 +++
->  arch/arm64/Kconfig | 4 +---
->  arch/x86/Kconfig   | 4 +---
->  3 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..d2f212dc8e72 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -577,6 +577,9 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
->  config HAVE_ARCH_HUGE_VMAP
->  	bool
->  
-> +config ARCH_WANT_HUGE_PMD_SHARE
-> +	bool
-> +
->  config HAVE_ARCH_SOFT_DIRTY
->  	bool
->  
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 697ea0510729..c862575decd3 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -71,6 +71,7 @@ config ARM64
->  	select ARCH_SUPPORTS_NUMA_BALANCING
->  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
->  	select ARCH_WANT_FRAME_POINTERS
-> +	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
->  	select ARM_AMBA
->  	select ARM_ARCH_TIMER
-> @@ -901,9 +902,6 @@ config HW_PERF_EVENTS
->  config SYS_SUPPORTS_HUGETLBFS
->  	def_bool y
->  
-> -config ARCH_WANT_HUGE_PMD_SHARE
-> -	def_bool y if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
-> -
+> I had already merged the attached (similar) fix into cifs-2.6.git for-next
 
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Yup, just got it with linux-next 20190701.
 
-Thanks
-Hanjun
-
+	-ss
