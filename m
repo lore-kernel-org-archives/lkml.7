@@ -2,153 +2,209 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889DBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2681BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC8C20881
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DB121479
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 06:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqVQAYL0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRys2EvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfGBGmm (ORCPT
+        id S1726613AbfGBGoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 02:42:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46457 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfGBGmm (ORCPT
+        Tue, 2 Jul 2019 02:44:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45889 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfGBGoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 02:42:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 81so7741370pfy.13
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:42:42 -0700 (PDT)
+        Tue, 2 Jul 2019 02:44:05 -0400
+Received: by mail-io1-f65.google.com with SMTP id e3so34471976ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2019 23:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=87XbSGKa5QHQCeUtgWcK1lHAubdPYIITDtUYO85ViuI=;
-        b=rqVQAYL03KWvM3yxtAzULV9ROj+5qv4RNm51K8dCwptmKyKYqkznX13vIUUrtbtd7X
-         6i10foW4JDXh3XDnOmEpSSpVWxS7vQI3opSg3vJMYbD2t2aBKXwDpM843lvsWW3sYDOR
-         4PZJCddPZUysCuNNRugCHitmMheStFtavdtokHk0u1nOMaXV0/75dyg1QJxscd0UsGQA
-         36CzpCLMA7v1ZPa2LFdKZa0GvuOtoSHAsnNMLCbWGaXNCGhtqm7qdZ2MPqHFDV4CqS6S
-         r06dYUammP+ccOXWNgAzrJZzTRv5OEoJtBXV3tekmbBI5tBjmC31rih/CQxkQ79CmhWj
-         75QQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XnaWd9P9xKybW0lXkt79Iun5uzyN370d1KKFn14u8pU=;
+        b=WRys2EvSKJfQDwTCYG+P7QnksaGqhATBxeEhJj8d3MZe0mKBEB7pE9/WxiA3x4z4bc
+         X6EvE9Q/tvimkyF1/0lXAId9x6WuKfW9YRRFLqpTjVI+LpnCmZyvLLAbrUqzFW+f8p5g
+         wbWbMZMx4P+XIDJ4xlnKH6eXl/os3wp5PpBQNIxNhMSslT3lV8TPQHGi2Zonz+mlufg6
+         4QDpvbOwxKjTA9/JPfcG8tc8FFSUuYFDv53jum5mIoQR36ZVP9X6FmF/yjPytmQnHZ2E
+         +/htcwo9DZQVMg7eSh8/WaGyoHLtdfPADQ4cyudwJ+3x5UnRcKRSOJT6ndq8RGWTHD3Y
+         6Cqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=87XbSGKa5QHQCeUtgWcK1lHAubdPYIITDtUYO85ViuI=;
-        b=HOC1LBjC6CNowFvzVni2iHCgE3UbY/QpELaRuVfTFG1Y31875EtAKn2C2khFUh0Lqw
-         0oK/c/4uQmRrXStZLlFAnj9fU1bqB3ubmgEtedeMcATPBGsVCTI2AYdwA0fF3dtEqfkL
-         ngCmxZ3fohXKw9nsFZmNqRLhVH48FUADn00lPYWzS6qc6O/3d4PW2Bhn0uLUxQ0PIYqR
-         8BthBCFxaEihBHQwy8n3aU1fUdOmS6FQAkqI+GWNVc21JkPl8GyU1RkGG7rgmuXTcj5m
-         bz9zgGAJNpGw+gzHZY0p/GvXeoRpdJq7puABxd+JIuKI0+KqVYdhl2iOxjST4W0kWOmr
-         vAbA==
-X-Gm-Message-State: APjAAAVvkRwt+tFOik22jDpDFFt+l224wYFamgANBsGVMa4WSPRI9Gzd
-        G8zKvkiWahdEg4IgTbWgjn4=
-X-Google-Smtp-Source: APXvYqx5opPoUVZnjJcNKkQE1Fn7/SKTQBxHrlZeRIrzSEiR5Nhjg0pGDvNnHaiwpg4kRbNXgzTrIg==
-X-Received: by 2002:a17:90a:bc0c:: with SMTP id w12mr3530135pjr.111.1562049761805;
-        Mon, 01 Jul 2019 23:42:41 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.googlemail.com with ESMTPSA id w65sm12975112pfw.168.2019.07.01.23.42.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 01 Jul 2019 23:42:41 -0700 (PDT)
-Message-ID: <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
-Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
-        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Tue, 02 Jul 2019 16:42:34 +1000
-In-Reply-To: <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
-References: <20190625075227.15193-1-osalvador@suse.de>
-         <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
-         <20190626080249.GA30863@linux>
-         <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
-         <20190626081516.GC30863@linux>
-         <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XnaWd9P9xKybW0lXkt79Iun5uzyN370d1KKFn14u8pU=;
+        b=i3DjLG8dGOxVWmqzbHhEn7PypWsXg0CebJ7+A3UOwUicsNKGhgQA+uJb5GKDCeYkiT
+         GJ16LuRDNO79PR/32bjVRb7Be1nvQTk0aSNHMHdTbPD264TNWbXx+cfJwyIF0FVG9MNY
+         DgojTApE0J+6nVdO6zDQ6hgUPjt2qAAPoFaVwfdZOSmfeIafW9BYV78xZusdsdniDHlB
+         jOgJuWz6uo6dZH8G3uTInV4MiqCajo614498qYsac3i2jrnRJxg5CxtSUvGjGnq+sjxX
+         qMKKNGCxSeMNfmOHgEKmmqFbO+qRDh12LFLk00furDi/YPa7WP8fb3AXf/togRzpKw3h
+         9YoQ==
+X-Gm-Message-State: APjAAAXS1T9/lKFoCQmb94S3FpVVO8TeCjwxqZvIVlQP9a9tPh9O4GFk
+        2Njb4ZOBFMR9boPKZwoEyPVZk/rJ3tO/H+TtHG6JYQ==
+X-Google-Smtp-Source: APXvYqwSRYk/6MNpauII6NxLVu48MJXQ1Z2SV6sf8Ubr37AzxK35/nHXsW2GbkiEnJkfl71BlOxRi7SBYVhoBqy/rEo=
+X-Received: by 2002:a02:7087:: with SMTP id f129mr34565969jac.38.1562049844133;
+ Mon, 01 Jul 2019 23:44:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <000000000000d028b30588fed102@google.com> <000000000000db481c058c462e4c@google.com>
+In-Reply-To: <000000000000db481c058c462e4c@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 2 Jul 2019 08:43:51 +0200
+Message-ID: <CACT4Y+axVLwc4b8hyQswuFJNwkFB45Zs7XDfi6O3CE0pG=5edA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in xfrm_hash_rebuild
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-Sorry for the late reply.
-
-On Wed, 2019-06-26 at 10:28 +0200, David Hildenbrand wrote:
-> On 26.06.19 10:15, Oscar Salvador wrote:
-> > On Wed, Jun 26, 2019 at 10:11:06AM +0200, David Hildenbrand wrote:
-> > > Back then, I already mentioned that we might have some users that
-> > > remove_memory() they never added in a granularity it wasn't
-> > > added. My
-> > > concerns back then were never fully sorted out.
-> > > 
-> > > arch/powerpc/platforms/powernv/memtrace.c
-> > > 
-> > > - Will remove memory in memory block size chunks it never added
-> > > - What if that memory resides on a DIMM added via
-> > > MHP_MEMMAP_DEVICE?
-> > > 
-> > > Will it at least bail out? Or simply break?
-> > > 
-> > > IOW: I am not yet 100% convinced that MHP_MEMMAP_DEVICE is save
-> > > to be
-> > > introduced.
-> > 
-> > Uhm, I will take a closer look and see if I can clear your
-> > concerns.
-> > TBH, I did not try to use arch/powerpc/platforms/powernv/memtrace.c
-> > yet.
-> > 
-> > I will get back to you once I tried it out.
-> > 
-> 
-> BTW, I consider the code in arch/powerpc/platforms/powernv/memtrace.c
-> very ugly and dangerous.
-
-Yes it would be nice to clean this up.
-
-> We should never allow to manually
-> offline/online pages / hack into memory block states.
-> 
-> What I would want to see here is rather:
-> 
-> 1. User space offlines the blocks to be used
-> 2. memtrace installs a hotplug notifier and hinders the blocks it
-> wants
-> to use from getting onlined.
-> 3. memory is not added/removed/onlined/offlined in memtrace code.
+On Tue, Jul 2, 2019 at 8:38 AM Hillf Danton <hdanton@sina.com> wrote:
 >
+>
+> On Wed, 26 Jun 2019 20:59:05 -0700 (PDT)
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10f017c3a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=0165480d4ef07360eeda
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cf37c3a00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in __write_once_size  include/linux/compiler.h:221 [inline]
+> > BUG: KASAN: use-after-free in __hlist_del include/linux/list.h:748 [inline]
+> > BUG: KASAN: use-after-free in hlist_del_rcu include/linux/rculist.h:455  [inline]
+> > BUG: KASAN: use-after-free in xfrm_hash_rebuild+0xa0d/0x1000  net/xfrm/xfrm_policy.c:1318
+> > Write of size 8 at addr ffff888095e79c00 by task kworker/1:3/8066
+> >
+> > CPU: 1 PID: 8066 Comm: kworker/1:3 Not tainted 5.2.0-rc6+ #7
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: events xfrm_hash_rebuild
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+> >   print_address_description+0x6d/0x310 mm/kasan/report.c:188
+> >   __kasan_report+0x14b/0x1c0 mm/kasan/report.c:317
+> >   kasan_report+0x26/0x50 mm/kasan/common.c:614
+> >   __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:137
+> >   __write_once_size include/linux/compiler.h:221 [inline]
+> >   __hlist_del include/linux/list.h:748 [inline]
+> >   hlist_del_rcu include/linux/rculist.h:455 [inline]
+> >   xfrm_hash_rebuild+0xa0d/0x1000 net/xfrm/xfrm_policy.c:1318
+> >   process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+> >   worker_thread+0xc01/0x1640 kernel/workqueue.c:2415
+> >   kthread+0x325/0x350 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Allocated by task 8064:
+> >   save_stack mm/kasan/common.c:71 [inline]
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:489
+> >   kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+> >   __do_kmalloc mm/slab.c:3660 [inline]
+> >   __kmalloc+0x23c/0x310 mm/slab.c:3669
+> >   kmalloc include/linux/slab.h:552 [inline]
+> >   kzalloc include/linux/slab.h:742 [inline]
+> >   xfrm_hash_alloc+0x38/0xe0 net/xfrm/xfrm_hash.c:21
+> >   xfrm_policy_init net/xfrm/xfrm_policy.c:4036 [inline]
+> >   xfrm_net_init+0x269/0xd60 net/xfrm/xfrm_policy.c:4120
+> >   ops_init+0x336/0x420 net/core/net_namespace.c:130
+> >   setup_net+0x212/0x690 net/core/net_namespace.c:316
+> >   copy_net_ns+0x224/0x380 net/core/net_namespace.c:439
+> >   create_new_namespaces+0x4ec/0x700 kernel/nsproxy.c:103
+> >   unshare_nsproxy_namespaces+0x12a/0x190 kernel/nsproxy.c:202
+> >   ksys_unshare+0x540/0xac0 kernel/fork.c:2692
+> >   __do_sys_unshare kernel/fork.c:2760 [inline]
+> >   __se_sys_unshare kernel/fork.c:2758 [inline]
+> >   __x64_sys_unshare+0x38/0x40 kernel/fork.c:2758
+> >   do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Freed by task 17:
+> >   save_stack mm/kasan/common.c:71 [inline]
+> >   set_track mm/kasan/common.c:79 [inline]
+> >   __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:451
+> >   kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+> >   __cache_free mm/slab.c:3432 [inline]
+> >   kfree+0xae/0x120 mm/slab.c:3755
+> >   xfrm_hash_free+0x38/0xd0 net/xfrm/xfrm_hash.c:35
+> >   xfrm_bydst_resize net/xfrm/xfrm_policy.c:602 [inline]
+> >   xfrm_hash_resize+0x13f1/0x1840 net/xfrm/xfrm_policy.c:680
+> >   process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+> >   worker_thread+0xc01/0x1640 kernel/workqueue.c:2415
+> >   kthread+0x325/0x350 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > The buggy address belongs to the object at ffff888095e79c00
+> >   which belongs to the cache kmalloc-64 of size 64
+> > The buggy address is located 0 bytes inside of
+> >   64-byte region [ffff888095e79c00, ffff888095e79c40)
+> > The buggy address belongs to the page:
+> > page:ffffea0002579e40 refcount:1 mapcount:0 mapping:ffff8880aa400340
+> > index:0x0
+> > flags: 0x1fffc0000000200(slab)
+> > raw: 01fffc0000000200 ffffea0002540888 ffffea0002907548 ffff8880aa400340
+> > raw: 0000000000000000 ffff888095e79000 0000000100000020 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff888095e79b00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> >   ffff888095e79b80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> > > ffff888095e79c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+> >                     ^
+> >   ffff888095e79c80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+> >   ffff888095e79d00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> > ==================================================================
+> >
+>
+> --- a/net/xfrm/xfrm_policy.c
+> +++ b/net/xfrm/xfrm_policy.c
+> @@ -1203,6 +1203,11 @@ xfrm_policy_inexact_insert(struct xfrm_policy *policy, u8 dir, int excl)
+>         return delpol;
+>  }
+>
+> +static inline bool xfrm_policy_node_hashed(struct hlist_node *node)
+> +{
+> +       return node->pprev && node->pprev != LIST_POISON2;
 
-I remember looking into doing it a similar way. I can't recall the
-details but my issue was probably 'how does userspace indicate to
-the kernel that this memory being offlined should be removed'?
+Is it right to open code LIST_POISON2 use here? As far as I see all
+current uses of LIST_POISON2 are encapsulated in list functions.
 
-I don't know the mm code nor how the notifiers work very well so I
-can't quite see how the above would work. I'm assuming memtrace would
-register a hotplug notifier and when memory is offlined from userspace,
-the callback func in memtrace would be called if the priority was high
-enough? But how do we know that the memory being offlined is intended
-for usto touch? Is there a way to offline memory from userspace not
-using sysfs or have I missed something in the sysfs interface?
-
-On a second read, perhaps you are assuming that memtrace is used after
-adding new memory at runtime? If so, that is not the case. If not, then
-would you be able to clarify what I'm not seeing?
-
-Thanks.
-
-> CCing the DEVs.
-> 
-
+> +}
+> +
+>  static void xfrm_hash_rebuild(struct work_struct *work)
+>  {
+>         struct net *net = container_of(work, struct net,
+> @@ -1315,7 +1320,9 @@ static void xfrm_hash_rebuild(struct work_struct *work)
+>                 chain = policy_hash_bysel(net, &policy->selector,
+>                                           policy->family, dir);
+>
+> -               hlist_del_rcu(&policy->bydst);
+> +               /* check bydst still hashed in case that policy survived bydst resize */
+> +               if (xfrm_policy_node_hashed(&policy->bydst))
+> +                       hlist_del_rcu(&policy->bydst);
+>
+>                 if (!chain) {
+>                         void *p = xfrm_policy_inexact_insert(policy, dir, 0);
+> --
