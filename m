@@ -2,90 +2,115 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F500C06513
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41903C06513
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D717D2146F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24ECC2146F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 11:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfGBLXt convert rfc822-to-8bit (ORCPT
+        id S1726765AbfGBLYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 07:23:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47714 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfGBLXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 07:23:49 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E3C3B59454;
-        Tue,  2 Jul 2019 11:23:38 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FFAD1001B00;
-        Tue,  2 Jul 2019 11:23:33 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Eric Biggers" <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+7fe11b49c1cc30e3fce2@syzkaller.appspotmail.com>,
-        anna.schumaker@netapp.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Subject: Re: memory leak in nfs_get_client
-Date:   Tue, 02 Jul 2019 07:23:32 -0400
-Message-ID: <13A4AF36-1649-41C0-A789-DC35853D2FB1@redhat.com>
-In-Reply-To: <20190702063140.GE3054@sol.localdomain>
-References: <000000000000f8a345058b046657@google.com>
- <223AB0C9-D93E-4D3C-BBBB-4AF40D8EA436@redhat.com>
- <20190702063140.GE3054@sol.localdomain>
+        Tue, 2 Jul 2019 07:24:40 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:33860 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfGBLYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 07:24:39 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id D2EC625AEC8;
+        Tue,  2 Jul 2019 21:24:36 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id CE40F940476; Tue,  2 Jul 2019 13:24:34 +0200 (CEST)
+Date:   Tue, 2 Jul 2019 13:24:34 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] dt-binding: mmc: rename tmio_mmc.txt to
+ renesas,sdhi.txt
+Message-ID: <20190702112434.ll3btya7fepkb5tn@verge.net.au>
+References: <20190624070345.20373-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 02 Jul 2019 11:23:49 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624070345.20373-1-yamada.masahiro@socionext.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2 Jul 2019, at 2:31, Eric Biggers wrote:
+On Mon, Jun 24, 2019 at 04:03:45PM +0900, Masahiro Yamada wrote:
+> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+> MFD glue") said, these MMC controllers use the IP from Panasonic.
+> 
+> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+> The common driver code was split and expanded as 'tmio-mmc-core', then
+> it became historical misnomer since 'tmio' is not the name of this IP.
+> 
+> In the discussion [1], we decide to keep this name as-is at least in
+> Linux driver level because renaming everything is a big churn.
+> 
+> However, DT should not be oriented to a particular project even though
+> it is mainly developed in Linux communities.
+> 
+> This is the misfortune only in Linux. Let's stop exporting it to other
+> projects, where there is no good reason to call this hardware "TMIO".
+> Rename the file to renesas,sdhi.txt. In fact, all the information in
+> this file is specific to the Renesas platform.
+> 
+> This commit also removes the first paragraph entirely. The DT-binding
+> should describe the hardware. It is strange to talk about Linux driver
+> internals such as how the drivers are probed, how platform data are
+> handed off, etc.
+> 
+> [1] https://www.spinics.net/lists/linux-mmc/msg46952.html
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-> On Tue, Jun 11, 2019 at 12:23:12PM -0400, Benjamin Coddington wrote:
->> Ugh.. Now that you can cancel the wait, you have to also handle if 
->> "new" was
->> allocated.  I think this needs:
->>
->> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
->> index d7e4f0848e28..4d90f5bf0b0a 100644
->> --- a/fs/nfs/client.c
->> +++ b/fs/nfs/client.c
->> @@ -406,10 +406,10 @@ struct nfs_client *nfs_get_client(const struct
->> nfs_client_initdata *cl_init)
->>                 clp = nfs_match_client(cl_init);
->>                 if (clp) {
->>                         spin_unlock(&nn->nfs_client_lock);
->> -                       if (IS_ERR(clp))
->> -                               return clp;
->>                         if (new)
->>                                 new->rpc_ops->free_client(new);
->> +                       if (IS_ERR(clp))
->> +                               return clp;
->>                         return nfs_found_client(cl_init, clp);
->>                 }
->>                 if (new) {
->>
->> I'll patch/test and send it along.
->>
->> Ben
->
-> Hi Ben, what happened to this patch?
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-I sent it along:
-
-https://lore.kernel.org/linux-nfs/65b675cec79d140df64bc30def88b1def32bf87e.1560272160.git.bcodding@redhat.com/
-
-I don't think it will go in 5.2.. it's not a huge problem.
-
-Ben
+> ---
+> 
+> Changes in v2:
+>  - Rename to renesas,sdhi.txt instead of renesas_sdhi.txt
+> 
+>  .../bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt}   | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>  rename Documentation/devicetree/bindings/mmc/{tmio_mmc.txt => renesas,sdhi.txt} (87%)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> similarity index 87%
+> rename from Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> rename to Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> index 2b4f17ca9087..dd08d038a65c 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+> @@ -1,13 +1,4 @@
+> -* Toshiba Mobile IO SD/MMC controller
+> -
+> -The tmio-mmc driver doesn't probe its devices actively, instead its binding to
+> -devices is managed by either MFD drivers or by the sh_mobile_sdhi platform
+> -driver. Those drivers supply the tmio-mmc driver with platform data, that either
+> -describe hardware capabilities, known to them, or are obtained by them from
+> -their own platform data or from their DT information. In the latter case all
+> -compulsory and any optional properties, common to all SD/MMC drivers, as
+> -described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
+> -optional bindings can be used.
+> +* Renesas SDHI SD/MMC controller
+>  
+>  Required properties:
+>  - compatible: should contain one or more of the following:
+> -- 
+> 2.17.1
+> 
