@@ -2,54 +2,54 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B502C5B57D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDEDC06511
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348E8205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4438620645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055296;
-	bh=UHj+reTeQRaOFAHNyvjjTOieOnvPAd53doWoMIt3ixE=;
+	s=default; t=1562055307;
+	bh=1uAF2VEZnNCpmekLPCqcTz9szVkonBBewY4/IYP6DcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hquSdcfqggSEYmfHDKBT9Ski6lmKLYdkyjAtRHvXoGs/OEbXnZdSOJgmKz1QxPKXN
-	 zIBuCEoSehRw7Yy7O7mgagA0CN/nC1fkMiArAJ6CHNs2n18XjrjPNuoiBWtNKVmpQW
-	 qkSjFrQVBihGOP+9XwQkbVBJtVIaD01DswsgwiBI=
+	b=voQBmzs0pNsJMo26Cke6JU3vSQHIx1cnwi7fjdgiFyeGPUnmGYxrsmFkmX41Wb3Cm
+	 nticXoOOPYtSLpYMVwE1PFr+lfNw3oWLzRR347WPyq+H8hNyp1K7kZubrbbN/RVXyx
+	 ZUTv1ViEVZRpfVe2GA7fle2rXY67++qNLZlQ/Bsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfGBIOy (ORCPT
+        id S1727911AbfGBIFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:14:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:05:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfGBIFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:05:44 -0400
+        id S1727885AbfGBIFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:05:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B68321841;
-        Tue,  2 Jul 2019 08:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144B520659;
+        Tue,  2 Jul 2019 08:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054742;
-        bh=UHj+reTeQRaOFAHNyvjjTOieOnvPAd53doWoMIt3ixE=;
+        s=default; t=1562054714;
+        bh=1uAF2VEZnNCpmekLPCqcTz9szVkonBBewY4/IYP6DcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxwORs356FDiGVF0JtNDdDj93Dyd3ax/qdbQ2qD+TPkE9VSMk6+PZToydHqGnY0CZ
-         u9kvZa6Ppvr8fQixgYbosvonRhngWBLrt0wCkgWGJ5wrhE2fgtAWWPEfFxDocNu3Nr
-         FAbKu95jJ6+gQc4LG1PlXCpJUH3wedqyVNSESZw8=
+        b=JNJ4eKdVopEr/RwSxcErfCt7wqPJvuc+Yx/24FDohb2EwmHSlG0XRNG3lSiCGK6vb
+         9963Xb3jLGoVPNBUgrLA4ZHeXHlitfdeGnEnRpky5qfxYxwJ65p7Gefjp7zy2ZQ8Jl
+         rJMZa19khJgQgOxEWDvPEkV9IkCdE37Tj0/qFmAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 04/72] arm64: Dont unconditionally add -Wno-psabi to KBUILD_CFLAGS
-Date:   Tue,  2 Jul 2019 10:01:05 +0200
-Message-Id: <20190702080124.797142876@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Jun Piao <piaojun@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Greg Kurz <groug@kaod.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 10/72] 9p: add a per-client fcall kmem_cache
+Date:   Tue,  2 Jul 2019 10:01:11 +0200
+Message-Id: <20190702080125.107936681@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -62,101 +62,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+[ Upstream commit 91a76be37ff89795526c452a6799576b03bec501 ]
 
-commit fa63da2ab046b885a7f70291aafc4e8ce015429b upstream.
+Having a specific cache for the fcall allocations helps speed up
+end-to-end latency.
 
-This is a GCC only option, which warns about ABI changes within GCC, so
-unconditionally adding it breaks Clang with tons of:
+The caches will automatically be merged if there are multiple caches
+of items with the same size so we do not need to try to share a cache
+between different clients of the same size.
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+Since the msize is negotiated with the server, only allocate the cache
+after that negotiation has happened - previous allocations or
+allocations of different sizes (e.g. zero-copy fcall) are made with
+kmalloc directly.
 
-and link time failures:
+Some figures on two beefy VMs with Connect-IB (sriov) / trans=rdma,
+with ior running 32 processes in parallel doing small 32 bytes IOs:
+ - no alloc (4.18-rc7 request cache): 65.4k req/s
+ - non-power of two alloc, no patch: 61.6k req/s
+ - power of two alloc, no patch: 62.2k req/s
+ - non-power of two alloc, with patch: 64.7k req/s
+ - power of two alloc, with patch: 65.1k req/s
 
-ld.lld: error: undefined symbol: __efistub___stack_chk_guard
->>> referenced by arm-stub.c:73
-(/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
->>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
-in archive ./drivers/firmware/efi/libstub/lib.a
-
-These failures come from the lack of -fno-stack-protector, which is
-added via cc-option in drivers/firmware/efi/libstub/Makefile. When an
-unknown flag is added to KBUILD_CFLAGS, clang will noisily warn that it
-is ignoring the option like above, unlike gcc, who will just error.
-
-$ echo "int main() { return 0; }" > tmp.c
-
-$ clang -Wno-psabi tmp.c; echo $?
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
-1 warning generated.
-0
-
-$ gcc -Wsometimes-uninitialized tmp.c; echo $?
-gcc: error: unrecognized command line option
-‘-Wsometimes-uninitialized’; did you mean ‘-Wmaybe-uninitialized’?
-1
-
-For cc-option to work properly with clang and behave like gcc, -Werror
-is needed, which was done in commit c3f0d0bc5b01 ("kbuild, LLVMLinux:
-Add -Werror to cc-option to support clang").
-
-$ clang -Werror -Wno-psabi tmp.c; echo $?
-error: unknown warning option '-Wno-psabi'
-[-Werror,-Wunknown-warning-option]
-1
-
-As a consequence of this, when an unknown flag is unconditionally added
-to KBUILD_CFLAGS, it will cause cc-option to always fail and those flags
-will never get added:
-
-$ clang -Werror -Wno-psabi -fno-stack-protector tmp.c; echo $?
-error: unknown warning option '-Wno-psabi'
-[-Werror,-Wunknown-warning-option]
-1
-
-This can be seen when compiling the whole kernel as some warnings that
-are normally disabled (see below) show up. The full list of flags
-missing from drivers/firmware/efi/libstub are the following (gathered
-from diffing .arm64-stub.o.cmd):
-
--fno-delete-null-pointer-checks
--Wno-address-of-packed-member
--Wframe-larger-than=2048
--Wno-unused-const-variable
--fno-strict-overflow
--fno-merge-all-constants
--fno-stack-check
--Werror=date-time
--Werror=incompatible-pointer-types
--ffreestanding
--fno-stack-protector
-
-Use cc-disable-warning so that it gets disabled for GCC and does nothing
-for Clang.
-
-Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Reported-by: Qian Cai <cai@lca.pw>
-Acked-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/1532943263-24378-2-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Acked-by: Jun Piao <piaojun@huawei.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Greg Kurz <groug@kaod.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/9p/9p.h     |  4 ++++
+ include/net/9p/client.h |  1 +
+ net/9p/client.c         | 37 ++++++++++++++++++++++++++++++++-----
+ 3 files changed, 37 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -51,7 +51,7 @@ endif
+diff --git a/include/net/9p/9p.h b/include/net/9p/9p.h
+index b8eb51a661e5..4ab293f574e0 100644
+--- a/include/net/9p/9p.h
++++ b/include/net/9p/9p.h
+@@ -336,6 +336,9 @@ enum p9_qid_t {
+ #define P9_NOFID	(u32)(~0)
+ #define P9_MAXWELEM	16
  
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
--KBUILD_CFLAGS	+= -Wno-psabi
-+KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
- KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
++/* Minimal header size: size[4] type[1] tag[2] */
++#define P9_HDRSZ	7
++
+ /* ample room for Twrite/Rread header */
+ #define P9_IOHDRSZ	24
  
- KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+@@ -558,6 +561,7 @@ struct p9_fcall {
+ 	size_t offset;
+ 	size_t capacity;
+ 
++	struct kmem_cache *cache;
+ 	u8 *sdata;
+ };
+ 
+diff --git a/include/net/9p/client.h b/include/net/9p/client.h
+index c2671d40bb6b..735f3979d559 100644
+--- a/include/net/9p/client.h
++++ b/include/net/9p/client.h
+@@ -123,6 +123,7 @@ struct p9_client {
+ 	struct p9_trans_module *trans_mod;
+ 	enum p9_trans_status status;
+ 	void *trans;
++	struct kmem_cache *fcall_cache;
+ 
+ 	union {
+ 		struct {
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 83e39fef58e1..7ef54719c6f7 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -237,9 +237,16 @@ static int parse_opts(char *opts, struct p9_client *clnt)
+ 	return ret;
+ }
+ 
+-static int p9_fcall_init(struct p9_fcall *fc, int alloc_msize)
++static int p9_fcall_init(struct p9_client *c, struct p9_fcall *fc,
++			 int alloc_msize)
+ {
+-	fc->sdata = kmalloc(alloc_msize, GFP_NOFS);
++	if (likely(c->fcall_cache) && alloc_msize == c->msize) {
++		fc->sdata = kmem_cache_alloc(c->fcall_cache, GFP_NOFS);
++		fc->cache = c->fcall_cache;
++	} else {
++		fc->sdata = kmalloc(alloc_msize, GFP_NOFS);
++		fc->cache = NULL;
++	}
+ 	if (!fc->sdata)
+ 		return -ENOMEM;
+ 	fc->capacity = alloc_msize;
+@@ -248,7 +255,16 @@ static int p9_fcall_init(struct p9_fcall *fc, int alloc_msize)
+ 
+ void p9_fcall_fini(struct p9_fcall *fc)
+ {
+-	kfree(fc->sdata);
++	/* sdata can be NULL for interrupted requests in trans_rdma,
++	 * and kmem_cache_free does not do NULL-check for us
++	 */
++	if (unlikely(!fc->sdata))
++		return;
++
++	if (fc->cache)
++		kmem_cache_free(fc->cache, fc->sdata);
++	else
++		kfree(fc->sdata);
+ }
+ EXPORT_SYMBOL(p9_fcall_fini);
+ 
+@@ -273,9 +289,9 @@ p9_tag_alloc(struct p9_client *c, int8_t type, unsigned int max_size)
+ 	if (!req)
+ 		return NULL;
+ 
+-	if (p9_fcall_init(&req->tc, alloc_msize))
++	if (p9_fcall_init(c, &req->tc, alloc_msize))
+ 		goto free_req;
+-	if (p9_fcall_init(&req->rc, alloc_msize))
++	if (p9_fcall_init(c, &req->rc, alloc_msize))
+ 		goto free;
+ 
+ 	p9pdu_reset(&req->tc);
+@@ -965,6 +981,7 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
+ 
+ 	clnt->trans_mod = NULL;
+ 	clnt->trans = NULL;
++	clnt->fcall_cache = NULL;
+ 
+ 	client_id = utsname()->nodename;
+ 	memcpy(clnt->name, client_id, strlen(client_id) + 1);
+@@ -1008,6 +1025,15 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
+ 	if (err)
+ 		goto close_trans;
+ 
++	/* P9_HDRSZ + 4 is the smallest packet header we can have that is
++	 * followed by data accessed from userspace by read
++	 */
++	clnt->fcall_cache =
++		kmem_cache_create_usercopy("9p-fcall-cache", clnt->msize,
++					   0, 0, P9_HDRSZ + 4,
++					   clnt->msize - (P9_HDRSZ + 4),
++					   NULL);
++
+ 	return clnt;
+ 
+ close_trans:
+@@ -1039,6 +1065,7 @@ void p9_client_destroy(struct p9_client *clnt)
+ 
+ 	p9_tag_cleanup(clnt);
+ 
++	kmem_cache_destroy(clnt->fcall_cache);
+ 	kfree(clnt);
+ }
+ EXPORT_SYMBOL(p9_client_destroy);
+-- 
+2.20.1
+
 
 
