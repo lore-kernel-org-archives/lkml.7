@@ -2,261 +2,1009 @@ Return-Path: <SRS0=JAXG=U7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FFDC06510
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820E7C06510
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C340C2089C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFAF2089C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 13:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eziIZnB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfGBNI7 (ORCPT
+        id S1726970AbfGBNKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 09:08:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60366 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726993AbfGBNI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 09:08:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 72C513001808;
-        Tue,  2 Jul 2019 13:08:57 +0000 (UTC)
-Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BE066F94F;
-        Tue,  2 Jul 2019 13:08:56 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 07:08:56 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Kirti Wankhede <kwankhede@nvidia.com>
-Cc:     Parav Pandit <parav@mellanox.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-Message-ID: <20190702070856.75c23a0c@x1.home>
-In-Reply-To: <b6afb6a7-0bd8-dff3-4a4b-a6bb34ccb61d@nvidia.com>
-References: <156199271955.1646.13321360197612813634.stgit@gimli.home>
-        <08597ab4-cc37-3973-8927-f1bc430f6185@nvidia.com>
-        <20190701112442.176a8407@x1.home>
-        <3b338e73-7929-df20-ca2b-3223ba4ead39@nvidia.com>
-        <20190701140436.45eabf07@x1.home>
-        <14783c81-0236-2f25-6193-c06aa83392c9@nvidia.com>
-        <20190701234201.47b6f23a@x1.home>
-        <AM0PR05MB48669DA5993C68765397AF1BD1F80@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <b6afb6a7-0bd8-dff3-4a4b-a6bb34ccb61d@nvidia.com>
-Organization: Red Hat
+        Tue, 2 Jul 2019 09:10:31 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36372 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfGBNKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 09:10:31 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w7so12955497oic.3;
+        Tue, 02 Jul 2019 06:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=s+YYdqr8bHiNSEYONgr3xT13YUnhch+TwXd78BsjKwI=;
+        b=eziIZnB6UP2ncLWyn1GIs6IAQ6SmVLTiTWALqJ+NV95ZQXJosk2Rvc1xfqvA52MTIn
+         mgv4E8NtfTj5k3n6f53wl9p4IG6ogNipFlNvCPXpKWAsvUo6rI/tSLPcGJsLoVFN34wy
+         DQhGbygbUXg4iYmFiI/32JeyjhpJVBmvAFPhDEMXadQSmPiYO21rfZerCLKcbUYi4IoD
+         KoIcqFkcyw8OqCHyRgnQo2XBD/KFJrWlUQfL2IyBBfh8X9xp2nhqQuU29CInf/KIRFLC
+         YMl3bQ3GJMuVsA0+n+wV/hV5cH9LVso09EvL0AoAzXbjISvNH0WL53i8RMAJwSVa1yOU
+         kPwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=s+YYdqr8bHiNSEYONgr3xT13YUnhch+TwXd78BsjKwI=;
+        b=L2qZC/+eXOwWqbXMmlEOSF9VmSyNBKxebAeoISH3a0N9klAUg5eVcZ51JM7USpdZL4
+         S7QB9S8GBpjnSGMMHS8bHQXgbz5MzJHsfVYOS3ANewLLrd4XPFi2L1Ddy0HOMjJSFXwn
+         rtWq//2R8C6JX28tEOO6r09D1KfFmmpVyNvX33bOJtNb3wyg39dqaIV23gJUQsRUolo/
+         4/xVCJSLQ5O3JxObRgMcyroH0JH7PZoaApaezU76zCulPHsH+kSyBq+u5O+WDaDZ2tHW
+         UZqnGy5/Lyml22Y/VZtrAOm0bCk7GKpTFtYv52qFM0/pOrDOr6mg5a2AKmuqRathuZCX
+         9Mag==
+X-Gm-Message-State: APjAAAWRqAwpSCcnDJTO542qQ8A9zUKKKKr+SC4IwQzP8/9swTTwKMFw
+        CAe6D+CK5ix9emDIw6L4XOOrJNKWwPuk/8mAfqM=
+X-Google-Smtp-Source: APXvYqyq4wtqpeOn7WAu2ZGR+EIUAbmE9caVAmYMQd3rx0io+tEem31bMZ3ZoSZGINgd5GV4DG56W3ilgF34KRgFmHA=
+X-Received: by 2002:aca:f4ce:: with SMTP id s197mr2940295oih.45.1562073029171;
+ Tue, 02 Jul 2019 06:10:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 02 Jul 2019 13:08:57 +0000 (UTC)
+References: <20190702130239.17864-1-andradanciu1997@gmail.com>
+In-Reply-To: <20190702130239.17864-1-andradanciu1997@gmail.com>
+From:   Andra Danciu <andradanciu1997@gmail.com>
+Date:   Tue, 2 Jul 2019 16:10:21 +0300
+Message-ID: <CAJNLGsz9SGZV-+Si+6zyg91k3FebE2AwydwqTZb_ZLziwitLNw@mail.gmail.com>
+Subject: Re: [PATCH] ARM64: dts: freescale: add wand-pi-8m dtb
+To:     shawnguo@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        Anson.Huang@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca,
+        ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 18:17:41 +0530
-Kirti Wankhede <kwankhede@nvidia.com> wrote:
+Please ignore this. Sent the wrong patch!
 
-> On 7/2/2019 12:43 PM, Parav Pandit wrote:
-> > 
-> >   
-> >> -----Original Message-----
-> >> From: linux-kernel-owner@vger.kernel.org <linux-kernel-  
-> >> owner@vger.kernel.org> On Behalf Of Alex Williamson  
-> >> Sent: Tuesday, July 2, 2019 11:12 AM
-> >> To: Kirti Wankhede <kwankhede@nvidia.com>
-> >> Cc: cohuck@redhat.com; kvm@vger.kernel.org; linux-kernel@vger.kernel.org
-> >> Subject: Re: [PATCH v2] mdev: Send uevents around parent device registration
-> >>
-> >> On Tue, 2 Jul 2019 10:25:04 +0530
-> >> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >>  
-> >>> On 7/2/2019 1:34 AM, Alex Williamson wrote:  
-> >>>> On Mon, 1 Jul 2019 23:20:35 +0530
-> >>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >>>>  
-> >>>>> On 7/1/2019 10:54 PM, Alex Williamson wrote:  
-> >>>>>> On Mon, 1 Jul 2019 22:43:10 +0530
-> >>>>>> Kirti Wankhede <kwankhede@nvidia.com> wrote:
-> >>>>>>  
-> >>>>>>> On 7/1/2019 8:24 PM, Alex Williamson wrote:  
-> >>>>>>>> This allows udev to trigger rules when a parent device is
-> >>>>>>>> registered or unregistered from mdev.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> >>>>>>>> ---
-> >>>>>>>>
-> >>>>>>>> v2: Don't remove the dev_info(), Kirti requested they stay and
-> >>>>>>>>     removing them is only tangential to the goal of this change.
-> >>>>>>>>  
-> >>>>>>>
-> >>>>>>> Thanks.
-> >>>>>>>
-> >>>>>>>  
-> >>>>>>>>  drivers/vfio/mdev/mdev_core.c |    8 ++++++++
-> >>>>>>>>  1 file changed, 8 insertions(+)
-> >>>>>>>>
-> >>>>>>>> diff --git a/drivers/vfio/mdev/mdev_core.c
-> >>>>>>>> b/drivers/vfio/mdev/mdev_core.c index ae23151442cb..7fb268136c62
-> >>>>>>>> 100644
-> >>>>>>>> --- a/drivers/vfio/mdev/mdev_core.c
-> >>>>>>>> +++ b/drivers/vfio/mdev/mdev_core.c
-> >>>>>>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev,
-> >>>>>>>> const struct mdev_parent_ops *ops)  {
-> >>>>>>>>  	int ret;
-> >>>>>>>>  	struct mdev_parent *parent;
-> >>>>>>>> +	char *env_string = "MDEV_STATE=registered";
-> >>>>>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>>>>
-> >>>>>>>>  	/* check for mandatory ops */
-> >>>>>>>>  	if (!ops || !ops->create || !ops->remove ||
-> >>>>>>>> !ops->supported_type_groups) @@ -197,6 +199,8 @@ int  
-> >> mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)  
-> >>>>>>>>  	mutex_unlock(&parent_list_lock);
-> >>>>>>>>
-> >>>>>>>>  	dev_info(dev, "MDEV: Registered\n");
-> >>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> >>>>>>>> +
-> >>>>>>>>  	return 0;
-> >>>>>>>>
-> >>>>>>>>  add_dev_err:
-> >>>>>>>> @@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
-> >>>>>>>>  void mdev_unregister_device(struct device *dev)  {
-> >>>>>>>>  	struct mdev_parent *parent;
-> >>>>>>>> +	char *env_string = "MDEV_STATE=unregistered";
-> >>>>>>>> +	char *envp[] = { env_string, NULL };
-> >>>>>>>>
-> >>>>>>>>  	mutex_lock(&parent_list_lock);
-> >>>>>>>>  	parent = __find_parent_device(dev); @@ -243,6 +249,8 @@  
-> >> void  
-> >>>>>>>> mdev_unregister_device(struct device *dev)
-> >>>>>>>>  	up_write(&parent->unreg_sem);
-> >>>>>>>>
-> >>>>>>>>  	mdev_put_parent(parent);
-> >>>>>>>> +
-> >>>>>>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);  
-> >>>>>>>
-> >>>>>>> mdev_put_parent() calls put_device(dev). If this is the last
-> >>>>>>> instance holding device, then on put_device(dev) dev would get freed.
-> >>>>>>>
-> >>>>>>> This event should be before mdev_put_parent()  
-> >>>>>>
-> >>>>>> So you're suggesting the vendor driver is calling
-> >>>>>> mdev_unregister_device() without a reference to the struct device
-> >>>>>> that it's passing to unregister?  Sounds bogus to me.  We take a
-> >>>>>> reference to the device so that it can't disappear out from under
-> >>>>>> us, the caller cannot rely on our reference and the caller
-> >>>>>> provided the struct device.  Thanks,
-> >>>>>>  
-> >>>>>
-> >>>>> 1. Register uevent is sent after mdev holding reference to device,
-> >>>>> then ideally, unregister path should be mirror of register path,
-> >>>>> send uevent and then release the reference to device.  
-> >>>>
-> >>>> I don't see the relevance here.  We're marking an event, not
-> >>>> unwinding state of the device from the registration process.
-> >>>> Additionally, the event we're trying to mark is the completion of
-> >>>> each process, so the notion that we need to mirror the ordering between  
-> >> the two is invalid.  
-> >>>>  
-> >>>>> 2. I agree that vendor driver shouldn't call
-> >>>>> mdev_unregister_device() without holding reference to device. But
-> >>>>> to be on safer side, if ever such case occur, to avoid any
-> >>>>> segmentation fault in kernel, better to send event before mdev release the  
-> >> reference to device.  
-> >>>>
-> >>>> I know that get_device() and put_device() are GPL symbols and that's
-> >>>> a bit of an issue, but I don't think we should be kludging the code
-> >>>> for a vendor driver that might have problems with that.  A) we're
-> >>>> using the caller provided device  for the uevent, B) we're only
-> >>>> releasing our own reference to the device that was acquired during
-> >>>> registration, the vendor driver must have other references,  
-> >>>
-> >>> Are you going to assume that someone/vendor driver is always going to
-> >>> do right thing?  
-> >>
-> >> mdev is a kernel driver, we make reasonable assumptions that other drivers
-> >> interact with it correctly.
-> >>  
-> > That is right.
-> > Vendor drivers must invoke mdev_register_device() and mdev_unregister_device() only once.
-> > And it must have a valid reference to the device for which it is invoking it.
-> > This is basic programming practice that a given driver has to follow.
-> > mdev_register_device() has a loop to check. It needs to WARN_ON there if there are duplicate registration.
-> > Similarly on mdev_unregister_device() to have WARN_ON if device is not found.  
-> 
-> If assumption is vendor driver is always going to do right way, then why
-> need check for duplicate registration? vendor driver is always going to
-> do it right way, right?
-
-Are we intentionally misinterpreting "reasonable assumptions" here?
-
-> > It was in my TODO list to submit those patches.
-> > I was still thinking to that mdev_register_device() should return mdev_parent and mdev_unregister_device() should accept mdev_parent pointer, instead of WARN_ON on unregister().
-> > 
-> >   
-> >>>> C) the parent device
-> >>>> generally lives on a bus, with a vendor driver, there's an entire
-> >>>> ecosystem of references to the device below mdev.  Is this a
-> >>>> paranoia request or are you really concerned that your PCI device suddenly
-> >>>> disappears when mdev's reference to it disappears.  
-> >>>
-> >>> mdev infrastructure is not always used by PCI devices. It is designed
-> >>> to be generic, so that other devices (other than PCI devices) can also
-> >>> use this framework.  
-> >>
-> >> Obviously mdev is not PCI specific, I only mention it because I'm asking if you
-> >> have a specific concern in mind.  If you did, I'd assume it's related to a PCI
-> >> backed vGPU.  
-> 
-> Its not always good to assume certain things.
-
-It was only an attempt to relate to a specific issue that might concern
-you.
-
-> >> Any physical parent device of an mdev is likely to have some sort
-> >> of bus infrastructure behind it holding references to the device (ie. a probe and
-> >> release where an implicit reference is held between these points).  A virtual
-> >> device would be similar, it's created as part of a module init and destroyed as
-> >> part of a module exit, where mdev registration would exist between these
-> >> points.
-> >>  
-> >>> If there is a assumption that user of mdev framework or vendor drivers
-> >>> are always going to use mdev in right way, then there is no need for
-> >>> mdev core to held reference of the device?
-> >>> This is not a "paranoia request". This is more of a ideal scenario,
-> >>> mdev should use device by holding its reference rather than assuming
-> >>> (or relying on) someone else holding the reference of device.  
-> >>
-> >> In fact, at one point Parav was proposing removing these references entirely,
-> >> but Connie and I both felt uncomfortable about that.  I think it's good practice
-> >> that mdev indicates the use of the parent device by incrementing the reference
-> >> count, with each child mdev device also taking a reference, but those
-> >> references balance out within the mdev core.  Their purpose is not to maintain
-> >> the device for outside callers, nor should outside callers assume mdev's use of
-> >> references to release their own.  I don't think it's unreasonable to assume that
-> >> the caller should have a legitimate reference to the object it's providing to this
-> >> function and therefore we should be able to use it after mdev's internal
-> >> references are balanced out.  Thanks,
-> >>  
-> 
-> I'm not fully convinced with what is the advantage of sending uevent
-> after releasing reference to device or disadvantage of sending uevent
-> before releasing reference to device.
-
-If mdev-core still holds a reference to the device, is it fully
-unregistered?  Why not send the uevent at the point where the
-notification is actually true?
-
-> Still if you want to go ahead with this change, please add a check or
-> assert if (dev != NULL) and add an comment highlighting the assumption.
-
-If CONFIG_DEBUG_KOBJECT_RELEASE is enabled then the deletion of the
-kobject can occur at some random delay after the last reference is
-removed via a workqueue, so such a test would only introduce a false
-sense of security for an issue that should not exist anyway.  Thanks,
-
-Alex
+=C3=8En mar., 2 iul. 2019 la 16:02, Andra Danciu <andradanciu1997@gmail.com=
+> a scris:
+>
+> From: Richard Hu <richard.hu@technexion.com>
+>
+> Add dtb for WAND-PI-8M board.
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile       |   3 +-
+>  arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 780 +++++++++++++++++++++=
+++++++
+>  2 files changed, 782 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+>
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts=
+/freescale/Makefile
+> index 7a9dae6c43f5..308bbb1caa60 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -51,7 +51,8 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) +=3D fsl-imx8mq-ddr3l-arm=
+2.dtb \
+>                                  fsl-imx8mq-evk-dual-display.dtb \
+>                                  fsl-imx8mq-evk-ak4497.dtb \
+>                                  fsl-imx8mq-evk-audio-tdm.dtb \
+> -                                fsl-imx8mq-evk-drm.dtb
+> +                                fsl-imx8mq-evk-drm.dtb \
+> +                                wand-pi-8m.dtb
+>
+>  always         :=3D $(dtb-y)
+>  subdir-y       :=3D $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/bo=
+ot/dts/freescale/wand-pi-8m.dts
+> new file mode 100644
+> index 000000000000..cc1d55ee88e2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
+> @@ -0,0 +1,780 @@
+> +/*
+> + * Copyright 2018 Wandboard, Org.
+> + * Copyright 2017 NXP
+> + *
+> + * Author: Richard Hu <hakahu@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "fsl-imx8mq.dtsi"
+> +
+> +/ {
+> +       model =3D "WAND-PI-8M";
+> +       compatible =3D "wand,imx8mq-wand-pi", "fsl,imx8mq";
+> +
+> +       chosen {
+> +               bootargs =3D "console=3Dttymxc0,115200 earlycon=3Dec_imx6=
+q,0x30860000,115200";
+> +               stdout-path =3D &uart1;
+> +       };
+> +
+> +       regulators {
+> +               compatible =3D "simple-bus";
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               reg_usdhc2_vmmc: usdhc2_vmmc {
+> +                       compatible =3D "regulator-fixed";
+> +                       regulator-name =3D "VSD_3V3";
+> +                       regulator-min-microvolt =3D <3300000>;
+> +                       regulator-max-microvolt =3D <3300000>;
+> +                       gpio =3D <&gpio2 19 GPIO_ACTIVE_HIGH>;
+> +                       enable-active-high;
+> +               };
+> +
+> +               reg_gpio_dvfs: regulator-gpio {
+> +                       compatible =3D "regulator-gpio";
+> +                       pinctrl-names =3D "default";
+> +                       pinctrl-0 =3D <&pinctrl_dvfs>;
+> +                       regulator-min-microvolt =3D <900000>;
+> +                       regulator-max-microvolt =3D <1000000>;
+> +                       regulator-name =3D "gpio_dvfs";
+> +                       regulator-type =3D "voltage";
+> +                       gpios =3D <&gpio1 13 GPIO_ACTIVE_HIGH>;
+> +                       states =3D <900000 0x1 1000000 0x0>;
+> +               };
+> +       };
+> +
+> +       modem_reset: modem-reset {
+> +               compatible =3D "gpio-reset";
+> +               reset-gpios =3D <&gpio3 5 GPIO_ACTIVE_LOW>;
+> +               reset-delay-us =3D <2000>;
+> +               reset-post-delay-ms =3D <40>;
+> +               #reset-cells =3D <0>;
+> +       };
+> +
+> +       wm8524: wm8524 {
+> +               compatible =3D "wlf,wm8524";
+> +               clocks =3D <&clk IMX8MQ_CLK_SAI2_ROOT>;
+> +               clock-names =3D "mclk";
+> +               wlf,mute-gpios =3D <&gpio1 8 GPIO_ACTIVE_LOW>;
+> +       };
+> +
+> +       sound-wm8524 {
+> +               compatible =3D "fsl,imx-audio-wm8524";
+> +               model =3D "wm8524-audio";
+> +               audio-cpu =3D <&sai2>;
+> +               audio-codec =3D <&wm8524>;
+> +               audio-routing =3D
+> +                       "Line Out Jack", "LINEVOUTL",
+> +                       "Line Out Jack", "LINEVOUTR";
+> +       };
+> +
+> +       sound-hdmi {
+> +               compatible =3D "fsl,imx-audio-cdnhdmi";
+> +               model =3D "imx-audio-hdmi";
+> +               audio-cpu =3D <&sai4>;
+> +               protocol =3D <1>;
+> +       };
+> +
+> +       sound-spdif {
+> +               compatible =3D "fsl,imx-audio-spdif";
+> +               model =3D "imx-spdif";
+> +               spdif-controller =3D <&spdif1>;
+> +               spdif-out;
+> +               spdif-in;
+> +       };
+> +
+> +       sound-hdmi-arc {
+> +               compatible =3D "fsl,imx-audio-spdif";
+> +               model =3D "imx-hdmi-arc";
+> +               spdif-controller =3D <&spdif2>;
+> +               spdif-in;
+> +       };
+> +};
+> +
+> +&clk {
+> +       assigned-clocks =3D <&clk IMX8MQ_AUDIO_PLL1>;
+> +       assigned-clock-rates =3D <786432000>;
+> +};
+> +
+> +&iomuxc {
+> +       pinctrl-names =3D "default";
+> +
+> +       wand-pi-8m {
+> +               pinctrl_csi1: csi1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3        =
+       0x19
+> +                               MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6        =
+       0x19
+> +                               MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO=
+2      0x59
+> +                       >;
+> +               };
+> +               pinctrl_csi2: csi2grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5        =
+       0x19
+> +                               MX8MQ_IOMUXC_GPIO1_IO06_GPIO1_IO6        =
+       0x19
+> +                               MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO=
+2      0x59
+> +                       >;
+> +               };
+> +
+> +               pinctrl_fec1: fec1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC         0=
+x3
+> +                               MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO       0=
+x23
+> +                               MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3   0=
+x1f
+> +                               MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2   0=
+x1f
+> +                               MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1   0=
+x1f
+> +                               MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0   0=
+x1f
+> +                               MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3   0=
+x91
+> +                               MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2   0=
+x91
+> +                               MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1   0=
+x91
+> +                               MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0   0=
+x91
+> +                               MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC   0=
+x1f
+> +                               MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC   0=
+x91
+> +                               MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_C=
+TL     0x91
+> +                               MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_C=
+TL     0x1f
+> +                               MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9       0=
+x19
+> +                       >;
+> +               };
+> +
+> +               pinctrl_i2c1: i2c1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL           =
+       0x4000007f
+> +                               MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA           =
+       0x4000007f
+> +                       >;
+> +               };
+> +
+> +               pinctrl_i2c2: i2c2grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL           =
+       0x4000007f
+> +                               MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA           =
+       0x4000007f
+> +                       >;
+> +               };
+> +
+> +
+> +               pinctrl_pcie0: pcie0grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_I2C4_SCL_GPIO5_IO20        0=
+x16
+> +                               MX8MQ_IOMUXC_UART4_TXD_GPIO5_IO29       0=
+x16
+> +                               MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28       0=
+x16
+> +                       >;
+> +               };
+> +
+> +               pinctrl_pcie1: pcie1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_I2C4_SDA_GPIO5_IO21        0=
+x16
+> +                               MX8MQ_IOMUXC_ECSPI2_SCLK_GPIO5_IO10     0=
+x16
+> +                               MX8MQ_IOMUXC_ECSPI2_MISO_GPIO5_IO12     0=
+x16
+> +                       >;
+> +               };
+> +
+> +               pinctrl_dvfs: dvfsgrp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13      0=
+x16
+> +                       >;
+> +               };
+> +
+> +               pinctrl_qspi: qspigrp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK       0=
+x82
+> +                               MX8MQ_IOMUXC_NAND_CE0_B_QSPI_A_SS0_B    0=
+x82
+> +                               MX8MQ_IOMUXC_NAND_DATA00_QSPI_A_DATA0   0=
+x82
+> +                               MX8MQ_IOMUXC_NAND_DATA01_QSPI_A_DATA1   0=
+x82
+> +                               MX8MQ_IOMUXC_NAND_DATA02_QSPI_A_DATA2   0=
+x82
+> +                               MX8MQ_IOMUXC_NAND_DATA03_QSPI_A_DATA3   0=
+x82
+> +
+> +                       >;
+> +               };
+> +
+> +               pinctrl_typec: typecgrp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_NAND_RE_B_GPIO3_IO15       0=
+x16
+> +                               MX8MQ_IOMUXC_NAND_CE2_B_GPIO3_IO3       0=
+x17059
+> +                       >;
+> +               };
+> +
+> +               pinctrl_uart1: uart1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX      =
+       0x49
+> +                               MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX      =
+       0x49
+> +                       >;
+> +               };
+> +
+> +               pinctrl_uart3: uart3grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX      =
+       0x49
+> +                               MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX      =
+       0x49
+> +                               MX8MQ_IOMUXC_ECSPI1_MISO_UART3_DCE_CTS_B =
+       0x49
+> +                               MX8MQ_IOMUXC_ECSPI1_SS0_UART3_DCE_RTS_B  =
+       0x49
+> +                               MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5          =
+       0x19
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc1: usdhc1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
+       0x83
+> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
+       0x83
+> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
+       0x85
+> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
+       0x85
+> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK          =
+       0x87
+> +                               MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD          =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE    =
+       0x87
+> +                               MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B  =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc2_gpio: usdhc2grpgpio {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12        0=
+x41
+> +                               MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19     0=
+x41
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc2: usdhc2grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
+       0x83
+> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
+       0xc3
+> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
+       0xc3
+> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
+       0x85
+> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
+       0xc5
+> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
+       0xc5
+> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK          =
+       0x87
+> +                               MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD          =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2      =
+       0xc7
+> +                               MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3      =
+       0xc7
+> +                               MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT   =
+       0xc1
+> +                       >;
+> +               };
+> +
+> +               pinctrl_sai2: sai2grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC     0=
+xd6
+> +                               MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK      0=
+xd6
+> +                               MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK        0=
+xd6
+> +                               MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0    0=
+xd6
+> +                               MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8       0=
+xd6
+> +                       >;
+> +               };
+> +
+> +               pinctrl_spdif1: spdif1grp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_SPDIF_TX_SPDIF1_OUT        0=
+xd6
+> +                               MX8MQ_IOMUXC_SPDIF_RX_SPDIF1_IN         0=
+xd6
+> +                       >;
+> +               };
+> +
+> +               pinctrl_wdog: wdoggrp {
+> +                       fsl,pins =3D <
+> +                               MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
+> +                       >;
+> +               };
+> +       };
+> +};
+> +
+> +&fec1 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_fec1>;
+> +       phy-mode =3D "rgmii-id";
+> +       phy-handle =3D <&ethphy0>;
+> +       fsl,magic-packet;
+> +       status =3D "okay";
+> +
+> +       mdio {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               ethphy0: ethernet-phy@0 {
+> +                       compatible =3D "ethernet-phy-ieee802.3-c22";
+> +                       reg =3D <0>;
+> +                       at803x,led-act-blind-workaround;
+> +                       at803x,eee-disabled;
+> +               };
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       clock-frequency =3D <100000>;
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_i2c1>;
+> +       status =3D "okay";
+> +
+> +       pmic: pfuze100@08 {
+> +               compatible =3D "fsl,pfuze100";
+> +               reg =3D <0x08>;
+> +
+> +               regulators {
+> +                       sw1a_reg: sw1ab {
+> +                               regulator-min-microvolt =3D <300000>;
+> +                               regulator-max-microvolt =3D <1875000>;
+> +                       };
+> +
+> +                       sw1c_reg: sw1c {
+> +                               regulator-min-microvolt =3D <300000>;
+> +                               regulator-max-microvolt =3D <1875000>;
+> +                       };
+> +
+> +                       sw2_reg: sw2 {
+> +                               regulator-min-microvolt =3D <800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       sw3a_reg: sw3ab {
+> +                               regulator-min-microvolt =3D <400000>;
+> +                               regulator-max-microvolt =3D <1975000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       sw4_reg: sw4 {
+> +                               regulator-min-microvolt =3D <800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       swbst_reg: swbst {
+> +                               regulator-min-microvolt =3D <5000000>;
+> +                               regulator-max-microvolt =3D <5150000>;
+> +                       };
+> +
+> +                       snvs_reg: vsnvs {
+> +                               regulator-min-microvolt =3D <1000000>;
+> +                               regulator-max-microvolt =3D <3000000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vref_reg: vrefddr {
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vgen1_reg: vgen1 {
+> +                               regulator-min-microvolt =3D <800000>;
+> +                               regulator-max-microvolt =3D <1550000>;
+> +                       };
+> +
+> +                       vgen2_reg: vgen2 {
+> +                               regulator-min-microvolt =3D <800000>;
+> +                               regulator-max-microvolt =3D <1550000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vgen3_reg: vgen3 {
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vgen4_reg: vgen4 {
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vgen5_reg: vgen5 {
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       vgen6_reg: vgen6 {
+> +                               regulator-min-microvolt =3D <1800000>;
+> +                               regulator-max-microvolt =3D <3300000>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       typec_ptn5100: ptn5110@50 {
+> +               compatible =3D "usb,tcpci";
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&pinctrl_typec>;
+> +               reg =3D <0x50>;
+> +               interrupt-parent =3D <&gpio3>;
+> +               interrupts =3D <3 8>;
+> +               ss-sel-gpios =3D <&gpio3 15 GPIO_ACTIVE_HIGH>;
+> +               src-pdos =3D <0x380190c8>;
+> +               snk-pdos =3D <0x380190c8 0x3802d0c8>;
+> +               max-snk-mv =3D <9000>;
+> +               max-snk-ma =3D <1000>;
+> +               op-snk-mw =3D <9000>;
+> +               port-type =3D "drp";
+> +               default-role =3D "sink";
+> +       };
+> +
+> +       ov5640_mipi: ov5640_mipi@3c {
+> +               compatible =3D "ovti,ov5640_mipi";
+> +               reg =3D <0x3c>;
+> +               status =3D "okay";
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&pinctrl_csi1>;
+> +               clocks =3D <&clk IMX8MQ_CLK_CLKO2_DIV>;
+> +               clock-names =3D "csi_mclk";
+> +               assigned-clocks =3D <&clk IMX8MQ_CLK_CLKO2_SRC>,
+> +                                 <&clk IMX8MQ_CLK_CLKO2_DIV>;
+> +               assigned-clock-parents =3D <&clk IMX8MQ_SYS2_PLL_200M>;
+> +               assigned-clock-rates =3D <0>, <20000000>;
+> +               csi_id =3D <0>;
+> +               pwn-gpios =3D <&gpio1 3 GPIO_ACTIVE_HIGH>;
+> +               rst-gpios =3D <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> +               mclk =3D <20000000>;
+> +               mclk_source =3D <0>;
+> +               port {
+> +                       ov5640_mipi1_ep: endpoint {
+> +                               remote-endpoint =3D <&mipi1_sensor_ep>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       ov5640_mipi2: ov5640_mipi2@3c {
+> +               compatible =3D "ovti,ov5640_mipi";
+> +               reg =3D <0x3c>;
+> +               status =3D "disabled";
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&pinctrl_csi2>;
+> +               clocks =3D <&clk IMX8MQ_CLK_CLKO2_DIV>;
+> +               clock-names =3D "csi_mclk";
+> +               assigned-clocks =3D <&clk IMX8MQ_CLK_CLKO2_SRC>,
+> +                                 <&clk IMX8MQ_CLK_CLKO2_DIV>;
+> +               assigned-clock-parents =3D <&clk IMX8MQ_SYS2_PLL_200M>;
+> +               assigned-clock-rates =3D <0>, <20000000>;
+> +               csi_id =3D <0>;
+> +               pwn-gpios =3D <&gpio1 5 GPIO_ACTIVE_HIGH>;
+> +               rst-gpios =3D <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> +               mclk =3D <20000000>;
+> +               mclk_source =3D <0>;
+> +               port {
+> +                       ov5640_mipi2_ep: endpoint {
+> +                               remote-endpoint =3D <&mipi2_sensor_ep>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&i2c2 {
+> +       clock-frequency =3D <100000>;
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_i2c2>;
+> +       status =3D "disabled";
+> +};
+> +
+> +&pcie0{
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_pcie0>;
+> +       clkreq-gpio =3D <&gpio5 20 GPIO_ACTIVE_LOW>;
+> +       disable-gpio =3D <&gpio5 29 GPIO_ACTIVE_LOW>;
+> +       reset-gpio =3D <&gpio5 28 GPIO_ACTIVE_LOW>;
+> +       ext_osc =3D <1>;
+> +       hard-wired =3D <1>;
+> +       status =3D "okay";
+> +};
+> +
+> +&pcie1{
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_pcie1>;
+> +       clkreq-gpio =3D <&gpio5 21 GPIO_ACTIVE_LOW>;
+> +       disable-gpio =3D <&gpio5 10 GPIO_ACTIVE_LOW>;
+> +       reset-gpio =3D <&gpio5 12 GPIO_ACTIVE_LOW>;
+> +       ext_osc =3D <1>;
+> +       status =3D "okay";
+> +};
+> +
+> +&uart1 { /* console */
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_uart1>;
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_UART1_SRC>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_CLK_25M>;
+> +       status =3D "okay";
+> +};
+> +
+> +&qspi {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_qspi>;
+> +       status =3D "okay";
+> +
+> +       flash0: n25q256a@0 {
+> +               reg =3D <0>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               compatible =3D "micron,n25q256a";
+> +               spi-max-frequency =3D <29000000>;
+> +               spi-nor,ddr-quad-read-dummy =3D <6>;
+> +       };
+> +};
+> +
+> +&uart3 { /* BT */
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_uart3>;
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_UART3_SRC>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_SYS1_PLL_80M>;
+> +       fsl,uart-has-rtscts;
+> +       resets =3D <&modem_reset>;
+> +       status =3D "okay";
+> +};
+> +
+> +&usdhc1 {
+> +       pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
+> +       pinctrl-0 =3D <&pinctrl_usdhc1>;
+> +       pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
+> +       pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
+> +       bus-width =3D <8>;
+> +       non-removable;
+> +       status =3D "okay";
+> +};
+> +
+> +&usdhc2 {
+> +       pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
+> +       pinctrl-0 =3D <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+> +       pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
+> +       pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
+> +       bus-width =3D <4>;
+> +       cd-gpios =3D <&gpio2 12 GPIO_ACTIVE_LOW>;
+> +       vmmc-supply =3D <&reg_usdhc2_vmmc>;
+> +       status =3D "okay";
+> +};
+> +
+> +&usb3_phy0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&usb3_0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&usb_dwc3_0 {
+> +       status =3D "okay";
+> +       extcon =3D <&typec_ptn5100>;
+> +       dr_mode =3D "otg";
+> +};
+> +
+> +&usb3_phy1 {
+> +       status =3D "okay";
+> +};
+> +
+> +&usb3_1 {
+> +       status =3D "okay";
+> +};
+> +
+> +&usb_dwc3_1 {
+> +       status =3D "okay";
+> +       dr_mode =3D "host";
+> +};
+> +
+> +&sai2 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_sai2>;
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SAI2_SRC>,
+> +                       <&clk IMX8MQ_CLK_SAI2_DIV>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +       assigned-clock-rates =3D <0>, <24576000>;
+> +       status =3D "okay";
+> +};
+> +
+> +&sai4 {
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SAI4_SRC>,
+> +                       <&clk IMX8MQ_CLK_SAI4_DIV>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +       assigned-clock-rates =3D <0>, <24576000>;
+> +       status =3D "okay";
+> +};
+> +
+> +&spdif1 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_spdif1>;
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SPDIF1_SRC>,
+> +                       <&clk IMX8MQ_CLK_SPDIF1_DIV>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +       assigned-clock-rates =3D <0>, <24576000>;
+> +       status =3D "okay";
+> +};
+> +
+> +&spdif2 {
+> +       assigned-clocks =3D <&clk IMX8MQ_CLK_SPDIF2_SRC>,
+> +                       <&clk IMX8MQ_CLK_SPDIF2_DIV>;
+> +       assigned-clock-parents =3D <&clk IMX8MQ_AUDIO_PLL1_OUT>;
+> +       assigned-clock-rates =3D <0>, <24576000>;
+> +       status =3D "okay";
+> +};
+> +
+> +&gpu_pd {
+> +       power-supply =3D <&sw1a_reg>;
+> +};
+> +
+> +&vpu_pd {
+> +       power-supply =3D <&sw1c_reg>;
+> +};
+> +
+> +&gpu {
+> +       status =3D "okay";
+> +};
+> +
+> +&vpu {
+> +       status =3D "okay";
+> +};
+> +
+> +&wdog1 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_wdog>;
+> +       fsl,ext-reset-output;
+> +       status =3D "okay";
+> +};
+> +
+> +&mu {
+> +       status =3D "okay";
+> +};
+> +
+> +&rpmsg{
+> +       /*
+> +        * 64K for one rpmsg instance:
+> +        * --0xb8000000~0xb800ffff: pingpong
+> +        */
+> +       vdev-nums =3D <1>;
+> +       reg =3D <0x0 0xb8000000 0x0 0x10000>;
+> +       status =3D "okay";
+> +};
+> +
+> +&A53_0 {
+> +       operating-points =3D <
+> +               /* kHz    uV */
+> +               1500000 1000000
+> +               1300000 1000000
+> +               1000000 900000
+> +               800000  900000
+> +       >;
+> +       dc-supply =3D <&reg_gpio_dvfs>;
+> +};
+> +
+> +&dcss {
+> +       status =3D "okay";
+> +
+> +       disp-dev =3D "hdmi_disp";
+> +};
+> +
+> +&hdmi {
+> +       status =3D "okay";
+> +};
+> +
+> +&hdmi_cec {
+> +       status =3D "okay";
+> +};
+> +
+> +&csi1_bridge {
+> +       fsl,mipi-mode;
+> +       fsl,two-8bit-sensor-mode;
+> +       status =3D "okay";
+> +
+> +       port {
+> +               csi1_ep: endpoint {
+> +                       remote-endpoint =3D <&csi1_mipi_ep>;
+> +               };
+> +       };
+> +};
+> +
+> +&csi2_bridge {
+> +       fsl,mipi-mode;
+> +       fsl,two-8bit-sensor-mode;
+> +       status =3D "disabled";
+> +
+> +       port {
+> +               csi2_ep: endpoint {
+> +                       remote-endpoint =3D <&csi2_mipi_ep>;
+> +               };
+> +       };
+> +};
+> +
+> +&mipi_csi_1 {
+> +       #address-cells =3D <1>;
+> +       #size-cells =3D <0>;
+> +       status =3D "okay";
+> +       port {
+> +               mipi1_sensor_ep: endpoint1 {
+> +                       remote-endpoint =3D <&ov5640_mipi1_ep>;
+> +                       data-lanes =3D <1 2>;
+> +               };
+> +
+> +               csi1_mipi_ep: endpoint2 {
+> +                       remote-endpoint =3D <&csi1_ep>;
+> +               };
+> +       };
+> +};
+> +
+> +&mipi_csi_2 {
+> +       #address-cells =3D <1>;
+> +       #size-cells =3D <0>;
+> +       status =3D "disabled";
+> +       port {
+> +               mipi2_sensor_ep: endpoint1 {
+> +                       remote-endpoint =3D <&ov5640_mipi2_ep>;
+> +                       data-lanes =3D <1 2>;
+> +               };
+> +
+> +               csi2_mipi_ep: endpoint2 {
+> +                       remote-endpoint =3D <&csi2_ep>;
+> +               };
+> +       };
+> +};
+> --
+> 2.11.0
+>
