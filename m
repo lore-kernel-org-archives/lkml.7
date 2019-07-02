@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD00C06511
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40713C5B57D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5980420645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1000C2064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Jul 2019 08:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562055270;
-	bh=CB5n+a0I0IeR56VJdQ4Is5/pAx6Z9g+uxpADhmcURPo=;
+	s=default; t=1562055274;
+	bh=f31brRCLJwDLQmLPVh+HVaNtwvSkOXwIuRLFN02XLk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PhY2Wb/7f/mh9xybfw8TdoeOn1XvZeLoi4ShJUHDCEA2/QvlzOVnJfJK2anxN8+w9
-	 WwR0Dyo0E9PNgNnTkYNyZgGCvQV18J0cWAwIXxnA4rrslfBj5XCzEQm/+svi71aM46
-	 45AVbfwqEO1mckAMQ+/z4yQyjX4Jo0nnlkAIGQBU=
+	b=u8LJpPa1vucCI76gDUvO9xKTkNAhOoVjnSTZBkMYE7YssbaxHPfTjmSVQGlEle9pq
+	 ni3oLOpHCH0DCal7nLvbvmC1I67kZhnAMT1rNwVAY2u1al89kZ86SbagKJnFaY9gvL
+	 fmV7q7I8K5yR9YpDq49ooB5k1xEiGSt1r1fvn63o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfGBIGP (ORCPT
+        id S1728442AbfGBIOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 04:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52510 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 04:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfGBIGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:06:08 -0400
+        id S1728060AbfGBIGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 04:06:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598A920659;
-        Tue,  2 Jul 2019 08:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E83620659;
+        Tue,  2 Jul 2019 08:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562054766;
-        bh=CB5n+a0I0IeR56VJdQ4Is5/pAx6Z9g+uxpADhmcURPo=;
+        s=default; t=1562054772;
+        bh=f31brRCLJwDLQmLPVh+HVaNtwvSkOXwIuRLFN02XLk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m79YMNG+4JFt41RzygCFD2lpaep8Y2pzgaRC+DhKaB/SsRNqk/odM6SYmeHhClON3
-         PCI96k17V5irwXd5OLZg0HGtqNtNtJ5zkaxoR6l6fNd0yrpXdO71BuW/FcTR6ctmnG
-         Q3aD9jAcHjL0oEnnfYCqX72hHq7OsnG5U6GYfkRo=
+        b=kiAK2WldXgM9gPEnZb+KGesKg7uk8vV5SMPFVyvdSMfKIYtsB4vaGAgUYU2073uOv
+         ZJznXlXfcg6FSeixClqi/2yjCXImZvyGd+D6nXewlnqfkR1R/XEf+jSrB7N69+s7DY
+         nYAwneJpfJdIyGYprMTP0XZdkK2uS8uo4uClTOzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         John Stultz <john.stultz@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/72] usb: dwc3: gadget: introduce cancelled_list
-Date:   Tue,  2 Jul 2019 10:01:29 +0200
-Message-Id: <20190702080126.132412439@linuxfoundation.org>
+Subject: [PATCH 4.19 30/72] usb: dwc3: gadget: remove wait_end_transfer
+Date:   Tue,  2 Jul 2019 10:01:31 +0200
+Message-Id: <20190702080126.229595910@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
 References: <20190702080124.564652899@linuxfoundation.org>
@@ -63,10 +63,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit d5443bbf5fc8f8389cce146b1fc2987cdd229d12 upstream
+commit fec9095bdef4e7c988adb603d0d4f92ee735d4a1 upstream
 
-This list will host cancelled requests who still have TRBs being
-processed.
+Now that we have a list of cancelled requests, we can skip over TRBs
+when END_TRANSFER command completes.
 
 Cc: Fei Yang <fei.yang@intel.com>
 Cc: Sam Protsenko <semen.protsenko@linaro.org>
@@ -74,73 +74,119 @@ Cc: Felipe Balbi <balbi@kernel.org>
 Cc: linux-usb@vger.kernel.org
 Cc: stable@vger.kernel.org # 4.19.y
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-(cherry picked from commit d5443bbf5fc8f8389cce146b1fc2987cdd229d12)
+(cherry picked from commit fec9095bdef4e7c988adb603d0d4f92ee735d4a1)
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.h   |  2 ++
- drivers/usb/dwc3/gadget.c |  1 +
- drivers/usb/dwc3/gadget.h | 15 +++++++++++++++
- 3 files changed, 18 insertions(+)
+ drivers/usb/dwc3/core.h   |  3 ---
+ drivers/usb/dwc3/gadget.c | 40 +--------------------------------------
+ 2 files changed, 1 insertion(+), 42 deletions(-)
 
 diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 0de78cb29f2c..24f0b108b7f6 100644
+index 24f0b108b7f6..131028501752 100644
 --- a/drivers/usb/dwc3/core.h
 +++ b/drivers/usb/dwc3/core.h
-@@ -636,6 +636,7 @@ struct dwc3_event_buffer {
- /**
-  * struct dwc3_ep - device side endpoint representation
-  * @endpoint: usb endpoint
-+ * @cancelled_list: list of cancelled requests for this endpoint
+@@ -639,7 +639,6 @@ struct dwc3_event_buffer {
+  * @cancelled_list: list of cancelled requests for this endpoint
   * @pending_list: list of pending requests for this endpoint
   * @started_list: list of started requests on this endpoint
-  * @wait_end_transfer: wait_queue_head_t for waiting on End Transfer complete
-@@ -659,6 +660,7 @@ struct dwc3_event_buffer {
-  */
- struct dwc3_ep {
- 	struct usb_ep		endpoint;
-+	struct list_head	cancelled_list;
+- * @wait_end_transfer: wait_queue_head_t for waiting on End Transfer complete
+  * @lock: spinlock for endpoint request queue traversal
+  * @regs: pointer to first endpoint register
+  * @trb_pool: array of transaction buffers
+@@ -664,8 +663,6 @@ struct dwc3_ep {
  	struct list_head	pending_list;
  	struct list_head	started_list;
  
+-	wait_queue_head_t	wait_end_transfer;
+-
+ 	spinlock_t		lock;
+ 	void __iomem		*regs;
+ 
 diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 46aa20b376cd..c2169bc626c8 100644
+index 8291fa1624e1..843586f20572 100644
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -2144,6 +2144,7 @@ static int dwc3_gadget_init_endpoint(struct dwc3 *dwc, u8 epnum)
+@@ -638,8 +638,6 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+ 		reg |= DWC3_DALEPENA_EP(dep->number);
+ 		dwc3_writel(dwc->regs, DWC3_DALEPENA, reg);
  
- 	INIT_LIST_HEAD(&dep->pending_list);
- 	INIT_LIST_HEAD(&dep->started_list);
-+	INIT_LIST_HEAD(&dep->cancelled_list);
+-		init_waitqueue_head(&dep->wait_end_transfer);
+-
+ 		if (usb_endpoint_xfer_control(desc))
+ 			goto out;
  
- 	return 0;
- }
-diff --git a/drivers/usb/dwc3/gadget.h b/drivers/usb/dwc3/gadget.h
-index 2aacd1afd9ff..023a473648eb 100644
---- a/drivers/usb/dwc3/gadget.h
-+++ b/drivers/usb/dwc3/gadget.h
-@@ -79,6 +79,21 @@ static inline void dwc3_gadget_move_started_request(struct dwc3_request *req)
- 	list_move_tail(&req->list, &dep->started_list);
- }
+@@ -1404,15 +1402,11 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 		if (r == req) {
+ 			/* wait until it is processed */
+ 			dwc3_stop_active_transfer(dep, true);
+-			wait_event_lock_irq(dep->wait_end_transfer,
+-					!(dep->flags & DWC3_EP_END_TRANSFER_PENDING),
+-					dwc->lock);
  
-+/**
-+ * dwc3_gadget_move_cancelled_request - move @req to the cancelled_list
-+ * @req: the request to be moved
-+ *
-+ * Caller should take care of locking. This function will move @req from its
-+ * current list to the endpoint's cancelled_list.
-+ */
-+static inline void dwc3_gadget_move_cancelled_request(struct dwc3_request *req)
-+{
-+	struct dwc3_ep		*dep = req->dep;
-+
-+	req->started = false;
-+	list_move_tail(&req->list, &dep->cancelled_list);
-+}
-+
- void dwc3_gadget_giveback(struct dwc3_ep *dep, struct dwc3_request *req,
- 		int status);
+ 			if (!r->trb)
+ 				goto out0;
  
+ 			dwc3_gadget_move_cancelled_request(req);
+-			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
+ 			goto out0;
+ 		}
+ 		dev_err(dwc->dev, "request %pK was not queued to %s\n",
+@@ -1913,8 +1907,6 @@ static int dwc3_gadget_stop(struct usb_gadget *g)
+ {
+ 	struct dwc3		*dwc = gadget_to_dwc(g);
+ 	unsigned long		flags;
+-	int			epnum;
+-	u32			tmo_eps = 0;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+ 
+@@ -1923,36 +1915,6 @@ static int dwc3_gadget_stop(struct usb_gadget *g)
+ 
+ 	__dwc3_gadget_stop(dwc);
+ 
+-	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
+-		struct dwc3_ep  *dep = dwc->eps[epnum];
+-		int ret;
+-
+-		if (!dep)
+-			continue;
+-
+-		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
+-			continue;
+-
+-		ret = wait_event_interruptible_lock_irq_timeout(dep->wait_end_transfer,
+-			    !(dep->flags & DWC3_EP_END_TRANSFER_PENDING),
+-			    dwc->lock, msecs_to_jiffies(5));
+-
+-		if (ret <= 0) {
+-			/* Timed out or interrupted! There's nothing much
+-			 * we can do so we just log here and print which
+-			 * endpoints timed out at the end.
+-			 */
+-			tmo_eps |= 1 << epnum;
+-			dep->flags &= DWC3_EP_END_TRANSFER_PENDING;
+-		}
+-	}
+-
+-	if (tmo_eps) {
+-		dev_err(dwc->dev,
+-			"end transfer timed out on endpoints 0x%x [bitmap]\n",
+-			tmo_eps);
+-	}
+-
+ out:
+ 	dwc->gadget_driver	= NULL;
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+@@ -2449,7 +2411,7 @@ static void dwc3_endpoint_interrupt(struct dwc3 *dwc,
+ 
+ 		if (cmd == DWC3_DEPCMD_ENDTRANSFER) {
+ 			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
+-			wake_up(&dep->wait_end_transfer);
++			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
+ 		}
+ 		break;
+ 	case DWC3_DEPEVT_STREAMEVT:
 -- 
 2.20.1
 
