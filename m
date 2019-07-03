@@ -2,165 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96502C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819D3C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665F2218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513FF218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WK27Jb9p";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WK27Jb9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfGCKoF convert rfc822-to-8bit (ORCPT
+        id S1726765AbfGCKrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:44:05 -0400
-Received: from m4a0040g.houston.softwaregrp.com ([15.124.2.86]:38619 "EHLO
-        m4a0040g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbfGCKoE (ORCPT
+        Wed, 3 Jul 2019 06:47:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46746 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfGCKrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:44:04 -0400
-Received: FROM m4a0040g.houston.softwaregrp.com (15.120.17.147) BY m4a0040g.houston.softwaregrp.com WITH ESMTP;
- Wed,  3 Jul 2019 10:43:43 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 3 Jul 2019 10:42:33 +0000
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (15.124.8.11) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 3 Jul 2019 10:42:33 +0000
-Received: from BY5PR18MB3283.namprd18.prod.outlook.com (10.255.139.203) by
- BY5PR18MB3362.namprd18.prod.outlook.com (10.255.154.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.17; Wed, 3 Jul 2019 10:42:31 +0000
-Received: from BY5PR18MB3283.namprd18.prod.outlook.com
- ([fe80::b587:8197:fcb2:bcd8]) by BY5PR18MB3283.namprd18.prod.outlook.com
- ([fe80::b587:8197:fcb2:bcd8%6]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 10:42:31 +0000
-From:   Chester Lin <chester.lin@suse.com>
-To:     "lenb@kernel.org" <lenb@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-CC:     Joey Lee <JLee@suse.com>, Michal Hocko <MHocko@suse.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] ACPI: New eject flow to remove devices cautiously
-Thread-Topic: [PATCH v2 0/3] ACPI: New eject flow to remove devices cautiously
-Thread-Index: AQHVMYgfyMERSgIW2U2QrJLhLEHQRKa4tOEA
-Date:   Wed, 3 Jul 2019 10:42:31 +0000
-Message-ID: <20190703104212.GA5965@linux-8mug>
-References: <20190703101348.3506-1-clin@suse.com>
-In-Reply-To: <20190703101348.3506-1-clin@suse.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DB7PR02CA0022.eurprd02.prod.outlook.com
- (2603:10a6:10:52::35) To BY5PR18MB3283.namprd18.prod.outlook.com
- (2603:10b6:a03:196::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chester.lin@suse.com; 
-x-originating-ip: [202.47.205.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 689b17bb-099b-4d1b-95da-08d6ffa326b4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR18MB3362;
-x-ms-traffictypediagnostic: BY5PR18MB3362:
-x-microsoft-antispam-prvs: <BY5PR18MB33623627B25DB45B905B646A9EFB0@BY5PR18MB3362.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(7916004)(396003)(366004)(39860400002)(136003)(376002)(346002)(189003)(199004)(43544003)(7736002)(6486002)(66476007)(1076003)(73956011)(6246003)(66556008)(305945005)(14454004)(66946007)(99286004)(25786009)(66066001)(44832011)(33716001)(52116002)(66446008)(486006)(478600001)(476003)(8676002)(5660300002)(64756008)(4326008)(6436002)(53936002)(2201001)(186003)(11346002)(446003)(9686003)(6506007)(54906003)(6512007)(102836004)(81156014)(26005)(386003)(81166006)(2906002)(71190400001)(86362001)(6116002)(14444005)(229853002)(316002)(68736007)(256004)(3846002)(110136005)(33656002)(8936002)(76176011)(71200400001)(2501003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR18MB3362;H:BY5PR18MB3283.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2Xmd6balJUI5kyzecBXkWAvsH/MCpXZojRohI/5U5IuxygzLs0Jq2FRwecsLZr903aP1LoIbYhs7bTreP4CHmtPzxEa9Qy41YUTssZCjmwVfwWS4HM/Sx1jomSja+16eiBYaVsBSkROzU/H+NNS4IcqqQdzs2dM8JA7ZG2sz7tOkWC/yM5w1ml3r0CX6C+mAq2N4jYChUCYYdLzIxxxiwJO/H6+6sRy0b9W9C2VIeA94/+7tT9WfyeVgFCgXsLZ0Dd9UJsf5HD0yw1+LTqO36lxnw9/KxQahBQO8zLDGQZkmD56+SS2D3xgSV1vrOxKMhXWXwZcjUG2M4d8qvVKvrA5Fnum0V5to9Fihz0JQD/GmTmrdhVhnmyjU9jJhrWPfcLH4NCrgwrSnYcNpFO89wWsCS7aZKAQO4GzlrE3S/w0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <202322DE792AC847B615394A6C80F2DE@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Wed, 3 Jul 2019 06:47:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 85181607DE; Wed,  3 Jul 2019 10:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562150839;
+        bh=EAJJi3gmJ59kawq1tWepQWDrFAsUgd0cWTVqW/judU4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WK27Jb9pkWRSAxcPsRmy5QIWoQupZzOYKc7Jc6Zm/2f8cyFJpClrwCtDxld4k++Cd
+         t2/95dRl7oAstI5/iFUdaJDJEiTOkWIT4+j0R800ByPERVpHwzO4HejV6CdCV21bKj
+         gS1ptQkWUrSKYDsNEDPrJ3Fv6cx77tbvTRXTN7gc=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CF766025A;
+        Wed,  3 Jul 2019 10:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562150839;
+        bh=EAJJi3gmJ59kawq1tWepQWDrFAsUgd0cWTVqW/judU4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WK27Jb9pkWRSAxcPsRmy5QIWoQupZzOYKc7Jc6Zm/2f8cyFJpClrwCtDxld4k++Cd
+         t2/95dRl7oAstI5/iFUdaJDJEiTOkWIT4+j0R800ByPERVpHwzO4HejV6CdCV21bKj
+         gS1ptQkWUrSKYDsNEDPrJ3Fv6cx77tbvTRXTN7gc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5CF766025A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 2/2] opp: Manage empty OPP tables with clk handle
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     vireshk@kernel.org, sboyd@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190702043643.1746-1-rnayak@codeaurora.org>
+ <20190702043643.1746-2-rnayak@codeaurora.org>
+ <20190703085026.xe3hwxqah76b7np3@vireshk-i7>
+ <95cf4e44-d57a-9aa4-40ce-3b7013e10813@codeaurora.org>
+ <20190703094746.l354nwp2gwuwhiu4@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <c8e42b38-8ce0-c02c-98d3-6d6598dc3fad@codeaurora.org>
+Date:   Wed, 3 Jul 2019 16:17:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 689b17bb-099b-4d1b-95da-08d6ffa326b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 10:42:31.7352
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: chester.lin@suse.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR18MB3362
-X-OriginatorOrg: suse.com
+In-Reply-To: <20190703094746.l354nwp2gwuwhiu4@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:14:39AM +0000, Chester Lin wrote:
-> Currently there are two ways to handle ACPI device ejection. When an eject
-> event happens on a container, the kernel just sends KOBJ_CHANGE to
-> userland and userland should handle offline operation. For other device
-> types, acpi_scan_try_to_offline() is called and it tries to put target
-> device(s) offline and then removes all nodes once they are all offline.
-> 
-> However we found that sometimes applications could intensively access
-> resources on ejectable devices therefore they could have risk if ejection
-> suddenly happens and removes devices without any notification. In stead
-> of executing the offline callbakcs directly, we want to introduce a new
-> approach, which sends change events to notify all target nodes beforehand
-> and hands over offline handling to userland so that userland can have a
-> chance to schedule an offline task based on current workload. The online
-> function to recover from failure is also changed, it follows the same
-> approach to send change events rather than putting devices online directly
-> , which means userland will also need to take care of online handling.
-> 
-> To ensure that eject function can work properly since normal users might
-> not have their own offline/online handling, we will submit a generic udev
-> rule to systemd upstream as default in order to deal with change events
-> and take [offline/online] action accordingly. But the Hot-Removing part
-> still remains so the hotplug function can run to it once target nodes are
-> all offline.
-> 
 
 
-Here are default rules we are going to propose:
-
-# 80-acpi-hotplug-eject.rules
-# Generic rules for handling ACPI hotplug eject.
-
-SUBSYSTEM=="*", ACTION=="change", ENV{EVENT}=="offline", ATTR{online}=="1", \
-DEVPATH=="*", ATTR{online}="0"
-
-SUBSYSTEM=="*", ACTION=="change", ENV{EVENT}=="online", ATTR{online}=="0", \
-DEVPATH=="*", ATTR{online}="1"
-
-
-> To easily monitor eject status and start over an eject process, there's a
-> status trace mechanism in this eject flow, which helps to count current
-> online devices under the ejectable target, and it can reschedule an eject
-> event when all nodes within the device tree have been put offline.
+On 7/3/2019 3:17 PM, Viresh Kumar wrote:
+> On 03-07-19, 14:41, Rajendra Nayak wrote:
+>> []..
+>>>
+>>> Explain the rationale behind this code here in a comment.
+>>>
+>>>> +	if (!_get_opp_count(opp_table)) {
+>>>> +		ret = _generic_set_opp_clk_only(dev, clk, freq);
+>>>> +		goto put_opp_table;
+>>>> +	}
+>>>> +
+>>>>    	temp_freq = old_freq;
+>>>>    	old_opp = _find_freq_ceil(opp_table, &temp_freq);
+>>>>    	if (IS_ERR(old_opp)) {
+>>>
+>>> Also, rebase over the OPP branch please:
+>>
+>> thanks, I will fix/rebase and repost,
+>> in the meantime while I was testing this a little more I realized I also need
+>> something like the change below to avoid a refcount mismatch WARN when empty OPP
+>> table is removed using dev_pm_opp_of_remove_table()
+>>
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index fa7d4d6d37b3..20128a88baf2 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -2118,7 +2118,8 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
+>>                  return;
+>>          }
+>> -       _put_opp_list_kref(opp_table);
+>> +       if (_get_opp_count(opp_table))
+>> +               _put_opp_list_kref(opp_table);
+>>          /* Drop reference taken by _find_opp_table() */
+>>          dev_pm_opp_put_opp_table(opp_table);
+>>
+>> Does this look like a good way to fix it?
 > 
-> v2:
-> - device_sysfs: Add descriptions in /Document/ABI/testing/sysfs-bus-acpi
-> - device_sysfs: Replace the declartion with DEVICE_ATTR_RW and add cancel
->   option in eject_store.
-> - scan: Add a retry mechanism when userspace fail to put device offline.
-> - scan: Add ready-to-remove state.
-> 
-> Chester Lin (3):
->   ACPI / hotplug: Send change events for offline/online requests when
->     eject is triggered
->   ACPI / hotplug: Eject status trace and auto-remove approach
->   ACPI / device_sysfs: Add eject_show and add a cancel option in
->     eject_store
-> 
->  Documentation/ABI/testing/sysfs-bus-acpi |   9 +-
->  drivers/acpi/container.c                 |   2 +-
->  drivers/acpi/device_sysfs.c              |  94 ++++++-
->  drivers/acpi/glue.c                      | 146 +++++++++++
->  drivers/acpi/internal.h                  |  34 ++-
->  drivers/acpi/scan.c                      | 318 +++++++++++++++++------
->  drivers/base/core.c                      |   4 +
->  include/acpi/acpi_bus.h                  |   3 +-
->  include/linux/acpi.h                     |   6 +
->  9 files changed, 523 insertions(+), 93 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+> No. If an OPP table only has dynamic OPPs, this will still generate
+> warning. Below is the fix I would suggest. Please test it, I haven't
+> tested it at all :)
+
+thanks, yes, this seems to work.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
