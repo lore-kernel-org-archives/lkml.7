@@ -2,169 +2,107 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B9EC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60627C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503842189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562176618;
-	bh=5x9nYr/bGtljeo+8XgQwsEz86LG7/Qa1TONMqcKMLrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FO6XNcGKTHdR8wym5hk/QeJXMNhAb9zAaRHBF4Y5V4he9kF/CE9rTDlxaYDDsswUc
-	 WOxR7FpLw6aYv2KVkHFYB/5sjO9mlI1nBH+YwCseypCw5Of+y65HTUPMxToar9psZS
-	 OlRSeQP2Eh2QK2N6hZWag/JzErafvhSOESmYYc/I=
+	by mail.kernel.org (Postfix) with ESMTP id 41D1B2184C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfGCR45 (ORCPT
+        id S1726918AbfGCR63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfGCR44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:56:56 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9D752184C;
-        Wed,  3 Jul 2019 17:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562176615;
-        bh=5x9nYr/bGtljeo+8XgQwsEz86LG7/Qa1TONMqcKMLrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SA8RPFrWCwm9msjhObImMtqTZdAN5oNTrvABGhRXT/ipfE+q9BkK9sOiE82WKFakY
-         Ov2czFSZ62pGhHWnaKDWxfjfG99LMRHQRewYtS7WVBORQA78tJ04yQhn0WNyKyYEBL
-         NyXflP/xQJtjvF8NiKQ9CYWZ8sHyALj0BwM5HReo=
-Date:   Wed, 3 Jul 2019 12:56:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v3 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-Message-ID: <20190703175654.GN128603@google.com>
-References: <cover.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Wed, 3 Jul 2019 13:58:29 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46088 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCR63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:58:29 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h21so2571318qtn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:58:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SBoVgDxevh+0orMCb2YPrkAIPpPXPXsDVuRye2tAk2k=;
+        b=JqBymbZ2ZSZJ2JEw+CakS7jx1ajjZVfe0vlD3ymPwoCjZWU4RxOeyHqiX/iWCENRuQ
+         n6DalD7Fqkm7xdZ7CQ8xwTmBLAA7hA8RPfQzn6NV/cYE6ICPb7UODDhnSKAsApjYt+oC
+         J4l+4ypl2OUpbjWDdVy32RlMhGL0eyMNdsy7LNhBxmloodV1hjgwXxPY832bNmiSUpcs
+         IlWm5NpTisJfs9eQUyHjL65D8hC/cAxUroQCF4qDiLXh/lpUraNeRbQ4n6O4uhEoN/n7
+         u36new3kmR2CTWLxyWNDCLmhbOY2hHLeV7pyjMZmaqk/CqvD6mcrQDKUFyoPVAS4FGTd
+         867g==
+X-Gm-Message-State: APjAAAX16bQdo5qkg40C8HPvbLwp/jdlSzIOcTq9D0wQVroGn+frgVJk
+        Hw/T67DCN+2aXQ8XQ/4HFPKHeUGounbCd3kl9r8=
+X-Google-Smtp-Source: APXvYqxf8mmbpvC31jKkb8dNVoAULaDG6q3i0PfGuKmnoUA7EPFs/+lF1YWPl9jqzm58WQs2s/8ws2mh2h1uXrUftwc=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr30964672qtn.304.1562176708215;
+ Wed, 03 Jul 2019 10:58:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703153112.2767411-1-arnd@arndb.de> <20190703165919.GC118075@archlinux-epyc>
+In-Reply-To: <20190703165919.GC118075@archlinux-epyc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 3 Jul 2019 19:58:08 +0200
+Message-ID: <CAK8P3a098AZfkz0bxfgN_XXk7QSQYi1V-EEmqLjQPjzR7986aA@mail.gmail.com>
+Subject: Re: [PATCH] soc: rockchip: work around clang warning
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, arm-soc <arm@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 01:38:42PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Since pci_prg_resp_pasid_required() function has dependency on both
-> PASID and PRI, define it only if both CONFIG_PCI_PRI and
-> CONFIG_PCI_PASID config options are enabled.
+On Wed, Jul 3, 2019 at 6:59 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+> On Wed, Jul 03, 2019 at 05:30:59PM +0200, Arnd Bergmann wrote:
+> > clang emits a warning about a negative shift count for an
+> > unused part of a conditional constant expression:
+> >
+> > drivers/soc/rockchip/pm_domains.c:795:21: error: shift count is negative [-Werror,-Wshift-count-negative]
+> >         [RK3328_PD_VIO]         = DOMAIN_RK3328(-1, 8, 8, false),
+> >                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/soc/rockchip/pm_domains.c:129:2: note: expanded from macro 'DOMAIN_RK3328'
+> >         DOMAIN_M(pwr, pwr, req, (req) + 10, req, wakeup)
+> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/soc/rockchip/pm_domains.c:105:33: note: expanded from macro 'DOMAIN_M'
+> >         .status_mask = (status >= 0) ? BIT(status) : 0, \
+> >                                        ^~~~~~~~~~~
+> > include/linux/bits.h:6:24: note: expanded from macro 'BIT'
+> >
+> > This is a bug in clang that will be fixed in the future, but in order
+> > to build cleanly with clang-8, it would be helpful to shut up this
+> > warning. This file is the only instance reported by kernelci at the
+> > moment.
+> >
+> > The best solution I could come up with is to move the BIT() usage
+> > out of the macro into the instantiation, so we can avoid using
+> > BIT(-1).
+> >
+> > Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Nick recently mentioned that Nathan was working on a fix on the clang
+> side. It might be worth holding off on this to see if it can make it
+> into LLVM 9, which will branch in about two weeks and be released at
+> the end of August (according to llvm.org).
 
-This is likely just confusion on my part, but I don't understand what
-you're doing here.
+I think fixing it in llvm is a good idea regardless of the workaround.
+My main goal for the workaround is to get a clean kernelci build
+again, and it will probably take a little while to move that to a fixed
+clang-9 build (release or prerelease).
 
-pci_prg_resp_pasid_required() does not actually *depend* on the
-CONFIG_PCI_PRI config symbol.
+> I don't feel strongly about it though so if this is going in:
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-It is currently compiled only if CONFIG_PCI_ATS=y (which controls
-compilation of the entire ats.c) and CONFIG_PCI_PASID=y (since it's
-within #ifdef CONFIG_PCI_PASID).
+Thanks!
 
-pci_prg_resp_pasid_required() is called by attach_device()
-(amd_iommu.c), which is only compiled if CONFIG_AMD_IOMMU=y, and that
-selects PCI_PRI.
-
-It is also called by iommu_enable_dev_iotlb() (intel-iommu.c).  That
-file is compiled if CONFIG_INTEL_IOMMU=y and the call itself is inside
-#ifdef CONFIG_INTEL_IOMMU_SVM.  But I don't see the PCI_PRI connection
-here.
-
-If this is just to limit the visibility, say that.  But I don't think
-that's really a good reason.  The chain of config symbols seems a
-little too complicated.
-
-> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
-> interface.")
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/ats.c       | 10 ++++++----
->  include/linux/pci-ats.h | 12 +++++++++---
->  2 files changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 97c08146534a..f9eeb7db0db3 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_pasid_features);
->  
-> +#ifdef CONFIG_PCI_PRI
-> +
->  /**
->   * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->   *				 status.
-> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->   *
->   * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->   *
-> - * Even though the PRG response PASID status is read from PRI Status
-> - * Register, since this API will mainly be used by PASID users, this
-> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
-> - * CONFIG_PCI_PRI.
-> + * Since this API has dependency on both PRI and PASID, protect it
-> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->   */
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  {
-> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->  
-> +#endif
-> +
->  #define PASID_NUMBER_SHIFT	8
->  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->  /**
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 1ebb88e7c184..1a0bdaee2f32 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
->  void pci_restore_pasid_state(struct pci_dev *pdev);
->  int pci_pasid_features(struct pci_dev *pdev);
->  int pci_max_pasids(struct pci_dev *pdev);
-> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->  
->  #else  /* CONFIG_PCI_PASID */
->  
-> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
->  	return -EINVAL;
->  }
->  
-> +#endif /* CONFIG_PCI_PASID */
-> +
-> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
-> +
-> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> +
-> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
-> +
->  static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->  {
->  	return 0;
->  }
-> -#endif /* CONFIG_PCI_PASID */
-> -
-> +#endif
->  
->  #endif /* LINUX_PCI_ATS_H*/
-> -- 
-> 2.21.0
-> 
+      Arnd
