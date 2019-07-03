@@ -2,140 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619C6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74E3C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361572089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC09521852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mBLQgYkx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hEdLVLX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfGCAyg (ORCPT
+        id S1727383AbfGCAyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:54:36 -0400
-Received: from mail-ot1-f73.google.com ([209.85.210.73]:44178 "EHLO
-        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGCAyf (ORCPT
+        Tue, 2 Jul 2019 20:54:41 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:53186 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfGCAyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:54:35 -0400
-Received: by mail-ot1-f73.google.com with SMTP id q16so416254otn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=R48TQi9q1FK2+H6bY660z2znRHgaYhNpT8f8fUMByQw=;
-        b=mBLQgYkxMEYzGqUznWDGxambBtuhZyiOOJORpyP891jPKRAhRjUBbORNd+4DveyMeD
-         rGZ3DeH9paDarY7J+YcNLIlYdogJBVNEJKYgDw+S6n1p9yHE06ZYNNVgi++pBAmRFG/v
-         rjO2ylNX11c0/iLdV/4/sLLWlx34EOzgETHmr/fYlkrJmVTXymJmHBBZhFl2QT6PpdCU
-         IFOReC8/kxoOUztR6XJtbeONmYjlCu8W0aKlHJKEpIfHJv0Tux8zLMjt2JtmJAp35Mlb
-         d1cbsotsN2YitgBnWkr+C909Etlm7N0KjWV5gNA1tpvHAhnYmcinusuyfNvhKkIgrINt
-         FOkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=R48TQi9q1FK2+H6bY660z2znRHgaYhNpT8f8fUMByQw=;
-        b=JOCHvNk+gnuLe1n7FzgfTuVc3h/YqCxkN0ilw1CUWwyKYz9dwOXQYTzBnZECWGU07W
-         iRMTbRa/36xmRGzsiG1BpU08Cb3FFmbzzCmDP98t/wqWtvcOEPuOLp90TUP+G8oyfsOn
-         zvIs3u+/jfByRkLOXhOdVjE3Gz21E9CRWIYdWERB2UmPa/5cZXJDsJGchg3EUglCAc6Y
-         p4Fvy53f40uNHbxSalZ/YSy8crei9gdXAPQ+UWT75wuX7YLItpUEXd8Fcy9z2NED8FhT
-         9j5OGNJO3pNYPezzO7i6/jNNCq21uUR9bd26gAIknc71+yx9XHQ2cgkJfPlXgxcuh0/0
-         jnYQ==
-X-Gm-Message-State: APjAAAUsmaRuHBWDv+ynINvrBPi418RX4fYJaefUDsqAJR/UAgwFxVr/
-        ZqxqwH6J8/hMvq/7LfpjvKp00VaS1w==
-X-Google-Smtp-Source: APXvYqxlTTxA9kVd7nmSx/MlM/hqPfeDUWd1gdGvu4tmxQfmIm2aDz4ezGffhECd1ECKMzycYcMzcnsBww==
-X-Received: by 2002:a63:6c04:: with SMTP id h4mr2529866pgc.94.1562111113724;
- Tue, 02 Jul 2019 16:45:13 -0700 (PDT)
-Date:   Tue,  2 Jul 2019 16:41:35 -0700
-In-Reply-To: <CAJkfWY4yvVVmJoQ0WwyoFBkWYsUJnnQPNU+-g23-m-L3ETe_hQ@mail.gmail.com>
-Message-Id: <20190702234135.78780-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <CAJkfWY4yvVVmJoQ0WwyoFBkWYsUJnnQPNU+-g23-m-L3ETe_hQ@mail.gmail.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v2] arm64: mm: Fix dead assignment of old_pte
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Jul 2019 20:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1562115281; x=1593651281;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fVT1Neu72Cl7Ti24Xfa8jpNhBvPMuWv91mK1LHqkCSA=;
+  b=hEdLVLX97kyJRiEd+bxnw2YMyBr1Cnmouuwv4r1VmEA3MIxoGcEPD7yz
+   LManCbYvIhcvy7/pmH6ZNGI+JDAfy2NvFP10Y4joBe8c5kSw7H8w+5sp+
+   i9fm6nwwrfaxz6BBocw/0pBGKksVLmSbtermfwaKRe/FKZCncljPv/lG9
+   yEb7LGSqqrv4/HAN3Qz2li094hKtvIfTv0b7ZCA/1nRNQ728+xnsv7I7N
+   qFY3L1WY/Cl14xA9pfLe2/i7j2YVxy37nU0zziu2AihKnWQswDRQFY5If
+   wLxj8hlAd4d9WyEQxEDlO3Vuep/zMOSZGj1XY/UJnIBZAeMAEdsIlWS9D
+   g==;
+IronPort-SDR: sl0pWYsrzo1WizLcFQJCThEl3psYdQ5qorW4DLQAOpQyWenFwIWU83U6DbJm0HeWzMy7GYV4SN
+ KQxFlhLHfB1qVrZDRUxMCqZbI9Mze58YSbkuj8IVCRMSkoYC/1C00Y44wkE0DecfdvH96vS5RR
+ LsbGHDwMl1nT3KLISr92GHGBGJutJWCrLkcJtj3k2Fn/BKmowWRUs8X01iwYiLwW97daOJ38gd
+ il9StJWX5IZbmszeCqheihOeRz51Yxe2ZbJGJDTRFMLvk/qud4H0cSLihbQvBnre2WOAeDNtjN
+ Hbw=
+X-IronPort-AV: E=Sophos;i="5.63,445,1557158400"; 
+   d="scan'208";a="113716743"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2019 08:54:41 +0800
+IronPort-SDR: Cv0UqDRPdqm7tL2awNL5BBMz4ALeO/qghQctSObPmRAsyxKJVO8QKz3aA8W+xo3o/vWMT62emF
+ bM8ofbCrY1HjilujaKmvpBnwkmIR6+MSE4/c+hZ42TWZ9OhGHYBKCJwa7MpmPjqrkyGmxtNfIC
+ N33UIPRKqtKn9BQNWz5nSiFc/RkWmB7ZdxMjVwwq9H4snENgVNz9O8Ql5trNREuO2+lnlVcjQ6
+ bGwBISNPnyefffkhXh/Bdt5Lw8cK0iZ9bxgC4RwOhT9pfzNhdEaMcfb7CyEPYZjK6uax4BcmCK
+ 7ziMww4848sHmLeJZCagan9/
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 02 Jul 2019 17:53:41 -0700
+IronPort-SDR: 3uwdGreIxlVjC6rLHAVUNPxCvYFm12JW++t5byZuYThYEKpHQy1rvPmQ3xRuq3bHiMuNnv4Hq7
+ 63wzCLqFIFApUyBBAcjPM74IesbGPjKYsPFPpuufziviVGB/UkXWgcGM2tZsqTjMkIhvf4D+UQ
+ QojHazb4wUUMSjboC3ARtuE89wBtlKhK6Jx8R0Q4qcn4UNQJe3cHoKaHzdb/G2Cyi68fnwbElo
+ tp+WtZHcEEzeowOCXxYJUduMa2yzOo5GB0CBsspNsy7AprVueWfrW2IeIt7UG4W4ouF7OhCsgw
+ AVk=
+Received: from risc6-mainframe.sdcorp.global.sandisk.com (HELO risc6-mainframe.int.fusionio.com) ([10.196.157.140])
+  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jul 2019 17:54:41 -0700
+From:   Alistair Francis <alistair.francis@wdc.com>
+To:     linux-riscv@lists.infradead.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, alistair23@gmail.com,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH RESEND 0/2] RISC-V: Handle the siginfo_t offset problem
+Date:   Tue,  2 Jul 2019 17:52:00 -0700
+Message-Id: <20190703005202.7578-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When analyzed with the clang static analyzer the
-following warning occurs
+Resending the the correct linux-riscv address.
 
-line 251, column 2
-Value stored to 'old_pte' is never read
+In the RISC-V 32-bit glibc port [1] the siginfo_t struct in the kernel
+doesn't line up with the struct in glibc. In glibc world the _sifields
+union is 8 byte alligned (although I can't figure out why) while in the
+kernel wordl the _sifields union is 4 bytes alligned. This results in
+information being lost in the waitid syscall.
 
-This warning is repeated every time pgtable.h is
-included by another file and produces ~3500
-extra warnings.
+This doesn't seem to be a great fix, but it is somewhat similar to what
+x32 does (which has 64-bit time_t like RV32) and I can't figure out why
+the two allignments are different.
 
-Moving old_pte into preprocessor guard.
+1: https://github.com/alistair23/glibc/commits/alistair/rv32.next
 
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
-Changes from v1 -> v2
-* Added scope to avoid [-Wdeclaration-after-statement]
- arch/arm64/include/asm/pgtable.h | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+Alistair Francis (2):
+  uapi/asm-generic: Allow defining a custom __SIGINFO struct
+  riscv/include/uapi: Define a custom __SIGINFO struct for RV32
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index fca26759081a..12b7f08db40d 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -238,8 +238,6 @@ extern void __sync_icache_dcache(pte_t pteval);
- static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
- 			      pte_t *ptep, pte_t pte)
- {
--	pte_t old_pte;
--
- 	if (pte_present(pte) && pte_user_exec(pte) && !pte_special(pte))
- 		__sync_icache_dcache(pte);
- 
-@@ -248,16 +246,23 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
- 	 * hardware updates of the pte (ptep_set_access_flags safely changes
- 	 * valid ptes without going through an invalid entry).
- 	 */
--	old_pte = READ_ONCE(*ptep);
--	if (IS_ENABLED(CONFIG_DEBUG_VM) && pte_valid(old_pte) && pte_valid(pte) &&
--	   (mm == current->active_mm || atomic_read(&mm->mm_users) > 1)) {
--		VM_WARN_ONCE(!pte_young(pte),
--			     "%s: racy access flag clearing: 0x%016llx -> 0x%016llx",
--			     __func__, pte_val(old_pte), pte_val(pte));
--		VM_WARN_ONCE(pte_write(old_pte) && !pte_dirty(pte),
--			     "%s: racy dirty state clearing: 0x%016llx -> 0x%016llx",
--			     __func__, pte_val(old_pte), pte_val(pte));
-+	#if IS_ENABLED(CONFIG_DEBUG_VM)
-+	{
-+		pte_t old_pte;
-+
-+		old_pte = READ_ONCE(*ptep);
-+		if (pte_valid(old_pte) && pte_valid(pte) &&
-+		  (mm == current->active_mm ||
-+		   atomic_read(&mm->mm_users) > 1)) {
-+			VM_WARN_ONCE(!pte_young(pte),
-+				     "%s: racy access flag clearing: 0x%016llx -> 0x%016llx",
-+				     __func__, pte_val(old_pte), pte_val(pte));
-+			VM_WARN_ONCE(pte_write(old_pte) && !pte_dirty(pte),
-+				     "%s: racy dirty state clearing: 0x%016llx -> 0x%016llx",
-+				     __func__, pte_val(old_pte), pte_val(pte));
-+		}
- 	}
-+	#endif
- 
- 	set_pte(ptep, pte);
- }
+ arch/riscv/include/uapi/asm/siginfo.h | 32 +++++++++++++++++++++++++++
+ include/uapi/asm-generic/siginfo.h    | 32 ++++++++++++++-------------
+ 2 files changed, 49 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/include/uapi/asm/siginfo.h
+
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.22.0
 
