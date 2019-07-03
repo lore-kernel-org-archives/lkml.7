@@ -2,125 +2,105 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D24C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A722C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E9820828
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E035218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562144892;
-	bh=WuNpIPbgET1Wv+158Gd/96+8da3oShqWJIeuSPz3bII=;
+	s=default; t=1562144960;
+	bh=9QMeqw5Cf+AavIXFQMWll5DbRTM0/Irk37zP2C60mxU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hL/tP3YekqiErSWx4Il6HPoWczpeATB+6tQiMOmILQK5lp4yaj9WdXlJSOZ071cFT
-	 Zad3hnNLCBacaMmey0ajNjWiyLt6M7dchvTYNBv2TlMwS8w1pUDJgqLNc2cO1Icbq3
-	 wKJuEyeWT3Qdifaj0dgVGN9F4jKQFd6MZZTxtiuY=
+	b=jbteMhftm4ZnNV0w5PT4UcQGSDT0ifyDmx9Zl/VzVBKBg/tqaaZ/nrsWpGXGTbhHn
+	 5T878C3uMFO3h6HUbzV4sFzE11fj5azaW0k3PzFsyGXnfuPJxgZv8JLzDhAUwrc4eV
+	 BsOlgoHfIllas3cUvBVTtjFHtRuadgzOXXU4d4Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfGCJIL convert rfc822-to-8bit (ORCPT
+        id S1727285AbfGCJJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:08:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34280 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfGCJIK (ORCPT
+        Wed, 3 Jul 2019 05:09:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43012 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfGCJJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:08:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so1608751otk.1;
-        Wed, 03 Jul 2019 02:08:10 -0700 (PDT)
+        Wed, 3 Jul 2019 05:09:18 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w79so1442360oif.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:09:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nbEbntIJaLENK/oqeoihZjrIjyBepd0wvibz6dSpYeE=;
-        b=g6OaSQ0Ow1QayrCaFQXW7MwfDuoShLOsyo24YGCJoSA280OiBbm0cXS/Rm9V0SlB7Y
-         KgGhESTn9M4TgAIYKFBS9lQxzqc07JxSHNvEh5wsifKkPKMy2HXBpdtkwnjDABjgqZSH
-         1HsX6qI56sftTC373T5QCX/A/DzZb7XIB6H6rK7tAoHdexlsCxQl2wKzVcmQI5HHCphP
-         b699zrouR6gHS0bnHg1LXGDnahZPPHPk08eYUbETHpiii+lG/z/z0POyYzvypPRJXi2S
-         YK9t4gHO5mudVzo6Fk+dM8ZXm8NZ+//vW17m0cCdEApySG2yel7qJ9xTX8vPrOnW0zFo
-         iFZA==
-X-Gm-Message-State: APjAAAV2WsRKGjPMbVtoVWJJL4fweHQFKhRDNuZXTtcxTnbipGkIBC5O
-        Sg2TDAGwcB8AwKulD4qsQUTOjRVT35WfR+8IeZ0=
-X-Google-Smtp-Source: APXvYqzw2F9FsWK8Gf8cnIc2VWd1k4GWetsGGm3DNFMokosTuaRW154UNXW1UF0auw1LGJC4+gTVmrEWM0JuNriWXjc=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr13439329otn.266.1562144889996;
- Wed, 03 Jul 2019 02:08:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=v9ocQ0y5CtxyEHOYV99/bjcmmQ1fzb/ctPNDmnSi3/0=;
+        b=AVj1pn6UP9O9GNaYYdDTyBxmTCJ62T2/w86+67e0a2dD6KeqGkITGknvMi0X+JJFvJ
+         mkqwJEMX0g57lbn9b6VAFzTyeC55ei7EBDjAg+lagYcmRT+BpkDXhU2PYunEPd4iHog4
+         CMzQk2uL1XtjlEq88ewVnLV8hHAdPIS4CyvpCqt2I+ArZfbyOXA9qxth2NIvws7biaxP
+         +1liIPetCAcOmV03MewRmVxO8qXrncom2EB9uQL84/TthC8alI8tJVQiaPvLssusfwpl
+         A0RRecYLvF/RZxb07mZ0l1r1sO8TTo5oQjUbvaQwWi96+mOLzrDbyYaOyiM8bzULtRoP
+         Mb/Q==
+X-Gm-Message-State: APjAAAU3K2TvuVAq6NS9HDKQXdh+ZpeUxvpjqcWUyUj5dd4BSH4CCHmX
+        liR+aKtvnDuFklOdTa5GDoc7XJLQQVM4gz7Z14g=
+X-Google-Smtp-Source: APXvYqyuBh1YTQk6z2MikBTMYfpl53EmGyvIRqlL614akb0XGpV2n0PuR40tHFZvP0UelhZNve4TXfYLCBdDAhDfODY=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr6055425oib.110.1562144958083;
+ Wed, 03 Jul 2019 02:09:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702163715.12649-1-smuchun@gmail.com> <CAJZ5v0jzVG5X8idR7Fy8g6=UPMpZ7eK6A_Uhqrer1aJFY1hX1w@mail.gmail.com>
- <CAPSr9jE6Qfu4NpmDfUrS+hVad2OP+xr00yoJ3k5=e=f7ZKwY+g@mail.gmail.com>
-In-Reply-To: <CAPSr9jE6Qfu4NpmDfUrS+hVad2OP+xr00yoJ3k5=e=f7ZKwY+g@mail.gmail.com>
+References: <20190703071653.2799-1-gregkh@linuxfoundation.org>
+In-Reply-To: <20190703071653.2799-1-gregkh@linuxfoundation.org>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jul 2019 11:07:58 +0200
-Message-ID: <CAJZ5v0ifXrrWd=md=fyW2P5xgRtZQ_==d1E-z7LYcJF2PMPxJA@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: Move disabling/enabling runtime PM to
- suspend/resume noirq
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 3 Jul 2019 11:09:06 +0200
+Message-ID: <CAJZ5v0hA_su=eR5tosY-MMz0CggQ5UG8CvYRp2nmWN=c0OT6=g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] debugfs: provide pr_fmt() macro
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 2:56 AM Muchun Song <smuchun@gmail.com> wrote:
+On Wed, Jul 3, 2019 at 9:17 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Rafael J. Wysocki <rafael@kernel.org> 于2019年7月3日周三 上午1:54写道：
-> >
-> > On Tue, Jul 2, 2019 at 6:37 PM Muchun Song <smuchun@gmail.com> wrote:
-> > >
-> > > Currently, the PM core disables runtime PM for all devices right after
-> > > executing subsystem/driver .suspend_late() callbacks for them and
-> > > re-enables it right before executing subsystem/driver .resume_early()
-> > > callbacks for them. This may lead to problems when there are two devices
-> > > such that the irq handler thread function executed for one of them
-> > > depends on runtime PM working for the other. E.g. There are two devices,
-> > > one is i2c slave device depends on another device which can be the i2c
-> > > adapter device. The slave device can generate system wakeup signals and
-> > > is enabled to wake up the system(via call enable_irq_wake()). So, the irq
-> > > of slave device is enabled. If a wakeup signal generate after executing
-> > > subsystem/driver .suspend_late() callbacks. Then, the irq handler thread
-> > > function will be called(The irq is requested via request_threaded_irq())
-> > > and the slave device reads data via i2c adapter device(via i2c_transfer()).
-> > > In that case, it may be failed to read data because of the runtime PM
-> > > disabled.
-> > >
-> > > It is also analogously for resume. If a wakeup signal generate when the
-> > > system is in the sleep state. The irq handler thread function may be
-> > > called before executing subsystem/driver .resume_early(). In that case,
-> > > it also may be failed to read data because of the runtime PM disabled.
-> > >
-> >
-> > This has been discussed for a number of times, documented and no, I'm
-> > not going to apply this patch.
+> Use a common "debugfs: " prefix for all pr_* calls in a single place.
 >
-> Thanks for your reply. I want to know why we can't do that, so where
-> can I find the discussion?
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The discussions rather.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-You need to search email archives, especially for the reason why the
-"late" and "early" callbacks have been added.  There was a conference
-presentation about that even.
-
-The bottom line is that the change you are proposing cannot be made.
-
-> > PM-runtime cannot be relied on during the "noirq" stages of suspend
-> > and resume, which is why it is disabled by the core in the "late" and
-> > "early" stages, respectively.
-> >
+> ---
+>  fs/debugfs/inode.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> What better solution do we have for the example I am talking about
-> which is described in the commit message?
-
-It's not "what better solution is there", because what you are
-proposing would simply not work.
-
-Basically, if there are devices that may need the given one in the
-"noirq" resume phase, this device needs to be resumed upfront.  It may
-be runtime-suspended again in the "early" resume phase.
+> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+> index acef14ad53db..f04c8475d9a1 100644
+> --- a/fs/debugfs/inode.c
+> +++ b/fs/debugfs/inode.c
+> @@ -9,6 +9,8 @@
+>   *  See ./Documentation/core-api/kernel-api.rst for more details.
+>   */
+>
+> +#define pr_fmt(fmt)    "debugfs: " fmt
+> +
+>  #include <linux/module.h>
+>  #include <linux/fs.h>
+>  #include <linux/mount.h>
+> @@ -285,7 +287,7 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
+>         struct dentry *dentry;
+>         int error;
+>
+> -       pr_debug("debugfs: creating file '%s'\n",name);
+> +       pr_debug("creating file '%s'\n", name);
+>
+>         if (IS_ERR(parent))
+>                 return parent;
+> --
+> 2.22.0
+>
