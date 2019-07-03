@@ -2,62 +2,183 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19B7C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B713DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB2C218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7093A21852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8HcPZ2y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pGPO5o/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfGCSp3 (ORCPT
+        id S1727004AbfGCSqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:45:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57546 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCSpJ (ORCPT
+        Wed, 3 Jul 2019 14:46:35 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41406 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCSqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:45:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UYUSkq3MaywALpKQmbkqpd/XlsTvFn81MlHwxqWXibw=; b=m8HcPZ2yeJKhNSw16f2U4gwi8
-        VaTgheKcvNfXeBOBmB/SsYKOJeJUuVqHvJ0+uwDyysD4GPpY3lM+PzTEkWhtLBBoggskp9VkHUsIk
-        UyGPHDBv6lN6uVl40S7pfVGSDzMGXP3klgrtrx8i65i7XXeXSanBjwMihL5tpASfXcWHKK8049WC9
-        4COYj4vK4P48hgNN3U8YbS8v6zZFinYOWgiAEjZk+THHb3vMXSTjZKjFTltedrmFPS6mdsp2vG2Cv
-        lBShDGZVA77KiqJ0Ogl95z9sCHe597CJXw4e4rhrDdE12lmFKK4fpGmHckcPOwKSG/n3t9UTbQVja
-        DEmxCAQ0g==;
-Received: from rap-us.hgst.com ([199.255.44.250] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hikFa-00079g-W0; Wed, 03 Jul 2019 18:45:03 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: hmm_range_fault related fixes and legacy API removal
-Date:   Wed,  3 Jul 2019 11:44:57 -0700
-Message-Id: <20190703184502.16234-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Wed, 3 Jul 2019 14:46:34 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 205so3559797ljj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vCIUPeCCEF+OLz7w98udyRcP/O/Khzz7h89sR5YZeg4=;
+        b=pGPO5o/p8zY1Oc4aPFzsn/Mool+es6Sl/wsHeKtG+4T7hctg/2z6k2jLIpWXJjSMD9
+         7mhnhoZiyom+kOicmb3t+F5QcYtVN4qZr/S1G9PUhNtT9UL3MHWcf0OFmpKDMqnSicg0
+         A7i4opJIwLQBzzpg2lTwrxtwi1Nn6GpdhNh4go8sUJ9tkD4ds+9ojwVootFLPHDdEw2I
+         ZkwBdGLo4wOw9K5+dtPlMTRelWuyWU5X08SdLgpPGAxPslQUmq1zDZUfrTB/uj4Ii517
+         e0DTGmeARSOMj4gybq+qQ0TRyCHo9Upj8pKw42NAKUCHu/wTHrDryJwJaRXW7jP05Em/
+         yt2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vCIUPeCCEF+OLz7w98udyRcP/O/Khzz7h89sR5YZeg4=;
+        b=Cdqo6genagVRNlQeQLLzyqWJD0ueZnussn4RuGkokzvoKAyakOwauBg+tkjjL9L2hP
+         pp7kzdjlRGknTpM6TgkZ5ICabxpkSQArasPMgEdejFdMjN0SX0ZRn1kV6o/6Ff3tTh/1
+         IR6pGUANJEljVwE7DGO116ivTW0NJ+6NgnipqOZPyJRZFNFcnBuz3yFpVvjv3GpTSISn
+         IwBhV1jHRU355OeyYON3Z/FfmqXugztQPR00VAv6kzvxGT4Gynums4iX1JKE9zu6pn2G
+         MCbmRPl4jEZp/ZaWTxc2Wp0fvaxmE40QTeHdz8Tme1WkCuCwTRSqhAJY3s0ZjSgnGcmn
+         nbnQ==
+X-Gm-Message-State: APjAAAUjGfNHcaikv6ZgQ/JJ6S43MHk9BMkwcwMhGXylY7dYQJ815EvT
+        8h4D7J8ZLs/D1p6+IcATwdjg/0PL/UrYDUZe6jwg9w==
+X-Google-Smtp-Source: APXvYqwiem5/n4z8d4zc+GCZEWpVW1sd4VnYulWvpXNjCar1izXohWHI0hwu9Cczfd1wDW2xf9ddEgTiPFBZQtzl+o4=
+X-Received: by 2002:a2e:98d7:: with SMTP id s23mr11048254ljj.179.1562179591897;
+ Wed, 03 Jul 2019 11:46:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190703050229.GC633@sol.localdomain>
+In-Reply-To: <20190703050229.GC633@sol.localdomain>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Wed, 3 Jul 2019 11:46:20 -0700
+Message-ID: <CAHRSSExd8bKR01010QLcWSotXXeVS5QC7iWvt7Qdz4VRyd-wCA@mail.gmail.com>
+Subject: Re: Reminder: 3 open syzbot bugs in "android/binder" subsystem
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jérôme, Ben and Jason,
+On Tue, Jul 2, 2019 at 10:03 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> [This email was generated by a script.  Let me know if you have any suggestions
+> to make it better, or if you want it re-generated with the latest status.]
+>
+> Of the currently open syzbot reports against the upstream kernel, I've manually
+> marked 3 of them as possibly being bugs in the "android/binder" subsystem.  I've
+> listed these reports below, sorted by an algorithm that tries to list first the
+> reports most likely to be still valid, important, and actionable.
+>
+> Of these 3 bugs, 1 was seen in mainline in the last week.
+>
+> Of these 3 bugs, 1 was bisected to a commit from the following person:
+>
+>         Todd Kjos <tkjos@android.com>
+>
+> If you believe a bug is no longer valid, please close the syzbot report by
+> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+> original thread, as explained at https://goo.gl/tpsmEJ#status
+>
+> If you believe I misattributed a bug to the "android/binder" subsystem, please
+> let me know, and if possible forward the report to the correct people or mailing
+> list.
+>
+> Here are the bugs:
+>
+> --------------------------------------------------------------------------------
+> Title:              kernel BUG at drivers/android/binder_alloc.c:LINE! (4)
+> Last occurred:      6 days ago
+> Reported:           14 days ago
+> Branches:           Mainline and others
+> Dashboard link:     https://syzkaller.appspot.com/bug?id=bbf40136a49ffaa8ac60906edcbe77f825b2c406
+> Original thread:    https://lkml.kernel.org/lkml/000000000000b6b25b058b96d5c3@google.com/T/#u
+>
+> This bug has a C reproducer.
+>
+> This bug was bisected to:
+>
+>         commit bde4a19fc04f5f46298c86b1acb7a4af1d5f138d
+>         Author: Todd Kjos <tkjos@android.com>
+>         Date:   Fri Feb 8 18:35:20 2019 +0000
+>
+>           binder: use userspace pointer as base of buffer space
+>
+> The original thread for this bug has received 3 replies; the last was 4 days
+> ago.
 
-below is a series against the hmm tree which fixes up the mmap_sem
-locking in nouveau and while at it also removes leftover legacy HMM APIs
-only used by nouveau.
+Fix posted: https://lore.kernel.org/lkml/20190628165012.4841-1-tkjos@google.com/
+
+>
+> If you fix this bug, please add the following tag to the commit:
+>     Reported-by: syzbot+3ae18325f96190606754@syzkaller.appspotmail.com
+>
+> If you send any email or patch for this bug, please reply to the original
+> thread, which had activity only 4 days ago.  For the git send-email command to
+> use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+> instructions" at https://lkml.kernel.org/r/000000000000b6b25b058b96d5c3@google.com
+>
+> --------------------------------------------------------------------------------
+> Title:              WARNING in binder_transaction_buffer_release
+> Last occurred:      0 days ago
+> Reported:           43 days ago
+> Branches:           Mainline and others
+> Dashboard link:     https://syzkaller.appspot.com/bug?id=4e0a6a529aef923a8d61c5d20b8fc0605c730138
+> Original thread:    https://lkml.kernel.org/lkml/000000000000afe2c70589526668@google.com/T/#u
+
+Assigned to Hridya Valsaraju (b/134585943)
+
+>
+> This bug has a syzkaller reproducer only.
+>
+> The original thread for this bug has received 2 replies; the last was 20 days
+> ago.
+>
+> If you fix this bug, please add the following tag to the commit:
+>     Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+>
+> If you send any email or patch for this bug, please consider replying to the
+> original thread.  For the git send-email command to use, or tips on how to reply
+> if the thread isn't in your mailbox, see the "Reply instructions" at
+> https://lkml.kernel.org/r/000000000000afe2c70589526668@google.com
+>
+> --------------------------------------------------------------------------------
+> Title:              possible deadlock in uprobe_clear_state
+> Last occurred:      165 days ago
+> Reported:           202 days ago
+> Branches:           Mainline
+> Dashboard link:     https://syzkaller.appspot.com/bug?id=a1ce9b3da349209c5085bb8c4fee753d68c3697f
+> Original thread:    https://lkml.kernel.org/lkml/00000000000010a9fb057cd14174@google.com/T/#u
+>
+> Unfortunately, this bug does not have a reproducer.
+>
+> [Note: the uprobe developers think this is a bug in binder, not uprobes.
+>  See https://marc.info/?l=linux-kernel&m=155119805728815&w=2
+>  for a suggested fix for this bug.]
+
+Just learned about this, but looks like a straightforward fix.
+
+>
+> If you fix this bug, please add the following tag to the commit:
+>     Reported-by: syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com
+>
+> If you send any email or patch for this bug, please consider replying to the
+> original thread.  For the git send-email command to use, or tips on how to reply
+> if the thread isn't in your mailbox, see the "Reply instructions" at
+> https://lkml.kernel.org/r/00000000000010a9fb057cd14174@google.com
+>
