@@ -2,145 +2,102 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD715C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C8C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833A3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2885A218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vKwjNK/h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VlTAdbPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfGCM03 (ORCPT
+        id S1727046AbfGCM0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:26:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35340 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbfGCM0Z (ORCPT
+        Wed, 3 Jul 2019 08:26:37 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40418 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbfGCM02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:26:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so2190232wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:26:23 -0700 (PDT)
+        Wed, 3 Jul 2019 08:26:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so2204717ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=plGjGyOid1jI+Xxis9Als2EenBhEyLHhPcpZxpUYN30=;
-        b=vKwjNK/hbuj6CRQyXmuujsWGLSTqcTiws2yP8LSdxlJtYieRupvb/tstkm0v5ucpoy
-         DLpHwzTi00otlUo6DokRJOPR5J/p/RZI63uNqAGusirRv93U+drv1lY6fDhVtuCo/4XM
-         4+fumzfXgWgThbkFfyKfdF24HsLshbXFCe5whSS88ST24f3VZJ2sZOIQjj+pt0kqX1oZ
-         cvARhlbm8Q52SR73bwi4J7gDhg/3Qcwt2teLzkl94He8lRjO25Eae31tJ+uVIF93V3x0
-         s9LEIT3KkZsss+DitpyzKUALqapb8sLePy/fqGvXgf9fQ8XXkJwj2URsmlbhXxU3JhTa
-         ukMg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sQ0WKefyL3mNgqdY1lyjmoIdIu/J9QFCMjO3S3QGPlk=;
+        b=VlTAdbPAVv+CgxXkv69g5pFeCgvV1hz0aXP9cXCKpkxBy0CDA9k2xNV7tZf4ewpsRV
+         CfBK3aOdH/umCZArjXpAvTfiQ8qUDknk19sONR2SSCr/nA3INgUVucxl9W+wY6vmD1/1
+         2XTsZQa768kgMRf+smzTYdGdE2fr5kRDxDXNzC/aja8OXl3MOf4dc/C7Tzv0skPj9ArV
+         5KrOwux7PoctX4NlobTCgFwD/MlCdIoWxkCmb3pRJ3vYZg/lujxWop0Kh91LJAc5zJ/4
+         76o1mOESfyyMSBcBY5BoqBxt9n6A8bk0K9hyl10Ujikl/+iQ6dVh+sBvFoluKOD2LqsE
+         EhLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=plGjGyOid1jI+Xxis9Als2EenBhEyLHhPcpZxpUYN30=;
-        b=NZ8n4KZVN557GUuC0gFW7JOjlISnSNdntaulRhYWQl/kMIiI8jklrPXmkil3aDn7xx
-         QArB4SQ/6XpTz3XQ6c3463KuFtkCp1B24/mYHqjlieHQ73YmIgTTtL6C1D9/s6MpXNi2
-         LSPCGOaVTQx3RccbycndLbTh9C2Wnh7mWmdfs3pymvleq5mqVUonEumuBJvIGUQxP/TN
-         Kq4IzSCbNNQF0x+83MC/Zt81p5OFVcckZVTYJ4ozArFxP+gEjBgcX2HZGw5rFlQ55DKD
-         arGyyaPPWtsFNKoBiKZ5tvg7eiUqlHSfNqJcpuoUl/3fvw/+eM4FnqE1z0TpbpMHn3LF
-         kboQ==
-X-Gm-Message-State: APjAAAUGLRciFWN3uLb5pAkwl7BpmoKmXyJ+fhaz8KTHQjH/sfM5lPXb
-        imEy+yRZ8oG5B04df5LNCTmLIg==
-X-Google-Smtp-Source: APXvYqxekxAtRSw1KL+dcb0nQEkMKDJSI1lDzUIG2OBv7pXWrxalbz0a5fJ1T3HDFVQvQuZzrFX8lQ==
-X-Received: by 2002:a1c:630a:: with SMTP id x10mr8506501wmb.113.1562156783223;
-        Wed, 03 Jul 2019 05:26:23 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id v67sm2868132wme.24.2019.07.03.05.26.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 05:26:22 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: clock: meson: add resets to the audio clock controller
-Date:   Wed,  3 Jul 2019 14:26:13 +0200
-Message-Id: <20190703122614.3579-2-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190703122614.3579-1-jbrunet@baylibre.com>
-References: <20190703122614.3579-1-jbrunet@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQ0WKefyL3mNgqdY1lyjmoIdIu/J9QFCMjO3S3QGPlk=;
+        b=QprypZXVyMIhKQbtbQIHGTaj9o89nW2QK7h5SAiMsQs9QAh56pJ6A3zCq3crSzh2Sl
+         cWY6TuI4xUC5T4S6VzHM3WaiybaRNgflTrhQdB0q0KHKu3ES9S6arMNbEcmEt3Y6mqE8
+         P4vpgWffPNuE1tBg+DZrI5MwcSUiy7OoSlLGnBvA5sd+AJ2WTiYAm9rgqpTYQeeqoUE4
+         KiX3GmexwWFWAunyi5OaWkTE3WK0yQEa9oOkUtPcMirzfX/J8toDPIBdixrUsKenqf1u
+         s4Lh3+ODixvqHlJ2DcUhU9Wlt+FFQ7CbvS3BzXlLuIpSPObEmQ1IDyCptUnqCWmuOZEb
+         Q23Q==
+X-Gm-Message-State: APjAAAUzbDGoM7QPKLysvsj86s4BuRyl/dHtNQYlJx9Mc1jR3ZCck4Y1
+        RH2yTXDK59xjby3xUgYiTuzCBPbEc6YImry1MNy/JQ==
+X-Google-Smtp-Source: APXvYqxTxZa9ESbuAcjCDllEi8XVNXyRZ46EbLsEXR4D9x59DgVsMw4Rpmc44K6jDKdIlcu8vkA5MW1BwruYFmuZR8I=
+X-Received: by 2002:a2e:8756:: with SMTP id q22mr3966445ljj.108.1562156786187;
+ Wed, 03 Jul 2019 05:26:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
+In-Reply-To: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jul 2019 14:26:14 +0200
+Message-ID: <CACRpkdboWWKfaTu=TKqnZgjy4HNWr+fjmQXLBBmePsaDihkbSA@mail.gmail.com>
+Subject: Re: [tip:irq/core] gpio: mb86s7x: Enable ACPI support
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the documentation and bindings for the resets provided by the g12a
-audio clock controller
+On Wed, Jul 3, 2019 at 11:24 AM tip-bot for Ard Biesheuvel
+<tipbot@zytor.com> wrote:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../bindings/clock/amlogic,axg-audio-clkc.txt |  1 +
- .../reset/amlogic,meson-g12a-audio-reset.h    | 38 +++++++++++++++++++
- 2 files changed, 39 insertions(+)
- create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
+> Committer:  Marc Zyngier <marc.zyngier@arm.com>
+> CommitDate: Wed, 29 May 2019 10:42:19 +0100
+>
+> gpio: mb86s7x: Enable ACPI support
+>
+> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
+> support for ACPI GPIO interrupts routed via platform interrupts, by
+> wiring the two together via the to_irq() gpiochip callback.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-index 0f777749f4f1..b3957d10d241 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-@@ -22,6 +22,7 @@ Required Properties:
- 				       components.
- - resets	: phandle of the internal reset line
- - #clock-cells	: should be 1.
-+- #reset-cells  : should be 1 on the g12a (and following) soc family
- 
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
-diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-new file mode 100644
-index 000000000000..14b78dabed0e
---- /dev/null
-+++ b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ *
-+ */
-+
-+#ifndef _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
-+#define _DT_BINDINGS_AMLOGIC_MESON_G12A_AUDIO_RESET_H
-+
-+#define AUD_RESET_PDM		0
-+#define AUD_RESET_TDMIN_A	1
-+#define AUD_RESET_TDMIN_B	2
-+#define AUD_RESET_TDMIN_C	3
-+#define AUD_RESET_TDMIN_LB	4
-+#define AUD_RESET_LOOPBACK	5
-+#define AUD_RESET_TODDR_A	6
-+#define AUD_RESET_TODDR_B	7
-+#define AUD_RESET_TODDR_C	8
-+#define AUD_RESET_FRDDR_A	9
-+#define AUD_RESET_FRDDR_B	10
-+#define AUD_RESET_FRDDR_C	11
-+#define AUD_RESET_TDMOUT_A	12
-+#define AUD_RESET_TDMOUT_B	13
-+#define AUD_RESET_TDMOUT_C	14
-+#define AUD_RESET_SPDIFOUT	15
-+#define AUD_RESET_SPDIFOUT_B	16
-+#define AUD_RESET_SPDIFIN	17
-+#define AUD_RESET_EQDRC		18
-+#define AUD_RESET_RESAMPLE	19
-+#define AUD_RESET_DDRARB	20
-+#define AUD_RESET_POWDET	21
-+#define AUD_RESET_TORAM		22
-+#define AUD_RESET_TOACODEC	23
-+#define AUD_RESET_TOHDMITX	24
-+#define AUD_RESET_CLKTREE	25
-+
-+#endif
--- 
-2.21.0
+OK!
 
+> +#include "gpiolib.h"
+> +
+
+But this isn't needed anymore, is it?
+I can try to remember to remove it later though.
+
+Yours,
+Linus Walleij
