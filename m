@@ -2,61 +2,61 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463B3C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF6DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA36218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DEE218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UByox/6o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKeKmBgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfGCIOG (ORCPT
+        id S1727560AbfGCIPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:14:06 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46251 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfGCIOC (ORCPT
+        Wed, 3 Jul 2019 04:15:04 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36469 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfGCIOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:14:02 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so785184pls.13;
-        Wed, 03 Jul 2019 01:14:02 -0700 (PDT)
+        Wed, 3 Jul 2019 04:14:06 -0400
+Received: by mail-pl1-f195.google.com with SMTP id k8so811648plt.3;
+        Wed, 03 Jul 2019 01:14:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nmCsYbm1OChUS/6iyzuZc8+iRZsteMJe/aD4EAVxC/s=;
-        b=UByox/6ooMiUeUN9pNJYDu5l/7oPAkbrqiAGR6ZlR/yGvFd0NRmZtOy8mgQFOl9Xx9
-         P+RKZo5hMxaIa/X1bDjJ+L2JRQZzKiTGgm83+W16ScQKadvAn7mw2EagotmP0zEx3tPU
-         bDKkMfb/slpwP27vSkSn7gL/T7abisnqf2tBOpH/09W3cSP+5em66Fsj30cXq15fbj1E
-         rrTA1Eb3Sn2RdWuHj081Kh8Ko+H8N87p+AuP5Dl32aelgOpB0z2ZZvABLPMRNoOL2D7h
-         roMDXQfCoJDbAGAHYJRfSdaWvpiQzYT6iNKR18YqyJaKO87Wgny2tZvCjlNOYLjVVjQ6
-         8SLw==
+        bh=2h20kHGJbizKH54h9j83TWNj7oYw/atmUiwKwp86SnQ=;
+        b=fKeKmBgH/r9868YdIKvLTA3k7CbTCv10o66dZK6ybUnyyvWVMD8R2TGU1qJh+hAnJp
+         HrpDNCdtD8A7vfpn4ptaqEs/c829m0VMWfbzqUyj+9W+2VihboRzNBJG/SB4qUsKGk3o
+         1hZ89ZtUcxPloAuxR/6QDl/k3Xanh5UMwgYmfEGclxWLcbFCBw1w5skOSPlE5+0DSKJI
+         wp01QNb9PjRNTD8pt1iwpnv4DAaJre2FUE48GNbf1tDXfmAETLuoUOtbrTjn5WPy1xZ4
+         sSirh2H87bN0hlye6RsmBvwVI1IGk8AIXN2G6Sg34rsvLzOB1NMy8XPZhmhVlWJD+Ahl
+         MjUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nmCsYbm1OChUS/6iyzuZc8+iRZsteMJe/aD4EAVxC/s=;
-        b=YXV9coBG60Xaj7zedKqR2UyhY0xaqNK9KvCMxvDcDvBC2Gzq0N2dDjJpWG66aB4NRt
-         keXCfv5x9MZr0Gl7hwtvnhOde/NH3DjiWsuG+AkRTdQ7jgl/9C6HvPNthWAMSeMa+5fc
-         Bvpz/UhRIf5h/ZPat066aAE02Fk7QzA4XJqPYrz1qN7N+Owxw8MRoGdfRrmQ6LrPSTCi
-         Ebrg6qli1dbsGeTZwWCAWzcHsTZD/iSNNSXJjdk54nGUncAHIuS1fpD364fKiEXwTEib
-         yc0rrfiZv7Xqezec+iQ3LmwyRJC0pbZ0Y48Zf5ztkvPZuWcyeDm3RwrtYlmIWWrl63V8
-         t10A==
-X-Gm-Message-State: APjAAAWjLv0mFiaGGn/U1EE5gmNSsW+VoIyCowXGyDm19nCHEmlOT0v/
-        atnhfmKnaThSlxcIVBIstZHOvz05//0=
-X-Google-Smtp-Source: APXvYqxPwQGd/DQpl5Vf317Gi61kfH7TZG6TGsyBMCktingto6JDt3KHixMP9vvfKMcenuLf4NVcyw==
-X-Received: by 2002:a17:902:106:: with SMTP id 6mr41661031plb.64.1562141641353;
-        Wed, 03 Jul 2019 01:14:01 -0700 (PDT)
+        bh=2h20kHGJbizKH54h9j83TWNj7oYw/atmUiwKwp86SnQ=;
+        b=l2gZRRXyws2jkXJE92PDkbgXPRmreMF8RZOA16BbiTyn19zhzjE2RMZqVWTd2kMOJl
+         /OtDhkuqLHVjYPpP8NLKN6NF5DnxVFlcj9jRRgwgrJTY1gVwDGKQ3PxcfY+SDfWmRUHE
+         x/pHgQLhawqxBj3J4f6l2aP3S8qzUZkssMIHsVrkOQDy3iAf3NpW2RLnLYC5xiuxsUgw
+         G++LZODdB5IZwlkRp1PYoHq1Rswmq3WX2rz6Qv8bxkGLCdlBXPRl7qkoBIBgbtgSwIfi
+         vRxiErgj3AvHg3EOkKUVWJftaFFsTlxOZt2/R1i3lIt/iF6Irc94mBaKKlishKty+kMC
+         ji0A==
+X-Gm-Message-State: APjAAAWquRsEi+MhO6JIbnlZvp/BQs56GAeSMUbMErxru1PncwKe7/r6
+        sz1+iW/ncZrLRDmwXE9/eH4QjLAGjoE=
+X-Google-Smtp-Source: APXvYqzjwjB4kCIa+danq4eu6nHIemNaNDAtFQxoSKzSjiWGZh7s0VOdA19bW6jxIk9Wz5V2GmjpuA==
+X-Received: by 2002:a17:902:f213:: with SMTP id gn19mr42057694plb.35.1562141645054;
+        Wed, 03 Jul 2019 01:14:05 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.13.59
+        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.14.03
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:14:00 -0700 (PDT)
+        Wed, 03 Jul 2019 01:14:04 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
-Date:   Wed,  3 Jul 2019 01:13:14 -0700
-Message-Id: <20190703081327.17505-4-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 06/16] crypto: caam - use devres to allocate 'inpring'
+Date:   Wed,  3 Jul 2019 01:13:17 -0700
+Message-Id: <20190703081327.17505-7-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190703081327.17505-1-andrew.smirnov@gmail.com>
 References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
@@ -82,8 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move tasklet_init() call further down in order to simplify error path
-cleanup. No functional change intended.
+Use devres to allocate 'inpring' and drop corresponding
+dma_free_coherent() call as well explicit references to size of
+'inpring' elemet (needet in following commits). No functional change
+intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Spencer <christopher.spencer@sea.co.uk>
@@ -96,48 +98,65 @@ Cc: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/jr.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/crypto/caam/jr.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index 4b25b2fa3d02..a7ca2bbe243f 100644
+index 1eaa91dcc146..813e9135babd 100644
 --- a/drivers/crypto/caam/jr.c
 +++ b/drivers/crypto/caam/jr.c
-@@ -441,15 +441,13 @@ static int caam_jr_init(struct device *dev)
+@@ -108,7 +108,6 @@ static int caam_reset_hw_jr(struct device *dev)
+ static int caam_jr_shutdown(struct device *dev)
+ {
+ 	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
+-	dma_addr_t inpbusaddr;
+ 	int ret;
  
- 	jrp = dev_get_drvdata(dev);
- 
--	tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
--
- 	/* Connect job ring interrupt handler. */
- 	error = request_irq(jrp->irq, caam_jr_interrupt, IRQF_SHARED,
- 			    dev_name(dev), dev);
- 	if (error) {
- 		dev_err(dev, "can't connect JobR %d interrupt (%d)\n",
- 			jrp->ridx, jrp->irq);
--		goto out_kill_deq;
-+		return error;
- 	}
- 
- 	error = caam_reset_hw_jr(dev);
-@@ -471,6 +469,8 @@ static int caam_jr_init(struct device *dev)
- 	if (!jrp->entinfo)
- 		goto out_free_outring;
- 
-+	tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
-+
- 	for (i = 0; i < JOBR_DEPTH; i++)
- 		jrp->entinfo[i].desc_addr_dma = !0;
- 
-@@ -504,8 +504,6 @@ static int caam_jr_init(struct device *dev)
- 	dev_err(dev, "can't allocate job rings for %d\n", jrp->ridx);
- out_free_irq:
+ 	ret = caam_reset_hw_jr(dev);
+@@ -118,11 +117,6 @@ static int caam_jr_shutdown(struct device *dev)
+ 	/* Release interrupt */
  	free_irq(jrp->irq, dev);
--out_kill_deq:
--	tasklet_kill(&jrp->irqtask);
- 	return error;
+ 
+-	/* Free rings */
+-	inpbusaddr = rd_reg64(&jrp->rregs->inpring_base);
+-	dma_free_coherent(dev, sizeof(dma_addr_t) * JOBR_DEPTH,
+-			  jrp->inpring, inpbusaddr);
+-
+ 	return ret;
  }
  
+@@ -451,8 +445,9 @@ static int caam_jr_init(struct device *dev)
+ 		goto out_free_irq;
+ 
+ 	error = -ENOMEM;
+-	jrp->inpring = dma_alloc_coherent(dev, sizeof(*jrp->inpring) *
+-					  JOBR_DEPTH, &inpbusaddr, GFP_KERNEL);
++	jrp->inpring = dmam_alloc_coherent(dev, sizeof(*jrp->inpring) *
++					   JOBR_DEPTH, &inpbusaddr,
++					   GFP_KERNEL);
+ 	if (!jrp->inpring)
+ 		goto out_free_irq;
+ 
+@@ -460,7 +455,7 @@ static int caam_jr_init(struct device *dev)
+ 					   JOBR_DEPTH, &outbusaddr,
+ 					   GFP_KERNEL);
+ 	if (!jrp->outring)
+-		goto out_free_inpring;
++		return -ENOMEM;
+ 
+ 	jrp->entinfo = devm_kcalloc(dev, JOBR_DEPTH, sizeof(*jrp->entinfo),
+ 				    GFP_KERNEL);
+@@ -493,10 +488,6 @@ static int caam_jr_init(struct device *dev)
+ 
+ 	return 0;
+ 
+-out_free_inpring:
+-	dma_free_coherent(dev, sizeof(dma_addr_t) * JOBR_DEPTH,
+-			  jrp->inpring, inpbusaddr);
+-	dev_err(dev, "can't allocate job rings for %d\n", jrp->ridx);
+ out_free_irq:
+ 	free_irq(jrp->irq, dev);
+ 	return error;
 -- 
 2.21.0
 
