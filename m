@@ -2,85 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A831DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EDBC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB062187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:28:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9DxrZWH"
+	by mail.kernel.org (Postfix) with ESMTP id E60B82187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfGCG2S (ORCPT
+        id S1727147AbfGCG3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:28:18 -0400
-Received: from mail-lf1-f51.google.com ([209.85.167.51]:36028 "EHLO
-        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfGCG2R (ORCPT
+        Wed, 3 Jul 2019 02:29:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726670AbfGCG3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:28:17 -0400
-Received: by mail-lf1-f51.google.com with SMTP id q26so888215lfc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SXu32Pa/2jY/SIfhjCTPNXklOrGOPwxWNpCrd6d7xWc=;
-        b=l9DxrZWHt7C6eTWN0i0SVfjKdZfwEj6P1o3jDecGHXsaU3IUlreJyMm/bDwCqnBpME
-         1PWg+xm7is9gl5rlo6t7tIZ4bqeI+NFl9pn2AwPp/lvXCSZF/vlhLvBx7z5nc7aydCJ8
-         IyBwVGAep64GgReKoASbFQviuuhXtZXZyOBMKqqDLtk/HOy6Dnr68erDYBDfy9xvX8kE
-         o5sJG/8BOxNMs02ChrH3wrl73ckn46b3sJSF3i/lOAGsOgSr4Y43Cf/yxjCnGrssQxYD
-         82024FHMnZayiuFtWma3P79crPYXnWJw+5QASgUS3mAfsgT7ZHMVQuzTGqU2i40lcN2Y
-         Ft9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SXu32Pa/2jY/SIfhjCTPNXklOrGOPwxWNpCrd6d7xWc=;
-        b=VtCsADIouVRrv9Y8LTfZIh1uaaIKE5kz7MpXN1Thh0uCNPqI2sB8yMMCttLiF1ONDR
-         t78lIZVMuPnqxanQWY6V29+YYXx2XgSg2yTWo+2m6SGFs3VaT+hbhImc2iyNckAz9irK
-         NqVDw99r0TYWfbtNWVfb1JUh+rZA/gD9k/AV4L0Grl+0Sy6aG3oTv4QTGJ+ieDIJqMz3
-         KcMlyBryp6KLME7YuvD6L2JGMbYHBOYTX+HJe/TASI+QrI+PTGy1V684XR1iiccDPa5a
-         PjbWaSnoTqEJmD9ObAtPCPSNiUnwEbKp1ZQgIleTP0ZmluRsQv/kIgr3d5NHE6Q35Ir7
-         yu2g==
-X-Gm-Message-State: APjAAAWv0Lus24slwcdNULXmW3SwdItqkjSh14frh6L3c8ZctMw6grRO
-        zEQ0YaQb6yuja1nOp+OzuY43s2+Tw8lQkCImEPgJCA==
-X-Google-Smtp-Source: APXvYqwdVcvnU84nLBGloVccDLThbqvTd4gp+Ns0yDpZlYkr2svJh5eSqbc0sUqWRzwB9mhq8cfmaslICQM/toProkQ=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr16327691lfh.92.1562135295442;
- Tue, 02 Jul 2019 23:28:15 -0700 (PDT)
+        Wed, 3 Jul 2019 02:29:37 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x636QNKK082508
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 02:29:36 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tgm3edwph-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:29:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 3 Jul 2019 07:29:34 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 07:29:30 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x636TUd717105342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 06:29:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECD33AE04D;
+        Wed,  3 Jul 2019 06:29:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 454B2AE045;
+        Wed,  3 Jul 2019 06:29:26 +0000 (GMT)
+Received: from [9.85.75.18] (unknown [9.85.75.18])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Jul 2019 06:29:26 +0000 (GMT)
+Subject: Re: [RFC PATCH v2 00/12] Reduce ifdef mess in ptrace
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <cover.1561735587.git.christophe.leroy@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 3 Jul 2019 11:59:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
-In-Reply-To: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jul 2019 08:28:03 +0200
-Message-ID: <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
-Subject: Re: gpio desc flags being lost
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1561735587.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070306-0020-0000-0000-0000034FB5F4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070306-0021-0000-0000-000021A34AE1
+Message-Id: <0b73b957-a782-5804-9794-a194deb3cc87@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=604 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 7:35 AM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
 
-> Doing a bit of debugging so far I see that after startup the desc->flags
-> for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x801).
+On 6/28/19 9:17 PM, Christophe Leroy wrote:
+> The purpose of this series is to reduce the amount of #ifdefs
+> in ptrace.c
+> 
+> This is a first try. Most of it is done, there are still some #ifdefs that
+> could go away.
+> 
+> Please comment and tell whether it is worth continuing in that direction.
 
-Yeah that is wrong.
+Hi Christopher,
 
-> I'll do some proper bisecting tomorrow, but figured you might want to
-> know sooner rather than later.
+I'm seeing this warning with all the patches.
 
-Thanks, I have another critical GPIO fix queued so would be great if we
-can fix this too before v5.2 is released.
+WARNING: Improper SPDX comment style for 'arch/powerpc/kernel/ptrace/ptrace-view.c', please use '//' instead
+#100: FILE: arch/powerpc/kernel/ptrace/ptrace-view.c:1:
++/* SPDX-License-Identifier: GPL-2.0-or-later */
 
-Yours,
-Linus Walleij
