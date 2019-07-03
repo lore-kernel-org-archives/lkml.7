@@ -7,102 +7,117 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD8C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DD6C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E182187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6C621873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120340;
-	bh=EXU4tNDrkaXGLhQDSTLyzWSbk5vH+e18n79TcZUDWHY=;
+	s=default; t=1562120342;
+	bh=mI3Eh754xfeg6MnRvDx3kOdsC0rJqHt9VJWUrh+yDS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Krelogtgnqu/lRSf/PX38t0+LKn/kG5oaktuigJmBvRPPK4cI2MF27wO8kmXd++lC
-	 dcjnmOd2kS3KcLKAdVUEKUopajkotXOBEhbqB/KUUk/a8vpU2WFM8jnsnjyvZRcbgF
-	 A7QUDAQkdO5c7vV7N8clg1ascLJNm9DM4mBnhgc0=
+	b=LVSeRCY0gL2mEp07yQXzwjNHm6VVywD37df97OOxculh1NHxFBCgULTQbkHlFT/TR
+	 frTYIxqex8fc8rQKPK7x++DbP8zTcsvql5uUkGuE7bFBSzdK18jplnI1KoM+IMuH44
+	 A1xtSD3eiaC4l8HQEi5EcxuTrapHwnPN7z2TJ4tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbfGCCS7 (ORCPT
+        id S1727842AbfGCCTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:19:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfGCCS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:56 -0400
+        id S1728351AbfGCCS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A49B2187F;
-        Wed,  3 Jul 2019 02:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EDBA21882;
+        Wed,  3 Jul 2019 02:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120335;
-        bh=EXU4tNDrkaXGLhQDSTLyzWSbk5vH+e18n79TcZUDWHY=;
+        s=default; t=1562120337;
+        bh=mI3Eh754xfeg6MnRvDx3kOdsC0rJqHt9VJWUrh+yDS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K72SugIKAiAmJ0h8Zi1i6gjRXgTWTKNbdbGhM1aE/chyqVR2yXDuxxuRFu3puV+Ff
-         DdQeABDPJW51IzKzk2LmlNKTVi664HaBcWmUgYoLJQSVv+ZR2E1YDGxRHcHiQZE1Vy
-         BgQy6q4XYkZloi7qIVb394iQc+bSPhBAvgzR2NHI=
+        b=I/QUeHYDj0P+f6ydueQJHQrnP5fw3g0upXqGXKa9bnEv3ml/6ur6hRRQiKouvcP1N
+         qGQZeNmZclg46R4yR8FhOQdy6J0OaRHhKjJMu3En1BAZNyIABzTN3DrU+yBYcRLfcy
+         DO5eolFR0g7keSBovtO7rR8H7wGTqblW60Q2ykwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roland Hii <roland.king.guan.hii@intel.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 5/8] net: stmmac: fixed new system time seconds value calculation
-Date:   Tue,  2 Jul 2019 22:18:44 -0400
-Message-Id: <20190703021847.18542-5-sashal@kernel.org>
+Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 7/8] ARM: dts: imx6ul: fix PWM[1-4] interrupts
+Date:   Tue,  2 Jul 2019 22:18:46 -0400
+Message-Id: <20190703021847.18542-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021847.18542-1-sashal@kernel.org>
 References: <20190703021847.18542-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roland Hii <roland.king.guan.hii@intel.com>
+From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-[ Upstream commit a1e5388b4d5fc78688e5e9ee6641f779721d6291 ]
+[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
 
-When ADDSUB bit is set, the system time seconds field is calculated as
-the complement of the seconds part of the update value.
+According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
+summary", the interrupts for the PWM[1-4] go from 83 to 86.
 
-For example, if 3.000000001 seconds need to be subtracted from the
-system time, this field is calculated as
-2^32 - 3 = 4294967296 - 3 = 0x100000000 - 3 = 0xFFFFFFFD
-
-Previously, the 0x100000000 is mistakenly written as 100000000.
-
-This is further simplified from
-  sec = (0x100000000ULL - sec);
-to
-  sec = -sec;
-
-Fixes: ba1ffd74df74 ("stmmac: fix PTP support for GMAC4")
-Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-index f4074e25fb71..25136941a964 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-@@ -125,7 +125,7 @@ static int stmmac_adjust_systime(void __iomem *ioaddr, u32 sec, u32 nsec,
- 		 * programmed with (2^32 – <new_sec_value>)
- 		 */
- 		if (gmac4)
--			sec = (100000000ULL - sec);
-+			sec = -sec;
- 
- 		value = readl(ioaddr + PTP_TCR);
- 		if (value & PTP_TCR_TSCTRLSSR)
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 7839300fe46b..200d9082caa4 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -332,7 +332,7 @@
+ 			pwm1: pwm@02080000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02080000 0x4000>;
+-				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM1>,
+ 					 <&clks IMX6UL_CLK_PWM1>;
+ 				clock-names = "ipg", "per";
+@@ -343,7 +343,7 @@
+ 			pwm2: pwm@02084000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02084000 0x4000>;
+-				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM2>,
+ 					 <&clks IMX6UL_CLK_PWM2>;
+ 				clock-names = "ipg", "per";
+@@ -354,7 +354,7 @@
+ 			pwm3: pwm@02088000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x02088000 0x4000>;
+-				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM3>,
+ 					 <&clks IMX6UL_CLK_PWM3>;
+ 				clock-names = "ipg", "per";
+@@ -365,7 +365,7 @@
+ 			pwm4: pwm@0208c000 {
+ 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
+ 				reg = <0x0208c000 0x4000>;
+-				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_PWM4>,
+ 					 <&clks IMX6UL_CLK_PWM4>;
+ 				clock-names = "ipg", "per";
 -- 
 2.20.1
 
