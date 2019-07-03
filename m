@@ -2,100 +2,82 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719CFC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15181C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D9121880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E050821880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfGCFce (ORCPT
+        id S1727019AbfGCFfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 01:32:34 -0400
-Received: from gate.crashing.org ([63.228.1.57]:60537 "EHLO gate.crashing.org"
+        Wed, 3 Jul 2019 01:35:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:37998 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfGCFce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 01:32:34 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x635WGkN025368;
-        Wed, 3 Jul 2019 00:32:17 -0500
-Message-ID: <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
-Subject: Re: [GIT PULL] FSI changes for 5.3
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Joel Stanley <joel@jms.id.au>, Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        Alistair Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-fsi@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 03 Jul 2019 15:32:15 +1000
-In-Reply-To: <CACPK8XfCpgjAwMeoyhcZqgqtXO=-wtpuB2kwsogvBnd1VzynDg@mail.gmail.com>
-References: <CACPK8XfCpgjAwMeoyhcZqgqtXO=-wtpuB2kwsogvBnd1VzynDg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        id S1725943AbfGCFfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 01:35:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FF42B;
+        Tue,  2 Jul 2019 22:35:01 -0700 (PDT)
+Received: from [10.162.42.95] (p8cg001049571a15.blr.arm.com [10.162.42.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14A2D3F718;
+        Tue,  2 Jul 2019 22:36:52 -0700 (PDT)
+Subject: Re: [DRAFT] mm/kprobes: Add generic kprobe_fault_handler() fallback
+ definition
+To:     Guenter Roeck <linux@roeck-us.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+References: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
+ <1561973757-5445-1-git-send-email-anshuman.khandual@arm.com>
+ <8c6b9525-5dc5-7d17-cee1-b75d5a5121d6@roeck-us.net>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <fc68afaa-32e1-a265-aae2-e4a9440f4c95@arm.com>
+Date:   Wed, 3 Jul 2019 11:05:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <8c6b9525-5dc5-7d17-cee1-b75d5a5121d6@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 03:39 +0000, Joel Stanley wrote:
-> Hello Greg,
-> 
-> We've not had a MAINAINERS entry for drivers/fsi, so this fixes that. It names
-> Jeremy and I as maintainers, so if it works for you we will send pull requests
-> to you each cycle.
 
-Ack. I no longer work for IBM and thus cannot handle that subsystem
-anymore.
 
-> I realise this one is a bit late, but please consider including so we have a
-> clear path for future submissions from 5.3 on.
+On 07/01/2019 06:58 PM, Guenter Roeck wrote:
+> On 7/1/19 2:35 AM, Anshuman Khandual wrote:
+>> Architectures like parisc enable CONFIG_KROBES without having a definition
+>> for kprobe_fault_handler() which results in a build failure. Arch needs to
+>> provide kprobe_fault_handler() as it is platform specific and cannot have
+>> a generic working alternative. But in the event when platform lacks such a
+>> definition there needs to be a fallback.
+>>
+>> This adds a stub kprobe_fault_handler() definition which not only prevents
+>> a build failure but also makes sure that kprobe_page_fault() if called will
+>> always return negative in absence of a sane platform specific alternative.
+>>
+>> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+>> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+>> just be dropped. Only on x86 it needs to be added back locally as it gets
+>> used in a !CONFIG_KPROBES function do_general_protection().
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> I am planning to go with approach unless we just want to implement a stub
+>> definition for parisc to get around the build problem for now.
+>>
+>> Hello Guenter,
+>>
+>> Could you please test this in your parisc setup. Thank you.
+>>
 > 
-> This pull request contains two code changes. One touches hwmon and has an ack
-> from Guenter as the hwmon maintainer.
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git tags/fsi-for-5.3
-> 
-> for you to fetch changes up to 371975b0b07520c85098652d561639837a60a905:
-> 
->   fsi/core: Fix error paths on CFAM init (2019-07-03 10:42:53 +0930)
-> 
-> ----------------------------------------------------------------
-> FSI changes for 5.3
-> 
->  - Add MAINTAINERS entry. There is now a git tree and a mailing
->  list/patchwork for collecting FSI patches
-> 
->  - Bug fix for error driver registration error paths
-> 
->  - Correction for the OCC hwmon driver to meet the spec
-> 
-> ----------------------------------------------------------------
-> Eddie James (1):
->       OCC: FSI and hwmon: Add sequence numbering
-> 
-> Jeremy Kerr (1):
->       fsi/core: Fix error paths on CFAM init
-> 
-> Joel Stanley (1):
->       MAINTAINERS: Add FSI subsystem
-> 
->  MAINTAINERS                | 13 +++++++++++++
->  drivers/fsi/fsi-core.c     | 32 ++++++++++++++++++++------------
->  drivers/fsi/fsi-occ.c      | 15 ++++++++++++---
->  drivers/hwmon/occ/common.c |  4 ++--
->  drivers/hwmon/occ/common.h |  1 +
->  5 files changed, 48 insertions(+), 17 deletions(-)
+> With this patch applied on top of next-20190628, parisc:allmodconfig builds
+> correctly. I scheduled a full build for tonight for all architectures.
 
+How did that come along ? Did this pass all build tests ?
