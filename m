@@ -2,68 +2,86 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C656DC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32BEC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9922187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A123C21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfGCXtl (ORCPT
+        id S1727448AbfGCXzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:49:41 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:33525 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfGCXtk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:49:40 -0400
-Received: by mail-oi1-f173.google.com with SMTP id u15so3551101oiv.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 16:49:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=MK8X2JBkBCPF1Im/XK2FCLUhKyKfsrG9WFPSb3zfOPdhLV99UrzfP+1M4XquttPq1h
-         PmdPGhem5yT+ZdwKm8maHlfphrIpzSWRbj1z2q3taZfdXrEXxYbSFR2gJ/qWW0rlnq+a
-         0l2sYbvX+RaD9/q+oaTkFzyJKRuEo5+Ohl8op60ni4FY6vB7qXRX7PiV+we5slUFqYKk
-         OP3vKYq6r4KGd/pWWP5B1U1uTaQe+BQk2E5+/xYUElLWxBafO8Y48ag7FNC5eaObVmbt
-         2rP7f1qyTLq8CqbUI44uTHVihOrZiQQa78QOdLnZCfrD8mjaf63iWoJrPpeJBIqjF1bw
-         7umQ==
-X-Gm-Message-State: APjAAAWEPHB5abOcDiOPfLIB+uUGWm12IZhc2gmzKNrljOqQJerOvTkq
-        Cr4fSOtRDJhh4lo/1KVA2jE=
-X-Google-Smtp-Source: APXvYqwRjZGgQdv1gBF/qPQaeqqTknjYw1knpnjJc0FbK3DbELJLE2T8hCPFY+bZjLS0aVudaXh0MA==
-X-Received: by 2002:aca:fd4e:: with SMTP id b75mr153998oii.129.1562197779924;
-        Wed, 03 Jul 2019 16:49:39 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id 198sm1398677oie.13.2019.07.03.16.49.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 16:49:39 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] nvmet-loop: Flush nvme_delete_wq when removing the
- port
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Stephen Bates <sbates@raithlin.com>
-References: <20190703230304.22905-1-logang@deltatee.com>
- <20190703230304.22905-3-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <3a3976b9-3d67-b9d4-69c2-6ba61c3da953@grimberg.me>
-Date:   Wed, 3 Jul 2019 16:49:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 19:55:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17632 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbfGCXzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:55:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 16:55:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
+   d="scan'208";a="169293598"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga006.jf.intel.com with ESMTP; 03 Jul 2019 16:55:05 -0700
+Date:   Thu, 4 Jul 2019 07:38:22 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 05/15] Documentation: fpga: dfl: add descriptions for
+ virtualization and new interfaces.
+Message-ID: <20190703233822.GB15825@hao-dev>
+References: <20190628004951.6202-1-mdf@kernel.org>
+ <20190628004951.6202-6-mdf@kernel.org>
+ <20190703175926.GA14649@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703230304.22905-3-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703175926.GA14649@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Wed, Jul 03, 2019 at 07:59:26PM +0200, Greg KH wrote:
+> On Thu, Jun 27, 2019 at 05:49:41PM -0700, Moritz Fischer wrote:
+> > From: Wu Hao <hao.wu@intel.com>
+> > 
+> > This patch adds virtualization support description for DFL based
+> > FPGA devices (based on PCIe SRIOV), and introductions to new
+> > interfaces added by new dfl private feature drivers.
+> > 
+> > [mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Acked-by: Alan Tull <atull@kernel.org>
+> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> > ---
+> >  Documentation/fpga/dfl.rst | 100 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 100 insertions(+)
+> 
+> This doesn't apply to my tree, where is this file created?
+
+Hi Greg,
+
+From the cover-letter, Moritz mentioned, dfl.txt has been converted to .rst
+in linux-next. I think this patch is created on top of that by Moritz.
+
+"Note: I've seen that Mauro touched Documentation/fpga/dfl.rst in linux-next
+commit c220a1fae6c5d ("docs: fpga: convert docs to ReST and rename to *.rst")"
+
+Thanks
+Hao
+
+> 
+> thanks,
+> 
+> greg k-h
