@@ -2,119 +2,144 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D9C5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A83C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33255218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B0C21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Qw5x5vW+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rKZhRLv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGDAn6 (ORCPT
+        id S1727113AbfGDBQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 20:43:58 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:30930 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGDAn5 (ORCPT
+        Wed, 3 Jul 2019 21:16:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35286 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfGDBQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 20:43:57 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x640hfs5007948;
-        Thu, 4 Jul 2019 09:43:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x640hfs5007948
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562201022;
-        bh=YEglfdV6gwtLpwefdXYa4i8HSGcTtqk+NU8k5bljqhg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qw5x5vW+HodXAsAM9eWx3LsERWErLbDHquz+/fNNvOizzhYBpWG6Wcg7/DpeJQx94
-         ousyH9k2gTLYlzvRSsSFBjOBLNC8UA78HsYGaBP+YZgg/DdZQWZPixX6la/rEVtUJB
-         rRBlI4we8YDrikrXsG4S3EDpJieEMFpTMqZUtsYB9V1KY1yafQhZ9WgUY3Kt+w/tr2
-         TCFxYZzaTLr3G7upREzePgw9jNb2HTSBFFTabaz0mm48hK64k/QMPApQki6w88MaEl
-         t14mn3q/7pBm/7qd8xyFmeHhpJKjJ3M5Ym6XWod4QDobzripQuwCjCt7/sCMeFX698
-         FbzFHhib2sstQ==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id g124so301546vkd.1;
-        Wed, 03 Jul 2019 17:43:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAUyTLLQOiFNMkHux7LMeJuPlZf9y2gLzwtZFZJOXM06FD/cwrhC
-        sb/0jEg9wXv5SGAIJkITS8RzeEKdzDq30ZAhgnE=
-X-Google-Smtp-Source: APXvYqwTIxDogC/SIRRHuAggdytqIbbtVGJ6ZbmryGi7Bqodet01ybGaLvoRyZFlQniP0SXM6NV/EYHc5F00hR1vxas=
-X-Received: by 2002:a1f:728b:: with SMTP id n133mr1331102vkc.84.1562201021033;
- Wed, 03 Jul 2019 17:43:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
-In-Reply-To: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 4 Jul 2019 09:43:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-Message-ID: <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-Subject: Re: [PATCH] builddeb: generate multi-arch friendly linux-libc-dev package
-To:     Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Cc:     isar-users@googlegroups.com,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jul 2019 21:16:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641EUdk123573;
+        Thu, 4 Jul 2019 01:16:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=YuCOXIRb/dHuU0bztnXWfWAbrWp+ScSgOTP4KoY+oi4=;
+ b=rKZhRLv86J9i1rvrZktSTTZCQ+BL1+OOD2Uqcglx6kQg6n9trrHvxI/Uf6doxbDZQhTr
+ jYZtVLBHXUinpS8X23Frvp5m09GUPCxgYu8l0PRyJ+WmTVLQWrT7D7LE9XxWAFAr13lI
+ R3fzCMbe3hobkdJ1hHcbNbq8vfJv0JKW3/S62JShkqz28p5rAKO46yuR5U9Ykgehrvjp
+ +jLy5FvVnlH75VqnVh7lNngxWh/susHJr1LV6c54vUPtu08usCNmriIK1cTdl2zgTqNl
+ 0dPZLskmwLvOZvOb1eEvRcmSPaoSqfVMw3tUvy7KXkt0RJKucCSHFDhkxMrackcsm5uI Rw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2te5tbv6rm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jul 2019 01:16:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641ChlE039884;
+        Thu, 4 Jul 2019 01:16:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2th5qks8k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jul 2019 01:16:00 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x641FxHl017794;
+        Thu, 4 Jul 2019 01:15:59 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jul 2019 18:15:59 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v5 1/4] x86/xen: Mark xen_hvm_need_lapic() and xen_x2apic_para_available() as __init
+Date:   Wed,  3 Jul 2019 09:19:35 +0800
+Message-Id: <1562116778-5846-2-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562116778-5846-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1562116778-5846-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907040013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907040014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCed a couple of people.
+.. as they are only called at early bootup stage. In fact, other
+functions in x86_hyper_xen_hvm.init.* are all marked as __init.
 
-On Mon, Jun 17, 2019 at 3:15 PM Cedric Hombourger
-<Cedric_Hombourger@mentor.com> wrote:
->
-> Debian-based distributions place libc header files in a machine
-> specific directory (/usr/include/<libc-machine>) instead of
-> /usr/include/asm to support installation of the linux-libc-dev
-> package from multiple architectures. Move headers installed by
-> "make headers_install" accordingly.
->
-> Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-> Reviewed-by: Henning Schild <henning.schild@siemens.com>
-> ---
->  scripts/package/builddeb | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> index b03dd56a4782..8f7afb3a84e9 100755
-> --- a/scripts/package/builddeb
-> +++ b/scripts/package/builddeb
-> @@ -132,6 +132,11 @@ fi
->  if [ "$ARCH" != "um" ]; then
->         $MAKE -f $srctree/Makefile headers_check
->         $MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
-> +       # move asm headers to /usr/include/<libc-machine>/asm to match the structure
-> +       # used by Debian-based distros (to support multi-arch)
-> +       libc_mach=$($CC -dumpmachine)
-> +       mkdir $libc_headers_dir/usr/include/$libc_mach
-> +       mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$libc_mach/
->  fi
->
->  # Install the maintainer scripts
+Unexport xen_hvm_need_lapic as it's never used outside.
 
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ arch/x86/include/asm/xen/hypervisor.h | 6 +++---
+ arch/x86/xen/enlighten_hvm.c          | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-I am not sure but,
-I just worried about the backward compatibility...
-Was this previously broken?
-
-I guess debian is using own control file
-instead of the one in upstream kernel.
-So, this is almost a matter for developers, I think.
-
-How did debian-base distros managed this before,
-and will this introduce no breakage?
-
-Ben,
-Could you comment on this?
-
-
+diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
+index 39171b3..42e1245 100644
+--- a/arch/x86/include/asm/xen/hypervisor.h
++++ b/arch/x86/include/asm/xen/hypervisor.h
+@@ -44,14 +44,14 @@ static inline uint32_t xen_cpuid_base(void)
+ }
+ 
+ #ifdef CONFIG_XEN
+-extern bool xen_hvm_need_lapic(void);
++extern bool __init xen_hvm_need_lapic(void);
+ 
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return xen_hvm_need_lapic();
+ }
+ #else
+-static inline bool xen_x2apic_para_available(void)
++static inline bool __init xen_x2apic_para_available(void)
+ {
+ 	return (xen_cpuid_base() != 0);
+ }
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index 0e75642..ac4943c 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -218,7 +218,7 @@ static __init int xen_parse_nopv(char *arg)
+ }
+ early_param("xen_nopv", xen_parse_nopv);
+ 
+-bool xen_hvm_need_lapic(void)
++bool __init xen_hvm_need_lapic(void)
+ {
+ 	if (xen_nopv)
+ 		return false;
+@@ -230,7 +230,6 @@ bool xen_hvm_need_lapic(void)
+ 		return false;
+ 	return true;
+ }
+-EXPORT_SYMBOL_GPL(xen_hvm_need_lapic);
+ 
+ static uint32_t __init xen_platform_hvm(void)
+ {
 -- 
-Best Regards
-Masahiro Yamada
+1.8.3.1
+
