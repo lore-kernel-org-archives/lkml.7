@@ -2,291 +2,155 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4F2C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB2FC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C542187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562197370;
-	bh=imovhP4ZMZGSyGNaGJjPVojqr88MLTU7orgGuDvxb/8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ulfSUSx+F62VWxzgG3ZcENsZZ38GBAab+L3CiTg9H+GOt/Z/TruVphJzYMv0nyh6M
-	 oIlCPYgX3KqiO7IB5OGJawj/TAtPUdeXqJTcUXfci5iIWYEhI/BoOqbJXuvK6blta4
-	 2o2a964LDBgn+2MSmg7N9uxJnOWMZHJlGM0oMn4I=
+	by mail.kernel.org (Postfix) with ESMTP id 5EB412187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pguTsmTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfGCXmt (ORCPT
+        id S1727439AbfGCXpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:42:49 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40896 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfGCXms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:42:48 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so798035iom.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 16:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cKpRue7ekilZ/gC210TI+uix8QmI6/WGhePQA9VAzrw=;
-        b=CJ0LMXj/g6sqNaL4su4AmdvNdA09GF9c2ejTy9JIMIodBzTkOtEUv+jbki/xNtB5K4
-         RFNc+encaWifB64XwTCrvPJHSYFTvIwFZs2xurGBpQUl/ZPb8pPUIdz4IIhM418g+BHT
-         iHXT9OqwGywp7Ob1hp9i+jJ5ylDYP3x1TxdTg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cKpRue7ekilZ/gC210TI+uix8QmI6/WGhePQA9VAzrw=;
-        b=ja/umYt9Tm5yjPc3BIEZSqp1SsJQ8dWD4yu8/DmBcpj6OmjrefnUL4/E2aJIddIovL
-         x4xKUKjkmCoVsJvDs0UBwUBYVGSW6ACPLm6lIZB8/VpkM5iV4jHaOYr7DBed55bEcKxC
-         Z+VYNdzW+CMtBx03/sV8nLHH2DW9Sjsx1UAIc3jTMQG3R9BCXqjT+agqmT/k0JBaNnoh
-         0aRacrAtZDlLKVMPP92BmXoS01+Je4zrF/wFxU+PqUbTBmlskhOhAaienfVkUecOOnrr
-         IxZyntSA7QTDBwG/oyg9gNsDxPQFSvGrvEGa86t6TIPG6kozjsAdk5x49qIgvuXANfTm
-         9HWg==
-X-Gm-Message-State: APjAAAXgxhPs6abH/8JpVp3Vw4rhKosuEJHV+FutzzmaMUTr6/PH6SJS
-        ujYQMQlQWCALOmgsjyhvP/Eoog==
-X-Google-Smtp-Source: APXvYqw2dXP4yA9Z9MmUv38J9MixesciXGpzQ0uqZCbkYvCfmJ2u4DDpRGPPNCQsez0Cu4/XJOpylQ==
-X-Received: by 2002:a02:85ef:: with SMTP id d102mr47953160jai.63.1562197367565;
-        Wed, 03 Jul 2019 16:42:47 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id u4sm1885691iol.59.2019.07.03.16.42.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 16:42:46 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
- <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
- <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
- <20190616184506.GD5006@pendragon.ideasonboard.com>
- <6e67ae76-6d37-cd70-c05f-1c6b6dd4af1a@linuxfoundation.org>
- <20190630114102.GB7043@pendragon.ideasonboard.com>
- <20190703161702.GA26461@bigcity.dyn.berto.se>
- <0306e792-e4b9-37b4-2ee0-9b0133c92828@linuxfoundation.org>
- <20190703232528.GR5007@pendragon.ideasonboard.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <bdd02f62-f6ff-0530-a31e-fd64ee9eaedc@linuxfoundation.org>
-Date:   Wed, 3 Jul 2019 17:42:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190703232528.GR5007@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 3 Jul 2019 19:45:42 -0400
+Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:51364
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbfGCXpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:45:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pl1N1KKRlbVNZqTDGWye8FUGkTS/iOqd5lQr7gzxj8A=;
+ b=pguTsmTUHbMp0pOuDKu9S0yjYXU1ErJECS42UgBmjc9Y1gNJlFWRQ7qoaNYxvsFn0FTVj8Ch0hk/OCyQCakxeFxDn6cc1sVMb55xRD78lMktF0pSu+OhGK0Nlxu3T5X5baQFQFIWPGhYvgCohDTAG9VmI5+caN1+b+wXhPUG600=
+Received: from DB7PR04MB5051.eurprd04.prod.outlook.com (20.176.234.223) by
+ DB7PR04MB4538.eurprd04.prod.outlook.com (52.135.134.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.16; Wed, 3 Jul 2019 23:45:38 +0000
+Received: from DB7PR04MB5051.eurprd04.prod.outlook.com
+ ([fe80::6c98:1416:8221:bdfc]) by DB7PR04MB5051.eurprd04.prod.outlook.com
+ ([fe80::6c98:1416:8221:bdfc%4]) with mapi id 15.20.2052.010; Wed, 3 Jul 2019
+ 23:45:38 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+CC:     Horia Geanta <horia.geanta@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
+Thread-Topic: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
+Thread-Index: AQHVMXdGY7YVraimN0KG3E6/ZzGQWw==
+Date:   Wed, 3 Jul 2019 23:45:37 +0000
+Message-ID: <DB7PR04MB50517E97A2BE28050E056B90EEFB0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+ <20190703081327.17505-4-andrew.smirnov@gmail.com>
+ <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+ <CAHQ1cqHfBU92g-P7jDfiWtEr0m-kv5Lw9yZcvUEXYg7OyhURfg@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [82.144.34.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 919eb507-f56f-48e9-d388-08d700108d0a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4538;
+x-ms-traffictypediagnostic: DB7PR04MB4538:
+x-microsoft-antispam-prvs: <DB7PR04MB453853660A802BEFCBD03C58EEFB0@DB7PR04MB4538.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(199004)(189003)(33656002)(9686003)(81166006)(71190400001)(81156014)(55016002)(102836004)(26005)(229853002)(53936002)(6916009)(6116002)(8936002)(446003)(54906003)(186003)(316002)(476003)(44832011)(3846002)(68736007)(486006)(71200400001)(6436002)(6506007)(6246003)(7736002)(73956011)(66946007)(305945005)(66446008)(64756008)(66556008)(66476007)(478600001)(86362001)(52536014)(14444005)(256004)(5660300002)(99286004)(53546011)(4326008)(76176011)(66066001)(74316002)(25786009)(76116006)(7696005)(91956017)(14454004)(8676002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4538;H:DB7PR04MB5051.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MI0znHPPqDgzTngT+HjwgCnoO7iXIrynSPDIz7Ewj2xw5O0HN6j8GmoMSx0Fbnpnep/seZMFkXWsDoIn7t7gK3xf9sGjDmXMYyw0xsyDmyTEPvC9mGOCVP+Sq8Ly+jqqBkpF54+oRwke/bTM2ba67RJvwYYkI/03qWLKj3WkqNpA9FAjABPMfGOD/lvTTrJl4wwMM/PbGecIaorcw6ax6FbZBXrXt88BeDmmCcvUGfN4WtENfkl1EOmRNSzLABW+dp6D8Lkfmuv3VTO1OrDZ0Zt5Vbcr5CnFWwCnPbCPPTU9cfmBo+ZG9hxWMgXS4jaOeO5w0A6acZjmaJDvre+Bp/+nyxWSOOaUQUp7AAT1f2uDxfnXVZ7pToW0McQxF7BSBbH8nIz5JNnbNQk8vZcc3k4WkX3VKkdtGFMzo1+/QPA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 919eb507-f56f-48e9-d388-08d700108d0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 23:45:37.9509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4538
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/19 5:25 PM, Laurent Pinchart wrote:
-> Hi Shuah,
-> 
-> On Wed, Jul 03, 2019 at 10:52:17AM -0600, Shuah Khan wrote:
->> On 7/3/19 10:17 AM, Niklas Söderlund wrote:
->>> On 2019-06-30 14:41:02 +0300, Laurent Pinchart wrote:
->>>> On Fri, Jun 28, 2019 at 10:41:07AM -0600, Shuah Khan wrote:
->>>>> On 6/16/19 12:45 PM, Laurent Pinchart wrote:
->>>>>> On Fri, Jun 14, 2019 at 05:26:46PM -0600, Shuah Khan wrote:
->>>>>>> On 6/13/19 7:24 AM, Helen Koike wrote:
->>>>>>>> On 6/13/19 2:44 AM, Hans Verkuil wrote:
->>>>>>>>> On 5/24/19 5:31 AM, Shuah Khan wrote:
->>>>>>>>>> media_device is embedded in struct vimc_device and when vimc is removed
->>>>>>>>>> vimc_device and the embedded media_device goes with it, while the active
->>>>>>>>>> stream and vimc_capture continue to access it.
->>>>>>>>>>
->>>>>>>>>> Fix the media_device lifetime problem by changing vimc to create shared
->>>>>>>>>> media_device using Media Device Allocator API and vimc_capture getting
->>>>>>>>>> a reference to vimc module. With this change, vimc module can be removed
->>>>>>>>>> only when the references are gone. vimc can be removed after vimc_capture
->>>>>>>>>> is removed.
->>>>>>>>>>
->>>>>>>>>> Media Device Allocator API supports just USB devices. Enhance it
->>>>>>>>>> adding a genetic device allocate interface to support other media
->>>>>>>>>> drivers.
->>>>>>>>>>
->>>>>>>>>> The new interface takes pointer to struct device instead and creates
->>>>>>>>>> media device. This interface allows a group of drivers that have a
->>>>>>>>>> common root device to share media device resource and ensure media
->>>>>>>>>> device doesn't get deleted as long as one of the drivers holds its
->>>>>>>>>> reference.
->>>>>>>>>>
->>>>>>>>>> The new interface has been tested with vimc component driver to fix
->>>>>>>>>> panics when vimc module is removed while streaming is in progress.
->>>>>>>>>
->>>>>>>>> Helen, can you review this series? I'm not sure this is the right approach
->>>>>>>>> for a driver like vimc, and even if it is, then it is odd that vimc-capture
->>>>>>>>> is the only vimc module that's handled here.
->>>>>>>>
->>>>>>>> Hi Hans,
->>>>>>>>
->>>>>>>> Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
->>>>>>>> try to take a look at this patch series (and the others) asap.
->>>>>>>>
->>>>>>>> Helen
->>>>>>>>
->>>>>>>>> My gut feeling is that this should be handled inside vimc directly and not
->>>>>>>>> using the media-dev-allocator.
->>>>>>>
->>>>>>> Hi Hans and Helen,
->>>>>>>
->>>>>>> I explored fixing the problem within vimc before I went down the path to
->>>>>>> use Media Device Allocator API. I do think that it is cleaner to go this
->>>>>>> way and easier to maintain.
->>>>>>>
->>>>>>> vimc is a group pf component drivers that rely on the media device vimc
->>>>>>> in vimc and falls into the use-case Media Device Allocator API is added
->>>>>>> to address. The release and life-time management happens without vimc
->>>>>>> component drivers being changed other than using the API to get and put
->>>>>>> media device reference.
->>>>>>
->>>>>> Our replies crossed each other, please see my reply to Hans. I would
->>>>>> just like to comment here that if having multiple kernel modules causes
->>>>>> issue, they can all be merged together. There's no need for vimc to be
->>>>>> handled through multiple modules (I actually think it's quite
->>>>>> counterproductive, it only makes it more complex, for no added value).
->>>>>
->>>>> There are several problems in this group of drivers as far as lifetime
->>>>> management is concerned. I explained some of it in the patch 2/2
->>>>>
->>>>> If vimc module is removed while streaming is active, vimc_exit runs
->>>>> into NULL pointer dereference error when streaming thread tries to
->>>>> access and lock graph_mutex in the struct media_device.
->>>>>
->>>>> The primary reason for this is that:
->>>>>
->>>>> media_device is embedded in struct vimc_device and when vimc is removed
->>>>> vimc_device and the embedded media_device goes with it, while the active
->>>>> stream and vimc_capture continue to access it.
->>>>
->>>> The issue isn't so much that media_devic is embedded in vimc_device, but
->>>> that vimc_device is released too early. Not only does the thread need to
->>>> access the graph_mutex lock in the media_device structure, but it can
->>>> potentially access fields of the device-specific structures as well. The
->>>> proper solution is to propagate media_device_release() one level up, in
->>>> order to only release the top-level structure containing media_device
->>>> when the last reference to the media_device is dropped.
->>
->> Yes. vimc_device is the master device for all the component drivers and
->> it being released early definitely causes problems. I tried to solve
->> this by isolating the media_device embedded in it and taking that out
->> of contention for release later. This problem could be solved by making
->> sure vimc_device sticks around and I am on that solution now.
-> 
-> Thank you :-)
-> 
->>> I have seen similar problems with rcar-vin, the device specific data is
->>> released to early. In my case it was not triggered by the struct
->>> media_device but with a struct v4l2_device embedded in the device
->>> specific data IIRC.
->>>
->>> This was when I tried to address the lifetime issues of the video device
->>> when binding/unbinding the device to the driver and not when unloading
->>> the module. This was quiet a while ago so I don't recall specifics,
->>> sorry about that. One finding was that there are also unsolved problems
->>> when it comes async notifiers and unloading/unbinding and then
->>> loading/binding subdevices as well as the driver controlling the video
->>> device. It was such a mess I gave up.
->>
->> Yes. You will find such problems with various media drivers. It could be
->> the v4l2 device or some other device that gets released while still in
->> use.
->>
->>> I'm happy to see activity in this area but I fear it might need work on
->>> a higher level and not trying to work around the problem in drivers.
->>
->> Drivers still need to handle such issues anyway. Is there a reason why
->> you think it is a work-around?
->>
->>>>> If we chose to keep these drivers as component drivers, media device
->>>>> needs to stick around until all components stop using it. This is tricky
->>>>> because there is no tie between these set of drivers. vimc module can
->>>>> be deleted while others are still active. As vimc gets removed, other
->>>>> component drivers start wanting to access the media device tree.
->>>>
->>>> Reference-counting is the key.
->>>>
->>>>> This is classic media device lifetime problem which could be solved
->>>>> easily with the way I solved it with this series. I saw this as a
->>>>> variation on the same use-case we had with sound and media drivers
->>>>> sharing the media device.
->>>>
->>>> This isn't about solving it easily, it's about solving it properly. The
->>>> media device allocator as used here is a hack and takes us in the
->>>> opposite direction of a proper fix.
->>
->> Labeling this hack doesn't accurate. I agree though that this might be a
->> big hammer and there might be other solutions that can be limited to
->> just vimc scope. :)
-> 
-> The reason I call this a hack is that it may hide the early free of the
-> media_device structure itself, but won't help at all with the vimc
-> device structure that may also need to be accessed by the other drivers.
-> In order to fix this problem - and all similar lifetime management
-> problems - correctly we need to look at every structure and track how
-> they are referenced. Only through proper reference counting can we be
-> safe.
-> 
-> The media device allocator was specifically designed to handle cases
-> where there is no single master driver that can own a media device. This
-> caused the problems explained below which to my infinite disappointment
-> have been ignored while being pointed out multiple times during review.
-> I can only blame myself for not having done a better job at explaining
-> those issues of course, as the patch adding the allocator is signed by
-> three V4L2 core developers, so I must have failed three times.
-> Nevertheless, this API shall not be used until those problems are fixed,
-> to avoid spreading them to more drivers. At least until then - and I
-> believe beyond that too - it shall not be used for drivers where a media
-> device master exists, such as vimc.
-> 
->>>>> I have a TODO request from you asking to extend Media Device Allocator
->>>>> API to generic case and not restrict it to USB devices. My thinking is
->>>>> that this gives a perfect test case to extend the API to be generic
->>>>> and use to solve this problem.
->>>>
->>>> The biggest issue at the moment with the media device allocator, which I
->>>> have pointed out numerous times and has never been addressed (and which
->>>> explains why I didn't think the code was ready to be merged) is that the
->>>> media_device contains operations that are based on having a single
->>>> driver controlling the media device. A proper shared media device
->>>> allocator needs to drop the concept of a single master for the media
->>>> device, and thus needs to refactor those operations to allow any user of
->>>> the media device to implement them (the .link_notify() operation is a
->>>> prime example, and the recently added request operations will make this
->>>> even more challenging - think of how this patch series would prevent
->>>> vimc from properly implementing the request API). As long as these issue
->>>> are not fixed I will be firmly opposed to spreading the usage of the
->>>> media device allocator beyond what exists today.
->>
->> During the reviews, it was deemed necessary to make media driver as the
->> master for creating parts of the tree and provide hooks for other
->> drivers to add their own media components to the tree. The same is
->> extended to other interfaces. This feature was on ice for so long,
->> I don't recall all the details on how it evolved.
-> 
-> Do you mean during the review of the vimc driver or of the media
-> allocator API ?
-> 
-
-I meant the media device allocator api. I did some looking after I sent
-this email. link_notify itself isn't in the media device allocator api
-scope. What is missing is someway to provide registering link_notify
-similar to entity_notify that exists today.
-
-Perhaps we can adrres the link_notify can be solved in the future. Let's
-chat when we meet in person at one of the conferences.
-
-thanks,
--- Shuah
+On 7/3/2019 8:14 PM, Andrey Smirnov wrote:=0A=
+> On Wed, Jul 3, 2019 at 6:51 AM Leonard Crestez <leonard.crestez@nxp.com> =
+wrote:=0A=
+>> On 7/3/2019 11:14 AM, Andrey Smirnov wrote:=0A=
+>>> Move tasklet_init() call further down in order to simplify error path=
+=0A=
+>>> cleanup. No functional change intended.=0A=
+>>>=0A=
+>>> diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c=0A=
+>>> index 4b25b2fa3d02..a7ca2bbe243f 100644=0A=
+>>> --- a/drivers/crypto/caam/jr.c=0A=
+>>> +++ b/drivers/crypto/caam/jr.c=0A=
+>>> @@ -441,15 +441,13 @@ static int caam_jr_init(struct device *dev)=0A=
+>>>=0A=
+>>>        jrp =3D dev_get_drvdata(dev);=0A=
+>>>=0A=
+>>> -     tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);=
+=0A=
+>>> -=0A=
+>>>        /* Connect job ring interrupt handler. */=0A=
+>>>        error =3D request_irq(jrp->irq, caam_jr_interrupt, IRQF_SHARED,=
+=0A=
+>>>                            dev_name(dev), dev);=0A=
+>>>        if (error) {=0A=
+>>>                dev_err(dev, "can't connect JobR %d interrupt (%d)\n",=
+=0A=
+>>>                        jrp->ridx, jrp->irq);=0A=
+>>> -             goto out_kill_deq;=0A=
+>>> +             return error;=0A=
+>>>        }=0A=
+>>=0A=
+>> The caam_jr_interrupt handler can schedule the tasklet so it makes sense=
+=0A=
+>> to have it be initialized ahead of request_irq. In theory it's possible=
+=0A=
+>> for an interrupt to be triggered immediately when request_irq is called.=
+=0A=
+>>=0A=
+>> I'm not very familiar with the CAAM ip, can you ensure no interrupts are=
+=0A=
+>> pending in HW at probe time? The "no functional change" part is not obvi=
+ous.=0A=
+>>=0A=
+> =0A=
+> Said tasklet will use both jrp->outring and jrp->entinfo array=0A=
+> initialized after IRQ request call in both versions of the code=0A=
+> (before/after this patch). AFAICT, the only case where this patch=0A=
+> would change initialization safety of the original code is if JR was=0A=
+> scheduled somehow while ORSFx is 0 (no jobs done), which I don't think=0A=
+> is possible.=0A=
+=0A=
+I took a second look at caam_jr_init and there is apparently a whole =0A=
+bunch of other reset/init stuff done after request_irq. For example =0A=
+caam_reset_hw_jr is done after request_irq and masks interrupts?=0A=
+=0A=
+What I'd expect is that request_irq is done last after all other =0A=
+initialization is performed. But I'm not familiar with how CAAM JRs work =
+=0A=
+so feel free to ignore this.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
