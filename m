@@ -2,159 +2,302 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0DEC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082AC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E492187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562138232;
-	bh=sU/JZZhXq3QoOX9/LPmBEfsxp7HMIOox/WOxhmMO+6U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsN3T8j7UHMxlKZgUt5bjRloh/+s1RZmj+hQJXrEz0Wh0MdeUCnd4PvfKyIPGWwll
-	 ZEZVoY+kJuH91RVA9GSZOALCrqmBF2/rX/DPhih2ON69YIVQCl8JyqA3SF+ZdemtdZ
-	 XRTOPvcSFbBoKYu47HqCegY0Xqop0orLb8lrCCCY=
+	by mail.kernel.org (Postfix) with ESMTP id 2CE882187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nb0tRuyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfGCHRL (ORCPT
+        id S1727286AbfGCHRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 03:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfGCHRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 03:17:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84CD82187F;
-        Wed,  3 Jul 2019 07:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562138229;
-        bh=sU/JZZhXq3QoOX9/LPmBEfsxp7HMIOox/WOxhmMO+6U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEHMJEPI6l29NCEh4w6cg9vx1WBbEHKsqtO5xa8E1hypCkIXYY1k99KNiTe/6/W9G
-         5ViAKfb9nCqEeeAoO5yNPRi6mOWj0wU89EEnsqsEHlZUPDp1qkCWjceFh0FyUXIUyg
-         VbV6UcG1P3CHbdKj7rTBDDEYYyKD+sHi8di97I/I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 2/2] debugfs: log errors when something goes wrong
-Date:   Wed,  3 Jul 2019 09:16:53 +0200
-Message-Id: <20190703071653.2799-2-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190703071653.2799-1-gregkh@linuxfoundation.org>
-References: <20190703071653.2799-1-gregkh@linuxfoundation.org>
+        Wed, 3 Jul 2019 03:17:55 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36158 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGCHRy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 03:17:54 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so726788plt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 00:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CkSNIC/xMFh1PVeLKzGySSfGIsN4lOVrNTJAEwJ5JpY=;
+        b=Nb0tRuyqoNgiky7Q4UId9CWY881ulwXjjr8XCsQ4027DD7P8g9O6cIfKpMhRM+A6BF
+         VWGAeP+8OD3NN9dUM/T/OQNOOvrQjByiLvM8PFk7t7EDEhl6gO6cV7AHn4JF/AN7F2xV
+         PaJkCdDa0JOgQ4hbUR+29/nZxvxLO/Y8Skm7Y6FNrtV3FCrnvgzROHb2EqVrND5r6EHp
+         kkpRpKwKMXlsxoUq7x3xnnmUP8NBZ6CU9KPNZxLMrMfOgfZyU6jMKCdpOHXWYNbt5xvK
+         u1y2XnLnQsdzPRIDlezCHeehInudV9m03mIM7yCSL+B8vFU+UfiqIEm+8hRiNmMp/BLH
+         rIOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CkSNIC/xMFh1PVeLKzGySSfGIsN4lOVrNTJAEwJ5JpY=;
+        b=f0/9kMOpZyIXXcpKX6jA/qBDgNyi6hcVcKVVgzKtrueb24mrYx4YdZA+tQt95CpUy9
+         igsSetuAbwtgiTMvjZRavTc5mTtFmiP19NyCfZXpDY44LOnpOnMoXXn6X7UlLj4Wrpnq
+         5AXuAIMom1cLjeSoi3KJM/bxUp//9IbwWwQg/EK1+dqgE3BrqCqeX2i232p82+NEGZUI
+         BbfFcc2tEMJhfCxx3XyA1hoOYnEC7dL8KB5xScauQxPI6NtLhRW4Qvm6SXG3uxQofeK3
+         J1UuYkH77jd3kaZuDP2KWDsNPllL+Qv0DxrMqZCjZe3YzwVlhtWchzbYMJcOGQzfOcWZ
+         w+jQ==
+X-Gm-Message-State: APjAAAVLt4EwlHul8tGfh7k/MQF5/f6wKM9QCjbQ2ukz9hz394P+6zuQ
+        TZpR1xMoBZdNsXeJKD4iCsA/7w==
+X-Google-Smtp-Source: APXvYqzjycPKphbvA2NlNoaOrMEu3Adfxu4eARsLs+l+1PGYQcmJ8Fk86Kv5nY2tJg/LfACrKsPHBw==
+X-Received: by 2002:a17:902:2aa8:: with SMTP id j37mr38741111plb.316.1562138273660;
+        Wed, 03 Jul 2019 00:17:53 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s24sm1480249pfh.133.2019.07.03.00.17.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 00:17:53 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 00:18:45 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: qcom: Add SM8150 pinctrl
+ binding
+Message-ID: <20190703071845.GH12249@tuxbook-pro>
+References: <20190702105045.27646-1-vkoul@kernel.org>
+ <20190702105045.27646-3-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702105045.27646-3-vkoul@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it is not recommended that debugfs calls be checked, it was pointed
-out that major errors should still be logged somewhere so that
-developers and users have a chance to figure out what went wrong.  To
-help with this, error logging has been added to the debugfs core so that
-it is not needed to be present in every individual file that calls
-debugfs.
+On Tue 02 Jul 03:50 PDT 2019, Vinod Koul wrote:
 
-Reported-by: Mark Brown <broonie@kernel.org>
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/debugfs/inode.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+> From: Prasad Sodagudi <psodagud@codeaurora.org>
+> 
+> Add the binding for the TLMM pinctrl block found in the SM8150 platform.
+> 
+> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> [vkoul: add missing nodes of gpio range and reserved
+> 	rewrote function names and order them]
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index f04c8475d9a1..7f43c8acfcbf 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -2,8 +2,9 @@
- /*
-  *  inode.c - part of debugfs, a tiny little debug file system
-  *
-- *  Copyright (C) 2004 Greg Kroah-Hartman <greg@kroah.com>
-+ *  Copyright (C) 2004,2019 Greg Kroah-Hartman <greg@kroah.com>
-  *  Copyright (C) 2004 IBM Inc.
-+ *  Copyright (C) 2019 Linux Foundation <gregkh@linuxfoundation.org>
-  *
-  *  debugfs is for people to use instead of /proc or /sys.
-  *  See ./Documentation/core-api/kernel-api.rst for more details.
-@@ -294,8 +295,10 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
- 
- 	error = simple_pin_fs(&debug_fs_type, &debugfs_mount,
- 			      &debugfs_mount_count);
--	if (error)
-+	if (error) {
-+		pr_err("Unable to pin filesystem for file '%s'\n", name);
- 		return ERR_PTR(error);
-+	}
- 
- 	/* If the parent is not specified, we create it in the root.
- 	 * We need the root dentry to do this, which is in the super
-@@ -309,6 +312,7 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
- 	dentry = lookup_one_len(name, parent, strlen(name));
- 	if (!IS_ERR(dentry) && d_really_is_positive(dentry)) {
- 		dput(dentry);
-+		pr_err("File '%s' already present!\n", name);
- 		dentry = ERR_PTR(-EEXIST);
- 	}
- 
-@@ -351,8 +355,11 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
- 		return dentry;
- 
- 	inode = debugfs_get_inode(dentry->d_sb);
--	if (unlikely(!inode))
-+	if (unlikely(!inode)) {
-+		pr_err("out of free dentries, can not create file '%s'\n",
-+		       name);
- 		return failed_creating(dentry);
-+	}
- 
- 	inode->i_mode = mode;
- 	inode->i_private = data;
-@@ -513,8 +520,11 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
- 		return dentry;
- 
- 	inode = debugfs_get_inode(dentry->d_sb);
--	if (unlikely(!inode))
-+	if (unlikely(!inode)) {
-+		pr_err("out of free dentries, can not create directory '%s'\n",
-+		       name);
- 		return failed_creating(dentry);
-+	}
- 
- 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
- 	inode->i_op = &simple_dir_inode_operations;
-@@ -552,8 +562,11 @@ struct dentry *debugfs_create_automount(const char *name,
- 		return dentry;
- 
- 	inode = debugfs_get_inode(dentry->d_sb);
--	if (unlikely(!inode))
-+	if (unlikely(!inode)) {
-+		pr_err("out of free dentries, can not create automount '%s'\n",
-+		       name);
- 		return failed_creating(dentry);
-+	}
- 
- 	make_empty_dir_inode(inode);
- 	inode->i_flags |= S_AUTOMOUNT;
-@@ -608,6 +621,8 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
- 
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
-+		pr_err("out of free dentries, can not create symlink '%s'\n",
-+		       name);
- 		kfree(link);
- 		return failed_creating(dentry);
- 	}
--- 
-2.22.0
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> ---
+>  .../bindings/pinctrl/qcom,sm8150-pinctrl.txt  | 190 ++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
+> new file mode 100644
+> index 000000000000..fa37733e5102
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.txt
+> @@ -0,0 +1,190 @@
+> +Qualcomm SM8150 TLMM block
+> +
+> +This binding describes the Top Level Mode Multiplexer block found in the
+> +QCS404 platform.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,sm8150-pinctrl"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the base address and size of the north, south, west
+> +		    and east TLMM tiles.
+> +
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Defintiion: names for the cells of reg, must contain "north", "south"
+> +		    "west" and "east".
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the TLMM summary IRQ.
+> +
+> +- interrupt-controller:
+> +	Usage: required
+> +	Value type: <none>
+> +	Definition: identifies this node as an interrupt controller
+> +
+> +- #interrupt-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 2. Specifying the pin number and flags, as defined
+> +		    in <dt-bindings/interrupt-controller/irq.h>
+> +
+> +- gpio-controller:
+> +	Usage: required
+> +	Value type: <none>
+> +	Definition: identifies this node as a gpio controller
+> +
+> +- #gpio-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 2. Specifying the pin number and flags, as defined
+> +		    in <dt-bindings/gpio/gpio.h>
+> +
+> +- gpio-ranges:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition:  see ../gpio/gpio.txt
+> +
+> +- gpio-reserved-ranges:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: see ../gpio/gpio.txt
+> +
+> +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> +a general description of GPIO and interrupt bindings.
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices, including the meaning of the
+> +phrase "pin configuration node".
+> +
+> +The pin configuration nodes act as a container for an arbitrary number of
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin, a group, or a list of pins or groups. This configuration can include the
+> +mux function to select on those pin(s)/group(s), and various pin configuration
+> +parameters, such as pull-up, drive strength, etc.
+> +
+> +
+> +PIN CONFIGURATION NODES:
+> +
+> +The name of each subnode is not important; all subnodes should be enumerated
+> +and processed purely based on their content.
+> +
+> +Each subnode only affects those parameters that are explicitly listed. In
+> +other words, a subnode that lists a mux function but no pin configuration
+> +parameters implies no information about any pin configuration parameters.
+> +Similarly, a pin subnode that describes a pullup parameter implies no
+> +information about e.g. the mux function.
+> +
+> +
+> +The following generic properties as defined in pinctrl-bindings.txt are valid
+> +to specify in a pin configuration subnode:
+> +
+> +- pins:
+> +	Usage: required
+> +	Value type: <string-array>
+> +	Definition: List of gpio pins affected by the properties specified in
+> +		    this subnode.
+> +
+> +		    Valid pins are:
+> +		      gpio0-gpio149
+> +		        Supports mux, bias and drive-strength
+> +
+> +		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
+> +		      sdc2_data sdc1_rclk
+> +		        Supports bias and drive-strength
+> +
+> +		      ufs_reset
+> +		        Supports bias and drive-strength
+> +
+> +- function:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Specify the alternative function to be configured for the
+> +		    specified pins. Functions are only valid for gpio pins.
+> +		    Valid values are:
+> +
+> +		    adsp_ext, agera_pll, aoss_cti, ddr_pxi2, atest_char,
+> +		    atest_char0, atest_char1, atest_char2, atest_char3,
+> +		    audio_ref, atest_usb1, atest_usb2, atest_usb10,
+> +		    atest_usb11, atest_usb12, atest_usb13, atest_usb20,
+> +		    atest_usb21, atest_usb22, atest_usb2, atest_usb23,
+> +		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
+> +		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
+> +		    cri_trng, cri_trng0, cri_trng1, dbg_out, ddr_bist,
+> +		    ddr_pxi0, ddr_pxi1, ddr_pxi3, edp_hot, edp_lcd,
+> +		    emac_phy, emac_pps, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
+> +		    hs1_mi2s, hs2_mi2s, hs3_mi2s, jitter_bist,
+> +		    lpass_slimbus, mdp_vsync, mdp_vsync0, mdp_vsync1,
+> +		    mdp_vsync2, mdp_vsync3, mss_lte, m_voc, nav_pps,
+> +		    pa_indicator, pci_e0, phase_flag, pll_bypassnl,
+> +		    pll_bist, pci_e1, pll_reset, pri_mi2s, pri_mi2s_ws,
+> +		    prng_rosc, qdss, qdss_cti, qlink_request, qlink_enable,
+> +		    qspi0, qspi1, qspi2, qspi3, qspi_clk, qspi_cs, qua_mi2s,
+> +		    qup0, qup1, qup2, qup3, qup4, qup5, qup6, qup7, qup8,
+> +		    qup9, qup10, qup11, qup12, qup13, qup14, qup15, qup16,
+> +		    qup17, qup18, qup19, qup_l4, qup_l5, qup_l6, rgmii,
+> +		    sdc4, sd_write, sec_mi2s, spkr_i2s, sp_cmu, ter_mi2s,
+> +		    tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3, tsense_pwm1,
+> +		    tsense_pwm2, tsif1, tsif2, uim1, uim2, uim_batt,
+> +		    usb2phy_ac, usb_phy, vfr_1, vsense_trigger, wlan1_adc0,
+> +		    wlan1_adc1, wlan2_adc0, wlan2_adc1, wmss_reset
+> +
+> +- bias-disable:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as no pull.
+> +
+> +- bias-pull-down:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as pull down.
+> +
+> +- bias-pull-up:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins should be configued as pull up.
+> +
+> +- output-high:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins are configured in output mode, driven
+> +		    high.
+> +		    Not valid for sdc pins.
+> +
+> +- output-low:
+> +	Usage: optional
+> +	Value type: <none>
+> +	Definition: The specified pins are configured in output mode, driven
+> +		    low.
+> +		    Not valid for sdc pins.
+> +
+> +- drive-strength:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: Selects the drive strength for the specified pins, in mA.
+> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+> +
+> +Example:
+> +
+> +	tlmm: pinctrl@3000000 {
+> +		compatible = "qcom,sm8150-pinctrl";
+> +		reg = <0x03100000 0x300000>,
+> +		      <0x03500000 0x300000>,
+> +		      <0x03900000 0x300000>,
+> +		      <0x03D00000 0x300000>;
+> +		reg-names = "west", "east", "north", "south";
+> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-ranges = <&tlmm 0 0 175>;
+> +		gpio-reserved-ranges = <0 4>, <126 4>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> -- 
+> 2.20.1
+> 
