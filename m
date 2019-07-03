@@ -2,105 +2,89 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE07C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A293DC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347CC20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJjRCX8t"
+	by mail.kernel.org (Postfix) with ESMTP id 79FB82063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfGCBdU (ORCPT
+        id S1727299AbfGCBfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:33:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38736 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfGCBdR (ORCPT
+        Tue, 2 Jul 2019 21:35:16 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:57932 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727080AbfGCBfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:33:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T6lwvzaIdbz/BZ6sGTCQ6xcfRARrDSx4wOd7/AZvlgA=; b=HJjRCX8tM0V+o6w1ycakC1h/u
-        KJ57SgETpC2AjqSXKpyUth7aNElF3NTRN/A+moXQyzH3YVlD9OnYdHZfS76ngLzVCiFlWkfeQ23f8
-        CmqxCFkMJ+vzAMgsnO/gTjV4/LUWVntkllTW3kyh+BMpSuOmY1brDlDFxlMGmb2b6CoABpbcjBXCF
-        7dSH+0UPowDVDgQHSN6f8MY4h+C4BYcIwBmVANFgpoLLn2eX6q2khzxXqjixtOLQcbB485j4GWSxN
-        PLFTl2Ewoc0v6q+dMoYHfnrtyZ1XEZ+MJKAQfjslONQ8q7Jt4LAB6n/s4cvhubKt4oVwu6Z5yQih1
-        QVQthwgkg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiS8V-0003XW-Td; Tue, 02 Jul 2019 23:24:31 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-hyperv@vger.kernel.org
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-Message-ID: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
-Date:   Tue, 2 Jul 2019 16:24:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 21:35:15 -0400
+X-IronPort-AV: E=Sophos;i="5.63,445,1557158400"; 
+   d="scan'208";a="70587071"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Jul 2019 09:35:13 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id EDFA14CDDD3F;
+        Wed,  3 Jul 2019 09:35:14 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 3 Jul 2019 09:35:19 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Subject: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
+To:     <ffilzlnx@mindspring.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-ID: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
+Date:   Wed, 3 Jul 2019 09:34:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: EDFA14CDDD3F.ADFC4
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Hi Frank
 
-Fix build errors when building almost-allmodconfig but with SYSFS
-not set (not enabled).  Fixes these build errors:
+We tested the pynfs of NFSv4.0 on the latest version of the kernel 
+(5.2.0-rc7).
+I encountered a problem while testing st_lock.testOpenUpgradeLock. The 
+problem is now as follows:
+**************************************************
+LOCK24 st_lock.testOpenUpgradeLock : FAILURE
+            OP_LOCK should return NFS4_OK, instead got
+            NFS4ERR_BAD_SEQID
+**************************************************
+Is this normal?
 
-ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+The case is as follows:
+Def testOpenUpgradeLock(t, env):
+     """Try open, lock, open, downgrade, close
 
-drivers/pci/slot.o is only built when SYSFS is enabled, so
-pci-hyperv.o has an implicit dependency on SYSFS.
-Make that explicit.
+     FLAGS: all lock
+     CODE: LOCK24
+     """
+     c= env.c1
+     C.init_connection()
+     Os = open_sequence(c, t.code, lockowner="lockowner_LOCK24")
+     Os.open(OPEN4_SHARE_ACCESS_READ)
+     Os.lock(READ_LT)
+     Os.open(OPEN4_SHARE_ACCESS_WRITE)
+     Os.unlock()
+     Os.downgrade(OPEN4_SHARE_ACCESS_WRITE)
+     Os.lock(WRITE_LT)
+     Os.close()
 
-Also, depending on X86 && X86_64 is not needed, so just change that
-to depend on X86_64.
+After investigation, there was an error in unlock->lock. When unlocking, 
+the lockowner of the file was not released, causing an error when 
+locking again.
+Will nfs4.0 support 1) open-> 2) lock-> 3) unlock-> 4) lock this function?
 
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Jake Oshins <jakeo@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: linux-hyperv@vger.kernel.org
----
- drivers/pci/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- lnx-52-rc7.orig/drivers/pci/Kconfig
-+++ lnx-52-rc7/drivers/pci/Kconfig
-@@ -181,7 +181,7 @@ config PCI_LABEL
- 
- config PCI_HYPERV
-         tristate "Hyper-V PCI Frontend"
--        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
-         help
-           The PCI device frontend driver allows the kernel to import arbitrary
-           PCI devices from a PCI backend to support PCI driver domains.
 
 
