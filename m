@@ -2,76 +2,112 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40188C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F116C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E13218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562171953;
-	bh=SE+Je5EFsMdGD+TiwNqygLRpk2ISs/GklnKAT/Yq7NI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i9/X5rwdegp4dBpVHynHtD3KQSVlWDQ+YB0eZm2t9CSQkuu++Xpe0x1sl6yUiMeWz
-	 W8QYWF9X4lFZUVNjFiYIDacAL8j3nLkls3nVJw4TOVr1neRNOZDAYfyxoM6ld5mD+0
-	 ZUL8JOT4gu6J1IbDDNDWNOrRKn6Bso6iG1P4EFUo=
+	by mail.kernel.org (Postfix) with ESMTP id ECACE218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NqaumRs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfGCQjL (ORCPT
+        id S1727005AbfGCQjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:39:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95C772189E;
-        Wed,  3 Jul 2019 16:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562171951;
-        bh=SE+Je5EFsMdGD+TiwNqygLRpk2ISs/GklnKAT/Yq7NI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bE/PhhxKetWxBnBk54zBTk1TxofIZkp3rz4c1cqtxi5BOtKVqDiRiPLRkbWvxIeDE
-         CvmZNTpecsETwCJWZ0mDgpPnayMUIrjZ95qst79wOUmLsTlbIQtv0l0kc9TJSprYWT
-         6WY+1OMHUsfKrI81jp6FBnIWnyKis9Leala/5hxU=
-Date:   Wed, 3 Jul 2019 18:39:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nikolaus Voss <nv@vosn.de>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drivers/usb/typec/tps6598x.c: fix portinfo width
-Message-ID: <20190703163908.GB17160@kroah.com>
-References: <20190628083417.GA21701@kuha.fi.intel.com>
- <f8daf204d49fff00db33e2b417a20afcc58ad56e.1561712364.git.nikolaus.voss@loewensteinmedical.de>
- <20190628095843.GB21701@kuha.fi.intel.com>
- <alpine.DEB.2.20.1906281208190.21573@fox.voss.local>
+        Wed, 3 Jul 2019 12:39:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42865 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfGCQjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:39:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so6285726ior.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kbDcTo4F8dXvZfSLbaTtza62bmr8qH9H1r6LEOl+lHU=;
+        b=NqaumRs/9r4N+LLQZVW7EKfaaKJYqiFXNQS0FREyFBH2dA5dQe+xDeHSF8h0f4HvVD
+         ZpP8PimJIp+5sU4npv4xahYwMV9fygG58x2bwWCGYHMgA8d9jsiTXdEjgjXy50uJ8PsW
+         TEbw48ERxWv8d1V3mw3vCrwh3vLxHeL0fTrQR+MYMu9XRa8KDsArTcgvh9andjUd2RP+
+         5woe4LfbhzoeKMgNBcJVBChrKTb8DDZ1RbCyrhk++x3Je98AMpNOduXga2w48ITbLxqT
+         5lCWRmkcHTJKIQBXr5u7Wu9Iwq41eXIyXnTqbszIjP3xokx9W176FvHXk2RhCqMaUmCV
+         qGzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kbDcTo4F8dXvZfSLbaTtza62bmr8qH9H1r6LEOl+lHU=;
+        b=TYUDnhihWtoMkQd8L3J17mIFNWugdvqb7UYiUlx4/xawjAKQZfifpS89+6hthtKjO+
+         ROPxXWaFjiAfxbRsPUsHp6q6UYXXqi5lci2Oe990qN14RnJ6itFQ12UtedVph0sTwOO2
+         ZGIpFQt5Ug6SU6jyyuW5VpBJ62zFMKvU8rh4Ft3mmwZV4GbHLirE5ntAJiHUp7sqDW4B
+         r0BzuJukvYwRF6b4SPnU9u7eQezlnDwPi1wDCKVhZ4KGQYze0UsijpgYNSpawGsLNQ1Q
+         RIlwHoL2zVnbUV6ZX7JaCuMlFgHoIkSdIX+SczGrZIpWcFzCqj1Ig8xE3TAFF3WAea57
+         AnAg==
+X-Gm-Message-State: APjAAAUzbg64jcYPsuZkRmoTjHFfQb8KGqM01KBFT9ZQXPnVPz2pXK3B
+        WC53HChxQVVh7RFXP61eS81L/+Z29+qVCi0D67FzCQ==
+X-Google-Smtp-Source: APXvYqzQyMYWqIT3Qfzpzptk3frJruzBTwW4rOb6aZvmElpX2SgWPwSUu0Enx4gwy/J+gJai0zJoUGBZgjWzPFk+Uh8=
+X-Received: by 2002:a5d:81c6:: with SMTP id t6mr15956036iol.86.1562171988733;
+ Wed, 03 Jul 2019 09:39:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1906281208190.21573@fox.voss.local>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190702005122.41036-1-henryburns@google.com> <CALvZod5Fb+2mR_KjKq06AHeRYyykZatA4woNt_K5QZNETvw4nw@mail.gmail.com>
+ <CAGQXPTjU0xAWCLTWej8DdZ5TbH91m8GzeiCh5pMJLQajtUGu_g@mail.gmail.com>
+ <20190702141930.e31bf1c07a77514d976ef6e2@linux-foundation.org>
+ <CAGQXPTiONoPARFTep-kzECtggS+zo2pCivbvPEakRF+qqq9SWA@mail.gmail.com>
+ <20190702152409.21c6c3787d125d61fb47840a@linux-foundation.org> <CAMJBoFOhXP36L6pZEA-7p24mJweDGe9iYb2fo1nNCxadYHcPzQ@mail.gmail.com>
+In-Reply-To: <CAMJBoFOhXP36L6pZEA-7p24mJweDGe9iYb2fo1nNCxadYHcPzQ@mail.gmail.com>
+From:   Henry Burns <henryburns@google.com>
+Date:   Wed, 3 Jul 2019 09:39:12 -0700
+Message-ID: <CAGQXPTgRC23SHoKZTctkJsEJORu7GHDYNz_+9HaDu9ntffrzig@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/z3fold.c: Lock z3fold page before __SetPageMovable()
+To:     Vitaly Wool <vitalywool@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Xidong Wang <wangxidong_97@163.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 12:10:41PM +0200, Nikolaus Voss wrote:
-> On Fri, 28 Jun 2019, Heikki Krogerus wrote:
-> > On Fri, Jun 28, 2019 at 11:01:08AM +0200, Nikolaus Voss wrote:
-> > > Portinfo bit field is 3 bits wide, not 2 bits. This led to
-> > > a wrong driver configuration for some tps6598x configurations.
-> > > 
-> > > Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
-> > > Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> > 
-> > Shouldn't this be applied to the stable trees as well?
-> 
-> Oh, yes, forgot that again... Greg, could you...?
+On Tue, Jul 2, 2019 at 10:54 PM Vitaly Wool <vitalywool@gmail.com> wrote:
+>
+> On Wed, Jul 3, 2019 at 12:24 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Tue, 2 Jul 2019 15:17:47 -0700 Henry Burns <henryburns@google.com> wrote:
+> >
+> > > > > > > +       if (can_sleep) {
+> > > > > > > +               lock_page(page);
+> > > > > > > +               __SetPageMovable(page, pool->inode->i_mapping);
+> > > > > > > +               unlock_page(page);
+> > > > > > > +       } else {
+> > > > > > > +               if (!WARN_ON(!trylock_page(page))) {
+> > > > > > > +                       __SetPageMovable(page, pool->inode->i_mapping);
+> > > > > > > +                       unlock_page(page);
+> > > > > > > +               } else {
+> > > > > > > +                       pr_err("Newly allocated z3fold page is locked\n");
+> > > > > > > +                       WARN_ON(1);
+> >
+> > The WARN_ON will have already warned in this case.
+> >
+> > But the whole idea of warning in this case may be undesirable.  We KNOW
+> > that the warning will sometimes trigger (yes?).  So what's the point in
+> > scaring users?
+>
+> Well, normally a newly allocated page that we own should not be locked
+> by someone else so this is worth a warning IMO. With that said, the
+> else branch here appears to be redundant.
+The else branch has been removed, and I think it's possible (albeit unlikely)
+that the trylock could fail due to either compaction or kstaled
+(In which case the page just won't be movable).
 
-It's not like I have anything else to do... :)
-
+Also Vitaly, do you have a preference between the two emails? I'm not sure which
+one to include.
