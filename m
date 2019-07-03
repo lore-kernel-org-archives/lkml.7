@@ -2,130 +2,156 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF7C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8036CC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2A721850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6B4218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hsd+hhLl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m75QlRBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGCUOw (ORCPT
+        id S1727231AbfGCUOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:14:52 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36222 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfGCUOr (ORCPT
+        Wed, 3 Jul 2019 16:14:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39454 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfGCUOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:14:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so2045381qtc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:14:46 -0700 (PDT)
+        Wed, 3 Jul 2019 16:14:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x4so4180383wrt.6;
+        Wed, 03 Jul 2019 13:14:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yYUsHMTWauYHWqlo9ty/zJzUyUz6zmCJ5iqAlMLp6F0=;
-        b=hsd+hhLlxEGDdvpWo6KHr+7ipbRO0Tpjqi/yfrTH9FDKheJ6fGdXTYEiCj28seOz2l
-         g/TjkEb8Td3Ga7v6D+piUUejHsLAcijpARYZtwoW1RJSMUvPf87zMGya0KxPrJfVVMWv
-         bXN+jQ3JwVWQpc3OowW7OKFslKmEJjOjFAwKepBGD6x1bI92iSiEiEc1IqRS7HLfsJqv
-         3CzASWm+KFGMCY4sGVmn2d4Mnx8RYBGNFlTkPLYn2M151gj70N1GzxuERCluhe1sltCG
-         abC0A5AraypsRtqrGUvR75f67LBlDm4d9i1Fj6ak8cbxNRGsLcYvu/UsFwm7fSvt8JBx
-         TGpQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WBfRrtE2AUjJNR4gQtkNz6C4Ih4H5C4/HnLfvNurTLE=;
+        b=m75QlRBhAxn2WVHWttp32A4fbPXuLCsrvUgVySGzABKtmbdv0cqa7TbWGaWQPu1xnP
+         4GQwU12hhWmQTX6OEOY+br9Me+QXKmh7NEPsM7Vy2+16/qv0AlC5Av7g4yrqvWbFt9ZX
+         w8zjVzas+0kxPDibtCPIhA3rQXnSQkHKcWja5yPvJS1ElUZ2/uwPaLT5fEFVHpuflXp8
+         6v2VN2fDbtCNawiVyeZon2bABdHkA8U1UjcINQseIw0tCqj2uG2ufXhiSy6ZIDGpZjrW
+         ApVkx6jUCK3RzoATfSn9El6m8BOYJDDxqItTOqxdZQjjEBt1VCu3M+FqB9QnV77YgnLL
+         Z27w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yYUsHMTWauYHWqlo9ty/zJzUyUz6zmCJ5iqAlMLp6F0=;
-        b=B0d65Qa8l8nLkhLH6sJarEWM9zBQI0nRKH/QcfFGWkXU1+777JDsL4NDvz5NiLz4va
-         cs9ALhVDsEHrF+E4UMAgFrXy9glmWCEjCHh2N7XRoxCqwDIsUgAq3NfXQvWoDLO+Cqpq
-         wn4O7SzjokmeWxD+Lij0zqnXOMWUDIw0ODJKopWDdzBTD1LV92zWsyz3GwsjU4irpkZ3
-         oKe20PShAif9gjq0iwcsCpzazlAht/cZh70xicYfg91utcEsnwJwMvJVuKWcYTibnWBy
-         4m9kDVktPJXSvE7OfRKnNgou7fsdx6wPpKWcPf05sSDIrxzcKtLkO9L9pM9HzdxlA16Q
-         YQxg==
-X-Gm-Message-State: APjAAAUN9Zyy4sKbqHF34VBP4VUFipG4CyLNzSQEOz5/stc8z2B9+Ktw
-        IVJdUgDozdEn3ZokkkM88MqZBFlFHnP7VUnvt0547w==
-X-Google-Smtp-Source: APXvYqxvm9RgE3mf6qJxv+IRH8IDppVFvJ1B6dViHCGIkkaRWjJXhzPOE5ckkXEYd2b2JX5VDQHFb3tCF7/zEqxZw4U=
-X-Received: by 2002:a81:4c44:: with SMTP id z65mr23892003ywa.4.1562184885658;
- Wed, 03 Jul 2019 13:14:45 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WBfRrtE2AUjJNR4gQtkNz6C4Ih4H5C4/HnLfvNurTLE=;
+        b=HMAyTA8lLMWTmhj7YCOi2xuBghH404LAREkoZnnwRNFwccayg1BTud/knXxqXjXdez
+         6w4SM2/55t4wf7hrluMNQEU7Bs+bhbLMCTN+bYVRBOTKGuEJGI3WjNF+necmfKA3ZHmU
+         wfOZ1pE/1+0ms8M2C12xKy6QesvSfI0ksOBI+4uaZyZPDLnZHsxfzohsELuOHBwcoE0g
+         X3kelNTiHqndGIt+NXDYsfNRSrCquuckQJN3KWPSmEx35CCGMO1p6TL8XZ+MKJ11f+b4
+         6xSCsVLBlFUWC0zNtDHpWwPP3zcg8iO/ZJaOxNmx4WcYsiwrySCyk8TP+ueo/mpurC1o
+         Z43w==
+X-Gm-Message-State: APjAAAXazkb/VhwzVF2dpru2mIMbF8Rr28thGr5FIPL12INieSrW1yOa
+        Xgk4pQA6r2RR3gcI1pWG0Hw=
+X-Google-Smtp-Source: APXvYqzZvKG/LNrrMgkl4hBygW/G0g6FMChhpeglD+mK4TjOgqKfe9gbhCEJwKd4cJHKyFdYTiGkgQ==
+X-Received: by 2002:a5d:500f:: with SMTP id e15mr18914764wrt.41.1562184887930;
+        Wed, 03 Jul 2019 13:14:47 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:4503:872e:8227:c4e0? (p200300EA8BD60C004503872E8227C4E0.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:4503:872e:8227:c4e0])
+        by smtp.googlemail.com with ESMTPSA id t80sm3548106wmt.26.2019.07.03.13.14.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 13:14:47 -0700 (PDT)
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <e7fa2c8c-d53e-2480-d239-e2c0b362dc4f@gmail.com>
+Date:   Wed, 3 Jul 2019 22:13:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190701173042.221453-1-henryburns@google.com>
- <CAMJBoFPbRcdZ+NnX17OQ-sOcCwe+ZAsxcDJoR0KDkgBY9WXvpg@mail.gmail.com>
- <CAGQXPTjX=7aD9MQAs2kJthFvPdd3x8Nh53oc=wZCXH_dvDJ=Vg@mail.gmail.com> <CAMJBoFMBLv9OpXtQkOAyZ-vw5Ktk1tYtvfT=GPPx8jnKBN01rg@mail.gmail.com>
-In-Reply-To: <CAMJBoFMBLv9OpXtQkOAyZ-vw5Ktk1tYtvfT=GPPx8jnKBN01rg@mail.gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 3 Jul 2019 13:14:34 -0700
-Message-ID: <CALvZod57CZ20SG0eYu95=PDqJ+adoiUErdgAmhc_+qxDo68GoA@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold: Fix z3fold_buddy_slots use after free
-To:     Vitaly Wool <vitalywool@gmail.com>
-Cc:     Henry Burns <henryburns@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190703193724.246854-6-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 11:03 PM Vitaly Wool <vitalywool@gmail.com> wrote:
->
-> On Tue, Jul 2, 2019 at 6:57 PM Henry Burns <henryburns@google.com> wrote:
-> >
-> > On Tue, Jul 2, 2019 at 12:45 AM Vitaly Wool <vitalywool@gmail.com> wrote:
-> > >
-> > > Hi Henry,
-> > >
-> > > On Mon, Jul 1, 2019 at 8:31 PM Henry Burns <henryburns@google.com> wrote:
-> > > >
-> > > > Running z3fold stress testing with address sanitization
-> > > > showed zhdr->slots was being used after it was freed.
-> > > >
-> > > > z3fold_free(z3fold_pool, handle)
-> > > >   free_handle(handle)
-> > > >     kmem_cache_free(pool->c_handle, zhdr->slots)
-> > > >   release_z3fold_page_locked_list(kref)
-> > > >     __release_z3fold_page(zhdr, true)
-> > > >       zhdr_to_pool(zhdr)
-> > > >         slots_to_pool(zhdr->slots)  *BOOM*
-> > >
-> > > Thanks for looking into this. I'm not entirely sure I'm all for
-> > > splitting free_handle() but let me think about it.
-> > >
-> > > > Instead we split free_handle into two functions, release_handle()
-> > > > and free_slots(). We use release_handle() in place of free_handle(),
-> > > > and use free_slots() to call kmem_cache_free() after
-> > > > __release_z3fold_page() is done.
-> > >
-> > > A little less intrusive solution would be to move backlink to pool
-> > > from slots back to z3fold_header. Looks like it was a bad idea from
-> > > the start.
-> > >
-> > > Best regards,
-> > >    Vitaly
-> >
-> > We still want z3fold pages to be movable though. Wouldn't moving
-> > the backink to the pool from slots to z3fold_header prevent us from
-> > enabling migration?
->
-> That is a valid point but we can just add back pool pointer to
-> z3fold_header. The thing here is, there's another patch in the
-> pipeline that allows for a better (inter-page) compaction and it will
-> somewhat complicate things, because sometimes slots will have to be
-> released after z3fold page is released (because they will hold a
-> handle to another z3fold page). I would prefer that we just added back
-> pool to z3fold_header and changed zhdr_to_pool to just return
-> zhdr->pool, then had the compaction patch valid again, and then we
-> could come back to size optimization.
->
+On 03.07.2019 21:37, Matthias Kaehlcke wrote:
+> The LED behavior of some Realtek PHYs is configurable. Add the
+> property 'realtek,led-modes' to specify the configuration of the
+> LEDs.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - patch added to the series
+> ---
+>  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
+>  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
+>  2 files changed, 26 insertions(+)
+>  create mode 100644 include/dt-bindings/net/realtek.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> index 71d386c78269..40b0d6f9ee21 100644
+> --- a/Documentation/devicetree/bindings/net/realtek.txt
+> +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> @@ -9,6 +9,12 @@ Optional properties:
+>  
+>  	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
+>  
+> +- realtek,led-modes: LED mode configuration.
+> +
+> +	A 0..3 element vector, with each element configuring the operating
+> +	mode of an LED. Omitted LEDs are turned off. Allowed values are
+> +	defined in "include/dt-bindings/net/realtek.h".
+> +
+>  Example:
+>  
+>  mdio0 {
+> @@ -20,5 +26,8 @@ mdio0 {
+>  		reg = <1>;
+>  		realtek,eee-led-mode-disable;
+>  		realtek,enable-ssc;
+> +		realtek,led-modes = <RTL8211E_LINK_ACTIVITY
+> +				     RTL8211E_LINK_100
+> +				     RTL8211E_LINK_1000>;
+>  	};
+>  };
+> diff --git a/include/dt-bindings/net/realtek.h b/include/dt-bindings/net/realtek.h
+> new file mode 100644
+> index 000000000000..8d64f58d58f8
+> --- /dev/null
+> +++ b/include/dt-bindings/net/realtek.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_REALTEK_H
+> +#define _DT_BINDINGS_REALTEK_H
+> +
+> +/* LED modes for RTL8211E PHY */
+> +
+> +#define RTL8211E_LINK_10		1
+> +#define RTL8211E_LINK_100		2
+> +#define RTL8211E_LINK_1000		4
+> +#define RTL8211E_LINK_10_100		3
+> +#define RTL8211E_LINK_10_1000		5
+> +#define RTL8211E_LINK_100_1000		6
+> +#define RTL8211E_LINK_10_100_1000	7
+> +
+> +#define RTL8211E_LINK_ACTIVITY		(1 << 16)
 
-By adding pool pointer back to z3fold_header, will we still be able to
-move/migrate/compact the z3fold pages?
+I don't see where this is used.
+
+> +
+> +#endif
+> 
+
