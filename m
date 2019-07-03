@@ -7,50 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DCDC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B70C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F3F21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018DA21873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120441;
-	bh=8Khvw1CXl7hKEvHm32HTns+qzUCEgZkcV/yGjgbRFyU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zF+X3UNYfMXjHYUpAv6matlGXMHbeCZ949OR1ldzqNWbuTfV7JIZy2PulyIGJrhcv
-	 iJwNN61M1llSPqlY64545Gd5NuURwpWqT9pLsnfYDnaiXsa4E/qC2XKtDf1FGQeCeE
-	 VnzeQwi0qp+3SG9ePZMutAgACHdWHj5j7fYYRTrQ=
+	s=default; t=1562120444;
+	bh=w958eBB9CsfSgfzoPHpMiISgggIpYuOFGkK+jgnzK9Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ja7iPSBESlQOP+w5w3LoknAY22k/y113/f6dAn7gFkXcRWQ6rpazv9jjOn8OWLVO8
+	 Q5hRWu7EKbUjR6QSIimA7D+TnBHicIEouEeyGg4jSAV6uRzUBL7SKlEwm0ISM+IsgC
+	 LPryHENQ/C0DwkQsmg6iA5StDxOlrAhf3l8Uo4H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfGCCSU (ORCPT
+        id S1728209AbfGCCUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:20:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbfGCCSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:17 -0400
+        id S1727435AbfGCCST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF5221873;
-        Wed,  3 Jul 2019 02:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A934E2187F;
+        Wed,  3 Jul 2019 02:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120296;
-        bh=8Khvw1CXl7hKEvHm32HTns+qzUCEgZkcV/yGjgbRFyU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rGH9f/6zl6a/GJU0dxQWZ0syRpdTX7Zgf+sHe2QP6NHiEFAojCqEAayqyuNUni51h
-         v/VzhwPYDAUZ6DyFNhDr6C0vQFNtEziyUuJVBAAswY/vaz3FYTUUhKHS96pjPDURAn
-         cR5lwkpArwJEAaqJuKwh/bhU1k2hOHXNw7ZUIPRA=
+        s=default; t=1562120299;
+        bh=w958eBB9CsfSgfzoPHpMiISgggIpYuOFGkK+jgnzK9Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M24Ybl8wJl6NMtQjGJLnrMWZ1OMl4VteNw6HbhwJQVQhtQHilxMxumg3fBoPfVPqr
+         tviBh15kslNwEmnGbIG27HemsEIYY6scmr9TMcqOL/XXCmIPQlNXHLSueMYEJOpZzn
+         ODSMdrN3WBfDgqB9Mj5EksfErjhgd+M02YM5JWNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/13] clk: ti: clkctrl: Fix returning uninitialized data
-Date:   Tue,  2 Jul 2019 22:18:02 -0400
-Message-Id: <20190703021814.18385-1-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>,
+        Young Xiao <92siuyang@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 03/13] perf/core: Fix perf_sample_regs_user() mm check
+Date:   Tue,  2 Jul 2019 22:18:04 -0400
+Message-Id: <20190703021814.18385-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
+References: <20190703021814.18385-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,63 +69,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 41b3588dba6ef4b7995735a97e47ff0aeea6c276 ]
+[ Upstream commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c ]
 
-If we do a clk_get() for a clock that does not exists, we have
-_ti_omap4_clkctrl_xlate() return uninitialized data if no match
-is found. This can be seen in some cases with SLAB_DEBUG enabled:
+perf_sample_regs_user() uses 'current->mm' to test for the presence of
+userspace, but this is insufficient, consider use_mm().
 
-Unable to handle kernel paging request at virtual address 5a5a5a5a
-...
-clk_hw_create_clk.part.33
-sysc_notifier_call
-notifier_call_chain
-blocking_notifier_call_chain
-device_add
+A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
+PF_KTHREAD after it sets the new ->mm but before it drops to userspace
+for the first time.
 
-Let's fix this by setting a found flag only when we find a match.
+Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Reported-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clkctrl.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index 82e4d5cccf84..2df8564f08a0 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -215,6 +215,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
- {
- 	struct omap_clkctrl_provider *provider = data;
- 	struct omap_clkctrl_clk *entry;
-+	bool found = false;
- 
- 	if (clkspec->args_count != 2)
- 		return ERR_PTR(-EINVAL);
-@@ -224,11 +225,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
- 
- 	list_for_each_entry(entry, &provider->clocks, node) {
- 		if (entry->reg_offset == clkspec->args[0] &&
--		    entry->bit_offset == clkspec->args[1])
-+		    entry->bit_offset == clkspec->args[1]) {
-+			found = true;
- 			break;
-+		}
- 	}
- 
--	if (!entry)
-+	if (!found)
- 		return ERR_PTR(-EINVAL);
- 
- 	return entry->clk;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 580616e6fcee..3d4eb6f840eb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5630,7 +5630,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (current->mm) {
++	} else if (!(current->flags & PF_KTHREAD)) {
+ 		perf_get_regs_user(regs_user, regs, regs_user_copy);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
 -- 
 2.20.1
 
