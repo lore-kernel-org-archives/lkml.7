@@ -2,95 +2,49 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EAFC06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C16C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B54F21993
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUqiuvk5"
+	by mail.kernel.org (Postfix) with ESMTP id 2D19621E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfGCAbf (ORCPT
+        id S1727205AbfGCAcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:31:35 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42523 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfGCAbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:31:34 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so290971edq.9;
-        Tue, 02 Jul 2019 17:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZXcSaivLBse0FFf2ctO/vkXxTGh9DxaocpQVfdLoLhY=;
-        b=RUqiuvk5AXV5I5ft6eTyLmR+50TxxAHEbh5RUXy9WxrZUs+fYtaZ+E6l8tcroswlKp
-         +BYxwkQTCxhVX2mBpTDi/tnQ6N6iXOk4VJdgCMLecTRQjj0PNLhvRZSFy5qTxAjrUoZr
-         Or2MpOdjjsoTr7SphxentppPilrsV779srsW4zxu72YOawstxJKLcA++bumylNQKRYpD
-         SlnH/WQROmdN3sBj1QjyXZiEYWyZHxaEcITpC6AuLUdC0rJfrKYqisQ5PEpZPUcWBhjI
-         Nuu6ZEqLepGpx0nCV0FrHUrVYirL71OGyt0HeO2g1BDeyGsRkJyh0OJSrFYdm6sWSB/4
-         HlUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZXcSaivLBse0FFf2ctO/vkXxTGh9DxaocpQVfdLoLhY=;
-        b=lcrjBSCe1DsNNTDNzDx1KaNY+bc9X5rxvmS6PZjcMosr4RyiodxUTMenAEUNu1cDCI
-         zGGL9C5Xs+sn2X5B2yk+9enX/A3hckdGxuOCEN5pYFESwgVznsyD3OfUVV4zdQyHrEBC
-         ZvDU9v494IVN0DYeXs7z7+cSTU59Prsdsqf8z+EZpxUQDijolTXHknGyilVQc0pdUEFw
-         CYVnz5ex/Mw5hm1QouhZTKl1iAEymoizxTdfyMmDU+WAmWQR9ehdS811cszmwHXH7uR6
-         wwIghSDAc4OhDfLmnN7DpFDKJcNSwHuzuW71Ik+tLKahnfZxqQOZUEfjJ7t7ISpgjuLA
-         QKmg==
-X-Gm-Message-State: APjAAAW9qiQRn83FjfyzeQY2BoaNb14yN7UNNyCBwO5p3PmNer5crxHz
-        6yiE77sBhTtBIbWXFCGbSe0=
-X-Google-Smtp-Source: APXvYqyhSetE6h0usazNMfHOe7nFs1mK2xvZFfe4TNf39deATvRUohuXWV9wNHAOZ9jhCerU1FXCcg==
-X-Received: by 2002:a17:906:8053:: with SMTP id x19mr31237606ejw.306.1562112290271;
-        Tue, 02 Jul 2019 17:04:50 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.211.18])
-        by smtp.gmail.com with ESMTPSA id k11sm159289edq.54.2019.07.02.17.04.47
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 17:04:49 -0700 (PDT)
-Subject: Re: pagecache locking
-To:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
-From:   Boaz Harrosh <openosd@gmail.com>
-Message-ID: <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
-Date:   Wed, 3 Jul 2019 03:04:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 2 Jul 2019 20:32:51 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56996 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfGCAcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:32:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:32:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
+   d="scan'208";a="315414213"
+Received: from unknown (HELO [10.239.196.136]) ([10.239.196.136])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2019 17:32:48 -0700
+Subject: Re: [PATCH v6 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
+        jingqi.liu@intel.com
+References: <20190621055747.17060-1-tao3.xu@intel.com>
+ <20190621055747.17060-3-tao3.xu@intel.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <121358d9-f330-da38-aae3-bd194aee75b0@intel.com>
+Date:   Wed, 3 Jul 2019 08:32:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190619223756.GC26375@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190621055747.17060-3-tao3.xu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -98,36 +52,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/06/2019 01:37, Dave Chinner wrote:
-<>
+Ping ;)
+On 6/21/2019 1:57 PM, Tao Xu wrote:
+> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
+> to determines the maximum time in TSC-quanta that the processor can reside
+> in either C0.1 or C0.2.
 > 
-> I'd prefer it doesn't get lifted to the VFS because I'm planning on
-> getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
-> likely to go away in the near term because a range lock can be
-> taken on either side of the mmap_sem in the page fault path.
+> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
+> IA32_UMWAIT_CONTROL between host and guest. The variable
+> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
+> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
 > 
-<>
-Sir Dave
+> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
+> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
+> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+> ---
+> 
+> Changes in v6:
+> 	add check msr_info->host_initiated in get/set msr(Xiaoyao)
+> 	restore the atomic_switch_umwait_control_msr()(Xiaoyao)
+> 	rebase the patch because the kernel dependcy patch updated to
+> 	v5: https://lkml.org/lkml/2019/6/19/972
+> ---
+>   arch/x86/kernel/cpu/umwait.c |  3 ++-
+>   arch/x86/kvm/vmx/vmx.c       | 33 +++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/vmx/vmx.h       |  3 +++
+>   arch/x86/kvm/x86.c           |  1 +
+>   4 files changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+> index 4b2aff7b2d4d..db5c193ef136 100644
+> --- a/arch/x86/kernel/cpu/umwait.c
+> +++ b/arch/x86/kernel/cpu/umwait.c
+> @@ -15,7 +15,8 @@
+>    * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
+>    * is enabled
+>    */
+> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
+> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
+> +EXPORT_SYMBOL_GPL(umwait_control_cached);
+>   
+>   /*
+>    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b35bfac30a34..0d81cb9b96cf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1679,6 +1679,13 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   #endif
+>   	case MSR_EFER:
+>   		return kvm_get_msr_common(vcpu, msr_info);
+> +	case MSR_IA32_UMWAIT_CONTROL:
+> +		if (!msr_info->host_initiated &&
+> +		    !guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
+> +			return 1;
+> +
+> +		msr_info->data = vmx->msr_ia32_umwait_control;
+> +		break;
+>   	case MSR_IA32_SPEC_CTRL:
+>   		if (!msr_info->host_initiated &&
+>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+> @@ -1841,6 +1848,17 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			return 1;
+>   		vmcs_write64(GUEST_BNDCFGS, data);
+>   		break;
+> +	case MSR_IA32_UMWAIT_CONTROL:
+> +		if (!msr_info->host_initiated &&
+> +		    !guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
+> +			return 1;
+> +
+> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
+> +		if (data & BIT_ULL(1))
+> +			return 1;
+> +
+> +		vmx->msr_ia32_umwait_control = data;
+> +		break;
+>   	case MSR_IA32_SPEC_CTRL:
+>   		if (!msr_info->host_initiated &&
+>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+> @@ -4126,6 +4144,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>   	vmx->rmode.vm86_active = 0;
+>   	vmx->spec_ctrl = 0;
+>   
+> +	vmx->msr_ia32_umwait_control = 0;
+> +
+>   	vcpu->arch.microcode_version = 0x100000000ULL;
+>   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+>   	kvm_set_cr8(vcpu, 0);
+> @@ -6339,6 +6359,16 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+>   					msrs[i].host, false);
+>   }
+>   
+> +static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
+> +{
+> +	if (vmx->msr_ia32_umwait_control != umwait_control_cached)
+> +		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
+> +			vmx->msr_ia32_umwait_control,
+> +			umwait_control_cached, false);
+> +	else
+> +		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
+> +}
+> +
+>   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+>   {
+>   	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+> @@ -6447,6 +6477,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>   
+>   	atomic_switch_perf_msrs(vmx);
+>   
+> +	if (guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
+> +		atomic_switch_umwait_control_msr(vmx);
+> +
+>   	vmx_update_hv_timer(vcpu);
+>   
+>   	/*
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 61128b48c503..8485bec7c38a 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -14,6 +14,8 @@
+>   extern const u32 vmx_msr_index[];
+>   extern u64 host_efer;
+>   
+> +extern u32 umwait_control_cached;
+> +
+>   #define MSR_TYPE_R	1
+>   #define MSR_TYPE_W	2
+>   #define MSR_TYPE_RW	3
+> @@ -194,6 +196,7 @@ struct vcpu_vmx {
+>   #endif
+>   
+>   	u64		      spec_ctrl;
+> +	u64		      msr_ia32_umwait_control;
+>   
+>   	u32 vm_entry_controls_shadow;
+>   	u32 vm_exit_controls_shadow;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 83aefd759846..4480de459bf4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
+>   	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
+>   	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
+>   	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
+> +	MSR_IA32_UMWAIT_CONTROL,
+>   };
+>   
+>   static unsigned num_msrs_to_save;
+> 
 
-Sorry if this was answered before. I am please very curious. In the zufs
-project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
-(Read & writes all take read-locks ...)
-The only reason I have it is because of lockdep actually.
-
-Specifically for those xfstests that mmap a buffer then direct_IO in/out
-of that buffer from/to another file in the same FS or the same file.
-(For lockdep its the same case).
-I would be perfectly happy to recursively _read_lock both from the top
-of the page_fault at the DIO path, and under in the page_fault. I'm
-_read_locking after all. But lockdep is hard to convince. So I stole the
-xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
-truncate/punch/clone time when all mapping traversal needs to stop for
-the destructive change to take place. (Allocations are done another way
-and are race safe with traversal)
-
-How do you intend to address this problem with range-locks? ie recursively
-taking the same "lock"? because if not for the recursive-ity and lockdep I would
-not need the extra lock-object per inode.
-
-Thanks
-Boaz
