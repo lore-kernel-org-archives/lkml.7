@@ -2,99 +2,100 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233BC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE923C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E80218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562171628;
-	bh=ktNAerFGbQZn3KVT3pQ8NIyte4UTPdVi/RkhIoUEYeo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=bGTGMZAtkTqSSA92jgOemtGNh96wZhQfBK1yw+JKQmYB4YSaZ3MVq2bvMngUv1c2T
-	 cMXU6E9bz5RM9wajkvYEQelAkjfhRyNmOz+mruikuDtauDwQCUS50FZiD40ekqkhfr
-	 LIVeCDoSpIWXUttVjVFca6V+Gh0P24i2j+DJoon8=
+	by mail.kernel.org (Postfix) with ESMTP id C2EA72187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfGCQdr (ORCPT
+        id S1727263AbfGCQeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 12:34:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:31024 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbfGCQdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:33:46 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 052E9218A0;
-        Wed,  3 Jul 2019 16:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562171625;
-        bh=ktNAerFGbQZn3KVT3pQ8NIyte4UTPdVi/RkhIoUEYeo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JH3JQyp8x3l/vUTh+Hsf30HbLDYNfC9EAhVTElQ4ll0liaA/by7Sh4APCpGyEcQ/t
-         PSD3lSxHAkdxXpj+yG15iQj7UOByHbCY+erwZKC33eyPZKUNdedP2WQFo8PZvPwn6u
-         tJkf3P9G7cByKDDWdT2FkLxcLyIzz30vyM0qQ0Do=
-Message-ID: <e3f1ecd6f68ed34df240346fae92f9c821503c68.camel@kernel.org>
-Subject: Re: [PATCH v2 04/35] block: Use kmemdup rather than duplicating its
- implementation
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        Alex Elder <elder@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 03 Jul 2019 12:33:43 -0400
-In-Reply-To: <20190703162650.32045-1-huangfq.daxian@gmail.com>
-References: <20190703162650.32045-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        id S1726718AbfGCQeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:34:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 09:34:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="154809293"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.63])
+  by orsmga007.jf.intel.com with ESMTP; 03 Jul 2019 09:33:59 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [GIT PULL 5/9] intel_th: msu: Introduce buffer driver interface
+In-Reply-To: <20190703155547.GA32438@kroah.com>
+References: <20190627125152.54905-1-alexander.shishkin@linux.intel.com> <20190627125152.54905-6-alexander.shishkin@linux.intel.com> <20190703155547.GA32438@kroah.com>
+Date:   Wed, 03 Jul 2019 19:33:58 +0300
+Message-ID: <87h883t6vd.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-04 at 00:26 +0800, Fuqian Huang wrote:
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
-> Changes in v2:
->   - Fix a typo in commit message (memset -> memcpy)
-> 
->  drivers/block/rbd.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index e5009a34f9c2..47ad3772dc58 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -1068,7 +1068,7 @@ static int rbd_header_from_disk(struct rbd_device *rbd_dev,
->  
->  		if (snap_names_len > (u64)SIZE_MAX)
->  			goto out_2big;
-> -		snap_names = kmalloc(snap_names_len, GFP_KERNEL);
-> +		snap_names = kmemdup(&ondisk->snaps[snap_count], snap_names_len, GFP_KERNEL);
->  		if (!snap_names)
->  			goto out_err;
->  
-> @@ -1088,7 +1088,6 @@ static int rbd_header_from_disk(struct rbd_device *rbd_dev,
->  		 * snap_names_len bytes beyond the end of the
->  		 * snapshot id array, this memcpy() is safe.
->  		 */
-> -		memcpy(snap_names, &ondisk->snaps[snap_count], snap_names_len);
->  		snaps = ondisk->snaps;
->  		for (i = 0; i < snap_count; i++) {
->  			snapc->snaps[i] = le64_to_cpu(snaps[i].id);
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>> +	/*
+>> +	 * ->assign() called when buffer 'mode' is set to this driver
+>> +	 *   (aka mode_store())
+>> +	 * @device:	struct device * of the msc
+>> +	 * @mode:	allows the driver to set HW mode (see the enum above)
+>> +	 * Returns:	a pointer to a private structure associated with this
+>> +	 *		msc or NULL in case of error. This private structure
+>> +	 *		will then be passed into all other callbacks.
+>> +	 */
+>> +	void	*(*assign)(struct device *dev, int *mode);
+>> +	/* ->unassign():	some other mode is selected, clean up */
+>> +	void	(*unassign)(void *priv);
+>> +	/*
+>> +	 * ->alloc_window(): allocate memory for the window of a given
+>> +	 *		size
+>> +	 * @sgt:	pointer to sg_table, can be overridden by the buffer
+>> +	 *		driver, or kept intact
+>> +	 * Returns:	number of sg table entries <= number of pages;
+>> +	 *		0 is treated as an allocation failure.
+>> +	 */
+>> +	int	(*alloc_window)(void *priv, struct sg_table **sgt,
+>> +				size_t size);
+>> +	void	(*free_window)(void *priv, struct sg_table *sgt);
+>> +	/* ->activate():	trace has started */
+>> +	void	(*activate)(void *priv);
+>> +	/* ->deactivate():	trace is about to stop */
+>> +	void	(*deactivate)(void *priv);
+>> +	/*
+>> +	 * ->ready():	window @sgt is filled up to the last block OR
+>> +	 *		tracing is stopped by the user; this window contains
+>> +	 *		@bytes data. The window in question transitions into
+>> +	 *		the "LOCKED" state, indicating that it can't be used
+>> +	 *		by hardware. To clear this state and make the window
+>> +	 *		available to the hardware again, call
+>> +	 *		intel_th_msc_window_unlock().
+>> +	 */
+>> +	int	(*ready)(void *priv, struct sg_table *sgt, size_t bytes);
+>> +};
+>
+> Why isn't this based off of 'struct driver'?
 
+It's not a real driver, in a sense that there's no underlying
+device. None of the usual driver stuff applies. It's still a set of
+callbacks, though. Should this be an elaborate comment, should I replace
+the word "driver" with something else?
+
+I'd really like to avoid shoehorning the whole 'struct device' + 'struct
+driver' here.
+
+Thanks,
+--
+Alex
