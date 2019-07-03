@@ -2,377 +2,108 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FFAC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45C2C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C25218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yrkEJOmV"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA58218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfGCO12 (ORCPT
+        id S1727221AbfGCO1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:27:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39571 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfGCO12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:27:28 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63ER7rE3326680
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:27:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63ER7rE3326680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562164028;
-        bh=McYLpXrJrlX9iePh8nqMzOHEHzqvYSsuIaWlQ5cPbM4=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=yrkEJOmVOb0B3QVShxCHcjl/H3jeScDpqWf6PdJc3DQrt7vq/4K7hDaiipPwubCVc
-         LMriljkBhWC/6LmlQ0RIpsNcAKJ2/Jo5fdj8rw0eqxcyo0hIKZDL/W/VoniXbVlySe
-         +ZR17vELUx33nerwN94etedETBxuj6qqTuaBPqDiMVmPyLk+XVWnlE5N8vQN+rvOYD
-         UG34yjE7mbdkV14jRWcKXdhnnJa9m6rRSRIXf5sidIGkB4Uqu6nG65e+ubhYDDALQs
-         whutsFrTS/e2EZPZLC073TaYm/wL1rc3A2XZ0Z8j8t1sAKpauLuoM/edOCy22Eq3fx
-         +UOUclQhHPsZA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63ER7BN3326677;
-        Wed, 3 Jul 2019 07:27:07 -0700
-Date:   Wed, 3 Jul 2019 07:27:07 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-j479s1ive9h75w5lfg16jroz@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, acme@redhat.com,
-        adrian.hunter@intel.com, hpa@zytor.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        mhiramat@kernel.org
-Reply-To: namhyung@kernel.org, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-          mingo@kernel.org, tglx@linutronix.de, adrian.hunter@intel.com,
-          acme@redhat.com, hpa@zytor.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] tools lib: Move argv_{split,free} from
- tools/perf/util/
-Git-Commit-ID: 9c10548c42219e961279826c2763a0e32dc056b9
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 10:27:35 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:52124 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726675AbfGCO1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:27:34 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1higEJ-0000cD-5e; Wed, 03 Jul 2019 22:27:27 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1higEF-0000UZ-Ar; Wed, 03 Jul 2019 22:27:23 +0800
+Date:   Wed, 3 Jul 2019 22:27:23 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 0/4] *** SUBJECT HERE ***
+Message-ID: <20190703142723.zueylnlwzajpdtvs@gondor.apana.org.au>
+References: <cover.1561360551.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1561360551.git.christophe.leroy@c-s.fr>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9c10548c42219e961279826c2763a0e32dc056b9
-Gitweb:     https://git.kernel.org/tip/9c10548c42219e961279826c2763a0e32dc056b9
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 26 Jun 2019 15:27:58 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Jul 2019 22:50:40 -0300
+On Mon, Jun 24, 2019 at 07:20:13AM +0000, Christophe Leroy wrote:
+> This series is the last set of fixes for the Talitos driver.
+> 
+> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+> 
+> [    3.385197] bus: 'platform': really_probe: probing driver talitos with device ff020000.crypto
+> [    3.450982] random: fast init done
+> [   12.252548] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+> [   12.262226] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+> [   43.310737] Bug in SEC1, padding ourself
+> [   45.603318] random: crng init done
+> [   54.612333] talitos ff020000.crypto: fsl,sec1.2 algorithms registered in /proc/crypto
+> [   54.620232] driver: 'talitos': driver_bound: bound to device 'ff020000.crypto'
+> 
+> [    1.193721] bus: 'platform': really_probe: probing driver talitos with device b0030000.crypto
+> [    1.229197] random: fast init done
+> [    2.714920] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos)
+> [    2.724312] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos-hsna)
+> [    4.482045] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos)
+> [    4.490940] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+> [    4.500280] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos)
+> [    4.509727] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+> [    6.631781] random: crng init done
+> [   11.521795] talitos b0030000.crypto: fsl,sec2.2 algorithms registered in /proc/crypto
+> [   11.529803] driver: 'talitos': driver_bound: bound to device 'b0030000.crypto'
+> 
+> v2: dropped patch 1 which was irrelevant due to a rebase weirdness. Added Cc to stable on the 2 first patches.
+> 
+> v3:
+>  - removed stable reference in patch 1
+>  - reworded patch 1 to include name of patch 2 for the dependency.
+>  - mentionned this dependency in patch 2 as well.
+>  - corrected the Fixes: sha1 in patch 4
+>  
+> v4:
+>  - using scatterwalk_ffwd() instead of opencodying SG list forwarding.
+>  - Added a patch to fix sg_copy_to_buffer() when sg->offset() is greater than PAGE_SIZE,
+>  otherwise sg_copy_to_buffer() fails when the list has been forwarded with scatterwalk_ffwd().
+>  - taken the patch "crypto: talitos - eliminate unneeded 'done' functions at build time"
+>  out of the series because it is independent.
+>  - added a helper to find the header field associated to a request in flush_channe()
+>  
+> v5:
+>  - Replacing the while loop by a direct shift/mask operation, as suggested by Herbert in patch 1.
+> 
+> Christophe Leroy (4):
+>   lib/scatterlist: Fix mapping iterator when sg->offset is greater than
+>     PAGE_SIZE
+>   crypto: talitos - move struct talitos_edesc into talitos.h
+>   crypto: talitos - fix hash on SEC1.
+>   crypto: talitos - drop icv_ool
+> 
+>  drivers/crypto/talitos.c | 102 +++++++++++++++++++----------------------------
+>  drivers/crypto/talitos.h |  28 +++++++++++++
+>  lib/scatterlist.c        |   9 +++--
+>  3 files changed, 74 insertions(+), 65 deletions(-)
 
-tools lib: Move argv_{split,free} from tools/perf/util/
-
-This came from the kernel lib/argv_split.c, so move it to
-tools/lib/argv_split.c, to get it closer to the kernel structure.
-
-We need to audit the usage of argv_split() to figure out if it is really
-necessary to do have one allocation per argv[] entry, looking at one of
-its users I guess that is not the case and we probably are even leaking
-those allocations by not using argv_free() judiciously, for later.
-
-With this we further remove stuff from tools/perf/util/, reducing the
-perf specific codebase and encouraging other tools/ code to use these
-routines so as to keep the style and constructs used with the kernel.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-j479s1ive9h75w5lfg16jroz@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/linux/string.h |   3 ++
- tools/lib/argv_split.c       | 100 +++++++++++++++++++++++++++++++++++++++++++
- tools/perf/MANIFEST          |   1 +
- tools/perf/util/Build        |   5 +++
- tools/perf/util/string.c     |  91 ---------------------------------------
- tools/perf/util/string2.h    |   2 -
- 6 files changed, 109 insertions(+), 93 deletions(-)
-
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index a76d4df10435..980cb9266718 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -7,6 +7,9 @@
- 
- void *memdup(const void *src, size_t len);
- 
-+char **argv_split(const char *str, int *argcp);
-+void argv_free(char **argv);
-+
- int strtobool(const char *s, bool *res);
- 
- /*
-diff --git a/tools/lib/argv_split.c b/tools/lib/argv_split.c
-new file mode 100644
-index 000000000000..0a58ccf3f761
---- /dev/null
-+++ b/tools/lib/argv_split.c
-@@ -0,0 +1,100 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Helper function for splitting a string into an argv-like array.
-+ */
-+
-+#include <stdlib.h>
-+#include <linux/kernel.h>
-+#include <linux/ctype.h>
-+#include <linux/string.h>
-+
-+static const char *skip_arg(const char *cp)
-+{
-+	while (*cp && !isspace(*cp))
-+		cp++;
-+
-+	return cp;
-+}
-+
-+static int count_argc(const char *str)
-+{
-+	int count = 0;
-+
-+	while (*str) {
-+		str = skip_spaces(str);
-+		if (*str) {
-+			count++;
-+			str = skip_arg(str);
-+		}
-+	}
-+
-+	return count;
-+}
-+
-+/**
-+ * argv_free - free an argv
-+ * @argv - the argument vector to be freed
-+ *
-+ * Frees an argv and the strings it points to.
-+ */
-+void argv_free(char **argv)
-+{
-+	char **p;
-+	for (p = argv; *p; p++) {
-+		free(*p);
-+		*p = NULL;
-+	}
-+
-+	free(argv);
-+}
-+
-+/**
-+ * argv_split - split a string at whitespace, returning an argv
-+ * @str: the string to be split
-+ * @argcp: returned argument count
-+ *
-+ * Returns an array of pointers to strings which are split out from
-+ * @str.  This is performed by strictly splitting on white-space; no
-+ * quote processing is performed.  Multiple whitespace characters are
-+ * considered to be a single argument separator.  The returned array
-+ * is always NULL-terminated.  Returns NULL on memory allocation
-+ * failure.
-+ */
-+char **argv_split(const char *str, int *argcp)
-+{
-+	int argc = count_argc(str);
-+	char **argv = calloc(argc + 1, sizeof(*argv));
-+	char **argvp;
-+
-+	if (argv == NULL)
-+		goto out;
-+
-+	if (argcp)
-+		*argcp = argc;
-+
-+	argvp = argv;
-+
-+	while (*str) {
-+		str = skip_spaces(str);
-+
-+		if (*str) {
-+			const char *p = str;
-+			char *t;
-+
-+			str = skip_arg(str);
-+
-+			t = strndup(p, str-p);
-+			if (t == NULL)
-+				goto fail;
-+			*argvp++ = t;
-+		}
-+	}
-+	*argvp = NULL;
-+
-+out:
-+	return argv;
-+
-+fail:
-+	argv_free(argv);
-+	return NULL;
-+}
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index aac4c755d81b..6a5de44b2de9 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -7,6 +7,7 @@ tools/lib/traceevent
- tools/lib/api
- tools/lib/bpf
- tools/lib/subcmd
-+tools/lib/argv_split.c
- tools/lib/ctype.c
- tools/lib/hweight.c
- tools/lib/rbtree.c
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index b4dc6112138f..d3408a463060 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -20,6 +20,7 @@ perf-y += parse-events.o
- perf-y += perf_regs.o
- perf-y += path.o
- perf-y += print_binary.o
-+perf-y += argv_split.o
- perf-y += rbtree.o
- perf-y += libstring.o
- perf-y += bitmap.o
-@@ -209,6 +210,10 @@ $(OUTPUT)util/kallsyms.o: ../lib/symbol/kallsyms.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
- 
-+$(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
-+	$(call rule_mkdir)
-+	$(call if_changed_dep,cc_o_c)
-+
- $(OUTPUT)util/bitmap.o: ../lib/bitmap.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
-diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-index 9b7fbb0cbecd..52603876c548 100644
---- a/tools/perf/util/string.c
-+++ b/tools/perf/util/string.c
-@@ -69,97 +69,6 @@ out_err:
- 	return -1;
- }
- 
--static const char *skip_arg(const char *cp)
--{
--	while (*cp && !isspace(*cp))
--		cp++;
--
--	return cp;
--}
--
--static int count_argc(const char *str)
--{
--	int count = 0;
--
--	while (*str) {
--		str = skip_spaces(str);
--		if (*str) {
--			count++;
--			str = skip_arg(str);
--		}
--	}
--
--	return count;
--}
--
--/**
-- * argv_free - free an argv
-- * @argv - the argument vector to be freed
-- *
-- * Frees an argv and the strings it points to.
-- */
--void argv_free(char **argv)
--{
--	char **p;
--	for (p = argv; *p; p++) {
--		free(*p);
--		*p = NULL;
--	}
--
--	free(argv);
--}
--
--/**
-- * argv_split - split a string at whitespace, returning an argv
-- * @str: the string to be split
-- * @argcp: returned argument count
-- *
-- * Returns an array of pointers to strings which are split out from
-- * @str.  This is performed by strictly splitting on white-space; no
-- * quote processing is performed.  Multiple whitespace characters are
-- * considered to be a single argument separator.  The returned array
-- * is always NULL-terminated.  Returns NULL on memory allocation
-- * failure.
-- */
--char **argv_split(const char *str, int *argcp)
--{
--	int argc = count_argc(str);
--	char **argv = calloc(argc + 1, sizeof(*argv));
--	char **argvp;
--
--	if (argv == NULL)
--		goto out;
--
--	if (argcp)
--		*argcp = argc;
--
--	argvp = argv;
--
--	while (*str) {
--		str = skip_spaces(str);
--
--		if (*str) {
--			const char *p = str;
--			char *t;
--
--			str = skip_arg(str);
--
--			t = strndup(p, str-p);
--			if (t == NULL)
--				goto fail;
--			*argvp++ = t;
--		}
--	}
--	*argvp = NULL;
--
--out:
--	return argv;
--
--fail:
--	argv_free(argv);
--	return NULL;
--}
--
- /* Character class matching */
- static bool __match_charclass(const char *pat, char c, const char **npat)
- {
-diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
-index 2696c3fcd780..708805f5573e 100644
---- a/tools/perf/util/string2.h
-+++ b/tools/perf/util/string2.h
-@@ -11,8 +11,6 @@ extern const char *graph_dotted_line;
- extern const char *dots;
- 
- s64 perf_atoll(const char *str);
--char **argv_split(const char *str, int *argcp);
--void argv_free(char **argv);
- bool strglobmatch(const char *str, const char *pat);
- bool strglobmatch_nocase(const char *str, const char *pat);
- bool strlazymatch(const char *str, const char *pat);
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
