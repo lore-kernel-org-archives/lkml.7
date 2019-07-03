@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A1AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B3C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D408A21874
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934F421874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120463;
-	bh=Q9xGE9S4674mQZc11CtxVVU6MEbdl6REXUoTXVQ4/KM=;
+	s=default; t=1562120469;
+	bh=CXypkWf8I4WajPrb0acNINufJkDjdlHLijhFneaHr+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNfiWZ2aE0OSGyX8i3e07EtJ4N2S0c1/QFKqiwmJ9pywFTHTVGonbRlrqbrgTI/J9
-	 zAOQOEUbyoAZo24GpCQclytb8ulhGGIkVAzfN8+Rz8ImV7h4EOH0FQrogqO8frsU83
-	 5Z/As4LL4O8eeZXdW396ckh/R9A8ULlcy9wSRG0Q=
+	b=2SsgcFwcCYVBes8P6Jank6nO/8X1BmjR0/4a0O0i/xYBdzjPgG0gfrX6mekQOvxFb
+	 EZg016j2hYTfBNY1FUARrepwCy4ZImrof82FXSQe1aDjQwXD7ykeId+7meVdnTpLpZ
+	 Eox2HUoAK1UUSENLPFxOPSKZvKQRZZLaPN6AqDtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfGCCVD (ORCPT
+        id S1727925AbfGCCQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfGCCQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:30 -0400
+        id S1727903AbfGCCQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB6882187F;
-        Wed,  3 Jul 2019 02:16:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C08E21882;
+        Wed,  3 Jul 2019 02:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120189;
-        bh=Q9xGE9S4674mQZc11CtxVVU6MEbdl6REXUoTXVQ4/KM=;
+        s=default; t=1562120180;
+        bh=CXypkWf8I4WajPrb0acNINufJkDjdlHLijhFneaHr+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lz6S4g2Bsgz1eXuoCWXHo9o/tasHKowCyCJN1IGfg1/s7w/9iKQ1jgHpSyquB7WWI
-         fJdS5G/0le5IouoDnMQyBecFkCnHkeux/YS2m+NTC1eb3f6qYaCx9SdjOTUczYCT8+
-         epnDE/BO3nVrkliIc8sLQuVgDnLyEA5i+oV0XOXI=
+        b=O+i1UEnzuaXjn12OchshjgINtru4+IXV5OElcGw24Ghy0N+WQffOzmxir8UdtFq/C
+         9o+tskdhVC5L8WFqrTpDYcRiSx3scMsD4PIbVX56OrtXqiMIN1qt6+L3zA21PZ6yTw
+         reu3LX9iGeJtwHj90U4AgTtVXhfki6FWFWzWn+B4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/26] efi/bgrt: Drop BGRT status field reserved bits check
-Date:   Tue,  2 Jul 2019 22:16:02 -0400
-Message-Id: <20190703021625.18116-3-sashal@kernel.org>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 38/39] fork,memcg: alloc_thread_stack_node needs to set tsk->stack
+Date:   Tue,  2 Jul 2019 22:15:13 -0400
+Message-Id: <20190703021514.17727-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
-References: <20190703021625.18116-1-sashal@kernel.org>
+In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
+References: <20190703021514.17727-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-[ Upstream commit a483fcab38b43fb34a7f12ab1daadd3907f150e2 ]
+[ Upstream commit 1bf4580e00a248a2c86269125390eb3648e1877c ]
 
-Starting with ACPI 6.2 bits 1 and 2 of the BGRT status field are no longer
-reserved. These bits are now used to indicate if the image needs to be
-rotated before being displayed.
+Commit 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on
+memcg charge fail") corrected two instances, but there was a third
+instance of this bug.
 
-The first device using these bits has now shown up (the GPD MicroPC) and
-the reserved bits check causes us to reject the valid BGRT table on this
-device.
+Without setting tsk->stack, if memcg_charge_kernel_stack fails, it'll
+execute free_thread_stack() on a dangling pointer.
 
-Rather then changing the reserved bits check, allowing only the 2 new bits,
-instead just completely remove it so that we do not end up with a similar
-problem when more bits are added in the future.
+Enterprise kernels are compiled with VMAP_STACK=y so this isn't
+critical, but custom VMAP_STACK=n builds should have some performance
+advantage, with the drawback of risking to fail fork because compaction
+didn't succeed.  So as long as VMAP_STACK=n is a supported option it's
+worth fixing it upstream.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Link: http://lkml.kernel.org/r/20190619011450.28048-1-aarcange@redhat.com
+Fixes: 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Reviewed-by: Rik van Riel <riel@surriel.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi-bgrt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/fork.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
-index b22ccfb0c991..2bf4d31f4967 100644
---- a/drivers/firmware/efi/efi-bgrt.c
-+++ b/drivers/firmware/efi/efi-bgrt.c
-@@ -50,11 +50,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
- 		       bgrt->version);
- 		goto out;
- 	}
--	if (bgrt->status & 0xfe) {
--		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
--		       bgrt->status);
--		goto out;
--	}
- 	if (bgrt->image_type != 0) {
- 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
- 		       bgrt->image_type);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2628f3773ca8..ee24fea0eede 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -245,7 +245,11 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
+ 	struct page *page = alloc_pages_node(node, THREADINFO_GFP,
+ 					     THREAD_SIZE_ORDER);
+ 
+-	return page ? page_address(page) : NULL;
++	if (likely(page)) {
++		tsk->stack = page_address(page);
++		return tsk->stack;
++	}
++	return NULL;
+ #endif
+ }
+ 
 -- 
 2.20.1
 
