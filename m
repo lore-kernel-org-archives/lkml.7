@@ -2,181 +2,86 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CC6C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD41C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4A72080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXws+LNo"
+	by mail.kernel.org (Postfix) with ESMTP id 20BB72184C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfGCI6T (ORCPT
+        id S1727287AbfGCI6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:58:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:32985 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfGCI6T (ORCPT
+        Wed, 3 Jul 2019 04:58:33 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:9794 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726400AbfGCI6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:58:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so1218959lfe.0;
-        Wed, 03 Jul 2019 01:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2mMVMreh3hJKLJhjIAM6H3oxpyFnkoyLmzafE6hiSIY=;
-        b=UXws+LNoc7XAqzFvu2ppbTf8wVcwsxHXrk3Ud4xWb0tXIqA2dh9Wp/KRTsplhNpRra
-         3WSW3yODUK1V9ndVDC9S0J6MBtc1GPi5ahtLaAYAKhDtboQW6norrPX3/3ptnODRgxVb
-         1RENdrzUS8xvpaQs/4AXCXevjmtWNfMSJK4dN0PGACa+e8x7JenM0wNjajQBSSJLkly8
-         ++qulESU0o8WGAvfC1i5XM+oHspsEodECy/e+RLr+JdzCnGgF8FIs5VeUZsW39sMEx5/
-         Th1TPtOXN5SlEdR9r1eoGlOSD+b/u0ImwZZvIrvIp7D2UrC2YP1PjNf/6DJLIvxmngBS
-         39iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2mMVMreh3hJKLJhjIAM6H3oxpyFnkoyLmzafE6hiSIY=;
-        b=CVjy36jew3MVJPqq+6DzSoscckJeYorTFczHqSpDc4D6Zn2WWJUAAaAkroo97RS27O
-         9yTqoCkeOvJjNB4ELHJ1BUIifM/RqmTYK/wWc5jD9NfGHvniYQsdNHNQ3nlYQ3FlkVKc
-         bSTRVn0KM1lx8Z2EPCrZTbAwwOpckfCHnoh8r1pdCHSvraW6+vlBTDQuwq3E5+RFAAzC
-         f7PQnTctjZpqrFS667krlmH85MgkAy6q0w1k5fFEHi5hD42RYyyEvzdtZhL5DDF2AX47
-         XZlKAWzNZJeQ/vFvYb36RgIsg3E3SYI2KflHYSyXDSCX6t7WBiQS/CV8oQutPCraRjZ7
-         5lUQ==
-X-Gm-Message-State: APjAAAWZuD9+HJs52Fm8Sd0uPCY3wy0MXd+spw3Gv7uI6zOhLMQbO1Lk
-        BcSiG5LGA5kvDVWTl8jKHp4=
-X-Google-Smtp-Source: APXvYqzBE5JWkQEYewzfdunGupYNiyEuR9qo8QLMdsdBwvBsO19vdVFSYv3J+rTIfOgB9HV+S9xlKg==
-X-Received: by 2002:a19:80c4:: with SMTP id b187mr2931361lfd.122.1562144297227;
-        Wed, 03 Jul 2019 01:58:17 -0700 (PDT)
-Received: from krolik-desktop.lan ([91.238.216.6])
-        by smtp.gmail.com with ESMTPSA id p76sm348625ljb.49.2019.07.03.01.58.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:58:16 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     paweldembicki@gmail.com, linus.walleij@linaro.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
-Date:   Wed,  3 Jul 2019 10:57:56 +0200
-Message-Id: <20190703085757.1027-1-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190701152723.624-1-paweldembicki@gmail.com>
-References: <20190701152723.624-1-paweldembicki@gmail.com>
+        Wed, 3 Jul 2019 04:58:32 -0400
+X-UUID: 97317b77af48444da774bf30f62fe1a9-20190703
+X-UUID: 97317b77af48444da774bf30f62fe1a9-20190703
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 122301073; Wed, 03 Jul 2019 16:58:27 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 3 Jul 2019 16:58:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 3 Jul 2019 16:58:25 +0800
+Message-ID: <1562144305.3550.0.camel@mtksdaap41>
+Subject: Re: [PATCH] checkpatch: avoid default n
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Joe Perches <joe@perches.com>
+CC:     Miles Chen <miles.chen@mediatek.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 3 Jul 2019 16:58:25 +0800
+In-Reply-To: <be8a97c15249ff8a613910db5792c5bcdc75333c.camel@perches.com>
+References: <20190703083031.2950-1-miles.chen@mediatek.com>
+         <be8a97c15249ff8a613910db5792c5bcdc75333c.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduce how to use vsc73xx platform driver.
+On Wed, 2019-07-03 at 01:42 -0700, Joe Perches wrote:
+> On Wed, 2019-07-03 at 16:30 +0800, Miles Chen wrote:
+> > This change reports a warning when "default n" is used.
+> > 
+> > I have seen several "remove default n" patches, so I think
+> > it might be helpful to add this test in checkpatch.
+> > 
+> > tested:
+> > WARNING: 'default n' is the default value, no need to write it explicitly.
+> > +       default n
+> 
+> I don't think this is reasonable as there are
+> several uses like:
+> 
+> 		default y
+> 		default n if <foo>
+> 
+> For instance:
+> 
+> arch/alpha/Kconfig-config ALPHA_WTINT
+> arch/alpha/Kconfig-     bool "Use WTINT" if ALPHA_SRM || ALPHA_GENERIC
+> arch/alpha/Kconfig-     default y if ALPHA_QEMU
+> arch/alpha/Kconfig:     default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+> arch/alpha/Kconfig:     default n if !ALPHA_SRM && !ALPHA_GENERIC
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-Changes in v2:
-- Drop -spi and -platform suffix
-- Change commit message
+I've sent similar patch in 2016, my version won't complain about these.
 
- .../bindings/net/dsa/vitesse,vsc73xx.txt      | 57 +++++++++++++++++--
- 1 file changed, 53 insertions(+), 4 deletions(-)
+https://lkml.org/lkml/2016/4/22/580
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-index ed4710c40641..c55e0148657d 100644
---- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-@@ -2,8 +2,8 @@ Vitesse VSC73xx Switches
- ========================
- 
- This defines device tree bindings for the Vitesse VSC73xx switch chips.
--The Vitesse company has been acquired by Microsemi and Microsemi in turn
--acquired by Microchip but retains this vendor branding.
-+The Vitesse company has been acquired by Microsemi and Microsemi has
-+been acquired Microchip but retains this vendor branding.
- 
- The currently supported switch chips are:
- Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-@@ -11,8 +11,13 @@ Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
- Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
- 
--The device tree node is an SPI device so it must reside inside a SPI bus
--device tree node, see spi/spi-bus.txt
-+This switch could have two different management interface.
-+
-+If SPI interface is used, the device tree node is an SPI device so it must
-+reside inside a SPI bus device tree node, see spi/spi-bus.txt
-+
-+If Platform driver is used, the device tree node is an platform device so it
-+must reside inside a platform bus device tree node.
- 
- Required properties:
- 
-@@ -38,6 +43,7 @@ and subnodes of DSA switches.
- 
- Examples:
- 
-+SPI:
- switch@0 {
- 	compatible = "vitesse,vsc7395";
- 	reg = <0>;
-@@ -79,3 +85,46 @@ switch@0 {
- 		};
- 	};
- };
-+
-+Platform:
-+switch@2,0 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "vitesse,vsc7385";
-+	reg = <0x2 0x0 0x20000>;
-+	reset-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan4";
-+		};
-+		vsc: port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&enet0>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+
-+};
--- 
-2.20.1
+Joe.C
 
