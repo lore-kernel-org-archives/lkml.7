@@ -2,126 +2,70 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653D0C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D94C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCBE218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AczUvvKP"
+	by mail.kernel.org (Postfix) with ESMTP id 46373218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfGCIOb (ORCPT
+        id S1727521AbfGCIOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:14:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:47075 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfGCIOT (ORCPT
+        Wed, 3 Jul 2019 04:14:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49315 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfGCIOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:14:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i8so796299pgm.13;
-        Wed, 03 Jul 2019 01:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iFdFgnbGfYNFGWijUj/XlW0cCu4McvzsQkcXKLZ/y8I=;
-        b=AczUvvKP6F/HCai5Oa1GCtVY1AilofYFPC69OkqStFoCsrPmasZt2WLIFsv7rylS5V
-         Pg+3Gh75cv6pqIcHduFuRyI7fj+lu0NKIckkEHHYmr4WNIPKacHqpRsBL7zLmiCCHY0r
-         hbmkzC5Oa6ig9++PaYvyes6gLisM9baNhpFYMlhn+9F3HJwXnwBpTMbx4zKxdWGgSFWt
-         93mPMbBRmJ3CDcgomnZsIvG42w7DiJZ+YBrqwcdgBX2R65owBrdNEutdzZcZM3CwHUFX
-         FcZKtNsaXe+KRP6UHTx2l5KgoT+pzB1OYAZQUNnDGkQ+WrV7eDTNEA5Kgy3nlVwuxEP7
-         n2FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iFdFgnbGfYNFGWijUj/XlW0cCu4McvzsQkcXKLZ/y8I=;
-        b=PkIqzYUYjZX6MdrNHcHmu3N7cB9+hsVMptlVrE62JlwZTFgvZE+/g+cYYzM0XFVz0i
-         XHKQhUbS/YRmZVqoGa0V6Nz8iNSUZfIK6adYi2t/q15mL7XLOuDmTZbZEWOKgIQzYFYo
-         IiroWVQHANI2Fn5i8lrRSoI0ziU2uinRcawV80XzNgDeCp4pUPJRbAZqqgowY/RovWnP
-         u5svLL5nXkznSzgIJmlqivfvL3rEeua5LPZSaIJi8HceizCWRQVy15VL71eCv9FZX6TW
-         0f9X8hvyLcgqRfaAFy3cE6Ky2twZG/W4KaT2dACETUR2faiBEbN/a2k6cP7VUaOK46EQ
-         vAlA==
-X-Gm-Message-State: APjAAAU/DuzWfQx0qmcJz7nOzEsUFndmthUAUVwnfQSDT+pq15I1dz5W
-        TeGkReEdTScMqlXJB/o5YYeWc2wtgkY=
-X-Google-Smtp-Source: APXvYqwzaR4dkXTDNAVT6FQnOKxqCmAVx0fDduq+qzwa+fkB6r+tP4P4cjVwaIoF9IYm6+Gm/iDqpg==
-X-Received: by 2002:a65:4cc4:: with SMTP id n4mr36959361pgt.307.1562141657808;
-        Wed, 03 Jul 2019 01:14:17 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.14.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:14:17 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 15/16] crypto: caam - always select job ring via RSR on i.MX8MQ
-Date:   Wed,  3 Jul 2019 01:13:26 -0700
-Message-Id: <20190703081327.17505-16-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190703081327.17505-1-andrew.smirnov@gmail.com>
-References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+        Wed, 3 Jul 2019 04:14:37 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hiaPS-0000QS-Hw; Wed, 03 Jul 2019 08:14:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] staging: rtl8723bs: hal: remove redundant assignment to packetType
+Date:   Wed,  3 Jul 2019 09:14:34 +0100
+Message-Id: <20190703081434.17489-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per feedback from NXP tech support the way to use register based
-service interface on i.MX8MQ is to follow the same set of steps
-outlined for the case when virtualization is enabled, regardless if it
-is. Current version of SRM for i.MX8MQ speaks of DECO DID_MS and DECO
-DID_LS registers, but apparently those are not implemented, so the
-case when SCFGR[VIRT_EN]=0 should be handles the same as the case when
-SCFGR[VIRT_EN]=1
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Spencer <christopher.spencer@sea.co.uk>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Local variable packetType is being assigned a value that is never
+read just before a return statement. The assignment is redundant
+and can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/crypto/caam/ctrl.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8723bs/hal/hal_btcoex.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index adb560950e59..a354c64ca39d 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -97,7 +97,12 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
- 	int i;
+diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
+index 66caf34..2579ac3 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
++++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
+@@ -1196,7 +1196,6 @@ void EXhalbtcoutsrc_SpecialPacketNotify(PBTC_COEXIST pBtCoexist, u8 pktType)
+ 	} else if (PACKET_ARP == pktType) {
+ 		packetType = BTC_PACKET_ARP;
+ 	} else {
+-		packetType = BTC_PACKET_UNKNOWN;
+ 		return;
+ 	}
  
- 
--	if (ctrlpriv->virt_en == 1) {
-+	if (ctrlpriv->virt_en == 1 ||
-+	    /*
-+	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
-+	     * and the following steps should be performed regardless
-+	     */
-+	    of_machine_is_compatible("fsl,imx8mq")) {
- 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
- 
- 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
 -- 
-2.21.0
+2.7.4
 
