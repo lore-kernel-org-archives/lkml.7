@@ -2,79 +2,94 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4AC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71411C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092BA2189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4640A2189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfGCL7Y (ORCPT
+        id S1726824AbfGCMCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:59:24 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43341 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCL7Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:59:24 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 8cb5d68938229b6e; Wed, 3 Jul 2019 13:59:21 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     dvhart@infradead.org, andy@infradead.org,
-        andriy.shevchenko@intel.com, corbet@lwn.net, alan@linux.intel.com,
-        lenb@kernel.org, prarit@redhat.com, darcari@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update for Intel Speed Select Technology
-Date:   Wed, 03 Jul 2019 13:59:21 +0200
-Message-ID: <1893254.mYh7M8VbD2@kreacher>
-In-Reply-To: <20190703015331.5449-1-srinivas.pandruvada@linux.intel.com>
-References: <20190703015331.5449-1-srinivas.pandruvada@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 3 Jul 2019 08:02:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:35332 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfGCMCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 08:02:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0F59C20039A;
+        Wed,  3 Jul 2019 14:02:07 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 02B78200399;
+        Wed,  3 Jul 2019 14:02:07 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 80063205F0;
+        Wed,  3 Jul 2019 14:02:06 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Date:   Wed,  3 Jul 2019 15:01:51 +0300
+Message-Id: <1562155311-24696-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, July 3, 2019 3:53:31 AM CEST Srinivas Pandruvada wrote:
-> Added myself as the maintainer.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather then using clock
+consumer API in a clock provider driver.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
 
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5cfbea4ce575..b6ed7958372d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8101,6 +8101,14 @@ S:	Supported
->  F:	drivers/infiniband/hw/i40iw/
->  F:	include/uapi/rdma/i40iw-abi.h
->  
-> +INTEL SPEED SELECT TECHNOLOGY
-> +M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/intel_speed_select_if/
-> +F:	tools/power/x86/intel-speed-select/
-> +F:	include/uapi/linux/isst_if.h
-> +
->  INTEL TELEMETRY DRIVER
->  M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->  M:	"David E. Box" <david.e.box@linux.intel.com>
-> 
+Changes since v1:
+ - removed the PCIE and CSI clocks parent setting since
+   that should be done from their driver, as suggested
+   by Leonard.
 
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808..c286f20 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -489,6 +489,20 @@
+ 				clock-names = "ckil", "osc_25m", "osc_27m",
+ 				              "clk_ext1", "clk_ext2",
+ 				              "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
++					<&clk IMX8MQ_CLK_AHB>,
++					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
++					<&clk IMX8MQ_CLK_AUDIO_AHB>,
++					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
++					<&clk IMX8MQ_CLK_NOC>;
++				assigned-clock-parents = <0>,
++						<&clk IMX8MQ_SYS1_PLL_133M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_500M>,
++						<&clk IMX8MQ_CLK_27M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>;
++				assigned-clock-rates = <593999999>;
++
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-- 
+2.7.4
 
