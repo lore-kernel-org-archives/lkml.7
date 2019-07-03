@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A21CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EE0C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA76D20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AABF2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120558;
-	bh=Aeh1Pnz51BbGOzC67Bac39NpqcFOp3F1K5sQsWf4tu8=;
+	s=default; t=1562120563;
+	bh=hMnvu1y7oW+9dgMx3Cngv884gTKh0B/1QjIVC72xhNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMPM5B1HJbNZeZe4PwDDDfXPIcEUsan/sIYC6CuH2PvCpyGtZrLIwNzC+HefPaH6l
-	 lJIO7ZYqpw39rRW6zL+WDbcEmfqXVsBiGAlQspfNjPSAwKKxs6TC7DEqpWd9PwwZCR
-	 0Q/0fDEAyQfN7HSDMTP/uYNoL2WLSxX8M9Pu5HEc=
+	b=GX/D+cdSXJSVmrHfIqPEMiKc4G+rvVNPp+7imd639JRm/UoWXzgxJGBd0d1zr7laX
+	 Z7EtqdObCdidah+gxcbct4/99gBKIVAGjfGbbXDHBBzVFEYXc/ae7pUsoOgJXSK4UR
+	 VwyMd0og5tzCkjo0vcpX14p9iBscIHTeQadOCQqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfGCCWh (ORCPT
+        id S1727594AbfGCCPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53888 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727613AbfGCCPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:35 -0400
+        id S1727543AbfGCCPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006CC2189E;
-        Wed,  3 Jul 2019 02:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2872421873;
+        Wed,  3 Jul 2019 02:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120135;
-        bh=Aeh1Pnz51BbGOzC67Bac39NpqcFOp3F1K5sQsWf4tu8=;
+        s=default; t=1562120130;
+        bh=hMnvu1y7oW+9dgMx3Cngv884gTKh0B/1QjIVC72xhNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPYXUQn2EZsBJVwWeKCpvSMtlwlPlxDiDgaMiG+bMqOaVuSTXvsKfOtz/RSzKkc42
-         hnBTilAoewRYyzZfQDtk5Wpzb7K83mg2s19r9QLDWDQFc6EvHe9oM4eV4CJ7LYwZoM
-         uuFACx3jS2yBiNOUMfncZK1tO0GGVnjQjvElOfKA=
+        b=mszR6nHilkLbLT7UsTWdy2Kk/iEcK+TEEuFv1uTpGC7X2ehJUb245iO/1648kAnjR
+         GkbkwN8IRgIXqy3XVSJJA7CBq0tSijV80hgH7xvWLTYdmqClnBA7WpoEUdm7j6PHmK
+         dyRDYVOa/rLK/KRAFKdTX1G9xjSi+6J7Y66PxRWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.1 12/39] ARM: omap2: remove incorrect __init annotation
-Date:   Tue,  2 Jul 2019 22:14:47 -0400
-Message-Id: <20190703021514.17727-12-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 09/39] selftests/powerpc: Add test of fork with mapping above 512TB
+Date:   Tue,  2 Jul 2019 22:14:44 -0400
+Message-Id: <20190703021514.17727-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -63,45 +59,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
+[ Upstream commit 16391bfc862342f285195013b73c1394fab28b97 ]
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+This tests that when a process with a mapping above 512TB forks we
+correctly separate the parent and child address spaces. This exercises
+the bug in the context id handling fixed in the previous commit.
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
-
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/mm/.gitignore |  3 +-
+ tools/testing/selftests/powerpc/mm/Makefile   |  4 +-
+ .../powerpc/mm/large_vm_fork_separation.c     | 87 +++++++++++++++++++
+ 3 files changed, 92 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/powerpc/mm/large_vm_fork_separation.c
 
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 05858f966f7d..dfa65fc2c82b 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+diff --git a/tools/testing/selftests/powerpc/mm/.gitignore b/tools/testing/selftests/powerpc/mm/.gitignore
+index ba919308fe30..d503b8764a8e 100644
+--- a/tools/testing/selftests/powerpc/mm/.gitignore
++++ b/tools/testing/selftests/powerpc/mm/.gitignore
+@@ -3,4 +3,5 @@ subpage_prot
+ tempfile
+ prot_sao
+ segv_errors
+-wild_bctr
+\ No newline at end of file
++wild_bctr
++large_vm_fork_separation
+\ No newline at end of file
+diff --git a/tools/testing/selftests/powerpc/mm/Makefile b/tools/testing/selftests/powerpc/mm/Makefile
+index 43d68420e363..f1fbc15800c4 100644
+--- a/tools/testing/selftests/powerpc/mm/Makefile
++++ b/tools/testing/selftests/powerpc/mm/Makefile
+@@ -2,7 +2,8 @@
+ noarg:
+ 	$(MAKE) -C ../
+ 
+-TEST_GEN_PROGS := hugetlb_vs_thp_test subpage_prot prot_sao segv_errors wild_bctr
++TEST_GEN_PROGS := hugetlb_vs_thp_test subpage_prot prot_sao segv_errors wild_bctr \
++		  large_vm_fork_separation
+ TEST_GEN_FILES := tempfile
+ 
+ top_srcdir = ../../../../..
+@@ -13,6 +14,7 @@ $(TEST_GEN_PROGS): ../harness.c
+ $(OUTPUT)/prot_sao: ../utils.c
+ 
+ $(OUTPUT)/wild_bctr: CFLAGS += -m64
++$(OUTPUT)/large_vm_fork_separation: CFLAGS += -m64
+ 
+ $(OUTPUT)/tempfile:
+ 	dd if=/dev/zero of=$@ bs=64k count=1
+diff --git a/tools/testing/selftests/powerpc/mm/large_vm_fork_separation.c b/tools/testing/selftests/powerpc/mm/large_vm_fork_separation.c
+new file mode 100644
+index 000000000000..2363a7f3ab0d
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/mm/large_vm_fork_separation.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright 2019, Michael Ellerman, IBM Corp.
++//
++// Test that allocating memory beyond the memory limit and then forking is
++// handled correctly, ie. the child is able to access the mappings beyond the
++// memory limit and the child's writes are not visible to the parent.
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/mman.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <unistd.h>
++
++#include "utils.h"
++
++
++#ifndef MAP_FIXED_NOREPLACE
++#define MAP_FIXED_NOREPLACE	MAP_FIXED	// "Should be safe" above 512TB
++#endif
++
++
++static int test(void)
++{
++	int p2c[2], c2p[2], rc, status, c, *p;
++	unsigned long page_size;
++	pid_t pid;
++
++	page_size = sysconf(_SC_PAGESIZE);
++	SKIP_IF(page_size != 65536);
++
++	// Create a mapping at 512TB to allocate an extended_id
++	p = mmap((void *)(512ul << 40), page_size, PROT_READ | PROT_WRITE,
++		MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
++	if (p == MAP_FAILED) {
++		perror("mmap");
++		printf("Error: couldn't mmap(), confirm kernel has 4TB support?\n");
++		return 1;
++	}
++
++	printf("parent writing %p = 1\n", p);
++	*p = 1;
++
++	FAIL_IF(pipe(p2c) == -1 || pipe(c2p) == -1);
++
++	pid = fork();
++	if (pid == 0) {
++		FAIL_IF(read(p2c[0], &c, 1) != 1);
++
++		pid = getpid();
++		printf("child writing  %p = %d\n", p, pid);
++		*p = pid;
++
++		FAIL_IF(write(c2p[1], &c, 1) != 1);
++		FAIL_IF(read(p2c[0], &c, 1) != 1);
++		exit(0);
++	}
++
++	c = 0;
++	FAIL_IF(write(p2c[1], &c, 1) != 1);
++	FAIL_IF(read(c2p[0], &c, 1) != 1);
++
++	// Prevent compiler optimisation
++	barrier();
++
++	rc = 0;
++	printf("parent reading %p = %d\n", p, *p);
++	if (*p != 1) {
++		printf("Error: BUG! parent saw child's write! *p = %d\n", *p);
++		rc = 1;
++	}
++
++	FAIL_IF(write(p2c[1], &c, 1) != 1);
++	FAIL_IF(waitpid(pid, &status, 0) == -1);
++	FAIL_IF(!WIFEXITED(status) || WEXITSTATUS(status));
++
++	if (rc == 0)
++		printf("success: test completed OK\n");
++
++	return rc;
++}
++
++int main(void)
++{
++	return test_harness(test, "large_vm_fork_separation");
++}
 -- 
 2.20.1
 
