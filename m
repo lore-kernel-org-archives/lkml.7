@@ -2,67 +2,182 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95A4C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF0C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF0D21850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC7421850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QjyXuNlT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjpkaCb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfGCUKh (ORCPT
+        id S1727119AbfGCUOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:10:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52166 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfGCUKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:10:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=TPWVIErTayik2edSo/VKbrrdLvMsqce5uWXEpj/oAnw=; b=QjyXuNlTAI2gOt0dEDzQkINfW6
-        BTzHSx8gAPdgxDnI1nGYQ9+TtvC7FP0VvT207N2qyEhVoZi91tCg5iRyKBiz8z1h14cTIW0MYlfng
-        JxNSl3d9zfSbV5L3QMVe5U1xEDjbbTqDrLIhsRscWKO3DMnti5b0TmXUJ9B7GpEhmYr8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hilaK-0007Vg-4b; Wed, 03 Jul 2019 22:10:32 +0200
-Date:   Wed, 3 Jul 2019 22:10:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
+        Wed, 3 Jul 2019 16:14:49 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38241 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfGCUOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:14:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so3711417wmj.3;
+        Wed, 03 Jul 2019 13:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KGRGCWyzALDC/wgl3gDRBe1xns6oSqRLv+D34iEHye0=;
+        b=pjpkaCb85EinJW0a5vQs5C55nMP34arf7Ry/cbJ4A1kpNzLP3w8c984F//IjnMupU2
+         mJC5sWeuPUcfZOa/0biCUTBEv9ZYtzIgpH+pKDCA7CuSr6qjm70ZZQTgMXDbFqqvTtyE
+         tE7Gp7a0yt2Wtfhqtzyuw1O8q8FWsdwKsi85JHWioENvRgxup/Q4TMuogpjPD2uEitbK
+         6H6+iSSpBB+mFP2wrHabAs7mhlCh4qb7kiJAq//1wzOqDz4aH/Q2PMi9PA4eOharURdi
+         DU6O+TgkH1ICpdw7Q5T02bo4oTFXN9poJuhnaRj0Rrmw1t+PPjbzO4Z/ntZ2QeLDjldS
+         QiPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KGRGCWyzALDC/wgl3gDRBe1xns6oSqRLv+D34iEHye0=;
+        b=B3h+QCATovrlNsOFBmL8jhC4taWEoMjilufPz69hrUaskgGJteSrM0GLjOtMTkd8+Z
+         gqWUZs0eWe826JmD0v82cMmyehZrlzOfM3p9E4ZBlOEAGt58hno9b5EGw+nbQcBCLIv6
+         mQn83yRwDJ5USBkLawP8vQzi2hBARDTigXM/Yn2tngQk6KVwqDR2RNqTJKyNf8ADWhWK
+         /gHHz18HseHU20kLZJtzWmnSgJrn9VjL1YylZXWNNf9FLozEGuq92BMSFJYLk5jRwEtw
+         FtgGmBGGHO22EyQY6GNEL9f4WvMkQ1Qd2LTCWxarCNsq3Ey3wR6V9acN+xSXAHu3huqn
+         jHSQ==
+X-Gm-Message-State: APjAAAURNuA03kFe0eKtIldyqXOG1k1wUA/PAjhdCDt+veJ/bNpbaG6C
+        S8BlJJPN4Hgveda/NCCgM8B9AFvq
+X-Google-Smtp-Source: APXvYqxKIv2erFklghRAxLVhTS8uHe6icyW/Gq6R7uuo19PCXRq5akB6xCsRa2oNl+VWfhZiY8YwnQ==
+X-Received: by 2002:a7b:ce88:: with SMTP id q8mr9346411wmj.89.1562184884981;
+        Wed, 03 Jul 2019 13:14:44 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:4503:872e:8227:c4e0? (p200300EA8BD60C004503872E8227C4E0.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:4503:872e:8227:c4e0])
+        by smtp.googlemail.com with ESMTPSA id a67sm3840405wmh.40.2019.07.03.13.14.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 13:14:44 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] net: phy: realtek: Allow disabling RTL8211E EEE
+ LED mode
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 7/7] net: phy: realtek: configure RTL8211E LEDs
-Message-ID: <20190703201032.GG18473@lunn.ch>
 References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-7-mka@chromium.org>
+ <20190703193724.246854-2-mka@chromium.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <743dda1b-532d-175f-1f87-5d80ba4a2e94@gmail.com>
+Date:   Wed, 3 Jul 2019 22:09:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703193724.246854-7-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190703193724.246854-2-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	for (i = 0; i < count; i++) {
-> +		u32 val;
+On 03.07.2019 21:37, Matthias Kaehlcke wrote:
+> EEE LED mode is enabled by default on the RTL8211E. Disable it when
+> the device tree property 'realtek,eee-led-mode-disable' exists.
+> 
+> The magic values to disable EEE LED mode were taken from the RTL8211E
+> datasheet, unfortunately they are not further documented.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - patch added to the series
+> ---
+>  drivers/net/phy/realtek.c | 37 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> index a669945eb829..eb815cbe1e72 100644
+> --- a/drivers/net/phy/realtek.c
+> +++ b/drivers/net/phy/realtek.c
+> @@ -9,8 +9,9 @@
+>   * Copyright (c) 2004 Freescale Semiconductor, Inc.
+>   */
+>  #include <linux/bitops.h>
+> -#include <linux/phy.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy.h>
+>  
+>  #define RTL821x_PHYSR				0x11
+>  #define RTL821x_PHYSR_DUPLEX			BIT(13)
+> @@ -26,6 +27,10 @@
+>  #define RTL821x_EXT_PAGE_SELECT			0x1e
+>  #define RTL821x_PAGE_SELECT			0x1f
+>  
+> +/* RTL8211E page 5 */
+> +#define RTL8211E_EEE_LED_MODE1			0x05
+> +#define RTL8211E_EEE_LED_MODE2			0x06
 > +
-> +		of_property_read_u32_index(dev->of_node,
-> +					   "realtek,led-modes", i, &val);
+>  #define RTL8211F_INSR				0x1d
+>  
+>  #define RTL8211F_TX_DELAY			BIT(8)
+> @@ -53,6 +58,35 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+>  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+>  }
+>  
+> +static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
+> +{
 
-Please validate the value, 0 - 7.
+You define return type int but AFAICS the return value is never used,
+also in subsequent patches.
 
-       Andrew
+> +	int ret = 0;
+> +	int oldpage;
+> +
+> +	oldpage = phy_select_page(phydev, 5);
+> +	if (oldpage < 0)
+> +		goto out;
+> +
+> +	/* write magic values to disable EEE LED mode */
+> +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
+> +
+> +out:
+> +	return phy_restore_page(phydev, oldpage, ret);
+> +}
+> +
+> +static int rtl8211e_config_init(struct phy_device *phydev)
+> +{
+> +	struct device *dev = &phydev->mdio.dev;
+> +
+> +	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
+> +		rtl8211e_disable_eee_led_mode(phydev);
+> +
+> +	return 0;
+> +}
+
+I suppose checkpatch complains about the missing empty line.
+You add it in a later patch, in case of a v3 you could fix that.
+
+>  static int rtl8201_ack_interrupt(struct phy_device *phydev)
+>  {
+>  	int err;
+> @@ -310,6 +344,7 @@ static struct phy_driver realtek_drvs[] = {
+>  		.name		= "RTL8211E Gigabit Ethernet",
+>  		.config_init	= &rtl8211e_config_init,
+>  		.ack_interrupt	= &rtl821x_ack_interrupt,
+> +		.config_init	= &rtl8211e_config_init,
+>  		.config_intr	= &rtl8211e_config_intr,
+>  		.suspend	= genphy_suspend,
+>  		.resume		= genphy_resume,
+> 
+
