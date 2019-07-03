@@ -2,241 +2,110 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95734C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF439C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629F62189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qWymVMwW"
+	by mail.kernel.org (Postfix) with ESMTP id 884FD218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562169701;
+	bh=sEHptRbLdsEYKSwjvY3/qz3IvFgJjdcb8qCsSzdw0vY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qNsaMgHIxazK99Oh0GJnuetnnHhXTwoIImQVQxqOa7ONmbpapYAU3OnbM2ZohkXxB
+	 tEG5Xs64Ck3RtEG1HCDSX1GLjTZmhGpHjcBtmYeQi0X44HPDc2XFaW5TzyqOAygTP5
+	 0F6TJ1TMxUBsrFINwWqVL9Cta5d44mf+a1E9RITI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGCP7y (ORCPT
+        id S1726986AbfGCQBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 11:59:54 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42240 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfGCP7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:59:53 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so2997260lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 08:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gFrhzCDbKN3dXJqOCjxaWjlxE64lMzIuw0MAKOdMJPo=;
-        b=qWymVMwWBiebY3jqm1IZFIvKbFwtFLiQBcstlPbjsEjP1XWeeND9r9xO1Gv+nq8hMl
-         KMjBNXPgyz9R2PCG624S838/3s2HNifSySYIKpD85drn4YzChNIDbXnNFqcb/+Yr9dxU
-         w+qz2mE3begIDz0gBU9B+lSKVeoz3DPpfkts4wBr7zcVU3NSEeEwE2Igkn++2ZOww0dt
-         VW9zD5ez59Nzn3H2cAlqNWYEHi9c7yeTv5q8tfkcVNqas3NCu5le3eEb/p1zEpN6x0J5
-         MWuKxAyKJGUwJLYqYeaT0ronfXLCgUI/sZj3wH9ateZX1SVSOVFpQgea8ix3pvwAle5H
-         CtUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gFrhzCDbKN3dXJqOCjxaWjlxE64lMzIuw0MAKOdMJPo=;
-        b=a7bUrnQxd3lCPjhY5geJQ7+Adg6jpvneVNVH32ae7dpyqIuk32UHEASVmiuKxExYdY
-         TuIvceT4Rnbebt5gDbRGoYFLHBLd0X+cD0nn0JAgwx9grRx7/uDFFYH33yM7/9cJ2boo
-         vWe4wNgpgsxqbA+lBipi31EAGTf16qjwe50gJcRUAfRvKqxqmkqi8joHYiBkolwqSYL4
-         FIYkjvzI6HIg8XZQrnv6JjQ2SoLEeUazm8qZCVWwGsTxrzV0V0FJ4qubVxkXBRt3Sxwn
-         tJZQWGHY6i4yCD/8U75Bo+LBtLYthW23M5T8KagH44s5VQRy5NIo3bF1JLs9/cHqHDNX
-         UpCg==
-X-Gm-Message-State: APjAAAXXUqV5HsUe07BHp6NUy7Op/FJSxlih6PoqWQKhfhcpeJOGVxGK
-        t9x05E+vhUGKooBDZcbaIpERAYYV+YPwiQ==
-X-Google-Smtp-Source: APXvYqxQN0IjsHvsXPGL1/dmxNkT7MMV5tTjkmdNONnvAy7DjCdslgHJ1eS+uFVKcySrprZrSgDZXA==
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr22136975ljj.34.1562169590522;
-        Wed, 03 Jul 2019 08:59:50 -0700 (PDT)
-Received: from pc636.semobile.internal ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id t21sm441121lfd.85.2019.07.03.08.59.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 08:59:49 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 1/1] mm/vmalloc: do not keep unpurged areas in the busy tree
-Date:   Wed,  3 Jul 2019 17:59:42 +0200
-Message-Id: <20190703155942.13571-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 3 Jul 2019 12:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfGCQBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:01:40 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A821F2189E;
+        Wed,  3 Jul 2019 16:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562169699;
+        bh=sEHptRbLdsEYKSwjvY3/qz3IvFgJjdcb8qCsSzdw0vY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CR/aA+HR1zGuRCS/ctRotaVzni53LoFZ77UI7OI9cYOVYeUKMDl3Ed1l2w3VRH9EZ
+         MYVEp+cWb34lbTInhOsRIKWeByf8P2aSr02Akc0V4iC76iRrlxqTmKFkMVKaTl+Cxh
+         f5/Tput0fGNikRUjsD6//pJ98OcGBcTLCjfz48So=
+Date:   Wed, 3 Jul 2019 09:01:37 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        davem@davemloft.net, glider@google.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        bpf@vger.kernel.org,
+        syzbot <syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com>
+Subject: Re: [net/tls] Re: KMSAN: uninit-value in aesti_encrypt
+Message-ID: <20190703160137.GB21629@sol.localdomain>
+References: <000000000000a97a15058c50c52e@google.com>
+ <20190627164627.GF686@sol.localdomain>
+ <5d1508c79587a_e392b1ee39f65b45b@john-XPS-13-9370.notmuch>
+ <20190627190123.GA669@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627190123.GA669@sol.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The busy tree can be quite big, even though the area is freed
-or unmapped it still stays there until "purge" logic removes
-it.
+On Thu, Jun 27, 2019 at 12:01:23PM -0700, Eric Biggers wrote:
+> On Thu, Jun 27, 2019 at 11:19:51AM -0700, John Fastabend wrote:
+> > Eric Biggers wrote:
+> > > [+TLS maintainers]
+> > > 
+> > > Very likely a net/tls bug, not a crypto bug.
+> > > 
+> > > Possibly a duplicate of other reports such as "KMSAN: uninit-value in gf128mul_4k_lle (3)"
+> > > 
+> > > See https://lore.kernel.org/netdev/20190625055019.GD17703@sol.localdomain/ for
+> > > the list of 17 other open syzbot bugs I've assigned to the TLS subsystem.  TLS
+> > > maintainers, when are you planning to look into these?
+> > > 
+> > > On Thu, Jun 27, 2019 at 09:37:05AM -0700, syzbot wrote:
+> > 
+> > I'm looking at this issue now. There is a series on bpf list now to address
+> > many of those 17 open issues but this is a separate issue. I can reproduce
+> > it locally so should have a fix soon.
+> > 
+> 
+> Okay, great!  However, just to clarify, the 17 syzbot bugs I assigned to TLS are
+> in addition to the 30 I assigned to BPF
+> (https://lore.kernel.org/lkml/20190624050114.GA30702@sol.localdomain/).
+> (Well, since I sent that it's actually up to 35 now.)
+> 
+> I do expect most of these are duplicates, so when you are fixing the bugs, it
+> would be really helpful (for everyone, including you in the future :-) ) if you
+> would include the corresponding Reported-by syzbot line for *every* syzbot
+> report you think is addressed, so they get closed.
+> 
 
-1) Optimize and reduce the size of "busy" tree by removing a
-node from it right away as soon as user triggers free paths.
-It is possible to do so, because the allocation is done using
-another augmented tree.
+Hi John, there's no activity on your patch thread
+(https://lore.kernel.org/bpf/5d1507e7b3eb6_e392b1ee39f65b463@john-XPS-13-9370.notmuch/T/#t)
+this week yet, nor do the patches seem to be applied anywhere.  What is the ETA
+on actually fixing the bug(s)?  There are now like 20 syzbot reports for
+seemingly the same bug, since it's apparently causing massive memory corruption;
+and this is wasting a lot of other kernel developers' time.  This has been going
+on for over a month; any reason why it's taking so long to fix?
 
-The vmalloc test driver shows the difference, for example the
-"fix_size_alloc_test" is ~11% better comparing with default
-configuration:
+Also, have you written a regression test for this bug so it doesn't happen
+again?
 
-sudo ./test_vmalloc.sh performance
-
-<default>
-Summary: fix_size_alloc_test loops: 1000000 avg: 993985 usec
-Summary: full_fit_alloc_test loops: 1000000 avg: 973554 usec
-Summary: long_busy_list_alloc_test loops: 1000000 avg: 12617652 usec
-<default>
-
-<this patch>
-Summary: fix_size_alloc_test loops: 1000000 avg: 882263 usec
-Summary: full_fit_alloc_test loops: 1000000 avg: 973407 usec
-Summary: long_busy_list_alloc_test loops: 1000000 avg: 12593929 usec
-<this patch>
-
-2) Since the busy tree now contains allocated areas only and does
-not interfere with lazily free nodes, introduce the new function
-show_purge_info() that dumps "unpurged" areas that is propagated
-through "/proc/vmallocinfo".
-
-3) Eliminate VM_LAZY_FREE flag.
-
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 51 ++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 9 deletions(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index edb212298c8a..1219152e60b1 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -329,7 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
- #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
- #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
- 
--#define VM_LAZY_FREE	0x02
- #define VM_VM_AREA	0x04
- 
- static DEFINE_SPINLOCK(vmap_area_lock);
-@@ -534,7 +533,7 @@ link_va(struct vmap_area *va, struct rb_root *root,
- static __always_inline void
- unlink_va(struct vmap_area *va, struct rb_root *root)
- {
--	if (WARN_ON(RB_EMPTY_NODE(&va->rb_node)))
-+	if (RB_EMPTY_NODE(&va->rb_node))
- 		return;
- 
- 	if (root == &free_vmap_area_root)
-@@ -1160,7 +1159,11 @@ EXPORT_SYMBOL_GPL(unregister_vmap_purge_notifier);
- static void __free_vmap_area(struct vmap_area *va)
- {
- 	/*
--	 * Remove from the busy tree/list.
-+	 * In most cases VA is not attached to the tree, but there
-+	 * are a few exceptions:
-+	 *
-+	 * - is linked only in case of pcpu, recovery part;
-+	 * - if radix_tree_preload gets failed, see new_vmap_block().
- 	 */
- 	unlink_va(va, &vmap_area_root);
- 
-@@ -1311,6 +1314,10 @@ static void free_vmap_area_noflush(struct vmap_area *va)
- {
- 	unsigned long nr_lazy;
- 
-+	spin_lock(&vmap_area_lock);
-+	unlink_va(va, &vmap_area_root);
-+	spin_unlock(&vmap_area_lock);
-+
- 	nr_lazy = atomic_long_add_return((va->va_end - va->va_start) >>
- 				PAGE_SHIFT, &vmap_lazy_nr);
- 
-@@ -2130,14 +2137,13 @@ struct vm_struct *remove_vm_area(const void *addr)
- 
- 	might_sleep();
- 
--	va = find_vmap_area((unsigned long)addr);
-+	spin_lock(&vmap_area_lock);
-+	va = __find_vmap_area((unsigned long)addr);
- 	if (va && va->flags & VM_VM_AREA) {
- 		struct vm_struct *vm = va->vm;
- 
--		spin_lock(&vmap_area_lock);
- 		va->vm = NULL;
- 		va->flags &= ~VM_VM_AREA;
--		va->flags |= VM_LAZY_FREE;
- 		spin_unlock(&vmap_area_lock);
- 
- 		kasan_free_shadow(vm);
-@@ -2145,6 +2151,8 @@ struct vm_struct *remove_vm_area(const void *addr)
- 
- 		return vm;
- 	}
-+
-+	spin_unlock(&vmap_area_lock);
- 	return NULL;
- }
- 
-@@ -3421,6 +3429,22 @@ static void show_numa_info(struct seq_file *m, struct vm_struct *v)
- 	}
- }
- 
-+static void show_purge_info(struct seq_file *m)
-+{
-+	struct llist_node *head;
-+	struct vmap_area *va;
-+
-+	head = READ_ONCE(vmap_purge_list.first);
-+	if (head == NULL)
-+		return;
-+
-+	llist_for_each_entry(va, head, purge_list) {
-+		seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
-+			(void *)va->va_start, (void *)va->va_end,
-+			va->va_end - va->va_start);
-+	}
-+}
-+
- static int s_show(struct seq_file *m, void *p)
- {
- 	struct vmap_area *va;
-@@ -3433,10 +3457,9 @@ static int s_show(struct seq_file *m, void *p)
- 	 * behalf of vmap area is being tear down or vm_map_ram allocation.
- 	 */
- 	if (!(va->flags & VM_VM_AREA)) {
--		seq_printf(m, "0x%pK-0x%pK %7ld %s\n",
-+		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
- 			(void *)va->va_start, (void *)va->va_end,
--			va->va_end - va->va_start,
--			va->flags & VM_LAZY_FREE ? "unpurged vm_area" : "vm_map_ram");
-+			va->va_end - va->va_start);
- 
- 		return 0;
- 	}
-@@ -3472,6 +3495,16 @@ static int s_show(struct seq_file *m, void *p)
- 
- 	show_numa_info(m, v);
- 	seq_putc(m, '\n');
-+
-+	/*
-+	 * As a final step, dump "unpurged" areas. Note,
-+	 * that entire "/proc/vmallocinfo" output will not
-+	 * be address sorted, because the purge list is not
-+	 * sorted.
-+	 */
-+	if (list_is_last(&va->list, &vmap_area_list))
-+		show_purge_info(m);
-+
- 	return 0;
- }
- 
--- 
-2.11.0
-
+- Eric
