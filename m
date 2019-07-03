@@ -2,96 +2,117 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7978C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3580EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89192218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C61B2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGCXFg (ORCPT
+        id S1727499AbfGCXFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:05:36 -0400
-Received: from gate.crashing.org ([63.228.1.57]:34221 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfGCXFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:05:35 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x63N4tut012603;
-        Wed, 3 Jul 2019 18:04:56 -0500
-Message-ID: <c8b5e295c34aaf8b3d8b03aeaa980c88d870443a.camel@kernel.crashing.org>
-Subject: Re: [patch v3 1/5] AST2500 DMA UART driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "sudheer.v" <open.sudheer@gmail.com>
-Cc:     jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        shivahshankar.shankarnarayanrao@aspeedtech.com,
-        shivahshankar@gmail.com, sudheer.veliseti@aspeedtech.com,
-        sudheer veliseti <sudheer.open@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
-Date:   Thu, 04 Jul 2019 09:04:55 +1000
-In-Reply-To: <20190703174926.GA12813@kroah.com>
-References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
-         <1561459476-14268-2-git-send-email-open.sudheer@gmail.com>
-         <20190703174926.GA12813@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Jul 2019 19:05:41 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60801 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfGCXFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:05:40 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 3f159dca3fbf52f1; Thu, 4 Jul 2019 01:05:38 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH] PM: sleep: Drop dev_pm_skip_next_resume_phases()
+Date:   Thu, 04 Jul 2019 01:05:38 +0200
+Message-ID: <2100414.Plmip0uhM5@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 19:49 +0200, Greg KH wrote:
-> > +
-> > +     if (tx_sts & UART_SDMA0_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA0_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[0]));
-> > +     } else if (tx_sts & UART_SDMA1_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA1_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[1]));
-> > +     } else if (tx_sts & UART_SDMA2_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA2_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[2]));
-> > +     } else if (tx_sts & UART_SDMA3_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA3_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[3]));
-> > +     } else if (tx_sts & UART_SDMA4_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA4_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[4]));
-> > +     } else if (tx_sts & UART_SDMA5_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA5_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[5]));
-> > +     } else if (tx_sts & UART_SDMA6_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA6_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[6]));
-> > +     } else if (tx_sts & UART_SDMA7_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA7_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[7]));
-> > +     } else if (tx_sts & UART_SDMA8_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA8_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[8]));
-> > +     } else if (tx_sts & UART_SDMA9_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA9_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[9]));
-> > +     } else if (tx_sts & UART_SDMA10_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA10_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[10]));
-> > +     } else if (tx_sts & UART_SDMA11_INT) {
-> > +             ast_uart_sdma_write(sdma, UART_SDMA11_INT, UART_TX_SDMA_ISR);
-> > +             ast_sdma_bufffdone(&(sdma->dma_ch->tx_dma_info[11]));
-> > +     } else {
-> > +     }
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Also this should be a for () loop...
+After recent hibernation-related changes, there are no more callers
+of dev_pm_skip_next_resume_phases() except for the PM core itself
+in which it is more straightforward to run the statements from
+that function directly, so do that and drop it.
 
-Cheers,
-Ben.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+On top of the patch series at:
+
+https://lore.kernel.org/linux-acpi/20190701162017.GB2640@lahna.fi.intel.com/T/#madf00de2d5a9b67e3c7bf51e882bd66ed7efc7ea
+
+---
+ drivers/base/power/main.c |   19 +++----------------
+ include/linux/pm.h        |    1 -
+ 2 files changed, 3 insertions(+), 17 deletions(-)
+
+Index: linux-pm/drivers/base/power/main.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -530,21 +530,6 @@ static void dpm_watchdog_clear(struct dp
+ /*------------------------- Resume routines -------------------------*/
+ 
+ /**
+- * dev_pm_skip_next_resume_phases - Skip next system resume phases for device.
+- * @dev: Target device.
+- *
+- * Make the core skip the "early resume" and "resume" phases for @dev.
+- *
+- * This function can be called by middle-layer code during the "noirq" phase of
+- * system resume if necessary, but not by device drivers.
+- */
+-void dev_pm_skip_next_resume_phases(struct device *dev)
+-{
+-	dev->power.is_late_suspended = false;
+-	dev->power.is_suspended = false;
+-}
+-
+-/**
+  * suspend_event - Return a "suspend" message for given "resume" one.
+  * @resume_msg: PM message representing a system-wide resume transition.
+  */
+@@ -681,6 +666,9 @@ Skip:
+ 	dev->power.is_noirq_suspended = false;
+ 
+ 	if (skip_resume) {
++		/* Make the next phases of resume skip the device. */
++		dev->power.is_late_suspended = false;
++		dev->power.is_suspended = false;
+ 		/*
+ 		 * The device is going to be left in suspend, but it might not
+ 		 * have been in runtime suspend before the system suspended, so
+@@ -689,7 +677,6 @@ Skip:
+ 		 * device again.
+ 		 */
+ 		pm_runtime_set_suspended(dev);
+-		dev_pm_skip_next_resume_phases(dev);
+ 	}
+ 
+ Out:
+Index: linux-pm/include/linux/pm.h
+===================================================================
+--- linux-pm.orig/include/linux/pm.h
++++ linux-pm/include/linux/pm.h
+@@ -760,7 +760,6 @@ extern int pm_generic_poweroff_late(stru
+ extern int pm_generic_poweroff(struct device *dev);
+ extern void pm_generic_complete(struct device *dev);
+ 
+-extern void dev_pm_skip_next_resume_phases(struct device *dev);
+ extern bool dev_pm_may_skip_resume(struct device *dev);
+ extern bool dev_pm_smart_suspend_and_suspended(struct device *dev);
+ 
+
 
 
