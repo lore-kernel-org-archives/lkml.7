@@ -1,103 +1,106 @@
 Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400CFC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DB6C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADAB218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5F2218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562185893;
+	bh=8rZJjhlUf/qMBdRLPI5prMW5R8RsnoeRcyV06al/QNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JcR+RpyWlSw4yAfCSO2WaoYIsQAvhAmf3bBElcs0/uYEIk4FVYr10K2ecULeEHpmZ
+	 Rk9O4ud6akzd9aUJLV8GeettZ9b9M50fC/K2DfWNB9lPeuM08YOUIbXcSvSp+YGfLF
+	 1X0Ds/Pu/mQB2hSG8yIQ4wM4iuyX1Hi+KHL8bAu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfGCU3q (ORCPT
+        id S1727113AbfGCUbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48060 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 16:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfGCU3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:29:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726550AbfGCUbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:31:32 -0400
+Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 590ED218A0;
-        Wed,  3 Jul 2019 20:29:44 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 16:29:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, bp@alien8.de, mingo@kernel.org,
-        luto@kernel.org, torvalds@linux-foundation.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, jgross@suse.com,
-        linux-kernel@vger.kernel.org, zhe.he@windriver.com,
-        joel@joelfernandes.org, devel@etsukata.com
-Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190703162942.63c750a3@gandalf.local.home>
-In-Reply-To: <20190703202231.GI16275@worktop.programming.kicks-ass.net>
-References: <20190703102731.236024951@infradead.org>
-        <20190703102807.588906400@infradead.org>
-        <20190703202231.GI16275@worktop.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E92C1218A0;
+        Wed,  3 Jul 2019 20:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562185891;
+        bh=8rZJjhlUf/qMBdRLPI5prMW5R8RsnoeRcyV06al/QNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=igHZO/XeFH2AYZ1UZL9Hr/0DlCMrJobgPYTmblwWmLYpJhrE0ThCPKavzhp8UODlC
+         dltKVf6ekIyFcekgpsHgb2EKKhfzm/UKUp8JEeh9zMBZsnYyG+EmijpcD1zhcqkJ9c
+         lsy2bCVVV3XzCoQn+FNDlTDjcguJ5uJAMU1QUF9c=
+Date:   Wed, 3 Jul 2019 13:31:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, chetjain@in.ibm.com,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH] crypto: user - prevent operating on larval algorithms
+Message-ID: <20190703203128.GC10080@gmail.com>
+References: <20190701153154.1569c2dc@kitsune.suse.cz>
+ <20190702211700.16526-1-ebiggers@kernel.org>
+ <20190703143057.miqgc7blhjjxjmee@gondor.apana.org.au>
+ <20190703222108.467ec204@kitsune.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190703222108.467ec204@kitsune.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 22:22:31 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Michal,
 
-> On Wed, Jul 03, 2019 at 12:27:34PM +0200, root wrote:
-> > Despire the current efforts to read CR2 before tracing happens there
-> > still exist a number of possible holes:
-> > 
-> >   idtentry page_fault             do_page_fault           has_error_code=1
-> >     call error_entry
-> >       TRACE_IRQS_OFF
-> >         call trace_hardirqs_off*
-> >           #PF // modifies CR2
-> > 
-> >       CALL_enter_from_user_mode
-> >         __context_tracking_exit()
-> >           trace_user_exit(0)
-> >             #PF // modifies CR2
-> > 
-> >     call do_page_fault
-> >       address = read_cr2(); /* whoopsie */
-> > 
-> > And similar for i386.
-> > 
-> > Fix it by pulling the CR2 read into the entry code, before any of that
-> > stuff gets a chance to run and ruin things.
-> > 
-> > Ideally we'll clean up the entry code by moving this tracing and
-> > context tracking nonsense into C some day, but let's not delay fixing
-> > this longer.
-> >   
+On Wed, Jul 03, 2019 at 10:21:08PM +0200, Michal Suchánek wrote:
+> On Wed, 3 Jul 2019 22:30:57 +0800
+> Herbert Xu <herbert@gondor.apana.org.au> wrote:
 > 
-> > @@ -1180,10 +1189,10 @@ idtentry xenint3		do_int3			has_error_co
-> >  #endif
-> >  
-> >  idtentry general_protection	do_general_protection	has_error_code=1
-> > -idtentry page_fault		do_page_fault		has_error_code=1
-> > +idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
-> >  
-> >  #ifdef CONFIG_KVM_GUEST
-> > -idtentry async_page_fault	do_async_page_fault	has_error_code=1
-> > +idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
-> >  #endif  
+> > On Tue, Jul 02, 2019 at 02:17:00PM -0700, Eric Biggers wrote:
+> > > From: Eric Biggers <ebiggers@google.com>
+> > > 
+> > > Michal Suchanek reported [1] that running the pcrypt_aead01 test from
+> > > LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
+> > > alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
+> > > The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
+> > > 
+> > > The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
+> > > unregister isn't a real registered algorithm, but rather is a "test
+> > > larval", which is a special "algorithm" added to the algorithms list
+> > > while the real algorithm is still being tested.  Larvals don't have
+> > > initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
+> > > doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
+> > > to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
+> > > 
 > 
-> While going over the various idt handlers, I found that we probably also
-> need read_cr2 on do_double_fault(), otherwise it is susceptible to the
-> same problem.
+> Do you have some way to reproduce this reliably?
+> 
+> I suppose you would have to send a signal to the process for the call
+> to get interrupted, right?
 > 
 
-BTW, do you plan on making this for stable? Even though it's rather
-invasive. Or should we just apply the band-aids first, have them
-backported to stable, and then put this change on top of them for
-upstream?
+It reproduced pretty reliably for me with what you suggested.  Just typing in
+terminal:
 
--- Steve
+	while true; do pcrypt_aead01; done
+
+and then holding Ctrl-C.
+
+If I have time I'll try writing an LTP test that specifically reproduces it.
+Yes, it would involve sending a signal to a thread or process that's executing
+CRYPTO_MSG_NEWALG (unless I find a better way).
+
+- Eric
