@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F78C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56B3C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B338421852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A476521852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pij2suAo"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GTJzXA6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfGCU7c (ORCPT
+        id S1727373AbfGCU7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:59:32 -0400
-Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:25882
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Wed, 3 Jul 2019 16:59:37 -0400
+Received: from mail-eopbgr150049.outbound.protection.outlook.com ([40.107.15.49]:60289
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726678AbfGCU7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:59:30 -0400
+        id S1727280AbfGCU7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:59:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4XzH04VyMkU/5vIBzhhhxcuTfHUI0O8GFlI+grC5liA=;
- b=pij2suAomTXo9a2Fpv/kWne/ughN1BbYIMcOOgiitqCaJ69u/rUBXH0xeasMYgQrG4Qj45ugY2aKo/oCxH2l3ZjzRtSWsdn7JwNdxUhzTGkmTvai6n8bNR+3V5rKA9HsRDuy9NYThiOW3Z+UAUKwNUUieyQcH6yyCYGLFRW6tl0=
+ bh=FvsWJrvejOHxRClN3xZ1gkKefbbL+X6CPpVlIbOXHYc=;
+ b=GTJzXA6ir3gFOEEfmpkarS4nFiqdXecrfHwOfYRCOCvcP9yI8Vie68AbRw9+OlB7M50RGW+dII71bALretx7HWkzW2DYb7BvniftqsBUDktYTVG2du/pK5xtMWsaEH0pqfhd9uhJPqHd7X4Ybx+rnGrlELuNCfEQoEFj0imLJrE=
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
- VE1PR04MB6464.eurprd04.prod.outlook.com (20.179.233.21) with Microsoft SMTP
+ VE1PR04MB6592.eurprd04.prod.outlook.com (20.179.234.208) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Wed, 3 Jul 2019 20:59:26 +0000
+ 15.20.2032.17; Wed, 3 Jul 2019 20:59:30 +0000
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::a5ca:7c9c:6b18:eb0a]) by VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::a5ca:7c9c:6b18:eb0a%6]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 20:59:26 +0000
+ 20:59:30 +0000
 From:   Roy Pledge <roy.pledge@nxp.com>
 To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -42,11 +42,13 @@ To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Leo Li <leoyang.li@nxp.com>
 CC:     Roy Pledge <roy.pledge@nxp.com>
-Subject: [PATCH v2 1/7] soc/fsl/qbman: Rework QBMan private memory setup
-Thread-Topic: [PATCH v2 1/7] soc/fsl/qbman: Rework QBMan private memory setup
-Thread-Index: AQHVMeIzPLFPuVfPjE2P/r3d1RtleA==
-Date:   Wed, 3 Jul 2019 20:59:26 +0000
-Message-ID: <1562187548-32261-2-git-send-email-roy.pledge@nxp.com>
+Subject: [PATCH v2 3/7] soc/fsl/qbman: Cleanup QMan queues if device was
+ already initialized
+Thread-Topic: [PATCH v2 3/7] soc/fsl/qbman: Cleanup QMan queues if device was
+ already initialized
+Thread-Index: AQHVMeI1E8Yqep3QnkaAT4Gy8a4rQg==
+Date:   Wed, 3 Jul 2019 20:59:30 +0000
+Message-ID: <1562187548-32261-4-git-send-email-roy.pledge@nxp.com>
 References: <1562187548-32261-1-git-send-email-roy.pledge@nxp.com>
 In-Reply-To: <1562187548-32261-1-git-send-email-roy.pledge@nxp.com>
 Reply-To: Roy Pledge <roy.pledge@nxp.com>
@@ -63,222 +65,159 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [72.142.119.78]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b0a1e33-fb2f-401a-68fe-08d6fff95517
+x-ms-office365-filtering-correlation-id: dc1c4512-6da9-4399-df53-08d6fff95779
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6464;
-x-ms-traffictypediagnostic: VE1PR04MB6464:
-x-microsoft-antispam-prvs: <VE1PR04MB64646761413A117D8564C2F386FB0@VE1PR04MB6464.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6592;
+x-ms-traffictypediagnostic: VE1PR04MB6592:
+x-microsoft-antispam-prvs: <VE1PR04MB659261256A3841F9EF70218286FB0@VE1PR04MB6592.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
 x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(189003)(199004)(14454004)(2501003)(81156014)(81166006)(4326008)(478600001)(305945005)(8676002)(14444005)(2906002)(7736002)(50226002)(476003)(486006)(2616005)(446003)(25786009)(11346002)(3450700001)(86362001)(2201001)(68736007)(44832011)(36756003)(66946007)(26005)(66476007)(66556008)(64756008)(73956011)(71200400001)(71190400001)(66066001)(53936002)(6116002)(52116002)(386003)(6506007)(66446008)(8936002)(256004)(102836004)(186003)(99286004)(6486002)(5660300002)(110136005)(316002)(3846002)(6436002)(43066004)(6512007)(6636002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6464;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(199004)(189003)(2616005)(6636002)(52116002)(2201001)(446003)(86362001)(476003)(7736002)(11346002)(110136005)(44832011)(3450700001)(256004)(6486002)(478600001)(5660300002)(305945005)(486006)(99286004)(14454004)(316002)(43066004)(66446008)(66946007)(73956011)(6512007)(8936002)(50226002)(81166006)(81156014)(3846002)(26005)(6116002)(71200400001)(186003)(71190400001)(2501003)(68736007)(64756008)(53936002)(386003)(66066001)(25786009)(8676002)(102836004)(76176011)(66556008)(6506007)(2906002)(66476007)(36756003)(4326008)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6592;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: M7QeasEi1Z5CR75593E19ofn71mq7Rj630ZW35mXGxgToMfkJtW7C4T7kbNV2ZQzOcbUnyKaoZl13lj/87U4mP0MZG8EGGEvCt9Eh49ppKdO1uQohvH4MeJrIlLh+yRgp6X/Ud9OD5jZR7dUiaaeBHazaOwZHNBh3HzrB+D17IiZgyxIWOuz45YiF9qVRyrMegBJFtKlyRhRl/VDHL+JDvzBeXkopoiKNhfT607kOEUGcU2L+SlLkKrABbojwK+oyPkVcUBNM7xnlRQ0LQOrDo6U0MQ4etpU1D0phbBNHckGrg9zHs7ehYC4j7XluMX9QJsTSRB74Curv0kt8O4eOksIh7TyskTyOf2Q9VUlY1wXDbAhOc+SNZnI20XpMMjqz1bj16+cQwJ2LasNz2TbKtY3PyuAETdQrZcc0Lxbue4=
+x-microsoft-antispam-message-info: dRiOS99F3NK1mL8s5JFdD178voaZR/v23tvnZ3N+aQoDbJgsylRiYpUY7JT845GgiYHbSW1YR625ai9SEB+8C50ercoBEymX4gqFQGQxPa5jEMEkiAkz0spaCtSJS8ppjA628ap4AUSxMsZuzZlaZ2QvXjKqo5o+kUEFK9FWEnu48DJhAfrd9BBhHSVDqBoQ2ICVsXsVWCwcrk33cJGj9tJTK1s1zCSY/GuinnNCAiOLt5EdnRRdn83Uw870nTTrOu0zf2u1y62urEiQoerOLebTSkZc6JRn5xCQ50NkG1jUKSQv2b0TnHQPBItQf4Gsn9MRNyFFRdLerjEwkDYWBqduf72QTtAa4TwtjEMUgsnM7ZIsnBynmHuokFXQqc2iBvm01v5DbSpQ11ev7Zpmqk5enN9zU6DLI3DQlTJ6qP4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b0a1e33-fb2f-401a-68fe-08d6fff95517
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 20:59:26.6926
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc1c4512-6da9-4399-df53-08d6fff95779
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 20:59:30.2326
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: roy.pledge@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6464
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework QBMan private memory setup so that the areas are not
-zeroed if the device was previously initialized
-
-If the QMan private memory was already initialized skip the PFDR
-initialization.
+If the QMan device was previously initialized make sure all the
+frame queues are out of service once all the portals are probed.
+This handles the case where the kernel is restarted without the
+SoC being reset (kexec for example)
 
 Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
 ---
- drivers/soc/fsl/qbman/bman_ccsr.c | 26 ++++++++++++++++++++--
- drivers/soc/fsl/qbman/dpaa_sys.c  |  7 +++---
- drivers/soc/fsl/qbman/qman_ccsr.c | 45 ++++++++++++++++++++++++++++++++++-=
-----
- 3 files changed, 67 insertions(+), 11 deletions(-)
+ drivers/soc/fsl/qbman/qman.c        |  4 ++--
+ drivers/soc/fsl/qbman/qman_ccsr.c   | 13 ++++++++++++-
+ drivers/soc/fsl/qbman/qman_portal.c | 18 +++++++++++++++++-
+ drivers/soc/fsl/qbman/qman_priv.h   |  7 +++++++
+ 4 files changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman=
-_ccsr.c
-index 7c3cc96..dc6d7e5 100644
---- a/drivers/soc/fsl/qbman/bman_ccsr.c
-+++ b/drivers/soc/fsl/qbman/bman_ccsr.c
-@@ -97,17 +97,40 @@ static void bm_get_version(u16 *id, u8 *major, u8 *mino=
-r)
- /* signal transactions for FBPRs with higher priority */
- #define FBPR_AR_RPRIO_HI BIT(30)
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index 636f83f..f10f77d 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -2581,7 +2581,7 @@ static int _qm_dqrr_consume_and_match(struct qm_porta=
+l *p, u32 fqid, int s,
+ #define qm_dqrr_drain_nomatch(p) \
+ 	_qm_dqrr_consume_and_match(p, 0, 0, false)
 =20
--static void bm_set_memory(u64 ba, u32 size)
-+/* Track if probe has occurred and if cleanup is required */
-+static int __bman_probed;
-+static int __bman_requires_cleanup;
-+
-+
-+static int bm_set_memory(u64 ba, u32 size)
+-static int qman_shutdown_fq(u32 fqid)
++int qman_shutdown_fq(u32 fqid)
  {
-+	u32 bar, bare;
- 	u32 exp =3D ilog2(size);
- 	/* choke if size isn't within range */
- 	DPAA_ASSERT(size >=3D 4096 && size <=3D 1024*1024*1024 &&
- 		   is_power_of_2(size));
- 	/* choke if '[e]ba' has lower-alignment than 'size' */
- 	DPAA_ASSERT(!(ba & (size - 1)));
-+
-+	/* Check to see if BMan has already been initialized */
-+	bar =3D bm_ccsr_in(REG_FBPR_BAR);
-+	if (bar) {
-+		/* Maker sure ba =3D=3D what was programmed) */
-+		bare =3D bm_ccsr_in(REG_FBPR_BARE);
-+		if (bare !=3D upper_32_bits(ba) || bar !=3D lower_32_bits(ba)) {
-+			pr_err("Attempted to reinitialize BMan with different BAR, got 0x%llx r=
-ead BARE=3D0x%x BAR=3D0x%x\n",
-+			       ba, bare, bar);
-+			return -ENOMEM;
-+		}
-+		pr_info("BMan BAR already configured\n");
-+		__bman_requires_cleanup =3D 1;
-+		return 1;
-+	}
-+
- 	bm_ccsr_out(REG_FBPR_BARE, upper_32_bits(ba));
- 	bm_ccsr_out(REG_FBPR_BAR, lower_32_bits(ba));
- 	bm_ccsr_out(REG_FBPR_AR, exp - 1);
-+	return 0;
- }
+ 	struct qman_portal *p;
+ 	struct device *dev;
+@@ -2754,7 +2754,7 @@ static int qman_shutdown_fq(u32 fqid)
 =20
- /*
-@@ -120,7 +143,6 @@ static void bm_set_memory(u64 ba, u32 size)
-  */
- static dma_addr_t fbpr_a;
- static size_t fbpr_sz;
--static int __bman_probed;
-=20
- static int bman_fbpr(struct reserved_mem *rmem)
- {
-diff --git a/drivers/soc/fsl/qbman/dpaa_sys.c b/drivers/soc/fsl/qbman/dpaa_=
-sys.c
-index e6d48dc..3e0a7f3 100644
---- a/drivers/soc/fsl/qbman/dpaa_sys.c
-+++ b/drivers/soc/fsl/qbman/dpaa_sys.c
-@@ -40,6 +40,7 @@ int qbman_init_private_mem(struct device *dev, int idx, d=
-ma_addr_t *addr,
- 	int ret;
- 	struct device_node *mem_node;
- 	u64 size64;
-+	struct reserved_mem *rmem;
-=20
- 	ret =3D of_reserved_mem_device_init_by_idx(dev, dev->of_node, idx);
- 	if (ret) {
-@@ -62,10 +63,8 @@ int qbman_init_private_mem(struct device *dev, int idx, =
-dma_addr_t *addr,
- 		return -ENODEV;
- 	}
-=20
--	if (!dma_alloc_coherent(dev, *size, addr, 0)) {
--		dev_err(dev, "DMA Alloc memory failed\n");
--		return -ENODEV;
--	}
-+	rmem =3D of_reserved_mem_lookup(mem_node);
-+	*addr =3D rmem->base;
-=20
- 	/*
- 	 * Disassociate the reserved memory area from the device
+ 		DPAA_ASSERT((mcr->verb & QM_MCR_VERB_MASK) =3D=3D
+ 			    QM_MCR_VERB_ALTER_OOS);
+-		if (mcr->result) {
++		if (mcr->result !=3D QM_MCR_RESULT_OK) {
+ 			dev_err(dev, "OOS fail: FQ 0x%x (0x%x)\n",
+ 				fqid, mcr->result);
+ 			ret =3D -EIO;
 diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman=
 _ccsr.c
-index a6bb430..39f6fc1 100644
+index 39f6fc1..fcf77e0 100644
 --- a/drivers/soc/fsl/qbman/qman_ccsr.c
 +++ b/drivers/soc/fsl/qbman/qman_ccsr.c
-@@ -274,6 +274,7 @@ static u32 __iomem *qm_ccsr_start;
- /* A SDQCR mask comprising all the available/visible pool channels */
- static u32 qm_pools_sdqcr;
- static int __qman_probed;
-+static int  __qman_requires_cleanup;
+@@ -483,7 +483,7 @@ RESERVEDMEM_OF_DECLARE(qman_pfdr, "fsl,qman-pfdr", qman=
+_pfdr);
 =20
- static inline u32 qm_ccsr_in(u32 offset)
+ #endif
+=20
+-static unsigned int qm_get_fqid_maxcnt(void)
++unsigned int qm_get_fqid_maxcnt(void)
  {
-@@ -340,19 +341,46 @@ static void qm_get_version(u16 *id, u8 *major, u8 *mi=
-nor)
+ 	return fqd_sz / 64;
  }
+@@ -728,6 +728,17 @@ int qman_is_probed(void)
+ }
+ EXPORT_SYMBOL_GPL(qman_is_probed);
 =20
- #define PFDR_AR_EN		BIT(31)
--static void qm_set_memory(enum qm_memory memory, u64 ba, u32 size)
-+static int qm_set_memory(enum qm_memory memory, u64 ba, u32 size)
- {
-+	void *ptr;
- 	u32 offset =3D (memory =3D=3D qm_memory_fqd) ? REG_FQD_BARE : REG_PFDR_BA=
-RE;
- 	u32 exp =3D ilog2(size);
-+	u32 bar, bare;
-=20
- 	/* choke if size isn't within range */
- 	DPAA_ASSERT((size >=3D 4096) && (size <=3D 1024*1024*1024) &&
- 		    is_power_of_2(size));
- 	/* choke if 'ba' has lower-alignment than 'size' */
- 	DPAA_ASSERT(!(ba & (size - 1)));
++int qman_requires_cleanup(void)
++{
++	return __qman_requires_cleanup;
++}
 +
-+	/* Check to see if QMan has already been initialized */
-+	bar =3D qm_ccsr_in(offset + REG_offset_BAR);
-+	if (bar) {
-+		/* Maker sure ba =3D=3D what was programmed) */
-+		bare =3D qm_ccsr_in(offset);
-+		if (bare !=3D upper_32_bits(ba) || bar !=3D lower_32_bits(ba)) {
-+			pr_err("Attempted to reinitialize QMan with different BAR, got 0x%llx r=
-ead BARE=3D0x%x BAR=3D0x%x\n",
-+			       ba, bare, bar);
-+			return -ENOMEM;
++void qman_done_cleanup(void)
++{
++	__qman_requires_cleanup =3D 0;
++}
++
++
+ static int fsl_qman_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qm=
+an_portal.c
+index 75717bc..153727c 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -233,7 +233,7 @@ static int qman_portal_probe(struct platform_device *pd=
+ev)
+ 	struct device_node *node =3D dev->of_node;
+ 	struct qm_portal_config *pcfg;
+ 	struct resource *addr_phys[2];
+-	int irq, cpu, err;
++	int irq, cpu, err, i;
+ 	u32 val;
+=20
+ 	err =3D qman_is_probed();
+@@ -328,6 +328,22 @@ static int qman_portal_probe(struct platform_device *p=
+dev)
+ 	if (!cpu_online(cpu))
+ 		qman_offline_cpu(cpu);
+=20
++	if (__qman_portals_probed =3D=3D 1 && qman_requires_cleanup()) {
++		/*
++		 * QMan wasn't reset prior to boot (Kexec for example)
++		 * Empty all the frame queues so they are in reset state
++		 */
++		for (i =3D 0; i < qm_get_fqid_maxcnt(); i++) {
++			err =3D  qman_shutdown_fq(i);
++			if (err) {
++				dev_err(dev, "Failed to shutdown frame queue %d\n",
++					i);
++				goto err_portal_init;
++			}
 +		}
-+		__qman_requires_cleanup =3D 1;
-+		/* Return 1 to indicate memory was previously programmed */
-+		return 1;
++		qman_done_cleanup();
 +	}
-+	/* Need to temporarily map the area to make sure it is zeroed */
-+	ptr =3D memremap(ba, size, MEMREMAP_WB);
-+	if (!ptr) {
-+		pr_crit("memremap() of QMan private memory failed\n");
-+		return -ENOMEM;
-+	}
-+	memset(ptr, 0, size);
-+	memunmap(ptr);
 +
- 	qm_ccsr_out(offset, upper_32_bits(ba));
- 	qm_ccsr_out(offset + REG_offset_BAR, lower_32_bits(ba));
- 	qm_ccsr_out(offset + REG_offset_AR, PFDR_AR_EN | (exp - 1));
-+	return 0;
- }
+ 	return 0;
 =20
- static void qm_set_pfdr_threshold(u32 th, u8 k)
-@@ -571,12 +599,19 @@ static int qman_init_ccsr(struct device *dev)
- 	int i, err;
-=20
- 	/* FQD memory */
--	qm_set_memory(qm_memory_fqd, fqd_a, fqd_sz);
-+	err =3D qm_set_memory(qm_memory_fqd, fqd_a, fqd_sz);
-+	if (err < 0)
-+		return err;
- 	/* PFDR memory */
--	qm_set_memory(qm_memory_pfdr, pfdr_a, pfdr_sz);
--	err =3D qm_init_pfdr(dev, 8, pfdr_sz / 64 - 8);
--	if (err)
-+	err =3D qm_set_memory(qm_memory_pfdr, pfdr_a, pfdr_sz);
-+	if (err < 0)
- 		return err;
-+	/* Only initialize PFDRs if the QMan was not initialized before */
-+	if (err =3D=3D 0) {
-+		err =3D qm_init_pfdr(dev, 8, pfdr_sz / 64 - 8);
-+		if (err)
-+			return err;
-+	}
- 	/* thresholds */
- 	qm_set_pfdr_threshold(512, 64);
- 	qm_set_sfdr_threshold(128);
+ err_portal_init:
+diff --git a/drivers/soc/fsl/qbman/qman_priv.h b/drivers/soc/fsl/qbman/qman=
+_priv.h
+index 0451571..a8a35fe 100644
+--- a/drivers/soc/fsl/qbman/qman_priv.h
++++ b/drivers/soc/fsl/qbman/qman_priv.h
+@@ -272,3 +272,10 @@ extern struct qman_portal *affine_portals[NR_CPUS];
+ extern struct qman_portal *qman_dma_portal;
+ const struct qm_portal_config *qman_get_qm_portal_config(
+ 						struct qman_portal *portal);
++
++unsigned int qm_get_fqid_maxcnt(void);
++
++int qman_shutdown_fq(u32 fqid);
++
++int qman_requires_cleanup(void);
++void qman_done_cleanup(void);
 --=20
 2.7.4
 
