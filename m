@@ -2,142 +2,107 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6F9C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B07C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF3A218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E812218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GRizeqOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfGCMS5 (ORCPT
+        id S1726768AbfGCMYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:18:57 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:57023 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCMS5 (ORCPT
+        Wed, 3 Jul 2019 08:24:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35128 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCMYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:18:57 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MFbmS-1hkIsC3VvC-00H6cu; Wed, 03 Jul 2019 14:16:55 +0200
-Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Cristina Moraru <cristina.moraru09@gmail.com>,
-        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
-        Valentin Rothberg <valentinrothberg@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <mmarek@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Bolle <pebolle@tiscali.nl>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Tejun Heo <tj@kernel.org>,
-        Jej B <James.Bottomley@hansenpartnership.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Daniel Jonsson <danijons@student.chalmers.se>,
-        Andrzej Wasowski <wasowski@itu.dk>
-References: <1471462023-119645-1-git-send-email-cristina.moraru09@gmail.com>
- <20160818175505.GM3296@wotan.suse.de> <20160825074313.GC18622@lst.de>
- <20160825201919.GE3296@wotan.suse.de>
- <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
- <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
- <20190627045052.GA7594@lst.de>
- <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net>
-Date:   Wed, 3 Jul 2019 14:16:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 3 Jul 2019 08:24:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tV5Q9vU+tNXeMlXcZgsSk1/vWrS+XQOTNkGpzgJ8SaM=; b=GRizeqOIeAVt/poyWWniKCrW9O
+        HQDXXZypve6C0K/gMwtK2UXRbImtD+Q5eL9fUTqoplsTqLQZiT6ZsuJ2eLIVAet2qqxjswXYIGEgU
+        bUvEEeuTnOACbzDbhuCvRQuHl6g5DrwoYXkLgBOS3JpSvaayVxZ7ZrXbLAg7WAG3YAZihaHKGxnrk
+        xYoDO3xz5xIkkvkyznXrdBMrcu520YDwpBYHu/V7PXekqLAUx+e6fLDLAT83R+ULpNO3EQa+/ukes
+        AmAraVq9Wtf1Qunn8OCKA6AO/t3oiMA93AQDiFv7xC/3t9fwx4Jm1lgNDbqA9TCJTXfkDdmeoE8mn
+        qLv1k1jQ==;
+Received: from [12.46.110.2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hieIq-0002G1-4b; Wed, 03 Jul 2019 12:24:00 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-riscv@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] mm: stub out all of swapops.h for !CONFIG_MMU
+Date:   Wed,  3 Jul 2019 05:23:59 -0700
+Message-Id: <20190703122359.18200-4-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703122359.18200-1-hch@lst.de>
+References: <20190703122359.18200-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:W1x9k6V+ILJLTptyvRZZehGm7oOh188B4CLlH8SDPNOMPl6mkgL
- jwh0gmXALvMKQ4QkJaDBduAejwvFFp99TX7tMmfPMp6/Dpi0tkOW5Vc2SXzFeZqTGvmGb5Y
- HAYYNuC6Zdm3DbpjV5aoBc0pQCIBGck52IAZ0AwhayVJboHeRay4HUUcqSLO1Wf8jbO9wk1
- 0SCzRRtgb7tB0OH4MzTsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WAtJgcwxvoU=:0kmEfqi451hPUIuRJpYyTG
- a4GnD3P2+1ZySKAR+DRfEbJgyVBnoylrvqvBwRReBdXZpfdeKejKNy3yUDAFD/7K5kXXFauYg
- UhzsEPInu3J1+7YyfAosnCb+hog0ydu0KyACei8pcZv1lfeffilhFcokmwQa9V1Deys0c7+81
- 1m+4LCKd1KxM9gVP699lhg8zFJddDWYVL3Y0+HcRBQXUYQ15r/jcozg8tGRfq2SRPfFdCYrNX
- SZ3ZDEEVP5Bf8g6lyEDiR/LfdaM9BBM6d4WPU8vdS4myU1mYEuzGm8YJI87RvYv+ngHEvzlNr
- tBjknxuzp56tuWOi+vuaCU/Cr4g9zAkdMfrlHrXNsovVHtMONkLPQAydDzvQK6WnW2kCm0m40
- AeZxso0aibZqL/e48hYl/o4/ne4oe7aJihzWdOknbn4dfCW8Ee6BDTxLC6VvAJnwi03bb5UWb
- 2eom04i8VSqMCzLjw72ZIb0Vp8DXbYA2tkR0q8IXBGxTk5ijHGXqWCaU10TyF18Foaiwa5mwT
- Dvx6tqdMfkyWaz3LM4wU0XeHurVba/ZFK/iYtD4FumEc8yUseDNoe8qR7pIOxMivxAbvCzgRn
- Has1Um8+1KKg/fmi253tN7Ie8lreycS5eGqFKk+jqlWvFYzjxBKSk4tEx+k3Hencsm/KzkRwT
- GRUt6KTYYgS9LNoDVeSH37fwr3MRgTvqa39ybtVakFxB/X99d8YuWLvQzYNrKSCuW2hnoxB6a
- a13bmJgK7Yj2qw9kJLymTcKC7AH3GNmVyGabQMc8x5cBqEB8PiBezdDgtdE=
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.06.19 20:40, Luis Chamberlain wrote:
+The whole header file deals with swap entries and PTEs, none of which
+can exist for nommu builds.  The current nommu ports have lots of
+stubs to allow the inline functions in swapops.h to compile, but
+as none of this functionality is actually used there is no point
+in even providing it.  This way we don't have to provide the stubs
+for the upcoming RISC-V nommu port, and can eventually remove it
+from the existing ports.
 
-Hi folks,
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/swapops.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> The solution puts forward a mechanism to add a kconfig_symb where we> are 100% certain we have a direct module --> config mapping.
-Okay, but IIRC this will add more boilerplate those modules.
-
-And I wonder whether target binaries are the right place for those
-things at all - IMHO that's something one wants to derive from the
-source code  / .config's. At least in the cases I'm imagining, I don't
-even have an actual kernel running on the corresponding target yet.
-(eg. in crosscompile situations)
-
-OTOH, a more pressing problem for me is identifying the right drivers
-and corresponding config options (usually plural, as certain subsystems
-have to be enabled, too) by hardware information like DT, ACPI, DMI,
-PCI, etc. For now, I have to do that manually, which is pretty time
-consuming.
-
-In embedded world, we often have scenarios where we want a really
-minimal kernel, but need to enable/disable certain hi-level peripherals
-in the middle of the project (eg. "oh, we also need ethernet, but we
-wanna drop usb"). There we'll have to find out what actual chip is,
-its corresponding driver, required subsystems, etc, and also kick off
-everything we don't need anymore.
-
-I've thought about implementing some actual dependency tracking
-(at least recording the auto-enabled symbols), but didn't expect that
-to become practically usable anytime soon, so I went for a different
-approach: writing a little tool that allows modeling hilevel features
-and corresponding (potentially board-specific) config syms, so the whole
-.config for certain board and usecase can be autogenerated by just some
-small meta-configuration:
-
-   https://github.com/metux/kmct
-
-Maybe this could also help for your usecase ?
-
-
---mtx
-
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index 4d961668e5fc..b02922556846 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -6,6 +6,8 @@
+ #include <linux/bug.h>
+ #include <linux/mm_types.h>
+ 
++#ifdef CONFIG_MMU
++
+ /*
+  * swapcache pages are stored in the swapper_space radix tree.  We want to
+  * get good packing density in that tree, so the index should be dense in
+@@ -50,13 +52,11 @@ static inline pgoff_t swp_offset(swp_entry_t entry)
+ 	return entry.val & SWP_OFFSET_MASK;
+ }
+ 
+-#ifdef CONFIG_MMU
+ /* check whether a pte points to a swap entry */
+ static inline int is_swap_pte(pte_t pte)
+ {
+ 	return !pte_none(pte) && !pte_present(pte);
+ }
+-#endif
+ 
+ /*
+  * Convert the arch-dependent pte representation of a swp_entry_t into an
+@@ -375,4 +375,5 @@ static inline int non_swap_entry(swp_entry_t entry)
+ }
+ #endif
+ 
++#endif /* CONFIG_MMU */
+ #endif /* _LINUX_SWAPOPS_H */
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.1
+
