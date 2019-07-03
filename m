@@ -2,100 +2,137 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED98EC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC99C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF93D218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F0B218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562160317;
+	bh=hPIgAF/RwH+87CC48ngdy/pc35EBUqps7G9X6Sfz/Rk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qQDlskgOvIKYZrAOQYkHQhHD7OftbCVFzz5Wpy+afbd60aIpIBbHnK97vI7zQuOlT
+	 8LOS7kpaSR6BCjy0owScJsgFigFO+PekqysDspee8OJdMGyG7D1lGtZmQg0Gg1bncj
+	 vIoH89f3MkQaABwjbAQHiDuivMOqa3oQNpiRnQP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfGCNXN (ORCPT
+        id S1727054AbfGCNZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:23:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:40593 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfGCNXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:23:12 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M28O9-1hgjPt2sY5-002TnS; Wed, 03 Jul 2019 15:22:56 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: bcm47094: add missing #cells for mdio-bus-mux
-Date:   Wed,  3 Jul 2019 15:22:45 +0200
-Message-Id: <20190703132255.852025-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 3 Jul 2019 09:25:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbfGCNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:25:16 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D033218AD;
+        Wed,  3 Jul 2019 13:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562160315;
+        bh=hPIgAF/RwH+87CC48ngdy/pc35EBUqps7G9X6Sfz/Rk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iOYguXOSn1KvEZ75OL682DZzYwsj4Dd/lxMdTTt7oxy3O57i3wga0yD86dARW7o8v
+         lW4fZBAD94lrViCzfj97n+Ubn24osyQPzRt+6h7Qlxb/I+mgmWkfwo28hj12GU4yCk
+         tnWhbHnM+Vwhnhe3gb4cuoQ5+qrsDzzfNeI1Az24=
+Received: by mail-qt1-f178.google.com with SMTP id d17so1627475qtj.8;
+        Wed, 03 Jul 2019 06:25:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAU4ejyYhb05AiV7wl9Y8bxHh3rFPLJN+EYY3g1oLAGTj7itFknq
+        gs9J6VuIU0aWl2VOPIXCygXji7W6Yuk+vvK3UQ==
+X-Google-Smtp-Source: APXvYqwbNqCNdpfVoj1XUWDZZwcDTVqfdN/j8JGsFHn6EWRXSqXFi1G31JDKwzRzYDQZC4Iohj8zuTfFHRWyCC03KMg=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr32762815qve.72.1562160314468;
+ Wed, 03 Jul 2019 06:25:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lvCFNj9rbQR8RjOV+MdKMN2bThGvAL+qaIb0oH5aGJue3TtP6ln
- d06sVHt6EYjIPOROSrbU6OtWl5LwghmnPvShGgDdr3Yx4Y58LgyPOn61l1tQj64jSgrSV2V
- oHrxr3wIM2tTby06bedxGhM2+S+nwWbrAlQRvfny4jBGFGMXWaOpDANZEBrzusRolOE6GIs
- 9n6vd3A5ulAq03Ib8PKNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l7jljqs9bFs=:KFglj0618tLWnyn1ATzAdo
- uIUjTjubRhoedfMbin5H/FoTO8PCiZnOMjlibAiNvYNuNQkqF6IpoB1/sukRqXavCjJN3ns6Q
- MjoA1M9xS+JQ1sG8JAvyo1lrfuhs2aHSWNSFAYx29AA0lmdl/+RBUP/NrDJ7+HXqY9RRPPNF9
- 1LzieIzos+QwFS+NBtE6CtxLBBOlpvB5qjD3/c7WoQWxgEuIhUTWnNBSU4LS2+LecsGP62YZp
- aEFAktZAd3XCcf0mKPJSR7Ve7E8YuFmyZgXgW4ZORNtRtdeYG74+T1X0ZNNIyokWWUHgahgNk
- xPI54+54p7TsXAifdYSWElb1GBDOCAE60Mg9eTZYAs93zACU8y2rxWSxGtvCY0yIkZLOabu7h
- NDhsnZyokdN5PN8i8S82mU+OZBwvvwZNmYrDgFBw9UhvN7/7FywSmeLHzEjRR7D8PHYauM6lT
- mCX8fbSF4pUiJuZs8637L59AHoiwbZ9RZ9kQAqA7kl0N47Xp6DVp6FqYUTV5cVkQE1L/p10xq
- wd3ZKhtMaH0PJnclTiU584ON5yxmjoaNe88mmnTrFboypT1NZGa2bLjq/ucSFwe79a+sQx9t0
- A9XznHTmFTHmEnfa9Qa2b98+K2psiYq/Jw4uI+n36ELcC8kOoMEvGAo1ws4o/nJi5/MQ1KD0C
- 53TlBlpT5EY/JYztPcttty21x9Hl/LKdWBie9hpYxBPQIL9iLqbr9eOjWgjpS66ak2T6B0LOX
- c8Ar9G7tUYlIiPW1X8VzC7v+t4xTACx1gtnZOA==
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+ <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
+ <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com> <CAFBinCCaK5USb062tywd54y=6B0jTFsx1-k7NMfqvjmS7+5LgA@mail.gmail.com>
+In-Reply-To: <CAFBinCCaK5USb062tywd54y=6B0jTFsx1-k7NMfqvjmS7+5LgA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 3 Jul 2019 07:25:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJwd63-BJq2Bw5xnSN7XRGj=KmhHXcxRbsaKMX8jYdAjg@mail.gmail.com>
+Message-ID: <CAL_JsqJwd63-BJq2Bw5xnSN7XRGj=KmhHXcxRbsaKMX8jYdAjg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
+ and ARX300 PCIe PHYs
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mdio-bus-mux has no #address-cells/#size-cells property,
-which causes a few dtc warnings:
+On Tue, Jul 2, 2019 at 5:37 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Rob,
+>
+> On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
+> [...]
+> > > +  lantiq,rcu:
+> > > +    maxItems: 1
+> > > +    description: phandle to the RCU syscon
+> >
+> > You need to define the type (and drop maxItems):
+> >
+> > $ref: /schemas/types.yaml#/definitions/phandle
+> thank you for this hint - the examples I used didn't have it
+>
+> > > +
+> > > +  lantiq,rcu-endian-offset:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: the offset of the endian registers for this PHY instance in the RCU syscon
+> > > +
+> > > +  lantiq,rcu-big-endian-mask:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
+> > > +
+> > > +required:
+> > > +  - "#phy-cells"
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - resets
+> > > +  - reset-names
+> > > +  - lantiq,rcu
+> > > +  - lantiq,rcu-endian-offset
+> > > +  - lantiq,rcu-big-endian-mask
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    pcie0_phy: phy@106800 {
+> > > +        compatible = "lantiq,vrx200-pcie-phy";
+> > > +        reg = <0x106800 0x100>;
+> > > +        lantiq,rcu = <&rcu0>;
+> > > +        lantiq,rcu-endian-offset = <0x4c>;
+> > > +        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
+> > > +        big-endian;
+> >
+> > The example will fail to validate because big-endian is not listed as
+> > a property and you have 'additionalProperties: false'. So you have to
+> > either list big-endian or drop additionalProperties.
+> good catch, thank you.
+> I'll add big-endian and little-endian as allowed (but optional) properties
+>
+> > Note that the examples are validated against the schema in linux-next now.
+> I tested this with yesterday's linux-next tree and it didn't fail for me
+> do you have any hint how I can run this validation myself?
 
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:129.4-18: Warning (reg_format): /mdio-bus-mux/mdio@200:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #address-cells value
-arch/arm/boot/dts/bcm47094-linksys-panamera.dts:128.22-132.5: Warning (avoid_default_addr_size): /mdio-bus-mux/mdio@200: Relying on default #size-cells value
+It's not a default target:
 
-Add the normal cell numbers.
+make dt_binding_check
 
-Fixes: 2bebdfcdcd0f ("ARM: dts: BCM5301X: Add support for Linksys EA9500")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/boot/dts/bcm47094-linksys-panamera.dts | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-index 18d0ae46e76c..0faae8950375 100644
---- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-+++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-@@ -124,6 +124,9 @@
- 	};
- 
- 	mdio-bus-mux {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		/* BIT(9) = 1 => external mdio */
- 		mdio_ext: mdio@200 {
- 			reg = <0x200>;
--- 
-2.20.0
-
+Rob
