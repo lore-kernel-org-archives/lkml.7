@@ -2,79 +2,241 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5559C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95734C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1602189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562169586;
-	bh=g4YfMS0at5H5fxKFbuWjLjLz//Y1pZ+NOQaMeDBxGco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BY+GcVqEVlGJksrEbXgNx0hXJnJdpciMnRyUVuEz0v81ODQrl39wtB9yPO7+v+89V
-	 hxewTevDs0j6lIqH8d7HRl1eyUIzZvaLMcv2heEBSPMielCY01cwK3/p0JACJgXObh
-	 YHfvKUDI4ALHt1cg3lMhu1Gl+RTX1fQVrJNoIbNU=
+	by mail.kernel.org (Postfix) with ESMTP id 629F62189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qWymVMwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGCP7p (ORCPT
+        id S1727049AbfGCP7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 11:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfGCP7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:59:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806DA2189E;
-        Wed,  3 Jul 2019 15:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562169584;
-        bh=g4YfMS0at5H5fxKFbuWjLjLz//Y1pZ+NOQaMeDBxGco=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BJJ+JfPCn064vt74jHWmcQrdy4Itbn8W/Zxl3CWXcGHsvHz+FQkwR58FkbBIYBcsX
-         QQSpEZ5ILwOSJwm4dAepvuNnbwg4udN3eNe6hvHBgyroXkaERV8bw93gF/Ls8c0qFr
-         A9TZ+7xqUqwwSKlViUJXJLeU5OFWXiHMDOKdUdks=
-Date:   Wed, 3 Jul 2019 17:59:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     jeyentam <je.yen.tam@ni.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] serial/8250: Add support for NI-Serial
- PXI/PXIe+485 devices
-Message-ID: <20190703155941.GB19567@kroah.com>
-References: <20190703072435.34152-1-je.yen.tam@ni.com>
- <63697b10-98a7-86b7-2513-3eb793ed03c5@metux.net>
- <20190703144744.GB24961@kroah.com>
- <d6910b29-3ba6-4a3b-04e2-bc7c3c012554@metux.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6910b29-3ba6-4a3b-04e2-bc7c3c012554@metux.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 3 Jul 2019 11:59:54 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42240 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfGCP7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:59:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so2997260lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 08:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gFrhzCDbKN3dXJqOCjxaWjlxE64lMzIuw0MAKOdMJPo=;
+        b=qWymVMwWBiebY3jqm1IZFIvKbFwtFLiQBcstlPbjsEjP1XWeeND9r9xO1Gv+nq8hMl
+         KMjBNXPgyz9R2PCG624S838/3s2HNifSySYIKpD85drn4YzChNIDbXnNFqcb/+Yr9dxU
+         w+qz2mE3begIDz0gBU9B+lSKVeoz3DPpfkts4wBr7zcVU3NSEeEwE2Igkn++2ZOww0dt
+         VW9zD5ez59Nzn3H2cAlqNWYEHi9c7yeTv5q8tfkcVNqas3NCu5le3eEb/p1zEpN6x0J5
+         MWuKxAyKJGUwJLYqYeaT0ronfXLCgUI/sZj3wH9ateZX1SVSOVFpQgea8ix3pvwAle5H
+         CtUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gFrhzCDbKN3dXJqOCjxaWjlxE64lMzIuw0MAKOdMJPo=;
+        b=a7bUrnQxd3lCPjhY5geJQ7+Adg6jpvneVNVH32ae7dpyqIuk32UHEASVmiuKxExYdY
+         TuIvceT4Rnbebt5gDbRGoYFLHBLd0X+cD0nn0JAgwx9grRx7/uDFFYH33yM7/9cJ2boo
+         vWe4wNgpgsxqbA+lBipi31EAGTf16qjwe50gJcRUAfRvKqxqmkqi8joHYiBkolwqSYL4
+         FIYkjvzI6HIg8XZQrnv6JjQ2SoLEeUazm8qZCVWwGsTxrzV0V0FJ4qubVxkXBRt3Sxwn
+         tJZQWGHY6i4yCD/8U75Bo+LBtLYthW23M5T8KagH44s5VQRy5NIo3bF1JLs9/cHqHDNX
+         UpCg==
+X-Gm-Message-State: APjAAAXXUqV5HsUe07BHp6NUy7Op/FJSxlih6PoqWQKhfhcpeJOGVxGK
+        t9x05E+vhUGKooBDZcbaIpERAYYV+YPwiQ==
+X-Google-Smtp-Source: APXvYqxQN0IjsHvsXPGL1/dmxNkT7MMV5tTjkmdNONnvAy7DjCdslgHJ1eS+uFVKcySrprZrSgDZXA==
+X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr22136975ljj.34.1562169590522;
+        Wed, 03 Jul 2019 08:59:50 -0700 (PDT)
+Received: from pc636.semobile.internal ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id t21sm441121lfd.85.2019.07.03.08.59.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 08:59:49 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 1/1] mm/vmalloc: do not keep unpurged areas in the busy tree
+Date:   Wed,  3 Jul 2019 17:59:42 +0200
+Message-Id: <20190703155942.13571-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 05:41:25PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 03.07.19 16:47, Greg KH wrote:
-> > On Wed, Jul 03, 2019 at 03:27:11PM +0200, Enrico Weigelt, metux IT consult wrote:
-> >>>  /* UART Port Control Register */> -#define NI8430_PORTCON	0x0f> -#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
-> >> Can we have that renaming as a separate patch, to ease review ?
-> >>
-> >> And what about introducing a config sym for the new device specific
-> >> stuff ? These devices seem to be pretty rare - never seen them in
-> >> embeded world, where we do need to care of kernel size.
-> > 
-> > No, that's not the way this driver works, sorry.
-> 
-> That's sad, because in embedded world we often have to care about
-> code size, so making those devices optional would be of great help.
+The busy tree can be quite big, even though the area is freed
+or unmapped it still stays there until "purge" logic removes
+it.
 
-Really?  are you sure?  Try it and see what you really end up saving.
+1) Optimize and reduce the size of "busy" tree by removing a
+node from it right away as soon as user triggers free paths.
+It is possible to do so, because the allocation is done using
+another augmented tree.
 
-greg k-h
+The vmalloc test driver shows the difference, for example the
+"fix_size_alloc_test" is ~11% better comparing with default
+configuration:
+
+sudo ./test_vmalloc.sh performance
+
+<default>
+Summary: fix_size_alloc_test loops: 1000000 avg: 993985 usec
+Summary: full_fit_alloc_test loops: 1000000 avg: 973554 usec
+Summary: long_busy_list_alloc_test loops: 1000000 avg: 12617652 usec
+<default>
+
+<this patch>
+Summary: fix_size_alloc_test loops: 1000000 avg: 882263 usec
+Summary: full_fit_alloc_test loops: 1000000 avg: 973407 usec
+Summary: long_busy_list_alloc_test loops: 1000000 avg: 12593929 usec
+<this patch>
+
+2) Since the busy tree now contains allocated areas only and does
+not interfere with lazily free nodes, introduce the new function
+show_purge_info() that dumps "unpurged" areas that is propagated
+through "/proc/vmallocinfo".
+
+3) Eliminate VM_LAZY_FREE flag.
+
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 51 ++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 42 insertions(+), 9 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index edb212298c8a..1219152e60b1 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -329,7 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
+ #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
+ #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+ 
+-#define VM_LAZY_FREE	0x02
+ #define VM_VM_AREA	0x04
+ 
+ static DEFINE_SPINLOCK(vmap_area_lock);
+@@ -534,7 +533,7 @@ link_va(struct vmap_area *va, struct rb_root *root,
+ static __always_inline void
+ unlink_va(struct vmap_area *va, struct rb_root *root)
+ {
+-	if (WARN_ON(RB_EMPTY_NODE(&va->rb_node)))
++	if (RB_EMPTY_NODE(&va->rb_node))
+ 		return;
+ 
+ 	if (root == &free_vmap_area_root)
+@@ -1160,7 +1159,11 @@ EXPORT_SYMBOL_GPL(unregister_vmap_purge_notifier);
+ static void __free_vmap_area(struct vmap_area *va)
+ {
+ 	/*
+-	 * Remove from the busy tree/list.
++	 * In most cases VA is not attached to the tree, but there
++	 * are a few exceptions:
++	 *
++	 * - is linked only in case of pcpu, recovery part;
++	 * - if radix_tree_preload gets failed, see new_vmap_block().
+ 	 */
+ 	unlink_va(va, &vmap_area_root);
+ 
+@@ -1311,6 +1314,10 @@ static void free_vmap_area_noflush(struct vmap_area *va)
+ {
+ 	unsigned long nr_lazy;
+ 
++	spin_lock(&vmap_area_lock);
++	unlink_va(va, &vmap_area_root);
++	spin_unlock(&vmap_area_lock);
++
+ 	nr_lazy = atomic_long_add_return((va->va_end - va->va_start) >>
+ 				PAGE_SHIFT, &vmap_lazy_nr);
+ 
+@@ -2130,14 +2137,13 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 
+ 	might_sleep();
+ 
+-	va = find_vmap_area((unsigned long)addr);
++	spin_lock(&vmap_area_lock);
++	va = __find_vmap_area((unsigned long)addr);
+ 	if (va && va->flags & VM_VM_AREA) {
+ 		struct vm_struct *vm = va->vm;
+ 
+-		spin_lock(&vmap_area_lock);
+ 		va->vm = NULL;
+ 		va->flags &= ~VM_VM_AREA;
+-		va->flags |= VM_LAZY_FREE;
+ 		spin_unlock(&vmap_area_lock);
+ 
+ 		kasan_free_shadow(vm);
+@@ -2145,6 +2151,8 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 
+ 		return vm;
+ 	}
++
++	spin_unlock(&vmap_area_lock);
+ 	return NULL;
+ }
+ 
+@@ -3421,6 +3429,22 @@ static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+ 	}
+ }
+ 
++static void show_purge_info(struct seq_file *m)
++{
++	struct llist_node *head;
++	struct vmap_area *va;
++
++	head = READ_ONCE(vmap_purge_list.first);
++	if (head == NULL)
++		return;
++
++	llist_for_each_entry(va, head, purge_list) {
++		seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
++			(void *)va->va_start, (void *)va->va_end,
++			va->va_end - va->va_start);
++	}
++}
++
+ static int s_show(struct seq_file *m, void *p)
+ {
+ 	struct vmap_area *va;
+@@ -3433,10 +3457,9 @@ static int s_show(struct seq_file *m, void *p)
+ 	 * behalf of vmap area is being tear down or vm_map_ram allocation.
+ 	 */
+ 	if (!(va->flags & VM_VM_AREA)) {
+-		seq_printf(m, "0x%pK-0x%pK %7ld %s\n",
++		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+ 			(void *)va->va_start, (void *)va->va_end,
+-			va->va_end - va->va_start,
+-			va->flags & VM_LAZY_FREE ? "unpurged vm_area" : "vm_map_ram");
++			va->va_end - va->va_start);
+ 
+ 		return 0;
+ 	}
+@@ -3472,6 +3495,16 @@ static int s_show(struct seq_file *m, void *p)
+ 
+ 	show_numa_info(m, v);
+ 	seq_putc(m, '\n');
++
++	/*
++	 * As a final step, dump "unpurged" areas. Note,
++	 * that entire "/proc/vmallocinfo" output will not
++	 * be address sorted, because the purge list is not
++	 * sorted.
++	 */
++	if (list_is_last(&va->list, &vmap_area_list))
++		show_purge_info(m);
++
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
+
