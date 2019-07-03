@@ -2,119 +2,94 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2826FC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99884C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0291721881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UX5GJ5a3"
+	by mail.kernel.org (Postfix) with ESMTP id 6CED2218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562174188;
+	bh=wAY71ePpwrDaNFkq0PM1Dpq4LuZP2NtIHZTtqRudRyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l9F0IWXnirR41ADQBDUNxVrewu8eoP/MVUpXClsR34x5V2+dRBNsldSrYAcbHivv+
+	 fHfZ7zBCzp8IOx/AkteBPhogdjQ3045N3XHefJQXvt1zj+1FhnM2jFHcWWIc8oFV07
+	 6yYRhNaZh/3JoaPVMhxw4BqjM8WtlQTXhiVs30x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfGCROv (ORCPT
+        id S1727066AbfGCRQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:14:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45441 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfGCROv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:14:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id e3so6202661ioc.12;
-        Wed, 03 Jul 2019 10:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nh9dEJ9u2Y4ShTiHFYbydyiw3WYwXZ47VJXMaHvlETk=;
-        b=UX5GJ5a3W8vnXqaG6bYQid9Tk2rxUC2cxFyHfISjXfw3xZRhBp7g5yal7gmi6b+6bi
-         2OLiaKbvjjNWqKVDRvxuLXZeTzOAx7XWNj4cscpT5PGP01nMamx5ZgU+H3IJCmIBzqDU
-         KgQXltDjEnYoX2BhQEahn5u43RU8j9EqAdsuofkq42ucH0lBO56IHtRvRphjKhqKzVoQ
-         9fShBsIyuPVasNQazC/c6i/B7Xou5NXhw9stdppSWRzSsuZsL3sewE8at0IeHbRAE/Pe
-         bYVRthrz3Rfw4iYDW5dX4GLX1rf3ctOZdw1gLtCF2Rxca41XJjSpReslNoHg9O0h4rBq
-         sSXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nh9dEJ9u2Y4ShTiHFYbydyiw3WYwXZ47VJXMaHvlETk=;
-        b=Sf5AYg6N1HXJhPATSZu5PO02y25DkQaU2rukL1Wom47pG2llUUDi8UNgeftCrKR+wD
-         FOFHuAeQTCtEuF8hm0dPWOqwLDm3FvXyKpILA7AqbTcQlGlirmWB3DmTsPN5sYFMEHdV
-         7g5Pz56wV4Q/GUcwBXmrI+st8rKCXK13Bz8VGi41cBs1jhFihOXBItr5fMd5bhsqcbzU
-         6CbAjAx6TeFijKOK5yjMw1y6zywyd1N7xSnK0Jtzbl2z0XiD+tuN76tM4EKrpBfnpeJ7
-         DC1Pz+VLtO/HlPyCm2gi3Dpj23QYibogykhFwFvdLNYK1OA0vCGJzLJg8d5qeKxPEEN6
-         y1sQ==
-X-Gm-Message-State: APjAAAX72VWkPG5O3xQ1K6ES4RhLIw5UxfS4dEjXVshqhwoFvDfWaIk3
-        1cBKpiSnZekyG4jrmM+0RDiREdGcJFRfsFeh7Vo=
-X-Google-Smtp-Source: APXvYqzxSGfndHH5s8QQP6JMhmrjCfpxwk4akPLDTwdab+2QJvkTvQ8scvf2HrUvngz2nLIFp8dcUZexpefSjuHWDW8=
-X-Received: by 2002:a02:8814:: with SMTP id r20mr45482735jai.115.1562174090222;
- Wed, 03 Jul 2019 10:14:50 -0700 (PDT)
+        Wed, 3 Jul 2019 13:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfGCRQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:16:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA2A721881;
+        Wed,  3 Jul 2019 17:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562174185;
+        bh=wAY71ePpwrDaNFkq0PM1Dpq4LuZP2NtIHZTtqRudRyA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aXCzjGovYsJE9GxJZUFPNADxn+l7zIN2HKBArp3F1hPAV1IK7L1Ern/YQCbbMW7mH
+         li5SzyGQ3VrRvnV0s/pRv+iwUEYWuuJb6KbZ6lAhZc2mdfHSVQKi5Sz9AAoqhd4ZbB
+         4GBlGioG7fpE8qE7mMpzcsyL+8lfUf4ATvsaDI0g=
+Date:   Wed, 3 Jul 2019 19:16:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] Add a general, global device notification watch list
+ [ver #5]
+Message-ID: <20190703171623.GD24672@kroah.com>
+References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
+ <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
- <20190703081327.17505-4-andrew.smirnov@gmail.com> <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 3 Jul 2019 10:14:38 -0700
-Message-ID: <CAHQ1cqHfBU92g-P7jDfiWtEr0m-kv5Lw9yZcvUEXYg7OyhURfg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:51 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> On 7/3/2019 11:14 AM, Andrey Smirnov wrote:
-> > Move tasklet_init() call further down in order to simplify error path
-> > cleanup. No functional change intended.
-> >
-> > diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-> > index 4b25b2fa3d02..a7ca2bbe243f 100644
-> > --- a/drivers/crypto/caam/jr.c
-> > +++ b/drivers/crypto/caam/jr.c
-> > @@ -441,15 +441,13 @@ static int caam_jr_init(struct device *dev)
-> >
-> >       jrp = dev_get_drvdata(dev);
-> >
-> > -     tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
-> > -
-> >       /* Connect job ring interrupt handler. */
-> >       error = request_irq(jrp->irq, caam_jr_interrupt, IRQF_SHARED,
-> >                           dev_name(dev), dev);
-> >       if (error) {
-> >               dev_err(dev, "can't connect JobR %d interrupt (%d)\n",
-> >                       jrp->ridx, jrp->irq);
-> > -             goto out_kill_deq;
-> > +             return error;
-> >       }
->
-> The caam_jr_interrupt handler can schedule the tasklet so it makes sense
-> to have it be initialized ahead of request_irq. In theory it's possible
-> for an interrupt to be triggered immediately when request_irq is called.
->
-> I'm not very familiar with the CAAM ip, can you ensure no interrupts are
-> pending in HW at probe time? The "no functional change" part is not obvious.
->
+On Fri, Jun 28, 2019 at 04:49:30PM +0100, David Howells wrote:
+> Create a general, global watch list that can be used for the posting of
+> device notification events, for such things as device attachment,
+> detachment and errors on sources such as block devices and USB devices.
+> This can be enabled with:
+> 
+> 	CONFIG_DEVICE_NOTIFICATIONS
+> 
+> To add a watch on this list, an event queue must be created and configured:
+> 
+>         fd = open("/dev/event_queue", O_RDWR);
+>         ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, page_size << n);
+> 
+> and then a watch can be placed upon it using a system call:
+> 
+>         watch_devices(fd, 12, 0);
+> 
+> Unless the application wants to receive all events, it should employ
+> appropriate filters.
 
-Said tasklet will use both jrp->outring and jrp->entinfo array
-initialized after IRQ request call in both versions of the code
-(before/after this patch). AFAICT, the only case where this patch
-would change initialization safety of the original code is if JR was
-scheduled somehow while ORSFx is 0 (no jobs done), which I don't think
-is possible.
+What "filter"?  Who is going to use this and why a new system call for
+this?  You can do this today with udev/netlink/hotplug/whatever so why
+create yet-another-way?
 
-Thanks,
-Andrey Smirnov
+I don't think this is a good idea unless we really nail down the api and
+who is going to be using it.
+
+thanks,
+
+greg k-h
