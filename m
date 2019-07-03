@@ -2,224 +2,107 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD76C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883F8C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDD9218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562180932;
-	bh=HoXkaVqeIwrvWqdQqRzUqS/2kqEcLJsak8sUVTa70Mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yr9eWFCg+DZ6tXh2H9Y+gYR/DmGitP7CHzWN2WMnkUslEZIXY+OkhqAnCThWoJRqW
-	 mUw0KbOlLMq6Xruk3qOUFfl1yikYIUSvGBsqy6gUvX2FLXRdrFRwEiQp1wu0oH7RwP
-	 QrfxCsN2MXlZvBhphuDEu9dNu/QE2NhrC5Inq1rQ=
+	by mail.kernel.org (Postfix) with ESMTP id 65A28218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfGCTIu (ORCPT
+        id S1727190AbfGCTJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfGCTIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:08:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34097218A0;
-        Wed,  3 Jul 2019 19:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562180928;
-        bh=HoXkaVqeIwrvWqdQqRzUqS/2kqEcLJsak8sUVTa70Mg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iCGRdqfrO1yKOvMzmAzI4FSJ11JFFdrT8uAKg+aygBP5h5IfEI6mCyBes+A3df9OC
-         Ie4OwB9l5sIwKRko882CHgAkuHxlAwo7FQ0azM7j+nkURsbAu2Rj2Ldo80uVacZ9Ll
-         swNUriKPHqt6e9DGUl5mf0/CKOg3sWOFNDJaxhoM=
-Date:   Wed, 3 Jul 2019 21:08:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] Add a general, global device notification watch list
- [ver #5]
-Message-ID: <20190703190846.GA15663@kroah.com>
-References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
- <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk>
+        Wed, 3 Jul 2019 15:09:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42266 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfGCTJp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:09:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 4799B28ABB7
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Helen Koike <helen.koike@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v7 01/14] media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
+Date:   Wed,  3 Jul 2019 16:08:57 -0300
+Message-Id: <20190703190910.32633-2-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703190910.32633-1-helen.koike@collabora.com>
+References: <20190703190910.32633-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:49:30PM +0100, David Howells wrote:
-> Create a general, global watch list that can be used for the posting of
-> device notification events, for such things as device attachment,
-> detachment and errors on sources such as block devices and USB devices.
-> This can be enabled with:
-> 
-> 	CONFIG_DEVICE_NOTIFICATIONS
-> 
-> To add a watch on this list, an event queue must be created and configured:
-> 
->         fd = open("/dev/event_queue", O_RDWR);
->         ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, page_size << n);
-> 
-> and then a watch can be placed upon it using a system call:
-> 
->         watch_devices(fd, 12, 0);
-> 
-> Unless the application wants to receive all events, it should employ
-> appropriate filters.
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Ok, as discussed off-list, this is needed by the other patches
-afterward, i.e. the USB and block ones, which makes more sense.
+Add the Rockchip ISP1 specific processing parameter format
+V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
+V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
 
-Some tiny nits:
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+[update for upstream]
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
-> diff --git a/drivers/base/watch.c b/drivers/base/watch.c
-> new file mode 100644
-> index 000000000000..00336607dc73
-> --- /dev/null
-> +++ b/drivers/base/watch.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Event notifications.
-> + *
-> + * Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
-> + * Written by David Howells (dhowells@redhat.com)
-> + */
-> +
-> +#include <linux/watch_queue.h>
-> +#include <linux/syscalls.h>
-> +#include <linux/init_task.h>
-> +#include <linux/security.h>
+---
 
-You forgot to include device.h which has the prototype for your global
-function :)
+Changes in v7:
+- s/IPU3/RK_ISP1
 
-> +
-> +/*
-> + * Global queue for watching for device layer events.
-> + */
-> +static struct watch_list device_watchers = {
-> +	.watchers	= HLIST_HEAD_INIT,
-> +	.lock		= __SPIN_LOCK_UNLOCKED(&device_watchers.lock),
-> +};
-> +
-> +static DEFINE_SPINLOCK(device_watchers_lock);
-> +
-> +/**
-> + * post_device_notification - Post notification of a device event
-> + * @n - The notification to post
-> + * @id - The device ID
-> + *
-> + * Note that there's only a global queue to which all events are posted.  Might
-> + * want to provide per-dev queues also.
-> + */
-> +void post_device_notification(struct watch_notification *n, u64 id)
-> +{
-> +	post_watch_notification(&device_watchers, n, &init_cred, id);
-> +}
+ drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+ include/uapi/linux/videodev2.h       | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-Don't you need to export this symbol?
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index b1f4b991dba6..248eb9d3bf42 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1308,6 +1308,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_META_FMT_VSP1_HGO:	descr = "R-Car VSP1 1-D Histogram"; break;
+ 	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
+ 	case V4L2_META_FMT_UVC:		descr = "UVC payload header metadata"; break;
++	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A params"; break;
++	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A statistics"; break;
+ 
+ 	default:
+ 		/* Compressed formats */
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 9d9705ceda76..e1fa8e3089f8 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -750,6 +750,10 @@ struct v4l2_pix_format {
+ #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
+ #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
+ 
++/* Vendor specific - used for RK_ISP1 camera sub-system */
++#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
++#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
++
+ /* priv field value to indicates that subsequent fields are valid. */
+ #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+ 
+-- 
+2.20.1
 
-> +
-> +/**
-> + * sys_watch_devices - Watch for device events.
-> + * @watch_fd: The watch queue to send notifications to.
-> + * @watch_id: The watch ID to be placed in the notification (-1 to remove watch)
-> + * @flags: Flags (reserved for future)
-> + */
-> +SYSCALL_DEFINE3(watch_devices, int, watch_fd, int, watch_id, unsigned int, flags)
-
-Finally, the driver core gets a syscall!  :)
-
-Don't we need a manpage and a kselftest for it?
-
-> +{
-> +	struct watch_queue *wqueue;
-> +	struct watch_list *wlist = &device_watchers;
-
-No real need for wlist, right?  You just set it to this value and then
-it never changes?
-
-> +	struct watch *watch;
-> +	long ret = -ENOMEM;
-> +	u64 id = 0; /* Might want to allow dev# here. */
-
-I don't understand the comment here, what does "dev#" refer to?
-
-> +
-> +	if (watch_id < -1 || watch_id > 0xff || flags)
-> +		return -EINVAL;
-> +
-> +	wqueue = get_watch_queue(watch_fd);
-> +	if (IS_ERR(wqueue)) {
-> +		ret = PTR_ERR(wqueue);
-> +		goto err;
-> +	}
-> +
-> +	if (watch_id >= 0) {
-> +		watch = kzalloc(sizeof(*watch), GFP_KERNEL);
-> +		if (!watch)
-> +			goto err_wqueue;
-> +
-> +		init_watch(watch, wqueue);
-> +		watch->id	= id;
-> +		watch->info_id	= (u32)watch_id << WATCH_INFO_ID__SHIFT;
-> +
-> +		ret = security_watch_devices(watch);
-> +		if (ret < 0)
-> +			goto err_watch;
-> +
-> +		spin_lock(&device_watchers_lock);
-> +		ret = add_watch_to_object(watch, wlist);
-> +		spin_unlock(&device_watchers_lock);
-> +		if (ret == 0)
-> +			watch = NULL;
-> +	} else {
-> +		spin_lock(&device_watchers_lock);
-> +		ret = remove_watch_from_object(wlist, wqueue, id, false);
-> +		spin_unlock(&device_watchers_lock);
-> +	}
-> +
-> +err_watch:
-> +	kfree(watch);
-> +err_wqueue:
-> +	put_watch_queue(wqueue);
-> +err:
-> +	return ret;
-> +}
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index e85264fb6616..c947c078b1be 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -26,6 +26,7 @@
->  #include <linux/uidgid.h>
->  #include <linux/gfp.h>
->  #include <linux/overflow.h>
-> +#include <linux/watch_queue.h>
-
-No need for this, just do:
-
-struct watch_notification;
-
-so that things build.
-
-thanks,
-
-greg k-h
