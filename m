@@ -2,112 +2,88 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7139C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063B8C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4182189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562169208;
-	bh=CuhYih1pMX2LOI7uQFX0bHnOKBAsJh5KmXFD6VVmkjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gzIAc/k4W3kS0glptFqIrOrWo1f0pTL7w5iqehpz1FEaMwy/M7IAZWC/orcL0I2mR
-	 WgrLV5sJ90cVHN5JHazYZoG3rXt7T4NjTdoEgqecEFAFgmO4f0iWFEaJn8U1JOeYC1
-	 51j5d8LG3P91F4d9HYOoEqXGvFtHG6hDX7GCUVz4=
+	by mail.kernel.org (Postfix) with ESMTP id D7CB02189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfGCPxY (ORCPT
+        id S1727004AbfGCPyI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 11:53:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34834 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfGCPxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:53:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 18B12AD17;
-        Wed,  3 Jul 2019 15:53:22 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 17:53:14 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
- caches
-Message-ID: <20190703155314.GT978@dhcp22.suse.cz>
-References: <20190702183730.14461-1-longman@redhat.com>
- <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
- <78879b79-1b8f-cdfd-d4fa-610afe5e5d48@redhat.com>
- <20190702143340.715f771192721f60de1699d7@linux-foundation.org>
- <c29ff725-95ba-db4d-944f-d33f5f766cd3@redhat.com>
+        Wed, 3 Jul 2019 11:54:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28237 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbfGCPyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:54:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 08:54:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="315615600"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.63])
+  by orsmga004.jf.intel.com with ESMTP; 03 Jul 2019 08:54:05 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [GIT PULL 1/9] intel_th: msu: Fix unused variable warning on arm64 platform
+In-Reply-To: <20190703154551.GA19371@kroah.com>
+References: <20190627125152.54905-1-alexander.shishkin@linux.intel.com> <20190627125152.54905-2-alexander.shishkin@linux.intel.com> <20190703154551.GA19371@kroah.com>
+Date:   Wed, 03 Jul 2019 18:54:05 +0300
+Message-ID: <87muhvt8pu.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c29ff725-95ba-db4d-944f-d33f5f766cd3@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 03-07-19 11:21:16, Waiman Long wrote:
-> On 7/2/19 5:33 PM, Andrew Morton wrote:
-> > On Tue, 2 Jul 2019 16:44:24 -0400 Waiman Long <longman@redhat.com> wrote:
-> >
-> >> On 7/2/19 4:03 PM, Andrew Morton wrote:
-> >>> On Tue,  2 Jul 2019 14:37:30 -0400 Waiman Long <longman@redhat.com> wrote:
-> >>>
-> >>>> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
-> >>>> file to shrink the slab by flushing all the per-cpu slabs and free
-> >>>> slabs in partial lists. This applies only to the root caches, though.
-> >>>>
-> >>>> Extends this capability by shrinking all the child memcg caches and
-> >>>> the root cache when a value of '2' is written to the shrink sysfs file.
-> >>> Why?
-> >>>
-> >>> Please fully describe the value of the proposed feature to or users. 
-> >>> Always.
-> >> Sure. Essentially, the sysfs shrink interface is not complete. It allows
-> >> the root cache to be shrunk, but not any of the memcg caches.�
-> > But that doesn't describe anything of value.  Who wants to use this,
-> > and why?  How will it be used?  What are the use-cases?
-> >
-> For me, the primary motivation of posting this patch is to have a way to
-> make the number of active objects reported in /proc/slabinfo more
-> accurately reflect the number of objects that are actually being used by
-> the kernel.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-I believe we have been through that. If the number is inexact due to
-caching then lets fix slabinfo rather than trick around it and teach
-people to do a magic write to some file that will "solve" a problem.
-This is exactly what drop_caches turned out to be in fact. People just
-got used to drop caches because they were told so by $random web page.
-So really, think about the underlying problem and try to fix it.
+> On Thu, Jun 27, 2019 at 03:51:44PM +0300, Alexander Shishkin wrote:
+>> From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> 
+>> Commit ba39bd8306057 ("intel_th: msu: Switch over to scatterlist")
+>> introduced the following warnings on non-x86 architectures, as a result
+>> of reordering the multi mode buffer allocation sequence:
+>> 
+>> > drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_alloc’:
+>> > drivers/hwtracing/intel_th/msu.c:783:21: warning: unused variable ‘i’
+>> > [-Wunused-variable]
+>> > int ret = -ENOMEM, i;
+>> >                    ^
+>> > drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_free’:
+>> > drivers/hwtracing/intel_th/msu.c:863:6: warning: unused variable ‘i’
+>> > [-Wunused-variable]
+>> > int i;
+>> >     ^
+>> 
+>> Fix this compiler warning by factoring out set_memory sequences and making
+>> them x86-only.
+>> 
+>> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> Fixes: ba39bd8306057 ("intel_th: msu: Switch over to scatterlist")
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> ---
+>>  drivers/hwtracing/intel_th/msu.c | 40 +++++++++++++++++++++-----------
+>>  1 file changed, 27 insertions(+), 13 deletions(-)
+>
+> Does not apply to my tree :(
 
-It is true that you could argue that this patch is actually fixing the
-existing interface because it doesn't really do what it is documented to
-do and on those grounds I would agree with the change. But do not teach
-people that they have to write to some file to get proper numbers.
-Because that is just a bad idea and it will kick back the same way
-drop_caches.
--- 
-Michal Hocko
-SUSE Labs
+It's the same one as the one in the fixes series. I just put it here for
+completeness.
+
+Regards,
+--
+Alex
