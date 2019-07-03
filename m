@@ -2,136 +2,107 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8306C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB060C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2842089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTQ/vUCf"
+	by mail.kernel.org (Postfix) with ESMTP id BC6842063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGCB2q (ORCPT
+        id S1727348AbfGCB3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:28:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34017 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfGCB2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:28:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id u18so788105wru.1;
-        Tue, 02 Jul 2019 18:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yy/jJe6Qlwwp1Uwe0Cit54zA7Vf11kpokyvinUCks7c=;
-        b=aTQ/vUCfodZFR5bl0E3g9XXd7THPV9nPu2mYp1+I8zMhs9sW7E6Ryo+nF5yEJRUyNX
-         fI8WUsDhjEVt5q7xnTAgk5AA+5WeigU53ZxjE4QoGIwbCvPIcq4EZoVsRxM6FKfrPuov
-         Qv+OEuln/KI5BLM4Pcsc6t/+OoqYbY+FJfgqqCNBwH5J9qIXgp7HRmXM/Hp/6QQGgZD3
-         RYP/lR0JWxJM/E4pW5wsV+9KSD10OM3lmMEU8ATdAqNCmgb6fDdjtBE+6ORfdyU9DXjd
-         JVUjqtL75spzdpAY6myj7OjBc40Gef9T6W9tBjtXlgTblrPH+kg8uUbhXkFlI1Wc3GOk
-         D0Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yy/jJe6Qlwwp1Uwe0Cit54zA7Vf11kpokyvinUCks7c=;
-        b=VbS7125Xu3y5i7b1GwiKV/aytg+I8tAWJI2xvqGtxl0ED+cm2aucFHw3lFV3KJapiY
-         +Vy31Z2g9gZBZt4jT7MKTl/ZllRd0SvT+nMrZY7/nKayAIFhxyiUtMEktmEshbA4duOa
-         AkakRNiI53CsVW4TU13pNqCjt3k4wciDg5TNmfSQYhk2F8Zw9fkwV78TF9oE10e4E/i7
-         k5vDcMtASQFf4S4hBhsTT2+wdZbOnlRUDyTMnMRAFSB2e+yRsdBVKZ6awTN5DiA/Od+B
-         sTXmcwFJbouc44PwvZD6dnkzToyyCy9KGxuXJg9WsqtHLt5wJTipAigwtUWmsbP1mrBQ
-         ojLg==
-X-Gm-Message-State: APjAAAV1xcLOF4U5PjewohHXwh1FasFaNAcfgz2Q+DQ3sUJdxRHBVhZw
-        oUJTjZsY8ni3/qRLr5iSQbTxjutHdGTFrma2rPArj2PdkVA=
-X-Google-Smtp-Source: APXvYqzIEb02aajpAGNava/id0J1XqTeNG0vVxYK5uLbQYjjwdzYTBzNUK+/I5XN+jnCDfKY6KrEoXRwtDvbB0DH4xE=
-X-Received: by 2002:adf:dec3:: with SMTP id i3mr14133575wrn.74.1562117322653;
- Tue, 02 Jul 2019 18:28:42 -0700 (PDT)
+        Tue, 2 Jul 2019 21:29:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8687 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726652AbfGCB3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:29:12 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2D9FCF20B30474FBDB7F;
+        Wed,  3 Jul 2019 09:29:10 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
+ 09:29:03 +0800
+Subject: Re: [PATCH] module: add usage links when calling ref_module func
+To:     Jessica Yu <jeyu@kernel.org>
+CC:     <rusty@rustcorp.com.au>, <kay.sievers@vrfy.org>,
+        <clabbe.montjoie@gmail.com>, <linux-kernel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+References: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
+ <20190701135556.GA25484@linux-8ccs>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <4473a66b-4aee-1d22-aec8-9d6bceb5b303@huawei.com>
+Date:   Wed, 3 Jul 2019 09:28:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <20190701213304.34eeaef8@canb.auug.org.au> <20190701231036.GC23718@mellanox.com>
-In-Reply-To: <20190701231036.GC23718@mellanox.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 2 Jul 2019 21:28:30 -0400
-Message-ID: <CADnq5_OGiOZaz8V1aLLNL9F88pkthKh4ytYMaaFZ8j3XbgOnkg@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the hmm tree
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        "Yang, Philip" <Philip.Yang@amd.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dave Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190701135556.GA25484@linux-8ccs>
+Content-Type: text/plain; charset="gb18030"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 3:24 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Mon, Jul 01, 2019 at 09:33:04PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the hmm tree, today's linux-next build (x86_64 allmodconfig)
-> > failed like this:
-> >
-> > mm/hmm.c: In function 'hmm_get_or_create':
-> > mm/hmm.c:50:2: error: implicit declaration of function 'lockdep_assert_held_exclusive'; did you mean 'lockdep_assert_held_once'? [-Werror=implicit-function-declaration]
-> >   lockdep_assert_held_exclusive(&mm->mmap_sem);
-> >   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >   lockdep_assert_held_once
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c: In function 'amdgpu_ttm_tt_get_user_pages':
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:778:28: error: passing argument 2 of 'hmm_range_register' from incompatible pointer type [-Werror=incompatible-pointer-types]
-> >   hmm_range_register(range, mm, start,
-> >                             ^~
-> > In file included from drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:35:
-> > include/linux/hmm.h:464:29: note: expected 'struct hmm_mirror *' but argument is of type 'struct mm_struct *'
-> >           struct hmm_mirror *mirror,
-> >           ~~~~~~~~~~~~~~~~~~~^~~~~~
-> >
-> > Caused by commit
-> >
-> >   e36acfe6c86d ("mm/hmm: Use hmm_mirror not mm as an argument for hmm_range_register")
-> >
-> > interacting with commit
-> >
-> >   66c45500bfdc ("drm/amdgpu: use new HMM APIs and helpers")
-> >
-> > from the drm tree.
-> >
-> > All I could do for now was to mark the AMDGPU driver broken.  Please
-> > submit a merge for for me (and later Linus) to use.
->
-> This is expected, the AMD guys have the resolution for this from when
-> they tested hmm.git..
->
-> I think we are going to have to merge hmm.git into the amdgpu tree and
-> push the resolution forward, as it looks kind of complicated to shift
-> onto Linus or DRM.
->
-> Probably amdgpu needs to gain a few patches making the hmm_mirror
-> visible to amdgpu_ttm.c and then the merge resolution will be simple?
->
-> AMD/DRM we have a few days left to decide on how best to handle the
-> conflict, thanks.
+On 2019/7/1 21:55, Jessica Yu wrote:
+> +++ Zhiqiang Liu [28/06/19 20:32 +0800]:
+>> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>>
+>> Problem: Users can call ref_module func in their modules to construct
+>> relationships with other modules. However, the holders
+>> '/sys/module/<mod-name>/holders' of the target module donot include
+>> the users` module. So lsmod command misses detailed info of 'Used by'.
+>>
+>> Here, we will add usage link of a to b's holder_dir.
+>>
+>> Fixes: 9bea7f239 ("module: fix bne2 "gave up waiting for init of module libcrc32c")
+> 
+> I think we can drop this tag; it doesn't fix a bug specifically
+> introduced by that particular commit.
+> 
+Thanks for your reply.
+I will remove the Fixes tag in v2 patch.
 
-Philip and Felix have been working on a branch with hmm merged into
-drm-next with all the conflicts fixes up.  I'll post it out tomorrow
-once I get Felix's latest revisions.
+>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>> ---
+>> kernel/module.c | 5 +++++
+>> 1 file changed, 5 insertions(+)
+>>
+>> diff --git a/kernel/module.c b/kernel/module.c
+>> index 80c7c09584cf..11c6aff37b1f 100644
+>> --- a/kernel/module.c
+>> +++ b/kernel/module.c
+>> @@ -871,6 +871,11 @@ int ref_module(struct module *a, struct module *b)
+>>         module_put(b);
+>>         return err;
+>>     }
+>> +
+>> +    err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
+>> +    if (err)
+>> +        return err;
+> 
+> We need to fix the error handling here - the module_use struct
+> allocated in the call to add_module_usage() needs to be freed (you
+> could just modify add_module_usage() to return the use pointer so that
+> it's easier to free from within ref_module()), module_put() needs to
+> be called, and the use struct should be removed from its respective
+> lists (see module_unload_free()).
+> 
+Thanks again for your advice.
+We will modify add_module_usage func to return the use pointer as your suggestion.
+In the error handling, We will call module_put() and call list_del() to remove the use.
 
-Alex
+> Thanks,
+> 
+> Jessica
+> 
+> 
+> .
+> 
 
->
-> Regards,
-> Jason
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
