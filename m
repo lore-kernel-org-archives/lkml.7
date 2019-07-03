@@ -2,157 +2,95 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6E7C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8429DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C58020989
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562130154;
-	bh=hPTJr/4Fckifjcsd2u8POjGCFLOUJufQKl8YwN15Dp4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hQGhkJXIlD+EmhUvjFe2kMrfJJGAQF0nexd4iWFXaGHDGSocdqHbMYIGuaGbOpAHX
-	 IPT1hxML55pdqMG5tY8hX6AEh0kc4CEIrCyEiG2PoLDIRGPBsOoX8sJz63gmYo5nqI
-	 VCPmlm/EfQbgusd4TbWhTlqBCdXta5xYyxs+XiAo=
+	by mail.kernel.org (Postfix) with ESMTP id 5D7A420989
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SFkzNcwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfGCFCc (ORCPT
+        id S1727006AbfGCFFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 01:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfGCFCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 01:02:32 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00BD20989;
-        Wed,  3 Jul 2019 05:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562130151;
-        bh=hPTJr/4Fckifjcsd2u8POjGCFLOUJufQKl8YwN15Dp4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gccmNSbBIeCgwTzD3fj8WdT0xTR1/6Uw6PZu7sk91BTtsMbL0o+9zuTLnyFaFGWNY
-         NLLVrgFxp01FQhfZrHfqB5h/Fsgu+heOXYe0k0vH2m9+NuYLll75ZWocmUGiBg2WSz
-         pXVU/FaxkcT3DbjwzduAu+a+HjhHOQyydG/pQM2Q=
-Date:   Tue, 2 Jul 2019 22:02:29 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 3 open syzbot bugs in "android/binder" subsystem
-Message-ID: <20190703050229.GC633@sol.localdomain>
+        Wed, 3 Jul 2019 01:05:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47004 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfGCFFj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 01:05:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xEl2+/JTzzBOI/KV08MgmserEhjFmkUWQJwBIctYK4M=; b=SFkzNcwpjtj88+RFf39lES3Nd
+        UpEcUpbr23nX5AEzz3vL5og98hLt9afZrefE1veDbp33W2fNzY6fiTDq/ZJFVjhy8BllljujBxzWS
+        yaLerA+zNO8n0GkdayN//eyGJEMgsEuGAHkd56kiBBCaMIJsoj2KmKlRvpF+HAYJ+nIIwUk/ma7sZ
+        Z0cFW8szsaDtrvg6Xcm6y+X7hqBshGj6AqlCQveshLz891vkxCojG2foWThJYXK2pUqzcv5OK0Xet
+        TMhCxUfwjxawsGr/NcgAYfeOulsmWaQdu7vy2Qh+1c16wohWxtsy8NKAj8B/v2f+pZke8Fsvdlnbd
+        EBXhfvzfg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiXSZ-0008SV-NI; Wed, 03 Jul 2019 05:05:36 +0000
+Subject: Re: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
+To:     Dexuan Cui <decui@microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
+ <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <99059dd0-3b53-a8b8-5573-18edf449085a@infradead.org>
+Date:   Tue, 2 Jul 2019 22:05:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On 7/2/19 9:33 PM, Dexuan Cui wrote:
+>> From: linux-hyperv-owner@vger.kernel.org
+>> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Randy Dunlap
+>> Sent: Tuesday, July 2, 2019 4:25 PM
+>> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+>> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+>>
+>> drivers/pci/slot.o is only built when SYSFS is enabled, so
+>> pci-hyperv.o has an implicit dependency on SYSFS.
+>> Make that explicit.
+>>
+>> Also, depending on X86 && X86_64 is not needed, so just change that
+>> to depend on X86_64.
+>>
+>> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft
+>> Hyper-V VMs")
+> 
+> I think the Fixes tag should be:
+> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+> 
+> Thanks,
+> -- Dexuan
+> 
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 3 of them as possibly being bugs in the "android/binder" subsystem.  I've
-listed these reports below, sorted by an algorithm that tries to list first the
-reports most likely to be still valid, important, and actionable.
+Thanks.  I did have a little trouble with that.
 
-Of these 3 bugs, 1 was seen in mainline in the last week.
-
-Of these 3 bugs, 1 was bisected to a commit from the following person:
-
-	Todd Kjos <tkjos@android.com>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the "android/binder" subsystem, please
-let me know, and if possible forward the report to the correct people or mailing
-list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at drivers/android/binder_alloc.c:LINE! (4)
-Last occurred:      6 days ago
-Reported:           14 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bbf40136a49ffaa8ac60906edcbe77f825b2c406
-Original thread:    https://lkml.kernel.org/lkml/000000000000b6b25b058b96d5c3@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit bde4a19fc04f5f46298c86b1acb7a4af1d5f138d
-	Author: Todd Kjos <tkjos@android.com>
-	Date:   Fri Feb 8 18:35:20 2019 +0000
-
-	  binder: use userspace pointer as base of buffer space
-
-The original thread for this bug has received 3 replies; the last was 4 days
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3ae18325f96190606754@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 4 days ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/000000000000b6b25b058b96d5c3@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in binder_transaction_buffer_release
-Last occurred:      0 days ago
-Reported:           43 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4e0a6a529aef923a8d61c5d20b8fc0605c730138
-Original thread:    https://lkml.kernel.org/lkml/000000000000afe2c70589526668@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug has received 2 replies; the last was 20 days
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000afe2c70589526668@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in uprobe_clear_state
-Last occurred:      165 days ago
-Reported:           202 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a1ce9b3da349209c5085bb8c4fee753d68c3697f
-Original thread:    https://lkml.kernel.org/lkml/00000000000010a9fb057cd14174@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-[Note: the uprobe developers think this is a bug in binder, not uprobes.
- See https://marc.info/?l=linux-kernel&m=155119805728815&w=2
- for a suggested fix for this bug.]
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000010a9fb057cd14174@google.com
-
+-- 
+~Randy
