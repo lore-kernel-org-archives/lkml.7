@@ -2,78 +2,192 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92734C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC9C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6566C2063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E2721873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfGCCHz (ORCPT
+        id S1727127AbfGCCKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:07:55 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2963 "EHLO huawei.com"
+        Tue, 2 Jul 2019 22:10:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48432 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfGCCHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:07:54 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id BA99EBBF4176F5607A9F;
-        Wed,  3 Jul 2019 10:07:52 +0800 (CST)
-Received: from dggeme716-chm.china.huawei.com (10.1.199.112) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 3 Jul 2019 10:07:52 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme716-chm.china.huawei.com (10.1.199.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 3 Jul 2019 10:07:52 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Wed, 3 Jul 2019 10:07:52 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "lukas@wunner.de" <lukas@wunner.de>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH] net: pci: Fix hotplug event timeout with shpchp
-Thread-Topic: [PATCH] net: pci: Fix hotplug event timeout with shpchp
-Thread-Index: AdUxQ4Ot2MsgjZ40Rim/5d9K2wgLog==
-Date:   Wed, 3 Jul 2019 02:07:51 +0000
-Message-ID: <fdbaef22bd774ee49fc58fe13a76bf91@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726329AbfGCCKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:10:14 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 33F16D5716B7DF6B3E17;
+        Wed,  3 Jul 2019 10:10:12 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
+ 10:10:04 +0800
+Subject: Re: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
+To:     Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190630185846.16624-1-hsiangkao@aol.com>
+ <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
+Date:   Wed, 3 Jul 2019 10:09:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
+In-Reply-To: <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUdWUsIEp1bCAwMiwgMjAxOSBhdCAwMTozNToxOVBNICswMDAwLCBNaWFvaGUgTGluIHdy
-b3RlOg0KPiA+IEhvdHBsdWcgYSBuZXR3b3JrIGNhcmQgd291bGQgdGFrZSBtb3JlIHRoYW4gNSBz
-ZWNvbmRzIGluIHFlbXUgKyBzaHBjaHAgDQo+ID4gc2NlbmUuIEl04oCZcyBiZWNhdXNlIDUgc2Vj
-b25kcyBkZWxheWVkX3dvcmsgaW4gZnVuYyANCj4NCj4gSSdtIGRyb3BwaW5nIHRoaXMgYmVjYXVz
-ZSBvZiB0aGUgcmVxdWlyZWQgZGVsYXkgcG9pbnRlZCBvdXQgYnkgTHVrYXMuDQo+DQo+IElmIHlv
-dSB0aGluayB3ZSBzdGlsbCBuZWVkIHRvIGRvIHNvbWV0aGluZyBoZXJlLCBwbGVhc2UgY2xhcmlm
-eSB0aGUgc2l0dWF0aW9uLiAgQXJlIHlvdSBob3QtYWRkaW5nPyAgSG90LXN3YXBwaW5nPyAgU2lu
-Y2UgeW91IG1lbnRpb24gYSBwcm90b2NvbCB0aW1lb3V0LCBJIHN1c3BlY3QgdGhlIGxhdHRlciwg
-ZS5nLiwgbWF5YmUgeW91IGhhZCBhbiBleGlzdGluZyBkZXZpY2Ugd2l0aCBjb25uZWN0aW9ucyBh
-bHJlYWR5IG9wZW4sIGFuZCB5b3Ugd2FudCB0byByZXBsYWNlIGl0IHdpdGggYSBuZXcgZGV2aWNl
-DQo+IFdlIGRvIGhhdmUgdG8gcHJlc2VydmUgdGhlIGV4aXN0aW5nIHVzZXIgZXhwZXJpZW5jZSwg
-ZS5nLiwgZGVsYXlzIHRvIGFsbG93IG9wZXJhdG9ycyB0byByZWNvdmVyIGZyb20gbWlzdGFrZW4g
-bGF0Y2ggb3BlbnMgb3IgYnV0dG9uIHByZXNzZXMuICBCdXQgaWYgd2Uga25ldyBtb3JlIGFib3V0
-IHdoYXQgeW91J3JlIHRyeWluZyB0byBkbywgbWF5YmUgd2UgY291bGQgZmlndXJlIG91dCBhbm90
-aGVyIGFwcHJvYWNoLg0KDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkuIEFzIGlzIHNwZWMgcmVxdWly
-ZWQsIHdlIHdvdWxkIHRyeSB0byB3b3JrIGFyb3VuZCBpdC4NCk1hbnkgdGhhbmtzLg0KDQpIYXZl
-IGEgZ29vZCBkYXkuDQpCZXN0IHdpc2hlcy4NCg==
+
+
+On 2019/7/3 9:50, Chao Yu wrote:
+> On 2019/7/1 2:58, Gao Xiang wrote:
+>> From: Gao Xiang <gaoxiang25@huawei.com>
+>>
+>> Like all lz77-based algrithms, lz4 has a dynamically populated
+>> ("sliding window") dictionary and the maximum lookback distance
+>> is 65535. Therefore the number of bounced pages could be limited
+>> by erofs based on this property.
+>>
+>> However, just now we observed some lz4 sequences in the extreme
+>> case cannot be decompressed correctly after this feature is enabled,
+>> the root causes after analysis are clear as follows:
+>> 1) max bounced pages should be 17 rather than 16 pages;
+>> 2) considering the following case, the broken implementation
+>>    could reuse unsafely in advance (in other words, reuse it
+>>    less than a safe distance),
+>>    0 1 2 ... 16 17 18 ... 33 34
+>>    b             p  b         b
+>>    note that the bounce page that we are concerned was allocated
+>>    at 0, and it reused at 18 since page 17 exists, but it mis-reused
+>>    at 34 in advance again, which causes decompress failure.
+>>
+>> This patch resolves the issue by introducing a bitmap to mark
+>> whether the page in the same position of last round is a bounced
+>> page or not, and a micro stack data structure to store all
+>> available bounced pages.
+>>
+>> Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>> ---
+>>  drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
+>>  1 file changed, 28 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+>> index 80f1f39719ba..1fb0abb98dff 100644
+>> --- a/drivers/staging/erofs/decompressor.c
+>> +++ b/drivers/staging/erofs/decompressor.c
+>> @@ -13,7 +13,7 @@
+>>  #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
+>>  #endif
+>>  
+>> -#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
+>> +#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
+>>  #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
+>>  #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
+>>  #endif
+>> @@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>  	const unsigned int nr =
+>>  		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>>  	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
+>> -	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>> -					  BITS_PER_LONG)] = { 0 };
+>> +	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>> +					   BITS_PER_LONG)] = { 0 };
+>>  	void *kaddr = NULL;
+>> -	unsigned int i, j, k;
+>> +	unsigned int i, j, top;
+>>  
+>> -	for (i = 0; i < nr; ++i) {
+>> +	top = 0;
+>> +	for (i = j = 0; i < nr; ++i, ++j) {
+>>  		struct page *const page = rq->out[i];
+>> +		struct page *victim;
+>>  
+>> -		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
+>> -		if (availables[j])
+>> -			__set_bit(j, unused);
+>> +		if (j >= LZ4_MAX_DISTANCE_PAGES)
+>> +			j = 0;
+>> +
+>> +		/* 'valid' bounced can only be tested after a complete round */
+>> +		if (test_bit(j, bounced)) {
+>> +			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
+>> +			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
+>> +			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
+> 
+> Maybe we can change 'i - LZ4_MAX_DISTANCE_PAGES' to 'j' directly for better
+> readability.
+
+OK, I think they are equivalent as well, will change for readability, retest and resend.
+Thanks for your suggestion :)
+
+Thanks,
+Gao Xiang
+
+> 
+> Otherwise, it looks good to me.
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+>> +		}
+>>  
+>>  		if (page) {
+>> +			__clear_bit(j, bounced);
+>>  			if (kaddr) {
+>>  				if (kaddr + PAGE_SIZE == page_address(page))
+>>  					kaddr += PAGE_SIZE;
+>> @@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>  			continue;
+>>  		}
+>>  		kaddr = NULL;
+>> +		__set_bit(j, bounced);
+>>  
+>> -		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
+>> -		if (k < LZ4_MAX_DISTANCE_PAGES) {
+>> -			j = k;
+>> -			get_page(availables[j]);
+>> +		if (top) {
+>> +			victim = availables[--top];
+>> +			get_page(victim);
+>>  		} else {
+>> -			DBG_BUGON(availables[j]);
+>> -
+>>  			if (!list_empty(pagepool)) {
+>> -				availables[j] = lru_to_page(pagepool);
+>> -				list_del(&availables[j]->lru);
+>> -				DBG_BUGON(page_ref_count(availables[j]) != 1);
+>> +				victim = lru_to_page(pagepool);
+>> +				list_del(&victim->lru);
+>> +				DBG_BUGON(page_ref_count(victim) != 1);
+>>  			} else {
+>> -				availables[j] = alloc_pages(GFP_KERNEL, 0);
+>> -				if (!availables[j])
+>> +				victim = alloc_pages(GFP_KERNEL, 0);
+>> +				if (!victim)
+>>  					return -ENOMEM;
+>>  			}
+>> -			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
+>> +			victim->mapping = Z_EROFS_MAPPING_STAGING;
+>>  		}
+>> -		rq->out[i] = availables[j];
+>> -		__clear_bit(j, unused);
+>> +		rq->out[i] = victim;
+>>  	}
+>>  	return kaddr ? 1 : 0;
+>>  }
+>>
