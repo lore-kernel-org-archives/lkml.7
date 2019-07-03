@@ -2,115 +2,171 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CE0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC5AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5082089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFD92089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IB/bmny+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhKjrysD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfGCBBh (ORCPT
+        id S1727517AbfGCBBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:01:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33549 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfGCBBh (ORCPT
+        Tue, 2 Jul 2019 21:01:47 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41238 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfGCBBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:01:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so748108wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:01:35 -0700 (PDT)
+        Tue, 2 Jul 2019 21:01:47 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g7so595183oia.8;
+        Tue, 02 Jul 2019 18:01:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fhGTRRlj+oNnom0r7WG68ILJggF1tRmBA7+h0sn4aHU=;
-        b=IB/bmny+VPQQLZytPAp+5HlEgrZmDlRBzsrQkNZkmYwxP+Id/yUjtNR6gi41a1xZN8
-         KQ08p4BL1YUwktRg7FhzaPScp37YxM3uwccWRpIXREFG+ug4W9OOhcbIPXcqmnonvfxW
-         zRnUgGLigs3lZNwvU5Ac75pLOaB2g/3mSEtTtUw2A4fGVcYEoS3ASY02IzU0lkkKaX9s
-         i3uhBDPmdf0KEyOVHifWK6SplVNbcsWBxlsQBccac//U5XOrJuDq7J+6gdgm0eFMRRAT
-         KQN+902e1pxKhH7dYkgpd+gcXtC8mknGpPrfLXUEUCk9FcDLKPo8s7AbPntAjOOgWlDN
-         77Mg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6/KKy82yrOyc29Ht7hH/jAIFLpMnSWEdvNOCoBZFw1Q=;
+        b=jhKjrysD7F3YEX73eCP0zuxoN6eVgP3fOptbLegmT5vwCHuRLQkMVOkWYkMbzxl5yH
+         MAPKEPsSy88O1W93Pwyqx6t6PdfVij0gqHjeTlllhAT5xXjk4vC0e0xS2YOVznLEohJ0
+         Ol7aRIz74oGk5py35ew6KskxFs0Ciul9PxBuG0YoYFJE1XIJ/VoiQnZYH02UTVhMVqKL
+         sP3hxGTSAew8NrQ9BVm3xIGmkltHe4zXtNxc7+yKFYfDf1ix7rwEtdxEzVegKYG6rfFX
+         HqKH2vVeJXRjHd0nOKULDjPbGIVfyVIBVZ8FF7n3v/uOw7hIcJu/CPMd+U85C+CCnpNl
+         PDzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fhGTRRlj+oNnom0r7WG68ILJggF1tRmBA7+h0sn4aHU=;
-        b=pDVDcltYr15OCKlvaMnZdlBGYddnRagJCeM+Vyb9hKh5sXghvqDGKL5CdtMH76+mdb
-         ObZylCM7LLHNO9Tw1UwpJzvMw0+8dESCSiop/OFPRTmfugpJmVPNSP3RFdhO1IawyWxZ
-         3bjNZJQl7xnh/z7wu5eBugr932dlBN8bE3K0hOGsFZArVFR7dqqQdc5NzVnVuAp1eJzw
-         G0+SbYLEmJwDLWsVANJQyMYkIHT3BaboLjW8/yimI0EE/lVCA00sasHMpRKE6dCbq7pa
-         En01OGQECrKQBIojvaNfjCxlLuysR37g+yBuzPHz5oi9yA9uTPGJ7seOcvtpQOtbe+k+
-         QT8w==
-X-Gm-Message-State: APjAAAUVJo/ye+gchO9XheKuLgbPGiyLVK16udq1rnJhSKT1TYZoloig
-        uqcbFt2Nqnx5k35QmTQ7zJ1+W4bFe18=
-X-Google-Smtp-Source: APXvYqyL0wJTez6TZyjeT/xmWOXzYmO/gmM5DGARc+Xg7zSTPeTSnEtY9Gfebk2z9iqEruXO8sLbdg==
-X-Received: by 2002:adf:fb8a:: with SMTP id a10mr2037078wrr.235.1562102140256;
-        Tue, 02 Jul 2019 14:15:40 -0700 (PDT)
-Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
-        by smtp.gmail.com with ESMTPSA id g14sm113417wro.11.2019.07.02.14.15.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 14:15:39 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 00:15:36 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        netdev@vger.kernel.org, grygorii.strashko@ti.com,
-        jakub.kicinski@netronome.com, daniel@iogearbox.net,
-        john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] net: core: page_pool: add user refcnt and reintroduce
- page_pool_destroy
-Message-ID: <20190702211536.GA22618@apalos>
-References: <20190702153902.0e42b0b2@carbon>
- <156207778364.29180.5111562317930943530.stgit@firesoul>
- <20190702144426.GD4510@khorivan>
- <20190702165230.6caa36e3@carbon>
- <20190702145612.GF4510@khorivan>
- <20190702171029.76c60538@carbon>
- <20190702152112.GG4510@khorivan>
- <20190702202907.15fb30ce@carbon>
- <20190702185839.GH4510@khorivan>
- <20190702230241.3be6d787@carbon>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6/KKy82yrOyc29Ht7hH/jAIFLpMnSWEdvNOCoBZFw1Q=;
+        b=pNNa2BLLH8j0w2xCDeDNwYRmeTAUZ7p912N2tq+K6rD76Zdy4gZX09nSdtl7UzF+Kp
+         BCuwWW+sBtDLfnuHijo94ZtugEHElxVALxdzfCDjxbAk8LA83XBPX4ZC3W+mEpQT8MpD
+         Umx2eK0bK4Xfdu4AwfeyqvskBRc5295O3W9IATTw8kD+Xz0UDsT9TJNzXPT4GGB1jX4c
+         RjTcJMmgpIYW0XNWCM05x3Oy9MN/wp7kRXF1u5QPDKSI7XXBWE8sDSZH/oD1y8uEretZ
+         xeLKSRerPa5fcyuDzxYflCpp5G0GwaQdbiqiG7r2PJKmoHTNp9U92V1ymYvvxRRPnzW8
+         Pgyw==
+X-Gm-Message-State: APjAAAVjuP8qmeyQmSK7y17+f09nZcDSh8f+WZy/4ZBQcVyA6+W/QFpF
+        95dGRf1pNwFLAIAsR4ITF+bF82s+p800gCTonP02bQ==
+X-Google-Smtp-Source: APXvYqz/BvsXGBiKuGtL9K1WWZnAhl10U8iozK1Qx/ukOJphcCT5NdWPIUM19XiKiGta7BHHDLEmcIg8i8/9HNaV+Ks=
+X-Received: by 2002:aca:544b:: with SMTP id i72mr5142037oib.174.1562115706420;
+ Tue, 02 Jul 2019 18:01:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702230241.3be6d787@carbon>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+ <1fbd236a-f7f9-e66a-e08c-bf2bac901d15@redhat.com> <20190702222330.GB26621@amt.cnet>
+ <CANRm+CyBjfa5LsMx87faKUO8XwHkNVrq4+P+vBuFGwjuFC1jxA@mail.gmail.com>
+In-Reply-To: <CANRm+CyBjfa5LsMx87faKUO8XwHkNVrq4+P+vBuFGwjuFC1jxA@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 3 Jul 2019 09:01:39 +0800
+Message-ID: <CANRm+CwtWnfLmwKJSW1o3v2E6WOrKWE-iMo46tKKhERZPe+1VA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] KVM: LAPIC: Implement Exitless Timer
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jesper,
-Getting late here, i'll respond in detail tomorrow. One point though
+On Wed, 3 Jul 2019 at 08:47, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> On Wed, 3 Jul 2019 at 06:23, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >
+> > On Tue, Jul 02, 2019 at 06:38:56PM +0200, Paolo Bonzini wrote:
+> > > On 21/06/19 11:39, Wanpeng Li wrote:
+> > > > Dedicated instances are currently disturbed by unnecessary jitter due
+> > > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+> > > > There is no hardware virtual timer on Intel for guest like ARM. Both
+> > > > programming timer in guest and the emulated timer fires incur vmexits.
+> > > > This patchset tries to avoid vmexit which is incurred by the emulated
+> > > > timer fires in dedicated instance scenario.
+> > > >
+> > > > When nohz_full is enabled in dedicated instances scenario, the unpinned
+> > > > timer will be moved to the nearest busy housekeepers after commit
+> > > > 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit
+> > > > 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However,
+> > > > KVM always makes lapic timer pinned to the pCPU which vCPU residents, the
+> > > > reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer
+> > > > pinned). Actually, these emulated timers can be offload to the housekeeping
+> > > > cpus since APICv is really common in recent years. The guest timer interrupt
+> > > > is injected by posted-interrupt which is delivered by housekeeping cpu
+> > > > once the emulated timer fires.
+> > > >
+> > > > The host admin should fine tuned, e.g. dedicated instances scenario w/
+> > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
+> > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
+> > > > mode, ~3% redis performance benefit can be observed on Skylake server.
+> > >
+> > > Marcelo,
+> > >
+> > > does this patch work for you or can you still see the oops?
+> >
+> > Hi Paolo,
+> >
+> > No more oopses with kvm/queue. Can you include:
+>
+> Cool, thanks for the confirm, Marcelo!
+>
+> >
+> > Index: kvm/arch/x86/kvm/lapic.c
+> > ===================================================================
+> > --- kvm.orig/arch/x86/kvm/lapic.c
+> > +++ kvm/arch/x86/kvm/lapic.c
+> > @@ -124,8 +124,7 @@ static inline u32 kvm_x2apic_id(struct k
+> >
+> >  bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> >  {
+> > -       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> > -               kvm_hlt_in_guest(vcpu->kvm);
+> > +       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
+> >  }
+> >  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> >
+> > However, for some reason (hrtimer subsystems responsability) with cyclictest -i 200
+> > on the guest, the timer runs on the local CPU:
+> >
+> >        CPU 1/KVM-9454  [003] d..2   881.674196: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674200: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d.h.   881.674387: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   881.674393: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674395: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674399: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d.h.   881.674586: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   881.674593: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674595: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674599: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d.h.   881.674787: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   881.674793: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >        CPU 1/KVM-9454  [003] d..2   881.674795: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >
+> > But on boot:
+> >
+> >        CPU 1/KVM-9454  [003] d..2   578.625394: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >           <idle>-0     [000] d.h1   578.626390: apic_timer_fn <-__hrtimer_run_queues
+> >           <idle>-0     [000] d.h1   578.626394: apic_timer_fn<-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   578.626401: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >           <idle>-0     [000] d.h1   578.628397: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   578.628407: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >           <idle>-0     [000] d.h1   578.631403: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   578.631413: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >           <idle>-0     [000] d.h1   578.635409: apic_timer_fn <-__hrtimer_run_queues
+> >        CPU 1/KVM-9454  [003] d..2   578.635419: get_nohz_timer_target: get_nohz_timer_target 3->0
+> >           <idle>-0     [000] d.h1   578.640415: apic_timer_fn <-__hrtimer_run_queues
+>
+> You have an idle housekeeping cpu(cpu 0), however, most of
+> housekeeping cpus will be busy in product environment to avoid to
+> waste money. get_nohz_timer_target() will find a busy housekeeping cpu
+> but the timer migration will fail if the timer is the first expiring
+> timer on the new target(as the comments above the function
+> switch_hrtimer_base()). Please try taskset -c 0 stress --cpu 1 on your
+> host, you can observe(through /proc/timer_list) apic_timer_fn running
+> on cpu 0 most of the time and sporadically on local cpu.
 
-[...]
-> 
-> This special use-case, seems confined to your driver. And Ilias told me
-> that XDP is not really a performance benefit for this driver as the HW
-> PPS-limit is hit before the XDP and netstack limit.  I ask, does it
-> make sense to add XDP to this driver, if it complicates the code for
-> everybody else?
-I think yes. This is a widely used driver on TI embedded devices so having XDP 
-to play along is a nice feature. It's also the first and only armv7 we have
-supporting this. Ivan already found a couple of issues due to the 32-bit
-architecture he is trying to fix, i think there's real benefit in having that,
-performance aside.
-I fully agree we should not impact the performance of the API to support a
-special hardware though. I'll have a look on the 2 solutions tomorrow, but the
-general approach on this one should be 'the simpler the better'
+Or if you have a little bigger VM/multiple VMs, the apic_timer_fn from
+all virtual lapics will make a housekeeping cpu busy. :)
 
-Cheers
-/Ilias
-
-> 
-> -- 
-> Best regards,
->   Jesper Dangaard Brouer
->   MSc.CS, Principal Kernel Engineer at Red Hat
->   LinkedIn: http://www.linkedin.com/in/brouer
+Regards,
+Wanpeng Li
