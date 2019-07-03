@@ -2,190 +2,84 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3188C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F267EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DD321881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8DA21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfGCSZy (ORCPT
+        id S1727217AbfGCS0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:25:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:6475 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfGCSZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:25:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 11:25:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="315655248"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 03 Jul 2019 11:25:45 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id A021258060A;
-        Wed,  3 Jul 2019 11:25:45 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v3 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
- dependency issues
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <cover.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190703175654.GN128603@google.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <a2ff2b65-3e7c-6aad-22d8-3a17dd4074b1@linux.intel.com>
-Date:   Wed, 3 Jul 2019 11:23:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 3 Jul 2019 14:26:01 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48797 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfGCS0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:26:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id z19so3521445ioi.15
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:26:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Ol2oTL6I09LrbBugODTrPEcLgmAtDlXO+xFKA9FYWzI=;
+        b=Sy6BUW7zMl9HiF2LTxCiajntgvbr1Y4E2fBiykzEDlQ/rnmAJGt3EeEb/+7scqBauB
+         iTNSfnrrWO7eZJpv/ttJ3bZirmwS/UtiSChipo19YTMQcQ2iGY7R/TV9MQuFcWmCLY9f
+         7OH373tHiPtS56R0+yytLhwOHBzh/GXP5nSRAQQNJ08M6XtTjPhXnsusCliNncqEdNV2
+         LQVG5z606DUWYdLj3khqOFDVFm3sy6zkgDNHQgmq2uX4cBl/o+LZu6gobpUF/t6CUCGA
+         jfRmoouSVAFM+acKpBMPRwV6XwoDZImPylbYn8o3mbCsVzSENJhV7GNU/92PMDxoeAB9
+         2KUQ==
+X-Gm-Message-State: APjAAAUyNj/QIuuhKYevaXxpPCS8yD5mtmy0QZV8HriYLI+JzrFgLM9f
+        tHFEYm9GaSXBO+4aIJ0PjeQCbdpyF3wxwQFFfuwn680mLVoM
+X-Google-Smtp-Source: APXvYqwnKz9Y5ErGzM/oENrZog1dO7eB2V3AocjmtCzYXUDUaLNQ1kAbKUGqE/0CNl8wQiJx3GqOLtHaUDhnnEPnEz2HNfDxKgvN
 MIME-Version: 1.0
-In-Reply-To: <20190703175654.GN128603@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a02:c50a:: with SMTP id s10mr45090759jam.106.1562178360550;
+ Wed, 03 Jul 2019 11:26:00 -0700 (PDT)
+Date:   Wed, 03 Jul 2019 11:26:00 -0700
+In-Reply-To: <00000000000035c756058848954a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000041ac74058ccafe0d@google.com>
+Subject: Re: KASAN: use-after-free Read in hci_cmd_timeout
+From:   syzbot <syzbot+19a9f729f05272857487@syzkaller.appspotmail.com>
+To:     chaitra.basappa@broadcom.com, davem@davemloft.net,
+        jejb@linux.vnet.ibm.com, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, marcel@holtmann.org,
+        martin.petersen@oracle.com, mpt-fusionlinux.pdl@broadcom.com,
+        netdev@vger.kernel.org, sathya.prakash@broadcom.com,
+        suganath-prabu.subramani@broadcom.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+syzbot has bisected this bug to:
 
-On 7/3/19 10:56 AM, Bjorn Helgaas wrote:
-> On Thu, Jun 20, 2019 at 01:38:42PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Since pci_prg_resp_pasid_required() function has dependency on both
->> PASID and PRI, define it only if both CONFIG_PCI_PRI and
->> CONFIG_PCI_PASID config options are enabled.
-> This is likely just confusion on my part, but I don't understand what
-> you're doing here.
->
-> pci_prg_resp_pasid_required() does not actually *depend* on the
-> CONFIG_PCI_PRI config symbol.
+commit ff92b9dd9268507e23fc10cc4341626cef50367c
+Author: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Date:   Thu Oct 25 14:03:40 2018 +0000
 
-pci_prg_resp_pasid_required() function internally reads the PRI status 
-register to get the status of PASID required bit.
+     scsi: mpt3sas: Update MPI headers to support Aero controllers
 
-FILE:drivers/pci/ats.c
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=130ac8dda00000
+start commit:   eca94432 Bluetooth: Fix faulty expression for minimum encr..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=108ac8dda00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=170ac8dda00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
+dashboard link: https://syzkaller.appspot.com/bug?extid=19a9f729f05272857487
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125b7999a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176deefba00000
 
-419         pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
-420
-421         if (status & PCI_PRI_STATUS_PASID)
+Reported-by: syzbot+19a9f729f05272857487@syzkaller.appspotmail.com
+Fixes: ff92b9dd9268 ("scsi: mpt3sas: Update MPI headers to support Aero  
+controllers")
 
-Since pci_prg_resp_pasid_required()  function is only used if 
-CONFIG_PCI_PASID is enabled, and since it also has internal PCI_PRI 
-dependency, I have protected it with both CONFIG_PCI_PASID and 
-CONFIG_PCI_PRI ifdefs.
-
->
-> It is currently compiled only if CONFIG_PCI_ATS=y (which controls
-> compilation of the entire ats.c) and CONFIG_PCI_PASID=y (since it's
-> within #ifdef CONFIG_PCI_PASID).
->
-> pci_prg_resp_pasid_required() is called by attach_device()
-> (amd_iommu.c), which is only compiled if CONFIG_AMD_IOMMU=y, and that
-> selects PCI_PRI.
-pci_prg_resp_pasid_required() is also called by intel_iommu.c, and 
-enabling CONFIG_INTEL_IOMMU does not enable PCI_PRI/PCI_PASID by default.
->
-> It is also called by iommu_enable_dev_iotlb() (intel-iommu.c).  That
-> file is compiled if CONFIG_INTEL_IOMMU=y and the call itself is inside
-> #ifdef CONFIG_INTEL_IOMMU_SVM.  But I don't see the PCI_PRI connection
-> here.
->
-> If this is just to limit the visibility, say that.  But I don't think
-> that's really a good reason.  The chain of config symbols seems a
-> little too complicated.
->
->> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
->> interface.")
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/ats.c       | 10 ++++++----
->>   include/linux/pci-ats.h | 12 +++++++++---
->>   2 files changed, 15 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->> index 97c08146534a..f9eeb7db0db3 100644
->> --- a/drivers/pci/ats.c
->> +++ b/drivers/pci/ats.c
->> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
->>   }
->>   EXPORT_SYMBOL_GPL(pci_pasid_features);
->>   
->> +#ifdef CONFIG_PCI_PRI
->> +
->>   /**
->>    * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
->>    *				 status.
->> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
->>    *
->>    * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
->>    *
->> - * Even though the PRG response PASID status is read from PRI Status
->> - * Register, since this API will mainly be used by PASID users, this
->> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
->> - * CONFIG_PCI_PRI.
->> + * Since this API has dependency on both PRI and PASID, protect it
->> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
->>    */
->>   int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   {
->> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   }
->>   EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
->>   
->> +#endif
->> +
->>   #define PASID_NUMBER_SHIFT	8
->>   #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
->>   /**
->> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
->> index 1ebb88e7c184..1a0bdaee2f32 100644
->> --- a/include/linux/pci-ats.h
->> +++ b/include/linux/pci-ats.h
->> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
->>   void pci_restore_pasid_state(struct pci_dev *pdev);
->>   int pci_pasid_features(struct pci_dev *pdev);
->>   int pci_max_pasids(struct pci_dev *pdev);
->> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->>   
->>   #else  /* CONFIG_PCI_PASID */
->>   
->> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
->>   	return -EINVAL;
->>   }
->>   
->> +#endif /* CONFIG_PCI_PASID */
->> +
->> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
->> +
->> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
->> +
->> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
->> +
->>   static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
->>   {
->>   	return 0;
->>   }
->> -#endif /* CONFIG_PCI_PASID */
->> -
->> +#endif
->>   
->>   #endif /* LINUX_PCI_ATS_H*/
->> -- 
->> 2.21.0
->>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
