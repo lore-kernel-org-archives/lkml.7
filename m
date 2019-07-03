@@ -2,63 +2,170 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CACC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F28C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBA621882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E36121880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQl30MMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGCG4o (ORCPT
+        id S1727117AbfGCG6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:56:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:39196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbfGCG4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:56:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE7C02B;
-        Tue,  2 Jul 2019 23:56:43 -0700 (PDT)
-Received: from [10.162.42.95] (p8cg001049571a15.blr.arm.com [10.162.42.95])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02E933F718;
-        Tue,  2 Jul 2019 23:58:34 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_isolate: change the prototype of
- undo_isolate_page_range()
-To:     Pingfan Liu <kernelfans@gmail.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org
-References: <1562075604-8979-1-git-send-email-kernelfans@gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ada46116-9c87-86ce-9015-351700439ea3@arm.com>
-Date:   Wed, 3 Jul 2019 12:27:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 3 Jul 2019 02:58:19 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43140 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbfGCG6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 02:58:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so1349943wru.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7NIH8CFjAMNOmJLuHgmNt9jeNJYxR5K2QbGvBFYhPyM=;
+        b=zQl30MMYhx8iWYLwIlLcv/0wck1BuceVHDEuRd2T38gMScJknOBuV9dIia/OxTsOne
+         UiekeRlnsmdKKem6TxZ7FnAX7OwFWc0t1yboi4SJPCLz0SePEH6zy9YglOjh3zK3As7e
+         U5frAhWsfFf2lcvoSrnaeCOKdho5ZmrzWbcbgW31fh6FCLixroxYU/emHdGuqsj8+xZX
+         5P1osZUnAolbMmu6Uyw6cMoqYTwq37eWPnCvDjLXvg3hkv/3ZyxqRoBKnIeQlX0NBIub
+         hkiOCkOscL99ZtTxTaY2pFPk236kNhq13Et10x2UsdzqorQ3g2R76Mt4H7Vk/6UDLbbZ
+         Spmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7NIH8CFjAMNOmJLuHgmNt9jeNJYxR5K2QbGvBFYhPyM=;
+        b=jZlLKEJdiAGCnKowpBdTkT35st5nuiYc6wJ/BKupel3mJGsX/IQgBMtg+rTzhWPrkY
+         psrhBpmJxzaODgL8Pk1DLywGYrRD5l8pvX5J1EVFJiSQd6tfzQx/PSlIGAFXpz28fO9Z
+         JKrq/dz7OExQve8DZZVmyk9y+2y9bQ0Z4cZy2ae5OZIhtVIUupL1C6hNeDIEcyc/dUv8
+         ojvygYdXtvu6Fv5fetkmVF3DFTbC+PWOjYQ5vqLsgRGtQsRJkDvnaPj6dKxtgT7gieXK
+         WiazTRBogSqiezA5iQEQeVJZKvWsuOEzMSlFvihbUy/kgNhsYOCU/rr7VMW3iY/vGAnS
+         WSuQ==
+X-Gm-Message-State: APjAAAX9sUc0MlBiitTuxmeimnPjAan5mBQi4NZcbg0ghHRj4Az95MMP
+        i0RnWlqmwY4ExifXTRIme3RUFw==
+X-Google-Smtp-Source: APXvYqw/X5rM8ZDYSaQMfFrQjrC5Br42gx2+HjM1yZXBgIo539ABva79LWol9ilB7gBuqGDXalghlQ==
+X-Received: by 2002:adf:b748:: with SMTP id n8mr1825265wre.268.1562137096980;
+        Tue, 02 Jul 2019 23:58:16 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id g14sm1287678wro.11.2019.07.02.23.58.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 23:58:16 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 09:58:13 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        "tee-dev@lists.linaro.org" <tee-dev@lists.linaro.org>,
+        "sumit.garg@linaro.org" <sumit.garg@linaro.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190703065813.GA12724@apalos>
+References: <20190625201341.15865-1-sashal@kernel.org>
+ <20190625201341.15865-2-sashal@kernel.org>
+ <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
+ <20190626235653.GL7898@sasha-vm>
+ <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
+ <20190627133004.GA3757@apalos>
+ <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
+ <20190702142109.GA32069@apalos>
+ <CY4PR21MB0279B99FB0097309ADE83809BCF80@CY4PR21MB0279.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1562075604-8979-1-git-send-email-kernelfans@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR21MB0279B99FB0097309ADE83809BCF80@CY4PR21MB0279.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 07/02/2019 07:23 PM, Pingfan Liu wrote:
-> undo_isolate_page_range() never fails, so no need to return value.
+Hi Thirupathaiah,
 > 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: linux-kernel@vger.kernel.org
+> First of all, Thanks a lot for trying to test the driver. 
+> 
+np
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+[...]
+> > I managed to do some quick testing in QEMU.
+> > Everything works fine when i build this as a module (using IBM's TPM 2.0
+> > TSS)
+> > 
+> > - As module
+> > # insmod /lib/modules/5.2.0-rc1/kernel/drivers/char/tpm/tpm_ftpm_tee.ko
+> > # getrandom -by 8
+> > randomBytes length 8
+> > 23 b9 3d c3 90 13 d9 6b
+> > 
+> > - Built-in
+> > # dmesg | grep optee
+> > ftpm-tee firmware:optee: ftpm_tee_probe:tee_client_open_session failed,
+> > err=ffff0008
+> This (0xffff0008) translates to TEE_ERROR_ITEM_NOT_FOUND.
+> 
+> Where is fTPM TA located in the your test setup? 
+> Is it stitched into TEE binary as an EARLY_TA or 
+> Is it expected to be loaded during run-time with the help of user mode OP-TEE supplicant?
+> 
+> My guess is that you are trying to load fTPM TA through user mode OP-TEE supplicant. 
+> Can you confirm? 
+I tried both
+
+> If that is the true, 
+> - In the case of driver built as a module (CONFIG_TCG_FTPM_TEE=m), this is works fine 
+> as user mode supplicant is ready. 
+> - In the built-in case (CONFIG_TCG_FTPM_TEE=y), 
+> This would result in the above error 0xffff0008 as TEE is unable to find fTPM TA. 
+Maybe i did something wrong and never noticed it wasn't built as an earlyTA
+
+> 
+> The expectation is that fTPM TA is built as an EARLY_TA (in BL32) so that
+> U-boot and Linux driver stacks work seamlessly without dependency on supplicant.  
+> 
+You can add my tested-by tag for the module. I'll go back to testing it as
+built-in at some point in real hardware and let you know if i have any issues.
+
+If someone's is interested in the QEMU testing: 
+1. compile this https://github.com/jbech-linaro/manifest/blob/ftpm/README.md
+2. replace the whole linux kernel on the root-dir with a latest version + fTPM 
+char driver
+3. Apply a hack on kernel and disable dynamic shm (Need for this depends on 
+kernel + op-tee version)
+
+diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+index 1854a3db..7aea8a5 100644
+--- a/drivers/tee/optee/core.c
++++ b/drivers/tee/optee/core.c
+@@ -588,13 +588,15 @@ static struct optee *optee_probe(struct device_node *np)
+        /*
+         * Try to use dynamic shared memory if possible
+         */
++#if 0
+        if (sec_caps & OPTEE_SMC_SEC_CAP_DYNAMIC_SHM)
+                pool = optee_config_dyn_shm();
++#endif
+
+        /*
+         * If dynamic shared memory is not available or failed - try static one
+         */
+-       if (IS_ERR(pool) && (sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM))
++       if (sec_caps & OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM)
+                pool = optee_config_shm_memremap(invoke_fn, &memremaped_shm);
+
+        if (IS_ERR(pool))
+
+
+For the module part:
+Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
