@@ -2,70 +2,68 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F130C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E02C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E42821871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2FC21871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srbeKWsd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vnx9hfTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfGCFHs (ORCPT
+        id S1727056AbfGCFIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 01:07:48 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33650 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfGCFHr (ORCPT
+        Wed, 3 Jul 2019 01:08:34 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35908 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfGCFId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 01:07:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m4so565525pgk.0;
-        Tue, 02 Jul 2019 22:07:47 -0700 (PDT)
+        Wed, 3 Jul 2019 01:08:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so543021plt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 22:08:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KC7vgfyqe3Eg8Fe1+cMp4HakvNx6nu/Qukkr/Zk8t/0=;
-        b=srbeKWsd0T/FmFJeZxZX7XrU5K3lDCf5qczxFm+i5RUqeXG+OCfkkW8149MtSQhKj6
-         fGwbnqWrgmJBZAwS3AApMwK4kUnwtbbSqz+TmPLM8OqtnnGEpoboCbl11ftNyPRqtbrt
-         bGa2KdPXks6Erg/8ptcXNZ4juObXOCcoOC/UyzTUO3Y3oH10eD4NzKWsKHpB6bdPSoeb
-         S3yBjKhYISR5UqcCEVzYfkDcKqoZvtiodtB6SNlE0bgk+S4+AjPVoZuyfbSl5wRvevKs
-         QscFbuAeKVUlK0eFhG1hplIswYg2zzIrOYcjT31zSA4Qwc2453gf/MCKild1aDXyYq13
-         gLxw==
+        bh=bP96sN12+LB4G6r3Yzr2XfyFwArhE5W1JsAQXFpUTDg=;
+        b=Vnx9hfTr/VWxDub2tOXOowzwiubYGn/LxBAvZqSZPPVKw4rbPpdKFBpYBOcBRRC1jl
+         l1UYyXOtSNZnb1fqwnKIyPgVWGCpqOX72qkWPCbMePtTbBwe1WjVnY7frmgfEvd2Sgtn
+         GqCgCU4loxPMQSzv1cdh04GnJMFKfP2pGW/lI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KC7vgfyqe3Eg8Fe1+cMp4HakvNx6nu/Qukkr/Zk8t/0=;
-        b=uFgaTTku+7otAnaT306kTE9Q5qzldMdlSMXhgO07jvsdaDrKkBYyMu46PrD1Xf9+71
-         P5GicNWHyPGEtVbYiUcIxbqR59y5pnIlO7V8qTo59ReiOqMyolzzm7W3/aMLgfdiJm7N
-         qfQAQWqqx5CRaMkZ0ofAvmgZqVue+JPJgKSkdQokeaHTp6ODDVrg1ymrUCkiXkauPGg0
-         MxZlTi+7IJBbAuUFUnm+XLd/a16Otw3FW/rGnGmjjVcHp9IRhFHVhpC3l6wKiRrzKqJT
-         W8TGY0Fb+7sYUxwB2vDYDOAFkQwpBMJBjQ0GPXZoW4gv2v4QgeRYPfIq4fuHAJjcMFFI
-         NCeg==
-X-Gm-Message-State: APjAAAXCKPZHNYPh/xc5vxis/TyaMSbxtj3Q1bY4HnNphC3UPiHiRzJC
-        NhBes6cywukpp9SoBoEEl7yThfnf
-X-Google-Smtp-Source: APXvYqzaXU3faS5JxOfTe2eOA7XoPTCkRS8vgP7gCgNPRUQr40ZbYSPxaM3Z7U4pYHyaX7bZGuIuwQ==
-X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr9819718pjb.37.1562130466964;
-        Tue, 02 Jul 2019 22:07:46 -0700 (PDT)
-Received: from localhost.localdomain ([175.223.36.210])
-        by smtp.gmail.com with ESMTPSA id v184sm831351pgd.34.2019.07.02.22.07.43
+        bh=bP96sN12+LB4G6r3Yzr2XfyFwArhE5W1JsAQXFpUTDg=;
+        b=lZ9ija5LuiRhLZKB/pLZedZH3CE2YUv8XZY57hRnk7Cta1DGrcSdzZkvFsYSDbgIg2
+         qs40pwxblUfTGdglrSaHRAV7NJ0nlGDTrBv31e4qtQPtZX3pJiaGaYbchWM1K8lIE+8Z
+         MFWXPzsWp6RUKkazabg1q/9nY+j4jg9LlWKD3OSKTX538JsYlMyYv7lzLOZNpf7FcGDs
+         dc0f1NKSiQgmGZlEkPpNl5NE78BJJb6Y8eEbVj8Iedw67WggDM42OLaOgJgjf4pUW9dp
+         Oo4GEbqhtRK6zE9wNFidI4WUBkFlYqPHms8XDoIGich+Jl4KQEXu6Dpw68MCzjRBV+ga
+         XWPQ==
+X-Gm-Message-State: APjAAAXXH8ZBBXU6L4TNNEEsq1zKN3alQXR24uDYAmOwy9xUvJVWDFW5
+        T7FAouM0R6tQeBufgboP8Y5GFg==
+X-Google-Smtp-Source: APXvYqzr5qQEG/MCl44C+LlaT88NYZd1W5tF3BecvIL8q7wgcm/VpeoP8zNrKVLauTL9Ru/pegMbiQ==
+X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr39331452plb.292.1562130512588;
+        Tue, 02 Jul 2019 22:08:32 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id v13sm803990pfe.105.2019.07.02.22.08.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 22:07:46 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH] posix_acl: fix stale posix_acl_update_mode() comment
-Date:   Wed,  3 Jul 2019 14:07:40 +0900
-Message-Id: <20190703050740.13730-1-sergey.senozhatsky@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 02 Jul 2019 22:08:31 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ian Campbell <ian.campbell@citrix.com>,
+        Grant Likely <grant.likely@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
+Date:   Wed,  3 Jul 2019 13:08:27 +0800
+Message-Id: <20190703050827.173284-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,26 +71,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inode_change_ok() was renamed to setattr_prepare() in 4.8-rc1.
+If the device tree is incorrectly configured, and attempts to
+define a "no-map" reserved memory that overlaps with the kernel
+data/code, the kernel would crash quickly after boot, with no
+obvious clue about the nature of the issue.
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+For example, this would happen if we have the kernel mapped at
+these addresses (from /proc/iomem):
+40000000-41ffffff : System RAM
+  40080000-40dfffff : Kernel code
+  40e00000-411fffff : reserved
+  41200000-413e0fff : Kernel data
+
+And we declare a no-map shared-dma-pool region at a fixed address
+within that range:
+mem_reserved: mem_region {
+	compatible = "shared-dma-pool";
+	reg = <0 0x40000000 0 0x01A00000>;
+	no-map;
+};
+
+To fix this, when removing memory regions at early boot (which is
+what "no-map" regions do), we need to make sure that the memory
+is not already reserved. If we do, __reserved_mem_reserve_reg
+will throw an error:
+[    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+   for node 'mem_region': base 0x0000000040000000, size 26 MiB
+and the code that will try to use the region should also fail,
+later on.
+
+We do not do anything for non-"no-map" regions, as memblock
+explicitly allows reserved regions to overlap, and the commit
+that this fixes removed the check for that precise reason.
+
+Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 ---
- fs/posix_acl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/fdt.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index 84ad1c90d535..a76aa995a95d 100644
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -637,7 +637,7 @@ EXPORT_SYMBOL_GPL(posix_acl_create);
-  * file mode, set *acl to NULL to indicate that no ACL should be set.
-  *
-  * As with chmod, clear the setgit bit if the caller is not in the owning group
-- * or capable of CAP_FSETID (see inode_change_ok).
-+ * or capable of CAP_FSETID (see setattr_prepare).
-  *
-  * Called from set_acl inode operations.
-  */
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index cd17dc62a71980a..a1ded43fc332d0c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
+ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+ 					phys_addr_t size, bool nomap)
+ {
+-	if (nomap)
++	if (nomap) {
++		/*
++		 * If the memory is already reserved (by another region), we
++		 * should not allow it to be removed altogether.
++		 */
++		if (memblock_is_region_reserved(base, size))
++			return -EBUSY;
++
+ 		return memblock_remove(base, size);
++	}
+ 	return memblock_reserve(base, size);
+ }
+ 
 -- 
-2.22.0
+2.22.0.410.gd8fdbe21b5-goog
 
