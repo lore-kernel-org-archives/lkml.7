@@ -2,75 +2,78 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFB8C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B55EC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3728E218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05FE218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5NbxhUw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N50zpxJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGCIN6 (ORCPT
+        id S1727297AbfGCIOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:13:58 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45099 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGCIN6 (ORCPT
+        Wed, 3 Jul 2019 04:14:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38193 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGCIOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:13:58 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so798634pgp.12;
-        Wed, 03 Jul 2019 01:13:58 -0700 (PDT)
+        Wed, 3 Jul 2019 04:14:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y15so856374pfn.5;
+        Wed, 03 Jul 2019 01:13:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l/fW7R33i6r3L87mywXzhr7gnJzg2boZZl1A7ts9QtY=;
-        b=O5NbxhUwXBjtORIyUkBBUPPOyAVmr4Ny6Q8TaxcBFBtsHViCYLVUtdSRqWauh7Jwyq
-         czNpjX/8R5lg9so1PACVXyUYcO4xpVbqHb/E9Ub3n6siceZ9msHWx5km7FzX3uvLVyzL
-         6B+E8EPF/cV+37JYWg8JuS0xq76cQmZNgRasa6fc2Hm89/F3AHKw27V6VXPv+hxKbAQV
-         +tEUSJqgD29vvQVLmHTG6cWHOwAQa7gUSQgNfrVnIQZ4MHcvYqv93/32x/aGrb7UmXFQ
-         vdlYcXc5cbS/uJVFWbnMWEOmHX61Hu18n4K9SblQCs5WdfaOCmfYT5HYpr5hr5mtURwZ
-         D2IQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6x6jWn1arFYtCfxNQ45HZjLDVkH250RmOZOdF+kQcoI=;
+        b=N50zpxJwnQFYf34e2vjC/buPUEmo71NS8jbvOqdqR8/g1FHy8o3AYLowccVfeiRgcM
+         n8f22BJK86jY+QLfkLJgtQSW3JIeDacJXodSJm9GO61ZVfs0Rby2wGaBnPwySgERTmxf
+         oF3oqF62ynoddlZW+W2hZJMzAzctR4XtHk1rD33msYh5FqcHgqyAGu5WuXV0CV4qXPiU
+         oeZe6x5WEv+lW2J7RSTmZXO/mf4xw4xPUJH2y84ZANb4tIu627NgG5cglLVYHR2fYLyH
+         MCPFeXFGXx4olNZpqCPMTTlz5uqfWN8XwTXGbtHI84RnFM/tQ8i5N5nh4VgnUrnUqDgz
+         q4+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l/fW7R33i6r3L87mywXzhr7gnJzg2boZZl1A7ts9QtY=;
-        b=n7ovSRk2LmDfwkN16jKaMCTD6NBp2GVZLLw1sh7gbdE9oAEdSWOAX3yiL7B86ndV24
-         1hcpmBh8/U0kij8jxoyB5LAhQkL+xpAlZp236hsr0xP8DzIAm0occG4xdrsUpxLqG6Fl
-         r1lXWDt1r4eW4BTaWCqFxYSfkO8AMmdri2+aQuXURq5husaZaGYlE2mtgrtIBGCIWK9d
-         dHoVpFRCS2MsCijJdJHIKFX4Udhg809oDHXUjZ9O9klScGqLk6gBJjN68mFxdrChVaAv
-         rfFV7UK8tHYGqTgR3lavkYAC0uOWoGvpS9p4smxEpAwCG4rqqGu2+ooK//0wUiK0jxqH
-         OMUw==
-X-Gm-Message-State: APjAAAWICCixOddkCMcgRH8EBRSEtcDAObYMKxSYxw1y237gT5j21zpy
-        JNpgCirABRuT8Q1vI6pyS1EdiDwNQGA=
-X-Google-Smtp-Source: APXvYqyphdSGjtgLfSmMWuT4DgKpCYgJRPkXQh4PxTXji4zrUdFHSNmoM2SaAHd1wsAws+6V4WzIfA==
-X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr11462614pjq.32.1562141637151;
-        Wed, 03 Jul 2019 01:13:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6x6jWn1arFYtCfxNQ45HZjLDVkH250RmOZOdF+kQcoI=;
+        b=dLZEiehr5TmzJ9rUJ3jSZyyqPktX7fkdDtskIu5WTgJWFBtkkcxZi3QvwbCdniS1rl
+         R5cc5HbFQa0dWPfT2K+QHagu080PNQoadSSciOocnkmV19J9JwOz1IyskCxO0ppo+H5Q
+         t3ElmPhTn9mAbCFaAABk+c42nhQWabAQJ1dkEw5ymPO4PuSqU7v9gmZ0PpdEZ3FbDCoz
+         neVYpJIpO66dnWqghH7fyMgCFtsnhUEJRYDJJ0unrK7zUIBmeIsaMU7eRuSUSeuHl70w
+         v5w663gQEiWxC5VSTQ4CkbHBJqvA+DLDweWR6KpJIe/KG5kMG3TphTIcvVaWX9lwNgL0
+         GN4A==
+X-Gm-Message-State: APjAAAWoBesQB4lAVsvMcla5IaN8hCslG7qqM+FOZ4vNuro7uvPi3wbE
+        1iBPqrLt4tECNE1pLgS5DBY0dTtjlDA=
+X-Google-Smtp-Source: APXvYqwZYbvTT+7X+Zd3zsAH8twpYtWuKStEbv+6mrfkYCWkO469a/5y+/PYTbl8r3Gk2e05e4aNFw==
+X-Received: by 2002:a17:90a:e38f:: with SMTP id b15mr11382311pjz.85.1562141638765;
+        Wed, 03 Jul 2019 01:13:58 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.13.55
+        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.13.57
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:13:56 -0700 (PDT)
+        Wed, 03 Jul 2019 01:13:57 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Chris Spencer <christopher.spencer@sea.co.uk>,
         Cory Tusar <cory.tusar@zii.aero>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/16] crypto: caam - Add i.MX8MQ support
-Date:   Wed,  3 Jul 2019 01:13:11 -0700
-Message-Id: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 01/16] crypto: caam - move DMA mask selection into a function
+Date:   Wed,  3 Jul 2019 01:13:12 -0700
+Message-Id: <20190703081327.17505-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -79,85 +82,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Everyone:
+Exactly the same code to figure out DMA mask is repeated twice in the
+driver code. To avoid repetition, move that logic into a standalone
+subroutine in intern.h. While at it re-shuffle the code to make it
+more readable with early returns.
 
-Picking up where Chris left off (I chatted with him privately
-beforehead), this series adds support for i.MX8MQ to CAAM driver. Just
-like [v1], this series is i.MX8MQ only.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Cc: Chris Spencer <christopher.spencer@sea.co.uk>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Horia Geantă <horia.geanta@nxp.com>
+Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/crypto/caam/ctrl.c   | 11 +----------
+ drivers/crypto/caam/intern.h | 20 ++++++++++++++++++++
+ drivers/crypto/caam/jr.c     | 15 +--------------
+ 3 files changed, 22 insertions(+), 24 deletions(-)
 
-Feedback is welcome!
-Thanks,
-Andrey Smirnov
-
-Changes since [v3]:
-
-  - Patchset changed to select DMA size at runtime in order to enable
-    support for both i.MX8MQ and Layerscape at the same time. I only
-    tested the patches on i.MX6,7 and 8MQ, since I don't have access
-    to any of the Layerscape HW. Any help in that regard would be
-    appareciated.
-
-  - Bulk clocks and their number are now stored as a part of struct
-    caam_drv_private to simplify allocation and cleanup code (no
-    special context needed)
-    
-  - Renamed 'soc_attr' -> 'imx_soc_match' for clarity
-
-Changes since [v2]:
-
-  - Dropped "crypto: caam - do not initialise clocks on the i.MX8" and
-    replaced it with "crypto: caam - simplfy clock initialization" and 
-    "crypto: caam - add clock entry for i.MX8MQ"
-
-
-Changes since [v1]
-
-  - Series reworked to continue using register based interface for
-    queueing RNG initialization job, dropping "crypto: caam - use job
-    ring for RNG instantiation instead of DECO"
-
-  - Added a patch to share DMA mask selection code
-
-  - Added missing Signed-off-by for authors of original NXP tree
-    commits that this sereis is based on
-
-[v3] lore.kernel.org/r/20190617160339.29179-1-andrew.smirnov@gmail.com
-[v2] lore.kernel.org/r/20190607200225.21419-1-andrew.smirnov@gmail.com
-[v1] https://patchwork.kernel.org/cover/10825625/
-
-
-Andrey Smirnov (16):
-  crypto: caam - move DMA mask selection into a function
-  crypto: caam - simplfy clock initialization
-  crypto: caam - move tasklet_init() call down
-  crypto: caam - use deveres to allocate 'entinfo'
-  crypto: caam - use devres to allocate 'outring'
-  crypto: caam - use devres to allocate 'inpring'
-  crytpo: caam - make use of iowrite64*_hi_lo in wr_reg64
-  crypto: caam - use ioread64*_hi_lo in rd_reg64
-  crypto: caam - drop 64-bit only wr/rd_reg64()
-  crypto: caam - make CAAM_PTR_SZ dynamic
-  crypto: caam - move cpu_to_caam_dma() selection to runtime
-  crypto: caam - drop explicit usage of struct jr_outentry
-  crypto: caam - don't hardcode inpentry size
-  crypto: caam - force DMA address to 32-bit on 64-bit i.MX SoCs
-  crypto: caam - always select job ring via RSR on i.MX8MQ
-  crypto: caam - add clock entry for i.MX8MQ
-
- drivers/crypto/caam/caamalg.c     |   2 +-
- drivers/crypto/caam/caamhash.c    |   2 +-
- drivers/crypto/caam/caampkc.c     |   8 +-
- drivers/crypto/caam/caamrng.c     |   2 +-
- drivers/crypto/caam/ctrl.c        | 224 ++++++++++++++----------------
- drivers/crypto/caam/desc_constr.h |  20 ++-
- drivers/crypto/caam/error.c       |   3 +
- drivers/crypto/caam/intern.h      |  32 ++++-
- drivers/crypto/caam/jr.c          |  67 +++------
- drivers/crypto/caam/pdb.h         |  16 ++-
- drivers/crypto/caam/pkc_desc.c    |   8 +-
- drivers/crypto/caam/regs.h        | 139 ++++++++++++------
- 12 files changed, 294 insertions(+), 229 deletions(-)
-
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 4e43ca4d3656..e674d8770cdb 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -688,16 +688,7 @@ static int caam_probe(struct platform_device *pdev)
+ 			      JRSTART_JR1_START | JRSTART_JR2_START |
+ 			      JRSTART_JR3_START);
+ 
+-	if (sizeof(dma_addr_t) == sizeof(u64)) {
+-		if (caam_dpaa2)
+-			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(49));
+-		else if (of_device_is_compatible(nprop, "fsl,sec-v5.0"))
+-			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
+-		else
+-			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
+-	} else {
+-		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+-	}
++	ret = dma_set_mask_and_coherent(dev, caam_get_dma_mask(dev));
+ 	if (ret) {
+ 		dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n", ret);
+ 		goto iounmap_ctrl;
+diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
+index 6af84bbc612c..ec25d260fa40 100644
+--- a/drivers/crypto/caam/intern.h
++++ b/drivers/crypto/caam/intern.h
+@@ -10,6 +10,8 @@
+ #ifndef INTERN_H
+ #define INTERN_H
+ 
++#include "ctrl.h"
++
+ /* Currently comes from Kconfig param as a ^2 (driver-required) */
+ #define JOBR_DEPTH (1 << CONFIG_CRYPTO_DEV_FSL_CAAM_RINGSIZE)
+ 
+@@ -215,4 +217,22 @@ DEFINE_SIMPLE_ATTRIBUTE(caam_fops_u32_ro, caam_debugfs_u32_get, NULL, "%llu\n");
+ DEFINE_SIMPLE_ATTRIBUTE(caam_fops_u64_ro, caam_debugfs_u64_get, NULL, "%llu\n");
+ #endif
+ 
++static inline u64 caam_get_dma_mask(struct device *dev)
++{
++	struct device_node *nprop = dev->of_node;
++
++	if (sizeof(dma_addr_t) != sizeof(u64))
++		return DMA_BIT_MASK(32);
++
++	if (caam_dpaa2)
++		return DMA_BIT_MASK(49);
++
++	if (of_device_is_compatible(nprop, "fsl,sec-v5.0-job-ring") ||
++	    of_device_is_compatible(nprop, "fsl,sec-v5.0"))
++		return DMA_BIT_MASK(40);
++
++	return DMA_BIT_MASK(36);
++}
++
++
+ #endif /* INTERN_H */
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index cea811fed320..4b25b2fa3d02 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -543,20 +543,7 @@ static int caam_jr_probe(struct platform_device *pdev)
+ 
+ 	jrpriv->rregs = (struct caam_job_ring __iomem __force *)ctrl;
+ 
+-	if (sizeof(dma_addr_t) == sizeof(u64)) {
+-		if (caam_dpaa2)
+-			error = dma_set_mask_and_coherent(jrdev,
+-							  DMA_BIT_MASK(49));
+-		else if (of_device_is_compatible(nprop,
+-						 "fsl,sec-v5.0-job-ring"))
+-			error = dma_set_mask_and_coherent(jrdev,
+-							  DMA_BIT_MASK(40));
+-		else
+-			error = dma_set_mask_and_coherent(jrdev,
+-							  DMA_BIT_MASK(36));
+-	} else {
+-		error = dma_set_mask_and_coherent(jrdev, DMA_BIT_MASK(32));
+-	}
++	error = dma_set_mask_and_coherent(jrdev, caam_get_dma_mask(jrdev));
+ 	if (error) {
+ 		dev_err(jrdev, "dma_set_mask_and_coherent failed (%d)\n",
+ 			error);
 -- 
 2.21.0
 
