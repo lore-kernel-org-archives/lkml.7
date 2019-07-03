@@ -2,92 +2,88 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000DCC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111D121881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B776E218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562163364;
+	bh=Z5Q9c6N5pcNRJTsrqbCAmSGmLaXFi1adb61wVEtQN1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r5q4sBXG0sPqTQkywhfw2iPdsi4xv8LUYDMcDBU7YSxwHX1clni/cASyvnYhRIr2x
+	 gtSiP4W4NkbYtt+5mJsmk1zYIQb1fQfbEBVYIMzFPmP/Dcbk0zry5xfzaxIEOdpMEM
+	 nbJ3JLE4fzmD3/HFEpkGyyhdmtEWlbZvZI86lZF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfGCOPh (ORCPT
+        id S1727129AbfGCOQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:15:37 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:54618 "EHLO ns.iliad.fr"
+        Wed, 3 Jul 2019 10:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbfGCOPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:15:37 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id DDF88201DB;
-        Wed,  3 Jul 2019 16:15:35 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id C5B9620119;
-        Wed,  3 Jul 2019 16:15:35 +0200 (CEST)
-Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brad Love <brad@nextdimension.cc>
-References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
- <20190702095109.GC22408@latitude>
- <6a644c94-f979-b656-472b-c7fe9303e08c@free.fr>
-Message-ID: <68ae0fde-ce8b-968d-853f-86eb5b1247aa@free.fr>
-Date:   Wed, 3 Jul 2019 16:15:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726957AbfGCOQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:16:02 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B36218A4;
+        Wed,  3 Jul 2019 14:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562163361;
+        bh=Z5Q9c6N5pcNRJTsrqbCAmSGmLaXFi1adb61wVEtQN1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WR4VGjKJMoXPGU+HXAaroKxcXZk+8X9kyhEnXMIjsa1AlxR9lo++0S+4558KzRZPe
+         sOQ7kFCXg3FOZJcVt3K/ytzOSn0DdevYUasPxalrv8HMWVWmVkNMdg9Fb2IC4FA6Or
+         LDv9BN1DcHEZUmtAmtoRHsT0gvV/R8BAV/GALRLE=
+Date:   Wed, 3 Jul 2019 10:16:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.1 07/51] ASoC: soc-dpm: fixup DAI active
+ unbalance
+Message-ID: <20190703141600.GW11506@sasha-vm>
+References: <20190626034117.23247-1-sashal@kernel.org>
+ <20190626034117.23247-7-sashal@kernel.org>
+ <20190626100315.GS5316@sirena.org.uk>
+ <20190627002059.GN7898@sasha-vm>
+ <20190701161801.GD2793@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <6a644c94-f979-b656-472b-c7fe9303e08c@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jul  3 16:15:35 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190701161801.GD2793@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 14:47, Marc Gonzalez wrote:
+On Mon, Jul 01, 2019 at 05:18:01PM +0100, Mark Brown wrote:
+>On Wed, Jun 26, 2019 at 08:20:59PM -0400, Sasha Levin wrote:
+>> On Wed, Jun 26, 2019 at 11:03:15AM +0100, Mark Brown wrote:
+>> > On Tue, Jun 25, 2019 at 11:40:23PM -0400, Sasha Levin wrote:
+>
+>> > > [ Upstream commit f7c4842abfa1a219554a3ffd8c317e8fdd979bec ]
+>
+>> > > snd_soc_dai_link_event() is updating snd_soc_dai :: active,
+>> > > but it is unbalance.
+>> > > It counts up if it has startup callback.
+>
+>> > Are you *sure* this doesn't have dependencies?
+>
+>> The actual code seems to correspond with the issue described in the
+>> commit message, so I'd think not.
+>
+>> I can remove this patch if you're not confident about it.
+>
+>I'm not entirely, no.
 
-> Come to think of it, I'm really not a fan of "large" macro functions.
-> I'll outline a different option in v2.
+Dropped it, thanks.
 
-My idea is to use a trivial helper function to assign the 3 struct fields,
-and then a trivial macro to invoke the helper:
-
-static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, int rlen)
-{
-	memcpy(cmd->args, args, wlen);
-	cmd->wlen = wlen;
-	cmd->rlen = rlen;
-}
-
-#define CMD_SETUP(cmd, args, rlen) \
-	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
-
-
-I think this way addresses all of your comments:
-
-- since we're using a real function, the compiler can perform type-checking,
-and the function's prototype is self-documenting.
-- no more funky __args and __rlen arguments
-- no local variables
-
-
-Note however, that drivers/media/tuners/si2157.c uses a different struct
-(struct si2157_cmd). Therefore, if we wanted to apply the same changes
-to si2157.c, we would have to define a common struct, and replace all
-the uses of struct si2157_cmd and struct si2168_cmd. That seemed too
-invasive to do without the maintainer's approval and guidance.
-
-Antti, do you Ack this new approach?
-
-It's not clear what HW is supported by drivers/media/dvb-frontends/si21xx.c
-(that's a very generic name).
-
-Regards.
+--
+Thanks,
+Sasha
