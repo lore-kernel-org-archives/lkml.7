@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4665AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42890C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0862187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC9A2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120183;
-	bh=0VqhOrySUpgW0ddkrrcTG2M+nPD6bjN6ICpW5L0wvWw=;
+	s=default; t=1562120187;
+	bh=XuULE2W5LNN8hF80bdQNe3UzqVbSKA2dya2PvImWKUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IoX4H4TXnU5OW+qEWGz9LoOALoAWJ7Rhcz2wvxCz/FnBYo4XwaWv3bD6s9Ehfd09I
-	 yxY1aDf0oKvzNe7S52UXdaDtdag3ph4DWzrz37U3vzb08xyFZrT2GpRM3Aqg24wI8x
-	 z80HlKJbSBNhq+8WZ/cQfCNkyvKPeXFfClDjViH8=
+	b=1EhfAuzRW2hHq3AxqeP9LN6Xb7H1M8xUwJUnRi2ZcrwQrhCWXE6P8fD8lxGwIB7KP
+	 vaekgP2fglAv2aEJAJltka4n+BlSK1YyOLrgREMkbQSrDUMCAmt43LqPLclYPuwCS0
+	 v6Q8f3MkhdaUh9u5T42auLjgBIDr6O2fKwwaqs+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfGCCQW (ORCPT
+        id S1727936AbfGCCQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbfGCCQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:19 -0400
+        id S1727895AbfGCCQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1253A2187F;
-        Wed,  3 Jul 2019 02:16:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 505B121881;
+        Wed,  3 Jul 2019 02:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120178;
-        bh=0VqhOrySUpgW0ddkrrcTG2M+nPD6bjN6ICpW5L0wvWw=;
+        s=default; t=1562120183;
+        bh=XuULE2W5LNN8hF80bdQNe3UzqVbSKA2dya2PvImWKUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=so/bqVAcjFTT3cgV0vgcX76LQO1yvZo/p22MmF9G1Y6/HJqn66DsuzkWvDCUZFHP6
-         YMOVj2HVGXOp9cYMVmQr1XIgUpmeWHLA+plw56h3gVHdaLvfFGTAUHrt4xesAtxyGw
-         wmUHyntC1zbfIQRr8E6oq5hL4RKbP+y7lB+6FHQs=
+        b=lZnh/vSCKELIgOhTFLbaVy4VfUvA2QR2ACd8bOR99zA3wHl8i5NU0zkb/flSepJw8
+         PLxOpHEKLMY94MHCCJF1qUYU6nFp2FAPDVSQ2BeqTozYjW5/kkDLx8The5bNZf1WQK
+         itzMJYYr6UO+gcLFZ6bKahjGZhouTC6+5OtkHiMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yafang Shao <laoar.shao@gmail.com>, Michal Hocko <mhocko@suse.com>,
-        Wind Yu <yuzhoujian@didichuxing.com>,
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.1 37/39] mm/oom_kill.c: fix uninitialized oc->constraint
-Date:   Tue,  2 Jul 2019 22:15:12 -0400
-Message-Id: <20190703021514.17727-37-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 39/39] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
+Date:   Tue,  2 Jul 2019 22:15:14 -0400
+Message-Id: <20190703021514.17727-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -61,79 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit 432b1de0de02a83f64695e69a2d83cbee10c236f ]
+[ Upstream commit 8f9fab480c7a87b10bb5440b5555f370272a5d59 ]
 
-In dump_oom_summary() oc->constraint is used to show oom_constraint_text,
-but it hasn't been set before.  So the value of it is always the default
-value 0.  We should inititialize it before.
+DIV_ROUND_UP_ULL adds the two arguments and then invokes
+DIV_ROUND_DOWN_ULL.  But on a 32bit system the addition of two 32 bit
+values can overflow.  DIV_ROUND_DOWN_ULL does it correctly and stashes
+the addition into a unsigned long long so cast the result to unsigned
+long long here to avoid the overflow condition.
 
-Bellow is the output when memcg oom occurs,
-
-before this patch:
-  oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null), cpuset=/,mems_allowed=0,oom_memcg=/foo,task_memcg=/foo,task=bash,pid=7997,uid=0
-
-after this patch:
-  oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null), cpuset=/,mems_allowed=0,oom_memcg=/foo,task_memcg=/foo,task=bash,pid=13681,uid=0
-
-Link: http://lkml.kernel.org/r/1560522038-15879-1-git-send-email-laoar.shao@gmail.com
-Fixes: ef8444ea01d7 ("mm, oom: reorganize the oom report in dump_header")
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Wind Yu <yuzhoujian@didichuxing.com>
+[akpm@linux-foundation.org: DIV_ROUND_UP_ULL must be an rval]
+Link: http://lkml.kernel.org/r/20190625100518.30753-1-vkoul@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/oom_kill.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ include/linux/kernel.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 3a2484884cfd..263efad6fc7e 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -985,8 +985,7 @@ static void oom_kill_process(struct oom_control *oc, const char *message)
- /*
-  * Determines whether the kernel must panic because of the panic_on_oom sysctl.
-  */
--static void check_panic_on_oom(struct oom_control *oc,
--			       enum oom_constraint constraint)
-+static void check_panic_on_oom(struct oom_control *oc)
- {
- 	if (likely(!sysctl_panic_on_oom))
- 		return;
-@@ -996,7 +995,7 @@ static void check_panic_on_oom(struct oom_control *oc,
- 		 * does not panic for cpuset, mempolicy, or memcg allocation
- 		 * failures.
- 		 */
--		if (constraint != CONSTRAINT_NONE)
-+		if (oc->constraint != CONSTRAINT_NONE)
- 			return;
- 	}
- 	/* Do not panic for oom kills triggered by sysrq */
-@@ -1033,7 +1032,6 @@ EXPORT_SYMBOL_GPL(unregister_oom_notifier);
- bool out_of_memory(struct oom_control *oc)
- {
- 	unsigned long freed = 0;
--	enum oom_constraint constraint = CONSTRAINT_NONE;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 2d14e21c16c0..4330cecd2237 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -92,7 +92,8 @@
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+ 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
  
- 	if (oom_killer_disabled)
- 		return false;
-@@ -1069,10 +1067,10 @@ bool out_of_memory(struct oom_control *oc)
- 	 * Check if there were limitations on the allocation (only relevant for
- 	 * NUMA and memcg) that may require different handling.
- 	 */
--	constraint = constrained_alloc(oc);
--	if (constraint != CONSTRAINT_MEMORY_POLICY)
-+	oc->constraint = constrained_alloc(oc);
-+	if (oc->constraint != CONSTRAINT_MEMORY_POLICY)
- 		oc->nodemask = NULL;
--	check_panic_on_oom(oc, constraint);
-+	check_panic_on_oom(oc);
+-#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
++#define DIV_ROUND_UP_ULL(ll, d) \
++	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
  
- 	if (!is_memcg_oom(oc) && sysctl_oom_kill_allocating_task &&
- 	    current->mm && !oom_unkillable_task(current, NULL, oc->nodemask) &&
+ #if BITS_PER_LONG == 32
+ # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
 -- 
 2.20.1
 
