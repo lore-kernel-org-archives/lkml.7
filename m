@@ -2,157 +2,86 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D9CC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F97C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E023821881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAD921881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xs2EPHtu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p54r3CaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfGCRV2 (ORCPT
+        id S1727242AbfGCRVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:21:28 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44029 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfGCRV0 (ORCPT
+        Wed, 3 Jul 2019 13:21:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48060 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfGCRVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:21:26 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so3274071ljv.10;
-        Wed, 03 Jul 2019 10:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kmYvquEADVAMciJoVWVna+nWEH18FTud+FJTYj28hHk=;
-        b=Xs2EPHtuaSZGrWvCpsXjY9TqhScmwra8dX5FPpUgi15DJpI1QQyVZ/nEqwn7dqDBkb
-         qS8B4wpiUjKQK/OucG+QsCCJPlZPtkjMaedZIJz0OD8lG5qfVZcwlYOWFG/E3jqzLEcM
-         qlzFWJakyUhILPaXkfPG/6qnn83ud+OQ3UitIHBKqdRUuSRt0vllFayCiQlHhwT9xI0q
-         LhNLp+INqQkPs/2uXT7q/Do/5/Q53sw6Xkw1wJyW7QrjQBo6dgLB4zo0qRElYdYn5+Mf
-         0lHnod9m+2p7q5iM7O+2RiiS/rCukRBeX1hfWzDWhNRt9nw0cHuZQR3zoIf6+1N6iPUF
-         Yayw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kmYvquEADVAMciJoVWVna+nWEH18FTud+FJTYj28hHk=;
-        b=hbRPv33FdZGimlr1+6rbIA942QdiIXvCk0BncmuUGnDXdD3+dajjjc0ZZU2mrywEYp
-         IkHf4QpN+/QIu7M/ia3QNAMws4pwAStiDoysvBymp/U7AqWxGuzUCP4M6dm4QOfSKlmu
-         NyhOhZGs1D5rD6OfZ72dyY+sWGsZncaUHcGkVaATsIG7s1giHPdEmv3nt1mqbijQDYdW
-         BViW5gVbjcOsVfn4ivcUUV9IzSPQC93WeVkL4CHLSgoXXtmWJvrhI3i4U3Zd07ZNwisF
-         hoL8Khfnm/sZFcvT9tKkh0/pCM0dbd4RVjXpPnrj45vmrlYnVz53zdkWn7q9mMnrhkO7
-         Nlmw==
-X-Gm-Message-State: APjAAAXbQlqGvQnjKmFxmCOiKioBvVjG0fh/yePpN+MWIitYX0PiC4oA
-        QOIND6monHFxMiQjamigRHk=
-X-Google-Smtp-Source: APXvYqwtoRqmRijNXeN0NdmQdzAxlK3Bi5IyzgiPpH2z7dLB3SyqrtHGbJOEwifAY9jQqng9stekJg==
-X-Received: by 2002:a2e:98f:: with SMTP id 137mr20858418ljj.232.1562174484805;
-        Wed, 03 Jul 2019 10:21:24 -0700 (PDT)
-Received: from krolik-desktop.lan ([91.238.216.6])
-        by smtp.gmail.com with ESMTPSA id 11sm581165ljc.66.2019.07.03.10.21.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 10:21:23 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>, linus.walleij@linaro.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Wed, 3 Jul 2019 13:21:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KLNpXUeBNjOGtXnDQ3qzX7M6wN19aQMGgVhJjQ1BSuc=; b=p54r3CaTxN1VjNO3vNGbNNXLB
+        djZuP4fanPNsLlBqMzU5MoP+1WLXTYZva0j3m3P7OUtM3wERwG+ot3qGTaebOvLcOlZE0NaZzIL2D
+        /HTFZdIBzKlwn1NFvQKlPE48i6NLNn5ZwqhLc804x/8rUCdrK0U+KhMah1s+XDe5M9w0MpvU4susf
+        HjmAYtShG3Hd42th/Q8PDRRdMRwIQH7zILUpUh67kFTwPYTmmjHzvF5JLUV7gOAchy78zV/lHSv4x
+        sJF1Mv54B5XJdRqqtIALihUynxzBVmmmmiJsl7TXUVScwRO2NcTplls5IExQYeZMS5sUhuWfEg2+L
+        0h3Q2PXug==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hiiwW-0007Al-2D; Wed, 03 Jul 2019 17:21:16 +0000
+Date:   Wed, 3 Jul 2019 10:21:16 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
-Date:   Wed,  3 Jul 2019 19:19:24 +0200
-Message-Id: <20190703171924.31801-5-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703171924.31801-1-paweldembicki@gmail.com>
-References: <20190703171924.31801-1-paweldembicki@gmail.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        David Miller <davem@davemloft.net>, brian.brooks@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        nadavh@marvell.com, stefanc@marvell.com,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH] driver core: platform: Allow using a dedicated dma_mask
+ for platform_device
+Message-ID: <20190703172115.GA22034@infradead.org>
+References: <20190628141550.22938-1-maxime.chevallier@bootlin.com>
+ <20190628155946.GA16956@infradead.org>
+ <20190701132340.21123dee@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701132340.21123dee@bootlin.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver allow to use devices with disabled iCPU only.
+On Mon, Jul 01, 2019 at 01:24:39PM +0200, Maxime Chevallier wrote:
+> I agree that this the real solution, it just seemed a bit overwhelming
+> to me. I'll be happy to help with this though, now that you took a big
+> first step.
 
-Some devices have pre-initialised iCPU by bootloader.
-That state make switch unmanaged. This patch force reset
-if device is in unmanaged state. In the result chip lost
-internal firmware from RAM and it can be managed.
+I think the first step is to resurrect my original patch to default
+to a 32-bit DMA mask for platform devices, as that will cut a lot
+of crap from the platform device declarations.
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
- drivers/net/dsa/vitesse-vsc73xx-core.c | 36 ++++++++++++--------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+IIRC the problem back then was that USB uses the fact that a DMA
+mask exist to decide if it uses a DMA vs PIO path in the HCD core.
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index 10063f31d9a3..4525702faf68 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -417,22 +417,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
- 	}
- 
- 	if (val == 0xffffffff) {
--		dev_info(vsc->dev, "chip seems dead, assert reset\n");
--		gpiod_set_value_cansleep(vsc->reset, 1);
--		/* Reset pulse should be 20ns minimum, according to datasheet
--		 * table 245, so 10us should be fine
--		 */
--		usleep_range(10, 100);
--		gpiod_set_value_cansleep(vsc->reset, 0);
--		/* Wait 20ms according to datasheet table 245 */
--		msleep(20);
--
--		ret = vsc73xx_read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
--				   VSC73XX_ICPU_MBOX_VAL, &val);
--		if (val == 0xffffffff) {
--			dev_err(vsc->dev, "seems not to help, giving up\n");
--			return -ENODEV;
--		}
-+		dev_info(vsc->dev, "chip seems dead.\n");
-+		return -EAGAIN;
- 	}
- 
- 	ret = vsc73xx_read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
-@@ -483,9 +469,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
- 	}
- 	if (icpu_si_boot_en && !icpu_pi_en) {
- 		dev_err(vsc->dev,
--			"iCPU enabled boots from SI, no external memory\n");
--		dev_err(vsc->dev, "no idea how to deal with this\n");
--		return -ENODEV;
-+			"iCPU enabled boots from PI/SI, no external memory\n");
-+		return -EAGAIN;
- 	}
- 	if (!icpu_si_boot_en && icpu_pi_en) {
- 		dev_err(vsc->dev,
-@@ -1158,6 +1143,19 @@ int vsc73xx_probe(struct vsc73xx *vsc)
- 		msleep(20);
- 
- 	ret = vsc73xx_detect(vsc);
-+	if (ret == -EAGAIN) {
-+		dev_err(vsc->dev,
-+			"Chip seams to be out of control. Assert reset and try again.\n");
-+		gpiod_set_value_cansleep(vsc->reset, 1);
-+		/* Reset pulse should be 20ns minimum, according to datasheet
-+		 * table 245, so 10us should be fine
-+		 */
-+		usleep_range(10, 100);
-+		gpiod_set_value_cansleep(vsc->reset, 0);
-+		/* Wait 20ms according to datasheet table 245 */
-+		msleep(20);
-+		ret = vsc73xx_detect(vsc);
-+	}
- 	if (ret) {
- 		dev_err(dev, "no chip found (%d)\n", ret);
- 		return -ENODEV;
--- 
-2.20.1
-
+So I'll need some help from Greg or other USB folks to clean that up,
+after that we can try to apply my patch again (preferably early in
+the next merge window), and once that sticks clean up all the 32-bit
+dma mask initialization for platform devices, and then turn the dma_mask
+into a scalar.
