@@ -2,141 +2,169 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D30DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F6CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71C020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCB12089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hoNbf0R4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBDl/pv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfGCBDz (ORCPT
+        id S1727331AbfGCBFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:03:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38069 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfGCBDx (ORCPT
+        Tue, 2 Jul 2019 21:05:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:32921 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfGCBFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:03:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s15so439846wmj.3;
-        Tue, 02 Jul 2019 18:03:52 -0700 (PDT)
+        Tue, 2 Jul 2019 21:05:03 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i11so377759edq.0;
+        Tue, 02 Jul 2019 18:05:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DXVTCCtxl9em2owyf8s4bbeO9mK7cEItEViXYHsj0G0=;
-        b=hoNbf0R4ebAsKTyC94FICS46RhUJwXy760CSyolqQmHWjfgvYUIWg5IS3nEkx+8yqg
-         2McJS5dz80Lx1Z8oQHRILpdxY/WV3qVwOAcR9VZAvoL436zIfIg01KmG880yxrQ449/L
-         S8axGKbf3+YMdw1kO4aOMgd/l9/+xOjqhSOPYyEUxNdnR4WmSHu+y9WNQ5/NJ87Pwi2k
-         72zJViGmWtXNnJC/4wj653REAKkPBVmC97f/79s85uerpY4hc1j8Nu8s4zQS/ix3IJcK
-         mu1pdj8lspLgoUDgtvxbsP6gSR+UhV3NQEcLBBiDH3Fdl+5aRxvIg3MlsrUS9beWx+Xs
-         YL2A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Pi01KzgEdIhGIrXlu8OB1kwQXoOUnrYPaRcf2PLxb/U=;
+        b=rBDl/pv0TR7OXoDLtY4qDwH4O3XAyoj4V0fiUbjGY2+xdzLZWxDB/TZMz91zWAQJlx
+         8zBLKP1eFkYs4j9t8Da2yciljUcB9aURJx3yWKCgQzqh66D6c/8XKo5SyexehiKWyNOp
+         ZWrYiq6dCaMItTH8MUNzgLBpTC7SCEuWXRPVvUjJ3B2z/XeOIcg0lCgVCD5f9hyeQDXt
+         mZ7b3IqG9l4uy2f1st4KIqnXHTMMEZdmsemj1i0fq9Y3AWXJ/MHhJJ7Dot+zWlOQOgdn
+         BcDXqV/O64Z5CiU1FS45nsKgYBjhkzK/mdulCD7+pePhPoSvgHgclOTmd+WheWRCDmAe
+         BCoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DXVTCCtxl9em2owyf8s4bbeO9mK7cEItEViXYHsj0G0=;
-        b=nEyQM+5aj88m+2F6ngRglGC0SHf82jZyIRUBWf/uD/CW3uHqsbRc2zfKujEc1buchh
-         qCr2CE5TojKedOqPp5vHPp/SGZtlSGzlQ9VzpBRkuCQuj5MS3LgcEGBjIs+EkcEEPgDg
-         ipdx0gIIXAwWdrl348S3oUG5p9BYPN3yIuFChxNhFBIVyE9mXo7KIms56qTV2Vf8EzJk
-         bLRUZyrDi3/ujXp6bIf9qUJXB9+9tcsugxLQqhY1XJS1iM2W6+3WzE9pU8nXKvGcPHdk
-         XgajEIfeIeKhX+a7xYv67RRiHeLze1pzBpL40tLNiamMzPBa+Z/f63IXSemcErFksmnZ
-         7mFg==
-X-Gm-Message-State: APjAAAX570SoGII8FnCrH27//R7aaWalR1fTxTHKVtVe+2jvsw1o6iKv
-        GiEV0Y2YP0VL1My6xVSSZ4xHK19K
-X-Google-Smtp-Source: APXvYqy+6ZeFmLvkHjQcUHqawZp5G5et8V7h/rxdioXafSpBMRoBFLtKq+pDRm7nmKAwmRvg6p4Ykw==
-X-Received: by 2002:a1c:c305:: with SMTP id t5mr4631536wmf.163.1562106789299;
-        Tue, 02 Jul 2019 15:33:09 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:33:08 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     blogic@openwrt.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
-Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/4] gpio: stp-xway: simplify error handling in xway_stp_probe()
-Date:   Wed,  3 Jul 2019 00:32:45 +0200
-Message-Id: <20190702223248.31934-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
-References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Pi01KzgEdIhGIrXlu8OB1kwQXoOUnrYPaRcf2PLxb/U=;
+        b=r7CTgElxJYLXXsm61ybKzVBjBzcvA9nIDAX9d6c9BqirffFfjiIWd/Lsg0+Bfc2+eV
+         y5VXzrdL9VUMLUQnEYxL+stD31jbYx6EhWBUoPX4NyB5rrCfhb9Ac1ieuloHaVyi4Gxx
+         6NB48Jd7NJfZatHwZJcWVK49+BrqJT8DxoX4eZCNCtNFS+wOxjs8xDMtJARJ1M0EB9re
+         8rR964zBPzbpT7vlyP4JBgOiDaVjkNrFQKDcE/7xqvI0drdEiLlPS2tx4qxVvMMTMNSR
+         csMqfJ2p+hVButcnxikfTN8UCJrAuNPpgOncGYNt+jeQ76RQYltV8ViHQtta38KK/wRz
+         2Wbg==
+X-Gm-Message-State: APjAAAVdKorEDLo0QlmVJ8atakZJmb+ScuwVmf9SLuLVA1aDVnZt0DsI
+        bchqicUK/dq+VWqibTTa/Hk=
+X-Google-Smtp-Source: APXvYqx42CglJVsr1ZJyV/elcgmcFYXinubcozjroo+1Dkc9XOZY8Eq/do5QH5nMOg/YC2Qtqrn5Gg==
+X-Received: by 2002:aa7:ca54:: with SMTP id j20mr39393692edt.50.1562115901344;
+        Tue, 02 Jul 2019 18:05:01 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.211.18])
+        by smtp.gmail.com with ESMTPSA id p23sm136538ejl.43.2019.07.02.18.04.59
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 18:05:00 -0700 (PDT)
+Subject: [PATCH] mm: Support madvise_willneed override by Filesystems
+To:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Amir Goldstein <amir73il@gmail.com>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190619082141.GA32409@quack2.suse.cz>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <27171de5-430e-b3a8-16f1-7ce25b76c874@gmail.com>
+Date:   Wed, 3 Jul 2019 04:04:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190619082141.GA32409@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return early if devm_gpiochip_add_data() returns an error instead of
-having two consecutive "if (!ret) ..." statements.
+On 19/06/2019 11:21, Jan Kara wrote:
+<>
+> Yes, I have patch to make madvise(MADV_WILLNEED) go through ->fadvise() as
+> well. I'll post it soon since the rest of the series isn't really dependent
+> on it.
+> 
+> 								Honza
+> 
 
-Also make xway_stp_hw_init() return void because it unconditionally
-returns 0. While here also update the kerneldoc comment for
-xway_stp_hw_init().
+Hi Jan
 
-These changes makes the error handling within the driver consistent.
-No functional changes intended.
+Funny I'm sitting on the same patch since LSF last. I need it too for other
+reasons. I have not seen, have you pushed your patch yet?
+(Is based on old v4.20)
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+~~~~~~~~~
+From fddb38169e33d23060ddd444ba6f2319f76edc89 Mon Sep 17 00:00:00 2001
+From: Boaz Harrosh <boazh@netapp.com>
+Date: Thu, 16 May 2019 20:02:14 +0300
+Subject: [PATCH] mm: Support madvise_willneed override by Filesystems
+
+In the patchset:
+	[b833a3660394] ovl: add ovl_fadvise()
+	[3d8f7615319b] vfs: implement readahead(2) using POSIX_FADV_WILLNEED
+	[45cd0faae371] vfs: add the fadvise() file operation
+
+Amir Goldstein introduced a way for filesystems to overide fadvise.
+Well madvise_willneed is exactly as fadvise_willneed except it always
+returns 0.
+
+In this patch we call the FS vector if it exists.
+
+NOTE: I called vfs_fadvise(..,POSIX_FADV_WILLNEED);
+      (Which is my artistic preference)
+
+I could also selectively call
+	if (file->f_op->fadvise)
+		return file->f_op->fadvise(..., POSIX_FADV_WILLNEED);
+If we fear theoretical side effects. I don't mind either way.
+
+CC: Amir Goldstein <amir73il@gmail.com>
+CC: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Boaz Harrosh <boazh@netapp.com>
 ---
- drivers/gpio/gpio-stp-xway.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ mm/madvise.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
-index 24c478392394..a3326255ce3c 100644
---- a/drivers/gpio/gpio-stp-xway.c
-+++ b/drivers/gpio/gpio-stp-xway.c
-@@ -156,9 +156,9 @@ static int xway_stp_request(struct gpio_chip *gc, unsigned gpio)
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 6cb1ca93e290..6b84ddcaaaf2 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -24,6 +24,7 @@
+ #include <linux/swapops.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/mmu_notifier.h>
++#include <linux/fadvise.h>
  
- /**
-  * xway_stp_hw_init() - Configure the STP unit and enable the clock gate
-- * @virt: pointer to the remapped register range
-+ * @chip: Pointer to the xway_stp chip structure
-  */
--static int xway_stp_hw_init(struct xway_stp *chip)
-+static void xway_stp_hw_init(struct xway_stp *chip)
- {
- 	/* sane defaults */
- 	xway_stp_w32(chip->virt, 0, XWAY_STP_AR);
-@@ -201,8 +201,6 @@ static int xway_stp_hw_init(struct xway_stp *chip)
- 	if (chip->reserved)
- 		xway_stp_w32_mask(chip->virt, XWAY_STP_UPD_MASK,
- 			XWAY_STP_UPD_FPI, XWAY_STP_CON1);
--
--	return 0;
+ #include <asm/tlb.h>
+ 
+@@ -303,7 +304,8 @@ static long madvise_willneed(struct vm_area_struct *vma,
+ 		end = vma->vm_end;
+ 	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+ 
+-	force_page_cache_readahead(file->f_mapping, file, start, end - start);
++	vfs_fadvise(file, start << PAGE_SHIFT, (end - start) << PAGE_SHIFT,
++		    POSIX_FADV_WILLNEED);
+ 	return 0;
  }
  
- static int xway_stp_probe(struct platform_device *pdev)
-@@ -265,14 +263,15 @@ static int xway_stp_probe(struct platform_device *pdev)
- 	}
- 	clk_enable(clk);
- 
--	ret = xway_stp_hw_init(chip);
--	if (!ret)
--		ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
-+	xway_stp_hw_init(chip);
- 
--	if (!ret)
--		dev_info(&pdev->dev, "Init done\n");
-+	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	dev_info(&pdev->dev, "Init done\n");
-+
-+	return 0;
- }
- 
- static const struct of_device_id xway_stp_match[] = {
 -- 
-2.22.0
+2.20.1
 
