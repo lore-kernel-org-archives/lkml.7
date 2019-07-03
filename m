@@ -2,183 +2,78 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B002DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61741C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C9821852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:53:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rbCs6946"
+	by mail.kernel.org (Postfix) with ESMTP id 35ED421852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfGCTxG (ORCPT
+        id S1727148AbfGCTxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:53:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50470 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGCTxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:53:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vqmc8HmxSdsdZnmxVteLD7yTFn26ShwrILrKMFB1/Tc=; b=rbCs6946skmxDkFEn5TfgPylE
-        laGOaLKGnO9S5VL454/xNsm3WwPwWIxPnLXto3FC4YWiMtUACCGPfVKtUUu7ZQEoCcvzVCPYexAVn
-        j6GiW1iesIW/RVOjEEwWjG0FX6M/rb/g8ZbhSnfDEJTwS1Tui7BejMq18AjlomFkn364bPFv9jm2V
-        DmW58ErGlBOZjRgk8n1ehE3LmaSBh6IVZ7624NgU0HPj5ow+CdVOVaf8EKci5a924fPxNz34M9wlr
-        KZ4LJPC2P98XGM/fucAuOVB/0lObjFzajE9o4w2Jcca+TuXZFrFGFP4hUs7MhuGrqTADdnBUaR1PD
-        FfDHBxtWQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hilJO-0006Fu-TK; Wed, 03 Jul 2019 19:53:02 +0000
-Date:   Wed, 3 Jul 2019 12:53:02 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190703195302.GJ1729@bombadil.infradead.org>
-References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190703121743.GH1729@bombadil.infradead.org>
- <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
+        Wed, 3 Jul 2019 15:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbfGCTxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:53:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F429218BB;
+        Wed,  3 Jul 2019 19:53:01 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hilJM-0006Wg-Gh; Wed, 03 Jul 2019 15:53:00 -0400
+Message-Id: <20190703195300.408302485@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Wed, 03 Jul 2019 15:50:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, shuah <shuah@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 2/2] ftrace/selftest: Test if set_event/ftrace_pid exists before writing
+References: <20190703194959.596805445@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:01:37AM -0700, Dan Williams wrote:
-> On Wed, Jul 3, 2019 at 5:17 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Wed, Jul 03, 2019 at 12:24:54AM -0700, Dan Williams wrote:
-> > > This fix may increase waitqueue contention, but a fix for that is saved
-> > > for a larger rework. In the meantime this fix is suitable for -stable
-> > > backports.
-> >
-> > I think this is too big for what it is; just the two-line patch to stop
-> > incorporating the low bits of the PTE would be more appropriate.
-> 
-> Sufficient, yes, "appropriate", not so sure. All those comments about
-> pmd entry size are stale after this change.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-But then they'll have to be put back in again.  This seems to be working
-for me, although I doubt I'm actually hitting the edge case that rocksdb
-hits:
+While testing on a very old kernel (3.5), the tests failed because the write
+to set_event_pid in the setup code, did not exist. The tests themselves
+could pass, but the setup failed causing an error.
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 2e48c7ebb973..e77bd6aef10c 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -198,6 +198,10 @@ static void dax_wake_entry(struct xa_state *xas, void *entry, bool wake_all)
-  * if it did.
-  *
-  * Must be called with the i_pages lock held.
-+ *
-+ * If the xa_state refers to a larger entry, then it may return a locked
-+ * smaller entry (eg a PTE entry) without waiting for the smaller entry
-+ * to be unlocked.
-  */
- static void *get_unlocked_entry(struct xa_state *xas)
- {
-@@ -211,7 +215,8 @@ static void *get_unlocked_entry(struct xa_state *xas)
- 	for (;;) {
- 		entry = xas_find_conflict(xas);
- 		if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
--				!dax_is_locked(entry))
-+				!dax_is_locked(entry) ||
-+				dax_entry_order(entry) < xas_get_order(xas))
- 			return entry;
- 
- 		wq = dax_entry_waitqueue(xas, entry, &ewait.key);
-@@ -253,8 +258,12 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
- 
- static void put_unlocked_entry(struct xa_state *xas, void *entry)
- {
--	/* If we were the only waiter woken, wake the next one */
--	if (entry)
-+	/*
-+	 * If we were the only waiter woken, wake the next one.
-+	 * Do not wake anybody if the entry is locked; that indicates
-+	 * we weren't woken.
-+	 */
-+	if (entry && !dax_is_locked(entry))
- 		dax_wake_entry(xas, entry, false);
- }
- 
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index 052e06ff4c36..b17289d92af4 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1529,6 +1529,27 @@ static inline void xas_set_order(struct xa_state *xas, unsigned long index,
- #endif
- }
- 
-+/**
-+ * xas_get_order() - Get the order of the entry being operated on.
-+ * @xas: XArray operation state.
-+ *
-+ * Return: The order of the entry.
-+ */
-+static inline unsigned int xas_get_order(const struct xa_state *xas)
-+{
-+	unsigned int order = xas->xa_shift;
-+
-+#ifdef CONFIG_XARRAY_MULTI
-+	unsigned int sibs = xas->xa_sibs;
-+
-+	while (sibs) {
-+		order++;
-+		sibs /= 2;
-+	}
-+#endif
-+	return order;
-+}
-+
- /**
-  * xas_set_update() - Set up XArray operation state for a callback.
-  * @xas: XArray operation state.
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index 7df4f7f395bf..af024477ec93 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -95,6 +95,17 @@ static noinline void check_xa_err(struct xarray *xa)
- //	XA_BUG_ON(xa, xa_err(xa_store(xa, 0, xa_mk_internal(0), 0)) != -EINVAL);
- }
- 
-+static noinline void check_xas_order(struct xarray *xa)
-+{
-+	XA_STATE(xas, xa, 0);
-+	unsigned int i;
-+
-+	for (i = 0; i < sizeof(long) * 8; i++) {
-+		xas_set_order(&xas, 0, i);
-+		XA_BUG_ON(xa, xas_get_order(&xas) != i);
-+	}
-+}
-+
- static noinline void check_xas_retry(struct xarray *xa)
- {
- 	XA_STATE(xas, xa, 0);
-@@ -1583,6 +1594,7 @@ static DEFINE_XARRAY(array);
- static int xarray_checks(void)
- {
- 	check_xa_err(&array);
-+	check_xas_order(&array);
- 	check_xas_retry(&array);
- 	check_xa_load(&array);
- 	check_xa_mark(&array);
+Other files test for existance before writing to them. Do the same for
+set_event_pid and set_ftrace_pid.
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/testing/selftests/ftrace/test.d/functions | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index 779ec11f61bd..a7b06291e32c 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -91,8 +91,8 @@ initialize_ftrace() { # Reset ftrace to initial-state
+     reset_events_filter
+     reset_ftrace_filter
+     disable_events
+-    echo > set_event_pid	# event tracer is always on
+-    echo > set_ftrace_pid
++    [ -f set_event_pid ] && echo > set_event_pid  # event tracer is always on
++    [ -f set_ftrace_pid ] && echo > set_ftrace_pid
+     [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
+     [ -f set_graph_function ] && echo | tee set_graph_*
+     [ -f stack_trace_filter ] && echo > stack_trace_filter
+-- 
+2.20.1
+
+
