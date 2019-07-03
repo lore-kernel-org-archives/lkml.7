@@ -2,146 +2,130 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CEDC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E5CC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6E72187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF86A2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i/E58QCR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2fecCCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGCQ2x (ORCPT
+        id S1727254AbfGCQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:28:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60400 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfGCQ2v (ORCPT
+        Wed, 3 Jul 2019 12:28:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33628 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbfGCQ24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:28:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x63GNbXp139693;
-        Wed, 3 Jul 2019 16:27:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=x3dC8l4+a2XaaDiZ4nOifBIIVoVWouOgo1NGCO/FuyY=;
- b=i/E58QCRWRHmHs0MmD0OckIG2ji0uCbGKx5HY1vnbj8UKCHhMjQ0zSsTol9uwlOjO3xb
- pegEDGbBAi5taJHjoGQkC0m2qwQNM0fc8z/s0SIl0s+3997PthkvJLn3vTHyr6sPGnyH
- uqFEq9e0NlRIQYHN1zyPLuu0QqFoTui+tANyhdvqA0q10MQuxKa9xLamOV3Tfv1YURzF
- A2TQgoO6OE2qjVScXMHqxqF6k22td3/Ctsu1qrVPFHBXP9jEvm9fIJ5Rcn3+21OD8bMQ
- hiXDbqOve6ukTe121xa/eBaIgX5sxIvAvsh3WtXPTJgOq4eBcAUIAmF9j2J+4C6FLgrl oQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2te5tbthxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jul 2019 16:27:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x63GNIhi101526;
-        Wed, 3 Jul 2019 16:27:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2tebamfetq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jul 2019 16:27:55 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x63GRpUX028428;
-        Wed, 3 Jul 2019 16:27:51 GMT
-Received: from [10.30.3.6] (/213.57.127.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jul 2019 09:27:51 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH 2/4] kvm: x86: allow set apic and ioapic debug dynamically
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <685680d5-f642-0c48-08f2-8c73026ccaf0@redhat.com>
-Date:   Wed, 3 Jul 2019 19:27:47 +0300
-Cc:     Yi Wang <wang.yi59@zte.com.cn>, rkrcmar@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Content-Transfer-Encoding: 7bit
-Message-Id: <076EBA72-1C86-4E9F-8821-2F49645E03CA@oracle.com>
-References: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
- <1561962071-25974-3-git-send-email-wang.yi59@zte.com.cn>
- <685680d5-f642-0c48-08f2-8c73026ccaf0@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907030199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907030199
+        Wed, 3 Jul 2019 12:28:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c14so1536539plo.0;
+        Wed, 03 Jul 2019 09:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Mg8aQOqXcwmSKct5oBrTlUPuw3Ze+pDAH7aWTtXxQ9Q=;
+        b=U2fecCCGPQNyiAAQn9Qy3DSZ5mDa469FzfTInyPqVzE5DqZmlxFEabavuR0QF2hDh0
+         pVgxM9wBArSMarXrMZkqEus+wj6nRimWA+N0d0sZVFaFdts78X5ExBqKCPrPyuPb/yUi
+         +LAwVEiZX9xkZyXx4O3EO8fzt7sDst4kdvQdcv2wudKzKJXuXle/6KaaQvonGCWfwAhU
+         9oubTcybFOoqhZEOFNlNxZ5/UtiVLMkNV2qxbM85XGHbSmYB+Uu4HVC3Zf1jxjmP2Vax
+         bjSKn5HITgg1yGNr3pj3LTeKDoG51I0vh9dFWYm7FE6wTpWDTR9oHV+7T4ymZomzuvFB
+         F9rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Mg8aQOqXcwmSKct5oBrTlUPuw3Ze+pDAH7aWTtXxQ9Q=;
+        b=Z1z+3gyfym8fMwURsTIWKjeGOtkRfLLlevxsSR7UFt8IAY/gvMDFB5e6CEP94DbGu4
+         2y9OKHjZyfU1vFz5MH59yWCBHuuIUV+bq+uk7BivoU1TLui57bH7bp8VFmRk2FEf14k7
+         Ycl5WFsAm6jh4aclPksCrxCe0zzNORJwkAjMCQ+yJ6ZjvZf+hCozwkvxN3ZMM2Qy4oAa
+         16yXKfea8iaY+oHxtC6A9PmL3B0GOd+fn8DDbI3fhbn1PAMmUVtC0gID5XR8CirCcOHA
+         6D1Q86i7I3rx2Q7jPvvB2VNwpVznZ94QhYCzyRYJbPzrVhKJKiOjS9tOdM6R/f8AFwDJ
+         RWfA==
+X-Gm-Message-State: APjAAAUKPC6SRNnJmFXr3NXBWaENguzwdE+qS02bzAtaec9/Ax1I330/
+        BEjckHBWaxAh1W8NDQmTabE=
+X-Google-Smtp-Source: APXvYqwmlbt+j7fly2K80DIrn4k4UHmqWWaQMZqFnB5vDjo83o53X00ERf34tg+UAEDXk15EhfDVmA==
+X-Received: by 2002:a17:902:9897:: with SMTP id s23mr43116182plp.47.1562171335539;
+        Wed, 03 Jul 2019 09:28:55 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id h6sm3154759pfb.20.2019.07.03.09.28.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 09:28:55 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH v2 12/35] media/tuners: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:28:48 +0800
+Message-Id: <20190703162848.32415-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+kmemdup is introduced to duplicate a region of memory in a neat way.
+Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
+write the size twice (sometimes lead to mistakes), kmemdup improves
+readability, leads to smaller code and also reduce the chances of mistakes.
+Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
 
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+Changes in v2:
+  - Fix a typo in commit message (memset -> memcpy)
 
-> On 3 Jul 2019, at 19:23, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> 
-> On 01/07/19 08:21, Yi Wang wrote:
->> There are two *_debug() macros in kvm apic source file:
->> - ioapic_debug, which is disable using #if 0
->> - apic_debug, which is commented
->> 
->> Maybe it's better to control these two macros using CONFIG_KVM_DEBUG,
->> which can be set in make menuconfig.
->> 
->> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
->> ---
->> arch/x86/kvm/ioapic.c | 2 +-
->> arch/x86/kvm/lapic.c  | 5 ++++-
->> 2 files changed, 5 insertions(+), 2 deletions(-)
->> 
->> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
->> index 1add1bc..8099253 100644
->> --- a/arch/x86/kvm/ioapic.c
->> +++ b/arch/x86/kvm/ioapic.c
->> @@ -45,7 +45,7 @@
->> #include "lapic.h"
->> #include "irq.h"
->> 
->> -#if 0
->> +#ifdef CONFIG_KVM_DEBUG
->> #define ioapic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg)
->> #else
->> #define ioapic_debug(fmt, arg...)
->> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
->> index 4924f83..dfff5c6 100644
->> --- a/arch/x86/kvm/lapic.c
->> +++ b/arch/x86/kvm/lapic.c
->> @@ -54,8 +54,11 @@
->> #define PRIu64 "u"
->> #define PRIo64 "o"
->> 
->> -/* #define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg) */
->> +#ifdef CONFIG_KVM_DEBUG
->> +#define apic_debug(fmt,arg...) printk(KERN_WARNING fmt,##arg)
->> +#else
->> #define apic_debug(fmt, arg...) do {} while (0)
->> +#endif
->> 
->> /* 14 is the version for Xeon and Pentium 8.4.8*/
->> #define APIC_VERSION			(0x14UL | ((KVM_APIC_LVT_NUM - 1) << 16))
->> 
-> 
-> I would just drop all of them.  I've never used them in years, the kvm
-> tracepoints are enough.
-> 
-> Paolo
+ drivers/media/tuners/tuner-xc2028.c | 3 +--
+ drivers/media/tuners/xc4000.c       | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-As someone who have done many LAPIC/IOAPIC debugging, I tend to agree. :)
-
--Liran
+diff --git a/drivers/media/tuners/tuner-xc2028.c b/drivers/media/tuners/tuner-xc2028.c
+index aa6861dcd3fd..574c3bb135d7 100644
+--- a/drivers/media/tuners/tuner-xc2028.c
++++ b/drivers/media/tuners/tuner-xc2028.c
+@@ -381,7 +381,7 @@ static int load_all_firmwares(struct dvb_frontend *fe,
+ 			goto corrupt;
+ 		}
+ 
+-		priv->firm[n].ptr = kzalloc(size, GFP_KERNEL);
++		priv->firm[n].ptr = kmemdup(p, size, GFP_KERNEL);
+ 		if (priv->firm[n].ptr == NULL) {
+ 			tuner_err("Not enough memory to load firmware file.\n");
+ 			rc = -ENOMEM;
+@@ -394,7 +394,6 @@ static int load_all_firmwares(struct dvb_frontend *fe,
+ 			       type, (unsigned long long)id, size);
+ 		}
+ 
+-		memcpy(priv->firm[n].ptr, p, size);
+ 		priv->firm[n].type = type;
+ 		priv->firm[n].id   = id;
+ 		priv->firm[n].size = size;
+diff --git a/drivers/media/tuners/xc4000.c b/drivers/media/tuners/xc4000.c
+index 43925e219d81..d9606738ce43 100644
+--- a/drivers/media/tuners/xc4000.c
++++ b/drivers/media/tuners/xc4000.c
+@@ -812,7 +812,7 @@ static int xc4000_fwupload(struct dvb_frontend *fe)
+ 			goto corrupt;
+ 		}
+ 
+-		priv->firm[n].ptr = kzalloc(size, GFP_KERNEL);
++		priv->firm[n].ptr = kmemdup(p, size, GFP_KERNEL);
+ 		if (priv->firm[n].ptr == NULL) {
+ 			printk(KERN_ERR "Not enough memory to load firmware file.\n");
+ 			rc = -ENOMEM;
+@@ -826,7 +826,6 @@ static int xc4000_fwupload(struct dvb_frontend *fe)
+ 			       type, (unsigned long long)id, size);
+ 		}
+ 
+-		memcpy(priv->firm[n].ptr, p, size);
+ 		priv->firm[n].type = type;
+ 		priv->firm[n].id   = id;
+ 		priv->firm[n].size = size;
+-- 
+2.11.0
 
