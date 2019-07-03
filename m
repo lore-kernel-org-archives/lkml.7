@@ -2,126 +2,97 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D60C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B85C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D5E2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:26:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCTwDsX0"
+	by mail.kernel.org (Postfix) with ESMTP id 484972187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfGCQ0a (ORCPT
+        id S1727012AbfGCQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:26:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46570 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCQ0a (ORCPT
+        Wed, 3 Jul 2019 12:26:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40922 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGCQ0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:26:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i8so1484487pgm.13;
-        Wed, 03 Jul 2019 09:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=s0b5XZT6tp+i2qspylAac10TkUZD+4LoluubE9vfnLk=;
-        b=iCTwDsX0bxLPZsASy9eBA8+h8On0/kUIIt6azHD+XqsOBkEEYt3KL4IYQ0ziXs+m+j
-         X/9r5o/eY9dLc77RhoSzicsS7zam0KDeaM7v6ix3YtZaabaR/DlvBgskAJ9qBZ/ap2Km
-         ctcgjUGAlnEPg1jhovJAY8wCcwnDR74jz1N/8cYSrmUInMYt+l18KeE7oUDHbIgHEoUh
-         epmtow4UDafEWYro26IYXP2CLN8i3/bnzxcrbBoyDh6iIXpQ98JWXZ3nY5DXA34ZLmcU
-         f6SYPa557ZaGh2cQGJb4c7K6F/Y/vveuioi1QhbafAcBHGAChUIapmxRkLHtkx9Eh9JV
-         AVlw==
+        Wed, 3 Jul 2019 12:26:33 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so3059047wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:26:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=s0b5XZT6tp+i2qspylAac10TkUZD+4LoluubE9vfnLk=;
-        b=lU6dsnLL2OtYxIZf/3jtuqiFuWz7HUtYtR3tYL9gWnitECP4Gj3V3Tv65oR0Vls2vJ
-         RCbX7izB02D3pL+NEdy1OifVZm4QSoIdNnnatNdEnKEuUessy/1thddcaQULkQ/MY+61
-         I8PSSx0xpTEdRSfItG1COX9ngkDylFfRzaw/xe89djdD/urOatv91e7TbQiB2/oKJiew
-         UomGolp325oJz1aQqfLHTSzamlBJx5q6KQv5IHWt30a0NKG492VesqrfpqhAUU24bwbB
-         ZAfiXWnMYhxQCJHLzUGpUvwuL+QMyTwT7qlsOyXkyqzWvuS6jIYbpNaT5nC3PEvGDfwc
-         b8/Q==
-X-Gm-Message-State: APjAAAUc7I1lZmS2FwDZN6r8aD+bb/3OpWk/Gx9KBDrG8zYXnQRHo9hB
-        zTz2ZNWRvlWFtNl66O3yAwE=
-X-Google-Smtp-Source: APXvYqwpRRor74pYLoRXzSoesuy0iF3B++ffD/nh2vOBFLXHUPm09omYc4bdDeELkr63mCKbRbvlyg==
-X-Received: by 2002:a17:90a:bb94:: with SMTP id v20mr13977949pjr.88.1562171189805;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j0uQRQKTOHPyvW++bkZoZSJYlgdc10E2ew9Dkx6AQzM=;
+        b=GcJRnExmlVGRu68fs+OzXaKf9I9USm1MWjo+8sxapqKunU4F1REUZOzMcnpgpgEr5E
+         1LAWA0XqALW64latsCm5XrXvi/jHEIxIYr8G/EZCojwxkVbVHh+TBFSALEozAy7ZpwED
+         GTSTFsqhvEuKJ834VOSG5eGyUQoWWholjPdxiKZlF2YKFKQuG3de5IUm8Cxb8TG6szT8
+         VAD1j/SlbD00kD/bKdLsUnp6rgoS9lrxDIa83EmkKg7vjnETJKJFHlylJMWarP7AvllF
+         CzUIJNzIfSkfSDvmKzCBHbBxFpEk//7Hw58/LkbItmfV1WRyxqZnlRq27zDS9mtyEeje
+         cMdg==
+X-Gm-Message-State: APjAAAUqyV7c7BGhUd+yWI2AJ+OpktRSltpQOL/BZwl7YAhnBnnaAPK5
+        I542XZxArLRL9BnIz9y1zK7Pfg==
+X-Google-Smtp-Source: APXvYqypcIe+Lp1N6JnMUycjOTqMPC65guVqIADpiZsYa4a0AtGoL+IeIfdUyq7itqBmG+HNyDsFsg==
+X-Received: by 2002:a1c:343:: with SMTP id 64mr9106444wmd.116.1562171190283;
+        Wed, 03 Jul 2019 09:26:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:6c1d:63cc:b81d:e1a9? ([2001:b07:6468:f312:6c1d:63cc:b81d:e1a9])
+        by smtp.gmail.com with ESMTPSA id l8sm5392733wrg.40.2019.07.03.09.26.29
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
         Wed, 03 Jul 2019 09:26:29 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id j9sm2831600pff.88.2019.07.03.09.26.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:26:29 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 01/35] ia64/sn: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:26:16 +0800
-Message-Id: <20190703162616.31905-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+Subject: Re: [PATCH 0/4] kvm: x86: introduce CONFIG_KVM_DEBUG
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+References: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0b4c7169-1f3b-af5e-fb89-52f7d9363a6c@redhat.com>
+Date:   Wed, 3 Jul 2019 18:26:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1561962071-25974-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup is introduced to duplicate a region of memory in a neat way.
-Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-write the size twice (sometimes lead to mistakes), kmemdup improves
-readability, leads to smaller code and also reduce the chances of mistakes.
-Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+On 01/07/19 08:21, Yi Wang wrote:
+> This series introduce CONFIG_KVM_DEBUG, using which we can make
+> the invoking *_debug in KVM simly and uniform.
+> 
+> FYI: the former discussion can been found in:
+> https://www.spinics.net/lists/kvm/msg187026.html
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
-Changes in v2:
-  - Fix a typo in commit message (memset -> memcpy)
+Basically everything except MMU_DEBUG can just be deleted, they are
+little more than debugging printk that were left in the code.
 
- arch/ia64/sn/kernel/io_acpi_init.c | 8 +++-----
- arch/ia64/sn/pci/tioce_provider.c  | 3 +--
- 2 files changed, 4 insertions(+), 7 deletions(-)
+For MMU_DEBUG, the way to go is to add more tracepoints, but then
+converting all pgprintk occurrences to tracepoints would be wrong.  You
+can only find the "right" tracepoints when debugging MMU code.  I do
+have a couple patches in this area, I will send them when possible.
 
-diff --git a/arch/ia64/sn/kernel/io_acpi_init.c b/arch/ia64/sn/kernel/io_acpi_init.c
-index c31fe637b0b4..7f305a468b69 100644
---- a/arch/ia64/sn/kernel/io_acpi_init.c
-+++ b/arch/ia64/sn/kernel/io_acpi_init.c
-@@ -210,13 +210,11 @@ sn_extract_device_info(acpi_handle handle, struct pcidev_info **pcidev_info,
- 		goto exit;
- 	}
- 
--	pcidev_ptr = kzalloc(sizeof(struct pcidev_info), GFP_KERNEL);
--	if (!pcidev_ptr)
--		panic("%s: Unable to alloc memory for pcidev_info", __func__);
--
- 	memcpy(&addr, vendor->byte_data, sizeof(struct pcidev_info *));
- 	pcidev_prom_ptr = __va(addr);
--	memcpy(pcidev_ptr, pcidev_prom_ptr, sizeof(struct pcidev_info));
-+	pcidev_ptr = kmemdup(pcidev_prom_ptr, sizeof(struct pcidev_info), GFP_KERNEL);
-+	if (!pcidev_ptr)
-+		panic("%s: Unable to alloc memory for pcidev_info", __func__);
- 
- 	/* Get the IRQ info */
- 	irq_info = kzalloc(sizeof(struct sn_irq_info), GFP_KERNEL);
-diff --git a/arch/ia64/sn/pci/tioce_provider.c b/arch/ia64/sn/pci/tioce_provider.c
-index 3bd9abc35485..20360a52ab4d 100644
---- a/arch/ia64/sn/pci/tioce_provider.c
-+++ b/arch/ia64/sn/pci/tioce_provider.c
-@@ -1000,11 +1000,10 @@ tioce_bus_fixup(struct pcibus_bussoft *prom_bussoft, struct pci_controller *cont
- 	 * Allocate kernel bus soft and copy from prom.
- 	 */
- 
--	tioce_common = kzalloc(sizeof(struct tioce_common), GFP_KERNEL);
-+	tioce_common = kmemdup(prom_bussoft, sizeof(struct tioce_common), GFP_KERNEL);
- 	if (!tioce_common)
- 		return NULL;
- 
--	memcpy(tioce_common, prom_bussoft, sizeof(struct tioce_common));
- 	tioce_common->ce_pcibus.bs_base = (unsigned long)
- 		ioremap(REGION_OFFSET(tioce_common->ce_pcibus.bs_base),
- 			sizeof(struct tioce_common));
--- 
-2.11.0
+Paolo
+
+> Yi Wang (4):
+>   kvm: x86: Add CONFIG_KVM_DEBUG
+>   kvm: x86: allow set apic and ioapic debug dynamically
+>   kvm: x86: replace MMU_DEBUG with CONFIG_KVM_DEBUG
+>   kvm: x86: convert TSC pr_debugs to be gated by CONFIG_KVM_DEBUG
+> 
+>  arch/x86/kvm/Kconfig  |  8 ++++++++
+>  arch/x86/kvm/ioapic.c |  2 +-
+>  arch/x86/kvm/lapic.c  |  5 ++++-
+>  arch/x86/kvm/mmu.c    |  5 ++---
+>  arch/x86/kvm/x86.c    | 18 ++++++++++++------
+>  5 files changed, 27 insertions(+), 11 deletions(-)
+> 
 
