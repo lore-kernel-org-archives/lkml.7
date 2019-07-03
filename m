@@ -6,113 +6,134 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB511C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9948AC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA73221882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E6E21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbfGCJnV (ORCPT
+        id S1726960AbfGCJnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:43:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:42802 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfGCJnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:43:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DB52344;
-        Wed,  3 Jul 2019 02:43:20 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5CCC3F246;
-        Wed,  3 Jul 2019 02:43:17 -0700 (PDT)
-Subject: Re: [PATCH] remove the initrd resource in /proc/iomem as the
- initrdhas freed the reserved memblock.
-To:     huang.junhua@zte.com.cn
-Cc:     wang.yi59@zte.com.cn, catalin.marinas@arm.com, will.deacon@arm.com,
-        akpm@linux-foundation.org, rppt@linux.vnet.ibm.com,
-        f.fainelli@gmail.com, logang@deltatee.com, robin.murphy@arm.com,
-        ghackmann@android.com, hannes@cmpxchg.org, david@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, jiang.xuexin@zte.com.cn
-References: <201907031716177178158@zte.com.cn>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <8b394f16-5cc5-328c-a1c7-2c2ba352440b@arm.com>
-Date:   Wed, 3 Jul 2019 10:43:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 3 Jul 2019 05:43:32 -0400
+Received: from outbound-smtp19.blacknight.com ([46.22.139.246]:37480 "EHLO
+        outbound-smtp19.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbfGCJnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 05:43:31 -0400
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp19.blacknight.com (Postfix) with ESMTPS id 053B81C346F
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 10:43:28 +0100 (IST)
+Received: (qmail 16561 invoked from network); 3 Jul 2019 09:43:27 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 3 Jul 2019 09:43:27 -0000
+Date:   Wed, 3 Jul 2019 10:43:25 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [Question] Should direct reclaim time be bounded?
+Message-ID: <20190703094325.GB2737@techsingularity.net>
+References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
+ <20190423071953.GC25106@dhcp22.suse.cz>
+ <eac582cf-2f76-4da1-1127-6bb5c8c959e4@oracle.com>
+ <04329fea-cd34-4107-d1d4-b2098ebab0ec@suse.cz>
+ <dede2f84-90bf-347a-2a17-fb6b521bf573@oracle.com>
+ <20190701085920.GB2812@suse.de>
+ <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <201907031716177178158@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jul 01, 2019 at 08:15:50PM -0700, Mike Kravetz wrote:
+> On 7/1/19 1:59 AM, Mel Gorman wrote:
+> > On Fri, Jun 28, 2019 at 11:20:42AM -0700, Mike Kravetz wrote:
+> >> On 4/24/19 7:35 AM, Vlastimil Babka wrote:
+> >>> On 4/23/19 6:39 PM, Mike Kravetz wrote:
+> >>>>> That being said, I do not think __GFP_RETRY_MAYFAIL is wrong here. It
+> >>>>> looks like there is something wrong in the reclaim going on.
+> >>>>
+> >>>> Ok, I will start digging into that.  Just wanted to make sure before I got
+> >>>> into it too deep.
+> >>>>
+> >>>> BTW - This is very easy to reproduce.  Just try to allocate more huge pages
+> >>>> than will fit into memory.  I see this 'reclaim taking forever' behavior on
+> >>>> v5.1-rc5-mmotm-2019-04-19-14-53.  Looks like it was there in v5.0 as well.
+> >>>
+> >>> I'd suspect this in should_continue_reclaim():
+> >>>
+> >>>         /* Consider stopping depending on scan and reclaim activity */
+> >>>         if (sc->gfp_mask & __GFP_RETRY_MAYFAIL) {
+> >>>                 /*
+> >>>                  * For __GFP_RETRY_MAYFAIL allocations, stop reclaiming if the
+> >>>                  * full LRU list has been scanned and we are still failing
+> >>>                  * to reclaim pages. This full LRU scan is potentially
+> >>>                  * expensive but a __GFP_RETRY_MAYFAIL caller really wants to succeed
+> >>>                  */
+> >>>                 if (!nr_reclaimed && !nr_scanned)
+> >>>                         return false;
+> >>>
+> >>> And that for some reason, nr_scanned never becomes zero. But it's hard
+> >>> to figure out through all the layers of functions :/
+> >>
+> >> I got back to looking into the direct reclaim/compaction stalls when
+> >> trying to allocate huge pages.  As previously mentioned, the code is
+> >> looping for a long time in shrink_node().  The routine
+> >> should_continue_reclaim() returns true perhaps more often than it should.
+> >>
+> >> As Vlastmil guessed, my debug code output below shows nr_scanned is remaining
+> >> non-zero for quite a while.  This was on v5.2-rc6.
+> >>
+> > 
+> > I think it would be reasonable to have should_continue_reclaim allow an
+> > exit if scanning at higher priority than DEF_PRIORITY - 2, nr_scanned is
+> > less than SWAP_CLUSTER_MAX and no pages are being reclaimed.
+> 
+> Thanks Mel,
+> 
+> I added such a check to should_continue_reclaim.  However, it does not
+> address the issue I am seeing.  In that do-while loop in shrink_node,
+> the scan priority is not raised (priority--).  We can enter the loop
+> with priority == DEF_PRIORITY and continue to loop for minutes as seen
+> in my previous debug output.
+> 
 
-On 03/07/2019 10:16, huang.junhua@zte.com.cn wrote:
->> On 02/07/2019 11:34, Yi Wang wrote:
->>> From: Junhua Huang <huang.junhua@zte.com.cn>
->>> The 'commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")'
->>> show the reserved memblock in /proc/iomem. But the initrd's reserved memblock
->>> will be freed in free_initrd_mem(), which executes after the reserve_memblock_reserved_regions().
->>> So there are some incorrect information shown in /proc/iomem. e.g.:
->>> 80000000-bbdfffff : System RAM
->>>   80080000-813effff : Kernel code
->>>   813f0000-8156ffff : reserved
->>>   81570000-817fcfff : Kernel data
->>>   83400000-83ffffff : reserved
->>>   90000000-90004fff : reserved
->>>   b0000000-b2618fff : reserved
->>>   b8c00000-bbbfffff : reserved
->>> In this case, the range from b0000000 to b2618fff is reserved for initrd, which should be
->>> clean from the resource tree after it was freed.
->>
->> (There was some discussion about this over-estimate on the list, but it didn't make it
->> into the commit message.) I think a reserved->free change is fine. If user-space thinks
->> its still reserved nothing bad happens.
+Indeed. I'm getting knocked offline shortly so I didn't give this the
+time it deserves but it appears that part of this problem is
+hugetlb-specific when one node is full and can enter into this continual
+loop due to __GFP_RETRY_MAYFAIL requiring both nr_reclaimed and
+nr_scanned to be zero.
 
->>> As kexec-tool will collect the iomem reserved info 
->>> and use it in second kernel, which causes error message generated a second time.
+Have you considered one of the following as an option?
 
->> What error message?
+1. Always use the on-stack nodes_allowed in __nr_hugepages_store_common
+   and copy nodes_states if necessary. Add a bool parameter to
+   alloc_pool_huge_page that is true when called from set_max_huge_pages.
+   If an allocation from alloc_fresh_huge_page, clear the failing node
+   from the mask so it's not retried, bail if the mask is empty. The
+   consequences are that round-robin allocation of huge pages will be
+   different if a node failed to allocate for transient reasons.
 
-> Sorry, it's my mistake. The kexec-tool could not use iomem reserved info in the second kernel.
-> The error message I mean is that the initrd reserved memblock region will be shown in 
-> second kernel /proc/iomem. But this message comes from the dtb's memreserve node, 
-> not the first kernel /proc/iomem.
+2. Alter the condition in should_continue_reclaim for
+   __GFP_RETRY_MAYFAIL to consider if nr_scanned < SWAP_CLUSTER_MAX.
+   Either raise priority (will interfere with kswapd though) or
+   bail entirely.  Consequences may be that other __GFP_RETRY_MAYFAIL
+   allocations do not want this behaviour. There are a lot of users.
 
-This doesn't sound right.
-Is kexec-tool spraying anything reserved in /proc/iomem into the DT as memreserve?
+3. Move where __GFP_RETRY_MAYFAIL is set in a gfp_mask in mm/hugetlb.c.
+   Strip the flag if an allocation fails on a node. Consequences are
+   that setting the required number of huge pages is more likely to
+   return without all the huge pages set.
 
-
-These top-level 'nomap' and second-level 'reserved' entries exist to stop kexec-tools
-trying to write the new kernel over the top of something important. This only matters
-between 'load' and 'exec' during the #1-kernel:
-
-| kexec-tools reads /proc/iomem.
-| kexec-tools tells #1-kernel "I want this 10MB image to be located at 0xf00".
-| #1-kernel knows 0xf00 is in use, so it stores the data else where until kexec-time.
-[some time passes]
-| #1-kernel kexec's, copying the image to 0xf00
-| #2-kernel now owns the machine
-
-This goes wrong if 0xf00 belonged to firmware (nomap), or contained something important
-(uefi memory map, acpi tables etc).
-
-Once the second kernel has started running it should re-discover where this important
-stuff is from the EFI and ACPI tables.
-
-We deliberately over-estimate these second-level reserved regions as its the simplest
-thing to do. (e.g. the per-cpu chunk allocations get swept up too)
-
-
-Does this mean the amount of usable memory in the system reduces each time you kexec? That
-shouldn't be true!
-
-
-Thanks,
-
-James
+-- 
+Mel Gorman
+SUSE Labs
