@@ -2,71 +2,179 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF09C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0A4C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D11221E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA49A21E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562113687;
+	bh=pPxcb0LDsgQA0SUglccwz7TppfnSPAMhkWwUGPg2n/U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uxaYrMs269MgmPVXtlaKFaYrlADvDN5KR12EUgNglCoDhmHnJiLYgJKDsXZyviGdI
+	 sgzITGO+Ody71ydcRKchgTSoz34N0UJGjaUvPUPTh2ibZfz8DbiXlIzA0Mm/wM5PjY
+	 FZfgDmtFLpXtWVibznNK5PKvlOMvBZv5MNnMCdC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGCA1g (ORCPT
+        id S1727221AbfGCA2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:27:36 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:32965 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726150AbfGCA1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:27:35 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x62Lfp30025320
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 2 Jul 2019 17:41:52 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 65FDB42002E; Tue,  2 Jul 2019 17:41:51 -0400 (EDT)
-Date:   Tue, 2 Jul 2019 17:41:51 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Kimberly Brown <kimbrownkd@gmail.com>
-Cc:     adilger.kernel@dilger.ca, gregkh@linuxfoundation.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext4: replace ktype default_attrs with default_groups
-Message-ID: <20190702214151.GA28833@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Kimberly Brown <kimbrownkd@gmail.com>, adilger.kernel@dilger.ca,
-        gregkh@linuxfoundation.org, linux-ext4@vger.kernel.org,
+        Tue, 2 Jul 2019 20:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726291AbfGCA2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:28:05 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 655FE219BE;
+        Wed,  3 Jul 2019 00:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562112712;
+        bh=pPxcb0LDsgQA0SUglccwz7TppfnSPAMhkWwUGPg2n/U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i3OgV8IoDaCpBBFL4wfhTmqEmtyTbGAjNPUyQsefF5sUYp/p2urm59EVpDNvfU0hf
+         P5wWdvdoehBE4sUVrqsQKWu3MUGz4xk+f2cM4OSq5b6JOHsHcJnUgIr1WGGmuLnlE6
+         mGtWW9nT/7F0F1Nn6YiNZFmqkbUCIKPVghmxf6NY=
+Date:   Wed, 3 Jul 2019 09:11:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Po-Hsu Lin <po-hsu.lin@canonical.com>, rostedt@goodmis.org,
+        mingo@redhat.com, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190508200748.3907-1-kimbrownkd@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508200748.3907-1-kimbrownkd@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: Re: [PATCH] selftests/ftrace: skip ftrace test if FTRACE was not
+ enabled
+Message-Id: <20190703091147.064029248fed5066ea5e5d2b@kernel.org>
+In-Reply-To: <4a44dd22-be88-ce5b-5c9b-6a3759b6c2eb@kernel.org>
+References: <20190702062358.7330-1-po-hsu.lin@canonical.com>
+        <4a44dd22-be88-ce5b-5c9b-6a3759b6c2eb@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 04:07:48PM -0400, Kimberly Brown wrote:
-> The kobj_type default_attrs field is being replaced by the
-> default_groups field. Replace the default_attrs field in ext4_sb_ktype
-> and ext4_feat_ktype with default_groups. Use the ATTRIBUTE_GROUPS macro
-> to create ext4_groups and ext4_feat_groups.
-> 
-> Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
-> ---
-> 
-> This patch depends on a patch in the driver-core tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=aa30f47cf666111f6bbfd15f290a27e8a7b9d854
-> 
-> Greg KH can take this patch through the driver-core tree, or this patch
-> can wait a release cycle and go through the subsystem's tree, whichever
-> the subsystem maintainer is more comfortable with.
+Hi Po-Hsu Lin,
 
-Thanks, since that commit is in 5.2-rc2, I've applied this patch.
+On Tue, 2 Jul 2019 13:22:26 -0600
+shuah <shuah@kernel.org> wrote:
 
-	      	   	     	- Ted
+> Hi Po-Hsu Lin,
+> 
+> On 7/2/19 12:23 AM, Po-Hsu Lin wrote:
+> > The ftrace test will need to have CONFIG_FTRACE enabled to make the
+> > ftrace directory available.
+> > 
+> > Add an additional check to skip this test if the CONFIG_FTRACE was not
+> > enabled.
+
+Sorry, NAK for config check.
+
+> > 
+> > This will be helpful to avoid a false-positive test result when testing
+> > it directly with the following commad against a kernel that does not
+> > have CONFIG_FTRACE enabled:
+
+Would you know tools/testing/selftests/ftrace/config (and other config files
+in each tests) ?
+
+Since each selftest depends specific configurations, those configs are
+written in config file, and tester must enable it using 
+"scripts/kconfig/merge_config.sh".
+
+We can not check the kernel config in some cases, e.g. distro kernel,
+cross-build kernel, remote build kernel etc. Also, the .config file
+can be a config file for another kernel build.
+
+So please take care of your kernel configuration. If you find any test
+failed even if you enable configs in config file under that test, please
+report it, since that is a bug.
+
+
+Thank you,
+
+> >      make -C tools/testing/selftests TARGETS=ftrace run_tests
+> > 
+> > The test result on an Ubuntu KVM kernel will be changed from:
+> >      selftests: ftrace: ftracetest
+> >      ========================================
+> >      Error: No ftrace directory found
+> >      not ok 1..1 selftests: ftrace: ftracetest [FAIL]
+> > To:
+> 
+> Thanks for the patch.
+> 
+> Check patch fails with the above To:
+> 
+> WARNING: Use a single space after To:
+> #107:
+> To:
+> 
+> ERROR: Unrecognized email address: ''
+> #107:
+> To:
+> 
+> total: 1 errors, 1 warnings, 23 lines checked
+> 
+> 
+> Please fix and send v2.
+> 
+> >      selftests: ftrace: ftracetest
+> >      ========================================
+> >      CONFIG_FTRACE was not enabled, test skipped.
+> >      not ok 1..1 selftests: ftrace: ftracetest [SKIP]
+> > 
+> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> > ---
+> >   tools/testing/selftests/ftrace/ftracetest | 11 ++++++++++-
+> >   1 file changed, 10 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> > index 6d5e9e8..6c8322e 100755
+> > --- a/tools/testing/selftests/ftrace/ftracetest
+> > +++ b/tools/testing/selftests/ftrace/ftracetest
+> > @@ -7,6 +7,9 @@
+> >   #  Written by Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> >   #
+> 
+> Hmm. You havem't cc'ed Masami on this. Adding Masami.
+> 
+> I would think Masami should be on the Signed-off-by as well,
+> since he is the author.
+> 
+> >   
+> > +# Kselftest framework requirement - SKIP code is 4.
+> > +ksft_skip=4
+> > +
+> >   usage() { # errno [message]
+> >   [ ! -z "$2" ] && echo $2
+> >   echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
+> > @@ -139,7 +142,13 @@ parse_opts $*
+> >   
+> >   # Verify parameters
+> >   if [ -z "$TRACING_DIR" -o ! -d "$TRACING_DIR" ]; then
+> > -  errexit "No ftrace directory found"
+> > +  ftrace_enabled=`grep "^CONFIG_FTRACE=y" /lib/modules/$(uname -r)/build/.config`
+> > +  if [ -z "$ftrace_enabled" ]; then
+> > +    echo "CONFIG_FTRACE was not enabled, test skipped."
+> > +    exit $ksft_skip
+> > +  else
+> > +    errexit "No ftrace directory found"
+> > +  fi
+> >   fi
+> >   
+> >   # Preparing logs
+> > 
+> 
+> thanks,
+> -- Shuah
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
