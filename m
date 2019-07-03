@@ -2,78 +2,92 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D2AC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BA2C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD01218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692F2218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfGCLel (ORCPT
+        id S1727021AbfGCLiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:34:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37558 "EHLO mx1.redhat.com"
+        Wed, 3 Jul 2019 07:38:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24548 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfGCLel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:34:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4EF5780F81;
-        Wed,  3 Jul 2019 11:34:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DC90A16D2B;
-        Wed,  3 Jul 2019 11:34:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  3 Jul 2019 13:34:41 +0200 (CEST)
-Date:   Wed, 3 Jul 2019 13:34:37 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 22 open syzbot bugs in perf subsystem
-Message-ID: <20190703113436.GA21672@redhat.com>
-References: <20190702054342.GB27702@sol.localdomain>
- <5a99f556-7449-55da-d901-0249352a5e15@linux.ibm.com>
- <20190703035550.GA633@sol.localdomain>
- <4d6ce02e-9325-4247-3d9b-51cdfcfaee07@linux.ibm.com>
- <20190703041918.GB633@sol.localdomain>
+        id S1726255AbfGCLiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 07:38:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 04:38:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="184728002"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Jul 2019 04:38:08 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] usb: dwc2: use a longer AHB idle timeout in dwc2_core_reset()
+In-Reply-To: <CAFBinCD1qj8sNXOK2Pcbz1MAcdvwywPSxQeERNVpmNw=Gmz=Vw@mail.gmail.com>
+References: <20190620175022.29348-1-martin.blumenstingl@googlemail.com> <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com> <CAFBinCDDyG_CxW+PB_OrUXfy-aDKSoewC2OyCfGh18N=omSgcQ@mail.gmail.com> <CAFBinCD1qj8sNXOK2Pcbz1MAcdvwywPSxQeERNVpmNw=Gmz=Vw@mail.gmail.com>
+Date:   Wed, 03 Jul 2019 14:38:07 +0300
+Message-ID: <87d0ir4acg.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703041918.GB633@sol.localdomain>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 03 Jul 2019 11:34:41 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02, Eric Biggers wrote:
+
+Hi,
+
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+
+> On Mon, Jul 1, 2019 at 7:54 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+>>
+>> On Mon, Jun 24, 2019 at 7:41 AM Minas Harutyunyan
+>> <Minas.Harutyunyan@synopsys.com> wrote:
+>> >
+>> > On 6/20/2019 9:51 PM, Martin Blumenstingl wrote:
+>> > > Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
+>> > > consistent with the other "wait for AHB master IDLE state" ocurrences.
+>> > >
+>> > > This fixes a problem for me where dwc2 would not want to initialize when
+>> > > updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
+>> > > 4.14.
+>> > > Testing on my board shows that it takes 180us until AHB master IDLE
+>> > > state is signalled. The very old vendor driver for this SoC (ifxhcd)
+>> > > used a 1 second timeout.
+>> > > Use the same timeout that is used everywhere when polling for
+>> > > GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
+>> > > (180us in my case) to have consistent behavior across the dwc2 driver.
+>> > >
+>> > > Cc: linux-stable <stable@vger.kernel.org> # 4.19+
+>> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> > > ---
+>> >
+>> > Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+>> thank you for reviewing this!
+>>
+>> is there any chance we can get this fix into Linux 5.3? I know that
+>> it's too late for 5.2 so I'm fine with skipping that.
+> thank you Felipe for queuing this for v5.3!
+> for reference, this patch is now in the usb-for-v5.3-part2 tag: [0]
 >
-> Even if it's a lockdep false positive you can't ignore it.  People rely on
-> lockdep to find bugs, and they will keep sending you bug reports.  So someone
-> has to fix something.  Did you see Oleg's suggestion to change mmput() to
-> mmput_async() in binder_alloc_free_page()?
-> https://marc.info/?l=linux-kernel&m=155119805728815&w=2
-> If you believe that is the right fix, I can reassign this report to binder
-> subsystem and nag the binder maintainers instead...
+>
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=usb-for-v5.3-part2&id=dfc4fdebc5d62ac4e2fe5428e59b273675515fb2
 
-Yes, please. To me s/mmput/mmput_async/ looks like the "obviously correct fix",
-but of course I don't understand this code and can't test it.
+I'll send pull request soon :-)
 
-Oleg.
-
+-- 
+balbi
