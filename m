@@ -2,60 +2,65 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAF2C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212D5C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B434A21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB20321882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ECWISvYP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeLJ6Y3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfGCVYK (ORCPT
+        id S1727364AbfGCV1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:24:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46554 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfGCVYK (ORCPT
+        Wed, 3 Jul 2019 17:27:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55733 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfGCV1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:24:10 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c2so326751plz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 14:24:10 -0700 (PDT)
+        Wed, 3 Jul 2019 17:27:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so3644767wmj.5;
+        Wed, 03 Jul 2019 14:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v2vlXPjl67SKMwWFhxyJH5w6PdqnZPQg08QW+0HWg7o=;
-        b=ECWISvYPDdYHD27CqcEoHJMDMinxTVOSDWlk2tr4YmVh0risPbbZjyZJ/8WzBG1ysf
-         itDw9oG9DAwxaorQ82esteEEeZuZI09qIiZUqDSgxD1M/0EVve3zRKZ95EKnP5c4KoWo
-         ba4Rh808R5Zvinvhgua86qIek5/NBOuP44d2c=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t9ppNu+tTe8IMaz8VD3GfS+xRVxRIJDS97FL0GEnxCo=;
+        b=JeLJ6Y3ufQlegAik9zWghxwF/mrLQWjE5NIpiZJd699FR9cSWOLeh3FrojugG83BwJ
+         DyldNdCjU7FbDJclPm2i6bzFggqRqbxYU4H8uVEYA7A4FE6t6vHcZYZJMWZOyhnZjyhe
+         RUZyVEQe2OLYC81n+dKvND0ZeU6SmUb5qUG73qB8B1baVlp/I0BvnYcmM3AvqbZhXo8I
+         hknyeLUpIF/3L5dxRTm65VR/Cg9AqKFgcu2xstwC2NWcYGp9SRKbJlOj7n7pVOIqXwYO
+         8VztMEobWnweJL4tmuEidzUCY/pVUyAoF2HDryk/LYahWYfk/VoKMP9rKWe6tpITqRtg
+         Qb8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v2vlXPjl67SKMwWFhxyJH5w6PdqnZPQg08QW+0HWg7o=;
-        b=gddwscrknRDCy29PQq01ZpOsPevkzhEV2ZF5nAcj9FnE12JS0u4M3b1iPXiKAnUNFn
-         x5uK3yawyajssEMwLX3BM9qjv3Tm6IHWC9W0ttONEyizcsmWFGHsfMT2phjR7seM7MLL
-         oS2gq7Uczh5Le0CaAPbRilHGYd+9WVZHWDTaw+HaqGyTvYgAwZX4HfvwE4kHXz3uYh6x
-         BfXEICBdNyEwQNZxqVtQUFtuCGOAn3brIzz50mXS/Lg2RHW9Yj8ulFjPiMJvgAZ8FwPu
-         UMA/T7pYyeYvqAog0bjzw4jnSDWeRPVmdEzUEaag/g4ZAbdknz7vuVNmRCsv4W4HgWMc
-         a77g==
-X-Gm-Message-State: APjAAAXiVC0O/QmoE5nVPxuazQ4YRd0aIlBGYOs59vt8+Y0I41iKvChi
-        Pa0lLzwC4/2TNWBl94U0dw6F2A==
-X-Google-Smtp-Source: APXvYqwHlT4x2pD/pE1d9wNBgrNtHbF+tIzS8ug8mk9SDfeO2q20ORWVmVGYed7fY3M0n+yfpljt0Q==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr45312466pla.172.1562189049492;
-        Wed, 03 Jul 2019 14:24:09 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f10sm3450912pfd.151.2019.07.03.14.24.08
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t9ppNu+tTe8IMaz8VD3GfS+xRVxRIJDS97FL0GEnxCo=;
+        b=r5bgVdt+H06tfx7kBORttd8AFUUCSh22eIoazPBWsonPj3CjMePaoreWx6o5C8SX4K
+         vNuEfZsDjkdy+js9M56R7N9nLGUH91qEXUlOVsH+nhwPxH94dB0bk8jQqrRlgpQAPQq1
+         marZ1kYt/+jap7MhtQVBai9cv4eSeulG7Qkykh9UkCDtDZ1JuMRNpDTFGFMpkFd4MADW
+         CZm/Q6SaJeCK+AQ1OCOwfgJjVWDUZsQ3ywPMO/7H1Ti9ij5QsjQjIH9SL16JYueLYSmP
+         3mBeaBxoeJ6ng85Q2gOpKNp01uHwnhw6HUz7KgCPGRvoJ6MpAIHUx+hP/IYOk+ZfNsVB
+         AbOw==
+X-Gm-Message-State: APjAAAXmygoDxmPWZUJTWfrCGdFjKHvGQS/PKITbyksgLTO5gt0EAHx5
+        Xbt1aCF4gKJrg1WtoRyZwv0=
+X-Google-Smtp-Source: APXvYqx2tUA/FQ/KELmCVtbRZYYZSkMb7PcEqhhQv19yjNdu85ImPP9Oy2RQ/bY9Xeq5QyvfBlkFhQ==
+X-Received: by 2002:a1c:1f06:: with SMTP id f6mr892554wmf.60.1562189267692;
+        Wed, 03 Jul 2019 14:27:47 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:4503:872e:8227:c4e0? (p200300EA8BD60C004503872E8227C4E0.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:4503:872e:8227:c4e0])
+        by smtp.googlemail.com with ESMTPSA id a64sm7593935wmf.1.2019.07.03.14.27.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 14:24:09 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 14:24:07 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
+        Wed, 03 Jul 2019 14:27:47 -0700 (PDT)
+Subject: Re: [PATCH v2 4/7] net: phy: realtek: Enable accessing RTL8211E
+ extension pages
+To:     Matthias Kaehlcke <mka@chromium.org>
 Cc:     "David S . Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,54 +69,65 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 4/7] net: phy: realtek: Enable accessing RTL8211E
- extension pages
-Message-ID: <20190703212407.GI250418@google.com>
 References: <20190703193724.246854-1-mka@chromium.org>
  <20190703193724.246854-4-mka@chromium.org>
  <dd7a569b-41e4-5925-88fc-227e69c82f67@gmail.com>
  <20190703203650.GF250418@google.com>
  <98326ec2-6e90-fd3a-32f5-cf0db26c31a9@gmail.com>
+ <20190703212407.GI250418@google.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <3e47639a-bbbb-f438-bc66-a29423090e95@gmail.com>
+Date:   Wed, 3 Jul 2019 23:27:41 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190703212407.GI250418@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <98326ec2-6e90-fd3a-32f5-cf0db26c31a9@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:01:09PM +0200, Heiner Kallweit wrote:
-> On 03.07.2019 22:36, Matthias Kaehlcke wrote:
-> > On Wed, Jul 03, 2019 at 10:12:12PM +0200, Heiner Kallweit wrote:
-> >> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
-> >>> The RTL8211E has extension pages, which can be accessed after
-> >>> selecting a page through a custom method. Add a function to
-> >>> modify bits in a register of an extension page and a helper for
-> >>> selecting an ext page.
-> >>>
-> >>> rtl8211e_modify_ext_paged() is inspired by its counterpart
-> >>> phy_modify_paged().
-> >>>
-> >>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >>> ---
-> >>> Changes in v2:
-> >>> - assign .read/write_page handlers for RTL8211E
-> >>
-> >> Maybe this was planned, but it's not part of the patch.
-> > 
-> > Oops, it was definitely there when I tested ... I guess this got
-> > somehow lost when changing the patch order and resolving minor
-> > conflicts, seems like I only build tested after that :/
-> > 
-> RTL8211E also supports normal pages (reg 0x1f = page).
-> See e.g. rtl8168e_2_hw_phy_config in the r8169 driver, this network
-> chip has an integrated RTL8211E PHY. There settings on page 3 and 5
-> are done.
-> Therefore I would prefer to use .read/write_page for normal paging
-> in all Realtek PHY drivers. Means the code here would remain as it
-> is and just the changelog would need to be fixed.
+On 03.07.2019 23:24, Matthias Kaehlcke wrote:
+> On Wed, Jul 03, 2019 at 11:01:09PM +0200, Heiner Kallweit wrote:
+>> On 03.07.2019 22:36, Matthias Kaehlcke wrote:
+>>> On Wed, Jul 03, 2019 at 10:12:12PM +0200, Heiner Kallweit wrote:
+>>>> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
+>>>>> The RTL8211E has extension pages, which can be accessed after
+>>>>> selecting a page through a custom method. Add a function to
+>>>>> modify bits in a register of an extension page and a helper for
+>>>>> selecting an ext page.
+>>>>>
+>>>>> rtl8211e_modify_ext_paged() is inspired by its counterpart
+>>>>> phy_modify_paged().
+>>>>>
+>>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>> - assign .read/write_page handlers for RTL8211E
+>>>>
+>>>> Maybe this was planned, but it's not part of the patch.
+>>>
+>>> Oops, it was definitely there when I tested ... I guess this got
+>>> somehow lost when changing the patch order and resolving minor
+>>> conflicts, seems like I only build tested after that :/
+>>>
+>> RTL8211E also supports normal pages (reg 0x1f = page).
+>> See e.g. rtl8168e_2_hw_phy_config in the r8169 driver, this network
+>> chip has an integrated RTL8211E PHY. There settings on page 3 and 5
+>> are done.
+>> Therefore I would prefer to use .read/write_page for normal paging
+>> in all Realtek PHY drivers. Means the code here would remain as it
+>> is and just the changelog would need to be fixed.
+> 
+> Do I understand correctly that you suggest an additional patch that
+> assigns .read/write_page() for all entries of realtek_drvs?
+> 
 
-Do I understand correctly that you suggest an additional patch that
-assigns .read/write_page() for all entries of realtek_drvs?
+No, basically all the Realtek PHY drivers use the following already:
+.read_page	= rtl821x_read_page,
+.write_page	= rtl821x_write_page,
+What I mean is that this should stay as it is, and not be overwritten
+with the extended paging.
