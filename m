@@ -2,120 +2,165 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F23C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C361DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DEA2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925D621850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WGpDCOMh"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="FWM+RRyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfGCDTy (ORCPT
+        id S1727186AbfGCDZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:19:54 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45009 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfGCDTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:19:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dmYy57H3z9s3Z;
-        Wed,  3 Jul 2019 13:19:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562123990;
-        bh=aMWKOPSg19BlgZYYRdTAeDuWdyK4008Ci9t23AgoYmc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WGpDCOMhZ5mCZafXgpr0Q3LbI/LB2ykkEYmFQu39VtYUcGByi5iuGjP3wa+92ncVT
-         byr9vPGP5Kprwo+779+wax1wNMcLwbSwSKjR1tt0i0UMgauJQ0008vKb0WCSpwHvzB
-         R31Kliv5Jq9vepw+Iyah5jNH9sbLM8o2fugowwDcXomGoMksOwBNfnjQq1vseQoyBb
-         a5LRpijyS2xyddbq4UdAYBMzBJL5Xj9LhYQvuno9ulclnLuxsxBxrU1UFYVTCTlKlt
-         Y7KaWz075bmxych4hRQFA948UuaAZyDaosn1XhYVlG+dKC1Wj/+nwn/Dc30cwqVduw
-         gnA8SMgeE/HiA==
-Date:   Wed, 3 Jul 2019 13:19:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the block tree with the xfs tree
-Message-ID: <20190703131948.37b05189@canb.auug.org.au>
+        Tue, 2 Jul 2019 23:25:25 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34254 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfGCDZY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:25:24 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t8so807610qkt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 20:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iJsosknFSMZqJio20riiWMLc4/tQoWtv3tru77r3tTA=;
+        b=FWM+RRyxyzu8W+QS8juDSU5bmX9P7C113BNP6FOv/ShOeGz6jH+oLijFv2qHlcoPEh
+         0uNnlRJPD1HICYWFfgrkBqgyYiaM0ix34Ed85bYE0ETi5Yf2OTtCLWmEN1JmfBorDCQ+
+         gBYsx2cunyHNgXf3CW6nFykqWWDUi6C2kW1U5TGMBstmHC7ZRWlZ7PqYE+wA8msyn80X
+         V6Nd5jEbWYKcLEXnJBZDauBhGXspHCC0kqENicar5+vH/qujt4GlNCbqt0hcNcFULxfJ
+         9cx/W6zcBkFBTc++dqD7TNGKdJEpbYFzRMcHlD5SfBiJ+ppNRXivhbbt9baIpLioc7V/
+         ZCYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iJsosknFSMZqJio20riiWMLc4/tQoWtv3tru77r3tTA=;
+        b=GoGBfr1ejJlqf26xkG1hc44HjHIfoomY0mwktbpzBgew4IWIpCltGkhaf1uyZUwYif
+         +eTmHkLHlW1Jlif94YgWJ71TYZEFSnkZb3/U32Or338GPfbsIjHIuXNSpwKIJtFZzTZS
+         1v7DmesBuYebCmeV1OWahOOrZ3HxL+x2VFILWh9JEPm5Mwm7B/sJC3d2pAQ4dO8d9+jI
+         VbeQxqz9vxibTj8z6U9fkn1XnjX41f9rc9nWugaUX0n0gP2/6sg4iPPoMuP249mulPeN
+         ohHqJOHoU6BWGO1fkBV9GGdMn2x/idq2uvDVE+ftHQfS0KMQ0TTiKr9UNAeZCDa9gO0M
+         72Pg==
+X-Gm-Message-State: APjAAAWBxaXUzdGd8F39cELjXh0Qstch8SBy6kgQMZ3y0nJeGFYeS/vp
+        Vz78eFGE6nkBNvvgqTJ/Wf01KdpVuHlM1yQhsRODvA==
+X-Google-Smtp-Source: APXvYqynhs3N20tz4EeRWUTKfzSM1e2Oi0HEF0ofk6gfdWiN2oBM1EZrbIrCFhjo8NMaXAJ/1/KyFHIpwqWU6t0nOQc=
+X-Received: by 2002:a37:9e4b:: with SMTP id h72mr28861404qke.297.1562124322973;
+ Tue, 02 Jul 2019 20:25:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/FYqSM1F0geViJaDykvbS9Vo"; protocol="application/pgp-signature"
+References: <20190627095247.8792-1-chiu@endlessm.com> <31f59db2-0e04-447b-48f8-66ea53ebfa7d@gmail.com>
+In-Reply-To: <31f59db2-0e04-447b-48f8-66ea53ebfa7d@gmail.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Wed, 3 Jul 2019 11:25:11 +0800
+Message-ID: <CAB4CAwcEdcg91Bgb+JoCdk_zQKsWT-K+cb07-5mrrx+__X2RMA@mail.gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FYqSM1F0geViJaDykvbS9Vo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 2, 2019 at 8:44 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+>
+> On 6/27/19 5:52 AM, Chris Chiu wrote:
+> > The WiFi tx power of RTL8723BU is extremely low after booting. So
+> > the WiFi scan gives very limited AP list and it always fails to
+> > connect to the selected AP. This module only supports 1x1 antenna
+> > and the antenna is switched to bluetooth due to some incorrect
+> > register settings.
+> >
+> > This commit hand over the antenna control to PTA, the wifi signal
+> > will be back to normal and the bluetooth scan can also work at the
+> > same time. However, the btcoexist still needs to be handled under
+> > different circumstances. If there's a BT connection established,
+> > the wifi still fails to connect until disconneting the BT.
+> >
+> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> > ---
+> >  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 9 ++++++---
+> >  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 ++-
+> >  2 files changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> > index 3adb1d3d47ac..6c3c70d93ac1 100644
+> > --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> > +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+> > @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+> >       /*
+> >        * WLAN action by PTA
+> >        */
+> > -     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
+> > +     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+> >
+> >       /*
+> >        * BT select S0/S1 controlled by WiFi
+> > @@ -1568,9 +1568,12 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+> >       rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+> >
+> >       /*
+> > -      * 0x280, 0x00, 0x200, 0x80 - not clear
+> > +      * Different settings per different antenna position.
+> > +      * Antenna switch to BT: 0x280, 0x00 (inverse)
+> > +      * Antenna switch to WiFi: 0x0, 0x280 (inverse)
+> > +      * Antenna controlled by PTA: 0x200, 0x80 (inverse)
+> >        */
+> > -     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+> > +     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+> >
+> >       /*
+> >        * Software control, antenna at WiFi side
+> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> > index 8136e268b4e6..87b2179a769e 100644
+> > --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> > +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> > @@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+> >
+> >       /* Check if MAC is already powered on */
+> >       val8 = rtl8xxxu_read8(priv, REG_CR);
+> > +     val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
+> >
+> >       /*
+> >        * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
+> >        * initialized. First MAC returns 0xea, second MAC returns 0x00
+> >        */
+> > -     if (val8 == 0xea)
+> > +     if (val8 == 0xea || !(val16 & BIT(11)))
+> >               macpower = false;
+> >       else
+> >               macpower = true;
+>
+> This part I would like to ask you take a good look at the other chips to
+> make sure you don't break support for 8192cu, 8723au, 8188eu with this.
+>
+> Cheers,
+> Jes
 
-Hi all,
+I checked the vendor code of 8192cu and 8188eu, they don't have this part
+of code to check the REG_CR before power on sequence. I can only find
+similar code in rtl8723be.
+if (tmp_u1b != 0 && tmp_u1b !=0xea)
+    rtlhal->mac_func_enable = true;
 
-Today's linux-next merge of the block tree got a conflict in:
+By definition, the BIT(11) of REG_SYS_CLKR in rtl8xxxu_regs.h is
+SYS_CLK_MAC_CLK_ENABLE. It seems to make sense to check this value
+for macpower no matter what chip it is. I think I can make it more
+self-expressive
+as down below.
 
-  fs/xfs/xfs_aops.c
+ if (val8 == 0xea || !(val16 & SYS_CLK_MAC_CLK_ENABLE))
 
-between commit:
+And per the comment, this code is for 92DU-VC S3 hang problem and I think an
+OR check for SYS_CLK_MAC_CLK_ENABLE is still safe for this.
 
-  a24737359667 ("xfs: simplify xfs_chain_bio")
-
-from the xfs tree and commit:
-
-  79d08f89bb1b ("block: fix .bi_size overflow")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/xfs/xfs_aops.c
-index bb769d9c5250,11f703d4a605..000000000000
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@@ -790,8 -782,8 +790,8 @@@ xfs_add_to_ioend
-  		atomic_inc(&iop->write_count);
- =20
-  	if (!merged) {
-- 		if (bio_full(wpc->ioend->io_bio))
-+ 		if (bio_full(wpc->ioend->io_bio, len))
- -			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
- +			wpc->ioend->io_bio =3D xfs_chain_bio(wpc->ioend->io_bio);
-  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
-  	}
- =20
-
---Sig_/FYqSM1F0geViJaDykvbS9Vo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0cHtUACgkQAVBC80lX
-0GxjbQf7BHHTZllJ6X240rzOrgZ8DA7+yeR4uy9cFKqJlpTY+2ImMN1UnEVUxLpW
-CppMNCEWVQOMSpLMnkFYt7H+VPbj8Z64Ta6Znv0GxXhYlpgz8AiPx8I1e3Ua3vd+
-oEG5GPh4wNTzBzXjxnPD/BtezzGwvvyZPYxoCqlvOj8A6KvyxnpfgqET88JC2POb
-tvp/BBo8pwVlGhm9vnj5uKPs7YRE4DwC/uWzBZApXLrewdpADXzi3iRAisWclezA
-Uv7rIA3t4RXMN3onQAlsEIuECyNNqO8TTvNng5iLwM94Rr0VQieakCaonRPAv9eg
-RnPFmW8oA9eR6zK14SmKlJXKebzVlg==
-=7nq4
------END PGP SIGNATURE-----
-
---Sig_/FYqSM1F0geViJaDykvbS9Vo--
+Chris
