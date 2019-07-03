@@ -2,152 +2,170 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132CAC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB567C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71F2218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84AA218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="qCfJh6wt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDTwIkbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfGCTAz (ORCPT
+        id S1727114AbfGCTCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:00:55 -0400
-Received: from mail-eopbgr50089.outbound.protection.outlook.com ([40.107.5.89]:39943
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726473AbfGCTAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jW1QLqG0Yl8+6QA1y0hpQO2CW7YVwBm9xRUpZgg5RV8=;
- b=qCfJh6wtkaqMswWFwHSQZb4Z/kbjELjDI12Ai5aNxFMY7TXtie2JJdRuFId4OaJZbyNV9KI5zcICr+uBShl1DpHfsSe/jRb3b2mOxRKuBi7M4jMhTj9uPZj2VEb+9KLsMewYy1GIqsiltXHOOVmoloXhd95CwvPjfZxYkVR1/DE=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6032.eurprd05.prod.outlook.com (20.178.127.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Wed, 3 Jul 2019 19:00:50 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 19:00:50 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: Re: [PATCH 1/5] mm: return valid info from hmm_range_unregister
-Thread-Topic: [PATCH 1/5] mm: return valid info from hmm_range_unregister
-Thread-Index: AQHVMc9vbnYVs0S/206V41dM/fYuDaa5P52A
-Date:   Wed, 3 Jul 2019 19:00:50 +0000
-Message-ID: <20190703190045.GN18688@mellanox.com>
-References: <20190703184502.16234-1-hch@lst.de>
- <20190703184502.16234-2-hch@lst.de>
-In-Reply-To: <20190703184502.16234-2-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR02CA0052.namprd02.prod.outlook.com
- (2603:10b6:207:3d::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e5c54ad6-e426-42ce-989f-08d6ffe8c394
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6032;
-x-ms-traffictypediagnostic: VI1PR05MB6032:
-x-microsoft-antispam-prvs: <VI1PR05MB6032B3B10FE9F9E9C6D63DB5CFFB0@VI1PR05MB6032.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(199004)(189003)(33656002)(26005)(81156014)(316002)(2616005)(36756003)(4326008)(6486002)(86362001)(386003)(81166006)(6506007)(53936002)(186003)(486006)(102836004)(14454004)(8936002)(6916009)(8676002)(305945005)(68736007)(11346002)(478600001)(476003)(446003)(54906003)(66476007)(52116002)(6246003)(5660300002)(2906002)(64756008)(66946007)(6512007)(66446008)(25786009)(73956011)(66556008)(1076003)(6436002)(3846002)(229853002)(99286004)(7736002)(76176011)(71190400001)(14444005)(66066001)(256004)(6116002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6032;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tGLXfkxhn4UMvbBsaWRxIq0U0KZWaqqcr+rFSUIlHqJy9FP57IS59e+yPBehjk1jXreBrmMYaZKLDwE60fBKQncizWEKCVlj7f2vVm63/bzW05sS2PMhxm398RP5Hmv/P590lkCoPjMQRKB24p2IP8a8x3NPijoeN+P04YH6/1QVAa/Ik/7e6apiSgb6jpe142Ul4RF7XDbGN/OnPmjZDxet9AOe/f9F5VOtiFbKUcS7Djs89CW1B8IWygw8aQIjhFsM8y5zg6F8pwjrSjrILw1s2W+pW5X1P2ryJv8DOc4BKwt08BVubCP3a7kICP9tfw2lv58U0FlYDvtPxJanewqzVQN4kT2YfhNa4uNVh1wxPLzIUsEU7SwYel5Y7gnz2MQiytuGVMkswgQbJ2vsnwFMaFQae/LCLEwwjkolSqs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <9EED1B508716C14685B4671208A7B4A6@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Jul 2019 15:02:42 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34762 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCTCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:02:42 -0400
+Received: by mail-qk1-f195.google.com with SMTP id t8so3715554qkt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 12:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9j91QuzZiuA3k9yRtiEcwirJNujPfeZz+gfvWzqG4sM=;
+        b=pDTwIkbqOcc+H1dxvW7x53x8X4xIJcfKzGjKxVWLntJnZBIte8mmdeX5JrFNjEgjnm
+         70HbqMbI8zWsbL6++GGmF+JiKyC0De1UWoJqp0M4CdV5pRQGyIKcrd3AB12VNadldD0S
+         k92iFBrPJF/WuYIHY1EqUDvrRRvrUc55TSdRIO7owyRzizI+3+kS7dEv9PaR3/vJjtUu
+         aA3z9Eqe66YmavwDTE2vSJioAMBtZ/JzD2GBc+Zzb+rirhnEtqOMBaUxRs05SQ2Pi3dp
+         LWrGWBJURqGiWKqxwUq5fvaRH0Q8KHhpeio3CrjKQ9yVUlKFUsvAzno3CQ95zAW7wERB
+         wTYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9j91QuzZiuA3k9yRtiEcwirJNujPfeZz+gfvWzqG4sM=;
+        b=lBEugBG4DYBL3N76Q3RfB2v00sH+aM9Ldwb3365QXqPIb/jfQsNYuHhGMZWrUin1F0
+         c3t2dOX+2JUK5fOKoI1SxwGVRfwKSmWRHgEUv8eYl11kCqXyauKnzyq5MTrKF0j7pUs8
+         w3VTz3FWBbjB2gvdUHt0KZkOlbn74gd9aioA5y6X9BGI6OL0ah9mN7wmnE3DyKsHPu9o
+         NQYQGt4GQFxnSjmuLXbEu6eaYJXanLPe02ZW3nQErEbieoSm5WPm9WpcABnpzx6PKEWP
+         NyY2N1Zl/9Ue7J8qOkzY0EFc24YsQkvzd54nCtLfUg9V5FtC0coYcBxA8rhooOCFqekH
+         SGmA==
+X-Gm-Message-State: APjAAAXtj3m5MQETz22hhP0t3Fz9NEdD090ptI4JvpIxx96t0aNtyJ9d
+        cgYjpj592ZACWwN32MQ3XGs=
+X-Google-Smtp-Source: APXvYqwTSVQFT1OBkv74/wi6RpT6wpjYQH6SkQzuUDXz9ngGrO/LUCNP3A2jcrUaKH45Srfjgju1mQ==
+X-Received: by 2002:a05:620a:522:: with SMTP id h2mr34041635qkh.329.1562180561228;
+        Wed, 03 Jul 2019 12:02:41 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.182])
+        by smtp.gmail.com with ESMTPSA id p13sm1182260qkj.4.2019.07.03.12.02.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 12:02:40 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7CFD341153; Wed,  3 Jul 2019 16:01:57 -0300 (-03)
+Date:   Wed, 3 Jul 2019 16:01:57 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 08/11] perf session: Smatch: Fix potential NULL
+ pointer dereference
+Message-ID: <20190703190157.GG10740@kernel.org>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702103420.27540-9-leo.yan@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5c54ad6-e426-42ce-989f-08d6ffe8c394
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 19:00:50.2152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702103420.27540-9-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:44:58AM -0700, Christoph Hellwig wrote:
-> Checking range->valid is trivial and has no meaningful cost, but
-> nicely simplifies the fastpath in typical callers. =20
+Em Tue, Jul 02, 2019 at 06:34:17PM +0800, Leo Yan escreveu:
+> Based on the following report from Smatch, fix the potential
+> NULL pointer dereference check.
+> 
+>   tools/perf/util/session.c:1252
+>   dump_read() error: we previously assumed 'evsel' could be null
+>   (see line 1249)
+> 
+> tools/perf/util/session.c
+> 1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+> 1241 {
+> 1242         struct read_event *read_event = &event->read;
+> 1243         u64 read_format;
+> 1244
+> 1245         if (!dump_trace)
+> 1246                 return;
+> 1247
+> 1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+> 1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+> 1250                event->read.value);
+> 1251
+> 1252         read_format = evsel->attr.read_format;
+>                            ^^^^^^^
+> 
+> 'evsel' could be NULL pointer, for this case this patch directly bails
+> out without dumping read_event.
 
-It should not be the typical caller..
+So this needs another hunk, adding it.
 
-> hmm_vma_range_done function, which now is a trivial wrapper around
-> hmm_range_unregister.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
->  drivers/gpu/drm/nouveau/nouveau_svm.c |  2 +-
->  include/linux/hmm.h                   | 11 +----------
->  mm/hmm.c                              |  7 ++++++-
->  3 files changed, 8 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouv=
-eau/nouveau_svm.c
-> index 8c92374afcf2..9d40114d7949 100644
-> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-> @@ -652,7 +652,7 @@ nouveau_svm_fault(struct nvif_notify *notify)
->  		ret =3D hmm_vma_fault(&svmm->mirror, &range, true);
->  		if (ret =3D=3D 0) {
->  			mutex_lock(&svmm->mutex);
-> -			if (!hmm_vma_range_done(&range)) {
-> +			if (!hmm_range_unregister(&range)) {
->  				mutex_unlock(&svmm->mutex);
->  				goto again;
->  			}
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8e0e06d3edfc..f4591a1438b4 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -224,7 +224,7 @@ static int perf_event__repipe_sample(struct perf_tool *tool,
+ 				     struct perf_evsel *evsel,
+ 				     struct machine *machine)
+ {
+-	if (evsel->handler) {
++	if (evsel && evsel->handler) {
+ 		inject_handler f = evsel->handler;
+ 		return f(tool, event, sample, evsel, machine);
+ 	}
+ 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/session.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 54cf163347f7..2e61dd6a3574 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+>  	       evsel ? perf_evsel__name(evsel) : "FAIL",
+>  	       event->read.value);
+>  
+> +	if (!evsel)
+> +		return;
+> +
+>  	read_format = evsel->attr.read_format;
+>  
+>  	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> -- 
+> 2.17.1
 
-In this case if we take the 'goto again' then we are pointlessly
-removing and re-adding the range.
+-- 
 
-The pattern is supposed to be:
-
-    hmm_range_register()
-again:
-    .. read page tables ..
-    lock
-    if (!hmm_range_valid())
-        unlock
-        goto again
-    .. setup device ..
-    unlock
-    hmm_range_unregister()
-
-I don't think the API should be encouraging some shortcut here..
-
-We can't do the above pattern because the old hmm_vma API didn't allow
-it, which is presumably a reason why it is obsolete.
-
-I'd rather see drivers move to a consistent pattern so we can then
-easily hoist the seqcount lock scheme into some common mmu notifier
-code, as discussed.
-
-Jason
+- Arnaldo
