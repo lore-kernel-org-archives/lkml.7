@@ -2,122 +2,87 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C89C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3AAC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A8A218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZlkWDaRm"
+	by mail.kernel.org (Postfix) with ESMTP id 41957218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfGCI6y (ORCPT
+        id S1727340AbfGCI7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:58:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37514 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfGCI6x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:58:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s20so1564247otp.4;
-        Wed, 03 Jul 2019 01:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lAu76Ghsvr1W5j1QydPulQlx7ZJYjzlKVY1X6/0TpYQ=;
-        b=ZlkWDaRm+F6GwfJacfLPTumk+RVHVPMMeileI2NFwlgWvaiJJa1YnjrCbLUMsIZTUc
-         CKx7yqQmO1MAkEU5RkkY+fqX+pcF6C5bvfgt6DU9YQ6315Rh4ppt4NckuFzlirtXJdW4
-         bXauvIzlfByBCcQCbKj/dQMX+FO4YHk7dgt2BqHQWfBiN2GjTE1Kt7sRE/fpjaJZ233Y
-         7EucpqztgtTjxkJuI2CJoELGbgQ0UsLqicla54UrQ1s6uI5Sm5cP55KZgAMPom6TI6Lh
-         eDV3440fsQsEOPIEVaVO70VowN2JWlXH/Dl/w36YmK4Qx1CW/WuZmpxGGpX8efH5HEaO
-         wt6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lAu76Ghsvr1W5j1QydPulQlx7ZJYjzlKVY1X6/0TpYQ=;
-        b=sHywb0FLb2Z4mxmIKjmDJNsdGWfY6iISqSKrM17DPjAvg1WA3EAzbIWT4oJZNZu0rz
-         aK5bSB3QNB7rgXd8OAEaKPONdddZvkU3pHNuexzXcQvs3efd5cfv3LUHx5P45CU2jmvQ
-         P7Z5sQY+VECCLR04G0s3OMChLGNhqLv6IXIeHg84QUfdNoDTQ5M3HNTxSUgJzqgqk3q1
-         GtmP1ecvEI3kzvFHtG8n/i7j+Uz6VCfOE33QuBbUgXkmQJ3vaHCqVd9o0O3vw9yEGcLM
-         mKGGIHkZxP0s4UGMrMOBQP49pbAtU8ek9G2ra+LTZPG/afQVYZh0DnreHe+JA0GAiTQj
-         QNSw==
-X-Gm-Message-State: APjAAAWQ4LlPiwwViyd3kP8ru8QN5LkYisiDGMdf8AtH/CMM/p53gMEX
-        J0lUSTIOC0/PGEBKKdzV0GMTEafw1x//8JJFvGk=
-X-Google-Smtp-Source: APXvYqzGyUzewzJOLzZnZSEaNzpUQzbtDJSH6yWGpp+2eb3HVLQViI2Tq6G8hX6C+3lTL2C6HmGIAUahYpDsxQUBb1Q=
-X-Received: by 2002:a9d:14a:: with SMTP id 68mr26337864otu.96.1562144332818;
- Wed, 03 Jul 2019 01:58:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
- <20190702203523.2412-2-martin.blumenstingl@googlemail.com> <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 10:58:41 +0200
-Message-ID: <CAFBinCCWzLyhzVcqHR0RY9+cSqDZ3EdJEim8SP4Mr2Q3M=OKTg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
- and ARX300 PCIe PHYs
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jul 2019 04:59:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31283 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbfGCI7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:59:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 01:59:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
+   d="scan'208";a="184692476"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Jul 2019 01:59:09 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v1 net-next] net: stmmac: Enable dwmac4 jumbo frame more than 8KiB
+Date:   Thu,  4 Jul 2019 00:59:10 +0800
+Message-Id: <1562173150-808-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Weifeng Voon <weifeng.voon@intel.com>
 
-On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Jul 2, 2019 at 2:35 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> >
-> > Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
-> > The IP block contains settings for the PHY and a PLL.
-> > The PLL mode is configurable through a dedicated #phy-cell in .dts.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
-> >  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
-> >  2 files changed, 98 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> >  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> > new file mode 100644
-> > index 000000000000..b7b222e772d0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> > @@ -0,0 +1,87 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> The preference is (GPL-2.0 OR BSD-2-Clause) for new bindings.
-to make sure I understand this correctly:
-the license is then only valid for the bindings - is it fine if the
-driver uses GPL-2.0-only?
+Enable GMAC v4.xx and beyond to support 16KiB buffer.
 
-I don't have any datasheet for these SoCs so all my knowledge is based
-on the GPL-2.0-only driver from the Lantiq board support package
-(called "UGW").
-the .yaml file is 100% my own work so I'm fine with having GPL-2.0 OR
-BSD-2-Clause
-however, that still has to be compatible with my driver, which I chose
-to be GPL-2.0-only because that's the license from the Lantiq board
-support package
+Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+index cf6436d3d6c7..dbde23e7e169 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+@@ -443,6 +443,15 @@ static void dwmac4_clear(struct dma_desc *p)
+ 	p->des3 = 0;
+ }
+ 
++static int set_16kib_bfsize(int mtu)
++{
++	int ret = 0;
++
++	if (unlikely(mtu >= BUF_SIZE_8KiB))
++		ret = BUF_SIZE_16KiB;
++	return ret;
++}
++
+ const struct stmmac_desc_ops dwmac4_desc_ops = {
+ 	.tx_status = dwmac4_wrback_get_tx_status,
+ 	.rx_status = dwmac4_wrback_get_rx_status,
+@@ -469,4 +478,6 @@ static void dwmac4_clear(struct dma_desc *p)
+ 	.clear = dwmac4_clear,
+ };
+ 
+-const struct stmmac_mode_ops dwmac4_ring_mode_ops = { };
++const struct stmmac_mode_ops dwmac4_ring_mode_ops = {
++	.set_16kib_bfsize = set_16kib_bfsize,
++};
+-- 
+1.9.1
 
-Martin
