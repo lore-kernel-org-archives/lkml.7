@@ -2,135 +2,249 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A677C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29454C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4633721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E257A21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="EYgk3iUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfGCQQW (ORCPT
+        id S1726991AbfGCQRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:16:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57451 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:16:22 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A38FE307D853;
-        Wed,  3 Jul 2019 16:16:16 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1165519698;
-        Wed,  3 Jul 2019 16:16:09 +0000 (UTC)
-Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
- caches
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20190702183730.14461-1-longman@redhat.com>
- <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
- <78879b79-1b8f-cdfd-d4fa-610afe5e5d48@redhat.com>
- <20190702143340.715f771192721f60de1699d7@linux-foundation.org>
- <c29ff725-95ba-db4d-944f-d33f5f766cd3@redhat.com>
- <20190703155314.GT978@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <ca6147ca-25be-cba6-a7b9-fcac6d21345d@redhat.com>
-Date:   Wed, 3 Jul 2019 12:16:09 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 3 Jul 2019 12:17:08 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44044 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCQRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:17:08 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so2183834lfm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=T4K0lfJrZdB+WImHUfetaGJj7jF3V38fxGsDa1+dLU4=;
+        b=EYgk3iUdJLGiD3gmhVDxVz7h2NG6et1FHg0d9Vb6krYWD+qzuBsonvXhmZ3uk4LzbS
+         mBiEz1ciNf7VH2k7M1aga3L7jIAFJsjdtssyNmXYt8n2RPxPg5iXD4xzZRudbz88zHJj
+         d8KnTjlVFGHZjCDI/YOkj3bBccyrVB8zRv9/bl2sF5276v+kMJNPjuUZsaBfGXdm24Kc
+         1ikpvCfdhjwVljTeSjCVtiJlvGCEwfj4tIZyD+eg6T9BkaaVH6r4Gy7IEO4HMHihoisv
+         KOuFiki3T+5kvBHxubzMYcAh3PHajyhMhaUDuXAEDX7wSbH001I7PW5nfZ+n5uJ1ZysN
+         9XeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=T4K0lfJrZdB+WImHUfetaGJj7jF3V38fxGsDa1+dLU4=;
+        b=tbPu44EOyldEOPdGRzo0CH9wiGsJYBE6M1QNPepIonD/HIXa8zMQvZckgeBCzMYScI
+         1dUJyL3mxFj2kGssEMYGWVV2URZmqjCOoVeh7/fuaDnmvYSLbYapxcN4tVABYtgXCkZi
+         FHjo8QeE+S3hiKrF+E104NvevNAaN5Qc3RrzjrmgG1JJtaQbLpyGfukspyB+9Pgna7ZF
+         qcvmLqpTuBO6WiLozHCxlpLiLH5MIPQjU04dhPzKwf2ML0eMBfseWzpvPd1olKqHTlME
+         T8+2RhSvtncRafBVUCupiMkvVANp6tqhhAw9okCeJuYax+Zm+vKsVFFp/J+nZjDKcu49
+         jI6g==
+X-Gm-Message-State: APjAAAWgmO+JY0cQMZC6XYHPYA5GVQPdnsIULr7EFlAbQFss5FNMwExs
+        SAge0GDXt+hM2FjUBxR/SUJEWg==
+X-Google-Smtp-Source: APXvYqwAla6eKOL5iV3D7gn6PeSwU+YMXFl3SiIcq6sEo7baJjlSYNndKZraMpG64D9qZw08l4l7eg==
+X-Received: by 2002:ac2:4152:: with SMTP id c18mr2759765lfi.144.1562170624734;
+        Wed, 03 Jul 2019 09:17:04 -0700 (PDT)
+Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
+        by smtp.gmail.com with ESMTPSA id u13sm457577lfc.5.2019.07.03.09.17.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 09:17:03 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 18:17:02 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
+Message-ID: <20190703161702.GA26461@bigcity.dyn.berto.se>
+References: <cover.1558667245.git.skhan@linuxfoundation.org>
+ <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
+ <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
+ <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
+ <20190616184506.GD5006@pendragon.ideasonboard.com>
+ <6e67ae76-6d37-cd70-c05f-1c6b6dd4af1a@linuxfoundation.org>
+ <20190630114102.GB7043@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703155314.GT978@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 03 Jul 2019 16:16:21 +0000 (UTC)
+In-Reply-To: <20190630114102.GB7043@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/19 11:53 AM, Michal Hocko wrote:
-> On Wed 03-07-19 11:21:16, Waiman Long wrote:
->> On 7/2/19 5:33 PM, Andrew Morton wrote:
->>> On Tue, 2 Jul 2019 16:44:24 -0400 Waiman Long <longman@redhat.com> wrote:
->>>
->>>> On 7/2/19 4:03 PM, Andrew Morton wrote:
->>>>> On Tue,  2 Jul 2019 14:37:30 -0400 Waiman Long <longman@redhat.com> wrote:
->>>>>
->>>>>> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
->>>>>> file to shrink the slab by flushing all the per-cpu slabs and free
->>>>>> slabs in partial lists. This applies only to the root caches, though.
->>>>>>
->>>>>> Extends this capability by shrinking all the child memcg caches and
->>>>>> the root cache when a value of '2' is written to the shrink sysfs file.
->>>>> Why?
->>>>>
->>>>> Please fully describe the value of the proposed feature to or users. 
->>>>> Always.
->>>> Sure. Essentially, the sysfs shrink interface is not complete. It allows
->>>> the root cache to be shrunk, but not any of the memcg caches.Â 
->>> But that doesn't describe anything of value.  Who wants to use this,
->>> and why?  How will it be used?  What are the use-cases?
->>>
->> For me, the primary motivation of posting this patch is to have a way to
->> make the number of active objects reported in /proc/slabinfo more
->> accurately reflect the number of objects that are actually being used by
->> the kernel.
-> I believe we have been through that. If the number is inexact due to
-> caching then lets fix slabinfo rather than trick around it and teach
-> people to do a magic write to some file that will "solve" a problem.
-> This is exactly what drop_caches turned out to be in fact. People just
-> got used to drop caches because they were told so by $random web page.
-> So really, think about the underlying problem and try to fix it.
->
-> It is true that you could argue that this patch is actually fixing the
-> existing interface because it doesn't really do what it is documented to
-> do and on those grounds I would agree with the change.
+Hi Shauah, Laurent,
 
-I do think that we should correct the shrink file to do what it is
-designed to do to include the memcg caches as well.
+On 2019-06-30 14:41:02 +0300, Laurent Pinchart wrote:
+> Hi Shuah,
+> 
+> On Fri, Jun 28, 2019 at 10:41:07AM -0600, Shuah Khan wrote:
+> > On 6/16/19 12:45 PM, Laurent Pinchart wrote:
+> > > On Fri, Jun 14, 2019 at 05:26:46PM -0600, Shuah Khan wrote:
+> > >> On 6/13/19 7:24 AM, Helen Koike wrote:
+> > >>> On 6/13/19 2:44 AM, Hans Verkuil wrote:
+> > >>>> On 5/24/19 5:31 AM, Shuah Khan wrote:
+> > >>>>> media_device is embedded in struct vimc_device and when vimc is removed
+> > >>>>> vimc_device and the embedded media_device goes with it, while the active
+> > >>>>> stream and vimc_capture continue to access it.
+> > >>>>>
+> > >>>>> Fix the media_device lifetime problem by changing vimc to create shared
+> > >>>>> media_device using Media Device Allocator API and vimc_capture getting
+> > >>>>> a reference to vimc module. With this change, vimc module can be removed
+> > >>>>> only when the references are gone. vimc can be removed after vimc_capture
+> > >>>>> is removed.
+> > >>>>>
+> > >>>>> Media Device Allocator API supports just USB devices. Enhance it
+> > >>>>> adding a genetic device allocate interface to support other media
+> > >>>>> drivers.
+> > >>>>>
+> > >>>>> The new interface takes pointer to struct device instead and creates
+> > >>>>> media device. This interface allows a group of drivers that have a
+> > >>>>> common root device to share media device resource and ensure media
+> > >>>>> device doesn't get deleted as long as one of the drivers holds its
+> > >>>>> reference.
+> > >>>>>
+> > >>>>> The new interface has been tested with vimc component driver to fix
+> > >>>>> panics when vimc module is removed while streaming is in progress.
+> > >>>>
+> > >>>> Helen, can you review this series? I'm not sure this is the right approach
+> > >>>> for a driver like vimc, and even if it is, then it is odd that vimc-capture
+> > >>>> is the only vimc module that's handled here.
+> > >>>
+> > >>> Hi Hans,
+> > >>>
+> > >>> Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
+> > >>> try to take a look at this patch series (and the others) asap.
+> > >>>
+> > >>> Helen
+> > >>>
+> > >>>> My gut feeling is that this should be handled inside vimc directly and not
+> > >>>> using the media-dev-allocator.
+> > >>
+> > >> Hi Hans and Helen,
+> > >>
+> > >> I explored fixing the problem within vimc before I went down the path to
+> > >> use Media Device Allocator API. I do think that it is cleaner to go this
+> > >> way and easier to maintain.
+> > >>
+> > >> vimc is a group pf component drivers that rely on the media device vimc
+> > >> in vimc and falls into the use-case Media Device Allocator API is added
+> > >> to address. The release and life-time management happens without vimc
+> > >> component drivers being changed other than using the API to get and put
+> > >> media device reference.
+> > > 
+> > > Our replies crossed each other, please see my reply to Hans. I would
+> > > just like to comment here that if having multiple kernel modules causes
+> > > issue, they can all be merged together. There's no need for vimc to be
+> > > handled through multiple modules (I actually think it's quite
+> > > counterproductive, it only makes it more complex, for no added value).
+> > 
+> > There are several problems in this group of drivers as far as lifetime
+> > management is concerned. I explained some of it in the patch 2/2
+> > 
+> > If vimc module is removed while streaming is active, vimc_exit runs
+> > into NULL pointer dereference error when streaming thread tries to
+> > access and lock graph_mutex in the struct media_device.
+> > 
+> > The primary reason for this is that:
+> > 
+> > media_device is embedded in struct vimc_device and when vimc is removed
+> > vimc_device and the embedded media_device goes with it, while the active
+> > stream and vimc_capture continue to access it.
+> 
+> The issue isn't so much that media_devic is embedded in vimc_device, but
+> that vimc_device is released too early. Not only does the thread need to
+> access the graph_mutex lock in the media_device structure, but it can
+> potentially access fields of the device-specific structures as well. The
+> proper solution is to propagate media_device_release() one level up, in
+> order to only release the top-level structure containing media_device
+> when the last reference to the media_device is dropped.
 
+I have seen similar problems with rcar-vin, the device specific data is 
+released to early. In my case it was not triggered by the struct
+media_device but with a struct v4l2_device embedded in the device 
+specific data IIRC.
 
->  But do not teach
-> people that they have to write to some file to get proper numbers.
-> Because that is just a bad idea and it will kick back the same way
-> drop_caches.
+This was when I tried to address the lifetime issues of the video device 
+when binding/unbinding the device to the driver and not when unloading 
+the module. This was quiet a while ago so I don't recall specifics, 
+sorry about that. One finding was that there are also unsolved problems 
+when it comes async notifiers and unloading/unbinding and then 
+loading/binding subdevices as well as the driver controlling the video 
+device. It was such a mess I gave up.
 
-The /proc/slabinfo file is a well-known file that is probably used
-relatively extensively. Making it to scan through all the per-cpu
-structures will probably cause performance issues as the slab_mutex has
-to be taken during the whole duration of the scan. That could have
-undesirable side effect.
+I'm happy to see activity in this area but I fear it might need work on 
+a higher level and not trying to work around the problem in drivers.
 
-Instead, I am thinking about extending the slab/objects sysfs file to
-also show the number of objects hold up by the per-cpu structures and
-thus we can get an accurate count by subtracting it from the reported
-active objects. That will have a more limited performance impact as it
-is just one kmem cache instead of all the kmem caches in the system.
-Also the sysfs files are not as commonly used as slabinfo. That will be
-another patch in the near future.
+> 
+> > If we chose to keep these drivers as component drivers, media device
+> > needs to stick around until all components stop using it. This is tricky
+> > because there is no tie between these set of drivers. vimc module can
+> > be deleted while others are still active. As vimc gets removed, other
+> > component drivers start wanting to access the media device tree.
+> 
+> Reference-counting is the key.
+> 
+> > This is classic media device lifetime problem which could be solved
+> > easily with the way I solved it with this series. I saw this as a
+> > variation on the same use-case we had with sound and media drivers
+> > sharing the media device.
+> 
+> This isn't about solving it easily, it's about solving it properly. The
+> media device allocator as used here is a hack and takes us in the
+> opposite direction of a proper fix.
+> 
+> > I have a TODO request from you asking to extend Media Device Allocator
+> > API to generic case and not restrict it to USB devices. My thinking is
+> > that this gives a perfect test case to extend the API to be generic
+> > and use to solve this problem.
+> 
+> The biggest issue at the moment with the media device allocator, which I
+> have pointed out numerous times and has never been addressed (and which
+> explains why I didn't think the code was ready to be merged) is that the
+> media_device contains operations that are based on having a single
+> driver controlling the media device. A proper shared media device
+> allocator needs to drop the concept of a single master for the media
+> device, and thus needs to refactor those operations to allow any user of
+> the media device to implement them (the .link_notify() operation is a
+> prime example, and the recently added request operations will make this
+> even more challenging - think of how this patch series would prevent
+> vimc from properly implementing the request API). As long as these issue
+> are not fixed I will be firmly opposed to spreading the usage of the
+> media device allocator beyond what exists today.
+> 
+> > Collapsing the drivers into one might be lot more difficult and complex
+> > than solving this problem with Media Device Allocator API. This approach
+> > has an added benefit of extending the API to be generic and not just for
+> > USB.
+> 
+> I've never disputed the fact that fixing a problem correctly is usually
+> more work than hacking around it :-)
+> 
+> > I looked at this as a good way to add generic API and have a great test
+> > case for it. This patch series fixes the problem for the current vimc
+> > architecture.
+> 
+> NAK, for the reasons above. Please drop this series and fix the problem
+> properly.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 
-Cheers,
-Longman
-
+-- 
+Regards,
+Niklas Söderlund
