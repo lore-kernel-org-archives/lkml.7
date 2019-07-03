@@ -2,150 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9C5C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0507BC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0CC218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5C5218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aPvBGrzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfGCWAs (ORCPT
+        id S1727310AbfGCWBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:00:48 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38187 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCWAs (ORCPT
+        Wed, 3 Jul 2019 18:01:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33690 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGCWBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:00:48 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E8843805B0; Thu,  4 Jul 2019 00:00:32 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 00:00:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
-        linux@roeck-us.net, dmurphy@ti.com,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
- device names
-Message-ID: <20190703220043.GA876@amd>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
- <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+        Wed, 3 Jul 2019 18:01:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ceCZBeAoLv1CmsCXsi7El8ScXjaB/imWQdAoEQ06PzI=; b=aPvBGrzooiaVo7jpEUrHQZoKw
+        IOB2e+GIlmUFCpn0aWtLaekXFfH8JC/jN6p/79W++IIOElFtXZER8CpT1Fd0PObwBQ/97sVsKesen
+        i40Zlu1Xupp5TxftC2GnTaJprejC1h+bktbArfZ5Q1Vz/VV7s9CqILkVXMl+yI+FT0VoZoxSYhf9v
+        li4/M9SQnmJDM9D3DgJxHKbaEDwg6F6dnqnxcB4/aiFwKGZpPChP5FgcjJJqzAZ5NzMQUoGfyn7AI
+        Ol9O6Bp9RDpOlkj/bewxD7AwJyL2/jJLkndkr/l/i3sjUnHSRKZTHLfoBO1x7L3Urj0YVsaC1Slu0
+        Ynj3UKB9g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hinJC-00047N-PH; Wed, 03 Jul 2019 22:00:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B60120213046; Thu,  4 Jul 2019 00:00:57 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 00:00:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
+Message-ID: <20190703220057.GJ3402@hirez.programming.kicks-ass.net>
+References: <20190703102731.236024951@infradead.org>
+ <20190703102807.588906400@infradead.org>
+ <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609190803.14815-6-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 03, 2019 at 01:27:09PM -0700, Andy Lutomirski wrote:
+> On Wed, Jul 3, 2019 at 3:28 AM root <peterz@infradead.org> wrote:
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > @@ -1338,18 +1347,9 @@ ENTRY(error_entry)
+> >         movq    %rax, %rsp                      /* switch stack */
+> >         ENCODE_FRAME_POINTER
+> >         pushq   %r12
+> > -
+> > -       /*
+> > -        * We need to tell lockdep that IRQs are off.  We can't do this until
+> > -        * we fix gsbase, and we should do it before enter_from_user_mode
+> > -        * (which can take locks).
+> > -        */
+> > -       TRACE_IRQS_OFF
+> 
+> This hunk looks wrong.  Am I missing some other place that handles the
+> case where we enter from kernel mode and IRQs were on?
 
-Hi!
+> > -	CALL_enter_from_user_mode
+> >  	ret
+> >  
+> >  .Lerror_entry_done:
+> > -	TRACE_IRQS_OFF
+> >  	ret
+> >  
+> >  	/*
 
-Sorry for the delay.
+Did you perchance mean to complain about the .Lerror_entry_done one?
 
-> @@ -27,6 +29,18 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->  LIST_HEAD(leds_list);
->  EXPORT_SYMBOL_GPL(leds_list);
-> =20
-> +const char *led_colors[LED_COLOR_ID_MAX] =3D {
+Because I'm not seeing how the one before CALL_enter_from_user_mode can
+ever be from-kernel.
 
-const char * const , if we want to play that game?
-
-
-> +	[LED_COLOR_ID_WHITE] =3D "white",
-> +	[LED_COLOR_ID_RED] =3D "red",
-> +	[LED_COLOR_ID_GREEN] =3D "green",
-> +	[LED_COLOR_ID_BLUE] =3D "blue",
-> +	[LED_COLOR_ID_AMBER] =3D "amber",
-> +	[LED_COLOR_ID_VIOLET] =3D "violet",
-> +	[LED_COLOR_ID_YELLOW] =3D "yellow",
-> +	[LED_COLOR_ID_IR] =3D "ir",
-> +};
-> +EXPORT_SYMBOL_GPL(led_colors);
-> +
-
-> +	if (fwnode_property_present(fwnode, "label")) {
-> +		ret =3D fwnode_property_read_string(fwnode, "label", &props->label);
-> +		if (ret)
-> +			dev_err(dev, "Error parsing \'label\' property (%d)\n", ret);
-> +		return;
-
-I don't think you need to escape ' with \.
-
-> +	if (fwnode_property_present(fwnode, "function")) {
-> +		ret =3D fwnode_property_read_string(fwnode, "function", &props->functi=
-on);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Error parsing \'function\' property (%d)\n",
-> +				ret);
-> +		}
-> +	} else {
-> +		return;
-> +	}
-
-> +
-> +	if (fwnode_property_present(fwnode, "function-enumerator")) {
-
-I'd do if (!fwnode_property_present()) return; in both occasions, to
-save an indentation level; but that's nitpicking.
-
-> +	if (props.label) {
-> +		/*
-> +		 * If init_data.devicename is NULL, then it indicates that
-> +		 * DT label should be used as-is for LED class device name.
-> +		 * Otherwise the label is prepended with devicename to compose
-> +		 * the final LED class device name.
-> +		 */
-> +		if (!devicename) {
-> +			strncpy(led_classdev_name, props.label,
-> +				LED_MAX_NAME_SIZE);
-> +		} else {
-> +			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +				 devicename, props.label);
-> +		}
-
-Unlike snprintf(), strncpy() does not guarantee NULL termination.
-
-I did not check the shell script.
-
-With that fixed,
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0dJYsACgkQMOfwapXb+vIsIQCdHeXyY51Wi7XK3/jnfTSCSYyv
-OasAoKFj4QE6Bn6SkRH40Pkbh0DKIheX
-=vR+B
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+But yes, that .Lerror_entry_done one looks fishy.
