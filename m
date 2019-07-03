@@ -2,119 +2,130 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C91C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D72FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2514321873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2AC21873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="MAVNS178"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMgdo5cx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfGCCLa (ORCPT
+        id S1727164AbfGCCPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:11:30 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44987 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCCLa (ORCPT
+        Tue, 2 Jul 2019 22:15:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45575 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCCPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:11:30 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x47so820565qtk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 19:11:29 -0700 (PDT)
+        Tue, 2 Jul 2019 22:15:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bi6so299697plb.12;
+        Tue, 02 Jul 2019 19:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=gfRLnUMpvQF4xvVuNB3lMwbLOVw0h67iy3HrcU5WJts=;
-        b=MAVNS178nXOTz84cbWexGGY36D6edM48ZYHVkM5Fv3RtGqu1rPZCT3aHPSg/8crhjS
-         YwCStc+teSy9pCCUHViHJJIscKNVQYsvLx2QGSuKDZe8D2Y6qb9lblPS0w13sme2qsxh
-         A9bxfFmXVxST14WM8URw4bSaFqxV8lluc+DloTml/EZhVQQ0ELA5R4YB3py91lNs42Pd
-         U0FkylavJaiQ5U2erVzCNCRVpBaR22SsbfZtIK0SId0V79dBxO3V43XcNS77EOU1i3gg
-         iGw53ybfWG5bj57oWAFrEvqHWzwb+7bkyfDHnMQ19+/9L7T58uNX/v2Rf8IqqHGO+lhg
-         mreQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Isqfps/O6LwRnu+dRSzriy5CxI0umRBIFUrqM+okdCs=;
+        b=eMgdo5cxD8xocs0qEkS5EHNLEtNLZV+yO9aTlypZIbft8FBVAa/yS1ZqB/gmuI9J/0
+         Y8Pu2DxexEkDszk9Vt58d1mBAWJBnWu1X/ISi5igs1bfkab1EeO/UYJxuIodJvv+bug8
+         RLH6+zu3qy8OB+mCmUxEv2K/a6RmUkDmtOIcoYpld8hLAO5MFAPgxNp+m6D4M9n0Ouc3
+         DHY9n/2eiMdeYjvHF07NkRPu7wpGYeBMmMZXtpBr1e91vJDDJf405wmxpI0DIi/xxU+x
+         tuuOLTUVeWD5skWO0zu3+1OIW3Bq7UykHev7jtjweIeTsCh1C7mqHXKyVYOfCz+rDy+o
+         mSPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=gfRLnUMpvQF4xvVuNB3lMwbLOVw0h67iy3HrcU5WJts=;
-        b=HAHNWaYWsYSLC3BJyV2KqJ0xU64u+lVPu+aHmI78WwtyxwV3328f8TyfF7u14o2AfU
-         jn/Eix33+tNXdoJ1ziAJq6SlGUJQJE8yCwXnZYJPb6WGDnRJyCpjQtfP157Npk1E4gf4
-         4KYYWzlsjaa6tosuoA5jlsap+qESyW8bAo5oXb+pIk8hnj2f84jiTOAY/Lp0j0/Nebu1
-         eb3uIBcOaDDY5Y6TmRKs2QW+EnkqTAaGu3axlBIzDHrIqv97xvmOA3cNI5ewnBTBZssT
-         AoIp9pknsa0Jk0EUEH6ymBdRZpDVgWgcnojoabAH2apOuFeqKVcnYiYq1NrdUddeRm01
-         jz2g==
-X-Gm-Message-State: APjAAAVRz6ZONEcZl3SRbQIrQ/FJGUuOXXwjPfLCroCg9TcYaf+7br11
-        DcJDKl/88oR7OHkIrLM+hqhFaQ==
-X-Google-Smtp-Source: APXvYqw1ToIbfnaYWP+zvspA2rUdGgQ6c/tdGz1YfhNGkfO1j/K5mz5MtxUqvUNCgB605r6Ug8HZmQ==
-X-Received: by 2002:ac8:2c35:: with SMTP id d50mr27032789qta.313.1562119889240;
-        Tue, 02 Jul 2019 19:11:29 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z50sm390789qtz.36.2019.07.02.19.11.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 19:11:29 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 19:11:24 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 11/15] ethtool: provide link mode names as a
- string set
-Message-ID: <20190702191124.259c6628@cakuba.netronome.com>
-In-Reply-To: <20190702190419.1cb8a189@cakuba.netronome.com>
-References: <cover.1562067622.git.mkubecek@suse.cz>
-        <1e1bf53de26780ecc0e448aa07dc429ef590798a.1562067622.git.mkubecek@suse.cz>
-        <20190702190419.1cb8a189@cakuba.netronome.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Isqfps/O6LwRnu+dRSzriy5CxI0umRBIFUrqM+okdCs=;
+        b=Aeavo+47bzaP0DLTpADFMMtDRqyFIN21vTuHT0oykWfA0sH1wajrDBV2i0dF5Xf084
+         XUu7NH3rM9vbTCbhwcbJebcbZvp/T9gBQeNcGa8qN0SzTEyCyB8icjg3U948Qmbx6IDr
+         8RnTIPCWbg/A7lZl7d9P+dcWhuXuKmTUA74yzhWCms0ASn8PmoYU9bqB99HxmEugOgfF
+         oH/UH5HFoylAjLfMLaSQQML6CYpU0EYJCGIZVXIWUlwbvane7Q1k25a9WJVTp4CIcTvq
+         oHu/TL77NNqXszzIg604TGu1JfHaCPpfFmZ4XQqJqhkDHfBkxvnYKhx4WENUL7tRTrV3
+         VhgQ==
+X-Gm-Message-State: APjAAAWtoVjybjiq8ADL66h6clmA+A7EqoyeqmmgdVMQM6Qn+wv6Ssxh
+        B2d0iuaULxImOdOiD6oFDa4=
+X-Google-Smtp-Source: APXvYqzbJaktcOHx/dP/TVDMSw89q+FpGXl/R5M9ermN1pbkJ4Zt5sJqY6gmBfin0c4K0V1idxIXQA==
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr30236136pls.179.1562120101420;
+        Tue, 02 Jul 2019 19:15:01 -0700 (PDT)
+Received: from debian.net.fpt ([2405:4800:58f7:1cb1:98e0:87d3:2c8b:b6ed])
+        by smtp.gmail.com with ESMTPSA id h2sm382955pgs.17.2019.07.02.19.14.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 19:15:00 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     tranmanphong@gmail.com
+Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        hans.verkuil@cisco.com, keescook@chromium.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        skhan@linuxfoundation.org,
+        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, glider@google.com
+Subject: [PATCH V2] media: usb: technisat-usb2: fix buffer overflow
+Date:   Wed,  3 Jul 2019 09:14:44 +0700
+Message-Id: <20190703021444.19954-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190702140211.28399-1-tranmanphong@gmail.com>
+References: <20190702140211.28399-1-tranmanphong@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 19:04:19 -0700, Jakub Kicinski wrote:
-> On Tue,  2 Jul 2019 13:50:34 +0200 (CEST), Michal Kubecek wrote:
-> > +const char *const link_mode_names[] = {
-> > +	__DEFINE_LINK_MODE_NAME(10, T, Half),
-> > +	__DEFINE_LINK_MODE_NAME(10, T, Full),
-> > +	__DEFINE_LINK_MODE_NAME(100, T, Half),
-> > +	__DEFINE_LINK_MODE_NAME(100, T, Full),
-> > +	__DEFINE_LINK_MODE_NAME(1000, T, Half),
-> > +	__DEFINE_LINK_MODE_NAME(1000, T, Full),
-> > +	__DEFINE_SPECIAL_MODE_NAME(Autoneg, "Autoneg"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(TP, "TP"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(AUI, "AUI"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(MII, "MII"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(FIBRE, "FIBRE"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(BNC, "BNC"),  
-> 
-> > +	__DEFINE_LINK_MODE_NAME(10000, T, Full),
-> > +	__DEFINE_SPECIAL_MODE_NAME(Pause, "Pause"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(Asym_Pause, "Asym_Pause"),
-> > +	__DEFINE_LINK_MODE_NAME(2500, X, Full),
-> > +	__DEFINE_SPECIAL_MODE_NAME(Backplane, "Backplane"),
-> > +	__DEFINE_LINK_MODE_NAME(1000, KX, Full),  
-> ...
-> > +	__DEFINE_LINK_MODE_NAME(5000, T, Full),
-> > +	__DEFINE_SPECIAL_MODE_NAME(FEC_NONE, "None"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(FEC_RS, "RS"),
-> > +	__DEFINE_SPECIAL_MODE_NAME(FEC_BASER, "BASER"),  
-> 
-> Why are port types and FEC params among link mode strings?
+The buffer will be overflow in case of the while loop can not break.
+Add the checking buffer condition in while loop for avoiding
+overlooping index.
 
-Ah, FEC for autoneg, but port type?
+This issue was reported by syzbot
 
-> > +	__DEFINE_LINK_MODE_NAME(50000, KR, Full),  
-> ...
-> > +	__DEFINE_LINK_MODE_NAME(1000, T1, Full),
-> > +};  
+Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
+
+Tested-by:
+https://groups.google.com/d/msg/syzkaller-bugs/CySBCKuUOOs/t3PvVheSAAAJ
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+Change Log:
+ * V2: add IR_MAX_BUFFER_INDEX and adjust the while loop condition as comments
+---
+ drivers/media/usb/dvb-usb/technisat-usb2.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
+index c659e18b358b..cdabff97c1ea 100644
+--- a/drivers/media/usb/dvb-usb/technisat-usb2.c
++++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
+@@ -49,6 +49,7 @@ MODULE_PARM_DESC(disable_led_control,
+ 		"disable LED control of the device (default: 0 - LED control is active).");
+ 
+ /* device private data */
++#define IR_MAX_BUFFER_INDEX	63
+ struct technisat_usb2_state {
+ 	struct dvb_usb_device *dev;
+ 	struct delayed_work green_led_work;
+@@ -56,7 +57,7 @@ struct technisat_usb2_state {
+ 
+ 	u16 last_scan_code;
+ 
+-	u8 buf[64];
++	u8 buf[IR_MAX_BUFFER_INDEX + 1];
+ };
+ 
+ /* debug print helpers */
+@@ -655,7 +656,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
+ #endif
+ 
+ 	ev.pulse = 0;
+-	while (1) {
++	while (b <= (buf + IR_MAX_BUFFER_INDEX)) {
+ 		ev.pulse = !ev.pulse;
+ 		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
+ 		ir_raw_event_store(d->rc_dev, &ev);
+-- 
+2.11.0
 
