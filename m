@@ -2,122 +2,119 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC9C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2826FC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049BF218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562173921;
-	bh=436WDhYAGRaHC7DhWZalpPfSr0ODNk1419c0VWx8viE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DbNVfYAZ6mg+Z/hxBmmeItY9+G5vGTlwBeR4a8OkIeQSkK7ozXIZDV96142aFDV6D
-	 6IaWLxSGoIyt0ORZqanoVxSI97v4e8o7hzpjtsv7g1QhD0nbCcxRPkxBZoumqIZ/ld
-	 foA3SA55UFvVTTgkpES1cvWpPgeFHj9o3GP+Mp2k=
+	by mail.kernel.org (Postfix) with ESMTP id 0291721881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:14:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UX5GJ5a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfGCRL7 (ORCPT
+        id S1726997AbfGCROv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfGCRL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:11:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5575A2187F;
-        Wed,  3 Jul 2019 17:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562173917;
-        bh=436WDhYAGRaHC7DhWZalpPfSr0ODNk1419c0VWx8viE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LW8bdLtCYoDfg6i3v8/Zb0LcmNqE8rpNUBgIps/4onsP5WYZ8jFkGmxdI9HoGhFV/
-         0d/AgJ6q/XRAimimUZT/3XK7cS2LB9i7IFiLCpLtrxyTMU6j5c6r0990l9bYQUWtk5
-         gCSth1cwabsT5F31+PUYCFKvhk3LouU7MR1EZeZw=
-Date:   Wed, 3 Jul 2019 19:11:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/9] General notification queue with user mmap()'able
- ring buffer [ver #5]
-Message-ID: <20190703171155.GC24672@kroah.com>
-References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
- <156173695061.15137.17196611619288074120.stgit@warthog.procyon.org.uk>
+        Wed, 3 Jul 2019 13:14:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45441 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfGCROv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:14:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id e3so6202661ioc.12;
+        Wed, 03 Jul 2019 10:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nh9dEJ9u2Y4ShTiHFYbydyiw3WYwXZ47VJXMaHvlETk=;
+        b=UX5GJ5a3W8vnXqaG6bYQid9Tk2rxUC2cxFyHfISjXfw3xZRhBp7g5yal7gmi6b+6bi
+         2OLiaKbvjjNWqKVDRvxuLXZeTzOAx7XWNj4cscpT5PGP01nMamx5ZgU+H3IJCmIBzqDU
+         KgQXltDjEnYoX2BhQEahn5u43RU8j9EqAdsuofkq42ucH0lBO56IHtRvRphjKhqKzVoQ
+         9fShBsIyuPVasNQazC/c6i/B7Xou5NXhw9stdppSWRzSsuZsL3sewE8at0IeHbRAE/Pe
+         bYVRthrz3Rfw4iYDW5dX4GLX1rf3ctOZdw1gLtCF2Rxca41XJjSpReslNoHg9O0h4rBq
+         sSXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nh9dEJ9u2Y4ShTiHFYbydyiw3WYwXZ47VJXMaHvlETk=;
+        b=Sf5AYg6N1HXJhPATSZu5PO02y25DkQaU2rukL1Wom47pG2llUUDi8UNgeftCrKR+wD
+         FOFHuAeQTCtEuF8hm0dPWOqwLDm3FvXyKpILA7AqbTcQlGlirmWB3DmTsPN5sYFMEHdV
+         7g5Pz56wV4Q/GUcwBXmrI+st8rKCXK13Bz8VGi41cBs1jhFihOXBItr5fMd5bhsqcbzU
+         6CbAjAx6TeFijKOK5yjMw1y6zywyd1N7xSnK0Jtzbl2z0XiD+tuN76tM4EKrpBfnpeJ7
+         DC1Pz+VLtO/HlPyCm2gi3Dpj23QYibogykhFwFvdLNYK1OA0vCGJzLJg8d5qeKxPEEN6
+         y1sQ==
+X-Gm-Message-State: APjAAAX72VWkPG5O3xQ1K6ES4RhLIw5UxfS4dEjXVshqhwoFvDfWaIk3
+        1cBKpiSnZekyG4jrmM+0RDiREdGcJFRfsFeh7Vo=
+X-Google-Smtp-Source: APXvYqzxSGfndHH5s8QQP6JMhmrjCfpxwk4akPLDTwdab+2QJvkTvQ8scvf2HrUvngz2nLIFp8dcUZexpefSjuHWDW8=
+X-Received: by 2002:a02:8814:: with SMTP id r20mr45482735jai.115.1562174090222;
+ Wed, 03 Jul 2019 10:14:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156173695061.15137.17196611619288074120.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+ <20190703081327.17505-4-andrew.smirnov@gmail.com> <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 3 Jul 2019 10:14:38 -0700
+Message-ID: <CAHQ1cqHfBU92g-P7jDfiWtEr0m-kv5Lw9yZcvUEXYg7OyhURfg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 04:49:10PM +0100, David Howells wrote:
-> Implement a misc device that implements a general notification queue as a
-> ring buffer that can be mmap()'d from userspace.
-> 
-> The way this is done is:
-> 
->  (1) An application opens the device and indicates the size of the ring
->      buffer that it wants to reserve in pages (this can only be set once):
-> 
-> 	fd = open("/dev/watch_queue", O_RDWR);
-> 	ioctl(fd, IOC_WATCH_QUEUE_NR_PAGES, nr_of_pages);
-> 
->  (2) The application should then map the pages that the device has
->      reserved.  Each instance of the device created by open() allocates
->      separate pages so that maps of different fds don't interfere with one
->      another.  Multiple mmap() calls on the same fd, however, will all work
->      together.
-> 
-> 	page_size = sysconf(_SC_PAGESIZE);
-> 	mapping_size = nr_of_pages * page_size;
-> 	char *buf = mmap(NULL, mapping_size, PROT_READ|PROT_WRITE,
-> 			 MAP_SHARED, fd, 0);
-> 
-> The ring is divided into 8-byte slots.  Entries written into the ring are
-> variable size and can use between 1 and 63 slots.  A special entry is
-> maintained in the first two slots of the ring that contains the head and
-> tail pointers.  This is skipped when the ring wraps round.  Note that
-> multislot entries, therefore, aren't allowed to be broken over the end of
-> the ring, but instead "skip" entries are inserted to pad out the buffer.
-> 
-> Each entry has a 1-slot header that describes it:
-> 
-> 	struct watch_notification {
-> 		__u32	type:24;
-> 		__u32	subtype:8;
-> 		__u32	info;
-> 	};
-> 
-> The type indicates the source (eg. mount tree changes, superblock events,
-> keyring changes, block layer events) and the subtype indicates the event
-> type (eg. mount, unmount; EIO, EDQUOT; link, unlink).  The info field
-> indicates a number of things, including the entry length, an ID assigned to
-> a watchpoint contributing to this buffer, type-specific flags and meta
-> flags, such as an overrun indicator.
-> 
-> Supplementary data, such as the key ID that generated an event, are
-> attached in additional slots.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+On Wed, Jul 3, 2019 at 6:51 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On 7/3/2019 11:14 AM, Andrey Smirnov wrote:
+> > Move tasklet_init() call further down in order to simplify error path
+> > cleanup. No functional change intended.
+> >
+> > diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+> > index 4b25b2fa3d02..a7ca2bbe243f 100644
+> > --- a/drivers/crypto/caam/jr.c
+> > +++ b/drivers/crypto/caam/jr.c
+> > @@ -441,15 +441,13 @@ static int caam_jr_init(struct device *dev)
+> >
+> >       jrp = dev_get_drvdata(dev);
+> >
+> > -     tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);
+> > -
+> >       /* Connect job ring interrupt handler. */
+> >       error = request_irq(jrp->irq, caam_jr_interrupt, IRQF_SHARED,
+> >                           dev_name(dev), dev);
+> >       if (error) {
+> >               dev_err(dev, "can't connect JobR %d interrupt (%d)\n",
+> >                       jrp->ridx, jrp->irq);
+> > -             goto out_kill_deq;
+> > +             return error;
+> >       }
+>
+> The caam_jr_interrupt handler can schedule the tasklet so it makes sense
+> to have it be initialized ahead of request_irq. In theory it's possible
+> for an interrupt to be triggered immediately when request_irq is called.
+>
+> I'm not very familiar with the CAAM ip, can you ensure no interrupts are
+> pending in HW at probe time? The "no functional change" part is not obvious.
+>
 
-I don't know if I mentioned this before, but your naming seems a bit
-"backwards" from other subsystems. Should "watch_queue" always be the
-prefix, instead of a mix of prefix/suffix usage?
+Said tasklet will use both jrp->outring and jrp->entinfo array
+initialized after IRQ request call in both versions of the code
+(before/after this patch). AFAICT, the only case where this patch
+would change initialization safety of the original code is if JR was
+scheduled somehow while ORSFx is 0 (no jobs done), which I don't think
+is possible.
 
-Anyway, your call, it's your code :)
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks,
+Andrey Smirnov
