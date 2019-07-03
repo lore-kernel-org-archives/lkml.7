@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96704C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EAAC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D780218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2256E2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgtlEcC2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlCjbJ7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfGCQbZ (ORCPT
+        id S1727414AbfGCQbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:31:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35886 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCQbY (ORCPT
+        Wed, 3 Jul 2019 12:31:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43367 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfGCQbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:31:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so1517542pgg.3;
-        Wed, 03 Jul 2019 09:31:24 -0700 (PDT)
+        Wed, 3 Jul 2019 12:31:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cl9so1514256plb.10;
+        Wed, 03 Jul 2019 09:31:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=4eVFCV4n8ApumpPcE82E9lpvBLXu1lzKnvoK5FcLU+s=;
-        b=GgtlEcC2dn2vunTVRLqIxAI2DUHYqdIi5ZsdJHwRsqXsoXkbGLC8dMobe9pPOxj6wQ
-         4ai1Y7Zuk3ZZUWods2gUe2Kg5Qh9HAbdLPFBKzLFMp7KlcpPFlDUTRohsIskgn6Qf3OT
-         h9ozLwVSkhosDGmADyXD6oFaXMoqBsvlYOhv2uAf2MCl/mkU+s+YIDb/rwOEDjK0Drnf
-         /aVc+CFMwvG6dUCWi1tOodrbpivs4Aix26uZxGO9SZxhLl544nBEXH6r1+xllmiaN34D
-         CcnRkJCxfXT/O5vrwOWwcBcxun5GzQEclZCaJTjtcMVaITGRyQETORT8VzzfDtIjVr06
-         l8YA==
+        bh=BLFyaOdYHKpWV9FodMEilP4BpCc1KRMqeXoJ4Bn9qQI=;
+        b=AlCjbJ7MtXwkZWg+ypGc07u3/sC1nbMOJ8pEO5q+VEHTZBwvHb06fTFslWxyQ22Kim
+         /JSSehyKi4FfMiruBoB7Cd6WDbBgGoZ9PRw9MarGNHYr7+aHM2jfkRHgQc36DK3QUJoh
+         Q3HsGcGbheFG0auroFWtfzLDltLZIyptxdgb3qHtVox3pfapbtKigAuiKPRt/HX8g/nS
+         w8ZOp66dTc3vyWerfl8XSOtKN0k+R8hbl98ByFED8LNgEchZh+YOGM++1CFfAVrtUzHE
+         cl4aWnP9O5Ms9C+GXpvWAOZHL+Sy/G7jRgXc7UYdP2nEw6Iu2JHM5mLkKYvkrtbQrfFE
+         Fv/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4eVFCV4n8ApumpPcE82E9lpvBLXu1lzKnvoK5FcLU+s=;
-        b=giaLkun+9kqAgMetc9KO040ZsNcLtYJnc2JCOPv4a1ICpnUUGF22nOuh7W1FdB45WY
-         gdoW0g80nAfIJz+Zjw1RV3SyDQv5fvfaP0BLbDQrK5aesApSBwjuh6/Zx2gUxhj4pBKN
-         rB3DLqK5+6eMbfn3i1AKFb7C025ouaT7YkQgHj4PgM0xhAYOIXD57gTziWUwXdil7Yca
-         6BPslD9iZKJyIaJrItUm2LAqsE9qVg9sioHi3MxHgMlkT4C0wgIXNlUyScmPSyHWBwaH
-         gU+oTCJ65jx1RYZF+NEUXJdNdyI156o3CVoFRKOUs5vXo2noyDbvOPSRPCaqMeHgpUK8
-         0cWQ==
-X-Gm-Message-State: APjAAAWD962RtjRhKApFn7nC0FhWab6HuO3Ih8puHUkNeJsUizOmBZrx
-        PT0wIYQUo79lC17mCXisq5A=
-X-Google-Smtp-Source: APXvYqz6TnR4jSf80DCJXCRS9ctmpPhnaJe7PWy59NW0J+xyRYKw94exyXX6TzbPF1bt/58ppLzbyw==
-X-Received: by 2002:a63:7945:: with SMTP id u66mr38055983pgc.127.1562171484199;
-        Wed, 03 Jul 2019 09:31:24 -0700 (PDT)
+        bh=BLFyaOdYHKpWV9FodMEilP4BpCc1KRMqeXoJ4Bn9qQI=;
+        b=OpF+ckMVnAjJ2BB6kqA8VMtnyphZ8vvdIH7hexdOb3m7iLfiOns2KYC5RqYt1tSeSr
+         yohRtmvVU89WiOTUEar2gILH2TYb/TA70rkH/PDmCllukAlWt3cIFEOJZKpuajRbzPGx
+         13D4aVrf58DxnJ1sGRokG7uZmFKoPKfndwSwAWHAQ8vM2+Oh81rh7h6nZNZR7zX3dfuW
+         btJpht6oEwVvtNnK/PkEy4HC93BFdqb/+hbEnOkLfG2cB3v0CKJrvO0mVoYPVT5C1VaF
+         rnq2f7quvaB3ENisC9KGo+MH0tCAyeySRUJO78/7Jdz3EvqmOYWvdTWmqhXaAZP0Bczw
+         RmlQ==
+X-Gm-Message-State: APjAAAX8WJ8NqrhNpvzUMHqlioNKvfwDy2FgDwq4AY/8ojx2XRI2d/lS
+        uFggAgGX4cGLPN/h3H1YUFc=
+X-Google-Smtp-Source: APXvYqwB1yONZbpLsiO8fKoAxYuHi2PoBLN99OgnxiiHvQC7nKcQNrM1uZX4uXa5EyXbJbqxxClKew==
+X-Received: by 2002:a17:902:9896:: with SMTP id s22mr31237253plp.4.1562171494548;
+        Wed, 03 Jul 2019 09:31:34 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h1sm5206544pfo.152.2019.07.03.09.31.21
+        by smtp.googlemail.com with ESMTPSA id q3sm2456747pgv.21.2019.07.03.09.31.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:31:23 -0700 (PDT)
+        Wed, 03 Jul 2019 09:31:34 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     "J . Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 28/35] ext4: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:31:16 +0800
-Message-Id: <20190703163116.710-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 29/35] nfsd: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:31:26 +0800
+Message-Id: <20190703163126.761-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,26 +81,28 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- fs/ext4/xattr.c | 3 +--
+ fs/nfsd/nfscache.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index 491f9ee4040e..d09040df7014 100644
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -1898,11 +1898,10 @@ ext4_xattr_block_set(handle_t *handle, struct inode *inode,
- 
- 			unlock_buffer(bs->bh);
- 			ea_bdebug(bs->bh, "cloning");
--			s->base = kmalloc(bs->bh->b_size, GFP_NOFS);
-+			s->base = kmemdup(BHDR(bs->bh), bs->bh->b_size, GFP_NOFS);
- 			error = -ENOMEM;
- 			if (s->base == NULL)
- 				goto cleanup;
--			memcpy(s->base, BHDR(bs->bh), bs->bh->b_size);
- 			s->first = ENTRY(header(s->base)+1);
- 			header(s->base)->h_refcount = cpu_to_le32(1);
- 			s->here = ENTRY(s->base + offset);
+diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+index da52b594362a..c0226f0281af 100644
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -533,13 +533,12 @@ nfsd_cache_update(struct svc_rqst *rqstp, int cachetype, __be32 *statp)
+ 	case RC_REPLBUFF:
+ 		cachv = &rp->c_replvec;
+ 		bufsize = len << 2;
+-		cachv->iov_base = kmalloc(bufsize, GFP_KERNEL);
++		cachv->iov_base = kmemdup(statp, bufsize, GFP_KERNEL);
+ 		if (!cachv->iov_base) {
+ 			nfsd_reply_cache_free(b, rp);
+ 			return;
+ 		}
+ 		cachv->iov_len = bufsize;
+-		memcpy(cachv->iov_base, statp, bufsize);
+ 		break;
+ 	case RC_NOCACHE:
+ 		nfsd_reply_cache_free(b, rp);
 -- 
 2.11.0
 
