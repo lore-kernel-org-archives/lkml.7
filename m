@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3F0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44517C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4971221881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CAF2189F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120130;
-	bh=ELkTw3wZi3L1EYVVesXt+nSyIepduEEIfGOW6PxZqIc=;
+	s=default; t=1562120136;
+	bh=9j/jU9tlExDPyT0raXIiYsUGaZECYufQ8Ge/GwJO1nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMO3fkxfYqqVDZYBvEa+OLJygGAe20iOgWDOtdjq/pb18RXmVZLbKIUADvAxYgzpc
-	 gJczt5eLxleCnGF6g/TDLDm5AojhtFL25w5Q5ge9/diZmLmfMEkPqnSDMPH/iWEWFf
-	 1adl0S4xnr4K7XoHDKQJmTRe0v4iIe36eflDgfNA=
+	b=B1G3+FXKmiTaRZuti1EzgkPs+IxVkcCMhj20ep9V2SNF9TSfB5sEztije8RdgRgD7
+	 Uuc/esEZOMwYou0wwZUgevZT8wXE7SwgQuUd17hNjZ2WSaz7WDlt8twgTRIsIK3bmO
+	 f+kD4zFKp4JNwpa+HHp+Av7r/QfOGr1tmG2uKAeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfGCCP2 (ORCPT
+        id S1727611AbfGCCPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfGCCPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:23 -0400
+        id S1727589AbfGCCPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1660F2189E;
-        Wed,  3 Jul 2019 02:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D45021881;
+        Wed,  3 Jul 2019 02:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120122;
-        bh=ELkTw3wZi3L1EYVVesXt+nSyIepduEEIfGOW6PxZqIc=;
+        s=default; t=1562120132;
+        bh=9j/jU9tlExDPyT0raXIiYsUGaZECYufQ8Ge/GwJO1nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhCju3dTby1h3aEBZuWID49PLKnoNtXzPFOHkGK/DKPINAKcuo9LWfshQZS03KT+9
-         HXu0/xXMBOwfax5ng+8nOuANuoE+6Q+y4Hz9wUm4rxhmt1UqVueL5hJF3dev5rdkLF
-         HxfOmJLN5w6AmtP4hSZ0EMcKOH03rAxo4vKvkV2s=
+        b=DOjZRbchS23SJTD0rf1gLLjwFUtUU+8+kRAnak5EhHiaB3CO0gay6hby38BIHLnHw
+         ohPkzCdJRyrOsHJD29pPsHfVTteD3A1jsJZ27qTSlg8fy42+dvYsZ49OD5lu2D+EPY
+         VE2LaNLS/K1/1IbMBoWC+Xb0yVQfjdSoi53Na+FU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 07/39] efi/bgrt: Drop BGRT status field reserved bits check
-Date:   Tue,  2 Jul 2019 22:14:42 -0400
-Message-Id: <20190703021514.17727-7-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>,
+        Young Xiao <92siuyang@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 10/39] perf/core: Fix perf_sample_regs_user() mm check
+Date:   Tue,  2 Jul 2019 22:14:45 -0400
+Message-Id: <20190703021514.17727-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -59,45 +69,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit a483fcab38b43fb34a7f12ab1daadd3907f150e2 ]
+[ Upstream commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c ]
 
-Starting with ACPI 6.2 bits 1 and 2 of the BGRT status field are no longer
-reserved. These bits are now used to indicate if the image needs to be
-rotated before being displayed.
+perf_sample_regs_user() uses 'current->mm' to test for the presence of
+userspace, but this is insufficient, consider use_mm().
 
-The first device using these bits has now shown up (the GPD MicroPC) and
-the reserved bits check causes us to reject the valid BGRT table on this
-device.
+A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
+PF_KTHREAD after it sets the new ->mm but before it drops to userspace
+for the first time.
 
-Rather then changing the reserved bits check, allowing only the 2 new bits,
-instead just completely remove it so that we do not end up with a similar
-problem when more bits are added in the future.
+Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Reported-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi-bgrt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
-index a2384184a7de..b07c17643210 100644
---- a/drivers/firmware/efi/efi-bgrt.c
-+++ b/drivers/firmware/efi/efi-bgrt.c
-@@ -47,11 +47,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
- 		       bgrt->version);
- 		goto out;
- 	}
--	if (bgrt->status & 0xfe) {
--		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
--		       bgrt->status);
--		goto out;
--	}
- 	if (bgrt->image_type != 0) {
- 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
- 		       bgrt->image_type);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dc7dead2d2cc..f33bd0a89391 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5913,7 +5913,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (current->mm) {
++	} else if (!(current->flags & PF_KTHREAD)) {
+ 		perf_get_regs_user(regs_user, regs, regs_user_copy);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
 -- 
 2.20.1
 
