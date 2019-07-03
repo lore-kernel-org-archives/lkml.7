@@ -2,227 +2,237 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386A3C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A84C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C58521882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC5421882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfGCGv0 (ORCPT
+        id S1727204AbfGCGvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:51:26 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39342 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfGCGvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:51:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ACEC2200351;
-        Wed,  3 Jul 2019 08:51:18 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 19643200349;
-        Wed,  3 Jul 2019 08:51:14 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DED2D402EB;
-        Wed,  3 Jul 2019 14:51:08 +0800 (SGT)
-From:   shengjiu.wang@nxp.com
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, alsa-devel@alsa-project.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after xrun
-Date:   Wed,  3 Jul 2019 14:42:05 +0800
-Message-Id: <c29639336b6b32fa781bdddad30287f8b76d5e0b.1562136119.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1562136119.git.shengjiu.wang@nxp.com>
-References: <cover.1562136119.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1562136119.git.shengjiu.wang@nxp.com>
-References: <cover.1562136119.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 3 Jul 2019 02:51:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39500 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726684AbfGCGvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 02:51:54 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 618B85CE45AEB27AABA8;
+        Wed,  3 Jul 2019 14:51:46 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
+ 14:51:36 +0800
+Subject: Re: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
+To:     Gao Xiang <gaoxiang25@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>
+References: <20190630185846.16624-1-hsiangkao@aol.com>
+ <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
+ <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
+ <570e12d3-985e-3d5a-d7d4-cf0a072442fe@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <9a199c2a-31be-5768-c5bd-dba69b99d99b@huawei.com>
+Date:   Wed, 3 Jul 2019 14:51:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <570e12d3-985e-3d5a-d7d4-cf0a072442fe@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Hi xiang,
 
-There is chip errata ERR008000, the reference doc is
-(https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf),
+On 2019/7/3 14:06, Gao Xiang wrote:
+> Hi Chao,
+> 
+> On 2019/7/3 10:09, Gao Xiang wrote:
+>>
+>>
+>> On 2019/7/3 9:50, Chao Yu wrote:
+>>> On 2019/7/1 2:58, Gao Xiang wrote:
+>>>> From: Gao Xiang <gaoxiang25@huawei.com>
+>>>>
+>>>> Like all lz77-based algrithms, lz4 has a dynamically populated
+>>>> ("sliding window") dictionary and the maximum lookback distance
+>>>> is 65535. Therefore the number of bounced pages could be limited
+>>>> by erofs based on this property.
+>>>>
+>>>> However, just now we observed some lz4 sequences in the extreme
+>>>> case cannot be decompressed correctly after this feature is enabled,
+>>>> the root causes after analysis are clear as follows:
+>>>> 1) max bounced pages should be 17 rather than 16 pages;
+>>>> 2) considering the following case, the broken implementation
+>>>>    could reuse unsafely in advance (in other words, reuse it
+>>>>    less than a safe distance),
+>>>>    0 1 2 ... 16 17 18 ... 33 34
+>>>>    b             p  b         b
+>>>>    note that the bounce page that we are concerned was allocated
+>>>>    at 0, and it reused at 18 since page 17 exists, but it mis-reused
+>>>>    at 34 in advance again, which causes decompress failure.
+>>>>
+>>>> This patch resolves the issue by introducing a bitmap to mark
+>>>> whether the page in the same position of last round is a bounced
+>>>> page or not, and a micro stack data structure to store all
+>>>> available bounced pages.
+>>>>
+>>>> Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+>>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>>> ---
+>>>>  drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
+>>>>  1 file changed, 28 insertions(+), 22 deletions(-)
+>>>>
+>>>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+>>>> index 80f1f39719ba..1fb0abb98dff 100644
+>>>> --- a/drivers/staging/erofs/decompressor.c
+>>>> +++ b/drivers/staging/erofs/decompressor.c
+>>>> @@ -13,7 +13,7 @@
+>>>>  #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
+>>>>  #endif
+>>>>  
+>>>> -#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
+>>>> +#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
+>>>>  #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
+>>>>  #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
+>>>>  #endif
+>>>> @@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>>>  	const unsigned int nr =
+>>>>  		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>>>>  	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
+>>>> -	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>>>> -					  BITS_PER_LONG)] = { 0 };
+>>>> +	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>>>> +					   BITS_PER_LONG)] = { 0 };
+>>>>  	void *kaddr = NULL;
+>>>> -	unsigned int i, j, k;
+>>>> +	unsigned int i, j, top;
+>>>>  
+>>>> -	for (i = 0; i < nr; ++i) {
+>>>> +	top = 0;
+>>>> +	for (i = j = 0; i < nr; ++i, ++j) {
+>>>>  		struct page *const page = rq->out[i];
+>>>> +		struct page *victim;
+>>>>  
+>>>> -		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
+>>>> -		if (availables[j])
+>>>> -			__set_bit(j, unused);
+>>>> +		if (j >= LZ4_MAX_DISTANCE_PAGES)
+>>>> +			j = 0;
+>>>> +
+>>>> +		/* 'valid' bounced can only be tested after a complete round */
+>>>> +		if (test_bit(j, bounced)) {
+>>>> +			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
+>>>> +			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
+>>>> +			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
+>>>
+>>> Maybe we can change 'i - LZ4_MAX_DISTANCE_PAGES' to 'j' directly for better
+>>> readability.
+>>
+>> OK, I think they are equivalent as well, will change for readability, retest and resend.
+>> Thanks for your suggestion :)
+> 
+> I tested again and I observed that using j broke the logic and I think we cannot use j
+> to replace i - LZ4_MAX_DISTANCE_PAGES.
+> 
+> Since bounced pages was marked according to the last round rather than the first round,
+> we cannot directly use the first round pages to push into the stack, e.g.
 
-The issue is "While using ESAI transmit or receive and
-an underrun/overrun happens, channel swap may occur.
-The only recovery mechanism is to reset the ESAI."
+Yes, I can understand that, so the bitmap only indicate page in previous round
+is a new bounced page or a referenced bounced page, using page at last round is
+safe.
 
-This issue exist in imx3/imx5/imx6(partial) series.
+Anyway, thanks for the explanation below, and go ahead with current
+implementation. :)
 
-In this commit add a tasklet to handle reset of ESAI
-after xrun happens to recover the channel swap.
+Thanks,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_esai.c | 76 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
-
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index 20039ae9893b..8c92e49ad6d8 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -32,6 +32,7 @@
-  * @extalclk: esai clock source to derive HCK, SCK and FS
-  * @fsysclk: system clock source to derive HCK, SCK and FS
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-+ * @task: tasklet to handle the reset operation
-  * @fifo_depth: depth of tx/rx FIFO
-  * @slot_width: width of each DAI slot
-  * @slots: number of slots
-@@ -42,6 +43,7 @@
-  * @sck_div: if using PSR/PM dividers for SCKx clock
-  * @slave_mode: if fully using DAI slave mode
-  * @synchronous: if using tx/rx synchronous mode
-+ * @reset_at_xrun: flags for enable reset operaton
-  * @name: driver name
-  */
- struct fsl_esai {
-@@ -53,6 +55,7 @@ struct fsl_esai {
- 	struct clk *extalclk;
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
-+	struct tasklet_struct task;
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
-@@ -65,6 +68,7 @@ struct fsl_esai {
- 	bool sck_div[2];
- 	bool slave_mode;
- 	bool synchronous;
-+	bool reset_at_xrun;
- 	char name[32];
- };
- 
-@@ -73,8 +77,16 @@ static irqreturn_t esai_isr(int irq, void *devid)
- 	struct fsl_esai *esai_priv = (struct fsl_esai *)devid;
- 	struct platform_device *pdev = esai_priv->pdev;
- 	u32 esr;
-+	u32 saisr;
- 
- 	regmap_read(esai_priv->regmap, REG_ESAI_ESR, &esr);
-+	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
-+
-+	if ((saisr & (ESAI_SAISR_TUE | ESAI_SAISR_ROE)) &&
-+	    esai_priv->reset_at_xrun) {
-+		dev_dbg(&pdev->dev, "reset module for xrun\n");
-+		tasklet_schedule(&esai_priv->task);
-+	}
- 
- 	if (esr & ESAI_ESR_TINIT_MASK)
- 		dev_dbg(&pdev->dev, "isr: Transmission Initialized\n");
-@@ -634,10 +646,17 @@ static void fsl_esai_trigger_start(struct fsl_esai *esai_priv, bool tx)
- 			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
- 			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
-+
-+	/* Enable Exception interrupt */
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
-+			   ESAI_xCR_xEIE_MASK, ESAI_xCR_xEIE);
- }
- 
- static void fsl_esai_trigger_stop(struct fsl_esai *esai_priv, bool tx)
- {
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
-+			   ESAI_xCR_xEIE_MASK, 0);
-+
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 			   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-@@ -652,6 +671,53 @@ static void fsl_esai_trigger_stop(struct fsl_esai *esai_priv, bool tx)
- 			   ESAI_xFCR_xFR, 0);
- }
- 
-+static void fsl_esai_reset(unsigned long arg)
-+{
-+	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
-+	u32 saisr, tfcr, rfcr;
-+
-+	/* save the registers */
-+	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
-+	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
-+
-+	/* stop the tx & rx */
-+	fsl_esai_trigger_stop(esai_priv, 1);
-+	fsl_esai_trigger_stop(esai_priv, 0);
-+
-+	/* reset the esai, and restore the registers */
-+	fsl_esai_init(esai_priv);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+			   ESAI_xCR_xPR_MASK,
-+			   ESAI_xCR_xPR);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+			   ESAI_xCR_xPR_MASK,
-+			   ESAI_xCR_xPR);
-+
-+	/* restore registers by regcache_sync */
-+	fsl_esai_register_restore(esai_priv);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-+			   ESAI_xCR_xPR_MASK, 0);
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-+			   ESAI_xCR_xPR_MASK, 0);
-+
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
-+			   ESAI_PRRC_PDC_MASK,
-+			   ESAI_PRRC_PDC(ESAI_GPIO));
-+	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
-+			   ESAI_PCRC_PC_MASK,
-+			   ESAI_PCRC_PC(ESAI_GPIO));
-+
-+	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
-+
-+	/* restart tx / rx, if they already enabled */
-+	if (tfcr & ESAI_xFCR_xFEN)
-+		fsl_esai_trigger_start(esai_priv, 1);
-+	if (rfcr & ESAI_xFCR_xFEN)
-+		fsl_esai_trigger_start(esai_priv, 0);
-+}
-+
- static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
- 			    struct snd_soc_dai *dai)
- {
-@@ -856,6 +922,10 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 	esai_priv->pdev = pdev;
- 	snprintf(esai_priv->name, sizeof(esai_priv->name), "%pOFn", np);
- 
-+	if (of_device_is_compatible(np, "fsl,vf610-esai") ||
-+	    of_device_is_compatible(np, "fsl,imx35-esai"))
-+		esai_priv->reset_at_xrun = true;
-+
- 	/* Get the addresses and IRQ */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	regs = devm_ioremap_resource(&pdev->dev, res);
-@@ -955,6 +1025,9 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	tasklet_init(&esai_priv->task, fsl_esai_reset,
-+		     (unsigned long)esai_priv);
-+
- 	pm_runtime_enable(&pdev->dev);
- 
- 	regcache_cache_only(esai_priv->regmap, true);
-@@ -968,7 +1041,10 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 
- static int fsl_esai_remove(struct platform_device *pdev)
- {
-+	struct fsl_esai *esai_priv = platform_get_drvdata(pdev);
-+
- 	pm_runtime_disable(&pdev->dev);
-+	tasklet_kill(&esai_priv->task);
- 
- 	return 0;
- }
--- 
-2.21.0
-
+> 
+> 1)
+>     0 1 2 ... 16 17 18 ... 33 34
+>     p             b            b
+> 
+> bounce page could be allocated from rq->out[17], and we could reuse it from rq->out[34], which
+> is not equal to rq->out[0].
+> 
+> 2)
+>     0 1 2 ... 16 17 18  19  ... 33 34 35 36
+>       b              p   b                b
+> allocated in rq->out[1] j = 1, reuse it in rq->out[19] j = 2, reuse it again in rq->out[36] j = 2,
+> which is not equal to rq->out[2].
+> 
+> I think the original patch is ok, and it cannot be replaced to rq->out[j].
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>>
+>>> Otherwise, it looks good to me.
+>>>
+>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>>
+>>> Thanks,
+>>>
+>>>> +		}
+>>>>  
+>>>>  		if (page) {
+>>>> +			__clear_bit(j, bounced);
+>>>>  			if (kaddr) {
+>>>>  				if (kaddr + PAGE_SIZE == page_address(page))
+>>>>  					kaddr += PAGE_SIZE;
+>>>> @@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>>>  			continue;
+>>>>  		}
+>>>>  		kaddr = NULL;
+>>>> +		__set_bit(j, bounced);
+>>>>  
+>>>> -		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
+>>>> -		if (k < LZ4_MAX_DISTANCE_PAGES) {
+>>>> -			j = k;
+>>>> -			get_page(availables[j]);
+>>>> +		if (top) {
+>>>> +			victim = availables[--top];
+>>>> +			get_page(victim);
+>>>>  		} else {
+>>>> -			DBG_BUGON(availables[j]);
+>>>> -
+>>>>  			if (!list_empty(pagepool)) {
+>>>> -				availables[j] = lru_to_page(pagepool);
+>>>> -				list_del(&availables[j]->lru);
+>>>> -				DBG_BUGON(page_ref_count(availables[j]) != 1);
+>>>> +				victim = lru_to_page(pagepool);
+>>>> +				list_del(&victim->lru);
+>>>> +				DBG_BUGON(page_ref_count(victim) != 1);
+>>>>  			} else {
+>>>> -				availables[j] = alloc_pages(GFP_KERNEL, 0);
+>>>> -				if (!availables[j])
+>>>> +				victim = alloc_pages(GFP_KERNEL, 0);
+>>>> +				if (!victim)
+>>>>  					return -ENOMEM;
+>>>>  			}
+>>>> -			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
+>>>> +			victim->mapping = Z_EROFS_MAPPING_STAGING;
+>>>>  		}
+>>>> -		rq->out[i] = availables[j];
+>>>> -		__clear_bit(j, unused);
+>>>> +		rq->out[i] = victim;
+>>>>  	}
+>>>>  	return kaddr ? 1 : 0;
+>>>>  }
+>>>>
+> .
+> 
