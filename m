@@ -2,193 +2,142 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7362EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5802DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8FC218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2A7218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J23ACrWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGCNTF (ORCPT
+        id S1727247AbfGCNTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:19:05 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:56569 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfGCNTE (ORCPT
+        Wed, 3 Jul 2019 09:19:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45512 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfGCNTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:19:04 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N3bCH-1iiyh62CiR-010fKK; Wed, 03 Jul 2019 15:18:59 +0200
-Subject: [priv] Re: [PATCH 1/2] serial/8250: Add support for NI-Serial
- PXI/PXIe+485 devices.
-To:     jeyentam <je.yen.tam@ni.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190702032323.28967-1-je.yen.tam@ni.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <435fe9ba-04c9-e797-f750-4eebffa82fe9@metux.net>
-Date:   Wed, 3 Jul 2019 15:18:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190702032323.28967-1-je.yen.tam@ni.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ZraLU6jp07TzmqFrdpAh1/pJG17eTeKa+NEbflnuowq2gylTRPQ
- cTTFuZzCqz9imexlEL1Y/bIj8yC8vx6t9OrG0l715jNll3ZULqckRboS6wGNt3cT74YuhNb
- jzsw/ROntEX2H2g9HZ6nuYVpSpbc3rBI4HAqK/d+JfM6TWPqPY9ABQ9qfoJs5LWPNQSwj+t
- AqBJmVMDza0OxUtJvrtKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9nJDnKfsRV8=:nIyfrdfVogZnxdtcaBIs4o
- iu+SAjT44lhiCnv9gxvPdu2+W5JKUu12hR2fJ4yh9IMIys+QNX60HDEY4XOPuBX8CFn2Eg4wa
- k5qDraTDTYN7yMCoB0BTMgh0awxd3gde6enVv3z9H8O64saq9b7+DpXNGsyrwAHx9LSck4RL+
- 6sLQlAJF79/pSG8Rj307n7hIZhiPI42OeRPUkoVmeT6sZRbr61WseJwJVxZmCNUnTGuMTmfDh
- Yin29vpbnUvFUSPkHv6aJkZqHOyC+fi/MP4ha9NGndP7P27ZrqqgJp4vbQfe2Kp6E+SGXhIxw
- 8KVPWJC4NM2K+oi/TYv13S3Y8S0kSSF0SUV/cDWSQmEIOy5K3Evs0O1Jh/OKeLI4e89pcZjVY
- TLNehBYgWABVR45zFJnAkisWmdsvjaYnlyynTaWv8+Tj5CQ73Wm2W8da2gAwbBNzEys9vs++X
- 94RndhFFdVbXpqOEj6/+qAkykpGRWFStjwE1CneLFTujn+KeUT0zsjlctmzMuiRaY96oBlP2d
- gk31gZ1ftIYTClytUHaaGLrWfkwdpfOQoivsvX4PkhQWfwI8/tg7SWj4tujRSMbso78yMdW0C
- JUTY5NF0bsrdGGRYbVhV5DjYLfFFLnu0dPO6z6k5Oqv+15lXynLHp6Y4+cZ7IJne9YRmjTzPt
- XxWRX2Dyo1Nf7FzpuVLmDIUIg59HjJk5CNabWuGwV2ZyX+HelhfDAkoHsYUazyy4S5DE2rHsp
- l5z3yUwMnuBVLVnZ04AISeWda0LmKa792+wThxinV+bv8AXvim3KkKT/zj0=
+        Wed, 3 Jul 2019 09:19:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so1231932pgp.12;
+        Wed, 03 Jul 2019 06:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Cs/Y84YOYpwUFwCANMN2rSejLTzy8FhytWYeNxufTp4=;
+        b=J23ACrWnvxU6RVchPSS8D1IZ0X5EqqEdAtBCpEeFfjySsLy8eOUlRZ2Ib9e8kfkIAI
+         4hPrjfBkURFnS5xXyguQjHab8UJz08M4GICEikAnf8C4HVhtflZwe+iEAyI916Bp7xCp
+         Uyy5HafGi/CMbBf9/hMeX3Wy+ypJ1SCuiTTeif5nIVFJwtWVChnzkWEnZ8yQej/u+X+5
+         ipQNmubxRyJqPisyZUi1W+eCBYR6JJ6Oq8KLh9//MfIv4z0kBsghzzqTmDDzelzGL9Oq
+         5KpxxynGrsvqaoUdcbJboG1FgfvryROvJOftCwi1G1O+305fAL5pQGfGiWiMrrLzWdat
+         YNfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Cs/Y84YOYpwUFwCANMN2rSejLTzy8FhytWYeNxufTp4=;
+        b=T6lx0jxDtQlSXc/hVUaoltl2TACKgB/FbjKlNtOJIhjcVzC5vVd/aMK6g5DLyQktz7
+         r7QIhUMuOO8qRI5OGoAJKX84Eg6qHDqfse//Oj447bUFyC+yen28PQoHkFO72wY263ib
+         bRd19Fy54n9peaFbYjCb+acuKqx0WCkgz9qM73IWmGOMm5jHo7C9H9DLtIuDEHyfLlvf
+         afwnZnUmpDTTC4rxHGBM9egqlzd1WlXgnuDRQgN8NGBxdF3uDf1B/Wjk7cC9RKLuywc3
+         o93Z392bAHddvotwVGRgAGPeipotcteY6FFs2VtcP0F1zh1C+N2o5kDPyQji1TMWrIJa
+         H3VQ==
+X-Gm-Message-State: APjAAAVI38/R3t7K3/6/W62ndV2kZcU+02n6OnmtuKwD3dUq0P5bRWuT
+        8sw/PlqzfxenSHxbImZTlQA=
+X-Google-Smtp-Source: APXvYqzPzysZ56Q6AcFY7zWWlRoN9Qnz+WihOdMtsntXZEjXPv/4u6YfQKqJ2lTQ4mZOBwJWEXmxiw==
+X-Received: by 2002:a63:b346:: with SMTP id x6mr20061918pgt.218.1562159957588;
+        Wed, 03 Jul 2019 06:19:17 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id 135sm2534772pfb.137.2019.07.03.06.19.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 06:19:17 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH 19/30] platform/x86: Use kmemdup rather than duplicating its implementation
+Date:   Wed,  3 Jul 2019 21:19:08 +0800
+Message-Id: <20190703131908.26138-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.19 05:23, jeyentam wrote:
+kmemdup is introduced to duplicate a region of memory in a neat way.
+Rather than kmalloc/kzalloc + memset, which the programmer needs to
+write the size twice (sometimes lead to mistakes), kmemdup improves
+readability, leads to smaller code and also reduce the chances of mistakes.
+Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
 
-Hi,
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c      |  3 +--
+ drivers/platform/x86/thinkpad_acpi.c | 17 +++++++----------
+ 2 files changed, 8 insertions(+), 12 deletions(-)
 
-better writing to you personally, off-list.
-
-> Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
-> 
-> Signed-off-by: jeyentam <je.yen.tam@ni.com>
-                  ^^^^^^
-maybe it would be nice to have your real name here.
-
-> @@ -1,10 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - *  Probe module for 8250/16550-type PCI serial ports.
-> + *	Probe module for 8250/16550-type PCI serial ports.
->   *
-> - *  Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
-> + *	Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
->   *
-> - *  Copyright (C) 2001 Russell King, All Rights Reserved.
-> + *	Copyright (C) 2001 Russell King, All Rights Reserved.
->   */
->  #undef DEBUG
->  #include <linux/module.h>
-
-Why all these whitespace-only changes ? I doubt that anybody seriously
-wanna review that.
-
-As I know Greg, he's doesn't like whitespace-only changes at all, unless
-you give him an really good reason for it.
-
-> @@ -730,8 +730,16 @@ static int pci_ni8430_init(struct pci_dev *dev)
->  }
->  
->  /* UART Port Control Register */
-> -#define NI8430_PORTCON	0x0f
-> -#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
-
-I'd prefer that name change as a separate (previous) patch.
-
-> +#define NI16550_PCR_OFFSET				  0x0f
-> +#define NI16550_PCR_RS422				  0x00
-> +#define NI16550_PCR_ECHO_RS485			  0x01
-> +#define NI16550_PCR_DTR_RS485			  0x02
-> +#define NI16550_PCR_AUTO_RS485			  0x03
-> +#define NI16550_PCR_WIRE_MODE_MASK		  0x03
-> +#define NI16550_PCR_TXVR_ENABLE_BIT		  (1 << 3)
-> +#define NI16550_PCR_RS485_TERMINATION_BIT (1 << 6)
-> +#define NI16550_ACR_DTR_AUTO_DTR		  (0x2 << 3)
-> +#define NI16550_ACR_DTR_MANUAL_DTR		  (0x0 << 3)
-
-you should use the BIT() macro here.
-
-> +static int pci_ni8431_config_rs485(struct uart_port *port,
-> +	struct serial_rs485 *rs485)
-> +{
-> +	u8 pcr, acr;
-> +
-> +	struct uart_8250_port *up;
-> +
-> +	up = container_of(port, struct uart_8250_port, port);
-> +
-> +	acr = up->acr;
-> +
-> +	dev_dbg(port->dev, "ni16550_config_rs485\n");
-
-don't leave in such hackish debug helpers
-
-> +	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
-
-is that indirection really necessary ? (IOW: are there separate
-implementations needed ?)
-
-> +static int pci_ni8431_setup(struct serial_private *priv,
-> +		 const struct pciserial_board *board,
-> +		 struct uart_8250_port *uart, int idx)
-> +{
-> +	u8 pcr, acr;
-> +	struct pci_dev *dev = priv->dev;
-> +	void __iomem *addr;
-> +	unsigned int bar, offset = board->first_offset;
-
-maybe size_t for offset ?
-
-> @@ -1956,6 +2077,87 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
->  		.setup		= pci_ni8430_setup,
->  		.exit		= pci_ni8430_exit,
->  	},
-> +	{
-> +		.vendor		= PCI_VENDOR_ID_NI,
-> +		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
-> +		.subvendor	= PCI_ANY_ID,
-> +		.subdevice	= PCI_ANY_ID,
-> +		.init		= pci_ni8430_init,
-> +		.setup		= pci_ni8430_setup,
-> +		.exit		= pci_ni8430_exit,
-> +	},
-
-We should have a config sym for that, so only those who really need the
-device can enable it.
-
-OTOH, it would be even nicer to have this as an extra module.
-
-
-Nevertheless its good that you NI folks now start making your products
-usable on mainline kernel, instead of this really ridiculous and broken-
-by-design "nikal"/daqmx crap (which even sometimes introduce 0day-
-exploitable leaks allowing remote machine takeover - I've posted one
-@full-disclosure several month ago. One of the reasons why I was banned
-from the forums - criticism in general seems to be disliked there)
-
-Over the recent years, I tried to get some specs on the cRIOs, in order
-to write proper drivers and bring them to mainline (currently these
-boxes might be nice for dumb PLC, but nothing more, and the marketing
-claim "linux support" is just wrong). But there was no way of getting
-anything from NI (not even after several calls with product management
-and development team). And playing around w/ LV was in no way any
-option. So I had to tell my client that cRIOs are completely unusable
-for him, and some >$1M purchases went off the table.
-(I've rarely seen any company so hostile against Linux support like NI)
-
-
-good luck,
-
---mtx
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 9b18a184e0aa..472b317ad814 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -260,12 +260,11 @@ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	 * Copy to dma capable address otherwise memory corruption occurs as
+ 	 * bios has to be able to access it.
+ 	 */
+-	input.pointer = kzalloc(args.length, GFP_DMA | GFP_KERNEL);
++	input.pointer = kmemdup(args.pointer, args.length, GFP_DMA | GFP_KERNEL);
+ 	input.length = args.length;
+ 	if (!input.pointer)
+ 		return -ENOMEM;
+ 	phys_addr = virt_to_phys(input.pointer);
+-	memcpy(input.pointer, args.pointer, args.length);
+ 
+ 	status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_AGFN,
+ 					phys_addr, 0, &retval);
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 7bde4640ef34..d379bdf98a0f 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3647,22 +3647,19 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		goto err_exit;
+ 
+ 	/* Set up key map */
+-	hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
+-					GFP_KERNEL);
+-	if (!hotkey_keycode_map) {
+-		pr_err("failed to allocate memory for key map\n");
+-		res = -ENOMEM;
+-		goto err_exit;
+-	}
+-
+ 	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+ 					ARRAY_SIZE(tpacpi_keymap_qtable));
+ 	BUG_ON(keymap_id >= ARRAY_SIZE(tpacpi_keymaps));
+ 	dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+ 		   "using keymap number %lu\n", keymap_id);
+ 
+-	memcpy(hotkey_keycode_map, &tpacpi_keymaps[keymap_id],
+-		TPACPI_HOTKEY_MAP_SIZE);
++	hotkey_keycode_map = kmemdup(&tpacpi_keymaps[keymap_id],
++			TPACPI_HOTKEY_MAP_SIZE,	GFP_KERNEL);
++	if (!hotkey_keycode_map) {
++		pr_err("failed to allocate memory for key map\n");
++		res = -ENOMEM;
++		goto err_exit;
++	}
+ 
+ 	input_set_capability(tpacpi_inputdev, EV_MSC, MSC_SCAN);
+ 	tpacpi_inputdev->keycodesize = TPACPI_HOTKEY_MAP_TYPESIZE;
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.11.0
+
