@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B90C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C019DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E2A20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957AE21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120570;
-	bh=x+xiUEjIlDgPOtEAJJ3ptRrqKRICaQTLBuXdh2m9Fco=;
+	s=default; t=1562120573;
+	bh=/cYx5cUz5hA102Q+olEMurcf0Hc50+refCvKyA+3QYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVqOtCDYLNNjET9NPQ9Wfzkj45FG3xaMoFmOdj1Vnk31efLzGjoBuqegyrxKKARFj
-	 4oPir0fuMizj/RXwKOpPD07U2vqn0weYX2SO9k/KtK3iZhS3kf3LaDVvBFuoWYC8Cy
-	 +lEPwFIYZ3Bd4KkLrlJXzO1FLDP7zmVASE+DcMzc=
+	b=pxCet+2ohn8afdU0gx+KhtuGF+TmGltNOS0BI/9N5fvLiKNC5HFMv24zb72VcbLY6
+	 AcHZQB6R81KFCJTbI/h15+LpV80BdZJ74tZKwBGVoUJx7acr89wpb9TAPVKuifvfKc
+	 m1nNk2FJsx3r7Q1KUJpUtVRlGc822E1nNcsh97Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbfGCCWt (ORCPT
+        id S1727963AbfGCCWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727547AbfGCCPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:24 -0400
+        id S1727539AbfGCCPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AD31218A0;
-        Wed,  3 Jul 2019 02:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C68EE21897;
+        Wed,  3 Jul 2019 02:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120123;
-        bh=x+xiUEjIlDgPOtEAJJ3ptRrqKRICaQTLBuXdh2m9Fco=;
+        s=default; t=1562120121;
+        bh=/cYx5cUz5hA102Q+olEMurcf0Hc50+refCvKyA+3QYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DA4SeyPvJHaBOLn9MmepAe7E7dKs2jNJRz4SSaAmKvlvrVrkL7yUqLkT2yP0nYkqe
-         +M+iDzc8lWVmu5jEYY0X6oRTmSiHeGw6t/XSUC8dK2D5ARI7CXjTF4tO/I4McYPnYf
-         b6qlnK9Df+sJgxRF0d3kH/CwlmbKjqr+cKcXOdjQ=
+        b=ZSm84mIxTq+gslqVUS7V1cOY+jkbCYeTvD0Sf9k38hgr1dH/HkndWVdQhsHUobJH0
+         cunbopfyGtg+kdekNtfc+8PN8swrzmJVSVs7qqLNhVMsSSvVukXn8T0DEvspvoaJ5q
+         XZeiE1sn9KMJVBOhpxTWNXWICIisBVQOJNS8DYEU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ran Wang <ran.wang_1@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 08/39] arm64: dts: ls1028a: Fix CPU idle fail.
-Date:   Tue,  2 Jul 2019 22:14:43 -0400
-Message-Id: <20190703021514.17727-8-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 06/39] clk: ti: clkctrl: Fix returning uninitialized data
+Date:   Tue,  2 Jul 2019 22:14:41 -0400
+Message-Id: <20190703021514.17727-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -58,67 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Wang <ran.wang_1@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 53f2ac9d3aa881ed419054076042898b77c27ee4 ]
+[ Upstream commit 41b3588dba6ef4b7995735a97e47ff0aeea6c276 ]
 
-PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
-indicate CPU State Type: 0 for standby, 1 for power down. In this
-case, we want to select standby for CPU idle feature. But current
-setting wrongly select power down and cause CPU SUSPEND fail every
-time. Need this fix.
+If we do a clk_get() for a clock that does not exists, we have
+_ti_omap4_clkctrl_xlate() return uninitialized data if no match
+is found. This can be seen in some cases with SLAB_DEBUG enabled:
 
-Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Unable to handle kernel paging request at virtual address 5a5a5a5a
+...
+clk_hw_create_clk.part.33
+sysc_notifier_call
+notifier_call_chain
+blocking_notifier_call_chain
+device_add
+
+Let's fix this by setting a found flag only when we find a match.
+
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/clk/ti/clkctrl.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 2896bbcfa3bb..228872549f01 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -28,7 +28,7 @@
- 			enable-method = "psci";
- 			clocks = <&clockgen 1 0>;
- 			next-level-cache = <&l2>;
--			cpu-idle-states = <&CPU_PH20>;
-+			cpu-idle-states = <&CPU_PW20>;
- 		};
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 3325ee43bcc1..626090b59cd7 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -229,6 +229,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+ {
+ 	struct omap_clkctrl_provider *provider = data;
+ 	struct omap_clkctrl_clk *entry;
++	bool found = false;
  
- 		cpu1: cpu@1 {
-@@ -38,7 +38,7 @@
- 			enable-method = "psci";
- 			clocks = <&clockgen 1 0>;
- 			next-level-cache = <&l2>;
--			cpu-idle-states = <&CPU_PH20>;
-+			cpu-idle-states = <&CPU_PW20>;
- 		};
+ 	if (clkspec->args_count != 2)
+ 		return ERR_PTR(-EINVAL);
+@@ -238,11 +239,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
  
- 		l2: l2-cache {
-@@ -53,13 +53,13 @@
- 		 */
- 		entry-method = "arm,psci";
+ 	list_for_each_entry(entry, &provider->clocks, node) {
+ 		if (entry->reg_offset == clkspec->args[0] &&
+-		    entry->bit_offset == clkspec->args[1])
++		    entry->bit_offset == clkspec->args[1]) {
++			found = true;
+ 			break;
++		}
+ 	}
  
--		CPU_PH20: cpu-ph20 {
--			compatible = "arm,idle-state";
--			idle-state-name = "PH20";
--			arm,psci-suspend-param = <0x00010000>;
--			entry-latency-us = <1000>;
--			exit-latency-us = <1000>;
--			min-residency-us = <3000>;
-+		CPU_PW20: cpu-pw20 {
-+			  compatible = "arm,idle-state";
-+			  idle-state-name = "PW20";
-+			  arm,psci-suspend-param = <0x0>;
-+			  entry-latency-us = <2000>;
-+			  exit-latency-us = <2000>;
-+			  min-residency-us = <6000>;
- 		};
- 	};
+-	if (!entry)
++	if (!found)
+ 		return ERR_PTR(-EINVAL);
  
+ 	return entry->clk;
 -- 
 2.20.1
 
