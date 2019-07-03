@@ -2,266 +2,166 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AECC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63F0C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B8521871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06D621871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YzkT20Tp"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eJO3HlFP";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Agz0pbNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfGCOob (ORCPT
+        id S1726986AbfGCOqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:44:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53973 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfGCOob (ORCPT
+        Wed, 3 Jul 2019 10:46:36 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:62848 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfGCOqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:44:31 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63EhrZV3330125
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:43:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63EhrZV3330125
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562165034;
-        bh=xNLy9vp2nhVh0xQp0dnRn61jpuwxYNYHkLgsM+oslpQ=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=YzkT20TpMN0aFicvMj85D121NDLLwkcguX05o9bJIew8OslyPXDLCDZZTU2JpfHHm
-         5kcNSgOLEqL7xiOOMn/x8ZHZjjZg0L5JpBgWHk4ibBLunFCfoAtG35zH9zmdHzHulJ
-         nJJ7MREmSymIAX5xOrEvbqPJz6/rBwyFXfsMnxGYsW6R7vM9irhYSdO8WIUDiSf3Xm
-         2v75NkXd2TqS97rP8Ynt6i3PmW06S7hxrFz+HlAvhZCzbRiQeOUBRl+uWTkqkBTNpk
-         vWQjYPI/n/SWUKMzUgh5a13r6AtR2ZDvQGFOlQtz/gpUVWv1Ssnt6t2Cp/l6Sfn0MU
-         jMY8VF58CH5uA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63Ehqtg3330122;
-        Wed, 3 Jul 2019 07:43:52 -0700
-Date:   Wed, 3 Jul 2019 07:43:52 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-d54gj64rerlxcqsrod05biwn@git.kernel.org>
-Cc:     alirazabhutta.10@gmail.com, yarygin@linux.vnet.ibm.com,
-        tglx@linutronix.de, okrieger@redhat.com, adrian.hunter@intel.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, jmario@redhat.com,
-        mingo@kernel.org, yunlong.song@huawei.com, npache@redhat.com,
-        lwoodman@redhat.com, borntraeger@de.ibm.com, acme@redhat.com,
-        namhyung@kernel.org, jolsa@kernel.org, artagnon@gmail.com
-Reply-To: artagnon@gmail.com, jolsa@kernel.org, namhyung@kernel.org,
-          borntraeger@de.ibm.com, lwoodman@redhat.com, acme@redhat.com,
-          yunlong.song@huawei.com, npache@redhat.com, mingo@kernel.org,
-          hpa@zytor.com, jmario@redhat.com, linux-kernel@vger.kernel.org,
-          adrian.hunter@intel.com, okrieger@redhat.com, tglx@linutronix.de,
-          yarygin@linux.vnet.ibm.com, alirazabhutta.10@gmail.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf script: Allow specifying the files to process
- guest samples
-Git-Commit-ID: 15a108af1a18b597bfbd7f7b3c7b4823bfbaf8df
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 10:46:35 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63EjAQh020649;
+        Wed, 3 Jul 2019 07:45:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=h1V9q7DaahqcccHrTmqwibHb7E/QjD6twdXS2g6QPoc=;
+ b=eJO3HlFPIa+2sgGE3ZslzQKE51FWx4Xq8A8pUjWu90kei26w92KJh9hSZ4L/7y4kSewq
+ 0QQxSWpA5Bw7+90M6Ls9/PIydLJR2khJQUa4ssQOxneAlr0IU1L4DE0UAMnyO6MYvqON
+ 4Q49Vp6VtpQhZKVNGtbXvHoDachhl9Q1Bhs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tgx97r15g-10
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 03 Jul 2019 07:45:18 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 3 Jul 2019 07:45:15 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 3 Jul 2019 07:45:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h1V9q7DaahqcccHrTmqwibHb7E/QjD6twdXS2g6QPoc=;
+ b=Agz0pbNtj+EYe+x2C7mbKNLfU+HkPYk/xlwA648YLtBecQFLX2P1k1E2ffF5y98kOPlh64sO+VqkTkUcZp8tpN/usOidzznjTM0hC5eHlGcyTZuOk73DL5x1n/Dh/ewER25ruIeYi6ktna8xI0G7gQYU7MtYSouLUO53L7dEi5s=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
+ BYAPR15MB2760.namprd15.prod.outlook.com (20.179.157.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Wed, 3 Jul 2019 14:45:14 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::850b:bed:29d5:ae79]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::850b:bed:29d5:ae79%7]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 14:45:14 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        "sdf@google.com" <sdf@google.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [PATCH v2 bpf-next] bpf: cgroup: Fix build error without
+ CONFIG_NET
+Thread-Topic: [PATCH v2 bpf-next] bpf: cgroup: Fix build error without
+ CONFIG_NET
+Thread-Index: AQHVMXkXQoxgo9ALIE+aMv0k9OvhfKa4+N2A
+Date:   Wed, 3 Jul 2019 14:45:14 +0000
+Message-ID: <4a81ed32-1e60-dee2-eb67-df0930dbcbf6@fb.com>
+References: <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
+ <20190703082630.51104-1-yuehaibing@huawei.com>
+In-Reply-To: <20190703082630.51104-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0008.namprd10.prod.outlook.com (2603:10b6:301::18)
+ To BYAPR15MB3384.namprd15.prod.outlook.com (2603:10b6:a03:10e::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::1:fb73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5cf30e31-ae5c-40ba-2ceb-08d6ffc50e9f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2760;
+x-ms-traffictypediagnostic: BYAPR15MB2760:
+x-microsoft-antispam-prvs: <BYAPR15MB27606463688C505FC0D42A7ED3FB0@BYAPR15MB2760.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:167;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(136003)(396003)(376002)(39860400002)(199004)(189003)(66446008)(73956011)(66556008)(6436002)(64756008)(476003)(2616005)(66946007)(31696002)(66476007)(36756003)(71190400001)(5024004)(386003)(2201001)(7736002)(14444005)(8936002)(446003)(486006)(256004)(31686004)(5660300002)(11346002)(2501003)(71200400001)(102836004)(2906002)(305945005)(86362001)(46003)(53936002)(68736007)(316002)(54906003)(478600001)(6116002)(99286004)(25786009)(6246003)(4326008)(52116002)(6512007)(6486002)(81166006)(81156014)(110136005)(76176011)(53546011)(229853002)(8676002)(186003)(6506007)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2760;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: o3KA3mubcUAPybgl6cQyKqGoEWamHGp1L3tA9jD6lPnGpCHGLhqcBD2xki3kQI/r9Rms9iUHddaPyenjdnY2M+yBh0VzdczEzc6BZouAjuJvzK1BB53aFrC0pwQFWR9mC+2/MDQOPToSk3fC2lFq2GiOVVWulph7ddxSoj9rgSiK6kKc1HS6SMe/jtwD/oiMwm1IgHSKVZUxOetaFgT+pAgNkoy9b0qcq3LvVHNpIeZ9vJ1GWWgk2h7UNwkDRUS6sc2u6pxXOzoASGtMuh49uEOQSS8bO1QjaH9B4e+cfVeVLF6gNcBMygIfjZnJMK7AEBkW6ia+KbygrAqhG4ZgMuN0fUPrF0QGh975RUCTzlqt1YAg4EmlnkvlIhCpYZgFJ/58AigM+f389hTUEDnlw8SF1MqH+ONWBsNSssHqtpg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A28F7E840033D541938F3BE4C6C643A9@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cf30e31-ae5c-40ba-2ceb-08d6ffc50e9f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 14:45:14.3064
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yhs@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2760
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030181
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  15a108af1a18b597bfbd7f7b3c7b4823bfbaf8df
-Gitweb:     https://git.kernel.org/tip/15a108af1a18b597bfbd7f7b3c7b4823bfbaf8df
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 28 Jun 2019 17:16:58 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 3 Jul 2019 00:13:25 -0300
-
-perf script: Allow specifying the files to process guest samples
-
-The 'perf kvm' command set up things so that we can record, report, top,
-etc, but not 'script', so make 'perf script' be able to process samples
-by allowing to pass guest kallsyms, vmlinux, modules, etc, and if at
-least one of those is provided, set perf_guest to true so that guest
-samples get properly resolved.
-
-Testing it:
-
-  # perf kvm --guest --guestkallsyms /wb/rhel6.kallsyms --guestmodules /wb/rhel6.modules record -e cycles:Gk
-^C[ perf record: Woken up 7 times to write data ]
-  [ perf record: Captured and wrote 3.602 MB perf.data.guest (10492 samples) ]
-
-  #
-  # perf evlist -i perf.data.guest
-cycles:Gk
-  # perf evlist -v -i perf.data.guest
-cycles:Gk: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD, read_format: ID, disabled: 1, inherit: 1, exclude_user: 1, exclude_hv: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, exclude_host: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-  #
-  # perf kvm --guestkallsyms /wb/rhel6.kallsyms --guestmodules /wb/rhel6.modules report --stdio -s sym | head -30
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 10K of event 'cycles:Gk'
-  # Event count (approx.): 2434201408
-  #
-  # Overhead  Symbol
-  # ........  ..............................................
-  #
-      11.93%  [g] avtab_search_node
-       3.95%  [g] sidtab_context_to_sid
-       2.41%  [g] n_tty_write
-       2.20%  [g] _spin_unlock_irqrestore
-       1.37%  [g] _aesni_dec4
-       1.33%  [g] kmem_cache_alloc
-       1.07%  [g] native_write_cr0
-       0.99%  [g] kfree
-       0.95%  [g] _spin_lock
-       0.91%  [g] __memset
-       0.87%  [g] schedule
-       0.83%  [g] _spin_lock_irqsave
-       0.76%  [g] __kmalloc
-       0.67%  [g] avc_has_perm_noaudit
-       0.66%  [g] kmem_cache_free
-       0.65%  [g] glue_xts_crypt_128bit
-       0.59%  [g] __d_lookup
-       0.59%  [g] __audit_syscall_exit
-       0.56%  [g] __memcpy
-  #
-
-Then, when trying to use perf script to generate a python script and
-then process the events after adding a python hook for non-tracepoint
-events:
-
-  # perf script -i perf.data.guest -g python
-  generated Python script: perf-script.py
-  # vim perf-script.py
-  # tail -2 perf-script.py
-  def process_event(param_dict):
-        print(param_dict["symbol"])
-  #
-  # perf script -i perf.data.guest -s perf-script.py  | head
-  in trace_begin
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  vmx_vmexit
-  231
-  #
-
-We'd see just the vmx_vmexit, i.e. the samples from the guest don't show
-up.
-
-After this patch:
-
-  # perf script --guestkallsyms /wb/rhel6.kallsyms --guestmodules /wb/rhel6.modules -i perf.data.guest -s perf-script.py 2> /dev/null | head -30
-  in trace_begin
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  save_args
-  do_timer
-  drain_array
-  inode_permission
-  avc_has_perm_noaudit
-  run_timer_softirq
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  apic_timer_interrupt
-  kvm_guest_apic_eoi_write
-  run_posix_cpu_timers
-  _spin_lock
-  handle_pte_fault
-  rcu_irq_enter
-  delay_tsc
-  delay_tsc
-  native_read_tsc
-  apic_timer_interrupt
-  sys_open
-  internal_add_timer
-  list_del
-  rcu_exit_nohz
-  #
-
-Jiri Olsa noticed we need to set 'perf_guest' to true if we want to
-process guest samples and I made it be set if one of the guest files
-settings get set via the command line options added in this patch, that
-match those present in the 'perf kvm' command.
-
-We probably want to have 'perf record', 'perf report' etc to notice that
-there are guest samples and do the right thing, which is to look for
-files with some suffix that make it be associated with the guest used to
-collect the samples, i.e. if a vmlinux file is passed, we can get the
-build-id from it, if not some other identifier or simply looking for
-"kallsyms.guest", for instance, in the current directory.
-
-Reported-by: Mariano Pache <npache@redhat.com>
-Tested-by: Mariano Pache <npache@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Yarygin <yarygin@linux.vnet.ibm.com>
-Cc: Ali Raza <alirazabhutta.10@gmail.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Larry Woodman <lwoodman@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Orran Krieger <okrieger@redhat.com>
-Cc: Ramkumar Ramachandra <artagnon@gmail.com>
-Cc: Yunlong Song <yunlong.song@huawei.com>
-Link: https://lkml.kernel.org/n/tip-d54gj64rerlxcqsrod05biwn@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-script.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 520e5b6b9ef9..2f6232f1bfdc 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3522,6 +3522,15 @@ int cmd_script(int argc, const char **argv)
- 		   "Time span of interest (start,stop)"),
- 	OPT_BOOLEAN(0, "inline", &symbol_conf.inline_name,
- 		    "Show inline function"),
-+	OPT_STRING(0, "guestmount", &symbol_conf.guestmount, "directory",
-+		   "guest mount directory under which every guest os"
-+		   " instance has a subdir"),
-+	OPT_STRING(0, "guestvmlinux", &symbol_conf.default_guest_vmlinux_name,
-+		   "file", "file saving guest os vmlinux"),
-+	OPT_STRING(0, "guestkallsyms", &symbol_conf.default_guest_kallsyms,
-+		   "file", "file saving guest os /proc/kallsyms"),
-+	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
-+		   "file", "file saving guest os /proc/modules"),
- 	OPT_END()
- 	};
- 	const char * const script_subcommands[] = { "record", "report", NULL };
-@@ -3541,6 +3550,16 @@ int cmd_script(int argc, const char **argv)
- 	argc = parse_options_subcommand(argc, argv, options, script_subcommands, script_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
- 
-+	if (symbol_conf.guestmount ||
-+	    symbol_conf.default_guest_vmlinux_name ||
-+	    symbol_conf.default_guest_kallsyms ||
-+	    symbol_conf.default_guest_modules) {
-+		/*
-+		 * Enable guest sample processing.
-+		 */
-+		perf_guest = true;
-+	}
-+
- 	data.path  = input_name;
- 	data.force = symbol_conf.force;
- 
+DQoNCk9uIDcvMy8xOSAxOjI2IEFNLCBZdWVIYWliaW5nIHdyb3RlOg0KPiBJZiBDT05GSUdfTkVU
+IGlzIG5vdCBzZXQgYW5kIENPTkZJR19DR1JPVVBfQlBGPXksDQo+IGdjYyBidWlsZGluZyBmYWls
+czoNCj4gDQo+IGtlcm5lbC9icGYvY2dyb3VwLm86IEluIGZ1bmN0aW9uIGBjZ19zb2Nrb3B0X2Z1
+bmNfcHJvdG8nOg0KPiBjZ3JvdXAuYzooLnRleHQrMHgyMzdlKTogdW5kZWZpbmVkIHJlZmVyZW5j
+ZSB0byBgYnBmX3NrX3N0b3JhZ2VfZ2V0X3Byb3RvJw0KPiBjZ3JvdXAuYzooLnRleHQrMHgyMzk0
+KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgYnBmX3NrX3N0b3JhZ2VfZGVsZXRlX3Byb3RvJw0K
+PiBrZXJuZWwvYnBmL2Nncm91cC5vOiBJbiBmdW5jdGlvbiBgX19jZ3JvdXBfYnBmX3J1bl9maWx0
+ZXJfZ2V0c29ja29wdCc6DQo+ICgudGV4dCsweDJhMWYpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
+IGBsb2NrX3NvY2tfbmVzdGVkJw0KPiAoLnRleHQrMHgyY2EyKTogdW5kZWZpbmVkIHJlZmVyZW5j
+ZSB0byBgcmVsZWFzZV9zb2NrJw0KPiBrZXJuZWwvYnBmL2Nncm91cC5vOiBJbiBmdW5jdGlvbiBg
+X19jZ3JvdXBfYnBmX3J1bl9maWx0ZXJfc2V0c29ja29wdCc6DQo+ICgudGV4dCsweDMwMDYpOiB1
+bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBsb2NrX3NvY2tfbmVzdGVkJw0KPiAoLnRleHQrMHgzMmJi
+KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgcmVsZWFzZV9zb2NrJw0KPiANCj4gUmVwb3J0ZWQt
+Ynk6IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tPg0KPiBTdWdnZXN0ZWQtYnk6IFN0YW5p
+c2xhdiBGb21pY2hldiA8c2RmQGZvbWljaGV2Lm1lPg0KPiBGaXhlczogMGQwMWRhNmFmYzU0ICgi
+YnBmOiBpbXBsZW1lbnQgZ2V0c29ja29wdCBhbmQgc2V0c29ja29wdCBob29rcyIpDQo+IFNpZ25l
+ZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbT4NCg0KQWNrZWQtYnk6
+IFlvbmdob25nIFNvbmcgPHloc0BmYi5jb20+DQoNCj4gLS0tDQo+IHYyOiB1c2UgaWZkZWYgbWFj
+cm8NCj4gLS0tDQo+ICAga2VybmVsL2JwZi9jZ3JvdXAuYyB8IDQgKysrKw0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvYnBmL2Nn
+cm91cC5jIGIva2VybmVsL2JwZi9jZ3JvdXAuYw0KPiBpbmRleCA3NmZhMDA3Li4wYTAwZWFjIDEw
+MDY0NA0KPiAtLS0gYS9rZXJuZWwvYnBmL2Nncm91cC5jDQo+ICsrKyBiL2tlcm5lbC9icGYvY2dy
+b3VwLmMNCj4gQEAgLTkzOSw2ICs5MzksNyBAQCBpbnQgX19jZ3JvdXBfYnBmX3J1bl9maWx0ZXJf
+c3lzY3RsKHN0cnVjdCBjdGxfdGFibGVfaGVhZGVyICpoZWFkLA0KPiAgIH0NCj4gICBFWFBPUlRf
+U1lNQk9MKF9fY2dyb3VwX2JwZl9ydW5fZmlsdGVyX3N5c2N0bCk7DQo+ICAgDQo+ICsjaWZkZWYg
+Q09ORklHX05FVA0KPiAgIHN0YXRpYyBib29sIF9fY2dyb3VwX2JwZl9wcm9nX2FycmF5X2lzX2Vt
+cHR5KHN0cnVjdCBjZ3JvdXAgKmNncnAsDQo+ICAgCQkJCQkgICAgIGVudW0gYnBmX2F0dGFjaF90
+eXBlIGF0dGFjaF90eXBlKQ0KPiAgIHsNCj4gQEAgLTExMjAsNiArMTEyMSw3IEBAIGludCBfX2Nn
+cm91cF9icGZfcnVuX2ZpbHRlcl9nZXRzb2Nrb3B0KHN0cnVjdCBzb2NrICpzaywgaW50IGxldmVs
+LA0KPiAgIAlyZXR1cm4gcmV0Ow0KPiAgIH0NCj4gICBFWFBPUlRfU1lNQk9MKF9fY2dyb3VwX2Jw
+Zl9ydW5fZmlsdGVyX2dldHNvY2tvcHQpOw0KPiArI2VuZGlmDQo+ICAgDQo+ICAgc3RhdGljIHNz
+aXplX3Qgc3lzY3RsX2NweV9kaXIoY29uc3Qgc3RydWN0IGN0bF9kaXIgKmRpciwgY2hhciAqKmJ1
+ZnAsDQo+ICAgCQkJICAgICAgc2l6ZV90ICpsZW5wKQ0KPiBAQCAtMTM4NiwxMCArMTM4OCwxMiBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IGJwZl9mdW5jX3Byb3RvICoNCj4gICBjZ19zb2Nrb3B0X2Z1
+bmNfcHJvdG8oZW51bSBicGZfZnVuY19pZCBmdW5jX2lkLCBjb25zdCBzdHJ1Y3QgYnBmX3Byb2cg
+KnByb2cpDQo+ICAgew0KPiAgIAlzd2l0Y2ggKGZ1bmNfaWQpIHsNCj4gKyNpZmRlZiBDT05GSUdf
+TkVUDQo+ICAgCWNhc2UgQlBGX0ZVTkNfc2tfc3RvcmFnZV9nZXQ6DQo+ICAgCQlyZXR1cm4gJmJw
+Zl9za19zdG9yYWdlX2dldF9wcm90bzsNCj4gICAJY2FzZSBCUEZfRlVOQ19za19zdG9yYWdlX2Rl
+bGV0ZToNCj4gICAJCXJldHVybiAmYnBmX3NrX3N0b3JhZ2VfZGVsZXRlX3Byb3RvOw0KPiArI2Vu
+ZGlmDQo+ICAgI2lmZGVmIENPTkZJR19JTkVUDQo+ICAgCWNhc2UgQlBGX0ZVTkNfdGNwX3NvY2s6
+DQo+ICAgCQlyZXR1cm4gJmJwZl90Y3Bfc29ja19wcm90bzsNCj4gDQo=
