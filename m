@@ -2,117 +2,133 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3580EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68968C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C61B2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5B4218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NzaNPXi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfGCXFl (ORCPT
+        id S1727435AbfGCXXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:05:41 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60801 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfGCXFk (ORCPT
+        Wed, 3 Jul 2019 19:23:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35862 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfGCXXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:05:40 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 3f159dca3fbf52f1; Thu, 4 Jul 2019 01:05:38 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH] PM: sleep: Drop dev_pm_skip_next_resume_phases()
-Date:   Thu, 04 Jul 2019 01:05:38 +0200
-Message-ID: <2100414.Plmip0uhM5@kreacher>
+        Wed, 3 Jul 2019 19:23:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c13so1964808pgg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 16:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XN3qgR1tVFK8sR9o1ybEyQRnUeXtfxfXh+O+zHL4/+Y=;
+        b=NzaNPXi+YZBGhIbIgIUZaTohxouzyDY7kLRqaDb4+9gt2fecCZ8L3hIKaY4vXMfsYQ
+         FxCmxwlE32iIfosrg9EOn5v5GkBgijUn24kBLYBMZN08ljM7nepXFEurCwjzALS56CR9
+         U5pBPaqa6xQnuBxvVQwfk/PA1nRUA3Q34yqUo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XN3qgR1tVFK8sR9o1ybEyQRnUeXtfxfXh+O+zHL4/+Y=;
+        b=l5oeZjQk2apO+PFUoeblMIAhYzHBJayBl3ZetTLxnqlda2Py4M41KeuBEkLoiSfnfx
+         eIygyju4AFjpde+AA0qtkCSr7xoJaHXaQsladWKl9cVSbon3/tioUsmMTvrN9uDnmtR2
+         mLDRkgxCTTP2TzXu44zAMmnXDhBsTOZmXYt3tV/PBTY7e7XCV/IuPJrLG1qimnyFKkLt
+         jFE51F3m2VKCZhFk+Ssqm+WA4LpGHJgsc+SCaXRs0EQ1/9mtR2NnDhQXwI0mBdfwZP5B
+         TwwfDZ+fyrG2Tpfy6Ke+SHXCHXcmht7y3oXbJXs+W76djflaKgsihxSNXtUv1Eqwow0W
+         H+ww==
+X-Gm-Message-State: APjAAAVsVpJj8pR+POf1lH93s8z8QJ7Vmb0nJYAlS0xpbGX0rREM/w8T
+        o6TXIWZtxODtGGsZJmTmkpOILA==
+X-Google-Smtp-Source: APXvYqx7unjhBypVqBgNvPTq6zAIlWKbNq6OlF0jySSP96LUGqlwwpVzJOnU2WwDUiZnU1HtSWbhLA==
+X-Received: by 2002:a63:5107:: with SMTP id f7mr25033521pgb.266.1562196214038;
+        Wed, 03 Jul 2019 16:23:34 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id v22sm5837535pgk.69.2019.07.03.16.23.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 16:23:33 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 16:23:31 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Message-ID: <20190703232331.GL250418@google.com>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Florian,
 
-After recent hibernation-related changes, there are no more callers
-of dev_pm_skip_next_resume_phases() except for the PM core itself
-in which it is more straightforward to run the statements from
-that function directly, so do that and drop it.
+On Wed, Jul 03, 2019 at 02:37:47PM -0700, Florian Fainelli wrote:
+> On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
+> > The LED behavior of some Realtek PHYs is configurable. Add the
+> > property 'realtek,led-modes' to specify the configuration of the
+> > LEDs.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v2:
+> > - patch added to the series
+> > ---
+> >  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
+> >  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
+> >  2 files changed, 26 insertions(+)
+> >  create mode 100644 include/dt-bindings/net/realtek.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> > index 71d386c78269..40b0d6f9ee21 100644
+> > --- a/Documentation/devicetree/bindings/net/realtek.txt
+> > +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> > @@ -9,6 +9,12 @@ Optional properties:
+> >  
+> >  	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
+> >  
+> > +- realtek,led-modes: LED mode configuration.
+> > +
+> > +	A 0..3 element vector, with each element configuring the operating
+> > +	mode of an LED. Omitted LEDs are turned off. Allowed values are
+> > +	defined in "include/dt-bindings/net/realtek.h".
+> 
+> This should probably be made more general and we should define LED modes
+> that makes sense regardless of the PHY device, introduce a set of
+> generic functions for validating and then add new function pointer for
+> setting the LED configuration to the PHY driver. This would allow to be
+> more future proof where each PHY driver could expose standard LEDs class
+> devices to user-space, and it would also allow facilities like: ethtool
+> -p to plug into that.
+> 
+> Right now, each driver invents its own way of configuring LEDs, that
+> does not scale, and there is not really a good reason for that other
+> than reviewing drivers in isolation and therefore making it harder to
+> extract the commonality. Yes, I realize that since you are the latest
+> person submitting something in that area, you are being selected :)
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-On top of the patch series at:
-
-https://lore.kernel.org/linux-acpi/20190701162017.GB2640@lahna.fi.intel.com/T/#madf00de2d5a9b67e3c7bf51e882bd66ed7efc7ea
-
----
- drivers/base/power/main.c |   19 +++----------------
- include/linux/pm.h        |    1 -
- 2 files changed, 3 insertions(+), 17 deletions(-)
-
-Index: linux-pm/drivers/base/power/main.c
-===================================================================
---- linux-pm.orig/drivers/base/power/main.c
-+++ linux-pm/drivers/base/power/main.c
-@@ -530,21 +530,6 @@ static void dpm_watchdog_clear(struct dp
- /*------------------------- Resume routines -------------------------*/
- 
- /**
-- * dev_pm_skip_next_resume_phases - Skip next system resume phases for device.
-- * @dev: Target device.
-- *
-- * Make the core skip the "early resume" and "resume" phases for @dev.
-- *
-- * This function can be called by middle-layer code during the "noirq" phase of
-- * system resume if necessary, but not by device drivers.
-- */
--void dev_pm_skip_next_resume_phases(struct device *dev)
--{
--	dev->power.is_late_suspended = false;
--	dev->power.is_suspended = false;
--}
--
--/**
-  * suspend_event - Return a "suspend" message for given "resume" one.
-  * @resume_msg: PM message representing a system-wide resume transition.
-  */
-@@ -681,6 +666,9 @@ Skip:
- 	dev->power.is_noirq_suspended = false;
- 
- 	if (skip_resume) {
-+		/* Make the next phases of resume skip the device. */
-+		dev->power.is_late_suspended = false;
-+		dev->power.is_suspended = false;
- 		/*
- 		 * The device is going to be left in suspend, but it might not
- 		 * have been in runtime suspend before the system suspended, so
-@@ -689,7 +677,6 @@ Skip:
- 		 * device again.
- 		 */
- 		pm_runtime_set_suspended(dev);
--		dev_pm_skip_next_resume_phases(dev);
- 	}
- 
- Out:
-Index: linux-pm/include/linux/pm.h
-===================================================================
---- linux-pm.orig/include/linux/pm.h
-+++ linux-pm/include/linux/pm.h
-@@ -760,7 +760,6 @@ extern int pm_generic_poweroff_late(stru
- extern int pm_generic_poweroff(struct device *dev);
- extern void pm_generic_complete(struct device *dev);
- 
--extern void dev_pm_skip_next_resume_phases(struct device *dev);
- extern bool dev_pm_may_skip_resume(struct device *dev);
- extern bool dev_pm_smart_suspend_and_suspended(struct device *dev);
- 
-
-
-
+I see the merit of your proposal to come up with a generic mechanism
+to configure Ethernet LEDs, however I can't justify spending much of
+my work time on this. If it is deemed useful I'm happy to send another
+version of the current patchset that addresses the reviewer's comments,
+but if the implementation of a generic LED configuration interface is
+a requirement I will have to abandon at least the LED configuration
+part of this series.
