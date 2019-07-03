@@ -2,89 +2,264 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298F0C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA5EC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0004C21852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF12021852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOB4vVcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfGCVo5 convert rfc822-to-8bit (ORCPT
+        id S1727432AbfGCVpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:44:57 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50343 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbfGCVo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:44:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 14:44:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
-   d="scan'208";a="184861600"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jul 2019 14:44:55 -0700
-Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 3 Jul 2019 14:44:55 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.70]) by
- ORSMSX112.amr.corp.intel.com ([169.254.3.232]) with mapi id 14.03.0439.000;
- Wed, 3 Jul 2019 14:44:55 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
- function iavf_debug_d
-Thread-Topic: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
- function iavf_debug_d
-Thread-Index: AQHVMJ5XiQrcda6PCk6e4wmTDurJL6a5b8lw
-Date:   Wed, 3 Jul 2019 21:44:55 +0000
-Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3FD2B4@ORSMSX104.amr.corp.intel.com>
-References: <20190702062021.41524-1-yuehaibing@huawei.com>
-In-Reply-To: <20190702062021.41524-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWU0MDViMDUtOWIyMy00YjFhLWJhZmEtZTA0ZjZmNzg1NzY0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiazgyelwvMVNkSFBKQ0ZTM3BsTCtcL1hZdzNWSjdTeTVCeWN4MGFtRWpEN2I3dW1Xc0hZVUFtZzl2NUNmeklVWW90In0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Wed, 3 Jul 2019 17:45:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41020 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfGCVpQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:45:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so1893451pff.8;
+        Wed, 03 Jul 2019 14:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rblKGIlJDkSzRoKjZR0ET2T3JOcuW5SkJJUuNM12yX4=;
+        b=XOB4vVcYBhzEHCUq87ZYRWQIOXEMrLuy250Kzgu+UOWDM4Qj3EMhvKXiAIQMvezsV1
+         tTlvp2W/AJaPQuzPDD7K8vH1H+yHsUEfUEZPj0qExIR/HrLFXrQCssEZj4abmJ6EBlJp
+         6SUNWUXL8cnY2Y0qYAue60xyhK7PRnjwunXwdjbnrVggsbfW1VkOTNCraDV0WUxnhS1m
+         V6B1ZK62xyCeohV7kPa4aQVKC/AdOQr9x6ZICa8GMI+CBMLzerypxLBF+PG+Z44fwoMD
+         JlPYcZWgpUnfi4Sri+cAm+qQXQu9V0Imiu4JpNpdkyYPctK1ZTCwR5NaYzN79Pd7BVaZ
+         0bbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=rblKGIlJDkSzRoKjZR0ET2T3JOcuW5SkJJUuNM12yX4=;
+        b=P3A8oZjX8TX6O3hRQ2i5uZyHDhuInYFvAIKZFirQa7SHKmtsCLt4sfOD1O2Vq/8eUw
+         etscgw2taq+QhB35KccJDs3Fr/sUsIPCmd4UPcErihdYDG3J9VVPeqvI/YglYLvfHGLB
+         0cs2Jq7q487t6HVzjHqsqqD8pueMZuzXp/ahLEb51cIg/tEZezn7ZoNrBqje4NIC0jT8
+         2hAhU01hEZBupr688xFZQ6NggxuM7GVJRo/wGHFZK0NV9ximf/gmCFnTuAgX/85Zw7hE
+         2MAcP+sAhxsK8IV8LXBaNTvqZeay9oc3ge5hl0YuFWQTotlOJ/JKi50/2jP3exYYPvCJ
+         gqSg==
+X-Gm-Message-State: APjAAAXMhhJqUznVj9hhr/2DEn/KnHvu8QCxgOcxg47szHnlqyTl9GjE
+        3gwohd752mzot5t9hmqRsgI=
+X-Google-Smtp-Source: APXvYqziW6uz8kvYxiLE8i06vq1Y2XLf9uMisxKM0llLNGE8dLv+QCJtNMLwxKg8jzpKrGeCHGMrrA==
+X-Received: by 2002:a63:545c:: with SMTP id e28mr40705619pgm.374.1562190315688;
+        Wed, 03 Jul 2019 14:45:15 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id o14sm2895434pjp.29.2019.07.03.14.45.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 14:45:15 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     broonie@kernel.org
+Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
+        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/2] regmap: Add DSI bus support
+Date:   Wed,  3 Jul 2019 14:45:12 -0700
+Message-Id: <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of YueHaibing
-> Sent: Monday, July 1, 2019 11:20 PM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net;
-> intel-wired-lan@lists.osuosl.org
-> Cc: netdev@vger.kernel.org; YueHaibing <yuehaibing@huawei.com>; linux-
-> kernel@vger.kernel.org
-> Subject: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
-> function iavf_debug_d
-> 
-> There is no caller of function iavf_debug_d() in tree since commit
-> 75051ce4c5d8 ("iavf: Fix up debug print macro"), so it can be removed.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/ethernet/intel/iavf/iavf_main.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
+Add basic support with a simple implementation that utilizes the generic
+read/write commands to allow device registers to be configured.
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/base/regmap/Kconfig      |  6 +++-
+ drivers/base/regmap/Makefile     |  1 +
+ drivers/base/regmap/regmap-dsi.c | 62 ++++++++++++++++++++++++++++++++
+ include/linux/regmap.h           | 37 +++++++++++++++++++
+ 4 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/base/regmap/regmap-dsi.c
 
+diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+index c8bbf5322720..27669afa9d95 100644
+--- a/drivers/base/regmap/Kconfig
++++ b/drivers/base/regmap/Kconfig
+@@ -4,7 +4,7 @@
+ # subsystems should select the appropriate symbols.
+ 
+ config REGMAP
+-	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
++	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C || REGMAP_DSI)
+ 	select IRQ_DOMAIN if REGMAP_IRQ
+ 	bool
+ 
+@@ -53,3 +53,7 @@ config REGMAP_SCCB
+ config REGMAP_I3C
+ 	tristate
+ 	depends on I3C
++
++config REGMAP_DSI
++	tristate
++	depends on DRM_MIPI_DSI
+diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
+index ff6c7d8ec1cd..c1cc81f3986f 100644
+--- a/drivers/base/regmap/Makefile
++++ b/drivers/base/regmap/Makefile
+@@ -17,3 +17,4 @@ obj-$(CONFIG_REGMAP_W1) += regmap-w1.o
+ obj-$(CONFIG_REGMAP_SOUNDWIRE) += regmap-sdw.o
+ obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
+ obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
++obj-$(CONFIG_REGMAP_DSI) += regmap-dsi.o
+diff --git a/drivers/base/regmap/regmap-dsi.c b/drivers/base/regmap/regmap-dsi.c
+new file mode 100644
+index 000000000000..0c2900e2fee0
+--- /dev/null
++++ b/drivers/base/regmap/regmap-dsi.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Register map access API - DSI support
++//
++// Copyright (c) 2019 Jeffrey Hugo
++
++#include <drm/drm_mipi_dsi.h>
++#include <linux/regmap.h>
++#include <linux/module.h>
++
++#include "internal.h"
++
++static int dsi_reg_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct device *dev = context;
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
++	char payload[2];
++	int ret;
++
++	payload[0] = (char)reg;
++	payload[1] = (char)val;
++
++	ret = mipi_dsi_generic_write(dsi, payload, 2);
++	return ret < 0 ? ret : 0;
++}
++
++static int dsi_reg_read(void *context, unsigned int reg, unsigned int *val)
++{
++	struct device *dev = context;
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
++	int ret;
++
++	ret = mipi_dsi_generic_read(dsi, &reg, 1, val, 1);
++	return ret < 0 ? ret : 0;
++}
++
++static struct regmap_bus dsi_bus = {
++	.reg_write = dsi_reg_write,
++	.reg_read = dsi_reg_read,
++};
++
++struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
++				 const struct regmap_config *config,
++				 struct lock_class_key *lock_key,
++				 const char *lock_name)
++{
++	return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
++			     lock_key, lock_name);
++}
++EXPORT_SYMBOL_GPL(__regmap_init_dsi);
++
++struct regmap *__devm_regmap_init_dsi(struct mipi_dsi_device *dsi,
++				      const struct regmap_config *config,
++				      struct lock_class_key *lock_key,
++				      const char *lock_name)
++{
++	return __devm_regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
++				  lock_key, lock_name);
++}
++EXPORT_SYMBOL_GPL(__devm_regmap_init_dsi);
++
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index dfe493ac692d..858239f7859f 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -32,6 +32,7 @@ struct regmap_range_cfg;
+ struct regmap_field;
+ struct snd_ac97;
+ struct sdw_slave;
++struct mipi_dsi_device;
+ 
+ /* An enum of all the supported cache types */
+ enum regcache_type {
+@@ -573,6 +574,10 @@ struct regmap *__regmap_init_sdw(struct sdw_slave *sdw,
+ 				 const struct regmap_config *config,
+ 				 struct lock_class_key *lock_key,
+ 				 const char *lock_name);
++struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
++				 const struct regmap_config *config,
++				 struct lock_class_key *lock_key,
++				 const char *lock_name);
+ 
+ struct regmap *__devm_regmap_init(struct device *dev,
+ 				  const struct regmap_bus *bus,
+@@ -626,6 +631,10 @@ struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
+ 				 const struct regmap_config *config,
+ 				 struct lock_class_key *lock_key,
+ 				 const char *lock_name);
++struct regmap *__devm_regmap_init_dsi(struct mipi_dsi_device *dsi,
++				 const struct regmap_config *config,
++				 struct lock_class_key *lock_key,
++				 const char *lock_name);
+ /*
+  * Wrapper for regmap_init macros to include a unique lockdep key and name
+  * for each call. No-op if CONFIG_LOCKDEP is not set.
+@@ -812,6 +821,19 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
+ 	__regmap_lockdep_wrapper(__regmap_init_sdw, #config,		\
+ 				sdw, config)
+ 
++/**
++ * regmap_init_dsi() - Initialise register map
++ *
++ * @dsi: Device that will be interacted with
++ * @config: Configuration for register map
++ *
++ * The return value will be an ERR_PTR() on error or a valid pointer to
++ * a struct regmap.
++ */
++#define regmap_init_dsi(dsi, config)					\
++	__regmap_lockdep_wrapper(__regmap_init_dsi, #config,		\
++				dsi, config)
++
+ 
+ /**
+  * devm_regmap_init() - Initialise managed register map
+@@ -999,6 +1021,21 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
+ 	__regmap_lockdep_wrapper(__devm_regmap_init_i3c, #config,	\
+ 				i3c, config)
+ 
++/**
++ * devm_regmap_init_dsi() - Initialise managed register map
++ *
++ * @dsi: Device that will be interacted with
++ * @config: Configuration for register map
++ *
++ * The return value will be an ERR_PTR() on error or a valid pointer
++ * to a struct regmap. The regmap will be automatically freed by the
++ * device management code.
++ */
++#define devm_regmap_init_dsi(dsi, config)				\
++	__regmap_lockdep_wrapper(__devm_regmap_init_dsi, #config,       \
++				dsi, config)
++
++
+ int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
+ void regmap_mmio_detach_clk(struct regmap *map);
+ void regmap_exit(struct regmap *map);
+-- 
+2.17.1
 
