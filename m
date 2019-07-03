@@ -2,148 +2,215 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E646FC46478
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD08C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9A7218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YGnNDsOJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2816E218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562185645;
+	bh=90lPrn9FCOvmaMGoRmz2Ce+oqF+p+Sz/GvLhh72WwM0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sFOq2NfAIRiKtzZmfWH+5HNadZlMwUsJsfx7uzqzMXNEhyz1Fchg6VLcR+qSV1Pnt
+	 UXeIhdvl1Kp2xiRqth0NFKpIlNy1WpbXUn2LjE1OFS2NkNp6TZVqkA38vK50G7sUQW
+	 mf4ShS62/XTLwCA9rJGeXSLe5CUkGKHP6t9uM06I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfGCU0k (ORCPT
+        id S1727127AbfGCU1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:26:40 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19744 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGCU0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:26:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1d0f7d0000>; Wed, 03 Jul 2019 13:26:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 03 Jul 2019 13:26:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 03 Jul 2019 13:26:38 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
- 2019 20:26:34 +0000
-Subject: Re: [PATCH 5/5] mm: remove the legacy hmm_pfn_* APIs
-To:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20190703184502.16234-1-hch@lst.de>
- <20190703184502.16234-6-hch@lst.de>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <d234738d-92ee-a841-5d9b-22881f2ac545@nvidia.com>
-Date:   Wed, 3 Jul 2019 13:26:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 3 Jul 2019 16:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfGCU1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:27:23 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20DFF218BA
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 20:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562185642;
+        bh=90lPrn9FCOvmaMGoRmz2Ce+oqF+p+Sz/GvLhh72WwM0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mB/Tx34FI8qtSy4nSC82hSafhYohmLQCmPf3uWeb9TPQGmWYQ200lA00jpIlcfn16
+         w30Cf/YTFXZerZNF1CE3ickBkGXYqYpklhOAOBrj+3jMGctEfri1V+y/aqdy5XBVCU
+         O79OBXS7mwNdJOE6dDFpjAUmKX4qfNJ1Ay12Tfa8=
+Received: by mail-wm1-f53.google.com with SMTP id s3so3506828wms.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:27:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAWJ8XO4VV9s0RAb6L71mdSOpAkovtm+xQB9+Qs6VgrRcaxvupx2
+        ZCZW9wAMcDUIv5deLncZDaHOSVljOsRBthZafwqi/A==
+X-Google-Smtp-Source: APXvYqxprk8oXGyeht1meo5mZFa2/qRdrSo5hhi/DQIMSl6vgSpNK1o584zTmfiTUO9E2JF8TNnvkuKR/H4lnh1fQ7o=
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr9131647wme.76.1562185640630;
+ Wed, 03 Jul 2019 13:27:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703184502.16234-6-hch@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562185597; bh=rm6vHnMn1NjJ83H8wZDmyjFoYuZQHy+fENvMn/j452Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YGnNDsOJPDkrHnZlPSB55fjBHjofdZ1pqmg5mfa3pGUujmhe6o4wkL5zQFrut+fQL
-         EmRJT13nJsodHkdgKjpZR4k/NVQ+p2haLqoN51ApjjBfdxsQu37mRCZGfnn6ihTByE
-         RqPRggRXqjKi+TPrFy0qX8AWs4E/HIO1hxx+f7X5zz0G3WndR2YJOusT3+PpWP3WqJ
-         GC1OQ7RZna/YgqfIZhbnEszK6cBofosZXX+Adtv7Nj+x4Kwh931vt2y8xYJ1ObEqrj
-         DN+gXSpIZpsebWAzOqem2frFsJh0Yzu9UH1ZaH7KUfDvQlih8aYWqZh7VPKCTVXycB
-         sw34ttIzrFWiQ==
+References: <20190703102731.236024951@infradead.org> <20190703102807.588906400@infradead.org>
+In-Reply-To: <20190703102807.588906400@infradead.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 3 Jul 2019 13:27:09 -0700
+X-Gmail-Original-Message-ID: <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
+Message-ID: <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
+To:     root <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/3/19 11:45 AM, Christoph Hellwig wrote:
-> Switch the one remaining user in nouveau over to its replacement,
-> and remove all the wrappers.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-
+On Wed, Jul 3, 2019 at 3:28 AM root <peterz@infradead.org> wrote:
+>
+> Despire the current efforts to read CR2 before tracing happens there
+> still exist a number of possible holes:
+>
+>   idtentry page_fault             do_page_fault           has_error_code=1
+>     call error_entry
+>       TRACE_IRQS_OFF
+>         call trace_hardirqs_off*
+>           #PF // modifies CR2
+>
+>       CALL_enter_from_user_mode
+>         __context_tracking_exit()
+>           trace_user_exit(0)
+>             #PF // modifies CR2
+>
+>     call do_page_fault
+>       address = read_cr2(); /* whoopsie */
+>
+> And similar for i386.
+>
+> Fix it by pulling the CR2 read into the entry code, before any of that
+> stuff gets a chance to run and ruin things.
+>
+> Ideally we'll clean up the entry code by moving this tracing and
+> context tracking nonsense into C some day, but let's not delay fixing
+> this longer.
+>
+> Reported-by: He Zhe <zhe.he@windriver.com>
+> Reported-by: Eiichi Tsukata <devel@etsukata.com>
+> Debugged-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->   drivers/gpu/drm/nouveau/nouveau_dmem.c |  2 +-
->   include/linux/hmm.h                    | 34 --------------------------
->   2 files changed, 1 insertion(+), 35 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index 42c026010938..b9ced2e61667 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -844,7 +844,7 @@ nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
->   		struct page *page;
->   		uint64_t addr;
->   
-> -		page = hmm_pfn_to_page(range, range->pfns[i]);
-> +		page = hmm_device_entry_to_page(range, range->pfns[i]);
->   		if (page == NULL)
->   			continue;
->   
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 657606f48796..cdcd78627393 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -290,40 +290,6 @@ static inline uint64_t hmm_device_entry_from_pfn(const struct hmm_range *range,
->   		range->flags[HMM_PFN_VALID];
->   }
->   
-> -/*
-> - * Old API:
-> - * hmm_pfn_to_page()
-> - * hmm_pfn_to_pfn()
-> - * hmm_pfn_from_page()
-> - * hmm_pfn_from_pfn()
-> - *
-> - * This are the OLD API please use new API, it is here to avoid cross-tree
-> - * merge painfullness ie we convert things to new API in stages.
-> - */
-> -static inline struct page *hmm_pfn_to_page(const struct hmm_range *range,
-> -					   uint64_t pfn)
-> -{
-> -	return hmm_device_entry_to_page(range, pfn);
-> -}
+>  arch/x86/entry/entry_32.S       |   25 ++++++++++++++++++++++---
+>  arch/x86/entry/entry_64.S       |   28 ++++++++++++++--------------
+>  arch/x86/include/asm/kvm_para.h |    2 +-
+>  arch/x86/include/asm/traps.h    |    2 +-
+>  arch/x86/kernel/kvm.c           |    8 ++++----
+>  arch/x86/mm/fault.c             |   28 ++++++++++------------------
+>  6 files changed, 52 insertions(+), 41 deletions(-)
+>
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -1443,9 +1443,28 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vec
+>
+>  ENTRY(page_fault)
+>         ASM_CLAC
+> -       pushl   $do_page_fault
+> -       ALIGN
+> -       jmp common_exception
+> +       pushl   $0; /* %gs's slot on the stack */
+> +
+> +       SAVE_ALL switch_stacks=1 skip_gs=1
+> +
+> +       ENCODE_FRAME_POINTER
+> +       UNWIND_ESPFIX_STACK
+> +
+> +       /* fixup %gs */
+> +       GS_TO_REG %ecx
+> +       REG_TO_PTGS %ecx
+> +       SET_KERNEL_GS %ecx
+> +
+> +       GET_CR2_INTO(%ecx)                      # might clobber %eax
+> +
+> +       /* fixup orig %eax */
+> +       movl    PT_ORIG_EAX(%esp), %edx         # get the error code
+> +       movl    $-1, PT_ORIG_EAX(%esp)          # no syscall to restart
+> +
+> +       TRACE_IRQS_OFF
+> +       movl    %esp, %eax                      # pt_regs pointer
+> +       call    do_page_fault
+> +       jmp     ret_from_exception
+>  END(page_fault)
+>
+>  common_exception:
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -901,7 +901,7 @@ apicinterrupt IRQ_WORK_VECTOR                       irq_work
+>   * @paranoid == 2 is special: the stub will never switch stacks.  This is for
+>   * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
+>   */
+> -.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0
+> +.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0 read_cr2=0
+>  ENTRY(\sym)
+>         UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+>
+> @@ -937,18 +937,27 @@ ENTRY(\sym)
+>
+>         .if \paranoid
+>         call    paranoid_entry
+> +       /* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
+>         .else
+>         call    error_entry
+>         .endif
+>         UNWIND_HINT_REGS
+> -       /* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
+>
+> -       .if \paranoid
+> +       .if \read_cr2
+> +       GET_CR2_INTO(%rdx);                     /* can clobber %rax */
+> +       .endif
+> +
+>         .if \shift_ist != -1
+>         TRACE_IRQS_OFF_DEBUG                    /* reload IDT in case of recursion */
+>         .else
+>         TRACE_IRQS_OFF
+>         .endif
+> +
+> +       .if \paranoid == 0
+> +       testb   $3, CS(%rsp)
+> +       jz      .Lfrom_kernel_no_context_tracking_\@
+> +       CALL_enter_from_user_mode
+> +.Lfrom_kernel_no_context_tracking_\@:
+>         .endif
+>
+>         movq    %rsp, %rdi                      /* pt_regs pointer */
+> @@ -1180,10 +1189,10 @@ idtentry xenint3                do_int3                 has_error_co
+>  #endif
+>
+>  idtentry general_protection    do_general_protection   has_error_code=1
+> -idtentry page_fault            do_page_fault           has_error_code=1
+> +idtentry page_fault            do_page_fault           has_error_code=1        read_cr2=1
+>
+>  #ifdef CONFIG_KVM_GUEST
+> -idtentry async_page_fault      do_async_page_fault     has_error_code=1
+> +idtentry async_page_fault      do_async_page_fault     has_error_code=1        read_cr2=1
+>  #endif
+>
+>  #ifdef CONFIG_X86_MCE
+> @@ -1338,18 +1347,9 @@ ENTRY(error_entry)
+>         movq    %rax, %rsp                      /* switch stack */
+>         ENCODE_FRAME_POINTER
+>         pushq   %r12
 > -
-> -static inline unsigned long hmm_pfn_to_pfn(const struct hmm_range *range,
-> -					   uint64_t pfn)
-> -{
-> -	return hmm_device_entry_to_pfn(range, pfn);
-> -}
-> -
-> -static inline uint64_t hmm_pfn_from_page(const struct hmm_range *range,
-> -					 struct page *page)
-> -{
-> -	return hmm_device_entry_from_page(range, page);
-> -}
-> -
-> -static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
-> -					unsigned long pfn)
-> -{
-> -	return hmm_device_entry_from_pfn(range, pfn);
-> -}
-> -
->   /*
->    * Mirroring: how to synchronize device page table with CPU page table.
->    *
-> 
+> -       /*
+> -        * We need to tell lockdep that IRQs are off.  We can't do this until
+> -        * we fix gsbase, and we should do it before enter_from_user_mode
+> -        * (which can take locks).
+> -        */
+> -       TRACE_IRQS_OFF
+
+This hunk looks wrong.  Am I missing some other place that handles the
+case where we enter from kernel mode and IRQs were on?
