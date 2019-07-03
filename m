@@ -2,101 +2,98 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F2DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2EDC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D948218BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B7121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BDcvXVU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfGCSNX (ORCPT
+        id S1727014AbfGCSNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:13:23 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39872 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfGCSNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:13:23 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hijks-0001bI-IX; Wed, 03 Jul 2019 12:13:19 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>
-Cc:     Stephen Bates <sbates@raithlin.com>
-References: <20190703170136.21515-1-logang@deltatee.com>
- <e88bed6b-c487-e224-1434-ba9912495a33@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c072210c-1f44-2803-4781-15ff6f72a07a@deltatee.com>
-Date:   Wed, 3 Jul 2019 12:13:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 14:13:30 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35709 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfGCSNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:13:30 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r21so3281471qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dIkgJeJBuw++uppqsU+TnGBul+EFF40cgrIXzTaEkqk=;
+        b=BDcvXVU5S9Xe6RaZL1d/tzhqXI0ERzROC5Hwy70kI1UbibB5XGc2qktpp6KCRj2eJ8
+         Cvf/ZQdisnA3SE13u0kPAYYcxD7/vjlMJCRXFqswT6wm7B/ZH66kJW3+LI/VOPZjovQN
+         evL2O/4brhczby9X6zVffdg7OkrHAb/PwnzOSEYjUiLxJrWp9rpmHGHLGRdXBfZRWW4W
+         JckFR0Y+fY+7lMoaMBwbiK+8lcXoBeP3tQ697oFwWt03yHVMREfyYMjvXlRNVt9JAfjh
+         vs4ZSzvO0c/ohYv6r1U/r7F4radpVLs9xgn1pHEoMnI8AYroHgpDAIAg2e2jlz8s1P1X
+         DWuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dIkgJeJBuw++uppqsU+TnGBul+EFF40cgrIXzTaEkqk=;
+        b=VZbzJw77BaULliVNBOw1QgaGUU4EukSjWGe+CxSeiOEA52UPK4g16S7ptrWOGWZKRG
+         jQ0nn4JY2NPYZMbIWDrW44v+3jHsRhQzZ2N5w5+39j7zAvbVu2XTGNy61eK0sllxgjV0
+         C4DSkWuIyGyXLmpXqrO/64GTZB0gA2eYl/dSqgb/fVZro4dmwV0r0Xo/D8ZfwWWrq1MD
+         984WFYFcwQPC4e+aInVBOj2c12PmVXHZj4Q9mLB/y7vl4WvezgAD2gY2GiXGw0TpGeG+
+         XI6UXDCj78xh1MaMmYYIdZugwpRkZsyh5hsVMPgWDBkswxvVDF1QkIPtaDG2VMI+Q5jv
+         oUIg==
+X-Gm-Message-State: APjAAAXbdkcx8P2SbAqB6DU1RKZPDzzQ6EMm0Fb2r9yCYx/a/9G1PHeC
+        wQhcY0Sti+DB+mVs0rR7mRq1EA==
+X-Google-Smtp-Source: APXvYqwJ/Yia/+35gou6qrRAmIkzXiI4t3koOKtXe3iAnV4Brg/bboybUghnJVCplNkmCRgecJA4HA==
+X-Received: by 2002:a37:ad0:: with SMTP id 199mr2986016qkk.90.1562177609563;
+        Wed, 03 Jul 2019 11:13:29 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id i17sm1533124qta.6.2019.07.03.11.13.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 11:13:29 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hijl2-0000Hu-Jr; Wed, 03 Jul 2019 15:13:28 -0300
+Date:   Wed, 3 Jul 2019 15:13:28 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     AlexDeucher <alexander.deucher@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/22] mm: move hmm_vma_fault to nouveau
+Message-ID: <20190703181328.GC18673@ziepe.ca>
+References: <20190701062020.19239-21-hch@lst.de>
+ <20190703180356.GB18673@ziepe.ca>
+ <20190703180525.GA13703@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <e88bed6b-c487-e224-1434-ba9912495a33@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 0/2] Fix use-after-free bug when ports are removed
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703180525.GA13703@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-07-03 11:33 a.m., Sagi Grimberg wrote:
->> NVME target ports can be removed while there are still active
->> controllers. Largely this is fine, except some admin commands
->> can access the req->port (for example, id-ctrl uses the port's
->> inline date size as part of it's response). This was found
->> while testing with KASAN.
->>
->> Two patches follow which disconnect active controllers when the
->> ports are removed for loop and rdma. I'm not sure if fc has the
->> same issue and have no way to test this.
->>
->> Alternatively, we could add reference counting to the struct port,
->> but I think this is a more involved change and could be done later
->> after we fix the bug quickly.
+On Wed, Jul 03, 2019 at 08:05:25PM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2019 at 03:03:56PM -0300, Jason Gunthorpe wrote:
+> > I was thinking about doing exactly this too, but amdgpu started using
+> > this already obsolete API in their latest driver :(
+> > 
+> > So, we now need to get both drivers to move to the modern API.
 > 
-> I don't think that when removing a port the expectation is that
-> all associated controllers remain intact (although they can, which
-> was why we did not remove them), so I think its fine to change that
-> if it causes issues.
-> 
-> Can we handle this in the core instead (also so we'd be consistent
-> across transports)?
+> Actually the AMD folks fixed this up after we pointed it out to them,
+> so even in linux-next it just is nouveau that needs fixing.
 
-Yes, that would be much better if we can sort out some other issues below...
+Oh, I looked at an older -next, my mistake. Lets do it then.
 
-> How about this untested patch instead?
-
-I've found a couple of problems with the patch:
-
-1) port->subsystems will always be empty before nvmet_disable_port() is
-called. We'd have to restructure things a little perhaps so that when a
-subsystem is removed from a port, all the active controllers for that
-subsys/port combo would be removed.
-
-2) loop needs to call flush_workqueue(nvme_delete_wq) somewhere,
-otherwise there's a small window after the port disappears while
-commands can still be submitted. We can actually still hit the bug with
-a tight loop.
-
-Maybe there's other cleanup that could be done to solve this: it does
-seem like all three transports need to keep their own lists of open
-controllers and loops through them to delete them. In theory, that could
-be made common so there's common code to manage the list per transport
-which would remove some boiler plate code. If we want to go this route
-though, I'd suggest using my patches as is for now and doing the cleanup
-in the next cycle.
-
-Logan
+Jason
