@@ -2,92 +2,77 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BA2C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379D3C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692F2218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC20218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGCLiL (ORCPT
+        id S1727101AbfGCLjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:38:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:24548 "EHLO mga04.intel.com"
+        Wed, 3 Jul 2019 07:39:01 -0400
+Received: from mail.us.es ([193.147.175.20]:39716 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfGCLiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:38:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 04:38:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="184728002"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jul 2019 04:38:08 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stable <stable@vger.kernel.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] usb: dwc2: use a longer AHB idle timeout in dwc2_core_reset()
-In-Reply-To: <CAFBinCD1qj8sNXOK2Pcbz1MAcdvwywPSxQeERNVpmNw=Gmz=Vw@mail.gmail.com>
-References: <20190620175022.29348-1-martin.blumenstingl@googlemail.com> <a7647aea-b3e6-b785-8476-1851f50beff1@synopsys.com> <CAFBinCDDyG_CxW+PB_OrUXfy-aDKSoewC2OyCfGh18N=omSgcQ@mail.gmail.com> <CAFBinCD1qj8sNXOK2Pcbz1MAcdvwywPSxQeERNVpmNw=Gmz=Vw@mail.gmail.com>
-Date:   Wed, 03 Jul 2019 14:38:07 +0300
-Message-ID: <87d0ir4acg.fsf@linux.intel.com>
+        id S1726255AbfGCLi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 07:38:59 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B281881A08
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 13:38:56 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A2EA8A7BD6
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 13:38:56 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 97C4FDA704; Wed,  3 Jul 2019 13:38:56 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A0F50DA732;
+        Wed,  3 Jul 2019 13:38:54 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 03 Jul 2019 13:38:54 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 7641F4265A2F;
+        Wed,  3 Jul 2019 13:38:54 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 13:38:54 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] netfilter: nf_log: Replace a seq_printf() call by
+ seq_puts() in seq_show()
+Message-ID: <20190703113854.swp66npj5ojthkp5@salvia>
+References: <c7d397c8-4f41-1831-505f-b3fbcc3663fb@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c7d397c8-4f41-1831-505f-b3fbcc3663fb@web.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 02, 2019 at 08:11:53PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 2 Jul 2019 20:06:30 +0200
+> 
+> A string which did not contain a data format specification should be put
+> into a sequence. Thus use the corresponding function “seq_puts”.
+> 
+> This issue was detected by using the Coccinelle software.
 
-Hi,
-
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-
-> On Mon, Jul 1, 2019 at 7:54 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->>
->> On Mon, Jun 24, 2019 at 7:41 AM Minas Harutyunyan
->> <Minas.Harutyunyan@synopsys.com> wrote:
->> >
->> > On 6/20/2019 9:51 PM, Martin Blumenstingl wrote:
->> > > Use a 10000us AHB idle timeout in dwc2_core_reset() and make it
->> > > consistent with the other "wait for AHB master IDLE state" ocurrences.
->> > >
->> > > This fixes a problem for me where dwc2 would not want to initialize when
->> > > updating to 4.19 on a MIPS Lantiq VRX200 SoC. dwc2 worked fine with
->> > > 4.14.
->> > > Testing on my board shows that it takes 180us until AHB master IDLE
->> > > state is signalled. The very old vendor driver for this SoC (ifxhcd)
->> > > used a 1 second timeout.
->> > > Use the same timeout that is used everywhere when polling for
->> > > GRSTCTL_AHBIDLE instead of using a timeout that "works for one board"
->> > > (180us in my case) to have consistent behavior across the dwc2 driver.
->> > >
->> > > Cc: linux-stable <stable@vger.kernel.org> # 4.19+
->> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> > > ---
->> >
->> > Acked-by: Minas Harutyunyan <hminas@synopsys.com>
->> thank you for reviewing this!
->>
->> is there any chance we can get this fix into Linux 5.3? I know that
->> it's too late for 5.2 so I'm fine with skipping that.
-> thank you Felipe for queuing this for v5.3!
-> for reference, this patch is now in the usb-for-v5.3-part2 tag: [0]
->
->
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=usb-for-v5.3-part2&id=dfc4fdebc5d62ac4e2fe5428e59b273675515fb2
-
-I'll send pull request soon :-)
-
--- 
-balbi
+Applied, thanks.
