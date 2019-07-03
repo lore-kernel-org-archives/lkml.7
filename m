@@ -2,217 +2,88 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01EDC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982E6C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AC621850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562164261;
-	bh=Tc67iOYKOnhcj6xw3ykPYuHASpmsGFxuHzhwP5CK3tU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AoxG5nv7URMDRJEEyAgLQHlwdVb4cXeHmwuMkRmqilloWJGU6hJDg3iZcGvuOW8bK
-	 Az68yNOmIjCMc0kXIWypn7Gvr/lOGNGYCG2acK0jl/4hTZ69U0VHGI9UbUPER+42zI
-	 YxvaG5shfgierLs6FkBCxhxgkt6nnPAvjw8FRQM8=
+	by mail.kernel.org (Postfix) with ESMTP id 6F353218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGCObA (ORCPT
+        id S1727208AbfGCObH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:31:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47884 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfGCObA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:31:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F3C80AD76;
-        Wed,  3 Jul 2019 14:30:58 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 16:30:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Kuo-Hsin Yang <vovoy@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: scan anonymous pages on file refaults
-Message-ID: <20190703143057.GQ978@dhcp22.suse.cz>
-References: <20190628111627.GA107040@google.com>
- <20190701081038.GA83398@google.com>
+        Wed, 3 Jul 2019 10:31:07 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:52348 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbfGCObH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:31:07 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1higHk-0000ng-VR; Wed, 03 Jul 2019 22:31:01 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1higHh-0000aL-6m; Wed, 03 Jul 2019 22:30:57 +0800
+Date:   Wed, 3 Jul 2019 22:30:57 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-crypto@vger.kernel.org, chetjain@in.ibm.com,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
+        stable@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: [PATCH] crypto: user - prevent operating on larval algorithms
+Message-ID: <20190703143057.miqgc7blhjjxjmee@gondor.apana.org.au>
+References: <20190701153154.1569c2dc@kitsune.suse.cz>
+ <20190702211700.16526-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701081038.GA83398@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190702211700.16526-1-ebiggers@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 01-07-19 16:10:38, Kuo-Hsin Yang wrote:
-> When file refaults are detected and there are many inactive file pages,
-> the system never reclaim anonymous pages, the file pages are dropped
-> aggressively when there are still a lot of cold anonymous pages and
-> system thrashes.  This issue impacts the performance of applications
-> with large executable, e.g. chrome.
+On Tue, Jul 02, 2019 at 02:17:00PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> With this patch, when file refault is detected, inactive_list_is_low()
-> always returns true for file pages in get_scan_count() to enable
-> scanning anonymous pages.
+> Michal Suchanek reported [1] that running the pcrypt_aead01 test from
+> LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
+> alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
+> The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
 > 
-> The problem can be reproduced by the following test program.
+> The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
+> unregister isn't a real registered algorithm, but rather is a "test
+> larval", which is a special "algorithm" added to the algorithms list
+> while the real algorithm is still being tested.  Larvals don't have
+> initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
+> doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
+> to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
 > 
-> ---8<---
-> void fallocate_file(const char *filename, off_t size)
-> {
-> 	struct stat st;
-> 	int fd;
+> Everything else in the "crypto user configuration" API has this same bug
+> too, i.e. it inappropriately allows operating on larval algorithms
+> (though it doesn't look like the other cases can cause a crash).
 > 
-> 	if (!stat(filename, &st) && st.st_size >= size)
-> 		return;
+> Fix this by making crypto_alg_match() exclude larval algorithms.
 > 
-> 	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-> 	if (fd < 0) {
-> 		perror("create file");
-> 		exit(1);
-> 	}
-> 	if (posix_fallocate(fd, 0, size)) {
-> 		perror("fallocate");
-> 		exit(1);
-> 	}
-> 	close(fd);
-> }
+> [1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
+> [2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
 > 
-> long *alloc_anon(long size)
-> {
-> 	long *start = malloc(size);
-> 	memset(start, 1, size);
-> 	return start;
-> }
-> 
-> long access_file(const char *filename, long size, long rounds)
-> {
-> 	int fd, i;
-> 	volatile char *start1, *end1, *start2;
-> 	const int page_size = getpagesize();
-> 	long sum = 0;
-> 
-> 	fd = open(filename, O_RDONLY);
-> 	if (fd == -1) {
-> 		perror("open");
-> 		exit(1);
-> 	}
-> 
-> 	/*
-> 	 * Some applications, e.g. chrome, use a lot of executable file
-> 	 * pages, map some of the pages with PROT_EXEC flag to simulate
-> 	 * the behavior.
-> 	 */
-> 	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
-> 		      fd, 0);
-> 	if (start1 == MAP_FAILED) {
-> 		perror("mmap");
-> 		exit(1);
-> 	}
-> 	end1 = start1 + size / 2;
-> 
-> 	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
-> 	if (start2 == MAP_FAILED) {
-> 		perror("mmap");
-> 		exit(1);
-> 	}
-> 
-> 	for (i = 0; i < rounds; ++i) {
-> 		struct timeval before, after;
-> 		volatile char *ptr1 = start1, *ptr2 = start2;
-> 		gettimeofday(&before, NULL);
-> 		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
-> 			sum += *ptr1 + *ptr2;
-> 		gettimeofday(&after, NULL);
-> 		printf("File access time, round %d: %f (sec)\n", i,
-> 		       (after.tv_sec - before.tv_sec) +
-> 		       (after.tv_usec - before.tv_usec) / 1000000.0);
-> 	}
-> 	return sum;
-> }
-> 
-> int main(int argc, char *argv[])
-> {
-> 	const long MB = 1024 * 1024;
-> 	long anon_mb, file_mb, file_rounds;
-> 	const char filename[] = "large";
-> 	long *ret1;
-> 	long ret2;
-> 
-> 	if (argc != 4) {
-> 		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS\n");
-> 		exit(0);
-> 	}
-> 	anon_mb = atoi(argv[1]);
-> 	file_mb = atoi(argv[2]);
-> 	file_rounds = atoi(argv[3]);
-> 
-> 	fallocate_file(filename, file_mb * MB);
-> 	printf("Allocate %ld MB anonymous pages\n", anon_mb);
-> 	ret1 = alloc_anon(anon_mb * MB);
-> 	printf("Access %ld MB file pages\n", file_mb);
-> 	ret2 = access_file(filename, file_mb * MB, file_rounds);
-> 	printf("Print result to prevent optimization: %ld\n",
-> 	       *ret1 + ret2);
-> 	return 0;
-> }
-> ---8<---
-> 
-> Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the
-> program fills ram with 2048 MB memory, access a 200 MB file for 10
-> times.  Without this patch, the file cache is dropped aggresively and
-> every access to the file is from disk.
-> 
->   $ ./thrash 2048 200 10
->   Allocate 2048 MB anonymous pages
->   Access 200 MB file pages
->   File access time, round 0: 2.489316 (sec)
->   File access time, round 1: 2.581277 (sec)
->   File access time, round 2: 2.487624 (sec)
->   File access time, round 3: 2.449100 (sec)
->   File access time, round 4: 2.420423 (sec)
->   File access time, round 5: 2.343411 (sec)
->   File access time, round 6: 2.454833 (sec)
->   File access time, round 7: 2.483398 (sec)
->   File access time, round 8: 2.572701 (sec)
->   File access time, round 9: 2.493014 (sec)
-> 
-> With this patch, these file pages can be cached.
-> 
->   $ ./thrash 2048 200 10
->   Allocate 2048 MB anonymous pages
->   Access 200 MB file pages
->   File access time, round 0: 2.475189 (sec)
->   File access time, round 1: 2.440777 (sec)
->   File access time, round 2: 2.411671 (sec)
->   File access time, round 3: 1.955267 (sec)
->   File access time, round 4: 0.029924 (sec)
->   File access time, round 5: 0.000808 (sec)
->   File access time, round 6: 0.000771 (sec)
->   File access time, round 7: 0.000746 (sec)
->   File access time, round 8: 0.000738 (sec)
->   File access time, round 9: 0.000747 (sec)
+> Reported-by: Michal Suchanek <msuchanek@suse.de>
+> Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+> Cc: <stable@vger.kernel.org> # v3.2+
+> Cc: Steffen Klassert <steffen.klassert@secunet.com>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  crypto/crypto_user_base.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-How does the reclaim behave with workloads with file backed data set
-not fitting into the memory? Aren't we going to to swap a lot -
-something that the heuristic is protecting from?
-
-> Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
-> Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
-> Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: <stable@vger.kernel.org> # 4.12+
-
+Patch applied.  Thanks.
 -- 
-Michal Hocko
-SUSE Labs
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
