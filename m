@@ -2,281 +2,291 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8919AC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B894C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543C721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQyWD/vN"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0DB218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfGCTar (ORCPT
+        id S1726876AbfGCTd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:30:47 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41495 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfGCTaq (ORCPT
+        Wed, 3 Jul 2019 15:33:56 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:49155 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbfGCTdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:30:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 205so3688209ljj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 12:30:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9CmDxCKQYXxEUXl00mBOezRpaXCu6nbIOQWdySvPJK4=;
-        b=YQyWD/vNgsVrsv6QlOobbz8ejlwTlhBqfvpirCdpa2xlgKKnJ8YphGsHkB+XnBdN2z
-         +FfwEZlhwEk5DIX23BhDSsi0lBorULxuJkBhL4Ixtry5eu8OeN91Lwbm+HSPT+dMP6wt
-         /svvtLLAEeHAG4IWsUujrqkWn3EkyU1D+Lw4OPZa81piIPRwv3yBtyBWqiTeawCN4O/q
-         fW87jJr0ohQ2yozuZiXvEK4YY9nGofwJHTw4qfRBXD+qdHOZs7havgR11/Y5WJJb2JBz
-         5SRybwL6XPNBjdYKrpiZ+BpsTfOtYfAbuhoZVCcUskiP6ToINDRfymIURYRz2bjjoTi5
-         ogzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9CmDxCKQYXxEUXl00mBOezRpaXCu6nbIOQWdySvPJK4=;
-        b=UIx9OYzsFib7pQAsldfToAAU0FL2cjc8yXCrezwrzpHpKWifwgX/gyZ9Em+h+vVEDT
-         9u0TiuGTIDfFfvdBxOWJ2QUMleAdoW3wWpawM+Eg4p1keKMbTNAYF9Ei1+kd6wRXP+Tg
-         7LmcUfxQJt5zz+gUsEBucbesaLySD+SNrCta+BDwpKizp0fZlI9bR/B4zR0E8BaJPu0b
-         kT8aGM1h6msRjVGBP5KREdN7AVKV8K1KrCjI79YUugBGzM0THqhd6S/rHbUUMMI3oH26
-         ugBGI2b21FFHpCIawEYfqoHj706nIQ2h9zraIqZ/uJpplLKnuKXy0BkINpSDQ/aVTp2P
-         fQgQ==
-X-Gm-Message-State: APjAAAWYF2Tv8Jkz+u+fu9T7W6yoCl1Dtg3MMEIL9l77nKHUXnies9E8
-        rsXjhFNvRTAfSBetLgdyER0=
-X-Google-Smtp-Source: APXvYqw44hXYdu3Xcop44tGS7RQFAqW4AGPiwHHgE5Rihlhmh4wp+rmCIel3wwsgfmK35sbQ0aqUJA==
-X-Received: by 2002:a2e:9b03:: with SMTP id u3mr22187395lji.15.1562182243894;
-        Wed, 03 Jul 2019 12:30:43 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id y5sm635525ljj.5.2019.07.03.12.30.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jul 2019 12:30:43 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 3 Jul 2019 21:30:35 +0200
-To:     Pengfei Li <lpf.vector@gmail.com>
-Cc:     akpm@linux-foundation.org, peterz@infradead.org, urezki@gmail.com,
-        rpenyaev@suse.de, mhocko@suse.com, guro@fb.com,
-        aryabinin@virtuozzo.com, rppt@linux.ibm.com, mingo@kernel.org,
-        rick.p.edgecombe@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] mm/vmalloc.c: improve readability and rewrite
- vmap_area
-Message-ID: <20190703193035.xsbdspgeiwzoo7aa@pc636>
-References: <20190702141541.12635-1-lpf.vector@gmail.com>
+        Wed, 3 Jul 2019 15:33:55 -0400
+Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MQMqN-1hvlgV3yxl-00MMxE; Wed, 03 Jul 2019 21:31:43 +0200
+Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Cristina Moraru <cristina.moraru09@gmail.com>,
+        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
+        Valentin Rothberg <valentinrothberg@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <mmarek@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Tejun Heo <tj@kernel.org>,
+        Jej B <James.Bottomley@hansenpartnership.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Daniel Jonsson <danijons@student.chalmers.se>,
+        Andrzej Wasowski <wasowski@itu.dk>
+References: <1471462023-119645-1-git-send-email-cristina.moraru09@gmail.com>
+ <20160818175505.GM3296@wotan.suse.de> <20160825074313.GC18622@lst.de>
+ <20160825201919.GE3296@wotan.suse.de>
+ <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
+ <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
+ <20190627045052.GA7594@lst.de>
+ <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
+ <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net>
+ <20190703173555.GW19023@42.do-not-panic.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net>
+Date:   Wed, 3 Jul 2019 21:31:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702141541.12635-1-lpf.vector@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190703173555.GW19023@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:kb/MYLc04HZOKlSnabqpK7DsYFcfO94OtT241V79SgdBtnFK6If
+ 3tPNNpMoG1pn8RBT4JKFPkFxXdMvYp1jNHC9iHtM2vV6TleiNErFy9d3yL0iJTmg4PdJxma
+ 5Od557VVQzR6m2nGhX9XXh80GZ1N11ZxfgvlC58thnluFXulWdn0/hyGLu4O3KZGjFCRlPs
+ XrIUoqVcrdlEMU5owxolA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GGlFYQ9CSoI=:Oa3dYStAtCjwENUukwkjWX
+ sP+nmf03MSeLVUBXJoE2AtBF93nOE8vvGOFm32bPxfQ34x2wy+21ZoThtwKT35yHbyFNuItEl
+ c75grpJrW93c8AtAKhom/gas95IZt8skAZQnAqRW5bCSFldNjjXR3CljqNMvfU1WJYhjvf4Pr
+ mgNHZYe913MSHlOHBIVO9C6Dtxi7ijr5BNTn2meODYTNqX0TpQ8ClwVtsNpiVUWuiHOs/xDzV
+ Cx22KNB+14YZntZYOBMZs2noZmw8uvTQLHjfs0z3ZGKoS0t0Gf2Bh9Xm3rEIDPx/gYGRAYq3B
+ PIl6lzjP01A/TjGMt0UdbBlcry4OhujX00Ja0QK3XdQItsa19TS7Xgm5ZjGkBT4xAZRGF/Plb
+ aLkGh0dhCoiJoXkwQCOQGFO+JLvZEID0jydypYE2Lc2+najdBgeLHDDcs9eSpLqe3ODtw45jb
+ FY1u8wC5mELMqYgD+pXhw8olH0QXUby95p4KD8xaQXc3uofsVDBWwOeCJtCHb/wvQSTKNSi0c
+ 6soxqkkuEMgL8/CU2b2h1G12pdoVlxCZp7N+sL1diqgKgWJk6lwNzUkkyI31ZESu9tFuQGI08
+ /SC71/9bcNwD7yXXHjiszSQact/mSnS7v6pCC/MU7P/6VXvf8RjcLRcbwIQgIIrLqo9a+bMoT
+ YffbvCVsPWkzphA9JX7tmQUplK2FNtbHe5FtqUbsWZCDp5eKyJdiDICeljThaZJ9jj/LZky4i
+ xEHCvWBnS/eETyTAp4LtIPZDKb9292NNkJzWSs7OeDsu6A0yg+A6r2Zq2j8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Li.
+On 03.07.19 19:35, Luis Chamberlain wrote:
 
+Hi,
+
+>> Okay, but IIRC this will add more boilerplate those modules.
 > 
-> v1 -> v2:
-> * patch 3: Rename __find_vmap_area to __search_va_in_busy_tree
->            instead of __search_va_from_busy_tree.
-> * patch 5: Add motivation and necessary test data to the commit
->            message.
-> * patch 5: Let va->flags use only some low bits of va_start
->            instead of completely overwriting va_start.
+> Just one module attribute.
+
+Yes, but still one per module. This raises the question whether
+maintainers are willing to cope w/ tons of tiny patches for just
+one line - for something that will take quite some time to become
+actually useful (doesn't help much if only few drivers support it),
+and is only helpful in a few use cases.
+
+And to make it really useful, we also need some way to automatically
+derive which other symbols to enable (subsystems, etc), w/o auto-
+enabling stuff one doesn't need here. (are the defaults sane for
+this usecase ?)
+
+The main problem here, IMHO, is that the kconfig system doesn't really
+know what makes up a module (it only knows that something w =y cant
+depend on something thats =m).
+
+So it smalls like we'd need some config language that really understands
+things like modules, subsystems, arches, etc with their properties and
+is used by both kconfig and kbuild. Then we could put all metadata there
+instead of the current macro calls. At that point we could also put
+things like match tables in here, which would solve the problem of
+finding the right driver by hardware descriptions.
+
+But that's really a *big* topic, it's not easy.
+
+>> And I wonder whether target binaries are the right place for those
+>> things at all - IMHO that's something one wants to derive from the
+>> source code  / .config's.
 > 
+> For the use cases mentioned for why the module attribute is being
+> suggested it would help to not have to download kernel sources. 
+
+Are we still talking about compiling custom kernels ?
+(how to do that w/o source code ?)
+
+> The only question we want to answer is: for the hardware components
+> present on this system, which configs options do I need to enable
+> to support these components?
+
+What else would one need that data, if not compiling a custom kernel
+(which in turn needs the source) ?
+
+> At least for virtualization we decided to support at least these two to
+> help:
 > 
-> The current implementation of struct vmap_area wasted space. At the
-> determined stage, not all members of the structure will be used.
+>   * make kvmconfig
+>   * make xenconfig
+
+These two are rather simple. Most times there isn't much variance in
+virtual hardware (unless one starts directly mapping in pci or usb
+devices ...)
+
+> Similar problem would be found if one wanted to find a desirable kernel
+> config for a remote system. One should be able to somehow scrape some
+> hardware information, dump that to a file, and then somehow generate
+> a working config for that system.
+
+Yes. That's actually pretty much the same usecase (in my case I'd also
+have dts, lspci/lsusb output, etc)
+
+> The module attribute being suggested would enable at least one way
+> to gather some of the required config symbols: symbols for *hardware*
+> and where one can run a modern kernel, with many features / hardware
+> enabled already.
+
+But only for a pretty specific usecase. I'm not opposed to this, but
+I wonder whether maintainers are willing to accept that stuff for just
+that specific usecase.
+
+> However, folks producing embedded systems *do* / *should* have a lot of
+> knowledge of their systems, and so the type of scheme you have devised
+> seems sensible for it.
+
+Usually we have (unless we need to do reverse engineering :o). But it's
+a pretty time-consuming task. Especially if the requirements change
+several times in the development or lifetime of a specific product.
+
+For example "oh, we now need eth", "naah, we don't wanna use usb
+anymore", "let's take a different SoM", ... not that have pretty
+orthogonal sets of configs we need to maintain: hardware- and non-
+hardware-related ones. And hardware-related ones can fall into different
+categories like fixed-attached/onboard vs. hotpluggable ones.
+
+Recently I had a case where the customer requested xattr support, so
+I had to enable general xattr support as well as per-filesystem.
+Pretty simple, but having lots of those cases quickly sums up. One of
+the reasons why I've written my own little config generator.
+
+>> In embedded world, we often have scenarios where we want a really
+>> minimal kernel, but need to enable/disable certain hi-level peripherals
+>> in the middle of the project (eg. "oh, we also need ethernet, but we
+>> wanna drop usb"). There we'll have to find out what actual chip is,
+>> its corresponding driver, required subsystems, etc, and also kick off
+>> everything we don't need anymore.
 > 
-> For this problem, this commit places multiple structural members that
-> are not being used at the same time into a union to reduce the size
-> of the structure.
+> Right. One *should* be able to tell some tool, hey, here is the list of
+> my desirable .config options. Go and figure out what I need to make that
+> work and give me a resulting .config. Its not easy.
+
+I think I've already got into a pretty usable state - at least for my
+projects. For now only supports a few boards and limited set of
+features, but patches are always welcomed :)
+
+>> I've thought about implementing some actual dependency tracking
+>> (at least recording the auto-enabled symbols), but didn't expect that
+>> to become practically usable anytime soon,
 > 
-> And local test results show that this commit will not hurt performance.
+> The ability to easily ask the kernel to enable the components needed
+> for a respective config option *is* very useful but indeed not easy.
+
+Yes, it would need to understand things like conditional definitions
+to deduce that certain things need to be enabled first, before certain
+drivers become choosable.
+
+> This is not the only space where this problem exists. Similar problem
+> exists for distribution packages, and dependencies. Challenges have
+> been made for proper research towards these problems, and such research
+> has lead distributions to opt to enable some of these algorithms.
+
+The problem w/ dependencies is that there can be different types of
+dependencies, as well as different types of software objects. Just
+solving the expressions is only a part of the problem.
+
+> This begs the question if we could learn from similar efforts on Linux
+> for these sorts of questions. One possibility here is to evaluate the
+> prospect of using a SAT solver with Minimally Unsatisfiable Subformulas
+> (MUSes) support, which should be be able to address thir problem. This
+> prospect is ongoing and currrent R&D is active, for details refer to:
 > 
-> After applying this commit, sizeof(struct vmap_area) has been reduced
-> from 11 words to 8 words.
-> 
-> Pengfei Li (5):
->   mm/vmalloc.c: Introduce a wrapper function of insert_vmap_area()
->   mm/vmalloc.c: Introduce a wrapper function of
->     insert_vmap_area_augment()
->   mm/vmalloc.c: Rename function __find_vmap_area() for readability
->   mm/vmalloc.c: Modify function merge_or_add_vmap_area() for readability
->   mm/vmalloc.c: Rewrite struct vmap_area to reduce its size
-> 
->  include/linux/vmalloc.h |  28 +++++---
->  mm/vmalloc.c            | 139 ++++++++++++++++++++++++++++------------
->  2 files changed, 118 insertions(+), 49 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
-I do not think that it is worth to reduce the struct size the way
-this series does. I mean the union around flags/va_start. Simply saying
-if we need two variables: flags and va_start let's have them. Otherwise
-everybody has to think what he/she access at certain moment of time.
+> https://kernelnewbies.org/KernelProjects/kconfig-sat
 
-So it would be easier to make mistakes, also that conversion looks strange
-to me. That is IMHO.
+Good tip, I'll have a look at it.
 
-If we want to reduce the size to L1-cache-line(64 bytes), i would propose to
-eliminate the "flags" variable from the structure. We could do that if apply
-below patch(as an example) on top of https://lkml.org/lkml/2019/7/3/661:
+> It certainly can be useful for components, ie, not hardware. But for
+> hardware a one-to-one mapping of one driver to one config would be of
+> much more use.
 
-<snip>
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 51e131245379..49bb82863d5b 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -51,15 +51,22 @@ struct vmap_area {
-        unsigned long va_start;
-        unsigned long va_end;
+Unfortunately, we don't have this 1:1 mapping. Often drivers support
+different sets of devices, depending on other factors, sometimes sub-
+options (eg. different hw versions), sometimes depending on other
+subsystems, sometimes arch-specific, etc, etc.
 
--       /*
--        * Largest available free size in subtree.
--        */
--       unsigned long subtree_max_size;
--       unsigned long flags;
-        struct rb_node rb_node;         /* address sorted rbtree */
-        struct list_head list;          /* address sorted list */
--       struct llist_node purge_list;    /* "lazy purge" list */
--       struct vm_struct *vm;
-+
-+       /*
-+        * Below three variables can be packed, because vmap_area
-+        * object can be only in one of the three different states:
-+        *
-+        * - when an object is in "free" tree only;
-+        * - when an object is in "purge list" only;
-+        * - when an object is in "busy" tree only.
-+        */
-+       union {
-+               unsigned long subtree_max_size;
-+               struct llist_node purge_list;
-+               struct vm_struct *vm;
-+       };
- };
+I think we should work towards that, but I doubt we'd reach that goal
+anytime soon, and begs the question whether it's really worth all the
+effort required for that.
 
- /*
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 6f1b6a188227..e389a6db222b 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -329,8 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
- #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
- #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+> It would be wonderful if for instance kconfig
+> supported a way to group a major set of components under *one* config
+> symbol and then say: "I want this major component enabled" and then it'd
+> go and enable all the defaults which would be required for it. 
 
--#define VM_VM_AREA     0x04
--
- static DEFINE_SPINLOCK(vmap_area_lock);
- /* Export for kexec only */
- LIST_HEAD(vmap_area_list);
-@@ -1108,7 +1106,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+Yes, thought about that, too. For example have syms for selecting whole
+boards and features of them - a bit like this:
 
-        va->va_start = addr;
-        va->va_end = addr + size;
--       va->flags = 0;
-+       va->vm = NULL;
-        insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+  --> Preconfigure for specific boards
+      --> board A
+      --> board B
+      ...
+  --> Enable board features
+      --> Ethernet port
+      --> Display
+          --> Touch panel
+      --> Audio
+      ....
 
-        spin_unlock(&vmap_area_lock);
-@@ -1912,7 +1910,6 @@ void __init vmalloc_init(void)
-                if (WARN_ON_ONCE(!va))
-                        continue;
+BUT: this would turn into maintenance hell, so I dropped that idea.
 
--               va->flags = VM_VM_AREA;
-                va->va_start = (unsigned long)tmp->addr;
-                va->va_end = va->va_start + tmp->size;
-                va->vm = tmp;
-@@ -2010,7 +2007,6 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
-        vm->size = va->va_end - va->va_start;
-        vm->caller = caller;
-        va->vm = vm;
--       va->flags |= VM_VM_AREA;
-        spin_unlock(&vmap_area_lock);
- }
+> An example is if you
+> wanted to enable PCI on a system which didn't support it. Because of
+> this, it seems you'd want *all* desirable configs and let a piece of
+> software figure out what you need / can enable. And.. this is precisely
+> where the SAT solver with MUSes could help...
 
-@@ -2115,7 +2111,7 @@ struct vm_struct *find_vm_area(const void *addr)
-        struct vmap_area *va;
+Yes, but this piece of software first needs to know whether eg. PCI
+is available on that HW. Oh, and things like PCI could be a dependency
+as well as an feature on its own, depending on how you gonna use it.
+(eg. if directly access from userland or VMs).
 
-        va = find_vmap_area((unsigned long)addr);
--       if (va && va->flags & VM_VM_AREA)
-+       if (va && va->vm)
-                return va->vm;
 
-        return NULL;
-@@ -2139,11 +2135,10 @@ struct vm_struct *remove_vm_area(const void *addr)
+--mtx
 
-        spin_lock(&vmap_area_lock);
-        va = __find_vmap_area((unsigned long)addr);
--       if (va && va->flags & VM_VM_AREA) {
-+       if (va && va->vm) {
-                struct vm_struct *vm = va->vm;
-
-                va->vm = NULL;
--               va->flags &= ~VM_VM_AREA;
-                spin_unlock(&vmap_area_lock);
-
-                kasan_free_shadow(vm);
-@@ -2854,7 +2849,7 @@ long vread(char *buf, char *addr, unsigned long count)
-                if (!count)
-                        break;
-
--               if (!(va->flags & VM_VM_AREA))
-+               if (!va->vm)
-                        continue;
-
-                vm = va->vm;
-@@ -2934,7 +2929,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
-                if (!count)
-                        break;
-
--               if (!(va->flags & VM_VM_AREA))
-+               if (!va->vm)
-                        continue;
-
-                vm = va->vm;
-@@ -3464,10 +3459,10 @@ static int s_show(struct seq_file *m, void *p)
-        va = list_entry(p, struct vmap_area, list);
-
-        /*
--        * s_show can encounter race with remove_vm_area, !VM_VM_AREA on
--        * behalf of vmap area is being tear down or vm_map_ram allocation.
-+        * s_show can encounter race with remove_vm_area, !vm on behalf
-+        * of vmap area is being tear down or vm_map_ram allocation.
-         */
--       if (!(va->flags & VM_VM_AREA)) {
-+       if (!va->vm) {
-                seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
-                        (void *)va->va_start, (void *)va->va_end,
-                        va->va_end - va->va_start);
-<snip>
-
-urezki@pc636:~/data/ssd/coding/linux-stable$ pahole -C vmap_area mm/vmalloc.o
-die__process_function: tag not supported (INVALID)!
-struct vmap_area {
-        long unsigned int          va_start;             /*     0     8 */
-        long unsigned int          va_end;               /*     8     8 */
-        struct rb_node             rb_node;              /*    16    24 */
-        struct list_head           list;                 /*    40    16 */
-        union {
-                long unsigned int  subtree_max_size;     /*           8 */
-                struct llist_node  purge_list;           /*           8 */
-                struct vm_struct * vm;                   /*           8 */
-        };                                               /*    56     8 */
-        /* --- cacheline 1 boundary (64 bytes) --- */
-
-        /* size: 64, cachelines: 1, members: 5 */
-};
-urezki@pc636:~/data/ssd/coding/linux-stable$
-
---
-Vlad Rezki
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
