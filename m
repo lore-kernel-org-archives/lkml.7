@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF16C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859D021882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE112189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120158;
-	bh=qT+TsddTC/RKQpkU5hcAg+6dxTNof2h4Mlwi23FLu5s=;
+	s=default; t=1562120161;
+	bh=PUuHdxl7TTy7bW0AsWJdX81k6IKf5IQiWJ1Ej54CLrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cy6YPGk8rCXlZrmxPE8aBX/7KEcQl/yq1e7tN6M3h048lWrqGZ2tq/z6bfc6c1ZqQ
-	 Rn7z9m+E4QtZnWgAAtIHiy4Dx+aDNd5/oYcwIobvcOKHQU8XOWwmc9eQR9E666MmgY
-	 IjS887U+FDmkZh37PwCjYnkoNXyM4hmD/Jw9A9MY=
+	b=uxIi97wJ+OLY/i5IleZWZkuC95wJv5O0xhGVZK6+7RNx3uSShNFB3Etvh+JhK8kFx
+	 +/1bwPwxktSAAb9lmbB+Uw9U9L2yjxC7zQC4nru5ldrXaZv2V5qvf+GYjf40/ewhq3
+	 7MrDs3SYJcRXC4b44ab8BaMdmw5e2CSw2nijngxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfGCCP5 (ORCPT
+        id S1727796AbfGCCQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54096 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbfGCCPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:46 -0400
+        id S1727742AbfGCCPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A60321882;
-        Wed,  3 Jul 2019 02:15:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23E0B21880;
+        Wed,  3 Jul 2019 02:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120146;
-        bh=qT+TsddTC/RKQpkU5hcAg+6dxTNof2h4Mlwi23FLu5s=;
+        s=default; t=1562120149;
+        bh=PUuHdxl7TTy7bW0AsWJdX81k6IKf5IQiWJ1Ej54CLrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUJawy7u8D3tDrK7KGrjio+ZMVTOTFcnN1vWc62k7ilLQM/+QNuTgFX5CgOiuJbAt
-         y0Bb2lojD6DOlB2aiYYE7orf0IHwLGhLGanyGwXxcI8zw43Hie5DjOXeJ72jr9sL0g
-         AnbR01QOXTG9G3i4Us2XddK1vCGp5LkhQkCQlz4g=
+        b=drcCmHhEYgLYkbyybfuvhizTPaA1sQxvFbJGFwopM2D1uxqW6LaIiD2+HBRLxSV6d
+         ejzzH8F2B2H8jJqd5IE4CAQ3xct8NsR79dbiKegAsQiZ2l5P0b/nmORhtz9fs8vuIx
+         C3njSGFsOwRmsp25ybk7XhozB8vaqL798PyHguPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 21/39] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date:   Tue,  2 Jul 2019 22:14:56 -0400
-Message-Id: <20190703021514.17727-21-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 24/39] pinctrl: ocelot: fix gpio direction for pins after 31
+Date:   Tue,  2 Jul 2019 22:14:59 -0400
+Message-Id: <20190703021514.17727-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,62 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
+[ Upstream commit f2818ba3a0125670cb9999bb5a65ebb631a8da2f ]
 
-According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
-summary", the interrupts for the PWM[1-4] go from 83 to 86.
+The third argument passed to REG is not the correct one and
+ocelot_gpio_set_direction is not working for pins after 31. Fix that by
+passing the pin number instead of the modulo 32 value.
 
-Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pinctrl/pinctrl-ocelot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index facd65602c2d..572c04296fe1 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -358,7 +358,7 @@
- 			pwm1: pwm@2080000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02080000 0x4000>;
--				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM1>,
- 					 <&clks IMX6UL_CLK_PWM1>;
- 				clock-names = "ipg", "per";
-@@ -369,7 +369,7 @@
- 			pwm2: pwm@2084000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02084000 0x4000>;
--				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM2>,
- 					 <&clks IMX6UL_CLK_PWM2>;
- 				clock-names = "ipg", "per";
-@@ -380,7 +380,7 @@
- 			pwm3: pwm@2088000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02088000 0x4000>;
--				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM3>,
- 					 <&clks IMX6UL_CLK_PWM3>;
- 				clock-names = "ipg", "per";
-@@ -391,7 +391,7 @@
- 			pwm4: pwm@208c000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x0208c000 0x4000>;
--				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM4>,
- 					 <&clks IMX6UL_CLK_PWM4>;
- 				clock-names = "ipg", "per";
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index 3b4ca52d2456..d2478db975bd 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -432,7 +432,7 @@ static int ocelot_gpio_set_direction(struct pinctrl_dev *pctldev,
+ 	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	unsigned int p = pin % 32;
+ 
+-	regmap_update_bits(info->map, REG(OCELOT_GPIO_OE, info, p), BIT(p),
++	regmap_update_bits(info->map, REG(OCELOT_GPIO_OE, info, pin), BIT(p),
+ 			   input ? 0 : BIT(p));
+ 
+ 	return 0;
 -- 
 2.20.1
 
