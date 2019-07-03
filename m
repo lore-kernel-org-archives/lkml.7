@@ -2,121 +2,139 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60798C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3329C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35291218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DFB218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPKV/kPr"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nHY7Db9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfGCM7Y (ORCPT
+        id S1726957AbfGCNAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:59:24 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44860 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCM7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:59:23 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p144so2461838qke.11;
-        Wed, 03 Jul 2019 05:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B3EbCvz8X6j0zzkGiu03xLcJoPBmlD1JcdVbnYZ1AM0=;
-        b=kPKV/kPrPzogkaCvQyzRg/c8dr8quQTQpvi+Cap2nAr5jbHSvqbvTJzTp6BvkbDvVu
-         jIFT07EYyUtwZao9gaKVX9kqdsaIljf84DqpAZ+ZxTQw497ttJZLhIUjKc+JZHhn2jEY
-         52c+Bfk5XVL0yDuKnzqd8Jp/z4wvp8o53KdqJq2aimGRXc93zhApMAYbKK4sr4YXbT6T
-         rYO+9zllfrWUo6Sxp/4ZCpALQH3cD0h7jatKOA8SM73Ivv7suTDw9CEvEmthD2OrmgTH
-         j4E2dPT6Bv2Ppa1d4dytTNOYhvFi/0ffn9x5SDpzp26AEiSYGoJULeHngSLuouSAJ5Ux
-         JW4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B3EbCvz8X6j0zzkGiu03xLcJoPBmlD1JcdVbnYZ1AM0=;
-        b=FOPI1BRaNljBNuFyrdLx20egWULXduS7YRmfzJOLHzW/FAsmbFr5CfhdVomC/Quqya
-         LzuAoVfgyYN4C4n6Uk4G+pFrZIcJ1GzFCeznIdv2P+hD9Hd3BEQVHujmPLn0V+r7nfQC
-         FaKi3nsSOiBGEHsSBwLXD2spMUHjDf0IcqvcD/HTmKvGJsp05hlBneVNDRCDrx1qcjUR
-         QIVHiTm8YH6QAnzuitH9ZxhfljBG4vjCDVirwQmhryuEsUnAWtBTlxxCRZCMHhaAAvKm
-         nui6hay+jP5i9LbTLesLdBpezYA5qvlCHFj7zbtDGBrETxRAUAf0JAmNLU1CwcjBwp08
-         I/ZA==
-X-Gm-Message-State: APjAAAUbkAJBV+ZAKrjd79oLzlKg5aYvJnD38GXUU/ez9If+wdG9WFrH
-        xsRwE7JaSOx4Z9w+j6EWy1icXOF6fPE=
-X-Google-Smtp-Source: APXvYqwiMScv8YFY/uIqT4gRFTXx7BmI72I2/asiZLeQvcpTyote35EuKr+TQcP3CYjZ2zLQyL6/uw==
-X-Received: by 2002:a05:620a:1285:: with SMTP id w5mr28646990qki.302.1562158762393;
-        Wed, 03 Jul 2019 05:59:22 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d9::105b? ([2620:10d:c091:480::2a6d])
-        by smtp.gmail.com with ESMTPSA id u7sm891625qkm.62.2019.07.03.05.59.19
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 05:59:21 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Chris Chiu <chiu@endlessm.com>, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-References: <20190627095247.8792-1-chiu@endlessm.com>
- <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
- <4c99866e-55b7-8852-c078-6b31dce21ee4@gmail.com>
- <CAD8Lp47mWH1-VsZaHr6_qmSU2EEOr9tQJ3CUhfi_JkQGgKpegA@mail.gmail.com>
-Message-ID: <89dbfb9d-a31a-9ecb-66bd-42ac0fc49e70@gmail.com>
-Date:   Wed, 3 Jul 2019 08:59:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Jul 2019 09:00:48 -0400
+Received: from node.akkea.ca ([192.155.83.177]:57972 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfGCNAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:00:47 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id BC92D4E204B; Wed,  3 Jul 2019 13:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1562158846; bh=jfEnQz6Z7lDitZDfZEU5tHLgi5WtCywGyso2NpbD6yM=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=nHY7Db9TTbezNC91mUbwu6U9bjG3WAnn/Vj2i/HuvYVxqG55+k/M/yHfQaRKCevGh
+         3gFNdY/MIMR/QthhXFfVDa7O2uYz6nSZ3Iz73qCjR3tpEJR21kbtwmGf4EUHZylfde
+         blLDPH5clasanypevgikazHmk+IrIti1LuSXTjuE=
+To:     Andra Danciu <andradanciu1997@gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp47mWH1-VsZaHr6_qmSU2EEOr9tQJ3CUhfi_JkQGgKpegA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jul 2019 07:00:46 -0600
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        Anson.Huang@nxp.com, andrew.smirnov@gmail.com,
+        ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190702132353.18632-1-andradanciu1997@gmail.com>
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+Message-ID: <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/19 3:42 AM, Daniel Drake wrote:
-> On Tue, Jul 2, 2019 at 8:42 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
->> We definitely don't want to bring over the vendor code, since it's a
->> pile of spaghetti, but we probably need to get something sorted. This
->> went down the drain when the bluetooth driver was added without taking
->> it into account - long after this driver was merged.
+Hi Andra,
+
+I tried this out on linux-next and I'm not able to record or play sound.
+
+I also added the sai2 entry to test out our devkit and get a PCM timeout 
+with that.
+
+On 2019-07-02 07:23, Andra Danciu wrote:
+> SAI3 and SAI6 nodes are used to connect to an external codec.
+> They have 1 Tx and 1 Rx dataline.
 > 
-> Yeah, I didn't mean bring over quite so literally.. Chris is studying
-> it and figuring out the neatest way to reimplement the required bits.
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> ---
+> Changes since v2:
+> 	- removed multiple new lines
 > 
-> As for the relationship with bluetooth.. actually the bug that Chris
-> is working on here is that the rtl8xxxu wifi signal is totally
-> unusable *until* the bluetooth driver is loaded.
+> Changes since v1:
+> 	- Added sai3 node because we need it to enable audio on pico-pi-8m
+> 	- Added commit description
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29 
+> +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index d09b808eff87..736cf81b695e 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -278,6 +278,20 @@
+>  			#size-cells = <1>;
+>  			ranges = <0x30000000 0x30000000 0x400000>;
+> 
+> +			sai6: sai@30030000 {
+> +				compatible = "fsl,imx8mq-sai",
 
-So this is not my experience at all from when I wrote the code. The
-8723bu dongle I used for it came up just fine.
+I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't 
+the registers at a different offset from "fsl,imx6sx-sai".
 
-> Once the bluetooth driver is loaded, at the point of bluetooth
-> firmware upload, the rtl8xxxu signal magiaclly strength becomes good.
-> I think this is consistent with other rtl8xxxu problem reports that we
-> saw lying around, although they had not been diagnosed in so much
-> detail.
+How is this supposed to work ?
 
-See this is the very opposite of what I have experienced. The bluetooth
-driver ruins the signal when it's loaded with my dongle.
+Thanks
+Angus
 
-> The rtl8723bu vendor driver does not suffer this problem, it works
-> fine with or without the bluetooth driver in place.
+> +					"fsl,imx6sx-sai";
+> +				reg = <0x30030000 0x10000>;
+> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
+> +					<&clk IMX8MQ_CLK_SAI6_ROOT>,
+> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
+> +				dma-names = "rx", "tx";
+> +				status = "disabled";
+> +			};
+> +
+>  			gpio1: gpio@30200000 {
+>  				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+>  				reg = <0x30200000 0x10000>;
+> @@ -728,6 +742,21 @@
+>  				status = "disabled";
+>  			};
+> 
+> +			sai3: sai@308c0000 {
+> +				compatible = "fsl,imx8mq-sai",
+> +					     "fsl,imx6sx-sai";
+> +				reg = <0x308c0000 0x10000>;
+> +				interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
+> +					<&clk IMX8MQ_CLK_DUMMY>,
+> +					<&clk IMX8MQ_CLK_SAI3_ROOT>,
+> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
+> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
+> +				dma-names = "rx", "tx";
+> +				status = "disabled";
+> +			};
+> +
+>  			i2c1: i2c@30a20000 {
+>  				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
+>  				reg = <0x30a20000 0x10000>;
 
-My point is this seems to be very dongle dependent :( We have to be
-careful not breaking it for some users while fixing it for others.
-
-Cheers,
-Jes
