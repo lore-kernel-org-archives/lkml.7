@@ -2,123 +2,99 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB80C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E734DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C4A21993
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B137D21993
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qbaLWSdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfGCAaH (ORCPT
+        id S1727339AbfGCAaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:30:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:11554 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727294AbfGCA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:29:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:29:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
-   d="scan'208";a="315413534"
-Received: from unknown (HELO [10.239.196.136]) ([10.239.196.136])
-  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2019 17:29:55 -0700
-Subject: Re: [PATCH v5 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Xiaoyao Li <xiaoyao.li@linux.intel.com>, rkrcmar@redhat.com,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, sean.j.christopherson@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, jingqi.liu@intel.com
-References: <20190620084620.17974-1-tao3.xu@intel.com>
- <20190620084620.17974-3-tao3.xu@intel.com>
- <b2cfa1d015315c74af6cee1c00185e5c68cfa397.camel@linux.intel.com>
- <22533924-f7e8-4b50-d5fe-7cbcc9295b53@redhat.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <05d4c029-79f4-e513-1778-a7c245a48ad7@intel.com>
-Date:   Wed, 3 Jul 2019 08:29:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 20:30:30 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:44679 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfGCAa3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:30:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1562113829; x=1593649829;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TMJsHq9zABqqQ3LglKzp9QSrjZnTx0R4BAlOB34vBkE=;
+  b=qbaLWSdzSoWQnpjSdvyiow0GvNZW+csP1PEyH7wFfcvy9kAgLQIGPC7t
+   OtOERKT+5oRz5YMQjjg6a9I39qQxdJnJeMbihQqTpP4tk6xisKOQsj9fr
+   9z9qbUmju22k+dhQNmcpQGJHZw/VtDLO2eHMUclxhQNgvS1LyoG7o+/lf
+   RYWUAGpTHOjgUF+qXQYnpdUOOUbtXyy29RNjbkWaG/lP1z/sxKN9ZLb8n
+   pub17rIBro2lu7ZKL+Ctf0kMGWG87Jpzp8SldFecEtsHQ79N6JKQiRLFi
+   I3NWSapZqTCzVO3l8qKzvAZgd95x7liOJCZX+KL1aidWXB+fGb+18Jozj
+   Q==;
+IronPort-SDR: sHuzIviK+rqOr3zkt+yyrX62rRI0jtge+iJnIfU+Clus+YqtGHm4LGZXlIJAXRxr0Y8xizVtDa
+ lW8m9MgwvKUJyzEOWjO+VQwbq12utj8RCmKL4kDG6bkcm3nIEOv+N/q6uL4YhpgvPBtsCbUDjc
+ cCitwg1ssr++el1XW1sNKDY9wxM5mD5jucNc9pi2Gbbq6Muwur2qWwhNER5EUXrkio4dpSoeLu
+ 4ZHWkB0/AdxdQcruyIz0MUq4/MSLxFs8pf1HZSZW7p5aoDnEEvLR9VQjRwKqu3vz/6aDWd6DVb
+ 0DQ=
+X-IronPort-AV: E=Sophos;i="5.63,444,1557158400"; 
+   d="scan'208";a="112096599"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2019 08:21:25 +0800
+IronPort-SDR: k1nZz9KcjzgOF5L0VqvUuyU3GpENOHupdjsAd2K7HOXLKwz9433aBju8eoWZaTuDxDe5xh3wIT
+ SxzU7IGuR3J+3/EgswCDH5S4cwPB1qB0kJZMUqd6LelkGfkUqpuetNQepzL7TmvggSytnVR211
+ 4R3l5d53tIl+CsLsVgCBuKLjQQErpqBnwQsIdz9yBkI5YZduKYe8/GIG/IXgHFsNNMIfREOW0S
+ gwhGjhNEgxkpWLpeuDGLVaeuwXhrQSASehh3RmluP1VITohltlcI6B5fkFCsKKG0+ejmByHYlW
+ vQAHj8LFYcRgcNV1RT+d+Wil
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 02 Jul 2019 17:20:25 -0700
+IronPort-SDR: GPO25u+udSBPahbfy+LtrdJF8rWSyoRkc3XxlFv4pm3hyXenQn0hdzbsFHK2AvCJ9uDi/HKxDs
+ rECGrfHTBptEsQ1oz219xFHu1ZO7WDlCc8vsT64rheUNk8Xn77uPUS9uw7hVMOO13ekYHhi/DQ
+ P/w99yrlU4MEQga/Zh81U39mh6mYScAczMwZfYpZ27ZnUAM2runiKt6pIYrwCgLH3Car19xDsq
+ li4fxN1Za0Pn6E8Q4OSLA0TuQdC58+HcvXq/DPoqnnTOUxQDKVz/M3dfN/LpAE2tRlz6lM3j9f
+ NDI=
+Received: from risc6-mainframe.sdcorp.global.sandisk.com (HELO risc6-mainframe.int.fusionio.com) ([10.196.157.140])
+  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jul 2019 17:21:24 -0700
+From:   Alistair Francis <alistair.francis@wdc.com>
+To:     linux-riscv-bounces@lists.infradead.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, alistair23@gmail.com,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH 0/2] RISC-V: Handle the siginfo_t offset problem
+Date:   Tue,  2 Jul 2019 17:18:40 -0700
+Message-Id: <20190703001842.12238-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <22533924-f7e8-4b50-d5fe-7cbcc9295b53@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/2019 12:37 AM, Paolo Bonzini wrote:
-> On 20/06/19 11:46, Xiaoyao Li wrote:
->> You cannot put the atomic switch here. What if umwait_control_cached is changed
->> at runtime? Host kernel patch exposed a sysfs interface to let it happen.
-> 
-> Thanks for the review, Xiaoyao.  I agree with both of your remarks.
-> 
-> Paolo
-> 
-Hi paolo,
+In the RISC-V 32-bit glibc port [1] the siginfo_t struct in the kernel
+doesn't line up with the struct in glibc. In glibc world the _sifields
+union is 8 byte alligned (although I can't figure out why) while in the
+kernel wordl the _sifields union is 4 bytes alligned. This results in
+information being lost in the waitid syscall.
 
-The issues have been solved in v6 patches, could you help to review v6 
-patches?
+This doesn't seem to be a great fix, but it is somewhat similar to what
+x32 does (which has 64-bit time_t like RV32) and I can't figure out why
+the two allignments are different.
 
-Thanks
+1: https://github.com/alistair23/glibc/commits/alistair/rv32.next
 
-Tao
+Alistair Francis (2):
+  uapi/asm-generic: Allow defining a custom __SIGINFO struct
+  riscv/include/uapi: Define a custom __SIGINFO struct for RV32
 
->>> +		break;
->>>   	case MSR_IA32_SPEC_CTRL:
->>>   		if (!msr_info->host_initiated &&
->>>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->>> @@ -4126,6 +4148,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool
->>> init_event)
->>>   	vmx->rmode.vm86_active = 0;
->>>   	vmx->spec_ctrl = 0;
->>>   
->>> +	vmx->msr_ia32_umwait_control = 0;
->>> +
->>>   	vcpu->arch.microcode_version = 0x100000000ULL;
->>>   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->>>   	kvm_set_cr8(vcpu, 0);
->>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->>> index 61128b48c503..8485bec7c38a 100644
->>> --- a/arch/x86/kvm/vmx/vmx.h
->>> +++ b/arch/x86/kvm/vmx/vmx.h
->>> @@ -14,6 +14,8 @@
->>>   extern const u32 vmx_msr_index[];
->>>   extern u64 host_efer;
->>>   
->>> +extern u32 umwait_control_cached;
->>> +
->>>   #define MSR_TYPE_R	1
->>>   #define MSR_TYPE_W	2
->>>   #define MSR_TYPE_RW	3
->>> @@ -194,6 +196,7 @@ struct vcpu_vmx {
->>>   #endif
->>>   
->>>   	u64		      spec_ctrl;
->>> +	u64		      msr_ia32_umwait_control;
->>>   
->>>   	u32 vm_entry_controls_shadow;
->>>   	u32 vm_exit_controls_shadow;
->>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>> index 83aefd759846..4480de459bf4 100644
->>> --- a/arch/x86/kvm/x86.c
->>> +++ b/arch/x86/kvm/x86.c
->>> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
->>>   	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
->>>   	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
->>>   	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
->>> +	MSR_IA32_UMWAIT_CONTROL,
->>>   };
->>>   
->>>   static unsigned num_msrs_to_save;
->>
-> 
+ arch/riscv/include/uapi/asm/siginfo.h | 32 +++++++++++++++++++++++++++
+ include/uapi/asm-generic/siginfo.h    | 32 ++++++++++++++-------------
+ 2 files changed, 49 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/include/uapi/asm/siginfo.h
+
+-- 
+2.22.0
 
