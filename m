@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0519BC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F050C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB6E218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E36218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6O/Y4Nx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCFmnMno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfGCNR0 (ORCPT
+        id S1727312AbfGCNRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:17:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41807 "EHLO
+        Wed, 3 Jul 2019 09:17:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42090 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCNR0 (ORCPT
+        with ESMTP id S1725830AbfGCNRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:17:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so1269869pff.8;
-        Wed, 03 Jul 2019 06:17:25 -0700 (PDT)
+        Wed, 3 Jul 2019 09:17:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so1268336pff.9;
+        Wed, 03 Jul 2019 06:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=2qYNVGbyIIWNOL5rTJJVjT4gxxFnB3Ik8dlI0/WbQj4=;
-        b=R6O/Y4NxQUD6zKrHnbUDo1Azr14C08OSSYr/bMB4XOd0Y94vf1ZJ6e7FYeOn8t0uJD
-         TvcGaxV1sVIc1dZrVQEeJWEw8f9LlV2nyNsGYDwYmkWl5fP+Rd0XaUSupzBzDsyFlLPE
-         d8ZPJtnAoUE0MJVq+18mFHC8aZWNENe8EGCb8L7Hu3iqUWAs+04H/vRf33rn0u2nwsHG
-         YjaXwJ4eu1Htwy9IrCr5iss0Ih2JrmaWENPQOfmGSJQBjovjSerfG/7rVGEizQyBp9hE
-         lHN/aG9G3F/YkdLwHo8WZh/s2VI1PduDhNssaag2fQh5f4k0o1jy2upBX7NtfQbNmw2c
-         rnVg==
+        bh=kID8MleQILhLJBSvhNclsUXpPABPaGgap1yaL7i2q0g=;
+        b=CCFmnMno+D5GHdrxjpBvUh9B4GejAclzpHtSteg9DYMAldleYRZvdnvIATiqhNlMzS
+         Bsf5LiQS7nVv5ri8fdtIp+OzbVxTgkydu1SDy2WrGQSeODbx/PVLOTwz45t0/vh+DOXq
+         snKshU9fwZKy4JcndV7lwggCLt6V2+HZB54XlCcjfFTtzYDXcapKWzKNy4gQ3rdOVCU6
+         oHnziz1C+8jjiBLe9kL+YcDGwsg1WwrwMPnzd+18VBLuWO+ODOcArPVOieuSquDoaVn3
+         W+nxbehkRExt6sGueOQF5L7ZJGwGyomqT38z9YIIgCGlfUIRUZAv1y8nDUctow/gdhp6
+         wgJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2qYNVGbyIIWNOL5rTJJVjT4gxxFnB3Ik8dlI0/WbQj4=;
-        b=iN4kWSxc4W6cuwxjRVr/YxQK4YkwZyTfv0EMLJ7qkFIMcZPgI7l+A5Ta/NQRdJyVe9
-         yQZ+ccEWek53xQizqQjXV40QnCF/0oWYnrOB00PxLHqur0wR14C46l3xQGTHuvBpaLlD
-         4MgrGU5m5FbO5PSiFI+LCffaZnMuFLvhhEp4Hh6GTWY2oVm1pLuzyzxP4pqfyhROiNWf
-         9RfpAV2UkiSb7UV042evUwaKdqOZTBoERsFDFE/ETs/V63FpJe4ThRYdjdMHwYumCDaQ
-         3UGJ09ZZ9V6zomEopmLR98ZmnA9UXoqm8LusZ6+9xllKKOv/s7AiEf/jXNomcc9HtT+W
-         0X5A==
-X-Gm-Message-State: APjAAAVvYVV1b/V1TJHbzqlABGQ7mngc9IkHnwTwpZvZ9ljVqI76WLQf
-        BDb+q0yyLzpI0cG46BJGj9I=
-X-Google-Smtp-Source: APXvYqyPMoOHdWfD2mYmRHdO63X6csCqLGJlHSZ6wY7B6QcMT+GDa43g06FtHQq+Kk8UhkwRp+t/5A==
-X-Received: by 2002:a17:90a:1b4c:: with SMTP id q70mr12417346pjq.69.1562159845497;
-        Wed, 03 Jul 2019 06:17:25 -0700 (PDT)
+        bh=kID8MleQILhLJBSvhNclsUXpPABPaGgap1yaL7i2q0g=;
+        b=cUIpHL/Pa2yaE/qzjgKmxqQaMavKJY0DntkJlyWdh/6dhFzP6q4Ye0QkVqZlS1SjNw
+         y1T8wkzT7GAOAdSaFSiDTQBDGOO6GGZcBHNm1nZT2smMDhlHXw8FOIjJyQe89nkSbrZP
+         jseqN6ovnugZA2MHtXCDhGrUn1TdQJ7httOFdmNBby31pnXhJTtJYVDdwvK2MzopUUlH
+         ivVPYpVMivYd+Xw6re7Tzyr+CZCfelanv4UuLglxGmf75rlJQSKRBDkw6jhTgJ6hxF0V
+         pJSxLYcII99qnKg5xL6ble3CXL5PDZGvlGwXBuRQCBKRGrVoU/Z5lHmXokJcw1rhy235
+         mK9w==
+X-Gm-Message-State: APjAAAWNypXYq4NJNVEzeAaCAiGHvKkcgXtYHi84o4QLrBZNnwi80hEz
+        pMTXUTcRr7zgl5kKqe96Yjg=
+X-Google-Smtp-Source: APXvYqwEz82fG8Aqjq14RhP/3Hxg5ERz3mIlO9S73tgHII5YcrQYvlMJbJ7aineL7lUinnLUFpFD7w==
+X-Received: by 2002:a63:607:: with SMTP id 7mr34192556pgg.240.1562159855813;
+        Wed, 03 Jul 2019 06:17:35 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id m5sm2552932pfa.116.2019.07.03.06.17.22
+        by smtp.googlemail.com with ESMTPSA id u10sm2255542pgk.41.2019.07.03.06.17.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 06:17:25 -0700 (PDT)
+        Wed, 03 Jul 2019 06:17:35 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+Cc:     Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 22/30] cifs: Use kmemdup rather than duplicating its implementation
-Date:   Wed,  3 Jul 2019 21:17:16 +0800
-Message-Id: <20190703131716.25689-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 23/30] ext2: Use kmemdup rather than duplicating its implementation
+Date:   Wed,  3 Jul 2019 21:17:27 +0800
+Message-Id: <20190703131727.25735-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,27 +77,26 @@ Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- fs/cifs/smb2pdu.c | 3 +--
+ fs/ext2/xattr.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 75311a8a68bf..ab8dc73d2282 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2550,12 +2550,11 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
- 		 * indatalen is usually small at a couple of bytes max, so
- 		 * just allocate through generic pool
- 		 */
--		in_data_buf = kmalloc(indatalen, GFP_NOFS);
-+		in_data_buf = kmemdup(in_data, indatalen, GFP_NOFS);
- 		if (!in_data_buf) {
- 			cifs_small_buf_release(req);
- 			return -ENOMEM;
- 		}
--		memcpy(in_data_buf, in_data, indatalen);
- 	}
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index 1e33e0ac8cf1..a9c641cd5484 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -506,11 +506,10 @@ bad_block:		ext2_error(sb, "ext2_xattr_set",
  
- 	req->CtlCode = cpu_to_le32(opcode);
+ 			unlock_buffer(bh);
+ 			ea_bdebug(bh, "cloning");
+-			header = kmalloc(bh->b_size, GFP_KERNEL);
++			header = kmemdup(HDR(bh), bh->b_size, GFP_KERNEL);
+ 			error = -ENOMEM;
+ 			if (header == NULL)
+ 				goto cleanup;
+-			memcpy(header, HDR(bh), bh->b_size);
+ 			header->h_refcount = cpu_to_le32(1);
+ 
+ 			offset = (char *)here - bh->b_data;
 -- 
 2.11.0
 
