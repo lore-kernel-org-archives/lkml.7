@@ -2,192 +2,204 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88CFC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ED2C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99301218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6A12189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FSF187M8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfGCQgS (ORCPT
+        id S1727014AbfGCQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:36:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:52414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbfGCQgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:36:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8189A1478;
-        Wed,  3 Jul 2019 09:36:16 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D7C03F740;
-        Wed,  3 Jul 2019 09:36:15 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, patrick.bellasi@arm.com,
-        dietmar.eggemann@arm.com
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
- <20190702155115.GW3436@hirez.programming.kicks-ass.net>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <5198292b-1874-9ff4-6a9f-826a5ea00466@arm.com>
-Date:   Wed, 3 Jul 2019 17:36:14 +0100
+        Wed, 3 Jul 2019 12:37:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8478 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCQhl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:37:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1cd9d10000>; Wed, 03 Jul 2019 09:37:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 03 Jul 2019 09:37:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 03 Jul 2019 09:37:38 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
+ 2019 16:37:36 +0000
+Subject: Re: [PATCH v4] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190703012836.16568-1-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b0a0b110-61c8-ae8b-22a0-3311f70b428a@nvidia.com>
+Date:   Wed, 3 Jul 2019 17:37:34 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190702155115.GW3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
+In-Reply-To: <20190703012836.16568-1-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562171857; bh=+hij/D6gVD7l9xuZhS70byu/Uv6XOjg3bl4uM9oJDT8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FSF187M8c+wiVdHpa4JRJXMBeHA7V+nYPo8TEmvT2Ppbkmch1h7l76edg1gLKCOf5
+         IAoGnrB0mHKjCEqUfK3gARBkkFD2EHCfKhXtHd5mTnWdoe3ruoL3Sa9trX5lkGnzo+
+         0dmIAobjC0MxtaOX0a88USkYxnNhBIiaIt44Gn9hwBJ+fq6fCiIOcqEOyM4EEaqko2
+         oNiRvb8/makgmb4K0ugZjytIhU7WWlHGtGAgHkjCTjkyhQC8M9oowPG2av1xyGCjcQ
+         EdK43Ce2W5Bs1EPgQadGi9MX/uLNQZ3w1003fgIoAerKbphz6PJ59JG/aN/8qhZUyD
+         H6s30HkbEIiqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 4:51 PM, Peter Zijlstra wrote:
-> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
->> Make schedutil cpufreq governor energy-aware.
->>
->> - patch 4 adds sugov_cpu_ramp_boost() function.
->> - patch 5 updates sugov_update_(single|shared)() to make use of
->>    sugov_cpu_ramp_boost().
->>
->> The benefits of using the EM in schedutil are twofold:
+
+On 03/07/2019 02:28, Dmitry Osipenko wrote:
+> Tegra's APB DMA engine updates words counter after each transferred burst
+> of data, hence it can report transfer's residual with more fidelity which
+> may be required in cases like audio playback. In particular this fixes
+> audio stuttering during playback in a chromium web browser. The patch is
+> based on the original work that was made by Ben Dooks and a patch from
+> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 > 
->> 2) Driving the frequency selection with power in mind, in addition to
->>     maximizing the utilization of the non-idle CPUs in the system.
+> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 > 
->> Point 2) is enabled in
->> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
->> higher frequencies when it is known that the true utilization of
->> currently running tasks is exceeding their previous stable point.
->> The benefits are:
->>
->> * Boosting the frequency when the behavior of a runnable task changes,
->>    leading to an increase in utilization. That shortens the frequency
->>    ramp up duration, which in turns allows the utilization signal to
->>    reach stable values quicker.  Since the allowed frequency boost is
->>    bounded in energy, it will behave consistently across platforms,
->>    regardless of the OPP cost range.
->>
->> * The boost is only transient, and should not impact a lot the energy
->>    consumed of workloads with very stable utilization signals.
+> Changelog:
 > 
-
-[reordered original comments]
-
-> This then obviously has relation to Patrick's patch that makes the EWMA
-> asymmetric, but I'm thinking that the interaction is mostly favourable?
-
-Making task_ue.ewma larger makes cpu_ue.enqueued larger, so Patrick's patch
-helps increasing the utilisation as seen by schedutil in that transient time.
-(see discussion on schedutil signals at the bottom). That goes in the same
-direction as this series.
-
-> So you're allowing a higher pick when the EWMA exceeds the enqueue
-> thing.
-
-TLDR: Schedutil ramp boost works on CPU rq signals, for which util est EWMA
-is not defined, but the idea is the same (replace util est EWMA by util_avg).
-
-The important point here is that when util_avg for the task becomes higher
-than task_ue.enqueued, it means the knowledge of the actual needs of the task
-is turned into a lower bound (=task_ue.enqueued) rather than an exact value.
-This means that selecting a higher frequency than that is:
-a) necessary, the task needs more computational power to do its job.
-b) a shot in the dark, as it's impossible to predict exactly how much it will
-    need without a crystal ball.
-
-When adding ramp boost, the bill is split: part of the "shot in the dark" comes from
-the growing CPU's util_avg (see schedutil_u definition at the bottom), and part of it
-comes from the ramp boost. We don't want to make the boost too costly either since
-it's a shot in the dark. Therefore, we make the boost proportional to a battery life
-cost rather than some guessed utilisation.
-
-Now that I think about it, it may make sense to let this ramp-boost completely
-handle this "future util prediction" case, as it's not better or worse than
-util_avg at that (since it's based on it), but allows better control on
-the cost of a (mis)prediction.
-
+> v4: The words_xferred is now also reset on a new iteration of a cyclic
+>     transfer by ISR, so that dmaengine_tx_status() won't produce a
+>     misleading warning splat on TX status re-checking after a cycle
+>     completion when cyclic transfer consists of a single SG.
 > 
-> I'm not immediately seeing how it is transient; that is, PELT has a
-> wobble in it's steady state, is that accounted for?
+> v3: Added workaround for a hardware design shortcoming that results
+>     in a words counter wraparound before end-of-transfer bit is set
+>     in a cyclic mode.
 > 
+> v2: Addressed review comments made by Jon Hunter to v1. We won't try
+>     to get words count if dma_desc is on free list as it will result
+>     in a NULL dereference because this case wasn't handled properly.
+> 
+>     The residual value is now updated properly, avoiding potential
+>     integer overflow by adding the "bytes" to the "bytes_transferred"
+>     instead of the subtraction.
+> 
+>  drivers/dma/tegra20-apb-dma.c | 72 +++++++++++++++++++++++++++++++----
+>  1 file changed, 65 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 79e9593815f1..148d136191d7 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>  	bool				last_sg;
+>  	struct list_head		node;
+>  	struct tegra_dma_desc		*dma_desc;
+> +	unsigned int			words_xferred;
+>  };
+>  
+>  /*
+> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>  	nsg_req->configured = true;
+> +	nsg_req->words_xferred = 0;
+>  
+>  	tegra_dma_resume(tdc);
+>  }
+> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>  					typeof(*sg_req), node);
+>  	tegra_dma_start(tdc, sg_req);
+>  	sg_req->configured = true;
+> +	sg_req->words_xferred = 0;
+>  	tdc->busy = true;
+>  }
+>  
+> @@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+>  		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
+>  	dma_desc->cb_count++;
+>  
+> +	sgreq->words_xferred = 0;
+> +
+>  	/* If not last req then put at end of pending list */
+>  	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
+>  		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
+> @@ -797,6 +802,62 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>  	return 0;
+>  }
+>  
+> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+> +					       struct tegra_dma_sg_req *sg_req)
+> +{
+> +	unsigned long status, wcount = 0;
+> +
+> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+> +		return 0;
+> +
+> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+> +
+> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+> +
+> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = status;
+> +
+> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+> +		return sg_req->req_len;
+> +
+> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
+> +
+> +	if (!wcount) {
+> +		/*
+> +		 * If wcount wasn't ever polled for this SG before, then
+> +		 * simply assume that transfer hasn't started yet.
+> +		 *
+> +		 * Otherwise it's the end of the transfer.
+> +		 *
+> +		 * The alternative would be to poll the status register
+> +		 * until EOC bit is set or wcount goes UP. That's so
+> +		 * because EOC bit is getting set only after the last
+> +		 * burst's completion and counter is less than the actual
+> +		 * transfer size by 4 bytes. The counter value wraps around
+> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+> +		 * distinguish start of transfer from its end.
+> +		 */
+> +		if (sg_req->words_xferred)
+> +			wcount = sg_req->req_len - 4;
+> +
+> +	} else if (wcount < sg_req->words_xferred) {
+> +		/*
+> +		 * This case shall not ever happen because EOC bit
+> +		 * must be set once next cyclic transfer is started.
 
-The transient-ness of the ramp boost I'm introducing comes from the fact that for a
-periodic task at steady state, task_ue.enqueued <= task_u when the task is executing.
-That is because task_ue.enqueued is sampled at dequeue time, precisely at the moment
-at which task_u is reaching its max for that task. Since we only take into account
-positive boosts, ramp boost will only have an impact in the "increase transients".
+Should this still be cyclic here?
 
+Cheers
+Jon
 
-About signals schedutil is based on
-===================================
-
-Here is the state of signals used by schedutil to my knowledge to compute
-the final "chosen_freq":
-
-# let's define short names to talk about
-task_ue = se.avg.util_est
-task_u = se.avg.util_avg
-
-cpu_ue = cfs_rq->avg.util_est
-cpu_u = cfs_rq->avg.util_avg
-
-
-# How things are defined
-task_u ~= LOW_PASS_FILTER(task_activations)
-task_ue.enqueued = SAMPLE_AT_DEQUEUE_AND_HOLD(task_u)
-task_ue.ewma = LOW_PASS_FILTER(task_ue.enqueued)
-
-# Patrick's patch amends task_ue.ewma definition this way:
-task_ue.ewma =
-	| task_ue.enqueued > task_ue.ewma: task_ue.enqueued
-	| otherwise			 : LOW_PASS_FILTER(task_ue.enqueued)
-
-
-cpu_ue.enqueued = SUM[MAX(task_ue.ewma, task_ue.enqueued) forall task_ue in enqueued_tasks]
-cpu_u = SUM[task_u forall task_ue in enqueued_tasks]
-
-# What schedutil considers when taking freq decisions
-
-non_cfs_u = util of deadline + rt + irq
-schedutil_u = non_cfs_u + APPLY_UCLAMP(MAX(cpu_ue.enqueued, cpu_u)) + iowait_boost
-schedutil_base_freq = MAP_UTIL_FREQ(schedutil_u)
-
-STABLE(signal) =
-	| signal equal to the last time it was sampled by caller: True
-	| otherwise				      		: False
-# A diff between two util signals is converted to a EM_COST_MARGIN_SCALE value.
-# They are different units, but the conversion factor is 1 in practice.
-ramp_boost =
-	| cpu_ue.enqueued > cpu_u && STABLE(cpu_ue.enqueued):
-		(cpu_ue.enqueued - cpu_u) * (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE)
-	| otherwise: 0
-
-APPLY_RAMP_BOOST(boost, base_freq) = boosted_freq
-	with
-		acceptable_cost = ENERGY_MODEL_COST(base_freq) * (EM_COST_MARGIN_SCALE + boost)
-		boosted_freq = MAX[freq forall freqs if ENERGY_MODEL_COST(freq) < acceptable_cost]
-
-# ramp-boost is applied on a freq instead of a util (unlike iowait_boost), since
-# the function ENERGY_MODEL_COST(freq) is provided by the EM, and an equivalent
-# ENERGY_MODEL_COST(util) would need extra calls to MAP_UTIL_FREQ().
-schedutil_freq = APPLY_RAMP_BOOST(ramp_boost, schedutil_base_freq)
-
-REAL_FREQ(ideal_freq) = MIN[freq forall freqs if freq >= ideal_freq]
-POLICY_CLAMP(freq) =
-	| freq < policy_min_freq: policy_min_freq
-	| freq > policy_max_freq: policy_max_freq
-	| otherwise		: freq
-# Frequency finally used for the policy
-chosen_freq = POLICY_CLAMP(REAL_FREQ(schedutil_freq))
-
-
-Thanks,
-Douglas
+-- 
+nvpublic
