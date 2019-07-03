@@ -2,103 +2,146 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F11C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DB1C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F303218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2F6218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="z9RrXjIv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taHtVk2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfGCIRF (ORCPT
+        id S1727383AbfGCIRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:17:05 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39749 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbfGCIRE (ORCPT
+        Wed, 3 Jul 2019 04:17:12 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40353 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfGCIRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:17:04 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x638Grv13200370
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 01:16:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x638Grv13200370
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562141814;
-        bh=C3HDRMLKb7ZFvwJEJA+A1L1B8w6R+VqyTzvzd1W3c8U=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=z9RrXjIvSw7FOoxnijH170pUgTICFTOrSWRAbsiA17IObteLlGCh33Wj0MZG52UDH
-         +UEQTtHJjXxRbIE1CcGC8Sn8p5FYAAE6PXXVFt4P0xoFW5EmKqODkOcstJOcp8f3ST
-         vkRdl2VR5RP7xcFeIFsqd/vFNxgW2fY40QvzBAdxCsGiWCuKqYLaUv+e2AJEMWfnSf
-         4eN3w74ymhbgS08NcMKccVf8d625Fohq4gegDK5KZsxAC6zuDyrlZXxuC+ZL4FF7v7
-         qrsBEYrL2eXIdlI7nWJr6FrtzO7PBePjGnB2PqeqyqRqmGOe+AMKCtgP/twzSmugVu
-         ZxwFZrdcDLo/Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x638Gr6q3200367;
-        Wed, 3 Jul 2019 01:16:53 -0700
-Date:   Wed, 3 Jul 2019 01:16:53 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-1d21f2af8571c6a6a44e7c1911780614847b0253@git.kernel.org>
-Cc:     marc.zyngier@arm.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: marc.zyngier@arm.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de
-In-Reply-To: <20190628111440.189241552@linutronix.de>
-References: <20190628111440.189241552@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] genirq: Fix misleading synchronize_irq()
- documentation
-Git-Commit-ID: 1d21f2af8571c6a6a44e7c1911780614847b0253
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 04:17:12 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e8so1435507otl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KbUJk2ldtGkFXbb/hUiSZglrGE0E+zl75r+apGMwxXc=;
+        b=taHtVk2prlLVdkCLv7izJLUW8aglmKjNUhvyHAfVNVSnYnAW3untkvdgmFWHmoiuwi
+         uQ8enVGVbsPu+lIBQi6hrm2Au6jS5v209ePxq8WxNT16IrRx4heT1SvAS+fgiHDSZWGp
+         7eFBC72rZ19FCVg7ZYwIBT8Ck8L5IhR/+dLEk/3fq5F50Bm5Cp0labne5B2MNjOmdkHc
+         bzdQNCIZCMNySeqcr+VsOB9MkTA6+T36eeEAVvhXXf/hmU4lNZGVKVt74Ar8obEX9bS+
+         cdAIhdpiL5/KzW1J9yHW1xqM8vM340ZZYmRcSXGMjRROIQw645spS05tc0xGNMfN9wFd
+         AOhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KbUJk2ldtGkFXbb/hUiSZglrGE0E+zl75r+apGMwxXc=;
+        b=G+63Ch+HSWGgPS4BDdpKR1AnAyZpUcEY+OVySylHIS149pkwUWi0ii8Ae7W9oe11GA
+         chRL/nw4olL+Fr9jrgDU8qTi+hy22aWjBEeDXP2AbbdUUsD1ipbP8B5QcrILGRpXN4ly
+         cuuSm3VyigJGFNP4M9wED6yKdtF/z3qKOUeZy/Jprg+kKgjRJqfAjOdP/HoqMali6EnK
+         I3lVysEZ3y7ijE0MJRAATxsD+yNsJHCVq4uuT2r20ulniopCt5411KMQSJjx+8fl187r
+         7Pqz1dmXVEPD9p7CxGN1rOCoMQEqImBINHYFa0j8YGDE6g3ABxN4ngfJJpA94nkx2g5L
+         kGWA==
+X-Gm-Message-State: APjAAAWG6RMroRPyCM2HC4VVKa6D3lGuYleec39DqHcz+I016BxS1St9
+        7oUAjJPUUD1Z7+iOE8Kcp+l9Lg==
+X-Google-Smtp-Source: APXvYqx99yi1XCUO1gr95zNH/ZhvnymqBxz9z0Odjb8hu2+hmpd3LCWQlN/dWNdu5Dn+13anYfM4hA==
+X-Received: by 2002:a9d:1718:: with SMTP id i24mr26800741ota.269.1562141831330;
+        Wed, 03 Jul 2019 01:17:11 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id d200sm554816oih.26.2019.07.03.01.17.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 01:17:10 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 16:16:57 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 10/11] perf intel-pt: Smatch: Fix potential NULL
+ pointer dereference
+Message-ID: <20190703081657.GD6852@leoy-ThinkPad-X240s>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702103420.27540-11-leo.yan@linaro.org>
+ <cfef1777-141e-4223-e0c1-1a3f3aee1d3c@intel.com>
+ <20190703013553.GB6852@leoy-ThinkPad-X240s>
+ <b65cf4c6-3484-85c8-d191-35021ed6ed3e@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <b65cf4c6-3484-85c8-d191-35021ed6ed3e@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1d21f2af8571c6a6a44e7c1911780614847b0253
-Gitweb:     https://git.kernel.org/tip/1d21f2af8571c6a6a44e7c1911780614847b0253
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Fri, 28 Jun 2019 13:11:50 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 3 Jul 2019 10:12:29 +0200
+On Wed, Jul 03, 2019 at 08:19:19AM +0300, Adrian Hunter wrote:
+> On 3/07/19 4:35 AM, Leo Yan wrote:
+> > Hi Adrian,
+> > 
+> > On Tue, Jul 02, 2019 at 02:07:40PM +0300, Adrian Hunter wrote:
+> >> On 2/07/19 1:34 PM, Leo Yan wrote:
+> >>> Based on the following report from Smatch, fix the potential
+> >>> NULL pointer dereference check.
+> >>
+> >> It never is NULL.  Remove the NULL test if you want:
+> >>
+> >> -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> >> +	if (session->itrace_synth_opts->set) {
+> >>
+> >> But blindly making changes like below is questionable.
+> > 
+> > Thanks for suggestions.
+> > 
+> > I checked report and script commands, as you said, both command will
+> > always set session->itrace_synth_opts.  For these two commands, we can
+> > safely remove the NULL test.
+> > 
+> > Because perf tool contains many sub commands, so I don't have much
+> > confidence it's very safe to remove the NULL test for all cases; e.g.
+> > there have cases which will process aux trace buffer but without
+> > itrace options; for this case, session->itrace_synth_opts might be NULL.
+> > 
+> > For either way (remove NULL test or keep NULL test), I don't want to
+> > introduce regression and extra efforts by my patch.  So want to double
+> > confirm with you for this :)
+> 
+> Yes, intel_pt_process_auxtrace_info() only gets called if a tool sets up the
+> tools->auxtrace_info() callback.  The tools that do that also set
+> session->itrace_synth_opts.
 
-genirq: Fix misleading synchronize_irq() documentation
+Yes.
 
-The function might sleep, so it cannot be called from interrupt
-context. Not even with care.
+I also checked the another case for 'perf inject', just as you said,
+it sets both inject->tool.auxtrace_info and session->itrace_synth_opts
+if we use 'itrace' option.  So it's safe to remove the NULL test for
+session->itrace_synth_opts.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.189241552@linutronix.de
+Will follow your suggestion for new patches.  Thanks a lot for
+confirmation and suggestions.
 
----
- kernel/irq/manage.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index dc8b35f2d545..44fc505815d6 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
-  *	to complete before returning. If you use this function while
-  *	holding a resource the IRQ handler may need you will deadlock.
-  *
-- *	This function may be called - with care - from IRQ context.
-+ *	Can only be called from preemptible code as it might sleep when
-+ *	an interrupt thread is associated to @irq.
-  */
- void synchronize_irq(unsigned int irq)
- {
+Thanks,
+Leo Yan
