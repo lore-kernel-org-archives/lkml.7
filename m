@@ -2,199 +2,97 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72735C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719A6C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510BB218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A25F218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:35:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ikgrok46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfGCUfB (ORCPT
+        id S1727452AbfGCUfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:35:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43944 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbfGCUfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:35:00 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 434955944C;
-        Wed,  3 Jul 2019 20:34:55 +0000 (UTC)
-Received: from x1.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E4FC18248;
-        Wed,  3 Jul 2019 20:34:52 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 14:34:51 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc:     <eric.auger@redhat.com>, <pmorel@linux.vnet.ibm.com>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <linuxarm@huawei.com>,
-        <john.garry@huawei.com>, <xuwei5@hisilicon.com>,
-        <kevin.tian@intel.com>
-Subject: Re: [PATCH v7 3/6] vfio/type1: Update iova list on detach
-Message-ID: <20190703143451.0ae4e9f7@x1.home>
-In-Reply-To: <20190626151248.11776-4-shameerali.kolothum.thodi@huawei.com>
-References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
-        <20190626151248.11776-4-shameerali.kolothum.thodi@huawei.com>
-Organization: Red Hat
+        Wed, 3 Jul 2019 16:35:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfGCUfN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:35:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6wVvKVSMYVfCvl9aNHnGnrJdrKBsm+sQjf5j3JbyT50=; b=ikgrok46t5C4CA+xVVHpukMbk
+        5sZjuxLMFP9iZsNr8P3Q8NGRw3DGYCe5+w4j9xMHyjfnK/gOdKUu1JwVZL1moxEZzmly4EYpeT83v
+        Ui+0EWqSNA3X1rkLJho1Bv77+qi5IDN9JUFNQcoXAytE/1fJCy/9S8CKYf7sysNV7XmhcgAktbVqw
+        LZPXi4SSjCbkn2nNHT+UBtEPPJLEtP7xAuD1iBnnqZ7HFUvR5oKYmEmXVecgPAnbpuZ9wNEVdVcBv
+        J88vbzRc7jQBoaz4pSWwxv/my8uX7bTzMq5+VbbRPqguph/wMxHgfezntQDtW05F6y2TsMN/8+RbY
+        QvhKhTjFQ==;
+Received: from rap-us.hgst.com ([199.255.44.250] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hilyD-0007KJ-BO; Wed, 03 Jul 2019 20:35:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     bskeggs@redhat.com
+Cc:     jglisse@redhat.com, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nouveau: remove bogus uses of DMA_ATTR_SKIP_CPU_SYNC
+Date:   Wed,  3 Jul 2019 13:35:13 -0700
+Message-Id: <20190703203513.22692-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 03 Jul 2019 20:35:00 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 16:12:45 +0100
-Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
+DMA_ATTR_SKIP_CPU_SYNC should only be used when the driver manually
+performs dma cache maintainance operations using the dma_sync_*
+calls.  Nouveau doesn't do that, and generally just assumes DMA
+is coherent.  Use plain dma_map_page which doesn't make this code
+correct but at least a little less wrong and simpler.
 
-> Get a copy of iova list on _group_detach and try to update the list.
-> On success replace the current one with the copy. Leave the list as
-> it is if update fails.
-> 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 91 +++++++++++++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index b6bfdfa16c33..e872fb3a0f39 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1873,12 +1873,88 @@ static void vfio_sanity_check_pfn_list(struct vfio_iommu *iommu)
->  	WARN_ON(iommu->notifier.head);
->  }
->  
-> +/*
-> + * Called when a domain is removed in detach. It is possible that
-> + * the removed domain decided the iova aperture window. Modify the
-> + * iova aperture with the smallest window among existing domains.
-> + */
-> +static void vfio_iommu_aper_expand(struct vfio_iommu *iommu,
-> +				   struct list_head *iova_copy)
-> +{
-> +	struct vfio_domain *domain;
-> +	struct iommu_domain_geometry geo;
-> +	struct vfio_iova *node;
-> +	dma_addr_t start = 0;
-> +	dma_addr_t end = (dma_addr_t)~0;
-> +
-> +	list_for_each_entry(domain, &iommu->domain_list, next) {
-> +		iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY,
-> +				      &geo);
-> +		if (geo.aperture_start > start)
-> +			start = geo.aperture_start;
-> +		if (geo.aperture_end < end)
-> +			end = geo.aperture_end;
-> +	}
-> +
-> +	/* Modify aperture limits. The new aper is either same or bigger */
-> +	node = list_first_entry(iova_copy, struct vfio_iova, list);
-> +	node->start = start;
-> +	node = list_last_entry(iova_copy, struct vfio_iova, list);
-> +	node->end = end;
-> +}
-> +
-> +/*
-> + * Called when a group is detached. The reserved regions for that
-> + * group can be part of valid iova now. But since reserved regions
-> + * may be duplicated among groups, populate the iova valid regions
-> + * list again.
-> + */
-> +static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
-> +				   struct list_head *iova_copy)
-> +{
-> +	struct vfio_domain *d;
-> +	struct vfio_group *g;
-> +	struct vfio_iova *node;
-> +	dma_addr_t start, end;
-> +	LIST_HEAD(resv_regions);
-> +	int ret;
-> +
-> +	list_for_each_entry(d, &iommu->domain_list, next) {
-> +		list_for_each_entry(g, &d->group_list, next)
-> +			iommu_get_group_resv_regions(g->iommu_group,
-> +						     &resv_regions);
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Need to account for failure case here too.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index b9ced2e61667..a5d9b537cbaf 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -186,9 +186,8 @@ nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
+ 		}
+ 
+ 		fault->dma[fault->npages] =
+-			dma_map_page_attrs(dev, dpage, 0, PAGE_SIZE,
+-					   PCI_DMA_BIDIRECTIONAL,
+-					   DMA_ATTR_SKIP_CPU_SYNC);
++			dma_map_page(dev, dpage, 0, PAGE_SIZE,
++				     PCI_DMA_BIDIRECTIONAL);
+ 		if (dma_mapping_error(dev, fault->dma[fault->npages])) {
+ 			dst_pfns[i] = MIGRATE_PFN_ERROR;
+ 			__free_page(dpage);
+@@ -706,9 +705,8 @@ nouveau_dmem_migrate_alloc_and_copy(struct vm_area_struct *vma,
+ 		}
+ 
+ 		migrate->dma[migrate->dma_nr] =
+-			dma_map_page_attrs(dev, spage, 0, PAGE_SIZE,
+-					   PCI_DMA_BIDIRECTIONAL,
+-					   DMA_ATTR_SKIP_CPU_SYNC);
++			dma_map_page(dev, spage, 0, PAGE_SIZE,
++				     PCI_DMA_BIDIRECTIONAL);
+ 		if (dma_mapping_error(dev, migrate->dma[migrate->dma_nr])) {
+ 			nouveau_dmem_page_free_locked(drm, dpage);
+ 			dst_pfns[i] = 0;
+-- 
+2.20.1
 
-> +	}
-> +
-> +	if (list_empty(&resv_regions))
-> +		return 0;
-> +
-> +	node = list_first_entry(iova_copy, struct vfio_iova, list);
-> +	start = node->start;
-> +	node = list_last_entry(iova_copy, struct vfio_iova, list);
-> +	end = node->end;
-> +
-> +	/* purge the iova list and create new one */
-> +	vfio_iommu_iova_free(iova_copy);
-> +
-> +	ret = vfio_iommu_aper_resize(iova_copy, start, end);
-> +	if (ret)
-> +		goto done;
-> +
-> +	/* Exclude current reserved regions from iova ranges */
-> +	ret = vfio_iommu_resv_exclude(iova_copy, &resv_regions);
-> +done:
-> +	vfio_iommu_resv_free(&resv_regions);
-> +	return ret;
-> +}
-> +
->  static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					  struct iommu_group *iommu_group)
->  {
->  	struct vfio_iommu *iommu = iommu_data;
->  	struct vfio_domain *domain;
->  	struct vfio_group *group;
-> +	bool iova_copy_fail;
-> +	LIST_HEAD(iova_copy);
->  
->  	mutex_lock(&iommu->lock);
->  
-> @@ -1901,6 +1977,12 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  		}
->  	}
->  
-> +	/*
-> +	 * Get a copy of iova list. If success, use copy to update the
-> +	 * list and to replace the current one.
-> +	 */
-> +	iova_copy_fail = !!vfio_iommu_iova_get_copy(iommu, &iova_copy);
-> +
->  	list_for_each_entry(domain, &iommu->domain_list, next) {
->  		group = find_iommu_group(domain, iommu_group);
->  		if (!group)
-> @@ -1926,10 +2008,19 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
->  			kfree(domain);
-> +			if (!iova_copy_fail && !list_empty(&iommu->domain_list))
-> +				vfio_iommu_aper_expand(iommu, &iova_copy);
->  		}
->  		break;
->  	}
->  
-> +	if (!iova_copy_fail && !list_empty(&iommu->domain_list)) {
-> +		if (!vfio_iommu_resv_refresh(iommu, &iova_copy))
-> +			vfio_iommu_iova_insert_copy(iommu, &iova_copy);
-> +		else
-> +			vfio_iommu_iova_free(&iova_copy);
-> +	}
-
-The iova_copy_fail and list_empty tests are rather ugly, could we avoid
-them by pushing the tests to the expand and refresh functions?  ie. it
-looks like vfio_iommu_aper_expand() could test list_empty(iova_copy),
-the list_for_each on domain_list doesn't need special handling.  Same
-for vfio_iommu_resv_refresh().  This would also fix the bug above that
-I think we don't free iova_copy if domain_list becomes empty during
-this operation.  Thanks,
-
-Alex
