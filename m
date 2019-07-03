@@ -2,169 +2,79 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3C1C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4BAC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A61218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GXeGwJmh"
+	by mail.kernel.org (Postfix) with ESMTP id 9A57521881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfGCOND (ORCPT
+        id S1727068AbfGCONd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:13:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35469 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCONB (ORCPT
+        Wed, 3 Jul 2019 10:13:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34463 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfGCONd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:13:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63ECiM23322173
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:12:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63ECiM23322173
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562163165;
-        bh=aMT/e5R01H3bvO3WVrG4hHVXOaRtBA28lRKegYW23Yg=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=GXeGwJmhQykjrG5QYp3SPynDf8/a8Hl3kNZ4iB0WVx3kXpGX40yd9V7KcehjELgdd
-         mTdjT4LJPGLVHJLXknBbiMvvq6KqFfAkqAv//HiTgS6gnWqSl143P9Wec9zgzG2Got
-         fAxlEXaZzdVe1J/Bm4DEX3yU9hNrzsQnOpWOYnByOlOOFEQ5Pf+GseGpEhjE/kNS02
-         ICppI42CQn5z+nft3NaTPE4wEIyaRx4Jhpn0hO3HhhAECi2oxFYIA7FgzhRiOD+b4v
-         4aW1OVIZifQ2pqRzCfCp1ljdc9HoAtSZS2wY9pfQdlP1xxA0Uu5fjJCa28D7J5ogsC
-         x2gMgQd4xEUyg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63EChUa3322170;
-        Wed, 3 Jul 2019 07:12:43 -0700
-Date:   Wed, 3 Jul 2019 07:12:43 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-5mc1zg0jqdwgkn8c358kaba6@git.kernel.org>
-Cc:     jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        acme@redhat.com, hpa@zytor.com, mingo@kernel.org,
-        adrian.hunter@intel.com, linux-kernel@vger.kernel.org
-Reply-To: jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-          acme@redhat.com, hpa@zytor.com, adrian.hunter@intel.com,
-          mingo@kernel.org, linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf kallsyms: Adopt hex2u64 from
- tools/perf/util/util.h
-Git-Commit-ID: 155681fcd7f82882a730240c2dde7eee76a46314
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 10:13:33 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so3031837wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 07:13:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ceMV6gREtUAH3s1rcTbUar/B6JUKROFXvDiwuyYeGXY=;
+        b=k5r1tFD6zELecHdyQ5L+y6zPZL27e7+fY6sNs8SPhQGFYM0rmOZYoKegJKsoz3bJ4h
+         GcvzbxxZVUIP8S1fnj10asudWDX0wUDRrUOxJWUUjhJubweYfCu36qsMjswJdOLXeRTF
+         63WgwTLHNWppNo+HxEfgzTxsKEhu4kcOfDHb2+py1y/mPeL6i8pC7aoaphf4mZiScv0d
+         o11F63E3KTYPGqZaCj8FkS7sB5Ck1UItXvQ75JYT87eKz9nRHXxEOz+YkgVMz/2r5N3Y
+         2VNsv3m3SgcocvQrWLlMOpj3gP/ly9Ysu53CxtA37YXhksdZisI0TnmkKP121yHfTRPO
+         cHXQ==
+X-Gm-Message-State: APjAAAUjpOwfPIVHEUSrlSFBr0VmLXknCyj88RZuBbdaPoQVz80T7iRK
+        JEaf8/fLRQxLxw2pCvr6ovlk+g==
+X-Google-Smtp-Source: APXvYqzNc25USnquIIueAfxvqHocNLi2CDXyM4EEc7JEs2GM3KQJc87l+CG6bfH/8feI9wY5hiX4JA==
+X-Received: by 2002:a7b:cb08:: with SMTP id u8mr8054265wmj.167.1562163210995;
+        Wed, 03 Jul 2019 07:13:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:6c1d:63cc:b81d:e1a9? ([2001:b07:6468:f312:6c1d:63cc:b81d:e1a9])
+        by smtp.gmail.com with ESMTPSA id o4sm2442172wmh.35.2019.07.03.07.13.30
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 07:13:30 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] KVM: LAPIC: Optimize timer latency consider world
+ switch time
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <1560474949-20497-1-git-send-email-wanpengli@tencent.com>
+ <1560474949-20497-2-git-send-email-wanpengli@tencent.com>
+ <CANRm+CzUvTTOuYhsGErSDxdNSmxVr7o8d66DF0KOk4v3Meajmg@mail.gmail.com>
+ <CANRm+Cw0vmqi4s4HhnMqs=hZZixHmU87CGO_ujTGoN_Osjx76g@mail.gmail.com>
+ <CANRm+Cz9Lc5rA7-2yLLX7wiemM-gdvWvQQdGVrvkYanYO9TwgA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <18fd2372-45d8-0bff-79e7-373a8b7d129c@redhat.com>
+Date:   Wed, 3 Jul 2019 16:13:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <CANRm+Cz9Lc5rA7-2yLLX7wiemM-gdvWvQQdGVrvkYanYO9TwgA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  155681fcd7f82882a730240c2dde7eee76a46314
-Gitweb:     https://git.kernel.org/tip/155681fcd7f82882a730240c2dde7eee76a46314
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 25 Jun 2019 18:13:17 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 25 Jun 2019 18:13:17 -0300
+On 03/07/19 02:48, Wanpeng Li wrote:
+> Hi Paolo, how about this patchset? Patch 2/2 is easy to take, do you
+> have more concern about patch 1/2?
 
-perf kallsyms: Adopt hex2u64 from tools/perf/util/util.h
+I don't know.  It seems somewhat hard to tune and in cyclictest it only
+happens for preemption_timer=N.  Are you using preemption_timer=N
+together with the LAPIC-timer-on-service-CPU patches?
 
-Just removing more stuff from tools/perf/, this is mostly used in the
-kallsyms parsing and in places in perf where kallsyms is involved, so we
-get it for free there.
-
-With this we reduce a bit more util.h.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5mc1zg0jqdwgkn8c358kaba6@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/symbol/kallsyms.c | 13 +++++++++++++
- tools/lib/symbol/kallsyms.h |  2 ++
- tools/perf/util/util.c      | 13 -------------
- tools/perf/util/util.h      |  1 -
- 4 files changed, 15 insertions(+), 14 deletions(-)
-
-diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-index 96d830545bbb..7501611abee4 100644
---- a/tools/lib/symbol/kallsyms.c
-+++ b/tools/lib/symbol/kallsyms.c
-@@ -16,6 +16,19 @@ bool kallsyms__is_function(char symbol_type)
- 	return symbol_type == 'T' || symbol_type == 'W';
- }
- 
-+/*
-+ * While we find nice hex chars, build a long_val.
-+ * Return number of chars processed.
-+ */
-+int hex2u64(const char *ptr, u64 *long_val)
-+{
-+	char *p;
-+
-+	*long_val = strtoull(ptr, &p, 16);
-+
-+	return p - ptr;
-+}
-+
- int kallsyms__parse(const char *filename, void *arg,
- 		    int (*process_symbol)(void *arg, const char *name,
- 					  char type, u64 start))
-diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
-index 72ab9870454b..bd988f7b18d4 100644
---- a/tools/lib/symbol/kallsyms.h
-+++ b/tools/lib/symbol/kallsyms.h
-@@ -18,6 +18,8 @@ static inline u8 kallsyms2elf_binding(char type)
- 	return isupper(type) ? STB_GLOBAL : STB_LOCAL;
- }
- 
-+int hex2u64(const char *ptr, u64 *long_val);
-+
- u8 kallsyms2elf_type(char type);
- 
- bool kallsyms__is_function(char symbol_type);
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index d388f80d8703..a61535cf1bca 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -434,19 +434,6 @@ size_t hex_width(u64 v)
- 	return n;
- }
- 
--/*
-- * While we find nice hex chars, build a long_val.
-- * Return number of chars processed.
-- */
--int hex2u64(const char *ptr, u64 *long_val)
--{
--	char *p;
--
--	*long_val = strtoull(ptr, &p, 16);
--
--	return p - ptr;
--}
--
- int perf_event_paranoid(void)
- {
- 	int value;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 09c1b0f91f65..125e215dd3d8 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -43,7 +43,6 @@ ssize_t readn(int fd, void *buf, size_t n);
- ssize_t writen(int fd, const void *buf, size_t n);
- 
- size_t hex_width(u64 v);
--int hex2u64(const char *ptr, u64 *val);
- 
- extern unsigned int page_size;
- int __pure cacheline_size(void);
+Paolo
