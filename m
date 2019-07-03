@@ -2,126 +2,220 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7CC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CBBC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4F921871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFhq5S64"
+	by mail.kernel.org (Postfix) with ESMTP id 7525C21871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfGCGDb (ORCPT
+        id S1727056AbfGCGG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:03:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35580 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfGCGDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:03:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so1050419ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YR83koGSfN8f4T21Djb6M4JozxiegfBiW4pc4sENEhU=;
-        b=PFhq5S64bGYOvM9RVa2rbe3BMe23mBxegax68A5oboVVYkj9yac+DYKBsUV8TIxm82
-         dCGgip+iJTAtzeueMH8rXwQ45n2SYFC+AJILLZRa9Dtx/5PVB/eM9wPnNOm1KyaDPc5B
-         WpCwcuNCvEEkNPlwFbk1fJwDnjI9sMF3ObMHbhpCS5nEdkC8ViFucYBJDVa7o8JsLEJu
-         w30fTQ8+s+plIIDzeJmOF+FLYOHg3mjz3cKsMggoNq3CRop9fr8LgDofeAmZDUYJq/Zc
-         K1IcZ1OxyF73JiC5QitC8o0m7qWFaaci8gL35lYByRCuUNfS0IorVlFmxBZz6UOfcPyx
-         My2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YR83koGSfN8f4T21Djb6M4JozxiegfBiW4pc4sENEhU=;
-        b=j4eDYrJkUd7A3op5wiGFnv5t3PMZHwKjp340xoSz+C9V1Tu20gOLHdsE4D+XPvT1Mg
-         R9cwYXmjqpXREvUIAnZ/Bfyodp53kBAwlQtgvyVAJYDtSWC/ChZJgxc7aX4I1yVJniBx
-         cCYI/1BwZc5wMbKd0sqGJpYP2qUzyqHRq6J3WvEbmstyrYl3X7OU6iXjJUHlVs8r6UrG
-         aV+h6rx5KLU+A2IgzNlq5zhBPN7hP41wKWAly76c7+sLKh2t2G1FHynRbBhVwjj4LE38
-         5tZ6c8Ak6Z7aHhx4wcrTDAVhP5+NqrTpdPaYr+BQVWhzk8r7btzuiPasGlBYtMPEH+kz
-         o3zg==
-X-Gm-Message-State: APjAAAWZbkn7zY0pdBeCZOgeUj02bmqOBXYbGKTVRbWScXsuQDmc4fs5
-        03nDtJy0X61fCBM/vAoZY+UVJ6/gj78js1ECvJg=
-X-Google-Smtp-Source: APXvYqzdUgWzjHttmuz/N8FCiFoagx183/BYjJRUjTIJAQZZEoLGL5Q9E3sSA0IdUXaoNAmAWERsIXlbn3793c0uRIc=
-X-Received: by 2002:a2e:80c8:: with SMTP id r8mr5360976ljg.168.1562133809409;
- Tue, 02 Jul 2019 23:03:29 -0700 (PDT)
+        Wed, 3 Jul 2019 02:06:28 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53674 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725927AbfGCGG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 02:06:27 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3C06FD4D7CBA388655BE;
+        Wed,  3 Jul 2019 14:06:25 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
+ 14:06:14 +0800
+Subject: Re: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>
+References: <20190630185846.16624-1-hsiangkao@aol.com>
+ <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
+ <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
+Message-ID: <570e12d3-985e-3d5a-d7d4-cf0a072442fe@huawei.com>
+Date:   Wed, 3 Jul 2019 14:06:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190701173042.221453-1-henryburns@google.com>
- <CAMJBoFPbRcdZ+NnX17OQ-sOcCwe+ZAsxcDJoR0KDkgBY9WXvpg@mail.gmail.com> <CAGQXPTjX=7aD9MQAs2kJthFvPdd3x8Nh53oc=wZCXH_dvDJ=Vg@mail.gmail.com>
-In-Reply-To: <CAGQXPTjX=7aD9MQAs2kJthFvPdd3x8Nh53oc=wZCXH_dvDJ=Vg@mail.gmail.com>
-From:   Vitaly Wool <vitalywool@gmail.com>
-Date:   Wed, 3 Jul 2019 08:02:31 +0200
-Message-ID: <CAMJBoFMBLv9OpXtQkOAyZ-vw5Ktk1tYtvfT=GPPx8jnKBN01rg@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold: Fix z3fold_buddy_slots use after free
-To:     Henry Burns <henryburns@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 6:57 PM Henry Burns <henryburns@google.com> wrote:
->
-> On Tue, Jul 2, 2019 at 12:45 AM Vitaly Wool <vitalywool@gmail.com> wrote:
-> >
-> > Hi Henry,
-> >
-> > On Mon, Jul 1, 2019 at 8:31 PM Henry Burns <henryburns@google.com> wrote:
-> > >
-> > > Running z3fold stress testing with address sanitization
-> > > showed zhdr->slots was being used after it was freed.
-> > >
-> > > z3fold_free(z3fold_pool, handle)
-> > >   free_handle(handle)
-> > >     kmem_cache_free(pool->c_handle, zhdr->slots)
-> > >   release_z3fold_page_locked_list(kref)
-> > >     __release_z3fold_page(zhdr, true)
-> > >       zhdr_to_pool(zhdr)
-> > >         slots_to_pool(zhdr->slots)  *BOOM*
-> >
-> > Thanks for looking into this. I'm not entirely sure I'm all for
-> > splitting free_handle() but let me think about it.
-> >
-> > > Instead we split free_handle into two functions, release_handle()
-> > > and free_slots(). We use release_handle() in place of free_handle(),
-> > > and use free_slots() to call kmem_cache_free() after
-> > > __release_z3fold_page() is done.
-> >
-> > A little less intrusive solution would be to move backlink to pool
-> > from slots back to z3fold_header. Looks like it was a bad idea from
-> > the start.
-> >
-> > Best regards,
-> >    Vitaly
->
-> We still want z3fold pages to be movable though. Wouldn't moving
-> the backink to the pool from slots to z3fold_header prevent us from
-> enabling migration?
+Hi Chao,
 
-That is a valid point but we can just add back pool pointer to
-z3fold_header. The thing here is, there's another patch in the
-pipeline that allows for a better (inter-page) compaction and it will
-somewhat complicate things, because sometimes slots will have to be
-released after z3fold page is released (because they will hold a
-handle to another z3fold page). I would prefer that we just added back
-pool to z3fold_header and changed zhdr_to_pool to just return
-zhdr->pool, then had the compaction patch valid again, and then we
-could come back to size optimization.
+On 2019/7/3 10:09, Gao Xiang wrote:
+> 
+> 
+> On 2019/7/3 9:50, Chao Yu wrote:
+>> On 2019/7/1 2:58, Gao Xiang wrote:
+>>> From: Gao Xiang <gaoxiang25@huawei.com>
+>>>
+>>> Like all lz77-based algrithms, lz4 has a dynamically populated
+>>> ("sliding window") dictionary and the maximum lookback distance
+>>> is 65535. Therefore the number of bounced pages could be limited
+>>> by erofs based on this property.
+>>>
+>>> However, just now we observed some lz4 sequences in the extreme
+>>> case cannot be decompressed correctly after this feature is enabled,
+>>> the root causes after analysis are clear as follows:
+>>> 1) max bounced pages should be 17 rather than 16 pages;
+>>> 2) considering the following case, the broken implementation
+>>>    could reuse unsafely in advance (in other words, reuse it
+>>>    less than a safe distance),
+>>>    0 1 2 ... 16 17 18 ... 33 34
+>>>    b             p  b         b
+>>>    note that the bounce page that we are concerned was allocated
+>>>    at 0, and it reused at 18 since page 17 exists, but it mis-reused
+>>>    at 34 in advance again, which causes decompress failure.
+>>>
+>>> This patch resolves the issue by introducing a bitmap to mark
+>>> whether the page in the same position of last round is a bounced
+>>> page or not, and a micro stack data structure to store all
+>>> available bounced pages.
+>>>
+>>> Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>> ---
+>>>  drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
+>>>  1 file changed, 28 insertions(+), 22 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+>>> index 80f1f39719ba..1fb0abb98dff 100644
+>>> --- a/drivers/staging/erofs/decompressor.c
+>>> +++ b/drivers/staging/erofs/decompressor.c
+>>> @@ -13,7 +13,7 @@
+>>>  #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
+>>>  #endif
+>>>  
+>>> -#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
+>>> +#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
+>>>  #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
+>>>  #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
+>>>  #endif
+>>> @@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>>  	const unsigned int nr =
+>>>  		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>>>  	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
+>>> -	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>>> -					  BITS_PER_LONG)] = { 0 };
+>>> +	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
+>>> +					   BITS_PER_LONG)] = { 0 };
+>>>  	void *kaddr = NULL;
+>>> -	unsigned int i, j, k;
+>>> +	unsigned int i, j, top;
+>>>  
+>>> -	for (i = 0; i < nr; ++i) {
+>>> +	top = 0;
+>>> +	for (i = j = 0; i < nr; ++i, ++j) {
+>>>  		struct page *const page = rq->out[i];
+>>> +		struct page *victim;
+>>>  
+>>> -		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
+>>> -		if (availables[j])
+>>> -			__set_bit(j, unused);
+>>> +		if (j >= LZ4_MAX_DISTANCE_PAGES)
+>>> +			j = 0;
+>>> +
+>>> +		/* 'valid' bounced can only be tested after a complete round */
+>>> +		if (test_bit(j, bounced)) {
+>>> +			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
+>>> +			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
+>>> +			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
+>>
+>> Maybe we can change 'i - LZ4_MAX_DISTANCE_PAGES' to 'j' directly for better
+>> readability.
+> 
+> OK, I think they are equivalent as well, will change for readability, retest and resend.
+> Thanks for your suggestion :)
 
-Best regards,
-   Vitaly
+I tested again and I observed that using j broke the logic and I think we cannot use j
+to replace i - LZ4_MAX_DISTANCE_PAGES.
+
+Since bounced pages was marked according to the last round rather than the first round,
+we cannot directly use the first round pages to push into the stack, e.g.
+
+1)
+    0 1 2 ... 16 17 18 ... 33 34
+    p             b            b
+
+bounce page could be allocated from rq->out[17], and we could reuse it from rq->out[34], which
+is not equal to rq->out[0].
+
+2)
+    0 1 2 ... 16 17 18  19  ... 33 34 35 36
+      b              p   b                b
+allocated in rq->out[1] j = 1, reuse it in rq->out[19] j = 2, reuse it again in rq->out[36] j = 2,
+which is not equal to rq->out[2].
+
+I think the original patch is ok, and it cannot be replaced to rq->out[j].
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Otherwise, it looks good to me.
+>>
+>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>
+>> Thanks,
+>>
+>>> +		}
+>>>  
+>>>  		if (page) {
+>>> +			__clear_bit(j, bounced);
+>>>  			if (kaddr) {
+>>>  				if (kaddr + PAGE_SIZE == page_address(page))
+>>>  					kaddr += PAGE_SIZE;
+>>> @@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+>>>  			continue;
+>>>  		}
+>>>  		kaddr = NULL;
+>>> +		__set_bit(j, bounced);
+>>>  
+>>> -		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
+>>> -		if (k < LZ4_MAX_DISTANCE_PAGES) {
+>>> -			j = k;
+>>> -			get_page(availables[j]);
+>>> +		if (top) {
+>>> +			victim = availables[--top];
+>>> +			get_page(victim);
+>>>  		} else {
+>>> -			DBG_BUGON(availables[j]);
+>>> -
+>>>  			if (!list_empty(pagepool)) {
+>>> -				availables[j] = lru_to_page(pagepool);
+>>> -				list_del(&availables[j]->lru);
+>>> -				DBG_BUGON(page_ref_count(availables[j]) != 1);
+>>> +				victim = lru_to_page(pagepool);
+>>> +				list_del(&victim->lru);
+>>> +				DBG_BUGON(page_ref_count(victim) != 1);
+>>>  			} else {
+>>> -				availables[j] = alloc_pages(GFP_KERNEL, 0);
+>>> -				if (!availables[j])
+>>> +				victim = alloc_pages(GFP_KERNEL, 0);
+>>> +				if (!victim)
+>>>  					return -ENOMEM;
+>>>  			}
+>>> -			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
+>>> +			victim->mapping = Z_EROFS_MAPPING_STAGING;
+>>>  		}
+>>> -		rq->out[i] = availables[j];
+>>> -		__clear_bit(j, unused);
+>>> +		rq->out[i] = victim;
+>>>  	}
+>>>  	return kaddr ? 1 : 0;
+>>>  }
+>>>
