@@ -2,142 +2,111 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5FCC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C161C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBAF218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7972189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WkQhINbq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWa4pc2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfGCQp0 (ORCPT
+        id S1727028AbfGCQqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:45:26 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38366 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCQp0 (ORCPT
+        Wed, 3 Jul 2019 12:46:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46591 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCQqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:45:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rpaCNZdtbwhwVN7hY9VZeOvZhvhLdEBGPEjtKH2aYAg=; b=WkQhINbqKZP35fqFn/9DS0Nppd
-        tunzEg+4cywUqCx84mnosjqNuckYUAyC4VvwXd62Hix7AUhsaISWcNo+KnnkWVPf1sqPRhomcZQfD
-        vRAmcDgQe4qzc2gkRlJ7eu6TJn1/vcSIzjXi18m54vNKwDVRN/bkjiZHb4rnC2YZ1uQ1npPnJzFIU
-        baOM6/bbZbRJZmfmDf2Vl4Lz1BQMtKobo6+sWtWvvRjyW57KBXY3vwf9B7pRITeXOQSCjvpkZInxi
-        3mG4Rq+AuPj6FxL8Wug3efYLk8K/Z5onN8Pp4NQrEMv52yMQzbta7qenJ6KGLDVHDIZTH9YSUlYXI
-        RYTeRzYQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiiNl-0008Kj-Fx; Wed, 03 Jul 2019 16:45:21 +0000
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6acf78df-b168-14d3-fea4-9a9d2945e77f@infradead.org>
-Date:   Wed, 3 Jul 2019 09:45:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 12:46:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so2715962edr.13;
+        Wed, 03 Jul 2019 09:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=08FT7ddsmk9tLgvVvr2oQycyQXe5HFBk71BAZ/FmXUk=;
+        b=TWa4pc2EdmtLNNbcdyQZTBp7Y2NNRNhRU25KJV9GQNIpuMKkvzYyNvnWH7nRRamPjb
+         /caum6h7iO4vYiEkff6fwK5UakxNxnG7joCZz2ztHg18jvm1EzUT1MVhQUAdq6q6nmlh
+         82j59LytSemhPZWkaRojDdtxLTfmB0aT4QJc8vxqebnnxqkcQ6Wtz6QBDJXsWnnofHPh
+         2WF0ehgVKHOIAaLQ6W69V8wxdHlaBd0SOTcldZ+6dWpo3IR2VBG8l/WRdWfnpOcQFk7Q
+         KkRJJkh4BFNw5XmVgmjlpoBmP5BhcLKyzDbmUjJ9zdsbCCnt6JHPtnNQj0qqrIbVFNEh
+         aSng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=08FT7ddsmk9tLgvVvr2oQycyQXe5HFBk71BAZ/FmXUk=;
+        b=RDaClSbQfRLYE20Dk1rFemvNCT6J85jjJkARjX1d4yJOoiYkjgo4tFFzdUslrJ38wC
+         fVEjp7ITyXu+TBMDlqFbhWsg3JsedUweqSIvyPYislVFcyrh9GQ1LuuuVEAnWfs8jAfu
+         fb3eECwYXZ7AdyRDemRWGYSI9pekRfHzQfWbNbPlbNxGP5T60/SOdlurXAIiWJg9ojvq
+         Y7+7AvrAs2Yeh/yJc5gHBjdiQqUvQWKGZx5XbXXz667AJKyCBePeMO8q2gyQ8LZerayJ
+         +MSIrzDQMxOLFMUe6NJu9njS5sxsqxNv2IXbx1X1dlARF4KAv5eYLU28KGLa9Z6iagN9
+         fyYw==
+X-Gm-Message-State: APjAAAV/xjrn2G7FD1swYAx8ZbAvt3Pap9Q3Wj8fWJev6GXJX3NCbHgG
+        W0sVCHNqZ4nhuWDoqAZGyB0=
+X-Google-Smtp-Source: APXvYqyQneHl9k0YePcXIOIWu0hzBiE7uHghqSPjYIrF6KJ/fdAgv7pH7XVLT+Hdo0nRWBLT+8kdhg==
+X-Received: by 2002:aa7:c754:: with SMTP id c20mr43184865eds.265.1562172363746;
+        Wed, 03 Jul 2019 09:46:03 -0700 (PDT)
+Received: from localhost (ip1f10d6e1.dynamic.kabel-deutschland.de. [31.16.214.225])
+        by smtp.gmail.com with ESMTPSA id h10sm845881eda.85.2019.07.03.09.46.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 09:46:02 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 18:46:00 +0200
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 0/2] Variscite DART-6UL SoM support
+Message-ID: <20190703164600.GA9261@ripley>
+References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
+ <20190613013830.GC20747@dragon>
 MIME-Version: 1.0
-In-Reply-To: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613013830.GC20747@dragon>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/19 9:11 AM, Jarkko Sakkinen wrote:
-> There are some weird quirks when it comes to UEFI event log. Provide a
-> brief introduction to TPM event log mechanism and describe the quirks
-> and how they can be sorted out.
+On 13/06/19, Shawn Guo wrote:
+> On Thu, Jun 06, 2019 at 06:47:00PM +0200, Oliver Graute wrote:
+> > Need feedback to the following patches which adds support for a DART-6UL Board
+> > 
+> > Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
+> > 
+> > Oliver Graute (2):
+> >   ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
+> >   ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
 > 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  Documentation/security/tpm/tpm-eventlog.rst | 53 +++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/security/tpm/tpm-eventlog.rst
-> 
-> diff --git a/Documentation/security/tpm/tpm-eventlog.rst b/Documentation/security/tpm/tpm-eventlog.rst
-> new file mode 100644
-> index 000000000000..2ca8042bdb17
-> --- /dev/null
-> +++ b/Documentation/security/tpm/tpm-eventlog.rst
-> @@ -0,0 +1,53 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=============
-> +TPM Event Log
-> +=============
-> +
-> +| Authors:
-> +| Stefan Berger <stefanb@linux.vnet.ibm.com>
-> +
-> +This document briefly describes what TPM log is and how it is handed
-> +over from the preboot firmware to the operating system.
-> +
-> +Introduction
-> +============
-> +
-> +The preboot firmware maintains an event log that gets new entries every
-> +time something gets hashed by it to any of the PCR registers. The events
-> +are segregated by their type and contain the value of the hashed PCR
-> +register. Typically, the preboot firmware will hash the components to
-> +who execution is to be handed over or actions relevant to the boot
-> +process.
-> +
-> +The main application for this is remote attestation and the reason why
-> +it is useful is nicely put in the very first section of [1]:
-> +
-> +"Attestation is used to provide information about the platform’s state
-> +to a challenger. However, PCR contents are difficult to interpret;
-> +therefore, attestation is typically more useful when the PCR contents
-> +are accompanied by a measurement log. While not trusted on their own,
-> +the measurement log contains a richer set of information than do the PCR
-> +contents. The PCR contents are used to provide the validation of the
-> +measurement log."
-> +
-> +UEFI event log
-> +==============
-> +
-> +UEFI provided event log has a few somewhat weird quirks.
-> +
-> +Before calling ExitBootServices() Linux EFI stub copies the event log to
-> +a custom configuration table defined by the stub itself. Unfortanely,
+> It's already v3?  I did not find previous versions.  What's changed
+> since previous versions?
 
-                                                            Unfortunately,
+The first two version you can find here. I splitted board and SoM part
+according Neils and Fabios comments.
 
-> +the events generated by ExitBootServices() do end up to the table.
-> +
-> +The firmware provides so called final events configuration table to sort
-> +out this issue. Events gets mirrored to this table after the first time
-> +EFI_TCG2_PROTOCOL.GetEventLog() gets called.
-> +
-> +This introduces another problem: nothing guarantees that it is not
-> +called before the stub gets to run. Thus, it needs to copy the final
-> +events table preboot size to the custom configuration table so that
-> +kernel offset it later on.
+v1
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=59259
 
-?  kernel can offset it later on.
+v2 
+https://patchwork.kernel.org/patch/10748361/
 
-> +
-> +[1] https://trustedcomputinggroup.org/resource/pc-client-specific-platform-firmware-profile-specification/
-> +[2] The final concatenation is done in drivers/char/tpm/eventlog/efi.c
-> 
+Please review the latest version v4:
 
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=137257
 
--- 
-~Randy
+Thx for your time and patience.
+
+Oliver
