@@ -2,97 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0406C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0789DC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1C0218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562150962;
-	bh=uwk3RIACN7rXhlfPTCv2M5qzeAQtv4s71C4Zj3hwVlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QTmqNA/9u6gqMG+s1R72u/uXBE8gd/cGSxaZlxhkewl4i7CfDacFdgN+mBMVY77rV
-	 e+NKx9uV4G9o7SOi8tFrC+WcRUIXnyO4u4b8xtLh9DY6w+biXzt3QvT83Iw/B6J+/w
-	 YBv2FOchYEZWMTkga2gUsN7xZ4Zs6BYCBd2KVNGE=
+	by mail.kernel.org (Postfix) with ESMTP id D0956218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R1uWKAif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGCKtV (ORCPT
+        id S1727124AbfGCKt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 06:49:27 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50335 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726544AbfGCKtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:49:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726544AbfGCKt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 06:49:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F4A218A0;
-        Wed,  3 Jul 2019 10:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562150960;
-        bh=uwk3RIACN7rXhlfPTCv2M5qzeAQtv4s71C4Zj3hwVlI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2eRgaMjOP4XbvBjrhbKFA7KRLjkiC28XwzYsLqRxXQ7m/h0wiikgYokhOaKl6Dz3q
-         suMUJL9ezZ31EQ58tXzt4HTEmj3BLVYMEWU7v4vqsvfo2IugU1DfrB+n3Nbq63/K/E
-         kyEY+/5leFwtB8ueTlNn5EESOoqal/sNzAtsrpEE=
-Date:   Wed, 3 Jul 2019 12:49:17 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
-Message-ID: <20190703104917.GB8931@kroah.com>
-References: <20190702080124.103022729@linuxfoundation.org>
- <50efc32b-04f7-0c5b-832b-47ed08aedef5@nvidia.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dyXg5Kw8z9s4Y;
+        Wed,  3 Jul 2019 20:49:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562150964;
+        bh=wcJRF5awK9VFplzQrvl0xSNRx3Qpc7cMbU202oXK/bE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=R1uWKAifUwCwvrVaqOS6ql1oNTIskGbaHY1sAWqqnC2TVj5qIh9eBDRfyeGwNqtxd
+         cDThu0moCJ6dkORD3ioXIzF3cPj7HCIsxmvqd4+SGgTAFMcBA6hYAc+DLqlhYEzBVx
+         uMK15vGPJekJ3bYsYadRGe7bRcVN3t18Ztsp8Bpu0C00U88eRMnl8PWeyVxiCh0S5A
+         S7iUsY+Ho7ODnprGxyjQARSeyMO/UGdLzu0fo1OG2E0IXoHamO6rOdKuatTh4JSYBh
+         WRYkVnWnSDd7kpbJGSAH5XP270rwF25/WSiTRGmDp6Ceze2fqY7dFIT/u71cqVnseJ
+         C1vsaEaaRDhFA==
+Date:   Wed, 3 Jul 2019 20:49:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eiichi Tsukata <devel@etsukata.com>
+Subject: linux-next: manual merge of the akpm tree with the net-next tree
+Message-ID: <20190703204921.69bc9074@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50efc32b-04f7-0c5b-832b-47ed08aedef5@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/RMargG3XWq7_PIiCvD6joQA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 11:21:35AM +0100, Jon Hunter wrote:
-> 
-> On 02/07/2019 09:01, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.16 release.
-> > There are 55 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.1:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.1.16-rc1-gbe6a5acaf4fb
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
+--Sig_/RMargG3XWq7_PIiCvD6joQA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Wonderful, thanks for testing all of these and letting me know.
+Hi all,
 
-greg k-h
+Today's linux-next merge of the akpm tree got a conflict in:
+
+  net/ipv6/sysctl_net_ipv6.c
+
+between commit:
+
+  00dc3307c0f7 ("net/ipv6: Fix misuse of proc_dointvec "flowlabel_reflect"")
+
+from the net-next tree and patch:
+
+  "proc-sysctl-add-shared-variables-for-range-check-fix-2-fix"
+
+from the akpm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/ipv6/sysctl_net_ipv6.c
+index 57f520d1bf45,e00cf070e542..000000000000
+--- a/net/ipv6/sysctl_net_ipv6.c
++++ b/net/ipv6/sysctl_net_ipv6.c
+@@@ -112,8 -112,8 +112,8 @@@ static struct ctl_table ipv6_table_temp
+  		.data		=3D &init_net.ipv6.sysctl.flowlabel_reflect,
+  		.maxlen		=3D sizeof(int),
+  		.mode		=3D 0644,
+ -		.proc_handler	=3D proc_dointvec,
+ +		.proc_handler	=3D proc_dointvec_minmax,
+- 		.extra1		=3D &zero,
++ 		.extra1		=3D SYSCTL_ZERO,
+  		.extra2		=3D &flowlabel_reflect_max,
+  	},
+  	{
+
+--Sig_/RMargG3XWq7_PIiCvD6joQA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ciDEACgkQAVBC80lX
+0GwpZAf8DYM6yf+jJSeiMzFBHbQsePC0ea5FZ5eVPIRS9Yeai3g+CUfNrBgGi0qV
+faGK895dzjZpylJk9nZveABDCX+sY0TXByp8jYDDPSh9KJAcUDKbzrqiIOQFPEUh
+qPLglC7k6VnybrSmFVmNf1/jC2AH1/cTRkohBaD/EweLKJVxmFwyCMPNrpg54HDo
+QQSZGXqvd5LjGR2o5UhA/OQGDE9ron8wnr2N+dF0pTTgMqkE8sXvKbNHFXII7QdN
+UB8UljWT4IH3t5GbmBn94xAFkSzclwpTFhdvmVpmox8STpkavfAmC31QR5AS+nbO
+2W1n3BFUWqMsL+wVdwaEfZicyyxvvA==
+=AHoM
+-----END PGP SIGNATURE-----
+
+--Sig_/RMargG3XWq7_PIiCvD6joQA--
