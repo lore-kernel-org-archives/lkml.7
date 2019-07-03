@@ -2,68 +2,65 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_12_24,
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DATE_IN_PAST_12_24,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A9C06511
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D337C4646D
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406A5218A4
+	by mail.kernel.org (Postfix) with ESMTP id 6C82F21882
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wb7MTWSe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PFa7vxlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGDBQq (ORCPT
+        id S1727231AbfGDBQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 21:16:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35310 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfGDBQq (ORCPT
+        Wed, 3 Jul 2019 21:16:48 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52260 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfGDBQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 21:16:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641Efot123673;
-        Thu, 4 Jul 2019 01:16:08 GMT
+        Wed, 3 Jul 2019 21:16:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641EI9A034007;
+        Thu, 4 Jul 2019 01:15:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=HhKAAWVPipFLRo00kLa1NJDWOLc4M9riT3RNfy4Uozs=;
- b=wb7MTWSeBsklCUBYPP99Z2BcF022Vw3ID16E/qh0bdF7nB7k1tlNEWUtZO2/cS8lP0ZD
- yNCz1L07vjhGc0qoJRLasQyOaDbHgOCxOdEXyd54gcfMQIk7DUjJ3oOfVdOfV8Q8vQ5g
- i8oAQpk7tKiO5Ms8vco8jiuHzpem2VPS3mxsJ8bKszx6U4gRSOvfPaUZPpUoY5CD+HiG
- lWK79YzScafjJjT6ivE7ICnc8TpIky7TSX3WmnIewaloynLkKNq42lBpqed0havaSTxq
- fhQ8TDFt8aDTFi2RL3MIclgIj8jVEMcu8L4Bn73q+IsNVF5vPoKkE9TKh9lQsAxuvw0M GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2te5tbv6s2-1
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=8R30P8/VE15uPa2Cd5dwobgt5Ubg1NVPlqUdVRzGKOg=;
+ b=PFa7vxlW1+CH/aILqZteNTx4bLTRzCCKfxlUc0pO0k9P6N6FzCrBr2ot3WvgURE9f+Ra
+ mpXvtK6hbtuAJrn0CepZRt+szQO2DmQpNdFuyHd3POlkpUne1LAe+EsWKQrLhCX/DQo2
+ LlsU8znXbYYmx2OMPJvKWob3JSGNoXynzfPFS93Lqx/BOdLQPnpjkgETMyneOYUzbojN
+ WEKblRARQYCw9aRAC48uKdNVHzjaXSVFJKCWAMEmHshiNS1AF1rc2fZGLEgI4RKPryIr
+ 1ysZDf1XeyfedeyiA8VNc6PPHjNnfzG/FG6XuEvhwgxd0+aLyyUNX7T2q/7Bwm/0UvdY Fg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2te61q46r4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 01:16:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641Cceh089845;
-        Thu, 4 Jul 2019 01:16:07 GMT
+        Thu, 04 Jul 2019 01:15:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x641CfXm100559;
+        Thu, 4 Jul 2019 01:15:58 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2tebkv5tdj-1
+        by userp3020.oracle.com with ESMTP id 2tebbknp7y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 01:16:07 +0000
+        Thu, 04 Jul 2019 01:15:58 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x641G7tj010700;
-        Thu, 4 Jul 2019 01:16:07 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x641FvGL010644;
+        Thu, 4 Jul 2019 01:15:57 GMT
 Received: from z2.cn.oracle.com (/10.182.69.87)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jul 2019 18:16:07 -0700
+        with ESMTP ; Wed, 03 Jul 2019 18:15:56 -0700
 From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
         jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de,
         Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v5 4/4] x86/xen: Add "nopv" support for HVM guest
-Date:   Wed,  3 Jul 2019 09:19:38 +0800
-Message-Id: <1562116778-5846-5-git-send-email-zhenzhong.duan@oracle.com>
+Subject: [PATCH v5 0/4] misc fixes to PV extentions code
+Date:   Wed,  3 Jul 2019 09:19:34 +0800
+Message-Id: <1562116778-5846-1-git-send-email-zhenzhong.duan@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1562116778-5846-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1562116778-5846-1-git-send-email-zhenzhong.duan@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
@@ -80,78 +77,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PVH guest needs PV extentions to work, so "nopv" parameter should be
-ignored for PVH but not for HVM guest.
+Hi,
 
-If PVH guest boots up via the Xen-PVH boot entry, xen_pvh is set early,
-we know it's PVH guest and ignore "nopv" parameter directly.
+In virtualization environment, PV extensions (drivers, interrupts,
+timers, etc) are enabled in the majority of use cases which is the
+best option.
 
-If PVH guest boots up via the normal boot entry same as HVM guest, it's
-hard to distinguish PVH and HVM guest at that time.
+However, in some cases (kexec not fully working, benchmarking, etc)
+we want to disable PV extensions. We have xen_nopv for that purpose
+but only for XEN. For a consistent admin experience a common command
+line parameter set across all PV guest implementations is a better
+choice.
 
-To handle that case, add a new function xen_hvm_nopv_guest_late_init()
-to detect PVH at a late time and panic itself if nopv enabled for a
-PVH guest.
+To achieve this introduce a new 'nopv' parameter which is usable by
+most of PV guest implementation. Due to the limitation of some PV
+guests(XEN PV, XEN PVH and jailhouse), 'nopv' is ignored for XEN PV
+, jailhouse and XEN PVH if booting via Xen-PVH boot entry. If booting
+via normal boot entry(like grub2), PVH guest has to panic itself
+currently.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
----
- arch/x86/xen/enlighten_hvm.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+While analyzing the PV guest code one bug were found and fixed.
+(Patches 1). It can be applied independent of the functional
+changes, but is kept in the series as the functional changes
+depend on them.
 
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index 1756cf7..09a010a 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -231,11 +231,37 @@ bool __init xen_hvm_need_lapic(void)
- 	return true;
- }
- 
-+static __init void xen_hvm_nopv_guest_late_init(void)
-+{
-+#ifdef CONFIG_XEN_PVH
-+	if (x86_platform.legacy.rtc || !x86_platform.legacy.no_vga)
-+		return;
-+
-+	/* PVH detected. */
-+	xen_pvh = true;
-+
-+	panic("\"nopv\" and \"xen_nopv\" parameters are unsupported in PVH guest.");
-+#endif
-+}
-+
-+
- static uint32_t __init xen_platform_hvm(void)
- {
- 	if (xen_pv_domain())
- 		return 0;
- 
-+	if (xen_pvh_domain() && nopv) {
-+		/* Guest booting via the Xen-PVH boot entry goes here */
-+		pr_info("\"nopv\" parameter is ignored in PVH guest\n");
-+		nopv = false;
-+	} else if (nopv) {
-+		/*
-+		 * Guest booting via normal boot entry (like via grub2) goes
-+		 * here.
-+		 */
-+		x86_init.hyper.guest_late_init = xen_hvm_nopv_guest_late_init;
-+		return 0;
-+	}
- 	return xen_cpuid_base();
- }
- 
-@@ -268,4 +294,5 @@ static __init void xen_hvm_guest_late_init(void)
- 	.init.init_mem_mapping	= xen_hvm_init_mem_mapping,
- 	.init.guest_late_init	= xen_hvm_guest_late_init,
- 	.runtime.pin_vcpu       = xen_pin_vcpu,
-+	.ignore_nopv            = true,
- };
--- 
-1.8.3.1
+For compatibility reason, "xen_nopv" is keeped and mapped to "nopv",
+this way also avoids an issue with xen_nopv when booting PVH guest.
 
+Build test passes with CONFIG_HYPERVISOR_GUEST enable and disabled.
+I didn't get env to test with jailhouse and Hyperv, the others work
+as expected.
+
+v5:
+PATCH2:
+update patch description per Boris
+add declaration of nopv variable in arch/x86/include/asm/hypervisor.h
+which will be used in PATCH3 and PATCH4
+
+PATCH3 update xen_parse_nopv() per Boris
+PATCH4 add nopv=false per Boris
+Combine PATCH5 into PATCH3
+
+
+v4:
+PATCH5 a new patch to add 'xen_nopv' back per Boris
+
+v3:
+Remove some unrelated patches from patchset as suggested by Tglx
+
+PATCH1 unchanged
+PATCH2 add Reviewed-by
+PATCH3 add Reviewed-by
+PATCH4 rewrite the patch as Jgross found an issue in old patch,
+description is also updated.
+
+
+
+v2:
+PATCH3 use 'ignore_nopv' for PVH/PV guest as suggested by Jgross.
+PATCH5 new added one, specifically for HVM guest
+
+Thanks
+Zhenzhong
