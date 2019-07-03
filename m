@@ -2,109 +2,113 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F1DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2111DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B856218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF742189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObWcSxFy"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IwyYn5xb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cEu0Eo/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfGCJLA (ORCPT
+        id S1727379AbfGCJLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:11:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35276 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfGCJK6 (ORCPT
+        Wed, 3 Jul 2019 05:11:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48244 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfGCJLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:10:58 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s27so904956pgl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=As2upjpnu0eNfhcHUKlBkgyy1u4yzbeYFixzSKqaDY4=;
-        b=ObWcSxFyx81NI2OD5AYV1+2zf6+ZncHg9EmE7AwksRacdzCfdlIP0d9ckHlCSk+hAE
-         lkIF1fwAfUwolfL8XdbQ0DqaD6bt2B1+RCqafwyRLeiMOQNEtmTnoR/6nVgXwKXbm9sU
-         uxSk7sytU9XzbuoPWfaw76VZJQcVDVWHZ8tWKtLZL28YnSLgT0hSP9zD11bnACe+24F7
-         GnFTEl6L7+NzdthUoBXS60y3CmnZ9N3bq1xqzwdpXzMQwLoKEITiT6AmxobFJbRpkujk
-         3m+ymw+NthAjrjGNfrbA2ry19Ag6AnfdneyhwF0MwTOfOC5UVUgYLyt69JILg9kL5Zva
-         DKGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=As2upjpnu0eNfhcHUKlBkgyy1u4yzbeYFixzSKqaDY4=;
-        b=mS1RY4gKxVs44DgCrgiutpykZIdbJCjUy2yTQE64c/QnGuYcjokOpMQj6kuiyeqKFp
-         CKezDtY/AONGGGuw1j84Van770/zRPU6rpqv3WEn5e5fhRfC6SVGTWWnlNIyXOleZ5Kp
-         rEpdRT9ZSfH998aGumE7sVK1xUyYbwJZwabdhxglsFhlnz2ykh2JPdgvWNnIEzTTMo1E
-         IEOYsTllGuBgkwT5Nc7jEK+oqNPE7vBC+bVTx6Rbxk28J8dWFTeVPj5w9iBZFDAlOow6
-         FEyUlYST+d2km10mgzWCuE4ATqwGSx38WkCkrt0N2J5ELnu3UeC0LVMmnVO9fwES0npH
-         oeSA==
-X-Gm-Message-State: APjAAAWG850nCANVZwDxHNmsBPKtz5noZ9+M2Nf1z3xjLHqTx7A+0kIi
-        +R3yX7jDtVuYaEGgM1pnplo=
-X-Google-Smtp-Source: APXvYqzFCXmdRw6ALVWTUgHPfy1hOiev9xTr20YFwbNlADqhKzfB6/Es/73il0GfRP7q2dFFqSPcKA==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr11615624pjq.114.1562145057087;
-        Wed, 03 Jul 2019 02:10:57 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id x1sm1350046pjo.4.2019.07.03.02.10.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 02:10:56 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 02:10:46 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     shengjiu.wang@nxp.com
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] ASoC: fsl_esai: Wrap some operations to be
- functions
-Message-ID: <20190703091046.GA8764@Asurada>
-References: <cover.1562136119.git.shengjiu.wang@nxp.com>
- <f57c5a045c6e5491b1bc9831388eab2c88773176.1562136119.git.shengjiu.wang@nxp.com>
+        Wed, 3 Jul 2019 05:11:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1652060A97; Wed,  3 Jul 2019 09:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562145076;
+        bh=nX45R+dm6a1Jwcb05CDNUgx4njh6ZeQnVggN92Rhfok=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IwyYn5xbQlKBd5czIMxMeX5+JmCORmGtYPOCCMxJFf7o2tP6ZeF1DdLW/kjhKQumd
+         NjKU5M9dpWYKu8mD1sOjnlx50LUzcmRDUDLh7e2l1u3m9U8Eu1eMf0Po03lF7kmzvY
+         B/NWYtuyNak548lgxE8K1YPt77Xx6H7Da8MiJW34=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D41360A0A;
+        Wed,  3 Jul 2019 09:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562145074;
+        bh=nX45R+dm6a1Jwcb05CDNUgx4njh6ZeQnVggN92Rhfok=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cEu0Eo/koIVPkWdry5K4U/iyWjCti1fQO0gIETQh0RFInFA5nvbtyEAz1rDl/ze/X
+         sEzNwmGt7Nn2mjoQgj1ac/6VIG54hQ2COGaHhsAU8NwEh8JqvE1y5GAFKo/njRBwRd
+         k7lg2EPqkAdJvYnIg4tkseG4OiD17285DOvKauH8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D41360A0A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 2/2] opp: Manage empty OPP tables with clk handle
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     vireshk@kernel.org, sboyd@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190702043643.1746-1-rnayak@codeaurora.org>
+ <20190702043643.1746-2-rnayak@codeaurora.org>
+ <20190703085026.xe3hwxqah76b7np3@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <95cf4e44-d57a-9aa4-40ce-3b7013e10813@codeaurora.org>
+Date:   Wed, 3 Jul 2019 14:41:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f57c5a045c6e5491b1bc9831388eab2c88773176.1562136119.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <20190703085026.xe3hwxqah76b7np3@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me, yet two small comments inline.
+[]..
+>>   
+> 
+> Explain the rationale behind this code here in a comment.
+> 
+>> +	if (!_get_opp_count(opp_table)) {
+>> +		ret = _generic_set_opp_clk_only(dev, clk, freq);
+>> +		goto put_opp_table;
+>> +	}
+>> +
+>>   	temp_freq = old_freq;
+>>   	old_opp = _find_freq_ceil(opp_table, &temp_freq);
+>>   	if (IS_ERR(old_opp)) {
+> 
+> Also, rebase over the OPP branch please:
 
-Please add this to this patch in the next version:
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+thanks, I will fix/rebase and repost,
+in the meantime while I was testing this a little more I realized I also need
+something like the change below to avoid a refcount mismatch WARN when empty OPP
+table is removed using dev_pm_opp_of_remove_table()
 
-On Wed, Jul 03, 2019 at 02:42:04PM +0800, shengjiu.wang@nxp.com wrote:
-> +static int fsl_esai_register_restore(struct fsl_esai *esai_priv)
-> +{
-> +	int ret;
-> +	/* FIFO reset for safety */
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index fa7d4d6d37b3..20128a88baf2 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -2118,7 +2118,8 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
+                 return;
+         }
+  
+-       _put_opp_list_kref(opp_table);
++       if (_get_opp_count(opp_table))
++               _put_opp_list_kref(opp_table);
+  
+         /* Drop reference taken by _find_opp_table() */
+         dev_pm_opp_put_opp_table(opp_table);
 
-Checkpatch script would probably warn this. Usually we add a blank
-line after variable declarations.
+Does this look like a good way to fix it?
 
-> @@ -866,22 +935,9 @@ static int fsl_esai_probe(struct platform_device *pdev)
->  
->  	dev_set_drvdata(&pdev->dev, esai_priv);
->  
-> -	/* Reset ESAI unit */
-> -	ret = regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ERST);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "failed to reset ESAI: %d\n", ret);
-> +	ret = fsl_esai_init(esai_priv);
-
-Could we rename this function to fsl_easi_hw_init() or something
-clear like fsl_esai_register_init? fsl_easi_init() feels like a
-driver init() function to me.
-
-Thank you
-Nicolin
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
