@@ -7,154 +7,154 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA415C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBBCC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC5320989
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9CB20989
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MaWsuh6T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJASSwao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGCEzM (ORCPT
+        id S1726670AbfGCE6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 00:55:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42244 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfGCEzL (ORCPT
+        Wed, 3 Jul 2019 00:58:55 -0400
+Received: from mail-ed1-f44.google.com ([209.85.208.44]:46172 "EHLO
+        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfGCE6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 00:55:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id u19so1673159ior.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:55:11 -0700 (PDT)
+        Wed, 3 Jul 2019 00:58:54 -0400
+Received: by mail-ed1-f44.google.com with SMTP id d4so670090edr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dz5HtnV173FQfBMfXXnX/xMaAQPeeA9atZJs94y2ZNE=;
-        b=MaWsuh6TbgZ6Y1ytSmhgmMuRvwKpUnM2Lm3L/1hO4mFnab9W8gwVqGT3YU4K2mDQTK
-         w6Gevp/LkJQV7G6+bQg4WOXb4/Mq9EAAc8nm5DTV9Fqsu3jYgzXoLA39sIRBDDY0ghwj
-         yoF75Sok83b5uMpWvaeKmDFRkreXrtkWm3gNE=
+         :cc:content-transfer-encoding;
+        bh=uf5aCU6aY5t/9fyL90O/cqUCzIfpNsCzgBmR7PWCe0Y=;
+        b=kJASSwao08QQ12P0yrheKoob6wHDYCL0MeriSYWmYAymiP4LABpOrMNoNyF/wCA3kr
+         uYFEqJKV4aZsU7s8nJUFIWjf5HHdnAlnZ3xEyNpTUvFXTHaVcbC79gezsNkfl80hnR/g
+         fu07wEe13+Ad9Xzpx+1j3p/HXJlP2X2+GVKE0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dz5HtnV173FQfBMfXXnX/xMaAQPeeA9atZJs94y2ZNE=;
-        b=XO82Tf1z5vmGkTTDqhPKqCI0VbUmYHFDx2Y8RndxwSEBGXqmjoPKx5nL1toU6nnSul
-         wbPscc4VTVWU/MmpaAKfGJqr7QNmdQjx/gvTty/hvAg9F6ccdiOhU0ZMJAE/swfgnbg7
-         dWbwmXo8GgAOQxHAceh4rhzUePRmOYJTR/hLAtx7aIMB8md81+FmydmKSbb48ZbrNP3H
-         555QinLEMnE2k12EResh/dlRixThoidxJRw6LqDNvlKfqv61CIJTzj8wkUpc6Sksa4fV
-         4wtC0r3NNHQLwbvgpFJrO0bZCYSDyww/m3aTnjsgitIfOOV9WNYY3DqvANw/v6V8Y4Mc
-         95aw==
-X-Gm-Message-State: APjAAAUPJ/GcBPwcWh/yn5mG7c2l9D7bu4ewXTNawJFLrNyHD48sYNe4
-        Xduvvj47TUZ/yLhEmy4v22TwQrY+UiI=
-X-Google-Smtp-Source: APXvYqxsOMITHmnE8OvjKG/tNUqivz0Z8Q2TG5DIIdjxbe3Fwp4jzk35OLBTR9xUUoBKUFhKPDDFAw==
-X-Received: by 2002:a6b:6001:: with SMTP id r1mr38152023iog.229.1562129710776;
-        Tue, 02 Jul 2019 21:55:10 -0700 (PDT)
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
-        by smtp.gmail.com with ESMTPSA id r139sm2636974iod.61.2019.07.02.21.55.08
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uf5aCU6aY5t/9fyL90O/cqUCzIfpNsCzgBmR7PWCe0Y=;
+        b=Sy0T8pGUMHt1fpG19BLJ4rUm2JZigiwAowBvh7E8Qpdn3rHw14ErgXdpilTDpGDyVr
+         E/pvHGsZhKlRlWr/bc8eYdq0C5axjWz7kEMqqf3/9MGQHvOexbDldjmAMty0orpLHJy1
+         i0PIfB90c0U1GkbcTm7bsJL3MAJFB7fR3iWPZ98JZWWqT2hwqiqpjI484udAjOKc4t2G
+         utjk4xGYlCxXjq4mBcvSAXo3JawloO17EsidfNZ7Wr5imvViIVectY4RjLtgV+F7moV4
+         c3oQRtTGONS4sy47HLNjBar8eSG3D3x473E+YnUab3T/VNLt1tyRrdw51p9XlCCvfDAx
+         CqEQ==
+X-Gm-Message-State: APjAAAVX/qs4YSSOxAsdJ+8/MWZWFi5U439lyPpQ1rbmm0w7MweqhYO8
+        zUbn36ilO1+2wtnxnE17tQIlG5Oq/sI2cg==
+X-Google-Smtp-Source: APXvYqxOqK64HcI+65raV3B7IvnwCVrhAA1Ui2WiC/OSz47LIPeHjMdbHMlsi2KpKELScq0NkMeM1A==
+X-Received: by 2002:a17:906:80cc:: with SMTP id a12mr32156288ejx.132.1562129932245;
+        Tue, 02 Jul 2019 21:58:52 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id b25sm335222eda.38.2019.07.02.21.58.50
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 21:55:08 -0700 (PDT)
-Received: by mail-io1-f49.google.com with SMTP id i10so1625513iol.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:55:08 -0700 (PDT)
-X-Received: by 2002:a5d:885a:: with SMTP id t26mr8802188ios.218.1562129708023;
- Tue, 02 Jul 2019 21:55:08 -0700 (PDT)
+        Tue, 02 Jul 2019 21:58:50 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id x4so1078957wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:58:50 -0700 (PDT)
+X-Received: by 2002:a05:6000:1150:: with SMTP id d16mr2514295wrx.48.1562129929689;
+ Tue, 02 Jul 2019 21:58:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190620182056.61552-1-dianders@chromium.org> <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
-In-Reply-To: <CAD=FV=Wi21Emjg7CpCJfSRiKr_EisR20UO1tbPjAeJzdJNbSVw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 2 Jul 2019 21:54:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
-Message-ID: <CAD=FV=UhNfhVG422=huthFSptoV4FXED=xPtArO2KkyNb1U3Xw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to
- rk3288-veyron panel-regulators"
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl> <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 3 Jul 2019 13:58:38 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5Aa-PQEakeg3sC_EDYdKy15hHx09Qmk6Jik4COeBe3xVA@mail.gmail.com>
+Message-ID: <CAAFQd5Aa-PQEakeg3sC_EDYdKy15hHx09Qmk6Jik4COeBe3xVA@mail.gmail.com>
+Subject: Re: [PATCHv4 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On Thu, Jun 20, 2019 at 1:31 PM Doug Anderson <dianders@chromium.org> wrote:
+On Mon, Jun 3, 2019 at 8:28 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrot=
+e:
 >
-> Hi,
+> From: Tomasz Figa <tfiga@chromium.org>
 >
-> On Thu, Jun 20, 2019 at 11:21 AM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
-> >
-> > This 100 ms mystery delay is not on downstream kernels and no longer
-> > seems needed on upstream kernels either [1].  Presumably something in the
-> > meantime has made things better.  A few possibilities for patches that
-> > have landed in the meantime that could have made this better are
-> > commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
-> > proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
-> > the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
-> > ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
-> >
-> > Let's revert and get our 100 ms back.
-> >
-> > [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 -
-> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 -
-> >  4 files changed, 4 deletions(-)
+> Due to complexity of the video decoding process, the V4L2 drivers of
+> stateful decoder hardware require specific sequences of V4L2 API calls
+> to be followed. These include capability enumeration, initialization,
+> decoding, seek, pause, dynamic resolution change, drain and end of
+> stream.
 >
-> Maybe wait before applying.  I've been running reboot tests now with
-> this patch applied (among others) and with enough reboots I managed to
-> see:
+> Specifics of the above have been discussed during Media Workshops at
+> LinuxCon Europe 2012 in Barcelona and then later Embedded Linux
+> Conference Europe 2014 in D=C3=BCsseldorf. The de facto Codec API that
+> originated at those events was later implemented by the drivers we alread=
+y
+> have merged in mainline, such as s5p-mfc or coda.
 >
-> [    5.682418] rockchip-dp ff970000.dp: eDP link training failed (-5)
+> The only thing missing was the real specification included as a part of
+> Linux Media documentation. Fix it now and document the decoder part of
+> the Codec API.
 >
-> I'll see if I can confirm that it's this patch and why things are
-> different compared to downstream.
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+>  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    8 +-
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |    5 +
+>  Documentation/media/uapi/v4l/v4l2.rst         |   10 +-
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+>  5 files changed, 1132 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+>
 
-OK, I finally got back to this and confirmed:
+Thanks a lot for helping with remaining changes.
 
-1. The above error is actually somewhat harmless.  The eDP failure
-will be retried automatically despite the scary message.  Specifically
-see the loop in analogix_dp_bridge_enable().  I confirmed that after
-seeing the error the screen came up just fine (I looked at the screen
-in two actual instances but I believe it's pretty much always fine).
+Just one thing inline our team member found recently.
 
-2. I haven't seen any evidence that the eDP link training happens any
-more often with this revert in place.  Specifically, I see the same
-message in the logs (at what appears to be the same rate) with or
-without this revert.
+[snip]
+> +Capture setup
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+[snip]
+> +4.  **Optional.** Set the ``CAPTURE`` format via :c:func:`VIDIOC_S_FMT` =
+on the
+> +    ``CAPTURE`` queue. The client may choose a different format than
+> +    selected/suggested by the decoder in :c:func:`VIDIOC_G_FMT`.
+> +
+> +    * **Required fields:**
+> +
+> +      ``type``
+> +          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
+> +
+> +      ``pixelformat``
+> +          a raw pixel format.
 
-3. Probably the link-training failures here are the same ones we
-debugged for PSR for rk3399-gru-kevin that we fixed by making the eDP
-PCLK rate exactly 24 MHz.  See <https://crrev.com/c/433393> for
-details.  On rk3399-gru-kevin it was super important to resolve the
-root cause of these errors because we had PSR (which meant we were
-constantly taking to the eDP controller).  On rk3288-veyron devices
-with no PSR the retry should be a fine solution and it doesn't seem
-like a good idea to fully rejigger our clock plan to fix the root
-cause.
+The client should be able to set the width and height as well. It's a
+quite frequent case, especially in DMA-buf import mode, that the
+buffers are actually bigger (e.g. more alignment) than what we could
+get from the decoder by default. For sane hardware platforms it's
+reasonable to expect that such bigger buffers could be handled as
+well, as long as we update the width and height here.
 
+It's more like a clarification anyway, so if you think it would be
+better to just merge the current revision, I could send a follow up
+patch.
 
-NOTE: I saw _one_ case on rk3288-veyron-minnie where the screen looked
-wonky at bootup and I saw the eDP link training error in the logs.
-That's what originally made me cautious.  I haven't been able to
-reproduce this, but presumably I just got super unlucky in that one
-case.  I've left devices rebooting all day at work and haven't seen
-the wonky screen since then.
+Regardless of that and FWIW:
 
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-Summary: I think this revert is just fine.
-
-
--Doug
+Best regards,
+Tomasz
