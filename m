@@ -2,103 +2,79 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606FC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE4BC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F29221882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0442121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wtXWiip2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4D1D82b7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfGCVa4 (ORCPT
+        id S1727327AbfGCVdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:30:56 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51132 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfGCVaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:30:55 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 91366886BF;
-        Thu,  4 Jul 2019 09:30:53 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562189453;
-        bh=1L1sB9h+79NdmQLMdwPjbfag8Y1xUTAYaNEw33rFiZI=;
-        h=From:To:CC:Subject:Date:References;
-        b=wtXWiip2DUI7Ot83NkMWRf5xL6PKzLb46Ef3+Hy47vNeWbY4j5LWGdUOu/LTGxBBE
-         DtjD401hLKopVFc/PiJ4vpWYQFNExSU7ZC9F+10SxnMNSGKIAgaYQBRd4MWZKl05wL
-         xJZUHhNOOQHU6Cy061gSUlMCjCzUsdu7hOPLcD9ZOrPMneudthcrnfpA0nJpGN+h7B
-         map2n2/YxJM7hjW0xrRkh3N+FouogNHRhEruIBIMqOKiztar2IulxFsHSmMW8sFoZ0
-         yc8281N1OzD/J5xC7XyVpR/SwhRt7OJ/VBqTeWT0ZTGB+/8YMAF1agROSXY6sBt4Yi
-         pFk21uKLteOJg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d1d1e8e0000>; Thu, 04 Jul 2019 09:30:54 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Thu, 4 Jul 2019 09:30:50 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Thu, 4 Jul 2019 09:30:50 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: gpio desc flags being lost
-Thread-Topic: gpio desc flags being lost
-Thread-Index: AQHVMWEqVhtjrKesFkiEOodI/qBrrg==
-Date:   Wed, 3 Jul 2019 21:30:50 +0000
-Message-ID: <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
-References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
- <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
- <f9eb3387ed384676b0b298e4da7eeaf0@svr-chch-ex1.atlnz.lc>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Jul 2019 17:33:35 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52380 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfGCVdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:33:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=DwOQ1VhqzOlKO8GcPOTAjm30bxi+tef4PCN5in+ERJQ=; b=4D1D82b7l3oxNLiNgWPNJH70tZ
+        av10Vp1R7e8O4us3SP9fUgWsEl4zL0VLCWoNZOouCgsIC7YKPWeIxAYBF7g5VKcf1QOaSXe7kx9AO
+        T/LacQKMGHL+qLmc7wObJvUsSswpjRlmIh0wfEXC+66B4ewmezgzopsoxdDhTlEFCkIU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1himsZ-0008CN-3n; Wed, 03 Jul 2019 23:33:27 +0200
+Date:   Wed, 3 Jul 2019 23:33:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Message-ID: <20190703213327.GH18473@lunn.ch>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/07/19 9:29 PM, Chris Packham wrote:=0A=
-> On 3/07/19 6:28 PM, Linus Walleij wrote:=0A=
->> On Wed, Jul 3, 2019 at 7:35 AM Chris Packham=0A=
->> <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
->>=0A=
->>> Doing a bit of debugging so far I see that after startup the desc->flag=
-s=0A=
->>> for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x=
-801).=0A=
->>=0A=
->> Yeah that is wrong.=0A=
->>=0A=
->>> I'll do some proper bisecting tomorrow, but figured you might want to=
-=0A=
->>> know sooner rather than later.=0A=
->>=0A=
->> Thanks, I have another critical GPIO fix queued so would be great if we=
-=0A=
->> can fix this too before v5.2 is released.=0A=
-> =0A=
-> Bit of an update. v4.19.54 works, v5.1.15 is broken. I'll keep bisecting=
-=0A=
-> between those tomorrow.=0A=
-> =0A=
-=0A=
-The problem is caused by commit 3edfb7bd76bd1cba ("gpiolib: Show correct =
-=0A=
-direction from the beginning"). I'll see if I can whip up a patch to fix it=
-.=0A=
+> I think if we're going to have custom properties for phys, we should
+> have a compatible string to at least validate whether the custom
+> properties are even valid for the node.
+
+Hi Rob
+
+What happens with other enumerable busses where a compatible string is
+not used?
+
+The Ethernet PHY subsystem will ignore the compatible string and load
+the driver which fits the enumeration data. Using the compatible
+string only to get the right YAML validator seems wrong. I would
+prefer adding some other property with a clear name indicates its is
+selecting the validator, and has nothing to do with loading the
+correct driver. And it can then be used as well for USB and PCI
+devices etc.
+
+	Andrew
+
+
