@@ -2,220 +2,106 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243E1C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA3C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B6321882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8084D2189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EbX/sgax"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MGb4X8V0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfGCSOG (ORCPT
+        id S1727093AbfGCSPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:14:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45036 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfGCSOG (ORCPT
+        Wed, 3 Jul 2019 14:15:44 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42191 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfGCSPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:14:06 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so3442631ljc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:14:05 -0700 (PDT)
+        Wed, 3 Jul 2019 14:15:44 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 201so1431395qkm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Chz7KpzfDvb4cnBPbwvegn1AV1XaBRdzu8IfAxBfQ5I=;
-        b=EbX/sgaxxHFwsU8r1WEvx2OotnABVYExtQp10LvIyCVm9iETlGlR0qTT/HGyH4ncpI
-         dsfpLRJ4yceh680j4RwwUkSvmS+FUTReqoSu8asLR3dTcJtGaT1Im4/p060H9dj7FZLf
-         DTxBgsrXJ35tib7SreK4cIC0eJcI4vNdDroQnYoSiSllACf1Appfu5TuhnRPE6sU8Hn1
-         HABwqoVCDdsOKcWWZJqxJC1q0QKulmoxO7nuuKcH11gVvjuHSH8z6ZtrmKfvzTkPu5s6
-         WJ1st9bKhy0Yqtzx+khfGOGRRrcVDfN/Tp0BMnW5GdZ9FQ5piRaJyinPh7gWRrb+yXOK
-         C7Yw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
+        b=MGb4X8V0OjUmCxHXdwat5t//603Imvm3kttDyzPr4B1R8dke3zyk8pDWGq7fzjOf9T
+         vhoLDzI6WCU5N4NrK/vZZAt9KDue5n72hIeNC1cz1j/ds592t4xYj0gPc7RQWN5tu3kK
+         y/BZeSVV19CFNNBfNU5x0lM9OM/CH02xFeKxUrblZJMqjjhX0l4gjG924KSmb6umCVqY
+         q+ZOkych1AFQ/2d82ikRe4cso3C8TVySqyZbPVlAYKLNARrOu29Nsf2uO3Rs45jVcEQb
+         PCfasJR/oBWrfsPe016/1vxmUYZfy876Nti6m+RO+WQbCOzAxMa5i5a/ZdgHoU8lAwIn
+         KN7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Chz7KpzfDvb4cnBPbwvegn1AV1XaBRdzu8IfAxBfQ5I=;
-        b=KDZEb/aiYW3UWvjAsko1LEMJZCllHPL0H9M2iR7LqW87jiIfA6cHoxDt5fUgsw18QA
-         sr3zKa3sm1r/lLTqpVY/yyXro49mv1KTzJ2b3RtrbshaKnC9dj1ZnzCjhERa9N6ozE5m
-         1Lkgrdw80jXJjpns+h6xwjRQh3LIYhMY12Uc8BGwIPvojWanTLMTRwlZcjOikWhuzSA0
-         7UClV8hp31EM44pDcvlNvjQcEIByKzFJ7XPyNU/68L20gjCxcnargx/hL3jobhE/7sDV
-         NP0Yvmb10dyTGFcpfPFeC30gn1AI1DI+Hry5fIlkLrUxlsP6sqMhqTI+ZI+zjJpdm9/t
-         lCRg==
-X-Gm-Message-State: APjAAAXpnmXLEWaCzVC4hRDlKVtmKcFWhJvsjj6jKukckp4gSLFYfHVn
-        gbdPR6K1UK9w7ZmN3cYVYIbgcg==
-X-Google-Smtp-Source: APXvYqyCTmvLLhwVshn+D5oXeVY+RnKmA+Y7RMGMyZofLc+vtv0Lv16PyM/ltRfxdVX7UHnCc08LNg==
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr22028028ljg.237.1562177644239;
-        Wed, 03 Jul 2019 11:14:04 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4463:651e:e5a9:49e2:7053:81e9])
-        by smtp.gmail.com with ESMTPSA id o11sm496196lfl.15.2019.07.03.11.14.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 11:14:03 -0700 (PDT)
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tokunori Ikegami <ikegami.t@gmail.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
- <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
- <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <8e870356-90ba-4762-b1fd-8a13ce6ebcc8@cogentembedded.com>
-Date:   Wed, 3 Jul 2019 21:14:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
+        b=ENMFMNGOgIi2pSJz4+DTVPLExFwr+yGFVE4AJruOrdUyoHFsyAZRqPImIhAbcm5mjt
+         q+W58Cpd4imVX2ojAwYja+cJ+adGvJBCYk2Wur8dau4WI3bS++LHP8yXpSZQnjBVYWSz
+         DJRhEzOHOPDpiXr8e1FLngXrznc+6JP3p9BccG3zcX7qDh8Z2WngJx21Nt42kpcom9Mo
+         yO9GmqII4/VPyoMywRqEI8KW18O15aExAschyhAj2TgMvADalsFIrQTc8eHa1o6ejK4w
+         sQZx16XOpIvo6UmlkKsvOiMcO99W2OgD3/Thl4K8oiX4EErcqk71QxURspTESTsCNHqz
+         Er2w==
+X-Gm-Message-State: APjAAAV2Lfos1RZT/GNs/Fsqe8MpnrcVBMMDhIdSyQVES6zjqveYKHqq
+        iU0W7MmgH+v+znPk8O4Ar8l3DA==
+X-Google-Smtp-Source: APXvYqx+Obpp289GMjyQScpks1hosaCdzO2IJ2gOygQVUkXAuZU/IoXFFk8Hk2uU2aW+fFE5K61x4g==
+X-Received: by 2002:a37:4914:: with SMTP id w20mr31403797qka.156.1562177743091;
+        Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id j184sm1204269qkc.65.2019.07.03.11.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 11:15:42 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hijnC-0000Ju-2z; Wed, 03 Jul 2019 15:15:42 -0300
+Date:   Wed, 3 Jul 2019 15:15:42 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/22] mm: remove the legacy hmm_pfn_* APIs
+Message-ID: <20190703181542.GD18673@ziepe.ca>
+References: <20190701062020.19239-1-hch@lst.de>
+ <20190701062020.19239-23-hch@lst.de>
+ <20190703180125.GA18673@ziepe.ca>
+ <20190703180308.GA13656@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703180308.GA13656@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 07/03/2019 07:41 AM, Vignesh Raghavendra wrote:
-
->>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->>> Bus interface between a host system master and one or more slave
->>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->>> or ASIC devices with random access NOR flash memory (called HyperFlash)
->>> or self refresh DRAM (called HyperRAM).
->>>
->>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->>> signal and either Single-ended clock(3.0V parts) or Differential clock
->>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->>> At bus level, it follows a separate protocol described in HyperBus
->>> specification[1].
->>>
->>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->>> its equivalent to x16 parallel NOR flash with respect to bits per clock
->>> cycle. But HyperBus operates at >166MHz frequencies.
->>> HyperRAM provides direct random read/write access to flash memory
->>> array.
->>>
->>> But, HyperBus memory controllers seem to abstract implementation details
->>> and expose a simple MMIO interface to access connected flash.
->>>
->>> Add support for registering HyperFlash devices with MTD framework. MTD
->>> maps framework along with CFI chip support framework are used to support
->>> communicating with flash.
->>>
->>> Framework is modelled along the lines of spi-nor framework. HyperBus
->>> memory controller (HBMC) drivers calls hyperbus_register_device() to
->>> register a single HyperFlash device. HyperFlash core parses MMIO access
->>> information from DT, sets up the map_info struct, probes CFI flash and
->>> registers it with MTD framework.
->>>
->>> Some HBMC masters need calibration/training sequence[3] to be carried
->>> out, in order for DLL inside the controller to lock, by reading a known
->>> string/pattern. This is done by repeatedly reading CFI Query
->>> Identification String. Calibration needs to be done before trying to detect
->>> flash as part of CFI flash probe.
->>>
->>> HyperRAM is not supported at the moment.
->>>
->>> HyperBus specification can be found at[1]
->>> HyperFlash datasheet can be found at[2]
->>>
->>> [1] https://www.cypress.com/file/213356/download
->>> [2] https://www.cypress.com/file/213346/download
->>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>>     Table 12-5741. HyperFlash Access Sequence
->>>
->>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> [...]
->>
->>    I have at least created my HyperBus driver and unfortunately I'm having serious
-
-   At last. :-)
-
->> issues with the design of the support core (see below)...
->>
->> [...]
->>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->>> new file mode 100644
->>> index 000000000000..63a9e64895bc
->>> --- /dev/null
->>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->>> @@ -0,0 +1,154 @@
->> [...]
->>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
->>> +{
->>> +	const struct hyperbus_ops *ops;
->>> +	struct hyperbus_ctlr *ctlr;
->>> +	struct device_node *np;
->>> +	struct map_info *map;
->>> +	struct resource res;
->>> +	struct device *dev;
->>> +	int ret;
->>> +
->>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
->>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	np = hbdev->np;
->>> +	ctlr = hbdev->ctlr;
->>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
->>> +		return -ENODEV;
->>> +
->>> +	hbdev->memtype = HYPERFLASH;
->>> +
->>> +	ret = of_address_to_resource(np, 0, &res);
->>
->>    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
->> like a property of the HB controller. In my case, the flash device in the DT has
->> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
->> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
->>
+On Wed, Jul 03, 2019 at 08:03:08PM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2019 at 03:01:25PM -0300, Jason Gunthorpe wrote:
+> > Christoph, I guess you didn't mean to send this branch to the mailing
+> > list?
+> > 
+> > In any event some of these, like this one, look obvious and I could
+> > still grab a few for hmm.git.
+> > 
+> > Let me know what you'd like please
+> > 
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 > 
-> You could declare R/O MMIO region in controla and set up a translation using ranges
-> from slave's reg CS based reg mapping like:
+> Thanks.  I was going to send this series out as soon as you had
+> applied the previous one.  Now that it leaked I'm happy to collect
+> reviews.  But while I've got your attention:  the rdma.git hmm
+> branch is still at the -rc7 merge and doen't have my series, is that
+> intentional?
 
-   No, not all HB controllers work the same (simple) way as yours. In case of RPC-IF,
-the direct read map is a 64 MiB window into a possibly larger flash chip, it has a
-register supplying address bits 25:31...
+Sorry, I rushed it too late at night to do it right apparently. Fixed.
 
-> +	hbmc: hyperbus@47034000 {
-> +		compatible = "ti,am654-hbmc";
-> +		reg = <0x0 0x47034000 0x0 0x100>,
-> +			<0x5 0x00000000 0x1 0x0000000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-> +			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
-> +
-> +		/* Slave flash node */
-> +		flash@0,0 {
-> +			compatible = "cypress,hyperflash", "cfi-flash";
-> +			reg = <0x0 0x0 0x4000000>;
-> +		};
-> +	};
-> 
-> If you use just CS# how would you handle CS to MMIO region mapping? 
-> Does both CS use the same MMIO base for reads?
-
-   The RPC-IF HF mode only has a single CS signal.
-
-[...]
-
-MBR, Sergei
+Jason
