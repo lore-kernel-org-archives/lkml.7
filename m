@@ -2,91 +2,99 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465FFC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DCEC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6D721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562138662;
-	bh=oKLiX+noAGMAX3ZpKVTLVn9b2ZYDuHOziGSU1+gstKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ObZVCG+lXpXw259Nk417TdnR9SGZopGiGcniv3Q8Shf9vkI+CJspsnRBenSbxaK9A
-	 2FgneE6+bRnySIDpRg0YV8GLcMmK+sAp7QZW81yqGdHo2+936yV+t7X9kUhpNmMpTz
-	 B/pjeypUD/5/3zCRBph6CkrVVs4nWKPFNykehdx0=
+	by mail.kernel.org (Postfix) with ESMTP id F247621881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfGCHYU (ORCPT
+        id S1727208AbfGCH0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 03:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42376 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 03:26:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:14659 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfGCHYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 03:24:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726670AbfGCH0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 03:26:13 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DB321881;
-        Wed,  3 Jul 2019 07:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562138659;
-        bh=oKLiX+noAGMAX3ZpKVTLVn9b2ZYDuHOziGSU1+gstKU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rLh+yYfz/nRaPHeiqDg1glKx2Cy7AtwWnvYxbfuMNcfK/3479K8YaolFNL6iG88uI
-         es8AkxUt8kfHyiJ7ZeDugjBOxhcT2XdH2URPgNC+NYOxXbSatRdLqXMuwESPtDbM/b
-         AuKCcRQ/T+sE5VamnY7oazoPR3EFPjSYuHPfRTJw=
-Date:   Wed, 3 Jul 2019 09:24:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH 5.1 51/55] bpf, arm64: use more scalable stadd over ldxr
- / stxr loop in xadd
-Message-ID: <20190703072416.GD3033@kroah.com>
-References: <20190702080124.103022729@linuxfoundation.org>
- <20190702080126.728030225@linuxfoundation.org>
- <20190703020200.GR11506@sasha-vm>
+        by mx1.redhat.com (Postfix) with ESMTPS id F2A123083391;
+        Wed,  3 Jul 2019 07:26:12 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CCF680F70;
+        Wed,  3 Jul 2019 07:26:05 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 09:26:03 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v5 net-next 6/6] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190703092603.66f36914@carbon>
+In-Reply-To: <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
+References: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+        <20190630172348.5692-7-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703020200.GR11506@sasha-vm>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 03 Jul 2019 07:26:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 10:02:00PM -0400, Sasha Levin wrote:
-> On Tue, Jul 02, 2019 at 10:01:59AM +0200, Greg Kroah-Hartman wrote:
-> > From: Daniel Borkmann <daniel@iogearbox.net>
-> > 
-> > commit 34b8ab091f9ef57a2bb3c8c8359a0a03a8abf2f9 upstream.
-> > 
-> > Since ARMv8.1 supplement introduced LSE atomic instructions back in 2016,
-> > lets add support for STADD and use that in favor of LDXR / STXR loop for
-> > the XADD mapping if available. STADD is encoded as an alias for LDADD with
-> > XZR as the destination register, therefore add LDADD to the instruction
-> > encoder along with STADD as special case and use it in the JIT for CPUs
-> > that advertise LSE atomics in CPUID register. If immediate offset in the
-> > BPF XADD insn is 0, then use dst register directly instead of temporary
-> > one.
-> > 
-> > Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-> > Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > Acked-by: Will Deacon <will.deacon@arm.com>
-> > Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+On Sun, 30 Jun 2019 20:23:48 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+
+> Add XDP support based on rx page_pool allocator, one frame per page.
+> Page pool allocator is used with assumption that only one rx_handler
+> is running simultaneously. DMA map/unmap is reused from page pool
+> despite there is no need to map whole page.
 > 
-> This one has a fix upstream: c5e2edeb01ae9ffbdde95bdcdb6d3614ba1eb195
-> ("arm64: insn: Fix ldadd instruction encoding").
+> Due to specific of cpsw, the same TX/RX handler can be used by 2
+> network devices, so special fields in buffer are added to identify
+> an interface the frame is destined to. Thus XDP works for both
+> interfaces, that allows to test xdp redirect between two interfaces
+> easily. Aslo, each rx queue have own page pools, but common for both
+> netdevs.
 
-Good catch, now queued up, thanks.
+Looking at the details what happen when a single RX-queue can receive
+into multiple net_device'es.  I realize that this driver will
+violate/kill some of the "hidden"/implicit RX-bulking that the
+XDP_REDIRECT code depend on for performance.
 
-greg k-h
+Specifically, it violate this assumption:
+ https://github.com/torvalds/linux/blob/v5.2-rc7/kernel/bpf/devmap.c#L324-L329
+
+	/* Ingress dev_rx will be the same for all xdp_frame's in
+	 * bulk_queue, because bq stored per-CPU and must be flushed
+	 * from net_device drivers NAPI func end.
+	 */
+	if (!bq->dev_rx)
+		bq->dev_rx = dev_rx;
+
+This drivers "NAPI func end", can have received into multiple
+net_devices, before it's NAPI cycle ends.  Thus, violating this code
+assumption.
+
+Knowing all xdp_frame's in the bulk queue is from the same net_device,
+can be used to further optimize XDP.  E.g. the dev->netdev_ops->ndo_xdp_xmit()
+call don't take fully advantage of this, yet.  If we merge this driver,
+it will block optimizations in this area.
+
+NACK
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
