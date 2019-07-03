@@ -2,52 +2,51 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A83C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D59C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C3E21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995E22187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120386;
-	bh=mMmFreGYxbftWf4XSVYFu9p4ZsjbHFSeyPDPQgZBY2s=;
+	s=default; t=1562120390;
+	bh=6UFdypzJV3gYgEOiT+p9b9miVPBLywDV1CBoZYDoDfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PRtZERwa7PWHopKZ2mZdwkshvAmAxoww+FhATxG08mruNCq7ynvodfjFK0MQFvKNt
-	 i1OnXvp+eoOrIciJtHRO4mzh7ZNFQj0qYdl1XQcqa1h/6EjXsTuQPQqU/3+TfXEG77
-	 bIT3+uRsTWeE0hVh2epkG8g/Nrg1Wsj4QDTKBp2s=
+	b=MBcB7lFSykKDyV5ruhcOsXOVqJ97n95y2m4f9vAr8yYnmhahC2Ndszd5vZv/Z7ABj
+	 LhpEEJtSzgYsYBOm8FMn9Rwk2dE0FY6tTsBWqPgNra0RLEIdNXOdlrRjIANHiUQ8lP
+	 Fy/XJtaWBoZ3H01zLOQQK/6lNNM1u+eh19cikwmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfGCCS5 (ORCPT
+        id S1727859AbfGCCTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56758 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbfGCCSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:54 -0400
+        id S1728335AbfGCCS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED2721882;
-        Wed,  3 Jul 2019 02:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573DC21880;
+        Wed,  3 Jul 2019 02:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120333;
-        bh=mMmFreGYxbftWf4XSVYFu9p4ZsjbHFSeyPDPQgZBY2s=;
+        s=default; t=1562120336;
+        bh=6UFdypzJV3gYgEOiT+p9b9miVPBLywDV1CBoZYDoDfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qP8GHCMNHB3fyxmHf2up0OA3yeR7HlOfgtCHyY34SiuANXfC9bCSVfh+bjQ9ZMigJ
-         Ik/6dX22H6y28Ckrfxa8WU7qd3ZcFC2+NsK/Jlkqn3sTwcW9Xh/H+XaQZV+7JNaER9
-         Xn2uYOhv9OD6cSTik6K4mpGdEq2f7+ZMAVKVJqKg=
+        b=eTitECsJukstQyTcT3ZnKsXy6IuUXV1glVuUmuWngdq/V3ekggQcbnUktqm3nYU0D
+         yRDrp5cZ2+4vU/jNG+eMEMvqj967V+F8bAv+sG8ydELSsvLB+qbghuF420twhQsSYv
+         gMRZ/yfwFyxRoNf77r5kmklK+5bna4WGbRheSeNA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
+Cc:     Sergej Benilov <sergej.benilov@googlemail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 4/8] ppp: mppe: Add softdep to arc4
-Date:   Tue,  2 Jul 2019 22:18:43 -0400
-Message-Id: <20190703021847.18542-4-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 6/8] sis900: fix TX completion
+Date:   Tue,  2 Jul 2019 22:18:45 -0400
+Message-Id: <20190703021847.18542-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021847.18542-1-sashal@kernel.org>
 References: <20190703021847.18542-1-sashal@kernel.org>
@@ -60,34 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sergej Benilov <sergej.benilov@googlemail.com>
 
-[ Upstream commit aad1dcc4f011ea409850e040363dff1e59aa4175 ]
+[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
 
-The arc4 crypto is mandatory at ppp_mppe probe time, so let's put a
-softdep line, so that the corresponding module gets prepared
-gracefully.  Without this, a simple inclusion to initrd via dracut
-failed due to the missing dependency, for example.
+Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
+outbound throughput is dramatically reduced for some connections, as sis900
+is doing TX completion within idle states only.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Make TX completion happen after every transmitted packet.
+
+Test:
+netperf
+
+before patch:
+> netperf -H remote -l -2000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
+
+ 87380 327680 327680    253.44      0.06
+
+after patch:
+> netperf -H remote -l -10000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
+
+ 87380 327680 327680    5.38       14.89
+
+Thx to Dave Miller and Eric Dumazet for helpful hints
+
+Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/ppp_mppe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
-index f60f7660b451..92f52a73ec0e 100644
---- a/drivers/net/ppp/ppp_mppe.c
-+++ b/drivers/net/ppp/ppp_mppe.c
-@@ -63,6 +63,7 @@ MODULE_AUTHOR("Frank Cusack <fcusack@fcusack.com>");
- MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
-+MODULE_SOFTDEP("pre: arc4");
- MODULE_VERSION("1.0.2");
+diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+index 6f85276376e8..ae9b983e8e5c 100644
+--- a/drivers/net/ethernet/sis/sis900.c
++++ b/drivers/net/ethernet/sis/sis900.c
+@@ -1058,7 +1058,7 @@ sis900_open(struct net_device *net_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
  
- static unsigned int
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
+ 
+@@ -1581,7 +1581,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
+ 	sw32(txdp, sis_priv->tx_ring_dma);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ }
+ 
+ /**
+@@ -1621,7 +1621,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+ 			spin_unlock_irqrestore(&sis_priv->lock, flags);
+ 			return NETDEV_TX_OK;
+ 	}
+-	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
++	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
+ 	sw32(cr, TxENA | sr32(cr));
+ 
+ 	sis_priv->cur_tx ++;
+@@ -1677,7 +1677,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 	do {
+ 		status = sr32(isr);
+ 
+-		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
++		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
+ 			/* nothing intresting happened */
+ 			break;
+ 		handled = 1;
+@@ -1687,7 +1687,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 			/* Rx interrupt */
+ 			sis900_rx(net_dev);
+ 
+-		if (status & (TxURN | TxERR | TxIDLE))
++		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
+ 			/* Tx interrupt */
+ 			sis900_finish_xmit(net_dev);
+ 
+@@ -1899,8 +1899,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
+ 
+ 		if (tx_status & OWN) {
+ 			/* The packet is not transmitted yet (owned by hardware) !
+-			 * Note: the interrupt is generated only when Tx Machine
+-			 * is idle, so this is an almost impossible case */
++			 * Note: this is an almost impossible condition
++			 * in case of TxDESC ('descriptor interrupt') */
+ 			break;
+ 		}
+ 
+@@ -2476,7 +2476,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
+ 
 -- 
 2.20.1
 
