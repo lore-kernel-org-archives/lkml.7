@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE132C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA981C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E522187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B5A21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120169;
-	bh=2fT5ENpFoozYgrzGD93CcBFDLgwLUoRZGTdT8EC2TrA=;
+	s=default; t=1562120174;
+	bh=oy9qP0wxrh1xE2kpkmhSfLTWKOcJ1/JMq2K1MVKuUOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myBKqtr0WmIE2vNLStNNREnX6IyWwX8RlLm6r4LCPUid8flD6FhKQxKZjG8+zDegd
-	 zuM+5Q72kT0b3Tj74v7MwXjTQjZYBsEZzzdI2ObdKko5yBSE0crYhJ6YNCUC2CWoby
-	 hZCFmWvbLm4rlm6SMNY6hiDzN4l/DM6Ght+uj8Jg=
+	b=P9FnZYKGYXg9vMfcialFmnwL2+9qHE38uBgFbcMDdHEZukcbh60iTqV/wX0TcU3w8
+	 OItZTGJLCeA5vCmMJWcksrAwSyau36aUp+OJIq6koDM/wwH8H+n/OYCVQ0LW59uec8
+	 /jBg9px03QNLZ8Z0e2Qb2heigFOboLpt2cYztGAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfGCCQI (ORCPT
+        id S1727864AbfGCCQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbfGCCP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:56 -0400
+        id S1727813AbfGCCQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6363621873;
-        Wed,  3 Jul 2019 02:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D994021881;
+        Wed,  3 Jul 2019 02:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120155;
-        bh=2fT5ENpFoozYgrzGD93CcBFDLgwLUoRZGTdT8EC2TrA=;
+        s=default; t=1562120162;
+        bh=oy9qP0wxrh1xE2kpkmhSfLTWKOcJ1/JMq2K1MVKuUOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Ds7z2bDQ12Jg5Bbps5OSv6HgF2oEGjxV+MuFu80rD5TeFvhGPgxbAqcD2AO2rMiL
-         U981Wv5OdFRoHAkAGN1I7lirOsWem0fkoTumkZkVZqw036Mxk9K/y2234EmMo5OuPk
-         NDUzH02RLywa+h49WCMJOre244onmdI3ZbA/GNy4=
+        b=J9O7JvQDTqHT4hnMjvc4LqEHXjELsr1QcGBhU17FUGaDh8XnaEKj0W4XpHcYkthMk
+         rjUuev4JrHJkgB/7cu7zN9oaHPShzZ95zUYxBQ6jUKv4p0a9K9p+aFpo71leZkHVd/
+         Sr3kfriZq3rvP0w1S+3/xL41VmCrY2R7Lq9wllXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 28/39] x86/boot/64: Fix crash if kernel image crosses page table boundary
-Date:   Tue,  2 Jul 2019 22:15:03 -0400
-Message-Id: <20190703021514.17727-28-sashal@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 33/39] pinctrl: mediatek: Ignore interrupts that are wake only during resume
+Date:   Tue,  2 Jul 2019 22:15:08 -0400
+Message-Id: <20190703021514.17727-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -65,89 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 81c7ed296dcd02bc0b4488246d040e03e633737a ]
+[ Upstream commit 35594bc7cecf3a78504b590e350570e8f4d7779e ]
 
-A kernel which boots in 5-level paging mode crashes in a small percentage
-of cases if KASLR is enabled.
+Before suspending, mtk-eint would set the interrupt mask to the
+one in wake_mask. However, some of these interrupts may not have a
+corresponding interrupt handler, or the interrupt may be disabled.
 
-This issue was tracked down to the case when the kernel image unpacks in a
-way that it crosses an 1G boundary. The crash is caused by an overrun of
-the PMD page table in __startup_64() and corruption of P4D page table
-allocated next to it. This particular issue is not visible with 4-level
-paging as P4D page tables are not used.
+On resume, the eint irq handler would trigger nevertheless,
+and irq/pm.c:irq_pm_check_wakeup would be called, which would
+try to call irq_disable. However, if the interrupt is not enabled
+(irqd_irq_disabled(&desc->irq_data) is true), the call does nothing,
+and the interrupt is left enabled in the eint driver.
 
-But the P4D and the PUD calculation have similar problems.
+Especially for level-sensitive interrupts, this will lead to an
+interrupt storm on resume.
 
-The PMD index calculation is wrong due to operator precedence, which fails
-to confine the PMDs in the PMD array on wrap around.
+If we detect that an interrupt is only in wake_mask, but not in
+cur_mask, we can just mask it out immediately (as mtk_eint_resume
+would do anyway at a later stage in the resume sequence, when
+restoring cur_mask).
 
-The P4D calculation for 5-level paging and the PUD calculation calculate
-the first index correctly, but then blindly increment it which causes the
-same issue when a kernel image is located across a 512G and for 5-level
-paging across a 46T boundary.
-
-This wrap around mishandling was introduced when these parts moved from
-assembly to C.
-
-Restore it to the correct behaviour.
-
-Fixes: c88d71508e36 ("x86/boot/64: Rewrite startup_64() in C")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190620112345.28833-1-kirill.shutemov@linux.intel.com
+Fixes: bf22ff45bed6 ("genirq: Avoid unnecessary low level irq function calls")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Sean Wang <sean.wang@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/pinctrl/mediatek/mtk-eint.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 16b1cbd3a61e..7df5bce4e1be 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -190,18 +190,18 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index f464f8cd274b..737385e86beb 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -318,7 +318,7 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct mtk_eint *eint = irq_desc_get_handler_data(desc);
+ 	unsigned int status, eint_num;
+-	int offset, index, virq;
++	int offset, mask_offset, index, virq;
+ 	void __iomem *reg =  mtk_eint_get_offset(eint, 0, eint->regs->stat);
+ 	int dual_edge, start_level, curr_level;
  
--		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
--		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
--		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
-+		i = physaddr >> P4D_SHIFT;
-+		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-+		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
- 	} else {
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
- 	}
+@@ -328,10 +328,24 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+ 		status = readl(reg);
+ 		while (status) {
+ 			offset = __ffs(status);
++			mask_offset = eint_num >> 5;
+ 			index = eint_num + offset;
+ 			virq = irq_find_mapping(eint->domain, index);
+ 			status &= ~BIT(offset);
  
--	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
--	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
--	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
-+	i = physaddr >> PUD_SHIFT;
-+	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-+	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
- 
- 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
- 	/* Filter out unsupported __PAGE_KERNEL_* bits: */
-@@ -211,8 +211,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	pmd_entry +=  physaddr;
- 
- 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
--		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
--		pmd[idx] = pmd_entry + i * PMD_SIZE;
-+		int idx = i + (physaddr >> PMD_SHIFT);
++			/*
++			 * If we get an interrupt on pin that was only required
++			 * for wake (but no real interrupt requested), mask the
++			 * interrupt (as would mtk_eint_resume do anyway later
++			 * in the resume sequence).
++			 */
++			if (eint->wake_mask[mask_offset] & BIT(offset) &&
++			    !(eint->cur_mask[mask_offset] & BIT(offset))) {
++				writel_relaxed(BIT(offset), reg -
++					eint->regs->stat +
++					eint->regs->mask_set);
++			}
 +
-+		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
- 	}
- 
- 	/*
+ 			dual_edge = eint->dual_edge[index];
+ 			if (dual_edge) {
+ 				/*
 -- 
 2.20.1
 
