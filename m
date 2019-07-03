@@ -2,183 +2,227 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA9C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3292EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDB1218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6D821882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="uoDqfXvx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CE+SFJ51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfGCRCn (ORCPT
+        id S1726918AbfGCREr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:02:43 -0400
-Received: from mail-eopbgr810079.outbound.protection.outlook.com ([40.107.81.79]:37275
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726955AbfGCRCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:02:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VYACtzuCqZCMdBkx4JyJnIh+w5U5BfxfyyJHVo0MWCg=;
- b=uoDqfXvxfGYiGTt8PHF9Xri4FaHBqvz9zfPL/34ySWV6uTldy0SaZQFleAg6vfWhsTrDwxBY5nfOnHTyTR0h13zWNWXftC/6qwZelF18DiNXxzagZhN1dE/RZ+/7Klz0nzJO1C1GmLdw7R6EuyFAfx4VZnoM22XXBkYyE0f4B3M=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYASPR01MB0055.namprd05.prod.outlook.com (20.179.90.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.15; Wed, 3 Jul 2019 17:02:36 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2052.010; Wed, 3 Jul 2019
- 17:02:36 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Juergen Gross <jgross@suse.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/9] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Topic: [PATCH v2 4/9] x86/mm/tlb: Flush remote and local TLBs
- concurrently
-Thread-Index: AQHVMW7qykCnng2DBUWUciRHoRZgF6a47Y6AgAAxzIA=
-Date:   Wed, 3 Jul 2019 17:02:36 +0000
-Message-ID: <A4BC0EDE-71F0-455D-964A-7250D005FB56@vmware.com>
-References: <20190702235151.4377-1-namit@vmware.com>
- <20190702235151.4377-5-namit@vmware.com>
- <d89e2b57-8682-153e-33d8-98084e9983d6@suse.com>
-In-Reply-To: <d89e2b57-8682-153e-33d8-98084e9983d6@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d82937b5-c8e6-4324-35e4-08d6ffd83fa0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYASPR01MB0055;
-x-ms-traffictypediagnostic: BYASPR01MB0055:
-x-microsoft-antispam-prvs: <BYASPR01MB0055AFF4910456681FF84AACD0FB0@BYASPR01MB0055.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(73956011)(76116006)(6246003)(54906003)(6512007)(316002)(486006)(6116002)(3846002)(6916009)(99286004)(25786009)(305945005)(86362001)(7736002)(66556008)(53936002)(64756008)(2906002)(66446008)(4326008)(66946007)(66476007)(76176011)(6506007)(102836004)(53546011)(5660300002)(33656002)(186003)(68736007)(26005)(256004)(478600001)(14454004)(6486002)(14444005)(6436002)(7416002)(2616005)(11346002)(446003)(476003)(229853002)(8936002)(36756003)(66066001)(81166006)(81156014)(8676002)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYASPR01MB0055;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bRkigeJHw+1MMReuCCKlpf/jW5QN+am0Y3t/Esa7tmebdn6NUVB3VTOWpnn2pbhfNpzpPRe3bLWsJ49SQHNrwiS/m3Xq4jDfwuNC0gsHwa6cFz1bEPaKae9kjRhZ3PEdKVTe6t0Xnz3ukKIVk+0pDK5/q0bfRKfNopygiNHysDi9mEOc2WPj+4y5EoEISvWDCmP4csLEiiSD/XxYJThdMNlwNBrhMNmm6YDsKR4s96dwVfF3FkA/HjV9pNnz9XmlpzijiEKfJush7LAMC5rsGZuOBBFFmOr1FfA+NqNG3eDUGcfU2m2r2nRjmVyYKkdcSpmqU7KmQHM1PMjtxmxEEPkXyfiQLTtVt9SNiLEkg+s+4SeS9R0XbJpCadeeedenZY9f9XkPtKcxQ/1PGKwPQa/s6Jyiny0UPiN1VfQd31o=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4011894573807D4C87553D9A4DFD3426@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 3 Jul 2019 13:04:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33778 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCREr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:04:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so1595291pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+UmPDjs3GC5y05O+oZrqETNtB8YeU/EW2F2rKy6gZYM=;
+        b=CE+SFJ51m98HEAk8kgNmqvYvCWofjk5rGAhF3Elt5bcDGLdmEcucHq00QvIjP89zrX
+         hu148gAghEBmxJ8NsPimHOa/aT1biE8OaAaFKWjfHLSqUHAzBkeRx6BhbS7YLKY+XI5s
+         Zz9C4shehSMwv2zep4uH9Lx2318mHw/flZj+c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+UmPDjs3GC5y05O+oZrqETNtB8YeU/EW2F2rKy6gZYM=;
+        b=GO/HF0I4IpmJ69Z5PEjCcy8D5xhIT5BuyrW3sqAa/rF7U/IBE3T6IMttSBNl4rsEmN
+         dOLGyTOtK/keRZi4YZHbi+xRt1VLaV2GrYTiHKdH/e7cSywaX3iaG7CxOenzvlrAeQHQ
+         k0BgbNaKHg2zkEK6op9nxacEbn5in1t57ZzHqTHUwSlyMGZIf7Wx0S8Wr/IOJU9VLhZz
+         RODBtzb8Oa/lzNXJdifugiU81Rp29QbaFsy1arcKIj6fpnTO1Vn3PP4FHAgOtUBTS9E9
+         Cl+44yrJ+wy8pbpxTiNHqrNirY+VhTI9Tknm/Kvr4N3Wnt9sJsytBobaaXb9677x7UGg
+         pDfg==
+X-Gm-Message-State: APjAAAVYfouhEynlTedb24bdlpyxGqFRWi6u2y4hh57fp5ko2QfaQ119
+        ZoWBkix004O/+rkCTKProbaawQ==
+X-Google-Smtp-Source: APXvYqxX1K1OeKVXQOBcW9auPYZkXDcwye8GnP0TxTOWeq4hZJnaeE2iK6rzD5yBrEYcFe8IYYAFqQ==
+X-Received: by 2002:a63:6c04:: with SMTP id h4mr7204915pgc.94.1562173486714;
+        Wed, 03 Jul 2019 10:04:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u75sm2767289pgb.92.2019.07.03.10.04.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 10:04:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net, Borislav Petkov <bp@suse.de>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Feng Tang <feng.tang@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH] kgdb: Don't use a notifier to enter kgdb at panic; call directly
+Date:   Wed,  3 Jul 2019 10:03:54 -0700
+Message-Id: <20190703170354.217312-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d82937b5-c8e6-4324-35e4-08d6ffd83fa0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 17:02:36.3417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYASPR01MB0055
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdWwgMywgMjAxOSwgYXQgNzowNCBBTSwgSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2Uu
-Y29tPiB3cm90ZToNCj4gDQo+IE9uIDAzLjA3LjE5IDAxOjUxLCBOYWRhdiBBbWl0IHdyb3RlOg0K
-Pj4gVG8gaW1wcm92ZSBUTEIgc2hvb3Rkb3duIHBlcmZvcm1hbmNlLCBmbHVzaCB0aGUgcmVtb3Rl
-IGFuZCBsb2NhbCBUTEJzDQo+PiBjb25jdXJyZW50bHkuIEludHJvZHVjZSBmbHVzaF90bGJfbXVs
-dGkoKSB0aGF0IGRvZXMgc28uIEludHJvZHVjZQ0KPj4gcGFyYXZpcnR1YWwgdmVyc2lvbnMgb2Yg
-Zmx1c2hfdGxiX211bHRpKCkgZm9yIEtWTSwgWGVuIGFuZCBoeXBlci12IChYZW4NCj4+IGFuZCBo
-eXBlci12IGFyZSBvbmx5IGNvbXBpbGUtdGVzdGVkKS4NCj4+IFdoaWxlIHRoZSB1cGRhdGVkIHNt
-cCBpbmZyYXN0cnVjdHVyZSBpcyBjYXBhYmxlIG9mIHJ1bm5pbmcgYSBmdW5jdGlvbiBvbg0KPj4g
-YSBzaW5nbGUgbG9jYWwgY29yZSwgaXQgaXMgbm90IG9wdGltaXplZCBmb3IgdGhpcyBjYXNlLiBU
-aGUgbXVsdGlwbGUNCj4+IGZ1bmN0aW9uIGNhbGxzIGFuZCB0aGUgaW5kaXJlY3QgYnJhbmNoIGlu
-dHJvZHVjZSBzb21lIG92ZXJoZWFkLCBhbmQNCj4+IG1pZ2h0IG1ha2UgbG9jYWwgVExCIGZsdXNo
-ZXMgc2xvd2VyIHRoYW4gdGhleSB3ZXJlIGJlZm9yZSB0aGUgcmVjZW50DQo+PiBjaGFuZ2VzLg0K
-Pj4gQmVmb3JlIGNhbGxpbmcgdGhlIFNNUCBpbmZyYXN0cnVjdHVyZSwgY2hlY2sgaWYgb25seSBh
-IGxvY2FsIFRMQiBmbHVzaA0KPj4gaXMgbmVlZGVkIHRvIHJlc3RvcmUgdGhlIGxvc3QgcGVyZm9y
-bWFuY2UgaW4gdGhpcyBjb21tb24gY2FzZS4gVGhpcw0KPj4gcmVxdWlyZXMgdG8gY2hlY2sgbW1f
-Y3B1bWFzaygpIG9uZSBtb3JlIHRpbWUsIGJ1dCB1bmxlc3MgdGhpcyBtYXNrIGlzDQo+PiB1cGRh
-dGVkIHZlcnkgZnJlcXVlbnRseSwgdGhpcyBzaG91bGQgaW1wYWN0IHBlcmZvcm1hbmNlIG5lZ2F0
-aXZlbHkuDQo+PiBDYzogIksuIFkuIFNyaW5pdmFzYW4iIDxreXNAbWljcm9zb2Z0LmNvbT4NCj4+
-IENjOiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQuY29tPg0KPj4gQ2M6IFN0ZXBo
-ZW4gSGVtbWluZ2VyIDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPg0KPj4gQ2M6IFNhc2hhIExldmlu
-IDxzYXNoYWxAa2VybmVsLm9yZz4NCj4+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRy
-b25peC5kZT4NCj4+IENjOiBJbmdvIE1vbG5hciA8bWluZ29AcmVkaGF0LmNvbT4NCj4+IENjOiBC
-b3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4NCj4+IENjOiB4ODZAa2VybmVsLm9yZw0KPj4g
-Q2M6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4+IENjOiBQYW9sbyBCb256aW5p
-IDxwYm9uemluaUByZWRoYXQuY29tPg0KPj4gQ2M6IERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBs
-aW51eC5pbnRlbC5jb20+DQo+PiBDYzogQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+
-DQo+PiBDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KPj4gQ2M6IEJv
-cmlzIE9zdHJvdnNreSA8Ym9yaXMub3N0cm92c2t5QG9yYWNsZS5jb20+DQo+PiBDYzogbGludXgt
-aHlwZXJ2QHZnZXIua2VybmVsLm9yZw0KPj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCj4+IENjOiB2aXJ0dWFsaXphdGlvbkBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZw0KPj4g
-Q2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmcNCj4+IENjOiB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVj
-dC5vcmcNCj4+IFNpZ25lZC1vZmYtYnk6IE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+DQo+
-PiAtLS0NCj4+ICBhcmNoL3g4Ni9oeXBlcnYvbW11LmMgICAgICAgICAgICAgICAgIHwgMTMgKysr
-LS0tDQo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnQuaCAgICAgICB8ICA2ICstLQ0K
-Pj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmggfCAgNCArLQ0KPj4gIGFy
-Y2gveDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmggICAgICAgfCAgOSArKy0tDQo+PiAgYXJjaC94
-ODYvaW5jbHVkZS9hc20vdHJhY2UvaHlwZXJ2LmggICB8ICAyICstDQo+PiAgYXJjaC94ODYva2Vy
-bmVsL2t2bS5jICAgICAgICAgICAgICAgICB8IDExICsrKy0tDQo+PiAgYXJjaC94ODYva2VybmVs
-L3BhcmF2aXJ0LmMgICAgICAgICAgICB8ICAyICstDQo+PiAgYXJjaC94ODYvbW0vdGxiLmMgICAg
-ICAgICAgICAgICAgICAgICB8IDY1ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KPj4gIGFy
-Y2gveDg2L3hlbi9tbXVfcHYuYyAgICAgICAgICAgICAgICAgfCAyMCArKysrKystLS0NCj4+ICBp
-bmNsdWRlL3RyYWNlL2V2ZW50cy94ZW4uaCAgICAgICAgICAgIHwgIDIgKy0NCj4+ICAxMCBmaWxl
-cyBjaGFuZ2VkLCA5MSBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlvbnMoLSkNCj4gDQo+IC4uLg0K
-PiANCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni94ZW4vbW11X3B2LmMgYi9hcmNoL3g4Ni94ZW4v
-bW11X3B2LmMNCj4+IGluZGV4IGJlYjQ0ZTIyYWZkZi4uMTllNDgxZTZlOTA0IDEwMDY0NA0KPj4g
-LS0tIGEvYXJjaC94ODYveGVuL21tdV9wdi5jDQo+PiArKysgYi9hcmNoL3g4Ni94ZW4vbW11X3B2
-LmMNCj4+IEBAIC0xMzU1LDggKzEzNTUsOCBAQCBzdGF0aWMgdm9pZCB4ZW5fZmx1c2hfdGxiX29u
-ZV91c2VyKHVuc2lnbmVkIGxvbmcgYWRkcikNCj4+ICAJcHJlZW1wdF9lbmFibGUoKTsNCj4+ICB9
-DQo+PiAgLXN0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVjdCBjcHVt
-YXNrICpjcHVzLA0KPj4gLQkJCQkgY29uc3Qgc3RydWN0IGZsdXNoX3RsYl9pbmZvICppbmZvKQ0K
-Pj4gK3N0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfbXVsdGkoY29uc3Qgc3RydWN0IGNwdW1hc2sg
-KmNwdXMsDQo+PiArCQkJCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4+ICB7
-DQo+PiAgCXN0cnVjdCB7DQo+PiAgCQlzdHJ1Y3QgbW11ZXh0X29wIG9wOw0KPj4gQEAgLTEzNjYs
-NyArMTM2Niw3IEBAIHN0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVj
-dCBjcHVtYXNrICpjcHVzLA0KPj4gIAljb25zdCBzaXplX3QgbWNfZW50cnlfc2l6ZSA9IHNpemVv
-ZihhcmdzLT5vcCkgKw0KPj4gIAkJc2l6ZW9mKGFyZ3MtPm1hc2tbMF0pICogQklUU19UT19MT05H
-UyhudW1fcG9zc2libGVfY3B1cygpKTsNCj4+ICAtCXRyYWNlX3hlbl9tbXVfZmx1c2hfdGxiX290
-aGVycyhjcHVzLCBpbmZvLT5tbSwgaW5mby0+c3RhcnQsIGluZm8tPmVuZCk7DQo+PiArCXRyYWNl
-X3hlbl9tbXVfZmx1c2hfdGxiX211bHRpKGNwdXMsIGluZm8tPm1tLCBpbmZvLT5zdGFydCwgaW5m
-by0+ZW5kKTsNCj4+ICAgIAlpZiAoY3B1bWFza19lbXB0eShjcHVzKSkNCj4+ICAJCXJldHVybjsJ
-CS8qIG5vdGhpbmcgdG8gZG8gKi8NCj4+IEBAIC0xMzc1LDkgKzEzNzUsMTcgQEAgc3RhdGljIHZv
-aWQgeGVuX2ZsdXNoX3RsYl9vdGhlcnMoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNwdXMsDQo+PiAg
-CWFyZ3MgPSBtY3MuYXJnczsNCj4+ICAJYXJncy0+b3AuYXJnMi52Y3B1bWFzayA9IHRvX2NwdW1h
-c2soYXJncy0+bWFzayk7DQo+PiAgLQkvKiBSZW1vdmUgdXMsIGFuZCBhbnkgb2ZmbGluZSBDUFVT
-LiAqLw0KPj4gKwkvKiBGbHVzaCBsb2NhbGx5IGlmIG5lZWRlZCBhbmQgcmVtb3ZlIHVzICovDQo+
-PiArCWlmIChjcHVtYXNrX3Rlc3RfY3B1KHNtcF9wcm9jZXNzb3JfaWQoKSwgdG9fY3B1bWFzayhh
-cmdzLT5tYXNrKSkpIHsNCj4+ICsJCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+PiArCQlmbHVzaF90
-bGJfZnVuY19sb2NhbChpbmZvKTsNCj4gDQo+IEkgdGhpbmsgdGhpcyBpc24ndCB0aGUgY29ycmVj
-dCBmdW5jdGlvbiBmb3IgUFYgZ3Vlc3RzLg0KPiANCj4gSW4gZmFjdCBpdCBzaG91bGQgYmUgbXVj
-aCBlYXNpZXI6IGp1c3QgZG9uJ3QgY2xlYXIgdGhlIG93biBjcHUgZnJvbSB0aGUNCj4gbWFzaywg
-dGhhdCdzIGFsbCB3aGF0J3MgbmVlZGVkLiBUaGUgaHlwZXJ2aXNvciBpcyBqdXN0IGZpbmUgaGF2
-aW5nIHRoZQ0KPiBjdXJyZW50IGNwdSBpbiB0aGUgbWFzayBhbmQgaXQgd2lsbCBkbyB0aGUgcmln
-aHQgdGhpbmcuDQoNClRoYW5rcy4gSSB3aWxsIGRvIHNvIGluIHYzLiBJIGRvbuKAmXQgdGhpbmsg
-SHlwZXItViBwZW9wbGUgd291bGQgd2FudCB0byBkbw0KdGhlIHNhbWUsIHVuZm9ydHVuYXRlbHks
-IHNpbmNlIGl0IHdvdWxkIGluZHVjZSBWTS1leGl0IG9uIFRMQiBmbHVzaGVzLiBCdXQNCmlmIHRo
-ZXkgZG8gLSBJ4oCZbGwgYmUgYWJsZSBub3QgdG8gZXhwb3NlIGZsdXNoX3RsYl9mdW5jX2xvY2Fs
-KCkuDQoNCg==
+Right now kgdb/kdb hooks up to debug panics by registering for the
+panic notifier.  This works OK except that it means that kgdb/kdb gets
+called _after_ the CPUs in the system are taken offline.  That means
+that if anything important was happening on those CPUs (like something
+that might have contributed to the panic) you can't debug them.
+
+Specifically I ran into a case where I got a panic because a task was
+"blocked for more than 120 seconds" which was detected on CPU 2.  I
+nicely got shown stack traces in the kernel log for all CPUs including
+CPU 0, which was running 'PID: 111 Comm: kworker/0:1H' and was in the
+middle of __mmc_switch().
+
+I then ended up at the kdb prompt where switched over to kgdb to try
+to look at local variables of the process on CPU 0.  I found that I
+couldn't.  Digging more, I found that I had no info on any tasks
+running on CPUs other than CPU 2 and that asking kdb for help showed
+me "Error: no saved data for this cpu".  This was because all the CPUs
+were offline.
+
+Let's move the entry of kdb/kgdb to a direct call from panic() and
+stop using the generic notifier.  Putting a direct call in allows us
+to order things more properly and it also doesn't seem like we're
+breaking any abstractions by calling into the debugger from the panic
+function.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ include/linux/kgdb.h      |  2 ++
+ kernel/debug/debug_core.c | 31 +++++++++++--------------------
+ kernel/panic.c            |  8 ++++++++
+ 3 files changed, 21 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index fbf144aaa749..b072aeb1fd78 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -326,8 +326,10 @@ extern atomic_t			kgdb_active;
+ 	(raw_smp_processor_id() == atomic_read(&kgdb_active))
+ extern bool dbg_is_early;
+ extern void __init dbg_late_init(void);
++extern void kgdb_panic(const char *msg);
+ #else /* ! CONFIG_KGDB */
+ #define in_dbg_master() (0)
+ #define dbg_late_init()
++static inline void kgdb_panic(const char *msg) {}
+ #endif /* ! CONFIG_KGDB */
+ #endif /* _KGDB_H_ */
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 5cc608de6883..b26bf06cff9e 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -896,30 +896,25 @@ static struct sysrq_key_op sysrq_dbg_op = {
+ };
+ #endif
+ 
+-static int kgdb_panic_event(struct notifier_block *self,
+-			    unsigned long val,
+-			    void *data)
++void kgdb_panic(const char *msg)
+ {
++	if (!kgdb_io_module_registered)
++		return;
++
+ 	/*
+-	 * Avoid entering the debugger if we were triggered due to a panic
+-	 * We don't want to get stuck waiting for input from user in such case.
+-	 * panic_timeout indicates the system should automatically
++	 * We don't want to get stuck waiting for input from user if
++	 * "panic_timeout" indicates the system should automatically
+ 	 * reboot on panic.
+ 	 */
+ 	if (panic_timeout)
+-		return NOTIFY_DONE;
++		return;
+ 
+ 	if (dbg_kdb_mode)
+-		kdb_printf("PANIC: %s\n", (char *)data);
++		kdb_printf("PANIC: %s\n", msg);
++
+ 	kgdb_breakpoint();
+-	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block kgdb_panic_event_nb = {
+-       .notifier_call	= kgdb_panic_event,
+-       .priority	= INT_MAX,
+-};
+-
+ void __weak kgdb_arch_late(void)
+ {
+ }
+@@ -968,8 +963,6 @@ static void kgdb_register_callbacks(void)
+ 			kgdb_arch_late();
+ 		register_module_notifier(&dbg_module_load_nb);
+ 		register_reboot_notifier(&dbg_reboot_notifier);
+-		atomic_notifier_chain_register(&panic_notifier_list,
+-					       &kgdb_panic_event_nb);
+ #ifdef CONFIG_MAGIC_SYSRQ
+ 		register_sysrq_key('g', &sysrq_dbg_op);
+ #endif
+@@ -983,16 +976,14 @@ static void kgdb_register_callbacks(void)
+ static void kgdb_unregister_callbacks(void)
+ {
+ 	/*
+-	 * When this routine is called KGDB should unregister from the
+-	 * panic handler and clean up, making sure it is not handling any
++	 * When this routine is called KGDB should unregister from
++	 * handlers and clean up, making sure it is not handling any
+ 	 * break exceptions at the time.
+ 	 */
+ 	if (kgdb_io_module_registered) {
+ 		kgdb_io_module_registered = 0;
+ 		unregister_reboot_notifier(&dbg_reboot_notifier);
+ 		unregister_module_notifier(&dbg_module_load_nb);
+-		atomic_notifier_chain_unregister(&panic_notifier_list,
+-					       &kgdb_panic_event_nb);
+ 		kgdb_arch_exit();
+ #ifdef CONFIG_MAGIC_SYSRQ
+ 		unregister_sysrq_key('g', &sysrq_dbg_op);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4d9f55bf7d38..e2971168b059 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -12,6 +12,7 @@
+ #include <linux/debug_locks.h>
+ #include <linux/sched/debug.h>
+ #include <linux/interrupt.h>
++#include <linux/kgdb.h>
+ #include <linux/kmsg_dump.h>
+ #include <linux/kallsyms.h>
+ #include <linux/notifier.h>
+@@ -219,6 +220,13 @@ void panic(const char *fmt, ...)
+ 		dump_stack();
+ #endif
+ 
++	/*
++	 * If kgdb is enabled, give it a chance to run before we stop all
++	 * the other CPUs or else we won't be able to debug processes left
++	 * running on them.
++	 */
++	kgdb_panic(buf);
++
+ 	/*
+ 	 * If we have crashed and we have a crash kernel loaded let it handle
+ 	 * everything else.
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
