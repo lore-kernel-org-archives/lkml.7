@@ -2,167 +2,192 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E172C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88CFC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C95218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lsPQ/7+A"
+	by mail.kernel.org (Postfix) with ESMTP id 99301218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfGCQfV (ORCPT
+        id S1727076AbfGCQgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:35:21 -0400
-Received: from mout.gmx.net ([212.227.15.15]:56345 "EHLO mout.gmx.net"
+        Wed, 3 Jul 2019 12:36:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:52414 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfGCQfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:35:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562171702;
-        bh=8VzoVQDGFFnEz0ri0l+Y/Z3hothQojcZPEg+LYQvm6c=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=lsPQ/7+ACfxH4XJN0KAunTO1RYoDviygZKHIgsqoP5khHrEjnKAuLxeEBpzKDjsZw
-         URuvGbhwGn6R6GO6VV0nAC3IN/D/2Hi/yOEn/W9r0JmsOXsp1qjQFNvAz21BktspJ1
-         cqLlCT1s8shlOL/gHQfjByL8fFOYY+2yR92AOA0k=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MAyZg-1hqRyk0Q7A-009u5L; Wed, 03
- Jul 2019 18:35:02 +0200
-Date:   Wed, 3 Jul 2019 18:35:00 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brad Love <brad@nextdimension.cc>
-Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
-Message-ID: <20190703163500.GF22408@latitude>
-References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
- <20190702095109.GC22408@latitude>
- <6a644c94-f979-b656-472b-c7fe9303e08c@free.fr>
+        id S1726823AbfGCQgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:36:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8189A1478;
+        Wed,  3 Jul 2019 09:36:16 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D7C03F740;
+        Wed,  3 Jul 2019 09:36:15 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        quentin.perret@arm.com, patrick.bellasi@arm.com,
+        dietmar.eggemann@arm.com
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
+ <20190702155115.GW3436@hirez.programming.kicks-ass.net>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <5198292b-1874-9ff4-6a9f-826a5ea00466@arm.com>
+Date:   Wed, 3 Jul 2019 17:36:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+KJYzRxRHjYqLGl5"
-Content-Disposition: inline
-In-Reply-To: <6a644c94-f979-b656-472b-c7fe9303e08c@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:WQd0V52qJoVeoLKv1xigM+RVdu80dTt+As10wjnu6CY7oqAbW/j
- n+Kk1KT1MXMPotgGb1nZzxGqnfhL2GO6J8sXtvtJsiEHL7O7eYRzWcoE8gYWMH7H3Elm97K
- eBMNAkdwxg1rEj/GijDvIFtkO54Cl5lupVW7Fn/nMjr64s+UAmiEq0Han85gyvYoHgbQXeL
- FGye6kOzopyCJh/uotxFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+6SDHD+wb8M=:YP2UxXWkEd7kPt4ksectbJ
- wDbWyC4H3AISQTuMF5S4YWd9U9H63g47g1f7oOzqdUhg/yk2iu9eGWyE5fEf6q4VPakq+YnPf
- JvGU0n9VOexJ2GaiOHjI5bEjoPFhjb0WvFgz7x8ithIKW9hC8QxczjFJLaKTFMl02/HU3mkPU
- dvjTIYifN4sV9QAqm6vG6FhmQGLaoYfkO8ZIOKGT1mEgt5Fc+EDGXonGzR3ZFAGQZy4dDNEgm
- x3M4oVYoSlgcfbLxz0gLgcO3UNRujcEZVe6KoA+Cz+7rYOnnXX+5RODln+4ZAQQk6Ljde+LuV
- EqHMJjyaZ2ojQ+9JJa2kfMRsjk+EIFBrcOA02ydth9BrS/WnKXgZax+skGyKODXqjqSrK0bxH
- GrL8hn3Rp56af7pjoGBKWE9Rc2gdhc1yeXzNfgWwu+8PBy1fvokGz4iHPRoK4Rt0i9WK02FUU
- OLxYC18RkrKGTHT1ZtMxCRNzbbBIm8jd1GdYwO/Mm5Oi6Nnta7iYvD0NKcsdr5oR6eIcbkJ1b
- O4Z219cloZnj2c/xAyDDJ7+UYh4LRUBfEiqBe/+jiF6rEUHriJV0d8kdPAiq+E3mq16mryqMj
- 59n7nJCxEJXvK+e7ONOYic4mgFPh2mftXKargwDQaChRaec4yg0KY+Pkiyv94AWmSDzTDVfp9
- j22lMQaVsCJU9AC1k13i1VFTxpO9Fi1Kxs0A19xfZya62eqAT9hIrN8CyDdGGZCM5uoIxmuRl
- 5j8mE7onlBzpevbU82xf8eJFGL1DjtlHSEk84vhrLWYphafxOAXY1taad4+XtIvi/aRPe+tS/
- vJeFRS2EmDPKdrK/O0QrQh1L+AKftZMLhXABOwN7feWNvaxUqgiKTH2ifJ36Ob7ru0L8qD/Xx
- MOK5HE4G3pWuaGGQJ7M1CrJ/PBJY/BdYGIzZkazuNNMCQAKnLv6wv1qq+1+G+d60nfE81kQFh
- YVZp9jFors8QjJ6ltkCiL78jUbR+uT/afzE0PRLBR8zYqR+ud7FYH+KS3g2YIEkf1lQkfBjIk
- rDjUDytGdjbTXo5rZewV02y+Dki8C1EHiy9HVNowEeSuBS98ybiogU7TNMtLjLKKkeueC/iNm
- yh0/CWaI8k9gaI=
+In-Reply-To: <20190702155115.GW3436@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/2/19 4:51 PM, Peter Zijlstra wrote:
+> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
+>> Make schedutil cpufreq governor energy-aware.
+>>
+>> - patch 4 adds sugov_cpu_ramp_boost() function.
+>> - patch 5 updates sugov_update_(single|shared)() to make use of
+>>    sugov_cpu_ramp_boost().
+>>
+>> The benefits of using the EM in schedutil are twofold:
+> 
+>> 2) Driving the frequency selection with power in mind, in addition to
+>>     maximizing the utilization of the non-idle CPUs in the system.
+> 
+>> Point 2) is enabled in
+>> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
+>> higher frequencies when it is known that the true utilization of
+>> currently running tasks is exceeding their previous stable point.
+>> The benefits are:
+>>
+>> * Boosting the frequency when the behavior of a runnable task changes,
+>>    leading to an increase in utilization. That shortens the frequency
+>>    ramp up duration, which in turns allows the utilization signal to
+>>    reach stable values quicker.  Since the allowed frequency boost is
+>>    bounded in energy, it will behave consistently across platforms,
+>>    regardless of the OPP cost range.
+>>
+>> * The boost is only transient, and should not impact a lot the energy
+>>    consumed of workloads with very stable utilization signals.
+> 
 
---+KJYzRxRHjYqLGl5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[reordered original comments]
 
-Hi again,
+> This then obviously has relation to Patrick's patch that makes the EWMA
+> asymmetric, but I'm thinking that the interaction is mostly favourable?
 
-On Wed, Jul 03, 2019 at 02:47:59PM +0200, Marc Gonzalez wrote:
-> On 02/07/2019 11:51, Jonathan Neusch=C3=A4fer wrote:
-> > On Mon, Jul 01, 2019 at 01:44:09PM +0200, Marc Gonzalez wrote:
-[...]
-> >>  static const struct dvb_frontend_ops si2168_ops;
-> >> =20
-> >> +#define CMD_SETUP(cmd, __args, __rlen) do {	\
-> >> +	int wlen =3D sizeof(__args) - 1;		\
-> >> +	memcpy(cmd.args, __args, wlen);		\
-> >> +	cmd.wlen =3D wlen; cmd.rlen =3D __rlen;	\
-> >> +} while (0)
-> >=20
-> > It would be nice for casual readers to have a little comment here, that
-> > explains (briefly) what this macro does, and what the arguments mean,
-> > and their types.
->=20
-> Just a bit of background.
->=20
-> A macro is required /at some point/ because arrays "decay" into pointers
-> when used as function arguments.
+Making task_ue.ewma larger makes cpu_ue.enqueued larger, so Patrick's patch
+helps increasing the utilisation as seen by schedutil in that transient time.
+(see discussion on schedutil signals at the bottom). That goes in the same
+direction as this series.
 
-*nod*
+> So you're allowing a higher pick when the EWMA exceeds the enqueue
+> thing.
 
-[ I should have been more specific: By "here" I meant at that spot in
-  the code, and by casual readers I mostly meant casual readers of the
-  code once it's merged. ]
+TLDR: Schedutil ramp boost works on CPU rq signals, for which util est EWMA
+is not defined, but the idea is the same (replace util est EWMA by util_avg).
 
-> Come to think of it, I'm really not a fan of "large" macro functions.
-> I'll outline a different option in v2.
+The important point here is that when util_avg for the task becomes higher
+than task_ue.enqueued, it means the knowledge of the actual needs of the task
+is turned into a lower bound (=task_ue.enqueued) rather than an exact value.
+This means that selecting a higher frequency than that is:
+a) necessary, the task needs more computational power to do its job.
+b) a shot in the dark, as it's impossible to predict exactly how much it will
+    need without a crystal ball.
 
-The v2 approach looks nicer to me, thanks.
+When adding ramp boost, the bill is split: part of the "shot in the dark" comes from
+the growing CPU's util_avg (see schedutil_u definition at the bottom), and part of it
+comes from the ramp boost. We don't want to make the boost too costly either since
+it's a shot in the dark. Therefore, we make the boost proportional to a battery life
+cost rather than some guessed utilisation.
 
-> > Why cmd rather than __cmd? This seems inconsistent.
->=20
-> Note: I hate using underscores in macro argument names, but they clashed
-> with the struct field names. There was no such clash for 'cmd'.
+Now that I think about it, it may make sense to let this ramp-boost completely
+handle this "future util prediction" case, as it's not better or worse than
+util_avg at that (since it's based on it), but allows better control on
+the cost of a (mis)prediction.
 
-Hmm, ok.
+> 
+> I'm not immediately seeing how it is transient; that is, PELT has a
+> wobble in it's steady state, is that accounted for?
+> 
 
-> > The wlen local variable can be avoided by a bit of suffling:
-> >=20
-> > 	#define CMD_SETUP(cmd, __args, __rlen) do {	\
-> > 		cmd.rlen =3D __rlen;			\
-> > 		cmd.wlen =3D sizeof(__args) - 1;		\
-> > 		memcpy(cmd.args, __args, cmd.wlen);	\
-> > 	} while (0)
->=20
-> Do you think it is important to avoid a local variable?
-
-Not exactly important, but wlen would be another name that can collide
-with the name spaces of the functions where the macro is used and
-trigger -Wshadow.
+The transient-ness of the ramp boost I'm introducing comes from the fact that for a
+periodic task at steady state, task_ue.enqueued <= task_u when the task is executing.
+That is because task_ue.enqueued is sampled at dequeue time, precisely at the moment
+at which task_u is reaching its max for that task. Since we only take into account
+positive boosts, ramp boost will only have an impact in the "increase transients".
 
 
-Greetings,
-Jonathan Neusch=C3=A4fer
+About signals schedutil is based on
+===================================
 
---+KJYzRxRHjYqLGl5
-Content-Type: application/pgp-signature; name="signature.asc"
+Here is the state of signals used by schedutil to my knowledge to compute
+the final "chosen_freq":
 
------BEGIN PGP SIGNATURE-----
+# let's define short names to talk about
+task_ue = se.avg.util_est
+task_u = se.avg.util_avg
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0c2QoACgkQCDBEmo7z
-X9vqIQ/9F6XYipBcpNCZYGQUrxmhVQAySFpGgnw4LXFN/OS1wwFkzq3dOEMQgCnf
-4hd7FvCcWKWnPOgMnbo9LcX6YulRh3WY44n4HF6d0HF3wGF91zvCn6Z7a9HieFhO
-BvrUfELL9/t1gC93iEnXeLBvz5gVUkLQfsHgIxlOuZ6/zej2ZiWvDh9c0jBix23Q
-0DqHwEWjjWkVTwm5m4G/pSzjAEUGoVjBK8r8Y8QhrDEm7y/FyZZXbdcXxka6OMYP
-Ij6PEb7SH8oLCuSpttWvjVVb0mcH6HY6frhpkO140iZ3gLe4THBbkPA+NCDIWN/c
-hx68+4FbnTif+k0Ds/hWRMmAzGvA2EnEi/cFOOSv3RWXh8D1op9p6PO/T5Urq22I
-hxgYhUeFTdONMRFPqjCP0nnmZQ1Bzf5TKFPKBjrGnX7tYy1F9QIDFcM7FXRz/7Fx
-zPO96Sh4/XiK6Cg+bL1rVAge8g85sjyIZgJpL9eF8lXmCqCoLXeI33nOuDaS5LnA
-N0tbwzXJAqM2aTF+nV+JMebRNFqzGnuA3bQgwx283fAO1P5jOOgqxNC+Y7jIO0lG
-3yEe07IqpP1d2z5Q5y8/XwBIpEYOThX64PH+09TpM3mmMkBqNy/WpSRnjtr/XuKK
-c0Fa4E4EDkwIDOmPmf7Nj6/MUny4Jmgo6vfa0Dlb4YSyV/VSMks=
-=gWpD
------END PGP SIGNATURE-----
+cpu_ue = cfs_rq->avg.util_est
+cpu_u = cfs_rq->avg.util_avg
 
---+KJYzRxRHjYqLGl5--
+
+# How things are defined
+task_u ~= LOW_PASS_FILTER(task_activations)
+task_ue.enqueued = SAMPLE_AT_DEQUEUE_AND_HOLD(task_u)
+task_ue.ewma = LOW_PASS_FILTER(task_ue.enqueued)
+
+# Patrick's patch amends task_ue.ewma definition this way:
+task_ue.ewma =
+	| task_ue.enqueued > task_ue.ewma: task_ue.enqueued
+	| otherwise			 : LOW_PASS_FILTER(task_ue.enqueued)
+
+
+cpu_ue.enqueued = SUM[MAX(task_ue.ewma, task_ue.enqueued) forall task_ue in enqueued_tasks]
+cpu_u = SUM[task_u forall task_ue in enqueued_tasks]
+
+# What schedutil considers when taking freq decisions
+
+non_cfs_u = util of deadline + rt + irq
+schedutil_u = non_cfs_u + APPLY_UCLAMP(MAX(cpu_ue.enqueued, cpu_u)) + iowait_boost
+schedutil_base_freq = MAP_UTIL_FREQ(schedutil_u)
+
+STABLE(signal) =
+	| signal equal to the last time it was sampled by caller: True
+	| otherwise				      		: False
+# A diff between two util signals is converted to a EM_COST_MARGIN_SCALE value.
+# They are different units, but the conversion factor is 1 in practice.
+ramp_boost =
+	| cpu_ue.enqueued > cpu_u && STABLE(cpu_ue.enqueued):
+		(cpu_ue.enqueued - cpu_u) * (EM_COST_MARGIN_SCALE/SCHED_CAPACITY_SCALE)
+	| otherwise: 0
+
+APPLY_RAMP_BOOST(boost, base_freq) = boosted_freq
+	with
+		acceptable_cost = ENERGY_MODEL_COST(base_freq) * (EM_COST_MARGIN_SCALE + boost)
+		boosted_freq = MAX[freq forall freqs if ENERGY_MODEL_COST(freq) < acceptable_cost]
+
+# ramp-boost is applied on a freq instead of a util (unlike iowait_boost), since
+# the function ENERGY_MODEL_COST(freq) is provided by the EM, and an equivalent
+# ENERGY_MODEL_COST(util) would need extra calls to MAP_UTIL_FREQ().
+schedutil_freq = APPLY_RAMP_BOOST(ramp_boost, schedutil_base_freq)
+
+REAL_FREQ(ideal_freq) = MIN[freq forall freqs if freq >= ideal_freq]
+POLICY_CLAMP(freq) =
+	| freq < policy_min_freq: policy_min_freq
+	| freq > policy_max_freq: policy_max_freq
+	| otherwise		: freq
+# Frequency finally used for the policy
+chosen_freq = POLICY_CLAMP(REAL_FREQ(schedutil_freq))
+
+
+Thanks,
+Douglas
