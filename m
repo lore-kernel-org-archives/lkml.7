@@ -2,169 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8BCC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF367C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754D521882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="EVDV2i92"
+	by mail.kernel.org (Postfix) with ESMTP id 9A81721882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGCV2z (ORCPT
+        id S1727388AbfGCVag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:28:55 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42702 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfGCV2x (ORCPT
+        Wed, 3 Jul 2019 17:30:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56928 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfGCVag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:28:53 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l15so3893761otn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 14:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Oa5fyrgRSaS4/rlLU6Dg1I751HN6ZGGg3XuTeNEsyA=;
-        b=EVDV2i92j6Oc8X9cDYFxw3faBgrvRgokearOh6hTInPcfDEF/9Dw3KaF4Zq6F/M1Po
-         7PhktLMJwFP6nTQp9RrenWueYOGk2EVUa/0Qx0+hUltXSvdhvIuEHI+qKgYeF3B1eFlS
-         5Y3swajWUyLDnwgyIA3axCIg+XMQUJMGQtIBwCbx1V1d//Itvxh9xcx753a7zTQU7G7q
-         9Zf9F4ew3jdtrywY3ZSbzOZTGZe1X8L9mb5LB87Kgaj4vPdRVLpEenwZhPzX+x7S/pLI
-         SKnQAFXjTLXqteyTAJ1slhEtrupPHQDbOkd7sNBcRXPLRfHg2/4qMUGQWkb8jOyatu6m
-         VoNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Oa5fyrgRSaS4/rlLU6Dg1I751HN6ZGGg3XuTeNEsyA=;
-        b=pScT8ecWU6krS4ui6HHBG+jQg18ymGven4ciPUOs2OcjkclA+s+TZ6Mo/VkeprncEm
-         MTBELp53xSCGQwhEXuAUxHgfdVEELhxZjaqhxWvWxxok6YKne9yCILCpVPyJ/MNBc0NB
-         a4LpVxW8DoFBYyw6eQfnAzrW3M4chWETAemIgm0ZcYT5FSLoi77LKSQjapb+fF+SKSVj
-         /nrf9XdmWsSj8kxwQDw7ZerIel6o0rkdAemrcm4Sgfod22WFyzzYWQBMoS5dcPUyCKHI
-         NmRwo6B0k5ejRM0QDRyS1k4U/xPPvLdI2qQgbuxtYoOTW2UpVjqnHCrqtLlcZ3jkrysu
-         wweA==
-X-Gm-Message-State: APjAAAUNPn/q1kpMZZeGaC/hBcAa9E2+H5JyfAA1yX3q3KcoKZYnWEUo
-        ux6Q8SDaEF7GO04fR/DmkE9/Qfm5UXSFosl7yNUyiw==
-X-Google-Smtp-Source: APXvYqx/eeik3ZxIiy7z87X0O8OLG62WiPNdXk3FcnhR2wJoQDPQ4BqLvO7rM7/LGIyRCPcHEmicv2tHJYa45mbHcK0=
-X-Received: by 2002:a9d:7248:: with SMTP id a8mr32385007otk.363.1562189332829;
- Wed, 03 Jul 2019 14:28:52 -0700 (PDT)
+        Wed, 3 Jul 2019 17:30:36 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1himpl-0001Uy-5x; Wed, 03 Jul 2019 23:30:33 +0200
+Date:   Wed, 3 Jul 2019 23:30:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nadav Amit <namit@vmware.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>
+Subject: Re: [patch 16/18] x86/apic: Convert 32bit to IPI shorthand static
+ key
+In-Reply-To: <F521E659-4F8A-44FC-994B-5B9E2B229184@vmware.com>
+Message-ID: <alpine.DEB.2.21.1907032324020.1802@nanos.tec.linutronix.de>
+References: <20190703105431.096822793@linutronix.de> <20190703105917.044463061@linutronix.de> <1DC35A28-DEBC-4A46-AC35-3AADD23AA40D@vmware.com> <alpine.DEB.2.21.1907032213250.1802@nanos.tec.linutronix.de> <F521E659-4F8A-44FC-994B-5B9E2B229184@vmware.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190703121743.GH1729@bombadil.infradead.org> <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
- <20190703195302.GJ1729@bombadil.infradead.org>
-In-Reply-To: <20190703195302.GJ1729@bombadil.infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 3 Jul 2019 14:28:41 -0700
-Message-ID: <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-749829697-1562189433=:1802"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 12:53 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Wed, Jul 03, 2019 at 10:01:37AM -0700, Dan Williams wrote:
-> > On Wed, Jul 3, 2019 at 5:17 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Wed, Jul 03, 2019 at 12:24:54AM -0700, Dan Williams wrote:
-> > > > This fix may increase waitqueue contention, but a fix for that is saved
-> > > > for a larger rework. In the meantime this fix is suitable for -stable
-> > > > backports.
-> > >
-> > > I think this is too big for what it is; just the two-line patch to stop
-> > > incorporating the low bits of the PTE would be more appropriate.
-> >
-> > Sufficient, yes, "appropriate", not so sure. All those comments about
-> > pmd entry size are stale after this change.
->
-> But then they'll have to be put back in again.  This seems to be working
-> for me, although I doubt I'm actually hitting the edge case that rocksdb
-> hits:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Seems to be holding up under testing here, a couple comments...
+--8323329-749829697-1562189433=:1802
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
->
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 2e48c7ebb973..e77bd6aef10c 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -198,6 +198,10 @@ static void dax_wake_entry(struct xa_state *xas, void *entry, bool wake_all)
->   * if it did.
->   *
->   * Must be called with the i_pages lock held.
-> + *
-> + * If the xa_state refers to a larger entry, then it may return a locked
-> + * smaller entry (eg a PTE entry) without waiting for the smaller entry
-> + * to be unlocked.
->   */
->  static void *get_unlocked_entry(struct xa_state *xas)
->  {
-> @@ -211,7 +215,8 @@ static void *get_unlocked_entry(struct xa_state *xas)
->         for (;;) {
->                 entry = xas_find_conflict(xas);
->                 if (!entry || WARN_ON_ONCE(!xa_is_value(entry)) ||
-> -                               !dax_is_locked(entry))
-> +                               !dax_is_locked(entry) ||
-> +                               dax_entry_order(entry) < xas_get_order(xas))
+On Wed, 3 Jul 2019, Nadav Amit wrote:
+> > On Jul 3, 2019, at 1:34 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Wed, 3 Jul 2019, Nadav Amit wrote:
+> >>> On Jul 3, 2019, at 3:54 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>> void default_send_IPI_all(int vector)
+> >>> {
+> >>> -	if (apic_ipi_shorthand_off || vector == NMI_VECTOR) {
+> >>> +	if (static_branch_likely(&apic_use_ipi_shorthand)) {
+> >>> 		apic->send_IPI_mask(cpu_online_mask, vector);
+> >>> 	} else {
+> >>> 		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
+> >> 
+> >> It may be better to check the static-key in native_send_call_func_ipi() (and
+> >> other callers if there are any), and remove all the other checks in
+> >> default_send_IPI_all(), x2apic_send_IPI_mask_allbutself(), etc.
+> > 
+> > That makes sense. Should have thought about that myself, but hunting that
+> > APIC emulation issue was affecting my brain obviously :)
+> 
+> Well, if you used VMware and not KVM... ;-)
 
-Doesn't this potentially allow a locked entry to be returned for a
-caller that expects all value entries are unlocked?
+Then I would have hunted some other bug probably :)
+ 
+> >> void native_send_call_func_ipi(const struct cpumask *mask)
+> >> {
+> >> -	cpumask_var_t allbutself;
+> >> -
+> >> -	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
+> >> -		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+> >> -		return;
+> >> +	int cpu, this_cpu = smp_processor_id();
+> >> +	bool allbutself = true;
+> >> +	bool self = false;
+> >> +
+> >> +	for_each_cpu_and_not(cpu, cpu_online_mask, mask) {
+> >> +
+> >> +		if (cpu != this_cpu) {
+> >> +			allbutself = false;
+> >> +			break;
+> >> +		}
+> >> +		self = true;
+> > 
+> > That accumulates to a large iteration in the worst case. 
+> 
+> I don’t understand why. There should be at most two iterations - one for
+> self and one for another core. So _find_next_bit() will be called at most
+> twice. _find_next_bit() has its own loop, but I don’t think overall it is as
 
->                         return entry;
->
->                 wq = dax_entry_waitqueue(xas, entry, &ewait.key);
-> @@ -253,8 +258,12 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
->
->  static void put_unlocked_entry(struct xa_state *xas, void *entry)
->  {
-> -       /* If we were the only waiter woken, wake the next one */
-> -       if (entry)
-> +       /*
-> +        * If we were the only waiter woken, wake the next one.
-> +        * Do not wake anybody if the entry is locked; that indicates
-> +        * we weren't woken.
-> +        */
-> +       if (entry && !dax_is_locked(entry))
->                 dax_wake_entry(xas, entry, false);
->  }
->
-> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-> index 052e06ff4c36..b17289d92af4 100644
-> --- a/include/linux/xarray.h
-> +++ b/include/linux/xarray.h
-> @@ -1529,6 +1529,27 @@ static inline void xas_set_order(struct xa_state *xas, unsigned long index,
->  #endif
->  }
->
-> +/**
-> + * xas_get_order() - Get the order of the entry being operated on.
-> + * @xas: XArray operation state.
-> + *
-> + * Return: The order of the entry.
-> + */
-> +static inline unsigned int xas_get_order(const struct xa_state *xas)
-> +{
-> +       unsigned int order = xas->xa_shift;
-> +
-> +#ifdef CONFIG_XARRAY_MULTI
-> +       unsigned int sibs = xas->xa_sibs;
-> +
-> +       while (sibs) {
-> +               order++;
-> +               sibs /= 2;
-> +       }
+Indeed, misread the code and right the bit search should be fast.
 
-Use ilog2() here?
+> bad as calling alloc_cpumask_var(), cpumask_copy() and cpumask_equal(),
+> which also have loops.
+>
+> I don’t have numbers (and I doubt they are very significant), but the cpumask
+> allocation showed when I was profiling my microbenchmark.
+
+Yes, that alloc/free part is completely bogus.
+
+Thanks,
+
+	tglx
+
+--8323329-749829697-1562189433=:1802--
