@@ -2,138 +2,376 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F98FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4776BC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF84218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093F421850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="gj1NqSMk"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Lv/iRWgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfGCOWk (ORCPT
+        id S1726981AbfGCOXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:22:40 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44196 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCOWj (ORCPT
+        Wed, 3 Jul 2019 10:23:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49799 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCOXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:22:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so5144943iob.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 07:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3jOjcCBZEWo1w1sLHMo+7YDCUkeYC1q2tao/STlCVFc=;
-        b=gj1NqSMk5FsHkkWbt1vPKGA6H759JOiNTm55WzGDptuNznkuH8Cf70mK1tbIg4jUGs
-         BJP2wSPCVmVas/t415+sHOmOta41zS2jYMqXZBhnvg/k7m9zP7t12JwNNZcJmykd3ppF
-         FeiJhLCis6scWAIADX5Sn5ZZcEgMC26sy9NIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3jOjcCBZEWo1w1sLHMo+7YDCUkeYC1q2tao/STlCVFc=;
-        b=U0a20Fpvtrr4lwJ6JJo+CZR/+uKDhR9UGPiT/ewtuun1Z9rFiNqM3VEjI1SW+h0my7
-         hZJvb7i2CQnF2wFEV3rrE2iI3FHpVRVdIi5yV4AxeI+CZvheN2IEuwTGwrU7c9cSojHR
-         dEOPg4osw00AX9SYFbdDIv4zN6ZefkVkV3zhDh4t7/soNCfMSoAoncTRze1/hHNUQIJk
-         kdHKc7XjZdYLZOyr8EjoNdvmTsDM/rB6jPG3AXY0FV5Qh+hzZHnl0VIanvqz4RkV6LFF
-         OWqid9I0x2o3/yUZwHvx09D+w3/esT+nF8lYlUSeC1bErEVdD/81YUJSFBLwbs5CyWcN
-         Mdiw==
-X-Gm-Message-State: APjAAAWW/6Gh2068jB9IKIS2+qpH6Bz18fUeg4qKgMg/OvWDd3um1lBE
-        notnZidQz/hRS+WogxV2Kk1ziw3bpIM17Oskd0gj8Q==
-X-Google-Smtp-Source: APXvYqz7dfwX/rO1C1CJlykOSigszl+TALdETbQAlr7homcQ7+eKR2HVUrZS/bcVykHb3jNfUNyum1SqZCpa6EsyOhM=
-X-Received: by 2002:a05:6638:3d6:: with SMTP id r22mr4047585jaq.71.1562163759062;
- Wed, 03 Jul 2019 07:22:39 -0700 (PDT)
+        Wed, 3 Jul 2019 10:23:04 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63EMlIa3324073
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Jul 2019 07:22:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63EMlIa3324073
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562163768;
+        bh=asRdQDUdVvfJZBDCEK0C3V5Hc2aX1e6s9d/FDulFQdY=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=Lv/iRWgz1rgIc3XYDByT1A6x0K6zBxF0IzHe2EcmC2fAHX0rIi+qq+NyTq69r3gvu
+         axSnh61m4FS4LjWxNvTnu7V0hKb7Dtktm6fj3KnyajZL32u3IY9TbvMt6N51rlWZXv
+         OKKOIHWYn5w+6TWsRIsO5iF6XMEhuqzAdBjO46cLpxoz6XJPKAJL6LfQqYBxpAvLz6
+         pUzYIzQF7hRIOBcbY9zsnp7YWPibTU4gHrdbRuGr6F2xFykIT/BW0ehRHzO/WitVjQ
+         3+jblsrdcUiI20d9VSU4/FMlMvYGXGbjWyBvqVI2XnD3K/Sn1Nw3lteBuzqdJy1JDZ
+         M6JoPJvTYMNwA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63EMl3K3324070;
+        Wed, 3 Jul 2019 07:22:47 -0700
+Date:   Wed, 3 Jul 2019 07:22:47 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-a85lkptkt0ru40irpga8yf54@git.kernel.org>
+Cc:     mingo@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
+        hpa@zytor.com, adrian.hunter@intel.com, tglx@linutronix.de,
+        acme@redhat.com, andre.goddard@gmail.com,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, andre.goddard@gmail.com,
+          tglx@linutronix.de, adrian.hunter@intel.com, acme@redhat.com,
+          hpa@zytor.com, namhyung@kernel.org, jolsa@kernel.org,
+          mingo@kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf tools: Ditch rtrim(), use skip_spaces() to get
+ closer to the kernel
+Git-Commit-ID: 328584804edc950fb4608c9a38e396ac71ef22b6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190703124609.21435-1-jagan@amarulasolutions.com>
- <20190703124609.21435-2-jagan@amarulasolutions.com> <20190703132838.nhewz5wzsijl65s5@flea>
-In-Reply-To: <20190703132838.nhewz5wzsijl65s5@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 3 Jul 2019 19:52:27 +0530
-Message-ID: <CAMty3ZDyx_RSkU=OndsvzS5reOzab0DBkrarSeHt+-gtsdyKuQ@mail.gmail.com>
-Subject: Re: [PATCH 01/25] arm64: dts: allwinner: Switch A64 dts(i) to use
- SPDX identifier
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Wed, Jul 03, 2019 at 06:15:45PM +0530, Jagan Teki wrote:
-> > Adopt the SPDX license identifier headers to ease license
-> > compliance management on Allwinner A64 dts(i) files.
-> >
-> > While the text specifies "of the GPL or the X11 license"
-> > but the actual license text matches the MIT license as
-> > specified at [0]
-> >
-> > [0] https://spdx.org/licenses/MIT.html
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
-> >  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
-> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
-> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
-> >  9 files changed, 9 insertions(+), 342 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > index 208373efee49..efdd84c362b0 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > @@ -1,43 +1,6 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
->
-> You say that this is a GPL2 only license
->
-> >  /*
-> >   * Copyright (c) 2016 ARM Ltd.
-> > - *
-> > - * This file is dual-licensed: you can use it either under the terms
-> > - * of the GPL or the X11 license, at your option. Note that this dual
-> > - * licensing only applies to this file, and not this project as a
-> > - * whole.
-> > - *
-> > - *  a) This library is free software; you can redistribute it and/or
-> > - *     modify it under the terms of the GNU General Public License as
-> > - *     published by the Free Software Foundation; either version 2 of the
-> > - *     License, or (at your option) any later version.
->
-> While this is GPL2 or later.
+Commit-ID:  328584804edc950fb4608c9a38e396ac71ef22b6
+Gitweb:     https://git.kernel.org/tip/328584804edc950fb4608c9a38e396ac71ef22b6
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 26 Jun 2019 11:42:03 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 26 Jun 2019 11:42:03 -0300
 
-Yes, this is where I was confused with compared to existing
-architectures. It seems like it is a call from author of the file or
-make GPL-2.0 for generic purpose [1], not really sure.
+perf tools: Ditch rtrim(), use skip_spaces() to get closer to the kernel
 
->
-> Also, I'm not sure why we need 25 patches to do that. Can't you just
-> send one (there's no even need to separate arm and arm64, since we
-> will do only a single PR from now as opposed to what we were doing
-> before).
+No change in behaviour, just using the same kernel idiom for such
+operation.
 
-Just to make a clear conversion possible with individual SoC + boards
-files, I did based on existing arch's does. np, if require I can send
-it in single patch.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: André Goddard Rosa <andre.goddard@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-a85lkptkt0ru40irpga8yf54@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-script.c    | 12 ++++++------
+ tools/perf/ui/browser.c        |  2 +-
+ tools/perf/ui/browsers/hists.c |  2 +-
+ tools/perf/ui/gtk/hists.c      |  4 ++--
+ tools/perf/ui/stdio/hist.c     |  2 +-
+ tools/perf/util/annotate.c     | 10 +++++-----
+ tools/perf/util/event.c        |  4 +---
+ tools/perf/util/pmu.c          |  3 ++-
+ tools/perf/util/stat-display.c |  4 ++--
+ tools/perf/util/string.c       | 14 --------------
+ tools/perf/util/string2.h      |  4 ++--
+ 11 files changed, 23 insertions(+), 38 deletions(-)
 
-[1] https://patchwork.kernel.org/patch/10963113/
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 0131f7a0d48d..520e5b6b9ef9 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2880,7 +2880,7 @@ static int read_script_info(struct script_desc *desc, const char *filename)
+ 		return -1;
+ 
+ 	while (fgets(line, sizeof(line), fp)) {
+-		p = ltrim(line);
++		p = skip_spaces(line);
+ 		if (strlen(p) == 0)
+ 			continue;
+ 		if (*p != '#')
+@@ -2889,19 +2889,19 @@ static int read_script_info(struct script_desc *desc, const char *filename)
+ 		if (strlen(p) && *p == '!')
+ 			continue;
+ 
+-		p = ltrim(p);
++		p = skip_spaces(p);
+ 		if (strlen(p) && p[strlen(p) - 1] == '\n')
+ 			p[strlen(p) - 1] = '\0';
+ 
+ 		if (!strncmp(p, "description:", strlen("description:"))) {
+ 			p += strlen("description:");
+-			desc->half_liner = strdup(ltrim(p));
++			desc->half_liner = strdup(skip_spaces(p));
+ 			continue;
+ 		}
+ 
+ 		if (!strncmp(p, "args:", strlen("args:"))) {
+ 			p += strlen("args:");
+-			desc->args = strdup(ltrim(p));
++			desc->args = strdup(skip_spaces(p));
+ 			continue;
+ 		}
+ 	}
+@@ -3008,7 +3008,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
+ 		return -1;
+ 
+ 	while (fgets(line, sizeof(line), fp)) {
+-		p = ltrim(line);
++		p = skip_spaces(line);
+ 		if (*p == '#')
+ 			continue;
+ 
+@@ -3018,7 +3018,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
+ 				break;
+ 
+ 			p += 2;
+-			p = ltrim(p);
++			p = skip_spaces(p);
+ 			len = strcspn(p, " \t");
+ 			if (!len)
+ 				break;
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 8812c1564995..55ff05a46e0b 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -594,7 +594,7 @@ static int ui_browser__color_config(const char *var, const char *value,
+ 			break;
+ 
+ 		*bg = '\0';
+-		bg = ltrim(++bg);
++		bg = skip_spaces(bg + 1);
+ 		ui_browser__colorsets[i].bg = bg;
+ 		ui_browser__colorsets[i].fg = fg;
+ 		return 0;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 59483bdb0027..04a56114df92 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -1470,7 +1470,7 @@ static int hist_browser__show_hierarchy_entry(struct hist_browser *browser,
+ 				int i = 0;
+ 
+ 				width -= fmt->entry(fmt, &hpp, entry);
+-				ui_browser__printf(&browser->b, "%s", ltrim(s));
++				ui_browser__printf(&browser->b, "%s", skip_spaces(s));
+ 
+ 				while (isspace(s[i++]))
+ 					width++;
+diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
+index 0c08890f006a..6341c421a8f7 100644
+--- a/tools/perf/ui/gtk/hists.c
++++ b/tools/perf/ui/gtk/hists.c
+@@ -459,7 +459,7 @@ static void perf_gtk__add_hierarchy_entries(struct hists *hists,
+ 			advance_hpp(hpp, ret + 2);
+ 		}
+ 
+-		gtk_tree_store_set(store, &iter, col_idx, ltrim(rtrim(bf)), -1);
++		gtk_tree_store_set(store, &iter, col_idx, trim(bf), -1);
+ 
+ 		if (!he->leaf) {
+ 			hpp->buf = bf;
+@@ -555,7 +555,7 @@ static void perf_gtk__show_hierarchy(GtkWidget *window, struct hists *hists,
+ 			first_col = false;
+ 
+ 			fmt->header(fmt, &hpp, hists, 0, NULL);
+-			strcat(buf, ltrim(rtrim(hpp.buf)));
++			strcat(buf, trim(hpp.buf));
+ 		}
+ 	}
+ 
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index 4b1a6e921d1c..594e56628904 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -516,7 +516,7 @@ static int hist_entry__hierarchy_fprintf(struct hist_entry *he,
+ 		 * dynamic entries are right-aligned but we want left-aligned
+ 		 * in the hierarchy mode
+ 		 */
+-		printed += fprintf(fp, "%s%s", sep ?: "  ", ltrim(buf));
++		printed += fprintf(fp, "%s%s", sep ?: "  ", skip_spaces(buf));
+ 	}
+ 	printed += putc('\n', fp);
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 65005ccea232..783e2628cc8e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -557,7 +557,7 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
+ 	if (comment == NULL)
+ 		return 0;
+ 
+-	comment = ltrim(comment);
++	comment = skip_spaces(comment);
+ 	comment__symbol(ops->source.raw, comment + 1, &ops->source.addr, &ops->source.name);
+ 	comment__symbol(ops->target.raw, comment + 1, &ops->target.addr, &ops->target.name);
+ 
+@@ -602,7 +602,7 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
+ 	if (comment == NULL)
+ 		return 0;
+ 
+-	comment = ltrim(comment);
++	comment = skip_spaces(comment);
+ 	comment__symbol(ops->target.raw, comment + 1, &ops->target.addr, &ops->target.name);
+ 
+ 	return 0;
+@@ -1098,7 +1098,7 @@ static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, str
+ 
+ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ {
+-	char tmp, *name = ltrim(line);
++	char tmp, *name = skip_spaces(line);
+ 
+ 	if (name[0] == '\0')
+ 		return -1;
+@@ -1116,7 +1116,7 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ 		goto out_free_name;
+ 
+ 	(*rawp)[0] = tmp;
+-	*rawp = ltrim(*rawp);
++	*rawp = skip_spaces(*rawp);
+ 
+ 	return 0;
+ 
+@@ -1503,7 +1503,7 @@ static int symbol__parse_objdump_line(struct symbol *sym, FILE *file,
+ 		return 0;
+ 	}
+ 
+-	tmp = ltrim(parsed_line);
++	tmp = skip_spaces(parsed_line);
+ 	if (*tmp) {
+ 		/*
+ 		 * Parse hexa addresses followed by ':'
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index d8f8a20543c5..e1d0c5ba1f92 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -158,9 +158,7 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 	if (name) {
+ 		char *nl;
+ 
+-		name += 5;  /* strlen("Name:") */
+-		name = ltrim(name);
+-
++		name = skip_spaces(name + 5);  /* strlen("Name:") */
+ 		nl = strchr(name, '\n');
+ 		if (nl)
+ 			*nl = '\0';
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index faa8eb231e1b..38dc0c6e28b8 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/list.h>
+ #include <linux/compiler.h>
++#include <linux/string.h>
+ #include <sys/types.h>
+ #include <errno.h>
+ #include <fcntl.h>
+@@ -1339,7 +1340,7 @@ static void wordwrap(char *s, int start, int max, int corr)
+ 			break;
+ 		s += wlen;
+ 		column += n;
+-		s = ltrim(s);
++		s = skip_spaces(s);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index ce993d29cca5..90df41169113 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -212,7 +212,7 @@ static void print_metric_csv(struct perf_stat_config *config __maybe_unused,
+ 		return;
+ 	}
+ 	snprintf(buf, sizeof(buf), fmt, val);
+-	ends = vals = ltrim(buf);
++	ends = vals = skip_spaces(buf);
+ 	while (isdigit(*ends) || *ends == '.')
+ 		ends++;
+ 	*ends = 0;
+@@ -280,7 +280,7 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
+ 		return;
+ 	unit = fixunit(tbuf, os->evsel, unit);
+ 	snprintf(buf, sizeof buf, fmt, val);
+-	ends = vals = ltrim(buf);
++	ends = vals = skip_spaces(buf);
+ 	while (isdigit(*ends) || *ends == '.')
+ 		ends++;
+ 	*ends = 0;
+diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+index d28e723e2790..99a555ea4a9f 100644
+--- a/tools/perf/util/string.c
++++ b/tools/perf/util/string.c
+@@ -318,20 +318,6 @@ char *strxfrchar(char *s, char from, char to)
+ 	return s;
+ }
+ 
+-/**
+- * ltrim - Removes leading whitespace from @s.
+- * @s: The string to be stripped.
+- *
+- * Return pointer to the first non-whitespace character in @s.
+- */
+-char *ltrim(char *s)
+-{
+-	while (isspace(*s))
+-		s++;
+-
+-	return s;
+-}
+-
+ /**
+  * rtrim - Removes trailing whitespace from @s.
+  * @s: The string to be stripped.
+diff --git a/tools/perf/util/string2.h b/tools/perf/util/string2.h
+index 07fd37568543..db02059e31c5 100644
+--- a/tools/perf/util/string2.h
++++ b/tools/perf/util/string2.h
+@@ -2,6 +2,7 @@
+ #ifndef PERF_STRING_H
+ #define PERF_STRING_H
+ 
++#include <linux/string.h>
+ #include <linux/types.h>
+ #include <stddef.h>
+ #include <string.h>
+@@ -22,12 +23,11 @@ static inline bool strisglob(const char *str)
+ int strtailcmp(const char *s1, const char *s2);
+ char *strxfrchar(char *s, char from, char to);
+ 
+-char *ltrim(char *s);
+ char *rtrim(char *s);
+ 
+ static inline char *trim(char *s)
+ {
+-	return ltrim(rtrim(s));
++	return skip_spaces(rtrim(s));
+ }
+ 
+ char *asprintf_expr_inout_ints(const char *var, bool in, size_t nints, int *ints);
