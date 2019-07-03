@@ -2,59 +2,58 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE63C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B072C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF97D2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F0B2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TXAox2sd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LJ4cpywQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfGCKTl (ORCPT
+        id S1727055AbfGCKTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:19:41 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37224 "EHLO
+        Wed, 3 Jul 2019 06:19:10 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43437 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbfGCKTM (ORCPT
+        with ESMTP id S1726871AbfGCKTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:19:12 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d11so1382246lfb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:10 -0700 (PDT)
+        Wed, 3 Jul 2019 06:19:09 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j29so1357350lfk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=F7JFqzRXqxTzUkcqfAtcONZlOP60PRysVxN4UPvDiWY=;
-        b=TXAox2sdWXBNBf+PRssojPI1C03UgoSeeRHKksHkDwWknje+kVCYI4gFwiCbZCxfEY
-         IkgI+mvbjSXUUB6DVZ5qMJ7mz1RVdPm+ypWOjvbis+zWk4d+AihqA88rbKHidV14PiWR
-         J8yJAfhdWtjTPK5Z2v3TiM8zork4wBqowDNGMSUVhiUMESHKEwOevdnHTiqLv97ldpif
-         SoRPCvwrJb0POJBqOSvXIBcFJr1Ti2uZmbHkbFTyPyKisAtav9ThkI6MNIQR4DREmk8a
-         ykPZHSrZYB4zt4dFwXwUr5VzE2AeqmubgnYNxQYwvfm+NLCO8HuyyY1LMKIpDwtXbVPI
-         LK9w==
+        h=from:to:cc:subject:date:message-id;
+        bh=N64YiOP2YVl5zyPZolUHrk+pThiJwXVkclxV2400gD8=;
+        b=LJ4cpywQ/xDEXzvzPx3lv5wTD8nK1FnzRsjS+SpAP/ku9u/Eucxp0IM0ubt0Lf88CD
+         n0Wt5pfYPGUdkxsnqzyhixYwadc7A3ZzzFNg94W+ySo4vsGGzR5DunUjXbSE3re5Kb1Y
+         Cuh9IpTxCSD1KhslOS9u9hdklo06Zd5y83ViBydoeJcW1t8G06Xs6q3F+8DOc6ewUVvC
+         ZM+v/ABR2xPA2s2rpO6fcgIbRu3EQvuYFogMfF4Q67ACp5frmT58cZaylS/a4KrOJwqY
+         TaiA4h8PMjtNM2Pjn4vLZ7cWQTL2kRj7dfnenF93TULHMrcSIfbqlBdXw1tcsRRv4m3w
+         D8tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=F7JFqzRXqxTzUkcqfAtcONZlOP60PRysVxN4UPvDiWY=;
-        b=XjuQ/hQJRR+yEYWhecajsR2oCVmQIwFzBALr25B0FSi4FE8cFzYNf7Go/EcWJLUxsM
-         VBa8zwbyEXMa4X0V+Q2iXEVgyPWCyXaP2lps/98WLwlapiG8NLEjLCf/KqOy+foAqW/h
-         OMCf6DkjjiOwcpJaywPxzu5so8SZaUJP19mnjoffuSe6rXCo0lnraI7QbvDbVJH3qRBq
-         9rHOcvM8rChmvSoZ33U2awNEmOdF6PuBywOEshXFFlRRITJzjdUc/DujdhY4brGPk0sW
-         KrFLKQcVRWqfLD8mgtcNic3rgsKRxmgLsy++jnN3VWz4FpgFPpMMAm5XWs2IED+e7Yu7
-         NJQg==
-X-Gm-Message-State: APjAAAXxRqqPgPGO4hz7Vbcdute7Od79pDTNkyUEgUeYLskWLw3PGpec
-        vQNmwvSkjKydzMhZwlUBmpxyYA==
-X-Google-Smtp-Source: APXvYqyjJ/dC++v25MO0K6HTcF98llYJkNq7R07VTHVGOQQa1klBHyw2COH6PNTUVmTlyk2e/+Qu4Q==
-X-Received: by 2002:ac2:46d5:: with SMTP id p21mr17199495lfo.133.1562149149849;
-        Wed, 03 Jul 2019 03:19:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N64YiOP2YVl5zyPZolUHrk+pThiJwXVkclxV2400gD8=;
+        b=L9Rz99fvdPlfijMhK/cmQ1JmeIPcTAHS/u8IEAjCzH6aaXTSueWuMKwM+CPyBV2wfs
+         qQmJCxB5zytNxkKEKH1hZsNJ3XvbSMhPdOH6I4tBVu/GMQoRdXNvT9QxaUay3PcGshZF
+         Jyo5YLNGhdSvIjLIwSHSi9ctJGKYKaIL4vzvP9Wbb4e+30qPHXl2akG6oE1JbmFCFbr2
+         KzZ93WfwL77xLfDnPlnD4LFvUNCqejKjDkRd+1/lUYHjizkvhIV39kUQsPVON4YliXGB
+         z8MVbAEML+SjRbbfWGJHTBZkcpgbKKm9iADYWMnZzeYmAsDg4alMT+3/RZrm96Ygj/b2
+         zsSg==
+X-Gm-Message-State: APjAAAXZ2UejLaP0bqP7wtwewAWzo2HU3bnbktmKySXLSsbqhn80NnBn
+        nTQWDWJtAqURR4S7vCLAC3F60w==
+X-Google-Smtp-Source: APXvYqzdLBy5TYPMJzQqNxFe8fF++4bQDuW89whZy9M57F++RFeRiQmMpPN71lULn5Cx1d6ruJxhfA==
+X-Received: by 2002:a19:f00a:: with SMTP id p10mr5215455lfc.68.1562149147493;
+        Wed, 03 Jul 2019 03:19:07 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.08
+        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:19:09 -0700 (PDT)
+        Wed, 03 Jul 2019 03:19:06 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -63,198 +62,86 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v6 net-next 2/5] net: ethernet: ti: davinci_cpdma: add dma mapped submit
-Date:   Wed,  3 Jul 2019 13:19:00 +0300
-Message-Id: <20190703101903.8411-3-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v6 net-next 0/5] net: ethernet: ti: cpsw: Add XDP support
+Date:   Wed,  3 Jul 2019 13:18:58 +0300
+Message-Id: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
-References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if dma mapped packet needs to be sent, like with XDP
-page pool, the "mapped" submit can be used. This patch adds dma
-mapped submit based on regular one.
+This patchset adds XDP support for TI cpsw driver and base it on
+page_pool allocator. It was verified on af_xdp socket drop,
+af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- drivers/net/ethernet/ti/davinci_cpdma.c | 89 ++++++++++++++++++++++---
- drivers/net/ethernet/ti/davinci_cpdma.h |  4 ++
- 2 files changed, 83 insertions(+), 10 deletions(-)
+It was verified with following configs enabled:
+CONFIG_JIT=y
+CONFIG_BPFILTER=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_XDP_SOCKETS=y
+CONFIG_BPF_EVENTS=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_BPF_JIT=y
+CONFIG_CGROUP_BPF=y
 
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 5cf1758d425b..8da46394c0e7 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -139,6 +139,7 @@ struct submit_info {
- 	int directed;
- 	void *token;
- 	void *data;
-+	int flags;
- 	int len;
- };
- 
-@@ -184,6 +185,8 @@ static struct cpdma_control_info controls[] = {
- 				 (directed << CPDMA_TO_PORT_SHIFT));	\
- 	} while (0)
- 
-+#define CPDMA_DMA_EXT_MAP		BIT(16)
-+
- static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
- {
- 	struct cpdma_desc_pool *pool = ctlr->pool;
-@@ -1015,6 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
- 	int				len = si->len;
-+	int				swlen = len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
- 	u32				mode;
-@@ -1036,16 +1040,22 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 		chan->stats.runt_transmit_buff++;
- 	}
- 
--	buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
--	ret = dma_mapping_error(ctlr->dev, buffer);
--	if (ret) {
--		cpdma_desc_free(ctlr->pool, desc, 1);
--		return -EINVAL;
--	}
--
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
- 	cpdma_desc_to_port(chan, mode, si->directed);
- 
-+	if (si->flags & CPDMA_DMA_EXT_MAP) {
-+		buffer = (u32)si->data;
-+		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-+		swlen |= CPDMA_DMA_EXT_MAP;
-+	} else {
-+		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
-+		ret = dma_mapping_error(ctlr->dev, buffer);
-+		if (ret) {
-+			cpdma_desc_free(ctlr->pool, desc, 1);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	/* Relaxed IO accessors can be used here as there is read barrier
- 	 * at the end of write sequence.
- 	 */
-@@ -1055,7 +1065,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	writel_relaxed(mode | len, &desc->hw_mode);
- 	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
--	writel_relaxed(len, &desc->sw_len);
-+	writel_relaxed(swlen, &desc->sw_len);
- 	desc_read(desc, sw_len);
- 
- 	__cpdma_chan_submit(chan, desc);
-@@ -1079,6 +1089,32 @@ int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 	si.data = data;
- 	si.len = len;
- 	si.directed = directed;
-+	si.flags = 0;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state == CPDMA_STATE_TEARDOWN) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+	return ret;
-+}
-+
-+int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
-+				  dma_addr_t data, int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = (void *)(u32)data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state == CPDMA_STATE_TEARDOWN) {
-@@ -1103,6 +1139,32 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	si.data = data;
- 	si.len = len;
- 	si.directed = directed;
-+	si.flags = 0;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state != CPDMA_STATE_ACTIVE) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+	return ret;
-+}
-+
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = (void *)(u32)data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state != CPDMA_STATE_ACTIVE) {
-@@ -1140,10 +1202,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
- 	uintptr_t			token;
- 
- 	token      = desc_read(desc, sw_token);
--	buff_dma   = desc_read(desc, sw_buffer);
- 	origlen    = desc_read(desc, sw_len);
- 
--	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	buff_dma   = desc_read(desc, sw_buffer);
-+	if (origlen & CPDMA_DMA_EXT_MAP) {
-+		origlen &= ~CPDMA_DMA_EXT_MAP;
-+		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
-+					chan->dir);
-+	} else {
-+		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	}
-+
- 	cpdma_desc_free(pool, desc, 1);
- 	(*chan->handler)((void *)token, outlen, status);
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 9343c8c73c1b..0271a20c2e09 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -77,8 +77,12 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
- 
- int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats);
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed);
- int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		      int len, int directed);
-+int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
-+				  dma_addr_t data, int len, int directed);
- int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 			   int len, int directed);
- int cpdma_chan_process(struct cpdma_chan *chan, int quota);
+Link on previous v5:
+https://lkml.org/lkml/2019/6/30/89
+
+Also regular tests with iperf2 were done in order to verify impact on
+regular netstack performance, compared with base commit:
+https://pastebin.com/JSMT0iZ4
+
+v5..v6:
+- do changes that is rx_dev while redirect/flush cycle is kept the same
+- dropped net: ethernet: ti: davinci_cpdma: return handler status
+- other changes desc in patches
+
+v4..v5:
+- added two plreliminary patches:
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+- added xdp alocator refcnt on xdp level, avoiding page pool refcnt
+- moved flush status as separate argument for cpdma_chan_process
+- reworked cpsw code according to last changes to allocator
+- added missed statistic counter
+
+v3..v4:
+- added page pool user counter
+- use same pool for ndevs in dual mac
+- restructured page pool create/destroy according to the last changes in API
+
+v2..v3:
+- each rxq and ndev has its own page pool
+
+v1..v2:
+- combined xdp_xmit functions
+- used page allocation w/o refcnt juggle
+- unmapped page for skb netstack
+- moved rxq/page pool allocation to open/close pair
+- added several preliminary patches:
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
+
+Ivan Khoronzhuk (5):
+  xdp: allow same allocator usage
+  net: ethernet: ti: davinci_cpdma: add dma mapped submit
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+  net: ethernet: ti: cpsw: add XDP support
+
+ drivers/net/ethernet/ti/Kconfig         |   1 +
+ drivers/net/ethernet/ti/cpsw.c          | 485 +++++++++++++++++++++---
+ drivers/net/ethernet/ti/cpsw_ethtool.c  |  76 +++-
+ drivers/net/ethernet/ti/cpsw_priv.h     |   7 +
+ drivers/net/ethernet/ti/davinci_cpdma.c |  99 ++++-
+ drivers/net/ethernet/ti/davinci_cpdma.h |   7 +-
+ include/net/xdp_priv.h                  |   2 +
+ net/core/xdp.c                          |  55 +++
+ 8 files changed, 656 insertions(+), 76 deletions(-)
+
 -- 
 2.17.1
 
