@@ -2,87 +2,106 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C519C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B30C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68612218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562162386;
-	bh=9jZQ+xkADDFcvlMkther+QWiQF9N7WPn19dHdCUcdJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q3VtMr3nIw1+MleE3POpVTmfGmtOuMe1iyFeWh8sy+1cBprBy61711RrMDuNiTVAJ
-	 v//QVdDRx4vCEyrkM/uOL8z3yaXzrOON7zwXcGiGr3wcqRfZO+RaVVPvrm0cLcGcyE
-	 mC4AqbutiJhPULgivWRFUT8du1YWAlAocgVWPPws=
+	by mail.kernel.org (Postfix) with ESMTP id E45D0218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ihp86dKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfGCN7p (ORCPT
+        id S1726994AbfGCOBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbfGCN7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:59:44 -0400
-Received: from localhost (84.sub-174-234-39.myvzw.com [174.234.39.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F41E218A4;
-        Wed,  3 Jul 2019 13:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562162383;
-        bh=9jZQ+xkADDFcvlMkther+QWiQF9N7WPn19dHdCUcdJQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vrOSy5n7+9jskmOih+YCm2qC0fiZpZUcrmgqI0SUk1XzVg5r8xd9SZ7WGFWNP8jk0
-         lTtiqUFV35QEFa+QYJ9vOJf3jUQrXQSDj8Xb+Yn2RODFehXFcct8+Yy0LdhyIzpKH2
-         19gu9RidHEYafUdvqQaslt+8Az+TYsWmWf5IQ8Sg=
-Date:   Wed, 3 Jul 2019 08:59:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Hao Zheng <yinhe@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, nanhai.zou@linux.alibaba.com,
-        quan.xu0@linux.alibaba.com, ashok.raj@intel.com,
-        keith.busch@intel.com, mike.campin@intel.com
-Subject: Re: [PATCH 0/2] PCI/IOV: Resolve regression in SR-IOV VF cfg_size
-Message-ID: <20190703135941.GL128603@google.com>
-References: <156046609596.29869.5839964168034189416.stgit@gimli.home>
+        Wed, 3 Jul 2019 10:01:04 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44667 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCOBE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:01:04 -0400
+Received: by mail-qk1-f193.google.com with SMTP id p144so2751980qke.11;
+        Wed, 03 Jul 2019 07:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pU+ulSQn+ZlhGldI6Scg4oHIBLfDs2QcuO3ZQ1cRwHY=;
+        b=Ihp86dKNA7MEEJHwjJvi6sNNYe4VASlt7jK8NWr/vk4IOoT+8oKo6jowwy0cc0wJOx
+         dpP4SmOcGyG22A364buKMVtSvKeyOKhX9PAbMZFC6yJW/Eay1fb6r3bFdoGMP0cjsM4u
+         ODtJdCD0sR/Sn3Zf1xm5JbXvMNMUozI81ZUvlJY+mDRm64MMCQJYATMBm2h76T2LI6Ib
+         j0R0UmKn6W4rtZQuHN08YhrG3q37U/v0wK76fVgpidbgYnxiu+0yGbCy4+hb5T0w3TEm
+         uN4A8NEDE3nkfFmwIIsyZq6aREPfxWq8u769pI2LuKI4UBtp6mU5sBEOPQLCGHO5dQCz
+         VVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pU+ulSQn+ZlhGldI6Scg4oHIBLfDs2QcuO3ZQ1cRwHY=;
+        b=RJhKRqWFVaLGLmTy3GR0+HVR47ZFlEIa31dISuiT0RMGiUuuFpvup6442RubRqagYI
+         hLO7Z5jXfFYNh7PHh9xCrjne8Uirld7LSJC0N6jG33uqC8Jozlpt06AM2RMT80iQVG2y
+         gANRX4DXA84cx7MVQZlZd/wcLvBeP18p2OikWArQwwqSL2uU/SM7iOI8i2RHmKAZF2kI
+         sJMlNPST0p5ucGR9FuJ+kpqAFVgtevXPX/1q7XN2Oen78fW349VrCu/TjrqGkjCHhKqp
+         s/MKi1RWyOU/bj2ynEdfF8uZ0kf1lIkPE7zdEDYRCXEsbGo7ZJMHGgK7OD40xAM2HsG+
+         BwpQ==
+X-Gm-Message-State: APjAAAV5qtYyP7LyDEvaZvcS5wuXIx0iSn3pNQUrG8ywfgbtpm0cIuTV
+        ZSStG0HJ0q6ZaSythpswH08=
+X-Google-Smtp-Source: APXvYqw69wTmSRidwjuI0ULggx0yzPo/UQ16JgPUj0BHwSZYN571l1o3ZGv9uNg8v/sZRZ4QHk9J/g==
+X-Received: by 2002:a37:8145:: with SMTP id c66mr29785590qkd.459.1562162463060;
+        Wed, 03 Jul 2019 07:01:03 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
+        by smtp.gmail.com with ESMTPSA id e8sm917213qkn.95.2019.07.03.07.01.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 07:01:02 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm/a6xx: add missing MODULE_FIRMWARE()
+Date:   Wed,  3 Jul 2019 07:00:35 -0700
+Message-Id: <20190703140055.26300-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156046609596.29869.5839964168034189416.stgit@gimli.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:56:57PM -0600, Alex Williamson wrote:
-> The commit reverted in the first patch introduced a regression where
-> only the first VF reports the correct config space size, subsequent VFs
-> report 256 bytes of config space.  Replace this in the second patch
-> with an assumption that all VFs support extended config space by virtue
-> of the SR-IOV spec requiring a PCIe capability and reachability of the
-> PF extended config space already being proven by the existence of the
-> VF.  Thanks,
-> 
-> Alex
-> 
-> ---
-> 
-> Alex Williamson (2):
->       Revert: PCI/IOV: Use VF0 cached config space size for other VFs
->       PCI/IOV: Assume SR-IOV VFs support extended config space.
+From: Rob Clark <robdclark@chromium.org>
 
-Applied to pci/virtualization for v5.3 with Kuppuswamy's reviewed-by on
-2/2, thanks!
+For platforms that require the "zap shader" to take the GPU out of
+secure mode at boot, we also need the zap fw to end up in the initrd.
 
->  drivers/pci/iov.c   |    2 --
->  drivers/pci/pci.h   |    1 -
->  drivers/pci/probe.c |   26 ++++++++++++--------------
->  3 files changed, 12 insertions(+), 17 deletions(-)
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index d9ac8c4cd866..aa64514afd5c 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -174,6 +174,10 @@ MODULE_FIRMWARE("qcom/a530_zap.b01");
+ MODULE_FIRMWARE("qcom/a530_zap.b02");
+ MODULE_FIRMWARE("qcom/a630_sqe.fw");
+ MODULE_FIRMWARE("qcom/a630_gmu.bin");
++MODULE_FIRMWARE("qcom/a630_zap.mdt");
++MODULE_FIRMWARE("qcom/a630_zap.b00");
++MODULE_FIRMWARE("qcom/a630_zap.b01");
++MODULE_FIRMWARE("qcom/a630_zap.b02");
+ 
+ static inline bool _rev_match(uint8_t entry, uint8_t id)
+ {
+-- 
+2.20.1
+
