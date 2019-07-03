@@ -2,249 +2,223 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29454C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D304EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E257A21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="EYgk3iUd"
+	by mail.kernel.org (Postfix) with ESMTP id AC5A2218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfGCQRI (ORCPT
+        id S1726805AbfGCQU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:17:08 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44044 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCQRI (ORCPT
+        Wed, 3 Jul 2019 12:20:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45707 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfGCQUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:17:08 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so2183834lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=T4K0lfJrZdB+WImHUfetaGJj7jF3V38fxGsDa1+dLU4=;
-        b=EYgk3iUdJLGiD3gmhVDxVz7h2NG6et1FHg0d9Vb6krYWD+qzuBsonvXhmZ3uk4LzbS
-         mBiEz1ciNf7VH2k7M1aga3L7jIAFJsjdtssyNmXYt8n2RPxPg5iXD4xzZRudbz88zHJj
-         d8KnTjlVFGHZjCDI/YOkj3bBccyrVB8zRv9/bl2sF5276v+kMJNPjuUZsaBfGXdm24Kc
-         1ikpvCfdhjwVljTeSjCVtiJlvGCEwfj4tIZyD+eg6T9BkaaVH6r4Gy7IEO4HMHihoisv
-         KOuFiki3T+5kvBHxubzMYcAh3PHajyhMhaUDuXAEDX7wSbH001I7PW5nfZ+n5uJ1ZysN
-         9XeA==
+        Wed, 3 Jul 2019 12:20:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so3485193wre.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:20:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=T4K0lfJrZdB+WImHUfetaGJj7jF3V38fxGsDa1+dLU4=;
-        b=tbPu44EOyldEOPdGRzo0CH9wiGsJYBE6M1QNPepIonD/HIXa8zMQvZckgeBCzMYScI
-         1dUJyL3mxFj2kGssEMYGWVV2URZmqjCOoVeh7/fuaDnmvYSLbYapxcN4tVABYtgXCkZi
-         FHjo8QeE+S3hiKrF+E104NvevNAaN5Qc3RrzjrmgG1JJtaQbLpyGfukspyB+9Pgna7ZF
-         qcvmLqpTuBO6WiLozHCxlpLiLH5MIPQjU04dhPzKwf2ML0eMBfseWzpvPd1olKqHTlME
-         T8+2RhSvtncRafBVUCupiMkvVANp6tqhhAw9okCeJuYax+Zm+vKsVFFp/J+nZjDKcu49
-         jI6g==
-X-Gm-Message-State: APjAAAWgmO+JY0cQMZC6XYHPYA5GVQPdnsIULr7EFlAbQFss5FNMwExs
-        SAge0GDXt+hM2FjUBxR/SUJEWg==
-X-Google-Smtp-Source: APXvYqwAla6eKOL5iV3D7gn6PeSwU+YMXFl3SiIcq6sEo7baJjlSYNndKZraMpG64D9qZw08l4l7eg==
-X-Received: by 2002:ac2:4152:: with SMTP id c18mr2759765lfi.144.1562170624734;
-        Wed, 03 Jul 2019 09:17:04 -0700 (PDT)
-Received: from localhost (customer-145-14-112-32.stosn.net. [145.14.112.32])
-        by smtp.gmail.com with ESMTPSA id u13sm457577lfc.5.2019.07.03.09.17.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 09:17:03 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 18:17:02 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-Message-ID: <20190703161702.GA26461@bigcity.dyn.berto.se>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
- <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
- <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
- <20190616184506.GD5006@pendragon.ideasonboard.com>
- <6e67ae76-6d37-cd70-c05f-1c6b6dd4af1a@linuxfoundation.org>
- <20190630114102.GB7043@pendragon.ideasonboard.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nQQIzDBT5ulmvCv1mGA/eYyAvfwknQmSWGz/saY1kAc=;
+        b=JOESdfCQoIoHRB2eTKfNV23yNInWM0Zb+vSLF31T+P+UtXhxdWByAfOsTIl41UBSeA
+         BkGeUWMNs3zae/g1oVY/nKDD08F/0Sad2liU2Fd9gPmPsQ2JltUshEqqnGySpPKH0IYb
+         SzfUG+DzvQh5OmICwuY4ibN/jx+MYw+DlS2o3xAC994U4xN2Y4Sa+9P0K8ruVhP0/Lhm
+         Uebqqur1Ses/h2jedBFm8VBv5fftETcvXR5a9PHf6tPN05vripWM85iKy/X1PgEUmO9r
+         /R5j5yUsBxlrh5esgKFr698S4vg9NKKD0OKlqWW3ORV0HIOkZd72NKoWV3TmcQyj/myw
+         1lXg==
+X-Gm-Message-State: APjAAAWSbsl3KwNV0jqweO6yLqJ852ot/6qZgsB7uJWXUUcySi6edlJD
+        leAm65jNZB3lskzonGbpKNDrB4RpJgB/1g==
+X-Google-Smtp-Source: APXvYqyqSE6CiCMaA3tE51IMPrW8jI0NMG5fLN7BNkcYFfVOQTNzchZ43TBtON7ulLvYVDu5oG/5iA==
+X-Received: by 2002:a5d:4681:: with SMTP id u1mr29031344wrq.102.1562170822816;
+        Wed, 03 Jul 2019 09:20:22 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:6c1d:63cc:b81d:e1a9? ([2001:b07:6468:f312:6c1d:63cc:b81d:e1a9])
+        by smtp.gmail.com with ESMTPSA id y24sm2136601wmi.10.2019.07.03.09.20.21
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 09:20:22 -0700 (PDT)
+Subject: Re: [PATCH v4 0/5] x86 instruction emulator fuzzing
+To:     Alexander Graf <graf@amazon.com>, Sam Caccavale <samcacc@amazon.de>
+Cc:     samcaccavale@gmail.com, nmanthey@amazon.de, wipawel@amazon.de,
+        dwmw@amazon.co.uk, mpohlack@amazon.de, karahmed@amazon.de,
+        andrew.cooper3@citrix.com, JBeulich@suse.com, rkrcmar@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        paullangton4@gmail.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190628092621.17823-1-samcacc@amazon.de>
+ <caaeb546-9aa1-7fd5-496d-a0ec1f759d10@amazon.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <537c4950-8b22-c28f-c248-504f8396dd5a@redhat.com>
+Date:   Wed, 3 Jul 2019 18:20:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <caaeb546-9aa1-7fd5-496d-a0ec1f759d10@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190630114102.GB7043@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shauah, Laurent,
+On 28/06/19 11:33, Alexander Graf wrote:
+> 
+> 
+> On 28.06.19 11:26, Sam Caccavale wrote:
+>> Dear all,
+>>
+>> This series aims to provide an entrypoint for, and fuzz KVM's x86
+>> instruction
+>> emulator from userspace.  It mirrors Xen's application of the AFL
+>> fuzzer to
+>> it's instruction emulator in the hopes of discovering vulnerabilities.
+>> Since this entrypoint also allows arbitrary execution of the emulators
+>> code
+>> from userspace, it may also be useful for testing.
+>>
+>> The current 4 patches build the emulator and 2 harnesses:
+>> simple-harness is
+>> an example of unit testing; afl-harness is a frontend for the AFL fuzzer.
+>> The fifth patch contains useful scripts for development but is not
+>> intended
+>> for usptream consumption.
+>>
+>> Patches
+>> =======
+>>
+>> - 01: Builds and links afl-harness with the required kernel objects.
+>> - 02: Introduces the minimal set of emulator operations and supporting
+>> code
+>> to emulate simple instructions.
+>> - 03: Demonstrates simple-harness as a unit test.
+>> - 04: Adds scripts for install and building.
+>> - 05: Useful scripts for development
+>>
+>>
+>> Issues
+>> =======
+>>
+>> Currently, fuzzing results in a large amount of FPU related crashes. 
+>> Xen's
+>> fuzzing efforts had this issue too.  Their (temporary?) solution was to
+>> disable FPU exceptions after every instruction iteration?  Some solution
+>> is desired for this project.
+>>
+>>
+>> Changelog
+>> =======
+>>
+>> v1 -> v2:
+>>   - Moved -O0 to ifdef DEBUG
+>>   - Building with ASAN by default
+>>   - Removed a number of macros from emulator_ops.c and moved them as
+>>     static inline functions in emulator_ops.h
+>>   - Accidentally changed the example in simple-harness (reverted in v3)
+>>   - Introduced patch 4 for scripts
+>>
+>> v2 -> v3:
+>>   - Removed a workaround for printf smashing the stack when compiled
+>>     with -mcmodel=kernel, and stopped compiling with -mcmodel=kernel
+>>   - Added a null check for malloc's return value
+>>   - Moved more macros from emulator_ops.c into emulator_ops.h as
+>>     static inline functions
+>>   - Removed commented out code
+>>   - Moved changes to emulator_ops.h into the first patch
+>>   - Moved addition of afl-many script to the script patch
+>>   - Fixed spelling mistakes in documentation
+>>   - Reverted the simple-harness example back to the more useful
+>> original one
+>>   - Moved non-essential development scripts from patch 4 to new patch 5
+>>
+>> v3 -> v4:
+>>   - Stubbed out all unimplemented emulator_ops with a unimplemented_op
+>> macro
+>>   - Setting FAIL_ON_UNIMPLEMENTED_OP on compile decides whether
+>> calling these
+>>     is treated as a crash or ignored
+>>   - Moved setting up core dumps out of the default build/install path and
+>>     detailed this change in the README
+>>   - Added a .sh extention to afl-many
+>>   - Added an optional timeout to afl-many.sh and made deploy_remote.sh
+>> use it
+>>   - Building no longer creates a new .config each time and does not
+>> force any
+>>     config options
+>>   - Fixed a path bug in afl-many.sh
+>>
+>> Any comments/suggestions are greatly appreciated.
+>>
+>> Best,
+>> Sam Caccavale
+>>
+>> Sam Caccavale (5):
+>>    Build target for emulate.o as a userspace binary
+>>    Emulate simple x86 instructions in userspace
+>>    Demonstrating unit testing via simple-harness
+>>    Added build and install scripts
+>>    Development scripts for crash triage and deploy
+>>
+>>   tools/Makefile                                |   9 +
+>>   tools/fuzz/x86ie/.gitignore                   |   2 +
+>>   tools/fuzz/x86ie/Makefile                     |  54 ++
+>>   tools/fuzz/x86ie/README.md                    |  21 +
+>>   tools/fuzz/x86ie/afl-harness.c                | 151 +++++
+>>   tools/fuzz/x86ie/common.h                     |  87 +++
+>>   tools/fuzz/x86ie/emulator_ops.c               | 590 ++++++++++++++++++
+>>   tools/fuzz/x86ie/emulator_ops.h               | 134 ++++
+>>   tools/fuzz/x86ie/scripts/afl-many.sh          |  31 +
+>>   tools/fuzz/x86ie/scripts/bin.sh               |  49 ++
+>>   tools/fuzz/x86ie/scripts/build.sh             |  34 +
+>>   tools/fuzz/x86ie/scripts/coalesce.sh          |   5 +
+>>   tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
+>>   tools/fuzz/x86ie/scripts/deploy_remote.sh     |  10 +
+>>   tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
+>>   tools/fuzz/x86ie/scripts/install_afl.sh       |  15 +
+>>   .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
+>>   tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
+>>   tools/fuzz/x86ie/scripts/run.sh               |  10 +
+>>   tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
+>>   tools/fuzz/x86ie/simple-harness.c             |  49 ++
+>>   tools/fuzz/x86ie/stubs.c                      |  59 ++
+>>   tools/fuzz/x86ie/stubs.h                      |  52 ++
+> 
+> Sorry I didn't realize it before. Isn't that missing a patch to the
+> MAINTAINERS file?
 
-On 2019-06-30 14:41:02 +0300, Laurent Pinchart wrote:
-> Hi Shuah,
-> 
-> On Fri, Jun 28, 2019 at 10:41:07AM -0600, Shuah Khan wrote:
-> > On 6/16/19 12:45 PM, Laurent Pinchart wrote:
-> > > On Fri, Jun 14, 2019 at 05:26:46PM -0600, Shuah Khan wrote:
-> > >> On 6/13/19 7:24 AM, Helen Koike wrote:
-> > >>> On 6/13/19 2:44 AM, Hans Verkuil wrote:
-> > >>>> On 5/24/19 5:31 AM, Shuah Khan wrote:
-> > >>>>> media_device is embedded in struct vimc_device and when vimc is removed
-> > >>>>> vimc_device and the embedded media_device goes with it, while the active
-> > >>>>> stream and vimc_capture continue to access it.
-> > >>>>>
-> > >>>>> Fix the media_device lifetime problem by changing vimc to create shared
-> > >>>>> media_device using Media Device Allocator API and vimc_capture getting
-> > >>>>> a reference to vimc module. With this change, vimc module can be removed
-> > >>>>> only when the references are gone. vimc can be removed after vimc_capture
-> > >>>>> is removed.
-> > >>>>>
-> > >>>>> Media Device Allocator API supports just USB devices. Enhance it
-> > >>>>> adding a genetic device allocate interface to support other media
-> > >>>>> drivers.
-> > >>>>>
-> > >>>>> The new interface takes pointer to struct device instead and creates
-> > >>>>> media device. This interface allows a group of drivers that have a
-> > >>>>> common root device to share media device resource and ensure media
-> > >>>>> device doesn't get deleted as long as one of the drivers holds its
-> > >>>>> reference.
-> > >>>>>
-> > >>>>> The new interface has been tested with vimc component driver to fix
-> > >>>>> panics when vimc module is removed while streaming is in progress.
-> > >>>>
-> > >>>> Helen, can you review this series? I'm not sure this is the right approach
-> > >>>> for a driver like vimc, and even if it is, then it is odd that vimc-capture
-> > >>>> is the only vimc module that's handled here.
-> > >>>
-> > >>> Hi Hans,
-> > >>>
-> > >>> Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
-> > >>> try to take a look at this patch series (and the others) asap.
-> > >>>
-> > >>> Helen
-> > >>>
-> > >>>> My gut feeling is that this should be handled inside vimc directly and not
-> > >>>> using the media-dev-allocator.
-> > >>
-> > >> Hi Hans and Helen,
-> > >>
-> > >> I explored fixing the problem within vimc before I went down the path to
-> > >> use Media Device Allocator API. I do think that it is cleaner to go this
-> > >> way and easier to maintain.
-> > >>
-> > >> vimc is a group pf component drivers that rely on the media device vimc
-> > >> in vimc and falls into the use-case Media Device Allocator API is added
-> > >> to address. The release and life-time management happens without vimc
-> > >> component drivers being changed other than using the API to get and put
-> > >> media device reference.
-> > > 
-> > > Our replies crossed each other, please see my reply to Hans. I would
-> > > just like to comment here that if having multiple kernel modules causes
-> > > issue, they can all be merged together. There's no need for vimc to be
-> > > handled through multiple modules (I actually think it's quite
-> > > counterproductive, it only makes it more complex, for no added value).
-> > 
-> > There are several problems in this group of drivers as far as lifetime
-> > management is concerned. I explained some of it in the patch 2/2
-> > 
-> > If vimc module is removed while streaming is active, vimc_exit runs
-> > into NULL pointer dereference error when streaming thread tries to
-> > access and lock graph_mutex in the struct media_device.
-> > 
-> > The primary reason for this is that:
-> > 
-> > media_device is embedded in struct vimc_device and when vimc is removed
-> > vimc_device and the embedded media_device goes with it, while the active
-> > stream and vimc_capture continue to access it.
-> 
-> The issue isn't so much that media_devic is embedded in vimc_device, but
-> that vimc_device is released too early. Not only does the thread need to
-> access the graph_mutex lock in the media_device structure, but it can
-> potentially access fields of the device-specific structures as well. The
-> proper solution is to propagate media_device_release() one level up, in
-> order to only release the top-level structure containing media_device
-> when the last reference to the media_device is dropped.
+Yeah, and the directory should probably be tools/fuzz/kvm_emulate so as
+not to puzzle people.  Also:
 
-I have seen similar problems with rcar-vin, the device specific data is 
-released to early. In my case it was not triggered by the struct
-media_device but with a struct v4l2_device embedded in the device 
-specific data IIRC.
+- let's limit the scripts to the minimum, i.e. only the run script which
+should be something like
 
-This was when I tried to address the lifetime issues of the video device 
-when binding/unbinding the device to the driver and not when unloading 
-the module. This was quiet a while ago so I don't recall specifics, 
-sorry about that. One finding was that there are also unsolved problems 
-when it comes async notifiers and unloading/unbinding and then 
-loading/binding subdevices as well as the driver controlling the video 
-device. It was such a mess I gave up.
+#!/bin/bash
+# SPDX-License-Identifier: GPL-2.0+
 
-I'm happy to see activity in this area but I fear it might need work on 
-a higher level and not trying to work around the problem in drivers.
+FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}"
 
-> 
-> > If we chose to keep these drivers as component drivers, media device
-> > needs to stick around until all components stop using it. This is tricky
-> > because there is no tie between these set of drivers. vimc module can
-> > be deleted while others are still active. As vimc gets removed, other
-> > component drivers start wanting to access the media device tree.
-> 
-> Reference-counting is the key.
-> 
-> > This is classic media device lifetime problem which could be solved
-> > easily with the way I solved it with this series. I saw this as a
-> > variation on the same use-case we had with sound and media drivers
-> > sharing the media device.
-> 
-> This isn't about solving it easily, it's about solving it properly. The
-> media device allocator as used here is a hack and takes us in the
-> opposite direction of a proper fix.
-> 
-> > I have a TODO request from you asking to extend Media Device Allocator
-> > API to generic case and not restrict it to USB devices. My thinking is
-> > that this gives a perfect test case to extend the API to be generic
-> > and use to solve this problem.
-> 
-> The biggest issue at the moment with the media device allocator, which I
-> have pointed out numerous times and has never been addressed (and which
-> explains why I didn't think the code was ready to be merged) is that the
-> media_device contains operations that are based on having a single
-> driver controlling the media device. A proper shared media device
-> allocator needs to drop the concept of a single master for the media
-> device, and thus needs to refactor those operations to allow any user of
-> the media device to implement them (the .link_notify() operation is a
-> prime example, and the recently added request operations will make this
-> even more challenging - think of how this patch series would prevent
-> vimc from properly implementing the request API). As long as these issue
-> are not fixed I will be firmly opposed to spreading the usage of the
-> media device allocator beyond what exists today.
-> 
-> > Collapsing the drivers into one might be lot more difficult and complex
-> > than solving this problem with Media Device Allocator API. This approach
-> > has an added benefit of extending the API to be generic and not just for
-> > USB.
-> 
-> I've never disputed the fact that fixing a problem correctly is usually
-> more work than hacking around it :-)
-> 
-> > I looked at this as a good way to add generic API and have a great test
-> > case for it. This patch series fixes the problem for the current vimc
-> > architecture.
-> 
-> NAK, for the reasons above. Please drop this series and fix the problem
-> properly.
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+mkdir -p $FUZZDIR/in
+cp tools/fuzz/kvm_emulate/rand_sample.bin $FUZZDIR/in
+mkdir -p $FUZZDIR/out
 
--- 
-Regards,
-Niklas S�derlund
+${TIMEOUT:+TIMEOUT=$TIMEOUT} ${AFL_FUZZ-afl-fuzz} "$@" \
+  -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/kvm_emulate/afl-harness @@
+
+where people can substitute afl-many.sh or add their own options using
+the AFL_FUZZ variable or the command line.  Likewise for screen.
+
+- the build should be just "make -C tools/fuzz/kvm_emulate" and it
+should just work.  Feel free to steal the Makefile magic from other
+tools/ directories.
+
+- finally, rand_sample.bin is missing.
+
+Otherwise, it looks very nice.
+
+Paolo
