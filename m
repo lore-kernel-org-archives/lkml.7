@@ -2,75 +2,71 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0BBC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF150C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB80218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE5E218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zj7UGvBL"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="a5734zHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfGCMsj (ORCPT
+        id S1727005AbfGCMsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:48:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38585 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbfGCMrb (ORCPT
+        Wed, 3 Jul 2019 08:48:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43394 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfGCMra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:47:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so2254366wmj.3;
-        Wed, 03 Jul 2019 05:47:30 -0700 (PDT)
+        Wed, 3 Jul 2019 08:47:30 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i189so1223970pfg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=34BvfGgISONnsOeh6LA1EfvEoJF1pB0OtD1tUFoABIY=;
-        b=Zj7UGvBLfC6yTB5Gy9eKUFK4/FokpCeq4rsKDYgRDe54B8HOHzYIyxJ64uFiDQbtGe
-         dcymEX/OZ6UxckhsV0b+crR0nUn36wTE+Nv796dA6bjUx2vZ6sYWv8tDd1jR20vjkc/E
-         axfrDwffhX5EBlB97SlhsrG4ZiFWR5FA+HDb393ZrxDa6RifAc/eJepqKP/wXmu2vzgs
-         OYgSsKz6+0lKebUAHeQcH2lQ9xxZeLqJyHXk8w83aKszArAwC3b5GMCLtI4/PhKVlzi0
-         f7Z/iIPiIQgFkOYfQBg30MfEHsl2FgLmGofNPispLjwALIn7vwiuMtfBGPfrc7lxhjN7
-         TtWA==
+        bh=d39jawQh6+62cnY4m12rmC1EPMGDbmQWWBnLkZPmXLY=;
+        b=a5734zHiEU/lTvrnSVpsUaOSLmjFS9gQNXXeq/rUaYZnnThD+iUIqg8qTqYjDl2slo
+         BC79selRwI5ywMFEm4nO4u+iZDlmsAVGKCGhvP+JLpl0mMxixg6FwDf2ckSZhFTYa81G
+         YqyR9LiZ1OsZ0bF4kC4TEMqbP+VuXvZXze/Z4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=34BvfGgISONnsOeh6LA1EfvEoJF1pB0OtD1tUFoABIY=;
-        b=aV3Ju7Ci0hz7Dkds9DMSpbYU8QlriyHGTIJ5dB1NLbK/HfVkA2LW5SGrtbIe8nhly1
-         ITTYuDK1O2Rq6AfCAADVg3e29ehOMxkZQj9ctM4zwEHPtD8prVbAeItxz3aNdy+IRm1Y
-         Sx6So0yAt6iofofJRPD6sSghXy7839nsXhqLviik74MMMAeoaaFSQ2UYdsXzseTaCOYf
-         0JgJSFCIgwSg8QaVE5WlgTZosxo8bQx2QVGM70wjs8aZdf/3gikehLGfOvTQJbUv6Cwl
-         JG3gBV2T5OtUSZCvcH+DCVn5wmhJHql/ysBocZJHXrg3nunBmR6841+nsS7QbEuORfkg
-         esrw==
-X-Gm-Message-State: APjAAAWqgyjhMIeH0NDCTK+crisDSBht2bF4RGSbY1P6Bh8ZX3HkF7zm
-        /ZmjU+7bvwSuxubmBEnkEQfq+VUJWpM=
-X-Google-Smtp-Source: APXvYqwY7iiZHXXifbUaGvDuBuT5SumvNPFuqW5mfuxQMgeVm6A6avgkZV86OlBxMZJEk3yqS5+mew==
-X-Received: by 2002:a7b:cd9a:: with SMTP id y26mr8435877wmj.44.1562158049430;
-        Wed, 03 Jul 2019 05:47:29 -0700 (PDT)
-Received: from heron.blarg.de (p200300DC6F443A000000000000000FD2.dip0.t-ipconnect.de. [2003:dc:6f44:3a00::fd2])
-        by smtp.gmail.com with ESMTPSA id o24sm5480588wmh.2.2019.07.03.05.47.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=d39jawQh6+62cnY4m12rmC1EPMGDbmQWWBnLkZPmXLY=;
+        b=n0OtitAIjuIQ98dkC2a7Aifo0buuiozDp/oz4Q/UFwxYmaUXe0TMIX9dY9qR/TkFpM
+         q0BnXLtFBTQsEI9FwEhBGvJwzFXmF58AbbnVuTGuotf5AS7HuCJRU1533ix097tJoTvn
+         iRHZZ8+LtQoa7OIGEUsZi7JqTthEiQm2Hb7BAxWoKJ5Lr7+hJLBhJsCj2sla1Qeb7JRc
+         +7Y3SR9BvgNceAxyKJxHqaHkmYw3epIr/6aewqsU3l8m3AuNTu/CINb3UwyLixZWjTt1
+         uidK3NieIcHWoMnV9uRAYcG8Av9lz5UUGQP2WVvOp4dTqWGlnYHkG3etNQGXI8+ZebnK
+         c/JA==
+X-Gm-Message-State: APjAAAUtb2ENH3t0KOwWgIiLFQtMGFp2MZC1ND/yI0Xphc+edED6VAub
+        gE2vmVzDQGJX1GIi0iNm5iQ0mQ==
+X-Google-Smtp-Source: APXvYqz+550jwQaiTupsHLO+w5gFfcH3Zzc5cL6f7rGQ+EHjHPs1FoigFCMJ5G9SN8Bte/bbybJS8Q==
+X-Received: by 2002:a63:490a:: with SMTP id w10mr36328365pga.6.1562158048673;
         Wed, 03 Jul 2019 05:47:28 -0700 (PDT)
-From:   Max Kellermann <max.kellermann@gmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com, bfields@redhat.com,
-        gregkh@linuxfoundation.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, hughd@google.com,
-        anna.schumaker@netapp.com
-Cc:     linux-kernel@vger.kernel.org,
-        Max Kellermann <max.kellermann@gmail.com>
-Subject: [PATCH 3/4] linux/fs.h: fix umask on NFS with CONFIG_FS_POSIX_ACL=n
-Date:   Wed,  3 Jul 2019 14:47:14 +0200
-Message-Id: <20190703124715.4319-3-max.kellermann@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703124715.4319-1-max.kellermann@gmail.com>
-References: <20190703124715.4319-1-max.kellermann@gmail.com>
+Received: from localhost.localdomain ([183.82.231.32])
+        by smtp.gmail.com with ESMTPSA id q1sm3735890pfn.178.2019.07.03.05.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 05:47:28 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 13/25] ARM: dts: sun8i: Switch A33 dts(i) to use SPDX identifier
+Date:   Wed,  3 Jul 2019 18:15:57 +0530
+Message-Id: <20190703124609.21435-14-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190703124609.21435-1-jagan@amarulasolutions.com>
+References: <20190703124609.21435-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,72 +74,427 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make IS_POSIXACL() return false if POSIX ACL support is disabled and
-ignore SB_POSIXACL/MS_POSIXACL.
+Adopt the SPDX license identifier headers to ease license
+compliance management on Allwinner A33 dts(i) files.
 
-Never skip applying the umask in namei.c and never bother to do any
-ACL specific checks if the filesystem falsely indicates it has ACLs
-enabled when the feature is completely disabled in the kernel.
+While the text specifies "of the GPL or the X11 license"
+but the actual license text matches the MIT license as
+specified at [0]
 
-This fixes a problem where the umask is always ignored in the NFS
-client when compiled without CONFIG_FS_POSIX_ACL.  This is a 4 year
-old regression caused by commit 013cdf1088d723 which itself was not
-completely wrong, but failed to consider all the side effects by
-misdesigned VFS code.
+[0] https://spdx.org/licenses/MIT.html
 
-Prior to that commit, there were two places where the umask could be
-applied, for example when creating a directory:
-
- 1. in the VFS layer in SYSCALL_DEFINE3(mkdirat), but only if
-    !IS_POSIXACL()
-
- 2. again (unconditionally) in nfs3_proc_mkdir()
-
-The first one does not apply, because even without
-CONFIG_FS_POSIX_ACL, the NFS client sets MS_POSIXACL in
-nfs_fill_super().
-
-After that commit, (2.) was replaced by:
-
- 2b. in posix_acl_create(), called by nfs3_proc_mkdir()
-
-There's one branch in posix_acl_create() which applies the umask;
-however, without CONFIG_FS_POSIX_ACL, posix_acl_create() is an empty
-dummy function which does not apply the umask.
-
-The approach chosen by this patch is to make IS_POSIXACL() always
-return false when POSIX ACL support is disabled, so the umask always
-gets applied by the VFS layer.  This is consistent with the (regular)
-behavior of posix_acl_create(): that function returns early if
-IS_POSIXACL() is false, before applying the umask.
-
-Therefore, posix_acl_create() is responsible for applying the umask if
-there is ACL support enabled in the file system (SB_POSIXACL), and the
-VFS layer is responsible for all other cases (no SB_POSIXACL or no
-CONFIG_FS_POSIX_ACL).
-
-Signed-off-by: Max Kellermann <max.kellermann@gmail.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- include/linux/fs.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts    | 39 +------------------
+ .../arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 39 +------------------
+ arch/arm/boot/dts/sun8i-a33-olinuxino.dts     | 39 +------------------
+ arch/arm/boot/dts/sun8i-a33-q8-tablet.dts     | 39 +------------------
+ .../arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 39 +------------------
+ arch/arm/boot/dts/sun8i-a33.dtsi              | 39 +------------------
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  | 39 +------------------
+ arch/arm/boot/dts/sun8i-r16-parrot.dts        | 39 +------------------
+ 8 files changed, 8 insertions(+), 304 deletions(-)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd28e7679089..299acdaaab56 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1985,7 +1985,12 @@ static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags
- #define IS_NOQUOTA(inode)	((inode)->i_flags & S_NOQUOTA)
- #define IS_APPEND(inode)	((inode)->i_flags & S_APPEND)
- #define IS_IMMUTABLE(inode)	((inode)->i_flags & S_IMMUTABLE)
-+
-+#ifdef CONFIG_FS_POSIX_ACL
- #define IS_POSIXACL(inode)	__IS_FLG(inode, SB_POSIXACL)
-+#else
-+#define IS_POSIXACL(inode)	0
-+#endif
+diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+index 2dfdd0a3151e..434ff35fdd7a 100644
+--- a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
++++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+@@ -1,43 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
- #define IS_DEADDIR(inode)	((inode)->i_flags & S_DEAD)
- #define IS_NOCMTIME(inode)	((inode)->i_flags & S_NOCMTIME)
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+index 317763069c0a..6b6c0d326bcc 100644
+--- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
++++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+@@ -1,44 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+  * Copyright 2016 Icenowy Zheng <icenowy@aosc.xyz>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
+index 3d78169cdeed..fc5129cf90df 100644
+--- a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
++++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
+@@ -1,44 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev@gmail.com>
+  *                  Olimex LTD. <support@olimex.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+index 9c5750c25613..3b35a2522354 100644
+--- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
++++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+@@ -1,43 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+index 785798e3a104..28d91b0d3926 100644
+--- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
++++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2015 Chen-Yu Tsai
+  *
+  * Chen-Yu Tsai <wens@csie.org>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index 1532a0e59af4..9a1ce16b9f92 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2014 Chen-Yu Tsai
+  *
+  * Chen-Yu Tsai <wens@csie.org>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ #include "sun8i-a23-a33.dtsi"
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index e1c75f7fa3ca..6ff81acff5cb 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -1,43 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright (c) 2017 Free Electrons <maxime.ripard@free-electrons.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-r16-parrot.dts b/arch/arm/boot/dts/sun8i-r16-parrot.dts
+index 4f48eec6b2ef..6901158f4f53 100644
+--- a/arch/arm/boot/dts/sun8i-r16-parrot.dts
++++ b/arch/arm/boot/dts/sun8i-r16-parrot.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2016 Quentin Schulz
+  *
+  * Quentin Schulz <quentin.schulz@free-electrons.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
 -- 
-2.20.1
+2.18.0.321.gffc6fa0e3
 
