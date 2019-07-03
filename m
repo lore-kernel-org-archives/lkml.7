@@ -1,106 +1,174 @@
 Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DB6C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084A5C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5F2218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562185893;
-	bh=8rZJjhlUf/qMBdRLPI5prMW5R8RsnoeRcyV06al/QNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JcR+RpyWlSw4yAfCSO2WaoYIsQAvhAmf3bBElcs0/uYEIk4FVYr10K2ecULeEHpmZ
-	 Rk9O4ud6akzd9aUJLV8GeettZ9b9M50fC/K2DfWNB9lPeuM08YOUIbXcSvSp+YGfLF
-	 1X0Ds/Pu/mQB2hSG8yIQ4wM4iuyX1Hi+KHL8bAu4=
+	by mail.kernel.org (Postfix) with ESMTP id D36CB218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i/PDO53Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfGCUbc (ORCPT
+        id S1727205AbfGCUcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbfGCUbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:31:32 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E92C1218A0;
-        Wed,  3 Jul 2019 20:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562185891;
-        bh=8rZJjhlUf/qMBdRLPI5prMW5R8RsnoeRcyV06al/QNE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=igHZO/XeFH2AYZ1UZL9Hr/0DlCMrJobgPYTmblwWmLYpJhrE0ThCPKavzhp8UODlC
-         dltKVf6ekIyFcekgpsHgb2EKKhfzm/UKUp8JEeh9zMBZsnYyG+EmijpcD1zhcqkJ9c
-         lsy2bCVVV3XzCoQn+FNDlTDjcguJ5uJAMU1QUF9c=
-Date:   Wed, 3 Jul 2019 13:31:29 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, chetjain@in.ibm.com,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH] crypto: user - prevent operating on larval algorithms
-Message-ID: <20190703203128.GC10080@gmail.com>
-References: <20190701153154.1569c2dc@kitsune.suse.cz>
- <20190702211700.16526-1-ebiggers@kernel.org>
- <20190703143057.miqgc7blhjjxjmee@gondor.apana.org.au>
- <20190703222108.467ec204@kitsune.suse.cz>
+        Wed, 3 Jul 2019 16:32:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42406 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCUcH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:32:07 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so1820237plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l7QTIU39WbGgNxpqHk/rQWXH658WW2+nXc1D+IbTyqQ=;
+        b=i/PDO53YknvDxsmpUlY5WMTP6lFmxNQVpr7dbtzg14LI26sjTul+WHfmpQsVZ8uvh5
+         /B06lochxNQ3zGnLgAwXjyCwVErxqc1b8yyZhJMbnm4t/g4Ehe/YGRp4Hrx+O27HVkaS
+         ds6E+hxYF4SQl6TxYO1J3pbD9wwwBSsKEOgDw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l7QTIU39WbGgNxpqHk/rQWXH658WW2+nXc1D+IbTyqQ=;
+        b=aRwm5yWiFSTI+pGatBMCdbwKW4S46Fw7tzLPLPatwg3FdUMSRkxXqnmkykwjpoHh80
+         WVn1JpnfbVDbcfqX2B7Q9GMr4dWq+LL1DZAXbLlvcpO933bUDdHUNPhmuUTjxhe7D9kB
+         QUIE02PWKMCcPxy9QlB6tPkOGtRQyJNlpZLcksPWmFdek3HdLIBkZOtruuuafY57QFz/
+         g76CFXBYvhjLBzX/8AasaE9p7vtl2rk7pDxpN8xB2+Nbm9SMgJ0xIZlMLAhvT4S4UxHx
+         xhW+RjcUoQD6Ki1OoLIieiZZ1+Z6WyLCzn8mQzRYzCCMbn+vkmdBx8UorOB79ZttKh6s
+         Gycg==
+X-Gm-Message-State: APjAAAU2c9KPIxxNZoSfix4yvMgr9UWBV/4SjpiGSB7kU9oYfL0ZXFFf
+        niqYGhbjlvkDs9PPz07fxvotqA==
+X-Google-Smtp-Source: APXvYqzAEp++YNnisvcoj6zq4UQd893GB9VfCRudl4/qLynhPsEDXlNKQDyXPS6cxdQnfiExwmtHHg==
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr43964560pla.89.1562185926577;
+        Wed, 03 Jul 2019 13:32:06 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id g6sm2824380pgh.64.2019.07.03.13.32.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 13:32:06 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 13:32:04 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/7] net: phy: realtek: Allow disabling RTL8211E EEE
+ LED mode
+Message-ID: <20190703203204.GE250418@google.com>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-2-mka@chromium.org>
+ <743dda1b-532d-175f-1f87-5d80ba4a2e94@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190703222108.467ec204@kitsune.suse.cz>
+In-Reply-To: <743dda1b-532d-175f-1f87-5d80ba4a2e94@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+Hi,
 
-On Wed, Jul 03, 2019 at 10:21:08PM +0200, Michal Suchánek wrote:
-> On Wed, 3 Jul 2019 22:30:57 +0800
-> Herbert Xu <herbert@gondor.apana.org.au> wrote:
+On Wed, Jul 03, 2019 at 10:09:39PM +0200, Heiner Kallweit wrote:
+> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
+> > EEE LED mode is enabled by default on the RTL8211E. Disable it when
+> > the device tree property 'realtek,eee-led-mode-disable' exists.
+> > 
+> > The magic values to disable EEE LED mode were taken from the RTL8211E
+> > datasheet, unfortunately they are not further documented.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v2:
+> > - patch added to the series
+> > ---
+> >  drivers/net/phy/realtek.c | 37 ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 36 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> > index a669945eb829..eb815cbe1e72 100644
+> > --- a/drivers/net/phy/realtek.c
+> > +++ b/drivers/net/phy/realtek.c
+> > @@ -9,8 +9,9 @@
+> >   * Copyright (c) 2004 Freescale Semiconductor, Inc.
+> >   */
+> >  #include <linux/bitops.h>
+> > -#include <linux/phy.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy.h>
+> >  
+> >  #define RTL821x_PHYSR				0x11
+> >  #define RTL821x_PHYSR_DUPLEX			BIT(13)
+> > @@ -26,6 +27,10 @@
+> >  #define RTL821x_EXT_PAGE_SELECT			0x1e
+> >  #define RTL821x_PAGE_SELECT			0x1f
+> >  
+> > +/* RTL8211E page 5 */
+> > +#define RTL8211E_EEE_LED_MODE1			0x05
+> > +#define RTL8211E_EEE_LED_MODE2			0x06
+> > +
+> >  #define RTL8211F_INSR				0x1d
+> >  
+> >  #define RTL8211F_TX_DELAY			BIT(8)
+> > @@ -53,6 +58,35 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+> >  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+> >  }
+> >  
+> > +static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
+> > +{
 > 
-> > On Tue, Jul 02, 2019 at 02:17:00PM -0700, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > Michal Suchanek reported [1] that running the pcrypt_aead01 test from
-> > > LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
-> > > alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
-> > > The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
-> > > 
-> > > The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
-> > > unregister isn't a real registered algorithm, but rather is a "test
-> > > larval", which is a special "algorithm" added to the algorithms list
-> > > while the real algorithm is still being tested.  Larvals don't have
-> > > initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
-> > > doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
-> > > to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
-> > > 
+> You define return type int but AFAICS the return value is never used,
+> also in subsequent patches.
+
+ok, I'll change it to void
+
+> > +	int ret = 0;
+> > +	int oldpage;
+> > +
+> > +	oldpage = phy_select_page(phydev, 5);
+> > +	if (oldpage < 0)
+> > +		goto out;
+> > +
+> > +	/* write magic values to disable EEE LED mode */
+> > +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	ret = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
+> > +
+> > +out:
+> > +	return phy_restore_page(phydev, oldpage, ret);
+> > +}
+> > +
+> > +static int rtl8211e_config_init(struct phy_device *phydev)
+> > +{
+> > +	struct device *dev = &phydev->mdio.dev;
+> > +
+> > +	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
+> > +		rtl8211e_disable_eee_led_mode(phydev);
+> > +
+> > +	return 0;
+> > +}
 > 
-> Do you have some way to reproduce this reliably?
-> 
-> I suppose you would have to send a signal to the process for the call
-> to get interrupted, right?
-> 
+> I suppose checkpatch complains about the missing empty line.
+> You add it in a later patch, in case of a v3 you could fix that.
 
-It reproduced pretty reliably for me with what you suggested.  Just typing in
-terminal:
+Actually checkpatch does not complain, I'll fix it in v3.
 
-	while true; do pcrypt_aead01; done
+Thanks
 
-and then holding Ctrl-C.
-
-If I have time I'll try writing an LTP test that specifically reproduces it.
-Yes, it would involve sending a signal to a thread or process that's executing
-CRYPTO_MSG_NEWALG (unless I find a better way).
-
-- Eric
+Matthias
