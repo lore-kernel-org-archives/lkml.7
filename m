@@ -2,113 +2,147 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB6CC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A58C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EE4218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04243218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SuR+z0zE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SqQC20u2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfGCQdE (ORCPT
+        id S1727351AbfGCQdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:33:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46816 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfGCQdD (ORCPT
+        Wed, 3 Jul 2019 12:33:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40513 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfGCQdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:33:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e5so1508247pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:33:03 -0700 (PDT)
+        Wed, 3 Jul 2019 12:33:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so3535939wre.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U7KSbZIhaI28wnIT5bzgBGt1Q6Og12wRpCuvNg/mCho=;
-        b=SuR+z0zEL42DlQqsaZg4I77ZHO23CdkuuS0IYMLMM5r1xCGUmMXrQGfULOJS0e3C5x
-         LL1OFtttNT+fGHqqnAhYDpGJ1nriG+ZdxgKfYIXHSQCz5kh2VGtkWgYdECgRGmPdiSIP
-         joM+GMZO1KRAa/T8dJGAcLRwrr7gAD2d4WCb1ylDNsvVb/yvjXMWhTlD6h0S1dvbRG6U
-         OVmaqQhjb9rHFunHzdTLAfkNZknlE0NvnveoqT9NbTmlgJJQU8rDNFCrZ48NsDQ75fhm
-         B34cJJeuDMLJx2EocFIKZK0OhsYnXbqSvp4/9gOy/9wvxMD2WDxDXEkOSvHbhIa4Bu7s
-         rIog==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AWfKUBqVWZzAawswGY+ZSjKKRhaQkfyUJM16meMSkPo=;
+        b=SqQC20u2dDoRyp5jcv3M6XGoifJsMIxnNea7QFL8/kVvb2UCAA8flUyKrqI9ejZsxZ
+         kU2lTzUeRu2H0DRUt9A/+YcW0WKC5DXZvqhA47BbU1PJov63d4B7xFHu0rxghzEBubbZ
+         fkMx1vyy/KTqcrRxJ+wHbzR2RcWI1bsuYQcvYx643PjJlTEsXtRRS7kMcAVARcFXauGR
+         aiyn9SU9SWjPsZCxZay9+2jPSeswBVq0FudAScZpXG6CCQBNvCRRCMx6Rv+uQbeWlscd
+         Okt/CDrAd7xyJqLMP7lTdjQCS5owlIquNQtdAenesffTZrDbAuwzfwfl/va0He7LjOa8
+         g+YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U7KSbZIhaI28wnIT5bzgBGt1Q6Og12wRpCuvNg/mCho=;
-        b=A0owsWLhVIvS4z8Z3V6zoe2UAnXWQd9a04Nuk/b1rUusXrTE90oEDae5oMk+DVq4dW
-         CoH6D08vTCBz8OwUXh4SD5l4AyFzXGMHYNQ8GOEa0uu2UiKhGWIZzB5cZmyWHOwuNoh5
-         3eoQIsAaKuyWSIKiqDQTN4QRbkanOPMhzwD+JyiaVVmz3FGxQ6UxJ021A2UpbF/2DCKz
-         RtobusDH4oAlLS9hImnUSixF1YxsdjsStPZoImJK7Qg65G+GtLZxXSRUK32QU8Jtuish
-         YpCCrkUEVF4PppIwcg2S9opZCt+u808VexxWmzAnMspPYzqkhVVIU2WoFdOIpUl5XDXO
-         ViUg==
-X-Gm-Message-State: APjAAAVz4WDx9KY6cviDKBcmac0Yyxs8Pl6VtqRAkftg19VrkYANWJWE
-        AeUTpQGhr0Gg5wVnr/uHlZE=
-X-Google-Smtp-Source: APXvYqwbrzW2FI+ZK5kK9MhgSRlCP5sMz7ugl/FEXCALhFLjfcVqRMbBxoh61G97a73wSChRTzwoOQ==
-X-Received: by 2002:a17:902:8c83:: with SMTP id t3mr42878572plo.93.1562171583217;
-        Wed, 03 Jul 2019 09:33:03 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id a18sm2319954pjq.0.2019.07.03.09.32.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:33:02 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 35/35] sound/soc/intel: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:32:51 +0800
-Message-Id: <20190703163251.1075-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AWfKUBqVWZzAawswGY+ZSjKKRhaQkfyUJM16meMSkPo=;
+        b=Uxiv87HW8hyE5W3zuxEaSqgodNIhu2HJ0OBmb1jN/cAn6KL58kU4ZA6SLM/G+DIVQK
+         gVMbnK2FgkOsHQCtW9my9OIkWJI/smWBOFsAWMkKAPp9pTIS9Dm4uf6lFzDclVnLVDYs
+         XOJIO5yHukwu1X1k5OwD7EXOgQClX3kgLr2bL1TS8FxOUZO6E+OeNTyCb9tjyfUKc22y
+         HYauPPPAwa+YZOOKopAu71U6+TSXivbvFARDrCm2POtH5+OD/t8GWE6cMX4LMZqLK1Hs
+         l4/DlZiOrwo7J2onW6jMnMj0A5PV+IMhfhDfjk9hDdaZK5i9JCxiyHEEPwhLhkfePLDo
+         PDVw==
+X-Gm-Message-State: APjAAAWFymECCkgj13LcK42pCalZLHijaPVXJgXHHxcpux3eKRhJI5cZ
+        whbMqLVsfrjCynZrLvrTOx+aPA==
+X-Google-Smtp-Source: APXvYqzyUKfEjD5zZwvYgn+6s0isuDDnar2rnm433earCTxIt7v2XJpN1VkPtyIJdyIZ37VlPS+lgw==
+X-Received: by 2002:a5d:438f:: with SMTP id i15mr24566996wrq.37.1562171594030;
+        Wed, 03 Jul 2019 09:33:14 -0700 (PDT)
+Received: from bivouac.eciton.net (bivouac.eciton.net. [2a00:1098:0:86:1000:23:0:2])
+        by smtp.gmail.com with ESMTPSA id x11sm1849858wmi.26.2019.07.03.09.33.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 09:33:13 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 17:33:11 +0100
+From:   Leif Lindholm <leif.lindholm@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Julien Thierry <julien.thierry@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] efi/libstub: detect panel-id
+Message-ID: <20190703163311.gtbo72dzpkpjvpi5@bivouac.eciton.net>
+References: <20190630203614.5290-1-robdclark@gmail.com>
+ <20190630203614.5290-3-robdclark@gmail.com>
+ <CAKv+Gu_8BOt+f8RTspHo+se-=igZba1zL0+jWLV2HuuUXCKYpA@mail.gmail.com>
+ <CAKv+Gu-KhPJxxJA3+J813OPcnoAD4nHq6MhiRTJSd_5y1dPNnw@mail.gmail.com>
+ <CAF6AEGv+uAXVV6Q78n=jP0YRDjYn9OS=Xec9MU0+_7EBirxF5w@mail.gmail.com>
+ <20190702215953.wdqges66hx3ge4jr@bivouac.eciton.net>
+ <CAF6AEGvm62rcm4Lp4a+QmqFweVQ0QWXLDoN2CP8=40BdwiiVbQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGvm62rcm4Lp4a+QmqFweVQ0QWXLDoN2CP8=40BdwiiVbQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup is introduced to duplicate a region of memory in a neat way.
-Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-write the size twice (sometimes lead to mistakes), kmemdup improves
-readability, leads to smaller code and also reduce the chances of mistakes.
-Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+On Tue, Jul 02, 2019 at 03:48:48PM -0700, Rob Clark wrote:
+> > > There is one kernel, and there
+> > > are N distro's, so debugging a users "I don't get a screen at boot"
+> > > problem because their distro missed some shim patch really just
+> > > doesn't seem like a headache I want to have.
+> >
+> > The distros should not need to be aware *at all* of the hacks required
+> > to disguise these platforms as DT platforms.
+> >
+> > If they do, they're already device-specific installers and have
+> > already accepted the logistical/support nightmare.
+> 
+> I guess I'm not *against* a DT loader shim populating the panel-id
+> over into /chosen.. I had it in mind as a backup plan.  Ofc still need
+> to get dt folks to buy into /chosen/panel-id but for DT boot I think
+> that is the best option.  (At least the /chosen/panel-id approach
+> doesn't require the shim to be aware of how the panel is wired up to
+> dsi controller and whether their is a bridge in between, and that
+> short of thing, so the panel-id approach seems more maintainable that
+> other options.)
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
-Changes in v2:
-  - Fix a typo in commit message (memset -> memcpy)
-  - Split into two patches
+I am leaning like Ard towards preferring a configuration table though.
 
- sound/soc/intel/atom/sst/sst_loader.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+That removes the question of no runtime services (needing to manually
+cache things, at least until EBBR 1.2 (?) is out and in use), and
+means we don't have to use different paths for DT and ACPI. Now we
+have UEFI in U-Boot, do we really need to worry about the non-UEFI
+case?
 
-diff --git a/sound/soc/intel/atom/sst/sst_loader.c b/sound/soc/intel/atom/sst/sst_loader.c
-index ce11c36848c4..cc95af35c060 100644
---- a/sound/soc/intel/atom/sst/sst_loader.c
-+++ b/sound/soc/intel/atom/sst/sst_loader.c
-@@ -288,14 +288,13 @@ static int sst_cache_and_parse_fw(struct intel_sst_drv *sst,
- {
- 	int retval = 0;
- 
--	sst->fw_in_mem = kzalloc(fw->size, GFP_KERNEL);
-+	sst->fw_in_mem = kmemdup(fw->data, fw->size, GFP_KERNEL);
- 	if (!sst->fw_in_mem) {
- 		retval = -ENOMEM;
- 		goto end_release;
- 	}
- 	dev_dbg(sst->dev, "copied fw to %p", sst->fw_in_mem);
- 	dev_dbg(sst->dev, "phys: %lx", (unsigned long)virt_to_phys(sst->fw_in_mem));
--	memcpy(sst->fw_in_mem, fw->data, fw->size);
- 	retval = sst_parse_fw_memcpy(sst, fw->size, &sst->memcpy_list);
- 	if (retval) {
- 		dev_err(sst->dev, "Failed to parse fw\n");
--- 
-2.11.0
+> I am a bit fearful of problems arising from different distros and
+> users using different versions of shim, and how to manage that.  I
+> guess if somehow "shim thing" was part of the kernel, there would by
+> one less moving part...
 
+Sure, but that's insurance against bindings changing
+non-backwards-compatibly - which there are ways to prevent, and which
+streamlining the design for really isn't the way to discourage...
+
+Distros have no need to worry about the DT loader - the whole point of
+it is to remove the need for the distro to worry about anything other
+than getting the required drivers in.
+
+> I'd know if user had kernel vX.Y.Z they'd be
+> good to go vs not.  But *also* depending on a new-enough version of a
+> shim, where the version # is probably not easily apparent to the end
+> user, sounds a bit scary from the "all the things that can go wrong"
+> point of view.  Maybe I'm paranoid, but I'm a bit worried about how to
+> manage that.
+
+Until the hardware abstractions provided by the system firmware (ACPI)
+is supported, these platforms are not going to be appropriate for
+end users anyway. No matter how many not-quite-upstream hacks distros
+include, they won't be able to support the next minor spin that comes
+off the production line and is no longer compatible with existing DTs.
+
+/
+    Leif
