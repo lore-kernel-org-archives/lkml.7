@@ -2,253 +2,254 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0AFC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E7DC46478
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6FC218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8008218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K81gNzMN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OWhUfNT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfGCXZx (ORCPT
+        id S1727462AbfGCXlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:25:53 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60122 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfGCXZw (ORCPT
+        Wed, 3 Jul 2019 19:41:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43243 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfGCXlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:25:52 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 50BA924B;
-        Thu,  4 Jul 2019 01:25:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1562196349;
-        bh=XtdE/gbqEbdkLoLVIK10NxfUE2jRJNofEm4V3DPEB0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K81gNzMN7rgs37lpqq/ZCUD/FFFBmSxTX1ELUpmFmf6z6qgh0PYdUoekMtOuJDhMe
-         fxTjH6GYss4/8Xr2O2YsM6aqv07sz5BKlR5+HNx3aDUXnQNcumjrKH716HW4fLVf7x
-         Z1dMBDup2jYG+ZhCky5yeqHAZaDU4uC5WyyZ0CYg=
-Date:   Thu, 4 Jul 2019 02:25:28 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-Message-ID: <20190703232528.GR5007@pendragon.ideasonboard.com>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
- <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
- <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
- <20190616184506.GD5006@pendragon.ideasonboard.com>
- <6e67ae76-6d37-cd70-c05f-1c6b6dd4af1a@linuxfoundation.org>
- <20190630114102.GB7043@pendragon.ideasonboard.com>
- <20190703161702.GA26461@bigcity.dyn.berto.se>
- <0306e792-e4b9-37b4-2ee0-9b0133c92828@linuxfoundation.org>
+        Wed, 3 Jul 2019 19:41:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so2001586pfg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 16:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cVKYoZ7M1neTWMWNkSfarm1kLLkAZh2a4u3Pqo3SzOU=;
+        b=OWhUfNT+x+l9tKNcHcOr8kuP2qdhGyE+B0e411zUg/nxqHy1v3vbklBPjWBIPWd1+X
+         lw5aHflM74n2xt/OAAiQhlNPGrSQVQRa+4MjJybCNy2xt94ieU8axV/bh19o4WGfWzwW
+         bc7SeBseK2dfjfJAMouw6pY81wBVOyVQijUmOr6rIyxetCcz2tD+r9Vrdt1IxtPYRepK
+         Nbi/7inGd9MhBPjN3BDpD4xzbLxIX311D6atZ8neX7oEcRDtH4k/c+3mNfaUqCqIHwqh
+         gffewpeSSQuFiFnvGzd3H0SEAPr2VegAZ8NlEv0Yl6KNzakq7kQ12TioJjvvu6bdkP5c
+         sjAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cVKYoZ7M1neTWMWNkSfarm1kLLkAZh2a4u3Pqo3SzOU=;
+        b=kQuqrT5HiIhueCxWHgBvidCm8meOxd9EhgbuBiyDQIZf3CpDx2M4TK6x0OZ4PTbXgI
+         /+VvFmhSch7+xluWjgjJvK1jhbluwawFVk2D2L1Qy+xv1/dh+LEZk4+m5oBWfnIjvqAo
+         qrX7CzS65FbTv39JAz8DBG0473qWMqD9fUonItlVcyBW7RNO3QPpoaaQi1GjWYz3du/f
+         pDQA3Ww46XVDMDYdg3xtq8DM9B9quy9Yus3SO8yAtmybaPOcILP9aQv98OMauc1LZq3L
+         263Ovxi+ypCaCn2AiFIylveNzjc+zo5plw297zNvBw/rcmoRBCNG1YA2B7L9p7MOPaS6
+         1pIQ==
+X-Gm-Message-State: APjAAAVr8R6F+1cjaE/UIP8qqkYlAfw9MTzAUmBXKkR7MGmI9RedMuVS
+        5/WHN67zX0kXOAuxZXas1tFFTqu+g4cDal2h806y8Q==
+X-Google-Smtp-Source: APXvYqwXB8g3qJfj0dB5mvs+S7ESPDvYCMhtPXvQDa6QHJcnwrHQejsvEjyf5gqWIAbwtcABAn5rOnSpZi2/GaX3pAc=
+X-Received: by 2002:a63:b919:: with SMTP id z25mr39509300pge.201.1562197262480;
+ Wed, 03 Jul 2019 16:41:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0306e792-e4b9-37b4-2ee0-9b0133c92828@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com> <69809117-dcda-160a-ee0a-d1d3b4c5cd8a@kernel.org>
+ <20190621181342.GA17166@mit.edu> <6f3f5184-d14e-1b46-17f1-391ee67e699c@kernel.org>
+ <CAFd5g46W1u+6JKLW0WX9uicK5utvJe9tvq4YBsCkghuo0rCmng@mail.gmail.com>
+In-Reply-To: <CAFd5g46W1u+6JKLW0WX9uicK5utvJe9tvq4YBsCkghuo0rCmng@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 3 Jul 2019 16:40:50 -0700
+Message-ID: <CAFd5g4515jAOzEtiZfXP0d6YUgOxOZCknw0Nd-2wsY=mPFdGqg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+On Fri, Jun 21, 2019 at 5:54 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Fri, Jun 21, 2019 at 12:21 PM shuah <shuah@kernel.org> wrote:
+> >
+> > On 6/21/19 12:13 PM, Theodore Ts'o wrote:
+> > > On Fri, Jun 21, 2019 at 08:59:48AM -0600, shuah wrote:
+> > >>>> ### But wait! Doesn't kselftest support in kernel testing?!
+> > >>>>
+> > >>>> ....
+> > >>
+> > >> I think I commented on this before. I agree with the statement that
+> > >> there is no overlap between Kselftest and KUnit. I would like see this
+> > >> removed. Kselftest module support supports use-cases KUnit won't be able
+> > >> to. I can build an kernel with Kselftest test modules and use it in the
+> > >> filed to load and run tests if I need to debug a problem and get data
+> > >> from a system. I can't do that with KUnit.
+>
+> Sure, I think this point has been brought up a number of times before.
+> Maybe I didn't write this section well because, like Frank said, it
+> comes across as being critical of the Kselftest module support; that
+> wasn't my intention. I was speaking from the perspective that
+> Kselftest module support is just a feature of Kselftest, and not a
+> full framework like KUnit is (obviously Kselftest itself *is* a
+> framework, but a very small part of it is not).
+>
+> It was obvious to me what Kselftest module support was intended for,
+> and it is not intended to cover the use case that KUnit is targeting.
+>
+> > >> In my mind, I am not viewing this as which is better. Kselftest and
+> > >> KUnit both have their place in the kernel development process. It isn't
+> > >> productive and/or necessary to comparing Kselftest and KUnit without a
+> > >> good understanding of the problem spaces for each of these.
+>
+> Again, I didn't mean to draw a comparison of which is better than the
+> other. I was just trying to point out that Kselftest module support
+> doesn't make sense as a stand alone unit testing framework, or really
+> a framework of any kind, despite how it might actually be used.
+>
+> > >> I would strongly recommend not making reference to Kselftest and talk
+> > >> about what KUnit offers.
+>
+> I can see your point. It seems that both you and Frank seem to think
+> that I drew a comparison between Kselftest and KUnit, which was
+> unintended. I probably should have spent more time editing this
+> section, but I can see the point of drawing the comparison itself
+> might invite this confusion.
+>
+> > > Shuah,
+> > >
+> > > Just to recall the history, this section of the FAQ was added to rebut
+> > > the ***very*** strong statements that Frank made that there was
+> > > overlap between Kselftest and Kunit, and that having too many ways for
+> > > kernel developers to do the identical thing was harmful (he said it
+> > > was too much of a burden on a kernel developer) --- and this was an
+> > > argument for not including Kunit in the upstream kernel.
+>
+> I don't think he was actually advocating that we don't include KUnit,
+> maybe playing devil's advocate; nevertheless, at the end, Frank seemed
+> to agree that there were valuable things that KUnit offered. I thought
+> he just wanted to make the point that I hadn't made the distinction
+> sufficiently clear in the cover letter, and other reviewers might get
+> confused in the future as well.
+>
+> Additionally, it does look like people were trying to use Kselftest
+> module support to cover some things which really were trying to be
+> unit tests. I know this isn't really intended - everything looks like
+> a nail when you only have a hammer, which I think Frank was pointing
+> out furthers the above confusion.
+>
+> In anycase, it sounds like I have, if anything, only made the
+> discussion even more confusing by adding this section; sorry about
+> that.
+>
+> > > If we're past that objection, then perhaps this section can be
+> > > dropped, but there's a very good reason why it was there.  I wouldn't
+> > > Brendan to be accused of ignoring feedback from those who reviewed his
+> > > patches.   :-)
+> > >
+> >
+> > Agreed. I understand that this FAQ probably was needed at one time and
+> > Brendan added it to address the concerns.
+>
+> I don't want to speak for Frank, but I don't think it was an objection
+> to KUnit itself, but rather an objection to not sufficiently
+> addressing the point about how they differ.
+>
+> > I think at some point we do need to have a document that outlines when
+> > to KUnit and when to use Kselftest modules. I think one concern people
+> > have is that if KUnit is perceived as a  replacement for Ksefltest
+> > module, Kselftest module will be ignored leaving users without the
+> > ability to build and run with Kselftest modules and load them on a need
+> > basis to gather data on a systems that aren't dedicated strictly for
+> > testing.
+>
+> I absolutely agree! I posed a suggestion here[1], which after I just
+> now searched for a link, I realize for some reason it didn't seem like
+> it reached a number of the mailing lists that I sent it to, so I
+> should probably resend it.
+>
+> Anyway, a summary of what I suggested: We should start off by better
+> organizing Documentation/dev-tools/ and create a landing page that
+> groups the dev-tools by function according to what person is likely to
+> use them and for what. Eventually and specifically for Kselftest and
+> KUnit, I would like to have a testing guide for the kernel that
+> explains what testing procedure should look like and what to use and
+> when.
+>
+> > I am trying to move the conversation forward from KUnit vs. Kselftest
+> > modules discussion to which problem areas each one addresses keeping
+> > in mind that it is not about which is better. Kselftest and KUnit both
+> > have their place in the kernel development process. We just have to be
+> > clear on usage as we write tests for each.
+>
+> I think that is the right long term approach. I think a good place to
+> start, like I suggested above, is cleaning up
+> Documentation/dev-tools/, but I think that belongs in a (probably
+> several) follow-up patchset.
+>
+> Frank, I believe your objection was mostly related to how KUnit is
+> presented specifically in the cover letter, and doesn't necessarily
+> deal with the intended use case. So I don't think that doing this,
+> especially doing this later, really addresses your concern. I don't
+> want to belabor the issue, but I would also rather not put words in
+> your mouth, what are your thoughts on the above?
+>
+> I think my main concern moving forward on this point is that I am not
+> sure that I can address the debate that this section covers in a way
+> that is both sufficiently concise for a cover letter, but also doesn't
+> invite more potential confusion. My inclination at this point is to
+> drop it since I think the set of reviewers for this patchset has at
+> this point become fixed, and it seems that it will likely cause more
+> confusion rather than reduce it; also, I don't really think this will
 
-On Wed, Jul 03, 2019 at 10:52:17AM -0600, Shuah Khan wrote:
-> On 7/3/19 10:17 AM, Niklas Söderlund wrote:
-> > On 2019-06-30 14:41:02 +0300, Laurent Pinchart wrote:
-> >> On Fri, Jun 28, 2019 at 10:41:07AM -0600, Shuah Khan wrote:
-> >>> On 6/16/19 12:45 PM, Laurent Pinchart wrote:
-> >>>> On Fri, Jun 14, 2019 at 05:26:46PM -0600, Shuah Khan wrote:
-> >>>>> On 6/13/19 7:24 AM, Helen Koike wrote:
-> >>>>>> On 6/13/19 2:44 AM, Hans Verkuil wrote:
-> >>>>>>> On 5/24/19 5:31 AM, Shuah Khan wrote:
-> >>>>>>>> media_device is embedded in struct vimc_device and when vimc is removed
-> >>>>>>>> vimc_device and the embedded media_device goes with it, while the active
-> >>>>>>>> stream and vimc_capture continue to access it.
-> >>>>>>>>
-> >>>>>>>> Fix the media_device lifetime problem by changing vimc to create shared
-> >>>>>>>> media_device using Media Device Allocator API and vimc_capture getting
-> >>>>>>>> a reference to vimc module. With this change, vimc module can be removed
-> >>>>>>>> only when the references are gone. vimc can be removed after vimc_capture
-> >>>>>>>> is removed.
-> >>>>>>>>
-> >>>>>>>> Media Device Allocator API supports just USB devices. Enhance it
-> >>>>>>>> adding a genetic device allocate interface to support other media
-> >>>>>>>> drivers.
-> >>>>>>>>
-> >>>>>>>> The new interface takes pointer to struct device instead and creates
-> >>>>>>>> media device. This interface allows a group of drivers that have a
-> >>>>>>>> common root device to share media device resource and ensure media
-> >>>>>>>> device doesn't get deleted as long as one of the drivers holds its
-> >>>>>>>> reference.
-> >>>>>>>>
-> >>>>>>>> The new interface has been tested with vimc component driver to fix
-> >>>>>>>> panics when vimc module is removed while streaming is in progress.
-> >>>>>>>
-> >>>>>>> Helen, can you review this series? I'm not sure this is the right approach
-> >>>>>>> for a driver like vimc, and even if it is, then it is odd that vimc-capture
-> >>>>>>> is the only vimc module that's handled here.
-> >>>>>>
-> >>>>>> Hi Hans,
-> >>>>>>
-> >>>>>> Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
-> >>>>>> try to take a look at this patch series (and the others) asap.
-> >>>>>>
-> >>>>>> Helen
-> >>>>>>
-> >>>>>>> My gut feeling is that this should be handled inside vimc directly and not
-> >>>>>>> using the media-dev-allocator.
-> >>>>>
-> >>>>> Hi Hans and Helen,
-> >>>>>
-> >>>>> I explored fixing the problem within vimc before I went down the path to
-> >>>>> use Media Device Allocator API. I do think that it is cleaner to go this
-> >>>>> way and easier to maintain.
-> >>>>>
-> >>>>> vimc is a group pf component drivers that rely on the media device vimc
-> >>>>> in vimc and falls into the use-case Media Device Allocator API is added
-> >>>>> to address. The release and life-time management happens without vimc
-> >>>>> component drivers being changed other than using the API to get and put
-> >>>>> media device reference.
-> >>>>
-> >>>> Our replies crossed each other, please see my reply to Hans. I would
-> >>>> just like to comment here that if having multiple kernel modules causes
-> >>>> issue, they can all be merged together. There's no need for vimc to be
-> >>>> handled through multiple modules (I actually think it's quite
-> >>>> counterproductive, it only makes it more complex, for no added value).
-> >>>
-> >>> There are several problems in this group of drivers as far as lifetime
-> >>> management is concerned. I explained some of it in the patch 2/2
-> >>>
-> >>> If vimc module is removed while streaming is active, vimc_exit runs
-> >>> into NULL pointer dereference error when streaming thread tries to
-> >>> access and lock graph_mutex in the struct media_device.
-> >>>
-> >>> The primary reason for this is that:
-> >>>
-> >>> media_device is embedded in struct vimc_device and when vimc is removed
-> >>> vimc_device and the embedded media_device goes with it, while the active
-> >>> stream and vimc_capture continue to access it.
-> >>
-> >> The issue isn't so much that media_devic is embedded in vimc_device, but
-> >> that vimc_device is released too early. Not only does the thread need to
-> >> access the graph_mutex lock in the media_device structure, but it can
-> >> potentially access fields of the device-specific structures as well. The
-> >> proper solution is to propagate media_device_release() one level up, in
-> >> order to only release the top-level structure containing media_device
-> >> when the last reference to the media_device is dropped.
-> 
-> Yes. vimc_device is the master device for all the component drivers and
-> it being released early definitely causes problems. I tried to solve
-> this by isolating the media_device embedded in it and taking that out
-> of contention for release later. This problem could be solved by making
-> sure vimc_device sticks around and I am on that solution now.
+Since no one has objected to dropping the "### But wait! Doesn't
+kselftest support in kernel testing?!" section in the past almost two
+weeks, I am just going to continue on without it.
 
-Thank you :-)
+Cheers
 
-> > I have seen similar problems with rcar-vin, the device specific data is
-> > released to early. In my case it was not triggered by the struct
-> > media_device but with a struct v4l2_device embedded in the device
-> > specific data IIRC.
-> > 
-> > This was when I tried to address the lifetime issues of the video device
-> > when binding/unbinding the device to the driver and not when unloading
-> > the module. This was quiet a while ago so I don't recall specifics,
-> > sorry about that. One finding was that there are also unsolved problems
-> > when it comes async notifiers and unloading/unbinding and then
-> > loading/binding subdevices as well as the driver controlling the video
-> > device. It was such a mess I gave up.
-> 
-> Yes. You will find such problems with various media drivers. It could be
-> the v4l2 device or some other device that gets released while still in
-> use.
-> 
-> > I'm happy to see activity in this area but I fear it might need work on
-> > a higher level and not trying to work around the problem in drivers.
-> 
-> Drivers still need to handle such issues anyway. Is there a reason why
-> you think it is a work-around?
-> 
-> >>> If we chose to keep these drivers as component drivers, media device
-> >>> needs to stick around until all components stop using it. This is tricky
-> >>> because there is no tie between these set of drivers. vimc module can
-> >>> be deleted while others are still active. As vimc gets removed, other
-> >>> component drivers start wanting to access the media device tree.
-> >>
-> >> Reference-counting is the key.
-> >>
-> >>> This is classic media device lifetime problem which could be solved
-> >>> easily with the way I solved it with this series. I saw this as a
-> >>> variation on the same use-case we had with sound and media drivers
-> >>> sharing the media device.
-> >>
-> >> This isn't about solving it easily, it's about solving it properly. The
-> >> media device allocator as used here is a hack and takes us in the
-> >> opposite direction of a proper fix.
-> 
-> Labeling this hack doesn't accurate. I agree though that this might be a
-> big hammer and there might be other solutions that can be limited to
-> just vimc scope. :)
-
-The reason I call this a hack is that it may hide the early free of the
-media_device structure itself, but won't help at all with the vimc
-device structure that may also need to be accessed by the other drivers.
-In order to fix this problem - and all similar lifetime management
-problems - correctly we need to look at every structure and track how
-they are referenced. Only through proper reference counting can we be
-safe.
-
-The media device allocator was specifically designed to handle cases
-where there is no single master driver that can own a media device. This
-caused the problems explained below which to my infinite disappointment
-have been ignored while being pointed out multiple times during review.
-I can only blame myself for not having done a better job at explaining
-those issues of course, as the patch adding the allocator is signed by
-three V4L2 core developers, so I must have failed three times.
-Nevertheless, this API shall not be used until those problems are fixed,
-to avoid spreading them to more drivers. At least until then - and I
-believe beyond that too - it shall not be used for drivers where a media
-device master exists, such as vimc.
-
-> >>> I have a TODO request from you asking to extend Media Device Allocator
-> >>> API to generic case and not restrict it to USB devices. My thinking is
-> >>> that this gives a perfect test case to extend the API to be generic
-> >>> and use to solve this problem.
-> >>
-> >> The biggest issue at the moment with the media device allocator, which I
-> >> have pointed out numerous times and has never been addressed (and which
-> >> explains why I didn't think the code was ready to be merged) is that the
-> >> media_device contains operations that are based on having a single
-> >> driver controlling the media device. A proper shared media device
-> >> allocator needs to drop the concept of a single master for the media
-> >> device, and thus needs to refactor those operations to allow any user of
-> >> the media device to implement them (the .link_notify() operation is a
-> >> prime example, and the recently added request operations will make this
-> >> even more challenging - think of how this patch series would prevent
-> >> vimc from properly implementing the request API). As long as these issue
-> >> are not fixed I will be firmly opposed to spreading the usage of the
-> >> media device allocator beyond what exists today.
-> 
-> During the reviews, it was deemed necessary to make media driver as the
-> master for creating parts of the tree and provide hooks for other
-> drivers to add their own media components to the tree. The same is
-> extended to other interfaces. This feature was on ice for so long,
-> I don't recall all the details on how it evolved.
-
-Do you mean during the review of the vimc driver or of the media
-allocator API ?
-
--- 
-Regards,
-
-Laurent Pinchart
+> be an issue for end users, especially once we have proper
+> documentation in place. Alternatively, I guess I could maybe address
+> the point elsewhere and refer to it in the cover letter? Or maybe just
+> put it at the end of the cover letter?
+>
+> [1] https://www.mail-archive.com/kgdb-bugreport@lists.sourceforge.net/msg05059.html
