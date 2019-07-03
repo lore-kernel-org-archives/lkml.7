@@ -2,109 +2,148 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE40C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE73C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1534821882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562152370;
-	bh=sgZTX1MaSMFXWpuFBi67qWczdhirVxwPWF/rvBRSlV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SGRfk+Ni3Pd5nIEvLqMBU6gXtwRNYKb31HLOIn0Z1W3BEK9cells3f8z3Wyb2usQj
-	 m12QkZ4K3T6oGrGF7MOx8QHL91HLDv0SgyU+KjtOr7OWHqQXUQBOVyQttUfI6FnzbC
-	 Ak7h3398BYK2tmGWAD/FiMa3GR1Y39wel1t5CZqU=
+	by mail.kernel.org (Postfix) with ESMTP id 191FD21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfGCLMt (ORCPT
+        id S1727076AbfGCLNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:12:49 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43137 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfGCLMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:12:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q10so1900105otk.10;
-        Wed, 03 Jul 2019 04:12:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U7f1EyIiFwc1ziRwMDUFrIFL5oAxoWGW+66zhLCeniw=;
-        b=p67wq8ZtXT9zPWRUNrwoc4LIEMV/4tlLjCOfijWLeEb2GiqqcNi2+wQF8u/OssJdfk
-         7DJMyfH2fKQfeY53GGL1CXcF2+55IhjyWOfZUyw9Y0D3aEP8mddNSSUBoznENzKTGASQ
-         ZM5X+fvKD6osdQK/Y3BF7W6MPjIOUuvGHVYX/uGQ9QuxEZ8wVUkNcEIgHAwVVX1iznOK
-         PSGTYUGZxqeYkxiB/WmRon/0ytXoPhQUiYp/QD5UalNEHN2SGKLejOiskf7QX5gZdSRJ
-         LPeRIM+xUAbieVLvcy7OiUcC7BDu1esNiqyyv6Cqb0xNSOcE/yEskXeRD8JGVXdMuyMw
-         bOKQ==
-X-Gm-Message-State: APjAAAVycMsZZselyhJ/zDQzEHTxozxMnpafM+noa+ksZV/9KrP3+5vW
-        LJlAERO+OgM8E4W6oRRosPEkSopjmQu76J25/vY=
-X-Google-Smtp-Source: APXvYqxFHMr6lDzi0AllC0aFB9PTf+FIR9lUZMObiJ0wMV7PVbFF5coqE7mhBMuA394XW2hUSI7+T7132sn1uQLuN9E=
-X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr10838606oto.167.1562152367825;
- Wed, 03 Jul 2019 04:12:47 -0700 (PDT)
+        Wed, 3 Jul 2019 07:13:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55660 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726486AbfGCLNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 07:13:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 080F8AD89;
+        Wed,  3 Jul 2019 11:13:50 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 2C95EE0159; Wed,  3 Jul 2019 13:13:47 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 13:13:47 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 05/15] ethtool: helper functions for netlink
+ interface
+Message-ID: <20190703111347.GK20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <44957b13e8edbced71aca893908d184eb9e57341.1562067622.git.mkubecek@suse.cz>
+ <20190702130515.GO2250@nanopsycho>
+ <20190702163437.GE20101@unicorn.suse.cz>
+ <20190703100435.GS2250@nanopsycho>
 MIME-Version: 1.0
-References: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156140042119.2951909.7727308817426477621.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156140042119.2951909.7727308817426477621.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jul 2019 13:12:36 +0200
-Message-ID: <CAJZ5v0gzRar8oowUSw0Z9_uofcbZCirmaYFmbjBvDrDAp4W5SA@mail.gmail.com>
-Subject: Re: [PATCH v4 09/10] acpi/numa/hmat: Register HMAT at device_initcall level
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703100435.GS2250@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 8:34 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> In preparation for registering device-dax instances for accessing EFI
-> specific-purpose memory, arrange for the HMAT registration to occur
-> later in the init process. Critically HMAT initialization needs to occur
-> after e820__reserve_resources_late() which is the point at which the
-> iomem resource tree is populated with "Application Reserved"
-> (IORES_DESC_APPLICATION_RESERVED). e820__reserve_resources_late()
-> happens at subsys_initcall time.
->
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Wed, Jul 03, 2019 at 12:04:35PM +0200, Jiri Pirko wrote:
+> Tue, Jul 02, 2019 at 06:34:37PM CEST, mkubecek@suse.cz wrote:
+> >On Tue, Jul 02, 2019 at 03:05:15PM +0200, Jiri Pirko wrote:
+> >> Tue, Jul 02, 2019 at 01:50:04PM CEST, mkubecek@suse.cz wrote:
+> >> >+
+> >> >+	req_info->dev = dev;
+> >> >+	ethnl_update_u32(&req_info->req_mask, tb[ETHTOOL_A_HEADER_INFOMASK]);
+> >> >+	ethnl_update_u32(&req_info->global_flags, tb[ETHTOOL_A_HEADER_GFLAGS]);
+> >> >+	ethnl_update_u32(&req_info->req_flags, tb[ETHTOOL_A_HEADER_RFLAGS]);
+> >> 
+> >> Just:
+> >> 	req_info->req_mask = nla_get_u32(tb[ETHTOOL_A_HEADER_INFOMASK];
+> >> 	...
+> >> 
+> >> Not sure what ethnl_update_u32() is good for, but it is not needed here.
+> >
+> >That would result in null pointer dereference if the attribute is
+> >missing. So you would need at least
+> >
+> >	if (tb[ETHTOOL_A_HEADER_INFOMASK])
+> >		req_info->req_mask = nla_get_u32(tb[ETHTOOL_A_HEADER_INFOMASK]);
+> >	if (tb[ETHTOOL_A_HEADER_GFLAGS])
+> >		req_info->global_flags =
+> >			nla_get_u32(tb[ETHTOOL_A_HEADER_GFLAGS]);
+> >	if (tb[ETHTOOL_A_HEADER_RFLAGS])
+> >		req_info->req_flags = nla_get_u32(tb[ETHTOOL_A_HEADER_RFLAGS]);
+> 
+> Yeah, sure.
+> 
+> >
+> >I don't think it looks better.
+> 
+> Better than hiding something inside a helper in my opinion - helper that
+> is there for different reason moreover. Much easier to read the code
+> and follow.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+OK, I'll use nla_get_u32() directly here. With the change below, use of
+ethnl_update_u32() would really look unnatural.
 
-> ---
->  drivers/acpi/numa/hmat.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 2c220cb7b620..1d329c4af3bf 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -671,4 +671,4 @@ static __init int hmat_init(void)
->         acpi_put_table(tbl);
->         return 0;
->  }
-> -subsys_initcall(hmat_init);
-> +device_initcall(hmat_init);
->
+> >> >+/* The ethnl_update_* helpers set value pointed to by @dst to the value of
+> >> >+ * netlink attribute @attr (if attr is not null). They return true if *dst
+> >> >+ * value was changed, false if not.
+> >> >+ */
+> >> >+static inline bool ethnl_update_u32(u32 *dst, struct nlattr *attr)
+> >> 
+> >> I'm still not sure I'm convinced about these "update helpers" :)
+> >
+> >Just imagine what would e.g.
+> >
+> >	if (ethnl_update_u32(&data.rx_pending, tb[ETHTOOL_A_RING_RX_PENDING]))
+> >		mod = true;
+> >	if (ethnl_update_u32(&data.rx_mini_pending,
+> >			     tb[ETHTOOL_A_RING_RX_MINI_PENDING]))
+> >		mod = true;
+> >	if (ethnl_update_u32(&data.rx_jumbo_pending,
+> >			     tb[ETHTOOL_A_RING_RX_JUMBO_PENDING]))
+> >		mod = true;
+> >	if (ethnl_update_u32(&data.tx_pending, tb[ETHTOOL_A_RING_TX_PENDING]))
+> >		mod = true;
+> >	if (!mod)
+> >		return 0;
+> >
+> >look like without them. And coalescing parameters would be much worse
+> >(22 attributes / struct members).
+> 
+> No, I understand your motivation, don't get me wrong. I just wonder that
+> no other netlink implementation need such mechanism. Maybe I'm not
+> looking close enough. But if it does, should be rathe netlink helper.
+
+I'll check some existing interfaces to see how they handle "set" type
+requests.
+
+> Regarding the example code you have here. It is prefered to store
+> function result in a variable "if check" that variable. But in your,
+> code, couldn't this be done without ifs?
+> 
+> 	bool mod = false;
+> 
+> 	ethnl_update_u32(&mod, &data.rx_pending, tb[ETHTOOL_A_RING_RX_PENDING]))
+> 	ethnl_update_u32(&mod, &data.rx_mini_pending,
+> 			 tb[ETHTOOL_A_RING_RX_MINI_PENDING]))
+> 	ethnl_update_u32(&mod, &data.rx_jumbo_pending,
+> 			 tb[ETHTOOL_A_RING_RX_JUMBO_PENDING]))
+> 	ethnl_update_u32(&mod, &data.tx_pending, tb[ETHTOOL_A_RING_TX_PENDING]))
+> 	
+> 	if (!mod)
+> 		return 0;
+
+Ah, right. Somehow I completely missed the possibility that update
+helper can use "set of leave as it is" logic instead of "set to true or
+false". Thanks, I'll rewrite the update helpers to this style.
+
+Michal
