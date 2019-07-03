@@ -2,156 +2,187 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3233C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3159FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD8420673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:48:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQMpxxLG"
+	by mail.kernel.org (Postfix) with ESMTP id 02B3C20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfGCBsW (ORCPT
+        id S1727232AbfGCBuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:48:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39971 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBsV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:48:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e8so612828otl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/lRiznl/b3k1Ie9ScyJ4jBFeaEoI2ZI3USYbKQfR1J0=;
-        b=zQMpxxLGrM0XjdsgBPT6ATLcrb7qA9zfpedH99WHA29nFWVTZMn5gYEGkwE/NO+j58
-         O0GelD0oUhq/t5UuQIzLN40ZYkRP2zzc1N3lAkXaYN9SpFI6oXBDfRYUYW0DDL7N5Irl
-         PT0IswXptUa0vycB9GEwZibK3zlJafP0FDM+ksQm3Eur3ySQZwANF62OBiy4caGXFFEz
-         8QPTMYNIwkiFEzQ2hfjAKMDgj9RuvrXBgl2U6TQF3njQH25/FcQL80t57ieCV/qnWoLd
-         Hmf7MuHoNwUEoProeXVs3712q03rie79FXvO9UhNfh702kuBuyTYFuf81Laf6+Jnq97N
-         h3BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/lRiznl/b3k1Ie9ScyJ4jBFeaEoI2ZI3USYbKQfR1J0=;
-        b=d/x5E3dpTglDrq0dz3b6uiELB1rPIas/gdD28J9R6+LqykZuPczhpLD+cuMmnMtG3p
-         CqF+DzVWnyIS6LArrKEAbC4zknAWhP5pSX1rPIt2AO0YszZXUIrP7qwzw8PF0Fmy1+dM
-         Cq/Hx1zMVLGGsdQWm4i1Wg2sHvMWlNgREDl658OK+1+g2jWRV0skrKDMSoNLS78WefCj
-         zSCvgFygPEz4LS5FHn7aiw5FEGAQqlgE0f7Bza780W3FmWyWijUB5Vho+ArGBKdneinj
-         VLD6lqPYfDiLWSzaIWM/MlBXvBDhRDM7bKQwnzDl/cg5eAAqaFFNG/bMKoOgW17ftUmU
-         +wnw==
-X-Gm-Message-State: APjAAAWc2JnI9/yS82hVFkDf2S37CEw5+HRh6vjE9yGwi9vJ2iSMzksR
-        GpQTJZnaXb4yRP9w684YxXIQOg==
-X-Google-Smtp-Source: APXvYqyH/Q87O4oDhQWm0UZHg0a9eu6n/1GxkkIumbyNvNvII6KOW/H5NXHLQOuBpr2GbdpYym7ZGg==
-X-Received: by 2002:a9d:61d8:: with SMTP id h24mr6357738otk.53.1562118501240;
-        Tue, 02 Jul 2019 18:48:21 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id p2sm313927otl.59.2019.07.02.18.48.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 18:48:20 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 09:48:08 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Changbin Du <changbin.du@intel.com>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 00/11] perf: Fix errors detected by Smatch
-Message-ID: <20190703014808.GC6852@leoy-ThinkPad-X240s>
-References: <20190702103420.27540-1-leo.yan@linaro.org>
- <20190702110743.GA12694@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702110743.GA12694@krava>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 2 Jul 2019 21:50:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:59472 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGCBuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:50:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 18:50:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
+   d="scan'208";a="184630185"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2019 18:50:02 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Date:   Wed,  3 Jul 2019 17:50:04 +0800
+Message-Id: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 01:07:43PM +0200, Jiri Olsa wrote:
-> On Tue, Jul 02, 2019 at 06:34:09PM +0800, Leo Yan wrote:
-> > When I used static checker Smatch for perf building, the main target is
-> > to check if there have any potential issues in Arm cs-etm code.  So
-> > finally I get many reporting for errors/warnings.
-> > 
-> > I used below command for using static checker with perf building:
-> > 
-> >   # make VF=1 CORESIGHT=1 -C tools/perf/ \
-> >     CHECK="/root/Work/smatch/smatch --full-path" \
-> >     CC=/root/Work/smatch/cgcc | tee smatch_reports.txt
-> > 
-> > I reviewed the errors one by one, if I understood some of these errors
-> > so changed the code as I can, this patch set is the working result; but
-> > still leave some errors due to I don't know what's the best way to fix
-> > it.  There also have many inconsistent indenting warnings.  So I firstly
-> > send out this patch set and let's see what's the feedback from public
-> > reviewing.
-> > 
-> > Leo Yan (11):
-> >   perf report: Smatch: Fix potential NULL pointer dereference
-> >   perf stat: Smatch: Fix use-after-freed pointer
-> >   perf top: Smatch: Fix potential NULL pointer dereference
-> >   perf annotate: Smatch: Fix dereferencing freed memory
-> >   perf trace: Smatch: Fix potential NULL pointer dereference
-> >   perf hists: Smatch: Fix potential NULL pointer dereference
-> >   perf map: Smatch: Fix potential NULL pointer dereference
-> >   perf session: Smatch: Fix potential NULL pointer dereference
-> >   perf intel-bts: Smatch: Fix potential NULL pointer dereference
-> >   perf intel-pt: Smatch: Fix potential NULL pointer dereference
-> >   perf cs-etm: Smatch: Fix potential NULL pointer dereference
-> 
-> from quick look it all looks good to me, nice tool ;-)
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+From: Kweh Hock Leong <hock.leong.kweh@intel.com>
 
-Thanks for reviewing, Jiri.
+DWMAC4 is capable to support clause 45 mdio communication.
+This patch enable the feature on stmmac_mdio_write() and
+stmmac_mdio_read() by following phy_write_mmd() and
+phy_read_mmd() mdiobus read write implementation format.
 
-@Arnaldo, Just want to check, will you firstly pick up 01~05, 07,
-08/11 patches if you think they are okay?  Or you want to wait me to
-spin new patch set with all patches after I gather all comments?
+Reviewed-by: Li, Yifan <yifan2.li@intel.com>
+Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
 
-Thanks,
-Leo Yan
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 18cadf0b0d66..b9edb18769f2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -24,11 +24,27 @@
+ 
+ #define MII_BUSY 0x00000001
+ #define MII_WRITE 0x00000002
++#define MII_DATA_MASK GENMASK(15, 0)
+ 
+ /* GMAC4 defines */
+ #define MII_GMAC4_GOC_SHIFT		2
++#define MII_GMAC4_REG_ADDR_SHIFT	16
+ #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
+ #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
++#define MII_GMAC4_C45E			BIT(1)
++
++static void stmmac_mdio_c45_setup(struct stmmac_priv *priv, int phyreg,
++				  u32 *val, u32 *data)
++{
++	unsigned int reg_shift = priv->hw->mii.reg_shift;
++	unsigned int reg_mask = priv->hw->mii.reg_mask;
++
++	*val |= MII_GMAC4_C45E;
++	*val &= ~reg_mask;
++	*val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
++
++	*data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
++}
+ 
+ /* XGMAC defines */
+ #define MII_XGMAC_SADDR			BIT(18)
+@@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+-	u32 v;
+-	int data;
+ 	u32 value = MII_BUSY;
++	int data = 0;
++	u32 v;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_READ;
++		if (phyreg & MII_ADDR_C45)
++			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
++	}
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+ 			       100, 10000))
+ 		return -EBUSY;
+ 
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -178,7 +198,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 		return -EBUSY;
+ 
+ 	/* Read the data from the MII data register */
+-	data = (int)readl(priv->ioaddr + mii_data);
++	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+ 
+ 	return data;
+ }
+@@ -198,8 +218,9 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+-	u32 v;
+ 	u32 value = MII_BUSY;
++	int data = phydata;
++	u32 v;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+@@ -207,10 +228,13 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_WRITE;
+-	else
++		if (phyreg & MII_ADDR_C45)
++			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
++	} else {
+ 		value |= MII_WRITE;
++	}
+ 
+ 	/* Wait until any existing MII operation is complete */
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -218,7 +242,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 		return -EBUSY;
+ 
+ 	/* Set the MII address register to write */
+-	writel(phydata, priv->ioaddr + mii_data);
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	/* Wait until any existing MII operation is complete */
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index d0af7d37fdf9..1739c6dc470e 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -195,6 +195,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
+    IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
+ #define MII_ADDR_C45 (1<<30)
++#define MII_DEVADDR_C45_SHIFT	16
++#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+ 
+ struct device;
+ struct phylink;
+-- 
+1.9.1
 
-> >  tools/perf/builtin-report.c    |  4 ++--
-> >  tools/perf/builtin-stat.c      |  2 +-
-> >  tools/perf/builtin-top.c       |  8 ++++++--
-> >  tools/perf/builtin-trace.c     |  5 +++--
-> >  tools/perf/ui/browsers/hists.c | 13 +++++++++----
-> >  tools/perf/util/annotate.c     |  6 ++----
-> >  tools/perf/util/cs-etm.c       |  2 +-
-> >  tools/perf/util/intel-bts.c    |  5 ++---
-> >  tools/perf/util/intel-pt.c     |  5 ++---
-> >  tools/perf/util/map.c          |  7 +++++--
-> >  tools/perf/util/session.c      |  3 +++
-> >  11 files changed, 36 insertions(+), 24 deletions(-)
-> > 
-> > -- 
-> > 2.17.1
-> > 
