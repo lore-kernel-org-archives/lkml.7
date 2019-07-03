@@ -2,199 +2,103 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C909C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A813C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD612184C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mL4FL2oc"
+	by mail.kernel.org (Postfix) with ESMTP id 4455E2184C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGCP0W (ORCPT
+        id S1726710AbfGCP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 11:26:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45017 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbfGCP0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:26:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so1412604pgl.11;
-        Wed, 03 Jul 2019 08:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6QROen4N3MxmsNite+g7qwf/F2DzBAOrXmr+wrgNUV0=;
-        b=mL4FL2ocXEMUft2oJQXTLNkmp2DMQhRFIDfUUudoCHFYlSIrh6ynFfZlCuB+8NOMim
-         VMk9y7HplpNPFC6KGuTDgS6dN8TuY0uxMMdes5b9KmZGrzUiZGiaxWrWNJVy4prSIHHm
-         EStziaTU3MfmVowvDCqYVV6LvbKF/35GxNu7JH78aAPAJWUgbZYIdpXbVU+5xnPvG27X
-         hxbdI4InhdFTJmwB9CBPRdoD9eLEvdQ8oL0wG7ftUT2i9Xk8p1/xNX2Huh82tc6DK0gO
-         Ze2D7YCXmmd35uGFHjWxQNENe8fZI3z5nHbp48GVshQkZUvqiWXJVAmYWkq8tAORAnGI
-         A5cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6QROen4N3MxmsNite+g7qwf/F2DzBAOrXmr+wrgNUV0=;
-        b=r1mvjbIZh5tvyZJ2n4KCnCgZMvLjELDByJX2IPMVagERhZvrzGOPbVP2ZW8SK+5zMy
-         JvXY1NrFnFDnm9vvFwXo5+Q1m7wg41ksW9CMkpOdHOP6CxjME36+4KtEwSyOPdBn3vnx
-         3peaFIDn9d1AgdZx9q2b/knq6UroPHbSI4pugFVxHaFhDkmsS3Wgrn7gtwOMbQc08NHy
-         ywQXxbYvhlb19OdsQAZ0izA3ImLo4l86X0ojM+5kRkLVF1SM5POxJz1F5ceBYdaQ9U9d
-         V1elTaz2e6UaGJ4IpTCzH4gfd5EPLTh8D9+W33fw/VAkGqAU9IYho/YLotMHRxJ0wCnD
-         beyg==
-X-Gm-Message-State: APjAAAVlCUzlHX5RzAFZiTOqM/9IUeaI25Q/2vIUj84zRbku7YVgh0NK
-        bxDHPFl++/Q+NZzxh6nXCPYEeC1f
-X-Google-Smtp-Source: APXvYqwyIwTtUGuTTdJ9VDhykSgyTtX+5oH5cD/Vk+9O8Lfm6DJ0XbWSbihJbPJDOXwi1P6wrXn71w==
-X-Received: by 2002:a63:125c:: with SMTP id 28mr28274843pgs.255.1562167581005;
-        Wed, 03 Jul 2019 08:26:21 -0700 (PDT)
-Received: from [10.230.28.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r27sm6054940pgn.25.2019.07.03.08.26.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 08:26:20 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx
- switches
-To:     Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190701152723.624-1-paweldembicki@gmail.com>
- <20190703085757.1027-1-paweldembicki@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <97789626-8371-703b-b515-7eef5cdf198d@gmail.com>
-Date:   Wed, 3 Jul 2019 08:26:18 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 11:28:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36958 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfGCP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:28:40 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3CABC308222F;
+        Wed,  3 Jul 2019 15:28:40 +0000 (UTC)
+Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A0561001281;
+        Wed,  3 Jul 2019 15:28:36 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 17:28:34 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+Message-ID: <20190703172834.31ed1848.cohuck@redhat.com>
+In-Reply-To: <your-ad-here.call-01562166593-ext-0522@work.hours>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+        <alpine.LFD.2.21.1906211817010.2388@schleppi>
+        <20190624091740.1d9c6c1d.cohuck@redhat.com>
+        <20190703165506.53d3911c.cohuck@redhat.com>
+        <your-ad-here.call-01562166593-ext-0522@work.hours>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190703085757.1027-1-paweldembicki@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 03 Jul 2019 15:28:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 3 Jul 2019 17:09:53 +0200
+Vasily Gorbik <gor@linux.ibm.com> wrote:
 
-
-On 7/3/2019 1:57 AM, Pawel Dembicki wrote:
-> This commit introduce how to use vsc73xx platform driver.
+> On Wed, Jul 03, 2019 at 04:55:06PM +0200, Cornelia Huck wrote:
+> > On Mon, 24 Jun 2019 09:17:40 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> >   
+> > > On Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
+> > > Sebastian Ott <sebott@linux.ibm.com> wrote:
+> > >   
+> > > > On Thu, 13 Jun 2019, Cornelia Huck wrote:    
+> > > > > Sometimes, we want to control which of the matching drivers
+> > > > > binds to a subchannel device (e.g. for subchannels we want to
+> > > > > handle via vfio-ccw).
+> > > > > 
+> > > > > For pci devices, a mechanism to do so has been introduced in
+> > > > > 782a985d7af2 ("PCI: Introduce new device binding path using
+> > > > > pci_dev.driver_override"). It makes sense to introduce the
+> > > > > driver_override attribute for subchannel devices as well, so
+> > > > > that we can easily extend the 'driverctl' tool (which makes
+> > > > > use of the driver_override attribute for pci).
+> > > > > 
+> > > > > Note that unlike pci we still require a driver override to
+> > > > > match the subchannel type; matching more than one subchannel
+> > > > > type is probably not useful anyway.
+> > > > > 
+> > > > > Signed-off-by: Cornelia Huck <cohuck@redhat.com>      
+> > > > 
+> > > > Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> > > > 
+> > > > Should I take that via our git tree or do you have other patches depending 
+> > > > on this one?
+> > > >     
+> > > 
+> > > No, this patch is stand-alone; everything else is happening in user
+> > > space, so taking it via your tree would be great. Thanks!  
+> > 
+> > Friendly ping (I don't see it on s390/features yet; or is this going
+> > via some other path?)
+> >   
 > 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-
-Pawel, please resubmit your patches starting a new thread, not as reply
-to the existing ones, see
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/networking/netdev-FAQ.rst#n134
-for details. Also, David Miller typically likes to have a cover letter
-for patch count > 1.
-
-Thanks!
-
-> ---
-> Changes in v2:
-> - Drop -spi and -platform suffix
-> - Change commit message
-> 
->  .../bindings/net/dsa/vitesse,vsc73xx.txt      | 57 +++++++++++++++++--
->  1 file changed, 53 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> index ed4710c40641..c55e0148657d 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-> @@ -2,8 +2,8 @@ Vitesse VSC73xx Switches
->  ========================
->  
->  This defines device tree bindings for the Vitesse VSC73xx switch chips.
-> -The Vitesse company has been acquired by Microsemi and Microsemi in turn
-> -acquired by Microchip but retains this vendor branding.
-> +The Vitesse company has been acquired by Microsemi and Microsemi has
-> +been acquired Microchip but retains this vendor branding.
->  
->  The currently supported switch chips are:
->  Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-> @@ -11,8 +11,13 @@ Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
->  Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
->  Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
->  
-> -The device tree node is an SPI device so it must reside inside a SPI bus
-> -device tree node, see spi/spi-bus.txt
-> +This switch could have two different management interface.
-> +
-> +If SPI interface is used, the device tree node is an SPI device so it must
-> +reside inside a SPI bus device tree node, see spi/spi-bus.txt
-> +
-> +If Platform driver is used, the device tree node is an platform device so it
-> +must reside inside a platform bus device tree node.
->  
->  Required properties:
->  
-> @@ -38,6 +43,7 @@ and subnodes of DSA switches.
->  
->  Examples:
->  
-> +SPI:
->  switch@0 {
->  	compatible = "vitesse,vsc7395";
->  	reg = <0>;
-> @@ -79,3 +85,46 @@ switch@0 {
->  		};
->  	};
->  };
-> +
-> +Platform:
-> +switch@2,0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	compatible = "vitesse,vsc7385";
-> +	reg = <0x2 0x0 0x20000>;
-> +	reset-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			label = "lan1";
-> +		};
-> +		port@1 {
-> +			reg = <1>;
-> +			label = "lan2";
-> +		};
-> +		port@2 {
-> +			reg = <2>;
-> +			label = "lan3";
-> +		};
-> +		port@3 {
-> +			reg = <3>;
-> +			label = "lan4";
-> +		};
-> +		vsc: port@6 {
-> +			reg = <6>;
-> +			label = "cpu";
-> +			ethernet = <&enet0>;
-> +			phy-mode = "rgmii";
-> +			fixed-link {
-> +				speed = <1000>;
-> +				full-duplex;
-> +				pause;
-> +			};
-> +		};
-> +	};
-> +
-> +};
+> It is there now. Just waited until latest ci results to push the branch.
+> Sorry for delay.
 > 
 
--- 
-Florian
+Awesome, thanks!
