@@ -2,246 +2,205 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61BDC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD7DC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F17121721
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2AB2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ADj3VWtl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i45m30Px"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfGCECQ (ORCPT
+        id S1727192AbfGCECU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 00:02:16 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:53866 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCECC (ORCPT
+        Wed, 3 Jul 2019 00:02:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38956 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCECR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 00:02:02 -0400
-Received: by mail-pg1-f201.google.com with SMTP id u4so748101pgb.20
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:02:02 -0700 (PDT)
+        Wed, 3 Jul 2019 00:02:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so519716pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=+Bz9EK5nXnCLx3MyMoxYoR0icGFjWu9nXmNokal9mQM=;
-        b=ADj3VWtlBGJk4u5ja3UlOVOUmIjGfBzRceZgHd/JjkItmsL9/IvBWO8SH+vctlhEk4
-         y0Czn5yxio8Pej1EY2pnnCDEOM4qIdwiwa42NoBg7rUITtuhKvv59CkMeZhq+Cu9lqke
-         7/We+NoLCObmzpy4kLqiXY37wH8bB9z9apxSfHrhEOUi3wSDZ6O7G7/h8/YGDkqffy0E
-         vTKU/mLGyqoKN5r07okLNUFNFig2aorpTHLrLtIfPR841tdvuEBcQvetc4tH44yDXPe+
-         LGS1yLh0tGEJe+HLLgEtNniKY2TOjxEkmIRcl+NMI2AaOtMdDGAEtbNOefurcKfku4SL
-         7Syw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sE5oRPdvnR06Bfd/FTtYnLnxxFkCbEalP2abcHjeDU8=;
+        b=i45m30PxRjJ+QfF7YsmsB920O0lzOqwcHSJWAm5pkRwMHE3Fa8Odbyv1u8nuW9F9S2
+         WJYWeTjXNsgwH5BrYwQ+lkpbsvPt6CMZrNT2EpfX5U8p4XivjywW3uq2mtOxYmTf1CBk
+         gdV1w3pHjv12duPJZ6QlZuhjJXWO7g8hHYNhc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+Bz9EK5nXnCLx3MyMoxYoR0icGFjWu9nXmNokal9mQM=;
-        b=NuZrs+bvPjmxm+8IneZS7ekRVVApgWvAKcxlUh0+MVP3gCrjtzVMAB0qqZr5ytrY/V
-         BLWP3+JVFqRvHbmvU44PZWI59OaRGSIMjv7iNYPcqMXEhlo3D2oX1LGymcCFUP8a4wCY
-         TsFiWiL65iyyUHNF63alIZ6HFh8fRZl17KRMPAtBPlLv647AUD75aZS2UgJNIOmj5WXW
-         uhQSX6eOKUf2SZk/ic9mX0s1EvFOo2mIsXk0X3v1WhqUFzOeMRGI8Ic/ZxbMvwusbqfw
-         JqwScqgBu2zNn3XzezCQVaFEf3dzunsfn7ReShM5xzpPMO4BTu+0sCu+Qd/DnCJ1qi3G
-         P07A==
-X-Gm-Message-State: APjAAAVjtXAbdB03w+LPt6iAxMlvM7cVJGF+7E+NuRiDnkl1Y5iY3DCk
-        7vsfDrFe6P8Xe4bK7FNL2uWjyA2kV9c=
-X-Google-Smtp-Source: APXvYqyvL3tIUNaaMFnL51aAcMnDwF12vdjuZZRdl9romMMrEcJCalpohkrbZ8zEgN7qtjZFCQg3IzQQSfk=
-X-Received: by 2002:a63:1b5c:: with SMTP id b28mr3590819pgm.101.1562126521287;
- Tue, 02 Jul 2019 21:02:01 -0700 (PDT)
-Date:   Tue,  2 Jul 2019 21:01:54 -0700
-In-Reply-To: <20190703040156.56953-1-walken@google.com>
-Message-Id: <20190703040156.56953-2-walken@google.com>
-Mime-Version: 1.0
-References: <20190703040156.56953-1-walken@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3 1/3] augmented rbtree: add comments for RB_DECLARE_CALLBACKS
- macro
-From:   Michel Lespinasse <walken@google.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sE5oRPdvnR06Bfd/FTtYnLnxxFkCbEalP2abcHjeDU8=;
+        b=nosYDGyxH+aHz/XZOrnHXnTZoaz+HhClpVUHUGYxa85xobcfbczwV8TSVf4NWvKNJB
+         u1Gjt63/9Ab7jO37ge8dT5C6E54+VRvpO4Jobdti2OxYmtX06zIQFtS9cacpCWmNAv+w
+         45ZIvvttCm6v7HhqI2yf6iTkXY3SBMQyMqrtc/Wd0XGF3AaN4+redYr8z2MLKDBkd+MR
+         BjvspDSpJAqDiznaMBBRNT8Coao8Qm4B2YTRWGJ5rKrV/+zIMkiWLdKsrvL6NPPkvqME
+         2bBYTYaphYUkboTlYFa/iUD+a7q+oMlMuHJ8Ep5jGje46Nt2e4zrl706hOcP+akzxCQw
+         9xdw==
+X-Gm-Message-State: APjAAAWxxKetz/RPACEVG04gNKC/EI0dJ2Csks/mscmzZI+/DPb6Cy+R
+        XfDpY7U51Ze/W8zKkz2Jv32ciw==
+X-Google-Smtp-Source: APXvYqx6ubXzVMy5VTfYWATgskEcFGPoppK1XdpHgeR0gsLFY6p2zOnwLkChe48hUu1VnvaIDKlbHA==
+X-Received: by 2002:a63:2006:: with SMTP id g6mr14382753pgg.287.1562126536114;
+        Tue, 02 Jul 2019 21:02:16 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id w16sm608327pfj.85.2019.07.02.21.02.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 02 Jul 2019 21:02:15 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Michel Lespinasse <walken@google.com>,
-        Davidlohr Bueso <dbueso@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v7 1/3] arm64: map FDT as RW for early_init_dt_scan()
+Date:   Wed,  3 Jul 2019 12:01:35 +0800
+Message-Id: <20190703040135.169843-2-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703040135.169843-1-hsinyi@chromium.org>
+References: <20190703040135.169843-1-hsinyi@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a short comment summarizing the arguments to RB_DECLARE_CALLBACKS.
-The arguments are also now capitalized. This copies the style of the
-INTERVAL_TREE_DEFINE macro.
+Currently in arm64, FDT is mapped to RO before it's passed to
+early_init_dt_scan(). However, there might be some codes
+(eg. commit "fdt: add support for rng-seed") that need to modify FDT
+during init. Map FDT to RO after early fixups are done.
 
-No functional changes in this commit, only comments and capitalization.
-
-Signed-off-by: Michel Lespinasse <walken@google.com>
-Acked-by: Davidlohr Bueso <dbueso@suse.de>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- include/linux/rbtree_augmented.h       | 54 ++++++++++++++++----------
- tools/include/linux/rbtree_augmented.h | 54 ++++++++++++++++----------
- 2 files changed, 66 insertions(+), 42 deletions(-)
+No change since v5.
+---
+ arch/arm64/include/asm/mmu.h |  2 +-
+ arch/arm64/kernel/kaslr.c    |  5 +----
+ arch/arm64/kernel/setup.c    |  9 ++++++++-
+ arch/arm64/mm/mmu.c          | 15 +--------------
+ 4 files changed, 11 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/rbtree_augmented.h b/include/linux/rbtree_augmented.h
-index f1ed3fc80bbb..5923495276e0 100644
---- a/include/linux/rbtree_augmented.h
-+++ b/include/linux/rbtree_augmented.h
-@@ -72,39 +72,51 @@ rb_insert_augmented_cached(struct rb_node *node,
- 	rb_insert_augmented(node, &root->rb_root, augment);
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index fd6161336653..f217e3292919 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -126,7 +126,7 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
+-extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
++extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+ extern void mark_linear_text_alias_ro(void);
+ 
+ #define INIT_MM_CONTEXT(name)	\
+diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
+index 708051655ad9..d94a3e41cef9 100644
+--- a/arch/arm64/kernel/kaslr.c
++++ b/arch/arm64/kernel/kaslr.c
+@@ -62,9 +62,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
+ 	return default_cmdline;
  }
  
--#define RB_DECLARE_CALLBACKS(rbstatic, rbname, rbstruct, rbfield,	\
--			     rbtype, rbaugmented, rbcompute)		\
-+/*
-+ * Template for declaring augmented rbtree callbacks
-+ *
-+ * RBSTATIC:    'static' or empty
-+ * RBNAME:      name of the rb_augment_callbacks structure
-+ * RBSTRUCT:    struct type of the tree nodes
-+ * RBFIELD:     name of struct rb_node field within RBSTRUCT
-+ * RBTYPE:      type of the RBAUGMENTED field
-+ * RBAUGMENTED: name of RBTYPE field within RBSTRUCT holding data for subtree
-+ * RBCOMPUTE:   name of function that recomputes the RBAUGMENTED data
-+ */
+-extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
+-				       pgprot_t prot);
+-
+ /*
+  * This routine will be executed with the kernel mapped at its default virtual
+  * address, and if it returns successfully, the kernel will be remapped, and
+@@ -93,7 +90,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
+ 	 * attempt at mapping the FDT in setup_machine()
+ 	 */
+ 	early_fixmap_init();
+-	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
++	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	if (!fdt)
+ 		return 0;
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 7e541f947b4c..754763b3fe28 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -170,9 +170,13 @@ static void __init smp_build_mpidr_hash(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	void *dt_virt = fixmap_remap_fdt(dt_phys);
++	int size;
++	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+ 	const char *name;
+ 
++	if (dt_virt)
++		memblock_reserve(dt_phys, size);
 +
-+#define RB_DECLARE_CALLBACKS(RBSTATIC, RBNAME, RBSTRUCT, RBFIELD,	\
-+			     RBTYPE, RBAUGMENTED, RBCOMPUTE)		\
- static inline void							\
--rbname ## _propagate(struct rb_node *rb, struct rb_node *stop)		\
-+RBNAME ## _propagate(struct rb_node *rb, struct rb_node *stop)		\
- {									\
- 	while (rb != stop) {						\
--		rbstruct *node = rb_entry(rb, rbstruct, rbfield);	\
--		rbtype augmented = rbcompute(node);			\
--		if (node->rbaugmented == augmented)			\
-+		RBSTRUCT *node = rb_entry(rb, RBSTRUCT, RBFIELD);	\
-+		RBTYPE augmented = RBCOMPUTE(node);			\
-+		if (node->RBAUGMENTED == augmented)			\
- 			break;						\
--		node->rbaugmented = augmented;				\
--		rb = rb_parent(&node->rbfield);				\
-+		node->RBAUGMENTED = augmented;				\
-+		rb = rb_parent(&node->RBFIELD);				\
- 	}								\
- }									\
- static inline void							\
--rbname ## _copy(struct rb_node *rb_old, struct rb_node *rb_new)		\
-+RBNAME ## _copy(struct rb_node *rb_old, struct rb_node *rb_new)		\
- {									\
--	rbstruct *old = rb_entry(rb_old, rbstruct, rbfield);		\
--	rbstruct *new = rb_entry(rb_new, rbstruct, rbfield);		\
--	new->rbaugmented = old->rbaugmented;				\
-+	RBSTRUCT *old = rb_entry(rb_old, RBSTRUCT, RBFIELD);		\
-+	RBSTRUCT *new = rb_entry(rb_new, RBSTRUCT, RBFIELD);		\
-+	new->RBAUGMENTED = old->RBAUGMENTED;				\
- }									\
- static void								\
--rbname ## _rotate(struct rb_node *rb_old, struct rb_node *rb_new)	\
-+RBNAME ## _rotate(struct rb_node *rb_old, struct rb_node *rb_new)	\
- {									\
--	rbstruct *old = rb_entry(rb_old, rbstruct, rbfield);		\
--	rbstruct *new = rb_entry(rb_new, rbstruct, rbfield);		\
--	new->rbaugmented = old->rbaugmented;				\
--	old->rbaugmented = rbcompute(old);				\
-+	RBSTRUCT *old = rb_entry(rb_old, RBSTRUCT, RBFIELD);		\
-+	RBSTRUCT *new = rb_entry(rb_new, RBSTRUCT, RBFIELD);		\
-+	new->RBAUGMENTED = old->RBAUGMENTED;				\
-+	old->RBAUGMENTED = RBCOMPUTE(old);				\
- }									\
--rbstatic const struct rb_augment_callbacks rbname = {			\
--	.propagate = rbname ## _propagate,				\
--	.copy = rbname ## _copy,					\
--	.rotate = rbname ## _rotate					\
-+RBSTATIC const struct rb_augment_callbacks RBNAME = {			\
-+	.propagate = RBNAME ## _propagate,				\
-+	.copy = RBNAME ## _copy,					\
-+	.rotate = RBNAME ## _rotate					\
- };
+ 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
+ 		pr_crit("\n"
+ 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
+@@ -184,6 +188,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
  
- 
-diff --git a/tools/include/linux/rbtree_augmented.h b/tools/include/linux/rbtree_augmented.h
-index 372a539314af..f46c1bf91f64 100644
---- a/tools/include/linux/rbtree_augmented.h
-+++ b/tools/include/linux/rbtree_augmented.h
-@@ -74,39 +74,51 @@ rb_insert_augmented_cached(struct rb_node *node,
- 	rb_insert_augmented(node, &root->rb_root, augment);
++	/* Early fixups are done, map the FDT as read-only now */
++	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++
+ 	name = of_flat_dt_get_machine_name();
+ 	if (!name)
+ 		return;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 750a69dde39b..54e93583085c 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -876,7 +876,7 @@ void __set_fixmap(enum fixed_addresses idx,
+ 	}
  }
  
--#define RB_DECLARE_CALLBACKS(rbstatic, rbname, rbstruct, rbfield,	\
--			     rbtype, rbaugmented, rbcompute)		\
-+/*
-+ * Template for declaring augmented rbtree callbacks
-+ *
-+ * RBSTATIC:    'static' or empty
-+ * RBNAME:      name of the rb_augment_callbacks structure
-+ * RBSTRUCT:    struct type of the tree nodes
-+ * RBFIELD:     name of struct rb_node field within RBSTRUCT
-+ * RBTYPE:      type of the RBAUGMENTED field
-+ * RBAUGMENTED: name of RBTYPE field within RBSTRUCT holding data for subtree
-+ * RBCOMPUTE:   name of function that recomputes the RBAUGMENTED data
-+ */
-+
-+#define RB_DECLARE_CALLBACKS(RBSTATIC, RBNAME, RBSTRUCT, RBFIELD,	\
-+			     RBTYPE, RBAUGMENTED, RBCOMPUTE)		\
- static inline void							\
--rbname ## _propagate(struct rb_node *rb, struct rb_node *stop)		\
-+RBNAME ## _propagate(struct rb_node *rb, struct rb_node *stop)		\
- {									\
- 	while (rb != stop) {						\
--		rbstruct *node = rb_entry(rb, rbstruct, rbfield);	\
--		rbtype augmented = rbcompute(node);			\
--		if (node->rbaugmented == augmented)			\
-+		RBSTRUCT *node = rb_entry(rb, RBSTRUCT, RBFIELD);	\
-+		RBTYPE augmented = RBCOMPUTE(node);			\
-+		if (node->RBAUGMENTED == augmented)			\
- 			break;						\
--		node->rbaugmented = augmented;				\
--		rb = rb_parent(&node->rbfield);				\
-+		node->RBAUGMENTED = augmented;				\
-+		rb = rb_parent(&node->RBFIELD);				\
- 	}								\
- }									\
- static inline void							\
--rbname ## _copy(struct rb_node *rb_old, struct rb_node *rb_new)		\
-+RBNAME ## _copy(struct rb_node *rb_old, struct rb_node *rb_new)		\
- {									\
--	rbstruct *old = rb_entry(rb_old, rbstruct, rbfield);		\
--	rbstruct *new = rb_entry(rb_new, rbstruct, rbfield);		\
--	new->rbaugmented = old->rbaugmented;				\
-+	RBSTRUCT *old = rb_entry(rb_old, RBSTRUCT, RBFIELD);		\
-+	RBSTRUCT *new = rb_entry(rb_new, RBSTRUCT, RBFIELD);		\
-+	new->RBAUGMENTED = old->RBAUGMENTED;				\
- }									\
- static void								\
--rbname ## _rotate(struct rb_node *rb_old, struct rb_node *rb_new)	\
-+RBNAME ## _rotate(struct rb_node *rb_old, struct rb_node *rb_new)	\
- {									\
--	rbstruct *old = rb_entry(rb_old, rbstruct, rbfield);		\
--	rbstruct *new = rb_entry(rb_new, rbstruct, rbfield);		\
--	new->rbaugmented = old->rbaugmented;				\
--	old->rbaugmented = rbcompute(old);				\
-+	RBSTRUCT *old = rb_entry(rb_old, RBSTRUCT, RBFIELD);		\
-+	RBSTRUCT *new = rb_entry(rb_new, RBSTRUCT, RBFIELD);		\
-+	new->RBAUGMENTED = old->RBAUGMENTED;				\
-+	old->RBAUGMENTED = RBCOMPUTE(old);				\
- }									\
--rbstatic const struct rb_augment_callbacks rbname = {			\
--	.propagate = rbname ## _propagate,				\
--	.copy = rbname ## _copy,					\
--	.rotate = rbname ## _rotate					\
-+RBSTATIC const struct rb_augment_callbacks RBNAME = {			\
-+	.propagate = RBNAME ## _propagate,				\
-+	.copy = RBNAME ## _copy,					\
-+	.rotate = RBNAME ## _rotate					\
- };
+-void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
++void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ {
+ 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
+ 	int offset;
+@@ -929,19 +929,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ 	return dt_virt;
+ }
  
- 
+-void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+-{
+-	void *dt_virt;
+-	int size;
+-
+-	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+-	if (!dt_virt)
+-		return NULL;
+-
+-	memblock_reserve(dt_phys, size);
+-	return dt_virt;
+-}
+-
+ int __init arch_ioremap_p4d_supported(void)
+ {
+ 	return 0;
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.20.1
 
