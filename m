@@ -2,81 +2,125 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D6FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B905C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C592187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483C721881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfGCN1T (ORCPT
+        id S1727045AbfGCN2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:27:19 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:50267 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCN1S (ORCPT
+        Wed, 3 Jul 2019 09:28:44 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:48817 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCN2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:27:18 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MBlpC-1ho7Kg0j64-00C8ca; Wed, 03 Jul 2019 15:27:14 +0200
-Subject: Re: [PATCH V2 1/2] serial/8250: Add support for NI-Serial
- PXI/PXIe+485 devices
-To:     jeyentam <je.yen.tam@ni.com>, gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190703072435.34152-1-je.yen.tam@ni.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <63697b10-98a7-86b7-2513-3eb793ed03c5@metux.net>
-Date:   Wed, 3 Jul 2019 15:27:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 3 Jul 2019 09:28:43 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 5F228100015;
+        Wed,  3 Jul 2019 13:28:39 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 15:28:38 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH 01/25] arm64: dts: allwinner: Switch A64 dts(i) to use
+ SPDX identifier
+Message-ID: <20190703132838.nhewz5wzsijl65s5@flea>
+References: <20190703124609.21435-1-jagan@amarulasolutions.com>
+ <20190703124609.21435-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703072435.34152-1-je.yen.tam@ni.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:88OtvEu5RKkHMkcjy/zKAH4e4olL3QESNrsVOKCIoavVk+OQ4lL
- KpwDF61skuRLCrX/plfmludB9ZchcZFssARMhG3gz3VLZEo2oqqxx4GLN/TEa0GWzHCwAfB
- NvHuzdGj0Q/P+5CSrKUIVYvJo3vfpckh4m4O9qePhyBq4aXAsgSlMDwAGwJkViO22AOMxmV
- 2R8QVA0PhgpA6y9ZBEepQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wz/rYjhdZS8=:+qQ6pl+Su62RMg4KobnxdG
- l7WrNMOIKWd+MP7OS4uoyWjMGtm7la73PmEdwywXhkzJPzKv8g6kUfQQgH7IfdXa3GFtLUBWu
- rGxuPvZpBIjoGLic7Xh1CeJZQjP2peXX/iMdcRXGLavCXfn/fih8TFLtQP0WjH9+Q0aBtyE76
- ETSxdMwmPGcmdRLcfGUZU842opcYwIdWLXqOcpnZfsgg+VeuvHGvLolGwkA9QAmD5/qR0ouQ6
- 92TBoqEr/x7jG+4XTl2+p1rz96/WLc03co17J0bmnRxe6sT/kffY8kSeL7cQzwCR4xYZwYa5Y
- AFMD+LrBmeUUQJCJIZnLGOvYdhx2IErKEpRPjyX4Hxqhlcb+KgP0uwwCeL9YjUkza1ujztM4r
- qTnHLV6JUfNLv1VnUf5bpbCYTeINMOtasU9uPVCEUVuDBw8UyWb8qCBKxczADNfXHvGq9XH/m
- /q0KlbJ4FEPhDwhqrhAxE1OnywTI6BOK3yQfbqS4CKK3jyJP25Qm8UmbHBzY1ibXnoSEqbOUU
- m1Nk73rOZzBCz3TJBN4FhhhSrK0ZwEKNBR7UsHytJyZE+3YHxiW2J5cIL8GnGAPs3MKF2zw7U
- RB0/UhSZIEf58K4eOqVtnog6mMeBXbQeFmTFL16mXtInmGQo/j/7EWvFj204BUGoz6RtA28+U
- ZsxZu3rNuIBzprggMZWz/Qy8KHZ86omOdPFBm1hC5FD3WwSrlMwOSLa6pBjqNOv9oI31ixr6X
- 2OavRLiynVWHeoiltf58xnH035jcsiT9QgQgY9/YqHoVIdAig4wYdgMaOQs=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ai23iijsoaamk652"
+Content-Disposition: inline
+In-Reply-To: <20190703124609.21435-2-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.19 09:24, jeyentam wrote:
 
-Hi,
+--ai23iijsoaamk652
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-besides what Greg already said:
+On Wed, Jul 03, 2019 at 06:15:45PM +0530, Jagan Teki wrote:
+> Adopt the SPDX license identifier headers to ease license
+> compliance management on Allwinner A64 dts(i) files.
+>
+> While the text specifies "of the GPL or the X11 license"
+> but the actual license text matches the MIT license as
+> specified at [0]
+>
+> [0] https://spdx.org/licenses/MIT.html
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
+>  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
+>  9 files changed, 9 insertions(+), 342 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> index 208373efee49..efdd84c362b0 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> @@ -1,43 +1,6 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
->  /* UART Port Control Register */> -#define NI8430_PORTCON	0x0f> -#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
-Can we have that renaming as a separate patch, to ease review ?
+You say that this is a GPL2 only license
 
-And what about introducing a config sym for the new device specific
-stuff ? These devices seem to be pretty rare - never seen them in
-embeded world, where we do need to care of kernel size.
+>  /*
+>   * Copyright (c) 2016 ARM Ltd.
+> - *
+> - * This file is dual-licensed: you can use it either under the terms
+> - * of the GPL or the X11 license, at your option. Note that this dual
+> - * licensing only applies to this file, and not this project as a
+> - * whole.
+> - *
+> - *  a) This library is free software; you can redistribute it and/or
+> - *     modify it under the terms of the GNU General Public License as
+> - *     published by the Free Software Foundation; either version 2 of the
+> - *     License, or (at your option) any later version.
 
+While this is GPL2 or later.
 
---mtx
+Also, I'm not sure why we need 25 patches to do that. Can't you just
+send one (there's no even need to separate arm and arm64, since we
+will do only a single PR from now as opposed to what we were doing
+before).
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ai23iijsoaamk652
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRythgAKCRDj7w1vZxhR
+xZUpAQCUowhwV64YaNa72m5XwoQd0CDApNJEPfLdaY1WQi3yBwEAlNG7pyZFSYLA
+mm/nwHBZk3qbI6FkIAe7oqcMDaVNvQA=
+=pMuf
+-----END PGP SIGNATURE-----
+
+--ai23iijsoaamk652--
