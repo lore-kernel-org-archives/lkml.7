@@ -2,111 +2,115 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16A9C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88632C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976D9218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GP5yP5Iw"
+	by mail.kernel.org (Postfix) with ESMTP id 6B131218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfGCIvi (ORCPT
+        id S1727188AbfGCIyY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:51:38 -0400
-Received: from mout.gmx.net ([212.227.15.18]:46665 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbfGCIvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:51:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562143879;
-        bh=9PB186LEloBouYC1p2ldmUewg113AS/sk7TTgnQz8eE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=GP5yP5IwXwZWTpXfe8SA3N/3zIgAF+n+xBPjg9pP/80VsehK5SJFrQkblA+mcm8DL
-         sUdghrvHHHWKKaCfmCJ0D3UG6/YDOjOQpxkP1ZLW5p34Vlg8nDHz2GbATIjAq4iZnF
-         HMkkGm05EwVq93gDCm9rVb23E/04+chH5Y0S9mZk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.158.204] ([217.61.158.204]) by web-mail.gmx.net
- (3c-app-gmx-bs07.server.lan [172.19.170.56]) (via HTTP); Wed, 3 Jul 2019
- 10:51:18 +0200
+        Wed, 3 Jul 2019 04:54:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35597 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfGCIyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:54:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so1719730qto.2;
+        Wed, 03 Jul 2019 01:54:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MSjZcZaarsSFJ2hu2ClYcmZVIX7oo4qCsiK4ex6LbOI=;
+        b=rpJJNYR8pHarR3zG2F7L9hmYg0ADqULRTwBnnfisItIg4Y9v4IPIAT4ftXyKCvrAGC
+         CSCwr2YDpqfAoHh0mkQ9JBfgDbt9w01AEwZ9MT6bjfs0o4AShkKByDGg9Q1XApfAMvr7
+         OmAcsdu1cpavEm4BdC9dfEf4N9gPFUphSOMDQEdWt3MtWceCcMBO5FzN5z2CiSPlL45G
+         qYAJAHuLgdp3p6kxYFJ3Wg0AvTaVtdhi4jxIbBrClTRCd8ITaHYCkBGlEoGqZi0JWD9X
+         btT5/VdMiZgFty7TZJd7qLtv89hxjloHgM2x43/v691eeLRyCetIdFTb3Mf5fm/yMdvV
+         rtmQ==
+X-Gm-Message-State: APjAAAWZg9pjaNgHsirVvrj/cqLN520rZvGtkWQIJCHO5n4qEZuLy1Rz
+        DBGgbVRJkcrBoCMTIamKxBSk9YpqURe7fo4UNqI=
+X-Google-Smtp-Source: APXvYqwUYSO3x//KZTXG6yv2dZ3NcZk20NbjruJN9Xn8+zo86d+e94GBeKk5SizQIKzkTw9NBTZSnlR8ipikN2uBVs8=
+X-Received: by 2002:a0c:b88e:: with SMTP id y14mr29883517qvf.93.1562144062650;
+ Wed, 03 Jul 2019 01:54:22 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <trinity-ca99ab22-eda4-42dd-b6eb-8e4bb5c99165-1562143878858@3c-app-gmx-bs07>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Matthias Brugger" <matthias.bgg@gmail.com>
-Cc:     "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Josef Friedl" <josef.friedl@speed.at>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>
-Subject: Aw: Re: [PATCH 3/3] add driver and MAINTAINERS for poweroff
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 3 Jul 2019 10:51:18 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <c1358da0-60a4-49dd-71a8-77e90178c9c9@gmail.com>
-References: <20190702094045.3652-1-frank-w@public-files.de>
- <20190702094045.3652-4-frank-w@public-files.de>
- <c1358da0-60a4-49dd-71a8-77e90178c9c9@gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:JPZTCh1ZfJHpWzb5eYAk5s1kOodanJvlOtH0JoIL8Th5cL5eBNXN53MDJZG4Tiea1rQbA
- ZPZUQ2sgDFECxxKapNnBOheINb976QRPW6Wr+OzxgmAp/lN91irS9iqxWTnAZKTjmXV12PyN+sy4
- NbqHa0eaADVQOZFLcZBw3UAFT3quKZoGm9gT5BJ8AnNIp6Q2+Xhtg56dlrva6jfmPpBj/aPTgVlv
- qN998m7tH0wsHPJGQ0k3O8vu3SoNVkokqEOBJ0FoektvVCYGUVcdxc8BFFzZ+UHMiman3Qxnb3Kr
- 1I=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1DICHQPpQTI=:A+NaXAfFhjiJt8kS1grdXD
- I8q+xw9r5eK5Hs0XxMcq9YAmZoEbhl5ngXLZirqdMYPNCsnaKMeVeOGCf9SfEUioYjkiIUQZB
- TiTU8Tw6t6rLww2mYVN1zH/UGj6ISVUDdFgBQzicUwLNh7UP13UCGyLB+vaa+JHKeyjJhppkh
- BOkc62et0yP0yk/E6tM1TaT+Q8NjGJhKTNSJ4AR2VqJJKLaFVhE/S5qmusGjjOrn7imr1sP2J
- YWSqbIRWftYdT90MSZWM/nf5wB0aEcYxrwElx37L5KD4b1WAMyQSQCHqKYDuqkDnO6nhM4tzb
- VnWUJ/TP7MdswuWgS3pfMJr5XBXJkMnvTgVk0LTfAtgRqeIz2VeNu6nQ/ixPwXb91Wj7ozvzq
- yFfBYU/ahOjjVvEO01PVk+8Mkmf//BE6fUQMqH98N5YHiAXJiP9SzCkZ1r7FFSAa6+hJC3nJs
- pr6O7q1FU1E5qaHAM6+fUin6y8Ub+D5hgJ4C7Mhe7dAnun5Ww3Kx9D39Vl4lk6sFiVxJbDO1j
- SFZGpLKXUGusvNivSBCQDEA6xIf6PV3Cx3dTQdyTIE5iXnp/dPMTYDFgVmWmyZNl89b1elkg9
- sbM2p9+6MwlcJiHH4VvESL7N3bbu3YQlskn0BljRWyD9FjsUmDrJRvl1abkbvjegDrIJ3Ue/u
- BODs=
-Content-Transfer-Encoding: quoted-printable
+References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-6-hch@lst.de>
+ <20190430201041.536amvinrcvd2wua@pburton-laptop> <20190430202947.GA30262@lst.de>
+ <20190430211105.ielntedm46uqamca@pburton-laptop> <20190501131339.GA890@lst.de>
+ <20190501171355.7wnrutfnax5djkpx@pburton-laptop> <20190603064855.GA22023@lst.de>
+In-Reply-To: <20190603064855.GA22023@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 3 Jul 2019 10:54:05 +0200
+Message-ID: <CAK8P3a0+mmc_DsHZZeM85xGUUB8zc50ROUu3=i3UN1XwD8UGeQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7 v2] MIPS: use the generic uncached segment support in dma-direct
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathias
-
-thank you for first look on this. Patchseries is originally from Josef Fri=
-edl i got some time ago for getting poweroff working on bananapi r2. There=
- it works and maybe on another devices too.
-
-drivers/rtc/rtc-mt6397.c and drivers/rtc/rtc-mt7622.c look very differentl=
-y on a diff (you've commented in part 1/3)
-
-maybe code is compatible but i have not the knowledge to compare this...ma=
-ybe sean (sorry, that i missed you) or ryder can say a word about the comp=
-atibility.
-
-> Fix the commit message. MAINTAINERS get normally send a independent patc=
-h.
-> Split patches between RTC and PWRC.
-> If not a new patch it should be stated in the commit message at least.
-
-i will try to split this
-
-> > + * Author: Tianping.Fang <tianping.fang@mediatek.com>
-> > + *        Sean Wang <sean.wang@mediatek.com>
+On Mon, Jun 3, 2019 at 8:50 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> You are the author of this file, aren't you?
+> On Wed, May 01, 2019 at 05:13:57PM +0000, Paul Burton wrote:
+> > Hi Christoph,
+> >
+> > On Wed, May 01, 2019 at 03:13:39PM +0200, Christoph Hellwig wrote:
+> > > Stop providing our arch alloc/free hooks and just expose the segment
+> > > offset instead.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  arch/mips/Kconfig              |  1 +
+> > >  arch/mips/include/asm/page.h   |  3 ---
+> > >  arch/mips/jazz/jazzdma.c       |  6 ------
+> > >  arch/mips/mm/dma-noncoherent.c | 26 +++++++++-----------------
+> > >  4 files changed, 10 insertions(+), 26 deletions(-)
+> >
+> > This one looks good to me now, for patches 1 & 5:
+> >
+> >   Acked-by: Paul Burton <paul.burton@mips.com>
+>
+> Thanks, I've merged thos into the dma-mapping tree.
 
-no, afaik these is code taken from rtc-mt6397.c and put in a separate head=
-er-file to use it in multiple c-files.
+I think this is the cause of some kernelci failures in current
+linux-next builds:
 
-sidenote on encoding/word-wrap. i use only "git sendemail" which afaik cal=
-ls sendmail (no other mta like thunderbird or similar) on ubuntu 18.4....c=
-urently have no idea how to fix this...have searched before, but not yet f=
-ound anything. if you have an idea please give me a hint.
+https://kernelci.org/build/next/branch/master/kernel/next-20190702/
 
-regards Frank
+bigsur_defconfig ‐ mips3 warnings — 1 error
+cavium_octeon_defconfig ‐ mips3 warnings — 1 error
+ip27_defconfig ‐ mips3 warnings — 1 error
+loongson3_defconfig ‐ mips3 warnings — 1 error
+mips_paravirt_defconfig ‐ mips3 warnings — 1 error
+nlm_xlp_defconfig ‐ mips3 warnings — 1 error
+nlm_xlr_defconfig ‐ mips1 warning — 1 error
+
+/home/buildslave/workspace/workspace/kernel-build@8/linux/build/../kernel/dma/direct.c:144:
+undefined reference to `arch_dma_prep_coherent'
+2/home/buildslave/workspace/kernel-build/linux/build/../kernel/dma/direct.c:144:
+undefined reference to `arch_dma_prep_coherent'
+2(.text+0xafc): undefined reference to `arch_dma_prep_coherent'
+1direct.c:(.text+0x934): undefined reference to `arch_dma_prep_coherent'
+1(.text+0xb84): undefined reference to `arch_dma_prep_coherent'
+
+I haven't looked into the details, but I suspect all machines
+with cache-coherent DMA are broken.
+
+       Arnd
