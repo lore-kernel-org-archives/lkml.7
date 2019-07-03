@@ -2,106 +2,172 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA3C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A575C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8084D2189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DB72064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MGb4X8V0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNyw6YdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGCSPo (ORCPT
+        id S1727094AbfGCSS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:15:44 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42191 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfGCSPo (ORCPT
+        Wed, 3 Jul 2019 14:18:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35416 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCSS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:15:44 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 201so1431395qkm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
+        Wed, 3 Jul 2019 14:18:26 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r21so3295403qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
-        b=MGb4X8V0OjUmCxHXdwat5t//603Imvm3kttDyzPr4B1R8dke3zyk8pDWGq7fzjOf9T
-         vhoLDzI6WCU5N4NrK/vZZAt9KDue5n72hIeNC1cz1j/ds592t4xYj0gPc7RQWN5tu3kK
-         y/BZeSVV19CFNNBfNU5x0lM9OM/CH02xFeKxUrblZJMqjjhX0l4gjG924KSmb6umCVqY
-         q+ZOkych1AFQ/2d82ikRe4cso3C8TVySqyZbPVlAYKLNARrOu29Nsf2uO3Rs45jVcEQb
-         PCfasJR/oBWrfsPe016/1vxmUYZfy876Nti6m+RO+WQbCOzAxMa5i5a/ZdgHoU8lAwIn
-         KN7g==
+        bh=E5F0P1vDyJ3wUiYtSXmadNODkx8n9+HfVcL5UJ271aQ=;
+        b=iNyw6YdBVsOUYRfGnZr41qxv/qJhiE8z6oAtCqxvVNOK0DkkLwaPWnKiWJAT86S9dM
+         jWP+tAujM9G0lwlx2aKpvh45VtDijqbeTv8i4oFRETVIvHSpt2tFyG2LPiIgnV4RkPza
+         5GaYvvloe2MyxumyoLFEGaOkVSzGcQh1/X+tQ0uhoAVaYuNSsuNagkYini4eOhB/W25Z
+         tphvS3I3yN5I2fMyOfgNk92o/I9CWpD17+mR2yQb9ZLEgJnFq1orjK7hdtsOe3UCEENU
+         zzpY3GqvIQLsRav6euL/+rqnqsA48JAdld5F5q/FOf9yuCSbv1wOYxo3m8lx2sXTXe/J
+         QFSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wryDEDMxoF6Vk+K+7duTnFgyottGCGFfZAdbutaWn2g=;
-        b=ENMFMNGOgIi2pSJz4+DTVPLExFwr+yGFVE4AJruOrdUyoHFsyAZRqPImIhAbcm5mjt
-         q+W58Cpd4imVX2ojAwYja+cJ+adGvJBCYk2Wur8dau4WI3bS++LHP8yXpSZQnjBVYWSz
-         DJRhEzOHOPDpiXr8e1FLngXrznc+6JP3p9BccG3zcX7qDh8Z2WngJx21Nt42kpcom9Mo
-         yO9GmqII4/VPyoMywRqEI8KW18O15aExAschyhAj2TgMvADalsFIrQTc8eHa1o6ejK4w
-         sQZx16XOpIvo6UmlkKsvOiMcO99W2OgD3/Thl4K8oiX4EErcqk71QxURspTESTsCNHqz
-         Er2w==
-X-Gm-Message-State: APjAAAV2Lfos1RZT/GNs/Fsqe8MpnrcVBMMDhIdSyQVES6zjqveYKHqq
-        iU0W7MmgH+v+znPk8O4Ar8l3DA==
-X-Google-Smtp-Source: APXvYqx+Obpp289GMjyQScpks1hosaCdzO2IJ2gOygQVUkXAuZU/IoXFFk8Hk2uU2aW+fFE5K61x4g==
-X-Received: by 2002:a37:4914:: with SMTP id w20mr31403797qka.156.1562177743091;
-        Wed, 03 Jul 2019 11:15:43 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id j184sm1204269qkc.65.2019.07.03.11.15.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jul 2019 11:15:42 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hijnC-0000Ju-2z; Wed, 03 Jul 2019 15:15:42 -0300
-Date:   Wed, 3 Jul 2019 15:15:42 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/22] mm: remove the legacy hmm_pfn_* APIs
-Message-ID: <20190703181542.GD18673@ziepe.ca>
-References: <20190701062020.19239-1-hch@lst.de>
- <20190701062020.19239-23-hch@lst.de>
- <20190703180125.GA18673@ziepe.ca>
- <20190703180308.GA13656@lst.de>
+        bh=E5F0P1vDyJ3wUiYtSXmadNODkx8n9+HfVcL5UJ271aQ=;
+        b=hzoSN38tsANj+8mLzaujOyFc8988iRJ05kwt4nVc8qq/Zs/k4L24HVNszI5nuVQTtD
+         s1YhxZ6B+wWg+ScvXzLTPPgkAQlAfoki7If4GbF6u+Lk515Ngf8wf4SuYjtet/s21wSt
+         ibEa+91Mh5FWJqDWz1WcYoYfgOWWV5XQWccUA8WNgTGwtu7rkWfeFwyRYYWlbAlpH3rA
+         WW1G3EnM1Qucm2v5juKSI4AGCLY+GESlvxqjfl95WTqZ3wJHqHmW7xuRABJU8R9MGGuk
+         bRNjBKkpdyhtDS7+l+uHJc+8xmvSZ4MR3WPcBmkJ8BtGhQxZ4DcCppb+8ZJcDs8BuYSD
+         z5AA==
+X-Gm-Message-State: APjAAAUVodGJYB6ykfChNthfTh56rn7tFWnUXOZHu3d+QMkfK0FuOCV+
+        S6CpzgUJahJppVM8DnB5Bvw=
+X-Google-Smtp-Source: APXvYqzNKpecx14rn/OVfcxsVgRFDoVbgm67vbFk+gRFR6GltcqQP1ONCh/Rkfrp5LeezDqjXotp/A==
+X-Received: by 2002:a05:620a:16c6:: with SMTP id a6mr31991741qkn.413.1562177904826;
+        Wed, 03 Jul 2019 11:18:24 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.182])
+        by smtp.gmail.com with ESMTPSA id b69sm1292412qkg.105.2019.07.03.11.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 11:18:23 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A69A741153; Wed,  3 Jul 2019 15:18:15 -0300 (-03)
+Date:   Wed, 3 Jul 2019 15:18:15 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 00/11] perf: Fix errors detected by Smatch
+Message-ID: <20190703181815.GB10740@kernel.org>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702110743.GA12694@krava>
+ <20190703014808.GC6852@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190703180308.GA13656@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190703014808.GC6852@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 08:03:08PM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 03, 2019 at 03:01:25PM -0300, Jason Gunthorpe wrote:
-> > Christoph, I guess you didn't mean to send this branch to the mailing
-> > list?
+Em Wed, Jul 03, 2019 at 09:48:08AM +0800, Leo Yan escreveu:
+> On Tue, Jul 02, 2019 at 01:07:43PM +0200, Jiri Olsa wrote:
+> > On Tue, Jul 02, 2019 at 06:34:09PM +0800, Leo Yan wrote:
+> > > When I used static checker Smatch for perf building, the main target is
+> > > to check if there have any potential issues in Arm cs-etm code.  So
+> > > finally I get many reporting for errors/warnings.
+> > > 
+> > > I used below command for using static checker with perf building:
+> > > 
+> > >   # make VF=1 CORESIGHT=1 -C tools/perf/ \
+> > >     CHECK="/root/Work/smatch/smatch --full-path" \
+> > >     CC=/root/Work/smatch/cgcc | tee smatch_reports.txt
+> > > 
+> > > I reviewed the errors one by one, if I understood some of these errors
+> > > so changed the code as I can, this patch set is the working result; but
+> > > still leave some errors due to I don't know what's the best way to fix
+> > > it.  There also have many inconsistent indenting warnings.  So I firstly
+> > > send out this patch set and let's see what's the feedback from public
+> > > reviewing.
+> > > 
+> > > Leo Yan (11):
+> > >   perf report: Smatch: Fix potential NULL pointer dereference
+> > >   perf stat: Smatch: Fix use-after-freed pointer
+> > >   perf top: Smatch: Fix potential NULL pointer dereference
+> > >   perf annotate: Smatch: Fix dereferencing freed memory
+> > >   perf trace: Smatch: Fix potential NULL pointer dereference
+> > >   perf hists: Smatch: Fix potential NULL pointer dereference
+> > >   perf map: Smatch: Fix potential NULL pointer dereference
+> > >   perf session: Smatch: Fix potential NULL pointer dereference
+> > >   perf intel-bts: Smatch: Fix potential NULL pointer dereference
+> > >   perf intel-pt: Smatch: Fix potential NULL pointer dereference
+> > >   perf cs-etm: Smatch: Fix potential NULL pointer dereference
 > > 
-> > In any event some of these, like this one, look obvious and I could
-> > still grab a few for hmm.git.
+> > from quick look it all looks good to me, nice tool ;-)
 > > 
-> > Let me know what you'd like please
-> > 
-> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> Thanks.  I was going to send this series out as soon as you had
-> applied the previous one.  Now that it leaked I'm happy to collect
-> reviews.  But while I've got your attention:  the rdma.git hmm
-> branch is still at the -rc7 merge and doen't have my series, is that
-> intentional?
+> Thanks for reviewing, Jiri.
+> 
+> @Arnaldo, Just want to check, will you firstly pick up 01~05, 07,
+> 08/11 patches if you think they are okay?  Or you want to wait me to
+> spin new patch set with all patches after I gather all comments?
 
-Sorry, I rushed it too late at night to do it right apparently. Fixed.
+I'm picking up the uncontrovertial, will push to my perf/core branch,
+continue from there, please.
 
-Jason
+- Arnaldo
+ 
+> Thanks,
+> Leo Yan
+> 
+> > >  tools/perf/builtin-report.c    |  4 ++--
+> > >  tools/perf/builtin-stat.c      |  2 +-
+> > >  tools/perf/builtin-top.c       |  8 ++++++--
+> > >  tools/perf/builtin-trace.c     |  5 +++--
+> > >  tools/perf/ui/browsers/hists.c | 13 +++++++++----
+> > >  tools/perf/util/annotate.c     |  6 ++----
+> > >  tools/perf/util/cs-etm.c       |  2 +-
+> > >  tools/perf/util/intel-bts.c    |  5 ++---
+> > >  tools/perf/util/intel-pt.c     |  5 ++---
+> > >  tools/perf/util/map.c          |  7 +++++--
+> > >  tools/perf/util/session.c      |  3 +++
+> > >  11 files changed, 36 insertions(+), 24 deletions(-)
+> > > 
+> > > -- 
+> > > 2.17.1
+> > > 
+
+-- 
+
+- Arnaldo
