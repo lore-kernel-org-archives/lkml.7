@@ -2,87 +2,146 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F52C46478
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9661FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FE021850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YsqBZXXV"
+	by mail.kernel.org (Postfix) with ESMTP id 7985221721
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfGCDZ3 (ORCPT
+        id S1727263AbfGCD0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:25:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50624 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfGCDZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:25:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L5XM5HrynKIiHWuKAUi/A3RoJvq7c/O4PnEtsU9AqBU=; b=YsqBZXXVKJ7NW3eTYs3lHNWgX
-        LD3IeLeRX3eCuKvT7CDHnWTH2+Mzdhn+f8I6KKuUGG5hwVGv/3qfBKhSEEhxJnYHP4S1hjTyQwFhp
-        bamdTo6pV4PAvlvQ/Vf4X+mbYmvoJxqhfeN1OUXKqbuVcFy7TMfI0uFtIy98ySl6zGZSqJrfO2wzB
-        Sg1gnDgd+D/AGYGvvyyoh5DKqVNoY7lSb8TeXUYYSr+8Hhyy/lS5apqtHQJjWcACoZU+Cm1Dj/FF1
-        31rV0WnfI/WG0GogGrFzaeLCBGza9p/10EUXV0+wb8eC9sajpnOfZchqqR2wo1NkWGVRhvyxcga9k
-        NyXcJBbfA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiVtf-0000Xr-01; Wed, 03 Jul 2019 03:25:27 +0000
-Subject: Re: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-hyperv@vger.kernel.org,
-        Jake Oshins <jakeo@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
- <20190703001541.GG1729@bombadil.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <139b6a64-1980-412b-5870-88706084b288@infradead.org>
-Date:   Tue, 2 Jul 2019 20:25:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 23:26:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43626 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727179AbfGCD0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:26:25 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C3A5D8A5EF48C5630538;
+        Wed,  3 Jul 2019 11:26:22 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
+ 11:26:18 +0800
+Subject: Re: [PATCH bpf-next] bpf: cgroup: Fix build error without CONFIG_NET
+To:     Yonghong Song <yhs@fb.com>
+References: <20190702132913.26060-1-yuehaibing@huawei.com>
+ <20190702155316.GJ6757@mini-arch>
+ <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
+CC:     Stanislav Fomichev <sdf@fomichev.me>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        "sdf@google.com" <sdf@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <780afbff-5b93-099c-f318-7f2704af13d6@huawei.com>
+Date:   Wed, 3 Jul 2019 11:26:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190703001541.GG1729@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 5:15 PM, Matthew Wilcox wrote:
-> On Tue, Jul 02, 2019 at 04:24:30PM -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix build errors when building almost-allmodconfig but with SYSFS
->> not set (not enabled).  Fixes these build errors:
->>
->> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->>
->> drivers/pci/slot.o is only built when SYSFS is enabled, so
->> pci-hyperv.o has an implicit dependency on SYSFS.
->> Make that explicit.
+On 2019/7/3 0:04, Yonghong Song wrote:
 > 
-> I wonder if we shouldn't rather provide no-op versions of
-> pci_create|destroy_slot for when SYSFS is not set?
 > 
+> On 7/2/19 8:53 AM, Stanislav Fomichev wrote:
+>> On 07/02, YueHaibing wrote:
+>>> If CONFIG_NET is not set, gcc building fails:
+>>>
+>>> kernel/bpf/cgroup.o: In function `cg_sockopt_func_proto':
+>>> cgroup.c:(.text+0x237e): undefined reference to `bpf_sk_storage_get_proto'
+>>> cgroup.c:(.text+0x2394): undefined reference to `bpf_sk_storage_delete_proto'
+>>> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_getsockopt':
+>>> (.text+0x2a1f): undefined reference to `lock_sock_nested'
+>>> (.text+0x2ca2): undefined reference to `release_sock'
+>>> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_setsockopt':
+>>> (.text+0x3006): undefined reference to `lock_sock_nested'
+>>> (.text+0x32bb): undefined reference to `release_sock'
+>>>
+>>> Add CONFIG_NET dependency to fix this.
+>> Can you share the config? Do I understand correctly that you have
+>> CONFIG_NET=n and CONFIG_BPF=y? What parts of BPF do you expect to
+>> work in this case?
+>>
+>> Less invasive fix would be something along the lines:
+>>
+>> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+>> index 76fa0076f20d..0a00eaca6fae 100644
+>> --- a/kernel/bpf/cgroup.c
+>> +++ b/kernel/bpf/cgroup.c
+>> @@ -939,6 +939,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
+>>   }
+>>   EXPORT_SYMBOL(__cgroup_bpf_run_filter_sysctl);
+>>   
+>> +#ifdef CONFIG_NET
+>>   static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
+>>   					     enum bpf_attach_type attach_type)
+>>   {
+>> @@ -1120,6 +1121,7 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+>>   	return ret;
+>>   }
+>>   EXPORT_SYMBOL(__cgroup_bpf_run_filter_getsockopt);
+>> +#endif
+>>   
+>>   static ssize_t sysctl_cpy_dir(const struct ctl_dir *dir, char **bufp,
+>>   			      size_t *lenp)
+>> @@ -1386,10 +1388,12 @@ static const struct bpf_func_proto *
+>>   cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>>   {
+>>   	switch (func_id) {
+>> +#ifdef CONFIG_NET
+>>   	case BPF_FUNC_sk_storage_get:
+>>   		return &bpf_sk_storage_get_proto;
+>>   	case BPF_FUNC_sk_storage_delete:
+>>   		return &bpf_sk_storage_delete_proto;
+>> +#endif
+>>   #ifdef CONFIG_INET
+>>   	case BPF_FUNC_tcp_sock:
+>>   		return &bpf_tcp_sock_proto;
+> 
+> Ah. Just send another email without checking inbox.
+> Looks like the above change is preferred.
+> YueHaibing, could you make change and resubmit your patch?
 
-Makes sense.  I'm test-building that now.
+Sure, I will test and resubmit it.
 
--- 
-~Randy
+> 
+>>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> ---
+>>>   init/Kconfig | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/init/Kconfig b/init/Kconfig
+>>> index e2e51b5..341cf2a 100644
+>>> --- a/init/Kconfig
+>>> +++ b/init/Kconfig
+>>> @@ -998,6 +998,7 @@ config CGROUP_PERF
+>>>   config CGROUP_BPF
+>>>   	bool "Support for eBPF programs attached to cgroups"
+>>>   	depends on BPF_SYSCALL
+>>> +	depends on NET
+>>>   	select SOCK_CGROUP_DATA
+>>>   	help
+>>>   	  Allow attaching eBPF programs to a cgroup using the bpf(2)
+>>> -- 
+>>> 2.7.4
+>>>
+>>>
+
