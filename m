@@ -2,83 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD320C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DC1C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A615D218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DAF218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfGCNjB (ORCPT
+        id S1726871AbfGCNjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:39:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:48220 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCNjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:39:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9052B;
-        Wed,  3 Jul 2019 06:39:00 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C42B3F718;
-        Wed,  3 Jul 2019 06:38:58 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, patrick.bellasi@arm.com,
-        dietmar.eggemann@arm.com
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
- <20190702154422.GV3436@hirez.programming.kicks-ass.net>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <590e3dd9-ea4e-5230-d12c-d04bb3916e89@arm.com>
-Date:   Wed, 3 Jul 2019 14:38:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 3 Jul 2019 09:39:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:59463 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCNjy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:39:54 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MqJuN-1iMuBq47Zz-00nPRK; Wed, 03 Jul 2019 15:39:42 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Vineet Gupta <vgupta@synopsys.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARC: hide unused function unw_hdr_alloc
+Date:   Wed,  3 Jul 2019 15:39:25 +0200
+Message-Id: <20190703133940.1493249-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190702154422.GV3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:19QUxxa2AQhjXJXGFQ5Q+GWQGKQpXLF1YnY0kSDAfj0P2T9ssZX
+ KP1PGWvi3sji27vCh04S+/7UxT27Re9y7MeU/xKlL8Bjv1bn2w0vxhZZ8oJfhHHdcA2fxdF
+ uLcw+cr1B5nNIxLjOPdAH3tAIYR+uY6I2hcm2kFsB8xTP4vs0rEA+R2IMqqp5+OrYuFTB5m
+ oF4/yjAjt2+QLbnvy6iUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rSO0Zk6wSks=:O5FU+OCGc/n3MF1WRuERet
+ N+T013OT4nT/b/BNJdnpri/rYumtNGDRxds9DEriW8Z2/89cU0GAHIfwQLmhqUBzCg0NNN1jv
+ FC1Zfub8dCxhTmodAu3ioF95hCdpjySCzYH+RxJoUc1Fw69ikpDXcog6UbTzip7GIzqWSKq71
+ MvJfHiEKCZV/52tLXZEdjvl0Us0mbJQuqZSG9jHMYppsjkUZ4ZtJoAcdfwHxgaxcohOSWFQRR
+ mBQEu8t95sNMh7DdzDQpZxM2Vvx6n/pn/pzCE4Gvjrx8mgCTlTjPtKGw/qDP2GhncCoXdoQ0G
+ 9lV9EWS8pj1kkFSlE1Bd90ceUosFELdBbzUewjVGS45zd/qr1tBOg6gzr/cvBvLGPY3gKh94c
+ 6YU7vmKbfX6/fWDoeN7cSciujC5hSoliTYVHspNOyD2Wz3Tf0xG6pRDaRpNe+O7tjP++cA04I
+ nNEERofGBsALOoTaGNtkQwJzKkMUI6euN60SQSo0CBoomjfjWO10T05LB6lBA8uXvHYrTen9L
+ TQFej/9Kkwaiy+LhaOq2XbzJ9jAmGW2uLexkBwTOTY6v9iKzVVAoC7KtOvhAKcJ0oXrEH6V7F
+ E5iYJdywcpi0XxUxKAZGQBTfWH747p7NkZRqzEG4m4Vy/SceBIepg49PpbRyuPS6m8SZ3T9AZ
+ M+871n3IVrgeiw6xWY53L63dHCLvBEMiClToo70zDzhakbMUhyxubxeIXyf4PqAPVeSUSmKtI
+ q/GsbY6oCZ0j+n6gAYp1uBHtx6jmjctUoXoalQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
 
-On 7/2/19 4:44 PM, Peter Zijlstra wrote:
-> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
->> Make schedutil cpufreq governor energy-aware.
->>
->> - patch 1 introduces a function to retrieve a frequency given a base
->>    frequency and an energy cost margin.
->> - patch 2 links Energy Model perf_domain to sugov_policy.
->> - patch 3 updates get_next_freq() to make use of the Energy Model.
-> 
->>
->> 1) Selecting the highest possible frequency for a given cost. Some
->>     platforms can have lower frequencies that are less efficient than
->>     higher ones, in which case they should be skipped for most purposes.
->>     They can still be useful to give more freedom to thermal throttling
->>     mechanisms, but not under normal circumstances.
->>     note: the EM framework will warn about such OPPs "hertz/watts ratio
->>     non-monotonically decreasing"
-> 
-> Humm, for some reason I was thinking we explicitly skipped those OPPs
-> and they already weren't used.
-> 
-> This isn't in fact so, and these first few patches make it so?
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
 
-That's correct, the cost information about each OPP has been introduced recently in mainline
-by the energy model series. Without that info, the only way to skip them that comes to my
-mind is to set a policy min frequency, since these inefficient OPPs are usually located
-at the lower end.
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arc/kernel/unwind.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
+index 182ce67dfe10..c2663fce7f6c 100644
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -181,11 +181,6 @@ static void *__init unw_hdr_alloc_early(unsigned long sz)
+ 	return memblock_alloc_from(sz, sizeof(unsigned int), MAX_DMA_ADDRESS);
+ }
+ 
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -366,6 +361,10 @@ static void init_unwind_hdr(struct unwind_table *table,
+ }
+ 
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
+-- 
+2.20.0
 
-Thanks,
-Douglas
