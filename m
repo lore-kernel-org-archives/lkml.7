@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBF8C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9AAC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B4B218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A3020645
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ya7HF0SC"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="CQmgJnIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfGCIrn (ORCPT
+        id S1727116AbfGCIsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:47:43 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51447 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfGCIrn (ORCPT
+        Wed, 3 Jul 2019 04:48:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35428 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCIsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:47:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so1312879wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:47:41 -0700 (PDT)
+        Wed, 3 Jul 2019 04:48:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c6so1433418wml.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vToO8p1g9fcXX+PhVJh6ccrR2JJj+qaLGHac875fuoU=;
-        b=ya7HF0SCJS7/lw63dHyStkFXeBgGqRCZr5oVuE2MJ4fjoX2KS14jmsuTRZSYk/27Wp
-         +ugvp7jtNkcycrDNDT8HnmTYFSxjRbuUl/DcpEeD9J4Q9DW9npCkTvnUmCkc0Q5vIhfY
-         ZMW7DYk5A/Oog+aqQRD6fhuV+8U7aud+caXVLw91OLAXH5qolczQ2sLITrEeg/7RewS8
-         K5fuYkc/xfyFk2N5drRiUeNA0+Cdp/AJvtE5hSbYObZz4PpS0GItlYWt5/YZvDJ9mkg1
-         STAbw69epP6gZPXrZwLKsfQJE8LruNlAEf0RA94wkzkbNBII3XP+ukymAYW5B7eKCSwd
-         R1TQ==
+        bh=9OD3A1MbQ7x1GxTFq+WXLwGT5ErpHAmVY1ZLw97KnU0=;
+        b=CQmgJnIFjAR6wf7MolyDYds+79eh+zkANb3YrAqvbQnKzPJYmPqEt0ODt0kSQEAxrs
+         41NpA4b1p756Ps8Q9ZhU/63RfoC8RFqnf8lUXbtY2cOta1kioHl1jhleC4maSY6xQ3KS
+         Y571q8u+tBSJly4nJKjQAjkNPNHsDwWVrEeTZEJPO5jc7+pDtmKpNsMjVIgWe5TEDYq1
+         gmnUcJIS1IDk37zBEd+kMf1I/UpxolEiUMalLjO40uzMdgzrLe5Ty/GarR9oZRQv4751
+         jFJBo2QDD/IlKrmACGyHEJhxBI/A0yIBzEdBczwU6UYcfPUUuqe63d4YpX+8VYA1f7iX
+         AteA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vToO8p1g9fcXX+PhVJh6ccrR2JJj+qaLGHac875fuoU=;
-        b=L6xaR6dFIm2wjiDjExzF2/d28Pa/4Vw3omIVUEoCFJTJ1J9GepyPj6FKfB7CDl+x54
-         88JUHVuJ5xa811EWB08hFzWeKIwi2ffdUVaI8iBg+po7nu/aMerhLy8V45KCJ9aioj8+
-         RnZIYS0NkhI0NC/QEm8cCSk/QT3I+q1rJNmE/AX85In3HQ2fDnLLBGPEJpdxeMHXQNGN
-         lw0ZzFhyXnqbCya42osSyaUflja5iDL40W7yy//IU8mJaaq8c2RjvGoNBiVBbqbdEpcg
-         j61chUn4loghWKzopa5qMYkA0rmP3o84zB7ey65Kd439L31NHnnteLkX+uRj8P8QMpCL
-         bcZw==
-X-Gm-Message-State: APjAAAUTAWC22frcmmY+at9+NjUA3OmWgE/aCnC5EvS1PnNcM21lQxbP
-        8QmH8g5p10wqGXvShrjxUJE=
-X-Google-Smtp-Source: APXvYqxWyocLK7e4QV2o5aZyfxZMd2py5upZayOd6/FoAhxElUp8QUkZ4T5jht5X+E1+cBnlQ1+X/Q==
-X-Received: by 2002:a7b:c4c1:: with SMTP id g1mr1534498wmk.14.1562143661194;
-        Wed, 03 Jul 2019 01:47:41 -0700 (PDT)
+        bh=9OD3A1MbQ7x1GxTFq+WXLwGT5ErpHAmVY1ZLw97KnU0=;
+        b=HariYcD2otYXcAGnRVd1m7rxlsroVIArX40Jf72EBPKcacx6g4uwA5o2Kelobn2PN8
+         if04S8xbMih/SqkxauUVmfahD5Sltgk9L15zsSYD8QpN5daOPEwfBbAWUtOBHe1Yzf/I
+         ExdPQ1vorOhWkydTFDbTYP6oAoLcranYyqD0Ew+hNeY9ebEPiZitHPvAYoGenv8jEs9s
+         o37H9fAuEUArljFjk55x3kKBmYLYMHAHCwzb5ZZtFHe7UJixFQv8ZaU1miCkZ1nrG+Ra
+         6RibJo0heiY0w6sqEoS8yJ9cnBNhPGH0nY+Paazq9/AJnzFCFvyGY4R6k5M1yNylslc9
+         8Hnw==
+X-Gm-Message-State: APjAAAVHNu/F1UerO8xxOUvgsYrjZAOVlTnR0L7hScTRfBJQzuYJ36Ju
+        Xqg1rwKqRZpnPFKx/XfWfBM=
+X-Google-Smtp-Source: APXvYqx36i74x4LxYOoggQEqJ6vJTnZruf8ZDMETTVOVN3VjV9+o5eH1nyCFajyASdMlc9S/YFxuKw==
+X-Received: by 2002:a7b:c356:: with SMTP id l22mr7006863wmj.97.1562143694720;
+        Wed, 03 Jul 2019 01:48:14 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id b2sm1797968wrp.72.2019.07.03.01.47.40
+        by smtp.gmail.com with ESMTPSA id 66sm1627363wma.11.2019.07.03.01.48.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 01:47:40 -0700 (PDT)
+        Wed, 03 Jul 2019 01:48:14 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] leds: max77650: add MODULE_ALIAS()
-Date:   Wed,  3 Jul 2019 10:47:38 +0200
-Message-Id: <20190703084738.9501-1-brgl@bgdev.pl>
+Subject: [PATCH] power: supply: max77650: add MODULE_ALIAS()
+Date:   Wed,  3 Jul 2019 10:48:10 +0200
+Message-Id: <20190703084811.9582-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,23 +73,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Define a MODULE_ALIAS() in the LED sub-driver for max77650 so that
+Define a MODULE_ALIAS() in the charger sub-driver for max77650 so that
 the appropriate module gets loaded together with the core mfd driver.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/leds/leds-max77650.c | 1 +
+ drivers/power/supply/max77650-charger.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
-index 6b74ce9cac12..70166cd3816c 100644
---- a/drivers/leds/leds-max77650.c
-+++ b/drivers/leds/leds-max77650.c
-@@ -145,3 +145,4 @@ module_platform_driver(max77650_led_driver);
- MODULE_DESCRIPTION("MAXIM 77650/77651 LED driver");
+diff --git a/drivers/power/supply/max77650-charger.c b/drivers/power/supply/max77650-charger.c
+index e34714cb05ec..5f9477c5cf5a 100644
+--- a/drivers/power/supply/max77650-charger.c
++++ b/drivers/power/supply/max77650-charger.c
+@@ -366,3 +366,4 @@ module_platform_driver(max77650_charger_driver);
+ MODULE_DESCRIPTION("MAXIM 77650/77651 charger driver");
  MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
  MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:max77650-led");
++MODULE_ALIAS("platform:max77650-charger");
 -- 
 2.21.0
 
