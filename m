@@ -2,128 +2,99 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317DCC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291E4C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094D4218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0460E218B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6CJEt6Z"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GdaPl4pS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfGCSDs (ORCPT
+        id S1727184AbfGCSD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:03:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43188 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfGCSDr (ORCPT
+        Wed, 3 Jul 2019 14:03:59 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41523 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbfGCSD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:03:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e3so2935022edr.10;
-        Wed, 03 Jul 2019 11:03:46 -0700 (PDT)
+        Wed, 3 Jul 2019 14:03:58 -0400
+Received: by mail-qk1-f196.google.com with SMTP id v22so3517807qkj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:03:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HktW2jbQb9daIuq89e7+nyOPIHE/MzRFk27e0RIauhk=;
-        b=I6CJEt6Z614d/vSVK4+ovKXsIY1OyStNiw/0DEsDi90EDdqxejjwwm6CxHQoLzDKTh
-         Kza0fDDdy+hYQnvd1trjWk2Yot/LCubzZ55fOGVoP51pjW5W8C4CMJj6jlD0Yi7cSVj1
-         naxRs6Yrh6fjZuddxCjI18AaGlVJvAI2MfTWOT/+6GOyKJbIaw2xOkVaqVG4UODVWSd9
-         Jib8DVlH/MamdEaPyeujMXQRMyITR71/z1UQJBPSmjseVyu1RytxGrisCGbvb4IuZzt8
-         hJZWi9Pxr9LOswwOA0pNnT1lK+5DPn3+gKuEKRU3tY/bMDvmm/J1qHhrfTzi+KsxNCfT
-         Ig6Q==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=lYX4hArZqbN+eTGDydHx247smNMZP20ckzpDZYDyj70=;
+        b=GdaPl4pS25oGRqKqhYVZvbGMctmnAHGdnVDY5M9r5E2gXod6kvV8ztPBkFUZyGMM4s
+         clYw/MlR3HpP4fUWkXGOqUyErs3qjITlzLbXXg12O9Tm+nYZZaTCWOpGAzeQajKuGTZU
+         0wZmmTjqvm2YnyiIapY0xjU8UbEcBknZzuv1w7IATnd4Sq1IJThXnD3h4aGhqzdo2ww1
+         6dYcSuMv9naAdmn53AoZUwIOgY2ixkhgWUgG5M3h3qNUG7OVco2Jf970+GkH9fxchzv1
+         Bwym1bXm36Zd5IvXjxpJKkA7FdRhwbFO3vyAQP2p0NEj/n2Yq8GEnqIn5HF5aibZNjgw
+         i3Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HktW2jbQb9daIuq89e7+nyOPIHE/MzRFk27e0RIauhk=;
-        b=mI/uJgldtzLvQQTfCfMi5qlOqnVG6mNW/Ek5krGY/r/PdbVgGg4G8y9Xq/VXOP305Q
-         N5njfHeyTfQnpK9m9OKXNZZKCuPOvT6qJlhcofCb8tLiL3iyAlTk0lkWX8sTy95bKzLa
-         On9DQsR4dRK3xHt30WQeNbIldfuYyv3RT74lXVmlC3sqZZjJQn8benXI2m4GkgQW8lzd
-         CWZbJrRbNuUDdX8f/9U0zjB+003WS4voIF1uXC1z40X1mp0wED2s3SxsLxoXmVNfvcML
-         FpXgXnSbSgWwkDQvJcDYcMti5M9NjrCwG75b1a6Z4UrRtC6/OXHAonly/Kz6CsoeQFYk
-         Ve7w==
-X-Gm-Message-State: APjAAAXM4fbEwoxOHhcakgZH9wCwj57gVL4DiRCcnA5m3IMbSGIHZRwe
-        aknPhnEJ+kD2W9INI2NYR38=
-X-Google-Smtp-Source: APXvYqxJnEihMQhEJBAJmLJZlc+dec6NPvUGNPBXjPZf9NCZYQ3YUxTRIiNzg505Yt6WsP+02smZpw==
-X-Received: by 2002:aa7:c515:: with SMTP id o21mr44067179edq.2.1562177025786;
-        Wed, 03 Jul 2019 11:03:45 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.211.18])
-        by smtp.gmail.com with ESMTPSA id g11sm589222ejm.86.2019.07.03.11.03.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 11:03:45 -0700 (PDT)
-Subject: Re: [PATCH] mm: Support madvise_willneed override by Filesystems
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-bcache@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Amir Goldstein <amir73il@gmail.com>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190619082141.GA32409@quack2.suse.cz>
- <27171de5-430e-b3a8-16f1-7ce25b76c874@gmail.com>
- <20190703172141.GD26423@quack2.suse.cz>
-From:   Boaz Harrosh <openosd@gmail.com>
-Message-ID: <7206059e-5a57-aa46-0a6c-e62b085f6c75@gmail.com>
-Date:   Wed, 3 Jul 2019 21:03:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lYX4hArZqbN+eTGDydHx247smNMZP20ckzpDZYDyj70=;
+        b=cyQb2Nn8jYq+RfxDaMB6+eNGBWEN4MqfzOtxURBfKPiv1DfxdmJcmIa/I6bwz6jU9M
+         +iV6CPymY73nAy2OWVGu9tGrwzBc+czraTQqmID02JgvAn0H8ecEV89zNBNHFyPcpeXc
+         gJ+YSYhrO/34GLcTM2bZjbzE+58af56QLxrDYnLUpTBFag8CADcHChLD8cDg4SZM4Fbt
+         olGWgV9PKdQ1D07RO5W4+YxYttLcgsqEcfD8faFAbTQZQxwwZPieLgirQtU7KDom0fTj
+         xNaUwTOfyFZlVrNVHY+IUwBjPUm0/leCu9SkuSQDuFSG8cdBTlg9Miycs4hYdcxSiEz/
+         vNYg==
+X-Gm-Message-State: APjAAAU9UcJwD76i28KqAw/xKUUeaRJ8KKbzb9vExsa89kfwPUWbsshq
+        fB3Dg0c7wYLG/ALUO92U3+11Xg==
+X-Google-Smtp-Source: APXvYqwAIbwqmaDg6afMKDuszd1tCKqefer9BuJ/SUVOZEN2k8Xz9Vx5WhWvm0C4hIeiM5DGRjiLAw==
+X-Received: by 2002:a37:a10b:: with SMTP id k11mr29660901qke.76.1562177037895;
+        Wed, 03 Jul 2019 11:03:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id f132sm1237440qke.88.2019.07.03.11.03.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 11:03:57 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hijbp-0006qR-01; Wed, 03 Jul 2019 15:03:57 -0300
+Date:   Wed, 3 Jul 2019 15:03:56 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>,
+        AlexDeucher <alexander.deucher@amd.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/22] mm: move hmm_vma_fault to nouveau
+Message-ID: <20190703180356.GB18673@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190703172141.GD26423@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701062020.19239-21-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 20:21, Jan Kara wrote:
-> On Wed 03-07-19 04:04:57, Boaz Harrosh wrote:
->> On 19/06/2019 11:21, Jan Kara wrote:
->> <>
-<>
->> Hi Jan
->>
->> Funny I'm sitting on the same patch since LSF last. I need it too for other
->> reasons. I have not seen, have you pushed your patch yet?
->> (Is based on old v4.20)
+On Mon, Jul 01, 2019 at 08:20:18AM +0200, Christoph Hellwig wrote:
+> hmm_vma_fault is marked as a legacy API to get rid of, but quite suites
+> the current nouvea flow.  Move it to the only user in preparation for
+> fixing a locking bug involving caller and callee.
 > 
-> Your patch is wrong due to lock ordering. You should not call vfs_fadvise()
-> under mmap_sem. So we need to do a similar dance like madvise_remove(). I
-> have to get to writing at least XFS fix so that the madvise change gets
-> used and post the madvise patch with it... Sorry it takes me so long.
-> 
-> 								Honza
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 54 ++++++++++++++++++++++++++-
+>  include/linux/hmm.h                   | 54 ---------------------------
+>  2 files changed, 53 insertions(+), 55 deletions(-)
 
-Ha Sorry I was not aware of this. Lockdep did not catch it on my setup
-because my setup does not have any locking conflicts with mmap_sem on the
-WILL_NEED path.
+I was thinking about doing exactly this too, but amdgpu started using
+this already obsolete API in their latest driver :(
 
-But surly you are right because the all effort is to fix the locking problems.
+So, we now need to get both drivers to move to the modern API.
 
-I will also try in a day or two to do as you suggest, and look at madvise_remove()
-once I have a bit of time. Who ever gets to be less busy ...
-
-Thank you for your help
-Boaz
+Jason
