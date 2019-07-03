@@ -2,123 +2,170 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDD9C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11751C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA7B206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA27120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CI3Iq2aA"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="QItggmVa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZhFxubvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfGCBXz (ORCPT
+        id S1727450AbfGCBYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:23:55 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33084 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfGCBXz (ORCPT
+        Tue, 2 Jul 2019 21:24:31 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:56265 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726329AbfGCBYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:23:55 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u15so671431oiv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Tjr+kTCBfEIGCCG/hrV8Jjghn6dXfiu1H36R2Sz+qKs=;
-        b=CI3Iq2aAqa6cTLPMphI0VdIANcgViK5iD5Lpd8O4rNHBubwk9KdlDQ9POIrvOviZza
-         WE8pTGwDVFnrE9xAq9cBqRjuxTN8JpzczIec7ftooghgMuZjpGD5rqjeroZHxFl0NfKH
-         unyq+yZB36NObk7atWWgkeW849JAneSR2EQr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Tjr+kTCBfEIGCCG/hrV8Jjghn6dXfiu1H36R2Sz+qKs=;
-        b=ei3lOcwCOUSq0E1WzaAJiKH7DupZHMUJ3EbQ+Iy1gzlmmpWLKQsy0YO3COXMVPwYRk
-         aDuq5yZKMx1hqxi1NCxLOe2HJuU+zwsT97wjwHFgFVFNNftUeYlVh4ZuCpu1+O5UCtFR
-         t7k+S9Mnfmf1PfZQJUo04deH7Xh6w8JQ3CeEC49TIoSlEgcA1H+SaB0PwTKiUTOXUjLc
-         ChLb26OuQvR6L/GdxDK1Qc/3LHxh829IJHvPB8oKCAHK+uJDGjfrQsYCiAHNLnKzDd+6
-         +61j8YvKbxMnmcU5kdN9vm0favSJaZStUHEdRSWdceen449WvBsYrX01Jgt4DgTpPLly
-         Zm4g==
-X-Gm-Message-State: APjAAAVpcGQy2ncbHQgKhZWtTZawBZlCk+evdv0b9pqfZCwnrBixyIb0
-        yJUFaJiycFbaGNXsDK6EZYbTKX3PJnw=
-X-Google-Smtp-Source: APXvYqwQMqX0GsfERFAKDe0Bwa3AI5eWVof8HlFAef/H5lfWEufbCDM+mSAkN/wC5xVQgT5/PUChtw==
-X-Received: by 2002:a63:755e:: with SMTP id f30mr24465931pgn.246.1562101453492;
-        Tue, 02 Jul 2019 14:04:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e20sm1431pfh.50.2019.07.02.14.04.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 14:04:08 -0700 (PDT)
-Date:   Mon, 1 Jul 2019 14:51:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Ross Zwisler <zwisler@chromium.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Johannes Hirte <johannes.hirte@datenkhaos.de>,
-        Klaus Kusche <klaus.kusche@computerix.info>,
-        samitolvanen@google.com, Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH] Revert "x86/build: Move _etext to actual end of .text"
-Message-ID: <201907011450.100092F32@keescook>
-References: <20190701155208.211815-1-zwisler@google.com>
+        Tue, 2 Jul 2019 21:24:31 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id DE3F921FC5;
+        Tue,  2 Jul 2019 21:24:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 02 Jul 2019 21:24:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        pVI22is6JO53wiZeKX9orH1tH3EcKd0M9Qk5pUYGmz0=; b=QItggmVaCyufNw3o
+        /95vT5695PevmXfDp/PHA5E7MaN9KfbMw3ZneCWWL7t0iFS7QOtEoPVlnm2vSlyw
+        C0JUc5byfsYPlgb9FRdODsk2VPWx3FgNtplNDDs/aQDO/KwTMsZQTU0prKgIYzD9
+        xUjtbGaXHE0VWv+BaaSlb5xbOz5COW3WQpSLOY1ZUNjvrn7w76TTXU/aEuGsU5mb
+        Z9u2vMQOVfr2CbXS8lMBesxvBmBlZA0ruD0Do62BkwIJMraGd/yfXMs8KLJoWclf
+        iUlpNf2DLVa53z7+63c2WAjtaUDJvWJ2sXqXhWwV24EzJrQTLnTbF/MlSB9tXpR7
+        0jHyNw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=pVI22is6JO53wiZeKX9orH1tH3EcKd0M9Qk5pUYGm
+        z0=; b=ZhFxubvHT1vsXcvj/Zr9QHUi7dK9Zch+ARwj4eFkkl8VOFPiLtvBAsIqF
+        i1skt4q2l4HIUEG7HfYsDvuKeZx50YqathHBNAphVCaUAFrvRNDQnMJicERlOetQ
+        /+FwykjEUSmzXGuuZQ9AuqOC1PnkRUoMAwYP/EvZjXl3x0FVl++0bQ3A6PaKMAI/
+        S2JrPidStsfE+EVWeWGkD41crT4QSgbemXLskxpJuFJqYLb9rJ/ZjrAeieFLaIuA
+        28ys2SkQEV4wq7lIEPeLyObRiJNc+hayqCARi7W2b7YtxNOPtj+FEzPZ1T4YLImT
+        x/hvnWxH2oQqv1oGz6gAuKrtUrHow==
+X-ME-Sender: <xms:zQMcXUULUfoNl5XkFNDfbduOQBYCTJcrzySdOCeV3p1II8AQ_EgP0A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrvdelgdeghecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
+    dujeegrdeiudenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
+    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:zQMcXX0C9MJeHilckyGlfFrIzLAd4OnaB85JUH04KZBwzguVQ_Mh5g>
+    <xmx:zQMcXbNRvAePR97KooMz9xXGakAiTUS0IDWeEasKbtySoyiknIKY4w>
+    <xmx:zQMcXa1ya4R0aj5Eq-FdHtKutkQtIaLiurSXNqELyiIR9nGfqnuvCg>
+    <xmx:zQMcXd6yrEzjUC27C7TZgZUtRKCUHX2qkZK4tYEYT0FVO48PENaQyA>
+Received: from pluto.themaw.net (unknown [118.208.174.61])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CE231380083;
+        Tue,  2 Jul 2019 21:24:28 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by pluto.themaw.net (Postfix) with ESMTP id 85D991C014E;
+        Wed,  3 Jul 2019 09:24:25 +0800 (AWST)
+Message-ID: <2daf229272884deaf139be510f5842f0689c18a6.camel@themaw.net>
+Subject: Re: [PATCH 4/6] vfs: Allow mount information to be queried by
+ fsinfo() [ver #15]
+From:   Ian Kent <raven@themaw.net>
+To:     christian@brauner.io, David Howells <dhowells@redhat.com>,
+        viro@zeniv.linux.org.uk
+Cc:     mszeredi@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 03 Jul 2019 09:24:25 +0800
+In-Reply-To: <8c70abf248d5ac07f334730af70d64235185b109.camel@themaw.net>
+References: <156173681842.14728.9331700785061885270.stgit@warthog.procyon.org.uk>
+         <156173685496.14728.9606180227161368035.stgit@warthog.procyon.org.uk>
+         <8c70abf248d5ac07f334730af70d64235185b109.camel@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701155208.211815-1-zwisler@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 09:52:08AM -0600, Ross Zwisler wrote:
-> This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+On Wed, 2019-07-03 at 09:09 +0800, Ian Kent wrote:
+> Hi Christian,
 > 
-> Per the discussion here:
-> 
-> https://lkml.org/lkml/2019/6/20/830
-> 
-> the above referenced commit breaks kernel compilation with old GCC
-> toolchains as well as current versions of the Gold linker.  Revert it so
-> we don't regress and lose the ability to compile the kernel with these
-> tools.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> About the propagation attributes you mentioned ...
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Umm ... how did you work out if a mount is unbindable from proc
+mountinfo?
 
--Kees
+I didn't notice anything that could be used for that when I was
+looking at this.
 
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 0850b5149345..4d1517022a14 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -141,10 +141,10 @@ SECTIONS
->  		*(.text.__x86.indirect_thunk)
->  		__indirect_thunk_end = .;
->  #endif
-> -	} :text = 0x9090
->  
-> -	/* End of text section */
-> -	_etext = .;
-> +		/* End of text section */
-> +		_etext = .;
-> +	} :text = 0x9090
->  
->  	NOTES :text :note
->  
-> -- 
-> 2.20.1
+> On Fri, 2019-06-28 at 16:47 +0100, David Howells wrote:
+> 
+> snip ...
+> 
+> > +
+> > +#ifdef CONFIG_FSINFO
+> > +int fsinfo_generic_mount_info(struct path *path, struct fsinfo_kparams
+> > *params)
+> > +{
+> > +	struct fsinfo_mount_info *p = params->buffer;
+> > +	struct super_block *sb;
+> > +	struct mount *m;
+> > +	struct path root;
+> > +	unsigned int flags;
+> > +
+> > +	if (!path->mnt)
+> > +		return -ENODATA;
+> > +
+> > +	m = real_mount(path->mnt);
+> > +	sb = m->mnt.mnt_sb;
+> > +
+> > +	p->f_sb_id		= sb->s_unique_id;
+> > +	p->mnt_id		= m->mnt_id;
+> > +	p->parent_id		= m->mnt_parent->mnt_id;
+> > +	p->change_counter	= atomic_read(&m->mnt_change_counter);
+> > +
+> > +	get_fs_root(current->fs, &root);
+> > +	if (path->mnt == root.mnt) {
+> > +		p->parent_id = p->mnt_id;
+> > +	} else {
+> > +		rcu_read_lock();
+> > +		if (!are_paths_connected(&root, path))
+> > +			p->parent_id = p->mnt_id;
+> > +		rcu_read_unlock();
+> > +	}
+> > +	if (IS_MNT_SHARED(m))
+> > +		p->group_id = m->mnt_group_id;
+> > +	if (IS_MNT_SLAVE(m)) {
+> > +		int master = m->mnt_master->mnt_group_id;
+> > +		int dom = get_dominating_id(m, &root);
+> > +		p->master_id = master;
+> > +		if (dom && dom != master)
+> > +			p->from_id = dom;
+> 
+> This provides information about mount propagation (well mostly).
+> 
+> My understanding of this was that:
+> "If a mount is propagation private (or slave) the group_id will
+> be zero otherwise it's propagation shared and it's group id will
+> be non-zero.
+> 
+> If a mount is propagation slave and propagation peers exist then
+> the mount field mnt_master will be non-NULL. Then mnt_master
+> (slave's master) can be used to set master_id. If the group id
+> of the propagation source is not that of the master then set
+> the from_id group as well."
+> 
+> This parallels the way in which these values are reported in
+> the proc pseudo file system.
+> 
+> Perhaps adding flags as well as setting the fields would be
+> useful too, since interpreting the meaning of the structure
+> fields isn't obvious, ;)
+> 
+> David, Al, thoughts?
+> 
+> Ian
 
--- 
-Kees Cook
