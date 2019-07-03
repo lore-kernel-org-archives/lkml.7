@@ -8,66 +8,68 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47648C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08A6C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131012187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B333F2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj4HgwcH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cq4qRUeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfGCQ12 (ORCPT
+        id S1727186AbfGCQ1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:27:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35310 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGCQ12 (ORCPT
+        Wed, 3 Jul 2019 12:27:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34472 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCQ1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:27:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so345391pfn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:27:27 -0700 (PDT)
+        Wed, 3 Jul 2019 12:27:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p10so1515793pgn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=UaCfWwscnCZ9X19G2iox4r2DvMJhQMjdmw+itwepCYk=;
-        b=Kj4HgwcHyaagPTCY8GhUqTvrvQSy4Yd+XUxgRU9gQUNdmbYhG4XDtk8WUcRjmpRseD
-         cHr9wS1oPEnjO/48xT1JxFaCEEsq0rz0E+rlHYKwklKLfz0kRbRKX3Fs8WJ5v5BoDvkK
-         QOTQYF0wBSTLgBB2rIiCwmSpe4mdR5Jx83Ceb9cfnbxVjUMO1k6YIr587NYmWFnfnkvm
-         7Bnzi4Q69NLxvijF3X2ZFEtuLDkVPpHd4QbKF3/aZre9Q+vjFlPloeoo2TlcwX1eQHWp
-         5+maYUdfZuYjWCV7jkr+s4o+XsFf7BY0s9fP3RjOd78o6LuLHPiS5omMtK+jjVuvgr2M
-         w0fQ==
+        bh=JOAvBtD07sBYTenk1Ld3G0gRN0kgMIcIX/hXrBaiC48=;
+        b=Cq4qRUeKmmr6VHzShTIBP5uJdaJ5TP3JSbHewKTET6tPfxhELWCppMDSPBfKFYw7mV
+         M9V5TcaxpMI/wVTiVQAqgxwxxWMDpeplHLUPLaYn3kMptcKJZ0XHLsECdmeOSgxF50Wm
+         +JFZWhFhw2Wa5At3DmWjdnIcPlKxzCoi3apzdrjDGrvmknCMiUdNbOYTXfr+oC26T9On
+         2UCPiVYl4pCPue6kkDo2ldm3SAAA7WSpp4fIjbQRStZVhe+NIz52SArH+KT+oJewTNSQ
+         MipHAVbq6krLiAnSl5FIdAhyHJ8mOnwQj7WrldWPg2sItR1hTk2DBqOlYZIBiudSb4AW
+         DYtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UaCfWwscnCZ9X19G2iox4r2DvMJhQMjdmw+itwepCYk=;
-        b=AX30/B/OO/VfY6uzC0qLst9T5Uib5FJ45kluuwxtCraotvouDsu7IW/AXOnBaDxIDi
-         Vemuhn/DyQxESlMujytSHfIO1tZscz437S0nNAdKU/A2RcbZvkABDBCBLL/QbKxX5VX6
-         cdD4PBhe6DVTsi5DskFGPlbcUDwzCmRS1JmNoWBLfZBthVbX8PfF3dIOVByd0W+4Bpkl
-         uwK3+GO2kjB1yUlff+Ir1x1ALIo74Z2rDS7glqjUkZaFrTsthH+uHMabudVEWjqYZxwp
-         PJuhnPpCzU29QHK50SLUWVrNILv9OnV2Vl8qPhdgRP8A7Dh4mYWE491MYXQT93AYYIHu
-         U7xQ==
-X-Gm-Message-State: APjAAAWrNRmxI5KjWI5gRnNlhnnXSYILik01WFicfMJ0DamM4H9ZPsha
-        nAtQs4xolyxV/DUiYIJ3nWg=
-X-Google-Smtp-Source: APXvYqzkQ6bcPEfIil3HUDVMahzt6JJS97amraTDfjGTSEJJKqnMP0+6Q5Q+ENguuAWIV/uuzywivQ==
-X-Received: by 2002:a65:6656:: with SMTP id z22mr36489848pgv.197.1562171247573;
-        Wed, 03 Jul 2019 09:27:27 -0700 (PDT)
+        bh=JOAvBtD07sBYTenk1Ld3G0gRN0kgMIcIX/hXrBaiC48=;
+        b=Ks3Elp8j7dTEuHma2XQn/oFKXXXjD+HmIV4m51PnA4OKmaR9gaXHEgibh5zlFzBeQO
+         Rqsk9c0wGScIKNaddta27uOJT+mqP1kWJBose0J40WOIoTMBKyJtVeBSMAtt8V0AqQoW
+         HpbsESc4XJ3/ozDJaivy5QArsLdFfR09CVWra4WaB8JQXHGA8O06O24JB22deyeBJH08
+         pyvmIl6L/raSmaCcfaZAyGjPgfg0YNek9u4C/y03iOeFYdOvmULsvOwOZSmlBc3gq6Hm
+         xBBoydoKyw1fxzzGxZF/YLgTlUo1ZmRJYWHyoxWPWbxW0G0MBOoDGSfIVmsf68FCSKB0
+         KupA==
+X-Gm-Message-State: APjAAAVRol7C847Lz7nlFfaO7FscX6Cz1q5MB5tII7SENrXJifG2zo4t
+        HeR5hod6wWqWIMHZg1E3t7I=
+X-Google-Smtp-Source: APXvYqwxisxAz70mUIcuNaWqws+r7Wyj6eH5XkoIzyb8MeIIkv07CAMI7ekDa2eTOk8igLTIOUxdPQ==
+X-Received: by 2002:a63:4c46:: with SMTP id m6mr39207542pgl.59.1562171258154;
+        Wed, 03 Jul 2019 09:27:38 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id m31sm2914550pjb.6.2019.07.03.09.27.23
+        by smtp.googlemail.com with ESMTPSA id h1sm2499433pgv.93.2019.07.03.09.27.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:27:27 -0700 (PDT)
+        Wed, 03 Jul 2019 09:27:37 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 07/35] drm/amdgpu: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:27:18 +0800
-Message-Id: <20190703162718.32184-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 08/35] drm/i915: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:27:28 +0800
+Message-Id: <20190703162728.32230-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,92 +83,33 @@ write the size twice (sometimes lead to mistakes), kmemdup improves
 readability, leads to smaller code and also reduce the chances of mistakes.
 Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
 
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c           | 5 ++---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c           | 5 ++---
- drivers/gpu/drm/amd/display/dc/core/dc.c        | 6 ++----
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 4 +---
- 4 files changed, 7 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/i915/gvt/dmabuf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-index 02955e6e9dd9..48e38479d634 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-@@ -3925,11 +3925,10 @@ static int gfx_v8_0_init_save_restore_list(struct amdgpu_device *adev)
+diff --git a/drivers/gpu/drm/i915/gvt/dmabuf.c b/drivers/gpu/drm/i915/gvt/dmabuf.c
+index 41c8ebc60c63..fe6fa979f22a 100644
+--- a/drivers/gpu/drm/i915/gvt/dmabuf.c
++++ b/drivers/gpu/drm/i915/gvt/dmabuf.c
+@@ -411,14 +411,13 @@ int intel_vgpu_query_plane(struct intel_vgpu *vgpu, void *args)
+ 		goto out;
+ 	}
  
- 	int list_size;
- 	unsigned int *register_list_format =
--		kmalloc(adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
-+		kmemdup(adev->gfx.rlc.register_list_format,
-+			adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
- 	if (!register_list_format)
- 		return -ENOMEM;
--	memcpy(register_list_format, adev->gfx.rlc.register_list_format,
--			adev->gfx.rlc.reg_list_format_size_bytes);
+-	dmabuf_obj->info = kmalloc(sizeof(struct intel_vgpu_fb_info),
++	dmabuf_obj->info = kmemdup(&fb_info, sizeof(struct intel_vgpu_fb_info),
+ 				   GFP_KERNEL);
+ 	if (unlikely(!dmabuf_obj->info)) {
+ 		gvt_vgpu_err("allocate intel vgpu fb info failed\n");
+ 		ret = -ENOMEM;
+ 		goto out_free_dmabuf;
+ 	}
+-	memcpy(dmabuf_obj->info, &fb_info, sizeof(struct intel_vgpu_fb_info));
  
- 	gfx_v8_0_parse_ind_reg_list(register_list_format,
- 				RLC_FormatDirectRegListLength,
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index b610e3b30d95..09d901ef216d 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -2092,11 +2092,10 @@ static int gfx_v9_1_init_rlc_save_restore_list(struct amdgpu_device *adev)
- 	u32 tmp = 0;
- 
- 	u32 *register_list_format =
--		kmalloc(adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
-+		kmemdup(adev->gfx.rlc.register_list_format,
-+			adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
- 	if (!register_list_format)
- 		return -ENOMEM;
--	memcpy(register_list_format, adev->gfx.rlc.register_list_format,
--		adev->gfx.rlc.reg_list_format_size_bytes);
- 
- 	/* setup unique_indirect_regs array and indirect_start_offsets array */
- 	unique_indirect_reg_count = ARRAY_SIZE(unique_indirect_regs);
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 18c775a950cc..6ced3b9cdce2 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1263,14 +1263,12 @@ struct dc_state *dc_create_state(struct dc *dc)
- struct dc_state *dc_copy_state(struct dc_state *src_ctx)
- {
- 	int i, j;
--	struct dc_state *new_ctx = kzalloc(sizeof(struct dc_state),
--					   GFP_KERNEL);
-+	struct dc_state *new_ctx = kmemdup(src_ctx,
-+			sizeof(struct dc_state), GFP_KERNEL);
- 
- 	if (!new_ctx)
- 		return NULL;
- 
--	memcpy(new_ctx, src_ctx, sizeof(struct dc_state));
--
- 	for (i = 0; i < MAX_PIPES; i++) {
- 			struct pipe_ctx *cur_pipe = &new_ctx->res_ctx.pipe_ctx[i];
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index 96e97d25d639..d4b563a2e220 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -167,12 +167,10 @@ struct dc_stream_state *dc_copy_stream(const struct dc_stream_state *stream)
- {
- 	struct dc_stream_state *new_stream;
- 
--	new_stream = kzalloc(sizeof(struct dc_stream_state), GFP_KERNEL);
-+	new_stream = kzalloc(stream, sizeof(struct dc_stream_state), GFP_KERNEL);
- 	if (!new_stream)
- 		return NULL;
- 
--	memcpy(new_stream, stream, sizeof(struct dc_stream_state));
--
- 	if (new_stream->sink)
- 		dc_sink_retain(new_stream->sink);
+ 	((struct intel_vgpu_fb_info *)dmabuf_obj->info)->obj = dmabuf_obj;
  
 -- 
 2.11.0
