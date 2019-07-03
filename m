@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBFBC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46F9C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AFF2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7692187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EH58ZxTT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYr3n8ck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfGCQaU (ORCPT
+        id S1727360AbfGCQac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:30:20 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42344 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfGCQaU (ORCPT
+        Wed, 3 Jul 2019 12:30:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40185 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCQab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:30:20 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so1509438plb.9;
-        Wed, 03 Jul 2019 09:30:20 -0700 (PDT)
+        Wed, 3 Jul 2019 12:30:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so1529780pfp.7;
+        Wed, 03 Jul 2019 09:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=2zWvMdzA/V9RyhmUcmhxRuOGTZVdTb4bDJ/gtFYjG8w=;
-        b=EH58ZxTTDW/gvWq+rRCkWLUjidFoA+hvkhdhLqyvRmIDziAlIzaUfd7TdKSZnaWLKO
-         xoV7NSefQySIIFqsIH+MvTCOLf2ZLAXjOG7O2bw7LZC4JMKAzh16Icy3vBJD3ZOTtn6j
-         XDSaMKSnhcP2hHeF/glVyoPgNTpBmEc+sfP/wHI2MeDMGhhPj0c2h2U0UeSDnSYz4I6z
-         Ug0wwmTv5bqWuo0hfXCw2JdzvulmlaTVcYuMLDwEhrle1CKoYyMcgLg+jdWbpNUxD8Fx
-         3+qv6q9uqXeYkH6bEBhH73Y6rvVymohaOZoIK78hODQcEW7KmCTaFpvQ/rNZe60ciBf5
-         p0MA==
+        bh=Gkn3vtw/wKbiE9yDLNxFjk7ZvpNBqpkx3Gx9EfielCI=;
+        b=rYr3n8ckCCzYVUXCL/A/uAB08qfjJ3q8sWPmBaZ7L8mjcTkkF7CEttydEnNjLmmJey
+         JNqD+ktv97HFpLXtH/3YY+jIxwKAocicJaUO+j/iTAvM65cgBX/zXT8oEWXfC/+hw4I8
+         yDoiHEZ7RO/oDuwRsirPqQ+6vPlhR73LmeND8hCYLPIrAd/lzmie8OzR8HftMtOeXU88
+         QHCE3g0fMiVOCVTgtPPdQY8A34C95zSxiI27lZ38mWnoMjw+46KOwQ8mO1fMwLJY5f3D
+         f8HidmLiwRlkerfali1Baq3zwa1LJbgbSz9YIUnoDPcm4hrPvQaPlccFIpZE/UKJnxs4
+         8Dkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2zWvMdzA/V9RyhmUcmhxRuOGTZVdTb4bDJ/gtFYjG8w=;
-        b=ozisrdeMFRo85HWDQ43A8NX8k8BWqvkaiFKnWbmyuc7UQtVhIVNX2W75KmDrwhtWyG
-         CExOUF+QllWO0gEK6XVbGG81xt/6qX32m7HZJfs+5YdPSXbWtOyiOE2hk7xjICq55q2m
-         PVQwc0fW4j7Rzm0ZtiIfraqWgTH00Mw05XGGaZfcrVZZBoZkaHro5gb2XbO2JVr+1Ikk
-         ULFJcG3KIVJIvz884N7QiTdj309H/F3LTRxgJPXePawiR4x/eeVbPsdNQq5mVjszFegC
-         Hh5a6M7JPt3aVcb3qJenNCAX+cTtEexHZsEzHgjIBY/wETZ4eFuqDU/v0x7M4PR+BLSg
-         UQ3w==
-X-Gm-Message-State: APjAAAVcMW8EVrXJFbFbaKGs/hHk5lgYLLniwyJ6AibMOtuDCJCzwvb9
-        bVvHejUyObtM/KYfe6onBho=
-X-Google-Smtp-Source: APXvYqyaQVg2V0LNXQ+367v5bLDi2dS1KGUjL/rC6yn1x5xvwLQPlYKuQGJ2mAnjFyAz5HGMk49fmA==
-X-Received: by 2002:a17:902:124:: with SMTP id 33mr44436846plb.145.1562171419914;
-        Wed, 03 Jul 2019 09:30:19 -0700 (PDT)
+        bh=Gkn3vtw/wKbiE9yDLNxFjk7ZvpNBqpkx3Gx9EfielCI=;
+        b=eib7x0DeXn+4PR849AVwLAQVEZWPYLnhU6ncwUp+jJ/vrfKnl4bPoEhjuZ8srtnfXv
+         uoALXuvDqjZNmHETb9gj2V2F7aNzPvrOUxRE45NXdEkvOcsqLdUW9LrA3gItGWYx5YK7
+         g/3NDvkMkQncqZDzmtrC+RQac42RqopgTtWmk0SVBJmQQfFcpctwfDHgC59lU7WdE+cf
+         iVsEq9QENTUtGEAxdVDErQk+ePbX0wcVNZM7xl2Oeo1ZrNnBtNc4LwfpJ980oRcCU/Q1
+         9Ho68iJ/y041J2fzcOVxb40/747qED/GcmOJobvmpOfZwWo8wi+50QI9f0dh+Y4GXjEj
+         W9uw==
+X-Gm-Message-State: APjAAAUuHujp/Lu7NYNBwt6d8FZVKV06dl/Y0x3jMuwzZ4kuEbDMLjP4
+        PQrL61zDuP8wz9BmrMQ2M10=
+X-Google-Smtp-Source: APXvYqwBdaYbRrBZNq9aGvyXxWn685mLA5szS7/gJwXYCmLMYW8+B7/LgoRYY5Zoaz9S6SLvgtUf+w==
+X-Received: by 2002:a63:a35c:: with SMTP id v28mr23334581pgn.144.1562171431084;
+        Wed, 03 Jul 2019 09:30:31 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id b16sm1245055pfo.54.2019.07.03.09.30.17
+        by smtp.googlemail.com with ESMTPSA id b19sm2959684pgh.57.2019.07.03.09.30.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:30:19 -0700 (PDT)
+        Wed, 03 Jul 2019 09:30:30 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Hannes Reinecke <hare@suse.com>,
+Cc:     Hannes Reinecke <hare@kernel.org>,
         "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 22/35] scsi/aic7xxx: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:30:10 +0800
-Message-Id: <20190703163010.364-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 23/35] scsi: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:30:22 +0800
+Message-Id: <20190703163022.410-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,42 +82,29 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- drivers/scsi/aic7xxx/aic79xx_core.c | 3 +--
- drivers/scsi/aic7xxx/aic7xxx_core.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/scsi/myrb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/aic79xx_core.c
-index 7e5044bf05c0..f4bc88c50dcd 100644
---- a/drivers/scsi/aic7xxx/aic79xx_core.c
-+++ b/drivers/scsi/aic7xxx/aic79xx_core.c
-@@ -9442,10 +9442,9 @@ ahd_loadseq(struct ahd_softc *ahd)
- 	if (cs_count != 0) {
+diff --git a/drivers/scsi/myrb.c b/drivers/scsi/myrb.c
+index 539ac8ce4fcd..5e6b5e7ae93a 100644
+--- a/drivers/scsi/myrb.c
++++ b/drivers/scsi/myrb.c
+@@ -1658,14 +1658,12 @@ static int myrb_ldev_slave_alloc(struct scsi_device *sdev)
+ 	if (!ldev_info)
+ 		return -ENXIO;
  
- 		cs_count *= sizeof(struct cs);
--		ahd->critical_sections = kmalloc(cs_count, GFP_ATOMIC);
-+		ahd->critical_sections = kmemdup(cs_table, cs_count, GFP_ATOMIC);
- 		if (ahd->critical_sections == NULL)
- 			panic("ahd_loadseq: Could not malloc");
--		memcpy(ahd->critical_sections, cs_table, cs_count);
- 	}
- 	ahd_outb(ahd, SEQCTL0, PERRORDIS|FAILDIS|FASTMODE);
- 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index a9d40d3b90ef..7ea4e45309ff 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -6907,10 +6907,9 @@ ahc_loadseq(struct ahc_softc *ahc)
- 	if (cs_count != 0) {
- 
- 		cs_count *= sizeof(struct cs);
--		ahc->critical_sections = kmalloc(cs_count, GFP_ATOMIC);
-+		ahc->critical_sections = kmemdup(cs_table, cs_count, GFP_ATOMIC);
- 		if (ahc->critical_sections == NULL)
- 			panic("ahc_loadseq: Could not malloc");
--		memcpy(ahc->critical_sections, cs_table, cs_count);
- 	}
- 	ahc_outb(ahc, SEQCTL, PERRORDIS|FAILDIS|FASTMODE);
- 
+-	sdev->hostdata = kzalloc(sizeof(*ldev_info), GFP_KERNEL);
++	sdev->hostdata = kmemdup(ldev_info, sizeof(*ldev_info), GFP_KERNEL);
+ 	if (!sdev->hostdata)
+ 		return -ENOMEM;
+ 	dev_dbg(&sdev->sdev_gendev,
+ 		"slave alloc ldev %d state %x\n",
+ 		ldev_num, ldev_info->state);
+-	memcpy(sdev->hostdata, ldev_info,
+-	       sizeof(*ldev_info));
+ 	switch (ldev_info->raid_level) {
+ 	case MYRB_RAID_LEVEL0:
+ 		level = RAID_LEVEL_LINEAR;
 -- 
 2.11.0
 
