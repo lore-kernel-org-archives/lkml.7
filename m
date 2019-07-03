@@ -2,52 +2,52 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C46FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EF4C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525F921873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0422621873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120238;
-	bh=97TGh6Ee0YZNTYPss0vf23tc8j5MQVZv1Nv6QE9ofGY=;
+	s=default; t=1562120245;
+	bh=EIYHMbaNIFTn9Ih8l6VVfVVVejaX/Pptb3dgz5pWr2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9juPd+6cgflAlDWz6OIkPr3OP4cPR1Y7BCkzkvtNPV319prIiwMSJDJqua5n4XoC
-	 ggLkOL32YowvSzAGFmCDcn1MBNh0T9rIPlXOJxBTA/wSJXaY/dwKgTBYKKxioCPxcf
-	 QVz9Z3SVU9XvV3h59PHeIKZY3DAYkjXJkDncekHw=
+	b=0VsONxtIYeE+5oWzKTpQQVuvaQyp3mCJpDJ1lqeoJmyspMkzt+sIyISEUwzecMOmt
+	 qoSruOt2moYqzshsdJpRXv3uIB2m6pFeiqXY6uPdXxXiHGlLz5WnHL56D0FRHrbbl5
+	 Fv3guulH9c13cCEfnNU8JkXPPlWWi6se9yNm3ZGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfGCCRR (ORCPT
+        id S1728182AbfGCCRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfGCCQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:58 -0400
+        id S1728098AbfGCCQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECFF21882;
-        Wed,  3 Jul 2019 02:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED31721897;
+        Wed,  3 Jul 2019 02:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120216;
-        bh=97TGh6Ee0YZNTYPss0vf23tc8j5MQVZv1Nv6QE9ofGY=;
+        s=default; t=1562120214;
+        bh=EIYHMbaNIFTn9Ih8l6VVfVVVejaX/Pptb3dgz5pWr2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgerRFW4Neu+oAIJQ1clB+rPF2uns9DqM+KAjJyFNhizZ6K4Tk90RUDvR3mhBBFag
-         skUOUOoRAMxqF7+SZnFFBJA10tyX2sNhwCRjx2tuWubNJo6d5CQK//spvcVaX/hYg3
-         iUrXlebMg81aldgQ4nc7xCpfuMqZGPMRmwLZN1MY=
+        b=SuRYlQqIeeCTUCp66WhliK7oMtQ2xXQmfVwBJNWOEfKSOfOsUaT07GNtt/v3hLmGm
+         CrT6K3bf02Vg2G/CaxYaQbv5cZS0Ko6Z4/TM4bdqfBQqhOoNtxPTvbk4Y6jxv6XdKv
+         H+AgshSvo5gRqFFELIhbepbn/+IsWUMU3xw211TQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/26] pinctrl: mediatek: Ignore interrupts that are wake only during resume
-Date:   Tue,  2 Jul 2019 22:16:22 -0400
-Message-Id: <20190703021625.18116-23-sashal@kernel.org>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Sebastian Parschauer <s.parschauer@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/26] HID: chicony: add another quirk for PixArt mouse
+Date:   Tue,  2 Jul 2019 22:16:20 -0400
+Message-Id: <20190703021625.18116-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
@@ -60,75 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Oleksandr Natalenko <oleksandr@redhat.com>
 
-[ Upstream commit 35594bc7cecf3a78504b590e350570e8f4d7779e ]
+[ Upstream commit dcf768b0ac868630e7bdb6f2f1c9fe72788012fa ]
 
-Before suspending, mtk-eint would set the interrupt mask to the
-one in wake_mask. However, some of these interrupts may not have a
-corresponding interrupt handler, or the interrupt may be disabled.
+I've spotted another Chicony PixArt mouse in the wild, which requires
+HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
 
-On resume, the eint irq handler would trigger nevertheless,
-and irq/pm.c:irq_pm_check_wakeup would be called, which would
-try to call irq_disable. However, if the interrupt is not enabled
-(irqd_irq_disabled(&desc->irq_data) is true), the call does nothing,
-and the interrupt is left enabled in the eint driver.
+USB ID of this device is 0x04f2:0x0939.
 
-Especially for level-sensitive interrupts, this will lead to an
-interrupt storm on resume.
+We've introduced quirks like this for other models before, so lets add
+this mouse too.
 
-If we detect that an interrupt is only in wake_mask, but not in
-cur_mask, we can just mask it out immediately (as mtk_eint_resume
-would do anyway at a later stage in the resume sequence, when
-restoring cur_mask).
-
-Fixes: bf22ff45bed6 ("genirq: Avoid unnecessary low level irq function calls")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Sean Wang <sean.wang@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsreconnects-every-minute-on-linux
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/mediatek/mtk-eint.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index a613e546717a..b9f3c02ba59d 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -318,7 +318,7 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct mtk_eint *eint = irq_desc_get_handler_data(desc);
- 	unsigned int status, eint_num;
--	int offset, index, virq;
-+	int offset, mask_offset, index, virq;
- 	void __iomem *reg =  mtk_eint_get_offset(eint, 0, eint->regs->stat);
- 	int dual_edge, start_level, curr_level;
- 
-@@ -328,10 +328,24 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 		status = readl(reg);
- 		while (status) {
- 			offset = __ffs(status);
-+			mask_offset = eint_num >> 5;
- 			index = eint_num + offset;
- 			virq = irq_find_mapping(eint->domain, index);
- 			status &= ~BIT(offset);
- 
-+			/*
-+			 * If we get an interrupt on pin that was only required
-+			 * for wake (but no real interrupt requested), mask the
-+			 * interrupt (as would mtk_eint_resume do anyway later
-+			 * in the resume sequence).
-+			 */
-+			if (eint->wake_mask[mask_offset] & BIT(offset) &&
-+			    !(eint->cur_mask[mask_offset] & BIT(offset))) {
-+				writel_relaxed(BIT(offset), reg -
-+					eint->regs->stat +
-+					eint->regs->mask_set);
-+			}
-+
- 			dual_edge = eint->dual_edge[index];
- 			if (dual_edge) {
- 				/*
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 97d33b8ed36c..4ff61fb43500 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -265,6 +265,7 @@
+ #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
+ #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
+ #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
++#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
+ #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
+ #define USB_DEVICE_ID_ASUS_AK1D		0x1125
+ #define USB_DEVICE_ID_CHICONY_ACER_SWITCH12	0x1421
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index e24790c988c0..6046c2439700 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -45,6 +45,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HID_QUIRK_NOGET },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_TOUCH), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELESS), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_STICK), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
