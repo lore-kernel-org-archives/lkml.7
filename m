@@ -2,117 +2,103 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B2C5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BD4C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3242A218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D7E218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfGDAAr (ORCPT
+        id S1727548AbfGDABO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 20:00:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17869 "EHLO mga05.intel.com"
+        Wed, 3 Jul 2019 20:01:14 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:25390 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbfGDAAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 20:00:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 17:00:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="363198396"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Jul 2019 17:00:44 -0700
-Date:   Thu, 4 Jul 2019 07:44:02 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 04/15] fpga: dfl: fme: support 512bit data width PR
-Message-ID: <20190703234402.GC15825@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-5-mdf@kernel.org>
- <20190703175601.GA14034@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703175601.GA14034@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1727483AbfGDABO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 20:01:14 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 9FD8FF1803BB8423107B;
+        Thu,  4 Jul 2019 08:01:11 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x6400j1F043263;
+        Thu, 4 Jul 2019 08:00:45 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070408010927-2064645 ;
+          Thu, 4 Jul 2019 08:01:09 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     catalin.marinas@arm.com
+Cc:     will.deacon@arm.com, akpm@linux-foundation.org,
+        rppt@linux.vnet.ibm.com, f.fainelli@gmail.com, logang@deltatee.com,
+        robin.murphy@arm.com, ghackmann@android.com, hannes@cmpxchg.org,
+        david@redhat.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
+        Junhua Huang <huang.junhua@zte.com.cn>
+Subject: [PATCH] arm64: mm: free the initrd reserved memblock in a aligned manner
+Date:   Thu, 4 Jul 2019 07:59:00 +0800
+Message-Id: <1562198340-19089-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-04 08:01:09,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-04 08:00:49,
+        Serialize complete at 2019-07-04 08:00:49
+X-MAIL: mse-fl2.zte.com.cn x6400j1F043263
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 07:56:01PM +0200, Greg KH wrote:
-> On Thu, Jun 27, 2019 at 05:49:40PM -0700, Moritz Fischer wrote:
-> > From: Wu Hao <hao.wu@intel.com>
-> > 
-> > In early partial reconfiguration private feature, it only
-> > supports 32bit data width when writing data to hardware for
-> > PR. 512bit data width PR support is an important optimization
-> > for some specific solutions (e.g. XEON with FPGA integrated),
-> > it allows driver to use AVX512 instruction to improve the
-> > performance of partial reconfiguration. e.g. programming one
-> > 100MB bitstream image via this 512bit data width PR hardware
-> > only takes ~300ms, but 32bit revision requires ~3s per test
-> > result.
-> > 
-> > Please note now this optimization is only done on revision 2
-> > of this PR private feature which is only used in integrated
-> > solution that AVX512 is always supported. This revision 2
-> > hardware doesn't support 32bit PR.
-> > 
-> > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> >  drivers/fpga/dfl-fme-main.c |   3 +
-> >  drivers/fpga/dfl-fme-mgr.c  | 113 +++++++++++++++++++++++++++++++-----
-> >  drivers/fpga/dfl-fme-pr.c   |  43 +++++++++-----
-> >  drivers/fpga/dfl-fme.h      |   2 +
-> >  drivers/fpga/dfl.h          |   5 ++
-> >  5 files changed, 135 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > index 086ad2420ade..076d74f6416d 100644
-> > --- a/drivers/fpga/dfl-fme-main.c
-> > +++ b/drivers/fpga/dfl-fme-main.c
-> > @@ -21,6 +21,8 @@
-> >  #include "dfl.h"
-> >  #include "dfl-fme.h"
-> >  
-> > +#define DRV_VERSION	"0.8"
-> > +
-> >  static ssize_t ports_num_show(struct device *dev,
-> >  			      struct device_attribute *attr, char *buf)
-> >  {
-> > @@ -277,3 +279,4 @@ MODULE_DESCRIPTION("FPGA Management Engine driver");
-> >  MODULE_AUTHOR("Intel Corporation");
-> >  MODULE_LICENSE("GPL v2");
-> >  MODULE_ALIAS("platform:dfl-fme");
-> > +MODULE_VERSION(DRV_VERSION);
-> 
-> No, we ripped out these useless "driver version" things all over the
-> place, please do not add them back in again.  They mean nothing and
-> confuse people to no end.
-> 
-> I'll not take this patch, sorry.
+From: Junhua Huang <huang.junhua@zte.com.cn>
 
-Let me remove them from these patches, and generate a new version quickly.
+We should free the reserved memblock in an aligned manner 
+because the initrd reserves the memblock in an aligned manner 
+in arm64_memblock_init(). 
+Otherwise there are some fragments in memblock_reserved regions. e.g.:
+/sys/kernel/debug/memblock # cat reserved 
+   0: 0x0000000080080000..0x00000000817fafff
+   1: 0x0000000083400000..0x0000000083ffffff
+   2: 0x0000000090000000..0x000000009000407f
+   3: 0x00000000b0000000..0x00000000b000003f
+   4: 0x00000000b26184ea..0x00000000b2618fff
+The fragments like the ranges from b0000000 to b000003f and 
+from b26184ea to b2618fff should be freed.
 
-Thanks for the review and comments.
+And we can do free_reserved_area() after memblock_free(),
+as free_reserved_area() calls __free_pages(), once we've done 
+that it could be allocated somewhere else, 
+but memblock and iomem still say this is reserved memory.
 
-Hao
+Signed-off-by: Junhua Huang <huang.junhua@zte.com.cn>
+---
+ arch/arm64/mm/init.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> 
-> greg k-h
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index d2adffb81b5d..03774b8bd364 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -580,8 +580,13 @@ void free_initmem(void)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ void __init free_initrd_mem(unsigned long start, unsigned long end)
+ {
++	unsigned long aligned_start, aligned_end;
++
++	aligned_start = __virt_to_phys(start) & PAGE_MASK;
++	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
++	memblock_free(aligned_end, aligned_end - aligned_start);
+ 	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-	memblock_free(__virt_to_phys(start), end - start);
++
+ }
+ #endif
+ 
+-- 
+2.15.2
+
