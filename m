@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B70C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE41C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018DA21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B1C21873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120444;
-	bh=w958eBB9CsfSgfzoPHpMiISgggIpYuOFGkK+jgnzK9Q=;
+	s=default; t=1562120452;
+	bh=oM1L33t+/hCOXb8D8GYlYwjleBds3DD6VTDRcYGc8YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ja7iPSBESlQOP+w5w3LoknAY22k/y113/f6dAn7gFkXcRWQ6rpazv9jjOn8OWLVO8
-	 Q5hRWu7EKbUjR6QSIimA7D+TnBHicIEouEeyGg4jSAV6uRzUBL7SKlEwm0ISM+IsgC
-	 LPryHENQ/C0DwkQsmg6iA5StDxOlrAhf3l8Uo4H8=
+	b=n79/kw08I+PNJDQFdkKcu02Q/hOdp1hiWmFUS+xAldYVelBi2s1fFzZawMCzj6ZKJ
+	 ChnhSTOdI71I2QN3FGgjO4gZlYxzfORiihl8vtPW0ItiBUfWOoIk5pWEoNXgalqCFm
+	 NDSfpCJMOmIEffwfFRMH5eRrvvlQDLNJxFjsgnLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfGCCUm (ORCPT
+        id S1727975AbfGCCQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbfGCCST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:19 -0400
+        id S1727957AbfGCCQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A934E2187F;
-        Wed,  3 Jul 2019 02:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E37C721880;
+        Wed,  3 Jul 2019 02:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120299;
-        bh=w958eBB9CsfSgfzoPHpMiISgggIpYuOFGkK+jgnzK9Q=;
+        s=default; t=1562120191;
+        bh=oM1L33t+/hCOXb8D8GYlYwjleBds3DD6VTDRcYGc8YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M24Ybl8wJl6NMtQjGJLnrMWZ1OMl4VteNw6HbhwJQVQhtQHilxMxumg3fBoPfVPqr
-         tviBh15kslNwEmnGbIG27HemsEIYY6scmr9TMcqOL/XXCmIPQlNXHLSueMYEJOpZzn
-         ODSMdrN3WBfDgqB9Mj5EksfErjhgd+M02YM5JWNc=
+        b=caHK6xE9oB5WIO9R4K36/uStHNSli50VOh28jsDggxwfKhUi/P1JVvtagcVyv9MUF
+         KQ9QmXqP6PIfyMfn5gRP8fL3DZRAaVrsOARI39wXfJZMeKtsb+57dlPqD2kd4Gt6f7
+         3DbNXifkrDWJiHTMfhqEKVkI93+dmYLxdBUMhfZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -54,12 +54,12 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 03/13] perf/core: Fix perf_sample_regs_user() mm check
-Date:   Tue,  2 Jul 2019 22:18:04 -0400
-Message-Id: <20190703021814.18385-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/26] perf/core: Fix perf_sample_regs_user() mm check
+Date:   Tue,  2 Jul 2019 22:16:03 -0400
+Message-Id: <20190703021625.18116-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
-References: <20190703021814.18385-1-sashal@kernel.org>
+In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
+References: <20190703021625.18116-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 580616e6fcee..3d4eb6f840eb 100644
+index 171b83ebed4a..3b61ff40bfe2 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5630,7 +5630,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+@@ -5906,7 +5906,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
  	if (user_mode(regs)) {
  		regs_user->abi = perf_reg_abi(current);
  		regs_user->regs = regs;
