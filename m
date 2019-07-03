@@ -2,134 +2,162 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CA1C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFB8C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6857521882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3728E218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rs/P10EO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5NbxhUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfGCIMl (ORCPT
+        id S1727266AbfGCIN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:12:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44810 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfGCIMk (ORCPT
+        Wed, 3 Jul 2019 04:13:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45099 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGCIN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:12:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p144so1456832qke.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:12:40 -0700 (PDT)
+        Wed, 3 Jul 2019 04:13:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so798634pgp.12;
+        Wed, 03 Jul 2019 01:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VjBFB/I0hlVew0sJZr7FphhS/ICkUfwzYUwEfGp+X9c=;
-        b=rs/P10EOeN8DyI/Wg/AZ1DlAhfVcgzzCalE9Vh9lVZ9iYbq7Jsh26+b068r1jTkYCu
-         9UM4aBR/8k/ZdDSMTmqUSSzooi/EJE6wcazITngYUVSrL+E7enwrQrSeCoMUKk1ixN+W
-         K9ve+Y/ZUGvYAEM4zp4tm3cwzm6BqzE9dqolkYjEUuNR0cEYY5iU5KBU9LCNeY5BWzMZ
-         hMF6PMR4U0+umNvC2E2/l6dDz92QxUN92vu6HnRT/AwAXCUmnCqs8lJnCxTrIhMdt4j0
-         BfcqgN8ddIaqNA27/dpccsu2frGQrqjCw2fA977jir5UmHgjgr3hksh7O+zUG+nh7bOb
-         FB6A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l/fW7R33i6r3L87mywXzhr7gnJzg2boZZl1A7ts9QtY=;
+        b=O5NbxhUwXBjtORIyUkBBUPPOyAVmr4Ny6Q8TaxcBFBtsHViCYLVUtdSRqWauh7Jwyq
+         czNpjX/8R5lg9so1PACVXyUYcO4xpVbqHb/E9Ub3n6siceZ9msHWx5km7FzX3uvLVyzL
+         6B+E8EPF/cV+37JYWg8JuS0xq76cQmZNgRasa6fc2Hm89/F3AHKw27V6VXPv+hxKbAQV
+         +tEUSJqgD29vvQVLmHTG6cWHOwAQa7gUSQgNfrVnIQZ4MHcvYqv93/32x/aGrb7UmXFQ
+         vdlYcXc5cbS/uJVFWbnMWEOmHX61Hu18n4K9SblQCs5WdfaOCmfYT5HYpr5hr5mtURwZ
+         D2IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VjBFB/I0hlVew0sJZr7FphhS/ICkUfwzYUwEfGp+X9c=;
-        b=PkkVOp9s831oz9HALlK5v0+AKIodaF/7gpSmXJSniTrlY2GUqseR9pOTxWRpSsqe3c
-         823gtn/0c/DRx80YCoBSgtSbAfKX0TG2kKIvzbcesL8rlqRnSRkO8ONJS1z+xFXwbmRw
-         +F8tWQYyZcJeU/NmFzlLJGoOo8hcUBS0hi5vMJ94e+BeN4QaTy0txjknjqqxSaimI3j1
-         zQrOz8rIZAQLQVi9c2WGO5C4ksEIT5kkc5jB9BgDdJOtBmd49Xv5O+0+jaXY3oBtFQ5A
-         Q+4T8Cg+eF2WWwuJYAd8v8GZvWY/bdimB7kotHOkiriFPr6XMoiH6NZthF3MXe8cmGEl
-         kipg==
-X-Gm-Message-State: APjAAAUK/Jq7Oo8ZODGvFrL6YxVroCWusi2qGL2sAjGO3TFqHCuw9IoK
-        5vnXV7PlrqoQ7JyWtWeTMGOl89gZjWdqeonuqnfpwg==
-X-Google-Smtp-Source: APXvYqzr8OCEiyef/ZkNtjl0SMgfPQYC1bswQpc5cBXmeylB8iVLKdFWMazq+fnPQ8raPNXy/tyZlYwpeBtzgp463F8=
-X-Received: by 2002:a67:fd91:: with SMTP id k17mr18291390vsq.121.1562141559483;
- Wed, 03 Jul 2019 01:12:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l/fW7R33i6r3L87mywXzhr7gnJzg2boZZl1A7ts9QtY=;
+        b=n7ovSRk2LmDfwkN16jKaMCTD6NBp2GVZLLw1sh7gbdE9oAEdSWOAX3yiL7B86ndV24
+         1hcpmBh8/U0kij8jxoyB5LAhQkL+xpAlZp236hsr0xP8DzIAm0occG4xdrsUpxLqG6Fl
+         r1lXWDt1r4eW4BTaWCqFxYSfkO8AMmdri2+aQuXURq5husaZaGYlE2mtgrtIBGCIWK9d
+         dHoVpFRCS2MsCijJdJHIKFX4Udhg809oDHXUjZ9O9klScGqLk6gBJjN68mFxdrChVaAv
+         rfFV7UK8tHYGqTgR3lavkYAC0uOWoGvpS9p4smxEpAwCG4rqqGu2+ooK//0wUiK0jxqH
+         OMUw==
+X-Gm-Message-State: APjAAAWICCixOddkCMcgRH8EBRSEtcDAObYMKxSYxw1y237gT5j21zpy
+        JNpgCirABRuT8Q1vI6pyS1EdiDwNQGA=
+X-Google-Smtp-Source: APXvYqyphdSGjtgLfSmMWuT4DgKpCYgJRPkXQh4PxTXji4zrUdFHSNmoM2SaAHd1wsAws+6V4WzIfA==
+X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr11462614pjq.32.1562141637151;
+        Wed, 03 Jul 2019 01:13:57 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.13.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 01:13:56 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/16] crypto: caam - Add i.MX8MQ support
+Date:   Wed,  3 Jul 2019 01:13:11 -0700
+Message-Id: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190625201341.15865-1-sashal@kernel.org> <20190625201341.15865-2-sashal@kernel.org>
- <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
- <20190626235653.GL7898@sasha-vm> <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
- <20190627133004.GA3757@apalos> <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
- <20190702142109.GA32069@apalos> <CY4PR21MB0279B99FB0097309ADE83809BCF80@CY4PR21MB0279.namprd21.prod.outlook.com>
- <20190703065813.GA12724@apalos>
-In-Reply-To: <20190703065813.GA12724@apalos>
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date:   Wed, 3 Jul 2019 11:12:28 +0300
-Message-ID: <CAC_iWjK2F13QxjuvqzqNLx00SiGz_FQ5X=MQxJyDev57bo3=LQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
-To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
-        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
-        "tee-dev@lists.linaro.org" <tee-dev@lists.linaro.org>,
-        "sumit.garg@linaro.org" <sumit.garg@linaro.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        Joakim Bech <joakim.bech@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thirupathaiah,
+Everyone:
 
-(+Joakim)
+Picking up where Chris left off (I chatted with him privately
+beforehead), this series adds support for i.MX8MQ to CAAM driver. Just
+like [v1], this series is i.MX8MQ only.
 
-On Wed, 3 Jul 2019 at 09:58, Ilias Apalodimas
-<ilias.apalodimas@linaro.org> wrote:
->
-> Hi Thirupathaiah,
-> >
-> > First of all, Thanks a lot for trying to test the driver.
-> >
-> np
->
-> [...]
-> > > I managed to do some quick testing in QEMU.
-> > > Everything works fine when i build this as a module (using IBM's TPM 2.0
-> > > TSS)
-> > >
-> > > - As module
-> > > # insmod /lib/modules/5.2.0-rc1/kernel/drivers/char/tpm/tpm_ftpm_tee.ko
-> > > # getrandom -by 8
-> > > randomBytes length 8
-> > > 23 b9 3d c3 90 13 d9 6b
-> > >
-> > > - Built-in
-> > > # dmesg | grep optee
-> > > ftpm-tee firmware:optee: ftpm_tee_probe:tee_client_open_session failed,
-> > > err=ffff0008
-> > This (0xffff0008) translates to TEE_ERROR_ITEM_NOT_FOUND.
-> >
-> > Where is fTPM TA located in the your test setup?
-> > Is it stitched into TEE binary as an EARLY_TA or
-> > Is it expected to be loaded during run-time with the help of user mode OP-TEE supplicant?
-> >
-> > My guess is that you are trying to load fTPM TA through user mode OP-TEE supplicant.
-> > Can you confirm?
-> I tried both
->
+Feedback is welcome!
+Thanks,
+Andrey Smirnov
 
-Ok apparently there was a failure with my built-in binary which i
-didn't notice. I did a full rebuilt and checked the elf this time :)
+Changes since [v3]:
 
-Built as an earlyTA my error now is:
-ftpm-tee firmware:optee: ftpm_tee_probe:tee_client_open_session
-failed, err=ffff3024 (translates to TEE_ERROR_TARGET_DEAD)
-Since you tested it on real hardware i guess you tried both
-module/built-in. Which TEE version are you using?
+  - Patchset changed to select DMA size at runtime in order to enable
+    support for both i.MX8MQ and Layerscape at the same time. I only
+    tested the patches on i.MX6,7 and 8MQ, since I don't have access
+    to any of the Layerscape HW. Any help in that regard would be
+    appareciated.
 
-Thanks
-/Ilias
+  - Bulk clocks and their number are now stored as a part of struct
+    caam_drv_private to simplify allocation and cleanup code (no
+    special context needed)
+    
+  - Renamed 'soc_attr' -> 'imx_soc_match' for clarity
+
+Changes since [v2]:
+
+  - Dropped "crypto: caam - do not initialise clocks on the i.MX8" and
+    replaced it with "crypto: caam - simplfy clock initialization" and 
+    "crypto: caam - add clock entry for i.MX8MQ"
+
+
+Changes since [v1]
+
+  - Series reworked to continue using register based interface for
+    queueing RNG initialization job, dropping "crypto: caam - use job
+    ring for RNG instantiation instead of DECO"
+
+  - Added a patch to share DMA mask selection code
+
+  - Added missing Signed-off-by for authors of original NXP tree
+    commits that this sereis is based on
+
+[v3] lore.kernel.org/r/20190617160339.29179-1-andrew.smirnov@gmail.com
+[v2] lore.kernel.org/r/20190607200225.21419-1-andrew.smirnov@gmail.com
+[v1] https://patchwork.kernel.org/cover/10825625/
+
+
+Andrey Smirnov (16):
+  crypto: caam - move DMA mask selection into a function
+  crypto: caam - simplfy clock initialization
+  crypto: caam - move tasklet_init() call down
+  crypto: caam - use deveres to allocate 'entinfo'
+  crypto: caam - use devres to allocate 'outring'
+  crypto: caam - use devres to allocate 'inpring'
+  crytpo: caam - make use of iowrite64*_hi_lo in wr_reg64
+  crypto: caam - use ioread64*_hi_lo in rd_reg64
+  crypto: caam - drop 64-bit only wr/rd_reg64()
+  crypto: caam - make CAAM_PTR_SZ dynamic
+  crypto: caam - move cpu_to_caam_dma() selection to runtime
+  crypto: caam - drop explicit usage of struct jr_outentry
+  crypto: caam - don't hardcode inpentry size
+  crypto: caam - force DMA address to 32-bit on 64-bit i.MX SoCs
+  crypto: caam - always select job ring via RSR on i.MX8MQ
+  crypto: caam - add clock entry for i.MX8MQ
+
+ drivers/crypto/caam/caamalg.c     |   2 +-
+ drivers/crypto/caam/caamhash.c    |   2 +-
+ drivers/crypto/caam/caampkc.c     |   8 +-
+ drivers/crypto/caam/caamrng.c     |   2 +-
+ drivers/crypto/caam/ctrl.c        | 224 ++++++++++++++----------------
+ drivers/crypto/caam/desc_constr.h |  20 ++-
+ drivers/crypto/caam/error.c       |   3 +
+ drivers/crypto/caam/intern.h      |  32 ++++-
+ drivers/crypto/caam/jr.c          |  67 +++------
+ drivers/crypto/caam/pdb.h         |  16 ++-
+ drivers/crypto/caam/pkc_desc.c    |   8 +-
+ drivers/crypto/caam/regs.h        | 139 ++++++++++++------
+ 12 files changed, 294 insertions(+), 229 deletions(-)
+
+-- 
+2.21.0
+
