@@ -2,52 +2,51 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D457C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B6C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144DB2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B22221874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120499;
-	bh=IkFjKExdh8Vp/k2HHoKWHLibz1mPbmLTwxqMp6GTu5w=;
+	s=default; t=1562120507;
+	bh=chKFCqDA6V2RIE/sy505VT1ttYmPYa6qIIJdqL1IBUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHFo6Uhln9lEisvQNcnFXmwnixuFL1/no0T2zxH4vuRQi4CxhzM2ea3hru+Y9BVMK
-	 4qkviQfkIH4h1X3g8K5L3/ip2a7x6AgaGe6a+OJtNsdK2vF/4vzb8lJw1KjE8+4pKt
-	 BHFX/fBdQiuyjM1BsFKNtbb2q6YnrIob1z+2mg6U=
+	b=dcSceL4MxS5DxiFrvpVk9Kz47MhfSVxzC7Z7eLA+6rOn7cDEnewgK8rhYUx9R+6FN
+	 6q3FsMQbXmx2BAlJNBJRqysehWYX1qanpaeEPqz9euC2F98yEXED6u7dmv2eXF2poC
+	 c2JjCE3933onq/HP6cqr8zOpJbKXpzhc7LHPDdi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfGCCVh (ORCPT
+        id S1728282AbfGCCVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54358 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:21:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbfGCCP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:59 -0400
+        id S1727753AbfGCCPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9987C21881;
-        Wed,  3 Jul 2019 02:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA1621873;
+        Wed,  3 Jul 2019 02:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120159;
-        bh=IkFjKExdh8Vp/k2HHoKWHLibz1mPbmLTwxqMp6GTu5w=;
+        s=default; t=1562120151;
+        bh=chKFCqDA6V2RIE/sy505VT1ttYmPYa6qIIJdqL1IBUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twUB/HqecQC8YVQB6frHW2gc8zOelx5qjCBicskNGKqNddyHWe+bWqYJmNlPx/Rg6
-         smImFbCf1Pe3oSF3ALQy+hQcbps1PnzJbBG8cy60itNifujx6bpACud5Oem1VDAvK0
-         KzA8jPFdMpmzzklTbVtuxTWZBw9Xkg7ADcRALEmA=
+        b=YrAqyKGJgl7vYEqTloP6KSDNVbaxZIO3Q4J3UGe6SjkT0KnJvdDIVtFePFa/VQB4M
+         iMC4bQKewGClgzoUljRSIJ7PqztlGarV0cfZS72p8GhIgqgh6nH+eaXD28hrGHM6Mk
+         1wCQOFJDDl1CeurG5Yv3nQIOJizvlVdlDEv7Y3W8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 30/39] HID: chicony: add another quirk for PixArt mouse
-Date:   Tue,  2 Jul 2019 22:15:05 -0400
-Message-Id: <20190703021514.17727-30-sashal@kernel.org>
+Cc:     Jerome Marchand <jmarchan@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 26/39] dm table: don't copy from a NULL pointer in realloc_argv()
+Date:   Tue,  2 Jul 2019 22:15:01 -0400
+Message-Id: <20190703021514.17727-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -60,52 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Natalenko <oleksandr@redhat.com>
+From: Jerome Marchand <jmarchan@redhat.com>
 
-[ Upstream commit dcf768b0ac868630e7bdb6f2f1c9fe72788012fa ]
+[ Upstream commit a0651926553cfe7992166432e418987760882652 ]
 
-I've spotted another Chicony PixArt mouse in the wild, which requires
-HID_QUIRK_ALWAYS_POLL quirk, otherwise it disconnects each minute.
+For the first call to realloc_argv() in dm_split_args(), old_argv is
+NULL and size is zero. Then memcpy is called, with the NULL old_argv
+as the source argument and a zero size argument. AFAIK, this is
+undefined behavior and generates the following warning when compiled
+with UBSAN on ppc64le:
 
-USB ID of this device is 0x04f2:0x0939.
+In file included from ./arch/powerpc/include/asm/paca.h:19,
+                 from ./arch/powerpc/include/asm/current.h:16,
+                 from ./include/linux/sched.h:12,
+                 from ./include/linux/kthread.h:6,
+                 from drivers/md/dm-core.h:12,
+                 from drivers/md/dm-table.c:8:
+In function 'memcpy',
+    inlined from 'realloc_argv' at drivers/md/dm-table.c:565:3,
+    inlined from 'dm_split_args' at drivers/md/dm-table.c:588:9:
+./include/linux/string.h:345:9: error: argument 2 null where non-null expected [-Werror=nonnull]
+  return __builtin_memcpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/dm-table.c: In function 'dm_split_args':
+./include/linux/string.h:345:9: note: in a call to built-in function '__builtin_memcpy'
 
-We've introduced quirks like this for other models before, so lets add
-this mouse too.
-
-Link: https://github.com/sriemer/fix-linux-mouse#usb-mouse-disconnectsreconnects-every-minute-on-linux
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Acked-by: Sebastian Parschauer <s.parschauer@gmx.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/md/dm-table.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index adce58f24f76..b5615ffa74ba 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -272,6 +272,7 @@
- #define USB_DEVICE_ID_CHICONY_MULTI_TOUCH	0xb19d
- #define USB_DEVICE_ID_CHICONY_WIRELESS	0x0618
- #define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE	0x1053
-+#define USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2	0x0939
- #define USB_DEVICE_ID_CHICONY_WIRELESS2	0x1123
- #define USB_DEVICE_ID_ASUS_AK1D		0x1125
- #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 77ffba48cc73..c586e9f8da3e 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -45,6 +45,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ATEN, USB_DEVICE_ID_ATEN_UC100KM), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_MULTI_TOUCH), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_PIXART_USB_OPTICAL_MOUSE2), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_WIRELESS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHIC, USB_DEVICE_ID_CHIC_GAMEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CH, USB_DEVICE_ID_CH_3AXIS_5BUTTON_STICK), HID_QUIRK_NOGET },
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 350cf0451456..ec8b27e20de3 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -561,7 +561,7 @@ static char **realloc_argv(unsigned *size, char **old_argv)
+ 		gfp = GFP_NOIO;
+ 	}
+ 	argv = kmalloc_array(new_size, sizeof(*argv), gfp);
+-	if (argv) {
++	if (argv && old_argv) {
+ 		memcpy(argv, old_argv, *size * sizeof(*argv));
+ 		*size = new_size;
+ 	}
 -- 
 2.20.1
 
