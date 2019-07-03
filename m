@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691CFC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBA6C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A909218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEEB218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZnIX9Ua"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiDwKn+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfGCION (ORCPT
+        id S1727423AbfGCIOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:14:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38694 "EHLO
+        Wed, 3 Jul 2019 04:14:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43451 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfGCIOJ (ORCPT
+        with ESMTP id S1727374AbfGCIOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:14:09 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z75so814471pgz.5;
-        Wed, 03 Jul 2019 01:14:08 -0700 (PDT)
+        Wed, 3 Jul 2019 04:14:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so803487pgv.10;
+        Wed, 03 Jul 2019 01:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HCmJmyzmQT4Pt6JaXDG9/uRNYLrXoyYw1jAGneb5HzY=;
-        b=ZZnIX9UaZGyuDvO48xtLr/H1WO8/EBI2wEYk1XHvwBJVcjwsQGK5gkEmlb1eY8S82G
-         14ZRWDzdxXdnu5CSjJV7Y6AZxCkSEwnYWPD8yJAiskPfr+iJvnlqRqgJJ3g9YOlgpv+w
-         u11t3H2O517+696LChy64YGdWoNLI4WaTJ019UPrwqZsdpNXxP0NzOsWaaWGHKnOHiKj
-         mwr3vuDC6Uzs/yr71SBCQKIGf/3WsJuc1pWOds9iQ1j+RwlEfKDCfuQpOp0kD1rFjfZo
-         a+LIkkZpnLgXDNBQ406PqJPzuU8qSLLWcALZ8Y1WqGSxNaqgb6f+DIDiu/6UhVNfl/yS
-         OIig==
+        bh=PkneT3aecs6Kbwyjtaql2AriO4Q+BBNKS7A4THu3IYU=;
+        b=RiDwKn+FlKgrr41ZvjT3tbd7ujE40hDraiJKOBSkwLxwpQDvQ8nTXFKMo46K5IRrdq
+         3SaLq94hb4FAzn0zcDq7VsdBMSWi3qpBgs43hguMnPdgEGllxujL3INNOuKqicHETFYF
+         lX+BDtu2Yj/1Ze9+QALF3zu2ntdzO1feO8N9HIG+oQ6pNyBUjXVdmIRQedPKammvfsC/
+         TBs3AVTOeMfo5L+AmvLhwOgfmjjkq7yqUw//bXdjFVXl1CSm9o1ZrEOwBnkRZNn0OlBp
+         E8k50UeA/MX84/LMcfAHTMiTUBpZesq0tc6QRfbHxws/1hgAvXqx54Zrxax3iJey4mt6
+         gz1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HCmJmyzmQT4Pt6JaXDG9/uRNYLrXoyYw1jAGneb5HzY=;
-        b=kqtfve1ou+5XtvV01XUsBKIJdVdltT8Tw4Vaz/42ASUu3X8NJWeWhIuF0mT2iUIsTL
-         loPJrk1LJOQ6ff/85a0ziGz/EbVpUKBKK0PgyCNxlXMnkujJPmzdbLEz7rs31IMgX2Fr
-         xO+REVwhZZ7nHHeZHKjbPRAYQ5dR7GYZQS3pkOJOfjZ+R4IypPp0XwnYPqvRdWQw6/cc
-         +oytpBfoNldK3JK/fGcsEGRPb1qjbKwbOJ2h7IZj5Qs6aVw5igM1/AVXssLWCyDU6i6u
-         Yoc5DAIoIhk+QxErbShG0OB7HYuWhqwEvM0/JKw5qCQpZGnIsuTlo3OgoWD+DZfv/bER
-         zGHg==
-X-Gm-Message-State: APjAAAUh8oymHqQybuUf4zIH7uKptSlF6Z6G0JjdD282OHL/1NjXM2gy
-        MH+A5LrKyL9L2UiWITlZyqZ6zAHO+bQ=
-X-Google-Smtp-Source: APXvYqzaR5M8wziwkPrxSec1KbxGfXyehUKrRQebI+8TmPvE84ahWfftCUUbP8FlaLVx6eF2DJFghg==
-X-Received: by 2002:a63:62c3:: with SMTP id w186mr36989443pgb.64.1562141647547;
-        Wed, 03 Jul 2019 01:14:07 -0700 (PDT)
+        bh=PkneT3aecs6Kbwyjtaql2AriO4Q+BBNKS7A4THu3IYU=;
+        b=PWYqAudM+DV+7ebHYAxrIERdOISsXdy4JeFTUTwCUldnv/EbVVCKXP+nJQyYap29ff
+         50NwhpV7tvaKiX2V0cgrtYyG1zWqxjTtLxRSQO5BQhxQCQ90/74QaGMZAFg+DIOlmR/1
+         XB09M8CRneMKBZ3om19Ny10/lwT2mF/tN0uy29SaEa025dZXTpznYg46ozK49kO5YVnY
+         oaTsZKg5zaWQ+nJvmPxlfkv2DTP92D07L/UGgJq3sAwpf6aU1lf5HHOiGTDkYAt0Zz0Q
+         IqeznlqvDMcvU8X2cAOAAbyfZHgQCHtskgCk31MKFaC2ipk9yjLkDAH22Onc7sdtTb/U
+         R9Kg==
+X-Gm-Message-State: APjAAAUK+6elrLE7/Oeag0b6aXhcrbHDBKwu3VEiAr3RBk8IZEzwkGyT
+        b4UjKIeFCN7NT/obYrRRiOgbk+tfDQI=
+X-Google-Smtp-Source: APXvYqwZzveMeYPZadlqmFOO4kJHKq3ImJw1NWDaYErehoJdabJXzHqx0oCVnpu1UlopyRnZRgEB2w==
+X-Received: by 2002:a65:64d3:: with SMTP id t19mr26322063pgv.112.1562141650474;
+        Wed, 03 Jul 2019 01:14:10 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.14.06
+        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.14.09
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:14:06 -0700 (PDT)
+        Wed, 03 Jul 2019 01:14:09 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/16] crypto: caam - use ioread64*_hi_lo in rd_reg64
-Date:   Wed,  3 Jul 2019 01:13:19 -0700
-Message-Id: <20190703081327.17505-9-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 10/16] crypto: caam - make CAAM_PTR_SZ dynamic
+Date:   Wed,  3 Jul 2019 01:13:21 -0700
+Message-Id: <20190703081327.17505-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190703081327.17505-1-andrew.smirnov@gmail.com>
 References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
@@ -82,9 +82,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the same transformation logic as outlined in previous commit
-converting wr_reg64, convert rd_reg64 to use helpers from
-<linux/io-64-nonatomic-hi-lo.h> first. No functional change intended.
+In order to be able to configure CAAM pointer size at run-time, which
+needed to support i.MX8MQ, which is 64-bit SoC with 32-bit pointer
+size, convert CAAM_PTR_SZ to refer to a global variable of the same
+name ("caam_ptr_sz") and adjust the rest of the code accordingly. No
+functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Spencer <christopher.spencer@sea.co.uk>
@@ -97,39 +99,109 @@ Cc: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/regs.h | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/crypto/caam/caamalg.c     |  2 +-
+ drivers/crypto/caam/caamhash.c    |  2 +-
+ drivers/crypto/caam/caamrng.c     |  2 +-
+ drivers/crypto/caam/ctrl.c        |  2 ++
+ drivers/crypto/caam/desc_constr.h | 10 ++++++++--
+ drivers/crypto/caam/error.c       |  3 +++
+ 6 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
-index 6e8352ac0d92..afdc0d1aa338 100644
---- a/drivers/crypto/caam/regs.h
-+++ b/drivers/crypto/caam/regs.h
-@@ -172,12 +172,20 @@ static inline void wr_reg64(void __iomem *reg, u64 data)
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index 4b03c967009b..7f13ccc1e603 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -74,7 +74,7 @@
  
- static inline u64 rd_reg64(void __iomem *reg)
- {
--	if (!caam_imx && caam_little_end)
--		return ((u64)rd_reg32((u32 __iomem *)(reg) + 1) << 32 |
--			(u64)rd_reg32((u32 __iomem *)(reg)));
-+	if (caam_little_end) {
-+		if (caam_imx) {
-+			u32 low, high;
+ #define CHACHAPOLY_DESC_JOB_IO_LEN	(AEAD_DESC_JOB_IO_LEN + CAAM_CMD_SZ * 6)
  
--	return ((u64)rd_reg32((u32 __iomem *)(reg)) << 32 |
--		(u64)rd_reg32((u32 __iomem *)(reg) + 1));
-+			high = ioread32(reg);
-+			low  = ioread32(reg + sizeof(u32));
+-#define DESC_MAX_USED_BYTES		(CAAM_DESC_BYTES_MAX - DESC_JOB_IO_LEN)
++#define DESC_MAX_USED_BYTES		(CAAM_DESC_BYTES_MAX - DESC_JOB_IO_LEN_MIN)
+ #define DESC_MAX_USED_LEN		(DESC_MAX_USED_BYTES / CAAM_CMD_SZ)
+ 
+ struct caam_alg_entry {
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index a87526f62737..4bfec53ccb8e 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -538,7 +538,7 @@ struct ahash_edesc {
+ 	dma_addr_t sec4_sg_dma;
+ 	int src_nents;
+ 	int sec4_sg_bytes;
+-	u32 hw_desc[DESC_JOB_IO_LEN / sizeof(u32)] ____cacheline_aligned;
++	u32 hw_desc[DESC_JOB_IO_LEN_MAX / sizeof(u32)] ____cacheline_aligned;
+ 	struct sec4_sg_entry sec4_sg[0];
+ };
+ 
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index 561bcb535184..511f0b44e258 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -53,7 +53,7 @@
+ 					 L1_CACHE_BYTES)
+ 
+ /* length of descriptors */
+-#define DESC_JOB_O_LEN			(CAAM_CMD_SZ * 2 + CAAM_PTR_SZ * 2)
++#define DESC_JOB_O_LEN			(CAAM_CMD_SZ * 2 + CAAM_PTR_SZ_MAX * 2)
+ #define DESC_RNG_LEN			(3 * CAAM_CMD_SZ)
+ 
+ /* Buffer, its dma address and lock */
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 908d3ecf6d1c..42692a2bc2f3 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -605,6 +605,8 @@ static int caam_probe(struct platform_device *pdev)
+ 	}
+ 	caam_imx = (bool)imx_soc_match;
+ 
++	caam_ptr_sz = sizeof(dma_addr_t);
 +
-+			return low + ((u64)high << 32);
-+		} else {
-+			return ioread64(reg);
-+		}
-+	} else {
-+		return ioread64be(reg);
-+	}
- }
- #endif /* CONFIG_64BIT  */
+ 	/* Get configuration properties from device tree */
+ 	/* First, get register page */
+ 	ctrl = of_iomap(nprop, 0);
+diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
+index 5988a26a2441..3a83a3332ba9 100644
+--- a/drivers/crypto/caam/desc_constr.h
++++ b/drivers/crypto/caam/desc_constr.h
+@@ -14,9 +14,14 @@
  
+ #define IMMEDIATE (1 << 23)
+ #define CAAM_CMD_SZ sizeof(u32)
+-#define CAAM_PTR_SZ sizeof(dma_addr_t)
++#define CAAM_PTR_SZ caam_ptr_sz
++#define CAAM_PTR_SZ_MAX sizeof(dma_addr_t)
++#define CAAM_PTR_SZ_MIN sizeof(u32)
+ #define CAAM_DESC_BYTES_MAX (CAAM_CMD_SZ * MAX_CAAM_DESCSIZE)
+-#define DESC_JOB_IO_LEN (CAAM_CMD_SZ * 5 + CAAM_PTR_SZ * 3)
++#define __DESC_JOB_IO_LEN(n) (CAAM_CMD_SZ * 5 + (n) * 3)
++#define DESC_JOB_IO_LEN __DESC_JOB_IO_LEN(CAAM_PTR_SZ)
++#define DESC_JOB_IO_LEN_MAX __DESC_JOB_IO_LEN(CAAM_PTR_SZ_MAX)
++#define DESC_JOB_IO_LEN_MIN __DESC_JOB_IO_LEN(CAAM_PTR_SZ_MIN)
+ 
+ #ifdef DEBUG
+ #define PRINT_POS do { printk(KERN_DEBUG "%02d: %s\n", desc_len(desc),\
+@@ -37,6 +42,7 @@
+ 			       (LDOFF_ENABLE_AUTO_NFIFO << LDST_OFFSET_SHIFT))
+ 
+ extern bool caam_little_end;
++extern size_t caam_ptr_sz;
+ 
+ /*
+  * HW fetches 4 S/G table entries at a time, irrespective of how many entries
+diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
+index 4f0d45865aa2..885cd364a01d 100644
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -56,6 +56,9 @@ EXPORT_SYMBOL(caam_little_end);
+ bool caam_imx;
+ EXPORT_SYMBOL(caam_imx);
+ 
++size_t caam_ptr_sz;
++EXPORT_SYMBOL(caam_ptr_sz);
++
+ static const struct {
+ 	u8 value;
+ 	const char *error_text;
 -- 
 2.21.0
 
