@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4158DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DE5C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C7D218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DD8218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGCTK7 (ORCPT
+        id S1727494AbfGCTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:10:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42542 "EHLO
+        Wed, 3 Jul 2019 15:11:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42582 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCTK4 (ORCPT
+        with ESMTP id S1726736AbfGCTLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:10:56 -0400
+        Wed, 3 Jul 2019 15:11:02 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 47C9428ABC2
+        with ESMTPSA id 5EFA228ABC7
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-rockchip@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
@@ -35,14 +35,16 @@ Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
         ezequiel@collabora.com, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
         Helen Koike <helen.koike@collabora.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v7 13/14] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-Date:   Wed,  3 Jul 2019 16:09:09 -0300
-Message-Id: <20190703190910.32633-14-helen.koike@collabora.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v7 14/14] MAINTAINERS: add entry for Rockchip ISP1 driver
+Date:   Wed,  3 Jul 2019 16:09:10 -0300
+Message-Id: <20190703190910.32633-15-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703190910.32633-1-helen.koike@collabora.com>
 References: <20190703190910.32633-1-helen.koike@collabora.com>
@@ -53,45 +55,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
+Add MAINTAINERS entry for the rockchip isp1 driver.
 
-It's a Designware MIPI D-PHY, used for ISP0 in rk3399.
-
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-[update for upstream]
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
-
 ---
 
-Changes in v7:
-- add phy-cells
+Changes in v7: None
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e7cf52e4b0ec..6b8e211e84c2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1388,6 +1388,17 @@
- 			status = "disabled";
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 866969b36a13..47c8f17b0b1f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13518,6 +13518,14 @@ F:	drivers/hid/hid-roccat*
+ F:	include/linux/hid-roccat*
+ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
  
-+		mipi_dphy_rx0: mipi-dphy-rx0 {
-+			compatible = "rockchip,rk3399-mipi-dphy";
-+			clocks = <&cru SCLK_MIPIDPHY_REF>,
-+				<&cru SCLK_DPHY_RX0_CFG>,
-+				<&cru PCLK_VIO_GRF>;
-+			clock-names = "dphy-ref", "dphy-cfg", "grf";
-+			power-domains = <&power RK3399_PD_VIO>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
++ROCKCHIP ISP V1 DRIVER
++M:	Helen Koike <helen.koike@collabora.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	drivers/media/platform/rockchip/isp1/
++F:	Documentation/devicetree/bindings/media/rockchip-isp1.txt
++F:	Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
 +
- 		u2phy0: usb2-phy@e450 {
- 			compatible = "rockchip,rk3399-usb2phy";
- 			reg = <0xe450 0x10>;
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob chen <jacob2.chen@rock-chips.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.20.1
 
