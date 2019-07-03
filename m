@@ -2,156 +2,133 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5C2C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5A9C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6B021882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280F3218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="f1YGUU71"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rzUpG3JP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfGCUhr (ORCPT
+        id S1727126AbfGCUkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:37:47 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46543 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfGCUhq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:37:46 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i8so1772176pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xKG93kH1nJplHRswkGCnie9FbNFinKJfzxQcF1wGkIU=;
-        b=f1YGUU715TPdNfaaYb9aRs6ljIT4zeam0z4kbBiIb9aXjxvpxAx8EELjNSg8R1heAr
-         S+E0B5pC+fdaN75v4uxBbkJB/VRhUjLq92JEn0TZm+tHlSK7ezQO0A/Dqw7nW7dk22qQ
-         lzinn0cQMxguQ4jj3mIEKXaxq4P1QZ5EJwasg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xKG93kH1nJplHRswkGCnie9FbNFinKJfzxQcF1wGkIU=;
-        b=amZKsm7/tLtVWDMYmyOJ2Ew56xfHJPz6sW2BxZE3Ogecj9s4LGhubiZhLo/HARz+d6
-         Xec+RXWeaMDq8h8zGeDpKl2wGhQPgFPm7pkop8zbpF+V0e6eXUpbwBThBS+S+rqVCk/C
-         Gzmmn88Mbq6b41SNBjjxORafndB7qrS3z/Yy+SV4A04JImg9Q4HbLlvlpXVua911kzL7
-         TJ6uqOvXvCkKjGyVnpABlxRdP9Xh6/lRwSH+5JX5T9O5Q88TS3lF8T9cC2kMXl+wxDBu
-         glBVoNJxm3pyaENjuv3MFlTE5T1w0VMda4fowTEeXtmqtASC5IskvHbXjGUOhqETYZVt
-         oOgQ==
-X-Gm-Message-State: APjAAAU0+kXTycHl7uDchJeoUedRFR8rCwVQ3HT22HCkquXCXSCFVnJo
-        bmVNosKEuBrTr3nQdEzJBwE=
-X-Google-Smtp-Source: APXvYqykdW0m0mEltO0vYTEY7Wjb8Is+XIU0h5sjDFuTvkVSy9g/Omww1/HJ6d5KLCpopvpa4aRt4w==
-X-Received: by 2002:a17:90a:77c5:: with SMTP id e5mr14532242pjs.109.1562186266123;
-        Wed, 03 Jul 2019 13:37:46 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id cq4sm2774291pjb.23.2019.07.03.13.37.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 13:37:45 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 16:37:44 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC] rcuperf: Make rcuperf test more robust for !expedited mode
-Message-ID: <20190703203744.GA146386@google.com>
-References: <20190703043945.128825-1-joel@joelfernandes.org>
- <20190703172344.GR26519@linux.ibm.com>
+        Wed, 3 Jul 2019 16:40:13 -0400
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:49937
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726581AbfGCUkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:40:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=boRw7gXNEPgVKjC8JbPa9vT086kc+Ya39vsy5M66LG4=;
+ b=rzUpG3JPf2lpis8U1+TAuOvlVTU04PTINLfcCiVuVwcUowQgkBQ079k37C/RxEik69OMUsO3hzstoG4LexH1TD6j0OMg7zrzjP9MQVq+NinnuOd/xljk0Z/CfJfTyUsmJi6qYhSatU2OKpvuOjNBYu/vJvlyXt1t7MxIihoZzQE=
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (52.135.129.16) by
+ DB7PR05MB5353.eurprd05.prod.outlook.com (20.178.42.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.18; Wed, 3 Jul 2019 20:40:08 +0000
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::9115:7752:2368:e7ec]) by DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::9115:7752:2368:e7ec%4]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 20:40:08 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: Re: [PATCH 1/5] mm: return valid info from hmm_range_unregister
+Thread-Topic: [PATCH 1/5] mm: return valid info from hmm_range_unregister
+Thread-Index: AQHVMc9vbnYVs0S/206V41dM/fYuDaa5P52AgAAYpYCAAAMYAA==
+Date:   Wed, 3 Jul 2019 20:40:08 +0000
+Message-ID: <20190703204002.GO18688@mellanox.com>
+References: <20190703184502.16234-1-hch@lst.de>
+ <20190703184502.16234-2-hch@lst.de> <20190703190045.GN18688@mellanox.com>
+ <20190703202857.GA15690@lst.de>
+In-Reply-To: <20190703202857.GA15690@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0060.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::37) To DB7PR05MB4138.eurprd05.prod.outlook.com
+ (2603:10a6:5:23::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c2d72fcc-a695-484b-3606-08d6fff6a28a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR05MB5353;
+x-ms-traffictypediagnostic: DB7PR05MB5353:
+x-microsoft-antispam-prvs: <DB7PR05MB53533520153B718AD8B44DDACFFB0@DB7PR05MB5353.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(39860400002)(136003)(366004)(199004)(189003)(6512007)(33656002)(52116002)(76176011)(476003)(3846002)(6116002)(11346002)(14444005)(6506007)(4326008)(25786009)(386003)(256004)(2616005)(305945005)(53936002)(6436002)(36756003)(8676002)(486006)(7736002)(8936002)(81166006)(6246003)(102836004)(6916009)(26005)(68736007)(81156014)(14454004)(73956011)(66446008)(66946007)(71190400001)(71200400001)(54906003)(66556008)(66476007)(66066001)(446003)(5660300002)(186003)(64756008)(2906002)(99286004)(316002)(229853002)(6486002)(478600001)(1076003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR05MB5353;H:DB7PR05MB4138.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jDfglUojE6QaLohL81Wj7gLMka4NP5sT4AN2MpsjUeFYA6EfzUDsjUacYNqHNDlFkll4sbJK1dD/ShvMtZLgdFeyB/GEoFthG0LHCUVuw7Wh5kMrZnHrm0m/FI1PhVKTWCCl5vK66cQcpWhELIIuNI2DJNp+cZovrAuYwRjcARIONcgMdxlIq9E7kaVwhTkpWutut2nXEpSv1gLJ7BZA0X6+qLHClSI0z7vVxxkqUT9JhM0r0tFzI/L9VcfWNwGXE0Xomw8DCQ2vKY3lbjc3vP4eD2alypF9eHQGekJErn+iEFVqm0i2KP8eOc3+fV3XF98mLOF9eWI7zcvHx1meXJGI4/buvOZlIXQOnV9PLn/pX6u/JutGVa7YL/01jHtwM4nd0OeMg+r2GOIWkzscAMZ+JHqUATdyVgC4cxIA5gk=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <06E102C96309A349A6DAB9BA508DF1DD@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703172344.GR26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2d72fcc-a695-484b-3606-08d6fff6a28a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 20:40:08.2593
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR05MB5353
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:23:44AM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 03, 2019 at 12:39:45AM -0400, Joel Fernandes (Google) wrote:
-> > It is possible that rcuperf run concurrently with init starting up.
-> > During this time, the system is running all grace periods as expedited.
-> > However, rcuperf can also be run in a normal mode. The rcuperf test
-> > depends on a holdoff before starting the test to ensure grace periods
-> > start later. This works fine with the default holdoff time however it is
-> > not robust in situations where init takes greater than the holdoff time
-> > the finish running. Or, as in my case:
-> > 
-> > I modified the rcuperf test locally to also run a thread that did
-> > preempt disable/enable in a loop. This had the effect of slowing down
-> > init. The end result was "batches:" counter was 0. This was because only
-> > expedited GPs seem to happen, not normal ones which led to the
-> > rcu_state.gp_seq counter remaining constant across grace periods which
-> > unexpectedly happen to be expedited.
-> > 
-> > This led me to debug that even though the test could be for normal GP
-> > performance, because init has still not run enough, the
-> > rcu_unexpedited_gp() call would not have run yet. In other words, the
-> > test would concurrently with init booting in expedited GP mode.
-> > 
-> > To fix this properly, let us just check for whether rcu_unexpedited_gp()
-> > was called yet before starting the writer test. With this, the holdoff
-> > parameter could also be dropped or reduced to speed up the test.
-> > 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> > Please consider this patch as an RFC only! This is the first time I am
-> > running the RCU performance tests, thanks!
-> 
-> Another approach is to create (say) a late_initcall() function that
-> sets a global variable.  Then have the wait loop wait for that global
-> variable to be set.  Or use an explicit wait/wakeup scheme, if you wish.
-> 
-> This has the virtue of keeping this (admittedly small) bit of complexit
-> out of the core kernel.
+On Wed, Jul 03, 2019 at 10:28:57PM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2019 at 07:00:50PM +0000, Jason Gunthorpe wrote:
+> > I don't think the API should be encouraging some shortcut here..
+> >=20
+> > We can't do the above pattern because the old hmm_vma API didn't allow
+> > it, which is presumably a reason why it is obsolete.
+> >=20
+> > I'd rather see drivers move to a consistent pattern so we can then
+> > easily hoist the seqcount lock scheme into some common mmu notifier
+> > code, as discussed.
+>=20
+> So you don't like the version in amdgpu_ttm_tt_get_user_pages_done in
+> linux-next either?
 
-Agreed, I thought of the late_initcall approach as well. I will respin the
-patch to do that.
+I looked at this for 5 mins, and I can't see the key elements of the
+collision retry lock:
 
-> > Question:
-> > I actually did not know that expedited gp does not increment
-> > rcu_state.gp_seq. Does expedited GPs not go through the same RCU-tree
-> > machinery as non-expedited? If yes, why doesn't rcu_state.gp_seq
-> > increment when we are expedited? If no, why not?
-> 
-> They are indeed (mostly) independent mechanisms.
-> 
-> This is in contrast to SRCU, where an expedited grace period does what
-> you expect, causing all grace periods to do less waiting until the
-> most recent expedited grace period has completed.
-> 
-> Why the difference?
-> 
-> o	Current SRCU uses have relatively few updates, so the decreases
-> 	in batching effectiveness for normal grace periods are less
-> 	troublesome than they would be for RCU.  Shortening RCU grace
-> 	periods would significantly increase per-update overhead, for
-> 	example, and less so for SRCU.
-> 
-> o	RCU uses a much more distributed design, which means that
-> 	expediting an already-started RCU grace period would be more
-> 	challenging than it is for SRCU.  The race conditions between
-> 	an "expedite now!" event and the various changes in state for
-> 	a normal RCU grace period would be challenging.
-> 
-> o	In addition, RCU's more distributed design results in
-> 	higher latencies.  Expedited RCU grace periods simply bypass
-> 	this and get much better latencies.
-> 
-> So, yes, normal and expedited RCU grace periods could be converged, but
-> it does not seem like a good idea given current requirements.
+- Where is the retry loop?
+- Where is the lock around the final test to valid prior to using
+  the output of range?
 
-Thanks a lot for the explanation of these subtleties, I really appreciate
-that and it will serve as a great future reference for everyone (and for my notes!)
+For instance looking at amdgpu_gem_userptr_ioctl()..
 
-Thanks again!
+We can't be holding a lock when we do hmm_range_wait_until_valid()
+(inside amdgpu_ttm_tt_get_user_pages), otherwise it deadlocks, and
+there are not other locks that would encompass the final is_valid check.
 
-- Joel
+And amdgpu_gem_userptr_ioctl() looks like a syscall entry point, so
+having it fail just because the lock collided (ie is_valid =3D=3D false)
+can't possibly be the right thing.
+
+I'm also unclear when the device data is updated in that sequence..
+
+So.. I think this locking is wrong. Maybe AMD team can explain how it
+should work?
+
+Jason
