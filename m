@@ -2,254 +2,183 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7733BC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA9C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D42218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDB1218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bukW9Fgr"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="uoDqfXvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGCRCJ (ORCPT
+        id S1727405AbfGCRCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:02:09 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:49188 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfGCRCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:02:05 -0400
-Received: by mail-vs1-f74.google.com with SMTP id b19so171194vsq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=a4B2pi3afPrfivcwvxY/0YFG7emhlAa6z/TIz7oLh4I=;
-        b=bukW9FgrgpnaTfg+obcuWRTUvcBzM1ggSi0JTvkY2Ae5L6Evnn1MydKeWAdJr4jHpD
-         K155rMxmXXFSDoq4Gb6xRF5gobEtv7Uo8uSmSZ14Anr3zhMh2ChciBLGQZGq6OekZKEe
-         jRP1pbytIydxHfngZ0esiuBzO2S38JHCupNdqAzG3a1512b2/+dX0x06ht1OuIhnMZwO
-         /9nO/fzdGARi9rMTIVYLWPZIdBTRyaktPnhp99sgEoQSR4Wu8SAzlVe31dFU/gEiQPhV
-         7AEr53drxmxgT0iNyHiR5JGfHl5U/KRFgOeuXxobQH3RkOQwsTNpuYtWiXrOvJcJ3v6L
-         qx+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=a4B2pi3afPrfivcwvxY/0YFG7emhlAa6z/TIz7oLh4I=;
-        b=SozjkxGHnpQNRbGppzWXlpHHCVZXP/OFsBIXT0v9skyIcwgY/PWjUXPtTJoCkO+FtC
-         Mb+ajYjLfSZa08NKR1/FoxAGoacKRnsrTJwbfCgYs5rYoMoY9v47pwTbe1Es1xUbTzna
-         CMfw8B+Of86MTtHwz72JmiFHehb3xgrKA4QfKz7VK5EhWUSYs4oe8a8zgkQ1WIk4sgnQ
-         NbzCISmg8ZpBUqjAZlPH4LuJQnOoaYCvKSBI3UEtC8CNujpfcE8WT1YIj8lm56BcUvEJ
-         BxJyNFGwag1ciEzWi9IpgzRMCjMJnt9oYpyLBM1TJb9hfwObmAueHu7AfftQIGkweG8L
-         nGJQ==
-X-Gm-Message-State: APjAAAWF+2AdT5YGEhx4atGM6xJjHOKXevab8kQGrAfrk5Cf3C6fchbD
-        YIW146933wkZHxxr8tIO9RNzsBK0Sygh
-X-Google-Smtp-Source: APXvYqyRDVT/laYhNDbWB8Xb2kPsFbhawuoJWiOJduoc/afILyBFyisVqWPFHogEuIHJSxmJgFzVmkvnEmqF
-X-Received: by 2002:a1f:a887:: with SMTP id r129mr11227778vke.75.1562173324191;
- Wed, 03 Jul 2019 10:02:04 -0700 (PDT)
-Date:   Wed,  3 Jul 2019 10:01:13 -0700
-In-Reply-To: <20190703170118.196552-1-brianvv@google.com>
-Message-Id: <20190703170118.196552-2-brianvv@google.com>
-Mime-Version: 1.0
-References: <20190703170118.196552-1-brianvv@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH bpf-next RFC v3 1/6] bpf: add bpf_map_value_size and
- bp_map_copy_value helper functions
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jul 2019 13:02:43 -0400
+Received: from mail-eopbgr810079.outbound.protection.outlook.com ([40.107.81.79]:37275
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726955AbfGCRCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:02:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYACtzuCqZCMdBkx4JyJnIh+w5U5BfxfyyJHVo0MWCg=;
+ b=uoDqfXvxfGYiGTt8PHF9Xri4FaHBqvz9zfPL/34ySWV6uTldy0SaZQFleAg6vfWhsTrDwxBY5nfOnHTyTR0h13zWNWXftC/6qwZelF18DiNXxzagZhN1dE/RZ+/7Klz0nzJO1C1GmLdw7R6EuyFAfx4VZnoM22XXBkYyE0f4B3M=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYASPR01MB0055.namprd05.prod.outlook.com (20.179.90.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.15; Wed, 3 Jul 2019 17:02:36 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2052.010; Wed, 3 Jul 2019
+ 17:02:36 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/9] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Topic: [PATCH v2 4/9] x86/mm/tlb: Flush remote and local TLBs
+ concurrently
+Thread-Index: AQHVMW7qykCnng2DBUWUciRHoRZgF6a47Y6AgAAxzIA=
+Date:   Wed, 3 Jul 2019 17:02:36 +0000
+Message-ID: <A4BC0EDE-71F0-455D-964A-7250D005FB56@vmware.com>
+References: <20190702235151.4377-1-namit@vmware.com>
+ <20190702235151.4377-5-namit@vmware.com>
+ <d89e2b57-8682-153e-33d8-98084e9983d6@suse.com>
+In-Reply-To: <d89e2b57-8682-153e-33d8-98084e9983d6@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d82937b5-c8e6-4324-35e4-08d6ffd83fa0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYASPR01MB0055;
+x-ms-traffictypediagnostic: BYASPR01MB0055:
+x-microsoft-antispam-prvs: <BYASPR01MB0055AFF4910456681FF84AACD0FB0@BYASPR01MB0055.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(73956011)(76116006)(6246003)(54906003)(6512007)(316002)(486006)(6116002)(3846002)(6916009)(99286004)(25786009)(305945005)(86362001)(7736002)(66556008)(53936002)(64756008)(2906002)(66446008)(4326008)(66946007)(66476007)(76176011)(6506007)(102836004)(53546011)(5660300002)(33656002)(186003)(68736007)(26005)(256004)(478600001)(14454004)(6486002)(14444005)(6436002)(7416002)(2616005)(11346002)(446003)(476003)(229853002)(8936002)(36756003)(66066001)(81166006)(81156014)(8676002)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYASPR01MB0055;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bRkigeJHw+1MMReuCCKlpf/jW5QN+am0Y3t/Esa7tmebdn6NUVB3VTOWpnn2pbhfNpzpPRe3bLWsJ49SQHNrwiS/m3Xq4jDfwuNC0gsHwa6cFz1bEPaKae9kjRhZ3PEdKVTe6t0Xnz3ukKIVk+0pDK5/q0bfRKfNopygiNHysDi9mEOc2WPj+4y5EoEISvWDCmP4csLEiiSD/XxYJThdMNlwNBrhMNmm6YDsKR4s96dwVfF3FkA/HjV9pNnz9XmlpzijiEKfJush7LAMC5rsGZuOBBFFmOr1FfA+NqNG3eDUGcfU2m2r2nRjmVyYKkdcSpmqU7KmQHM1PMjtxmxEEPkXyfiQLTtVt9SNiLEkg+s+4SeS9R0XbJpCadeeedenZY9f9XkPtKcxQ/1PGKwPQa/s6Jyiny0UPiN1VfQd31o=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4011894573807D4C87553D9A4DFD3426@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d82937b5-c8e6-4324-35e4-08d6ffd83fa0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 17:02:36.3417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYASPR01MB0055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move reusable code from map_lookup_elem to helper functions to avoid code
-duplication in kernel/bpf/syscall.c
-
-Suggested-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
----
- kernel/bpf/syscall.c | 134 +++++++++++++++++++++++--------------------
- 1 file changed, 73 insertions(+), 61 deletions(-)
-
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index b0f545e07425..d200d2837ade 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -126,6 +126,76 @@ static struct bpf_map *find_and_alloc_map(union bpf_attr *attr)
- 	return map;
- }
- 
-+static u32 bpf_map_value_size(struct bpf_map *map)
-+{
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY ||
-+	    map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE)
-+		return round_up(map->value_size, 8) * num_possible_cpus();
-+	else if (IS_FD_MAP(map))
-+		return sizeof(u32);
-+	else
-+		return  map->value_size;
-+}
-+
-+static int bpf_map_copy_value(struct bpf_map *map, void *key, void *value,
-+			      __u64 flags)
-+{
-+	void *ptr;
-+	int err;
-+
-+	if (bpf_map_is_dev_bound(map))
-+		return  bpf_map_offload_lookup_elem(map, key, value);
-+
-+	preempt_disable();
-+	this_cpu_inc(bpf_prog_active);
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
-+		err = bpf_percpu_hash_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
-+		err = bpf_percpu_array_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
-+		err = bpf_percpu_cgroup_storage_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_STACK_TRACE) {
-+		err = bpf_stackmap_copy(map, key, value);
-+	} else if (IS_FD_ARRAY(map)) {
-+		err = bpf_fd_array_map_lookup_elem(map, key, value);
-+	} else if (IS_FD_HASH(map)) {
-+		err = bpf_fd_htab_map_lookup_elem(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
-+		err = bpf_fd_reuseport_array_lookup_elem(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-+		   map->map_type == BPF_MAP_TYPE_STACK) {
-+		err = map->ops->map_peek_elem(map, value);
-+	} else {
-+		rcu_read_lock();
-+		if (map->ops->map_lookup_elem_sys_only)
-+			ptr = map->ops->map_lookup_elem_sys_only(map, key);
-+		else
-+			ptr = map->ops->map_lookup_elem(map, key);
-+		if (IS_ERR(ptr)) {
-+			err = PTR_ERR(ptr);
-+		} else if (!ptr) {
-+			err = -ENOENT;
-+		} else {
-+			err = 0;
-+			if (flags & BPF_F_LOCK)
-+				/* lock 'ptr' and copy everything but lock */
-+				copy_map_value_locked(map, value, ptr, true);
-+			else
-+				copy_map_value(map, value, ptr);
-+			/* mask lock, since value wasn't zero inited */
-+			check_and_init_map_lock(map, value);
-+		}
-+		rcu_read_unlock();
-+	}
-+	this_cpu_dec(bpf_prog_active);
-+	preempt_enable();
-+
-+	return err;
-+}
-+
- void *bpf_map_area_alloc(size_t size, int numa_node)
- {
- 	/* We really just want to fail instead of triggering OOM killer
-@@ -729,7 +799,7 @@ static int map_lookup_elem(union bpf_attr *attr)
- 	void __user *uvalue = u64_to_user_ptr(attr->value);
- 	int ufd = attr->map_fd;
- 	struct bpf_map *map;
--	void *key, *value, *ptr;
-+	void *key, *value;
- 	u32 value_size;
- 	struct fd f;
- 	int err;
-@@ -761,72 +831,14 @@ static int map_lookup_elem(union bpf_attr *attr)
- 		goto err_put;
- 	}
- 
--	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY ||
--	    map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE)
--		value_size = round_up(map->value_size, 8) * num_possible_cpus();
--	else if (IS_FD_MAP(map))
--		value_size = sizeof(u32);
--	else
--		value_size = map->value_size;
-+	value_size = bpf_map_value_size(map);
- 
- 	err = -ENOMEM;
- 	value = kmalloc(value_size, GFP_USER | __GFP_NOWARN);
- 	if (!value)
- 		goto free_key;
- 
--	if (bpf_map_is_dev_bound(map)) {
--		err = bpf_map_offload_lookup_elem(map, key, value);
--		goto done;
--	}
--
--	preempt_disable();
--	this_cpu_inc(bpf_prog_active);
--	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
--		err = bpf_percpu_hash_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
--		err = bpf_percpu_array_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
--		err = bpf_percpu_cgroup_storage_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_STACK_TRACE) {
--		err = bpf_stackmap_copy(map, key, value);
--	} else if (IS_FD_ARRAY(map)) {
--		err = bpf_fd_array_map_lookup_elem(map, key, value);
--	} else if (IS_FD_HASH(map)) {
--		err = bpf_fd_htab_map_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
--		err = bpf_fd_reuseport_array_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
--		   map->map_type == BPF_MAP_TYPE_STACK) {
--		err = map->ops->map_peek_elem(map, value);
--	} else {
--		rcu_read_lock();
--		if (map->ops->map_lookup_elem_sys_only)
--			ptr = map->ops->map_lookup_elem_sys_only(map, key);
--		else
--			ptr = map->ops->map_lookup_elem(map, key);
--		if (IS_ERR(ptr)) {
--			err = PTR_ERR(ptr);
--		} else if (!ptr) {
--			err = -ENOENT;
--		} else {
--			err = 0;
--			if (attr->flags & BPF_F_LOCK)
--				/* lock 'ptr' and copy everything but lock */
--				copy_map_value_locked(map, value, ptr, true);
--			else
--				copy_map_value(map, value, ptr);
--			/* mask lock, since value wasn't zero inited */
--			check_and_init_map_lock(map, value);
--		}
--		rcu_read_unlock();
--	}
--	this_cpu_dec(bpf_prog_active);
--	preempt_enable();
--
--done:
-+	err = bpf_map_copy_value(map, key, value, attr->flags);
- 	if (err)
- 		goto free_value;
- 
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+PiBPbiBKdWwgMywgMjAxOSwgYXQgNzowNCBBTSwgSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2Uu
+Y29tPiB3cm90ZToNCj4gDQo+IE9uIDAzLjA3LjE5IDAxOjUxLCBOYWRhdiBBbWl0IHdyb3RlOg0K
+Pj4gVG8gaW1wcm92ZSBUTEIgc2hvb3Rkb3duIHBlcmZvcm1hbmNlLCBmbHVzaCB0aGUgcmVtb3Rl
+IGFuZCBsb2NhbCBUTEJzDQo+PiBjb25jdXJyZW50bHkuIEludHJvZHVjZSBmbHVzaF90bGJfbXVs
+dGkoKSB0aGF0IGRvZXMgc28uIEludHJvZHVjZQ0KPj4gcGFyYXZpcnR1YWwgdmVyc2lvbnMgb2Yg
+Zmx1c2hfdGxiX211bHRpKCkgZm9yIEtWTSwgWGVuIGFuZCBoeXBlci12IChYZW4NCj4+IGFuZCBo
+eXBlci12IGFyZSBvbmx5IGNvbXBpbGUtdGVzdGVkKS4NCj4+IFdoaWxlIHRoZSB1cGRhdGVkIHNt
+cCBpbmZyYXN0cnVjdHVyZSBpcyBjYXBhYmxlIG9mIHJ1bm5pbmcgYSBmdW5jdGlvbiBvbg0KPj4g
+YSBzaW5nbGUgbG9jYWwgY29yZSwgaXQgaXMgbm90IG9wdGltaXplZCBmb3IgdGhpcyBjYXNlLiBU
+aGUgbXVsdGlwbGUNCj4+IGZ1bmN0aW9uIGNhbGxzIGFuZCB0aGUgaW5kaXJlY3QgYnJhbmNoIGlu
+dHJvZHVjZSBzb21lIG92ZXJoZWFkLCBhbmQNCj4+IG1pZ2h0IG1ha2UgbG9jYWwgVExCIGZsdXNo
+ZXMgc2xvd2VyIHRoYW4gdGhleSB3ZXJlIGJlZm9yZSB0aGUgcmVjZW50DQo+PiBjaGFuZ2VzLg0K
+Pj4gQmVmb3JlIGNhbGxpbmcgdGhlIFNNUCBpbmZyYXN0cnVjdHVyZSwgY2hlY2sgaWYgb25seSBh
+IGxvY2FsIFRMQiBmbHVzaA0KPj4gaXMgbmVlZGVkIHRvIHJlc3RvcmUgdGhlIGxvc3QgcGVyZm9y
+bWFuY2UgaW4gdGhpcyBjb21tb24gY2FzZS4gVGhpcw0KPj4gcmVxdWlyZXMgdG8gY2hlY2sgbW1f
+Y3B1bWFzaygpIG9uZSBtb3JlIHRpbWUsIGJ1dCB1bmxlc3MgdGhpcyBtYXNrIGlzDQo+PiB1cGRh
+dGVkIHZlcnkgZnJlcXVlbnRseSwgdGhpcyBzaG91bGQgaW1wYWN0IHBlcmZvcm1hbmNlIG5lZ2F0
+aXZlbHkuDQo+PiBDYzogIksuIFkuIFNyaW5pdmFzYW4iIDxreXNAbWljcm9zb2Z0LmNvbT4NCj4+
+IENjOiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQuY29tPg0KPj4gQ2M6IFN0ZXBo
+ZW4gSGVtbWluZ2VyIDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPg0KPj4gQ2M6IFNhc2hhIExldmlu
+IDxzYXNoYWxAa2VybmVsLm9yZz4NCj4+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRy
+b25peC5kZT4NCj4+IENjOiBJbmdvIE1vbG5hciA8bWluZ29AcmVkaGF0LmNvbT4NCj4+IENjOiBC
+b3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4NCj4+IENjOiB4ODZAa2VybmVsLm9yZw0KPj4g
+Q2M6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4+IENjOiBQYW9sbyBCb256aW5p
+IDxwYm9uemluaUByZWRoYXQuY29tPg0KPj4gQ2M6IERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBs
+aW51eC5pbnRlbC5jb20+DQo+PiBDYzogQW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+
+DQo+PiBDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KPj4gQ2M6IEJv
+cmlzIE9zdHJvdnNreSA8Ym9yaXMub3N0cm92c2t5QG9yYWNsZS5jb20+DQo+PiBDYzogbGludXgt
+aHlwZXJ2QHZnZXIua2VybmVsLm9yZw0KPj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmcNCj4+IENjOiB2aXJ0dWFsaXphdGlvbkBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZw0KPj4g
+Q2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmcNCj4+IENjOiB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVj
+dC5vcmcNCj4+IFNpZ25lZC1vZmYtYnk6IE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+DQo+
+PiAtLS0NCj4+ICBhcmNoL3g4Ni9oeXBlcnYvbW11LmMgICAgICAgICAgICAgICAgIHwgMTMgKysr
+LS0tDQo+PiAgYXJjaC94ODYvaW5jbHVkZS9hc20vcGFyYXZpcnQuaCAgICAgICB8ICA2ICstLQ0K
+Pj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0X3R5cGVzLmggfCAgNCArLQ0KPj4gIGFy
+Y2gveDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmggICAgICAgfCAgOSArKy0tDQo+PiAgYXJjaC94
+ODYvaW5jbHVkZS9hc20vdHJhY2UvaHlwZXJ2LmggICB8ICAyICstDQo+PiAgYXJjaC94ODYva2Vy
+bmVsL2t2bS5jICAgICAgICAgICAgICAgICB8IDExICsrKy0tDQo+PiAgYXJjaC94ODYva2VybmVs
+L3BhcmF2aXJ0LmMgICAgICAgICAgICB8ICAyICstDQo+PiAgYXJjaC94ODYvbW0vdGxiLmMgICAg
+ICAgICAgICAgICAgICAgICB8IDY1ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KPj4gIGFy
+Y2gveDg2L3hlbi9tbXVfcHYuYyAgICAgICAgICAgICAgICAgfCAyMCArKysrKystLS0NCj4+ICBp
+bmNsdWRlL3RyYWNlL2V2ZW50cy94ZW4uaCAgICAgICAgICAgIHwgIDIgKy0NCj4+ICAxMCBmaWxl
+cyBjaGFuZ2VkLCA5MSBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlvbnMoLSkNCj4gDQo+IC4uLg0K
+PiANCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni94ZW4vbW11X3B2LmMgYi9hcmNoL3g4Ni94ZW4v
+bW11X3B2LmMNCj4+IGluZGV4IGJlYjQ0ZTIyYWZkZi4uMTllNDgxZTZlOTA0IDEwMDY0NA0KPj4g
+LS0tIGEvYXJjaC94ODYveGVuL21tdV9wdi5jDQo+PiArKysgYi9hcmNoL3g4Ni94ZW4vbW11X3B2
+LmMNCj4+IEBAIC0xMzU1LDggKzEzNTUsOCBAQCBzdGF0aWMgdm9pZCB4ZW5fZmx1c2hfdGxiX29u
+ZV91c2VyKHVuc2lnbmVkIGxvbmcgYWRkcikNCj4+ICAJcHJlZW1wdF9lbmFibGUoKTsNCj4+ICB9
+DQo+PiAgLXN0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVjdCBjcHVt
+YXNrICpjcHVzLA0KPj4gLQkJCQkgY29uc3Qgc3RydWN0IGZsdXNoX3RsYl9pbmZvICppbmZvKQ0K
+Pj4gK3N0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfbXVsdGkoY29uc3Qgc3RydWN0IGNwdW1hc2sg
+KmNwdXMsDQo+PiArCQkJCWNvbnN0IHN0cnVjdCBmbHVzaF90bGJfaW5mbyAqaW5mbykNCj4+ICB7
+DQo+PiAgCXN0cnVjdCB7DQo+PiAgCQlzdHJ1Y3QgbW11ZXh0X29wIG9wOw0KPj4gQEAgLTEzNjYs
+NyArMTM2Niw3IEBAIHN0YXRpYyB2b2lkIHhlbl9mbHVzaF90bGJfb3RoZXJzKGNvbnN0IHN0cnVj
+dCBjcHVtYXNrICpjcHVzLA0KPj4gIAljb25zdCBzaXplX3QgbWNfZW50cnlfc2l6ZSA9IHNpemVv
+ZihhcmdzLT5vcCkgKw0KPj4gIAkJc2l6ZW9mKGFyZ3MtPm1hc2tbMF0pICogQklUU19UT19MT05H
+UyhudW1fcG9zc2libGVfY3B1cygpKTsNCj4+ICAtCXRyYWNlX3hlbl9tbXVfZmx1c2hfdGxiX290
+aGVycyhjcHVzLCBpbmZvLT5tbSwgaW5mby0+c3RhcnQsIGluZm8tPmVuZCk7DQo+PiArCXRyYWNl
+X3hlbl9tbXVfZmx1c2hfdGxiX211bHRpKGNwdXMsIGluZm8tPm1tLCBpbmZvLT5zdGFydCwgaW5m
+by0+ZW5kKTsNCj4+ICAgIAlpZiAoY3B1bWFza19lbXB0eShjcHVzKSkNCj4+ICAJCXJldHVybjsJ
+CS8qIG5vdGhpbmcgdG8gZG8gKi8NCj4+IEBAIC0xMzc1LDkgKzEzNzUsMTcgQEAgc3RhdGljIHZv
+aWQgeGVuX2ZsdXNoX3RsYl9vdGhlcnMoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNwdXMsDQo+PiAg
+CWFyZ3MgPSBtY3MuYXJnczsNCj4+ICAJYXJncy0+b3AuYXJnMi52Y3B1bWFzayA9IHRvX2NwdW1h
+c2soYXJncy0+bWFzayk7DQo+PiAgLQkvKiBSZW1vdmUgdXMsIGFuZCBhbnkgb2ZmbGluZSBDUFVT
+LiAqLw0KPj4gKwkvKiBGbHVzaCBsb2NhbGx5IGlmIG5lZWRlZCBhbmQgcmVtb3ZlIHVzICovDQo+
+PiArCWlmIChjcHVtYXNrX3Rlc3RfY3B1KHNtcF9wcm9jZXNzb3JfaWQoKSwgdG9fY3B1bWFzayhh
+cmdzLT5tYXNrKSkpIHsNCj4+ICsJCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+PiArCQlmbHVzaF90
+bGJfZnVuY19sb2NhbChpbmZvKTsNCj4gDQo+IEkgdGhpbmsgdGhpcyBpc24ndCB0aGUgY29ycmVj
+dCBmdW5jdGlvbiBmb3IgUFYgZ3Vlc3RzLg0KPiANCj4gSW4gZmFjdCBpdCBzaG91bGQgYmUgbXVj
+aCBlYXNpZXI6IGp1c3QgZG9uJ3QgY2xlYXIgdGhlIG93biBjcHUgZnJvbSB0aGUNCj4gbWFzaywg
+dGhhdCdzIGFsbCB3aGF0J3MgbmVlZGVkLiBUaGUgaHlwZXJ2aXNvciBpcyBqdXN0IGZpbmUgaGF2
+aW5nIHRoZQ0KPiBjdXJyZW50IGNwdSBpbiB0aGUgbWFzayBhbmQgaXQgd2lsbCBkbyB0aGUgcmln
+aHQgdGhpbmcuDQoNClRoYW5rcy4gSSB3aWxsIGRvIHNvIGluIHYzLiBJIGRvbuKAmXQgdGhpbmsg
+SHlwZXItViBwZW9wbGUgd291bGQgd2FudCB0byBkbw0KdGhlIHNhbWUsIHVuZm9ydHVuYXRlbHks
+IHNpbmNlIGl0IHdvdWxkIGluZHVjZSBWTS1leGl0IG9uIFRMQiBmbHVzaGVzLiBCdXQNCmlmIHRo
+ZXkgZG8gLSBJ4oCZbGwgYmUgYWJsZSBub3QgdG8gZXhwb3NlIGZsdXNoX3RsYl9mdW5jX2xvY2Fs
+KCkuDQoNCg==
