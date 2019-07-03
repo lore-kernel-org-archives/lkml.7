@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A64EC4646D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE965C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5407E21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ECD21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120210;
-	bh=LSwEiAyPY+KjA1cb5aSdkiBAeVpkrlpKj2sAb7zAvlw=;
+	s=default; t=1562120214;
+	bh=WLRSW10dLHRVb2oZyCPZDmoAiESSADs0iBv9LxSmbys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwi3D3fHAbuEaDl3a/qpJadGoRc8sMBDIuCKOX1u34IsU7v/i+RZNVB/y6tlWf5a9
-	 bewXaWCjgrPOdTpIdXbmJi3ItYJZKAvYZpfZNmxbB3DLgkm7z/4HoR4UKoevGJzp3o
-	 Au1BBjZp/ioRiTSO+0jI0ceqzbNW6a81Xfsg3Hmk=
+	b=FsAvzgBn60KBLOVSgxAT5kuT1cR2Azf3pNHxVxHvxNRbuumcU+8/beSfjHJECIBVu
+	 CyVVn924pDKxnLb+LPUOoW1zedustIiW8/ghH/Y7OYF4r+3rwHgHZJR6INEMmRo8h0
+	 DByQ1AeAXb7ae/UeVnxGU+lQerjqiDERsrsFM1zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfGCCQt (ORCPT
+        id S1727542AbfGCCQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbfGCCQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:46 -0400
+        id S1727530AbfGCCQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7979521897;
-        Wed,  3 Jul 2019 02:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C5D21880;
+        Wed,  3 Jul 2019 02:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120205;
-        bh=LSwEiAyPY+KjA1cb5aSdkiBAeVpkrlpKj2sAb7zAvlw=;
+        s=default; t=1562120210;
+        bh=WLRSW10dLHRVb2oZyCPZDmoAiESSADs0iBv9LxSmbys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4paVcbPn/+GGCQ+pAC7IrBV8Tv+39M8vC3LETgIOrAAf8UFlIB5prK5Injhq2O2x
-         9yfzNEhe1fjRQ/zucjJixoOmO6KzhZL9UutrdOfqhyhlqCo+eoOpCWqyMjk9H4ToD6
-         YCko1lpGJpOECtt9sfzy2SdDooTMIz867JHnCWDg=
+        b=ADpmsUNqvcIpc3y7JA1uBDp/aAWHVQjNBo7xh/p+LkJ1VjcB2kfmWG46fSlvQzzyd
+         e1vdHHoTAxCNWANimyBPhlOxuz2Fl8Z111Qovv9JaY3vAe7N2gEyFqlhUJ2tCUEybd
+         dL2J1pzZh7TXAaxb+hAO7vRtJoUUqsDkDPFTXw/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/26] qmi_wwan: Fix out-of-bounds read
-Date:   Tue,  2 Jul 2019 22:16:14 -0400
-Message-Id: <20190703021625.18116-15-sashal@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/26] x86/boot/64: Fix crash if kernel image crosses page table boundary
+Date:   Tue,  2 Jul 2019 22:16:18 -0400
+Message-Id: <20190703021625.18116-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,53 +65,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 
-[ Upstream commit 904d88d743b0c94092c5117955eab695df8109e8 ]
+[ Upstream commit 81c7ed296dcd02bc0b4488246d040e03e633737a ]
 
-The syzbot reported
+A kernel which boots in 5-level paging mode crashes in a small percentage
+of cases if KASLR is enabled.
 
- Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  qmi_wwan_probe+0x342/0x360 drivers/net/usb/qmi_wwan.c:1417
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+This issue was tracked down to the case when the kernel image unpacks in a
+way that it crosses an 1G boundary. The crash is caused by an overrun of
+the PMD page table in __startup_64() and corruption of P4D page table
+allocated next to it. This particular issue is not visible with 4-level
+paging as P4D page tables are not used.
 
-Caused by too many confusing indirections and casts.
-id->driver_info is a pointer stored in a long.  We want the
-pointer here, not the address of it.
+But the P4D and the PUD calculation have similar problems.
 
-Thanks-to: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+b68605d7fadd21510de1@syzkaller.appspotmail.com
-Cc: Kristian Evensen <kristian.evensen@gmail.com>
-Fixes: e4bf63482c30 ("qmi_wwan: Add quirk for Quectel dynamic config")
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The PMD index calculation is wrong due to operator precedence, which fails
+to confine the PMDs in the PMD array on wrap around.
+
+The P4D calculation for 5-level paging and the PUD calculation calculate
+the first index correctly, but then blindly increment it which causes the
+same issue when a kernel image is located across a 512G and for 5-level
+paging across a 46T boundary.
+
+This wrap around mishandling was introduced when these parts moved from
+assembly to C.
+
+Restore it to the correct behaviour.
+
+Fixes: c88d71508e36 ("x86/boot/64: Rewrite startup_64() in C")
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190620112345.28833-1-kirill.shutemov@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/head64.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index d9a6699abe59..e657d8947125 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1412,7 +1412,7 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * different. Ignore the current interface if the number of endpoints
- 	 * equals the number for the diag interface (two).
- 	 */
--	info = (void *)&id->driver_info;
-+	info = (void *)id->driver_info;
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index ddee1f0870c4..cc5b519dc687 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -190,18 +190,18 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
  
- 	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
- 		if (desc->bNumEndpoints == 2)
+-		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
+-		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
+-		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
++		i = physaddr >> P4D_SHIFT;
++		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
++		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
+ 	} else {
+ 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
+ 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
+ 	}
+ 
+-	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
+-	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
+-	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
++	i = physaddr >> PUD_SHIFT;
++	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
++	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+ 
+ 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
+ 	/* Filter out unsupported __PAGE_KERNEL_* bits: */
+@@ -211,8 +211,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 	pmd_entry +=  physaddr;
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
+-		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
+-		pmd[idx] = pmd_entry + i * PMD_SIZE;
++		int idx = i + (physaddr >> PMD_SHIFT);
++
++		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
+ 	}
+ 
+ 	/*
 -- 
 2.20.1
 
