@@ -2,148 +2,151 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=0.9 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F3FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0193C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF08218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m01HNG6w"
+	by mail.kernel.org (Postfix) with ESMTP id B7A1B218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfGCNKw (ORCPT
+        id S1727017AbfGCNMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:10:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34819 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCNKw (ORCPT
+        Wed, 3 Jul 2019 09:12:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:41812 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCNMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:10:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c27so2781320wrb.2;
-        Wed, 03 Jul 2019 06:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Bobaa50WXbR9Y4LcY/j1xmyJEA8EpS2B/y8I4HgN8Y=;
-        b=m01HNG6wrx/reIarGAfsQfArF84e7O4uyXNBjqkc9OOTg8rv7kmLMtGi/FGFpq/IHM
-         LLFm+60f/VkHVa/kdCHMn3Gdk31L0i7zSM8d7O9Yop9simcXDE2BFiTdV5wWl9ApObxn
-         dF3oVE8bQ7aJhpHFPcU+LGNtNDRgbAxjQfMy5gHMowF1EQq5jWLIvX2mz5NOP6Cr5jva
-         WH7a83cBEgSceLeUh7dtKLV7cUNsAVryRJWwIGXFU7WSdK0WzKrsuFiIxA3/ARt4L5p4
-         5kvXGVYykMG1z5CkyV+VVwmJ2z9YwW1gBVglW86TSqLoXPg99UbW1QKZ/wEPhWppm3xq
-         72Ag==
+        Wed, 3 Jul 2019 09:12:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id x17so2551849iog.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:12:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Bobaa50WXbR9Y4LcY/j1xmyJEA8EpS2B/y8I4HgN8Y=;
-        b=AEqEQhW8J79qychvVLeQYIvs7ZwWlOQJCVN87SU0wX5b3FN/fsVhTKXbpZi1W7QMGk
-         UdNrRjV6Qh2skfKsT0lnyYCNkrGaPdfzq9mh2QwLfkaPhIyIGSEwOrKgRzNRhl1EvkRv
-         HzsgJZnen8uSjec5PoGcORNgdAG/Shq6InLBRsGSBN8nsi3vvpOQzyMNgR2ThdJ0RJjV
-         zXvLcxbmGKilKLW6q6MYg0C36DwV9p3W2N+VlAKjwQ/VZrKUpu+cTLcY0mSEGMxxCSif
-         tV2AhbIW7MQAzvbvj7vV7DkEA91B4A46D0uLLJgwQhg58b3cSP4O/G9wQTVjoOiexqgm
-         wCEw==
-X-Gm-Message-State: APjAAAWeiXFCRqMALzTyoQs3zf0ovszVj3IFfOUW+JOrsdngz2LSG1QL
-        YFmpKOOrRCMpl3qfz9WvOsPkoB71sAYPnPwB9tk=
-X-Google-Smtp-Source: APXvYqzxRCWgYBv94XndsktY7TXLYzN563M7b6eZz6JCymcmhJ0NgQ/r9yxy7ERMDwsgfwNkZOv6T+elFv3Cp6CEi1w=
-X-Received: by 2002:adf:b69a:: with SMTP id j26mr21775717wre.93.1562159449703;
- Wed, 03 Jul 2019 06:10:49 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0LKzWy3rKCKUf2ADkmhCBlAO8nooReUA+k7uMtJw9z8=;
+        b=OLa5roTOTrNPC0PvArfne7Q2OsxbOy6J4PC9/nnQ3uaeZHLDWQiLV1yXvc6UL1biYA
+         QAZvwh3rfG0g8umf4np1RaocBDAFbXaj+II+gtq6T/EQItU3LCkaX0/9MkT5dnlwYlJM
+         rnVFjmk4mospHE0UZeYQ2ZF7reGCdcdQa6XPh5Bv8nKX84p07vHWX19A67/vcu/FdMx2
+         7cfOOqhgGnF3l+0HuUU8b5o+zDy5F4NY8DcpjLuyTQOH6fIPjlqfGlJuRevQ1dRWyUuK
+         hVXbIhoZwX+iNpb3IKh8k81mI60eLXrJcJk42HV9uHin9DFvpX0zuxw9w9KcZQlXlcBK
+         0R8g==
+X-Gm-Message-State: APjAAAUjKOwwO4nAFrdsYxR92e69DOzg11HvWwqdzyASlHKV821XB2PL
+        8aXTtYqA4xyqDkeoAI/KAw/TDJ8zbiab4ljXI+O/NPEkudOx
+X-Google-Smtp-Source: APXvYqzjw5aaitiWWD6dEocipz83t7ATXlepPRhnUXEFvzDxK0lxT2Q2XJhDNQIEV9xnvLBTPgvvzofYGptzSTHYKvri+paEh/nX
 MIME-Version: 1.0
-References: <20190702132353.18632-1-andradanciu1997@gmail.com> <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
-In-Reply-To: <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 3 Jul 2019 16:10:38 +0300
-Message-ID: <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
-To:     Angus Ainslie <angus@akkea.ca>
-Cc:     Andra Danciu <andradanciu1997@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:b696:: with SMTP id i22mr10221274jam.87.1562159525386;
+ Wed, 03 Jul 2019 06:12:05 -0700 (PDT)
+Date:   Wed, 03 Jul 2019 06:12:05 -0700
+In-Reply-To: <00000000000035c756058848954a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000097dfa5058cc69be3@google.com>
+Subject: Re: KASAN: use-after-free Read in hci_cmd_timeout
+From:   syzbot <syzbot+19a9f729f05272857487@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
->
-> Hi Andra,
->
-> I tried this out on linux-next and I'm not able to record or play sound.
->
-> I also added the sai2 entry to test out our devkit and get a PCM timeout
-> with that.
+syzbot has found a reproducer for the following crash on:
 
-Hi Angus,
+HEAD commit:    eca94432 Bluetooth: Fix faulty expression for minimum encr..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1006cc8ba00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
+dashboard link: https://syzkaller.appspot.com/bug?extid=19a9f729f05272857487
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125b7999a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176deefba00000
 
-There are still lots of SAI patches that need to be upstream. Me and Andra
-will be working on that over this summer.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+19a9f729f05272857487@syzkaller.appspotmail.com
 
->
-> On 2019-07-02 07:23, Andra Danciu wrote:
-> > SAI3 and SAI6 nodes are used to connect to an external codec.
-> > They have 1 Tx and 1 Rx dataline.
-> >
-> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> > ---
-> > Changes since v2:
-> >       - removed multiple new lines
-> >
-> > Changes since v1:
-> >       - Added sai3 node because we need it to enable audio on pico-pi-8m
-> >       - Added commit description
-> >
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
-> > +++++++++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > index d09b808eff87..736cf81b695e 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> > @@ -278,6 +278,20 @@
-> >                       #size-cells = <1>;
-> >                       ranges = <0x30000000 0x30000000 0x400000>;
-> >
-> > +                     sai6: sai@30030000 {
-> > +                             compatible = "fsl,imx8mq-sai",
->
-> I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
-> the registers at a different offset from "fsl,imx6sx-sai".
+Bluetooth: hci0: command 0xfc11 tx timeout
+==================================================================
+BUG: KASAN: use-after-free in hci_cmd_timeout+0x1fe/0x220  
+net/bluetooth/hci_core.c:2614
+Read of size 8 at addr ffff88809e8a3c48 by task kworker/0:5/9461
 
-Yes, you are right on this. We are trying to slowly push all our internal-tree
-patches to mainline. Obviously, with started with low hanging fruits, DTS
-nodes and small SAI fixes.
+CPU: 0 PID: 9461 Comm: kworker/0:5 Not tainted 5.2.0-rc7+ #40
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events hci_cmd_timeout
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  hci_cmd_timeout+0x1fe/0x220 net/bluetooth/hci_core.c:2614
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Soon, we will start to send patches for SAI IP ipgrade for imx8.
+Allocated by task 9446:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+  slab_post_alloc_hook mm/slab.h:437 [inline]
+  slab_alloc mm/slab.c:3326 [inline]
+  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
+  skb_clone+0x154/0x3d0 net/core/skbuff.c:1321
+  hci_cmd_work+0xe0/0x2a0 net/bluetooth/hci_core.c:4495
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
->
-> How is this supposed to work ?
->
+Freed by task 1501:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3432 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3698
+  kfree_skbmem net/core/skbuff.c:620 [inline]
+  kfree_skbmem+0xc5/0x150 net/core/skbuff.c:614
+  __kfree_skb net/core/skbuff.c:677 [inline]
+  kfree_skb net/core/skbuff.c:694 [inline]
+  kfree_skb+0xf0/0x390 net/core/skbuff.c:688
+  hci_dev_do_open+0xb20/0x1760 net/bluetooth/hci_core.c:1550
+  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2171
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-For the moment it won't work unless we will upstream all our SAI
-internal patches.
-But we will get there hopefully this summer.
+The buggy address belongs to the object at ffff88809e8a3b80
+  which belongs to the cache skbuff_head_cache of size 224
+The buggy address is located 200 bytes inside of
+  224-byte region [ffff88809e8a3b80, ffff88809e8a3c60)
+The buggy address belongs to the page:
+page:ffffea00027a28c0 refcount:1 mapcount:0 mapping:ffff88821baabb40  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00027b2d08 ffffea00021b83c8 ffff88821baabb40
+raw: 0000000000000000 ffff88809e8a3040 000000010000000c 0000000000000000
+page dumped because: kasan: bad access detected
 
-Thanks,
-Daniel.
+Memory state around the buggy address:
+  ffff88809e8a3b00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88809e8a3b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88809e8a3c00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                                               ^
+  ffff88809e8a3c80: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+  ffff88809e8a3d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
