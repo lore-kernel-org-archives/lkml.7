@@ -2,146 +2,105 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9661FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05B2C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7985221721
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEAE21874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfGCD0Z (ORCPT
+        id S1727287AbfGCD0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:26:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727179AbfGCD0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:26:25 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C3A5D8A5EF48C5630538;
-        Wed,  3 Jul 2019 11:26:22 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
- 11:26:18 +0800
-Subject: Re: [PATCH bpf-next] bpf: cgroup: Fix build error without CONFIG_NET
-To:     Yonghong Song <yhs@fb.com>
-References: <20190702132913.26060-1-yuehaibing@huawei.com>
- <20190702155316.GJ6757@mini-arch>
- <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
-CC:     Stanislav Fomichev <sdf@fomichev.me>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        "sdf@google.com" <sdf@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <780afbff-5b93-099c-f318-7f2704af13d6@huawei.com>
+        Tue, 2 Jul 2019 23:26:37 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:51202 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727142AbfGCD0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:26:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TVvT.Sc_1562124377;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TVvT.Sc_1562124377)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 03 Jul 2019 11:26:33 +0800
+Subject: [PATCH 0/4] per cpu cgroup numa suite
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+Message-ID: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
 Date:   Wed, 3 Jul 2019 11:26:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/3 0:04, Yonghong Song wrote:
-> 
-> 
-> On 7/2/19 8:53 AM, Stanislav Fomichev wrote:
->> On 07/02, YueHaibing wrote:
->>> If CONFIG_NET is not set, gcc building fails:
->>>
->>> kernel/bpf/cgroup.o: In function `cg_sockopt_func_proto':
->>> cgroup.c:(.text+0x237e): undefined reference to `bpf_sk_storage_get_proto'
->>> cgroup.c:(.text+0x2394): undefined reference to `bpf_sk_storage_delete_proto'
->>> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_getsockopt':
->>> (.text+0x2a1f): undefined reference to `lock_sock_nested'
->>> (.text+0x2ca2): undefined reference to `release_sock'
->>> kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_setsockopt':
->>> (.text+0x3006): undefined reference to `lock_sock_nested'
->>> (.text+0x32bb): undefined reference to `release_sock'
->>>
->>> Add CONFIG_NET dependency to fix this.
->> Can you share the config? Do I understand correctly that you have
->> CONFIG_NET=n and CONFIG_BPF=y? What parts of BPF do you expect to
->> work in this case?
->>
->> Less invasive fix would be something along the lines:
->>
->> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
->> index 76fa0076f20d..0a00eaca6fae 100644
->> --- a/kernel/bpf/cgroup.c
->> +++ b/kernel/bpf/cgroup.c
->> @@ -939,6 +939,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
->>   }
->>   EXPORT_SYMBOL(__cgroup_bpf_run_filter_sysctl);
->>   
->> +#ifdef CONFIG_NET
->>   static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
->>   					     enum bpf_attach_type attach_type)
->>   {
->> @@ -1120,6 +1121,7 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
->>   	return ret;
->>   }
->>   EXPORT_SYMBOL(__cgroup_bpf_run_filter_getsockopt);
->> +#endif
->>   
->>   static ssize_t sysctl_cpy_dir(const struct ctl_dir *dir, char **bufp,
->>   			      size_t *lenp)
->> @@ -1386,10 +1388,12 @@ static const struct bpf_func_proto *
->>   cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->>   {
->>   	switch (func_id) {
->> +#ifdef CONFIG_NET
->>   	case BPF_FUNC_sk_storage_get:
->>   		return &bpf_sk_storage_get_proto;
->>   	case BPF_FUNC_sk_storage_delete:
->>   		return &bpf_sk_storage_delete_proto;
->> +#endif
->>   #ifdef CONFIG_INET
->>   	case BPF_FUNC_tcp_sock:
->>   		return &bpf_tcp_sock_proto;
-> 
-> Ah. Just send another email without checking inbox.
-> Looks like the above change is preferred.
-> YueHaibing, could you make change and resubmit your patch?
+During our torturing on numa stuff, we found problems like:
 
-Sure, I will test and resubmit it.
+  * missing per-cgroup information about the per-node execution status
+  * missing per-cgroup information about the numa locality
 
-> 
->>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>>   init/Kconfig | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/init/Kconfig b/init/Kconfig
->>> index e2e51b5..341cf2a 100644
->>> --- a/init/Kconfig
->>> +++ b/init/Kconfig
->>> @@ -998,6 +998,7 @@ config CGROUP_PERF
->>>   config CGROUP_BPF
->>>   	bool "Support for eBPF programs attached to cgroups"
->>>   	depends on BPF_SYSCALL
->>> +	depends on NET
->>>   	select SOCK_CGROUP_DATA
->>>   	help
->>>   	  Allow attaching eBPF programs to a cgroup using the bpf(2)
->>> -- 
->>> 2.7.4
->>>
->>>
+That is when we have a cpu cgroup running with bunch of tasks, no good
+way to tell how it's tasks are dealing with numa.
+
+The first two patches are trying to complete the missing pieces, but
+more problems appeared after monitoring these status:
+
+  * tasks not always running on the preferred numa node
+  * tasks from same cgroup running on different nodes
+
+The task numa group handler will always check if tasks are sharing pages
+and try to pack them into a single numa group, so they will have chance to
+settle down on the same node, but this failed in some cases:
+
+  * workloads share page caches rather than share mappings
+  * workloads got too many wakeup across nodes
+
+Since page caches are not traced by numa balancing, there are no way to
+realize such kind of relationship, and when there are too many wakeup,
+task will be drag from the preferred node and then migrate back by numa
+balancing, repeatedly.
+
+Here the third patch try to address the first issue, we could now give hint
+to kernel about the relationship of tasks, and pack them into single numa
+group.
+
+And the forth patch introduced numa cling, which try to address the wakup
+issue, now we try to make task stay on the preferred node on wakeup in fast
+path, in order to address the unbalancing risk, we monitoring the numa
+migration failure ratio, and pause numa cling when it reach the specified
+degree.
+
+Michael Wang (4):
+  numa: introduce per-cgroup numa balancing locality statistic
+  numa: append per-node execution info in memory.numa_stat
+  numa: introduce numa group per task group
+  numa: introduce numa cling feature
+
+ include/linux/memcontrol.h   |  37 ++++
+ include/linux/sched.h        |   8 +-
+ include/linux/sched/sysctl.h |   3 +
+ kernel/sched/core.c          |  37 ++++
+ kernel/sched/debug.c         |   7 +
+ kernel/sched/fair.c          | 455 ++++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/sched.h         |  14 ++
+ kernel/sysctl.c              |   9 +
+ mm/memcontrol.c              |  66 +++++++
+ 9 files changed, 628 insertions(+), 8 deletions(-)
+
+-- 
+2.14.4.44.g2045bb6
 
