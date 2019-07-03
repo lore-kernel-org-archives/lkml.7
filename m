@@ -2,139 +2,195 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8CBC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB893C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0A52189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbrY7QMY"
+	by mail.kernel.org (Postfix) with ESMTP id 9AC1A21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfGCSSw (ORCPT
+        id S1727151AbfGCSSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:18:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40324 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCSSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:18:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so4862268qtn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DCpM7nms5B5RUVgOYjG5X7MCBjiWqWHo1JgqvBcjmHM=;
-        b=bbrY7QMYHPZ7Mia+OaTfFaWN872NDlMZ1Yer/JourHzxGBRBVeZPHmKWxabKdkyrQK
-         zXUq301ZKbw/758fFD7bDkDuwkG+kdSrZEv+giT8QlXnS2zZhJ+0wRYdSzv/t2WrZbe2
-         +IZjHlDbj+Hq//uVCWcP5z5B6BQHjJmUupFcJIo5hkRivjgMZhpmbSmkynC6bRcLlHZr
-         iV51wzDklp56UMYL8wL47L6mkYu0I4RS9wfqnswVAvytvRByqFmMNufO7YjaXpXpi7k7
-         VbszCQc1t/50jmWf/FS6TRLYcPRE8nvuBgzZntN38D2oTFSbszBs8xkOWS+0xX+Kcluv
-         MoZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DCpM7nms5B5RUVgOYjG5X7MCBjiWqWHo1JgqvBcjmHM=;
-        b=DdT5SXurGTv9zoG6DLXtG7Fy9NllqOOAyyM/2cjVga76dSJ3TFH0DUG576v09ugLeq
-         qpBWMV9SeJUtZGWkk43tW8IQZM9ugG5+814/vcft5fe9S623DcgddOKOMT1M1buRnyKW
-         XE/mFqZmkFTfseg3nYZyLEQZGoDRiM84T1G2lVKF9YxOTZIq1qT5x1YBKtTYMWe33uWl
-         07b2CUfhpmXAafcKZWtQqkpXyAc0WGuEnHTdQ9kzyC6/9+Y/phNpTBKm6fbFcxpnPK5w
-         W9rg3rhPApZqIjRWCa93KSAEoD8Nxlwd44e2DhPjbjPSuxNZO/1cu3Cs6yi6DVKp94h+
-         Pf0A==
-X-Gm-Message-State: APjAAAVA6r2s3t8blpfxnc30xQMEqlVaiSej73nenOLOJPUVP6ta6fNB
-        Kff0ycKYFSc/YuvoH5rESJ0=
-X-Google-Smtp-Source: APXvYqxOeiiCSzHuoTUco8WGNs2rMZECWyqtER1ghOhlmsutfnoYPSwrcBupt92rztRKGBxk8LvIoQ==
-X-Received: by 2002:a0c:b897:: with SMTP id y23mr33775143qvf.44.1562177930791;
-        Wed, 03 Jul 2019 11:18:50 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.209.182])
-        by smtp.gmail.com with ESMTPSA id m5sm1234999qke.25.2019.07.03.11.18.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 11:18:50 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BF8DF41153; Wed,  3 Jul 2019 15:18:41 -0300 (-03)
-Date:   Wed, 3 Jul 2019 15:18:41 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Changbin Du <changbin.du@intel.com>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 02/11] perf stat: Smatch: Fix use-after-freed pointer
-Message-ID: <20190703181841.GC10740@kernel.org>
-References: <20190702103420.27540-1-leo.yan@linaro.org>
- <20190702103420.27540-3-leo.yan@linaro.org>
+        Wed, 3 Jul 2019 14:18:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39512 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726430AbfGCSSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:18:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 91152AE62;
+        Wed,  3 Jul 2019 18:18:52 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id DEA40E0159; Wed,  3 Jul 2019 20:18:51 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 20:18:51 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+Message-ID: <20190703181851.GP20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+ <20190703114933.GW2250@nanopsycho>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190702103420.27540-3-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190703114933.GW2250@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 02, 2019 at 06:34:11PM +0800, Leo Yan escreveu:
-> Based on the following report from Smatch, fix the use-after-freed
-> pointer.
+On Wed, Jul 03, 2019 at 01:49:33PM +0200, Jiri Pirko wrote:
+> Tue, Jul 02, 2019 at 01:50:09PM CEST, mkubecek@suse.cz wrote:
+> >diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+> >index 97c369aa290b..4636682c551f 100644
+> >--- a/Documentation/networking/ethtool-netlink.txt
+> >+++ b/Documentation/networking/ethtool-netlink.txt
+> >@@ -73,6 +73,67 @@ set, the behaviour is the same as (or closer to) the behaviour before it was
+> > introduced.
+> > 
+> > 
+> >+Bit sets
+> >+--------
+> >+
+> >+For short bitmaps of (reasonably) fixed length, standard NLA_BITFIELD32 type
+> >+is used. For arbitrary length bitmaps, ethtool netlink uses a nested attribute
+> >+with contents of one of two forms: compact (two binary bitmaps representing
+> >+bit values and mask of affected bits) and bit-by-bit (list of bits identified
+> >+by either index or name).
+> >+
+> >+Compact form: nested (bitset) atrribute contents:
+> >+
+> >+    ETHTOOL_A_BITSET_LIST	(flag)		no mask, only a list
+> >+    ETHTOOL_A_BITSET_SIZE	(u32)		number of significant bits
+> >+    ETHTOOL_A_BITSET_VALUE	(binary)	bitmap of bit values
+> >+    ETHTOOL_A_BITSET_MASK	(binary)	bitmap of valid bits
+> >+
+> >+Value and mask must have length at least ETHTOOL_A_BITSET_SIZE bits rounded up
+> >+to a multiple of 32 bits. They consist of 32-bit words in host byte order,
 > 
->   tools/perf/builtin-stat.c:1353
->   add_default_attributes() warn: passing freed memory 'str'.
+> Looks like the blocks are similar to NLA_BITFIELD32. Why don't you user
+> nested array of NLA_BITFIELD32 instead?
+
+That would mean a layout like
+
+  4 bytes of attr header
+  4 bytes of value
+  4 bytes of mask
+  4 bytes of attr header
+  4 bytes of value
+  4 bytes of mask
+  ...
+
+i.e. interleaved headers, words of value and words of mask. Having value
+and mask contiguous looks cleaner to me. Also, I can quickly check the
+sizes without iterating through a (potentially long) array.
+
+> >+words ordered from least significant to most significant (i.e. the same way as
+> >+bitmaps are passed with ioctl interface).
+> >+
+> >+For compact form, ETHTOOL_A_BITSET_SIZE and ETHTOOL_A_BITSET_VALUE are
+> >+mandatory.  Similar to BITFIELD32, a compact form bit set requests to set bits
 > 
-> The pointer 'str' has been freed but later it is still passed into the
-> function parse_events_print_error().  This patch fixes this
-> use-after-freed issue.
+> Double space^^
 
-thanks, applied.
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-stat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hm, I have to learn how to tell vim not to do that with "gq".
+
+> >+in the mask to 1 (if the bit is set in value) or 0 (if not) and preserve the
+> >+rest. If ETHTOOL_A_BITSET_LIST is present, there is no mask and bitset
+> >+represents a simple list of bits.
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 8a35fc5a7281..de0f6d0e96a2 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1349,8 +1349,8 @@ static int add_default_attributes(void)
->  				fprintf(stderr,
->  					"Cannot set up top down events %s: %d\n",
->  					str, err);
-> -				free(str);
->  				parse_events_print_error(&errinfo, str);
-> +				free(str);
->  				return -1;
->  			}
->  		} else {
-> -- 
-> 2.17.1
+> Okay, that is a bit confusing. Why not to rename to something like:
+> ETHTOOL_A_BITSET_NO_MASK (flag)
+> ?
 
--- 
+From the logical point of view, it's used for lists - list of link
+modes, list of netdev features, list of timestamping modes etc.
 
-- Arnaldo
+The point is that in userspace requests, we sometimes want to change
+some values (enable A, disable B), sometimes to define the list of
+values to be set (I want (only) A, C and E to be enabled). In kernel
+replies, sometimes there is a natural value/mask pairing (e.g.
+advertised and supported link modes, enabled and supported WoL modes)
+but often there is just one bitmap.
+
+> >+Kernel bit set length may differ from userspace length if older application is
+> >+used on newer kernel or vice versa. If userspace bitmap is longer, an error is
+> >+issued only if the request actually tries to set values of some bits not
+> >+recognized by kernel.
+> >+
+> >+Bit-by-bit form: nested (bitset) attribute contents:
+> >+
+> >+    ETHTOOL_A_BITSET_LIST	(flag)		no mask, only a list
+> >+    ETHTOOL_A_BITSET_SIZE	(u32)		number of significant bits
+> >+    ETHTOOL_A_BITSET_BIT	(nested)	array of bits
+> >+	ETHTOOL_A_BITSET_BIT+   (nested)	one bit
+> >+	    ETHTOOL_A_BIT_INDEX	(u32)		bit index (0 for LSB)
+> >+	    ETHTOOL_A_BIT_NAME	(string)	bit name
+> >+	    ETHTOOL_A_BIT_VALUE	(flag)		present if bit is set
+> >+
+> >+Bit size is optional for bit-by-bit form. ETHTOOL_A_BITSET_BITS nest can only
+> >+contain ETHTOOL_A_BITS_BIT attributes but there can be an arbitrary number of
+> >+them.  A bit may be identified by its index or by its name. When used in
+> >+requests, listed bits are set to 0 or 1 according to ETHTOOL_A_BIT_VALUE, the
+> >+rest is preserved. A request fails if index exceeds kernel bit length or if
+> >+name is not recognized.
+> >+
+> >+When ETHTOOL_A_BITSET_LIST flag is present, bitset is interpreted as a simple
+> >+bit list. ETHTOOL_A_BIT_VALUE attributes are not used in such case. Bit list
+> >+represents a bitmap with listed bits set and the rest zero.
+> >+
+> >+In requests, application can use either form. Form used by kernel in reply is
+> >+determined by a flag in flags field of request header. Semantics of value and
+> >+mask depends on the attribute. General idea is that flags control request
+> >+processing, info_mask control which parts of the information are returned in
+> >+"get" request and index identifies a particular subcommand or an object to
+> >+which the request applies.
+> 
+> This is quite complex and confusing. Having the same API for 2 APIs is
+> odd. The API should be crystal clear, easy to use.
+> 
+> Why can't you have 2 commands, one working with bit arrays only, one
+> working with strings? Something like:
+> X_GET
+>    ETHTOOL_A_BITS (nested)
+>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
+> X_NAMES_GET
+>    ETHTOOL_A_BIT_NAMES (nested)
+> 	ETHTOOL_A_BIT_INDEX
+> 	ETHTOOL_A_BIT_NAME
+> 
+> For set, you can also have multiple cmds:
+> X_SET  - to set many at once, by bit index
+>    ETHTOOL_A_BITS (nested)
+>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
+> X_ONE_SET   - to set one, by bit index
+>    ETHTOOL_A_BIT_INDEX
+>    ETHTOOL_A_BIT_VALUE
+> X_ONE_SET   - to set one, by name
+>    ETHTOOL_A_BIT_NAME
+>    ETHTOOL_A_BIT_VALUE
+
+This looks as if you assume there is nothing except the bitset in the
+message but that is not true. Even with your proposed breaking of
+current groups, you would still have e.g. 4 bitsets in reply to netdev
+features query, 3 in timestamping info GET request and often bitsets
+combined with other data (e.g. WoL modes and optional WoL password).
+If you wanted to further refine the message granularity to the level of
+single parameters, we might be out of message type ids already.
+
+Unless you want to forget about structured data completely and turn
+everything into tunables - but that's rather scary idea.
+
+Michal
