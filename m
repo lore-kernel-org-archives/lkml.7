@@ -6,188 +6,130 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDC9C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96C9C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E2721873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B752D21874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGCCKO (ORCPT
+        id S1727297AbfGCCLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:10:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48432 "EHLO huawei.com"
+        Tue, 2 Jul 2019 22:11:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8129 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfGCCKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:10:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 33F16D5716B7DF6B3E17;
-        Wed,  3 Jul 2019 10:10:12 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
- 10:10:04 +0800
-Subject: Re: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
-To:     Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190630185846.16624-1-hsiangkao@aol.com>
- <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
-Date:   Wed, 3 Jul 2019 10:09:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        id S1726329AbfGCCLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:11:02 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BAAF3919EA66212C700B;
+        Wed,  3 Jul 2019 10:10:59 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
+ 10:10:29 +0800
+To:     Jessica Yu <jeyu@kernel.org>, <rusty@rustcorp.com.au>,
+        <kay.sievers@vrfy.org>, <clabbe.montjoie@gmail.com>
+CC:     LKML <linux-kernel@vger.kernel.org>, <wangxiaogang3@huawei.com>,
+        <zhoukang7@huawei.com>, Mingfangsen <mingfangsen@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH v2] module: add usage links when calling ref_module func
+Message-ID: <4fec6c3b-03b8-dd57-4009-99431105a8a5@huawei.com>
+Date:   Wed, 3 Jul 2019 10:09:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="gb18030"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
+X-Originating-IP: [10.184.225.177]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
+Users can call ref_module func in their modules to construct
+relationships with other modules. However, the holders
+'/sys/module/<mod-name>/holders' of the target module donot include
+the users` module. So lsmod command misses detailed info of 'Used by'.
 
-On 2019/7/3 9:50, Chao Yu wrote:
-> On 2019/7/1 2:58, Gao Xiang wrote:
->> From: Gao Xiang <gaoxiang25@huawei.com>
->>
->> Like all lz77-based algrithms, lz4 has a dynamically populated
->> ("sliding window") dictionary and the maximum lookback distance
->> is 65535. Therefore the number of bounced pages could be limited
->> by erofs based on this property.
->>
->> However, just now we observed some lz4 sequences in the extreme
->> case cannot be decompressed correctly after this feature is enabled,
->> the root causes after analysis are clear as follows:
->> 1) max bounced pages should be 17 rather than 16 pages;
->> 2) considering the following case, the broken implementation
->>    could reuse unsafely in advance (in other words, reuse it
->>    less than a safe distance),
->>    0 1 2 ... 16 17 18 ... 33 34
->>    b             p  b         b
->>    note that the bounce page that we are concerned was allocated
->>    at 0, and it reused at 18 since page 17 exists, but it mis-reused
->>    at 34 in advance again, which causes decompress failure.
->>
->> This patch resolves the issue by introducing a bitmap to mark
->> whether the page in the same position of last round is a bounced
->> page or not, and a micro stack data structure to store all
->> available bounced pages.
->>
->> Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
->> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->> ---
->>  drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
->>  1 file changed, 28 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
->> index 80f1f39719ba..1fb0abb98dff 100644
->> --- a/drivers/staging/erofs/decompressor.c
->> +++ b/drivers/staging/erofs/decompressor.c
->> @@ -13,7 +13,7 @@
->>  #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
->>  #endif
->>  
->> -#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
->> +#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
->>  #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
->>  #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
->>  #endif
->> @@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
->>  	const unsigned int nr =
->>  		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
->>  	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
->> -	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
->> -					  BITS_PER_LONG)] = { 0 };
->> +	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
->> +					   BITS_PER_LONG)] = { 0 };
->>  	void *kaddr = NULL;
->> -	unsigned int i, j, k;
->> +	unsigned int i, j, top;
->>  
->> -	for (i = 0; i < nr; ++i) {
->> +	top = 0;
->> +	for (i = j = 0; i < nr; ++i, ++j) {
->>  		struct page *const page = rq->out[i];
->> +		struct page *victim;
->>  
->> -		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
->> -		if (availables[j])
->> -			__set_bit(j, unused);
->> +		if (j >= LZ4_MAX_DISTANCE_PAGES)
->> +			j = 0;
->> +
->> +		/* 'valid' bounced can only be tested after a complete round */
->> +		if (test_bit(j, bounced)) {
->> +			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
->> +			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
->> +			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
-> 
-> Maybe we can change 'i - LZ4_MAX_DISTANCE_PAGES' to 'j' directly for better
-> readability.
+When load module, the process is given as follows,
+load_module()
+	-> mod_sysfs_setup()
+		-> add_usage_links
+	-> do_init_module
+		-> mod->init()
 
-OK, I think they are equivalent as well, will change for readability, retest and resend.
-Thanks for your suggestion :)
+add_usage_links func creates holders of target modules linking to
+this module. If ref_module is called in mod->init() func, the usage
+links cannot be added.
 
-Thanks,
-Gao Xiang
+Here, we will add usage link of a to b's holder_dir.
 
-> 
-> Otherwise, it looks good to me.
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
-> 
->> +		}
->>  
->>  		if (page) {
->> +			__clear_bit(j, bounced);
->>  			if (kaddr) {
->>  				if (kaddr + PAGE_SIZE == page_address(page))
->>  					kaddr += PAGE_SIZE;
->> @@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
->>  			continue;
->>  		}
->>  		kaddr = NULL;
->> +		__set_bit(j, bounced);
->>  
->> -		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
->> -		if (k < LZ4_MAX_DISTANCE_PAGES) {
->> -			j = k;
->> -			get_page(availables[j]);
->> +		if (top) {
->> +			victim = availables[--top];
->> +			get_page(victim);
->>  		} else {
->> -			DBG_BUGON(availables[j]);
->> -
->>  			if (!list_empty(pagepool)) {
->> -				availables[j] = lru_to_page(pagepool);
->> -				list_del(&availables[j]->lru);
->> -				DBG_BUGON(page_ref_count(availables[j]) != 1);
->> +				victim = lru_to_page(pagepool);
->> +				list_del(&victim->lru);
->> +				DBG_BUGON(page_ref_count(victim) != 1);
->>  			} else {
->> -				availables[j] = alloc_pages(GFP_KERNEL, 0);
->> -				if (!availables[j])
->> +				victim = alloc_pages(GFP_KERNEL, 0);
->> +				if (!victim)
->>  					return -ENOMEM;
->>  			}
->> -			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
->> +			victim->mapping = Z_EROFS_MAPPING_STAGING;
->>  		}
->> -		rq->out[i] = availables[j];
->> -		__clear_bit(j, unused);
->> +		rq->out[i] = victim;
->>  	}
->>  	return kaddr ? 1 : 0;
->>  }
->>
+V1->V2:
+- remove incorrect Fixes tag
+- fix error handling of sysfs_create_link as suggested by Jessica Yu
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Suggested-by: Jessica Yu <jeyu@kernel.org>
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+---
+ kernel/module.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/module.c b/kernel/module.c
+index 80c7c09584cf..672abce2222c 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -837,25 +837,26 @@ static int already_uses(struct module *a, struct module *b)
+  *    'b' can walk the list to see who sourced them), and of 'a'
+  *    targets (so 'a' can see what modules it targets).
+  */
+-static int add_module_usage(struct module *a, struct module *b)
++static struct module_use *add_module_usage(struct module *a, struct module *b)
+ {
+ 	struct module_use *use;
+
+ 	pr_debug("Allocating new usage for %s.\n", a->name);
+ 	use = kmalloc(sizeof(*use), GFP_ATOMIC);
+ 	if (!use)
+-		return -ENOMEM;
++		return NULL;
+
+ 	use->source = a;
+ 	use->target = b;
+ 	list_add(&use->source_list, &b->source_list);
+ 	list_add(&use->target_list, &a->target_list);
+-	return 0;
++	return use;
+ }
+
+ /* Module a uses b: caller needs module_mutex() */
+ int ref_module(struct module *a, struct module *b)
+ {
++	struct module_use *use;
+ 	int err;
+
+ 	if (b == NULL || already_uses(a, b))
+@@ -866,9 +867,18 @@ int ref_module(struct module *a, struct module *b)
+ 	if (err)
+ 		return err;
+
+-	err = add_module_usage(a, b);
++	use = add_module_usage(a, b);
++	if (!use) {
++		module_put(b);
++		return -ENOMEM;
++	}
++
++	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
+ 	if (err) {
+ 		module_put(b);
++		list_del(&use->source_list);
++		list_del(&use->target_list);
++		kfree(use);
+ 		return err;
+ 	}
+ 	return 0;
+-- 
+2.19.1
+
