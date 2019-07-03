@@ -2,206 +2,62 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2751CC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8861C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB73F218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClFSxBUa"
+	by mail.kernel.org (Postfix) with ESMTP id 89B54218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfGCU2h (ORCPT
+        id S1727263AbfGCU3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:28:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33334 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfGCU2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:28:34 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so4252947wru.0;
-        Wed, 03 Jul 2019 13:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4RuuSF1aVRZQhu/zSR3wfaiY2yCCsY50QgpIhgnfugE=;
-        b=ClFSxBUaA1th2NV8PZ4dEtzi3ROWRhZHoClA40CViFyXMWg6/dbYnCTZglTY7LyDcz
-         5IFQLgJjvTwJID+fRDPjciGvp9XaJarOKyN/p3V/+AkfEMObTqV6XUDo8EVIjzGMTyg1
-         v/N7S9PSQgqPKUfPNFwT29abfX7jGrdPCaWLvGkxwodlfjpRYwBePmG9qnn59DNsx9Hr
-         mcTH3mTP6z5tY+POxIJ9cPGnFWaLKZGCQ8sJFH7mlmYzKstTTuWcHWCKxKpyfdPcFQOe
-         Iux379RRzNX5PwZZnrCyL58axAqSvuE9Rj/FotzAxVT/FPS5ZMKNuJ8IIxeaj/5UJeeJ
-         jjbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4RuuSF1aVRZQhu/zSR3wfaiY2yCCsY50QgpIhgnfugE=;
-        b=PgvGTHmi8jXpk4fcXEGUSfV5oJQjMaKUS7YYHY2aJPKRQEFpJSmLMLoOgb0EQZ7Ku/
-         4vNWyXzgSUlMilnrRNMbRYGv0X9i1ZT2Y9j03QErvxlIB9dWAS2mofldAjb1u1D0ck4h
-         0Vg7TAni2nEADmqq7PPone0/IftNNf2M14YHk6yToNIQiq3uCrto+KbjaRaIQUMY9/WH
-         rn7cAungOEfO7o+nMePA8ohrObOY8/4nFlDmayUXXDgE4AMkCV1KIRcPkn8xVd7tCNKt
-         2sYocDXNOTtJ+BqFfuTI/Bh9kVIhFf3HBEkpNfrgJACxH4WjX1y/9VIdNF5xDVat+fgd
-         i2dg==
-X-Gm-Message-State: APjAAAV5E5wqVOpxOumfAKXD2kRmlBYdz1S19gbIxN5Tk/4qPLo0gbHJ
-        9a7wFGEz0QLD+boAqXYCiK0=
-X-Google-Smtp-Source: APXvYqzqp3wkKlJW4bqh5QXHBGeOwR1GBjCj3aoil1HE/EWzT3oA8Hskis7h17iBGR4ZDMHmwsOpAg==
-X-Received: by 2002:adf:82a8:: with SMTP id 37mr7127315wrc.332.1562185711828;
-        Wed, 03 Jul 2019 13:28:31 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd6:c00:4503:872e:8227:c4e0? (p200300EA8BD60C004503872E8227C4E0.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:4503:872e:8227:c4e0])
-        by smtp.googlemail.com with ESMTPSA id w20sm8256560wra.96.2019.07.03.13.28.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 13:28:31 -0700 (PDT)
-Subject: Re: [PATCH v2 7/7] net: phy: realtek: configure RTL8211E LEDs
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-7-mka@chromium.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <189ec367-2085-056b-61a9-90f0044b55ba@gmail.com>
-Date:   Wed, 3 Jul 2019 22:28:17 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 16:29:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:54906 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727246AbfGCU3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:29:00 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BA28168B05; Wed,  3 Jul 2019 22:28:57 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 22:28:57 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: Re: [PATCH 1/5] mm: return valid info from hmm_range_unregister
+Message-ID: <20190703202857.GA15690@lst.de>
+References: <20190703184502.16234-1-hch@lst.de> <20190703184502.16234-2-hch@lst.de> <20190703190045.GN18688@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703193724.246854-7-mka@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703190045.GN18688@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.2019 21:37, Matthias Kaehlcke wrote:
-> Configure the RTL8211E LEDs behavior when the device tree property
-> 'realtek,led-modes' is specified.
+On Wed, Jul 03, 2019 at 07:00:50PM +0000, Jason Gunthorpe wrote:
+> I don't think the API should be encouraging some shortcut here..
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - patch added to the series
-> ---
->  drivers/net/phy/realtek.c | 63 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 61 insertions(+), 2 deletions(-)
+> We can't do the above pattern because the old hmm_vma API didn't allow
+> it, which is presumably a reason why it is obsolete.
 > 
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index 45fee4612031..559aec547738 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -9,6 +9,7 @@
->   * Copyright (c) 2004 Freescale Semiconductor, Inc.
->   */
->  #include <linux/bitops.h>
-> +#include <linux/bits.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -35,6 +36,15 @@
->  #define RTL8211E_EEE_LED_MODE1			0x05
->  #define RTL8211E_EEE_LED_MODE2			0x06
->  
-> +/* RTL8211E extension page 44 */
-> +#define RTL8211E_LACR				0x1a
-> +#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
-> +#define RLT8211E_LACR_LEDACTCTRL_MASK		GENMASK(6, 4)
-> +#define RTL8211E_LCR				0x1c
-> +#define RTL8211E_LCR_LEDCTRL_MASK		(GENMASK(2, 0) | \
-> +						 GENMASK(6, 4) | \
-> +						 GENMASK(10, 8))
-> +
->  /* RTL8211E extension page 160 */
->  #define RTL8211E_SCR				0x1a
->  #define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
-> @@ -124,6 +134,56 @@ static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
->  	return phy_restore_page(phydev, oldpage, ret);
->  }
->  
-> +static int rtl8211e_config_leds(struct phy_device *phydev)
-> +{
-> +	struct device *dev = &phydev->mdio.dev;
-> +	int count, i, oldpage, ret;
-> +	u16 lacr_bits = 0, lcr_bits = 0;
-> +
-> +	if (!dev->of_node)
-> +		return 0;
-> +
-> +	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
-> +		rtl8211e_disable_eee_led_mode(phydev);
-> +
-> +	count = of_property_count_elems_of_size(dev->of_node,
-> +						"realtek,led-modes",
-> +						sizeof(u32));
-> +	if (count < 0 || count > 3)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		u32 val;
-> +
-> +		of_property_read_u32_index(dev->of_node,
-> +					   "realtek,led-modes", i, &val);
-> +		lacr_bits |= (u16)(val >> 16) <<
-> +			(RLT8211E_LACR_LEDACTCTRL_SHIFT + i);
+> I'd rather see drivers move to a consistent pattern so we can then
+> easily hoist the seqcount lock scheme into some common mmu notifier
+> code, as discussed.
 
-This may be done in an easier to read way:
+So you don't like the version in amdgpu_ttm_tt_get_user_pages_done in
+linux-next either?
 
-if (val & RTL8211E_LINK_ACTIVITY)
-	lacr_bits |= BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + i);
-
-
-> +		lcr_bits |= (u16)(val & 0xf) << (i * 4);
-> +	}
-> +
-> +	oldpage = rtl8211e_select_ext_page(phydev, 44);
-> +	if (oldpage < 0) {
-> +		dev_err(dev, "failed to select extended page: %d\n", oldpage);
-
-In a PHY driver it may be more appropriate to use phydev_err() et al,
-even though effectively it's the same.
-
-> +		goto err;
-> +	}
-> +
-> +	ret = __phy_modify(phydev, RTL8211E_LACR,
-> +			   RLT8211E_LACR_LEDACTCTRL_MASK, lacr_bits);
-> +	if (ret) {
-> +		dev_err(dev, "failed to write LACR reg: %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	ret = __phy_modify(phydev, RTL8211E_LCR,
-> +			   RTL8211E_LCR_LEDCTRL_MASK, lcr_bits);
-> +	if (ret)
-> +		dev_err(dev, "failed to write LCR reg: %d\n", ret);
-> +
-> +err:
-> +	return phy_restore_page(phydev, oldpage, ret);
-> +}
-> +
->  static int rtl8211e_config_init(struct phy_device *phydev)
->  {
->  	struct device *dev = &phydev->mdio.dev;
-> @@ -137,8 +197,7 @@ static int rtl8211e_config_init(struct phy_device *phydev)
->  			dev_err(dev, "failed to enable SSC on RXC: %d\n", ret);
->  	}
->  
-> -	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
-> -		rtl8211e_disable_eee_led_mode(phydev);
-> +	rtl8211e_config_leds(phydev);
->  
->  	return 0;
->  }
-> 
-
+I can remove this and just move hmm_vma_range_done to nouveau instead.
+Let me know if you have other comments before I resend.  Note that
+I'll probably be offline Thu-Sun this week.
