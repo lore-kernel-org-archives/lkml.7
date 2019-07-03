@@ -2,136 +2,135 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06938C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A677C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AEB21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YGubzmLM";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="OLeRriG9"
+	by mail.kernel.org (Postfix) with ESMTP id 4633721882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGCQPO (ORCPT
+        id S1726966AbfGCQQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:15:14 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:52194 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725933AbfGCQPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:15:14 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 3 Jul 2019 12:16:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57451 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfGCQQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:16:22 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D9F62C00FF;
-        Wed,  3 Jul 2019 16:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562170513; bh=WDDiZDuew8RegZw1RwNP2UM3/pT0484FOMpowsuFhms=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=YGubzmLMIxfbuso0hgSWgzxFUTyeoIY5h9vw45hInb9h5z603SboOjTm1U+E7UUT3
-         nLxO3vw8NEW7rwBYuZo0IdtGKiM92ZA1Pc7pA4eV4sV+Lpk9TG1qt+oEiISkoZt8IG
-         aVSyGCn4kujkgH69dgjObBVyKWFFuqF1dLF/pMMteAC4HFPSmz+0gKBjjJaF9HXZx9
-         S9NJsse7gLlJDHrk+PEpuE6pInZkwQx5DWHj7yxLztCY+0XpEp7ftWJuaej9CGUoKU
-         3tCJieJB9a025xq5ImFX/mFWHVfwDRwTETYPsuozfakiQloQ75xplTckZdulZrsJ98
-         oR81jD7iciCTw==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9235DA0067;
-        Wed,  3 Jul 2019 16:15:12 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 3 Jul 2019 09:15:12 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 3 Jul 2019 09:15:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDDiZDuew8RegZw1RwNP2UM3/pT0484FOMpowsuFhms=;
- b=OLeRriG9A01mLmtWBXti5K7ZLxh+UiUEkvCzh4Pr+C1pjowP0WlvIFMBeQdNOzeCQJxcHLiKlJciryw15luFsle+2QnMMmTqtbYjyBG/Pzum8xSDtgzpLEwh9JyoZanhqQKZpMh6/+uIy7uJXTBzbLVuQGow8QG6k4MAsjbAIUY=
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
- BN6PR1201MB0051.namprd12.prod.outlook.com (10.174.114.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.17; Wed, 3 Jul 2019 16:15:10 +0000
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::c4ec:41a0:dfb5:767f]) by BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::c4ec:41a0:dfb5:767f%10]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 16:15:10 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Index: AQHVMbp1QUnMGryojE2rPVU+oeatwQ==
-Date:   Wed, 3 Jul 2019 16:15:09 +0000
-Message-ID: <991ace9d-ef6d-0f29-d4f4-03ba47a7f7ff@synopsys.com>
-References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-x-originating-ip: [198.182.56.5]
-x-clientproxiedby: BYAPR06CA0015.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::28) To BN6PR1201MB0035.namprd12.prod.outlook.com
- (2603:10b6:405:4d::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6e0424bf-9902-4397-ec7a-08d6ffd19eb2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0051;
-x-ms-traffictypediagnostic: BN6PR1201MB0051:
-x-microsoft-antispam-prvs: <BN6PR1201MB00518DF8CC12A9AA4BB97EA6B6FB0@BN6PR1201MB0051.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(110136005)(66066001)(64756008)(66446008)(66476007)(58126008)(5660300002)(229853002)(6486002)(66556008)(54906003)(66946007)(52116002)(65826007)(31696002)(73956011)(6512007)(7736002)(316002)(81156014)(4326008)(86362001)(65956001)(65806001)(81166006)(26005)(8676002)(305945005)(64126003)(386003)(6506007)(8936002)(476003)(53546011)(76176011)(53936002)(186003)(36756003)(4744005)(71200400001)(71190400001)(486006)(6436002)(99286004)(25786009)(31686004)(446003)(102836004)(11346002)(2616005)(3846002)(6116002)(14454004)(68736007)(6246003)(478600001)(2501003)(14444005)(2906002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0051;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Nez3vwR5bBm+H7HAeKUFBQ2I0BdvMD3j86W8Hr1kea6UrZk497DTN7hk+U+0BpUXus7JtNAxg+PzZNvMrg7E/tCXat8qsRZuxKyb1fW2Q32LTOcbY//v+UrFK1JJn12bPHPda5erwOHlGD3ny2Y88vpjULd9dazAMkIOXVf6yfUA1JU6RbhzsamGSOZg075qoghqvKfWmttzimDu8GQ/UK6pQGhHuGbkAa9l74osQYgpkfXv+hH3c2BYLOtUom6NPniQ6wwibJfJGgcW58NQVZoJkOGKPhk5cGLYl2tzgTuI4ccpfzY7Ch0dLh2kFZ1QMa/U02LMnjueLF6zDnJq3/AvjMWsMFS70JEDg20rr7gOCKFKgVQZhpQw02B0bVt3ki1TITbdvClRpWAd6wvjB9ABQcFOfJMMpV3qpoQgqmg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6F497960BCBDEE4BA2FB30EEE564DBC0@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        by mx1.redhat.com (Postfix) with ESMTPS id A38FE307D853;
+        Wed,  3 Jul 2019 16:16:16 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1165519698;
+        Wed,  3 Jul 2019 16:16:09 +0000 (UTC)
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+ <20190702130318.39d187dc27dbdd9267788165@linux-foundation.org>
+ <78879b79-1b8f-cdfd-d4fa-610afe5e5d48@redhat.com>
+ <20190702143340.715f771192721f60de1699d7@linux-foundation.org>
+ <c29ff725-95ba-db4d-944f-d33f5f766cd3@redhat.com>
+ <20190703155314.GT978@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <ca6147ca-25be-cba6-a7b9-fcac6d21345d@redhat.com>
+Date:   Wed, 3 Jul 2019 12:16:09 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e0424bf-9902-4397-ec7a-08d6ffd19eb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 16:15:09.8800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0051
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20190703155314.GT978@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 03 Jul 2019 16:16:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8xOC8xOSA5OjE2IEFNLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IE9uIDYvMTQvMTkgOTo0
-MSBBTSwgRXVnZW5peSBQYWx0c2V2IHdyb3RlOg0KPj4gSW1wbGVtZW50IGp1bXAgbGFiZWwgcGF0
-Y2hpbmcgZm9yIEFSQy4gSnVtcCBsYWJlbHMgcHJvdmlkZQ0KPj4gYW4gaW50ZXJmYWNlIHRvIGdl
-bmVyYXRlIGR5bmFtaWMgYnJhbmNoZXMgdXNpbmcNCj4+IHNlbGYtbW9kaWZ5aW5nIGNvZGUuDQo+
-Pg0KPj4gVGhpcyBhbGxvd3MgdXMgdG8gaW1wbGVtZW50IGNvbmRpdGlvbmFsIGJyYW5jaGVzIHdo
-ZXJlDQo+PiBjaGFuZ2luZyBicmFuY2ggZGlyZWN0aW9uIGlzIGV4cGVuc2l2ZSBidXQgYnJhbmNo
-IHNlbGVjdGlvbg0KPj4gaXMgYmFzaWNhbGx5ICdmcmVlJw0KPj4NCj4+IFRoaXMgaW1wbGVtZW50
-YXRpb24gdXNlcyAzMi1iaXQgTk9QIGFuZCBCUkFOQ0ggaW5zdHJ1Y3Rpb25zDQo+PiB3aGljaCBm
-b3JjZWQgdG8gYmUgYWxpZ25lZCBieSA0IHRvIGd1YXJhbnRlZSB0aGF0IHRoZXkgZG9uJ3QNCj4+
-IGNyb3NzIEwxIGNhY2hlIGxpbmUgYW5kIGNhbiBiZSB1cGRhdGUgYXRvbWljYWxseS4NCj4+DQo+
-PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5
-cy5jb20+DQo+IExHVE0gb3ZlcmFsbCAtIG5pdHMgYmVsb3cuDQo+IA0KDQpDYW4geW91IGFkZHJl
-c3MgdGhlIHJldmlldyBjb21tZW50cyBzb29uIHNvIHRoaXMgZ2V0cyBtZXJnZWQgaW4gNS4zIHdo
-b3NlIG1lcmdlDQp3aW5kb3cgaXMgbG9vbWluZyAhDQo=
+On 7/3/19 11:53 AM, Michal Hocko wrote:
+> On Wed 03-07-19 11:21:16, Waiman Long wrote:
+>> On 7/2/19 5:33 PM, Andrew Morton wrote:
+>>> On Tue, 2 Jul 2019 16:44:24 -0400 Waiman Long <longman@redhat.com> wrote:
+>>>
+>>>> On 7/2/19 4:03 PM, Andrew Morton wrote:
+>>>>> On Tue,  2 Jul 2019 14:37:30 -0400 Waiman Long <longman@redhat.com> wrote:
+>>>>>
+>>>>>> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
+>>>>>> file to shrink the slab by flushing all the per-cpu slabs and free
+>>>>>> slabs in partial lists. This applies only to the root caches, though.
+>>>>>>
+>>>>>> Extends this capability by shrinking all the child memcg caches and
+>>>>>> the root cache when a value of '2' is written to the shrink sysfs file.
+>>>>> Why?
+>>>>>
+>>>>> Please fully describe the value of the proposed feature to or users. 
+>>>>> Always.
+>>>> Sure. Essentially, the sysfs shrink interface is not complete. It allows
+>>>> the root cache to be shrunk, but not any of the memcg caches. 
+>>> But that doesn't describe anything of value.  Who wants to use this,
+>>> and why?  How will it be used?  What are the use-cases?
+>>>
+>> For me, the primary motivation of posting this patch is to have a way to
+>> make the number of active objects reported in /proc/slabinfo more
+>> accurately reflect the number of objects that are actually being used by
+>> the kernel.
+> I believe we have been through that. If the number is inexact due to
+> caching then lets fix slabinfo rather than trick around it and teach
+> people to do a magic write to some file that will "solve" a problem.
+> This is exactly what drop_caches turned out to be in fact. People just
+> got used to drop caches because they were told so by $random web page.
+> So really, think about the underlying problem and try to fix it.
+>
+> It is true that you could argue that this patch is actually fixing the
+> existing interface because it doesn't really do what it is documented to
+> do and on those grounds I would agree with the change.
+
+I do think that we should correct the shrink file to do what it is
+designed to do to include the memcg caches as well.
+
+
+>  But do not teach
+> people that they have to write to some file to get proper numbers.
+> Because that is just a bad idea and it will kick back the same way
+> drop_caches.
+
+The /proc/slabinfo file is a well-known file that is probably used
+relatively extensively. Making it to scan through all the per-cpu
+structures will probably cause performance issues as the slab_mutex has
+to be taken during the whole duration of the scan. That could have
+undesirable side effect.
+
+Instead, I am thinking about extending the slab/objects sysfs file to
+also show the number of objects hold up by the per-cpu structures and
+thus we can get an accurate count by subtracting it from the reported
+active objects. That will have a more limited performance impact as it
+is just one kmem cache instead of all the kmem caches in the system.
+Also the sysfs files are not as commonly used as slabinfo. That will be
+another patch in the near future.
+
+Cheers,
+Longman
+
