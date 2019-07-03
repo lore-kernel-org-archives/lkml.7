@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C019DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200D2C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957AE21880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EF520673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120573;
-	bh=/cYx5cUz5hA102Q+olEMurcf0Hc50+refCvKyA+3QYo=;
+	s=default; t=1562120582;
+	bh=0HHrHpTAdfLrEOsan/In0mpf9OzeIbpV4oZoWeelD7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxCet+2ohn8afdU0gx+KhtuGF+TmGltNOS0BI/9N5fvLiKNC5HFMv24zb72VcbLY6
-	 AcHZQB6R81KFCJTbI/h15+LpV80BdZJ74tZKwBGVoUJx7acr89wpb9TAPVKuifvfKc
-	 m1nNk2FJsx3r7Q1KUJpUtVRlGc822E1nNcsh97Uc=
+	b=uxLtu/nldgKfT5dNq0g8Wi0lFxnb97cpUmuWHUP88eqGsl1f6jXYB31GzqAzQneXC
+	 17YPR71EDnXCrr5wgXQuCsWdfxPOoYDXDbZoEhZrv0vk+VcV7S7Od/6IVtjZHdk5ST
+	 yCopmyd+LRi0MRNkh6gddcsKD4Kv/LYHUVH3Wa1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfGCCWw (ORCPT
+        id S1727937AbfGCCXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:23:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfGCCPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:22 -0400
+        id S1727482AbfGCCPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C68EE21897;
-        Wed,  3 Jul 2019 02:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A970A21881;
+        Wed,  3 Jul 2019 02:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120121;
-        bh=/cYx5cUz5hA102Q+olEMurcf0Hc50+refCvKyA+3QYo=;
+        s=default; t=1562120118;
+        bh=0HHrHpTAdfLrEOsan/In0mpf9OzeIbpV4oZoWeelD7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSm84mIxTq+gslqVUS7V1cOY+jkbCYeTvD0Sf9k38hgr1dH/HkndWVdQhsHUobJH0
-         cunbopfyGtg+kdekNtfc+8PN8swrzmJVSVs7qqLNhVMsSSvVukXn8T0DEvspvoaJ5q
-         XZeiE1sn9KMJVBOhpxTWNXWICIisBVQOJNS8DYEU=
+        b=Z99RFiwrx6MwTmqZXo7cZG+R8Q472LNTKOMnn39txKeIppNAdQaWM/TbVXdwPAhFn
+         mUc38NQuL2zN/Qi0oLUdfIowhas2xRr6n10h/yuXLewRF1Mw/tsIJ3zsC3rczF3Sb3
+         i9aq14voEeeI/o/tZNNgyWAsLl2AIo4hGaRXSTnM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 06/39] clk: ti: clkctrl: Fix returning uninitialized data
-Date:   Tue,  2 Jul 2019 22:14:41 -0400
-Message-Id: <20190703021514.17727-6-sashal@kernel.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 03/39] idr: Fix idr_get_next race with idr_remove
+Date:   Tue,  2 Jul 2019 22:14:38 -0400
+Message-Id: <20190703021514.17727-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -62,63 +59,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-[ Upstream commit 41b3588dba6ef4b7995735a97e47ff0aeea6c276 ]
+[ Upstream commit 5c089fd0c73411f2170ab795c9ffc16718c7d007 ]
 
-If we do a clk_get() for a clock that does not exists, we have
-_ti_omap4_clkctrl_xlate() return uninitialized data if no match
-is found. This can be seen in some cases with SLAB_DEBUG enabled:
+If the entry is deleted from the IDR between the call to
+radix_tree_iter_find() and rcu_dereference_raw(), idr_get_next()
+will return NULL, which will end the iteration prematurely.  We should
+instead continue to the next entry in the IDR.  This only happens if the
+iteration is protected by the RCU lock.  Most IDR users use a spinlock
+or semaphore to exclude simultaneous modifications.  It was noticed once
+the PID allocator was converted to use the IDR, as it uses the RCU lock,
+but there may be other users elsewhere in the kernel.
 
-Unable to handle kernel paging request at virtual address 5a5a5a5a
-...
-clk_hw_create_clk.part.33
-sysc_notifier_call
-notifier_call_chain
-blocking_notifier_call_chain
-device_add
+We can't use the normal pattern of calling radix_tree_deref_retry()
+(which catches both a retry entry in a leaf node and a node entry in
+the root) as the IDR supports storing entries which are unaligned,
+which will trigger an infinite loop if they are encountered.  Instead,
+we have to explicitly check whether the entry is a retry entry.
 
-Let's fix this by setting a found flag only when we find a match.
-
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 0a835c4f090a ("Reimplement IDR and IDA using the radix tree")
+Reported-by: Brendan Gregg <bgregg@netflix.com>
+Tested-by: Brendan Gregg <bgregg@netflix.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clkctrl.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/idr.c                           | 14 +++++++--
+ tools/testing/radix-tree/idr-test.c | 46 +++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index 3325ee43bcc1..626090b59cd7 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -229,6 +229,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+diff --git a/lib/idr.c b/lib/idr.c
+index cb1db9b8d3f6..da3021e7c2b5 100644
+--- a/lib/idr.c
++++ b/lib/idr.c
+@@ -227,11 +227,21 @@ void *idr_get_next(struct idr *idr, int *nextid)
  {
- 	struct omap_clkctrl_provider *provider = data;
- 	struct omap_clkctrl_clk *entry;
-+	bool found = false;
+ 	struct radix_tree_iter iter;
+ 	void __rcu **slot;
++	void *entry = NULL;
+ 	unsigned long base = idr->idr_base;
+ 	unsigned long id = *nextid;
  
- 	if (clkspec->args_count != 2)
- 		return ERR_PTR(-EINVAL);
-@@ -238,11 +239,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+ 	id = (id < base) ? 0 : id - base;
+-	slot = radix_tree_iter_find(&idr->idr_rt, &iter, id);
++	radix_tree_for_each_slot(slot, &idr->idr_rt, &iter, id) {
++		entry = rcu_dereference_raw(*slot);
++		if (!entry)
++			continue;
++		if (!xa_is_internal(entry))
++			break;
++		if (slot != &idr->idr_rt.xa_head && !xa_is_retry(entry))
++			break;
++		slot = radix_tree_iter_retry(&iter);
++	}
+ 	if (!slot)
+ 		return NULL;
+ 	id = iter.index + base;
+@@ -240,7 +250,7 @@ void *idr_get_next(struct idr *idr, int *nextid)
+ 		return NULL;
  
- 	list_for_each_entry(entry, &provider->clocks, node) {
- 		if (entry->reg_offset == clkspec->args[0] &&
--		    entry->bit_offset == clkspec->args[1])
-+		    entry->bit_offset == clkspec->args[1]) {
-+			found = true;
- 			break;
-+		}
+ 	*nextid = id;
+-	return rcu_dereference_raw(*slot);
++	return entry;
+ }
+ EXPORT_SYMBOL(idr_get_next);
+ 
+diff --git a/tools/testing/radix-tree/idr-test.c b/tools/testing/radix-tree/idr-test.c
+index 1b63bdb7688f..fe33be4c2475 100644
+--- a/tools/testing/radix-tree/idr-test.c
++++ b/tools/testing/radix-tree/idr-test.c
+@@ -287,6 +287,51 @@ static void idr_align_test(struct idr *idr)
  	}
+ }
  
--	if (!entry)
-+	if (!found)
- 		return ERR_PTR(-EINVAL);
++DEFINE_IDR(find_idr);
++
++static void *idr_throbber(void *arg)
++{
++	time_t start = time(NULL);
++	int id = *(int *)arg;
++
++	rcu_register_thread();
++	do {
++		idr_alloc(&find_idr, xa_mk_value(id), id, id + 1, GFP_KERNEL);
++		idr_remove(&find_idr, id);
++	} while (time(NULL) < start + 10);
++	rcu_unregister_thread();
++
++	return NULL;
++}
++
++void idr_find_test_1(int anchor_id, int throbber_id)
++{
++	pthread_t throbber;
++	time_t start = time(NULL);
++
++	pthread_create(&throbber, NULL, idr_throbber, &throbber_id);
++
++	BUG_ON(idr_alloc(&find_idr, xa_mk_value(anchor_id), anchor_id,
++				anchor_id + 1, GFP_KERNEL) != anchor_id);
++
++	do {
++		int id = 0;
++		void *entry = idr_get_next(&find_idr, &id);
++		BUG_ON(entry != xa_mk_value(id));
++	} while (time(NULL) < start + 11);
++
++	pthread_join(throbber, NULL);
++
++	idr_remove(&find_idr, anchor_id);
++	BUG_ON(!idr_is_empty(&find_idr));
++}
++
++void idr_find_test(void)
++{
++	idr_find_test_1(100000, 0);
++	idr_find_test_1(0, 100000);
++}
++
+ void idr_checks(void)
+ {
+ 	unsigned long i;
+@@ -368,6 +413,7 @@ void idr_checks(void)
+ 	idr_u32_test(1);
+ 	idr_u32_test(0);
+ 	idr_align_test(&idr);
++	idr_find_test();
+ }
  
- 	return entry->clk;
+ #define module_init(x)
 -- 
 2.20.1
 
