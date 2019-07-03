@@ -2,176 +2,136 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B7FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06938C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5EE218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2AEB21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vRHm7wc6"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YGubzmLM";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="OLeRriG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfGCQO5 (ORCPT
+        id S1727027AbfGCQPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:14:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36934 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfGCQO5 (ORCPT
+        Wed, 3 Jul 2019 12:15:14 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:52194 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725933AbfGCQPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:14:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so1742347iok.4;
-        Wed, 03 Jul 2019 09:14:56 -0700 (PDT)
+        Wed, 3 Jul 2019 12:15:14 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D9F62C00FF;
+        Wed,  3 Jul 2019 16:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562170513; bh=WDDiZDuew8RegZw1RwNP2UM3/pT0484FOMpowsuFhms=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=YGubzmLMIxfbuso0hgSWgzxFUTyeoIY5h9vw45hInb9h5z603SboOjTm1U+E7UUT3
+         nLxO3vw8NEW7rwBYuZo0IdtGKiM92ZA1Pc7pA4eV4sV+Lpk9TG1qt+oEiISkoZt8IG
+         aVSyGCn4kujkgH69dgjObBVyKWFFuqF1dLF/pMMteAC4HFPSmz+0gKBjjJaF9HXZx9
+         S9NJsse7gLlJDHrk+PEpuE6pInZkwQx5DWHj7yxLztCY+0XpEp7ftWJuaej9CGUoKU
+         3tCJieJB9a025xq5ImFX/mFWHVfwDRwTETYPsuozfakiQloQ75xplTckZdulZrsJ98
+         oR81jD7iciCTw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 9235DA0067;
+        Wed,  3 Jul 2019 16:15:12 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 3 Jul 2019 09:15:12 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 3 Jul 2019 09:15:11 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=kdryzXbCbzDfJP4dXE/8MzkyDavCGnlKuzeemQ+TiVE=;
-        b=vRHm7wc6IwyVzI2KJ1/ggfLsbkwNF8TjNgYG+YcJ55vtYJpAszIaXwG9bj+pky/Tqy
-         ajI2asAuUI549bMqf5wx6RVq3CruOC02zkqF/N8/q3/sBExo90alnQjzH+pRJlq7IEMX
-         hLKi8MaZHDlX2+9DduXJWGH8Scck5b2Ix9tzTRtXwttLFjuTTNiDYLMDYzdbX/f1j+ev
-         LuxFa7xWqsJtEDdm8+2d7mpN8EYcu9zOvWhBQ9sIPp7EtZ46TTFY1UorwIO86+FUNZ5g
-         XXA2X5HyLgq0gjbWLzgrjc/xnJIV/bRvvjyriGwWmr/uVgUuKMTkKMVeH3jV1vgTSAjW
-         tcbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=kdryzXbCbzDfJP4dXE/8MzkyDavCGnlKuzeemQ+TiVE=;
-        b=Q8XEy1P6o4GIQJza7LoOCUs26PHmn0wBZbMvNEPNlN3BOhqDtCUCuW5g6+SOv3ZauN
-         H60L4n6g6xJC75RFTLu9NerLfwwFE8xyGkuAN1HMhOS/MMmpVkak2oLNdHQXaKU+WVKK
-         VBgXl2gnS16xQOhq2K1s59bmiYxOrriHtP64nu0RIwkhRjAF8R8cW5rDAztdtbW5BC9s
-         dGylt2j3X/qY9tR6r6TOScqk0I+MWXjituCdxgC5RznUXX0jRR3sIasjW9PvNfs8Iugk
-         lzvJtZXmEydEtvnoszbraPH2VC8oD/+WSkIfGpqL6d+TeyiI5mBFo2zQBNoshj3NlG8q
-         85Sw==
-X-Gm-Message-State: APjAAAWp3prJNV2jYztSgMxk7Dxffmt0VdyUBzGO77brxrWefW4XS9jj
-        9dVeh3zmBAoaYSrfRci3ZOgWz2/QAcY=
-X-Google-Smtp-Source: APXvYqwUX87x3z0i6i3URdkVyW37nBeRT9KQ8nLzY5lOnThla46DeABRo/y5QORYPGb+8UyyWVhMeg==
-X-Received: by 2002:a5d:9c46:: with SMTP id 6mr30163372iof.6.1562170495847;
-        Wed, 03 Jul 2019 09:14:55 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id n17sm2240193iog.63.2019.07.03.09.14.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 09:14:54 -0700 (PDT)
-Date:   Wed, 03 Jul 2019 09:14:46 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+d88a977731a9888db7ba@syzkaller.appspotmail.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        Dave Watson <davejwatson@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Message-ID: <5d1cd47644b45_8ce2b1bd49125c4ed@john-XPS-13-9370.notmuch>
-In-Reply-To: <20190703154543.GA21629@sol.localdomain>
-References: <20190703064307.13740-1-hdanton@sina.com>
- <20190703144000.GH17978@ZenIV.linux.org.uk>
- <20190703152334.GI17978@ZenIV.linux.org.uk>
- <20190703154543.GA21629@sol.localdomain>
-Subject: Re: kernel panic: corrupted stack end in dput
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDDiZDuew8RegZw1RwNP2UM3/pT0484FOMpowsuFhms=;
+ b=OLeRriG9A01mLmtWBXti5K7ZLxh+UiUEkvCzh4Pr+C1pjowP0WlvIFMBeQdNOzeCQJxcHLiKlJciryw15luFsle+2QnMMmTqtbYjyBG/Pzum8xSDtgzpLEwh9JyoZanhqQKZpMh6/+uIy7uJXTBzbLVuQGow8QG6k4MAsjbAIUY=
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
+ BN6PR1201MB0051.namprd12.prod.outlook.com (10.174.114.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.17; Wed, 3 Jul 2019 16:15:10 +0000
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f]) by BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f%10]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 16:15:10 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Thread-Index: AQHVMbp1QUnMGryojE2rPVU+oeatwQ==
+Date:   Wed, 3 Jul 2019 16:15:09 +0000
+Message-ID: <991ace9d-ef6d-0f29-d4f4-03ba47a7f7ff@synopsys.com>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [198.182.56.5]
+x-clientproxiedby: BYAPR06CA0015.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::28) To BN6PR1201MB0035.namprd12.prod.outlook.com
+ (2603:10b6:405:4d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6e0424bf-9902-4397-ec7a-08d6ffd19eb2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0051;
+x-ms-traffictypediagnostic: BN6PR1201MB0051:
+x-microsoft-antispam-prvs: <BN6PR1201MB00518DF8CC12A9AA4BB97EA6B6FB0@BN6PR1201MB0051.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(110136005)(66066001)(64756008)(66446008)(66476007)(58126008)(5660300002)(229853002)(6486002)(66556008)(54906003)(66946007)(52116002)(65826007)(31696002)(73956011)(6512007)(7736002)(316002)(81156014)(4326008)(86362001)(65956001)(65806001)(81166006)(26005)(8676002)(305945005)(64126003)(386003)(6506007)(8936002)(476003)(53546011)(76176011)(53936002)(186003)(36756003)(4744005)(71200400001)(71190400001)(486006)(6436002)(99286004)(25786009)(31686004)(446003)(102836004)(11346002)(2616005)(3846002)(6116002)(14454004)(68736007)(6246003)(478600001)(2501003)(14444005)(2906002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0051;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Nez3vwR5bBm+H7HAeKUFBQ2I0BdvMD3j86W8Hr1kea6UrZk497DTN7hk+U+0BpUXus7JtNAxg+PzZNvMrg7E/tCXat8qsRZuxKyb1fW2Q32LTOcbY//v+UrFK1JJn12bPHPda5erwOHlGD3ny2Y88vpjULd9dazAMkIOXVf6yfUA1JU6RbhzsamGSOZg075qoghqvKfWmttzimDu8GQ/UK6pQGhHuGbkAa9l74osQYgpkfXv+hH3c2BYLOtUom6NPniQ6wwibJfJGgcW58NQVZoJkOGKPhk5cGLYl2tzgTuI4ccpfzY7Ch0dLh2kFZ1QMa/U02LMnjueLF6zDnJq3/AvjMWsMFS70JEDg20rr7gOCKFKgVQZhpQw02B0bVt3ki1TITbdvClRpWAd6wvjB9ABQcFOfJMMpV3qpoQgqmg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6F497960BCBDEE4BA2FB30EEE564DBC0@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e0424bf-9902-4397-ec7a-08d6ffd19eb2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 16:15:09.8800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0051
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Biggers wrote:
-> [+bpf and tls maintainers]
-> 
-> On Wed, Jul 03, 2019 at 04:23:34PM +0100, Al Viro wrote:
-> > On Wed, Jul 03, 2019 at 03:40:00PM +0100, Al Viro wrote:
-> > > On Wed, Jul 03, 2019 at 02:43:07PM +0800, Hillf Danton wrote:
-> > > 
-> > > > > This is very much *NOT* fine.
-> > > > > 	1) trylock can fail from any number of reasons, starting
-> > > > > with "somebody is going through the hash chain doing a lookup on
-> > > > > something completely unrelated"
-> > > > 
-> > > > They are also a red light that we need to bail out of spiraling up
-> > > > the directory hierarchy imho.
-> > > 
-> > > Translation: "let's leak the reference to parent, shall we?"
-> > > 
-> > > > > 	2) whoever had been holding the lock and whatever they'd
-> > > > > been doing might be over right after we get the return value from
-> > > > > spin_trylock().
-> > > > 
-> > > > Or after we send a mail using git. I don't know.
-> > > > 
-> > > > > 	3) even had that been really somebody adding children in
-> > > > > the same parent *AND* even if they really kept doing that, rather
-> > > > > than unlocking and buggering off, would you care to explain why
-> > > > > dentry_unlist() called by __dentry_kill() and removing the victim
-> > > > > from the list of children would be safe to do in parallel with that?
-> > > > >
-> > > > My bad. I have to walk around that unsafety.
-> > > 
-> > > WHAT unsafety?  Can you explain what are you seeing and how to
-> > > reproduce it, whatever it is?
-> > 
-> > BTW, what makes you think that it's something inside dput() itself?
-> > All I see is that at some point in the beginning of the loop body
-> > in dput() we observe a buggered stack.
-> > 
-> > Is that the first iteration through the loop?  IOW, is that just
-> > the place where we first notice preexisting corruption, or is
-> > that something the code called from that loop does?  If it's
-> > a stack overflow, I would be very surprised to see it here -
-> > dput() is iterative and it's called on a very shallow stack in
-> > those traces.
-> > 
-> > What happens if you e.g. turn that
-> > 	dput(dentry);
-> > in __fput() into
-> > 	rcu_read_lock(); rcu_read_unlock(); // trigger the check
-> > 	dput(dentry);
-> > 
-> > and run your reporducer?
-> > 
-> 
-> Please don't waste your time on this, it looks like just another report from the
-> massive memory corruption in BPF and/or TLS.  Look at reproducer:
-> 
-> bpf$MAP_CREATE(0x0, &(0x7f0000000280)={0xf, 0x4, 0x4, 0x400, 0x0, 0x1}, 0x3c)
-> socket$rxrpc(0x21, 0x2, 0x800000000a)
-> r0 = socket$inet6_tcp(0xa, 0x1, 0x0)
-> setsockopt$inet6_tcp_int(r0, 0x6, 0x13, &(0x7f00000000c0)=0x100000001, 0x1d4)
-> connect$inet6(r0, &(0x7f0000000140), 0x1c)
-> bpf$MAP_CREATE(0x0, &(0x7f0000000000)={0x5}, 0xfffffffffffffdcb)
-> bpf$MAP_CREATE(0x2, &(0x7f0000003000)={0x3, 0x0, 0x77fffb, 0x0, 0x10020000000, 0x0}, 0x2c)
-> setsockopt$inet6_tcp_TCP_ULP(r0, 0x6, 0x1f, &(0x7f0000000040)='tls\x00', 0x4)
-> 
-> It's the same as like 20 other syzbot reports.
-
-There is a missing synchronize_rcu we need to add and we have a race
-between map_free and tls close at the moment. The race cuases us to
-incorrectly set the sk->prot pointers when tls socket is closed in
-this case. I've added a hook to the ULP side now that should let
-the map_free reset the saved sk->prot pointers on the TLS side and
-am testing this now.
-
-The 20 syzbot reports appear to all be due to these two issues.
-This has nothing to do with dput().
-
-Thanks,
-John
-
-> 
-> - Eric
-
-
+T24gNi8xOC8xOSA5OjE2IEFNLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IE9uIDYvMTQvMTkgOTo0
+MSBBTSwgRXVnZW5peSBQYWx0c2V2IHdyb3RlOg0KPj4gSW1wbGVtZW50IGp1bXAgbGFiZWwgcGF0
+Y2hpbmcgZm9yIEFSQy4gSnVtcCBsYWJlbHMgcHJvdmlkZQ0KPj4gYW4gaW50ZXJmYWNlIHRvIGdl
+bmVyYXRlIGR5bmFtaWMgYnJhbmNoZXMgdXNpbmcNCj4+IHNlbGYtbW9kaWZ5aW5nIGNvZGUuDQo+
+Pg0KPj4gVGhpcyBhbGxvd3MgdXMgdG8gaW1wbGVtZW50IGNvbmRpdGlvbmFsIGJyYW5jaGVzIHdo
+ZXJlDQo+PiBjaGFuZ2luZyBicmFuY2ggZGlyZWN0aW9uIGlzIGV4cGVuc2l2ZSBidXQgYnJhbmNo
+IHNlbGVjdGlvbg0KPj4gaXMgYmFzaWNhbGx5ICdmcmVlJw0KPj4NCj4+IFRoaXMgaW1wbGVtZW50
+YXRpb24gdXNlcyAzMi1iaXQgTk9QIGFuZCBCUkFOQ0ggaW5zdHJ1Y3Rpb25zDQo+PiB3aGljaCBm
+b3JjZWQgdG8gYmUgYWxpZ25lZCBieSA0IHRvIGd1YXJhbnRlZSB0aGF0IHRoZXkgZG9uJ3QNCj4+
+IGNyb3NzIEwxIGNhY2hlIGxpbmUgYW5kIGNhbiBiZSB1cGRhdGUgYXRvbWljYWxseS4NCj4+DQo+
+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5
+cy5jb20+DQo+IExHVE0gb3ZlcmFsbCAtIG5pdHMgYmVsb3cuDQo+IA0KDQpDYW4geW91IGFkZHJl
+c3MgdGhlIHJldmlldyBjb21tZW50cyBzb29uIHNvIHRoaXMgZ2V0cyBtZXJnZWQgaW4gNS4zIHdo
+b3NlIG1lcmdlDQp3aW5kb3cgaXMgbG9vbWluZyAhDQo=
