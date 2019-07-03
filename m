@@ -2,177 +2,109 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E530C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F1DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014102189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562145063;
-	bh=nTQJQz0aUFEnhElWalm9pUd5CXb56Zsx7NpZ+tqQ/5E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zjlw7BU6XVTm3cuX2UZ3ZNiE8gsyRPRZOGdO8r7xUhQ9RxmPVfRMe2+JDgu1F4wn0
-	 xRBkp97wE1wZ51mNQhYTikNB6CniHmBhhm2/o02gjKCHBoju0ynP6R1W3IWUSWyVQ7
-	 tn60mjAEAHbltMR4ZBkrQwEppR4+RMV9FEySWV0o=
+	by mail.kernel.org (Postfix) with ESMTP id 9B856218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObWcSxFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfGCJLB (ORCPT
+        id S1727354AbfGCJLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:11:01 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34666 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbfGCJK4 (ORCPT
+        Wed, 3 Jul 2019 05:11:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35276 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGCJK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:10:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so1616835otk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:10:56 -0700 (PDT)
+        Wed, 3 Jul 2019 05:10:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s27so904956pgl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=As2upjpnu0eNfhcHUKlBkgyy1u4yzbeYFixzSKqaDY4=;
+        b=ObWcSxFyx81NI2OD5AYV1+2zf6+ZncHg9EmE7AwksRacdzCfdlIP0d9ckHlCSk+hAE
+         lkIF1fwAfUwolfL8XdbQ0DqaD6bt2B1+RCqafwyRLeiMOQNEtmTnoR/6nVgXwKXbm9sU
+         uxSk7sytU9XzbuoPWfaw76VZJQcVDVWHZ8tWKtLZL28YnSLgT0hSP9zD11bnACe+24F7
+         GnFTEl6L7+NzdthUoBXS60y3CmnZ9N3bq1xqzwdpXzMQwLoKEITiT6AmxobFJbRpkujk
+         3m+ymw+NthAjrjGNfrbA2ry19Ag6AnfdneyhwF0MwTOfOC5UVUgYLyt69JILg9kL5Zva
+         DKGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DciJ90nh1NzfXcJeF9DL81fOMF6IEI7qQaUbMDoK/ok=;
-        b=D0df0vV3AQOyeU9kHyW9lCS2FPRxLXLZmDF4Tsc8VesjfikKW4b5iQMJ3ENZXTKgsh
-         +1TpgO52ArMlFL48IG84lgekF3KuC2hs4ZUtJjE73eGQ9ioFSpwQte8womsAcq2R7xU4
-         4ioHcFbri4EJ98FpXldGQ+6oba6dqw9ZjiKkQ9IKqvnRdFKR5fBmtLKn2yVjLDPATCnE
-         gy5xMj6exF+mmKAQU1M9XXuY8uu5tZr8JrKxRSbe2kNmv/5sGHHET97ogminCfDRAjHc
-         HyIx76gnT/KQlaTb8GyeMVBvT9Eq9nja38IwhRMoir+sHUoq30QK61ZF+T2gD45Npk8f
-         jYew==
-X-Gm-Message-State: APjAAAWuECMq8/s+AaCsXby6hVOFo1jvE1fue8uX0MSbKelehisW7YhD
-        c+aPQ+cIwFxun/nFQ5ltwVzacDwWEBhd42VGU9I=
-X-Google-Smtp-Source: APXvYqza5e2FicbMKr5dqkoDR8/5pVuhNf2c6MThpTIwKh+O0DLItd1BhWLNz0X1CeBA1OglAGsa7GKg7RMI0hHwSCE=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr13449335otn.266.1562145055618;
- Wed, 03 Jul 2019 02:10:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=As2upjpnu0eNfhcHUKlBkgyy1u4yzbeYFixzSKqaDY4=;
+        b=mS1RY4gKxVs44DgCrgiutpykZIdbJCjUy2yTQE64c/QnGuYcjokOpMQj6kuiyeqKFp
+         CKezDtY/AONGGGuw1j84Van770/zRPU6rpqv3WEn5e5fhRfC6SVGTWWnlNIyXOleZ5Kp
+         rEpdRT9ZSfH998aGumE7sVK1xUyYbwJZwabdhxglsFhlnz2ykh2JPdgvWNnIEzTTMo1E
+         IEOYsTllGuBgkwT5Nc7jEK+oqNPE7vBC+bVTx6Rbxk28J8dWFTeVPj5w9iBZFDAlOow6
+         FEyUlYST+d2km10mgzWCuE4ATqwGSx38WkCkrt0N2J5ELnu3UeC0LVMmnVO9fwES0npH
+         oeSA==
+X-Gm-Message-State: APjAAAWG850nCANVZwDxHNmsBPKtz5noZ9+M2Nf1z3xjLHqTx7A+0kIi
+        +R3yX7jDtVuYaEGgM1pnplo=
+X-Google-Smtp-Source: APXvYqzFCXmdRw6ALVWTUgHPfy1hOiev9xTr20YFwbNlADqhKzfB6/Es/73il0GfRP7q2dFFqSPcKA==
+X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr11615624pjq.114.1562145057087;
+        Wed, 03 Jul 2019 02:10:57 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id x1sm1350046pjo.4.2019.07.03.02.10.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 02:10:56 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 02:10:46 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     shengjiu.wang@nxp.com
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] ASoC: fsl_esai: Wrap some operations to be
+ functions
+Message-ID: <20190703091046.GA8764@Asurada>
+References: <cover.1562136119.git.shengjiu.wang@nxp.com>
+ <f57c5a045c6e5491b1bc9831388eab2c88773176.1562136119.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <20190703071653.2799-1-gregkh@linuxfoundation.org> <20190703071653.2799-2-gregkh@linuxfoundation.org>
-In-Reply-To: <20190703071653.2799-2-gregkh@linuxfoundation.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Jul 2019 11:10:44 +0200
-Message-ID: <CAJZ5v0goKqHXfG=nNprMtKTDj02s3U56BOGQTuqajcqVdqqFcw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] debugfs: log errors when something goes wrong
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f57c5a045c6e5491b1bc9831388eab2c88773176.1562136119.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 9:17 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> As it is not recommended that debugfs calls be checked, it was pointed
-> out that major errors should still be logged somewhere so that
-> developers and users have a chance to figure out what went wrong.  To
-> help with this, error logging has been added to the debugfs core so that
-> it is not needed to be present in every individual file that calls
-> debugfs.
->
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Reported-by: Takashi Iwai <tiwai@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Looks good to me, yet two small comments inline.
 
-Generally speaking
+Please add this to this patch in the next version:
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Jul 03, 2019 at 02:42:04PM +0800, shengjiu.wang@nxp.com wrote:
+> +static int fsl_esai_register_restore(struct fsl_esai *esai_priv)
+> +{
+> +	int ret;
+> +	/* FIFO reset for safety */
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TFCR,
 
-> ---
->  fs/debugfs/inode.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
->
-> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-> index f04c8475d9a1..7f43c8acfcbf 100644
-> --- a/fs/debugfs/inode.c
-> +++ b/fs/debugfs/inode.c
-> @@ -2,8 +2,9 @@
->  /*
->   *  inode.c - part of debugfs, a tiny little debug file system
->   *
-> - *  Copyright (C) 2004 Greg Kroah-Hartman <greg@kroah.com>
-> + *  Copyright (C) 2004,2019 Greg Kroah-Hartman <greg@kroah.com>
->   *  Copyright (C) 2004 IBM Inc.
-> + *  Copyright (C) 2019 Linux Foundation <gregkh@linuxfoundation.org>
->   *
->   *  debugfs is for people to use instead of /proc or /sys.
->   *  See ./Documentation/core-api/kernel-api.rst for more details.
-> @@ -294,8 +295,10 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
->
->         error = simple_pin_fs(&debug_fs_type, &debugfs_mount,
->                               &debugfs_mount_count);
-> -       if (error)
-> +       if (error) {
-> +               pr_err("Unable to pin filesystem for file '%s'\n", name);
+Checkpatch script would probably warn this. Usually we add a blank
+line after variable declarations.
 
-But I'm not sure about the log level here.  Particularly, why would
-pr_info() not work?
+> @@ -866,22 +935,9 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(&pdev->dev, esai_priv);
+>  
+> -	/* Reset ESAI unit */
+> -	ret = regmap_write(esai_priv->regmap, REG_ESAI_ECR, ESAI_ECR_ERST);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "failed to reset ESAI: %d\n", ret);
+> +	ret = fsl_esai_init(esai_priv);
 
->                 return ERR_PTR(error);
-> +       }
->
->         /* If the parent is not specified, we create it in the root.
->          * We need the root dentry to do this, which is in the super
-> @@ -309,6 +312,7 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
->         dentry = lookup_one_len(name, parent, strlen(name));
->         if (!IS_ERR(dentry) && d_really_is_positive(dentry)) {
->                 dput(dentry);
-> +               pr_err("File '%s' already present!\n", name);
->                 dentry = ERR_PTR(-EEXIST);
->         }
->
-> @@ -351,8 +355,11 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
->                 return dentry;
->
->         inode = debugfs_get_inode(dentry->d_sb);
-> -       if (unlikely(!inode))
-> +       if (unlikely(!inode)) {
-> +               pr_err("out of free dentries, can not create file '%s'\n",
-> +                      name);
->                 return failed_creating(dentry);
-> +       }
->
->         inode->i_mode = mode;
->         inode->i_private = data;
-> @@ -513,8 +520,11 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
->                 return dentry;
->
->         inode = debugfs_get_inode(dentry->d_sb);
-> -       if (unlikely(!inode))
-> +       if (unlikely(!inode)) {
-> +               pr_err("out of free dentries, can not create directory '%s'\n",
-> +                      name);
->                 return failed_creating(dentry);
-> +       }
->
->         inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
->         inode->i_op = &simple_dir_inode_operations;
-> @@ -552,8 +562,11 @@ struct dentry *debugfs_create_automount(const char *name,
->                 return dentry;
->
->         inode = debugfs_get_inode(dentry->d_sb);
-> -       if (unlikely(!inode))
-> +       if (unlikely(!inode)) {
-> +               pr_err("out of free dentries, can not create automount '%s'\n",
-> +                      name);
->                 return failed_creating(dentry);
-> +       }
->
->         make_empty_dir_inode(inode);
->         inode->i_flags |= S_AUTOMOUNT;
-> @@ -608,6 +621,8 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
->
->         inode = debugfs_get_inode(dentry->d_sb);
->         if (unlikely(!inode)) {
-> +               pr_err("out of free dentries, can not create symlink '%s'\n",
-> +                      name);
->                 kfree(link);
->                 return failed_creating(dentry);
->         }
-> --
-> 2.22.0
->
+Could we rename this function to fsl_easi_hw_init() or something
+clear like fsl_esai_register_init? fsl_easi_init() feels like a
+driver init() function to me.
+
+Thank you
+Nicolin
