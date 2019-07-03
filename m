@@ -2,92 +2,112 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48ECC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19466C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABA5218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A6421852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfGCU40 (ORCPT
+        id S1727310AbfGCU4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:56:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:43888 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbfGCU4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:56:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 13:56:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
-   d="scan'208";a="166087884"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.1.56]) ([10.252.1.56])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2019 13:56:20 -0700
-Subject: Re: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-To:     shengjiu.wang@nxp.com
-Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1562136119.git.shengjiu.wang@nxp.com>
- <c29639336b6b32fa781bdddad30287f8b76d5e0b.1562136119.git.shengjiu.wang@nxp.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <3238f813-ac71-69e2-45bf-badb461dac82@intel.com>
-Date:   Wed, 3 Jul 2019 22:56:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 16:56:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:44615 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfGCU41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:56:27 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MqbDs-1iMWxP2do8-00masw; Wed, 03 Jul 2019 22:56:03 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Abbott Liu <liuwenliang@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH 2/3] kasan: disable CONFIG_KASAN_STACK with clang on arm32
+Date:   Wed,  3 Jul 2019 22:54:37 +0200
+Message-Id: <20190703205527.955320-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190703205527.955320-1-arnd@arndb.de>
+References: <20190703205527.955320-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <c29639336b6b32fa781bdddad30287f8b76d5e0b.1562136119.git.shengjiu.wang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:dVu6TB6bK7PiXC0nWCBWTtH4+VmEpXav81wxunH7qxb9O8LK6xY
+ 9t1OBqgcoNKISokDJOGEmpsK9Olw4WiYxv3R4Yk0VHCPHCwbE5CfGGDvCGKORzYaTcZzpMZ
+ m0fJ4OWUu8fhsgmIFep0j6SXmG5L3NTwAgbpxGDx8Qj04BISYNu2I01zggQ4J9AyAUBAt5n
+ camESeoPyJjNiAUdUlgtA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BtQ+/a+4hxk=:BXsO/jIoni0w1uZ5xMb/V6
+ h3BmSvC14FIsrbv1u2lvwtgR132tDDF864k1Mm0/o1613vabZUA4IFS/P8E4jRRI6wzptV5lM
+ jniEHTkB7qHeV/3lCntpeY7GYB4gr9Vvv+AKKRatXz3x21fZBGm2/fGSYXAXY+ZYcmSlQRb0Z
+ 3uc+P/LLZG12LdSV4N+0Jdl/ijlnTXia0VndfpbgkK0UMbzs9GaMSjIuFE72esecJiyh9QXlC
+ jNr2Bequ/b5BgqDk6YfU+QnZsfElwGyaURabVnt6B5C4Ohxqk07JXMFYf1RDOphcRy1RG3a7g
+ cX1kSgnBkWa6c7lXaA5Hp4HJ+c0RNNy3WS5G15hdnR29brBeN7LGOMTBv+bUvZj2fKB9A8rcd
+ xDU4aHuOfToN3Mi0jKRBJbkqfK4pL2GQiLvrctVa9OboD57iyUbUJJQxSc64DPWyyv/TwAWg+
+ 4rlCQYskxhnYiA1upHe0T38dZpE4V+pDZ9UUdpPEEC+JaKy0Z7hPP3gDh8UQUk7wDeMlx43Ma
+ Nj2f2RvuW0zBufN7CCC1gzXZZ7yj6LKcva/a4KeZ+T9LAHp/QTc4vBkJmaBeQePNHF7pDF9ty
+ lgByqBiJ5vNeyY0IYOTYOX5SjHBdj73WL+AOjE6+yMAAfu05z4cLAPM2ewhkYRfsv/UNbfGFL
+ 1jdoMMETbefmQEsOxl2/ok8E/gLyIPPUwGrnjqGFE8jZCT2/J0FOdGzP9k7kfPWx7NIPnmgMn
+ vIN90lJ0ZDhmHtW8bJnYoKFXqd3tUJdj5FcRRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-03 08:42, shengjiu.wang@nxp.com wrote:
-> +static void fsl_esai_reset(unsigned long arg)
-> +{
-> +	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
-> +	u32 saisr, tfcr, rfcr;
-> +
-> +	/* save the registers */
-> +	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
-> +	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
-> +
-> +	/* stop the tx & rx */
-> +	fsl_esai_trigger_stop(esai_priv, 1);
-> +	fsl_esai_trigger_stop(esai_priv, 0);
-> +
-> +	/* reset the esai, and restore the registers */
-> +	fsl_esai_init(esai_priv);
+The CONFIG_KASAN_STACK symbol tells us whether we should be using the
+asan-stack=1 parameter. On clang-8, this causes explosive kernel stack
+frame growth, so it is currently disabled, hopefully to be turned back
+on when a future clang version is fixed. Examples include
 
-<comment below applies>
+drivers/media/dvb-frontends/mb86a20s.c:1942:12: error: stack frame size of 4128 bytes in function
+drivers/net/wireless/atmel/atmel.c:1307:5: error: stack frame size of 4928 bytes in function 'atmel_open'
+drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c:1521:1: error: stack frame size of 5440 bytes in function
+drivers/media/i2c/mt9t112.c:670:12: error: stack frame size of 9344 bytes in function 'mt9t112_init_camera'
+drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c:185:12: error: stack frame size of 10048 bytes
 
-> +
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> +			   ESAI_xCR_xPR_MASK,
-> +			   ESAI_xCR_xPR);
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> +			   ESAI_xCR_xPR_MASK,
-> +			   ESAI_xCR_xPR);
-> +
-> +	/* restore registers by regcache_sync */
-> +	fsl_esai_register_restore(esai_priv);
-> +
+For the 32-bit ARM build, the logic I introduced earlier does
+not work because $(CFLAGS_KASAN_SHADOW) is empty, and we don't add
+those flags.
 
-Both _init and _restore may fail given their declaration in 1/2 "ASoC: 
-fsl_esai: Wrap some operations to be functions" yet here you simply 
-ignore the return values.
+Moving the asan-stack= parameter down fixes this. No idea of any
+of the other parameters should also be moved though.
 
-If failure of said functions is permissive, it might be a good place for 
-a comment.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ scripts/Makefile.kasan | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Czarek
+diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
+index 6410bd22fe38..fc57fcf49722 100644
+--- a/scripts/Makefile.kasan
++++ b/scripts/Makefile.kasan
+@@ -26,10 +26,11 @@ else
+ 	CFLAGS_KASAN := $(CFLAGS_KASAN_SHADOW) \
+ 	 $(call cc-param,asan-globals=1) \
+ 	 $(call cc-param,asan-instrumentation-with-call-threshold=$(call_threshold)) \
+-	 $(call cc-param,asan-stack=$(CONFIG_KASAN_STACK)) \
+ 	 $(call cc-param,asan-instrument-allocas=1)
+ endif
+ 
++CFLAGS_KASAN += $(call cc-param,asan-stack=$(CONFIG_KASAN_STACK))
++
+ endif # CONFIG_KASAN_GENERIC
+ 
+ ifdef CONFIG_KASAN_SW_TAGS
+-- 
+2.20.0
+
