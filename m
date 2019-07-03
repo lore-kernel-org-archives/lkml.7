@@ -2,108 +2,67 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C608AC06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95A4C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04E621850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562184505;
-	bh=QLiCFyaVLvvKUFjZ1ybsNzRWACPlJb3K33Cvj+RcJrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uXy6zlncDqQnLKfaU++VlwYeYFX6W5zna52W+s/K7ABMrH0+GpIabq+T9/Q2FCB66
-	 XL+/R0q6Yn2SirEF/QXVc4VOwycTrGkAn2KOLpOIOMjQ4mU9C+vmbJ1Or7psAmIRTq
-	 U1v/LCk4nv3mqrzDraPvPDC0O/hWelmesyJvzhJU=
+	by mail.kernel.org (Postfix) with ESMTP id BEF0D21850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:10:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QjyXuNlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGCUIY (ORCPT
+        id S1727130AbfGCUKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:08:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37208 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfGCUIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:08:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=95ySJca7aDUHQfVnY7n0PFU5PPGDK2zcemrI1diRXqk=; b=tC/yluJ0ITBF4AboY3FTStid/
-        hDYojrKIXGFGG1/Vl8g89LSNKae9YlbKIa6gB/lQ/ONWiF6k12rm+JfkvxOTpH1iSohhj4wkDbo19
-        DNLB76el6SpDdynxANYg7ugiVXE+RNLjpbvvkz1b4Nmz9aWmUkfb9eaXxJC+Y4kchkHuU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hilYA-0007AO-Sn; Wed, 03 Jul 2019 20:08:18 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 182BB440046; Wed,  3 Jul 2019 21:08:18 +0100 (BST)
-Date:   Wed, 3 Jul 2019 21:08:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH AUTOSEL 5.1 11/51] ASoC: sun4i-codec: fix first delay on
- Speaker
-Message-ID: <20190703200818.GX2793@sirena.org.uk>
-References: <20190626034117.23247-1-sashal@kernel.org>
- <20190626034117.23247-11-sashal@kernel.org>
- <20190626103741.GU5316@sirena.org.uk>
- <20190703142047.GX11506@sasha-vm>
- <20190703170744.GB3490@sirena.org.uk>
- <20190703181005.GB2733@sasha-vm>
+        Wed, 3 Jul 2019 16:10:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52166 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbfGCUKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:10:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=TPWVIErTayik2edSo/VKbrrdLvMsqce5uWXEpj/oAnw=; b=QjyXuNlTAI2gOt0dEDzQkINfW6
+        BTzHSx8gAPdgxDnI1nGYQ9+TtvC7FP0VvT207N2qyEhVoZi91tCg5iRyKBiz8z1h14cTIW0MYlfng
+        JxNSl3d9zfSbV5L3QMVe5U1xEDjbbTqDrLIhsRscWKO3DMnti5b0TmXUJ9B7GpEhmYr8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hilaK-0007Vg-4b; Wed, 03 Jul 2019 22:10:32 +0200
+Date:   Wed, 3 Jul 2019 22:10:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 7/7] net: phy: realtek: configure RTL8211E LEDs
+Message-ID: <20190703201032.GG18473@lunn.ch>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-7-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ggEtdcIX3XIOBw6T"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190703181005.GB2733@sasha-vm>
-X-Cookie: This sentence no verb.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190703193724.246854-7-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> +	for (i = 0; i < count; i++) {
+> +		u32 val;
+> +
+> +		of_property_read_u32_index(dev->of_node,
+> +					   "realtek,led-modes", i, &val);
 
---ggEtdcIX3XIOBw6T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please validate the value, 0 - 7.
 
-On Wed, Jul 03, 2019 at 02:10:05PM -0400, Sasha Levin wrote:
-
-> Sure, but I don't see any work upstream on trying to correct this?
-
-There's nothing to do to correct it, it's a normal thing that
-might happen in an audio system.  Probably users on the old
-kernel who are bothered by it either did a local kernel change or
-inserted a delay at the application level.  Correcting it again
-separately will double the delay, the problem is changing it
-affecting system integrations.
-
-> These sort of things are a reason why users stick with the same kernel
-> for years, which is what we'd like to avoid.
-
-Domain specific knowledge can be helpful...
-
---ggEtdcIX3XIOBw6T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0dCy8ACgkQJNaLcl1U
-h9CIdwf+JU0ifEXpdltuikrRRWLLmTkfjleFoPsOeFhqfEPnOLFZLHfM/q/sfz84
-1n2U81kmwzv6nyKihLXyf9ykFhI8jJ2gshiSsDJjqwFbP7/qy0QwDSUkDaq8rbw7
-npyN9rFybW1UnD9rBYNsuRRcAs8Q0chv6ifHdInIKVLwe09L8JeqSpisxlOlWL3u
-kpMzXkHF8Ut+vpsBTlqSa/IZ640o1z+GjZIMClXpDWS68iWDAlBB+o4cT5W3sMcg
-NfH0m6PQLoHaE07HArpBIyAO0Aw3GFtqFRB7MAGW0Vmhrw4TAH8eLxHm+2PkRCS7
-TzTAYV3eJgRBAiA8aIpsLzIgJldsrw==
-=6g13
------END PGP SIGNATURE-----
-
---ggEtdcIX3XIOBw6T--
+       Andrew
