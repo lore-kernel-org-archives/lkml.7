@@ -2,189 +2,338 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B88EC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBCBC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675EF21871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D7621882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562193759;
+	bh=mqaKXpIUaOv5o5DAuot/V+dj1eWcUhrVyM8suEuyl2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tqJvcu3PTiKOnR/+cV51Rp6NbpNHPa8DMJdLXXvSyNshydTnckvkdypgdcHTPFEKD
+	 wOXmoaSAPLSmuQjJyk4dWpiJrqveoJBw3wii3B6QeH+KOtU7VuHyxqAYkOxNoO3C+Z
+	 OiyjM2p7zfDdtcay9dKkGJ+jFjpH+XfMb1VHdKAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfGCWdz (ORCPT
+        id S1727346AbfGCWmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:33:55 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39158 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfGCWdy (ORCPT
+        Wed, 3 Jul 2019 18:42:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42527 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfGCWmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:33:54 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B04AA8060F; Thu,  4 Jul 2019 00:33:39 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 00:33:50 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
+        Wed, 3 Jul 2019 18:42:37 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so1969483plb.9;
+        Wed, 03 Jul 2019 15:42:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PCddMzEjs2p7iYZQi+ZtIQLYMeW5v/QID7YyYIQrvbc=;
+        b=Shd6A9yfFvFS7EppLkJtiNvLYUACPWipP+VCuefVf1w+DB3vXNWDqQo+YzROGwJDwj
+         S0r/91nSB1lByhjEaVwqbbNsT2rX15UKcUZFDbpUEC+xTH4VVTipTaOQ9zRP+15jD5uk
+         IfzrwoGUVSn8+GUKXNZiAdd34Q6iDOx0BXhRL2Pu5dqyqd0v8jqg4vqUenVtWCLzhY7J
+         A3DBOMosmd9UV64ezTqtaxgEAVinf7i21XRgCKvUy3SqmyzWH4L+/QzHB235oxVmRt56
+         ocx1Te0dFt1H6JcIGwzoA5S+O0wu1fij1Yd9eDK7uUYYQexT2b3AFMig56X2TgI3ZUZj
+         x38w==
+X-Gm-Message-State: APjAAAXXqPbB4GMEbXNKDURg81xQtjHvuVDNWPHxO6kv8Ws1qu7+OWUn
+        DfoOKuh6VLBsNhRsiSgi54Y=
+X-Google-Smtp-Source: APXvYqyrpSxwL8fWf4uPI4kUSZ+xAGW58c6IDL/yluq9fbRuoFFmUIkciHxkADiZsaesAL3oRZI0pw==
+X-Received: by 2002:a17:902:76c3:: with SMTP id j3mr43792032plt.116.1562193756183;
+        Wed, 03 Jul 2019 15:42:36 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b24sm3300146pfd.98.2019.07.03.15.42.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 15:42:34 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 2F07E402AC; Wed,  3 Jul 2019 22:42:34 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 22:42:34 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Cristina Moraru <cristina.moraru09@gmail.com>,
+        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
+        Valentin Rothberg <valentinrothberg@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <mmarek@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Alan Cox <alan@llwyncelyn.cymru>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] serdev support for n_gsm
-Message-ID: <20190703223350.GA1762@amd>
-References: <20190114012528.2367-1-tony@atomide.com>
- <20190118115958.GA5532@kroah.com>
- <20190121105735.GI3691@localhost>
- <20190121170116.GA5544@atomide.com>
- <20190124163932.GZ3691@localhost>
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Bolle <pebolle@tiscali.nl>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Tejun Heo <tj@kernel.org>,
+        Jej B <James.Bottomley@hansenpartnership.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Daniel Jonsson <danijons@student.chalmers.se>,
+        Andrzej Wasowski <wasowski@itu.dk>
+Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
+Message-ID: <20190703224234.GY19023@42.do-not-panic.com>
+References: <20160818175505.GM3296@wotan.suse.de>
+ <20160825074313.GC18622@lst.de>
+ <20160825201919.GE3296@wotan.suse.de>
+ <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
+ <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
+ <20190627045052.GA7594@lst.de>
+ <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
+ <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net>
+ <20190703173555.GW19023@42.do-not-panic.com>
+ <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190124163932.GZ3691@localhost>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 03, 2019 at 09:31:33PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 03.07.19 19:35, Luis Chamberlain wrote:
+> 
+> Hi,
+> 
+> >> Okay, but IIRC this will add more boilerplate those modules.
+> > 
+> > Just one module attribute.
+> 
+> Yes, but still one per module. This raises the question whether
+> maintainers are willing to cope w/ tons of tiny patches for just
+> one line - for something that will take quite some time to become
+> actually useful (doesn't help much if only few drivers support it),
+> and is only helpful in a few use cases.
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This can be wrapped in kconfig and disabled by default.
 
-Hi!
+> And to make it really useful, we also need some way to automatically
+> derive which other symbols to enable (subsystems, etc), w/o auto-
+> enabling stuff one doesn't need here. (are the defaults sane for
+> this usecase ?)
 
-> and sorry about the reply latency. This is quite a lot to think about.
->=20
-> I'm also adding Kishon and Mark on CC (e.g. for the phy and ASoC
-> bits).
+No, that's a separate problem.
+> 
+> The main problem here, IMHO, is that the kconfig system doesn't really
+> know what makes up a module (it only knows that something w =y cant
+> depend on something thats =m).
+> 
+> So it smalls like we'd need some config language that really understands
+> things like modules, subsystems, arches, etc with their properties and
+> is used by both kconfig and kbuild. Then we could put all metadata there
+> instead of the current macro calls. At that point we could also put
+> things like match tables in here, which would solve the problem of
+> finding the right driver by hardware descriptions.
+> 
+> But that's really a *big* topic, it's not easy.
 
-I just wanted to ask... any news here?
+Christoph's sugggestion goes along the lines with addressing some of
+this, yet 2 years havegone by and no one is working on it and its hugely
+intrusive. I'd welcome the patches.
 
-> > For some user space examples, I have posted scripts to send and receive
-> > SMS at [3], and Pavel has ofono patches [4] below. Seems like we can
-> > also add support to ModemManager along the similar lines. And for the
-> > serdev drivers, those implement standard Linux interfaces for apps
-> > to use.
-> >=20
-> > For PM, about a year ago I tried making things work with a user space
-> > solution and it sucked big time[5]. The power management makes sense
-> > to do in the kernel driver at least in this case as there are shared
-> > GPIO pins between the USB PHY and TS 27.010 UART. The shared GPIOs
-> > are handled by the phy-mapphone-mdm6600 driver.
-> >=20
-> > With the serdev n_gsm MFD driver, the only thing that needs to be done
-> > to idle the modem is to enable autosuspend for the OHCI interface. So
-> > no spefific coordination between various components is needed for PM
-> > beyond that. Things idle just fine using PM runtime.
->=20
-> Yeah, I don't envy you trying to get this to work (and now I'm getting
-> dragged into it ;) ).
+> >> And I wonder whether target binaries are the right place for those
+> >> things at all - IMHO that's something one wants to derive from the
+> >> source code  / .config's.
+> > 
+> > For the use cases mentioned for why the module attribute is being
+> > suggested it would help to not have to download kernel sources. 
+> 
+> Are we still talking about compiling custom kernels ?
+> (how to do that w/o source code ?)
 
-Yeah, and now I'm in, too. I'd really like to have an useful
-phone. Droid4 seems like best candidate.
+There is a difference between getting kernel sources for your current
+running kernel Vs getting kernel sources from say Linus' tree or the
+stable tree, or whatever subsystem you work on. I'm saying that with
+a module attribute being present you would *not* have to get the kernel
+sources for the current kernel you are running.
 
-> It would really help with a high-level outline of the modem and its
-> components. I've done my best to derive it from these patches and the
-> code you link to, but that info needs to go in the patch descriptions
-> (or cover letter).
+> > The only question we want to answer is: for the hardware components
+> > present on this system, which configs options do I need to enable
+> > to support these components?
+> 
+> What else would one need that data, if not compiling a custom kernel
+> (which in turn needs the source) ?
 
-Are you ready for the crazyness?
+One is compiling a custom kernel.
 
-There are two modems in droid 4. I don't care about the LTE one. The
-GSM one is connected with few USB channels, and few multiplexed
-channels over UART.
+> > At least for virtualization we decided to support at least these two to
+> > help:
+> > 
+> >   * make kvmconfig
+> >   * make xenconfig
+> 
+> These two are rather simple. Most times there isn't much variance in
+> virtual hardware (unless one starts directly mapping in pci or usb
+> devices ...)
 
-One of USB channels is standard AT commands.
-One of USB channels is QMI.
-But using USB means big power consumption, so it is better to use
-multiplexed channels over UART.
+Actually no, there is huge variance on the qemu level and that problem
+is not solved by the above.
 
-Few of those look vaguely like AT commands, but voice and sms and
-=2E.. are going over separate channels. One of those contains NMEA data
-(packet in AT lookalike).
+> > Similar problem would be found if one wanted to find a desirable kernel
+> > config for a remote system. One should be able to somehow scrape some
+> > hardware information, dump that to a file, and then somehow generate
+> > a working config for that system.
+> 
+> Yes. That's actually pretty much the same usecase (in my case I'd also
+> have dts, lspci/lsusb output, etc)
+> 
+> > The module attribute being suggested would enable at least one way
+> > to gather some of the required config symbols: symbols for *hardware*
+> > and where one can run a modern kernel, with many features / hardware
+> > enabled already.
+> 
+> But only for a pretty specific usecase.
 
-> > Sure that's doable. But notice that we actually need to kick the
-> > serdev GNSS interface to get more data. It's not a passive GNSS
-> > data feed in this case. So it's not going to be just a case of
-> > cat /dev/motmdm4 > /dev/ugnss. Without the serdev GNSS driver,
-> > it would be some-custom-app -i /dev/motmdm4 -o /dev/ugnss.
->=20
-> Yeah, I remember us discussing that briefly off list.
-> =20
-> > And without the n_gsm serdev support, it's a mess of some app
-> > similar to [5] initializing n_gsm, trying to deal with the USB
-> > PHY PM, dealing with Motorola custom packet numbering, kicking
-> > GNSS device, feeding data to /dev/ugnss. Hmm I think I've already
-> > been there just to be able to type AT commands to the modem and
-> > it did not work :)
->=20
-> It's a mess indeed, but I'd rather see user-space dealing with until we
-> figure out how best to do it in the kernel. ;)
+Two: build time, and backports.
 
-Userspace should be shielded from hardware-specific mess :-(.
+> I'm not opposed to this, but
+> I wonder whether maintainers are willing to accept that stuff for just
+> that specific usecase.
 
-> > Anyways, for the serdev kernel drivers, the criteria I've tried
-> > to follow is: "Can this serdev device driver make user space
-> > apps use standard Linux interfaces for the hardware?"
-> >=20
-> > So for the serdev Alsa ASoC driver, user space can use the standard
-> > Alsa interface for setting voice call volume. And for the serdev
-> > GNSS driver, user space can use /dev/gnss0.
->=20
-> I understand. Both drivers appears to be using AT commands for control.
-> It would be interesting to hear what Mark has to say about the codec
-> driver too. Moving AT handling into the kernel scares me a bit. If we
-> already have a telephony stack to deal with it in user-space, my
-> inclination is to let it continue to handle it.
+This is why we are discussing this on this thread.
 
-These "Motorola AT" commands are really a bit different from standard
-AT commands. I was working on userspace, and got something... but
-could not get SMSes to work.
+Since we have 'make localmodconfig' already upstream, and since this
+would help both users of that and backports I'd argue it makes sense
+upstream. Otherwise I find it that having upstream 'make localmodconfig'
+but not wanting to improve that problem space rather odd.
 
-> Modem-managed GNSS is also different from receivers connected directly
-> to the host. It's really the modem that drives the GNSS receiver, and
-> offers a higher-level interface to the host, for example, by buffering
-> output which the host can later request. It may or may not be the
-> kernel's job to periodically poll the modem to recreate an NMEA feed so
-> to speak.
->=20
-> But the end-result of having it accessible through a standard interface
-> is of course appealing.
+> > However, folks producing embedded systems *do* / *should* have a lot of
+> > knowledge of their systems, and so the type of scheme you have devised
+> > seems sensible for it.
+> 
+> Usually we have (unless we need to do reverse engineering :o). But it's
+> a pretty time-consuming task. Especially if the requirements change
+> several times in the development or lifetime of a specific product.
+> 
+> For example "oh, we now need eth", "naah, we don't wanna use usb
+> anymore", "let's take a different SoM", ... not that have pretty
+> orthogonal sets of configs we need to maintain: hardware- and non-
+> hardware-related ones. And hardware-related ones can fall into different
+> categories like fixed-attached/onboard vs. hotpluggable ones.
+> 
+> Recently I had a case where the customer requested xattr support, so
+> I had to enable general xattr support as well as per-filesystem.
+> Pretty simple, but having lots of those cases quickly sums up. One of
+> the reasons why I've written my own little config generator.
 
-We'd really like unified interface for the GPS receivers, please. In
-the Droid4 case, there's separate channel on the UART that has just
-the GPS... so it is really quite similar to normal GPS.
+I agree that the problem space you are dealing with should be made
+easier.
 
-We won't have proper driver for the modem anytime soon, but it would
-be good to be able to use the GPS in the meantime.
+> >> In embedded world, we often have scenarios where we want a really
+> >> minimal kernel, but need to enable/disable certain hi-level peripherals
+> >> in the middle of the project (eg. "oh, we also need ethernet, but we
+> >> wanna drop usb"). There we'll have to find out what actual chip is,
+> >> its corresponding driver, required subsystems, etc, and also kick off
+> >> everything we don't need anymore.
+> > 
+> > Right. One *should* be able to tell some tool, hey, here is the list of
+> > my desirable .config options. Go and figure out what I need to make that
+> > work and give me a resulting .config. Its not easy.
+> 
+> I think I've already got into a pretty usable state - at least for my
+> projects. For now only supports a few boards and limited set of
+> features, but patches are always welcomed :)
 
-Best regards,
+A solution upstream would be better ;)
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> >> I've thought about implementing some actual dependency tracking
+> >> (at least recording the auto-enabled symbols), but didn't expect that
+> >> to become practically usable anytime soon,
+> > 
+> > The ability to easily ask the kernel to enable the components needed
+> > for a respective config option *is* very useful but indeed not easy.
+> 
+> Yes, it would need to understand things like conditional definitions
+> to deduce that certain things need to be enabled first, before certain
+> drivers become choosable.
+> 
+> > This is not the only space where this problem exists. Similar problem
+> > exists for distribution packages, and dependencies. Challenges have
+> > been made for proper research towards these problems, and such research
+> > has lead distributions to opt to enable some of these algorithms.
+> 
+> The problem w/ dependencies is that there can be different types of
+> dependencies, as well as different types of software objects. Just
+> solving the expressions is only a part of the problem.
+> 
+> > This begs the question if we could learn from similar efforts on Linux
+> > for these sorts of questions. One possibility here is to evaluate the
+> > prospect of using a SAT solver with Minimally Unsatisfiable Subformulas
+> > (MUSes) support, which should be be able to address thir problem. This
+> > prospect is ongoing and currrent R&D is active, for details refer to:
+> > 
+> > https://kernelnewbies.org/KernelProjects/kconfig-sat
+> 
+> Good tip, I'll have a look at it.
+> 
+> > It certainly can be useful for components, ie, not hardware. But for
+> > hardware a one-to-one mapping of one driver to one config would be of
+> > much more use.
+> 
+> Unfortunately, we don't have this 1:1 mapping. Often drivers support
+> different sets of devices, depending on other factors, sometimes sub-
+> options (eg. different hw versions), sometimes depending on other
+> subsystems, sometimes arch-specific, etc, etc.
+> 
+> I think we should work towards that, but I doubt we'd reach that goal
+> anytime soon, and begs the question whether it's really worth all the
+> effort required for that.
 
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Code speaks, and fortunately its being worked on.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> > It would be wonderful if for instance kconfig
+> > supported a way to group a major set of components under *one* config
+> > symbol and then say: "I want this major component enabled" and then it'd
+> > go and enable all the defaults which would be required for it. 
+> 
+> Yes, thought about that, too. For example have syms for selecting whole
+> boards and features of them - a bit like this:
+> 
+>   --> Preconfigure for specific boards
+>       --> board A
+>       --> board B
+>       ...
+>   --> Enable board features
+>       --> Ethernet port
+>       --> Display
+>           --> Touch panel
+>       --> Audio
+>       ....
+> 
+> BUT: this would turn into maintenance hell, so I dropped that idea.
+> 
+> > An example is if you
+> > wanted to enable PCI on a system which didn't support it. Because of
+> > this, it seems you'd want *all* desirable configs and let a piece of
+> > software figure out what you need / can enable. And.. this is precisely
+> > where the SAT solver with MUSes could help...
+> 
+> Yes, but this piece of software first needs to know whether eg. PCI
+> is available on that HW. Oh, and things like PCI could be a dependency
+> as well as an feature on its own, depending on how you gonna use it.
+> (eg. if directly access from userland or VMs).
 
-iEYEARECAAYFAl0dLU4ACgkQMOfwapXb+vJW5gCgmYIFuIwzONDK9HMxxjeYazDy
-zG0AnAwd55BTAOguHDpuIumZ7Y7CKmmU
-=s0eS
------END PGP SIGNATURE-----
+Yes, but that is a separate problem. The way 'make localmodconfig'
+addresses this is by keeping as modules things which are already
+modules. And keeping things it found as =y as buit-in in your kernel as
+well.
 
---u3/rZRmxL6MmkK24--
+  Luis
