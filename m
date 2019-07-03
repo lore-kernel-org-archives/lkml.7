@@ -6,124 +6,64 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE758C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36EAC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3452187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64E82187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfGCXro (ORCPT
+        id S1727469AbfGCXtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:47:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25134 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfGCXro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:47:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 16:47:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
-   d="scan'208";a="154901178"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga007.jf.intel.com with ESMTP; 03 Jul 2019 16:47:41 -0700
-Date:   Thu, 4 Jul 2019 07:30:58 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190703233058.GA15825@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-7-mdf@kernel.org>
- <20190703180753.GA24723@kroah.com>
+        Wed, 3 Jul 2019 19:49:33 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46811 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfGCXtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:49:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z23so4181639ote.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 16:49:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=iYkGpwMXKxVNcmLKnQld70dQP6ASPjx6Ir+lpUcmRbeaCLNxvoPbZdbtjpO+02wvjj
+         4tt7dBbmpdK6C8YBbjvVzu3cwBQcNieJfp8BGuljGCzf4UV3p0y1a0xoDDPFf59llgJx
+         ZF+XMXns7N33mPqM7xg9zWd+Zn/ATL2/KT2E4HmjygdfzKpchJsj0afaC4tu3HrbCyXt
+         r58+DTDBJm83/3mL48DbPH1FNyKFNWK/4JHrlFZuysD3qniRz7OfQXZyESyxivDAoI3x
+         5qWKQx/gkT5jtoLDoVsV1KiShI/GyqNT0/hGdD3YpUaRQUe/NV8P0y3lmgnFGVo9s2+8
+         BKdw==
+X-Gm-Message-State: APjAAAXOP9cWicD/uv4X5/JBkUCRToqhw5IE3y6Ie7mHk++t+UzItdCu
+        +TN4snShckxGS2Qwy8lCpV5QTWen
+X-Google-Smtp-Source: APXvYqxEbFi5posAe2vKH3wHGzt+E6AjNnOUpt4KA77N6dTLlE/YyRtTIGKg7Wa3P92Zgd5G0pxitg==
+X-Received: by 2002:a9d:65ca:: with SMTP id z10mr32303635oth.334.1562197772109;
+        Wed, 03 Jul 2019 16:49:32 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id n106sm1409132ota.31.2019.07.03.16.49.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 16:49:31 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] nvmet: Fix use-after-free bug when a port is
+ removed
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Bates <sbates@raithlin.com>
+References: <20190703230304.22905-1-logang@deltatee.com>
+ <20190703230304.22905-2-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <87f99bda-3e94-2d49-2ef1-4537433c5e3f@grimberg.me>
+Date:   Wed, 3 Jul 2019 16:49:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703180753.GA24723@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190703230304.22905-2-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
-> On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
-> > From: Wu Hao <hao.wu@intel.com>
-> > 
-> > In order to support virtualization usage via PCIe SRIOV, this patch
-> > adds two ioctls under FPGA Management Engine (FME) to release and
-> > assign back the port device. In order to safely turn Port from PF
-> > into VF and enable PCIe SRIOV, it requires user to invoke this
-> > PORT_RELEASE ioctl to release port firstly to remove userspace
-> > interfaces, and then configure the PF/VF access register in FME.
-> > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
-> > ioctl to attach the port back to PF.
-> > 
-> >  Ioctl interfaces:
-> >  * DFL_FPGA_FME_PORT_RELEASE
-> >    Release platform device of given port, it deletes port platform
-> >    device to remove related userspace interfaces on PF, then
-> >    configures PF/VF access mode to VF.
-> > 
-> >  * DFL_FPGA_FME_PORT_ASSIGN
-> >    Assign platform device of given port back to PF, it configures
-> >    PF/VF access mode to PF, then adds port platform device back to
-> >    re-enable related userspace interfaces on PF.
-> 
-> Why are you not using the "generic" bind/unbind facility that userspace
-> already has for this with binding drivers to devices?  Why a special
-> ioctl?
-
-Hi Greg,
-
-Actually we think it should be safer that making the device invisble than
-just unbinding its driver. Looks like user can try to rebind it at any
-time and we don't have any method to stop them.
-
-> 
-> > --- a/include/uapi/linux/fpga-dfl.h
-> > +++ b/include/uapi/linux/fpga-dfl.h
-> > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
-> >  
-> >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
-> >  
-> > +/**
-> > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
-> > + *					struct dfl_fpga_fme_port_release)
-> > + *
-> > + * Driver releases the port per Port ID provided by caller.
-> > + * Return: 0 on success, -errno on failure.
-> > + */
-> > +struct dfl_fpga_fme_port_release {
-> > +	/* Input */
-> > +	__u32 argsz;		/* Structure length */
-> > +	__u32 flags;		/* Zero for now */
-> > +	__u32 port_id;
-> > +};
-> 
-> meta-comment, why do all of your structures for ioctls have argsz?  You
-> "know" the size of the structure already, it's part of the ioctl
-> definition.  You shouldn't need to also set it again, right?  Otherwise
-> ALL Linux ioctls would need something crazy like this.
-
-Actually we followed the same method as vfio. The major purpose should be
-extendibility, as we really need this to be sth long term maintainable.
-It really helps, if we add some new members for extentions/enhancement
-under the same ioctl. I don't think everybody needs this, but my
-consideration here is if newer generations of hardware/specs come with some
-extentions, I still hope we can resue these IOCTLs as much as we could,
-instead of creating more new ones.
-
-Thanks
-Hao
-
-> 
-> thanks,
-> 
-> greg k-h
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
