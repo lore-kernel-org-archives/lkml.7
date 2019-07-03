@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7351AC06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB00C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E8C20673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6605D20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120544;
-	bh=kxd6DhSp0GnWT3gKbEadLw4u2K2Ny8vIqZRTBU3o9zI=;
+	s=default; t=1562120551;
+	bh=c17pRlxwwPrNoXYc9Mh5aPONf3pswB3AD9mAnAJ8Vi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=coCLAPK6HAyOw8tlNwX/3osSPV83lAQEP0CKCk5ZWSEUrM6pANFmmRfRn+kPpSr6K
-	 PlyvGVf8sPQ52IsChCbBHFpgAyaOk/EdGQfatRv/t7j6mMNgUt/kUJ6/Q4V9bhKc1k
-	 GulIxUPV+55tvyJczkafGzCDjUzt+ixtq6sES48Y=
+	b=WRInWT2SFCAlBgwqe491z8x8FYEh0mx2ABk5HxnJriDPBs8c2QrejswHjo/8Qjs6R
+	 1ZmOotOqW0Ghe7G9QcbejR0FKQe7+sWAT7QZ2i+hx/vgDjfeEy6Aai6Q2xO0TOd+mC
+	 8lEkJVJp7pvdGvLFk54evuU0ttsR/IuZfHnJYdBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfGCCPl (ORCPT
+        id S1727625AbfGCCPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53944 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfGCCPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:38 -0400
+        id S1727598AbfGCCPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67686218A3;
-        Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 125B7218A3;
+        Wed,  3 Jul 2019 02:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120137;
-        bh=kxd6DhSp0GnWT3gKbEadLw4u2K2Ny8vIqZRTBU3o9zI=;
+        s=default; t=1562120133;
+        bh=c17pRlxwwPrNoXYc9Mh5aPONf3pswB3AD9mAnAJ8Vi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IP4pcFdYItVDa6lu9q8+cT88ZD/tCPgk0fJ0KK27f7rNtzR/Rb25VEOPpAXRJSGLl
-         mmU25ISJVJS2xtXONrIzkNhyZAFeXhKIQB61K1IZoURtUFTFv3v97rkxNRc4FUYwNQ
-         F9dkSoLpxM0NnoBsxzMzGIsX60BL6IxCVoj8aS3E=
+        b=RK3MR5Rc3WTTyPdrc4ttwsdBm80YnA8enqP86nb93XWdOiBXdsSxn/kFn9pJybHQa
+         HfOcWd7mk8J7GVAGRg/fM692urag0nrvX1/Qs9/lCknbcN/Vskga2NAl9c9tRPHMjK
+         DQ8EhWE43VO2ILQTxX/mH+m+1uf2G6cMYJFpX2/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 14/39] x86/efi: fix a -Wtype-limits compilation warning
-Date:   Tue,  2 Jul 2019 22:14:49 -0400
-Message-Id: <20190703021514.17727-14-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 11/39] ARM: dts: gemini Fix up DNS-313 compatible string
+Date:   Tue,  2 Jul 2019 22:14:46 -0400
+Message-Id: <20190703021514.17727-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -61,37 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 919aef44d73d5d0c04213cb1bc31149cc074e65e ]
+[ Upstream commit 36558020128b1a48b7bddd5792ee70e3f64b04b0 ]
 
-Compiling a kernel with W=1 generates this warning,
+It's a simple typo in the DNS file, which was pretty serious.
+No scripts were working properly. Fix it up.
 
-arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-
-Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running ...")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/quirks.c | 2 +-
+ arch/arm/boot/dts/gemini-dlink-dns-313.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index a25a9fd987a9..529522c62d89 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -724,7 +724,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
- 	 * page faulting on these addresses isn't expected.
- 	 */
--	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
-+	if (phys_addr <= 0x0fff)
- 		return;
+diff --git a/arch/arm/boot/dts/gemini-dlink-dns-313.dts b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
+index b12504e10f0b..360642a02a48 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dns-313.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
+@@ -11,7 +11,7 @@
  
- 	/*
+ / {
+ 	model = "D-Link DNS-313 1-Bay Network Storage Enclosure";
+-	compatible = "dlink,dir-313", "cortina,gemini";
++	compatible = "dlink,dns-313", "cortina,gemini";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
 -- 
 2.20.1
 
