@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FDCC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AC6C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D627218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE38218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfGCLEU (ORCPT
+        id S1727205AbfGCLES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:04:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51651 "EHLO
+        Wed, 3 Jul 2019 07:04:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51630 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfGCLEO (ORCPT
+        with ESMTP id S1727079AbfGCLEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:04:14 -0400
+        Wed, 3 Jul 2019 07:04:11 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hid3b-0002cd-PQ; Wed, 03 Jul 2019 13:04:11 +0200
-Message-Id: <20190703105916.657025797@linutronix.de>
+        id 1hid3a-0002c6-0k; Wed, 03 Jul 2019 13:04:10 +0200
+Message-Id: <20190703105916.377516522@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Jul 2019 12:54:43 +0200
+Date:   Wed, 03 Jul 2019 12:54:40 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch 12/18] x86/apic: Remove dest argument from
- __default_send_IPI_shortcut()
+Subject: [patch 09/18] smp/hotplug: Track booted once CPUs in a cpumask
 References: <20190703105431.096822793@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,120 +42,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDM states:
+The booted once information which is required to deal with the MCE
+broadcast issue on X86 correctly is stored in the per cpu hotplug state,
+which is perfectly fine for the intended purpose.
 
-  "The destination shorthand field of the ICR allows the delivery mode to be
-   by-passed in favor of broadcasting the IPI to all the processors on the
-   system bus and/or back to itself (see Section 10.6.1, Interrupt Command
-   Register (ICR)). Three destination shorthands are supported: self, all
-   excluding self, and all including self. The destination mode is ignored
-   when a destination shorthand is used."
+X86 needs that information for supporting NMI broadcasting via shortcuts,
+but retrieving it from per cpu data is cumbersome.
 
-So there is no point to supply the destination mode to the shorthand
-delivery function.
+Move it to a cpumask so the information can be checked against the
+cpu_present_mask quickly.
+
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/apic/apic_flat_64.c |    6 ++----
- arch/x86/kernel/apic/ipi.c          |   15 +++++++--------
- arch/x86/kernel/apic/local.h        |    2 +-
- arch/x86/kernel/apic/probe_64.c     |    2 +-
- 4 files changed, 11 insertions(+), 14 deletions(-)
+ include/linux/cpumask.h |    2 ++
+ kernel/cpu.c            |   11 +++++++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -90,8 +90,7 @@ static void flat_send_IPI_allbutself(int
- 			_flat_send_IPI_mask(mask, vector);
- 		}
- 	} else if (num_online_cpus() > 1) {
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT,
--					    vector, apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
- 	}
- }
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -115,6 +115,8 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_active(cpu)		((cpu) == 0)
+ #endif
  
-@@ -100,8 +99,7 @@ static void flat_send_IPI_all(int vector
- 	if (vector == NMI_VECTOR) {
- 		flat_send_IPI_mask(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC,
--					    vector, apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
- 	}
- }
- 
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -16,7 +16,7 @@ static inline void __xapic_wait_icr_idle
- 		cpu_relax();
- }
- 
--void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest)
-+void __default_send_IPI_shortcut(unsigned int shortcut, int vector)
++extern cpumask_t cpus_booted_once_mask;
++
+ static inline void cpu_max_bits_warn(unsigned int cpu, unsigned int bits)
  {
- 	/*
- 	 * Subtle. In the case of the 'never do double writes' workaround
-@@ -33,9 +33,10 @@ void __default_send_IPI_shortcut(unsigne
- 	__xapic_wait_icr_idle();
+ #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -62,7 +62,6 @@ struct cpuhp_cpu_state {
+ 	bool			rollback;
+ 	bool			single;
+ 	bool			bringup;
+-	bool			booted_once;
+ 	struct hlist_node	*node;
+ 	struct hlist_node	*last;
+ 	enum cpuhp_state	cb_state;
+@@ -76,6 +75,10 @@ static DEFINE_PER_CPU(struct cpuhp_cpu_s
+ 	.fail = CPUHP_INVALID,
+ };
  
- 	/*
--	 * No need to touch the target chip field
-+	 * No need to touch the target chip field. Also the destination
-+	 * mode is ignored when a shorthand is used.
++#ifdef CONFIG_SMP
++cpumask_t cpus_booted_once_mask;
++#endif
++
+ #if defined(CONFIG_LOCKDEP) && defined(CONFIG_SMP)
+ static struct lockdep_map cpuhp_state_up_map =
+ 	STATIC_LOCKDEP_MAP_INIT("cpuhp_state-up", &cpuhp_state_up_map);
+@@ -433,7 +436,7 @@ static inline bool cpu_smt_allowed(unsig
+ 	 * CPU. Otherwise, a broadacasted MCE observing CR4.MCE=0b on any
+ 	 * core will shutdown the machine.
  	 */
--	cfg = __prepare_ICR(shortcut, vector, dest);
-+	cfg = __prepare_ICR(shortcut, vector, 0);
- 
- 	/*
- 	 * Send the IPI. The write to APIC_ICR fires this off.
-@@ -202,8 +203,7 @@ void default_send_IPI_allbutself(int vec
- 	if (no_broadcast || vector == NMI_VECTOR) {
- 		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
--					    apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector);
- 	}
+-	return !per_cpu(cpuhp_state, cpu).booted_once;
++	return !cpumask_test_cpu(cpu, &cpus_booted_once_mask);
  }
+ #else
+ static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
+@@ -1066,7 +1069,7 @@ void notify_cpu_starting(unsigned int cp
+ 	int ret;
  
-@@ -212,14 +212,13 @@ void default_send_IPI_all(int vector)
- 	if (no_broadcast || vector == NMI_VECTOR) {
- 		apic->send_IPI_mask(cpu_online_mask, vector);
- 	} else {
--		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
--					    apic->dest_logical);
-+		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
- 	}
- }
- 
- void default_send_IPI_self(int vector)
+ 	rcu_cpu_starting(cpu);	/* Enables RCU usage on this CPU. */
+-	st->booted_once = true;
++	cpumask_set_cpu(cpu, &cpus_booted_once_mask);
+ 	while (st->state < target) {
+ 		st->state++;
+ 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
+@@ -2324,7 +2327,7 @@ void __init boot_cpu_init(void)
+ void __init boot_cpu_hotplug_init(void)
  {
--	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, apic->dest_logical);
-+	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
+ #ifdef CONFIG_SMP
+-	this_cpu_write(cpuhp_state.booted_once, true);
++	cpumask_set_cpu(smp_processor_id(), &cpus_booted_once_mask);
+ #endif
+ 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
  }
- 
- /* must come after the send_IPI functions above for inlining */
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -38,7 +38,7 @@ static inline unsigned int __prepare_ICR
- 	return icr;
- }
- 
--void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest);
-+void __default_send_IPI_shortcut(unsigned int shortcut, int vector);
- 
- /*
-  * This is used to send an IPI with no shorthand notation (the destination is
---- a/arch/x86/kernel/apic/probe_64.c
-+++ b/arch/x86/kernel/apic/probe_64.c
-@@ -40,7 +40,7 @@ void __init default_setup_apic_routing(v
- 
- void apic_send_IPI_self(int vector)
- {
--	__default_send_IPI_shortcut(APIC_DEST_SELF, vector, APIC_DEST_PHYSICAL);
-+	__default_send_IPI_shortcut(APIC_DEST_SELF, vector);
- }
- 
- int __init default_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
 
 
