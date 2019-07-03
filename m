@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6D6C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C12C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FCF21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737E221881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120164;
-	bh=Lu7Rm6lZyhB8upg6bSwZbm8eUXjav1L23VNJbikpp7A=;
+	s=default; t=1562120166;
+	bh=Ihna0SpiCL/LQLBaYsObx0ex65FIk9LvQahUnnOlOhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uA1/XpnbJXSTYTlMD3RIcIERoiKvrIzzp8a/MS3+Bw893IKNJjq7Ng9HQ43ImPSCA
-	 jzKvLViI6Jweh1ERP3e2hDSc+FmTOu1YwPuohc3GkJQD9dFSGn8MwAFuZtnkKj9jf7
-	 5wLTTTp4V+qXs5yLTlDaRaZJ1mQ4UrCEo84tSrPU=
+	b=vh3gWwBRQR9ER236JvaaAvFBPyr9cURTvvlXOYX2kgJP8TA1TomraIM4On/6jjQH1
+	 I3yGnnO4ubONry9oZTOfVy7W2W9UatBQeB1ePEo0VP3OUcJQPpAzrQuWE8sobEsc4O
+	 pTQIeo1N+tKvmclGiTav0tflL2/ZrlVb4bZHIWcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfGCCQC (ORCPT
+        id S1727827AbfGCCQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727745AbfGCCPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:52 -0400
+        id S1727763AbfGCCPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DE9218A3;
-        Wed,  3 Jul 2019 02:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4260B218A5;
+        Wed,  3 Jul 2019 02:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120150;
-        bh=Lu7Rm6lZyhB8upg6bSwZbm8eUXjav1L23VNJbikpp7A=;
+        s=default; t=1562120152;
+        bh=Ihna0SpiCL/LQLBaYsObx0ex65FIk9LvQahUnnOlOhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrX+7Z5QYbmpcjLn2AWD4lFCHZaEe2VMFL9evJ36/VucMBFM8uVZzTtb4mnimxBPj
-         45C+ieJ1TXkm0QUfddwFmKqkRlahNKNeeQSz6drb8bMhENC5F20LhyppMSkLhZsG4m
-         Uyt3Ruhnhk12be5irczrPnUDlLHZmijzkfGjUsyk=
+        b=E0e9ocmSAw4HU9aw0zpx9KatFIu1hEkmzcds5EFlC2O8hShJoWs5v1OckqwL4QCAG
+         pQuOyZjyENxhsvBcXXku7nlCmQdaOyNQMp7D4/vd9fSR/l58lq2ZhzsUBH6gshjP60
+         7EGipRxSjVWNkqRq8DwvvuvDrjmXqckOMhMmZmMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 25/39] pinctrl: ocelot: fix pinmuxing for pins after 31
-Date:   Tue,  2 Jul 2019 22:15:00 -0400
-Message-Id: <20190703021514.17727-25-sashal@kernel.org>
+Cc:     Milan Broz <gmazyland@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 27/39] dm verity: use message limit for data block corruption message
+Date:   Tue,  2 Jul 2019 22:15:02 -0400
+Message-Id: <20190703021514.17727-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -59,74 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Milan Broz <gmazyland@gmail.com>
 
-[ Upstream commit 4b36082e2e09c2769710756390d54cfca563ed96 ]
+[ Upstream commit 2eba4e640b2c4161e31ae20090a53ee02a518657 ]
 
-The actual layout for OCELOT_GPIO_ALT[01] when there are more than 32 pins
-is interleaved, i.e. OCELOT_GPIO_ALT0[0], OCELOT_GPIO_ALT1[0],
-OCELOT_GPIO_ALT0[1], OCELOT_GPIO_ALT1[1]. Introduce a new REG_ALT macro to
-facilitate the register offset calculation and use it where necessary.
+DM verity should also use DMERR_LIMIT to limit repeat data block
+corruption messages.
 
-Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ocelot.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/md/dm-verity-target.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index d2478db975bd..fb76fb2e9ea5 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -396,7 +396,7 @@ static int ocelot_pin_function_idx(struct ocelot_pinctrl *info,
- 	return -1;
- }
+diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+index f4c31ffaa88e..cec1c0ff33eb 100644
+--- a/drivers/md/dm-verity-target.c
++++ b/drivers/md/dm-verity-target.c
+@@ -236,8 +236,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
+ 		BUG();
+ 	}
  
--#define REG(r, info, p) ((r) * (info)->stride + (4 * ((p) / 32)))
-+#define REG_ALT(msb, info, p) (OCELOT_GPIO_ALT0 * (info)->stride + 4 * ((msb) + ((info)->stride * ((p) / 32))))
+-	DMERR("%s: %s block %llu is corrupted", v->data_dev->name, type_str,
+-		block);
++	DMERR_LIMIT("%s: %s block %llu is corrupted", v->data_dev->name,
++		    type_str, block);
  
- static int ocelot_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 				 unsigned int selector, unsigned int group)
-@@ -412,19 +412,21 @@ static int ocelot_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 
- 	/*
- 	 * f is encoded on two bits.
--	 * bit 0 of f goes in BIT(pin) of ALT0, bit 1 of f goes in BIT(pin) of
--	 * ALT1
-+	 * bit 0 of f goes in BIT(pin) of ALT[0], bit 1 of f goes in BIT(pin) of
-+	 * ALT[1]
- 	 * This is racy because both registers can't be updated at the same time
- 	 * but it doesn't matter much for now.
- 	 */
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT0, info, pin->pin),
-+	regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
- 			   BIT(p), f << p);
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT1, info, pin->pin),
-+	regmap_update_bits(info->map, REG_ALT(1, info, pin->pin),
- 			   BIT(p), f << (p - 1));
- 
- 	return 0;
- }
- 
-+#define REG(r, info, p) ((r) * (info)->stride + (4 * ((p) / 32)))
-+
- static int ocelot_gpio_set_direction(struct pinctrl_dev *pctldev,
- 				     struct pinctrl_gpio_range *range,
- 				     unsigned int pin, bool input)
-@@ -445,9 +447,9 @@ static int ocelot_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
- 	unsigned int p = offset % 32;
- 
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT0, info, offset),
-+	regmap_update_bits(info->map, REG_ALT(0, info, offset),
- 			   BIT(p), 0);
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT1, info, offset),
-+	regmap_update_bits(info->map, REG_ALT(1, info, offset),
- 			   BIT(p), 0);
- 
- 	return 0;
+ 	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
+ 		DMERR("%s: reached maximum errors", v->data_dev->name);
 -- 
 2.20.1
 
