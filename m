@@ -2,108 +2,115 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA35C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCECC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F48218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D358F21871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562173673;
-	bh=4eaUjlGIh2ae11eaOiVm5gdPPuQ5PSi+Agb5MdWcY7c=;
+	s=default; t=1562173694;
+	bh=0ouf0Y73C+G8kK8V/y9ZdKcbKz2QNfNH9xVkkqZP1JA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LrvC1zOJ2Kz/FiETNfsd9pFPp7yWA634FA3ivcduQ7P4FLLUlBDAnifmqZqGlX8F+
-	 2pYhYRl9WyFDtzhoB37xu1bgc5/pFcZs6MyOC4j87/DKiJqVLrW+1monYzZyNUWeXF
-	 U6ioTINl2YOP1zWBdpeYEhhO5DXg5GzJ2bPBjhS8=
+	b=XKZUmKnd6Fc8J2Kq/cTB/rJFqMV0PpGxhvYwlnBNl17kJiyjkFLVU08wFYYk6pozN
+	 KCiofF9NITNcD4Xv4KX/19sOsLF9T3hPLpFMATJUrzMEUA9fLdALs+7wbhWiltHIBI
+	 gefFfPMJmPpC5C8gVcUXfo9QmkbRrjSgQ34Dqeeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfGCRHw (ORCPT
+        id S1727152AbfGCRIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:07:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44292 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCRHv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:07:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4eaUjlGIh2ae11eaOiVm5gdPPuQ5PSi+Agb5MdWcY7c=; b=Sl9TtrMVk5jHRJO6Tm1nDhQxN
-        Jy8RqRzuX9yRj9bDAwC3iT79dhs1UkCnaNVfFhZqWdURFTgyyP6Mgajg5078j2C7i8Y4xCzM4yqyb
-        swRRM3inGJL5aenRDHMvMtsv+yIBkTxlGTskktyUrlenJELKT7j1x0llldKmZmOpuTK3E=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hiijR-0006vj-7N; Wed, 03 Jul 2019 17:07:45 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id E21EB1128FB2; Wed,  3 Jul 2019 18:07:44 +0100 (BST)
-Date:   Wed, 3 Jul 2019 18:07:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH AUTOSEL 5.1 11/51] ASoC: sun4i-codec: fix first delay on
- Speaker
-Message-ID: <20190703170744.GB3490@sirena.org.uk>
-References: <20190626034117.23247-1-sashal@kernel.org>
- <20190626034117.23247-11-sashal@kernel.org>
- <20190626103741.GU5316@sirena.org.uk>
- <20190703142047.GX11506@sasha-vm>
+        Wed, 3 Jul 2019 13:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfGCRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:08:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE6EE2080C;
+        Wed,  3 Jul 2019 17:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562173692;
+        bh=0ouf0Y73C+G8kK8V/y9ZdKcbKz2QNfNH9xVkkqZP1JA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gJ0o71u9D8lYdXoiiMKqqplUcWvoc5CoTLCEvXJliqmrj/bLCD4U7ZquS4QjDfQ5S
+         y6bAUovvtz1ELtv2hiWjY7X3gqzzZwKjN1wdiZhn6duk1o19EUlj0mUvmKXPY6BMpf
+         chEbpSaJjWxWVemuFC7cZlw0f5molzIeYgqrlTLE=
+Date:   Wed, 3 Jul 2019 19:08:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] uapi: General notification ring definitions [ver #5]
+Message-ID: <20190703170810.GB24672@kroah.com>
+References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
+ <156173691411.15137.2073887155273175167.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190703142047.GX11506@sasha-vm>
-X-Cookie: You will be successful in your work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <156173691411.15137.2073887155273175167.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 04:48:34PM +0100, David Howells wrote:
+> Add UAPI definitions for the general notification ring, including the
+> following pieces:
+> 
+>  (1) struct watch_notification.
+> 
+>      This is the metadata header for each entry in the ring.  It includes a
+>      type and subtype that indicate the source of the message
+>      (eg. WATCH_TYPE_MOUNT_NOTIFY) and the kind of the message
+>      (eg. NOTIFY_MOUNT_NEW_MOUNT).
+> 
+>      The header also contains an information field that conveys the
+>      following information:
+> 
+> 	- WATCH_INFO_LENGTH.  The size of the entry (entries are variable
+>           length).
+> 
+> 	- WATCH_INFO_ID.  The watch ID specified when the watchpoint was
+>           set.
+> 
+> 	- WATCH_INFO_TYPE_INFO.  (Sub)type-specific information.
+> 
+> 	- WATCH_INFO_FLAG_*.  Flag bits overlain on the type-specific
+>           information.  For use by the type.
+> 
+>      All the information in the header can be used in filtering messages at
+>      the point of writing into the buffer.
+> 
+>  (2) struct watch_queue_buffer.
+> 
+>      This describes the layout of the ring.  Note that the first slots in
+>      the ring contain a special metadata entry that contains the ring
+>      pointers.  The producer in the kernel knows to skip this and it has a
+>      proper header (WATCH_TYPE_META, WATCH_META_SKIP_NOTIFICATION) that
+>      indicates the size so that the ring consumer can handle it the same as
+>      any other record and just skip it.
+> 
+>      Note that this means that ring entries can never be split over the end
+>      of the ring, so if an entry would need to be split, a skip record is
+>      inserted to wrap the ring first; this is also WATCH_TYPE_META,
+>      WATCH_META_SKIP_NOTIFICATION.
+> 
+>  (3) WATCH_INFO_NOTIFICATIONS_LOST.
+> 
+>      This is a flag that can be set in the metadata header by the kernel to
+>      indicate that at least one message was lost since it was last cleared
+>      by userspace.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
---/NkBOFFp2J2Af1nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jul 03, 2019 at 10:20:47AM -0400, Sasha Levin wrote:
-> On Wed, Jun 26, 2019 at 11:37:41AM +0100, Mark Brown wrote:
-> > On Tue, Jun 25, 2019 at 11:40:27PM -0400, Sasha Levin wrote:
-
-> > > Allwinner DAC seems to have a delay in the Speaker audio routing. When
-> > > playing a sound for the first time, the sound gets chopped. On a second
-> > > play the sound is played correctly. After some time (~5s) the issue gets
-> > > back.
-
-> > This is inserting a big delay in the startup and might disrupt some
-> > production system.
-
-> But that would be a problem upstream as well, no?
-
-There's a difference between a problem that gets introduced in normal
-development tracking upstream and something that gets dropped into a
-stable release, we don't want people deciding that stable is something
-they can't just take en masse without really looking at what's in there.
-
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0c4OAACgkQJNaLcl1U
-h9CWYgf+Jnwet2KcfLZTzlj/yyDEIF75VsnK1s60xns9FE+7EMVYDdOANMQ3nM4t
-ghRs/y65BPCnV9RX81DiWefJyw2axtXSdhGLnnifg7NFMuSSgzSajTEVr+IzT7J5
-v2dTHvpq1DHHL9Vd+Ma4WqAYmtg5sHbMlSjtLi3DnZM4C7JEZ/N5OalA92wNyfCU
-iUnW9tuoJuycWJ7bhL5xAeRRMa05sq+ElrbnnnvOu1X02qTHn8UWtw1Zo4w5HRti
-i3xVF7qBPXAoHQAl5pLq0JocrDWoyptA82jVe/n9zKke7xlEuzAhrlDAErP/qSHw
-5I5+NWPQLtcl2UBTLwbpwr3xGPyTQA==
-=68IP
------END PGP SIGNATURE-----
-
---/NkBOFFp2J2Af1nK--
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
