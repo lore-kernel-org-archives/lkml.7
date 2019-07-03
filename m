@@ -2,51 +2,53 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7453C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1883AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDFC21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7AA120673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120528;
-	bh=ALO5GQgjFEmrI84YIJBgdTgdTHVt7LTl74XEQehwXBE=;
+	s=default; t=1562120536;
+	bh=9Yoh8I6freaWFY0+Uec5FuoOX+T7aUlDifN96wj7du0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gN3M/vGJoyLPdaeGSMvm0JheiVPOmET+MWl6IQ9Diea252nw6Tf5bSsZ+VLTnX1kL
-	 bkJhIruIgsXHJF/FwraXgnIxdXnPt8FeOqhL3yAA+wFrz/gQArRdwcOvi1fTGHhl2w
-	 8IHLLdO0NxLAlINaUFT31jK93KHCRwF4KsEN+z+I=
+	b=vtCFs2878FeWTFWQDfhZYywdQLRpNHh5Pez5s+Co5D5J9GG4SebUMcGButFtO+Slo
+	 UbmwmPhz5y+JPI9an2asTpqshrA7MOinlgXxr3slWZ3Kh2x1U4ihunoAsybT/dS6NY
+	 SaXvOPetP5NtO52BdXlZWQenRpWTwiaj1BYBIrDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfGCCWH (ORCPT
+        id S1727691AbfGCCPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbfGCCPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:46 -0400
+        id S1727646AbfGCCPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96561218A3;
-        Wed,  3 Jul 2019 02:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1CB021873;
+        Wed,  3 Jul 2019 02:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120145;
-        bh=ALO5GQgjFEmrI84YIJBgdTgdTHVt7LTl74XEQehwXBE=;
+        s=default; t=1562120139;
+        bh=9Yoh8I6freaWFY0+Uec5FuoOX+T7aUlDifN96wj7du0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZytB2HuEtGGVgkXdmq9wvvCS2hot1zXl7dYfIwLfnSKVjTxVpvknHDgQQtq6LlYU
-         0VNv6CViMsX6ztOfkEJ0+lFQmGTQPDiUpHD3Ly0+4gd4s0mZEDng+WcnPzTNZhW6d4
-         Pl8QRG3x2+HgJO9ETZhpbiCtEgP6/jrrHprz6JAU=
+        b=z0o9saU/7RymDFw26ngxxlvddt3HJORSt5doQCMdTNvG9IvTqxqpVF5hfge3Yw0SX
+         AMqEu/9m0qu0EW3Q6UJPPO+tG+RGlc62uAK1VFY0gExEozHZDIwR+nYPJno/vnHAoU
+         30Wkzpeq1OBK0XOLgQFjpXOfdjcq7Rkk1tygvjB4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergej Benilov <sergej.benilov@googlemail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 20/39] sis900: fix TX completion
-Date:   Tue,  2 Jul 2019 22:14:55 -0400
-Message-Id: <20190703021514.17727-20-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, kernel-janitors@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 15/39] x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
+Date:   Tue,  2 Jul 2019 22:14:50 -0400
+Message-Id: <20190703021514.17727-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -59,117 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergej Benilov <sergej.benilov@googlemail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
+[ Upstream commit ea136a112d89bade596314a1ae49f748902f4727 ]
 
-Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
-outbound throughput is dramatically reduced for some connections, as sis900
-is doing TX completion within idle states only.
+The left shift of unsigned int cpu_khz will overflow for large values of
+cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
+For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
 
-Make TX completion happen after every transmitted packet.
-
-Test:
-netperf
-
-before patch:
-> netperf -H remote -l -2000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
-
- 87380 327680 327680    253.44      0.06
-
-after patch:
-> netperf -H remote -l -10000000 -- -s 1000000
-MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
-Recv   Send    Send
-Socket Socket  Message  Elapsed
-Size   Size    Size     Time     Throughput
-bytes  bytes   bytes    secs.    10^6bits/sec
-
- 87380 327680 327680    5.38       14.89
-
-Thx to Dave Miller and Eric Dumazet for helpful hints
-
-Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: kernel-janitors@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kernel/apic/apic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
-index 67f9bb6e941b..9b036c857b1d 100644
---- a/drivers/net/ethernet/sis/sis900.c
-+++ b/drivers/net/ethernet/sis/sis900.c
-@@ -1057,7 +1057,7 @@ sis900_open(struct net_device *net_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
- 
-@@ -1578,7 +1578,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
- 	sw32(txdp, sis_priv->tx_ring_dma);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- }
- 
- /**
-@@ -1618,7 +1618,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 			spin_unlock_irqrestore(&sis_priv->lock, flags);
- 			return NETDEV_TX_OK;
- 	}
--	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
-+	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
- 	sw32(cr, TxENA | sr32(cr));
- 
- 	sis_priv->cur_tx ++;
-@@ -1674,7 +1674,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 	do {
- 		status = sr32(isr);
- 
--		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
-+		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
- 			/* nothing intresting happened */
- 			break;
- 		handled = 1;
-@@ -1684,7 +1684,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
- 			/* Rx interrupt */
- 			sis900_rx(net_dev);
- 
--		if (status & (TxURN | TxERR | TxIDLE))
-+		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
- 			/* Tx interrupt */
- 			sis900_finish_xmit(net_dev);
- 
-@@ -1896,8 +1896,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
- 
- 		if (tx_status & OWN) {
- 			/* The packet is not transmitted yet (owned by hardware) !
--			 * Note: the interrupt is generated only when Tx Machine
--			 * is idle, so this is an almost impossible case */
-+			 * Note: this is an almost impossible condition
-+			 * in case of TxDESC ('descriptor interrupt') */
- 			break;
- 		}
- 
-@@ -2473,7 +2473,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
- 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
- 
- 	/* Enable all known interrupts by setting the interrupt mask. */
--	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
-+	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
- 	sw32(cr, RxENA | sr32(cr));
- 	sw32(ier, IE);
- 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index b7bcdd781651..ec6225cb94f9 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1458,7 +1458,8 @@ static void apic_pending_intr_clear(void)
+ 		if (queued) {
+ 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
+ 				ntsc = rdtsc();
+-				max_loops = (cpu_khz << 10) - (ntsc - tsc);
++				max_loops = (long long)cpu_khz << 10;
++				max_loops -= ntsc - tsc;
+ 			} else {
+ 				max_loops--;
+ 			}
 -- 
 2.20.1
 
