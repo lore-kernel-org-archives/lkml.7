@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A15C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFA0C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256DB218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9527218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="onN8jeMR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lo998Vzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfGCLvx (ORCPT
+        id S1726993AbfGCLxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:51:53 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:40205 "EHLO
+        Wed, 3 Jul 2019 07:53:20 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:37355 "EHLO
         mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfGCLvw (ORCPT
+        with ESMTP id S1725786AbfGCLxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:51:52 -0400
-Received: by mail-wm1-f53.google.com with SMTP id v19so2038179wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 04:51:50 -0700 (PDT)
+        Wed, 3 Jul 2019 07:53:19 -0400
+Received: by mail-wm1-f53.google.com with SMTP id f17so2061198wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 04:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=dmgOtc0ef0vbCSF0u6LPGuLXsa2YCDJRWJ/SIOjqW40=;
-        b=onN8jeMRJY50imh5s232CApZjReU1Aepo/SIzqZj8uyG7KxjdgK69PXHs5V+t9UWVh
-         O4APw4Hed8+MpBq6DkCwNr1sOyf+Yp92YmIj0/JxTdrKP2Fh6EybkBI4CPthXto+Xbr0
-         fJGh5pi64hwMiVSFFNvectw5MIQz4iPzCpTQEoXhrvjSvPXERr8bCpo734nUWXCG9jZa
-         QmXSIEpDUr8IBEhw7xtccViL51+LyaU0+vlnw9Jxuzel3Hda5OjqiDRB6vJfrP+Oom9E
-         hpOav+wZ5jWSU/iRGAshsCNq5uJ0xMkq7tFibkSaw1DP1F9btOKSGflbtP+r1srcKIjC
-         JpSQ==
+        bh=ECYcI8AlM2+Up/9U9dhONTZIuaFVroymFXWiMWPGvhA=;
+        b=Lo998VzvGouMh4VaHm3pLpdC8XOaBts7PQecaj21Fj9ykSqkytbOHmWEHR/xa/XM2Q
+         m12klRrbHu6kFGbfGpU6YcyM1Vx0SywqPrcGUud+p67+r+FBP413FPAZeeTzkQMb5b6K
+         5diORxd/AlYNhcAGRNaP+MB5StUHBcRKWkqzuoADPICZfKVTmc0X99fHnTquMn4HaAVi
+         ws9XvLVo11qAE0qVeAuq5at6M68rPd5cx7IwPLoPL+qX58tfv7oCpukPnfEEa7L0URRY
+         9voXuft/bbTLaVXm4pnm94Yvy79QB634ZVvTTcY6GPhsA0RkrtaqIRnoyG7gGdAtMIT7
+         1xCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=dmgOtc0ef0vbCSF0u6LPGuLXsa2YCDJRWJ/SIOjqW40=;
-        b=cjxqXaq49LJfpnZbxgucmkicQC5D8NIFaciOTHyopV9LcfheAOmxKT/lxAV23DxdZf
-         uoYy9v8Fmbv3yYwZ9ARoLeHQ0qd4JXLfpow1qhjZqK0Ep7Y/hz2laHyJLe5hTj7AO5Uw
-         fXstCdP06MvvChi9PuCbB32ogHAM0k6DjLshpv4+mbRW5Yebn+XnNoRIi3MIoHRUsO+V
-         a1JBDmWpSBYtw0hisWT48u/quNc/D3/eX3doOLMkJNOKwGpJmdwRNRptUgSZfn+my/fc
-         3bfwYa/0A09EzYl0YDHOCztzjUpCvozfmPgYz2grE5HWxlFHVbccWlRxWZ8uCEnBz6m7
-         ISfg==
-X-Gm-Message-State: APjAAAXDMsjxVrm3+OyiiaC7b6bl1hbSxpR3WjmNBZNWxGxczJENAX/E
-        CnF/YBOo6vjsKUjaAjfzfXOFEQ==
-X-Google-Smtp-Source: APXvYqwtmuYxu0DeX2VCYgfGjgEDXUxplZP3POyu+75SNarwPxYKc8rpIh/ZyDZ3MDj4L4AC5GM6HQ==
-X-Received: by 2002:a1c:b782:: with SMTP id h124mr7804735wmf.20.1562154709486;
-        Wed, 03 Jul 2019 04:51:49 -0700 (PDT)
+        bh=ECYcI8AlM2+Up/9U9dhONTZIuaFVroymFXWiMWPGvhA=;
+        b=IzIZTLs+i6PGpBMqQMQgwz68pKS3ueYqewPX7FICvvvOGVDXIthw8F6WZFztLEEd9Z
+         68Z8D5k4QgjxFYVeGkkQxAvBViLOZIutfZyb99cbqjL5r8Y3UGsRSztNjisfSXBgTzLg
+         CIw1/XWDmKR1tHMsA4akNomJxAq45VwkLI3utHf4t/IioVkY1gGRIeKEbHMMgV9OwRtr
+         aSWGGkBRbGN6JKt9FvqLAG8xaD9bNWikk8nkBMdfPjjA4Dx7xEafp91y5aoLlz9jnEj5
+         Zgj0YGkf+i7nOKJlLii6drwNo3GwW6siC95DkxUJzL3N3XDLxP/mWLE+vHka+nDOZG3g
+         Bgww==
+X-Gm-Message-State: APjAAAVYZ7wzb/HwiAoRV4Qi5q96z0NTPGWf+BrOm6/fNQHXPqne9nOj
+        jJ1ty76VSdFJ1CJNgkKtiRAcSg==
+X-Google-Smtp-Source: APXvYqw1UydkA6XdM3tn/Mh6Trc55NumI7hz88+bOC34gP3xPxq6ffraSlp3cxtYo3lA+fJa+NR25g==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr8004579wmg.7.1562154796842;
+        Wed, 03 Jul 2019 04:53:16 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z1sm2217403wrv.90.2019.07.03.04.51.48
+        by smtp.gmail.com with ESMTPSA id h8sm2000695wmf.12.2019.07.03.04.53.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 04:51:49 -0700 (PDT)
-Subject: Re: [RFC/RFT v3 09/14] arm64: dts: move common G12A & G12B modes to
- meson-g12-common.dtsi
+        Wed, 03 Jul 2019 04:53:16 -0700 (PDT)
+Subject: Re: [RFC/RFT v3 11/14] arm64: dts: meson-g12a: add cpus OPP table
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20190701091258.3870-1-narmstrong@baylibre.com>
- <20190701091258.3870-10-narmstrong@baylibre.com>
- <CAFBinCA537EV9kzz+5syaF1Q-stTJ4no+NBdcYD3QL-FJSoWfQ@mail.gmail.com>
+ <20190701091258.3870-12-narmstrong@baylibre.com>
+ <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -119,12 +118,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <e49bfb8f-23e9-c834-62c7-a40528a2ef06@baylibre.com>
-Date:   Wed, 3 Jul 2019 13:51:48 +0200
+Message-ID: <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
+Date:   Wed, 3 Jul 2019 13:53:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCA537EV9kzz+5syaF1Q-stTJ4no+NBdcYD3QL-FJSoWfQ@mail.gmail.com>
+In-Reply-To: <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -133,37 +132,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 01:54, Martin Blumenstingl wrote:
+On 03/07/2019 01:47, Martin Blumenstingl wrote:
 > Hi Neil,
 > 
 > On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> To simplify the representation of differences betweem the G12A and G12B
->> SoCs, move the common nodes into a meson-g12-common.dtsi file and
->> express the CPU nodes and differences in meson-g12a.dtsi and meson-g12b.dtsi.
+>> Add the OPP table taken from the vendor u200 and u211 DTS.
 >>
->> This separation will help for DVFS and future Amlogic SM1 Family support.
+>> The Amlogic G12A SoC seems to available in 3 types :
+>> - low-speed: up to 1,8GHz
+>> - mid-speed: up to 1,908GHz
+>> - high-speed: up to 2.1GHz
 >>
->> The sd_emmc_a quirk is added in the g12a/g12b since since it's already
->> known the sd_emmc_a controller is fixed in the next SM1 SoC family.
-> too bad they named the upcoming SoC family SM1
+>> And the S905X2 opp voltages are slightly higher than the S905D2
+>> OPP voltages for the low-speed table.
+>>
+>> This adds the conservative OPP table with the S905X2 higher voltages
+>> and the maximum low-speed OPP frequency.
+> have you considered all three as separate voltage tables?
+> you're other patches are assigning the OPP table to the CPU in the
+> board.dts anyways, so it's easy to use different OPP tables for
+> different boards
 
-Yeah weird naming, but seems SM1 is the new "AI" oriented SoC family
+We can't assume the board and the CPU type :-/
 
-> 
-> does it make sense to name this file "meson-g12a-g12b-sm1-common.dtsi" instead?
-> do you know whether there will be a successor to G12B and what it's
-> code-name will be?
-
-meson-g12a-g12b-sm1-common seems a bit long to me...
-
-We don't have naming of the future SoCs, since SM1 is only available on
-prototypes yet.
+Kevin told me about cpufreq policy, where we could add a policy reading the
+eFUSE and changing the max frequency, then we could add the whole OPP table.
 
 Neil
 
-> 
-> 
-> Martin
 > 
 
