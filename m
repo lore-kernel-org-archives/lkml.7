@@ -2,220 +2,155 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CBBC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138F4C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7525C21871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6EB21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:13:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mZl18DDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfGCGG2 (ORCPT
+        id S1727032AbfGCGNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:06:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53674 "EHLO huawei.com"
+        Wed, 3 Jul 2019 02:13:49 -0400
+Received: from mail-eopbgr760080.outbound.protection.outlook.com ([40.107.76.80]:33103
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725927AbfGCGG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:06:27 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3C06FD4D7CBA388655BE;
-        Wed,  3 Jul 2019 14:06:25 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
- 14:06:14 +0800
-Subject: Re: [PATCH] staging: erofs: fix LZ4 limited bounced page mis-reuse
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, Gao Xiang <hsiangkao@aol.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Du Wei <weidu.du@huawei.com>, Miao Xie <miaoxie@huawei.com>
-References: <20190630185846.16624-1-hsiangkao@aol.com>
- <dbd9e23d-3e76-8281-81f3-48680b4d0b9d@huawei.com>
- <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
-Message-ID: <570e12d3-985e-3d5a-d7d4-cf0a072442fe@huawei.com>
-Date:   Wed, 3 Jul 2019 14:06:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        id S1725927AbfGCGNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 02:13:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ymS6KkwwZTQC+sQ2EgEKDIkYDAqK4nnANFoc7YJBFLQ=;
+ b=mZl18DDCg83hNVvpk5tkGNU4TnSSpKCvBM66b+rtod4UAUCP5Qyy1dSROAThO8wLIKRDjQoBDHDEJSunDW3NreyXKTe/jr6LA46YntNjLPPRGXmhus+1iIIjCQGcZMkePO73dGU0KCP7ud17DrRYuAf8bRJDtIDN9jWFdGAjJvU=
+Received: from DM6PR02MB4779.namprd02.prod.outlook.com (20.176.109.16) by
+ DM6PR02MB5898.namprd02.prod.outlook.com (20.179.68.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Wed, 3 Jul 2019 06:13:47 +0000
+Received: from DM6PR02MB4779.namprd02.prod.outlook.com
+ ([fe80::936:90c8:a385:1513]) by DM6PR02MB4779.namprd02.prod.outlook.com
+ ([fe80::936:90c8:a385:1513%4]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 06:13:47 +0000
+From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
+To:     Helmut Grohne <helmut.grohne@intenta.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>
+Subject: RE: [LINUX PATCH v17 2/2] mtd: rawnand: pl353: Add basic driver for
+ arm pl353 smc nand interface
+Thread-Topic: [LINUX PATCH v17 2/2] mtd: rawnand: pl353: Add basic driver for
+ arm pl353 smc nand interface
+Thread-Index: AQHVKxERfpwoj8XL9UqMkCeJJ20MnKasaZ4AgAwLy6A=
+Date:   Wed, 3 Jul 2019 06:13:47 +0000
+Message-ID: <DM6PR02MB47796F40DB186070031E5113AFFB0@DM6PR02MB4779.namprd02.prod.outlook.com>
+References: <20190625044630.31717-1-naga.sureshkumar.relli@xilinx.com>
+ <20190625044630.31717-2-naga.sureshkumar.relli@xilinx.com>
+ <20190625141126.ggmxjcmdh76lguds@laureti-dev>
+In-Reply-To: <20190625141126.ggmxjcmdh76lguds@laureti-dev>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nagasure@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3c3423f2-19b9-4b6e-651e-08d6ff7d9bfb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR02MB5898;
+x-ms-traffictypediagnostic: DM6PR02MB5898:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR02MB58982921A488BA22DDD79084AFFB0@DM6PR02MB5898.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:348;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(376002)(39860400002)(199004)(189003)(13464003)(66446008)(55016002)(6436002)(6306002)(52536014)(7416002)(53936002)(4326008)(7696005)(99286004)(33656002)(3846002)(11346002)(478600001)(446003)(6116002)(76176011)(6246003)(476003)(86362001)(26005)(68736007)(7736002)(256004)(5660300002)(9686003)(64756008)(73956011)(14444005)(6506007)(110136005)(66476007)(305945005)(316002)(229853002)(186003)(486006)(102836004)(74316002)(2906002)(8676002)(54906003)(8936002)(66946007)(25786009)(71200400001)(71190400001)(81156014)(53546011)(66556008)(966005)(76116006)(81166006)(14454004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5898;H:DM6PR02MB4779.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Hj+sdDPEqygBtoipPmFyKvDQr0MbIhoSCDlX6Sgg9Aqk3uzkP3I8J1bMi6EJV3fFOeLuxGAJSDoDGCwDEyx+gEHze7DaJ5XbI2uQWbB70AjcHV8fduu5OCHJPKV9JMNoUSKrqwVpyDH/8HPMGD5NO7WDTpcKg96nKwCHI96bXgLE8ndOCpsBzVtwfSFXqqYiMn0lloUiGyE0ImieLTGoh/dlIvs893fbd9JlwaNkz+2TuaJpRrS4CPxmH88EbC++q4USyHYARmMVkJY1YX0RiSyVfzmw9pkZngcd6rYFWVVgB43MonXSplv3gwYdMBWzr3U3gjOg4ZMUAQjlL0YjlhO0r0O3B7KOeI9AmVldC06StqYI26ARYYAExJcnY4Q+6v+XSNa1VC5lNmcsvUx4NklniX2Kjl+Q05lZECshUss=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <e57f757f-2a61-3c5d-bf06-264cd1d00fef@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c3423f2-19b9-4b6e-651e-08d6ff7d9bfb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 06:13:47.0853
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nagasure@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5898
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Hi Miquel,
 
-On 2019/7/3 10:09, Gao Xiang wrote:
-> 
-> 
-> On 2019/7/3 9:50, Chao Yu wrote:
->> On 2019/7/1 2:58, Gao Xiang wrote:
->>> From: Gao Xiang <gaoxiang25@huawei.com>
->>>
->>> Like all lz77-based algrithms, lz4 has a dynamically populated
->>> ("sliding window") dictionary and the maximum lookback distance
->>> is 65535. Therefore the number of bounced pages could be limited
->>> by erofs based on this property.
->>>
->>> However, just now we observed some lz4 sequences in the extreme
->>> case cannot be decompressed correctly after this feature is enabled,
->>> the root causes after analysis are clear as follows:
->>> 1) max bounced pages should be 17 rather than 16 pages;
->>> 2) considering the following case, the broken implementation
->>>    could reuse unsafely in advance (in other words, reuse it
->>>    less than a safe distance),
->>>    0 1 2 ... 16 17 18 ... 33 34
->>>    b             p  b         b
->>>    note that the bounce page that we are concerned was allocated
->>>    at 0, and it reused at 18 since page 17 exists, but it mis-reused
->>>    at 34 in advance again, which causes decompress failure.
->>>
->>> This patch resolves the issue by introducing a bitmap to mark
->>> whether the page in the same position of last round is a bounced
->>> page or not, and a micro stack data structure to store all
->>> available bounced pages.
->>>
->>> Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
->>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->>> ---
->>>  drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
->>>  1 file changed, 28 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
->>> index 80f1f39719ba..1fb0abb98dff 100644
->>> --- a/drivers/staging/erofs/decompressor.c
->>> +++ b/drivers/staging/erofs/decompressor.c
->>> @@ -13,7 +13,7 @@
->>>  #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
->>>  #endif
->>>  
->>> -#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
->>> +#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
->>>  #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
->>>  #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
->>>  #endif
->>> @@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
->>>  	const unsigned int nr =
->>>  		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
->>>  	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
->>> -	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
->>> -					  BITS_PER_LONG)] = { 0 };
->>> +	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
->>> +					   BITS_PER_LONG)] = { 0 };
->>>  	void *kaddr = NULL;
->>> -	unsigned int i, j, k;
->>> +	unsigned int i, j, top;
->>>  
->>> -	for (i = 0; i < nr; ++i) {
->>> +	top = 0;
->>> +	for (i = j = 0; i < nr; ++i, ++j) {
->>>  		struct page *const page = rq->out[i];
->>> +		struct page *victim;
->>>  
->>> -		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
->>> -		if (availables[j])
->>> -			__set_bit(j, unused);
->>> +		if (j >= LZ4_MAX_DISTANCE_PAGES)
->>> +			j = 0;
->>> +
->>> +		/* 'valid' bounced can only be tested after a complete round */
->>> +		if (test_bit(j, bounced)) {
->>> +			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
->>> +			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
->>> +			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
->>
->> Maybe we can change 'i - LZ4_MAX_DISTANCE_PAGES' to 'j' directly for better
->> readability.
-> 
-> OK, I think they are equivalent as well, will change for readability, retest and resend.
-> Thanks for your suggestion :)
-
-I tested again and I observed that using j broke the logic and I think we cannot use j
-to replace i - LZ4_MAX_DISTANCE_PAGES.
-
-Since bounced pages was marked according to the last round rather than the first round,
-we cannot directly use the first round pages to push into the stack, e.g.
-
-1)
-    0 1 2 ... 16 17 18 ... 33 34
-    p             b            b
-
-bounce page could be allocated from rq->out[17], and we could reuse it from rq->out[34], which
-is not equal to rq->out[0].
-
-2)
-    0 1 2 ... 16 17 18  19  ... 33 34 35 36
-      b              p   b                b
-allocated in rq->out[1] j = 1, reuse it in rq->out[19] j = 2, reuse it again in rq->out[36] j = 2,
-which is not equal to rq->out[2].
-
-I think the original patch is ok, and it cannot be replaced to rq->out[j].
+> -----Original Message-----
+> From: linux-mtd <linux-mtd-bounces@lists.infradead.org> On Behalf Of Helm=
+ut Grohne
+> Sent: Tuesday, June 25, 2019 7:41 PM
+> To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> Cc: vigneshr@ti.com; bbrezillon@kernel.org; yamada.masahiro@socionext.com=
+;
+> richard@nod.at; linux-kernel@vger.kernel.org; marek.vasut@gmail.com; linu=
+x-
+> mtd@lists.infradead.org; miquel.raynal@bootlin.com; computersforpeace@gma=
+il.com;
+> dwmw2@infradead.org
+> Subject: Re: [LINUX PATCH v17 2/2] mtd: rawnand: pl353: Add basic driver =
+for arm pl353
+> smc nand interface
+>=20
+> Thank you for the quick update.
+>=20
+> On Tue, Jun 25, 2019 at 06:46:30AM +0200, Naga Sureshkumar Relli wrote:
+> > -> Tested Micron MT29F2G08ABAEAWP (On-die capable) and AMD/Spansion
+> S34ML01G1.
+>=20
+> I tested the v17 series with the MT29F2G08ABAEAWP. I can now mount existi=
+ng jffs2
+> volumes without issues.
+>=20
+> When running nandtest on a 64MB area, I no longer see lots of consecutive=
+ errors. However I
+> see few (4-8) single byte errors for random locations on about half the r=
+uns. In comparison, I
+> couldn't reproduce these on the older driver on v4.14.
+>=20
+> When writing random 1MB files on a fresh jffs2 filesystem and reading the=
+m back after
+> umounting and mounting the filesystem, I got one faulty file in 50 attemp=
+ts.
+>=20
+> So this driver mostly works for me, but I suspect that something (possibl=
+y the tested
+> hardware) doesn't fully work yet. To say more, I'll need long term testin=
+g results. In the mean
+> time, I'm in favour of merging the driver.
+What is your take on this?
+Can we consider to merge this driver?
+Could you please let me know?
 
 Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Otherwise, it looks good to me.
->>
->> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->>
->> Thanks,
->>
->>> +		}
->>>  
->>>  		if (page) {
->>> +			__clear_bit(j, bounced);
->>>  			if (kaddr) {
->>>  				if (kaddr + PAGE_SIZE == page_address(page))
->>>  					kaddr += PAGE_SIZE;
->>> @@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
->>>  			continue;
->>>  		}
->>>  		kaddr = NULL;
->>> +		__set_bit(j, bounced);
->>>  
->>> -		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
->>> -		if (k < LZ4_MAX_DISTANCE_PAGES) {
->>> -			j = k;
->>> -			get_page(availables[j]);
->>> +		if (top) {
->>> +			victim = availables[--top];
->>> +			get_page(victim);
->>>  		} else {
->>> -			DBG_BUGON(availables[j]);
->>> -
->>>  			if (!list_empty(pagepool)) {
->>> -				availables[j] = lru_to_page(pagepool);
->>> -				list_del(&availables[j]->lru);
->>> -				DBG_BUGON(page_ref_count(availables[j]) != 1);
->>> +				victim = lru_to_page(pagepool);
->>> +				list_del(&victim->lru);
->>> +				DBG_BUGON(page_ref_count(victim) != 1);
->>>  			} else {
->>> -				availables[j] = alloc_pages(GFP_KERNEL, 0);
->>> -				if (!availables[j])
->>> +				victim = alloc_pages(GFP_KERNEL, 0);
->>> +				if (!victim)
->>>  					return -ENOMEM;
->>>  			}
->>> -			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
->>> +			victim->mapping = Z_EROFS_MAPPING_STAGING;
->>>  		}
->>> -		rq->out[i] = availables[j];
->>> -		__clear_bit(j, unused);
->>> +		rq->out[i] = victim;
->>>  	}
->>>  	return kaddr ? 1 : 0;
->>>  }
->>>
+Naga Sureshkumar Relli
+>=20
+> Helmut
+>=20
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
