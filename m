@@ -2,229 +2,171 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0425C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AFCC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB30020673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1220420645
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lhYC3RAw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gD1H9uju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfGCBJ6 (ORCPT
+        id S1727388AbfGCBK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:09:58 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37699 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBJ6 (ORCPT
+        Tue, 2 Jul 2019 21:10:27 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:46057 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbfGCBKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:09:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so626431oih.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:09:57 -0700 (PDT)
+        Tue, 2 Jul 2019 21:10:25 -0400
+Received: by mail-pf1-f202.google.com with SMTP id i27so392053pfk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XdfQkc10ZEHgoDK1SNLlrirAzmY3Oa6pflTI/YkyqLs=;
-        b=lhYC3RAwDyVnsu9qutRDpMePchtvZtnds0Au+8BDVd355z2kcvCxxoUeLKjoKsqljz
-         0nmLPHcuV4BsV31lBWyb6mlGmxOpTzAUBz3C6sba5YMsicyvHffJNot/FkRrgQ3yleek
-         oCMyTMO8UPmvAvc2f4O1rOTb61xIvaciq0FTM=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=+/NgGwFACy34LZMNgdF6kK1NINvGCtP2Z/MvjjI7Ew8=;
+        b=gD1H9ujuBDHYxyQRM/QxbAM3l52LJlazN/k0bex99R3tQl+EKLtZtPVAAE3Y7PRS83
+         so+dRF8C5h0z3U2iTRMh+m0UC9PJQGeEpO4BN2p1AG2qg08y9u8qsKrA3a473FdvYzDQ
+         9o+1ImEqm49Ba4/rIxrNfFQ5a6gQtJ+MHqIL+IhQBci2U/KwaQwea/xCfZC4wGCQLv/A
+         sJtLlgV5jRHx+WJoNEd5sJJvcr1P38owycNXEwhnHsiAUfil7US4V3sb0+0GfyeU08PO
+         rlOg/95z7CY5CPeeNzBD6+wNSiJc9qFlzW/OXrkzUe8es9PaWmzgRcmL1CeX1BeGeC4Z
+         mCug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XdfQkc10ZEHgoDK1SNLlrirAzmY3Oa6pflTI/YkyqLs=;
-        b=LKMpLr/Iq0n40ptxXRtTgyWkQFqMoGBfAdnN1+gdqQ0StV8Zx8Q9QM826YP7iRie/j
-         zRGwGudqVwhAZSjrW5NAuyj3gydq2boeezB39F4IhAPCQ3fs0pS/LR0s4wTS0ReBeThM
-         my220iuiu/r+Amg4wi6cDGp2pDBHLBwEuv1+TrxIfQQR/3SJ+kk/sB3/gsiW12DwQpR4
-         5F5/iPgIUUz7hd6L1aOOvI0oBNhQ6W5Gc9MX4mOuh7Omx0JJqAsdQz6uEn0uz6xGAjkp
-         3BG1mqlxZ0gUUEIOCsFF1kjgn8A47BP2CZ6sM7jadKAEPsq+iWjSSAk+3ByJhmEPms11
-         cuOQ==
-X-Gm-Message-State: APjAAAWfreYtvAZGTUJS5IEkUm/g9VGs4nJuGtf6kPJeq7JjUGJ8wfdE
-        FZbq4yePXRIkG3yYitd3Ps0seJDifZs=
-X-Google-Smtp-Source: APXvYqyxHmfAgHSytPsWrix4p+ZJ6+jIhYHj/U+jxRorMiv/9wt4TCSDHqnkrKqjPvgxgFZ/tzVnIA==
-X-Received: by 2002:a65:500d:: with SMTP id f13mr32057264pgo.151.1562101458715;
-        Tue, 02 Jul 2019 14:04:18 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p23sm6217pfn.10.2019.07.02.14.04.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 14:04:14 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 10:11:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Remove HARDENED_USERCOPY_PAGESPAN
-Message-ID: <201907021009.3CF9EBB4@keescook>
-References: <201905101341.A17DDD7@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905101341.A17DDD7@keescook>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=+/NgGwFACy34LZMNgdF6kK1NINvGCtP2Z/MvjjI7Ew8=;
+        b=HtBb6cPtBbJ9+T7tjYPwjRbBsO3ssND0kL18R7LeIEd0tM3hePIZ4xU98lyR7oOt8F
+         B1Y6mWW9668RWYuPhBPPycAc0KZe4qjl2k8T2kjtq2tfF7rC/SVXBJtg0rAJedS5l3az
+         pZNVeEOdhMA2xIdc4tSnLs9akBwUh9IN+U14UfaVbMT53jBW+UErWgaZ8GsrobBhB4xF
+         l+F+81/mztb+W1tuJWAEZWIvZ4bDlWifZAXGSGHetCKVV0UkKsXKkxrbQqCP/h3S8G0A
+         geLQaejGGzSY+gyAqGPbXQE0/0dxkiW9JaJSaWik6aU9TasDBlGpcaTXsPg2QJ170Rfe
+         s/tw==
+X-Gm-Message-State: APjAAAUdDF4xU71HZFbKyeyamMPDwXAGAA3QTWhE3R7H9iRbZ4TJFO+X
+        sJmzTspe4jZwAl/7XEMWl+fE0m7dE6mLPY8=
+X-Google-Smtp-Source: APXvYqxjLAm5FeB4krGVnJ8xrlNX//iGRKhBSPNoeTp221sbsHnxh0Xh8hiTM1YF3feQVjQjV1Qr19ueNgCNDpo=
+X-Received: by 2002:a63:7c0e:: with SMTP id x14mr33166685pgc.65.1562116224469;
+ Tue, 02 Jul 2019 18:10:24 -0700 (PDT)
+Date:   Tue,  2 Jul 2019 18:10:14 -0700
+Message-Id: <20190703011020.151615-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
+From:   Saravana Kannan <saravanak@google.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Saravana Kannan <saravanak@google.com>, vincent.guittot@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 01:43:36PM -0700, Kees Cook wrote:
-> This feature continues to cause more problems than it solves[1]. Its
-> intention was to check the bounds of page-allocator allocations by using
-> __GFP_COMP, for which we would need to find all missing __GFP_COMP
-> markings. This work has been on hold and there is an argument[2]
-> that such markings are not even the correct signal for checking for
-> same-allocation pages. Instead of depending on BROKEN, this just removes
-> it entirely. It can be trivially reverted if/when a better solution for
-> tracking page allocator sizes is found.
-> 
-> [1] https://www.mail-archive.com/linux-crypto@vger.kernel.org/msg37479.html
-> [2] https://lkml.kernel.org/r/20190415022412.GA29714@bombadil.infradead.org
-> 
-> Suggested-by: Eric Biggers <ebiggers@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Interconnects and interconnect paths quantify their performance levels in
+terms of bandwidth and not in terms of frequency. So similar to how we have
+frequency based OPP tables in DT and in the OPP framework, we need
+bandwidth OPP table support in the OPP framework and in DT. Since there can
+be more than one interconnect path used by a device, we also need a way to
+assign a bandwidth OPP table to an interconnect path.
 
-So, after looking at this more, I think I'm going to keep this patch,
-and we can add new sanity checks on a per-Page flag check. (See below.)
+This patch series:
+- Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
+- Adds interconnect-opp-table property to interconnect DT bindings
+- Adds OPP helper functions for bandwidth OPP tables
+- Adds icc_get_opp_table() to get the OPP table for an interconnect path
 
-Andrew, can you apply this to -mm please?
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
 
-> ---
->  mm/usercopy.c    | 67 ------------------------------------------------
->  security/Kconfig | 11 --------
->  2 files changed, 78 deletions(-)
-> 
-> diff --git a/mm/usercopy.c b/mm/usercopy.c
-> index 14faadcedd06..15dc1bf03303 100644
-> --- a/mm/usercopy.c
-> +++ b/mm/usercopy.c
-> @@ -159,70 +159,6 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
->  		usercopy_abort("null address", NULL, to_user, ptr, n);
->  }
->  
-> -/* Checks for allocs that are marked in some way as spanning multiple pages. */
-> -static inline void check_page_span(const void *ptr, unsigned long n,
-> -				   struct page *page, bool to_user)
-> -{
-> -#ifdef CONFIG_HARDENED_USERCOPY_PAGESPAN
-> -	const void *end = ptr + n - 1;
-> -	struct page *endpage;
-> -	bool is_reserved, is_cma;
-> -
-> -	/*
-> -	 * Sometimes the kernel data regions are not marked Reserved (see
-> -	 * check below). And sometimes [_sdata,_edata) does not cover
-> -	 * rodata and/or bss, so check each range explicitly.
-> -	 */
-> -
-> -	/* Allow reads of kernel rodata region (if not marked as Reserved). */
-> -	if (ptr >= (const void *)__start_rodata &&
-> -	    end <= (const void *)__end_rodata) {
-> -		if (!to_user)
-> -			usercopy_abort("rodata", NULL, to_user, 0, n);
-> -		return;
-> -	}
-> -
-> -	/* Allow kernel data region (if not marked as Reserved). */
-> -	if (ptr >= (const void *)_sdata && end <= (const void *)_edata)
-> -		return;
-> -
-> -	/* Allow kernel bss region (if not marked as Reserved). */
-> -	if (ptr >= (const void *)__bss_start &&
-> -	    end <= (const void *)__bss_stop)
-> -		return;
-> -
-> -	/* Is the object wholly within one base page? */
-> -	if (likely(((unsigned long)ptr & (unsigned long)PAGE_MASK) ==
-> -		   ((unsigned long)end & (unsigned long)PAGE_MASK)))
-> -		return;
-> -
-> -	/* Allow if fully inside the same compound (__GFP_COMP) page. */
-> -	endpage = virt_to_head_page(end);
-> -	if (likely(endpage == page))
-> -		return;
-> -
-> -	/*
-> -	 * Reject if range is entirely either Reserved (i.e. special or
-> -	 * device memory), or CMA. Otherwise, reject since the object spans
-> -	 * several independently allocated pages.
-> -	 */
-> -	is_reserved = PageReserved(page);
-> -	is_cma = is_migrate_cma_page(page);
-> -	if (!is_reserved && !is_cma)
-> -		usercopy_abort("spans multiple pages", NULL, to_user, 0, n);
-> -
-> -	for (ptr += PAGE_SIZE; ptr <= end; ptr += PAGE_SIZE) {
-> -		page = virt_to_head_page(ptr);
-> -		if (is_reserved && !PageReserved(page))
-> -			usercopy_abort("spans Reserved and non-Reserved pages",
-> -				       NULL, to_user, 0, n);
-> -		if (is_cma && !is_migrate_cma_page(page))
-> -			usercopy_abort("spans CMA and non-CMA pages", NULL,
-> -				       to_user, 0, n);
-> -	}
-> -#endif
-> -}
-> -
->  static inline void check_heap_object(const void *ptr, unsigned long n,
->  				     bool to_user)
->  {
-> @@ -236,9 +172,6 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
->  	if (PageSlab(page)) {
->  		/* Check slab allocator for flags and size. */
->  		__check_heap_object(ptr, n, page, to_user);
-> -	} else {
-> -		/* Verify object does not incorrectly span multiple pages. */
-> -		check_page_span(ptr, n, page, to_user);
->  	}
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
 
-In the future, instead of this catch-all "else", we can add things like:
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000>;
+		opp-avg-KBps = <1000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000>;
+		opp-avg-KBps = <2000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000>;
+		opp-avg-KBps = <9000>;
+	};
+};
 
-	} else if (PageCompound(page)) {
-		... do some check for compound pages ...
-	} else if (PageReserved(page))
-		... etc ...
-	}
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
 
-But for 5.3, I think we need to just entirely drop the PAGESPAN thing.
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525>;
+		opp-avg-KBps = <452>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051>;
+		opp-avg-KBps = <915>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500>;
+		opp-avg-KBps = <3000>;
+	};
+};
 
--Kees
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
 
->  }
->  
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 353cfef71d4e..8392647f5a4c 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -176,17 +176,6 @@ config HARDENED_USERCOPY_FALLBACK
->  	  Booting with "slab_common.usercopy_fallback=Y/N" can change
->  	  this setting.
->  
-> -config HARDENED_USERCOPY_PAGESPAN
-> -	bool "Refuse to copy allocations that span multiple pages"
-> -	depends on HARDENED_USERCOPY
-> -	depends on EXPERT
-> -	help
-> -	  When a multi-page allocation is done without __GFP_COMP,
-> -	  hardened usercopy will reject attempts to copy it. There are,
-> -	  however, several cases of this in the kernel that have not all
-> -	  been removed. This config is intended to be used only while
-> -	  trying to find such users.
-> -
->  config FORTIFY_SOURCE
->  	bool "Harden common str/mem functions against buffer overflows"
->  	depends on ARCH_HAS_FORTIFY_SOURCE
-> -- 
-> 2.17.1
-> 
-> 
-> -- 
-> Kees Cook
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+	};
+};
+
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEM_CACHE>,
+			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+	interconnect-names = "gpu-cache", "gpu-mem";
+	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
+};
+
+Cheers,
+Saravana
+
+Saravana Kannan (6):
+  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+  OPP: Add API to find an OPP table from its DT node
+  dt-bindings: interconnect: Add interconnect-opp-table property
+  interconnect: Add OPP table support for interconnects
+
+ .../bindings/interconnect/interconnect.txt    |  8 ++
+ Documentation/devicetree/bindings/opp/opp.txt | 15 +++-
+ drivers/interconnect/core.c                   | 27 ++++++-
+ drivers/opp/core.c                            | 51 +++++++++++++
+ drivers/opp/of.c                              | 76 ++++++++++++++++---
+ drivers/opp/opp.h                             |  4 +-
+ include/linux/interconnect.h                  |  7 ++
+ include/linux/pm_opp.h                        | 26 +++++++
+ 8 files changed, 199 insertions(+), 15 deletions(-)
 
 -- 
-Kees Cook
+2.22.0.410.gd8fdbe21b5-goog
+
