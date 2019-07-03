@@ -2,97 +2,102 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269C2C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6F5C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC11421852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68B321852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cIKJ1Vjz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPU5nLks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfGCVm0 (ORCPT
+        id S1727350AbfGCVnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:42:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:54825 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfGCVmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:42:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fF2703htz9sCJ;
-        Thu,  4 Jul 2019 07:42:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562190143;
-        bh=o+473wFhtVjiy0ckHYq5we6vAWRdKnr3jC+e6q2Np30=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cIKJ1VjzJ5NXt3UMrJSSHCFknoDp+MeSPNpv9aq4N8aW783KT/kDOXOm0Bke1ZLTs
-         XWebXhZUaizMh6BU6ObKd+EWVw6mCrwEsJjovQfjNVX/gPaw4A+6n0k3Gi5SMztZLf
-         E7q25hfxJ55TDkv7s9VvEMnFoM5bTjCMP609VeGqCY8gQoxK4uYKseFVM8YTh9aBlg
-         tWJbKLd1fkAUEL9x8fl47vhMKZHWYQkzW0yPQy6N2LJVBgxHAhU4QaxkijZZdsFb01
-         sJbavEScAR23AgzSSWOOrArDZBb9CMLJSKVffSQxNNkksbhxLmjXMzrJGmngGlw1gG
-         hRQ7MFPaiSzNg==
-Date:   Thu, 4 Jul 2019 07:42:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mahesh Bandewar <maheshb@google.com>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20190704074220.42e4771e@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//+.awAE4SFPtT.RyYWny0+a"; protocol="application/pgp-signature"
+        Wed, 3 Jul 2019 17:43:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42293 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbfGCVnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:43:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so1905239plb.9;
+        Wed, 03 Jul 2019 14:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bC+NSmuLWEsv6oPx3XnIf+0FW2175TmLMl+WAygDkKU=;
+        b=JPU5nLksJvt0fUeU3xq3KmutnplMnOxOQRJMgALyn2JDTEs5VeXoR+TfYHByBEcnwO
+         zRU4F8bccZJ5ugFn4+d3zDBIXx2rwZU/8FrH8RnjCv/gcc8Em1b4q5WhSWqWtRQdWFC4
+         BHDKHrHUr2XtytxOWj12mL54u8hMaSKtbKkac0KmwXRmvKTy8Y9V5mu7X42Rj7j0MHjZ
+         Pvdq8uQ0I3QwczWfCZyvW1t1OIHsiax8Ej/J96sk7N4iq4gY6pUxq3a6FHF+rJr9apzL
+         UdQjtwm5iUPR6chrAFY7V9VGJr0kiFjr5KEDgrlxH1+90wswDHf0/LMzlOQe6Rslqsbx
+         qK2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bC+NSmuLWEsv6oPx3XnIf+0FW2175TmLMl+WAygDkKU=;
+        b=Hci5HrFipacW0J/M0CqeG59gfato+U4ZEL2j4xJ1QPWy6PDT4RpKQ6t5FEqc+6zJtE
+         ZnOw665JWMxacdigNRplGq0p9L/Ck+d47it5RbwjUgkYe+hsq/8TNirbx4z2FZ5QIn1B
+         biMVtKX3jF+sHbSWPFwp48WOQQXcbCnO6Q1svqt+n5wb2XFkQe/N2P16y5ElkM5CckSY
+         7NIv5d5FIweZSMgFPibS13FIvD4BFqv+rj1M0M319AE4EFypRR9wEbSuOvB7rWfstuME
+         0XUthdmTG1I631aylyWBWh8VrQSbE30vLMRcycT+aTGyDjZya3uzsmhqnyH3KTs+ajf4
+         olug==
+X-Gm-Message-State: APjAAAXRLDKlDohzN6z2j5jnao9iyS1qy1XYYRFzay+h3IFi/bGaGA7n
+        HUuQvS4whyqWykq+vF9Y5Dk=
+X-Google-Smtp-Source: APXvYqxupxMQrDq3Zqb7a37DqR6TG00xKI9iD9hNoRiw/XNAJDgi2Ws6jxpFETlLyzILp7T0P7jCkg==
+X-Received: by 2002:a17:902:bcc4:: with SMTP id o4mr44071677pls.90.1562190210539;
+        Wed, 03 Jul 2019 14:43:30 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id b24sm3234095pfd.98.2019.07.03.14.43.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 14:43:30 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     broonie@kernel.org, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, robdclark@gmail.com, bjorn.andersson@linaro.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/2] ti-sn65dsi86 DSI configuration support
+Date:   Wed,  3 Jul 2019 14:43:26 -0700
+Message-Id: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//+.awAE4SFPtT.RyYWny0+a
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The ti-sn65dsi86 bridge on the Lenovo Miix 630 does not appear to be
+wired to an I2C bus - there is no indication from the FW which bus to
+use and scanning all of the busses does not result in an unknown device
+being discovered.
 
-Hi all,
+As a result, we must utilize the ability of the ti-sn65dsi86 to be
+configured "inband" via the DSI connection.  Since the driver already
+utilizes regmap (over I2C), adding the ability of the driver to
+configure via DSI is rather minimal effort once we have established a
+regmap over DSI handle.
 
-In commit
+However, regmap currently doesn't support the MIPI DSI bus, so add that
+option first.
 
-  d62962b37ceb ("loopback: fix lockdep splat")
+Jeffrey Hugo (2):
+  regmap: Add DSI bus support
+  drm/bridge: ti-sn65dsi86: Add support to be a DSI device
 
-Fixes tag
+ drivers/base/regmap/Kconfig           |   6 +-
+ drivers/base/regmap/Makefile          |   1 +
+ drivers/base/regmap/regmap-dsi.c      |  62 ++++++++++
+ drivers/gpu/drm/bridge/Kconfig        |   1 +
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 160 +++++++++++++++++++-------
+ include/linux/regmap.h                |  37 ++++++
+ 6 files changed, 222 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/base/regmap/regmap-dsi.c
 
-  Fixes: 4de83b88c66 ("loopback: create blackhole net device similar to loo=
-pack.")
+-- 
+2.17.1
 
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//+.awAE4SFPtT.RyYWny0+a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0dITwACgkQAVBC80lX
-0Gz6zwf+Maozgm+A2X2QXXhY4JeyxbZuDCuvlK47fqNn0lWOStxC7ZSGGBQt+ODe
-7EvVuHxu3PQFLfM+TmrEQSVhDrB7PFUo/LNsb6/XkaE+Uxs8DFTYCyCfp9YkpgWF
-BDRVNv6rROkFMVLJixX1aI4BS1JJPUBRTN6RNJs0EW5fzKZujCBMkj122RqDp5E8
-2ZtMdlXRZ97vIkrPBdlHVHGg0pTYo/UvzI1aqvE0QGzGqkJUyeZIV0pXypOSSdz+
-zSWZFddIwblscF3MnfrtTn5DawEMpg5scu2tGrvQGw1Ow0IR/9xiK2SrebDIL/qd
-Ar1LUBPZxH+H6LiwUyDXdh3YhpU9Hg==
-=X12Y
------END PGP SIGNATURE-----
-
---Sig_//+.awAE4SFPtT.RyYWny0+a--
