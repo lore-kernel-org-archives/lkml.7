@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDBAC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4450C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93CC218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986AF218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uJgtEcRF"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BAyOt6f3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfGCODN (ORCPT
+        id S1726876AbfGCOEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:03:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33985 "EHLO
+        Wed, 3 Jul 2019 10:04:06 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52381 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGCODN (ORCPT
+        with ESMTP id S1725847AbfGCOEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:03:13 -0400
+        Wed, 3 Jul 2019 10:04:06 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63E2hIP3318473
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63E3Q4A3318776
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:02:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63E2hIP3318473
+        Wed, 3 Jul 2019 07:03:26 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63E3Q4A3318776
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562162564;
-        bh=m6ftjh9jiLen9wZRZMjrphqIHAx+1NwhFiXu7nN7In0=;
+        s=2019061801; t=1562162607;
+        bh=MpWYwBEhJGIvlPzXQhFpO1LkUrqZrPR1wGtqnYWJ1oc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uJgtEcRFqPx/VdKNeJUpbqcMF3U9h9yG92pB5LPOP5oW3ceYlpzD0tSYyJR7kIykt
-         0pRGtJr1fy8H6g74kn8K4QymUni2DV6AhPOje6UWq4cEFLgyVXcHySN9rSoCdeFjlT
-         piaV5xWZrG4oljAOGZYVusQvFCeDy9usswFvPLjXzA4MBe+sHVI7mDBa2AMEspJR5e
-         EQc1xazT/m75isb5bt2Y45Y3flLGiw88qHtMaILy4UNsGlnHuXAfvZnujm5DpTEF0v
-         FRa5QjTmCK2XnLMUCpDbgv7A9MnDBq3hX6AHYlx3nuO35pEsaePtUgtqpmrPE+cPJ7
-         yi2wwTwoug2Rg==
+        b=BAyOt6f3Rtxlx4J9ctdBJB1/RCGGf7RFaZjAKQA/rVUrXQYnRwo/i8KrGRhDrgdpE
+         WRIBPbGgR8n6p3EWqtgdYsqpbRc+tQoh4fVBU2NmcU3UI0u9kdsd+MECC++kq164AT
+         MLCVr0Aw2LcgO0t70A0l3wCFuTkd0iI9TzFoIFX1Nc5ZZk1KuyVe04g/UUtX+GOWH7
+         I1Jk38h2L2xydHufQndhXHDzvfMHMqWt3vwb6phy934kYBXMxREuMqrCTm0nrkVNJk
+         sEAt93DvkgxVlsITEfG6PUxGTTwWiXJ64QdXFqJIAaMVIofRidVnTZ7KLPRf2ZBqmJ
+         JPw1P08RlCCvg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63E2g3k3318467;
-        Wed, 3 Jul 2019 07:02:42 -0700
-Date:   Wed, 3 Jul 2019 07:02:42 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63E3PTN3318773;
+        Wed, 3 Jul 2019 07:03:25 -0700
+Date:   Wed, 3 Jul 2019 07:03:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-eb5d854456f5a4ccec6f9681b7196cf056df8cfa@git.kernel.org>
-Cc:     jolsa@redhat.com, adrian.hunter@intel.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, acme@redhat.com,
-        hpa@zytor.com
-Reply-To: hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          acme@redhat.com, mingo@kernel.org, adrian.hunter@intel.com,
-          jolsa@redhat.com
-In-Reply-To: <20190619064429.14940-3-adrian.hunter@intel.com>
-References: <20190619064429.14940-3-adrian.hunter@intel.com>
+From:   tip-bot for Kyle Meyer <tipbot@zytor.com>
+Message-ID: <tip-9f94c7f947e919c343b30f080285af53d0fa9902@git.kernel.org>
+Cc:     jolsa@redhat.com, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, mingo@kernel.org, acme@redhat.com,
+        namhyung@kernel.org, hpa@zytor.com, kyle.meyer@hpe.com
+Reply-To: jolsa@redhat.com, linux-kernel@vger.kernel.org,
+          alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+          peterz@infradead.org, mingo@kernel.org, acme@redhat.com,
+          namhyung@kernel.org, hpa@zytor.com, kyle.meyer@hpe.com
+In-Reply-To: <20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf thread-stack: Eliminate code duplicating
- thread_stack__pop_ks()
-Git-Commit-ID: eb5d854456f5a4ccec6f9681b7196cf056df8cfa
+Subject: [tip:perf/core] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
+Git-Commit-ID: 9f94c7f947e919c343b30f080285af53d0fa9902
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,58 +71,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eb5d854456f5a4ccec6f9681b7196cf056df8cfa
-Gitweb:     https://git.kernel.org/tip/eb5d854456f5a4ccec6f9681b7196cf056df8cfa
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 19 Jun 2019 09:44:29 +0300
+Commit-ID:  9f94c7f947e919c343b30f080285af53d0fa9902
+Gitweb:     https://git.kernel.org/tip/9f94c7f947e919c343b30f080285af53d0fa9902
+Author:     Kyle Meyer <kyle.meyer@hpe.com>
+AuthorDate: Thu, 20 Jun 2019 14:36:30 -0500
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 25 Jun 2019 08:47:10 -0300
 
-perf thread-stack: Eliminate code duplicating thread_stack__pop_ks()
+perf tools: Increase MAX_NR_CPUS and MAX_CACHES
 
-Use new function thread_stack__pop_ks() in place of equivalent code.
+Attempting to profile 1024 or more CPUs with perf causes two errors:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  way too many cpu caches..
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  Error: failed to set  cpu bitmap
+  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
+
+  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
+  MAX_NR_CPUS * 4 returns normal functionality to perf:
+
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  ...
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190619064429.14940-3-adrian.hunter@intel.com
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ tools/perf/perf.h        | 2 +-
+ tools/perf/util/header.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 4c826a2e08d8..6ff1ff4d4ce7 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -664,12 +664,9 @@ static int thread_stack__no_call_return(struct thread *thread,
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 711e009381ec..74d0124d38f3 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
+ }
  
- 	if (ip >= ks && addr < ks) {
- 		/* Return to userspace, so pop all kernel addresses */
--		while (thread_stack__in_kernel(ts)) {
--			err = thread_stack__call_return(thread, ts, --ts->cnt,
--							tm, ref, true);
--			if (err)
--				return err;
--		}
-+		err = thread_stack__pop_ks(thread, ts, sample, ref);
-+		if (err)
-+			return err;
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS			1024
++#define MAX_NR_CPUS			2048
+ #endif
  
- 		/* If the stack is empty, push the userspace address */
- 		if (!ts->cnt) {
-@@ -679,12 +676,9 @@ static int thread_stack__no_call_return(struct thread *thread,
- 		}
- 	} else if (thread_stack__in_kernel(ts) && ip < ks) {
- 		/* Return to userspace, so pop all kernel addresses */
--		while (thread_stack__in_kernel(ts)) {
--			err = thread_stack__call_return(thread, ts, --ts->cnt,
--							tm, ref, true);
--			if (err)
--				return err;
--		}
-+		err = thread_stack__pop_ks(thread, ts, sample, ref);
-+		if (err)
-+			return err;
- 	}
+ extern const char *input_name;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 06ddb6618ef3..abc9c2145efe 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1121,7 +1121,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 	return 0;
+ }
  
- 	if (ts->cnt)
+-#define MAX_CACHES 2000
++#define MAX_CACHES (MAX_NR_CPUS * 4)
+ 
+ static int write_cache(struct feat_fd *ff,
+ 		       struct perf_evlist *evlist __maybe_unused)
