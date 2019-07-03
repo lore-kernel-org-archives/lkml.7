@@ -2,132 +2,112 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D876C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43255C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FBC21993
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15214219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PnPo4QIF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I0LWxM6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfGCAae (ORCPT
+        id S1727371AbfGCAak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:30:34 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:44681 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfGCAaa (ORCPT
+        Tue, 2 Jul 2019 20:30:40 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:37345 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfGCAaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:30:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1562113830; x=1593649830;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Wy7yC5O2tmsY73xSrxj13jbMBblMeVDokHmeqGBlXTw=;
-  b=PnPo4QIFCl4xycyFwVj/2AcvUw6ex0XLigKL1lNsn4WfqKtLLUNpOgsg
-   K1kkcH3CG30NLdOKTtiKMeNK7ZbWSr+Cn5jyb8lcI7VumHIfItUGtbfeM
-   ZJ62wx9jw8CZb7kI41GIsYKx/6rmaqw0zufPl0JclLn2nR7SnwEiWQ4rj
-   nuvSS3kG+vO9C0wsE3GujuLtmgFTH4LI8YJTuVGfspchYN9+tN1P/vwQ6
-   D0t86jqtpVAKNL/aZ62FS14SEbYVHfDnNqKSIfsfaNwKhy6vkmekUKrje
-   igbi+UqB57D9rBC/3C0tzrbYltfXpLmkdfXIM6BUvU0pRFvDwo0YtjRMX
-   A==;
-IronPort-SDR: 1P891hBb6x9O1/3WGDYYtPtTpOfbMaVNTAJhLU5rIOJBVcn/vZDm2dj6I1QL+LobYT87HpKV0i
- Aoz/YlCBjNoEWIpTw7uNbAIHGz9mk4rSGD1gusgSrewaDyO6dcSrpslrYgBZR6Iz5uRO3BPdEg
- LU93Y37riV1NqvzMLVrjgE53qabx5gB/z7FOoUB8SzjSMROiAe9c5IXA/hu7nZ5OOesXWRQrk+
- JMbbyxQjSqdGpSywmYyQrpO8maJTKle7ORABpKj3XE8i+x5ejaMuEB4gOQRcnfkO09ihlQwwWC
- gHE=
-X-IronPort-AV: E=Sophos;i="5.63,444,1557158400"; 
-   d="scan'208";a="112096603"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2019 08:21:25 +0800
-IronPort-SDR: oRlID7VbmY+mxcrY+wVzzQ/KZDSEytidsRl6/1s+u7pC0OIZAqp7VZDYjaEukeCaLrWuvw/aoe
- WZapSjss7sojXQhhI37rfKBjIHKmFtiD6nhKvxDYEXkjHhlp1xjSk48pHO8fljb1skZ++esrPL
- LaSbZq7lWU5gmlO2c6upJtwj6uT5UGo76bWSv5NczKfu+CJflbZF6YfWNT9JmwOJB21K7NgdPs
- YgoTmHG429jE592pZO6s4+W0A9ClMnvTKODHtU/0w+y4M+ggKYjgJ0OCmnTheG+5Y5eIibUrjz
- vRPwJ0qq4CUHQkR0+nbjah2N
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 02 Jul 2019 17:20:26 -0700
-IronPort-SDR: UZDjthIev6GusnpHicyRKLOOvWLP2fQvqt3HwRFRUC0oadg5DnlWcaGsFdEfndiB8WVfKl9IZw
- tGKxdSKGiYNLoHy1gcLpTIjhr/Iq1AKVZHnDKiTzTZkbNxXuR6xecPm8frDbDknAYt2Utzr5bk
- YOd//7/wlsnatwxsEy86yOCSjRIkiqo6UDtAvAq+HffqHSwZtcm1YO+iFrV9rFBhasi0uGV/c8
- YDiVVjL4/RyHDL8xh6/+Ya55tadiIOh9olwty8MwoYWQ0mvpUQvKXDyV5urEID58BpsvXeej24
- P/I=
-Received: from risc6-mainframe.sdcorp.global.sandisk.com (HELO risc6-mainframe.int.fusionio.com) ([10.196.157.140])
-  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jul 2019 17:21:24 -0700
-From:   Alistair Francis <alistair.francis@wdc.com>
-To:     linux-riscv-bounces@lists.infradead.org, arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, alistair23@gmail.com,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH 2/2] riscv/include/uapi: Define a custom __SIGINFO struct for RV32
-Date:   Tue,  2 Jul 2019 17:18:42 -0700
-Message-Id: <20190703001842.12238-3-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190703001842.12238-1-alistair.francis@wdc.com>
-References: <20190703001842.12238-1-alistair.francis@wdc.com>
+        Tue, 2 Jul 2019 20:30:39 -0400
+Received: by mail-pg1-f173.google.com with SMTP id g15so230567pgi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vn+LAxBJO7zxGvZ7qZMhFP9o+nyZP9kSApnr8HWEFrc=;
+        b=I0LWxM6dylxeZ05/nj4aoBN7X/RCZTrN0PJSydzFd4UPU814KFD5BpK9lx9/rhjLXR
+         Q8OqzdSdZJsCu3sBlmNq9VhRx2w/mHhbIE+vp4in58fCSfUVcTsh6/nwoWnobprAr6F9
+         n5BFK0sxGgzxKkKho2sDVVZ1d5DCeR8mE2kvciHRn9wLMJ8JXBhJHgMlkXIzRFB68dLT
+         pS/lQ9xWfByyLNgPHkp0I1k49SUKuyEre4Et/0ediDaJlpnIEqsLQk8jmMXCeJ1FG4vf
+         BvE2DP/GXPNLnxvmWjXjo/ixOzpcId1eF6L6G7YFzc3L7HQCDzGjBythsulUwNPr1gok
+         iMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vn+LAxBJO7zxGvZ7qZMhFP9o+nyZP9kSApnr8HWEFrc=;
+        b=qUJn6uWQUkSwIcVHYAJ1CDa6Cx1GPCGluvMLFy1k3ulLWw3RV4j2dSjQHb5iJFyZwa
+         +C0IHHlQZjbANM2En8bSv0BnEO+SHgbcamAAcO3hMnOtYFzH+uJvpAwqYgW+F77r0iHI
+         dom2Bnk8YTJwurlrsdmIhFiMfmMAhy5Z/7c4wuoxYcEZLT5z3zuzbJKadsKFpGLK6lBf
+         MTcM+FWlPupGOLqwHkb7b0AYEuBNXskTOaFEFfbTbzi0qgCh215vymXn7dLoO8u0t8uj
+         vuAT5C8+QLLzEKRgc4V90KWipQJ+RKxnbQBrB3FFGTw0WGfKqGb3CWzTQwE14Awvbn1j
+         14rA==
+X-Gm-Message-State: APjAAAX23FaSNwGGtsvBybujIykqlPDAyB2d1eLIY7kd7yU0KtDWwezm
+        JBuOkN4Taz0Y6WT4WQAMFHs7DGuGSYQjIJpZekNpiQ==
+X-Google-Smtp-Source: APXvYqx4jRLXTTfaBDu7oGjvQW1U3ugxjFYp6X0Mz+GfQZNQV4p/VDfNSi0vrPKvUv6EI5VN2dgK5l31VVxhLL6S4Fg=
+X-Received: by 2002:a63:52:: with SMTP id 79mr33023414pga.381.1562113838414;
+ Tue, 02 Jul 2019 17:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
+ <20190702220739.GJ32547@worktop.programming.kicks-ass.net>
+In-Reply-To: <20190702220739.GJ32547@worktop.programming.kicks-ass.net>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Jul 2019 17:30:27 -0700
+Message-ID: <CAKwvOdk_faiFKC=hQ0beus5S_kcC0D3=k2rnja1wE_yMhCgPTw@mail.gmail.com>
+Subject: Re: objtool warnings in prerelease clang-9
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Craig Topper <craig.topper@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Stephen Hines <srhines@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The glibc implementation of siginfo_t results in an allignment of 8 bytes
-for the union _sifields on RV32. The kernel has an allignment of 4 bytes
-for the _sifields union. This results in information being lost when
-glibc parses the siginfo_t struct.
+On Tue, Jul 2, 2019 at 3:07 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+>
+> Hi Nick,
+>
+> That is good news; and I'll strive to read the email in more detail
+> in the morning when there is a better chance of me actually
+> understanding some of it :-)
+>
+> But his here is something I felt needed clarification:
+>
+> On Tue, Jul 02, 2019 at 01:53:51PM -0700, Nick Desaulniers wrote:
+> > Of interest are the disassembled __jump_table entries; in groups of
+> > three, there is a group for which the second element is duplicated
+> > with a previous group.  This is bad because (as explained by Peter in
+> > https://lkml.org/lkml/2019/6/27/118) the triples are in the form (code
+> > location, jump target, pointer to key).  Duplicate or repeated jump
+> > targets are unexpected, and will lead to incorrect control flow after
+> > patching such code locations.
+>
+> > Also, the jump target should be 0x7 bytes ahead of the location, IIUC.
+>
+> Even if you mean 'at least' I'm fairly sure this is not correct. The
+> instruction at the 'code location' is either a jmp.d32 or a nop5 (both 5
+> bytes). The target must (obviously) be at an instruction boundary, but
+> really can be anywhere (it is compiler generated after all).
+>
 
-To fix the issue add a pad variable to the struct to avoid allignment
-mismatches.
-
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
----
- arch/riscv/include/uapi/asm/siginfo.h | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 arch/riscv/include/uapi/asm/siginfo.h
-
-diff --git a/arch/riscv/include/uapi/asm/siginfo.h b/arch/riscv/include/uapi/asm/siginfo.h
-new file mode 100644
-index 000000000000..0854ad97bf44
---- /dev/null
-+++ b/arch/riscv/include/uapi/asm/siginfo.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _ASM_RISCV_SIGINFO_H
-+#define _ASM_RISCV_SIGINFO_H
-+
-+/* Add a pad element for RISC-V 32-bit. We need this as the
-+ * _sifields union is 8 byte allgined in usperace.
-+ */
-+#if __riscv_xlen == 32
-+#ifndef __ARCH_HAS_SWAPPED_SIGINFO
-+#define __SIGINFO 			\
-+struct {				\
-+	int si_signo;			\
-+	int si_errno;			\
-+	int si_code;			\
-+	int pad;			\
-+	union __sifields _sifields;	\
-+}
-+#else
-+#define __SIGINFO 			\
-+struct {				\
-+	int si_signo;			\
-+	int si_code;			\
-+	int si_errno;			\
-+	int pad;			\
-+	union __sifields _sifields;	\
-+}
-+#endif /* __ARCH_HAS_SWAPPED_SIGINFO */
-+#endif
-+
-+#include <asm-generic/siginfo.h>
-+
-+#endif /* _ASM_RISCV_SIGINFO_H */
+Got it.  Issue should be fixed outright with:
+https://reviews.llvm.org/D64101 (I figured out how to fix the loop
+unroller, so now we can proceed with the optimization instead of the
+base conservative case).
 -- 
-2.22.0
-
+Thanks,
+~Nick Desaulniers
