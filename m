@@ -2,140 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2386DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B1EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADA621E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:28:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WU9xE1Va"
+	by mail.kernel.org (Postfix) with ESMTP id 65E2621993
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGCA2l (ORCPT
+        id S1727315AbfGCAaC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:28:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44307 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfGCA2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:28:39 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so391540lfm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWuzzOxwUVGbMCvFD/kQRaZgbqg2U0ttqAGoU0tIxDc=;
-        b=WU9xE1VaEDXdGOfDOaQ8eCNlTBcxHe1uPjWOXfL0akhUDkfR9pYxvy2vkEDfni+c8h
-         WMVK/5ptG9BAQJtthbU9xhXp41aX/dRI7O6DGRbzSic+KQYV4r79fr3F33IPwBk4A9/w
-         GB0kyYoceOYaI2Zwrbm6QbIM8AP0naUmdNCuQ2tAPmooOIqjVKYIIcMIkgONM7r947bm
-         Rcb/3dBlykiu3KSgumMs5axcfx87QLCZKcPVy2M8OzJauDqJh5Z1Bo7FTS75GRY0iu0+
-         IdLBkAJI8wJkTgpnoj96Ri0vBe8IfwgD2+EBl9ikgM/r7w39QRdydkoW0ChmAqm5YMzc
-         LsVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWuzzOxwUVGbMCvFD/kQRaZgbqg2U0ttqAGoU0tIxDc=;
-        b=P4ZWGIynu02orPUXm0SVvv4+HdNulUgwIA/DRpmvi17HTgpzZHpvpck5GQJ4XQTmbw
-         G7nvXCYH21/MPtGBXFu99x3mRvAKXRA0voUij1jKgyIdH1JcnxPRgID5oZIlN4cpMOOV
-         BlsLJydj3n5Jy6RXVQHdUhVo6T0Q0I7Dnafg6h6k4D8LD+Fw5xuQyiI0eYpd2iV/Rj28
-         HvTlrHxN5Hk2gy+j5y6MgOZfF7lyvxXGdHimc2G0P0pJksKoC6YxnMACS8TwUGCRE9t8
-         aZBL84fdkT6mUDMg8HUDVf9Zc+YhCq3ibs20WemMrZFSC79Ne5zb8KXvc/vULm9Cy88+
-         3Wsg==
-X-Gm-Message-State: APjAAAW37s7KDA3eay1P/tWEkL/c1ptQswRB3/hPEFFM6Ca4sDHJ8Pag
-        btYGt479PXLOR4K7o9A6PJC/2TiaJeXL4qrmVHl3UwXUyMk=
-X-Google-Smtp-Source: APXvYqxPy3MzRImB1p5uGBTXdcSHdB32SVAS4jpsrlLbMd+boV/5IuiNLeQxCDIw30/585vq93owljYh5YviaC4jL+c=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr1324771lfg.152.1562101441838;
- Tue, 02 Jul 2019 14:04:01 -0700 (PDT)
+        Tue, 2 Jul 2019 20:30:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56863 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727287AbfGCA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 20:29:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:20:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,444,1557212400"; 
+   d="scan'208";a="184617637"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2019 17:20:53 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 2 Jul 2019 17:20:53 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 2 Jul 2019 17:20:52 -0700
+Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 2 Jul 2019 17:20:52 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
+ CRSMSX103.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
+ Tue, 2 Jul 2019 18:20:50 -0600
+From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH] selftests/x86/fsgsbase: Fix some test case bugs
+Thread-Topic: [PATCH] selftests/x86/fsgsbase: Fix some test case bugs
+Thread-Index: AQHVMR6idqkf2SQVKkywk8XhSQW+kaa4bKyA
+Date:   Wed, 3 Jul 2019 00:20:49 +0000
+Message-ID: <77F4123B-C10E-4EC0-AD2B-F7F3223BA3BA@intel.com>
+References: <46e6a60f8992fd54da12203e820c35daadaeffb5.1562103506.git.luto@kernel.org>
+In-Reply-To: <46e6a60f8992fd54da12203e820c35daadaeffb5.1562103506.git.luto@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.252.192.184]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DCB9B83EF095F141AEB935CC0833E756@intel.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190617221134.9930-1-f.fainelli@gmail.com> <20190617221134.9930-2-f.fainelli@gmail.com>
-In-Reply-To: <20190617221134.9930-2-f.fainelli@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Jul 2019 23:03:50 +0200
-Message-ID: <CACRpkdZGqiiax2m5L1y3=Enw0Q5cLc-idAQNae34uenf-drHDw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/6] ARM: Add TTBR operator for kasan_init
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>, christoffer.dall@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>, jinb.park7@gmail.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Rob Landley <rob@landley.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, thgarnie@google.com,
-        David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        julien.thierry@arm.com, drjones@redhat.com, philip@cog.systems,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com,
-        kasan-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvmarm@lists.cs.columbia.edu,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian!
 
-thanks for your patch!
+> On Jul 2, 2019, at 14:38, Andy Lutomirski <luto@kernel.org> wrote:
+> 
+> @@ -494,16 +489,24 @@ static void test_ptrace_write_gsbase(void)
+> 		 * selector value is changed or not by the GSBASE write in
+> 		 * a ptracer.
+> 		 */
+> -		if (gs != 0x7) {
+> +		if (gs != *shared_scratch) {
+> 			nerrs++;
+> 			printf("[FAIL]\tGS changed to %lx\n", gs);
 
-On Tue, Jun 18, 2019 at 12:11 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+There is one more point to be fixed like this.
+So, this diff also needs to be applied:
 
-> From: Abbott Liu <liuwenliang@huawei.com>
->
-> The purpose of this patch is to provide set_ttbr0/get_ttbr0 to
-> kasan_init function. The definitions of cp15 registers should be in
-> arch/arm/include/asm/cp15.h rather than arch/arm/include/asm/kvm_hyp.h,
-> so move them.
->
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Abbott Liu <liuwenliang@huawei.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
+index de8c80a..c9da4c5 100644
+--- a/tools/testing/selftests/x86/fsgsbase.c
++++ b/tools/testing/selftests/x86/fsgsbase.c
+@@ -472,7 +472,7 @@ static void test_ptrace_write_gsbase(void)
+ 
+                gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
+ 
+-               if (gs != 0x7) {
++               if (gs != *shared_scratch) {
+                        nerrs++;
+                        printf("[FAIL]\tGS is not prepared with nonzero\n");
+                        goto END;
 
-> +#include <linux/stringify.h>
-
-What is this for? I think it can be dropped.
-
-This stuff adding a whole bunch of accessors:
-
-> +static inline void set_par(u64 val)
-> +{
-> +       if (IS_ENABLED(CONFIG_ARM_LPAE))
-> +               write_sysreg(val, PAR_64);
-> +       else
-> +               write_sysreg(val, PAR_32);
-> +}
-
-Can we put that in a separate patch since it is not
-adding any users, so this is a pure refactoring patch for
-the current code?
-
-Yours,
-Linus Walleij
+Thanks for the cleanup & the fix!
