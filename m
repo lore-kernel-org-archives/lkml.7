@@ -2,122 +2,243 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500BCC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A964FC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321B22187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5BA2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ePJH9RCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfGCMsE (ORCPT
+        id S1727347AbfGCMrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:48:04 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:59666 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfGCMsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:48:01 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 6C7B22079D;
-        Wed,  3 Jul 2019 14:47:59 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 583F5206B9;
-        Wed,  3 Jul 2019 14:47:59 +0200 (CEST)
-Subject: Re: [PATCH v1] media: si2168: Refactor command setup code
-To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brad Love <brad@nextdimension.cc>
-References: <6a8f9a5b-2e88-8c26-440b-76af0d91eda6@free.fr>
- <20190702095109.GC22408@latitude>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <6a644c94-f979-b656-472b-c7fe9303e08c@free.fr>
-Date:   Wed, 3 Jul 2019 14:47:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Jul 2019 08:47:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34461 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfGCMrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 08:47:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c85so1247811pfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hatjJqYTsKuohwhchJlyiHY2qZcDvmLcyitdsqcWn4c=;
+        b=ePJH9RCAZuNdf2hwtyKq7cjNtW1CQTrtwUVrMm0Mf+DqmUFTJh7bfgiarNQgJ7MARo
+         9es1EjhmDkXMvWW5kT4V9T35pzd5V1rNK0y+h885CqtCdUtegFrSwG8Loc2mH+JthQ+d
+         pIASGmII6EePUz+aoDroGZx0SHHGnoWIpYreo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hatjJqYTsKuohwhchJlyiHY2qZcDvmLcyitdsqcWn4c=;
+        b=CEOrzG770igiOmumjboN63R0GOZZQqEjbgRhuLtg9ahTob6S0gqWp9VWjqBYNQXuc4
+         SZ0V//6w97zZqEcoewsOgzjX72kkXUjihlisS9aVd06x6uD50QV4LSNNP7VE1DyFgpXb
+         4aENMzKYDqBkoqbpMRVVXwm9ZrQlh67kr3+3LSmAXh36zkAa7+t1iFnMhmQgpSpJRpuV
+         wQTUZadeXBG8J80qUi57e1zHnESC4PdLn/psgBIxfVxjVLn8fsBgT9pVnnyD9XwXuFSf
+         K52vZLg738muqIiMtt73Oaf4brcZp5EvrvUJQWa+8C4PwQLUXzoAp1dKjRd5RH668+p2
+         NYMg==
+X-Gm-Message-State: APjAAAWTLZpA1N/wcn6fphC4l/fcD8jvlKrcdWIEDcgSSrGgcBnUdqeA
+        ou+sGGUszPPVKckAj5rwT/3KmQ==
+X-Google-Smtp-Source: APXvYqwLpRKVyfFUzoMzHnWbATMSBt8m/783O5FnhLbgPhqDGG7aT1ngbQxv3vRyjju7AdcglU6INQ==
+X-Received: by 2002:a17:90a:109:: with SMTP id b9mr12001649pjb.112.1562158061932;
+        Wed, 03 Jul 2019 05:47:41 -0700 (PDT)
+Received: from localhost.localdomain ([183.82.231.32])
+        by smtp.gmail.com with ESMTPSA id q1sm3735890pfn.178.2019.07.03.05.47.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 05:47:41 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 17/25] ARM: dts: sun8i: Switch R40 dts(i) to use SPDX identifier
+Date:   Wed,  3 Jul 2019 18:16:01 +0530
+Message-Id: <20190703124609.21435-18-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190703124609.21435-1-jagan@amarulasolutions.com>
+References: <20190703124609.21435-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <20190702095109.GC22408@latitude>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jul  3 14:47:59 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2019 11:51, Jonathan Neuschäfer wrote:
+Adopt the SPDX license identifier headers to ease license
+compliance management on Allwinner R40 dts(i) files.
 
-> On Mon, Jul 01, 2019 at 01:44:09PM +0200, Marc Gonzalez wrote:
->
->> By refactoring the command setup code, we can let the compiler
->> determine the size of each command.
-> 
-> I like the idea, it definitely saves some code.
-> 
-> The conversion also looks correct.
-> 
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> ---
->>  drivers/media/dvb-frontends/si2168.c | 142 ++++++++-------------------
->>  1 file changed, 41 insertions(+), 101 deletions(-)
->>
->> diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
->> index 168c503e9154..19398f041c79 100644
->> --- a/drivers/media/dvb-frontends/si2168.c
->> +++ b/drivers/media/dvb-frontends/si2168.c
->> @@ -11,6 +11,12 @@
->>  
->>  static const struct dvb_frontend_ops si2168_ops;
->>  
->> +#define CMD_SETUP(cmd, __args, __rlen) do {	\
->> +	int wlen = sizeof(__args) - 1;		\
->> +	memcpy(cmd.args, __args, wlen);		\
->> +	cmd.wlen = wlen; cmd.rlen = __rlen;	\
->> +} while (0)
-> 
-> It would be nice for casual readers to have a little comment here, that
-> explains (briefly) what this macro does, and what the arguments mean,
-> and their types.
+While the text specifies "of the GPL or the X11 license"
+but the actual license text matches the MIT license as
+specified at [0]
 
-Just a bit of background.
+[0] https://spdx.org/licenses/MIT.html
 
-A macro is required /at some point/ because arrays "decay" into pointers
-when used as function arguments.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 39 +------------------
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 39 +------------------
+ .../boot/dts/sun8i-v40-bananapi-m2-berry.dts  | 39 +------------------
+ 3 files changed, 3 insertions(+), 114 deletions(-)
 
-Come to think of it, I'm really not a fan of "large" macro functions.
-I'll outline a different option in v2.
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 42d62d1ba1dc..79c307091270 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -1,44 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
+  * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 6007d0cc252d..dac6b16fc320 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -1,44 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright 2017 Chen-Yu Tsai <wens@csie.org>
+  * Copyright 2017 Icenowy Zheng <icenowy@aosc.io>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index 15c22b06fc4b..be05d16dffd2 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -1,43 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+  * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+-- 
+2.18.0.321.gffc6fa0e3
 
-
-> Why cmd rather than __cmd? This seems inconsistent.
-
-Note: I hate using underscores in macro argument names, but they clashed
-with the struct field names. There was no such clash for 'cmd'.
-
-
-> The wlen local variable can be avoided by a bit of suffling:
-> 
-> 	#define CMD_SETUP(cmd, __args, __rlen) do {	\
-> 		cmd.rlen = __rlen;			\
-> 		cmd.wlen = sizeof(__args) - 1;		\
-> 		memcpy(cmd.args, __args, cmd.wlen);	\
-> 	} while (0)
-
-Do you think it is important to avoid a local variable?
-
-
->> Not sure where to store the macro. Maybe include/media/dvb_frontend.h?
-> 
-> Then include/media/dvb_frontend.h would contain information about the
-> private structs of a few (two) drivers. This doesn't seem like a good
-> idea to me.
-
-You're right. I found a better place.
-
-Regards.
