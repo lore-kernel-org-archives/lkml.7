@@ -8,68 +8,63 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08A6C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE3CC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B333F2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5235D218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cq4qRUeK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2IC40lD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfGCQ1j (ORCPT
+        id S1727202AbfGCQ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:27:39 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34472 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGCQ1j (ORCPT
+        Wed, 3 Jul 2019 12:27:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37084 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCQ1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:27:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p10so1515793pgn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:27:38 -0700 (PDT)
+        Wed, 3 Jul 2019 12:27:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bh12so1520802plb.4;
+        Wed, 03 Jul 2019 09:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=JOAvBtD07sBYTenk1Ld3G0gRN0kgMIcIX/hXrBaiC48=;
-        b=Cq4qRUeKmmr6VHzShTIBP5uJdaJ5TP3JSbHewKTET6tPfxhELWCppMDSPBfKFYw7mV
-         M9V5TcaxpMI/wVTiVQAqgxwxxWMDpeplHLUPLaYn3kMptcKJZ0XHLsECdmeOSgxF50Wm
-         +JFZWhFhw2Wa5At3DmWjdnIcPlKxzCoi3apzdrjDGrvmknCMiUdNbOYTXfr+oC26T9On
-         2UCPiVYl4pCPue6kkDo2ldm3SAAA7WSpp4fIjbQRStZVhe+NIz52SArH+KT+oJewTNSQ
-         MipHAVbq6krLiAnSl5FIdAhyHJ8mOnwQj7WrldWPg2sItR1hTk2DBqOlYZIBiudSb4AW
-         DYtg==
+        bh=i806vjTPab+S1IW/T0fDaHWxtMiFfg783wFw+mYhfTg=;
+        b=u2IC40lD2iWRDsl0qkacPje1ZsmhEoaXEJW/7RCMyaT51GhNlvrA5DGLye0Vw26t1r
+         LrpxgpwK+YPAoTawhtHIxc29m7VzkKBJiSRbpjRiAcOtyGLmRd4CAeiuJBJi/jAoZ/LF
+         XL13Dfjon1vnhzQv/CTXuEEGohMJRV5rkZlH2Ktnoc93cPSmXlysJMYGJnPEPZiU4x8m
+         t5vFRo6BzkNjvfSMRrIz3CKS7dUVpiL+CmlDwD5uNElqhmJJtqXpQkg5gD5eJoICIURY
+         wTwoOpCqO3Ev6Y+boF/rYXjemfKajMAF/Ns03Ij2zPeJQg1TdO9rt3kqwxtmRHuW/2lb
+         72Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JOAvBtD07sBYTenk1Ld3G0gRN0kgMIcIX/hXrBaiC48=;
-        b=Ks3Elp8j7dTEuHma2XQn/oFKXXXjD+HmIV4m51PnA4OKmaR9gaXHEgibh5zlFzBeQO
-         Rqsk9c0wGScIKNaddta27uOJT+mqP1kWJBose0J40WOIoTMBKyJtVeBSMAtt8V0AqQoW
-         HpbsESc4XJ3/ozDJaivy5QArsLdFfR09CVWra4WaB8JQXHGA8O06O24JB22deyeBJH08
-         pyvmIl6L/raSmaCcfaZAyGjPgfg0YNek9u4C/y03iOeFYdOvmULsvOwOZSmlBc3gq6Hm
-         xBBoydoKyw1fxzzGxZF/YLgTlUo1ZmRJYWHyoxWPWbxW0G0MBOoDGSfIVmsf68FCSKB0
-         KupA==
-X-Gm-Message-State: APjAAAVRol7C847Lz7nlFfaO7FscX6Cz1q5MB5tII7SENrXJifG2zo4t
-        HeR5hod6wWqWIMHZg1E3t7I=
-X-Google-Smtp-Source: APXvYqwxisxAz70mUIcuNaWqws+r7Wyj6eH5XkoIzyb8MeIIkv07CAMI7ekDa2eTOk8igLTIOUxdPQ==
-X-Received: by 2002:a63:4c46:: with SMTP id m6mr39207542pgl.59.1562171258154;
-        Wed, 03 Jul 2019 09:27:38 -0700 (PDT)
+        bh=i806vjTPab+S1IW/T0fDaHWxtMiFfg783wFw+mYhfTg=;
+        b=ZWajGiYOu0Bua388NsSecg89z7cLB65wEUP0G5GAriT3dSPfDciR+3Kp9YzKIKTW/a
+         KBu5P3NdjmINujHKkRKqb7PQATL3GphJltCYhvFh277h+T5WSWnI/QDypfZbVuKXfy4p
+         4Fkpj+AcvNPzOmqr+967aOQ8eS7MdTv8HPiHmdSYfgPzlfQRhHrkwBW4DLyahPyuZxQ8
+         fwNIAfGMcC7PkFOz4zenQmCVG12m0xuZZrxcG30R/VNKMbNHCzfBUyrtTHIFeE/i1Nq7
+         TMwtYThod8/jKfEfXHIOxPtHUuVEyX1QilWI1fdi1t5gTkH30p69E2criobpi8GJOggN
+         EAAQ==
+X-Gm-Message-State: APjAAAUcStf9+5y30V3Dg7ulRk/mX7Frma8M2GTjVFdjqViMy5aXp/uo
+        esrmRi4WNxggxIxpHJDMAJo=
+X-Google-Smtp-Source: APXvYqxm13u/JNmjt8siHF2rlzRa/6WlAd+F/Usyk97ToBj2tGUSL7hP0XRiIXjyg5ueq7YiukHYIQ==
+X-Received: by 2002:a17:902:7c96:: with SMTP id y22mr22871987pll.39.1562171268989;
+        Wed, 03 Jul 2019 09:27:48 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h1sm2499433pgv.93.2019.07.03.09.27.33
+        by smtp.googlemail.com with ESMTPSA id t26sm2453818pgu.43.2019.07.03.09.27.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:27:37 -0700 (PDT)
+        Wed, 03 Jul 2019 09:27:48 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+Cc:     Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 08/35] drm/i915: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:27:28 +0800
-Message-Id: <20190703162728.32230-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 09/35] infiniband: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:27:42 +0800
+Message-Id: <20190703162742.32276-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,28 +83,26 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- drivers/gpu/drm/i915/gvt/dmabuf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gvt/dmabuf.c b/drivers/gpu/drm/i915/gvt/dmabuf.c
-index 41c8ebc60c63..fe6fa979f22a 100644
---- a/drivers/gpu/drm/i915/gvt/dmabuf.c
-+++ b/drivers/gpu/drm/i915/gvt/dmabuf.c
-@@ -411,14 +411,13 @@ int intel_vgpu_query_plane(struct intel_vgpu *vgpu, void *args)
- 		goto out;
- 	}
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 8233f5a4e623..84b3ff2687fb 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -4276,11 +4276,11 @@ static void i40iw_qhash_ctrl(struct i40iw_device *iwdev,
+ 	/* if not found then add a child listener if interface is going up */
+ 	if (!ifup)
+ 		return;
+-	child_listen_node = kzalloc(sizeof(*child_listen_node), GFP_ATOMIC);
++	child_listen_node = kmemdup(parent_listen_node,
++			sizeof(*child_listen_node), GFP_ATOMIC);
+ 	if (!child_listen_node)
+ 		return;
+ 	node_allocated = true;
+-	memcpy(child_listen_node, parent_listen_node, sizeof(*child_listen_node));
  
--	dmabuf_obj->info = kmalloc(sizeof(struct intel_vgpu_fb_info),
-+	dmabuf_obj->info = kmemdup(&fb_info, sizeof(struct intel_vgpu_fb_info),
- 				   GFP_KERNEL);
- 	if (unlikely(!dmabuf_obj->info)) {
- 		gvt_vgpu_err("allocate intel vgpu fb info failed\n");
- 		ret = -ENOMEM;
- 		goto out_free_dmabuf;
- 	}
--	memcpy(dmabuf_obj->info, &fb_info, sizeof(struct intel_vgpu_fb_info));
- 
- 	((struct intel_vgpu_fb_info *)dmabuf_obj->info)->obj = dmabuf_obj;
+ 	memcpy(child_listen_node->loc_addr, ipaddr,  ipv4 ? 4 : 16);
  
 -- 
 2.11.0
