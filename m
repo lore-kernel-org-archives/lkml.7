@@ -2,181 +2,113 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A81C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A88BC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D757C21880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E357D21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rv8/eydR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfGCHjP (ORCPT
+        id S1727300AbfGCHje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 03:39:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5217 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfGCHjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 03:39:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 00:39:14 -0700
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="157884803"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 00:39:11 -0700
-Subject: [PATCH] dax: Fix missed PMD wakeups
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Boaz Harrosh <openosd@gmail.com>, stable@vger.kernel.org,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Date:   Wed, 03 Jul 2019 00:24:54 -0700
-Message-ID: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Wed, 3 Jul 2019 03:39:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44084 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfGCHjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 03:39:31 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e189so1241835oib.11
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 00:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w+ONtwKrr9MoAxJy3nzYyZYaZtN7tZSEZElIWhYkH6s=;
+        b=rv8/eydRATgo4XLG7QYMsUNM6tIoAfjMBeIEw526lP66oRfS1YEvpduOSz0u7nibUl
+         nb76zfYHzWEFwMrqiGxJbb+vcHmiIHpS7tFjZ2ltXqaYUkFhKztC9otdCyajFbmp/N/u
+         VMJK38E3H+WyuHIeRFz7e3AmhIHOJr6kz2xOYRbsaMFVBGxPXF1Lys2N4W6Z70E8i8/C
+         MuzeQrOzkxXI/3PPnh42oDJmnOXbrx8nT/8lVQLr3qTTlR6i2SN2J59cRwl6JJmgamuw
+         loUICPT9wT9KTrXh97PDSBDor1LhPYL9aH+2dXN/tcH4XWDVKf9Ish5qOZvC3rqpl4n7
+         KlcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w+ONtwKrr9MoAxJy3nzYyZYaZtN7tZSEZElIWhYkH6s=;
+        b=sRsQpub41zYg4gVvANf2rPbb/XsWsfDoW4Am27p9K4TtvYde94pXatMXnqsTxK5RGs
+         h3QmMdLeZUXZCl6FZS9cwp6F3uppTUe+7n/HnuDSUZi4/WFgIfranhFlEaP0suG4MvyG
+         lE0SXnz3GZamKNdGK8MQsKPts4Hd6kC1RZXELIo4876Sp8qEgUiUQPIE7aK+bVobYTAz
+         40s4acBPrmdkEmsIkRjsc9wA4uKhWt6QvU0ON7NKff2O6q6EPyRypyTchOSIdBmRzo3P
+         uPbtqhB4yvekA4KQ5pm3p4MliS7nVnsJUvcOZ1UYXYqq8E5YvnBnSIcPuj+fsPiXJsKD
+         gdMg==
+X-Gm-Message-State: APjAAAU2nIoFyxIirMnFxqzhEKvaZiDlCaAwOv7nkRtiAEVIc+Z5kDSr
+        RtuJi2V6QvaJ6tv+YHyTwFUJdjJaCL4IV7T5ts6C3g==
+X-Google-Smtp-Source: APXvYqxN4JBehPtSNVFvMgeIctFw8U6GM1tPTFUqjq+7Uz2D6J3GcSi6Tcqvx53ETCvfY/YyDqrTPsjGLQzG92y6q3s=
+X-Received: by 2002:aca:574e:: with SMTP id l75mr5705600oib.2.1562139570860;
+ Wed, 03 Jul 2019 00:39:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20190627120208.4661-1-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20190627120208.4661-1-codrin.ciubotariu@microchip.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Wed, 3 Jul 2019 15:39:19 +0800
+Message-ID: <CA+Px+wXBBgeWbjZ5uQmwJgn+d=ZE-N0aehitog7==ak3GDxMsQ@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH 1/2] ASoC: codecs: ad193x: Group register
+ initialization at probe
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        linux-kernel@vger.kernel.org, lars@metafoo.de,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
-been encountering intermittent lockups. In the failing case a thread
-that is taking a PMD-fault is awaiting a wakeup while holding the
-'mmap_sem' for read. As soon as the next mmap() event occurs that tries
-to take the 'mmap_sem' for write it causes ps(1)  and any new 'mmap_sem'
-reader to block.
+On Thu, Jun 27, 2019 at 8:05 PM Codrin Ciubotariu
+<codrin.ciubotariu@microchip.com> wrote:
+> +struct ad193x_reg_default {
+> +       unsigned int reg;
+> +       unsigned int val;
+> +};
+You probably don't need to define this.  There is a struct
+reg_sequence in regmap.h.
 
-Debug shows that there are no outstanding Xarray entry-lock holders in
-the hang state which indicates that a PTE lock-holder thread caused a
-PMD thread to wait. When the PTE index-lock is released it may wake the
-wrong waitqueue depending on how the index hashes. Brute-force fix this
-by arranging for PTE-aligned indices within a PMD-span to hash to the
-same waitqueue as the PMD-index.
+> +
+> +/* codec register values to set after reset */
+> +static void ad193x_reg_default_init(struct ad193x_priv *ad193x)
+> +{
+> +       const struct ad193x_reg_default reg_init[] = {
+> +               {  0, 0x99 },   /* PLL_CLK_CTRL0: pll input: mclki/xi 12.288Mhz */
+> +               {  1, 0x04 },   /* PLL_CLK_CTRL1: no on-chip Vref */
+> +               {  2, 0x40 },   /* DAC_CTRL0: TDM mode */
+> +               {  4, 0x1A },   /* DAC_CTRL2: 48kHz de-emphasis, unmute dac */
+> +               {  5, 0x00 },   /* DAC_CHNL_MUTE: unmute DAC channels */
+> +       };
+> +       const struct ad193x_reg_default reg_adc_init[] = {
+> +               { 14, 0x03 },   /* ADC_CTRL0: high-pass filter enable */
+> +               { 15, 0x43 },   /* ADC_CTRL1: sata delay=1, adc aux mode */
+> +       };
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(reg_init); i++)
+> +               regmap_write(ad193x->regmap, reg_init[i].reg, reg_init[i].val);
+> +
+> +       if (ad193x_has_adc(ad193x)) {
+> +               for (i = 0; i < ARRAY_SIZE(reg_adc_init); i++) {
+> +                       regmap_write(ad193x->regmap, reg_adc_init[i].reg,
+> +                                    reg_adc_init[i].val);
+> +               }
+> +       }
+And you could use regmap_multi_reg_write( ) to substitute the two for-loops.
 
-This fix may increase waitqueue contention, but a fix for that is saved
-for a larger rework. In the meantime this fix is suitable for -stable
-backports.
-
-Link: https://lore.kernel.org/linux-fsdevel/CAPcyv4hwHpX-MkUEqxwdTj7wCCZCN4RV-L4jsnuwLGyL_UEG4A@mail>
-Fixes: b15cd800682f ("dax: Convert page fault handlers to XArray")
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Boaz Harrosh <openosd@gmail.com>
-Cc: <stable@vger.kernel.org>
-Reported-by: Robert Barror <robert.barror@intel.com>
-Reported-by: Seema Pandit <seema.pandit@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- fs/dax.c |   34 ++++++++++++----------------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
-
-diff --git a/fs/dax.c b/fs/dax.c
-index 9fd908f3df32..592944c522b8 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -144,19 +144,14 @@ struct wait_exceptional_entry_queue {
- 	struct exceptional_entry_key key;
- };
- 
--static wait_queue_head_t *dax_entry_waitqueue(struct xa_state *xas,
--		void *entry, struct exceptional_entry_key *key)
-+static wait_queue_head_t *dax_index_waitqueue(struct xa_state *xas,
-+		struct exceptional_entry_key *key)
- {
- 	unsigned long hash;
- 	unsigned long index = xas->xa_index;
- 
--	/*
--	 * If 'entry' is a PMD, align the 'index' that we use for the wait
--	 * queue to the start of that PMD.  This ensures that all offsets in
--	 * the range covered by the PMD map to the same bit lock.
--	 */
--	if (dax_is_pmd_entry(entry))
--		index &= ~PG_PMD_COLOUR;
-+	/* PMD-align the index to ensure PTE events wakeup PMD waiters */
-+	index &= ~PG_PMD_COLOUR;
- 	key->xa = xas->xa;
- 	key->entry_start = index;
- 
-@@ -177,17 +172,12 @@ static int wake_exceptional_entry_func(wait_queue_entry_t *wait,
- 	return autoremove_wake_function(wait, mode, sync, NULL);
- }
- 
--/*
-- * @entry may no longer be the entry at the index in the mapping.
-- * The important information it's conveying is whether the entry at
-- * this index used to be a PMD entry.
-- */
--static void dax_wake_entry(struct xa_state *xas, void *entry, bool wake_all)
-+static void dax_wake_index(struct xa_state *xas, bool wake_all)
- {
- 	struct exceptional_entry_key key;
- 	wait_queue_head_t *wq;
- 
--	wq = dax_entry_waitqueue(xas, entry, &key);
-+	wq = dax_index_waitqueue(xas, &key);
- 
- 	/*
- 	 * Checking for locked entry and prepare_to_wait_exclusive() happens
-@@ -222,7 +212,7 @@ static void *get_unlocked_entry(struct xa_state *xas)
- 				!dax_is_locked(entry))
- 			return entry;
- 
--		wq = dax_entry_waitqueue(xas, entry, &ewait.key);
-+		wq = dax_index_waitqueue(xas, &ewait.key);
- 		prepare_to_wait_exclusive(wq, &ewait.wait,
- 					  TASK_UNINTERRUPTIBLE);
- 		xas_unlock_irq(xas);
-@@ -246,7 +236,7 @@ static void wait_entry_unlocked(struct xa_state *xas, void *entry)
- 	init_wait(&ewait.wait);
- 	ewait.wait.func = wake_exceptional_entry_func;
- 
--	wq = dax_entry_waitqueue(xas, entry, &ewait.key);
-+	wq = dax_index_waitqueue(xas, &ewait.key);
- 	/*
- 	 * Unlike get_unlocked_entry() there is no guarantee that this
- 	 * path ever successfully retrieves an unlocked entry before an
-@@ -263,7 +253,7 @@ static void put_unlocked_entry(struct xa_state *xas, void *entry)
- {
- 	/* If we were the only waiter woken, wake the next one */
- 	if (entry)
--		dax_wake_entry(xas, entry, false);
-+		dax_wake_index(xas, false);
- }
- 
- /*
-@@ -281,7 +271,7 @@ static void dax_unlock_entry(struct xa_state *xas, void *entry)
- 	old = xas_store(xas, entry);
- 	xas_unlock_irq(xas);
- 	BUG_ON(!dax_is_locked(old));
--	dax_wake_entry(xas, entry, false);
-+	dax_wake_index(xas, false);
- }
- 
- /*
-@@ -522,7 +512,7 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 
- 		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
--		dax_wake_entry(xas, entry, true);
-+		dax_wake_index(xas, true);
- 		mapping->nrexceptional--;
- 		entry = NULL;
- 		xas_set(xas, index);
-@@ -915,7 +905,7 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
- 	xas_lock_irq(xas);
- 	xas_store(xas, entry);
- 	xas_clear_mark(xas, PAGECACHE_TAG_DIRTY);
--	dax_wake_entry(xas, entry, false);
-+	dax_wake_index(xas, false);
- 
- 	trace_dax_writeback_one(mapping->host, index, count);
- 	return ret;
-
+See https://mailman.alsa-project.org/pipermail/alsa-devel/2019-June/151090.html
+as an example.  It also has some reg initializations in component
+probe( ).
