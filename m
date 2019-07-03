@@ -2,99 +2,114 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70546C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A45EC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA07218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F9C218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562188287;
+	bh=6aVvitJ2eQg7l8Z/jfjS1nTET2e6zwxLEVDtiVxsvuY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AFWBbsy2xJsbhB6Oydxhnljk1vl9z+pklZxQB2iCaQYPUEBK/Dl3JhZcawISTpN+k
+	 Gt9sehgGkNSiAKsW/Muhn/GkZqK4hTf393gQHM9o4t+kuzlGt3LiAhzkIrm81qdnIR
+	 uX1t3Hvn0KrKtPcQkBZT4pG1NhqC9ZhP/nk/PBgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfGCVKQ convert rfc822-to-8bit (ORCPT
+        id S1727300AbfGCVL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:10:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35034 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726550AbfGCVKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:10:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 24FABAD35;
-        Wed,  3 Jul 2019 21:10:15 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 23:10:14 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, chetjain@in.ibm.com,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: Re: [PATCH] crypto: user - prevent operating on larval algorithms
-Message-ID: <20190703231014.610ab8b5@kitsune.suse.cz>
-In-Reply-To: <20190703203128.GC10080@gmail.com>
-References: <20190701153154.1569c2dc@kitsune.suse.cz>
-        <20190702211700.16526-1-ebiggers@kernel.org>
-        <20190703143057.miqgc7blhjjxjmee@gondor.apana.org.au>
-        <20190703222108.467ec204@kitsune.suse.cz>
-        <20190703203128.GC10080@gmail.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+        Wed, 3 Jul 2019 17:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbfGCVL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:11:26 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025C6218AD;
+        Wed,  3 Jul 2019 21:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562188285;
+        bh=6aVvitJ2eQg7l8Z/jfjS1nTET2e6zwxLEVDtiVxsvuY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I6zieWHbYXuDTvqFmLgAYXkG2rRbka6EwT1DhfYsdVikRogo0nSR6/3v1Y9ERV1Db
+         pSeqSg13VZ5EHMX3cohtBMB6eBZcl8yNk3WlGtV6i4S5Q7LVv+KCZY4SvqgAfLhmDH
+         h4cCBUMYPJ/H1peL6PCbiEDgORNDzGTVP0kAkJso=
+Received: by mail-qt1-f173.google.com with SMTP id d23so5826960qto.2;
+        Wed, 03 Jul 2019 14:11:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAXaxgdL5fJuzPN3a8INkc/BrQYIVzzH2yMogV0p+JcMrD/QGHyc
+        6K9EHbPv6o0VH32NKCu4IdBB9UHvyEwj1bmPAg==
+X-Google-Smtp-Source: APXvYqz2JpG3y/B5JHop/E8UqTGOE9Y3sBc3rmCutZyjkSWocM2iVeN7Rk1xUR4GzOGuOaW23rZIeT0cxfAMIfjjkmk=
+X-Received: by 2002:a0c:baa1:: with SMTP id x33mr34537404qvf.200.1562188284250;
+ Wed, 03 Jul 2019 14:11:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190703193724.246854-1-mka@chromium.org>
+In-Reply-To: <20190703193724.246854-1-mka@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 3 Jul 2019 15:11:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
+Message-ID: <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 13:31:29 -0700
-Eric Biggers <ebiggers@kernel.org> wrote:
+On Wed, Jul 3, 2019 at 1:37 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Add the 'realtek,eee-led-mode-disable' property to disable EEE
+> LED mode on Realtek PHYs that support it.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - document 'realtek,eee-led-mode-disable' instead of
+>   'realtek,enable-ssc' in the initial version
+> ---
+>  .../devicetree/bindings/net/realtek.txt       | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/realtek.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+> new file mode 100644
+> index 000000000000..63f7002fa704
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/realtek.txt
+> @@ -0,0 +1,19 @@
+> +Realtek PHY properties.
+> +
+> +This document describes properties of Realtek PHYs.
+> +
+> +Optional properties:
+> +- realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
+> +
+> +Example:
+> +
+> +mdio0 {
+> +       compatible = "snps,dwmac-mdio";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       ethphy: ethernet-phy@1 {
+> +               reg = <1>;
+> +               realtek,eee-led-mode-disable;
 
-> Hi Michal,
-> 
-> On Wed, Jul 03, 2019 at 10:21:08PM +0200, Michal Suchánek wrote:
-> > On Wed, 3 Jul 2019 22:30:57 +0800
-> > Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> >   
-> > > On Tue, Jul 02, 2019 at 02:17:00PM -0700, Eric Biggers wrote:  
-> > > > From: Eric Biggers <ebiggers@google.com>
-> > > > 
-> > > > Michal Suchanek reported [1] that running the pcrypt_aead01 test from
-> > > > LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
-> > > > alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
-> > > > The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
-> > > > 
-> > > > The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
-> > > > unregister isn't a real registered algorithm, but rather is a "test
-> > > > larval", which is a special "algorithm" added to the algorithms list
-> > > > while the real algorithm is still being tested.  Larvals don't have
-> > > > initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
-> > > > doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
-> > > > to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
-> > > >   
-> > 
-> > Do you have some way to reproduce this reliably?
-> > 
-> > I suppose you would have to send a signal to the process for the call
-> > to get interrupted, right?
-> >   
-> 
-> It reproduced pretty reliably for me with what you suggested.  Just typing in
-> terminal:
-> 
-> 	while true; do pcrypt_aead01; done
-> 
-> and then holding Ctrl-C.
-> 
-> If I have time I'll try writing an LTP test that specifically reproduces it.
-> Yes, it would involve sending a signal to a thread or process that's executing
-> CRYPTO_MSG_NEWALG (unless I find a better way).
+I think if we're going to have custom properties for phys, we should
+have a compatible string to at least validate whether the custom
+properties are even valid for the node.
 
-Maybe it is possible to just send the remove message without waiting
-for the ack on add.
-
-Thanks
-
-Michal
+Rob
