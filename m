@@ -2,119 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E81C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49F218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YnADNR5a"
+	by mail.kernel.org (Postfix) with ESMTP id D7F40218C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfGCVtO (ORCPT
+        id S1727364AbfGCVv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:49:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:56685 "EHLO ozlabs.org"
+        Wed, 3 Jul 2019 17:51:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:55501 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbfGCVtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:49:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fF9z1y9kz9s8m;
-        Thu,  4 Jul 2019 07:49:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562190551;
-        bh=ogYrAdqmBL5sV/Ifv2mvi7wFD/kypvfY6pwW/9HHGMY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YnADNR5aXZq0RBozBxpyZRbBUhE18DQHskZE8/xRalMseUrvh7vA43ympqxzEm348
-         UBrkTnRCkrpl+pDakNk5nStyIHeI80uyW9lqSmWrbF6x2cOo1J+eu9r9cVzvBGMtAT
-         HxWpSZt0jyHwErnXuvnuulUjaYB4/UyIBBTuSO6QmPx49S78f2PTL3J0HVR3RjYzsj
-         9WBHrzV5jq5ubwXCT1/yM/8coPxhR4CDobL17fR1bCzVORjy9T43jC5zRVz+Pt4zWk
-         DrFYwaE9g86F0zAvRQswD8bfXmbZ6xMgSIbjc90ApRApxA16uKmD0BmoTDH4a7KCyo
-         nzwl0bIfG1rDA==
-Date:   Thu, 4 Jul 2019 07:49:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tags need some work in the kvm tree
-Message-ID: <20190704074908.5fb3d184@canb.auug.org.au>
+        id S1727058AbfGCVv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:51:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C562368B05; Wed,  3 Jul 2019 23:51:26 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 23:51:26 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] nouveau: unlock mmap_sem on all errors from
+ nouveau_range_fault
+Message-ID: <20190703215126.GA17366@lst.de>
+References: <20190703184502.16234-1-hch@lst.de> <20190703184502.16234-5-hch@lst.de> <ec5e86a4-4a60-0dd5-797c-41b21e3a091a@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/.bYtCXpIAYKBGltV7yY8X/U"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec5e86a4-4a60-0dd5-797c-41b21e3a091a@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.bYtCXpIAYKBGltV7yY8X/U
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 03, 2019 at 01:46:02PM -0700, Ralph Campbell wrote:
+> You can delete the comment "With the old API the driver must ..."
+> (not visible in the patch here).
 
-Hi all,
+Sure.
 
-In commit
+> I suggest moving the two assignments:
+> 	range->default_flags = 0;
+> 	range->pfn_flags_mask = -1UL;
+> to just above the "again:" where the other range.xxx fields are
+> initialized in nouveau_svm_fault().
 
-  e8a70bd4e925 ("KVM: nVMX: allow setting the VMFUNC controls MSR")
+For now I really just want to move the code around.  As Jason pointed
+out the flow will need some major rework, and I'd rather not mess
+with little things like this for now.  Especially as I assume Jerome
+must have an update to the proper API ready given that he both
+wrote that new API and the nouveau code.
 
-Fixes tag
+> You can delete this comment (only the first line is visible here)
+> since it is about the "old API".
 
-  Fixes: 27c42a1bb ("KVM: nVMX: Enable VMFUNC for the L1 hypervisor", 2017-=
-08-03)
+Ok.
 
-has these problem(s):
+> Also, it should return -EBUSY not -EAGAIN since it means there was a
+> range invalidation collision (similar to hmm_range_fault() if
+> !range->valid).
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-  - The trailing date is unexpected.
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
+Yes, probably.
 
-In commit
 
-  6defc591846d ("KVM: nVMX: include conditional controls in /dev/kvm KVM_GE=
-T_MSRS")
+>> @@ -515,15 +517,14 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range,
+>>     	ret = hmm_range_fault(range, block);
+>
+> nouveau_range_fault() is only called with "block = true" so
+> could eliminate the block parameter and pass true here.
 
-Fixes tag
+Indeed.
 
-  Fixes: 1389309c811 ("KVM: nVMX: expose VMX capabilities for nested hyperv=
-isors to userspace", 2018-02-26)
+>
+>>   	if (ret <= 0) {
+>> -		if (ret == -EBUSY || !ret) {
+>> -			/* Same as above, drop mmap_sem to match old API. */
+>> -			up_read(&range->vma->vm_mm->mmap_sem);
+>> -			ret = -EBUSY;
+>> -		} else if (ret == -EAGAIN)
+>> +		if (ret == 0)
+>>   			ret = -EBUSY;
+>> +		if (ret != -EAGAIN)
+>> +			up_read(&range->vma->vm_mm->mmap_sem);
+>
+> Can ret == -EAGAIN happen if "block = true"?
 
-has these problem(s):
+I don't think so, we can remove that.
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-  - The trailing date is unexpected.
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
+> Generally, I prefer the read_down()/read_up() in the same function
+> (i.e., nouveau_svm_fault()) but I can see why it should be here
+> if hmm_range_fault() can return with mmap_sem unlocked.
 
---=20
-Cheers,
-Stephen Rothwell
+Yes, in the long run this all needs a major cleanup..
 
---Sig_/.bYtCXpIAYKBGltV7yY8X/U
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+>>   @@ -718,8 +719,8 @@ nouveau_svm_fault(struct nvif_notify *notify)
+>>   						NULL);
+>>   			svmm->vmm->vmm.object.client->super = false;
+>>   			mutex_unlock(&svmm->mutex);
+>> +			up_read(&svmm->mm->mmap_sem);
+>>   		}
+>> -		up_read(&svmm->mm->mmap_sem);
+>>   
+>
+> The "else" case should check for -EBUSY and goto again.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0dItQACgkQAVBC80lX
-0Gwv5wf9FteVffOioPU1RApnBCZ95sSTsrIv9feDYWWXcAB6wtw7eDLCrczS3Uda
-+rT2sPpC9gkgsJXX6BnQ01FjOhbg1I8QTBTp9yJtOWNLxNxTlz94Vwz7YBmwjMCo
-SRPyLE4TUVGnb7v+T9Ge1AWHhQ1EgsU+l5JAGdiGIfzJ1m1NU1c3Xb172DBey1Pk
-VsuOwXbAjDE7YnL5PZF0dGDcqUly1SQ+CkB439DWf5YVutMCQLVP8cvKaHS3gyIS
-eq+po8CUylXVFVB/jjD03FGIyPDXBDAnHmqcgoQryxyQTy5XFnr/uB5GTLxXOZ9A
-kaOBIrrXWuirTQgGdSUYq0QedIq4+g==
-=zY54
------END PGP SIGNATURE-----
-
---Sig_/.bYtCXpIAYKBGltV7yY8X/U--
+It should if I were trying to fix this.  But this is just code
+inspection and I don't even have the hardware, so I'll have to leave
+that for someone who can do real development on the driver.
