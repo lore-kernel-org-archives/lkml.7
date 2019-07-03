@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D769C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16E8C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C6121882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC83218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562182572;
-	bh=X+w6oEZ7Oqtw7OosCBFQMbPj6yt8YZdBW+clG6vdnHQ=;
+	s=default; t=1562182643;
+	bh=U8Xrb45ilHhw7jx7gYnL8WAYXBkJ2Df/YlcppG55Odw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=amrbrf5pMDaxFkCveWa2xix43cY7pcFDygB5IRnTkxk0q+2OMyEgobfCbb2HSXnrh
-	 5igAGDHacYU6pBF8IAqOBssRIJH96e5Pmi8wNg5GX3B1cgFr3H7ZzUAr9cbVQSTuK2
-	 dfNNtaUXrmyy1YmR3bpi1Sh2j56i1VWkGXfSw+Ks=
+	b=K4EvMlsTmcZbmL6vYq0BDQKRExq1webn/cfZ5mNLq64AQbiXJ8gUI8xwwSR8F9HjW
+	 Rg8Jjpm/ySRiGujL+8OMwCbJm6O57SYE/YegJ64o0t8x8E1HcAkIDzQJ0fje/g5nr/
+	 xgrR1iBnTjFdJedfzoUrM06vvaWPTJw4raf4un6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfGCTgK (ORCPT
+        id S1727045AbfGCThV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:36:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 15:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfGCTgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:36:10 -0400
+        id S1726473AbfGCThV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:37:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 676DA21882;
-        Wed,  3 Jul 2019 19:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 820E5218A3;
+        Wed,  3 Jul 2019 19:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562182568;
-        bh=X+w6oEZ7Oqtw7OosCBFQMbPj6yt8YZdBW+clG6vdnHQ=;
+        s=default; t=1562182640;
+        bh=U8Xrb45ilHhw7jx7gYnL8WAYXBkJ2Df/YlcppG55Odw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2T9R9p660mrCBOPbl9g/ChqJBQafKQl67BXZD5ysSIcaSD+6TDhuDPXViFoptsUSx
-         RxFferRwXB1GCPM3giZfseHqXkpcx7gFN49VKVLhwE4HUOJ1hh16r56pFUX2aIXJyv
-         Kd4ieqQiBAHrWTl/Holq52hq2voLL/TPoeg8cS9Y=
-Date:   Wed, 3 Jul 2019 21:36:06 +0200
+        b=SarjFpkC60l99m43nx6zVD5rRkXYFu85DIgP9ZHqRN+KP3ERRY2aevSYIXuMuvcwu
+         lO8wGEz3aGnxE9j2bCn9jG49518QSOhd+xvN0Q/UYK4/BmLiEfZG/ndolJAKE99105
+         nb6jyVxfGFOC8t8V4Z/tgZvvOuFVfKSdgCcxD31U=
+Date:   Wed, 3 Jul 2019 21:37:17 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Muchun Song <smuchun@gmail.com>
 Cc:     rafael@kernel.org, benh@kernel.crashing.org, prsood@codeaurora.org,
         mojha@codeaurora.org, gkohli@codeaurora.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 OPT2] driver core: Fix use-after-free and double free
+Subject: Re: [PATCH v1 OPT1] driver core: Fix use-after-free and double free
  on glue directory
-Message-ID: <20190703193606.GA8452@kroah.com>
-References: <20190626144021.7249-1-smuchun@gmail.com>
+Message-ID: <20190703193717.GB8452@kroah.com>
+References: <20190626143823.7048-1-smuchun@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626144021.7249-1-smuchun@gmail.com>
+In-Reply-To: <20190626143823.7048-1-smuchun@gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:40:21PM +0800, Muchun Song wrote:
+On Wed, Jun 26, 2019 at 10:38:23PM +0800, Muchun Song wrote:
 > There is a race condition between removing glue directory and adding a new
 > device under the glue directory. It can be reproduced in following test:
 > 
@@ -130,10 +130,9 @@ On Wed, Jun 26, 2019 at 10:40:21PM +0800, Muchun Song wrote:
 > reference count is decremented to 0, it will also call kmem_cache_free()
 > to free glue_dir->sd again. This will result in double free.
 > 
-> In order to avoid this happening, we can ensure the lookup of the glue
-> dir and creation of the child object(s) are done under a single instance
-> of gdp_mutex so we never see a stale "empty" but still poentially used
-> glue dir around.
+> In order to avoid this happening, we should not call kobject_del() on
+> path2 when the reference count of glue_dir is greater than 1. So we add a
+> conditional statement to fix it.
 > 
 > The following calltrace is captured in kernel 4.14 with the following patch
 > applied:
@@ -173,81 +172,40 @@ On Wed, Jun 26, 2019 at 10:40:21PM +0800, Muchun Song wrote:
 > Signed-off-by: Muchun Song <smuchun@gmail.com>
 > ---
 > 
-> Change in v4:
->        1. Add some kerneldoc comment.
->        2. Remove unlock_if_glue_dir().
->        3. Rename get_device_parent_locked_if_glue_dir() to
->           get_device_parent_locked.
->        4. Update commit message.
-> Change in v3:
->        Add change log.
-> Change in v2:
->        Fix device_move() also.
+> Hi Greg,
 > 
->  drivers/base/core.c | 108 +++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 92 insertions(+), 16 deletions(-)
+> This fix patch is based on the refcount. It is also the original fix method.
+> Another fix patch is based on the mutex lock.
+> 
+> It can reference to:
+>         Subject: [PATCH v4 OPT2] driver core: Fix use-after-free and double free on glue directory
+> 
+> I am hoping you would chose which solution you prefered here. Thanks.
+> 
+>  drivers/base/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 4aeaa0c92bda..2251e391a352 100644
+> index 4aeaa0c92bda..5ac5376ae9af 100644
 > --- a/drivers/base/core.c
 > +++ b/drivers/base/core.c
-> @@ -1739,8 +1739,23 @@ class_dir_create_and_add(struct class *class, struct kobject *parent_kobj)
+> @@ -1825,7 +1825,7 @@ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
+>  		return;
 >  
->  static DEFINE_MUTEX(gdp_mutex);
->  
-> -static struct kobject *get_device_parent(struct device *dev,
-> -					 struct device *parent)
-> +/**
-> + * __get_device_parent() - Get the parent device kobject.
-> + * @dev: Pointer to the device structure.
-> + * @parent: Pointer to the parent device structure.
-> + * @lock: When we live in a glue directory, should we hold the
-> + *        gdp_mutex lock when this function returns? If @lock
-> + *        is true, this function returns with the gdp_mutex
-> + *        holed. Otherwise it will not.
+>  	mutex_lock(&gdp_mutex);
+> -	if (!kobject_has_children(glue_dir))
+> +	if (!kobject_has_children(glue_dir) && kref_read(&glue_dir->kref) == 1)
+>  		kobject_del(glue_dir);
 
-Ugh, if you are trying to get me to hate one version of these patches,
-this is how you do it :)
+Ok, I guess I have to take this patch, as the other one is so bad :)
 
-A function should not "sometimes takes a lock, sometimes does not,
-depending on a parameter passed into it"  That way lies madness...
+But, I need a very large comment here saying why we are poking around in
+a kref and why we need to do this, at the expense of anything else.
 
+So can you respin this patch with a comment here to help explain it so
+we have a chance to understand it when we run across this line in 10
+years?
 
-> + *
-> + * Note: Only when we live in a glue directory and @lock is
-> + * true, the function will return with the gdp_mutex holed.
-> + * In this case, The caller is responsible for releasing the
-> + * gdp_mutex lock.
-> + */
-> +static struct kobject *__get_device_parent(struct device *dev,
-> +					   struct device *parent,
-> +					   bool lock)
->  {
->  	if (dev->class) {
->  		struct kobject *kobj = NULL;
-> @@ -1778,16 +1793,32 @@ static struct kobject *get_device_parent(struct device *dev,
->  				break;
->  			}
->  		spin_unlock(&dev->class->p->glue_dirs.list_lock);
-> -		if (kobj) {
-> -			mutex_unlock(&gdp_mutex);
-> -			return kobj;
-> -		}
->  
-> -		/* or create a new class-directory at the parent device */
-> -		k = class_dir_create_and_add(dev->class, parent_kobj);
-> -		/* do not emit an uevent for this simple "glue" directory */
-> -		mutex_unlock(&gdp_mutex);
-> -		return k;
-> +		/**
-
-Note, in the future, you don't need to use /** for comments in a
-function, those are only for kernel doc markers for a _global_ function
-that gets pulled into the larger documentation documents.  So even
-__get_device_parent() here does not need this.
-
-Anyway, this is a mess.
-
-Ugh I hate glue dirs...
+thanks,
 
 greg k-h
