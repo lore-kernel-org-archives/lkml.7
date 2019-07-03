@@ -2,84 +2,111 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E663C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B5C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E57218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8162189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBKUEIk7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tozxBVBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfGCMfg (ORCPT
+        id S1726628AbfGCMk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:35:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33346 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCMff (ORCPT
+        Wed, 3 Jul 2019 08:40:59 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:51649 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCMk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:35:35 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so1677115lfe.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:35:34 -0700 (PDT)
+        Wed, 3 Jul 2019 08:40:59 -0400
+Received: by mail-wm1-f46.google.com with SMTP id 207so2064640wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:40:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9yjZLyM9JOHe1yZ3T3nibJuov33+lgCxQ34IkJ3YWoQ=;
-        b=MBKUEIk7naz4Y3fvvU65OzmlKtCI30NENWTo+afhiNMK5znd4Y1eQOnkDJOcg0aY+v
-         ++7it044iEA0/FnqXRy9uVMCF6MR0sNynwBDdD22xtV+hNHMNNgjCEQ7U9rlh2JYeWWM
-         ewuMGRi59rNUvNyn7PxpkrglasWGXAJsTnxIqrYGrHBtU2YQ1mcV/erApCDaFvkfJ6DQ
-         i31VHZa80MLy32I5VNuyfBI7GYE900zLgxPQbbTlZ40LoCUOyotjP3R5q6l7SryAy4qi
-         WQevM0L80vkOVIsX3mZUNJ2TZL463RUKjeI7Cpcgj//LRodNH7QyTRygpFWHsLjxAtqT
-         qOQg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=REnOeEN5yGA6DyLHYZUXObOyZCyVPJqos2PFAeloT7k=;
+        b=tozxBVBj8Zx3/S4JOAkF4a5m+vhqYKE2FZcfa+qH6ELSArafWHyGRNUtG6pNYT7Ovt
+         R3w4RriHSl55srSSXoSz60ResDvaxdxcBnlkj77F1MXPQ82WER6328sXmSyr5Z/EMTin
+         kAZt+LVQ3GpKa9SEdo5HpNqtgLpy66dR5K8Djxhcrqms6IOr5yD+bp93WooNpo0sBFbv
+         TGgkW76J/K7eDePQ7M63uxp8HWfr5Jom2D9uQA5KFDp+H3ySKnVMtExmwcvKwU1UfH8C
+         bPoMr/V3aIqJ9xwS5Nyy04U+/UEKh5x/GE1NtHu/xl/qRUSD744fvS0ieYvdzSYsxMnV
+         HdWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9yjZLyM9JOHe1yZ3T3nibJuov33+lgCxQ34IkJ3YWoQ=;
-        b=VFxi38D7DNjOV103fMShd+q52JuA0QdVUUDHRTKxU4DDGLcEgmXmTzUATKU0dNs9GV
-         JB9JPt0Ar23jVHtIk+LrVN9D3rsoiI3+BLjtcLz/c3pP3mAIzt0bmQZKNr+XokuqbZfH
-         8jfYZS5H1p5zpbbeHlIy75Lyzlgpjcii6pKumXgYTQgio4VOiTgPygpVzQNzGB1X+WHC
-         2m+noAyUN1JWdwgpFRYppYqfJGZWceZ1F5BOubsTfQCmZiIamZEKVADpgk/mmDaRnRey
-         3V6iL/WTDHPkT727idKrgF7KnhMJPUCZno8ez4DvSHjYn3ORF55Axle/yVIg3EZHwHBX
-         wg2A==
-X-Gm-Message-State: APjAAAXS3RoaPMO5BkBzuO4TCMC09OrRLwhgF3Gx1RMQYaYaJxNh5o9g
-        wOskXq9fQAui6Lb+ImYNzsA9A8o0BZ8wO0+0BfxltA==
-X-Google-Smtp-Source: APXvYqz7dH1dOhL9GPZ3rezQELsJyZdenNecNAinD3cs2wH7cnyReBlZqciqoJFvA3uBaX6sgLuWduWNDyfTkk2F5yk=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr5964199lfn.165.1562157333469;
- Wed, 03 Jul 2019 05:35:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=REnOeEN5yGA6DyLHYZUXObOyZCyVPJqos2PFAeloT7k=;
+        b=YnugyOxuCdcw2DCCViF4/XxVmpq8aC7qXoXxVMqcyt7lU265/RZkRmoW46EwhBROPK
+         SuxlsKbWjq/rvNK1gNF45xpohO7q8+Kpm40zieA455rNQjjE/ujRq3/86ffsXFuLOge7
+         ptinJG2iV3Gz3JFJ0j77W2qiycRYG/KiwBuphXO7phnUzJZCX2/wdsEve54zA71nTwAe
+         UYkssaRnPOB3llQwSH0iQD/XNFRhhiXHYDULGSvsQM182jTU+BrOBQvOosQs68to/sIm
+         fXF6hAgB0cpQ0ORUqmrMviUO7/dRNSNGVLnBLkWJ59chDmiFaNQbDsRSSts2+l3Xqjcp
+         arAQ==
+X-Gm-Message-State: APjAAAWcSf1n53sAOEFNcIMqZBrziCPFi0PBzTXy9zvYhqLfoATYnOUx
+        GLQTUFKaut2tXPJ/AYcRmp9Etw==
+X-Google-Smtp-Source: APXvYqzv39vxjEOuFXIZd2izLbkL+W+voUSFY7XUgtQYBiXS3oC/SBtBaMlJedbypMkeWFSaJyc9mQ==
+X-Received: by 2002:a7b:c94a:: with SMTP id i10mr2879582wml.97.1562157657223;
+        Wed, 03 Jul 2019 05:40:57 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c65sm2327372wma.44.2019.07.03.05.40.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 05:40:56 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     khilman@baylibre.com, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        amergnat@baylibre.com
+Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
+In-Reply-To: <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
+References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-5-narmstrong@baylibre.com> <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com> <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
+Date:   Wed, 03 Jul 2019 14:40:55 +0200
+Message-ID: <1jo92b70ko.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <1562146944-4162-1-git-send-email-info@metux.net>
-In-Reply-To: <1562146944-4162-1-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jul 2019 14:35:22 +0200
-Message-ID: <CACRpkdbtwXYiKOo6LwNm2bQnEMSUoi2UutP4DKXzt=_jOcRkLg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pl061: drop duplicate printing of device name
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 11:42 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On Wed 03 Jul 2019 at 13:45, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-> From: Enrico Weigelt <info@metux.net>
+> On 03/07/2019 01:16, Martin Blumenstingl wrote:
+>> +Cc Alexandre Mergnat
+>> 
+>> On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>
+>>> Add a setup() callback in the eeclk structure, to call an optional
+>>> call() function at end of eeclk probe to setup clocks.
+>>>
+>>> It's used for the G12A clock controller to setup the CPU clock notifiers.
+>>>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> this will probably work fine, but I want do double check first
+>> 
+>> are we planning to get rid of meson-eeclk (mid-term)?
 >
-> The dev_info() call already prints the device name, so there's
-> no need to explicitly include it in the message for second time.
+> AFAIK no, but maybe I'm not aware of it !
 >
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+> Neil
+>
+>> Alex has some patches to get rid of all these IN_PREFIX logic.
 
-True. Patch applied.
+The prefix logic will go away with Alex's rework, so are the input clock
+But meson-eeclk, which is just a common probe function do avoid
+repeating the same things over and over, will stay
 
-Yours,
-Linus Walleij
+>> I'm asking because if we want to get rid of meson-eeclk it may be the
+
+May I ask why ?
+
+>> time to do so now to have less logic to migrate later on
+>> 
+>> 
+>> Martin
+>> 
