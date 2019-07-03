@@ -2,59 +2,63 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58066C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04214C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B332218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32A5218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FizreZQf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPtWsayQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfGCRCD (ORCPT
+        id S1727295AbfGCRCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:02:03 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:37417 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGCRCC (ORCPT
+        Wed, 3 Jul 2019 13:02:10 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:53184 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfGCRCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:02:02 -0400
-Received: by mail-pg1-f201.google.com with SMTP id s5so1964071pgr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:02:02 -0700 (PDT)
+        Wed, 3 Jul 2019 13:02:08 -0400
+Received: by mail-ua1-f74.google.com with SMTP id u73so162262uau.19
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=PtzfnXHwir5t+OK6oGGR3xyRGAh0lHKhLg6y74Z7SLI=;
-        b=FizreZQfOB54x6CBxj83tADQPZPzVR8/wChupBATHtmbdgjnMryGONlVDgnxLjKuYq
-         3VV5dEtzc3rOyy5BHnKAdcoRvGWEwoVjf/4+gik2NSUYKmlR/p8FJLpB3I4CraYn178/
-         R/xmnUwfUUzqNmcvqRa/NCBw5cTyAwsSFFBHR5IN84dyIor/8zLJdz85Vq6yeh6BiG3p
-         iMtK0ogb/8C/lHsfN6RP4nJpyWYaK7/S5EDQUK9vud4VnpKOCcjvX9dRX+YJrnb+bMkk
-         OpdJazGd+BNI/aHArshaRwnW1fF14xznm3LZ54tHv8PTFWFF/fkib1YSARjkYPSwmc3l
-         4y2Q==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=byxWQcFkOw0n1MZOPKiskDPHZeszueGC1zKGXJuqoj8=;
+        b=XPtWsayQUbX4mzexabtf4MCueZpbuKGgpUxkbz0RIeVX152jBmljMsQCpFCWXPVERn
+         VComJBDRppBiZzS7WAw5rn6MICG9eHFPF60oYbb5Obcy/NqkzdMkioxFbH1uXvD6PWG9
+         fxZuUqkn3yxGZZ4fRjSR5TgfbIPV/mIztSyKxnQgXDz0vxJ8p1RmU/2rTq4pAn5J/VCu
+         DtsyZ9r1h4QFg543h0c5/P65mhk98en44Ois2NCf/xhbWYnvNJwjlXtVHR2RIAmAAILd
+         5xWIikqlbsUOf+u36fuy3f5sisf4C1GGaCDh4L4j7USHBoWlhFi2xcVgjooko2qmR1w2
+         386Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=PtzfnXHwir5t+OK6oGGR3xyRGAh0lHKhLg6y74Z7SLI=;
-        b=r2hmCP5BwQkfPkXv0ITtP7JHaig9LOaWqBBKJqDV7wEoJ/o+1noT0p64wLYHZhExCp
-         lzfWcNSabVawzmcM+09EBGIGmttxYH3OH003GrAP39m80mijXYCVS/LSI+gdQ7Rv+794
-         9gv0Nl1GwcD+d5R5aA42OmYCcM4rUgzlUjWeAaS6/rZ3N/EUM0QT4V9I/47uqSNuzx16
-         qPBl+SYg19H3oG2YapdMalp9a9Ux9hPrnGQ7cQeK2pNA22/ZSAOm2EExbLJ3FcOyO+G7
-         GAy0SAKmxBFULa7GbrUhnjLdJXaZsZ9qxykzFf76I352FmJUtwYPJ/4Hdlu/eMDyBBGy
-         CqtQ==
-X-Gm-Message-State: APjAAAU0DJzh7zSbkeHrR+pSeyXBrq96uzTqAZdYIvvAAbDULdevrQdm
-        R+xFSmcF2l+MwBxeqze5Stf5A58BrGnu
-X-Google-Smtp-Source: APXvYqwFUIvxlm1JZsLTU/DwtWcZRSkjscpz9PkPbEih6Nz94MHK2bwBsb5v9GSWKe3fWIQGB7QB2+hNQMz9
-X-Received: by 2002:a63:c03:: with SMTP id b3mr38912759pgl.68.1562173321483;
- Wed, 03 Jul 2019 10:02:01 -0700 (PDT)
-Date:   Wed,  3 Jul 2019 10:01:12 -0700
-Message-Id: <20190703170118.196552-1-brianvv@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=byxWQcFkOw0n1MZOPKiskDPHZeszueGC1zKGXJuqoj8=;
+        b=M4qDznOeJuw67jHSoQsKC8rjs6P8q7wXAt3d8Q3MGcXgf2ul0VpgcDpZGtIKj/x14Q
+         8IWNf10wakzB1rsbUvdygGvpnzkUtj7UhdvVX3jlmn+nRSV2jX+tlQY8bXM40Va0vR0r
+         lsGfg/SjbUFPFSM5li5LIIJPj5CNYe7YXmz1yOdg2kwOUr00CJRvq82jJfRX69WRjnCN
+         vqLJWCP8/9BnVSK9KrE0Dc2CwFxb/s8tRNCmZqL/ALs5sLBHalnJyN5xiMyEBKqVdYMo
+         BaIiMrvkzUToMOo1vtzd8GXgbnYe2TrzcGB+EkIPL9xZ5DdftpK5ce8/l3gaHMZNI7PZ
+         t0VA==
+X-Gm-Message-State: APjAAAWZmAVmcNSuQrmqOLUuwneLNRgHaJaNeXrq2jSDvt/LudwwInzA
+        r7uI4Xp+bX6nisMJRhBrmlSPzf0qOjlU
+X-Google-Smtp-Source: APXvYqwyscb1TaeUFUBGXJ73ubkLTKfe0z2l2Lro+IlYXlp12XiNJFnOngqs21OKnqFetDeE5nbVJNgE5v9e
+X-Received: by 2002:a1f:9456:: with SMTP id w83mr11552693vkd.67.1562173326650;
+ Wed, 03 Jul 2019 10:02:06 -0700 (PDT)
+Date:   Wed,  3 Jul 2019 10:01:14 -0700
+In-Reply-To: <20190703170118.196552-1-brianvv@google.com>
+Message-Id: <20190703170118.196552-3-brianvv@google.com>
 Mime-Version: 1.0
+References: <20190703170118.196552-1-brianvv@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH bpf-next RFC v3 0/6] bpf: add BPF_MAP_DUMP command to dump
+Subject: [PATCH bpf-next RFC v3 2/6] bpf: add BPF_MAP_DUMP command to dump
  more than one entry per call
 From:   Brian Vazquez <brianvv@google.com>
 To:     Brian Vazquez <brianvv.kernel@gmail.com>,
@@ -73,74 +77,215 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This introduces a new command to retrieve a variable number of entries
-from a bpf map.
-
-This new command can be executed from the existing BPF syscall as
-follows:
-
-err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
-using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
-attr->dump.buf_len
-returns zero or negative error, and populates buf and buf_len on
-succees
-
-This implementation is wrapping the existing bpf methods:
+from a bpf map wrapping the existing bpf methods:
 map_get_next_key and map_lookup_elem
-the results show that even with a 1-elem_size buffer, it runs ~40 faster
-than the current implementation, improvements of ~85% are reported when
-the buffer size is increased, although, after the buffer size is around
-5% of the total number of entries there's no huge difference in
-increasing it.
 
-Tested:
-Tried different size buffers to handle case where the bulk is bigger, or
-the elements to retrieve are less than the existing ones, all runs read
-a map of 100K entries. Below are the results(in ns) from the different
-runs:
+To start dumping the map from the beginning you must specify NULL as
+the prev_key.
 
-buf_len_1:	 69038725 entry-by-entry: 112384424 improvement
-38.569134
-buf_len_2:	 40897447 entry-by-entry: 111030546 improvement
-63.165590
-buf_len_230:	 13652714 entry-by-entry: 111694058 improvement
-87.776687
-buf_len_5000:	 13576271 entry-by-entry: 111101169 improvement
-87.780263
-buf_len_73000:	 14694343 entry-by-entry: 111740162 improvement
-86.849542
-buf_len_100000:	 13745969 entry-by-entry: 114151991 improvement
-87.958187
-buf_len_234567:	 14329834 entry-by-entry: 114427589 improvement
-87.476941
+The new API returns 0 when it successfully copied all the elements
+requested or it copied less because there weren't more elements to
+retrieved (err == -ENOENT). In last scenario err will be masked to 0.
 
-Changelog:
+On a successful call buf and buf_len will contain correct data and in
+case prev_key was provided (not for the first walk, since prev_key is
+NULL) it will contain the last_key copied into the buf which will simplify
+next call.
 
-v3:
-- add explanation of the API in the commit message
-- fix masked errors and return them to user
-- copy last_key from return buf into prev_key if it was provided
-- run test with kpti and retpoline mitigations
+Only when it can't find a single element it will return -ENOENT meaning
+that the map has been entirely walked. When an error is return buf,
+buf_len and prev_key shouldn't be read nor used.
 
-v2:
-- use proper bpf-next tag
+Because maps can be called from userspace and kernel code, this function
+can have a scenario where the next_key was found but by the time we
+try to retrieve the value the element is not there, in this case the
+function continues and tries to get a new next_key value, skipping the
+deleted key. If at some point the function find itself trap in a loop,
+it will return -EINTR.
 
-Brian Vazquez (6):
-  bpf: add bpf_map_value_size and bp_map_copy_value helper functions
-  bpf: add BPF_MAP_DUMP command to dump more than one entry per call
-  bpf: keep bpf.h in sync with tools/
-  libbpf: support BPF_MAP_DUMP command
-  selftests/bpf: test BPF_MAP_DUMP command on a bpf hashmap
-  selftests/bpf: add test to measure performance of BPF_MAP_DUMP
+The function will try to fit as much as possible in the buf provided and
+will return -EINVAL if buf_len is smaller than elem_size.
 
- include/uapi/linux/bpf.h                |   9 +
- kernel/bpf/syscall.c                    | 252 ++++++++++++++++++------
- tools/include/uapi/linux/bpf.h          |   9 +
- tools/lib/bpf/bpf.c                     |  28 +++
- tools/lib/bpf/bpf.h                     |   4 +
- tools/lib/bpf/libbpf.map                |   2 +
- tools/testing/selftests/bpf/test_maps.c | 147 +++++++++++++-
- 7 files changed, 388 insertions(+), 63 deletions(-)
+QUEUE and STACK maps are not supported.
 
+Note that map_dump doesn't guarantee that reading the entire table is
+consistent since this function is always racing with kernel and user code
+but the same behaviour is found when the entire table is walked using
+the current interfaces: map_get_next_key + map_lookup_elem.
+It is also important to note that when a locked map the lock is grabbed for
+1 entry at the time, meaning that the buf returned might or might not be
+consistent.
+
+Suggested-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+---
+ include/uapi/linux/bpf.h |   9 +++
+ kernel/bpf/syscall.c     | 118 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 127 insertions(+)
+
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index cffea1826a1f..cc589570a639 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -106,6 +106,7 @@ enum bpf_cmd {
+ 	BPF_TASK_FD_QUERY,
+ 	BPF_MAP_LOOKUP_AND_DELETE_ELEM,
+ 	BPF_MAP_FREEZE,
++	BPF_MAP_DUMP,
+ };
+ 
+ enum bpf_map_type {
+@@ -388,6 +389,14 @@ union bpf_attr {
+ 		__u64		flags;
+ 	};
+ 
++	struct { /* struct used by BPF_MAP_DUMP command */
++		__u32		map_fd;
++		__aligned_u64	prev_key;
++		__aligned_u64	buf;
++		__aligned_u64	buf_len; /* input/output: len of buf */
++		__u64		flags;
++	} dump;
++
+ 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
+ 		__u32		prog_type;	/* one of enum bpf_prog_type */
+ 		__u32		insn_cnt;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index d200d2837ade..78d55463fc76 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1097,6 +1097,121 @@ static int map_get_next_key(union bpf_attr *attr)
+ 	return err;
+ }
+ 
++/* last field in 'union bpf_attr' used by this command */
++#define BPF_MAP_DUMP_LAST_FIELD dump.buf_len
++
++static int map_dump(union bpf_attr *attr)
++{
++	void __user *ukey = u64_to_user_ptr(attr->dump.prev_key);
++	void __user *ubuf = u64_to_user_ptr(attr->dump.buf);
++	u32 __user *ubuf_len = u64_to_user_ptr(attr->dump.buf_len);
++	int ufd = attr->dump.map_fd;
++	struct bpf_map *map;
++	void *buf, *prev_key, *key, *value;
++	u32 value_size, elem_size, buf_len, cp_len;
++	struct fd f;
++	int err;
++	bool first_key = false;
++
++	if (CHECK_ATTR(BPF_MAP_DUMP))
++		return -EINVAL;
++
++	attr->flags = 0;
++	if (attr->dump.flags & ~BPF_F_LOCK)
++		return -EINVAL;
++
++	f = fdget(ufd);
++	map = __bpf_map_get(f);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
++		err = -EPERM;
++		goto err_put;
++	}
++
++	if ((attr->dump.flags & BPF_F_LOCK) &&
++	    !map_value_has_spin_lock(map)) {
++		err = -EINVAL;
++		goto err_put;
++	}
++
++	if (map->map_type == BPF_MAP_TYPE_QUEUE ||
++	    map->map_type == BPF_MAP_TYPE_STACK) {
++		err = -ENOTSUPP;
++		goto err_put;
++	}
++
++	value_size = bpf_map_value_size(map);
++
++	err = get_user(buf_len, ubuf_len);
++	if (err)
++		goto err_put;
++
++	elem_size = map->key_size + value_size;
++	if (buf_len < elem_size) {
++		err = -EINVAL;
++		goto err_put;
++	}
++
++	if (ukey) {
++		prev_key = __bpf_copy_key(ukey, map->key_size);
++		if (IS_ERR(prev_key)) {
++			err = PTR_ERR(prev_key);
++			goto err_put;
++		}
++	} else {
++		prev_key = NULL;
++		first_key = true;
++	}
++
++	err = -ENOMEM;
++	buf = kmalloc(elem_size, GFP_USER | __GFP_NOWARN);
++	if (!buf)
++		goto err_put;
++
++	key = buf;
++	value = key + map->key_size;
++	for (cp_len = 0; cp_len + elem_size <= buf_len;) {
++		if (signal_pending(current)) {
++			err = -EINTR;
++			break;
++		}
++
++		rcu_read_lock();
++		err = map->ops->map_get_next_key(map, prev_key, key);
++		rcu_read_unlock();
++
++		if (err)
++			break;
++
++		err = bpf_map_copy_value(map, key, value, attr->dump.flags);
++
++		if (err == -ENOENT)
++			continue;
++		if (err)
++			goto free_buf;
++
++		if (copy_to_user(ubuf + cp_len, buf, elem_size)) {
++			err = -EFAULT;
++			goto free_buf;
++		}
++
++		prev_key = key;
++		cp_len += elem_size;
++	}
++
++	if (err == -ENOENT && cp_len)
++		err = 0;
++	if (!err && (copy_to_user(ubuf_len, &cp_len, sizeof(cp_len)) ||
++		    (!first_key && copy_to_user(ukey, key, map->key_size))))
++		err = -EFAULT;
++free_buf:
++	kfree(buf);
++err_put:
++	fdput(f);
++	return err;
++}
++
+ #define BPF_MAP_LOOKUP_AND_DELETE_ELEM_LAST_FIELD value
+ 
+ static int map_lookup_and_delete_elem(union bpf_attr *attr)
+@@ -2910,6 +3025,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
+ 	case BPF_MAP_LOOKUP_AND_DELETE_ELEM:
+ 		err = map_lookup_and_delete_elem(&attr);
+ 		break;
++	case BPF_MAP_DUMP:
++		err = map_dump(&attr);
++		break;
+ 	default:
+ 		err = -EINVAL;
+ 		break;
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
