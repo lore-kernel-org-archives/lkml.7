@@ -2,157 +2,114 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0CDC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D42C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7147921881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKwTiDBL"
+	by mail.kernel.org (Postfix) with ESMTP id D9CCC21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfGCGRv (ORCPT
+        id S1727111AbfGCGU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:17:51 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33949 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfGCGRu (ORCPT
+        Wed, 3 Jul 2019 02:20:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725927AbfGCGU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:17:50 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u18so1286353wru.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+b+ZNE8muQpXOkikX4gDxD4noa9WUcqsJTLAj8ORuJM=;
-        b=JKwTiDBL2F+xPIXodfp3SDz4pvAQOhkw28XjDRRIIYEZDf0uHXJ1kaleuATAaqGLSj
-         /lUVb0laNogltshs0CJYJM/yRK5yRpb7G7aiJv4OhPU4LA7450Dc2/qnaeiyRbXcW6sU
-         nm0PusQqZCpWiHtb9fRFRri5N45uAQ3MzhWMu9l+CFg/k5JUiRkPVLg+Nqw8/WwRE2A8
-         lGEnGR1X1u/hGIzOEXy2X1Ud6SvgllAo5AV9pnp0rHC2lFF7dZez2Of7YCaciwEvGILQ
-         iI+ghMdv9+1ejKc7ydDrAXaUhi/ErjFpwMBtxxQXrETNf0ebq/cu896eshbhURPsvkcR
-         gcqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+b+ZNE8muQpXOkikX4gDxD4noa9WUcqsJTLAj8ORuJM=;
-        b=N7LAJl0FvVqkcOsZrnXmsg4DH/J7PCOk8iALD5eF2KisYrj5+ETx2MF9UoiBt+Tn5y
-         D7VE854QZmgMliHYLfA4DLKKB8p14GldUbZ5ItvCKGUZ9SIEAIPyhqoqfRpnCyFtvCOy
-         R9xj3nlbFQdwZiwWFWJgJ63JnQaYL0B7f4BRrZ1obAl80CWxtVlmPl50YuQRfgT/fFKW
-         XQjnBqJ//od6/ZN6x5RVTOqbxJlTJzmXyyPth8Z94f2wXvoTo9lnZr9k8t5qKLuK0tdI
-         ktPikPlmz8qB1S8H2s+7RLp//TOPIzeWqJLYi1TmI2qJdIwZH5wcSAqFg/THdtbdqe2a
-         f3ZA==
-X-Gm-Message-State: APjAAAWGkPbi4SJxUFixz4xRMVgy93lq3Hf1VOqlGhEHqGjXx9MLGvhR
-        IqpqW00e6Cf56m/TUrvfXK870Q==
-X-Google-Smtp-Source: APXvYqz+4yF7FL0ZwdGQ6A6cFS0uz4zTCMWbnntXpvljfOHA2f6i0BKfL5+UQZ2+UhOOhD69RM5yiA==
-X-Received: by 2002:a5d:494d:: with SMTP id r13mr28538311wrs.152.1562134669005;
-        Tue, 02 Jul 2019 23:17:49 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id c1sm1572121wrh.1.2019.07.02.23.17.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Jul 2019 23:17:48 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 07:17:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        Christian Hoff <christian_hoff@gmx.net>,
-        Enrico Weigelt <info@metux.net>,
-        Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 2/4] input: keyboard/mouse/touchscreen/misc: Use
- dev_get_drvdata()
-Message-ID: <20190703061746.GI4652@dell>
-References: <20190701032342.25971-1-huangfq.daxian@gmail.com>
- <20190701075255.GD172968@dtor-ws>
- <CABXRUiSO2Fos1V3hR5t3AviZ9Hit_y+E-Tp3PNOQj6-FKUBJBw@mail.gmail.com>
- <CAHp75VeUo2Au66tETo3zneBpeaVU+Y+-h5zghpo+hPuB=a6-eA@mail.gmail.com>
- <CABXRUiQ77feNzEdQ7GqNxLS9YAMybVG3eAWWSDPFdGvERaxCyg@mail.gmail.com>
- <20190702143225.12b0fe07@karo-electronics.de>
+        Wed, 3 Jul 2019 02:20:27 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x636HJTh059160
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 02:20:26 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tgm3edmmw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:20:26 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 3 Jul 2019 07:20:24 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 07:20:22 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x636KLda59965480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 06:20:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD62EAE04D;
+        Wed,  3 Jul 2019 06:20:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3FE4DAE061;
+        Wed,  3 Jul 2019 06:20:19 +0000 (GMT)
+Received: from [9.85.75.18] (unknown [9.85.75.18])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Jul 2019 06:20:18 +0000 (GMT)
+Subject: Re: [PATCH] powerpc/hw_breakpoint: move instruction stepping out of
+ hw_breakpoint_handler()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <f8cdc3f1c66ad3c43ebc568abcc6c39ed4676284.1561737231.git.christophe.leroy@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 3 Jul 2019 11:50:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <f8cdc3f1c66ad3c43ebc568abcc6c39ed4676284.1561737231.git.christophe.leroy@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190702143225.12b0fe07@karo-electronics.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070306-0020-0000-0000-0000034FB580
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070306-0021-0000-0000-000021A34A66
+Message-Id: <57148696-b9a5-d3c1-1e29-82673c558927@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=665 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 02 Jul 2019, Lothar Waßmann wrote:
 
-> Hi,
+
+On 6/28/19 9:25 PM, Christophe Leroy wrote:
+> On 8xx, breakpoints stop after executing the instruction, so
+> stepping/emulation is not needed. Move it into a sub-function and
+> remove the #ifdefs.
 > 
-> On Tue, 2 Jul 2019 19:47:16 +0800 Fuqian Huang wrote:
-> > Andy Shevchenko <andy.shevchenko@gmail.com> 於 2019年7月2日週二 下午5:51寫道：
-> > >
-> > > On Tue, Jul 2, 2019 at 11:20 AM Fuqian Huang <huangfq.daxian@gmail.com> wrote:  
-> > > >
-> > > > I am not an expert on this. I just write a coccinelle script to search
-> > > > this kind of misuse and fix it in a naive way.
-> > > > Could you tell me about how to use the proper bus accessors? Then I
-> > > > will fix it up and resend a v2 patch set.  
-> > >
-> > > First, don't top post.
-> > > And answering to this, simple drop the patch.
-> > > Proper bus accessors is exactly what it's used in the current code.  
-> > 
-> > But why not use dev_get_drvdata directly.
-> > It simplifies getting the 'driver_data' from 'struct device' directly.
-> > And the platform_device here is not required.
-> > Replace it can remove the unnecessary step back and forth. (dev -> pdev -> dev).
-> > 
-> Did you check whether the compiler generates different (better) code
-> with and without your patch? My guess is it won't.
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
 
-I can see Fuqian's point.  If bus APIs are preferred, maybe it would
-be nicer if the function was adapted to accept a platform_device
-instead?
+Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Caveat: I haven't taken the time to look into the call-site details.
-	This comment is based on just the patch alone.
+Just one neat below...
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+[...]
+
+> -#ifndef CONFIG_PPC_8xx
+> -	/* Do not emulate user-space instructions, instead single-step them */
+> -	if (user_mode(regs)) {
+> -		current->thread.last_hit_ubp = bp;
+> -		regs->msr |= MSR_SE;
+> +	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
+
+May be split this line. It's 86 chars long and checkpatch.pl is warning
+about this:
+
+WARNING: line over 80 characters
+#257: FILE: arch/powerpc/kernel/hw_breakpoint.c:282:
++	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
+
