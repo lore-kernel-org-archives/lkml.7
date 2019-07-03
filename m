@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DE2C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D969C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6050C21874
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B2B21873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120482;
-	bh=EKd5QM7O37RJeJVsOGu4y8h/7Si1oO7SID6TIXdkLDc=;
+	s=default; t=1562120490;
+	bh=fosSDEmRwDBzgJQEi7Bq48fKrUZBN23RlErwkIjrFcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2RBQc05fueWX+PNj82IXwq4t+k6ks02Cur7M5wcjWl5F7E7jvhFokOA4AgsR15wK
-	 jjNXEcUD6QthZiJoTqpexarIIo5ZaBMZzhu7BQD+ho0R5GEz96JPcj1mYp4kcqEogF
-	 5BoLyervReimvPeLXBJTa7b0Owsrg6vSlk5sr28M=
+	b=afzKnV4oWstqHG5h3lDv4DAOvSJnkkeLaSdhGGrf8Dxi2aMefUQDpPkG+UI8AJ+S3
+	 UcDGy1BiNt9kQidHaLekQMa9tg9YTmYCbC/3hCV7gLlPM0mvZIvdaSzG3wcaZ5ZonR
+	 mSZB2N3IiCPLTXd1CisRtpzjfw8pkWyBHjKt/D4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfGCCQL (ORCPT
+        id S1728122AbfGCCV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfGCCP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:59 -0400
+        id S1727807AbfGCCQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8EC121880;
-        Wed,  3 Jul 2019 02:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D72AD21897;
+        Wed,  3 Jul 2019 02:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120158;
-        bh=EKd5QM7O37RJeJVsOGu4y8h/7Si1oO7SID6TIXdkLDc=;
+        s=default; t=1562120161;
+        bh=fosSDEmRwDBzgJQEi7Bq48fKrUZBN23RlErwkIjrFcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBV/rjfUuJ7GdMzrBci/IVd0hFCb+OHJAHRN4vvqtLGFQd+Th7ogsBGuXo5pE5dvQ
-         JRyK5ASmHDZPPppSavSMvNlOh+6Pcf2LSrVmNH1tDpC5CxZeLQPRBKXwSqdpQZ3+/X
-         i8cIX79TqVRlnyTXU5sfIszLwg/Tg85r5ta6A92g=
+        b=lB3VbpphUMHHNW/LxtAD08vnbWCV9XgRN1t2tGr3+DkAKS/AdeAxScPKRsa+p7BNE
+         mtyR/TSpLSKMjXP0tgthn5/y6X6X+tji32bKDwg/p/CR4jbHWMzKP2C7PYlJL/i1Fy
+         oXvBK+PeSo9tf5S/iNVC5bpJWwLRTjm/49VRLUc0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Potapenko <glider@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.1 29/39] x86/boot/64: Add missing fixup_pointer() for next_early_pgt access
-Date:   Tue,  2 Jul 2019 22:15:04 -0400
-Message-Id: <20190703021514.17727-29-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 32/39] HID: multitouch: Add pointstick support for ALPS Touchpad
+Date:   Tue,  2 Jul 2019 22:15:07 -0400
+Message-Id: <20190703021514.17727-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -67,47 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit c1887159eb48ba40e775584cfb2a443962cf1a05 ]
+[ Upstream commit 0a95fc733da375de0688d0f1fd3a2869a1c1d499 ]
 
-__startup_64() uses fixup_pointer() to access global variables in a
-position-independent fashion. Access to next_early_pgt was wrapped into the
-helper, but one instance in the 5-level paging branch was missed.
+There's a new ALPS touchpad/pointstick combo device that requires
+MT_CLS_WIN_8_DUAL to make its pointsitck work as a mouse.
 
-GCC generates a R_X86_64_PC32 PC-relative relocation for the access which
-doesn't trigger the issue, but Clang emmits a R_X86_64_32S which leads to
-an invalid memory access and system reboot.
+The device can be found on HP ZBook 17 G5.
 
-Fixes: 187e91fe5e91 ("x86/boot/64/clang: Use fixup_pointer() to access 'next_early_pgt'")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexander Potapenko <glider@google.com>
-Link: https://lkml.kernel.org/r/20190620112422.29264-1-kirill.shutemov@linux.intel.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 7df5bce4e1be..29ffa495bd1c 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -184,7 +184,8 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	pgtable_flags = _KERNPG_TABLE_NOENC + sme_get_me_mask();
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 4ea272eb34c8..cd7442eb25b9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -83,6 +83,7 @@
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
++#define HID_DEVICE_ID_ALPS_1222		0x1222
  
- 	if (la57) {
--		p4d = fixup_pointer(early_dynamic_pgts[next_early_pgt++], physaddr);
-+		p4d = fixup_pointer(early_dynamic_pgts[(*next_pgt_ptr)++],
-+				    physaddr);
  
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+ #define USB_VENDOR_ID_AMI		0x046b
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 1565a307170a..42bb635895cf 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1780,6 +1780,10 @@ static const struct hid_device_id mt_devices[] = {
+ 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+ 			USB_VENDOR_ID_ALPS_JP,
+ 			HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP) },
++	{ .driver_data = MT_CLS_WIN_8_DUAL,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_ALPS_JP,
++			HID_DEVICE_ID_ALPS_1222) },
+ 
+ 	/* Lenovo X1 TAB Gen 2 */
+ 	{ .driver_data = MT_CLS_WIN_8_DUAL,
 -- 
 2.20.1
 
