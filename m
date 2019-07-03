@@ -2,72 +2,173 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B5FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A123C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E514A218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB1C218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:58:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="SpfH1iV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfGCN5z (ORCPT
+        id S1727029AbfGCN6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:57:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49516 "EHLO mx1.redhat.com"
+        Wed, 3 Jul 2019 09:58:34 -0400
+Received: from node.akkea.ca ([192.155.83.177]:59766 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfGCN5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:57:55 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B52962F8BCB;
-        Wed,  3 Jul 2019 13:57:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAF0883CD7;
-        Wed,  3 Jul 2019 13:57:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190703025518.6379-1-yuehaibing@huawei.com>
-References: <20190703025518.6379-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dhowells@redhat.com, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kairui Song <kasong@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Thiago Jung Bauermann" <bauerman@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Eric Biggers" <ebiggers@google.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] integrity: Remove set but not used variable 'acl'
+        id S1725847AbfGCN6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:58:33 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id B606E4E204B; Wed,  3 Jul 2019 13:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1562162312; bh=UHIUaVsVDuz0yZjRB09x+PshwKLK6UHG+Qvlw7TIC58=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=SpfH1iV5gPGx0vLKUhzKfEvLCQNmPLkUyJlyLG3cW8wfWxKgAPFOR+aGMwiCtP5qV
+         S+TSC/nxxbenLnoRMlQrsfUB2MXIUMeQmR2zwJ5dfti+3LJyKCNajnNEm6XcjeReqg
+         E8fKNY+j2dOhPI2vMmPmQD/ssHXJFGIGur51ElBA=
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <15690.1562162261.1@warthog.procyon.org.uk>
-Date:   Wed, 03 Jul 2019 14:57:41 +0100
-Message-ID: <15691.1562162261@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 03 Jul 2019 13:57:55 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jul 2019 07:58:32 -0600
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     Andra Danciu <andradanciu1997@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+ <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
+ <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
+ <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca>
+ <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
+Message-ID: <8ebfeaae8541132ad39e4109d135cd5f@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
+Hi Daniel,
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On 2019-07-03 07:25, Daniel Baluta wrote:
+> On Wed, Jul 3, 2019 at 4:12 PM Angus Ainslie <angus@akkea.ca> wrote:
+>> 
+>> Hi Daniel,
+>> 
+>> On 2019-07-03 07:10, Daniel Baluta wrote:
+>> > On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
+>> >>
+>> >> Hi Andra,
+>> >>
+>> >> I tried this out on linux-next and I'm not able to record or play
+>> >> sound.
+>> >>
+>> >> I also added the sai2 entry to test out our devkit and get a PCM
+>> >> timeout
+>> >> with that.
+>> >
+>> > Hi Angus,
+>> >
+>> > There are still lots of SAI patches that need to be upstream. Me and
+>> > Andra
+>> > will be working on that over this summer.
+>> >
+>> >>
+>> >> On 2019-07-02 07:23, Andra Danciu wrote:
+>> >> > SAI3 and SAI6 nodes are used to connect to an external codec.
+>> >> > They have 1 Tx and 1 Rx dataline.
+>> >> >
+>> >> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+>> >> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+>> >> > ---
+>> >> > Changes since v2:
+>> >> >       - removed multiple new lines
+>> >> >
+>> >> > Changes since v1:
+>> >> >       - Added sai3 node because we need it to enable audio on pico-pi-8m
+>> >> >       - Added commit description
+>> >> >
+>> >> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
+>> >> > +++++++++++++++++++++++++++++
+>> >> >  1 file changed, 29 insertions(+)
+>> >> >
+>> >> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> >> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> >> > index d09b808eff87..736cf81b695e 100644
+>> >> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> >> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> >> > @@ -278,6 +278,20 @@
+>> >> >                       #size-cells = <1>;
+>> >> >                       ranges = <0x30000000 0x30000000 0x400000>;
+>> >> >
+>> >> > +                     sai6: sai@30030000 {
+>> >> > +                             compatible = "fsl,imx8mq-sai",
+>> >>
+>> >> I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
+>> >> the registers at a different offset from "fsl,imx6sx-sai".
+>> >
+>> > Yes, you are right on this. We are trying to slowly push all our
+>> > internal-tree
+>> > patches to mainline. Obviously, with started with low hanging fruits,
+>> > DTS
+>> > nodes and small SAI fixes.
+>> >
+>> > Soon, we will start to send patches for SAI IP ipgrade for imx8.
+>> >
+>> >>
+>> >> How is this supposed to work ?
+>> >>
+>> >
+>> > For the moment it won't work unless we will upstream all our SAI
+>> > internal patches.
+>> > But we will get there hopefully this summer.
+>> >
+>> 
+>> Shouldn't a working driver be upstream before enabling it in the
+>> devicetree ?
 > 
-> security/integrity/digsig.c: In function 'integrity_init_keyring':
-> security/integrity/digsig.c:99:18: warning:
->  variable 'acl' set but not used [-Wunused-but-set-variable]
+> I see your point here and maybe your suggestion is the ideal
+> way to do things.
 > 
-> It seems 'acl' is needed in __integrity_init_keyring
+> Anyhow, I don't see a problem with adding the node in dts
+> because CONFIG_FSL_SAI is not set in the default config.
+> 
 
-I've folded this fix in, thanks.
+I think the assumption is that devices in the devicetree are tested and 
+working. That's not currently the case for sai on imx8mq.
 
-David
+> We try to speedup the upstreaming process giving the fact
+> that SAI patches will go through audio maintainer's tree and
+> the DTS patches will most likely go through Shawn's tree.
+> 
+
+Ok I can see them being committed concurrently but I haven't even seen a 
+v1 of the sai patches.
+
+Thanks
+Angus
+
+> thanks,
+> Daniel.
+
