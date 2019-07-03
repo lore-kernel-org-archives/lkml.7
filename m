@@ -8,60 +8,63 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F209DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261DFC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A39218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5E8218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWxBmQPh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIZ+QjmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfGCQ3u (ORCPT
+        id S1727345AbfGCQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:29:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34654 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfGCQ3u (ORCPT
+        Wed, 3 Jul 2019 12:30:00 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34668 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfGCQaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:29:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so1533269plt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:29:49 -0700 (PDT)
+        Wed, 3 Jul 2019 12:30:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so1533480plt.1;
+        Wed, 03 Jul 2019 09:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=4vkamgkuNEJ7lFH9BkYtAYDf6iohWhVIL8l34Dz6df0=;
-        b=aWxBmQPh9r1u+33C34XTcgpv9TlOL27ETdEeHRmq137xTTqgp6OMNBvFWN+OmzMTJL
-         Mlb1fZ3mPdAwmUDzuK7JivDbIAYEXZ4hkkAek+Pm3RQbKK6kCzhArq1IByahv8znST7W
-         6YJqBV+8QaqLCNKv1W3AvG0oT7ht0ZKTfLX/saxRvwSEhGekXj5hR45MEQgexCY7IRqG
-         7JbrojKCjJ51pU5MIkTM7JFV6mfSKvPBy5OHAcMkzS+e8/EADy1EgcB7Fppqo1+HadUy
-         wYgOSGdcL30M8nc04Ks7aDS/RbHxaDiE5yqpLVPKiMCA6U1k/PJESm5OZpbJSFPYaUW6
-         uF3Q==
+        bh=sWA+8J2rSgIapxEvPrdhvzsbd/hl1uuQJT8SGPnww+g=;
+        b=FIZ+QjmOinajLJg2asmfCN0UL5nbWAIVO3EZ3yUaJUBmqqc9WUWCY/6EWbCnzxXGMe
+         LwA/1ZpnjqlYHyeggJ3Re9eD+AeoCWKcVk2a+LmOHmf6jhqgIDNailwMLDJDR8OJJaZ4
+         +4fKc/H01jPaCXf9gy8Sifze4cCTi17+49znbXfqXKPGXcUh7uRT/DzRwrj3YPWeWdMg
+         V2ya/cCRrCjxxuFRrQ6r1bD/MimWhE8kk5dwymljYoMPV+ia+5gc2uBHF4gHQbwuBX0A
+         WoYLz2QPapqy/YMwqW3+7sxsykF3BzXughF4YqwNHCehTk+etRfgNdVgs5luI2cnZEhy
+         DlSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4vkamgkuNEJ7lFH9BkYtAYDf6iohWhVIL8l34Dz6df0=;
-        b=fMinAv3liWki95h+G2X3sf2AQ+fBg9iuGcxvZmBnU82owEafFpbDyfAi2KTNBH2MsG
-         rqzWIncpli8a6M9CYLthBLO8WII9njilIBCkxfTL2WzZYD5HgpXtt0UMK70vLJVKW2+J
-         8eKwnDXwcbU+hgU4sJHYZYCIN13BgZHV1StCyqVVCvdxlutTNJpEfqY8QdGmq+x6ynys
-         55KEqdocU3km3e7jihOa8DGoqmJcMeBfNYOfu9bQxwSy9082DngKk9CEnYmizEom8Qvw
-         EniMnyXTLWrFflfRFvpHZLh4IBW56WImXGRKHQ6ogOha5mjCz1UXWncYHyxFEmEKlLgb
-         pZ6A==
-X-Gm-Message-State: APjAAAUS5O0YPZYDlGw/DuCZvMS73FcTJHOXdb7Y0e6yHiIA3LOIO/F0
-        8cIcOY1uluS3jjPsHrqHlN0JDU5PeYE=
-X-Google-Smtp-Source: APXvYqztlOodDLZoKy+0zOyDry+38yLWxJUs3qIFjXVeL+Aa8ke6SMCwc5rtH7GpTupHFrdHo/xnTg==
-X-Received: by 2002:a17:902:aa0a:: with SMTP id be10mr43900098plb.27.1562171389631;
-        Wed, 03 Jul 2019 09:29:49 -0700 (PDT)
+        bh=sWA+8J2rSgIapxEvPrdhvzsbd/hl1uuQJT8SGPnww+g=;
+        b=NX/w5WDfyyA53gkBlaYx84uw/hWnphJu8yeJ3cxnVBC9PepXmaZq2btQUKgaaitcv1
+         Am4hMRRsccqK08duN0LXNzOS0DZRXlJabgfFUIPvDhDLMhqx/oxI8d13B8GvxGcncosn
+         r1VuapZXNtMNf0OXRZNMVTSsjsfvtAWXpTHE8HmNk8H7mskMd2C9c1e/yF9hbKSeYMeM
+         OwlmQT1EMY3VfMghApmjP84MctVUpDijsTbG+6ApOS/ZbUrNVREJxMg/GqSwcPs7IH0d
+         e2lfJJWg2of/ONBQ1w/8s/Zd7DZ1hTpwi/mnJbktz7XA/59/yUqmEns+UoIp6ttQOC7L
+         nZug==
+X-Gm-Message-State: APjAAAVtI6zD/Yo9nPmran7v/FEuvEm0SvvuLJlY1obIqeErJvcWurHO
+        6iXQ09AIb60EcxFmF8xNO6I=
+X-Google-Smtp-Source: APXvYqwsafC/F/Y/6lwyuRes8D5JprdTxE1+fbLr1GrD1jiTOJCYdz+TVvfT9i4buk5iyZ7Ey2Qy7Q==
+X-Received: by 2002:a17:902:7248:: with SMTP id c8mr6203101pll.162.1562171399475;
+        Wed, 03 Jul 2019 09:29:59 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id u5sm2612875pgp.19.2019.07.03.09.29.47
+        by smtp.googlemail.com with ESMTPSA id p13sm8179907pjb.30.2019.07.03.09.29.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:29:49 -0700 (PDT)
+        Wed, 03 Jul 2019 09:29:59 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org,
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 19/35] pcmcia: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:29:43 +0800
-Message-Id: <20190703162943.32691-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 20/35] platform/x86/asus: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:29:51 +0800
+Message-Id: <20190703162951.32737-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,30 +82,29 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
+  - Split into two patches.
 
- drivers/pcmcia/cistpl.c | 3 +--
+ drivers/platform/x86/asus-wmi.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pcmcia/cistpl.c b/drivers/pcmcia/cistpl.c
-index abd029945cc8..eff91726f121 100644
---- a/drivers/pcmcia/cistpl.c
-+++ b/drivers/pcmcia/cistpl.c
-@@ -414,14 +414,13 @@ int pcmcia_replace_cis(struct pcmcia_socket *s,
- 	}
- 	mutex_lock(&s->ops_mutex);
- 	kfree(s->fake_cis);
--	s->fake_cis = kmalloc(len, GFP_KERNEL);
-+	s->fake_cis = kmemdup(data, len, GFP_KERNEL);
- 	if (s->fake_cis == NULL) {
- 		dev_warn(&s->dev, "no memory to replace CIS\n");
- 		mutex_unlock(&s->ops_mutex);
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 9b18a184e0aa..472b317ad814 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -260,12 +260,11 @@ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	 * Copy to dma capable address otherwise memory corruption occurs as
+ 	 * bios has to be able to access it.
+ 	 */
+-	input.pointer = kzalloc(args.length, GFP_DMA | GFP_KERNEL);
++	input.pointer = kmemdup(args.pointer, args.length, GFP_DMA | GFP_KERNEL);
+ 	input.length = args.length;
+ 	if (!input.pointer)
  		return -ENOMEM;
- 	}
- 	s->fake_cis_len = len;
--	memcpy(s->fake_cis, data, len);
- 	dev_info(&s->dev, "Using replacement CIS\n");
- 	mutex_unlock(&s->ops_mutex);
- 	return 0;
+ 	phys_addr = virt_to_phys(input.pointer);
+-	memcpy(input.pointer, args.pointer, args.length);
+ 
+ 	status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_AGFN,
+ 					phys_addr, 0, &retval);
 -- 
 2.11.0
 
