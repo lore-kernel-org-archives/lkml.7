@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63369C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934F421874
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391B621874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120469;
-	bh=CXypkWf8I4WajPrb0acNINufJkDjdlHLijhFneaHr+o=;
+	s=default; t=1562120478;
+	bh=T4iMR+bJmYTxoN/boqXIWFDZbkCowcPs3pYXPapJw3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SsgcFwcCYVBes8P6Jank6nO/8X1BmjR0/4a0O0i/xYBdzjPgG0gfrX6mekQOvxFb
-	 EZg016j2hYTfBNY1FUARrepwCy4ZImrof82FXSQe1aDjQwXD7ykeId+7meVdnTpLpZ
-	 Eox2HUoAK1UUSENLPFxOPSKZvKQRZZLaPN6AqDtE=
+	b=Fzfybb9BZTT/GkvHGaVSrmnf0DVUvsZ9w7z2B00VL3Qygf4yUgN+H/qXJgAxriE2d
+	 LxVeH7M7plejH4t+WjTbb5D2ZfYu9wMFcfyWVyyNsSTe8gwl/6WBKhMA2tedcaPSwn
+	 FhTH8YuC4+RN6e4Z/wWiKdXBiodoPqfWKZjiQHA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfGCCQZ (ORCPT
+        id S1728048AbfGCCVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54668 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbfGCCQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:20 -0400
+        id S1727868AbfGCCQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C08E21882;
-        Wed,  3 Jul 2019 02:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE5A421881;
+        Wed,  3 Jul 2019 02:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120180;
-        bh=CXypkWf8I4WajPrb0acNINufJkDjdlHLijhFneaHr+o=;
+        s=default; t=1562120174;
+        bh=T4iMR+bJmYTxoN/boqXIWFDZbkCowcPs3pYXPapJw3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+i1UEnzuaXjn12OchshjgINtru4+IXV5OElcGw24Ghy0N+WQffOzmxir8UdtFq/C
-         9o+tskdhVC5L8WFqrTpDYcRiSx3scMsD4PIbVX56OrtXqiMIN1qt6+L3zA21PZ6yTw
-         reu3LX9iGeJtwHj90U4AgTtVXhfki6FWFWzWn+B4=
+        b=O2YgjpeDKFoIL+RUOds2DE64EEchrArATC8L7uj2Dge0SuxfXXXFIriEEgV3V3iH3
+         8Y9P0cENfwQ9YxTfyDWENF6jx1tXJ7WcvBPDh+g3I/lD82rz0tIlKca/hqAzlFo7ov
+         Swqqh2mGTb3bgZSsWMxqj5gbUZ4dsw7AvcsG+RUQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 38/39] fork,memcg: alloc_thread_stack_node needs to set tsk->stack
-Date:   Tue,  2 Jul 2019 22:15:13 -0400
-Message-Id: <20190703021514.17727-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 35/39] cpu/hotplug: Fix out-of-bounds read when setting fail state
+Date:   Tue,  2 Jul 2019 22:15:10 -0400
+Message-Id: <20190703021514.17727-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -62,53 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit 1bf4580e00a248a2c86269125390eb3648e1877c ]
+[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
 
-Commit 5eed6f1dff87 ("fork,memcg: fix crash in free_thread_stack on
-memcg charge fail") corrected two instances, but there was a third
-instance of this bug.
+Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
+can control `struct cpuhp_step *sp` address, results in the following
+global-out-of-bounds read.
 
-Without setting tsk->stack, if memcg_charge_kernel_stack fails, it'll
-execute free_thread_stack() on a dangling pointer.
+Reproducer:
 
-Enterprise kernels are compiled with VMAP_STACK=y so this isn't
-critical, but custom VMAP_STACK=n builds should have some performance
-advantage, with the drawback of risking to fail fork because compaction
-didn't succeed.  So as long as VMAP_STACK=n is a supported option it's
-worth fixing it upstream.
+  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
 
-Link: http://lkml.kernel.org/r/20190619011450.28048-1-aarcange@redhat.com
-Fixes: 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reviewed-by: Rik van Riel <riel@surriel.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+KASAN report:
+
+  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
+  Read of size 8 at addr ffffffff89734438 by task bash/1941
+
+  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
+  Call Trace:
+   write_cpuhp_fail+0x2cd/0x2e0
+   dev_attr_store+0x58/0x80
+   sysfs_kf_write+0x13d/0x1a0
+   kernfs_fop_write+0x2bc/0x460
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f05e4f4c970
+
+  The buggy address belongs to the variable:
+   cpu_hotplug_lock+0x98/0xa0
+
+  Memory state around the buggy address:
+   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+                                          ^
+   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Add a sanity check for the value written from user space.
+
+Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: peterz@infradead.org
+Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/fork.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/cpu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2628f3773ca8..ee24fea0eede 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -245,7 +245,11 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
- 	struct page *page = alloc_pages_node(node, THREADINFO_GFP,
- 					     THREAD_SIZE_ORDER);
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 9cc8b6fdb2dc..6e95c9bafba6 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1954,6 +1954,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
+ 	if (ret)
+ 		return ret;
  
--	return page ? page_address(page) : NULL;
-+	if (likely(page)) {
-+		tsk->stack = page_address(page);
-+		return tsk->stack;
-+	}
-+	return NULL;
- #endif
- }
- 
++	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
++		return -EINVAL;
++
+ 	/*
+ 	 * Cannot fail STARTING/DYING callbacks.
+ 	 */
 -- 
 2.20.1
 
