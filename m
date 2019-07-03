@@ -2,210 +2,270 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A35C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D78C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6CB21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BF521882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+bATqC4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyGnagav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfGCUEF (ORCPT
+        id S1727164AbfGCUEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:04:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41934 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfGCUEF (ORCPT
+        Wed, 3 Jul 2019 16:04:41 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35516 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCUEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:04:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id w25so7801635ioc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:04:04 -0700 (PDT)
+        Wed, 3 Jul 2019 16:04:41 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r21so3576935qke.2;
+        Wed, 03 Jul 2019 13:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=96QcmaBU6PQetN4ksZagHFgDlTk0cqr9dTtquxV84iw=;
-        b=g+bATqC4dMpXhAFuOsNN2gNZ4K3Nz36JeiGgdDBBKZdqwTo3e4j2opQ1AEs9+PZ1ZT
-         i9hIeDte0PobqWVSrr3goitBqPU7ubH4kL6+NhoY+Mg+rXXcMyjCxUs4y1iuoBd1pH5B
-         nlcX26IbnTABvwBEZELAyl0SArRpB9T4/+U+W6h7zB8deaWuTJ5VC4WAgwzsLVIgP0B7
-         qDJNTnwhQbHSPdFZDxRolwalIFAlj02zEA8hGEPyJY41v9u2u9k9zLYgIDRfcJN8UNbw
-         fE7APf2Ec7lzfHQHHOpqfkPq+roCEBsrhm/LCS5bB9dToZrDdQZLm6pkb4J18wYz3a69
-         x7fw==
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=nLV0SgYCElDGpuVWKTt1nkFCDhoVGHSVjtI/YSUZbZA=;
+        b=JyGnagavsq+kKQ6HXvWgqguYiSxbAUytbFWkTz0t3dIjuZn1LF/Qozd9txVarWupmV
+         q3r4Tpt6MkozMl6Re7V6B5UI71J7nupMZJylssZ2x/ZrSoVugdwPwK330DcnuSVVvj7A
+         EWiXHRPWOU5gye/hqpiKwiQv97lxYbVLxlnUZG51upTRYyQSAUv6i0BkS+YW7WihYals
+         4tsIM93X/L00Bam9vqlrf04sO6fqMfhoetk2m2iBwUS7JPKcLPO6+wgRpM7Xh9oPxQK/
+         JBg7qi5L44U+Tma7Z/JzQkR1EbAOcOsJVpIcehixEL2qVjVW5d+VkSSM95W49+KNK73A
+         XQhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=96QcmaBU6PQetN4ksZagHFgDlTk0cqr9dTtquxV84iw=;
-        b=XKL7UZOAmVXRzV90Jldn3wT/dzWx01ZJlWdhAdV/8CUG8hgEHPYmh+1AHKwLlLS71h
-         x+AjQ3XQIr7vpclOgSa8oPq0J4WKTiJCcKOfc7n1vQCCrwKikP4eIadvt8lXjPdm7aML
-         ye/OiMUoeUonweiPNuJhPnXkJzEBYAGYm8XkiHNHPelcU1sGfathbMxVWiNgju4nFYJa
-         QusmcDEW8RN5/tnf71Nv0tmJ0+Z/uPz4q4Mlv0eovfxbfh8xX4me+rKgfMJl0qkQgJLy
-         w0UB3oec1tllZI9FjqNDeR7uEG+k7FtA+d6Sv9y1U8q5BvI7cem9RqTsIH1XMnz2Enpg
-         DRcg==
-X-Gm-Message-State: APjAAAU/rrfprdbY0RVPB1+GmqbAO8i+OuGk+hZ60H1rCT2yiMHEo8Ln
-        v6h2Gwz5by9PgWJxqgJywBSqvuZTuwrJgVKzK5+H7Q==
-X-Google-Smtp-Source: APXvYqzihMh2s3NouVarDqgmqNcCKCFot9tW5KqD3ZwRVkaij7ka5hN0usN2Fd4v9mOoDVEjow/waIPYzqwlAlQohUc=
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr7302789iop.58.1562184244059;
- Wed, 03 Jul 2019 13:04:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org> <1a6616f9f41b560963e86e24d533c5b2c3f05179.1561659046.git.saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <1a6616f9f41b560963e86e24d533c5b2c3f05179.1561659046.git.saiprakash.ranjan@codeaurora.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 3 Jul 2019 14:03:53 -0600
-Message-ID: <CANLsYkxxEuLmmiabbyi9-f7U37g7OqHiUWzHHo5GYioEu+aR3g@mail.gmail.com>
-Subject: Re: [PATCHv5 2/2] coresight: Do not default to CPU0 for missing CPU phandle
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=nLV0SgYCElDGpuVWKTt1nkFCDhoVGHSVjtI/YSUZbZA=;
+        b=twQazOb+/gNcPm8jdCVYv891bL2ThdznO9kRj4NxYHeFeUOJ0+3wcdnX1knu6wDFLu
+         VwDKaYyUs0/qTlJPQJfA83PtEVu9JNmR3o4qWSgy/QMPKzgjtpFo57hGWQYRFsgVRBZy
+         kgFT9SZD+Q86iZ/+M3kzjb0mCy48ak3vJi3e0LqB54KBNZiwckS5Ijm6cVo21H/s6YyL
+         4/5AkgPIJTq4ndUopvBwAMrW5uwEl7GW3bDoAP+GW62d2vRLyP4h/5LgQbp8oTkKePh3
+         k2gR061vu5I37+Wwm6Ksp6TSAGzJoZFIIFXEEfASGpc/HkV626/crh3kNaHY9lRA4HRY
+         1vFw==
+X-Gm-Message-State: APjAAAUMbrB9rj3fHFzxK/5fhxSuF9Xw4Sk1SM6/pikYOkImqp2T0liK
+        mhPkA6DRmgz1Dq+scB0rOlE=
+X-Google-Smtp-Source: APXvYqxA1dLShpdJy5ZGDfd19ia0mtHsXt5qyHBflFWCqqOiy4wmlsjO00M8DyJv55d3Af2BmI7lAQ==
+X-Received: by 2002:a37:354:: with SMTP id 81mr32690349qkd.378.1562184279714;
+        Wed, 03 Jul 2019 13:04:39 -0700 (PDT)
+Received: from eis-macbook.hsd1.ma.comcast.net (c-24-61-97-214.hsd1.ma.comcast.net. [24.61.97.214])
+        by smtp.gmail.com with ESMTPSA id 15sm1687168qtf.2.2019.07.03.13.04.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 13:04:38 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v4 0/5] x86 instruction emulator fuzzing
+From:   Sam Caccavale <samcaccavale@gmail.com>
+In-Reply-To: <537c4950-8b22-c28f-c248-504f8396dd5a@redhat.com>
+Date:   Wed, 3 Jul 2019 16:04:36 -0400
+Cc:     Alexander Graf <graf@amazon.com>, nmanthey@amazon.de,
+        wipawel@amazon.de, dwmw@amazon.co.uk, mpohlack@amazon.de,
+        karahmed@amazon.de, andrew.cooper3@citrix.com, JBeulich@suse.com,
+        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, paullangton4@gmail.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <95CA4688-4658-4993-9949-5B6C10882613@gmail.com>
+References: <20190628092621.17823-1-samcacc@amazon.de>
+ <caaeb546-9aa1-7fd5-496d-a0ec1f759d10@amazon.com>
+ <537c4950-8b22-c28f-c248-504f8396dd5a@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 at 12:16, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Coresight platform support assumes that a missing "cpu" phandle
-> defaults to CPU0. This could be problematic and unnecessarily binds
-> components to CPU0, where they may not be. In coresight etm and
-> cpu-debug drivers, abort the probe for such cases.
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Same with this one:
+> On Jul 3, 2019, at 12:20 PM, Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>=20
+> On 28/06/19 11:33, Alexander Graf wrote:
+>>=20
+>>=20
+>> On 28.06.19 11:26, Sam Caccavale wrote:
+>>> Dear all,
+>>>=20
+>>> This series aims to provide an entrypoint for, and fuzz KVM's x86
+>>> instruction
+>>> emulator from userspace.  It mirrors Xen's application of the AFL
+>>> fuzzer to
+>>> it's instruction emulator in the hopes of discovering =
+vulnerabilities.
+>>> Since this entrypoint also allows arbitrary execution of the =
+emulators
+>>> code
+>>> from userspace, it may also be useful for testing.
+>>>=20
+>>> The current 4 patches build the emulator and 2 harnesses:
+>>> simple-harness is
+>>> an example of unit testing; afl-harness is a frontend for the AFL =
+fuzzer.
+>>> The fifth patch contains useful scripts for development but is not
+>>> intended
+>>> for usptream consumption.
+>>>=20
+>>> Patches
+>>> =3D=3D=3D=3D=3D=3D=3D
+>>>=20
+>>> - 01: Builds and links afl-harness with the required kernel objects.
+>>> - 02: Introduces the minimal set of emulator operations and =
+supporting
+>>> code
+>>> to emulate simple instructions.
+>>> - 03: Demonstrates simple-harness as a unit test.
+>>> - 04: Adds scripts for install and building.
+>>> - 05: Useful scripts for development
+>>>=20
+>>>=20
+>>> Issues
+>>> =3D=3D=3D=3D=3D=3D=3D
+>>>=20
+>>> Currently, fuzzing results in a large amount of FPU related crashes.=20=
 
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> Xen's
+>>> fuzzing efforts had this issue too.  Their (temporary?) solution was =
+to
+>>> disable FPU exceptions after every instruction iteration?  Some =
+solution
+>>> is desired for this project.
+>>>=20
+>>>=20
+>>> Changelog
+>>> =3D=3D=3D=3D=3D=3D=3D
+>>>=20
+>>> v1 -> v2:
+>>>   - Moved -O0 to ifdef DEBUG
+>>>   - Building with ASAN by default
+>>>   - Removed a number of macros from emulator_ops.c and moved them as
+>>>     static inline functions in emulator_ops.h
+>>>   - Accidentally changed the example in simple-harness (reverted in =
+v3)
+>>>   - Introduced patch 4 for scripts
+>>>=20
+>>> v2 -> v3:
+>>>   - Removed a workaround for printf smashing the stack when compiled
+>>>     with -mcmodel=3Dkernel, and stopped compiling with =
+-mcmodel=3Dkernel
+>>>   - Added a null check for malloc's return value
+>>>   - Moved more macros from emulator_ops.c into emulator_ops.h as
+>>>     static inline functions
+>>>   - Removed commented out code
+>>>   - Moved changes to emulator_ops.h into the first patch
+>>>   - Moved addition of afl-many script to the script patch
+>>>   - Fixed spelling mistakes in documentation
+>>>   - Reverted the simple-harness example back to the more useful
+>>> original one
+>>>   - Moved non-essential development scripts from patch 4 to new =
+patch 5
+>>>=20
+>>> v3 -> v4:
+>>>   - Stubbed out all unimplemented emulator_ops with a =
+unimplemented_op
+>>> macro
+>>>   - Setting FAIL_ON_UNIMPLEMENTED_OP on compile decides whether
+>>> calling these
+>>>     is treated as a crash or ignored
+>>>   - Moved setting up core dumps out of the default build/install =
+path and
+>>>     detailed this change in the README
+>>>   - Added a .sh extention to afl-many
+>>>   - Added an optional timeout to afl-many.sh and made =
+deploy_remote.sh
+>>> use it
+>>>   - Building no longer creates a new .config each time and does not
+>>> force any
+>>>     config options
+>>>   - Fixed a path bug in afl-many.sh
+>>>=20
+>>> Any comments/suggestions are greatly appreciated.
+>>>=20
+>>> Best,
+>>> Sam Caccavale
+>>>=20
+>>> Sam Caccavale (5):
+>>>    Build target for emulate.o as a userspace binary
+>>>    Emulate simple x86 instructions in userspace
+>>>    Demonstrating unit testing via simple-harness
+>>>    Added build and install scripts
+>>>    Development scripts for crash triage and deploy
+>>>=20
+>>>   tools/Makefile                                |   9 +
+>>>   tools/fuzz/x86ie/.gitignore                   |   2 +
+>>>   tools/fuzz/x86ie/Makefile                     |  54 ++
+>>>   tools/fuzz/x86ie/README.md                    |  21 +
+>>>   tools/fuzz/x86ie/afl-harness.c                | 151 +++++
+>>>   tools/fuzz/x86ie/common.h                     |  87 +++
+>>>   tools/fuzz/x86ie/emulator_ops.c               | 590 =
+++++++++++++++++++
+>>>   tools/fuzz/x86ie/emulator_ops.h               | 134 ++++
+>>>   tools/fuzz/x86ie/scripts/afl-many.sh          |  31 +
+>>>   tools/fuzz/x86ie/scripts/bin.sh               |  49 ++
+>>>   tools/fuzz/x86ie/scripts/build.sh             |  34 +
+>>>   tools/fuzz/x86ie/scripts/coalesce.sh          |   5 +
+>>>   tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
+>>>   tools/fuzz/x86ie/scripts/deploy_remote.sh     |  10 +
+>>>   tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
+>>>   tools/fuzz/x86ie/scripts/install_afl.sh       |  15 +
+>>>   .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
+>>>   tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
+>>>   tools/fuzz/x86ie/scripts/run.sh               |  10 +
+>>>   tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
+>>>   tools/fuzz/x86ie/simple-harness.c             |  49 ++
+>>>   tools/fuzz/x86ie/stubs.c                      |  59 ++
+>>>   tools/fuzz/x86ie/stubs.h                      |  52 ++
+>>=20
+>> Sorry I didn't realize it before. Isn't that missing a patch to the
+>> MAINTAINERS file?
 
-> ---
->  .../hwtracing/coresight/coresight-cpu-debug.c |  3 +++
->  drivers/hwtracing/coresight/coresight-etm3x.c |  3 +++
->  drivers/hwtracing/coresight/coresight-etm4x.c |  3 +++
->  .../hwtracing/coresight/coresight-platform.c  | 20 +++++++++----------
->  4 files changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index 07a1367c733f..58bfd6319f65 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
->                 return -ENOMEM;
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         if (per_cpu(debug_drvdata, drvdata->cpu)) {
->                 dev_err(dev, "CPU%d drvdata has already been initialized\n",
->                         drvdata->cpu);
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-> index 225c2982e4fe..e2cb6873c3f2 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-> @@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->         }
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
->         if (!desc.name)
->                 return -ENOMEM;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 7fe266194ab5..7bcac8896fc1 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->         spin_lock_init(&drvdata->spinlock);
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
->         if (!desc.name)
->                 return -ENOMEM;
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 3c5ceda8db24..cf580ffbc27c 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
->         struct device_node *dn;
->
->         if (!dev->of_node)
-> -               return 0;
-> +               return -ENODEV;
-> +
->         dn = of_parse_phandle(dev->of_node, "cpu", 0);
-> -       /* Affinity defaults to CPU0 */
->         if (!dn)
-> -               return 0;
-> +               return -ENODEV;
-> +
->         cpu = of_cpu_node_to_id(dn);
->         of_node_put(dn);
->
-> -       /* Affinity to CPU0 if no cpu nodes are found */
-> -       return (cpu < 0) ? 0 : cpu;
-> +       return cpu;
->  }
->
->  /*
-> @@ -310,7 +310,7 @@ of_get_coresight_platform_data(struct device *dev,
->
->  static inline int of_coresight_get_cpu(struct device *dev)
->  {
-> -       return 0;
-> +       return -ENODEV;
->  }
->  #endif
->
-> @@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
->         struct acpi_device *adev = ACPI_COMPANION(dev);
->
->         if (!adev)
-> -               return 0;
-> +               return -ENODEV;
->         status = acpi_get_parent(adev->handle, &cpu_handle);
->         if (ACPI_FAILURE(status))
-> -               return 0;
-> +               return -ENODEV;
->
->         cpu = acpi_handle_to_logical_cpuid(cpu_handle);
->         if (cpu >= nr_cpu_ids)
-> -               return 0;
-> +               return -ENODEV;
->         return cpu;
->  }
->
-> @@ -769,7 +769,7 @@ acpi_get_coresight_platform_data(struct device *dev,
->
->  static inline int acpi_coresight_get_cpu(struct device *dev)
->  {
-> -       return 0;
-> +       return -ENODEV;
->  }
->  #endif
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+It is, I will add that. =20
+
+> Yeah, and the directory should probably be tools/fuzz/kvm_emulate so =
+as
+> not to puzzle people.  Also:
+>=20
+> - let's limit the scripts to the minimum, i.e. only the run script =
+which
+> should be something like
+>=20
+> #!/bin/bash
+> # SPDX-License-Identifier: GPL-2.0+
+>=20
+> FUZZDIR=3D"${FUZZDIR:-$(pwd)/fuzz}"
+>=20
+> mkdir -p $FUZZDIR/in
+> cp tools/fuzz/kvm_emulate/rand_sample.bin $FUZZDIR/in
+> mkdir -p $FUZZDIR/out
+>=20
+> ${TIMEOUT:+TIMEOUT=3D$TIMEOUT} ${AFL_FUZZ-afl-fuzz} "$@" \
+>  -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/kvm_emulate/afl-harness @@
+>=20
+> where people can substitute afl-many.sh or add their own options using
+> the AFL_FUZZ variable or the command line.  Likewise for screen.
+
+Yep, both of those are sensible.  I=E2=80=99ll update with next patch.
+
+> - the build should be just "make -C tools/fuzz/kvm_emulate" and it
+> should just work.  Feel free to steal the Makefile magic from other
+> tools/ directories.
+
+Yeah, the build is a bit of a sore point.  I=E2=80=99ll reach out if I =
+can=E2=80=99t get it to work.
+
+> - finally, rand_sample.bin is missing.
+>=20
+> Otherwise, it looks very nice.
+>=20
+> Paolo
+
+Thanks for the feedback. =20
+
+Per the email=E2=80=99s bouncing, I=E2=80=99ve removed my @amazon.de =
+email and will be using this one going forward.
+
+- Sam
+
