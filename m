@@ -2,183 +2,148 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B713DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D706EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7093A21852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14CB2189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pGPO5o/p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcrCBtv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfGCSqf (ORCPT
+        id S1727113AbfGCSqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:46:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41406 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCSqe (ORCPT
+        Wed, 3 Jul 2019 14:46:53 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36513 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCSqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:46:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 205so3559797ljj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:46:33 -0700 (PDT)
+        Wed, 3 Jul 2019 14:46:52 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g18so3663496qkl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vCIUPeCCEF+OLz7w98udyRcP/O/Khzz7h89sR5YZeg4=;
-        b=pGPO5o/p8zY1Oc4aPFzsn/Mool+es6Sl/wsHeKtG+4T7hctg/2z6k2jLIpWXJjSMD9
-         7mhnhoZiyom+kOicmb3t+F5QcYtVN4qZr/S1G9PUhNtT9UL3MHWcf0OFmpKDMqnSicg0
-         A7i4opJIwLQBzzpg2lTwrxtwi1Nn6GpdhNh4go8sUJ9tkD4ds+9ojwVootFLPHDdEw2I
-         ZkwBdGLo4wOw9K5+dtPlMTRelWuyWU5X08SdLgpPGAxPslQUmq1zDZUfrTB/uj4Ii517
-         e0DTGmeARSOMj4gybq+qQ0TRyCHo9Upj8pKw42NAKUCHu/wTHrDryJwJaRXW7jP05Em/
-         yt2Q==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lxu8VUMKdHDWmo8g651uclV2QTSciyGC6y+pb/rVSnA=;
+        b=LcrCBtv0ZLyYgyWByF03aD3dLFbITDwQ1iSk30xGE3IhRzWt5t1cWtvKTGuSak9Ac1
+         quTV3uebdg2gbweRYhm/FLETgusswD3ACUx5Jp7wyeDzi/4MgZJI5nQNtHzYXmGViOLA
+         1aD4NTa7kMGsGryyYAfTMCyd7CcCDAXDjiZJhPjjR1xSm/5lAVeSJFEjJZapJfQfTVAn
+         rkKPnVnzu8UZgRolZzWrcKM3QWca9yP4REnXyY9uqXM6p5fSTHmoK3sI0rQRRZUjcsRD
+         EtYmCcEKrC6pWoGvdbTsC5Zgu4IcSDW2fq4MbgFGwlID1ZWslqA795FQevvT0yvubwLu
+         wBpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vCIUPeCCEF+OLz7w98udyRcP/O/Khzz7h89sR5YZeg4=;
-        b=Cdqo6genagVRNlQeQLLzyqWJD0ueZnussn4RuGkokzvoKAyakOwauBg+tkjjL9L2hP
-         pp7kzdjlRGknTpM6TgkZ5ICabxpkSQArasPMgEdejFdMjN0SX0ZRn1kV6o/6Ff3tTh/1
-         IR6pGUANJEljVwE7DGO116ivTW0NJ+6NgnipqOZPyJRZFNFcnBuz3yFpVvjv3GpTSISn
-         IwBhV1jHRU355OeyYON3Z/FfmqXugztQPR00VAv6kzvxGT4Gynums4iX1JKE9zu6pn2G
-         MCbmRPl4jEZp/ZaWTxc2Wp0fvaxmE40QTeHdz8Tme1WkCuCwTRSqhAJY3s0ZjSgnGcmn
-         nbnQ==
-X-Gm-Message-State: APjAAAUjGfNHcaikv6ZgQ/JJ6S43MHk9BMkwcwMhGXylY7dYQJ815EvT
-        8h4D7J8ZLs/D1p6+IcATwdjg/0PL/UrYDUZe6jwg9w==
-X-Google-Smtp-Source: APXvYqwiem5/n4z8d4zc+GCZEWpVW1sd4VnYulWvpXNjCar1izXohWHI0hwu9Cczfd1wDW2xf9ddEgTiPFBZQtzl+o4=
-X-Received: by 2002:a2e:98d7:: with SMTP id s23mr11048254ljj.179.1562179591897;
- Wed, 03 Jul 2019 11:46:31 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lxu8VUMKdHDWmo8g651uclV2QTSciyGC6y+pb/rVSnA=;
+        b=IgnQfNsHpLxaS4b9+WzuIkT+ApZ9Aqk4flLQ1/bYsK/88zjmeQtKtMupibHAJZ+LiX
+         J3sDjrNSAlVV2h43QRHbRuRl6C4eF2i2Nbnhilj86SCPeenrK4PiTd2AQk7PDtZSLCWB
+         FOddjB6vadMCaqHW0U68tVwEg6i65Sv1zFBjbCboSRLnxuGBkG0V8OC4tMT9fGs3IRSy
+         SVzXEfwsom1cyNi3WkJKVhQvFuix/JXSDvGTX3Co+NS0x2AdMGC7u2SZZ2S9Uk3Bb1IY
+         0zTztuqBYvUOsHtp43HyLnun4G+ydoRXUu5FUNBgg657AZ1XHNvu9LMc02fClfic2qZF
+         iAYg==
+X-Gm-Message-State: APjAAAUSnKmFn9mgn9JTJu8eIuFH6JxJrgDhQdz/8iG0kMT9uViljjWf
+        2QbWcdkd34MAGN7R/JWuI5s=
+X-Google-Smtp-Source: APXvYqzDpt++1yhZV/LZqaA/Mo161b2L7HhcxUJ5L6Nvz8+pmH1ZynDUyuCrcHkK0BTItHD+miOUTw==
+X-Received: by 2002:a37:4dc6:: with SMTP id a189mr31364013qkb.41.1562179611820;
+        Wed, 03 Jul 2019 11:46:51 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.182])
+        by smtp.gmail.com with ESMTPSA id u7sm1402263qta.82.2019.07.03.11.46.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 11:46:51 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CAA0141154; Wed,  3 Jul 2019 15:46:06 -0300 (-03)
+Date:   Wed, 3 Jul 2019 15:46:06 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 05/11] perf trace: Smatch: Fix potential NULL pointer
+ dereference
+Message-ID: <20190703184606.GF10740@kernel.org>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702103420.27540-6-leo.yan@linaro.org>
 MIME-Version: 1.0
-References: <20190703050229.GC633@sol.localdomain>
-In-Reply-To: <20190703050229.GC633@sol.localdomain>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Wed, 3 Jul 2019 11:46:20 -0700
-Message-ID: <CAHRSSExd8bKR01010QLcWSotXXeVS5QC7iWvt7Qdz4VRyd-wCA@mail.gmail.com>
-Subject: Re: Reminder: 3 open syzbot bugs in "android/binder" subsystem
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702103420.27540-6-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 10:03 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> [This email was generated by a script.  Let me know if you have any suggestions
-> to make it better, or if you want it re-generated with the latest status.]
->
-> Of the currently open syzbot reports against the upstream kernel, I've manually
-> marked 3 of them as possibly being bugs in the "android/binder" subsystem.  I've
-> listed these reports below, sorted by an algorithm that tries to list first the
-> reports most likely to be still valid, important, and actionable.
->
-> Of these 3 bugs, 1 was seen in mainline in the last week.
->
-> Of these 3 bugs, 1 was bisected to a commit from the following person:
->
->         Todd Kjos <tkjos@android.com>
->
-> If you believe a bug is no longer valid, please close the syzbot report by
-> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> original thread, as explained at https://goo.gl/tpsmEJ#status
->
-> If you believe I misattributed a bug to the "android/binder" subsystem, please
-> let me know, and if possible forward the report to the correct people or mailing
-> list.
->
-> Here are the bugs:
->
-> --------------------------------------------------------------------------------
-> Title:              kernel BUG at drivers/android/binder_alloc.c:LINE! (4)
-> Last occurred:      6 days ago
-> Reported:           14 days ago
-> Branches:           Mainline and others
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=bbf40136a49ffaa8ac60906edcbe77f825b2c406
-> Original thread:    https://lkml.kernel.org/lkml/000000000000b6b25b058b96d5c3@google.com/T/#u
->
-> This bug has a C reproducer.
->
-> This bug was bisected to:
->
->         commit bde4a19fc04f5f46298c86b1acb7a4af1d5f138d
->         Author: Todd Kjos <tkjos@android.com>
->         Date:   Fri Feb 8 18:35:20 2019 +0000
->
->           binder: use userspace pointer as base of buffer space
->
-> The original thread for this bug has received 3 replies; the last was 4 days
-> ago.
+Em Tue, Jul 02, 2019 at 06:34:14PM +0800, Leo Yan escreveu:
+> Based on the following report from Smatch, fix the potential
+> NULL pointer dereference check.
+> 
+>   tools/perf/builtin-trace.c:1044
+>   thread_trace__new() error: we previously assumed 'ttrace' could be
+>   null (see line 1041).
+> 
+> tools/perf/builtin-trace.c
+> 1037 static struct thread_trace *thread_trace__new(void)
+> 1038 {
+> 1039         struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+> 1040
+> 1041         if (ttrace)
+> 1042                 ttrace->files.max = -1;
+> 1043
+> 1044         ttrace->syscall_stats = intlist__new(NULL);
+>              ^^^^^^^^
+> 1045
+> 1046         return ttrace;
+> 1047 }
+> 
+> This patch directly returns NULL when fail to allocate memory for
+> ttrace; this can avoid potential NULL pointer dereference.
 
-Fix posted: https://lore.kernel.org/lkml/20190628165012.4841-1-tkjos@google.com/
+I did it slightly different, to avoid having two return lines, and that
+is what most other constructors (foo__new()) do in tools/perf/, kept
+your changeset comment and patch authorship, thanks.
 
->
-> If you fix this bug, please add the following tag to the commit:
->     Reported-by: syzbot+3ae18325f96190606754@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please reply to the original
-> thread, which had activity only 4 days ago.  For the git send-email command to
-> use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-> instructions" at https://lkml.kernel.org/r/000000000000b6b25b058b96d5c3@google.com
->
-> --------------------------------------------------------------------------------
-> Title:              WARNING in binder_transaction_buffer_release
-> Last occurred:      0 days ago
-> Reported:           43 days ago
-> Branches:           Mainline and others
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=4e0a6a529aef923a8d61c5d20b8fc0605c730138
-> Original thread:    https://lkml.kernel.org/lkml/000000000000afe2c70589526668@google.com/T/#u
-
-Assigned to Hridya Valsaraju (b/134585943)
-
->
-> This bug has a syzkaller reproducer only.
->
-> The original thread for this bug has received 2 replies; the last was 20 days
-> ago.
->
-> If you fix this bug, please add the following tag to the commit:
->     Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/000000000000afe2c70589526668@google.com
->
-> --------------------------------------------------------------------------------
-> Title:              possible deadlock in uprobe_clear_state
-> Last occurred:      165 days ago
-> Reported:           202 days ago
-> Branches:           Mainline
-> Dashboard link:     https://syzkaller.appspot.com/bug?id=a1ce9b3da349209c5085bb8c4fee753d68c3697f
-> Original thread:    https://lkml.kernel.org/lkml/00000000000010a9fb057cd14174@google.com/T/#u
->
-> Unfortunately, this bug does not have a reproducer.
->
-> [Note: the uprobe developers think this is a bug in binder, not uprobes.
->  See https://marc.info/?l=linux-kernel&m=155119805728815&w=2
->  for a suggested fix for this bug.]
-
-Just learned about this, but looks like a straightforward fix.
-
->
-> If you fix this bug, please add the following tag to the commit:
->     Reported-by: syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com
->
-> If you send any email or patch for this bug, please consider replying to the
-> original thread.  For the git send-email command to use, or tips on how to reply
-> if the thread isn't in your mailbox, see the "Reply instructions" at
-> https://lkml.kernel.org/r/00000000000010a9fb057cd14174@google.com
->
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d0eb7224dd36..e3fc9062f136 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1038,10 +1038,10 @@ static struct thread_trace *thread_trace__new(void)
+ {
+ 	struct thread_trace *ttrace =  zalloc(sizeof(struct thread_trace));
+ 
+-	if (ttrace)
++	if (ttrace) {
+ 		ttrace->files.max = -1;
+-
+-	ttrace->syscall_stats = intlist__new(NULL);
++		ttrace->syscall_stats = intlist__new(NULL);
++	}
+ 
+ 	return ttrace;
+ }
