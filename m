@@ -2,95 +2,91 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A11EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCA3C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E441B2085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377E02085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfGCTqT (ORCPT
+        id S1727063AbfGCTr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:46:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59982 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbfGCTqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:46:18 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 54FDF3086200;
-        Wed,  3 Jul 2019 19:46:18 +0000 (UTC)
-Received: from treble (ovpn-112-31.rdu2.redhat.com [10.10.112.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5246E91F54;
-        Wed,  3 Jul 2019 19:46:17 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 14:46:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Jul 2 (objtool)
-Message-ID: <20190703194614.6bsyfspnpcf4dhfj@treble>
-References: <20190702195158.79aa5517@canb.auug.org.au>
- <b0238309-72b4-1a5c-77ff-89c7e432e2ba@infradead.org>
- <20190703164458.imjawnoczygb2vvd@treble>
- <a3135000-c12d-9800-f58d-eabbfcfa1d3f@infradead.org>
- <20190703194528.7kk7v44whdp7ol5a@treble>
+        Wed, 3 Jul 2019 15:47:56 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34435 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGCTrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:47:55 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so3179844qtu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 12:47:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lu6djyiUlDtpTUUCZPiIMkZuBFC6UZao2Rv1MMbdJQY=;
+        b=cdLp9xNSAFB8ZwXkLyYuvr9/9s/ufvuWYv1f3zZjCc+MAL1i8BzLkZ4B2qiI5YoBXq
+         TpP525Qt+FVNkPgo5DSr2gQevZGcjIGcdBUg0saYWl4izRPFTyVJvEhu/VZy2lFCV4o2
+         anJ2n5khLG+zRl+qEJHThFTn8EaqQxn3AxrmCpVpRjo5QrFd23ieCiNUhXx++eD4B3f7
+         Lth+hBVQlffi4E4JKrcn3w+xdFgVmquFavh7F/oFi9GjdvPKO6f13R9rbOxRYbpvsU35
+         S6YEp8rIimxLlRqzCCC5BjxT507jco5s/Se024+NQTvvHZJ+yUjFNxR31G5IC9EoCRBB
+         Rs+g==
+X-Gm-Message-State: APjAAAU1vwblyRn+jy8HD5ujXwWmVNZNlQdEWQwqCg/pva+e8QRza4s5
+        oiWFwD36mfrRpzd7cpnFdMV50GQp1Omh1gTeC3zikko2cZU=
+X-Google-Smtp-Source: APXvYqxRHjCsWv3BgWezeFdm/f6b8yCsD6b1irOI08KPrtXIRPdxw7qvycrMoq0HHUNFZUNv3CqEHHaZA24xicS4o8g=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr31341893qtn.304.1562183274631;
+ Wed, 03 Jul 2019 12:47:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190703194528.7kk7v44whdp7ol5a@treble>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 03 Jul 2019 19:46:18 +0000 (UTC)
+References: <20190703001842.12238-1-alistair.francis@wdc.com>
+ <20190703001842.12238-3-alistair.francis@wdc.com> <CAK8P3a37GLzp+w6m0SEV+9j_6sH91SuStyAEW-VzuJ5_dUCnZw@mail.gmail.com>
+ <CAKmqyKP07futGV1WsZwvqGzeR646eo-ysVy9RCqaSOG-2qhH_g@mail.gmail.com>
+In-Reply-To: <CAKmqyKP07futGV1WsZwvqGzeR646eo-ysVy9RCqaSOG-2qhH_g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 3 Jul 2019 21:47:36 +0200
+Message-ID: <CAK8P3a1zJPiR06uxZ5QVoEyDU64v=oUu_p9X-mULLeXN-som8A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv/include/uapi: Define a custom __SIGINFO struct
+ for RV32
+To:     Alistair Francis <alistair23@gmail.com>
+Cc:     Alistair Francis <alistair.francis@wdc.com>,
+        linux-riscv-bounces@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 02:45:28PM -0500, Josh Poimboeuf wrote:
-> On Wed, Jul 03, 2019 at 10:23:21AM -0700, Randy Dunlap wrote:
-> > On 7/3/19 9:44 AM, Josh Poimboeuf wrote:
-> > > On Tue, Jul 02, 2019 at 11:47:02AM -0700, Randy Dunlap wrote:
-> > >> On 7/2/19 2:51 AM, Stephen Rothwell wrote:
-> > >>> Hi all,
-> > >>>
-> > >>> Changes since 20190701:
-> > >>>
-> > >>
-> > >> on x86_64:
-> > >>
-> > >> kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x22: can't find switch jump table
-> > > 
-> > > I don't see it on current linux-next/master.  Can you share the config
-> > > and .o?
-> > > 
-> > 
-> > This warning happened in 6 of 10 builds for 20190702.
-> > 
-> > Today (20190703) I don't see it at all, but I see this instead:
-> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0xa3: sibling call from callable instruction with modified stack frame
-> > 
-> > Kernel (rand)config file and .o file for 20190702 are attached.
-> 
-> Thanks, I'm able to recreate the sibling call warning with a randconfig
-> on today's linux-next.
-> 
-> GCC is doing some funky stuff.  With my randconfig, ___bpf_prog_run()
-> has 166 indirect calls to its jump table.  Seems (a bit!) excessive.
+On Wed, Jul 3, 2019 at 8:45 PM Alistair Francis <alistair23@gmail.com> wrote:
+>
+> On Wed, Jul 3, 2019 at 1:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Jul 3, 2019 at 2:21 AM Alistair Francis
+> > <alistair.francis@wdc.com> wrote:
+> > >
+> > > The glibc implementation of siginfo_t results in an allignment of 8 bytes
+> > > for the union _sifields on RV32. The kernel has an allignment of 4 bytes
+> > > for the _sifields union. This results in information being lost when
+> > > glibc parses the siginfo_t struct.
+> >
+> > I think the problem is that you incorrectly defined clock_t to 64-bit,
+> > while it is 32 bit in the kernel. You should fix the clock_t definition
+> > instead, it would otherwise cause additional problems.
+>
+> That is the problem. I assume we want to change the kernel to use a
+> 64-bit clock_t.
 
-s/calls/jumps/ obviously
+Certainly not!
 
-> 
-> I'll need to look into it.
-> 
-> -- 
-> Josh
+Doing so would likely involve deprecating all system calls that
+take a clock_t (anything passing a struct siginfo or struct tms) and
+replacements based on clock64_t.
 
--- 
-Josh
+> What I don't understand though is how that impacted this struct, it
+> doesn't use clock_t at all, everything in the struct is an int or
+> void*.
+
+si_utime/si_stime in siginfo are clock_t.
+
+      Arnd
