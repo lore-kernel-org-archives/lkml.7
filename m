@@ -2,88 +2,138 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DE5C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E29EC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DD8218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BD9218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="qtI1TSvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfGCTLF (ORCPT
+        id S1727130AbfGCTMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:11:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42582 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCTLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:11:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 5EFA228ABC7
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Helen Koike <helen.koike@collabora.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v7 14/14] MAINTAINERS: add entry for Rockchip ISP1 driver
-Date:   Wed,  3 Jul 2019 16:09:10 -0300
-Message-Id: <20190703190910.32633-15-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703190910.32633-1-helen.koike@collabora.com>
-References: <20190703190910.32633-1-helen.koike@collabora.com>
+        Wed, 3 Jul 2019 15:12:10 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:58686 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfGCTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:12:09 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id ikfkhVmzwzEP4ikflhol97; Wed, 03 Jul 2019 13:12:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1562181127; bh=duuBS6rinMa0pwtOKOVf/BFNNO4Ic1/CAz5zHoIh6XA=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=qtI1TSvtcp1usB7XvPwIbPFB+xJblM1BUnwhmuMsmTZqt070RQ3+dwZGMYtjr39oQ
+         E4fGlhXQ/bWaYXCQ3aQAyOIkweLECJTWzUPIC952erLEdO0ZBSyMTfJVF0jl0Y/Ag1
+         e0N97hTYpcwQ9Me+/yqIUE3ZBrlFd9aJ6dy8inAMT4RaRF1t+2ODzjrcaOnIzOGHdn
+         cAudzu7E/Btps+bJnZKPAeXiYaT/NBZK5B/S9Tjhn6Q66N5xS+Aprgj5QL8Be8STc8
+         W5HwHEbZO82E4atCv6j5+QPNxLU9yk7mZ7nPvZufcF2jkbV6BAlqmTC8ijMY15k6U/
+         ZhLqiJFl1nmzw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=cYmsUULM c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=FGbulvE0AAAA:8 a=kWJDoAjU50K2MEyS90sA:9 a=QEXdDO2ut3YA:10
+ a=svzTaB3SJmTkU8mK-ULk:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Daniel Lezcano'" <daniel.lezcano@linaro.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'open list:CPU IDLE TIME MANAGEMENT FRAMEWORK'" 
+        <linux-pm@vger.kernel.org>, <rafael@kernel.org>
+References: <20190620115826.4897-1-daniel.lezcano@linaro.org> <000101d531aa$e00987e0$a01c97a0$@net> <6589a058-c538-fbf3-7761-d43ab8434654@linaro.org>
+In-Reply-To: <6589a058-c538-fbf3-7761-d43ab8434654@linaro.org>
+Subject: RE: [PATCH] cpuidle/drivers/mobile: Add new governor for mobile/embedded systems
+Date:   Wed, 3 Jul 2019 12:12:03 -0700
+Message-ID: <000a01d531d3$3471a060$9d54e120$@net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdUxskNHh9ahYXCXQ82aPBZqjRxmngAFv0oA
+X-CMAE-Envelope: MS4wfF7v91g2X7U5hcjl4wllzOJpv6pIkupad2wCk1AC5zpzSc7M92u9y433Q/ErjieDGGPRW9k70rjyMAS3l85uTGBUfzWaT2FHG0xnnYj2zJzSYVcmwTm0
+ DAtxBGAb3Dy5Yb4rdiLuyABzbPlfD/imUJy7UlDVcQvkF6uCQQ95vsJbqxey1NqDmpa9XGPvTqEQrvEOJ99ik9aHSr4R9DQZ3A6pkYuo2mgHwyQ8p4LbjXkS
+ +UmQk8SJ4Yw2I8UKkeFxTm/odEeZNYSd1B1B21gA39axctRmlNW9Iwl0t8Swp9EN3Ovts22kc6OHFHKgh3qYX8iC3FmcsQAeCcn3QdNPjv39IrLsSUMnxmWH
+ y2lmf9yX9IbjwuVFIZ2+zN8DN6yduw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for the rockchip isp1 driver.
+On 2019.07.03 08:16 Daniel Lezcano wrote:
+> On 03/07/2019 16:23, Doug Smythies wrote:
+>> On 2019.06.20 04:58 Daniel Lezcano wrote:
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
----
+...
+>> Anyway, I did a bunch of tests and such, but have deleted
+>> most from this e-mail, because it's just noise. I'll
+>> include just one set:
+>> 
+>> For a work load that would normally result in a lot of use
+>> of shallow idle states (single core pipe-test * 2 cores).
+>
+> Can you share the tests and the command lines?
 
-Changes in v7: None
+Yes, give me a few days to repeat the tests and write
+it up properly. I am leaving town in an hour and for a day.
 
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+It'll be similar to this:
+http://www.smythies.com/~doug/linux/idle/teo8/pipe/index.html
+parent page (which I will do a better version):
+http://www.smythies.com/~doug/linux/idle/teo8/index.html
+...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 866969b36a13..47c8f17b0b1f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13518,6 +13518,14 @@ F:	drivers/hid/hid-roccat*
- F:	include/linux/hid-roccat*
- F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
- 
-+ROCKCHIP ISP V1 DRIVER
-+M:	Helen Koike <helen.koike@collabora.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/rockchip/isp1/
-+F:	Documentation/devicetree/bindings/media/rockchip-isp1.txt
-+F:	Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-+
- ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
- M:	Jacob chen <jacob2.chen@rock-chips.com>
- L:	linux-media@vger.kernel.org
--- 
-2.20.1
+>> I got (all kernel 5.2-rc5 + this patch):
+>> 
+>> Idle governor, teo; CPU frequency scaling: intel-cpufreq/ondemand;
+>> Processor package power: 40.4 watts; 4.9 uSec/loop
+>> 
+>> Idle governor, teo; CPU frequency scaling: intel-cpufreq/ondemand;
+>> Processor package power: 34 watts; 5.2 uSec/loop
+>> 
+>> Idle governor, mobile; CPU frequency scaling: intel-cpufreq/ondemand;
+>> Processor package power: 25.9 watts; 11.1 uSec/loop
+>> 
+>> Idle governor, menu; CPU frequency scaling: intel-cpufreq/ondemand;
+>> Processor package power: 34.2 watts; 5.23 uSec/loop
+>> 
+>> Idle governor, teo; CPU frequency scaling: intel-cpufreq/ondemand;
+>> Maximum CPU frequency limited to 73% to match mobile energy.
+>> Processor package power: 25.4 watts; 6.4 uSec/loop
+>
+> Ok that's interesting. Thanks for the values.
+>
+> The governor can be better by selecting the shallow states, the
+> scheduler has to interact with the governor to give clues about the
+> load, that is identified and will be the next step.
+>
+> Is it possible to check with the schedutil governor instead?
+
+Oh, I already have some data, just didn't include it before:
+
+Idle governor, teo; CPU frequency scaling: intel-cpufreq/schedutil;
+Processor package power: 40.4 watts; 4.9 uSec/loop
+
+Idle governor, mobile; CPU frequency scaling: intel-cpufreq/schedutil;
+Processor package power: 12.7 watts; 19.7 uSec/loop
+
+Idle governor, teo; CPU frequency scaling: intel-cpufreq/schedutil;
+Idle states 0-3 disabled (note: Idle state 4 is the deepest on my system)
+Processor package power: 36.9 watts; 8.3 uSec/loop
+In my notes I wrote: "Huh?? I do not understand this result, as I had
+expected more similar to the mobile governor". But I did not investigate.
+
+Anyway, the schedutil test is the one I'll repeat and write up better.
+
+... Doug
+
 
