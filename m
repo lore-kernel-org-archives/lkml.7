@@ -2,115 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88632C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DF2C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B131218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1B9218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfGCIyY convert rfc822-to-8bit (ORCPT
+        id S1727240AbfGCIy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:54:24 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35597 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfGCIyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:54:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so1719730qto.2;
-        Wed, 03 Jul 2019 01:54:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MSjZcZaarsSFJ2hu2ClYcmZVIX7oo4qCsiK4ex6LbOI=;
-        b=rpJJNYR8pHarR3zG2F7L9hmYg0ADqULRTwBnnfisItIg4Y9v4IPIAT4ftXyKCvrAGC
-         CSCwr2YDpqfAoHh0mkQ9JBfgDbt9w01AEwZ9MT6bjfs0o4AShkKByDGg9Q1XApfAMvr7
-         OmAcsdu1cpavEm4BdC9dfEf4N9gPFUphSOMDQEdWt3MtWceCcMBO5FzN5z2CiSPlL45G
-         qYAJAHuLgdp3p6kxYFJ3Wg0AvTaVtdhi4jxIbBrClTRCd8ITaHYCkBGlEoGqZi0JWD9X
-         btT5/VdMiZgFty7TZJd7qLtv89hxjloHgM2x43/v691eeLRyCetIdFTb3Mf5fm/yMdvV
-         rtmQ==
-X-Gm-Message-State: APjAAAWZg9pjaNgHsirVvrj/cqLN520rZvGtkWQIJCHO5n4qEZuLy1Rz
-        DBGgbVRJkcrBoCMTIamKxBSk9YpqURe7fo4UNqI=
-X-Google-Smtp-Source: APXvYqwUYSO3x//KZTXG6yv2dZ3NcZk20NbjruJN9Xn8+zo86d+e94GBeKk5SizQIKzkTw9NBTZSnlR8ipikN2uBVs8=
-X-Received: by 2002:a0c:b88e:: with SMTP id y14mr29883517qvf.93.1562144062650;
- Wed, 03 Jul 2019 01:54:22 -0700 (PDT)
+        Wed, 3 Jul 2019 04:54:57 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:54076 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfGCIy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:54:57 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x638oNPH007150
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Wed, 3 Jul 2019 01:50:43 -0700
+Received: from pek-lpggp3.wrs.com (128.224.153.76) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
+ 01:50:13 -0700
+From:   Song liwei <liwei.song@windriver.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Will Deacon <will@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Kulkarni <Ganapatrao.Kulkarni@cavium.com>,
+        Guo Ren <ren_guo@c-sky.com>, Joseph Lo <josephl@nvidia.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        "Anju T Sudhakar" <anju@linux.vnet.ibm.com>,
+        Rafael J <rafael.j.wysocki@intel.com>,
+        liwei <liwei.song@windriver.com>
+Subject: [PATCH] x86/microcode, cpuhotplug: move microcode hotplug callback after cpu teardown
+Date:   Wed, 3 Jul 2019 04:48:48 -0400
+Message-ID: <1562143728-78052-1-git-send-email-liwei.song@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-6-hch@lst.de>
- <20190430201041.536amvinrcvd2wua@pburton-laptop> <20190430202947.GA30262@lst.de>
- <20190430211105.ielntedm46uqamca@pburton-laptop> <20190501131339.GA890@lst.de>
- <20190501171355.7wnrutfnax5djkpx@pburton-laptop> <20190603064855.GA22023@lst.de>
-In-Reply-To: <20190603064855.GA22023@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 3 Jul 2019 10:54:05 +0200
-Message-ID: <CAK8P3a0+mmc_DsHZZeM85xGUUB8zc50ROUu3=i3UN1XwD8UGeQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7 v2] MIPS: use the generic uncached segment support in dma-direct
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 8:50 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, May 01, 2019 at 05:13:57PM +0000, Paul Burton wrote:
-> > Hi Christoph,
-> >
-> > On Wed, May 01, 2019 at 03:13:39PM +0200, Christoph Hellwig wrote:
-> > > Stop providing our arch alloc/free hooks and just expose the segment
-> > > offset instead.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/mips/Kconfig              |  1 +
-> > >  arch/mips/include/asm/page.h   |  3 ---
-> > >  arch/mips/jazz/jazzdma.c       |  6 ------
-> > >  arch/mips/mm/dma-noncoherent.c | 26 +++++++++-----------------
-> > >  4 files changed, 10 insertions(+), 26 deletions(-)
-> >
-> > This one looks good to me now, for patches 1 & 5:
-> >
-> >   Acked-by: Paul Burton <paul.burton@mips.com>
->
-> Thanks, I've merged thos into the dma-mapping tree.
+From: Liwei Song <liwei.song@windriver.com>
 
-I think this is the cause of some kernelci failures in current
-linux-next builds:
+Fix the following BUG:
 
-https://kernelci.org/build/next/branch/master/kernel/next-20190702/
+[  236.599792] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:255
+[  236.599796] in_atomic(): 1, irqs_disabled(): 1, pid: 14, name: migration/1
+[  236.599798] Preemption disabled at:
+[  236.599807] [<ffffffffb3998fa1>] cpu_stopper_thread+0x71/0x100
+[  236.599816] Call Trace:
+[  236.599826]  dump_stack+0x4f/0x6a
+[  236.599830]  ? cpu_stopper_thread+0x71/0x100
+[  236.599836]  ___might_sleep.cold+0xd1/0xe2
+[  236.599841]  __might_sleep+0x4b/0x80
+[  236.599847]  mutex_lock+0x21/0x50
+[  236.599852]  kernfs_find_and_get_ns+0x24/0x60
+[  236.599857]  sysfs_remove_group+0x2a/0x80
+[  236.599862]  ? mc_device_remove+0x50/0x50
+[  236.599866]  mc_cpu_down_prep+0x1d/0x30
+[  236.599871]  cpuhp_invoke_callback+0x98/0x670
+[  236.599876]  ? cpu_disable_common+0x26a/0x280
+[  236.599882]  take_cpu_down+0x70/0xb0
+[  236.599886]  multi_cpu_stop+0x64/0xc0
+[  236.599890]  ? cpu_stop_queue_work+0x110/0x110
+[  236.599894]  cpu_stopper_thread+0x79/0x100
+[  236.599899]  ? smpboot_thread_fn+0x2d/0x290
+[  236.599904]  smpboot_thread_fn+0x1e7/0x290
+[  236.599910]  kthread+0x112/0x150
+[  236.599914]  ? sort_range+0x30/0x30
+[  236.599918]  ? kthread_park+0x90/0x90
+[  236.599922]  ret_from_fork+0x35/0x40
+[  236.599965] smpboot: CPU 1 is now offline
 
-bigsur_defconfig ‐ mips3 warnings — 1 error
-cavium_octeon_defconfig ‐ mips3 warnings — 1 error
-ip27_defconfig ‐ mips3 warnings — 1 error
-loongson3_defconfig ‐ mips3 warnings — 1 error
-mips_paravirt_defconfig ‐ mips3 warnings — 1 error
-nlm_xlp_defconfig ‐ mips3 warnings — 1 error
-nlm_xlr_defconfig ‐ mips1 warning — 1 error
+After CPUHP_TEARDOWN_CPU callback was invoked, the context will become
+atomic and IRQ disabled, while mc_cpu_down_prep will called
+kernfs_find_and_get_ns which will try to acquire mutext lock which may
+sleep.
 
-/home/buildslave/workspace/workspace/kernel-build@8/linux/build/../kernel/dma/direct.c:144:
-undefined reference to `arch_dma_prep_coherent'
-2/home/buildslave/workspace/kernel-build/linux/build/../kernel/dma/direct.c:144:
-undefined reference to `arch_dma_prep_coherent'
-2(.text+0xafc): undefined reference to `arch_dma_prep_coherent'
-1direct.c:(.text+0x934): undefined reference to `arch_dma_prep_coherent'
-1(.text+0xb84): undefined reference to `arch_dma_prep_coherent'
+Adjust CPUHP_AP_MICROCODE_LOADER callback function run before
+CPUHP_TEARDOWN_CPU to fix this bug.
 
-I haven't looked into the details, but I suspect all machines
-with cache-coherent DMA are broken.
+Fixes: 78f4e932f776 ("x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback")
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+---
+ include/linux/cpuhotplug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-       Arnd
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 5c6062206760..6724bc8a17cd 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -101,7 +101,6 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_BCM2836_STARTING,
+ 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
+-	CPUHP_AP_MICROCODE_LOADER,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+ 	CPUHP_AP_PERF_X86_STARTING,
+ 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
+@@ -143,6 +142,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_ARM_CACHE_B15_RAC_DYING,
+ 	CPUHP_AP_ONLINE,
+ 	CPUHP_TEARDOWN_CPU,
++	CPUHP_AP_MICROCODE_LOADER,
+ 	CPUHP_AP_ONLINE_IDLE,
+ 	CPUHP_AP_SMPBOOT_THREADS,
+ 	CPUHP_AP_X86_VDSO_VMA_ONLINE,
+-- 
+2.7.4
+
