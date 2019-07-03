@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E2FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AADC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7A1218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377F3218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BStuIp4l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7ahiyVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfGCKTN (ORCPT
+        id S1727227AbfGCKTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:19:13 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33790 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGCKTL (ORCPT
+        Wed, 3 Jul 2019 06:19:17 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:37306 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbfGCKTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:19:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h10so1820296ljg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:09 -0700 (PDT)
+        Wed, 3 Jul 2019 06:19:14 -0400
+Received: by mail-lf1-f46.google.com with SMTP id d11so1382328lfb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MDAbzUanknf4PJsLEUbC0kOM1La2C83H5dJbGwjf9oQ=;
-        b=BStuIp4lx39QUwMNDApesZDWOux56RQyzibqQT0WtE7sdrznGvAb4wfLUKg7QKY9EF
-         0eTCQlVTVpGq5zmjqgJk8ING+02J+P6W9QmFsv+oIeQPaTglC1bDZYjQPQixp3d4U24n
-         DN6gdMxbbr2uYOX5bxg/rCjNL0oMBci2siqMJpCsLP26JhrG+o4405TwBeJV8XvylUWE
-         jeENo2O1Epssy5gF3zvp7rBSkac1hWxWxGFAkvJetrnYBRoVktwsQm9tnXLOFv5P72vK
-         vW4oKGQlH7i00io624xFqcPZBRXTRgB1SH5a/Ei8yX76FyIDLgSvSVdNj3sq1w7xdEY2
-         lPUg==
+        bh=lLtsucvsZ+6X8j0YIBVtyEFlEwonh01weVxKZ0zmUeo=;
+        b=N7ahiyVGoCj6eyemjVWc1fXvSVIP0KHaciHhTwSFTsbnUHHmrTZhhuTHqvv7iR9bDE
+         vd3mUe7tU/W3eQ6o/wiHvs0R0HzLxmxNSpnHerJNNYG814T2ZRQ7GlkOpIWGTV/IzuRK
+         nL9YkAbW+wayvAuV2n2jtKfE4VF+JD920R1oIYrfdHvirX+Fbeos3qMyL1+iFAyIkqYt
+         GjkPd8UTGNJVbd4L7zyC3LYt4XIPN1Z3DcW6F0kJYRzX9v2nHAq44d/v0M41JFP5Do3G
+         H4nSozx35eosQr2qUMntLb+qqwcsDt5S5cgwJ2kpkfUcUiX0pqgI7WAmMkgK5iNzqAht
+         uOFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MDAbzUanknf4PJsLEUbC0kOM1La2C83H5dJbGwjf9oQ=;
-        b=ZkkyrvRHRTqfhNMbBLVJANuGOE770+B0fbJetnOe24pKuK8ekLIuqH+L0WgulWBfmC
-         nxSZKHBiq9DhyqLuhr1qnK77TsfaFxBckcQEyVh+z3AfNyF+kWl6eWVhjGDJ7hVXfPqz
-         2lxCCITq+by4iF1kTdnIWlcGBs292mvppIKFfITkdy24QwMm+G0RQ7NOdJOodC/OYhHX
-         EO0z79Q6tgcddRhhizcfxBD6WodHcROJiPm54xbCgdo9sSXlAbbVHuWkur2ueXPOktUs
-         hfmK1vrulo2+uD5kHTCBkU8l5qUTUQegDVNf+wgVWG3ZIZCDe8xKfdSvbm3Xh8bqq3WP
-         Vc+w==
-X-Gm-Message-State: APjAAAX8pYsDSVklA5kOz4ccBCa5a2e5AWrfEcozUVWEbpUSu849wlp7
-        gWQA7Ae/bw8duofb4QKoGu7A1A==
-X-Google-Smtp-Source: APXvYqxN1wVjNfcQKjJAJHaRYIheYjov2AZ1vEh8atpfySg/spYnhrwoPYJrkeC9q18VFn1eFK4sig==
-X-Received: by 2002:a2e:8396:: with SMTP id x22mr7001525ljg.135.1562149148704;
-        Wed, 03 Jul 2019 03:19:08 -0700 (PDT)
+        bh=lLtsucvsZ+6X8j0YIBVtyEFlEwonh01weVxKZ0zmUeo=;
+        b=hQW1fNBbJU3JKSbnYAjTuzUV8/DBUWkm5hKmdnScRN9iKrJ1xrtrM1VINbrtJ83ycV
+         ExL9upiiisLTyAiF2rPfCPE6TGflTH01GMVEh6c1om6OY++nYcLUpyaEGsgO3PTWTFpy
+         P1DXd0/Djsf9JwZMOwwRccfAg5wScGNFCodiO5lisxYczayIRT5L5Phnn4M79dZesrRE
+         uS6T1cb0Wgoa3uYW8lMWewKmTRls9E4BcxBRq+kWv1DrYBDaZ4Ej3v8DjtuzFbpK+12f
+         gfmLfs0Jb1FYKCBCO50GP6vj9w7TpXuqeN2aVnxc8wLSAK7oSFezmzx8NTfYMlvk6I0O
+         Ai4A==
+X-Gm-Message-State: APjAAAW/VsNGzJxULRIuTCZjcpW0/Fyk3UlVlV1eyijmsGtTN1o6WX2m
+        cAEWWKbBWO9WdA12dXV5gNaaZA==
+X-Google-Smtp-Source: APXvYqw2TVQ/OpZSIQ7ZVajMAp1wWmK6ttP1QNBOQdxDKKL9IzYtVPd2gowk6D1qC0zJAdGxOrv0wQ==
+X-Received: by 2002:ac2:5225:: with SMTP id i5mr17389550lfl.157.1562149152126;
+        Wed, 03 Jul 2019 03:19:12 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.07
+        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:19:08 -0700 (PDT)
+        Wed, 03 Jul 2019 03:19:11 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v6 net-next 1/5] xdp: allow same allocator usage
-Date:   Wed,  3 Jul 2019 13:18:59 +0300
-Message-Id: <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v6 net-next 4/5] net: ethernet: ti: cpsw_ethtool: allow res split while down
+Date:   Wed,  3 Jul 2019 13:19:02 +0300
+Message-Id: <20190703101903.8411-5-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
 References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
@@ -74,125 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, it is an absolute requirement that each RX-queue have
-their own page_pool object/allocator. And this change is intendant
-to handle special case, where a single RX-queue can receive packets
-from two different net_devices.
-
-In order to protect against using same allocator for 2 different rx
-queues, add queue_index to xdp_mem_allocator to catch the obvious
-mistake where queue_index mismatch, as proposed by Jesper Dangaard
-Brouer.
-
-Adding this on xdp allocator level allows drivers with such dependency
-change the allocators w/o modifications.
+That's possible to set channel num while interfaces are down. When
+interface gets up it should resplit budget. This resplit can happen
+after phy is up but only if speed is changed, so should be set before
+this, for this allow it to happen while changing number of channels,
+when interfaces are down.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- include/net/xdp_priv.h |  2 ++
- net/core/xdp.c         | 55 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ drivers/net/ethernet/ti/cpsw_ethtool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
-index 6a8cba6ea79a..9858a4057842 100644
---- a/include/net/xdp_priv.h
-+++ b/include/net/xdp_priv.h
-@@ -18,6 +18,8 @@ struct xdp_mem_allocator {
- 	struct rcu_head rcu;
- 	struct delayed_work defer_wq;
- 	unsigned long defer_warn;
-+	unsigned long refcnt;
-+	u32 queue_index;
- };
- 
- #endif /* __LINUX_NET_XDP_PRIV_H__ */
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 829377cc83db..4f0ddbb3717a 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -98,6 +98,18 @@ static bool __mem_id_disconnect(int id, bool force)
- 		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
- 		return true;
- 	}
-+
-+	/* to avoid calling hash lookup twice, decrement refcnt here till it
-+	 * reaches zero, then it can be called from workqueue afterwards.
-+	 */
-+	if (xa->refcnt)
-+		xa->refcnt--;
-+
-+	if (xa->refcnt) {
-+		mutex_unlock(&mem_id_lock);
-+		return true;
-+	}
-+
- 	xa->disconnect_cnt++;
- 
- 	/* Detects in-flight packet-pages for page_pool */
-@@ -312,6 +324,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
- 	return true;
- }
- 
-+static struct xdp_mem_allocator *xdp_allocator_find(void *allocator)
-+{
-+	struct xdp_mem_allocator *xae, *xa = NULL;
-+	struct rhashtable_iter iter;
-+
-+	if (!allocator)
-+		return xa;
-+
-+	rhashtable_walk_enter(mem_id_ht, &iter);
-+	do {
-+		rhashtable_walk_start(&iter);
-+
-+		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
-+			if (xae->allocator == allocator) {
-+				xa = xae;
-+				break;
-+			}
-+		}
-+
-+		rhashtable_walk_stop(&iter);
-+
-+	} while (xae == ERR_PTR(-EAGAIN));
-+	rhashtable_walk_exit(&iter);
-+
-+	return xa;
-+}
-+
- int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
- 			       enum xdp_mem_type type, void *allocator)
- {
-@@ -347,6 +386,20 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index 08d7aaee8299..fa4d75f5548e 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -620,8 +620,7 @@ int cpsw_set_channels_common(struct net_device *ndev,
  		}
  	}
  
-+	mutex_lock(&mem_id_lock);
-+	xdp_alloc = xdp_allocator_find(allocator);
-+	if (xdp_alloc) {
-+		/* One allocator per queue is supposed only */
-+		if (xdp_alloc->queue_index != xdp_rxq->queue_index)
-+			return -EINVAL;
-+
-+		xdp_rxq->mem.id = xdp_alloc->mem.id;
-+		xdp_alloc->refcnt++;
-+		mutex_unlock(&mem_id_lock);
-+		return 0;
-+	}
-+	mutex_unlock(&mem_id_lock);
-+
- 	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
- 	if (!xdp_alloc)
- 		return -ENOMEM;
-@@ -360,6 +413,8 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
- 	xdp_rxq->mem.id = id;
- 	xdp_alloc->mem  = xdp_rxq->mem;
- 	xdp_alloc->allocator = allocator;
-+	xdp_alloc->refcnt = 1;
-+	xdp_alloc->queue_index = xdp_rxq->queue_index;
+-	if (cpsw->usage_count)
+-		cpsw_split_res(cpsw);
++	cpsw_split_res(cpsw);
  
- 	/* Insert allocator into ID lookup table */
- 	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+ 	ret = cpsw_resume_data_pass(ndev);
+ 	if (!ret)
 -- 
 2.17.1
 
