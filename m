@@ -2,108 +2,128 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE7EC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE758C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E460C2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pBRcwDlq"
+	by mail.kernel.org (Postfix) with ESMTP id AA3452187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGCXq2 (ORCPT
+        id S1727491AbfGCXro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:46:28 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:49771 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfGCXq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:46:28 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x63NkMsr028613;
-        Thu, 4 Jul 2019 08:46:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x63NkMsr028613
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562197583;
-        bh=rJ6iT0au4ngG40wf1ctFNsLJ/Vpo/OHLwWrHUVVL5n0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pBRcwDlq9QFS40kSn8o+W7JGHIB79v1LZjAh3vvRvVw8IrJ6O2xZ/cIv0hfHjJ3lu
-         BBcuNtOlojoeFW36HV75idpBRFfMseVcxkOKBmROLyZJ0pP482hPlEG4i8whHyNq6Z
-         6NuKc8rQbEAF5UNrDPSJhV7Sr0TzhZV7lRirDE1dIVIj9o3+6k2/PAiqFf6FQYVBwb
-         0o3oPO1SPmEtPo1/KCbwsWC9AynWROzjRkBj3g/yQUQtld2dX6rDtoczTStdnns+Ps
-         WFvU00oSs4KkBeHvTrTF6xHujq2xbZE/ER0eDlnfGb2bnMPYXVLyO45/utiBaHgyqc
-         5413gbq4asObg==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id r3so897047vsr.13;
-        Wed, 03 Jul 2019 16:46:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWOWXuuD0GcZyguIysmxKxgOi9g0nieHWJ616ZEnifL8dJYFHvo
-        hAiGNSAgQlxmFTKWYpvCs1zE7V2kBEitW1UD3lE=
-X-Google-Smtp-Source: APXvYqygjbgdBLzYA0azdr6k7nnoESGst/swxhWFdByz3nqGXi0UFBizFXN+MN+2HjMPTCzfmxg0UBCFEEo0oK19Z7I=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr19975775vsn.54.1562197582238;
- Wed, 03 Jul 2019 16:46:22 -0700 (PDT)
+        Wed, 3 Jul 2019 19:47:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25134 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbfGCXro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:47:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 16:47:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
+   d="scan'208";a="154901178"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga007.jf.intel.com with ESMTP; 03 Jul 2019 16:47:41 -0700
+Date:   Thu, 4 Jul 2019 07:30:58 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
+ DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+Message-ID: <20190703233058.GA15825@hao-dev>
+References: <20190628004951.6202-1-mdf@kernel.org>
+ <20190628004951.6202-7-mdf@kernel.org>
+ <20190703180753.GA24723@kroah.com>
 MIME-Version: 1.0
-References: <20190627191448.110756-1-natechancellor@gmail.com>
-In-Reply-To: <20190627191448.110756-1-natechancellor@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 4 Jul 2019 08:45:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATekKUTPvx4ywj_8yDLR8=Awmo6JKj5b-FBBF=EE+S-nw@mail.gmail.com>
-Message-ID: <CAK7LNATekKUTPvx4ywj_8yDLR8=Awmo6JKj5b-FBBF=EE+S-nw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add ability to test Clang's integrated assembler
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Dmitry Golovin <dima@golovin.in>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703180753.GA24723@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 4:15 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> There are some people interested in experimenting with Clang's
-> integrated assembler. To make it easy to do so without source
-> modification, allow the user to specify 'AS=clang' as part of the
-> make command to avoid adding '-no-integrated-as' to the {A,C}FLAGS.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/577
-> Suggested-by: Dmitry Golovin <dima@golovin.in>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
+> On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
+> > From: Wu Hao <hao.wu@intel.com>
+> > 
+> > In order to support virtualization usage via PCIe SRIOV, this patch
+> > adds two ioctls under FPGA Management Engine (FME) to release and
+> > assign back the port device. In order to safely turn Port from PF
+> > into VF and enable PCIe SRIOV, it requires user to invoke this
+> > PORT_RELEASE ioctl to release port firstly to remove userspace
+> > interfaces, and then configure the PF/VF access register in FME.
+> > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
+> > ioctl to attach the port back to PF.
+> > 
+> >  Ioctl interfaces:
+> >  * DFL_FPGA_FME_PORT_RELEASE
+> >    Release platform device of given port, it deletes port platform
+> >    device to remove related userspace interfaces on PF, then
+> >    configures PF/VF access mode to VF.
+> > 
+> >  * DFL_FPGA_FME_PORT_ASSIGN
+> >    Assign platform device of given port back to PF, it configures
+> >    PF/VF access mode to PF, then adds port platform device back to
+> >    re-enable related userspace interfaces on PF.
+> 
+> Why are you not using the "generic" bind/unbind facility that userspace
+> already has for this with binding drivers to devices?  Why a special
+> ioctl?
 
-Applied to linux-kbuild. Thanks.
+Hi Greg,
 
+Actually we think it should be safer that making the device invisble than
+just unbinding its driver. Looks like user can try to rebind it at any
+time and we don't have any method to stop them.
 
+> 
+> > --- a/include/uapi/linux/fpga-dfl.h
+> > +++ b/include/uapi/linux/fpga-dfl.h
+> > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
+> >  
+> >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
+> >  
+> > +/**
+> > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
+> > + *					struct dfl_fpga_fme_port_release)
+> > + *
+> > + * Driver releases the port per Port ID provided by caller.
+> > + * Return: 0 on success, -errno on failure.
+> > + */
+> > +struct dfl_fpga_fme_port_release {
+> > +	/* Input */
+> > +	__u32 argsz;		/* Structure length */
+> > +	__u32 flags;		/* Zero for now */
+> > +	__u32 port_id;
+> > +};
+> 
+> meta-comment, why do all of your structures for ioctls have argsz?  You
+> "know" the size of the structure already, it's part of the ioctl
+> definition.  You shouldn't need to also set it again, right?  Otherwise
+> ALL Linux ioctls would need something crazy like this.
 
-> ---
->  Makefile | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 5102b2bbd224..d77481129339 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -527,7 +527,9 @@ endif
->  ifneq ($(GCC_TOOLCHAIN),)
->  CLANG_FLAGS    += --gcc-toolchain=$(GCC_TOOLCHAIN)
->  endif
-> +ifeq ($(shell $(AS) --version 2>&1 | head -n 1 | grep clang),)
->  CLANG_FLAGS    += -no-integrated-as
-> +endif
->  CLANG_FLAGS    += -Werror=unknown-warning-option
->  KBUILD_CFLAGS  += $(CLANG_FLAGS)
->  KBUILD_AFLAGS  += $(CLANG_FLAGS)
-> --
-> 2.22.0
->
+Actually we followed the same method as vfio. The major purpose should be
+extendibility, as we really need this to be sth long term maintainable.
+It really helps, if we add some new members for extentions/enhancement
+under the same ioctl. I don't think everybody needs this, but my
+consideration here is if newer generations of hardware/specs come with some
+extentions, I still hope we can resue these IOCTLs as much as we could,
+instead of creating more new ones.
 
+Thanks
+Hao
 
---
-Best Regards
-Masahiro Yamada
+> 
+> thanks,
+> 
+> greg k-h
