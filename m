@@ -7,124 +7,102 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24389C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD8C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE2721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E182187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120331;
-	bh=blrMzjnG4BFCaJAhYzSyPoEnFsnOWYXtexx/u2A++Cs=;
+	s=default; t=1562120340;
+	bh=EXU4tNDrkaXGLhQDSTLyzWSbk5vH+e18n79TcZUDWHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gipVZcVRqewo+5M3HGLmPRVBdczzIwYxnkCoUnQxdghyYDz8KYtyyzXDxM6utodO
-	 8gcaoVfHF8P6BQCgxhT2qC9bvUzA+U6SWizJweN6TwGb5SK+IDZjZ02ujwXk5Qdk57
-	 H58TYkSael3Tblb/CnRWksWYKbv1uludPCuy8NBk=
+	b=Krelogtgnqu/lRSf/PX38t0+LKn/kG5oaktuigJmBvRPPK4cI2MF27wO8kmXd++lC
+	 dcjnmOd2kS3KcLKAdVUEKUopajkotXOBEhbqB/KUUk/a8vpU2WFM8jnsnjyvZRcbgF
+	 A7QUDAQkdO5c7vV7N8clg1ascLJNm9DM4mBnhgc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfGCCSt (ORCPT
+        id S1728362AbfGCCS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56466 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfGCCSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:32 -0400
+        id S1728323AbfGCCS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034B621874;
-        Wed,  3 Jul 2019 02:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A49B2187F;
+        Wed,  3 Jul 2019 02:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120311;
-        bh=blrMzjnG4BFCaJAhYzSyPoEnFsnOWYXtexx/u2A++Cs=;
+        s=default; t=1562120335;
+        bh=EXU4tNDrkaXGLhQDSTLyzWSbk5vH+e18n79TcZUDWHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CTJJxUXVJ+yppHlHyp7GB9nNyWx7rftCPbfX21vd8afSzyotQmOi49MbY7egKu539
-         0x+ukxKW66mGg/p0JhBA4B3ZTemG0RkSWx1oU3tnKBElV4Xf73M+83qs32C2khLf8w
-         3etm1TKA5E85+eD6R8oab6KUrgNgWxX8af3UFjqI=
+        b=K72SugIKAiAmJ0h8Zi1i6gjRXgTWTKNbdbGhM1aE/chyqVR2yXDuxxuRFu3puV+Ff
+         DdQeABDPJW51IzKzk2LmlNKTVi664HaBcWmUgYoLJQSVv+ZR2E1YDGxRHcHiQZE1Vy
+         BgQy6q4XYkZloi7qIVb394iQc+bSPhBAvgzR2NHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 12/13] cpu/hotplug: Fix out-of-bounds read when setting fail state
-Date:   Tue,  2 Jul 2019 22:18:13 -0400
-Message-Id: <20190703021814.18385-12-sashal@kernel.org>
+Cc:     Roland Hii <roland.king.guan.hii@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/8] net: stmmac: fixed new system time seconds value calculation
+Date:   Tue,  2 Jul 2019 22:18:44 -0400
+Message-Id: <20190703021847.18542-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
-References: <20190703021814.18385-1-sashal@kernel.org>
+In-Reply-To: <20190703021847.18542-1-sashal@kernel.org>
+References: <20190703021847.18542-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Roland Hii <roland.king.guan.hii@intel.com>
 
-[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
+[ Upstream commit a1e5388b4d5fc78688e5e9ee6641f779721d6291 ]
 
-Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
-can control `struct cpuhp_step *sp` address, results in the following
-global-out-of-bounds read.
+When ADDSUB bit is set, the system time seconds field is calculated as
+the complement of the seconds part of the update value.
 
-Reproducer:
+For example, if 3.000000001 seconds need to be subtracted from the
+system time, this field is calculated as
+2^32 - 3 = 4294967296 - 3 = 0x100000000 - 3 = 0xFFFFFFFD
 
-  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
+Previously, the 0x100000000 is mistakenly written as 100000000.
 
-KASAN report:
+This is further simplified from
+  sec = (0x100000000ULL - sec);
+to
+  sec = -sec;
 
-  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
-  Read of size 8 at addr ffffffff89734438 by task bash/1941
-
-  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
-  Call Trace:
-   write_cpuhp_fail+0x2cd/0x2e0
-   dev_attr_store+0x58/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f05e4f4c970
-
-  The buggy address belongs to the variable:
-   cpu_hotplug_lock+0x98/0xa0
-
-  Memory state around the buggy address:
-   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-                                          ^
-   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Add a sanity check for the value written from user space.
-
-Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: peterz@infradead.org
-Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
+Fixes: ba1ffd74df74 ("stmmac: fix PTP support for GMAC4")
+Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 127a69b8b192..5a10390b09de 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1944,6 +1944,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index f4074e25fb71..25136941a964 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -125,7 +125,7 @@ static int stmmac_adjust_systime(void __iomem *ioaddr, u32 sec, u32 nsec,
+ 		 * programmed with (2^32 – <new_sec_value>)
+ 		 */
+ 		if (gmac4)
+-			sec = (100000000ULL - sec);
++			sec = -sec;
  
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
+ 		value = readl(ioaddr + PTP_TCR);
+ 		if (value & PTP_TCR_TSCTRLSSR)
 -- 
 2.20.1
 
