@@ -3,116 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4107EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD91DC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F077218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AD8218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 23:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfGCXCx (ORCPT
+        id S1727403AbfGCXDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 19:02:53 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61215 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfGCXCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 19:02:53 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 8010e3fd10758b8f; Thu, 4 Jul 2019 01:02:49 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH] ACPI: PM: Unexport acpi_device_get_power()
-Date:   Thu, 04 Jul 2019 01:02:49 +0200
-Message-ID: <1970901.ZntFDt4DbR@kreacher>
+        Wed, 3 Jul 2019 19:03:40 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:44162 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbfGCXDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 19:03:40 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hioHq-0005uR-Bd; Wed, 03 Jul 2019 17:03:39 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hioHp-0005yB-10; Wed, 03 Jul 2019 17:03:37 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed,  3 Jul 2019 17:03:02 -0600
+Message-Id: <20190703230304.22905-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v2 0/2] Fix use-after-free bug when ports are removed
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hey,
 
-Using acpi_device_get_power() outside of ACPI device initialization
-and ACPI sysfs is problematic due to the way in which power resources
-are handled by it, so unexport it and add a paragraph explaining the
-pitfalls to its kerneldoc comment.
+This is the second attempt at fixing this.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+Per Sagi's feedback on the first attempt, I've found an approach
+that disconnects active controllers when the subsys is removed from
+the port (Patch 1). Patch 2 fixes a race that still exists in the
+loop transport which requires us to flush the nvme_delete_wq before
+freeing the port to prevent the use-after-free bug.
 
-On top of the linux-next branch in the linux-pm.git tree.
+Logan
 
----
- drivers/acpi/device_pm.c |    6 +++++-
- drivers/acpi/internal.h  |    7 +++++++
- include/acpi/acpi_bus.h  |    1 -
- 3 files changed, 12 insertions(+), 2 deletions(-)
+--
 
-Index: linux-pm/drivers/acpi/device_pm.c
-===================================================================
---- linux-pm.orig/drivers/acpi/device_pm.c
-+++ linux-pm/drivers/acpi/device_pm.c
-@@ -66,6 +66,11 @@ static int acpi_dev_pm_explicit_get(stru
-  * This function does not update the device's power.state field, but it may
-  * update its parent's power.state field (when the parent's power state is
-  * unknown and the device's power state turns out to be D0).
-+ *
-+ * Also, it does not update power resource reference counters to ensure that
-+ * the power state returned by it will be persistent and it may return a power
-+ * state shallower than previously set by acpi_device_set_power() for @device
-+ * (if that power state depends on any power resources).
-  */
- int acpi_device_get_power(struct acpi_device *device, int *state)
- {
-@@ -130,7 +135,6 @@ int acpi_device_get_power(struct acpi_de
- 
- 	return 0;
- }
--EXPORT_SYMBOL(acpi_device_get_power);
- 
- static int acpi_dev_pm_explicit_set(struct acpi_device *adev, int state)
- {
-Index: linux-pm/include/acpi/acpi_bus.h
-===================================================================
---- linux-pm.orig/include/acpi/acpi_bus.h
-+++ linux-pm/include/acpi/acpi_bus.h
-@@ -506,7 +506,6 @@ int acpi_bus_get_status(struct acpi_devi
- 
- int acpi_bus_set_power(acpi_handle handle, int state);
- const char *acpi_power_state_string(int state);
--int acpi_device_get_power(struct acpi_device *device, int *state);
- int acpi_device_set_power(struct acpi_device *device, int state);
- int acpi_bus_init_power(struct acpi_device *device);
- int acpi_device_fix_up_power(struct acpi_device *device);
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -139,8 +139,15 @@ int acpi_power_get_inferred_state(struct
- int acpi_power_on_resources(struct acpi_device *device, int state);
- int acpi_power_transition(struct acpi_device *device, int state);
- 
-+/* --------------------------------------------------------------------------
-+                              Device Power Management
-+   -------------------------------------------------------------------------- */
-+int acpi_device_get_power(struct acpi_device *device, int *state);
- int acpi_wakeup_device_init(void);
- 
-+/* --------------------------------------------------------------------------
-+                                  Processor
-+   -------------------------------------------------------------------------- */
- #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
- void acpi_early_processor_set_pdc(void);
- #else
+NVME target ports can be removed while there are still active
+controllers. Largely this is fine, except some admin commands
+can access the req->port (for example, id-ctrl uses the port's
+inline date size as part of it's response). This was found
+while testing with KASAN.
 
+--
 
+Logan Gunthorpe (2):
+  nvmet: Fix use-after-free bug when a port is removed
+  nvmet-loop: Flush nvme_delete_wq when removing the port
 
+ drivers/nvme/target/configfs.c |  1 +
+ drivers/nvme/target/core.c     | 12 ++++++++++++
+ drivers/nvme/target/loop.c     |  8 ++++++++
+ drivers/nvme/target/nvmet.h    |  3 +++
+ 4 files changed, 24 insertions(+)
+
+--
+2.20.1
