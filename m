@@ -2,108 +2,506 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BAFC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27B9C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A142187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eEVegu5X"
+	by mail.kernel.org (Postfix) with ESMTP id 6D2F12187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfGCKU0 (ORCPT
+        id S1727306AbfGCKUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:20:26 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11402 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfGCKUZ (ORCPT
+        Wed, 3 Jul 2019 06:20:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4234 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726486AbfGCKUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:20:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1c81650001>; Wed, 03 Jul 2019 03:20:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 03 Jul 2019 03:20:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 03 Jul 2019 03:20:24 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
- 2019 10:20:22 +0000
-Subject: Re: [PATCH 4.14 00/43] 4.14.132-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190702080123.904399496@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a47ff63e-9250-d12c-2bc2-6027e4b0f6c5@nvidia.com>
-Date:   Wed, 3 Jul 2019 11:20:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190702080123.904399496@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562149221; bh=gyQVgxER1zUiBZgEtuKwwAdpSeLgNHaZVj1LUOHZVD4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eEVegu5XbQnCHgr6eFdPTlTIjOZWPAekficjzBAXNPGE9eaAwhM5mMtIMAa6nCGKF
-         71Afji0xOy7H/4S2bYw29EjQMz//JoCPZwMbwtINAi9oJIgRkSAqUApfcFUHh0DMna
-         xbwtFnvH3ybg3Mi5hLOxPuqY1Ta9OIIyIkIZokLthhdQcTB6hLapwr3AtF+ZwEw6L8
-         fGixeqquMwfqEvdXBREG5HyM2m4YvwNQ4CytfLcCBDH42i6Tn3JUaD+UrR9Upl2Oxh
-         0Li3oaOIuhqXtp05jIHcQMM5j/QrpDYgs7xwKOH3SlG5fXR/fu/3ywmMwHzUXugTVx
-         1uISmUxI7RPhg==
+        Wed, 3 Jul 2019 06:20:46 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63AKewu102959
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 06:20:43 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tgqxyxn6v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:20:42 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maier@linux.ibm.com>;
+        Wed, 3 Jul 2019 11:20:18 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 11:20:15 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x63AKE4T28574184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 10:20:14 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64B814C052;
+        Wed,  3 Jul 2019 10:20:14 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 258894C04E;
+        Wed,  3 Jul 2019 10:20:14 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.152.97.10])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Jul 2019 10:20:14 +0000 (GMT)
+From:   Steffen Maier <maier@linux.ibm.com>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] docs: s390: unify and update s390dbf kdocs at debug.c
+Date:   Wed,  3 Jul 2019 12:19:48 +0200
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562149189-1417-1-git-send-email-maier@linux.ibm.com>
+References: <1562149189-1417-1-git-send-email-maier@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19070310-0028-0000-0000-0000037FF27D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070310-0029-0000-0000-00002440303E
+Message-Id: <1562149189-1417-3-git-send-email-maier@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=884 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For non-static-inlines, debug.c already had non-compliant function
+header docs. So move the pure prototype kdocs of
+("s390: include/asm/debug.h add kerneldoc markups")
+from debug.h to debug.c and merge them with the old function docs.
+Also, I had the impression that kdoc typically is at the implementation
+in the compile unit rather than at the prototype in the header file.
 
-On 02/07/2019 09:01, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.132 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.132-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+While at it, update the short kdoc description to distinguish the
+different functions. And a few more consistency cleanups.
 
-All tests are passing for Tegra ...
+Added a new kdoc for debug_set_critical() since debug.h comments it
+as part of the API.
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+---
+ Documentation/s390/s390dbf.rst |   1 +
+ arch/s390/include/asm/debug.h  | 112 ++++++-----------------------------------
+ arch/s390/kernel/debug.c       | 105 +++++++++++++++++++++++++++++++-------
+ 3 files changed, 102 insertions(+), 116 deletions(-)
 
-Linux version:	4.14.132-rc1-g3734933c2330
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/Documentation/s390/s390dbf.rst b/Documentation/s390/s390dbf.rst
+index 01d66251643d..be42892b159e 100644
+--- a/Documentation/s390/s390dbf.rst
++++ b/Documentation/s390/s390dbf.rst
+@@ -107,6 +107,7 @@ will stay deactivated.
+ Kernel Interfaces:
+ ------------------
+ 
++.. kernel-doc:: arch/s390/kernel/debug.c
+ .. kernel-doc:: arch/s390/include/asm/debug.h
+ 
+ Predefined views:
+diff --git a/arch/s390/include/asm/debug.h b/arch/s390/include/asm/debug.h
+index 02c36eedd780..310134015541 100644
+--- a/arch/s390/include/asm/debug.h
++++ b/arch/s390/include/asm/debug.h
+@@ -95,77 +95,19 @@ debug_entry_t *debug_exception_common(debug_info_t *id, int level,
+ 
+ /* Debug Feature API: */
+ 
+-/**
+- * debug_register() - allocates memory for a debug log.
+- *
+- * @name:        Name of debug log (e.g. used for debugfs entry)
+- * @pages:       Number of pages, which will be allocated per area
+- * @nr_areas:    Number of debug areas
+- * @buf_size:    Size of data area in each debug entry
+- *
+- * Return:
+- * - Handler for generated debug area
+- * - %NULL if register failed
+- *
+- * Must not be called within an interrupt handler.
+- */
+ debug_info_t *debug_register(const char *name, int pages, int nr_areas,
+ 			     int buf_size);
+ 
+-/**
+- * debug_register_mode() - allocates memory for a debug log.
+- *
+- * @name:	Name of debug log (e.g. used for debugfs entry)
+- * @pages:	Number of pages, which will be allocated per area
+- * @nr_areas:	Number of debug areas
+- * @buf_size:	Size of data area in each debug entry
+- * @mode:	File mode for debugfs files. E.g. S_IRWXUGO
+- * @uid:	User ID for debugfs files. Currently only 0 is supported.
+- * @gid:	Group ID for debugfs files. Currently only 0 is supported.
+- *
+- * Return:
+- * - Handler for generated debug area
+- * - %NULL if register failed
+- *
+- * Must not be called within an interrupt handler
+- */
+ debug_info_t *debug_register_mode(const char *name, int pages, int nr_areas,
+ 				  int buf_size, umode_t mode, uid_t uid,
+ 				  gid_t gid);
+ 
+-/**
+- * debug_unregister() - frees memory for a debug log and removes all
+- *			registered debug
+- * views.
+- *
+- * @id:		handle for debug log
+- *
+- * Return:
+- *    none
+- *
+- * Must not be called within an interrupt handler
+- */
+ void debug_unregister(debug_info_t *id);
+ 
+-/**
+- * debug_set_level() -  Sets new actual debug level if new_level is valid.
+- *
+- * @id:		handle for debug log
+- * @new_level:	new debug level
+- *
+- * Return:
+- *    none
+- */
+ void debug_set_level(debug_info_t *id, int new_level);
+ 
+ void debug_set_critical(void);
+ 
+-/**
+- * debug_stop_all() - stops the debug feature if stopping is allowed.
+- *
+- * Return:
+- * -   none
+- */
+ void debug_stop_all(void);
+ 
+ /**
+@@ -184,7 +126,7 @@ static inline bool debug_level_enabled(debug_info_t *id, int level)
+ }
+ 
+ /**
+- * debug_event() - writes debug entry to active debug area
++ * debug_event() - writes binary debug entry to active debug area
+  *		   (if level <= actual debug level)
+  *
+  * @id:		handle for debug log
+@@ -194,6 +136,7 @@ static inline bool debug_level_enabled(debug_info_t *id, int level)
+  *
+  * Return:
+  * - Address of written debug entry
++ * - %NULL if error
+  */
+ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ 					 void *data, int length)
+@@ -204,7 +147,7 @@ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_int_event() - writes debug entry to active debug area
++ * debug_int_event() - writes unsigned integer debug entry to active debug area
+  *		       (if level <= actual debug level)
+  *
+  * @id:		handle for debug log
+@@ -226,12 +169,12 @@ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_long_event() - writes debug entry to active debug area
++ * debug_long_event() - writes unsigned long debug entry to active debug area
+  *		       (if level <= actual debug level)
+  *
+  * @id:		handle for debug log
+  * @level:	debug level
+- * @tag:	integer value for debug entry
++ * @tag:	long integer value for debug entry
+  *
+  * Return:
+  * - Address of written debug entry
+@@ -248,7 +191,7 @@ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_text_event() - writes debug entry in ascii format to active
++ * debug_text_event() - writes string debug entry in ascii format to active
+  *			debug area (if level <= actual debug level)
+  *
+  * @id:		handle for debug log
+@@ -306,9 +249,9 @@ static inline debug_entry_t *debug_text_event(debug_info_t *id, int level,
+ })
+ 
+ /**
+- * debug_exception() - writes debug entry to active debug area
+- *		       (if level <= actual debug level) and switches
+- *		       to next debug area
++ * debug_exception() - writes binary debug entry to active debug area
++ *		       (if level <= actual debug level)
++ *		       and switches to next debug area
+  *
+  * @id:		handle for debug log
+  * @level:	debug level
+@@ -328,7 +271,7 @@ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_int_exception() - writes debug entry to active debug area
++ * debug_int_exception() - writes unsigned int debug entry to active debug area
+  *			   (if level <= actual debug level)
+  *			   and switches to next debug area
+  *
+@@ -351,13 +294,13 @@ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_long_exception() - writes debug entry to active debug area
++ * debug_long_exception() - writes long debug entry to active debug area
+  *			   (if level <= actual debug level)
+  *			   and switches to next debug area
+  *
+  * @id:		handle for debug log
+  * @level:	debug level
+- * @tag:	integer value for debug entry
++ * @tag:	long integer value for debug entry
+  *
+  * Return:
+  * - Address of written debug entry
+@@ -374,9 +317,9 @@ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
+ }
+ 
+ /**
+- * debug_text_exception() - writes debug entry in ascii format to active
++ * debug_text_exception() - writes string debug entry in ascii format to active
+  *			    debug area (if level <= actual debug level)
+- *			    and switches to next debug
++ *			    and switches to next debug area
+  * area
+  *
+  * @id:	handle for debug log
+@@ -407,7 +350,7 @@ static inline debug_entry_t *debug_text_exception(debug_info_t *id, int level,
+ /**
+  * debug_sprintf_exception() - writes debug entry with format string and
+  *			       varargs (longs) to active debug area
+- *			       (if level $<=$ actual debug level)
++ *			       (if level <= actual debug level)
+  *			       and switches to next debug area.
+  *
+  * @_id:	handle for debug log
+@@ -435,33 +378,8 @@ static inline debug_entry_t *debug_text_exception(debug_info_t *id, int level,
+ 	__ret;								\
+ })
+ 
+-/**
+- * debug_register_view() - registers new debug view and creates debugfs
+- *			   dir entry
+- *
+- * @id:	handle for debug log
+- * @view:	pointer to debug view struct
+- *
+- * Return:
+- * -   0  : ok
+- * -   < 0: Error
+- */
+ int debug_register_view(debug_info_t *id, struct debug_view *view);
+ 
+-/**
+- * debug_unregister_view()
+- *
+- * @id:	handle for debug log
+- * @view:	pointer to debug view struct
+- *
+- * Return:
+- * -   0  : ok
+- * -   < 0: Error
+- *
+- *
+- * unregisters debug view and removes debugfs dir entry
+- */
+-
+ int debug_unregister_view(debug_info_t *id, struct debug_view *view);
+ 
+ /*
+diff --git a/arch/s390/kernel/debug.c b/arch/s390/kernel/debug.c
+index 0ebf08c3b35e..70a44bad625f 100644
+--- a/arch/s390/kernel/debug.c
++++ b/arch/s390/kernel/debug.c
+@@ -647,11 +647,23 @@ static int debug_close(struct inode *inode, struct file *file)
+ 	return 0; /* success */
+ }
+ 
+-/*
+- * debug_register_mode:
+- * - Creates and initializes debug area for the caller
+- *   The mode parameter allows to specify access rights for the s390dbf files
+- * - Returns handle for debug area
++/**
++ * debug_register_mode() - creates and initializes debug area.
++ *
++ * @name:	Name of debug log (e.g. used for debugfs entry)
++ * @pages_per_area:	Number of pages, which will be allocated per area
++ * @nr_areas:	Number of debug areas
++ * @buf_size:	Size of data area in each debug entry
++ * @mode:	File mode for debugfs files. E.g. S_IRWXUGO
++ * @uid:	User ID for debugfs files. Currently only 0 is supported.
++ * @gid:	Group ID for debugfs files. Currently only 0 is supported.
++ *
++ * Return:
++ * - Handle for generated debug area
++ * - %NULL if register failed
++ *
++ * Allocates memory for a debug log.
++ * Must not be called within an interrupt handler.
+  */
+ debug_info_t *debug_register_mode(const char *name, int pages_per_area,
+ 				  int nr_areas, int buf_size, umode_t mode,
+@@ -681,10 +693,21 @@ debug_info_t *debug_register_mode(const char *name, int pages_per_area,
+ }
+ EXPORT_SYMBOL(debug_register_mode);
+ 
+-/*
+- * debug_register:
+- * - creates and initializes debug area for the caller
+- * - returns handle for debug area
++/**
++ * debug_register() - creates and initializes debug area with default file mode.
++ *
++ * @name:	Name of debug log (e.g. used for debugfs entry)
++ * @pages_per_area:	Number of pages, which will be allocated per area
++ * @nr_areas:	Number of debug areas
++ * @buf_size:	Size of data area in each debug entry
++ *
++ * Return:
++ * - Handle for generated debug area
++ * - %NULL if register failed
++ *
++ * Allocates memory for a debug log.
++ * The debugfs file mode access permisions are read and write for user.
++ * Must not be called within an interrupt handler.
+  */
+ debug_info_t *debug_register(const char *name, int pages_per_area,
+ 			     int nr_areas, int buf_size)
+@@ -694,9 +717,13 @@ debug_info_t *debug_register(const char *name, int pages_per_area,
+ }
+ EXPORT_SYMBOL(debug_register);
+ 
+-/*
+- * debug_unregister:
+- * - give back debug area
++/**
++ * debug_unregister() -  give back debug area.
++ *
++ * @id:		handle for debug log
++ *
++ * Return:
++ *    none
+  */
+ void debug_unregister(debug_info_t *id)
+ {
+@@ -745,9 +772,14 @@ static int debug_set_size(debug_info_t *id, int nr_areas, int pages_per_area)
+ 	return rc;
+ }
+ 
+-/*
+- * debug_set_level:
+- * - set actual debug level
++/**
++ * debug_set_level() -  Sets new actual debug level if new_level is valid.
++ *
++ * @id:		handle for debug log
++ * @new_level:	new debug level
++ *
++ * Return:
++ *    none
+  */
+ void debug_set_level(debug_info_t *id, int new_level)
+ {
+@@ -873,6 +905,14 @@ static int s390dbf_procactive(struct ctl_table *table, int write,
+ 
+ static struct ctl_table_header *s390dbf_sysctl_header;
+ 
++/**
++ * debug_stop_all() - stops the debug feature if stopping is allowed.
++ *
++ * Return:
++ * -   none
++ *
++ * Currently used in case of a kernel oops.
++ */
+ void debug_stop_all(void)
+ {
+ 	if (debug_stoppable)
+@@ -880,6 +920,17 @@ void debug_stop_all(void)
+ }
+ EXPORT_SYMBOL(debug_stop_all);
+ 
++/**
++ * debug_set_critical() - event/exception functions try lock instead of spin.
++ *
++ * Return:
++ * -   none
++ *
++ * Currently used in case of stopping all CPUs but the current one.
++ * Once in this state, functions to write a debug entry for an
++ * event or exception no longer spin on the debug area lock,
++ * but only try to get it and fail if they do not get the lock.
++ */
+ void debug_set_critical(void)
+ {
+ 	debug_critical = 1;
+@@ -1036,8 +1087,16 @@ debug_entry_t *__debug_sprintf_exception(debug_info_t *id, int level, char *stri
+ }
+ EXPORT_SYMBOL(__debug_sprintf_exception);
+ 
+-/*
+- * debug_register_view:
++/**
++ * debug_register_view() - registers new debug view and creates debugfs
++ *			   dir entry
++ *
++ * @id:		handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
+  */
+ int debug_register_view(debug_info_t *id, struct debug_view *view)
+ {
+@@ -1077,8 +1136,16 @@ int debug_register_view(debug_info_t *id, struct debug_view *view)
+ }
+ EXPORT_SYMBOL(debug_register_view);
+ 
+-/*
+- * debug_unregister_view:
++/**
++ * debug_unregister_view() - unregisters debug view and removes debugfs
++ *			     dir entry
++ *
++ * @id:		handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
+  */
+ int debug_unregister_view(debug_info_t *id, struct debug_view *view)
+ {
 -- 
-nvpublic
+1.8.3.1
+
