@@ -2,81 +2,131 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3F2C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832CEC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2A521882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8EB21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uA3+Aoq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGCSa3 (ORCPT
+        id S1727198AbfGCSa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:30:29 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:43294 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfGCSa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:30:29 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x63ITQqx003852;
-        Wed, 3 Jul 2019 21:29:26 +0300
-Date:   Wed, 3 Jul 2019 21:29:26 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        lvs-devel@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: Re: linux-next: Tree for Jul 3 (netfilter/ipvs/)
-In-Reply-To: <406d9741-68ad-f465-1248-64eef05b1350@infradead.org>
-Message-ID: <alpine.LFD.2.21.1907032126220.3226@ja.home.ssi.bg>
-References: <20190703214900.45e94ae4@canb.auug.org.au> <406d9741-68ad-f465-1248-64eef05b1350@infradead.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 3 Jul 2019 14:30:58 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]:33777 "EHLO
+        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCSa5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:30:57 -0400
+Received: by mail-qk1-f175.google.com with SMTP id r6so3634434qkc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n7VNjaI2aCGOMzbyzYJu0FlkDpcbiq36WN05mA2Mw60=;
+        b=uA3+Aoq0vcQ2HU7BW0W3uFIvooxh5zJAicAdJlnII3k0YyHR9E+Q7QsEDCVD/dLyg0
+         PeD4xk04TmX+FO2VbyFeSXhY71p6099MP0Wr9To1Pfw/vWsf1Wi84bzpVHCol2x2wxql
+         yaJsin96M4FHUJVvyoamZ1fokSAO1MJ2kgn08DcNTgX92XBcX+Z0yhjgo0+rMpBX+xyB
+         qig59D/j4PkAS0LpU1vLVK6BG+l/6qMHoKSgUlC7IPtuRZxkUqTgvtxImHu9eswCX7RO
+         9rfoca+rLCKZh54KVGbXfprPkKpIhVANQbtINB5ZpPZ2sHZgft3z27X0bif3dafOGvpv
+         Kcvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n7VNjaI2aCGOMzbyzYJu0FlkDpcbiq36WN05mA2Mw60=;
+        b=PLGI1JTwvCsfxEMFCxAOUKIV6yJ3yhMM6qahly3TM93bds5choLtlItwFR6+rSBWRt
+         8LaknC2vj6yeyAoditPiATfCXDPLU9uE9SOxY5Rj9Ud6TIL1/kjzpU9zBZj0PM/ctSX1
+         sM5orMAqVkUhxsKSXQSjLvlG3sQFoHghjRNtpNlUlmqddnkClmVIq62jX3k7j3Rtqr0D
+         5E/CV613g7qBTm/xMNwvxUGUE3LN7M89hlg3B0Jf5lKdJFYkin368KCI9tTc7/XgqBXZ
+         Mv5CTgWbVaf93QggUox70rXJqt+ivwObjX0qDjeRql4DjMciPzcJ07UjqPNzroNUcNKz
+         FiRQ==
+X-Gm-Message-State: APjAAAX3OczcHWcQrliUBAa7ZKR54L7d8Ph32kPGsMmFcflnIjGrcttp
+        sD2fbaz2L+x858OSgAH54y0=
+X-Google-Smtp-Source: APXvYqxYzy1qzCyHjrrJfVEVrY9v2gcLdlabSBzmkUU2CYn+nzk3tyX/7QuHrY/L/m86oMEMDCtI5Q==
+X-Received: by 2002:a37:aa0d:: with SMTP id t13mr33660607qke.167.1562178656551;
+        Wed, 03 Jul 2019 11:30:56 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.182])
+        by smtp.gmail.com with ESMTPSA id p21sm1195100qtq.17.2019.07.03.11.30.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 11:30:55 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5542A41153; Wed,  3 Jul 2019 15:30:49 -0300 (-03)
+Date:   Wed, 3 Jul 2019 15:30:49 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 03/11] perf top: Smatch: Fix potential NULL pointer
+ dereference
+Message-ID: <20190703183049.GD10740@kernel.org>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702103420.27540-4-leo.yan@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811672-1070578143-1562178566=:3226"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702103420.27540-4-leo.yan@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1463811672-1070578143-1562178566=:3226
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-
-	Hello,
-
-On Wed, 3 Jul 2019, Randy Dunlap wrote:
-
-> On 7/3/19 4:49 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20190702:
-> > 
+Em Tue, Jul 02, 2019 at 06:34:12PM +0800, Leo Yan escreveu:
+> Based on the following report from Smatch, fix the potential
+> NULL pointer dereference check.
 > 
-> on i386:
-
-	Oh, well. net/gre.h was included by CONFIG_NF_CONNTRACK, so
-it is failing when CONFIG_NF_CONNTRACK is not used.
-
-	Pablo, should I post v2 or just a fix?
-
+>   tools/perf/builtin-top.c:109
+>   perf_top__parse_source() warn: variable dereferenced before check 'he'
+>   (see line 103)
 > 
->   CC      net/netfilter/ipvs/ip_vs_core.o
-> ../net/netfilter/ipvs/ip_vs_core.c: In function ‘ipvs_gre_decap’:
-> ../net/netfilter/ipvs/ip_vs_core.c:1618:22: error: storage size of ‘_greh’ isn’t known
->   struct gre_base_hdr _greh, *greh;
->                       ^
+>   tools/perf/builtin-top.c:233
+>   perf_top__show_details() warn: variable dereferenced before check 'he'
+>   (see line 228)
+> 
+> tools/perf/builtin-top.c
+> 101 static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+> 102 {
+> 103         struct perf_evsel *evsel = hists_to_evsel(he->hists);
+>                                                       ^^^^
+> 104         struct symbol *sym;
+> 105         struct annotation *notes;
+> 106         struct map *map;
+> 107         int err = -1;
+> 108
+> 109         if (!he || !he->ms.sym)
+> 110                 return -1;
+> 
+> This patch moves the values assignment after validating pointer 'he'.
 
-Regards
+Applied, thanks,
 
---
-Julian Anastasov <ja@ssi.bg>
----1463811672-1070578143-1562178566=:3226--
+- Arnaldo
