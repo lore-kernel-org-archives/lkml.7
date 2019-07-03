@@ -2,93 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF4C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA221C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B21218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EA0218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfGCWD2 (ORCPT
+        id S1727304AbfGCWFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:03:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38800 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727076AbfGCWD1 (ORCPT
+        Wed, 3 Jul 2019 18:05:30 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38371 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfGCWFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:03:27 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63M1xJU090810
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 18:03:26 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2th3gm2eaj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 18:03:26 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
-        Wed, 3 Jul 2019 23:03:24 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Jul 2019 23:03:21 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x63M3Kxh59244590
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jul 2019 22:03:20 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61C3F5204E;
-        Wed,  3 Jul 2019 22:03:20 +0000 (GMT)
-Received: from bahia.lan (unknown [9.145.70.88])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3330F52052;
-        Wed,  3 Jul 2019 22:03:20 +0000 (GMT)
-Subject: [PATCH] KVM: PPC: Book3S HV: XIVE: Fix typo in comment
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org
-Date:   Thu, 04 Jul 2019 00:03:19 +0200
-User-Agent: StGit/unknown-version
+        Wed, 3 Jul 2019 18:05:30 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 35F328060B; Thu,  4 Jul 2019 00:05:16 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 00:05:26 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Linus Walleij' <linus.walleij@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Dmitry Torokhov <dtor@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+Subject: Various LED complexities was Re: [PATCH v5 05/26] leds: core: Add
+ support for composing LED class device names
+Message-ID: <20190703220526.GB876@amd>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <CACRpkdYdqKZVKSaQB0THi=iZcRT04EKX2-85__Hw1f53o8vsuw@mail.gmail.com>
+ <643e3b10fe9d45b59ed063ffc6d578ff@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070322-0008-0000-0000-000002F99151
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070322-0009-0000-0000-00002266E117
-Message-Id: <156219139988.578018.1046848908285019838.stgit@bahia.lan>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=929 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907030269
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Disposition: inline
+In-Reply-To: <643e3b10fe9d45b59ed063ffc6d578ff@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: trivial@kernel.org
-Signed-off-by: Greg Kurz <groug@kaod.org>
----
- arch/powerpc/kvm/book3s_xive.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
-index 1fcb3d6f1db8..e3169e8bf1fc 100644
---- a/arch/powerpc/kvm/book3s_xive.c
-+++ b/arch/powerpc/kvm/book3s_xive.c
-@@ -501,7 +501,7 @@ static void xive_finish_unmask(struct kvmppc_xive *xive,
- 	kvmppc_xive_select_irq(state, &hw_num, &xd);
- 
- 	/*
--	 * See command in xive_lock_and_mask() concerning masking
-+	 * See comment in xive_lock_and_mask() concerning masking
- 	 * via firmware.
- 	 */
- 	if (xd->flags & OPAL_XIVE_IRQ_MASK_VIA_FW) {
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri 2019-06-28 13:30:30, David Laight wrote:
+> From: Linus Walleij
+> > Sent: 28 June 2019 09:46
+> ...
+> > A problem with LEDs is that it invites bikeshedding because it is too
+> > relateable.
+>=20
+> Bikeshedding leds :-)
+>=20
+> It also isn't at all clear how to handle bi-colour and tri-colour leds.
+> ISTR the usual interface lets you set the brightness, but more often
+> leds are single brightness but multi-colour.
+> Eg the ethernet 'speed' led which is (usually) off/orange/green.
+>=20
+> Changing the brightness either means changing the current or using PWM.
+> Both really require more hardware support than changing colours.
+>=20
+> I've done some led driving (for a front panel) from a PLD (small FPGA).
+> As well as the obvious things I did:
+> - dim: 1/8th on at 80Hz.
+> - flash: 1/8th on at 4Hz.
+> - orange: 50-50 red-green at 80Hz on an RGB led.
+>=20
+> There was also the 'ethernet activity' led which could either be driven
+> by the hardware, or forced on/off/flash by the driver.
+> If driven by the hardware, the software could read the current state.
+>=20
+> None of this really fitted the Linux leds interface.
+
+Well, we are working on some of those :-). But lets discuss that in
+separate threads.
+
+In particular we are working on triggers and RGB LEDs.
+
+bi-color LEDs seem to handled as two separate LEDs. Not much expected
+to change there.
+								=09
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0dJqYACgkQMOfwapXb+vK3+gCgip2UEFe6NwueZy1C3k5AeG/n
+otAAnjpPCwHWvYp6ku5OriKI1CkGFCYr
+=31SK
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
