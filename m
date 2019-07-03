@@ -2,82 +2,105 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C4EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E87C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1332184C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562176772;
-	bh=qcjf0F/KpOBz3u3VNKEDbRvTWFQxOBmG4BLXbKgdmno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gaMqYsnwEgKUwaMDp9hJZZ6AcqXP2HEhAr+qJKtCn3lDwHUHZlRnCYad0PB6BaL/l
-	 32uAMHDm6a9Z9L2WXX7IwXWjuAAYx0SAbLylbcIlImDC+AkhXQJnF05L+mTNztW7gw
-	 ysA4pl84ikVKTPZDho4D4u0Mx0dClobGin7tRxAk=
+	by mail.kernel.org (Postfix) with ESMTP id 8307A2184C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="UR+mB33w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfGCR7a (ORCPT
+        id S1726876AbfGCSB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfGCR7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:59:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6CC2184C;
-        Wed,  3 Jul 2019 17:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562176769;
-        bh=qcjf0F/KpOBz3u3VNKEDbRvTWFQxOBmG4BLXbKgdmno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cnc0EhpUR85NpjNg03Y17RSy22nOvxYf5/oKjt+VqUurePVrE1TCcCNPYHoQ7b6d7
-         TpyEuLxUZ0ket7+q0uCdntXXzUGEqQl/1Cz1eoe7cmXXdCj5tGvfDBl9sZxFnYMCOS
-         HJMn1xsXgYM1x8lqdsmg2FHr629S1ayYnakdXVZ4=
-Date:   Wed, 3 Jul 2019 19:59:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Wu Hao <hao.wu@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 05/15] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190703175926.GA14649@kroah.com>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-6-mdf@kernel.org>
+        Wed, 3 Jul 2019 14:01:27 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35014 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCSB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:01:27 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r21so3247402qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a2vka/akssy/859dgmuGdTYFT4YH52SMxVHx2PN2EUA=;
+        b=UR+mB33wfBhu3cMDn/7EBIfgFaGZRuvY/6J1fd9PhMgOfBQW4lCtf4aW4cWrAUOg/V
+         ysDxZJU9vC+aEmT4cwhxTIl4TYXWNEvXLnwzfoSFoTPuhqs/gUxKo54FOzEU1qF6lBPO
+         BDzC9RkbmXZgFl5C89Dr/DavME/J23LtilDnr6BOfCLfGcmh3h3ZqRvCwPxs52Z9/ShV
+         88aK4465TTIaWrpxAOzvxt4Awc0wM1VxGtTmtNuDdYn6htswBnMWDqrfqYcoFAAtYDKN
+         PK+3yzvEgZr3lVoSgy+/yjpH/TVAkGrizrHi9TWzWfIHt86MDzHjD59dYGp18SQRc4c1
+         cphA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a2vka/akssy/859dgmuGdTYFT4YH52SMxVHx2PN2EUA=;
+        b=Qkzi9IJfSebMcos3wncorAdU7OL0YYNabAZM8kJXmpYjnMUOsd4qN3Xc3cAXfdqRUm
+         ioStOLbi/W8YL5X9BYJlkVDv2eaVkNak+nGwLcD2icmTLsLuurAx485YdbCFE9Id17tW
+         GnHWjENLGQ6jsEXdfGpdj8at5wUqi+E09grUd0l6mpoGOA85v8rJdimdZDUe3XnLy/dO
+         c7bKMmzXbXRIZNYKFCpPN7xwJ5RFdDiklyI+MR8uGLK/8a02uduV+Puum2MVHBPwMfim
+         N32/6KApdS43E6wrpzY2b4Q6n4DmjLiBHcM5X49Id+KDzFN/FzMD7SdDWy4fQftbQnXZ
+         1fEQ==
+X-Gm-Message-State: APjAAAX69zqjLtGvx9iAW4aEXiTW5kyUIgGUtM2hUUW0YhLI9VgxJSbZ
+        NMc9mKMjYDRI2pCPlKry5P5oDQ==
+X-Google-Smtp-Source: APXvYqydaJsLmmJTIUtSU+kahyTjsnRgAp4YEYaGKvpkMDRvv9xpp1xwyaxLhy2xlOb2NB+ML08lUQ==
+X-Received: by 2002:a37:a413:: with SMTP id n19mr30343855qke.98.1562176886317;
+        Wed, 03 Jul 2019 11:01:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id u19sm1310165qka.35.2019.07.03.11.01.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 11:01:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hijZN-0006oc-AR; Wed, 03 Jul 2019 15:01:25 -0300
+Date:   Wed, 3 Jul 2019 15:01:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/22] mm: remove the legacy hmm_pfn_* APIs
+Message-ID: <20190703180125.GA18673@ziepe.ca>
+References: <20190701062020.19239-1-hch@lst.de>
+ <20190701062020.19239-23-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190628004951.6202-6-mdf@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190701062020.19239-23-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 05:49:41PM -0700, Moritz Fischer wrote:
-> From: Wu Hao <hao.wu@intel.com>
+On Mon, Jul 01, 2019 at 08:20:20AM +0200, Christoph Hellwig wrote:
+> Switch the one remaining user in nouveau over to its replacement,
+> and remove all the wrappers.
 > 
-> This patch adds virtualization support description for DFL based
-> FPGA devices (based on PCIe SRIOV), and introductions to new
-> interfaces added by new dfl private feature drivers.
-> 
-> [mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  Documentation/fpga/dfl.rst | 100 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 100 insertions(+)
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  drivers/gpu/drm/nouveau/nouveau_dmem.c |  2 +-
+>  include/linux/hmm.h                    | 36 --------------------------
+>  2 files changed, 1 insertion(+), 37 deletions(-)
 
-This doesn't apply to my tree, where is this file created?
+Christoph, I guess you didn't mean to send this branch to the mailing
+list?
 
-thanks,
+In any event some of these, like this one, look obvious and I could
+still grab a few for hmm.git.
 
-greg k-h
+Let me know what you'd like please
+
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Thanks,
+Jason
