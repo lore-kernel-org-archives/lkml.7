@@ -6,49 +6,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B932AC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BCC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989C3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A88218B0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGCO1Q (ORCPT
+        id S1727093AbfGCO1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:27:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:52117 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfGCO1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jul 2019 10:27:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:39609 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfGCO1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:27:05 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45f3Mt388Xz9sPD; Thu,  4 Jul 2019 00:27:06 +1000 (AEST)
+        id 45f3Mq1Jzfz9s8m; Thu,  4 Jul 2019 00:27:02 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 63982618662e2a05e5c5c3e4247456d1d3467f32
-In-Reply-To: <20190625145239.2759-2-hch@lst.de>
-To:     Christoph Hellwig <hch@lst.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: 3becd11dffe5d4a7467ebd841172f3e091fbcbd0
+In-Reply-To: <1559767579-7151-1-git-send-email-cai@lca.pw>
+To:     Qian Cai <cai@lca.pw>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] powerpc/powernv: remove the unused pnv_pci_set_p2p function
-Message-Id: <45f3Mt388Xz9sPD@ozlabs.org>
-Date:   Thu,  4 Jul 2019 00:27:06 +1000 (AEST)
+Cc:     Qian Cai <cai@lca.pw>, sbobroff@linux.ibm.com,
+        linux-kernel@vger.kernel.org, oohall@gmail.com, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/eeh_cache: fix a W=1 kernel-doc warning
+Message-Id: <45f3Mq1Jzfz9s8m@ozlabs.org>
+Date:   Thu,  4 Jul 2019 00:27:02 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 14:52:36 UTC, Christoph Hellwig wrote:
-> This function has never been used anywhere in the kernel tree since it
-> was added to the tree.  We also now have proper PCIe P2P APIs in the core
-> kernel, and any new P2P support should be using those.
+On Wed, 2019-06-05 at 20:46:19 UTC, Qian Cai wrote:
+> The opening comment mark "/**" is reserved for kernel-doc comments, so
+> it will generate a warning with "make W=1".
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> arch/powerpc/kernel/eeh_cache.c:37: warning: cannot understand function
+> prototype: 'struct pci_io_addr_range
+> 
+> Since this is not a kernel-doc for the struct below, but rather an
+> overview of this source eeh_cache.c, just use the free-form comments
+> kernel-doc syntax instead.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Acked-by: Russell Currey <ruscur@russell.cc>
 
-Series applied to powerpc next, thanks.
+Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/63982618662e2a05e5c5c3e4247456d1d3467f32
+https://git.kernel.org/powerpc/c/3becd11dffe5d4a7467ebd841172f3e091fbcbd0
 
 cheers
