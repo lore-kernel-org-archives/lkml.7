@@ -2,277 +2,96 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F02FC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD488C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF6721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8AA21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+QyETMz"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rDOmQVwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfGCVdx (ORCPT
+        id S1727289AbfGCVgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:33:53 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40113 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfGCVdx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:33:53 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e8so3914432otl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 14:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R3V0xyfQtgszg7VMyFhoH7Ys4L42MA+hGNQOZN+rSSg=;
-        b=V+QyETMzR+c11xzxqJ7CvOBHlFJ127q7f+YbE3ve0bt+n8nmvGJw6KhSwYIyLfQD7O
-         OgMEUrtgN9cuhypLuelAH+bqQONAnfkT7FzbKcnQHMw3Wi5H046OUJO+6eo+SchXmhcI
-         qipRfKc2xU6/hnEdK4uw9QSVq/lVH1C939if8ZZciMjWkmsc5MmLq/TA2JR+XzBf9c50
-         21aPpuiNTNU5DpKzfH8l5kZjmFALMRkAG6GPl/MgjH1cF8s2ymT/vjnZ3OHqFlElm+v/
-         5hrqxmXJJAgAwyg1J6PpfG7U8dUa8YeKf8HHPUnk8LEDiDsdZnyBvmyp4SYLLrEfcgqr
-         HeuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R3V0xyfQtgszg7VMyFhoH7Ys4L42MA+hGNQOZN+rSSg=;
-        b=PoJlJFZPPGqlvsQhM2a0LKw97GiHQ8VeIzO7BFTfe2oOnQZffzwsRriFbBOy3GUNk2
-         EEQsLRvCL7YFBO2NaYe9HVtD8CPXqNwEMtmmwMsdWGvlrfwGjLN6JLB6k7SE8NBtP6Mu
-         Ge6kscKIAzyt69kM6ZsADd1z5M5rx1IKqCWNeKhYCR/kKUKkumcgd2KVpCOu8tqOkfI6
-         7WGGjKVefXIorKQZG9EvQk//JNcnfczpp3lVcyvTjG414HlOLjCsOFm9t7faUZ5+v9hH
-         dfGVSXeZNO0r7RRB+fKUJpl0Cr+mUKNU+Ac1U/LCG4TKeYXCI0umWdFEkCZ8yEdFl08P
-         PTcg==
-X-Gm-Message-State: APjAAAXXa5VJSgldPZUUBoSaNAQShZoGJ+4XpxNCf+NGgmZlEQpXU4x/
-        YE13a67hzssUKEIFLDN0/s2he/avacJn1scWj44M5A==
-X-Google-Smtp-Source: APXvYqxktUBobLHri/+RpGQ9t5HW3WC7Y8fP/5luLqnatxKPkw8Nz7g7awliOBFQip7Os9RGiYdDHakvVgO3HZ8oNQg=
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr33086605otr.231.1562189631932;
- Wed, 03 Jul 2019 14:33:51 -0700 (PDT)
+        Wed, 3 Jul 2019 17:36:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:57851 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbfGCVgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:36:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fDtj5jF5z9s4V;
+        Thu,  4 Jul 2019 07:35:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562189757;
+        bh=gaBAshq7g2CAcmEA00uzMl3h+Mf9XAVfkh9upGhr/V0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rDOmQVwlABF7Jqt2UjhchmUbsP8E0gefJT9DqX11pwLNuFzCagSom2uatNIf8lDR+
+         OLBCxTSh+g2+w/ZQEuxo+Xhs1A8vwfOQt2SMYGF8VlafTjzXNvlvNOWx6MB4Ha4jtO
+         pT5VwKWQkNeiDHPx+yWNy1kJD+n4udRqNQF+g+d+SeuaRUZ+qCtYbFXUgBbvBGaviL
+         4BHYBTlizJD8RW5Mpv/JfEIOA+CmHpeFt41fHMoi8xhdWoFJHnOq2XJbga3v7S9KuD
+         ynXouXukCwiLczyeINMIWM5pUSuuvMJ5qxHGGUBn1aGul4xJekycOTAVUXzRUr6kMn
+         suFqytQsfvalQ==
+Date:   Thu, 4 Jul 2019 07:35:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the dma-mapping tree
+Message-ID: <20190704073556.11865317@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
- <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 3 Jul 2019 14:33:15 -0700
-Message-ID: <CAGETcx_5gu84FOVmELPnK5uJTE0NEhxYKtdFigoXGyFtjehQvw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9pptVeHwnWnZUOG_IkMXl4/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 11:45 PM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Interconnect paths can have different performance points. Now that OPP
-> > framework supports bandwidth OPP tables, add OPP table support for
-> > interconnects.
-> >
-> > Devices can use the interconnect-opp-table DT property to specify OPP
-> > tables for interconnect paths. And the driver can obtain the OPP table for
-> > an interconnect path by calling icc_get_opp_table().
->
-> The opp table of a path must come from the aggregation of OPP tables
-> of the interconnect providers.
+--Sig_/9pptVeHwnWnZUOG_IkMXl4/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The aggregation of OPP tables of the providers is certainly the
-superset of what a path can achieve, but to say that OPPs for
-interconnect path should match that superset is an oversimplification
-of the reality in hardware.
+Hi all,
 
-There are lots of reasons an interconnect path might not want to use
-all the available bandwidth options across all the interconnects in
-the route.
+In commit
 
-1. That particular path might not have been validated or verified
-   during the HW design process for some of the frequencies/bandwidth
-   combinations of the providers.
+  f80b90f8caba ("MIPS: only select ARCH_HAS_UNCACHED_SEGMENT for non-cohere=
+nt platforms")
 
-2. Similarly during parts screening in the factory, some of the
-   combinations might not have been screened and can't be guaranteed
-   to work.
+Fixes tag
 
-3. Only a certain set of bandwidth levels might make sense to use from
-   a power/performance balance given the device using it. For example:
-   - The big CPU might not want to use some of the lower bandwidths
-     but the little CPU might want to.
-   - The big CPU might not want to use some intermediate bandwidth
-     points if they don't save a lot of power compared to a higher
-     bandwidth levels, but the little CPU might want to.
-   - The little CPU might never want to use the higher set of
-     bandwidth levels since they won't be power efficient for the use
-     cases that might run on it.
+  Fixes: 2e96e04d25 ("MIPS: use the generic uncached segment support in dma=
+-direct")
 
-4. It might not make sense from a system level power perspective.
-Let's take an example of a path S (source) -> A -> B -> C -> D
-(destination).
-   - A supports only 2, 5, 7 and 10 GB/s. B supports 1, 2 ... 10 GB/s.
-     C supports 5 and 10 GB/s
-   - If you combine and list the superset of bandwidth levels
-     supported in that path, that'd be 1, 2, 3, ... 10 GB/s.
-   - Which set of bandwidth levels make sense will depend on the
-     hardware characteristics of the interconnects.
-   - If B is the biggest power sink, then you might want to use all 10
-     levels.
-   - If A is the biggest power sink, then you might want to use all 2,
-     5 and 10 GB/s of the levels.
-   - If C is the biggest power sink then you might only want to use 5
-     and 10 GB/s
-   - The more hops and paths you get the more convoluted this gets.
+has these problem(s):
 
-5. The design of the interconnects themselves might have an impact on
-which bandwidth levels are used.
-   - For example, the FIFO depth between two specific interconnects
-     might affect the valid bandwidth levels for a specific path.
-   - Say S1 -> A -> B -> D1, S2 -> C -> B -> D1 and S2 -> C -> D2 are
-     three paths.
-   - If C <-> B FIFO depth is small, then there might be a requirement
-     that C and B be closely performance matched to avoid system level
-     congestion due to back pressure.
-   - So S2 -> D1 path can't use all the bandwidth levels supported by
-     C-B combination.
-   - But S2 -> D2 can use all the bandwidth levels supported by C.
-   - And S1 -> D1 can use all the levels supported by A-B combination.
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
-These are just some of the reasons I could recollect in a few minutes.
-These are all real world cases I had to deal with in the past several
-years of dealing with scaling interconnects. I'm sure vendors and SoCs
-I'm not familiar with have other good reasons I'm not aware of.
+--=20
+Cheers,
+Stephen Rothwell
 
-Trying to figure this all out by aggregating OPP tables of
-interconnect providers just isn't feasible nor is it efficient. The
-OPP tables for an interconnect path is describing the valid BW levels
-supported by that path and verified in hardware and makes a lot of
-sense to capture it clearly in DT.
+--Sig_/9pptVeHwnWnZUOG_IkMXl4/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> So such kind of OPP table should be at
-> provider level but not at path level.
+-----BEGIN PGP SIGNATURE-----
 
-They can also use it if they want to, but they'll probably want to use
-a frequency OPP table.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0dH7wACgkQAVBC80lX
+0GyvJgf+PhEttclwbWOAsdsN7P+FBifnDuZ4GO2E45M52ZDH/c6iEnUlYupl2Iak
+VuKcGU3X9nil26/dRdA9RE1mWcRSO+5q9brfZps6VeOxu8XzUuT9tJSjXN3StctN
+q0UAwYBogMvAGFLCh8umTTknTYYiLqNoEbZX/atUQaHE0gnRviR3fsaTjUdmZ3ht
+zR1XLXibePc2fWl+9S6lL4MpWzcKCqRiG3HZUBuD0Kgm+Wls1VUWEWQr/6RZCtjL
+I9lo9R3hFlVxa0NhwnSFGy/f2O5crNzWltI7qlnv+rmnCsqIrql+HDCle1VFWuzF
+RlkWRTk2xWqzHyt5ktB7sZirhNgLcA==
+=P5zz
+-----END PGP SIGNATURE-----
 
-
--Saravana
-
->
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
-> >  include/linux/interconnect.h |  7 +++++++
-> >  2 files changed, 33 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> > index 871eb4bc4efc..881bac80bc1e 100644
-> > --- a/drivers/interconnect/core.c
-> > +++ b/drivers/interconnect/core.c
-> > @@ -47,6 +47,7 @@ struct icc_req {
-> >   */
-> >  struct icc_path {
-> >         size_t num_nodes;
-> > +       struct opp_table *opp_table;
-> >         struct icc_req reqs[];
-> >  };
-> >
-> > @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> >  {
-> >         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
-> >         struct icc_node *src_node, *dst_node;
-> > -       struct device_node *np = NULL;
-> > +       struct device_node *np = NULL, *opp_node;
-> >         struct of_phandle_args src_args, dst_args;
-> >         int idx = 0;
-> >         int ret;
-> > @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> >                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
-> >         mutex_unlock(&icc_lock);
-> >
-> > +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
-> > +       if (opp_node) {
-> > +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-> > +               of_node_put(opp_node);
-> > +       }
-> > +
-> > +
-> >         return path;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_icc_get);
-> >
-> > +/**
-> > + * icc_get_opp_table() - Get the OPP table that corresponds to a path
-> > + * @path: reference to the path returned by icc_get()
-> > + *
-> > + * This function will return the OPP table that corresponds to a path handle.
-> > + * If the interconnect API is disabled, NULL is returned and the consumer
-> > + * drivers will still build. Drivers are free to handle this specifically, but
-> > + * they don't have to.
-> > + *
-> > + * Return: opp_table pointer on success. NULL is returned when the API is
-> > + * disabled or the OPP table is missing.
-> > + */
-> > +struct opp_table *icc_get_opp_table(struct icc_path *path)
-> > +{
-> > +       return path->opp_table;
-> > +}
-> > +
-> >  /**
-> >   * icc_set_bw() - set bandwidth constraints on an interconnect path
-> >   * @path: reference to the path returned by icc_get()
-> > diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> > index dc25864755ba..0c0bc55f0e89 100644
-> > --- a/include/linux/interconnect.h
-> > +++ b/include/linux/interconnect.h
-> > @@ -9,6 +9,7 @@
-> >
-> >  #include <linux/mutex.h>
-> >  #include <linux/types.h>
-> > +#include <linux/pm_opp.h>
-> >
-> >  /* macros for converting to icc units */
-> >  #define Bps_to_icc(x)  ((x) / 1000)
-> > @@ -28,6 +29,7 @@ struct device;
-> >  struct icc_path *icc_get(struct device *dev, const int src_id,
-> >                          const int dst_id);
-> >  struct icc_path *of_icc_get(struct device *dev, const char *name);
-> > +struct opp_table *icc_get_opp_table(struct icc_path *path);
-> >  void icc_put(struct icc_path *path);
-> >  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-> >
-> > @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
-> >  {
-> >  }
-> >
-> > +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
-> > +{
-> > +       return NULL;
-> > +}
-> > +
-> >  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-> >  {
-> >         return 0;
-> > --
-> > 2.22.0.410.gd8fdbe21b5-goog
-> >
+--Sig_/9pptVeHwnWnZUOG_IkMXl4/--
