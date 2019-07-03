@@ -2,291 +2,252 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B894C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D769C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0DB218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C6121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562182572;
+	bh=X+w6oEZ7Oqtw7OosCBFQMbPj6yt8YZdBW+clG6vdnHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=amrbrf5pMDaxFkCveWa2xix43cY7pcFDygB5IRnTkxk0q+2OMyEgobfCbb2HSXnrh
+	 5igAGDHacYU6pBF8IAqOBssRIJH96e5Pmi8wNg5GX3B1cgFr3H7ZzUAr9cbVQSTuK2
+	 dfNNtaUXrmyy1YmR3bpi1Sh2j56i1VWkGXfSw+Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfGCTd4 (ORCPT
+        id S1727006AbfGCTgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:33:56 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:49155 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfGCTdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:33:55 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MQMqN-1hvlgV3yxl-00MMxE; Wed, 03 Jul 2019 21:31:43 +0200
-Subject: Re: [RFC PATCH 0/5] Add CONFIG symbol as module attribute
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Cristina Moraru <cristina.moraru09@gmail.com>,
-        "vegard.nossum@gmail.com" <vegard.nossum@gmail.com>,
-        Valentin Rothberg <valentinrothberg@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <mmarek@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tom Gundersen <teg@jklm.no>, Kay Sievers <kay@vrfy.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        backports@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Bolle <pebolle@tiscali.nl>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Tejun Heo <tj@kernel.org>,
-        Jej B <James.Bottomley@hansenpartnership.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Daniel Jonsson <danijons@student.chalmers.se>,
-        Andrzej Wasowski <wasowski@itu.dk>
-References: <1471462023-119645-1-git-send-email-cristina.moraru09@gmail.com>
- <20160818175505.GM3296@wotan.suse.de> <20160825074313.GC18622@lst.de>
- <20160825201919.GE3296@wotan.suse.de>
- <CAB=NE6UfkNN5kES6QmkM-dVC=HzKsZEkevH+Y3beXhVb2gC5vg@mail.gmail.com>
- <CAB=NE6XEnZ1uH2nidRbn6myvdQJ+vArpTTT6iSJebUmyfdaLcQ@mail.gmail.com>
- <20190627045052.GA7594@lst.de>
- <CAB=NE6Xa525g+3oWROjCyDT3eD0sw-6O+7o97HGX8zORJfYw4w@mail.gmail.com>
- <40f70582-c16a-7de0-cfd6-c7d5ff9ead71@metux.net>
- <20190703173555.GW19023@42.do-not-panic.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <9a2ae341-9ea7-d4c6-7c3e-b12bb6515905@metux.net>
-Date:   Wed, 3 Jul 2019 21:31:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 3 Jul 2019 15:36:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbfGCTgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 15:36:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676DA21882;
+        Wed,  3 Jul 2019 19:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562182568;
+        bh=X+w6oEZ7Oqtw7OosCBFQMbPj6yt8YZdBW+clG6vdnHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2T9R9p660mrCBOPbl9g/ChqJBQafKQl67BXZD5ysSIcaSD+6TDhuDPXViFoptsUSx
+         RxFferRwXB1GCPM3giZfseHqXkpcx7gFN49VKVLhwE4HUOJ1hh16r56pFUX2aIXJyv
+         Kd4ieqQiBAHrWTl/Holq52hq2voLL/TPoeg8cS9Y=
+Date:   Wed, 3 Jul 2019 21:36:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Muchun Song <smuchun@gmail.com>
+Cc:     rafael@kernel.org, benh@kernel.crashing.org, prsood@codeaurora.org,
+        mojha@codeaurora.org, gkohli@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 OPT2] driver core: Fix use-after-free and double free
+ on glue directory
+Message-ID: <20190703193606.GA8452@kroah.com>
+References: <20190626144021.7249-1-smuchun@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703173555.GW19023@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:kb/MYLc04HZOKlSnabqpK7DsYFcfO94OtT241V79SgdBtnFK6If
- 3tPNNpMoG1pn8RBT4JKFPkFxXdMvYp1jNHC9iHtM2vV6TleiNErFy9d3yL0iJTmg4PdJxma
- 5Od557VVQzR6m2nGhX9XXh80GZ1N11ZxfgvlC58thnluFXulWdn0/hyGLu4O3KZGjFCRlPs
- XrIUoqVcrdlEMU5owxolA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GGlFYQ9CSoI=:Oa3dYStAtCjwENUukwkjWX
- sP+nmf03MSeLVUBXJoE2AtBF93nOE8vvGOFm32bPxfQ34x2wy+21ZoThtwKT35yHbyFNuItEl
- c75grpJrW93c8AtAKhom/gas95IZt8skAZQnAqRW5bCSFldNjjXR3CljqNMvfU1WJYhjvf4Pr
- mgNHZYe913MSHlOHBIVO9C6Dtxi7ijr5BNTn2meODYTNqX0TpQ8ClwVtsNpiVUWuiHOs/xDzV
- Cx22KNB+14YZntZYOBMZs2noZmw8uvTQLHjfs0z3ZGKoS0t0Gf2Bh9Xm3rEIDPx/gYGRAYq3B
- PIl6lzjP01A/TjGMt0UdbBlcry4OhujX00Ja0QK3XdQItsa19TS7Xgm5ZjGkBT4xAZRGF/Plb
- aLkGh0dhCoiJoXkwQCOQGFO+JLvZEID0jydypYE2Lc2+najdBgeLHDDcs9eSpLqe3ODtw45jb
- FY1u8wC5mELMqYgD+pXhw8olH0QXUby95p4KD8xaQXc3uofsVDBWwOeCJtCHb/wvQSTKNSi0c
- 6soxqkkuEMgL8/CU2b2h1G12pdoVlxCZp7N+sL1diqgKgWJk6lwNzUkkyI31ZESu9tFuQGI08
- /SC71/9bcNwD7yXXHjiszSQact/mSnS7v6pCC/MU7P/6VXvf8RjcLRcbwIQgIIrLqo9a+bMoT
- YffbvCVsPWkzphA9JX7tmQUplK2FNtbHe5FtqUbsWZCDp5eKyJdiDICeljThaZJ9jj/LZky4i
- xEHCvWBnS/eETyTAp4LtIPZDKb9292NNkJzWSs7OeDsu6A0yg+A6r2Zq2j8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626144021.7249-1-smuchun@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.19 19:35, Luis Chamberlain wrote:
-
-Hi,
-
->> Okay, but IIRC this will add more boilerplate those modules.
+On Wed, Jun 26, 2019 at 10:40:21PM +0800, Muchun Song wrote:
+> There is a race condition between removing glue directory and adding a new
+> device under the glue directory. It can be reproduced in following test:
 > 
-> Just one module attribute.
-
-Yes, but still one per module. This raises the question whether
-maintainers are willing to cope w/ tons of tiny patches for just
-one line - for something that will take quite some time to become
-actually useful (doesn't help much if only few drivers support it),
-and is only helpful in a few use cases.
-
-And to make it really useful, we also need some way to automatically
-derive which other symbols to enable (subsystems, etc), w/o auto-
-enabling stuff one doesn't need here. (are the defaults sane for
-this usecase ?)
-
-The main problem here, IMHO, is that the kconfig system doesn't really
-know what makes up a module (it only knows that something w =y cant
-depend on something thats =m).
-
-So it smalls like we'd need some config language that really understands
-things like modules, subsystems, arches, etc with their properties and
-is used by both kconfig and kbuild. Then we could put all metadata there
-instead of the current macro calls. At that point we could also put
-things like match tables in here, which would solve the problem of
-finding the right driver by hardware descriptions.
-
-But that's really a *big* topic, it's not easy.
-
->> And I wonder whether target binaries are the right place for those
->> things at all - IMHO that's something one wants to derive from the
->> source code  / .config's.
+> path 1: Add the child device under glue dir
+> device_add()
+>     get_device_parent()
+>         mutex_lock(&gdp_mutex);
+>         ....
+>         /*find parent from glue_dirs.list*/
+>         list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
+>             if (k->parent == parent_kobj) {
+>                 kobj = kobject_get(k);
+>                 break;
+>             }
+>         ....
+>         mutex_unlock(&gdp_mutex);
+>         ....
+>     ....
+>     kobject_add()
+>         kobject_add_internal()
+>             create_dir()
+>                 sysfs_create_dir_ns()
+>                     if (kobj->parent)
+>                         parent = kobj->parent->sd;
+>                     ....
+>                     kernfs_create_dir_ns(parent)
+>                         kernfs_new_node()
+>                             kernfs_get(parent)
+>                         ....
+>                         /* link in */
+>                         rc = kernfs_add_one(kn);
+>                         if (!rc)
+>                             return kn;
 > 
-> For the use cases mentioned for why the module attribute is being
-> suggested it would help to not have to download kernel sources. 
-
-Are we still talking about compiling custom kernels ?
-(how to do that w/o source code ?)
-
-> The only question we want to answer is: for the hardware components
-> present on this system, which configs options do I need to enable
-> to support these components?
-
-What else would one need that data, if not compiling a custom kernel
-(which in turn needs the source) ?
-
-> At least for virtualization we decided to support at least these two to
-> help:
+>                         kernfs_put(kn)
+>                             ....
+>                             repeat:
+>                             kmem_cache_free(kn)
+>                             kn = parent;
 > 
->   * make kvmconfig
->   * make xenconfig
-
-These two are rather simple. Most times there isn't much variance in
-virtual hardware (unless one starts directly mapping in pci or usb
-devices ...)
-
-> Similar problem would be found if one wanted to find a desirable kernel
-> config for a remote system. One should be able to somehow scrape some
-> hardware information, dump that to a file, and then somehow generate
-> a working config for that system.
-
-Yes. That's actually pretty much the same usecase (in my case I'd also
-have dts, lspci/lsusb output, etc)
-
-> The module attribute being suggested would enable at least one way
-> to gather some of the required config symbols: symbols for *hardware*
-> and where one can run a modern kernel, with many features / hardware
-> enabled already.
-
-But only for a pretty specific usecase. I'm not opposed to this, but
-I wonder whether maintainers are willing to accept that stuff for just
-that specific usecase.
-
-> However, folks producing embedded systems *do* / *should* have a lot of
-> knowledge of their systems, and so the type of scheme you have devised
-> seems sensible for it.
-
-Usually we have (unless we need to do reverse engineering :o). But it's
-a pretty time-consuming task. Especially if the requirements change
-several times in the development or lifetime of a specific product.
-
-For example "oh, we now need eth", "naah, we don't wanna use usb
-anymore", "let's take a different SoM", ... not that have pretty
-orthogonal sets of configs we need to maintain: hardware- and non-
-hardware-related ones. And hardware-related ones can fall into different
-categories like fixed-attached/onboard vs. hotpluggable ones.
-
-Recently I had a case where the customer requested xattr support, so
-I had to enable general xattr support as well as per-filesystem.
-Pretty simple, but having lots of those cases quickly sums up. One of
-the reasons why I've written my own little config generator.
-
->> In embedded world, we often have scenarios where we want a really
->> minimal kernel, but need to enable/disable certain hi-level peripherals
->> in the middle of the project (eg. "oh, we also need ethernet, but we
->> wanna drop usb"). There we'll have to find out what actual chip is,
->> its corresponding driver, required subsystems, etc, and also kick off
->> everything we don't need anymore.
+>                             if (kn) {
+>                                 if (atomic_dec_and_test(&kn->count))
+>                                     goto repeat;
+>                             }
+>                         ....
 > 
-> Right. One *should* be able to tell some tool, hey, here is the list of
-> my desirable .config options. Go and figure out what I need to make that
-> work and give me a resulting .config. Its not easy.
-
-I think I've already got into a pretty usable state - at least for my
-projects. For now only supports a few boards and limited set of
-features, but patches are always welcomed :)
-
->> I've thought about implementing some actual dependency tracking
->> (at least recording the auto-enabled symbols), but didn't expect that
->> to become practically usable anytime soon,
+> path2: Remove last child device under glue dir
+> device_del()
+>     cleanup_device_parent()
+>         cleanup_glue_dir()
+>             mutex_lock(&gdp_mutex);
+>             if (!kobject_has_children(glue_dir))
+>                 kobject_del(glue_dir);
+>             kobject_put(glue_dir);
+>             mutex_unlock(&gdp_mutex);
 > 
-> The ability to easily ask the kernel to enable the components needed
-> for a respective config option *is* very useful but indeed not easy.
-
-Yes, it would need to understand things like conditional definitions
-to deduce that certain things need to be enabled first, before certain
-drivers become choosable.
-
-> This is not the only space where this problem exists. Similar problem
-> exists for distribution packages, and dependencies. Challenges have
-> been made for proper research towards these problems, and such research
-> has lead distributions to opt to enable some of these algorithms.
-
-The problem w/ dependencies is that there can be different types of
-dependencies, as well as different types of software objects. Just
-solving the expressions is only a part of the problem.
-
-> This begs the question if we could learn from similar efforts on Linux
-> for these sorts of questions. One possibility here is to evaluate the
-> prospect of using a SAT solver with Minimally Unsatisfiable Subformulas
-> (MUSes) support, which should be be able to address thir problem. This
-> prospect is ongoing and currrent R&D is active, for details refer to:
+> Before path2 remove last child device under glue dir, If path1 add a new
+> device under glue dir, the glue_dir kobject reference count will be
+> increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
+> been called kernfs_new_node(), but not call kernfs_get(parent).
+> Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
+> kobject_has_children(). This result in glue_dir->sd is freed and it's
+> reference count will be 0. Then path1 call kernfs_get(parent) will trigger
+> a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
+> it's reference count to 1. Because glue_dir->sd is freed by path2, the next
+> call kernfs_add_one() by path1 will fail(This is also use-after-free)
+> and call atomic_dec_and_test() to decrease reference count. Because the
+> reference count is decremented to 0, it will also call kmem_cache_free()
+> to free glue_dir->sd again. This will result in double free.
 > 
-> https://kernelnewbies.org/KernelProjects/kconfig-sat
+> In order to avoid this happening, we can ensure the lookup of the glue
+> dir and creation of the child object(s) are done under a single instance
+> of gdp_mutex so we never see a stale "empty" but still poentially used
+> glue dir around.
+> 
+> The following calltrace is captured in kernel 4.14 with the following patch
+> applied:
+> 
+> commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+> 
+> --------------------------------------------------------------------------
+> [    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
+>                 Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
+> ....
+> [    3.633986] Call trace:
+> [    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
+> [    3.633994]  sysfs_create_dir_ns+0x54/0xe8
+> [    3.634001]  kobject_add_internal+0x22c/0x3f0
+> [    3.634005]  kobject_add+0xe4/0x118
+> [    3.634011]  device_add+0x200/0x870
+> [    3.634017]  _request_firmware+0x958/0xc38
+> [    3.634020]  request_firmware_into_buf+0x4c/0x70
+> ....
+> [    3.634064] kernel BUG at .../mm/slub.c:294!
+>                 Here is BUG_ON(object == fp) in set_freepointer().
+> ....
+> [    3.634346] Call trace:
+> [    3.634351]  kmem_cache_free+0x504/0x6b8
+> [    3.634355]  kernfs_put+0x14c/0x1d8
+> [    3.634359]  kernfs_create_dir_ns+0x88/0xb0
+> [    3.634362]  sysfs_create_dir_ns+0x54/0xe8
+> [    3.634366]  kobject_add_internal+0x22c/0x3f0
+> [    3.634370]  kobject_add+0xe4/0x118
+> [    3.634374]  device_add+0x200/0x870
+> [    3.634378]  _request_firmware+0x958/0xc38
+> [    3.634381]  request_firmware_into_buf+0x4c/0x70
+> --------------------------------------------------------------------------
+> 
+> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+> 
+> Signed-off-by: Muchun Song <smuchun@gmail.com>
+> ---
+> 
+> Change in v4:
+>        1. Add some kerneldoc comment.
+>        2. Remove unlock_if_glue_dir().
+>        3. Rename get_device_parent_locked_if_glue_dir() to
+>           get_device_parent_locked.
+>        4. Update commit message.
+> Change in v3:
+>        Add change log.
+> Change in v2:
+>        Fix device_move() also.
+> 
+>  drivers/base/core.c | 108 +++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 92 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 4aeaa0c92bda..2251e391a352 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1739,8 +1739,23 @@ class_dir_create_and_add(struct class *class, struct kobject *parent_kobj)
+>  
+>  static DEFINE_MUTEX(gdp_mutex);
+>  
+> -static struct kobject *get_device_parent(struct device *dev,
+> -					 struct device *parent)
+> +/**
+> + * __get_device_parent() - Get the parent device kobject.
+> + * @dev: Pointer to the device structure.
+> + * @parent: Pointer to the parent device structure.
+> + * @lock: When we live in a glue directory, should we hold the
+> + *        gdp_mutex lock when this function returns? If @lock
+> + *        is true, this function returns with the gdp_mutex
+> + *        holed. Otherwise it will not.
 
-Good tip, I'll have a look at it.
+Ugh, if you are trying to get me to hate one version of these patches,
+this is how you do it :)
 
-> It certainly can be useful for components, ie, not hardware. But for
-> hardware a one-to-one mapping of one driver to one config would be of
-> much more use.
-
-Unfortunately, we don't have this 1:1 mapping. Often drivers support
-different sets of devices, depending on other factors, sometimes sub-
-options (eg. different hw versions), sometimes depending on other
-subsystems, sometimes arch-specific, etc, etc.
-
-I think we should work towards that, but I doubt we'd reach that goal
-anytime soon, and begs the question whether it's really worth all the
-effort required for that.
-
-> It would be wonderful if for instance kconfig
-> supported a way to group a major set of components under *one* config
-> symbol and then say: "I want this major component enabled" and then it'd
-> go and enable all the defaults which would be required for it. 
-
-Yes, thought about that, too. For example have syms for selecting whole
-boards and features of them - a bit like this:
-
-  --> Preconfigure for specific boards
-      --> board A
-      --> board B
-      ...
-  --> Enable board features
-      --> Ethernet port
-      --> Display
-          --> Touch panel
-      --> Audio
-      ....
-
-BUT: this would turn into maintenance hell, so I dropped that idea.
-
-> An example is if you
-> wanted to enable PCI on a system which didn't support it. Because of
-> this, it seems you'd want *all* desirable configs and let a piece of
-> software figure out what you need / can enable. And.. this is precisely
-> where the SAT solver with MUSes could help...
-
-Yes, but this piece of software first needs to know whether eg. PCI
-is available on that HW. Oh, and things like PCI could be a dependency
-as well as an feature on its own, depending on how you gonna use it.
-(eg. if directly access from userland or VMs).
+A function should not "sometimes takes a lock, sometimes does not,
+depending on a parameter passed into it"  That way lies madness...
 
 
---mtx
+> + *
+> + * Note: Only when we live in a glue directory and @lock is
+> + * true, the function will return with the gdp_mutex holed.
+> + * In this case, The caller is responsible for releasing the
+> + * gdp_mutex lock.
+> + */
+> +static struct kobject *__get_device_parent(struct device *dev,
+> +					   struct device *parent,
+> +					   bool lock)
+>  {
+>  	if (dev->class) {
+>  		struct kobject *kobj = NULL;
+> @@ -1778,16 +1793,32 @@ static struct kobject *get_device_parent(struct device *dev,
+>  				break;
+>  			}
+>  		spin_unlock(&dev->class->p->glue_dirs.list_lock);
+> -		if (kobj) {
+> -			mutex_unlock(&gdp_mutex);
+> -			return kobj;
+> -		}
+>  
+> -		/* or create a new class-directory at the parent device */
+> -		k = class_dir_create_and_add(dev->class, parent_kobj);
+> -		/* do not emit an uevent for this simple "glue" directory */
+> -		mutex_unlock(&gdp_mutex);
+> -		return k;
+> +		/**
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Note, in the future, you don't need to use /** for comments in a
+function, those are only for kernel doc markers for a _global_ function
+that gets pulled into the larger documentation documents.  So even
+__get_device_parent() here does not need this.
+
+Anyway, this is a mess.
+
+Ugh I hate glue dirs...
+
+greg k-h
