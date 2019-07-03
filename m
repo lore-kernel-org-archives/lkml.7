@@ -2,86 +2,94 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327C3C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3888FC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22E3218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562150615;
-	bh=rtDwzSnNcOQGNWFdCc1Bop63mTOkGYGEB+m7tqXFlm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qr3SNbcXt3Ync0IbQ43nZSYVmOt6U3RD133jJVAOVytT31+8T+jRdIRwcYI1ZJrU/
-	 tQ/EWrgGgtGKmnwILwB1jD32+IGO3sIPqckkw08SqYqgfyiEPT/lO5OXnEURI2NxL6
-	 0euyS/vesL4RLSWvuZC4cQRkUMzk+4hgKzHRsrZw=
+	by mail.kernel.org (Postfix) with ESMTP id 0F29A218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfGCKnd (ORCPT
+        id S1727154AbfGCKnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbfGCKnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:43:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 3 Jul 2019 06:43:42 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:40633 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfGCKnl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 06:43:41 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0292D218A0;
-        Wed,  3 Jul 2019 10:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562150612;
-        bh=rtDwzSnNcOQGNWFdCc1Bop63mTOkGYGEB+m7tqXFlm8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zJuASnOIQ3MT+bbM+Sz0FCw91geKA+AuC/9yWArXtPEJXVCPJ+lqQh1JUR4d/wtPU
-         lXB+SORru4EBjr/Q+Dy+4LF6VSUuUaaFw2XtYeJ/Bt3dH9Pc3pJnX7w+sRP1qJEGNY
-         CotA44WUtO/aOvwVu0vfu6T3E1frrWEhgG+rSYJk=
-Date:   Wed, 3 Jul 2019 12:43:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] bpf: Replace a seq_printf() call by seq_puts() in
- btf_enum_seq_show()
-Message-ID: <20190703104330.GA8931@kroah.com>
-References: <93898abe-9a7d-0c64-0856-094b62e07ba2@web.de>
- <e0c9978f-7304-8a25-1bc9-b2be8a038382@iogearbox.net>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 2A99E100AF5F7;
+        Wed,  3 Jul 2019 12:43:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id CCA622F790B; Wed,  3 Jul 2019 12:43:38 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 12:43:38 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "kernel@martin.sperl.org" <kernel@martin.sperl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "wahrenst@gmx.net" <wahrenst@gmx.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "eric@anholt.net" <eric@anholt.net>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] spi: spi-bcm2835.c: Fix 3-wire mode
+Message-ID: <20190703104338.m5vfkbyq4fhqmjh4@wunner.de>
+References: <20190628123023.4696-1-nuno.sa@analog.com>
+ <1b932c61-982b-aae0-1fef-3c574e7d17eb@gmx.net>
+ <20190628190022.vya4h2lihm6x2xpb@wunner.de>
+ <54323339606a36febc6a8633a8d3a7db84b975c4.camel@analog.com>
+ <20190701115506.42rr4o4hbuvwytjc@wunner.de>
+ <42a533cbf1e47ab8c8a44c5e865ec15193a2e956.camel@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0c9978f-7304-8a25-1bc9-b2be8a038382@iogearbox.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <42a533cbf1e47ab8c8a44c5e865ec15193a2e956.camel@analog.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 12:09:51PM +0200, Daniel Borkmann wrote:
-> On 07/02/2019 07:13 PM, Markus Elfring wrote:
-> > From: Markus Elfring <elfring@users.sourceforge.net>
-> > Date: Tue, 2 Jul 2019 19:04:08 +0200
+On Mon, Jul 01, 2019 at 02:21:21PM +0000, Sa, Nuno wrote:
+> On Mon, 2019-07-01 at 13:55 +0200, Lukas Wunner wrote:
+> > I see.  In that case, try:
 > > 
-> > A string which did not contain a data format specification should be put
-> > into a sequence. Thus use the corresponding function “seq_puts”.
-> > 
-> > This issue was detected by using the Coccinelle software.
-> > 
-> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> >  	/* handle all the 3-wire mode */
+> > -	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf))
+> > +	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf != ctlr->dummy_rx))
+> >  		cs |= BCM2835_SPI_CS_REN;
+> >  	else
+> >  		cs &= ~BCM2835_SPI_CS_REN;
 > 
-> The code is fine as is, I'm not applying this.
+> This worked fine. Also, I did a quick backport of the state of your
+> driver's (both spi-bcm2835 and bcm2835-dma) in revpi_staging and it
+> also worked fine with my device.
+> So, as far as I understand, the above suggestion (or my patch) is not
+> intended to be upstreamed, right? It is just a temporary fix that I can
+> use while your patchset gets upstream.
 
-Just a heads up, this person/bot is in my kill-file, making it easier to
-ignore crazy things like this.  I recommend it for other maintainers to
-also do as well.
+Thanks for testing.  I've just submitted the above as a fix for 5.3.
+(Actually with a small change, the check for (tfr->rx_buf) needs to
+be preserved in case DMA is disabled.)
 
-thanks,
+The patch can be backported to 5.2 and older stable kernels if "ctlr"
+is replaced by "master", we can inform Greg about that once the patch
+lands in Linus' tree.  And I've amended my patch set to revert this
+patch when dropping MUST_RX.
 
-greg k-h
+Thanks,
+
+Lukas
