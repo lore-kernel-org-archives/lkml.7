@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1628EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A70C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C74218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220FF218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UdUPRM97"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QkYiGjbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfGCWCV (ORCPT
+        id S1727435AbfGCWCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:02:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33840 "EHLO
+        Wed, 3 Jul 2019 18:02:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33856 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfGCWCU (ORCPT
+        with ESMTP id S1727416AbfGCWCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:02:20 -0400
+        Wed, 3 Jul 2019 18:02:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NS2VTlTL88GXGtGIYTIdIxcDk6oTfWlSKFcdult1b6c=; b=UdUPRM9702sfvLifCc8pPMC2aw
-        LKUsn7kyOwVNfN6MlrKBQNCi3nL1x8SmpXj43Q3xEMu+cfuC1MdIb1fHyxiZlXTDu6PCk1+p7niBV
-        FZ4+8Xio8+nJ67X+uBfr7pTHgYLPuNjdCCO9+K0R9zqULuTbibDw/B77irgHa+EZfA77+WmQv5ySC
-        y8D4s0hg1LlbsNh7JmvGGCBqtoHIRkMxn1/F2W/r0h7nD9QHSYIsKtQLm6F8yk4X9R3DdzINGvsSO
-        F3c/PXuwTOr4ghT6Wy+P1265stXrlBzmxchknyosBXC9J8PZzgsJzPZlCsyGNOEAFf57nQ6sHdKzN
-        H+pV8yAg==;
+        bh=TH7ilSpN+2j82AKqVSfBr/e3/+W2L5xJvYOO3yTY4Is=; b=QkYiGjbMBjTGLVROOh+GRbmRJb
+        MyoPGFJE+6teMNn9c5SEVHNaLJh/dDNSFYCEY+IvBJKEGW9ohDBcsp6CVPN0VrZ0J7fDngCYsPSv4
+        CTcFISy34r27v4v0H03+M4tT46hjxR7FS9ebz/zaYpADue3mFBLXKkQiySiYo0OXMfYuIEZSyIeYM
+        BCuxayLeVqoTiSZtVLEC80SQUqJFqA/SAdaH6UO6w3Q1gsl//cwPUe6JlfqruSzJ+jjOQ7dz9kSgZ
+        fn9KEBBzwR+rePovn050pvLCHNfewpmtkFC8H0ZPqp/ZOMDz4QtUvPdjcKRyVJo7D+Wq8Gx7oUV5c
+        ydw5RV1w==;
 Received: from rap-us.hgst.com ([199.255.44.250] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hinKR-0004EQ-QL; Wed, 03 Jul 2019 22:02:15 +0000
+        id 1hinKS-0004Eh-Da; Wed, 03 Jul 2019 22:02:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Ben Skeggs <bskeggs@redhat.com>
 Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
         nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Subject: [PATCH 1/6] mm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
-Date:   Wed,  3 Jul 2019 15:02:09 -0700
-Message-Id: <20190703220214.28319-2-hch@lst.de>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6] nouveau: unlock mmap_sem on all errors from nouveau_range_fault
+Date:   Wed,  3 Jul 2019 15:02:12 -0700
+Message-Id: <20190703220214.28319-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703220214.28319-1-hch@lst.de>
 References: <20190703220214.28319-1-hch@lst.de>
@@ -60,67 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should not have two different error codes for the same condition.  In
-addition this really complicates the code due to the special handling of
-EAGAIN that drops the mmap_sem due to the FAULT_FLAG_ALLOW_RETRY logic
-in the core vm.
+Currently nouveau_svm_fault expects nouveau_range_fault to never unlock
+mmap_sem, but the latter unlocks it for a random selection of error
+codes. Fix this up by always unlocking mmap_sem for non-zero return
+values in nouveau_range_fault, and only unlocking it in the caller
+for successful returns.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
 ---
- Documentation/vm/hmm.rst |  2 +-
- mm/hmm.c                 | 10 ++++------
- 2 files changed, 5 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-index 7d90964abbb0..710ce1c701bf 100644
---- a/Documentation/vm/hmm.rst
-+++ b/Documentation/vm/hmm.rst
-@@ -237,7 +237,7 @@ The usage pattern is::
-       ret = hmm_range_snapshot(&range);
-       if (ret) {
-           up_read(&mm->mmap_sem);
--          if (ret == -EAGAIN) {
-+          if (ret == -EBUSY) {
-             /*
-              * No need to check hmm_range_wait_until_valid() return value
-              * on retry we will get proper error with hmm_range_snapshot()
-diff --git a/mm/hmm.c b/mm/hmm.c
-index d48b9283725a..1d57c39c1d8b 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -946,7 +946,7 @@ EXPORT_SYMBOL(hmm_range_unregister);
-  * @range: range
-  * Return: -EINVAL if invalid argument, -ENOMEM out of memory, -EPERM invalid
-  *          permission (for instance asking for write and range is read only),
-- *          -EAGAIN if you need to retry, -EFAULT invalid (ie either no valid
-+ *          -EBUSY if you need to retry, -EFAULT invalid (ie either no valid
-  *          vma or it is illegal to access that range), number of valid pages
-  *          in range->pfns[] (from range start address).
-  *
-@@ -967,7 +967,7 @@ long hmm_range_snapshot(struct hmm_range *range)
- 	do {
- 		/* If range is no longer valid force retry. */
- 		if (!range->valid)
--			return -EAGAIN;
-+			return -EBUSY;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index 9a9f71e4be29..d97d862e8b7d 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -501,8 +501,10 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range)
+ 	ret = hmm_range_register(range, mirror,
+ 				 range->start, range->end,
+ 				 PAGE_SHIFT);
+-	if (ret)
++	if (ret) {
++		up_read(&range->vma->vm_mm->mmap_sem);
+ 		return (int)ret;
++	}
  
- 		vma = find_vma(hmm->mm, start);
- 		if (vma == NULL || (vma->vm_flags & device_vma))
-@@ -1062,10 +1062,8 @@ long hmm_range_fault(struct hmm_range *range, bool block)
+ 	if (!hmm_range_wait_until_valid(range, NOUVEAU_RANGE_FAULT_TIMEOUT)) {
+ 		up_read(&range->vma->vm_mm->mmap_sem);
+@@ -511,11 +513,9 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range)
  
- 	do {
- 		/* If range is no longer valid force retry. */
--		if (!range->valid) {
--			up_read(&hmm->mm->mmap_sem);
--			return -EAGAIN;
--		}
-+		if (!range->valid)
-+			return -EBUSY;
+ 	ret = hmm_range_fault(range, true);
+ 	if (ret <= 0) {
+-		if (ret == -EBUSY || !ret) {
+-			up_read(&range->vma->vm_mm->mmap_sem);
+-			ret = -EBUSY;
+-		} else if (ret == -EAGAIN)
++		if (ret == 0)
+ 			ret = -EBUSY;
++		up_read(&range->vma->vm_mm->mmap_sem);
+ 		hmm_range_unregister(range);
+ 		return ret;
+ 	}
+@@ -713,8 +713,8 @@ nouveau_svm_fault(struct nvif_notify *notify)
+ 						NULL);
+ 			svmm->vmm->vmm.object.client->super = false;
+ 			mutex_unlock(&svmm->mutex);
++			up_read(&svmm->mm->mmap_sem);
+ 		}
+-		up_read(&svmm->mm->mmap_sem);
  
- 		vma = find_vma(hmm->mm, start);
- 		if (vma == NULL || (vma->vm_flags & device_vma))
+ 		/* Cancel any faults in the window whose pages didn't manage
+ 		 * to keep their valid bit, or stay writeable when required.
 -- 
 2.20.1
 
