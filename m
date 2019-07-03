@@ -2,119 +2,131 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95BEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782EDC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C92218DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453E3218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chfL2Y+v"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PHnDSrVD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YkMHRIYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfGCAmD (ORCPT
+        id S1727249AbfGCAmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:42:03 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44026 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCAmC (ORCPT
+        Tue, 2 Jul 2019 20:42:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46206 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCAmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:42:02 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 16so441897ljv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uy9P4Bv7MoU15f1hxa9HUk41ddeWB4vxhHhX7nu5AF8=;
-        b=chfL2Y+vcu0HLio56W5yCpYcO12fzccTTuvBbkGhkNe/aF5ZgcfKOE24xS40HsFMlc
-         Ut8Bz0uCuff4zpfBt474goph+OPSk+NhNQVgLSimuL3/Ah0v11JGh/8rGaKti0yddSiM
-         q/0fOfoab+9/DUCSuDVGXRkPBEodmSnVOEGRZxSGePAp5QYIi/4446bzXKyWwa+Z9QVU
-         JorSbzfYLEjhFTeRYS7/jv30gSLerU7/hW/VDodF7UL5D3eT6ZP0fWQXg/OaUFUv2/fn
-         GcIo0P7LqaWgUcqGlOiipgnrK233+5QeGPJ94GG6q7nHRhDMqNxm2bzPhj2Qys7AxdxL
-         UO4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uy9P4Bv7MoU15f1hxa9HUk41ddeWB4vxhHhX7nu5AF8=;
-        b=ndhbB+FpJZRAmEZQZu1U6nL8iy6bGys7/0YvZWk8oQ7Qtib4fqzpaGLJ/gmCwVhvWI
-         N14gJCQcHGZzX6f8ciUMmFuhsTcZyP2z9s7aCcMOeZgzEYxmcqbafTWnUurGXffrAHYg
-         c+Sd3qplK1swv8vIoa9d1LR/DCCQ6BVx48qvs2WEAYYMDBk2Penlgcrz3LCQFkX4fNsg
-         AbsDehSRYJRB21eOL9Ainc+/JD4g2aZTrDh6k6r0+C+KJzBBqgQZ+g1GjOY4bzGf2e6w
-         jrqPCnAF6dp5+yeORPlbG/apX6+6fUswsayLJ9RTaW0IM68vX5cV3OO6aJr1w+QC79Nf
-         620g==
-X-Gm-Message-State: APjAAAWgDx8ZdhXDyXaO0uj8VgILd9q7IpZha9UE0kViRGez7v+2J8Ia
-        GUGIqL7tnalM1jbXyJ35AwxaG1VzMmPEQF+NrN4BVabN
-X-Google-Smtp-Source: APXvYqybYGFXeKm3HudJJDld+RvqFOCnrMTby4Ii2vx9EH9qEyc7WekPspTFOFMLIfLcDmLdtXWyHbCAfNQSt4Z3QxE=
-X-Received: by 2002:a2e:8195:: with SMTP id e21mr167967ljg.62.1562104610089;
- Tue, 02 Jul 2019 14:56:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617221134.9930-1-f.fainelli@gmail.com> <20190617221134.9930-3-f.fainelli@gmail.com>
-In-Reply-To: <20190617221134.9930-3-f.fainelli@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Jul 2019 23:56:38 +0200
-Message-ID: <CACRpkdb3P6oQTK9FGUkMj4kax8us3rKH6c36pX=HD1_wMqcoJQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] ARM: Disable instrumentation for some code
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>, christoffer.dall@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>, jinb.park7@gmail.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Rob Landley <rob@landley.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 2 Jul 2019 20:42:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8D5D66025A; Wed,  3 Jul 2019 00:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562112231;
+        bh=Ehzb5REbZ1sAGqR0DY72rQI/Hyw2RX9/t1g57kj00rs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PHnDSrVDwfgQJgf0I+W+KiUM86AS4rE6Fy2Av270knbxo+bEBYplTz/ZCPQuEe2I4
+         fNzPDwaSZmBiKo5VrP0sRQRLEYzURkM4UWHUZJhyn8FZwrHSNghuSX7UHfV8XAd558
+         BbrAULrw8EBM7HOh+AHyh++3rcGV3X4HoXZMpYAc=
+Received: from [10.46.160.165] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: collinsd@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 257F66025A;
+        Wed,  3 Jul 2019 00:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562112230;
+        bh=Ehzb5REbZ1sAGqR0DY72rQI/Hyw2RX9/t1g57kj00rs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YkMHRIYLA5V46KlIhru4A3fnsbCSkndtSW9zs2Cjaim0N2J64OYjzq8THiO9uc63G
+         pjPnWHJwm0B583nkQzsUveSzVv0Jwe2j5cWQBRKv6eBvXzKhEPU3zEIbNuGVe7J29W
+         0dOSvKmHAXUZVMS609/mKWBo3oXa1snC9A6dFOjs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 257F66025A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=collinsd@codeaurora.org
+Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe
+ ordering
+To:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>, thgarnie@google.com,
-        David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        julien.thierry@arm.com, drjones@redhat.com, philip@cog.systems,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com,
-        kasan-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvmarm@lists.cs.columbia.edu,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+References: <20190702004811.136450-1-saravanak@google.com>
+From:   David Collins <collinsd@codeaurora.org>
+Message-ID: <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
+Date:   Tue, 2 Jul 2019 17:03:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190702004811.136450-1-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:11 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+Hello Saravana,
 
-> @@ -236,7 +236,8 @@ static int unwind_pop_register(struct unwind_ctrl_block *ctrl,
->                 if (*vsp >= (unsigned long *)ctrl->sp_high)
->                         return -URC_FAILURE;
->
-> -       ctrl->vrs[reg] = *(*vsp)++;
-> +       ctrl->vrs[reg] = READ_ONCE_NOCHECK(*(*vsp));
-> +       (*vsp)++;
+On 7/1/19 5:48 PM, Saravana Kannan wrote:
+...
+> TODO:
+> - For the case of consumer child sub-nodes being added by a parent
+>   device after late_initcall_sync we might be able to address that by
+>   recursively parsing all child nodes and adding all their suppliers as
+>   suppliers of the parent node too. The parent probe will add the
+>   children before its probe is completed and that will prevent the
+>   supplier's sync_state from being executed before the children are
+>   probed.
+> 
+> But I'll write that part once I see how this series is received.
 
-I would probably even put in a comment here so it is clear why we
-do this. Passers-by may not know that READ_ONCE_NOCHECK() is
-even related to KASan.
+I don't think that this scheme will work in all cases.  It can also lead
+to probing deadlock.
 
-Other than that,
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Here is an example:
 
-Yours,
-Linus Walleij
+Three DT devices (top level A with subnodes B and C):
+/A
+/A/B
+/A/C
+C is a consumer of B.
+
+When device A is created, a search of its subnodes will find the link from
+C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
+will fail and add A to the wait_for_suppliers list.  This will cause the
+probe of A to fail with -EPROBE_DEFER (thanks to the check in
+device_links_check_suppliers()).  As a result device B will not be created
+and device A will never probe.
+
+You could try to resolve this situation by detecting the cycle and *not*
+adding A to the wait_for_suppliers list.  However, that would get us back
+to the problem we had before.  A would be allowed to probe which would
+then result in devices being added for B and C.  If the device for B is
+added before C, then it would be allowed to immediately probe and
+(assuming this all takes place after late_initcall_sync thanks to modules)
+its sync_state() callback would be called since no consumer devices are
+linked to B.
+
+Please note that to change this example from theoretical to practical,
+replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
+pm8998-rpmh-regulators in [1].
+
+Take care,
+David
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc7#n55
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
