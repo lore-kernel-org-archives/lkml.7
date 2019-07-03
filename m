@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1883AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7351AC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AA120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E8C20673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120536;
-	bh=9Yoh8I6freaWFY0+Uec5FuoOX+T7aUlDifN96wj7du0=;
+	s=default; t=1562120544;
+	bh=kxd6DhSp0GnWT3gKbEadLw4u2K2Ny8vIqZRTBU3o9zI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtCFs2878FeWTFWQDfhZYywdQLRpNHh5Pez5s+Co5D5J9GG4SebUMcGButFtO+Slo
-	 UbmwmPhz5y+JPI9an2asTpqshrA7MOinlgXxr3slWZ3Kh2x1U4ihunoAsybT/dS6NY
-	 SaXvOPetP5NtO52BdXlZWQenRpWTwiaj1BYBIrDY=
+	b=coCLAPK6HAyOw8tlNwX/3osSPV83lAQEP0CKCk5ZWSEUrM6pANFmmRfRn+kPpSr6K
+	 PlyvGVf8sPQ52IsChCbBHFpgAyaOk/EdGQfatRv/t7j6mMNgUt/kUJ6/Q4V9bhKc1k
+	 GulIxUPV+55tvyJczkafGzCDjUzt+ixtq6sES48Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfGCCPo (ORCPT
+        id S1727661AbfGCCPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfGCCPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:40 -0400
+        id S1727626AbfGCCPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1CB021873;
-        Wed,  3 Jul 2019 02:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67686218A3;
+        Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120139;
-        bh=9Yoh8I6freaWFY0+Uec5FuoOX+T7aUlDifN96wj7du0=;
+        s=default; t=1562120137;
+        bh=kxd6DhSp0GnWT3gKbEadLw4u2K2Ny8vIqZRTBU3o9zI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0o9saU/7RymDFw26ngxxlvddt3HJORSt5doQCMdTNvG9IvTqxqpVF5hfge3Yw0SX
-         AMqEu/9m0qu0EW3Q6UJPPO+tG+RGlc62uAK1VFY0gExEozHZDIwR+nYPJno/vnHAoU
-         30Wkzpeq1OBK0XOLgQFjpXOfdjcq7Rkk1tygvjB4=
+        b=IP4pcFdYItVDa6lu9q8+cT88ZD/tCPgk0fJ0KK27f7rNtzR/Rb25VEOPpAXRJSGLl
+         mmU25ISJVJS2xtXONrIzkNhyZAFeXhKIQB61K1IZoURtUFTFv3v97rkxNRc4FUYwNQ
+         F9dkSoLpxM0NnoBsxzMzGIsX60BL6IxCVoj8aS3E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, kernel-janitors@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 15/39] x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
-Date:   Tue,  2 Jul 2019 22:14:50 -0400
-Message-Id: <20190703021514.17727-15-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 14/39] x86/efi: fix a -Wtype-limits compilation warning
+Date:   Tue,  2 Jul 2019 22:14:49 -0400
+Message-Id: <20190703021514.17727-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -61,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit ea136a112d89bade596314a1ae49f748902f4727 ]
+[ Upstream commit 919aef44d73d5d0c04213cb1bc31149cc074e65e ]
 
-The left shift of unsigned int cpu_khz will overflow for large values of
-cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
-For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
+Compiling a kernel with W=1 generates this warning,
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
+arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+
+Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running ...")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/platform/efi/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index b7bcdd781651..ec6225cb94f9 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1458,7 +1458,8 @@ static void apic_pending_intr_clear(void)
- 		if (queued) {
- 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
- 				ntsc = rdtsc();
--				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-+				max_loops = (long long)cpu_khz << 10;
-+				max_loops -= ntsc - tsc;
- 			} else {
- 				max_loops--;
- 			}
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index a25a9fd987a9..529522c62d89 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -724,7 +724,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
+ 	 */
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
+ 
+ 	/*
 -- 
 2.20.1
 
