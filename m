@@ -2,149 +2,117 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A90C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A89BC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C5820673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81D720673
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MyF13COg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBiIeW9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfGCBip (ORCPT
+        id S1727130AbfGCBjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:38:45 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35408 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBip (ORCPT
+        Tue, 2 Jul 2019 21:39:43 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37039 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:38:45 -0400
-Received: by mail-io1-f66.google.com with SMTP id m24so983863ioo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:38:44 -0700 (PDT)
+        Tue, 2 Jul 2019 21:39:43 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so414907eds.4;
+        Tue, 02 Jul 2019 18:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6suCIUcpnxYWLx0u7rAt8YHu7DyHRein/0Ku8MDeQrw=;
-        b=MyF13COg8Z9CREi9V7uwtNZ+RQgUSogpyqwer+wxMaRNlPvmTJ3LJUiyv1bRH2HNg4
-         UdgEbOWphL591zLtGdaR5I4Nw4e1exGSG3CgmWGSsfGiRRfTC+NEd9mUTlTTIUs2/NJT
-         WoMG2zeqsWqlC36tyRgV6MVFaOJ16SDyDjBSU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xv6Z2w7AXk92Vbzt4aqL4v0EY5bcvUni5jxfgnSS2X4=;
+        b=vBiIeW9bFNunEW4y2IugAzdpjTePbxfP9J0ybTq2bnsVP4Fl7QW61pngKWqUIUrJt/
+         opaKadhTBaDLpSqKWyixYloIWQhFCJra8GnQDDW8enxAC2D7aSo+Vq+kHtMkqBlUJgza
+         in7TNAfvTg5HFSU4kHEJzR4/GmcTAKClwzCMBJ7GkmUsmHxlH0LXaUrjMRxFEFt2agmV
+         goKHC8epixWBWZTWq6GPfRm04jTfVeUnTBJr68JsqS3B5VGX/vciNpVVVxTyEH095Hl4
+         1Dtm8Uz1BSDW1fhfnC1aHFjWq1rp9oyo0mRXe25G+4cKWGSZUqYrUQ7Y91B0WzzMG/xY
+         d+JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6suCIUcpnxYWLx0u7rAt8YHu7DyHRein/0Ku8MDeQrw=;
-        b=umceEBeWRpWtgTwzq/V/mB9gTzxufegaYM1roJg1UrQE8ekJbnbPazi97sjoKVEGhn
-         kUvW013YuigEvMMYZ6chUtG+Y+JvIR9KSzphzd0d88zVJzQgRiljVOTqIKtyz/2m+LCF
-         /0BCFVc8Kp8I5Fgl3qa6hFrZq8upj0Hd8TfGDOf/4wVj9fqJzfhE7odaxfi9kV+JmOGv
-         ZjaWHs3BrsRsStDBmrVwXTLYWYLiLw8GhSnp3gRG5hM9w/P4IVlIrzb7wQJiOu5aFiqO
-         OK0XhuhwR9+Bg8hdA7locCdviEJuLoucAl6Gu+OuAY56R1643gvJADKnKGyDb8AdsJEL
-         tcnA==
-X-Gm-Message-State: APjAAAUfOy7De9oQ91a1Eqj8nkYDKvL1dBMhIlhnk6WOvRq2URwt0ovN
-        VIn+CBV+XfJ37gaEy6VA6hsiDHWpaSk=
-X-Google-Smtp-Source: APXvYqxpp+RbiG4RcZlcjAd1nMPu+AxAuSfrv1D4ATudL59rLZmxlsIEaF2BrujpyBWLPbafH9nQdA==
-X-Received: by 2002:a02:ba14:: with SMTP id z20mr36289734jan.14.1562098479416;
-        Tue, 02 Jul 2019 13:14:39 -0700 (PDT)
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
-        by smtp.gmail.com with ESMTPSA id y17sm13118250ioa.40.2019.07.02.13.14.37
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xv6Z2w7AXk92Vbzt4aqL4v0EY5bcvUni5jxfgnSS2X4=;
+        b=YXdVk6OvtUka/HIgGwgnAzN3ETmU0eYnknInJB/+3sdZATmhl1iu57eaxzmEDSNW9R
+         TRRr5FltRu8ZuMvwyjHEw54+9hDQmrx479mGfLfxsB8Mtv+kNALaiOx2HJ4577/IMEGV
+         CMu74wSKMcDCobiW7qurXhhbdVbOHCmSsq4mjlCB+gvGs6Gwxoaj1MwVctJgJgdYmO6w
+         3uI+KM8SvCh41prn0r1RDb0R7MGI0lex9MQ6XumUvuakFLp1ReeZS3EVcRcRNCbptXZY
+         UA299Gl5L/X+ADixszpU+1w3yvyAQFXVrcftfL0JMP+0RLrHm4Fx91MsGyB2VC8I9277
+         YELw==
+X-Gm-Message-State: APjAAAVqOKlIHy5yZhSuqdkelGPE80lRIumJkmsAZayqgPwwOwjqAC3f
+        zvJuhTZFTmU3ApPX72G/BA4=
+X-Google-Smtp-Source: APXvYqwrLtCnEUAfps9E5gDVqiIlzIoWVwm2iRYk7xzsJoj47a3BVX1i6951g0EonpzWMlMC/XccCA==
+X-Received: by 2002:a50:f4dd:: with SMTP id v29mr39081283edm.246.1562117981276;
+        Tue, 02 Jul 2019 18:39:41 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.211.18])
+        by smtp.gmail.com with ESMTPSA id l50sm212064edb.77.2019.07.02.18.39.39
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 13:14:38 -0700 (PDT)
-Received: by mail-io1-f41.google.com with SMTP id h6so40207718ioh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 13:14:37 -0700 (PDT)
-X-Received: by 2002:a02:aa1d:: with SMTP id r29mr15652512jam.127.1562098477589;
- Tue, 02 Jul 2019 13:14:37 -0700 (PDT)
+        Tue, 02 Jul 2019 18:39:40 -0700 (PDT)
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+References: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org>
+ <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org>
+ <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+ <20190630152324.GA15900@bombadil.infradead.org>
+ <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
+ <20190702033410.GB1729@bombadil.infradead.org>
+ <CAPcyv4iEkN1o5HD6Gb9m5ohdAVQhmtiTDcFE+PMQczYx635Vwg@mail.gmail.com>
+ <fa9b9165-7910-1fbd-fb5b-78023936d2f2@gmail.com>
+ <CAPcyv4ihQ9djQvgnqZoTLRH3CwFhpWK_uUrmWSLH_3-Fi1g1qw@mail.gmail.com>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <1eac7cfb-a23c-097e-8dba-d83e6921f152@gmail.com>
+Date:   Wed, 3 Jul 2019 04:39:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190621211346.1324-1-ezequiel@collabora.com> <3c68bf286d8b75ac339df0eab43d276667e073c2.camel@collabora.com>
-In-Reply-To: <3c68bf286d8b75ac339df0eab43d276667e073c2.camel@collabora.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 2 Jul 2019 13:14:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UK3bpyvvFQtsvUtWHun_bfxb25R0bLyg=WJz+yHz5kvg@mail.gmail.com>
-Message-ID: <CAD=FV=UK3bpyvvFQtsvUtWHun_bfxb25R0bLyg=WJz+yHz5kvg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] RK3288 Gamma LUT
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPcyv4ihQ9djQvgnqZoTLRH3CwFhpWK_uUrmWSLH_3-Fi1g1qw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 03/07/2019 03:42, Dan Williams wrote:
+> On Tue, Jul 2, 2019 at 5:23 PM Boaz Harrosh <openosd@gmail.com> wrote:
+<>
+> 
+> Yes, but the trick is how to manage cases where someone waiting on one
+> type needs to be woken up by an event on the other. 
 
-On Tue, Jul 2, 2019 at 4:26 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> Hi Heiko,
->
-> On Fri, 2019-06-21 at 18:13 -0300, Ezequiel Garcia wrote:
-> > Let's support Gamma LUT configuration on RK3288 SoCs.
-> >
-> > In order to do so, this series adds a new and optional
-> > address resource.
-> >
-> > A separate address resource is required because on this RK3288,
-> > the LUT address is after the MMU address, which is requested
-> > by the iommu driver. This prevents the DRM driver
-> > from requesting an entire register space.
-> >
-> > The current implementation works for RGB 10-bit tables, as that
-> > is what seems to work on RK3288.
-> >
-> > This has been tested on a Rock2 Square board, using
-> > a hacked 'modetest' tool, with legacy and atomic APIs.
-> >
-> > Thanks,
-> > Eze
-> >
-> > Changes from v1:
-> > * drop explicit linear LUT after finding a proper
-> >   way to disable gamma correction.
-> > * avoid setting gamma is the CRTC is not active.
-> > * s/int/unsigned int as suggested by Jacopo.
-> > * only enable color management and set gamma size
-> >   if gamma LUT is supported, suggested by Doug.
-> > * drop the reg-names usage, and instead just use indexed reg
-> >   specifiers, suggested by Doug.
-> >
-> > Changes from RFC:
-> > * Request (an optional) address resource for the LUT.
-> > * Add devicetree changes.
-> > * Drop support for RK3399, which doesn't seem to work
-> >   out of the box and needs more research.
-> > * Support pass-thru setting when GAMMA_LUT is NULL.
-> > * Add a check for the gamma size, as suggested by Ilia.
-> > * Move gamma setting to atomic_commit_tail, as pointed
-> >   out by Jacopo/Laurent, is the correct way.
-> >
-> > Ezequiel Garcia (3):
-> >   dt-bindings: display: rockchip: document VOP gamma LUT address
-> >   drm/rockchip: Add optional support for CRTC gamma LUT
-> >   ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-> >
-> >  .../display/rockchip/rockchip-vop.txt         |   6 +-
-> >  arch/arm/boot/dts/rk3288.dtsi                 |   4 +-
-> >  drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |   3 +
-> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 114 ++++++++++++++++++
-> >  drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |   7 ++
-> >  drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |   2 +
-> >  6 files changed, 133 insertions(+), 3 deletions(-)
+Exactly I'm totally with you on this.
 
-I will note that I can confirm that the "gamma_test" app present on
-Chrome OS can be shown to work with this series, both on eDP and HDMI.
-I see a nice shiny RGB pattern on the screen.  Thus:
+> So all I'm saying it lets live with more hash collisions until we can figure out a race
+> free way to better scale waitqueue usage.
+> 
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
+Yes and lets actually do real measurements to see if this really hurts needlessly.
+Maybe not so much
+
+Thanks
+Boaz
+
+<>
