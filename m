@@ -2,98 +2,134 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7754C06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238E2C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD403218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFB5218AD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPp129mG"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="dKPauEKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfGCA7Q (ORCPT
+        id S1727466AbfGCA7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:59:16 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33737 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfGCA7Q (ORCPT
+        Tue, 2 Jul 2019 20:59:24 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:56588 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727082AbfGCA7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:59:16 -0400
-Received: by mail-yw1-f66.google.com with SMTP id j190so362123ywb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wIf3s/qpqMqc2ju4HSpCa9loV1PYd9khtmiRlahKfMw=;
-        b=pPp129mGMAgZmQQqFW2wfGEyipUebLHwGsceAtgrBF3rmcputVE6yLkvSQzI5+Umpe
-         ozwXEefLssoK6is8zIDlkwY/8KxjUGg4mFuSKbFB26uy43eFMyRjUtyFLV2PXbRIXp4S
-         nXHtGaazQ+NoOvr/kGLrfL86ynZ5+JPT39vV8UPPVwpByVSniduvE865bw+oh4sDDk8e
-         jZ+tHN3OsCR6DZ27o/h80jb8FFe8FqUFoAO21NfwxBXtyuAwby9BaxyIDkmG6v6CBDrB
-         xMZdvZ8g4jOQzQlCof9FvROv5TZ+hPQySu6YgAIUvgtORBagVLpLL4A6t2rIK8irYDYe
-         USHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wIf3s/qpqMqc2ju4HSpCa9loV1PYd9khtmiRlahKfMw=;
-        b=EqsF7bKmZuGq5igVsL24Oln8YtBAe9v8UNv9Oc4vsvIHExfU0jjBpFDzcdj8Nwytru
-         H3ZsAe0klsHxXSfeOWI60HQITtXmfXiokXR1gqrRB46LuhTBQskG7tEYDSEXfICVEwqp
-         otIFsyemSsKLg1dOwXi7cuUIOIJitmLajvz5PrAGnEF7w9ARe/xhDZvNmoElbyBff3rp
-         j5kdqZwWDzw+1LOakC3Tus7/DN6L1H0avb3W8X0ouDo6io/f6qcs7IFD90+pogoV3n3W
-         vvnG2aM+WgKL88GkObP3yr/fUBImdhRx+6r5gLTI0iv3vslqIPRnYQgKMqHrxqXO8NVV
-         o40w==
-X-Gm-Message-State: APjAAAVXfcEqFK7kQQdG44awnP+5OznS59IClit1dHXDRK3v6XvlcxWU
-        8EzJKPVp4sKuzUA7xd2jtXA8fnd+SKSsIxeu72aVxQ==
-X-Google-Smtp-Source: APXvYqxK5DEkk2kHSda+WF/FAeUHPkw6wKzo7ZmZsBWNCRYS9CdUUUng7zhdFAAYidX2Li7ETs1OA9wyePtHHTyX7VI=
-X-Received: by 2002:a81:ae5d:: with SMTP id g29mr19968749ywk.398.1562115554994;
- Tue, 02 Jul 2019 17:59:14 -0700 (PDT)
+        Tue, 2 Jul 2019 20:59:23 -0400
+Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
+        by m0050096.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x630vIWU025766;
+        Wed, 3 Jul 2019 01:59:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=jan2016.eng;
+ bh=9pZ9ryOnK9wPGkn/8i9iDreAG7ft/sEEwlO0Jad2gyA=;
+ b=dKPauEKr1U+hKOcxAbDA3CdO7vPFfawP4q3i3TnfwGqfrGAa5bVNgS1y75IQXyuYvUl0
+ ouiP1+d1bU0ABupEdIW85+F6c51eNeaJ9NAXu7nFQAfIG0jKQnUusdC3qil+Yw7wFwmM
+ 8GCn/NupllEeNGO9DjraXi0Lqy98oxs7X1lN2UtrUAij4xCA7avfPu0vEAlo5dgKyhjw
+ BId897T0SZbP4INdfyVZawM5JiPr1SuV/mkHQcUe5tFx+my7WxJdcq2yNKNDS+6NDuoM
+ 0YAFMf4Uh1c9fZdrMCVydHEj5ifIC4P3hb8X/haEPqiLX86Oq16Yy4a2K24j97/icH0+ oA== 
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+        by m0050096.ppops.net-00190b01. with ESMTP id 2tg2s5kq8d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 Jul 2019 01:59:11 +0100
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x630ljCc002837;
+        Tue, 2 Jul 2019 20:59:10 -0400
+Received: from email.msg.corp.akamai.com ([172.27.25.30])
+        by prod-mail-ppoint1.akamai.com with ESMTP id 2te3awh4vp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jul 2019 20:59:09 -0400
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com (172.27.27.105) by
+ ustx2ex-dag1mb4.msg.corp.akamai.com (172.27.27.104) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Tue, 2 Jul 2019 19:58:34 -0500
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com ([172.27.27.105]) by
+ ustx2ex-dag1mb5.msg.corp.akamai.com ([172.27.27.105]) with mapi id
+ 15.00.1473.004; Tue, 2 Jul 2019 19:58:34 -0500
+From:   "Lubashev, Igor" <ilubashe@akamai.com>
+To:     James Morris <jmorris@namei.org>
+CC:     Serge Hallyn <serge@hallyn.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 0/1] security: add SECURE_KEEP_FSUID to preserve
+ fsuid/fsgid across execve
+Thread-Topic: [RFC PATCH 0/1] security: add SECURE_KEEP_FSUID to preserve
+ fsuid/fsgid across execve
+Thread-Index: AQHVIkp2KrFaTjvuWkqWuYjnYmNLQ6aa7f2AgAD6xpCAAIJWAIAbwq2g
+Date:   Wed, 3 Jul 2019 00:58:34 +0000
+Message-ID: <127af0e711e747279742b2aa13a658fb@ustx2ex-dag1mb5.msg.corp.akamai.com>
+References: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
+ <alpine.LRH.2.21.1906141445010.7150@namei.org>
+ <720751180a9543cfa205cd527248df7c@ustx2ex-dag1mb5.msg.corp.akamai.com>
+ <alpine.LRH.2.21.1906142049480.3646@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1906142049480.3646@namei.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.19.37.5]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190702233538.52793-1-henryburns@google.com>
-In-Reply-To: <20190702233538.52793-1-henryburns@google.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 2 Jul 2019 17:59:03 -0700
-Message-ID: <CALvZod7udORRrz7wzQPRa2Eya5TfrVh9kG037GKsAsSkRJPx7Q@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/z3fold.c: Lock z3fold page before __SetPageMovable()
-To:     Henry Burns <henryburns@google.com>
-Cc:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Xidong Wang <wangxidong_97@163.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907030009
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907030011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 4:35 PM Henry Burns <henryburns@google.com> wrote:
->
-> Following zsmalloc.c's example we call trylock_page() and unlock_page().
-> Also make z3fold_page_migrate() assert that newpage is passed in locked,
-> as per the documentation.
->
-> Link: http://lkml.kernel.org/r/20190702005122.41036-1-henryburns@google.com
-> Signed-off-by: Henry Burns <henryburns@google.com>
-> Suggested-by: Vitaly Wool <vitalywool@gmail.com>
-> Acked-by: Vitaly Wool <vitalywool@gmail.com>
-> Acked-by: David Rientjes <rientjes@google.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Vitaly Vul <vitaly.vul@sony.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Xidong Wang <wangxidong_97@163.com>
-> Cc: Jonathan Adams <jwadams@google.com>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> From: James Morris <jmorris@namei.org>  on Friday, June 14, 2019 11:54 PM=
+:
+> On Sat, 15 Jun 2019, Lubashev, Igor wrote:
+>=20
+> > Unfortunately, perf is using uid=3D=3D0 and euid=3D=3D0 as a "capabilit=
+y bits".
+> >
+> >
+> > In tools/perf/util/evsel.c:
+> > 	static bool perf_event_can_profile_kernel(void)
+> > 	{
+> > 		return geteuid() =3D=3D 0 || perf_event_paranoid() =3D=3D -1;
+> > 	}
+> >
+> > In tools/perf/util/symbol.c:
+> > 	static bool symbol__read_kptr_restrict(void)
+> > 	{
+> > 	...
+> > 		value =3D ((geteuid() !=3D 0) || (getuid() !=3D 0)) ?
+> > 				(atoi(line) !=3D 0) :
+> > 				(atoi(line) =3D=3D 2);
+> > 	...
+> > 	}
+>=20
+> These are bugs. They should be checking for CAP_SYS_ADMIN.
 
-We need a "Fixes" tag.
+Thanks for the suggestion.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Actually, the former one should be checking CAP_SYS_ADMIN, while the latter=
+ -- CAP_SYSLOG (see lib/vsprintf.c).
+
+Just posted a patch to perf (http://lists.infradead.org/pipermail/linux-arm=
+-kernel/2019-July/664552.html).
+
+Thank you,
+
+- Igor
