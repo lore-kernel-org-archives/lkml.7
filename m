@@ -2,137 +2,174 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC99C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37569C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F0B218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562160317;
-	bh=hPIgAF/RwH+87CC48ngdy/pc35EBUqps7G9X6Sfz/Rk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qQDlskgOvIKYZrAOQYkHQhHD7OftbCVFzz5Wpy+afbd60aIpIBbHnK97vI7zQuOlT
-	 8LOS7kpaSR6BCjy0owScJsgFigFO+PekqysDspee8OJdMGyG7D1lGtZmQg0Gg1bncj
-	 vIoH89f3MkQaABwjbAQHiDuivMOqa3oQNpiRnQP8=
+	by mail.kernel.org (Postfix) with ESMTP id 09C1F218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpg6IaJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGCNZQ (ORCPT
+        id S1727099AbfGCNZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbfGCNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:25:16 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D033218AD;
-        Wed,  3 Jul 2019 13:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562160315;
-        bh=hPIgAF/RwH+87CC48ngdy/pc35EBUqps7G9X6Sfz/Rk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iOYguXOSn1KvEZ75OL682DZzYwsj4Dd/lxMdTTt7oxy3O57i3wga0yD86dARW7o8v
-         lW4fZBAD94lrViCzfj97n+Ubn24osyQPzRt+6h7Qlxb/I+mgmWkfwo28hj12GU4yCk
-         tnWhbHnM+Vwhnhe3gb4cuoQ5+qrsDzzfNeI1Az24=
-Received: by mail-qt1-f178.google.com with SMTP id d17so1627475qtj.8;
-        Wed, 03 Jul 2019 06:25:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAU4ejyYhb05AiV7wl9Y8bxHh3rFPLJN+EYY3g1oLAGTj7itFknq
-        gs9J6VuIU0aWl2VOPIXCygXji7W6Yuk+vvK3UQ==
-X-Google-Smtp-Source: APXvYqwbNqCNdpfVoj1XUWDZZwcDTVqfdN/j8JGsFHn6EWRXSqXFi1G31JDKwzRzYDQZC4Iohj8zuTfFHRWyCC03KMg=
-X-Received: by 2002:a0c:b627:: with SMTP id f39mr32762815qve.72.1562160314468;
- Wed, 03 Jul 2019 06:25:14 -0700 (PDT)
+        Wed, 3 Jul 2019 09:25:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38390 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGCNZY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:25:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so2817271wro.5;
+        Wed, 03 Jul 2019 06:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4NwugRsrz30iTHZQgWt6F/3Ov8fl00xOltiwxUVEio8=;
+        b=gpg6IaJ2V2R/S8X/fVZz+TVrGpioO30d1kedBhmuLkrgt48raO6wgYYtLQMI0SvZH8
+         xOMeAXfBsRZCOnvNrZeBFCo500XqvHpTmjJNXjW3IGTvTjEYx/rClLrlnWh1rX4gaCQX
+         Nxd8k8gSxt3B0QMV6mUHj0QG/bKQPiEKcQmDi8YY92Jtw0bdwFuMYYCmW2IpDK5sUMVl
+         8qv2Uc+Mg7HoiZCajbjFv+O1WGCDYSQCf2SFM8wS1GL9a35GOnSJF/5srPQcPOlXcGWR
+         lov25fTvovhq667L//7AO05bdZ+UicM3tDbMJw4XnDQa5VoAvcHS7/41wY7NrwoN/8bF
+         t2BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4NwugRsrz30iTHZQgWt6F/3Ov8fl00xOltiwxUVEio8=;
+        b=PMh546tS69a8jMQuh8PYbblhriApIeqA4L8xFO64jej2hgsffiRQcaK0PCi4GwUdxx
+         eSHGNvH5VjoRg86fmgqIDk9OjdmCarahe7SxNM72oLr/FftBze9yFKJtzyBKhxf5yN+n
+         ECsf1AW9tTmvgd+pi0NnE8oEphP709sXPFpQKzFe/CigVt7VT2B+o1c0/e83wXIGoFCu
+         2yh7wNucSRKdKu60fnVuKFy61MYBWWcj2hECx+TjSmYUVxr1Sjx+ZLLBJbxUidJ5e9cA
+         y7e7CKrobe1kG15T8LDYMdUQjM5zqFA0/T10iV34UDpUXbS2P4mwV6YgQeGOsMtozEcj
+         o+BQ==
+X-Gm-Message-State: APjAAAUK9DPJ67p7yq/B/NkJmgRk4NHiMQDLHv4Dlzr3xq8mAJXXxkCa
+        2gRotKfA2eAD/Q0Aehf0quCnc0Q5s0Xe4sgb1T4=
+X-Google-Smtp-Source: APXvYqxo5f8uBoCPBbG+a3vlWIJP2lcqQMuX5HJWpva0kJNkHI1DRDi/7+BDTKw8Pzb4DjO37HrMXCarLAsyxHuzdcs=
+X-Received: by 2002:adf:b69a:: with SMTP id j26mr21826997wre.93.1562160321848;
+ Wed, 03 Jul 2019 06:25:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
- <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
- <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com> <CAFBinCCaK5USb062tywd54y=6B0jTFsx1-k7NMfqvjmS7+5LgA@mail.gmail.com>
-In-Reply-To: <CAFBinCCaK5USb062tywd54y=6B0jTFsx1-k7NMfqvjmS7+5LgA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 3 Jul 2019 07:25:02 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJwd63-BJq2Bw5xnSN7XRGj=KmhHXcxRbsaKMX8jYdAjg@mail.gmail.com>
-Message-ID: <CAL_JsqJwd63-BJq2Bw5xnSN7XRGj=KmhHXcxRbsaKMX8jYdAjg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
- and ARX300 PCIe PHYs
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+ <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca> <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
+ <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca>
+In-Reply-To: <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 3 Jul 2019 16:25:10 +0300
+Message-ID: <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Andra Danciu <andradanciu1997@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin Schiller <ms@dev.tdt.de>
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 5:37 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Wed, Jul 3, 2019 at 4:12 PM Angus Ainslie <angus@akkea.ca> wrote:
 >
-> Hi Rob,
+> Hi Daniel,
 >
-> On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
-> [...]
-> > > +  lantiq,rcu:
-> > > +    maxItems: 1
-> > > +    description: phandle to the RCU syscon
+> On 2019-07-03 07:10, Daniel Baluta wrote:
+> > On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
+> >>
+> >> Hi Andra,
+> >>
+> >> I tried this out on linux-next and I'm not able to record or play
+> >> sound.
+> >>
+> >> I also added the sai2 entry to test out our devkit and get a PCM
+> >> timeout
+> >> with that.
 > >
-> > You need to define the type (and drop maxItems):
+> > Hi Angus,
 > >
-> > $ref: /schemas/types.yaml#/definitions/phandle
-> thank you for this hint - the examples I used didn't have it
->
-> > > +
-> > > +  lantiq,rcu-endian-offset:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: the offset of the endian registers for this PHY instance in the RCU syscon
-> > > +
-> > > +  lantiq,rcu-big-endian-mask:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: the mask to set the PDI (PHY) registers for this PHY instance to big endian
-> > > +
-> > > +required:
-> > > +  - "#phy-cells"
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - resets
-> > > +  - reset-names
-> > > +  - lantiq,rcu
-> > > +  - lantiq,rcu-endian-offset
-> > > +  - lantiq,rcu-big-endian-mask
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    pcie0_phy: phy@106800 {
-> > > +        compatible = "lantiq,vrx200-pcie-phy";
-> > > +        reg = <0x106800 0x100>;
-> > > +        lantiq,rcu = <&rcu0>;
-> > > +        lantiq,rcu-endian-offset = <0x4c>;
-> > > +        lantiq,rcu-big-endian-mask = <0x80>; /* bit 7 */
-> > > +        big-endian;
+> > There are still lots of SAI patches that need to be upstream. Me and
+> > Andra
+> > will be working on that over this summer.
 > >
-> > The example will fail to validate because big-endian is not listed as
-> > a property and you have 'additionalProperties: false'. So you have to
-> > either list big-endian or drop additionalProperties.
-> good catch, thank you.
-> I'll add big-endian and little-endian as allowed (but optional) properties
+> >>
+> >> On 2019-07-02 07:23, Andra Danciu wrote:
+> >> > SAI3 and SAI6 nodes are used to connect to an external codec.
+> >> > They have 1 Tx and 1 Rx dataline.
+> >> >
+> >> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> >> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> >> > ---
+> >> > Changes since v2:
+> >> >       - removed multiple new lines
+> >> >
+> >> > Changes since v1:
+> >> >       - Added sai3 node because we need it to enable audio on pico-pi-8m
+> >> >       - Added commit description
+> >> >
+> >> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
+> >> > +++++++++++++++++++++++++++++
+> >> >  1 file changed, 29 insertions(+)
+> >> >
+> >> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> > index d09b808eff87..736cf81b695e 100644
+> >> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> > @@ -278,6 +278,20 @@
+> >> >                       #size-cells = <1>;
+> >> >                       ranges = <0x30000000 0x30000000 0x400000>;
+> >> >
+> >> > +                     sai6: sai@30030000 {
+> >> > +                             compatible = "fsl,imx8mq-sai",
+> >>
+> >> I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
+> >> the registers at a different offset from "fsl,imx6sx-sai".
+> >
+> > Yes, you are right on this. We are trying to slowly push all our
+> > internal-tree
+> > patches to mainline. Obviously, with started with low hanging fruits,
+> > DTS
+> > nodes and small SAI fixes.
+> >
+> > Soon, we will start to send patches for SAI IP ipgrade for imx8.
+> >
+> >>
+> >> How is this supposed to work ?
+> >>
+> >
+> > For the moment it won't work unless we will upstream all our SAI
+> > internal patches.
+> > But we will get there hopefully this summer.
+> >
 >
-> > Note that the examples are validated against the schema in linux-next now.
-> I tested this with yesterday's linux-next tree and it didn't fail for me
-> do you have any hint how I can run this validation myself?
+> Shouldn't a working driver be upstream before enabling it in the
+> devicetree ?
 
-It's not a default target:
+I see your point here and maybe your suggestion is the ideal
+way to do things.
 
-make dt_binding_check
+Anyhow, I don't see a problem with adding the node in dts
+because CONFIG_FSL_SAI is not set in the default config.
 
-Rob
+We try to speedup the upstreaming process giving the fact
+that SAI patches will go through audio maintainer's tree and
+the DTS patches will most likely go through Shawn's tree.
+
+thanks,
+Daniel.
