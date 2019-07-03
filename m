@@ -2,204 +2,76 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ED2C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40188C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6A12189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FSF187M8"
+	by mail.kernel.org (Postfix) with ESMTP id 06E13218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562171953;
+	bh=SE+Je5EFsMdGD+TiwNqygLRpk2ISs/GklnKAT/Yq7NI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i9/X5rwdegp4dBpVHynHtD3KQSVlWDQ+YB0eZm2t9CSQkuu++Xpe0x1sl6yUiMeWz
+	 W8QYWF9X4lFZUVNjFiYIDacAL8j3nLkls3nVJw4TOVr1neRNOZDAYfyxoM6ld5mD+0
+	 ZUL8JOT4gu6J1IbDDNDWNOrRKn6Bso6iG1P4EFUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfGCQhl (ORCPT
+        id S1726928AbfGCQjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:37:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8478 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCQhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:37:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1cd9d10000>; Wed, 03 Jul 2019 09:37:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 03 Jul 2019 09:37:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 03 Jul 2019 09:37:38 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
- 2019 16:37:36 +0000
-Subject: Re: [PATCH v4] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190703012836.16568-1-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b0a0b110-61c8-ae8b-22a0-3311f70b428a@nvidia.com>
-Date:   Wed, 3 Jul 2019 17:37:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 12:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725847AbfGCQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:39:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95C772189E;
+        Wed,  3 Jul 2019 16:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562171951;
+        bh=SE+Je5EFsMdGD+TiwNqygLRpk2ISs/GklnKAT/Yq7NI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bE/PhhxKetWxBnBk54zBTk1TxofIZkp3rz4c1cqtxi5BOtKVqDiRiPLRkbWvxIeDE
+         CvmZNTpecsETwCJWZ0mDgpPnayMUIrjZ95qst79wOUmLsTlbIQtv0l0kc9TJSprYWT
+         6WY+1OMHUsfKrI81jp6FBnIWnyKis9Leala/5hxU=
+Date:   Wed, 3 Jul 2019 18:39:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nikolaus Voss <nv@vosn.de>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] drivers/usb/typec/tps6598x.c: fix portinfo width
+Message-ID: <20190703163908.GB17160@kroah.com>
+References: <20190628083417.GA21701@kuha.fi.intel.com>
+ <f8daf204d49fff00db33e2b417a20afcc58ad56e.1561712364.git.nikolaus.voss@loewensteinmedical.de>
+ <20190628095843.GB21701@kuha.fi.intel.com>
+ <alpine.DEB.2.20.1906281208190.21573@fox.voss.local>
 MIME-Version: 1.0
-In-Reply-To: <20190703012836.16568-1-digetx@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562171857; bh=+hij/D6gVD7l9xuZhS70byu/Uv6XOjg3bl4uM9oJDT8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FSF187M8c+wiVdHpa4JRJXMBeHA7V+nYPo8TEmvT2Ppbkmch1h7l76edg1gLKCOf5
-         IAoGnrB0mHKjCEqUfK3gARBkkFD2EHCfKhXtHd5mTnWdoe3ruoL3Sa9trX5lkGnzo+
-         0dmIAobjC0MxtaOX0a88USkYxnNhBIiaIt44Gn9hwBJ+fq6fCiIOcqEOyM4EEaqko2
-         oNiRvb8/makgmb4K0ugZjytIhU7WWlHGtGAgHkjCTjkyhQC8M9oowPG2av1xyGCjcQ
-         EdK43Ce2W5Bs1EPgQadGi9MX/uLNQZ3w1003fgIoAerKbphz6PJ59JG/aN/8qhZUyD
-         H6s30HkbEIiqQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1906281208190.21573@fox.voss.local>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 12:10:41PM +0200, Nikolaus Voss wrote:
+> On Fri, 28 Jun 2019, Heikki Krogerus wrote:
+> > On Fri, Jun 28, 2019 at 11:01:08AM +0200, Nikolaus Voss wrote:
+> > > Portinfo bit field is 3 bits wide, not 2 bits. This led to
+> > > a wrong driver configuration for some tps6598x configurations.
+> > > 
+> > > Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
+> > > Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> > 
+> > Shouldn't this be applied to the stable trees as well?
+> 
+> Oh, yes, forgot that again... Greg, could you...?
 
-On 03/07/2019 02:28, Dmitry Osipenko wrote:
-> Tegra's APB DMA engine updates words counter after each transferred burst
-> of data, hence it can report transfer's residual with more fidelity which
-> may be required in cases like audio playback. In particular this fixes
-> audio stuttering during playback in a chromium web browser. The patch is
-> based on the original work that was made by Ben Dooks and a patch from
-> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
-> 
-> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
-> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> 
-> Changelog:
-> 
-> v4: The words_xferred is now also reset on a new iteration of a cyclic
->     transfer by ISR, so that dmaengine_tx_status() won't produce a
->     misleading warning splat on TX status re-checking after a cycle
->     completion when cyclic transfer consists of a single SG.
-> 
-> v3: Added workaround for a hardware design shortcoming that results
->     in a words counter wraparound before end-of-transfer bit is set
->     in a cyclic mode.
-> 
-> v2: Addressed review comments made by Jon Hunter to v1. We won't try
->     to get words count if dma_desc is on free list as it will result
->     in a NULL dereference because this case wasn't handled properly.
-> 
->     The residual value is now updated properly, avoiding potential
->     integer overflow by adding the "bytes" to the "bytes_transferred"
->     instead of the subtraction.
-> 
->  drivers/dma/tegra20-apb-dma.c | 72 +++++++++++++++++++++++++++++++----
->  1 file changed, 65 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 79e9593815f1..148d136191d7 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->  	bool				last_sg;
->  	struct list_head		node;
->  	struct tegra_dma_desc		*dma_desc;
-> +	unsigned int			words_xferred;
->  };
->  
->  /*
-> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->  	nsg_req->configured = true;
-> +	nsg_req->words_xferred = 0;
->  
->  	tegra_dma_resume(tdc);
->  }
-> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->  					typeof(*sg_req), node);
->  	tegra_dma_start(tdc, sg_req);
->  	sg_req->configured = true;
-> +	sg_req->words_xferred = 0;
->  	tdc->busy = true;
->  }
->  
-> @@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
->  		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
->  	dma_desc->cb_count++;
->  
-> +	sgreq->words_xferred = 0;
-> +
->  	/* If not last req then put at end of pending list */
->  	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
->  		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
-> @@ -797,6 +802,62 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->  	return 0;
->  }
->  
-> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-> +					       struct tegra_dma_sg_req *sg_req)
-> +{
-> +	unsigned long status, wcount = 0;
-> +
-> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-> +		return 0;
-> +
-> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-> +
-> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-> +
-> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = status;
-> +
-> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-> +		return sg_req->req_len;
-> +
-> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
-> +
-> +	if (!wcount) {
-> +		/*
-> +		 * If wcount wasn't ever polled for this SG before, then
-> +		 * simply assume that transfer hasn't started yet.
-> +		 *
-> +		 * Otherwise it's the end of the transfer.
-> +		 *
-> +		 * The alternative would be to poll the status register
-> +		 * until EOC bit is set or wcount goes UP. That's so
-> +		 * because EOC bit is getting set only after the last
-> +		 * burst's completion and counter is less than the actual
-> +		 * transfer size by 4 bytes. The counter value wraps around
-> +		 * in a cyclic mode before EOC is set(!), so we can't easily
-> +		 * distinguish start of transfer from its end.
-> +		 */
-> +		if (sg_req->words_xferred)
-> +			wcount = sg_req->req_len - 4;
-> +
-> +	} else if (wcount < sg_req->words_xferred) {
-> +		/*
-> +		 * This case shall not ever happen because EOC bit
-> +		 * must be set once next cyclic transfer is started.
+It's not like I have anything else to do... :)
 
-Should this still be cyclic here?
-
-Cheers
-Jon
-
--- 
-nvpublic
