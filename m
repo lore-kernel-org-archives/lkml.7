@@ -2,108 +2,119 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45C2C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7EBC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA58218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ACC21850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PbTxhM/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfGCO1f (ORCPT
+        id S1727128AbfGCO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:27:35 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52124 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfGCO1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:27:34 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1higEJ-0000cD-5e; Wed, 03 Jul 2019 22:27:27 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1higEF-0000UZ-Ar; Wed, 03 Jul 2019 22:27:23 +0800
-Date:   Wed, 3 Jul 2019 22:27:23 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v5 0/4] *** SUBJECT HERE ***
-Message-ID: <20190703142723.zueylnlwzajpdtvs@gondor.apana.org.au>
-References: <cover.1561360551.git.christophe.leroy@c-s.fr>
+        Wed, 3 Jul 2019 10:28:07 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59579 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfGCO2G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:28:06 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63ERoKX3326835
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Jul 2019 07:27:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63ERoKX3326835
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562164070;
+        bh=wU1K/XwJMno8cHqoLmV+jJjjpGSNVErjtRupzb4JzlA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=PbTxhM/Yik0bGYQIzm4AvQBIkHDob2wQUN/Kw9FlGEvqWqE4Zasu7jELanqLU4tpz
+         v6oFzQ7OGvlFmLU6plCvx5QfT7509ES0nDOVaX+xDYrnFhuW4we85jIkzVKwyNoCHB
+         JE09Oyz5V+KKbpKnDLoJH5dGmEWdyP8DjgUWd2ECgWeLOzQmhKQ7+ikmw1xM93eCAh
+         xsx1vk//zDl6gURoWCwYPVDGm2faallrc0lsD/LAwLcO7XFlALJHcxzMkWP55YieSA
+         3Kw1RBurhDfvQYtTiTMuZHWUQLksAbuPKclNxDNQXE7CAHMfmZ0+63zANa0Yqct+Z9
+         Fkep0o1bp54lw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63ERnJ63326832;
+        Wed, 3 Jul 2019 07:27:49 -0700
+Date:   Wed, 3 Jul 2019 07:27:49 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-145c407c808352acd625be793396fd4f33c794f8@git.kernel.org>
+Cc:     hpa@zytor.com, acme@redhat.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, tglx@linutronix.de, mingo@kernel.org,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, kan.liang@linux.intel.com, jolsa@kernel.org,
+          mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          acme@redhat.com, ak@linux.intel.com
+In-Reply-To: <20190624193711.35241-2-andi@firstfloor.org>
+References: <20190624193711.35241-2-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf stat: Make metric event lookup more robust
+Git-Commit-ID: 145c407c808352acd625be793396fd4f33c794f8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <cover.1561360551.git.christophe.leroy@c-s.fr>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:20:13AM +0000, Christophe Leroy wrote:
-> This series is the last set of fixes for the Talitos driver.
-> 
-> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
-> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
-> 
-> [    3.385197] bus: 'platform': really_probe: probing driver talitos with device ff020000.crypto
-> [    3.450982] random: fast init done
-> [   12.252548] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
-> [   12.262226] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
-> [   43.310737] Bug in SEC1, padding ourself
-> [   45.603318] random: crng init done
-> [   54.612333] talitos ff020000.crypto: fsl,sec1.2 algorithms registered in /proc/crypto
-> [   54.620232] driver: 'talitos': driver_bound: bound to device 'ff020000.crypto'
-> 
-> [    1.193721] bus: 'platform': really_probe: probing driver talitos with device b0030000.crypto
-> [    1.229197] random: fast init done
-> [    2.714920] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos)
-> [    2.724312] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos-hsna)
-> [    4.482045] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos)
-> [    4.490940] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
-> [    4.500280] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos)
-> [    4.509727] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
-> [    6.631781] random: crng init done
-> [   11.521795] talitos b0030000.crypto: fsl,sec2.2 algorithms registered in /proc/crypto
-> [   11.529803] driver: 'talitos': driver_bound: bound to device 'b0030000.crypto'
-> 
-> v2: dropped patch 1 which was irrelevant due to a rebase weirdness. Added Cc to stable on the 2 first patches.
-> 
-> v3:
->  - removed stable reference in patch 1
->  - reworded patch 1 to include name of patch 2 for the dependency.
->  - mentionned this dependency in patch 2 as well.
->  - corrected the Fixes: sha1 in patch 4
->  
-> v4:
->  - using scatterwalk_ffwd() instead of opencodying SG list forwarding.
->  - Added a patch to fix sg_copy_to_buffer() when sg->offset() is greater than PAGE_SIZE,
->  otherwise sg_copy_to_buffer() fails when the list has been forwarded with scatterwalk_ffwd().
->  - taken the patch "crypto: talitos - eliminate unneeded 'done' functions at build time"
->  out of the series because it is independent.
->  - added a helper to find the header field associated to a request in flush_channe()
->  
-> v5:
->  - Replacing the while loop by a direct shift/mask operation, as suggested by Herbert in patch 1.
-> 
-> Christophe Leroy (4):
->   lib/scatterlist: Fix mapping iterator when sg->offset is greater than
->     PAGE_SIZE
->   crypto: talitos - move struct talitos_edesc into talitos.h
->   crypto: talitos - fix hash on SEC1.
->   crypto: talitos - drop icv_ool
-> 
->  drivers/crypto/talitos.c | 102 +++++++++++++++++++----------------------------
->  drivers/crypto/talitos.h |  28 +++++++++++++
->  lib/scatterlist.c        |   9 +++--
->  3 files changed, 74 insertions(+), 65 deletions(-)
+Commit-ID:  145c407c808352acd625be793396fd4f33c794f8
+Gitweb:     https://git.kernel.org/tip/145c407c808352acd625be793396fd4f33c794f8
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Mon, 24 Jun 2019 12:37:08 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 1 Jul 2019 22:50:41 -0300
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+perf stat: Make metric event lookup more robust
+
+After setting up metric groups through the event parser, the metricgroup
+code looks them up again in the event list.
+
+Make sure we only look up events that haven't been used by some other
+metric. The data structures currently cannot handle more than one metric
+per event. This avoids problems with multiple events partially
+overlapping.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/stat-shadow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 027b09aaa4cf..3f8fd127d31e 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -304,7 +304,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
+ 	struct perf_evsel *c2;
+ 
+ 	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name))
++		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+ 			return c2;
+ 	}
+ 	return NULL;
+@@ -343,7 +343,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i])) {
++					if (!strcasecmp(oc->name, metric_names[i]) &&
++						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+ 					}
