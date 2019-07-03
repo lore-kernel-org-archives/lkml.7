@@ -2,67 +2,93 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5B5C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF4C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A20218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZoXDWaM0"
+	by mail.kernel.org (Postfix) with ESMTP id 71B21218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfGCWCm (ORCPT
+        id S1727485AbfGCWD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:02:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33846 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfGCWCU (ORCPT
+        Wed, 3 Jul 2019 18:03:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38800 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727076AbfGCWD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:02:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aR9uGMKGXKbHfq0jNFOgm2SkQaXqyDisE482MLvao/8=; b=ZoXDWaM0JtTHhc2otW2p82e/T
-        /jNnbQZZmVgh2h79y9++LJbnLByPF/oaDm7Qo7iKHdL2D4Ih95NUhDkWF3aTF78fDdiRt4AArcezL
-        HbG1KY2whzTjugStJ0zV9TMW005Tf85+ZyT8SLxtOeO5JSTgxOIzL8b7Sx0xaCtGUxic8y+uI4Moj
-        bpjSCQsQetvIZf757cl9CAMduvgTlsWQBWKzRSxxwPAOi7TNaZ1BZD6oqtaqqwD1QdwQl/X9DJJhn
-        TRzWUblKWO70fd5ENlz40DeZ3x7FAWOeqQradP3mRmuFpOzbg63IOXzNu4J8MfzJzyqrXb1PfSjVV
-        oappvp1fQ==;
-Received: from rap-us.hgst.com ([199.255.44.250] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hinKR-0004EN-KS; Wed, 03 Jul 2019 22:02:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: hmm_range_fault related fixes and legacy API removal v2
-Date:   Wed,  3 Jul 2019 15:02:08 -0700
-Message-Id: <20190703220214.28319-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Wed, 3 Jul 2019 18:03:27 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63M1xJU090810
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 18:03:26 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2th3gm2eaj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 18:03:26 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
+        Wed, 3 Jul 2019 23:03:24 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 23:03:21 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x63M3Kxh59244590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 22:03:20 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61C3F5204E;
+        Wed,  3 Jul 2019 22:03:20 +0000 (GMT)
+Received: from bahia.lan (unknown [9.145.70.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3330F52052;
+        Wed,  3 Jul 2019 22:03:20 +0000 (GMT)
+Subject: [PATCH] KVM: PPC: Book3S HV: XIVE: Fix typo in comment
+From:   Greg Kurz <groug@kaod.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Date:   Thu, 04 Jul 2019 00:03:19 +0200
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070322-0008-0000-0000-000002F99151
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070322-0009-0000-0000-00002266E117
+Message-Id: <156219139988.578018.1046848908285019838.stgit@bahia.lan>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=929 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030269
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jérôme, Ben and Jason,
+Cc: trivial@kernel.org
+Signed-off-by: Greg Kurz <groug@kaod.org>
+---
+ arch/powerpc/kvm/book3s_xive.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-below is a series against the hmm tree which fixes up the mmap_sem
-locking in nouveau and while at it also removes leftover legacy HMM APIs
-only used by nouveau.
+diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
+index 1fcb3d6f1db8..e3169e8bf1fc 100644
+--- a/arch/powerpc/kvm/book3s_xive.c
++++ b/arch/powerpc/kvm/book3s_xive.c
+@@ -501,7 +501,7 @@ static void xive_finish_unmask(struct kvmppc_xive *xive,
+ 	kvmppc_xive_select_irq(state, &hw_num, &xd);
+ 
+ 	/*
+-	 * See command in xive_lock_and_mask() concerning masking
++	 * See comment in xive_lock_and_mask() concerning masking
+ 	 * via firmware.
+ 	 */
+ 	if (xd->flags & OPAL_XIVE_IRQ_MASK_VIA_FW) {
 
-Changes since v1:
- - don't return the valid state from hmm_range_unregister
- - additional nouveau cleanups
