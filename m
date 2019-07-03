@@ -2,131 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782EDC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC628C46478
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453E3218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86081218B0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PHnDSrVD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YkMHRIYL"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="QWyJjuDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfGCAmT (ORCPT
+        id S1727285AbfGCAml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:42:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46206 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCAmS (ORCPT
+        Tue, 2 Jul 2019 20:42:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36702 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfGCAml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:42:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8D5D66025A; Wed,  3 Jul 2019 00:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562112231;
-        bh=Ehzb5REbZ1sAGqR0DY72rQI/Hyw2RX9/t1g57kj00rs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PHnDSrVDwfgQJgf0I+W+KiUM86AS4rE6Fy2Av270knbxo+bEBYplTz/ZCPQuEe2I4
-         fNzPDwaSZmBiKo5VrP0sRQRLEYzURkM4UWHUZJhyn8FZwrHSNghuSX7UHfV8XAd558
-         BbrAULrw8EBM7HOh+AHyh++3rcGV3X4HoXZMpYAc=
-Received: from [10.46.160.165] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: collinsd@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 257F66025A;
-        Wed,  3 Jul 2019 00:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562112230;
-        bh=Ehzb5REbZ1sAGqR0DY72rQI/Hyw2RX9/t1g57kj00rs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YkMHRIYLA5V46KlIhru4A3fnsbCSkndtSW9zs2Cjaim0N2J64OYjzq8THiO9uc63G
-         pjPnWHJwm0B583nkQzsUveSzVv0Jwe2j5cWQBRKv6eBvXzKhEPU3zEIbNuGVe7J29W
-         0dOSvKmHAXUZVMS609/mKWBo3oXa1snC9A6dFOjs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 257F66025A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=collinsd@codeaurora.org
-Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe
- ordering
-To:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-References: <20190702004811.136450-1-saravanak@google.com>
-From:   David Collins <collinsd@codeaurora.org>
-Message-ID: <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
-Date:   Tue, 2 Jul 2019 17:03:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Jul 2019 20:42:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so506873oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 17:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AGSyMvf0zexOMokX4EpC11/R6d7poyoJeo3TShyztM=;
+        b=QWyJjuDYJNyB44jlcWkT2Do84tRKoTgiiRWbe8c+iRWLpEQXaFEgT0w9ZSZH2Cs9Tf
+         NgpgZ8pPPSpSGIZa0MJeB+dtoragQ2H4oPc7bonqaiiNZhCo2ZOJ7wWuogIDhfx9e4s/
+         ZfZgI41C2VLSea49134z094gXVVtjlcxZP9bHzuIY6XmQJlEzTwh4QKqYp1GvIhzTBqP
+         C0rfgeI6tqW1a8lFZkStsJB+FEkRAIaU3kaEYBQPQGtfGa8CabE6/0FtfDI1lC7Xc0F+
+         6+LCGjufHIildbzfwK5DH2jwZiLcBGxTCOHmP+FN42+bD0bPJuwOEVfltIw786Xw5ebf
+         Gk3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AGSyMvf0zexOMokX4EpC11/R6d7poyoJeo3TShyztM=;
+        b=W0uXxpdT0MiHTijrpMKCfM9ihAbVhgXfhVnbIfOpUzrCN48ZL93lXsF/Wdvneh5fnJ
+         hBwOrFLStv9xXsv3oIBLtPsWy2xWu5XyXfjy9WEepnpAKKvSn+EINf93N2dJmhufiOrv
+         D89VeOQNw2+Lcj/iVhlEwk+cCeZ0UILlnfzl6ZZMLTv/Skj6C1CF0DOCp1rdcAQwkxp9
+         V6IcFkVzKKWhawmQNaMOuwNnpykEIOr98Rv5BV+cl4TkvVcnxKRSRZUJsYKzYDb5i+EI
+         kibXenSHx7zVoNyw3X/ahhPtMxMXshZmEk4PUoZO4w87M30APsuQlO09kiJpVSiuzfPz
+         TFeQ==
+X-Gm-Message-State: APjAAAVtkpz+Es9WSNIbV0RRyrQn0hSH/o65QYIO8d+UGKBAOYTgnfKN
+        qEwP/24K4mz48F3aHgV/QM3f47aaK8uMUBjJCPiG3g==
+X-Google-Smtp-Source: APXvYqwt/AruSNRNxTjRUQk6hQeRuA06O8pI4+Ci7eZfCus0eFiY7ywxyleud1COJr+2irFyLNDBtxvmvCpYM8UHPzM=
+X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr25111745otn.247.1562114560450;
+ Tue, 02 Jul 2019 17:42:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190702004811.136450-1-saravanak@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org> <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org> <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+ <20190630152324.GA15900@bombadil.infradead.org> <CAPcyv4j2NBPBEUU3UW1Q5OyOEuo9R5e90HpkowpeEkMsAKiUyQ@mail.gmail.com>
+ <20190702033410.GB1729@bombadil.infradead.org> <CAPcyv4iEkN1o5HD6Gb9m5ohdAVQhmtiTDcFE+PMQczYx635Vwg@mail.gmail.com>
+ <fa9b9165-7910-1fbd-fb5b-78023936d2f2@gmail.com>
+In-Reply-To: <fa9b9165-7910-1fbd-fb5b-78023936d2f2@gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 2 Jul 2019 17:42:28 -0700
+Message-ID: <CAPcyv4ihQ9djQvgnqZoTLRH3CwFhpWK_uUrmWSLH_3-Fi1g1qw@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Boaz Harrosh <openosd@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Saravana,
+On Tue, Jul 2, 2019 at 5:23 PM Boaz Harrosh <openosd@gmail.com> wrote:
+>
+> On 02/07/2019 18:37, Dan Williams wrote:
+> <>
+> >
+> > I'd be inclined to do the brute force fix of not trying to get fancy
+> > with separate PTE/PMD waitqueues and then follow on with a more clever
+> > performance enhancement later. Thoughts about that?
+> >
+>
+> Sir Dan
+>
+> I do not understand how separate waitqueues are any performance enhancement?
+> The all point of the waitqueues is that there is enough of them and the hash
+> function does a good radomization spread to effectively grab a single locker
+> per waitqueue unless the system is very contended and waitqueues are shared.
 
-On 7/1/19 5:48 PM, Saravana Kannan wrote:
-...
-> TODO:
-> - For the case of consumer child sub-nodes being added by a parent
->   device after late_initcall_sync we might be able to address that by
->   recursively parsing all child nodes and adding all their suppliers as
->   suppliers of the parent node too. The parent probe will add the
->   children before its probe is completed and that will prevent the
->   supplier's sync_state from being executed before the children are
->   probed.
-> 
-> But I'll write that part once I see how this series is received.
+Right, the fix in question limits the input to the hash calculation by
+masking the input to always be 2MB aligned.
 
-I don't think that this scheme will work in all cases.  It can also lead
-to probing deadlock.
+> Which is good because it means you effectively need a back pressure to the app.
+> (Because pmem IO is mostly CPU bound with no long term sleeps I do not think
+>  you will ever get to that situation)
+>
+> So the way I understand it having twice as many waitqueues serving two types
+> will be better performance over all then, segregating the types each with half
+> the number of queues.
 
-Here is an example:
+Yes, but the trick is how to manage cases where someone waiting on one
+type needs to be woken up by an event on the other. So all I'm saying
+it lets live with more hash collisions until we can figure out a race
+free way to better scale waitqueue usage.
 
-Three DT devices (top level A with subnodes B and C):
-/A
-/A/B
-/A/C
-C is a consumer of B.
-
-When device A is created, a search of its subnodes will find the link from
-C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
-will fail and add A to the wait_for_suppliers list.  This will cause the
-probe of A to fail with -EPROBE_DEFER (thanks to the check in
-device_links_check_suppliers()).  As a result device B will not be created
-and device A will never probe.
-
-You could try to resolve this situation by detecting the cycle and *not*
-adding A to the wait_for_suppliers list.  However, that would get us back
-to the problem we had before.  A would be allowed to probe which would
-then result in devices being added for B and C.  If the device for B is
-added before C, then it would be allowed to immediately probe and
-(assuming this all takes place after late_initcall_sync thanks to modules)
-its sync_state() callback would be called since no consumer devices are
-linked to B.
-
-Please note that to change this example from theoretical to practical,
-replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
-pm8998-rpmh-regulators in [1].
-
-Take care,
-David
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-mtp.dts?h=v5.2-rc7#n55
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> (Regardless of the above problem of where the segregation is not race clean)
+>
+> Thanks
+> Boaz
