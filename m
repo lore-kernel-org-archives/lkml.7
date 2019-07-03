@@ -2,86 +2,147 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F97C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8333C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAD921881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p54r3CaT"
+	by mail.kernel.org (Postfix) with ESMTP id B998D21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfGCRVm (ORCPT
+        id S1727263AbfGCRVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:21:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48060 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfGCRVZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:21:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KLNpXUeBNjOGtXnDQ3qzX7M6wN19aQMGgVhJjQ1BSuc=; b=p54r3CaTxN1VjNO3vNGbNNXLB
-        djZuP4fanPNsLlBqMzU5MoP+1WLXTYZva0j3m3P7OUtM3wERwG+ot3qGTaebOvLcOlZE0NaZzIL2D
-        /HTFZdIBzKlwn1NFvQKlPE48i6NLNn5ZwqhLc804x/8rUCdrK0U+KhMah1s+XDe5M9w0MpvU4susf
-        HjmAYtShG3Hd42th/Q8PDRRdMRwIQH7zILUpUh67kFTwPYTmmjHzvF5JLUV7gOAchy78zV/lHSv4x
-        sJF1Mv54B5XJdRqqtIALihUynxzBVmmmmiJsl7TXUVScwRO2NcTplls5IExQYeZMS5sUhuWfEg2+L
-        0h3Q2PXug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiiwW-0007Al-2D; Wed, 03 Jul 2019 17:21:16 +0000
-Date:   Wed, 3 Jul 2019 10:21:16 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        David Miller <davem@davemloft.net>, brian.brooks@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        nadavh@marvell.com, stefanc@marvell.com,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: Re: [PATCH] driver core: platform: Allow using a dedicated dma_mask
- for platform_device
-Message-ID: <20190703172115.GA22034@infradead.org>
-References: <20190628141550.22938-1-maxime.chevallier@bootlin.com>
- <20190628155946.GA16956@infradead.org>
- <20190701132340.21123dee@bootlin.com>
+        Wed, 3 Jul 2019 13:21:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727119AbfGCRVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:21:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3FC2DABF1;
+        Wed,  3 Jul 2019 17:21:47 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 147E11E0D71; Wed,  3 Jul 2019 19:21:41 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 19:21:41 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Boaz Harrosh <openosd@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH] mm: Support madvise_willneed override by Filesystems
+Message-ID: <20190703172141.GD26423@quack2.suse.cz>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190619082141.GA32409@quack2.suse.cz>
+ <27171de5-430e-b3a8-16f1-7ce25b76c874@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701132340.21123dee@bootlin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <27171de5-430e-b3a8-16f1-7ce25b76c874@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 01:24:39PM +0200, Maxime Chevallier wrote:
-> I agree that this the real solution, it just seemed a bit overwhelming
-> to me. I'll be happy to help with this though, now that you took a big
-> first step.
+On Wed 03-07-19 04:04:57, Boaz Harrosh wrote:
+> On 19/06/2019 11:21, Jan Kara wrote:
+> <>
+> > Yes, I have patch to make madvise(MADV_WILLNEED) go through ->fadvise() as
+> > well. I'll post it soon since the rest of the series isn't really dependent
+> > on it.
+> > 
+> > 								Honza
+> > 
+> 
+> Hi Jan
+> 
+> Funny I'm sitting on the same patch since LSF last. I need it too for other
+> reasons. I have not seen, have you pushed your patch yet?
+> (Is based on old v4.20)
 
-I think the first step is to resurrect my original patch to default
-to a 32-bit DMA mask for platform devices, as that will cut a lot
-of crap from the platform device declarations.
+Your patch is wrong due to lock ordering. You should not call vfs_fadvise()
+under mmap_sem. So we need to do a similar dance like madvise_remove(). I
+have to get to writing at least XFS fix so that the madvise change gets
+used and post the madvise patch with it... Sorry it takes me so long.
 
-IIRC the problem back then was that USB uses the fact that a DMA
-mask exist to decide if it uses a DMA vs PIO path in the HCD core.
-
-So I'll need some help from Greg or other USB folks to clean that up,
-after that we can try to apply my patch again (preferably early in
-the next merge window), and once that sticks clean up all the 32-bit
-dma mask initialization for platform devices, and then turn the dma_mask
-into a scalar.
+								Honza
+> 
+> ~~~~~~~~~
+> From fddb38169e33d23060ddd444ba6f2319f76edc89 Mon Sep 17 00:00:00 2001
+> From: Boaz Harrosh <boazh@netapp.com>
+> Date: Thu, 16 May 2019 20:02:14 +0300
+> Subject: [PATCH] mm: Support madvise_willneed override by Filesystems
+> 
+> In the patchset:
+> 	[b833a3660394] ovl: add ovl_fadvise()
+> 	[3d8f7615319b] vfs: implement readahead(2) using POSIX_FADV_WILLNEED
+> 	[45cd0faae371] vfs: add the fadvise() file operation
+> 
+> Amir Goldstein introduced a way for filesystems to overide fadvise.
+> Well madvise_willneed is exactly as fadvise_willneed except it always
+> returns 0.
+> 
+> In this patch we call the FS vector if it exists.
+> 
+> NOTE: I called vfs_fadvise(..,POSIX_FADV_WILLNEED);
+>       (Which is my artistic preference)
+> 
+> I could also selectively call
+> 	if (file->f_op->fadvise)
+> 		return file->f_op->fadvise(..., POSIX_FADV_WILLNEED);
+> If we fear theoretical side effects. I don't mind either way.
+> 
+> CC: Amir Goldstein <amir73il@gmail.com>
+> CC: Miklos Szeredi <mszeredi@redhat.com>
+> Signed-off-by: Boaz Harrosh <boazh@netapp.com>
+> ---
+>  mm/madvise.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 6cb1ca93e290..6b84ddcaaaf2 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/swapops.h>
+>  #include <linux/shmem_fs.h>
+>  #include <linux/mmu_notifier.h>
+> +#include <linux/fadvise.h>
+>  
+>  #include <asm/tlb.h>
+>  
+> @@ -303,7 +304,8 @@ static long madvise_willneed(struct vm_area_struct *vma,
+>  		end = vma->vm_end;
+>  	end = ((end - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+>  
+> -	force_page_cache_readahead(file->f_mapping, file, start, end - start);
+> +	vfs_fadvise(file, start << PAGE_SHIFT, (end - start) << PAGE_SHIFT,
+> +		    POSIX_FADV_WILLNEED);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
