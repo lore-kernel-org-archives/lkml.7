@@ -2,108 +2,121 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B053FC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A19C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85ED521897
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D5021882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQrvKYN6"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="arld3s3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfGCGhr (ORCPT
+        id S1727108AbfGCGj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:37:47 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40495 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfGCGhq (ORCPT
+        Wed, 3 Jul 2019 02:39:58 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:53722 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfGCGj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:37:46 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so2153457ioc.7;
-        Tue, 02 Jul 2019 23:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FOIxNlDzVh5kXdl9uOiCioxQI2rCCNBXDcfxZ9oiGn4=;
-        b=oQrvKYN6+Oa/mi5oqHJm/0u1d3bIJSZvqt/2eGg8P4ktEZTx14HyMyCIxEvYI2B47V
-         4VsUmdNttA9TSM+TZLgpm0PDvKjyAgy6GUAREped91mDu/QX+CltfgdXh38jba5ZKmhd
-         P2AK0d/w1qNtPkjFY9xb5mktdhaE7uih5Av11615R4hJy0wb0yzqczDF7HYpVFJpv6/6
-         s3hCxB8VolfGSXpmccI/iIYtGaaqPGqKhLuh5cU3IXY74iOMUdruB89oozjiPO3Dy+gr
-         pZlFmom46AbUUceksx7V0grs2DsemIajtC3WLtW8zVxkoNwidJm0HYjD3bK6ejRS98NQ
-         05ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FOIxNlDzVh5kXdl9uOiCioxQI2rCCNBXDcfxZ9oiGn4=;
-        b=UEDxaF+aYdGrgVc3Gt1/Du0+jG0uYirsVwt55eUdCSEG6tO0p1Vv3dHiQ8PrAuVDEf
-         jRVl4RybltNLOPkjXod4eA+ZtgPV4Ih9JvvtCo9B4I1av7KxDyMNh7d6n3FyiQJSwp3Z
-         BXZMva5a1U33rOC9phhiA5fKVB825N8TxCxdnmyfUpDFfn0pDsFArBZKL3L1khQv5SaH
-         xUHteoje2g+A4F6EEACFCaY/CaWkf8EQcVMiah6GL4aeNKQhYRMpi1EP2+fpAmQ/B1O6
-         LsXpmiDerVCnaigWPAKAfeEUgewQiOlprSn/AuIng+pfKT/V/1tVxXWvR08vvhN6ZmMo
-         cNmw==
-X-Gm-Message-State: APjAAAUPHhJ/YlGRPF5U4A60Bw0qsM33lvgcZHAbsfIqA+A7dYQxmDeG
-        7cVp5ZWeJFeBtFKUEuqAQLqGtgDl9yHi6h83ROeqpeV+
-X-Google-Smtp-Source: APXvYqzUoLIbKm+T5fsnG1Of6uNoe9L4Lk43sPF5Mm1NCv7QtIHFm6oVd5rzrOle8bjQuRlwvYUdK+/9Ip+p+q6a0f8=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr4379048ioa.12.1562135865720;
- Tue, 02 Jul 2019 23:37:45 -0700 (PDT)
+        Wed, 3 Jul 2019 02:39:57 -0400
+Date:   Tue, 2 Jul 2019 23:39:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 85CEE64013F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1562135996;
+        bh=waAA9bz7u8vTcqSxfkBH3kI4fMWrMyh3e4aqengWgPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=arld3s3oUiDqM0POunjuNaXZx1LPmOkmuIEDUZXuHuMRO1KtTYegdWtFteYdleykz
+         bnaGCYFRvBegnM7u77hhw5jcfUO7jlOGJ3XyTQvUuUkDt+/VX/v0jhALYCPr5LQ6dx
+         hnr9d7rU5vpxvfwPUXKAcTWQr+zI8Me+aKrpZljnLwlTgJcbOTOM1udKcq4yf9WZC8
+         pV5DyQGdBM3yJRW7B/Ra+oM6J8cGZqG0AlL36KkBchVyOfKSkHBXGuuch0u7GQxLES
+         q/3qQ39Dsk2rFuR2x/dEmf/TxLh6aIOUspIeinHPT/OYmMqP4NUSJp/HWbZGFQDwgB
+         g8eUiEpsgEk/Q==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] drm/bridge: sil_sii8620: make remote control
+ optional.
+Message-ID: <20190703063956.GA32102@innovation.ch>
+References: <20190419081926.13567-1-ronald@innovation.ch>
+ <20190419081926.13567-2-ronald@innovation.ch>
+ <CGME20190702135052eucas1p11e2621af0514505789c7947b84cf133c@eucas1p1.samsung.com>
+ <2d0fe94c-a2c9-a8f6-967f-c33b53e86518@samsung.com>
 MIME-Version: 1.0
-References: <20190617160339.29179-1-andrew.smirnov@gmail.com>
- <20190617160339.29179-2-andrew.smirnov@gmail.com> <VI1PR0402MB3485542286BC0F8814DE4EB098FD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3485542286BC0F8814DE4EB098FD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 2 Jul 2019 23:37:41 -0700
-Message-ID: <CAHQ1cqH4t7zge8ceNQ9GSA=ioMNJxerz9qJ4vtgY_Gh0Bz689A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] crypto: caam - move DMA mask selection into a function
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d0fe94c-a2c9-a8f6-967f-c33b53e86518@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 3:50 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 6/17/2019 7:04 PM, Andrey Smirnov wrote:
-> > Exactly the same code to figure out DMA mask is repeated twice in the
-> > driver code. To avoid repetition, move that logic into a standalone
-> > subroutine in intern.h. While at it re-shuffle the code to make it
-> > more readable with early returns.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Spencer <christopher.spencer@sea.co.uk>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
-> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
->
-> Being the 1st patch in the series and not i.MX8-specific, I'd say it shou=
-ld
-> be merged separately.
->
 
-Can it be done by cherry picking it from the series or does it have to
-be submitted as a separate patch? I am hoping the former is possible
-since it'd make life easier for me.
+On Tue, Jul 02, 2019 at 03:50:49PM +0200, Andrzej Hajda wrote:
+> On 19.04.2019 10:19, Ronald Tschalär wrote:
+> > commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
+> > of RC_CORE) changed the driver to select both RC_CORE and INPUT.
+> > However, this causes problems with other drivers, in particular an input
+> > driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
+> > commit):
+> > 
+> >   drivers/clk/Kconfig:9:error: recursive dependency detected!
+> >   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
+> >   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
+> >   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
+> >   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
+> >   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
+> >   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
+> >   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
+> >   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
+> > 
+> > According to the docs and general consensus, select should only be used
+> > for non user-visible symbols, but both RC_CORE and INPUT are
+> > user-visible. Furthermore almost all other references to INPUT
+> > throughout the kernel config are depends, not selects. For this reason
+> > the first part of this change reverts commit d6abe6df706c.
+> > 
+> > In order to address the original reason for commit d6abe6df706c, namely
+> > that not all boards use the remote controller functionality and hence
+> > should not need have to deal with RC_CORE, the second part of this
+> > change now makes the remote control support in the driver optional and
+> > contingent on RC_CORE being defined. And with this the hard dependency
+> > on INPUT also goes away as that is only needed if RC_CORE is defined
+> > (which in turn already depends on INPUT).
+> > 
+> > CC: Inki Dae <inki.dae@samsung.com>
+> > CC: Andrzej Hajda <a.hajda@samsung.com>
+> > CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> 
+> 
+> Apparently this patch was not queued to kernel yet. If there are no
+> objections I will queue it via drm-misc-next tree tomorrow.
 
-Thanks,
-Andrey Smirnov
+If this patch set won't be queued for 5.3 then I guess that would be a
+good idea.
+
+But may I ask what is preventing this patch set from being queued for
+upstream, so I can try and fix whatever the issue is?
+
+
+  Cheers,
+
+  Ronald
+
