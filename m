@@ -2,124 +2,90 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86112C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48138C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEED218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B496218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHchkMOv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gNa86D9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfGCMZq (ORCPT
+        id S1726823AbfGCM0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:25:46 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43064 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCMZq (ORCPT
+        Wed, 3 Jul 2019 08:26:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46800 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCM0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:25:46 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e3so1870849edr.10;
-        Wed, 03 Jul 2019 05:25:44 -0700 (PDT)
+        Wed, 3 Jul 2019 08:26:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so2547056wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MPb7Hz/aUpRJZzTZLNZiyzmAnZP9z54WdoZUYMn88X0=;
-        b=vHchkMOvsHv8kCbADBZUi1vqLd4RTY+FiPP9Lcmq+0/ksI+sEADt3BL/B6j1XPh4sv
-         8mVZ5lV2G5n5tMEJRJFIZ0fo979d1UN6QoxOmHlllEUg3J1Pwy2ex1GT3DhC1CpuQtWl
-         2gXnxt80cMG1BqF8rJSpfWYyGXRpHG8QCgnHjyNStOeM3/WYWkFB3oyfCYxA5xm0DUxc
-         x9s6+4ojoKtayGxCeER/E4qGN6dWO2A/1tiAUiMgIpdOyxz3m267eY7/dEf651rPsIzO
-         edygRg5PthgrTVRS6jqy504BnS7OQUcdBI4bM2kXuffv+e/FTrmLzf/3XoY/PuZrOtVf
-         nVRw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fqRlKVNruC97TKfS68sR9FKZBA0FRnpxLwfr/fXEA2s=;
+        b=gNa86D9pGZJ5sdLRnW2ukNzqCVR5k6+Da2hEivCl62/mYUQYGg/amqyl0D+c4nCzuI
+         2LXQn3sqxDBW/+yHMGMcpLF+i6+IazKtkgrxKZv6ryTJKduLQe0kDCYo1zCqe7D8OkAl
+         asxi9z0OkpUZ8jpkuI27yKLUiOdhmYzCvxsKmRWzibuV14Sjh4GZ1RGMIuHx3LexGMhV
+         G+d/aXOIMhokQRx4fcF013uGI0+Do6/gNgaye0nEGt6NYVBuWWd93DKnWDbt2KCmhKxf
+         pzYOeDXwLHam/t5zs0IZGmnKRzgkgW7LOOQ8ZuXTa8SFe/4xNvDx90v3VnpVaSeWsdJy
+         EG2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MPb7Hz/aUpRJZzTZLNZiyzmAnZP9z54WdoZUYMn88X0=;
-        b=WaTyt2AiOLLpx9OGOBXkWzBS2uRUeWXh9GnG9t7ShB4+rjNgxIKbqAfTAr7KGrZ2/6
-         dZ91zYkU6vttlH6uth/3JFxmiZdEtDnTpkdLeyf/6JZhweTCgNHj7AGamCI3lQwPWuzi
-         5eelBRQo3bDDS+R4YBRPLKrnn8khGRywuo2gkoA8FqTi9FaqJDV67vqX1SwyM5XHASss
-         HNVPi2x0v/sThIjp6QGUtrAsm5IoWl+YiS5gzXn8wC2da3YIFZh6QXk235gaflhuQWIX
-         wwOP9QAwJ2kxh0yeSe40o70sTmeFyeqz94hmLeX8eJv2c8bwHqIjwIIQYDMpU82xH8rQ
-         fHOQ==
-X-Gm-Message-State: APjAAAVEs3NyXDflWuablzs55V3eaA63e0DnOCOMyXMr0c6VlZkj0Z9Q
-        xdeIc11l49y3NGMdb8AneQH5e/XnXOlGAh15Vk4=
-X-Google-Smtp-Source: APXvYqwwqBwoR0MKYgtbC2RmXe+Vq0vZxW7XMvoTuUUUmhoh1kZpu2I3IiFIpogQ8NwcLjzrOgckudH6yN1/qTMZEO8=
-X-Received: by 2002:a17:906:3612:: with SMTP id q18mr34803196ejb.278.1562156744041;
- Wed, 03 Jul 2019 05:25:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fqRlKVNruC97TKfS68sR9FKZBA0FRnpxLwfr/fXEA2s=;
+        b=NFe8SIgN4RzfPqNDPq3Sg5v2t+Al8uJt/CmySErTMgDHIo4j2Ugyuf18Db1aypMw51
+         5Pkvs7gjIwmF3FGupgVjaZR2d8TN3NkNJ9im/58qNUZU1KSjNJ9W4t4dSp+vBCqXp1vw
+         lGDfCWLC9UzjWcx3UDiVegOz4kT8BG0DhtOftAkWd/lKvrVCsiTR7bvGlnMzX4/2xo//
+         GwSQC5HPjBcNkW6LBm6Hfmx9rZYDnMtUBNZJ6uNADBudWVkZapIZBzTWDqw+hR3chp6W
+         SadeiPjVoCVCNke+CtvcCIt+R72bOsIyjcj+9m01YfolMsFDhxZmZ8ZxeB2QQiwGbkSL
+         3TcA==
+X-Gm-Message-State: APjAAAVqZKJoqtKlFdHoT/ewJ2IvkDAY8mwdOHkU5NDjdr/aCUovoz10
+        Nbi+E8B9le2Caa/9xj8vNCO/Bg==
+X-Google-Smtp-Source: APXvYqyzZFKUhirNmVYzoxkyGXKg/pBa0jfrzsPgw0VJQHASHTlsxPSCVkavu9zNjfP6kzDjMMS85g==
+X-Received: by 2002:a5d:56c7:: with SMTP id m7mr19293000wrw.64.1562156782290;
+        Wed, 03 Jul 2019 05:26:22 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id v67sm2868132wme.24.2019.07.03.05.26.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 05:26:21 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] clk: meson: axg-audio: add reset support
+Date:   Wed,  3 Jul 2019 14:26:12 +0200
+Message-Id: <20190703122614.3579-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190701173907.15494-1-jeffrey.l.hugo@gmail.com> <20190703040843.GA27383@builder>
-In-Reply-To: <20190703040843.GA27383@builder>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 3 Jul 2019 05:25:27 -0700
-Message-ID: <CAF6AEGvwMj+R6KbFYbatx8AuF+5mztc7246ocKXfRWnpphv9NA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/mdp5: Use drm_device for creating gem address space
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 9:08 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 01 Jul 10:39 PDT 2019, Jeffrey Hugo wrote:
->
-> > Creating the msm gem address space requires a reference to the dev where
-> > the iommu is located.  The driver currently assumes this is the same as
-> > the platform device, which breaks when the iommu is outside of the
-> > platform device.  Use the drm_device instead, which happens to always have
-> > a reference to the proper device.
-> >
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->
-> Sorry, but on db820c this patch results in:
->
-> [   64.803263] msm_mdp 901000.mdp: [drm:mdp5_kms_init [msm]] *ERROR* failed to attach iommu: -19
->
-> Followed by 3 oopses as we're trying to fail the initialization.
+This patchset adds support for the reset provided in the register space
+of the g12a audio clock controller
 
-yeah, that is kinda what I suspected would happen.  I guess to deal
-with how things are hooked up on 8998, perhaps the best thing is to
-first try &pdev->dev, and then if that fails try dev->dev
+Jerome Brunet (2):
+  dt-bindings: clock: meson: add resets to the audio clock controller
+  clk: meson: axg-audio: add g12a reset support
 
-BR,
--R
+ .../bindings/clock/amlogic,axg-audio-clkc.txt |   1 +
+ drivers/clk/meson/axg-audio.c                 | 107 +++++++++++++++++-
+ drivers/clk/meson/axg-audio.h                 |   1 +
+ .../reset/amlogic,meson-g12a-audio-reset.h    |  38 +++++++
+ 4 files changed, 145 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
 
-> Regards,
-> Bjorn
->
-> > ---
-> >  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > index 4a60f5fca6b0..1347a5223918 100644
-> > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > @@ -702,7 +702,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
-> >       mdelay(16);
-> >
-> >       if (config->platform.iommu) {
-> > -             aspace = msm_gem_address_space_create(&pdev->dev,
-> > +             aspace = msm_gem_address_space_create(dev->dev,
-> >                               config->platform.iommu, "mdp5");
-> >               if (IS_ERR(aspace)) {
-> >                       ret = PTR_ERR(aspace);
-> > --
-> > 2.17.1
-> >
+-- 
+2.21.0
+
