@@ -2,103 +2,118 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B715C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8375DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2401F206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591B22089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQfg7pH4"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="OluhLlRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfGCB1X (ORCPT
+        id S1727463AbfGCB2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:27:23 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39608 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfGCB1W (ORCPT
+        Tue, 2 Jul 2019 21:28:42 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37601 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbfGCB2m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:27:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id r185so890971iod.6;
-        Tue, 02 Jul 2019 18:27:22 -0700 (PDT)
+        Tue, 2 Jul 2019 21:28:42 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y57so799444qtk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pAci9weqdgGIQBmNcdVFp+Cps1SlEdfna2ZTHfidk4s=;
-        b=fQfg7pH4Sm1UfYaKtwjCqwOkANJcgpsdEef2Jc0Vnnv6CrjpMAqzINySn3ZsFImMKe
-         T9CzN3e5xprsAsfUp9wzNfa6hrMmvfV5YFwjeMWrH/vZk0utjNGZ8LVwTmXfeM9s9KFV
-         awuVWqFOYH9/vubLgxVHa2piApnGDYbSDwJ6J7YeeFCFW3SKAncrOnHeLd9z2Wl9MqGa
-         vYzUbqeKYE9A+StWlIjF/TL1UnP8TxtHX9INiHIvdM9c7+3nxH/w3lVUaDUGUUHcBeAg
-         wQ7DR+mRbupzYT/9aVthIW/NyhKsrdBh2+E8yhR3mnP0eUY42G3EQsFo2aplRTLF+lnD
-         ib6w==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=GPq+X9gZ7QNxQQpyYuv9TfK86Mv6GcvklT40SAlmU6I=;
+        b=OluhLlRuwPPuipU6cP5uCepLi5qwIPWoKIg+SrFLDnLIPWUVwbd20cNRHrpJjZodcI
+         bpTfkHot5f3AkN85zqhxB7iu7g8RRnhrvj4IDi9J+ymngPXPpvvKixZ7uy4vgS/CpA7o
+         LI1K0P6e1HWNz859c3xzR/LWinE4y3gtVbPZH4ZvuxbazmVyd+SVfrHLVQLiU6nwTytT
+         lRThvht5Y8GvFutbWJKr2+mpp75TF8D0xUlKGgFCuC32BUvu+jKEjJFrlKkH00pq5Qnf
+         sTnjxik3lFu9C92pKOnsGh5sW4gcox6NBLporHj4ibDswJqbrUtUe/3vWdLsvqNcBeVL
+         Gt1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pAci9weqdgGIQBmNcdVFp+Cps1SlEdfna2ZTHfidk4s=;
-        b=g2sp6uBmTkVx+HwuUTg/MIhzzCI0F9Cd5arg19pYz0sECNrt3xt6TDO7mEbXYrl8Sd
-         krqlghpUlBj7JCrkuQ42cThpJ7WZusAVRdKqwP60R+lJizCaJhsdHzuxUJioan977hWr
-         3HaWARyJWmRTQzdyv5HWTPmtXORlYlv+R6vLG7mpDGpHdproc+J2FxsdUIi8MqIBgFyP
-         ZZGrSYzqWaBfZ9gbkMP/AeO/BGGRzrfhI/vIOiLLoqgZJZsJqHrXMboukLF/dG1WIMHM
-         NAyoHnp7ELu8YTk60iRWQdRJhONmP+YX5FRmtuPjinZmzter83LSLp5ev47ig6gvC9DE
-         iXdA==
-X-Gm-Message-State: APjAAAXMqEkU/ZMNViDCYVmkZ5rN459Dhv37wPrjUhyIro7aCLD8iyFh
-        aXoukf4jrlVXOSR6hfAjTk0s+36gKDeNjg==
-X-Google-Smtp-Source: APXvYqyVaw65phiu70giHYXUIs2ipt+3VtM+wJ6S/zZrZsx+FDh/mt+BJBdInlTIJpHWmlAYGh9HEw==
-X-Received: by 2002:a6b:7602:: with SMTP id g2mr1878572iom.82.1562101796619;
-        Tue, 02 Jul 2019 14:09:56 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id f17sm114199ioc.2.2019.07.02.14.09.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=GPq+X9gZ7QNxQQpyYuv9TfK86Mv6GcvklT40SAlmU6I=;
+        b=a1uNNEJdeq9selqvPQzYTf5/laZ8W4fCn++M6SNXVAUivQWnzly/5RhdKiXteYfyxa
+         bSasmxYLHjn5eKdmy1bRsPR7oITRO/4e06Gb4pWaGjaL8MZCPiGU7ismw0MdPv+X1c9f
+         QrxrUh97GCHMg/Mqgj2v7k/HU2nnjv5f1xn1b8pbkLfrzG+TTemD2tsplg6GfoHPotpS
+         QgbIUzzseVGm+coX9v1klUMMnSb76CLFn0QmY+orKy+YRUS0CvvnIu/35Qk9/iNTKAI4
+         1nA10G67rHGaEgE5YFOGZ3z2Ob0/vJaFtyX/uqX2H9NDwK5Q9OLqGlJ2EuJcOHkEDytY
+         F0rw==
+X-Gm-Message-State: APjAAAXliJfViDNaAlh/qI5WLLEok8g91qfTYyKC/pz5u63pYXQAEKa8
+        bIFQhu1YAjuZ8FyqhA4sy9fNag==
+X-Google-Smtp-Source: APXvYqzYSgXl8r6+whN1TzV4O/DdC6Y7yHmiVDY0vvy0MVaR9rm+bdJH9PclIsRiwOBEWrYeIC7k2Q==
+X-Received: by 2002:ac8:224d:: with SMTP id p13mr27884664qtp.154.1562117321444;
+        Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 18sm247144qke.131.2019.07.02.18.28.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 14:09:55 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 15:09:54 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
-Message-ID: <20190702210953.GB2368@JATN>
-References: <20190702080124.103022729@linuxfoundation.org>
+        Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 18:28:35 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 05/15] ethtool: helper functions for netlink
+ interface
+Message-ID: <20190702182835.69c9ac67@cakuba.netronome.com>
+In-Reply-To: <20190702163437.GE20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+        <44957b13e8edbced71aca893908d184eb9e57341.1562067622.git.mkubecek@suse.cz>
+        <20190702130515.GO2250@nanopsycho>
+        <20190702163437.GE20101@unicorn.suse.cz>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702080124.103022729@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 10:01:08AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.16 release.
-> There are 55 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, 2 Jul 2019 18:34:37 +0200, Michal Kubecek wrote:
+> > >+	ret = nla_parse_nested(tb, ETHTOOL_A_HEADER_MAX, nest,
+> > >+			       policy ?: dflt_header_policy, extack);
+> > >+	if (ret < 0)  
+> > 
+> > if (ret)
+> > 
+> > Same remark goes to the rest of the code (also the rest of the patches),
+> > in case called function cannot return positive values.  
 > 
-> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
-> Anything received after that time might be too late.
+> The "if (ret < 0)" idiom for "on error do ..." is so ubiquitous through
+> the whole kernel that I don't think it's worth it to carefully check
+> which function can return a positive value and which cannot and risk
+> that one day I overlook that some function. And yet another question is
+> what exactly "cannot return" means: is it whenever the function does not
+> return a positive value or only if it's explicitly documented not to?
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
+> Looking at existing networking code, e.g. net/netfilter (except ipvs),
+> net/sched or net/core/rtnetlink.c are using "if (ret < 0)" rather
+> uniformly. And (as you objected to the check of genl_register_family()
+> previous patch) even genetlink itself has
 > 
-> thanks,
+> 	err = genl_register_family(&genl_ctrl);
+> 	if (err < 0)
+> 		goto problem;
 > 
-> greg k-h
-> 
+> in genl_init().
 
-Compiled, booted, and no regressions on my system.
+I agree with Jiri, if a function only returns "0, or -errno" it's
+easier to parse if the error check is not only for negative values.
+At least to my eyes.
 
-Cheers,
-Kelsey
-
+What I'm not sure about is whether we want to delay the merging of this
+interface over this..
