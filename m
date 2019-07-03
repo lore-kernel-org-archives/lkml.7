@@ -2,118 +2,89 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F41C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD3CC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F6C21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29662184B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562119323;
+	bh=Snc/t/lCtkBERwsYIRCa83hFKhk04PY6amxMNM7o1jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ys5ZZZGQEmz9eFMIF4VXkEx635qUk1pXOCDTNcJnpbNzfKF/Cq3nG63gyrB9K3B8z
+	 irTiptbg+8Pb77Lbpll0oRDUfUXgsmbYXz2eKVhi9RpbRYKCm12E2ziGH+POWUosPZ
+	 elMGthdj4fxZbVVaaUoa6awdjKvkv/dT+jbVPUBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfGCB7x convert rfc822-to-8bit (ORCPT
+        id S1727206AbfGCCCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:59:53 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3017 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfGCB7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:59:53 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 90A18A470A45D8703D9A;
-        Wed,  3 Jul 2019 09:59:48 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 3 Jul 2019 09:59:48 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 3 Jul 2019 09:59:48 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Wed, 3 Jul 2019 09:59:47 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     David Ahern <dsahern@gmail.com>
-CC:     "pablo@netfilter.org" <pablo@netfilter.org>,
-        "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH v5] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Topic: [PATCH v5] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Index: AdUxQkGnwofogVcmQkqkZWrkNMYBtA==
-Date:   Wed, 3 Jul 2019 01:59:47 +0000
-Message-ID: <4b5cc7929a83472e9b2e64d84397eccc@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 2 Jul 2019 22:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfGCCCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:02:02 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A66321721;
+        Wed,  3 Jul 2019 02:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562119321;
+        bh=Snc/t/lCtkBERwsYIRCa83hFKhk04PY6amxMNM7o1jw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0GoMmqJgtYnQap3xsd7R6I9G+9mr8xeeYGzCMG/thnbVnsTHoLKQ5dKzmfJVUFPIr
+         bz7CSoLz9kByvAE9LEwBIAsgdHV2DAxdN5gGInlggcSfmBzZWFLOJovNMnI4aPkyVk
+         ZAVK+7jz/WWa2Hbi+L5PwIe4sy8lbgD6GUL2QGbs=
+Date:   Tue, 2 Jul 2019 22:02:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH 5.1 51/55] bpf, arm64: use more scalable stadd over ldxr
+ / stxr loop in xadd
+Message-ID: <20190703020200.GR11506@sasha-vm>
+References: <20190702080124.103022729@linuxfoundation.org>
+ <20190702080126.728030225@linuxfoundation.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190702080126.728030225@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add David Ahern. @David Ahern I'am so sorry but I rerun scripts/get_maintainer.pl .
-You are not in the list , so I forgot to add you to the email-to list. I'am sorry again.
-Have a good day.
-Best wishes.
+On Tue, Jul 02, 2019 at 10:01:59AM +0200, Greg Kroah-Hartman wrote:
+>From: Daniel Borkmann <daniel@iogearbox.net>
+>
+>commit 34b8ab091f9ef57a2bb3c8c8359a0a03a8abf2f9 upstream.
+>
+>Since ARMv8.1 supplement introduced LSE atomic instructions back in 2016,
+>lets add support for STADD and use that in favor of LDXR / STXR loop for
+>the XADD mapping if available. STADD is encoded as an alias for LDADD with
+>XZR as the destination register, therefore add LDADD to the instruction
+>encoder along with STADD as special case and use it in the JIT for CPUs
+>that advertise LSE atomics in CPUID register. If immediate offset in the
+>BPF XADD insn is 0, then use dst register directly instead of temporary
+>one.
+>
+>Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+>Acked-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+>Acked-by: Will Deacon <will.deacon@arm.com>
+>Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
-ipv4/ipv6 packets will be dropped. Vrf device will pass through netfilter hook twice. One with enslaved device and another one with l3 master device. So in device may dismatch witch out device because out device is always enslaved device.So failed with the check of the rpfilter and drop the packets by mistake.
+This one has a fix upstream: c5e2edeb01ae9ffbdde95bdcdb6d3614ba1eb195
+("arm64: insn: Fix ldadd instruction encoding").
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ipv4/netfilter/ipt_rpfilter.c  | 1 +  net/ipv6/netfilter/ip6t_rpfilter.c | 8 ++++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
-index 59031670b16a..cc23f1ce239c 100644
---- a/net/ipv4/netfilter/ipt_rpfilter.c
-+++ b/net/ipv4/netfilter/ipt_rpfilter.c
-@@ -78,6 +78,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
- 	flow.flowi4_tos = RT_TOS(iph->tos);
- 	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
-+	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
- 
- 	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;  } diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-index 6bcaf7357183..d800801a5dd2 100644
---- a/net/ipv6/netfilter/ip6t_rpfilter.c
-+++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-@@ -55,7 +55,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 	if (rpfilter_addr_linklocal(&iph->saddr)) {
- 		lookup_flags |= RT6_LOOKUP_F_IFACE;
- 		fl6.flowi6_oif = dev->ifindex;
--	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
-+	/* Set flowi6_oif for vrf devices to lookup route in l3mdev domain. */
-+	} else if (netif_is_l3_master(dev) || netif_is_l3_slave(dev) ||
-+		  (flags & XT_RPFILTER_LOOSE) == 0)
- 		fl6.flowi6_oif = dev->ifindex;
- 
- 	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@ -70,7 +72,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
- 		goto out;
- 	}
- 
--	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
-+	if (rt->rt6i_idev->dev == dev ||
-+	    l3mdev_master_ifindex_rcu(rt->rt6i_idev->dev) == dev->ifindex ||
-+	    (flags & XT_RPFILTER_LOOSE))
- 		ret = true;
-  out:
- 	ip6_rt_put(rt);
 --
-2.21.GIT
-
+Thanks,
+Sasha
