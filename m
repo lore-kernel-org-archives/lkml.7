@@ -2,112 +2,56 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9AAC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D96C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B89218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CtYhWINe"
+	by mail.kernel.org (Postfix) with ESMTP id 89031218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfGCMMe (ORCPT
+        id S1726824AbfGCMNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:12:34 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43718 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCMMd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:12:33 -0400
-Received: by mail-ot1-f68.google.com with SMTP id q10so2065270otk.10;
-        Wed, 03 Jul 2019 05:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mH2lyxDMkrD7XdLOxAFWGZyjvyOXaNVi0/ntCaxja1Y=;
-        b=CtYhWINebh0TkuL+oXcaXo183wNNBg6jq4kBnoqD4X5Lt4Vhcyoochri/u/cY6y6El
-         y76PWe4b0agnkFCB5lWeO8QXTRw3iGVqZZnJYEKjpsmZ7tJHeLFeqpuaVad8p+SH1MBj
-         uRdE5wjDx/nrBSZ10/v1tsRnVD0XmuND8FsBFiZ72mPWKT3YUGrtXrR5nB8bxKuHNoPn
-         qI1/geq5LfbEluFVoreQC/bhwvWszF4iHfZxMBPzbpfQC78N0z9RQ42vIMUgGFw7Wozb
-         EbeOWgaoRnO3AqXqn0PXEC1DwnGGeQXLqJy8UQguQvty39kol54Blk3MoAAsxP7g2Olj
-         18cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mH2lyxDMkrD7XdLOxAFWGZyjvyOXaNVi0/ntCaxja1Y=;
-        b=UtCd+xiV3G0sgCRB7tOL0pA6rgS3HwcI/QKp1KjWDtvO9wS4iLo+dUuwYhio9e6i90
-         o1RP7hQ0v5p2Vt/cVEg/kOQGtJMMmdYqwFFFEODEbW+qtL/XhQizTujRMXn4Hg/fEK9m
-         ghLNcQ2cJ0GUvEAlRHdiVbFWYhw79EVSGZQSmPK5/vGU089QhOPlJ38cYbGmzuHKK+p2
-         EC7/Q5subiriR8MOtQfeND1ebgx/DTOIzcJHgs6e61wPMuxK/PSjJEICCX0fZTWQ72/X
-         tbRh4RJks22CTicZFrPEca6ogsPNm80DFaEt9QFck3JHxlN1IKdtu+NcfhiCQz/RVDjP
-         CQhA==
-X-Gm-Message-State: APjAAAVVbONO+b+vv+e3ejkMQbSSuaIMjauWp5Nm0xo+IXnKPnPyqXux
-        25/+t/sThUuLs8oRWvHi5dCxdBlTG2Qj5Du9GeM=
-X-Google-Smtp-Source: APXvYqyHjGppN3tIIiaPddI2WT4l1OOcds5DkRdEgJQOZDr9uZ31b+RJY1XmKW37lEvv3kuJ9imk6UwFGNQZzxqlDPY=
-X-Received: by 2002:a9d:226c:: with SMTP id o99mr27745852ota.42.1562155952743;
- Wed, 03 Jul 2019 05:12:32 -0700 (PDT)
+        Wed, 3 Jul 2019 08:13:51 -0400
+Received: from verein.lst.de ([213.95.11.211]:51009 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbfGCMNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 08:13:51 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F19DC68B05; Wed,  3 Jul 2019 14:13:47 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 14:13:47 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>, Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH 5/7 v2] MIPS: use the generic uncached segment support
+ in dma-direct
+Message-ID: <20190703121347.GB7671@lst.de>
+References: <20190430110032.25301-1-hch@lst.de> <20190430110032.25301-6-hch@lst.de> <20190430201041.536amvinrcvd2wua@pburton-laptop> <20190430202947.GA30262@lst.de> <20190430211105.ielntedm46uqamca@pburton-laptop> <20190501131339.GA890@lst.de> <20190501171355.7wnrutfnax5djkpx@pburton-laptop> <20190603064855.GA22023@lst.de> <CAK8P3a0+mmc_DsHZZeM85xGUUB8zc50ROUu3=i3UN1XwD8UGeQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190701091258.3870-1-narmstrong@baylibre.com>
- <20190701091258.3870-12-narmstrong@baylibre.com> <CAFBinCBg57gh1x3CKs-YrCvTD0WR2s5zVGWtycb=RGqMiQ-VgA@mail.gmail.com>
- <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
-In-Reply-To: <7acdafc1-39e7-a2ec-886f-ca337c60dfe7@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 3 Jul 2019 14:12:21 +0200
-Message-ID: <CAFBinCC1sJxBA8NgDNzLaWJV7Y+fARVczy31rHkbtkj58XKUUQ@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 11/14] arm64: dts: meson-g12a: add cpus OPP table
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0+mmc_DsHZZeM85xGUUB8zc50ROUu3=i3UN1XwD8UGeQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Wed, Jul 03, 2019 at 10:54:05AM +0200, Arnd Bergmann wrote:
+> I think this is the cause of some kernelci failures in current
+> linux-next builds:
 
-On Wed, Jul 3, 2019 at 1:53 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 03/07/2019 01:47, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>
-> >> Add the OPP table taken from the vendor u200 and u211 DTS.
-> >>
-> >> The Amlogic G12A SoC seems to available in 3 types :
-> >> - low-speed: up to 1,8GHz
-> >> - mid-speed: up to 1,908GHz
-> >> - high-speed: up to 2.1GHz
-> >>
-> >> And the S905X2 opp voltages are slightly higher than the S905D2
-> >> OPP voltages for the low-speed table.
-> >>
-> >> This adds the conservative OPP table with the S905X2 higher voltages
-> >> and the maximum low-speed OPP frequency.
-> > have you considered all three as separate voltage tables?
-> > you're other patches are assigning the OPP table to the CPU in the
-> > board.dts anyways, so it's easy to use different OPP tables for
-> > different boards
->
-> We can't assume the board and the CPU type :-/
-OK, should we assign the OPP table to the CPU cores then in the
-soc.dtsi (instead of board.dts like the other patches from this series
-do)?
-
-> Kevin told me about cpufreq policy, where we could add a policy reading the
-> eFUSE and changing the max frequency, then we could add the whole OPP table.
-we can still do that in a second step, so I'm all for starting with
-the "conservative" OPP table and then improve performance (by having
-detecting the SoC and using the correct OPP table)
-
-
-Martin
+Yes, Guenther reported this already and I sent a fix.  I've been waiting
+for an ACK from the mips maintaines, but given the breakage I
+might as well just pull it in without an ACK.
