@@ -2,106 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC22C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFC9C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF97D218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qSIHAi2c"
+	by mail.kernel.org (Postfix) with ESMTP id 049BF218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562173921;
+	bh=436WDhYAGRaHC7DhWZalpPfSr0ODNk1419c0VWx8viE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DbNVfYAZ6mg+Z/hxBmmeItY9+G5vGTlwBeR4a8OkIeQSkK7ozXIZDV96142aFDV6D
+	 6IaWLxSGoIyt0ORZqanoVxSI97v4e8o7hzpjtsv7g1QhD0nbCcxRPkxBZoumqIZ/ld
+	 foA3SA55UFvVTTgkpES1cvWpPgeFHj9o3GP+Mp2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfGCRKb (ORCPT
+        id S1727099AbfGCRL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:10:31 -0400
-Received: from mail-eopbgr130084.outbound.protection.outlook.com ([40.107.13.84]:47753
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726430AbfGCRKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wpM14TJHytTU7ev4exyN9gC1pt+3+sCqijV3yyGhTnI=;
- b=qSIHAi2c5nPmRgPfyUwjyb/XauUqDgno5P7gsk7iWXjRAfRhBdtuCBcJhcN9BKeljY3RMT74epTKJDZY5qeNKKmtf/geEWMNeWZqps/8ho0Xb55pP5pt12A6AJ7zh5RwiWnPBPcnHF9e5oJoaSz33R/sJpUEctyBVVEpR871aQg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2798.eurprd04.prod.outlook.com (10.172.255.141) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Wed, 3 Jul 2019 17:10:26 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::14c8:b254:33f0:fdba]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::14c8:b254:33f0:fdba%6]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 17:10:26 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-CC:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Gonglei <arei.gonglei@huawei.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 06/35] crypto: Use kmemdup rather than duplicating its
- implementation
-Thread-Topic: [PATCH v2 06/35] crypto: Use kmemdup rather than duplicating its
- implementation
-Thread-Index: AQHVMbwvhMxjtgd8Ck6FxllExWXG3A==
-Date:   Wed, 3 Jul 2019 17:10:26 +0000
-Message-ID: <VI1PR0402MB3485A113C5FB19DC556B678B98FB0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190703162708.32137-1-huangfq.daxian@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 872d7a5f-e0eb-4b41-98ca-08d6ffd957f5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2798;
-x-ms-traffictypediagnostic: VI1PR0402MB2798:
-x-microsoft-antispam-prvs: <VI1PR0402MB2798E20A16034BEE9101227798FB0@VI1PR0402MB2798.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(346002)(136003)(376002)(199004)(189003)(4744005)(53546011)(476003)(25786009)(4326008)(486006)(6436002)(6916009)(446003)(6506007)(74316002)(33656002)(26005)(14454004)(102836004)(7736002)(305945005)(186003)(229853002)(44832011)(99286004)(66446008)(64756008)(66556008)(66476007)(8936002)(8676002)(53936002)(81166006)(81156014)(2906002)(66946007)(73956011)(76116006)(91956017)(6246003)(5660300002)(256004)(76176011)(3846002)(6116002)(52536014)(54906003)(7696005)(9686003)(55016002)(86362001)(66066001)(68736007)(316002)(478600001)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2798;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ad5e7Wmf+qRRWmAKhqjaqEmJ6yHHPGkD4WgjtggahiZhIrJyuF2/JYw/g8tNcLyPZTUenhOUu5KsAAz0WLlclp2601QtIThKLYgWSVHuTspmjzWpqjLV/I0ICy2j52J5QBKbVjZPZGc/nCg2zikflh8WHOLZj1vfXldpp9o3CWVPL2bGJfJunvziDCOmIZl236/3D6R/RcW7YG/b5uAsRC9+SuMNXzpG3aT6ILlLLB7PVdu9kK37KI3XQIDMYrNrmwudAeG9wgFGAzFBk3PK21Hl8Y/xPMO3WygCe4VCvLtAwFZcriAwhcwK0MuWGlN1r8Nywf1VgwUmbxOJ1haTb/eX3nzMlGUPshZLbYK+mKItxMfiX5CPfrk09grSwaplNqxtA3O359gHv13wlvbojWsPZAm8FyDQnB1G+OpodCM=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Jul 2019 13:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfGCRL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:11:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5575A2187F;
+        Wed,  3 Jul 2019 17:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562173917;
+        bh=436WDhYAGRaHC7DhWZalpPfSr0ODNk1419c0VWx8viE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LW8bdLtCYoDfg6i3v8/Zb0LcmNqE8rpNUBgIps/4onsP5WYZ8jFkGmxdI9HoGhFV/
+         0d/AgJ6q/XRAimimUZT/3XK7cS2LB9i7IFiLCpLtrxyTMU6j5c6r0990l9bYQUWtk5
+         gCSth1cwabsT5F31+PUYCFKvhk3LouU7MR1EZeZw=
+Date:   Wed, 3 Jul 2019 19:11:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] General notification queue with user mmap()'able
+ ring buffer [ver #5]
+Message-ID: <20190703171155.GC24672@kroah.com>
+References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
+ <156173695061.15137.17196611619288074120.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 872d7a5f-e0eb-4b41-98ca-08d6ffd957f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 17:10:26.6883
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2798
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156173695061.15137.17196611619288074120.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/2019 7:27 PM, Fuqian Huang wrote:=0A=
-> kmemdup is introduced to duplicate a region of memory in a neat way.=0A=
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to=0A=
-> write the size twice (sometimes lead to mistakes), kmemdup improves=0A=
-> readability, leads to smaller code and also reduce the chances of mistake=
-s.=0A=
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.=0A=
-> =0A=
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Fri, Jun 28, 2019 at 04:49:10PM +0100, David Howells wrote:
+> Implement a misc device that implements a general notification queue as a
+> ring buffer that can be mmap()'d from userspace.
+> 
+> The way this is done is:
+> 
+>  (1) An application opens the device and indicates the size of the ring
+>      buffer that it wants to reserve in pages (this can only be set once):
+> 
+> 	fd = open("/dev/watch_queue", O_RDWR);
+> 	ioctl(fd, IOC_WATCH_QUEUE_NR_PAGES, nr_of_pages);
+> 
+>  (2) The application should then map the pages that the device has
+>      reserved.  Each instance of the device created by open() allocates
+>      separate pages so that maps of different fds don't interfere with one
+>      another.  Multiple mmap() calls on the same fd, however, will all work
+>      together.
+> 
+> 	page_size = sysconf(_SC_PAGESIZE);
+> 	mapping_size = nr_of_pages * page_size;
+> 	char *buf = mmap(NULL, mapping_size, PROT_READ|PROT_WRITE,
+> 			 MAP_SHARED, fd, 0);
+> 
+> The ring is divided into 8-byte slots.  Entries written into the ring are
+> variable size and can use between 1 and 63 slots.  A special entry is
+> maintained in the first two slots of the ring that contains the head and
+> tail pointers.  This is skipped when the ring wraps round.  Note that
+> multislot entries, therefore, aren't allowed to be broken over the end of
+> the ring, but instead "skip" entries are inserted to pad out the buffer.
+> 
+> Each entry has a 1-slot header that describes it:
+> 
+> 	struct watch_notification {
+> 		__u32	type:24;
+> 		__u32	subtype:8;
+> 		__u32	info;
+> 	};
+> 
+> The type indicates the source (eg. mount tree changes, superblock events,
+> keyring changes, block layer events) and the subtype indicates the event
+> type (eg. mount, unmount; EIO, EDQUOT; link, unlink).  The info field
+> indicates a number of things, including the entry length, an ID assigned to
+> a watchpoint contributing to this buffer, type-specific flags and meta
+> flags, such as an overrun indicator.
+> 
+> Supplementary data, such as the key ID that generated an event, are
+> attached in additional slots.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+
+I don't know if I mentioned this before, but your naming seems a bit
+"backwards" from other subsystems. Should "watch_queue" always be the
+prefix, instead of a mix of prefix/suffix usage?
+
+Anyway, your call, it's your code :)
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
