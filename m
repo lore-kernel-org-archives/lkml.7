@@ -2,114 +2,188 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C6BC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82547C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6038218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A8C218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rUe2uflj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfFyFfGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfGCNUC (ORCPT
+        id S1727153AbfGCNUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:20:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23453 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCNUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:20:02 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45f1tQ3cLGz9v01x;
-        Wed,  3 Jul 2019 15:19:58 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rUe2uflj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id iKri1vSda-LR; Wed,  3 Jul 2019 15:19:58 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45f1tQ2YQzz9v01w;
-        Wed,  3 Jul 2019 15:19:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1562159998; bh=jgQROG+UEH6/opA6KH5Z7+riscQwAjL4quybFcDWmgk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rUe2ufljgQWRO0cVg4/ZfJuTFMKu/q27D4zizFbvQKzj72busF8AJLTiuA7789/mJ
-         Bhn3nszxOJm9oNl8AR3cwwDd0eyy09eNtdu2vh7UJkq1EEsJ9MfMo1OevAs4uNyN5i
-         1UgsFWWcKDnFg8xNDQc5WySBFMZ3ddFXKDt8yAdQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C860F8B815;
-        Wed,  3 Jul 2019 15:19:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id y3m8qO8lx4v5; Wed,  3 Jul 2019 15:19:59 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 81E668B811;
-        Wed,  3 Jul 2019 15:19:59 +0200 (CEST)
-Subject: Re: [PATCH 09/30] macintosh: Use kmemdup rather than duplicating its
- implementation
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190703131452.25085-1-huangfq.daxian@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d8ef6578-d879-9222-3feb-92264b8275ec@c-s.fr>
-Date:   Wed, 3 Jul 2019 15:19:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 09:20:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40765 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCNUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:20:20 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w196so2020766oie.7;
+        Wed, 03 Jul 2019 06:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bCaVky2m+KtWvdgOXzoJkN+wtnsS5A6HRHWj07Umdk0=;
+        b=qfFyFfGuqZyaaJ9UbSIPrzCP3Mb45WLBH4lZhsdXMIpcTeY2HW4TpghAMzHK1PXg0r
+         6UA0O7yLcgAz3EPrj+8W/V8hqOeQPFWlQU73IsifcCpPajUU0tBFjVCVD1GPuLUM3Ewh
+         y5AeMjb/TXzaqs58E2xTDqKmKtGYXnvtCQysry1YZegO8Gsur2W7bW3wSfPpu5TWESZB
+         zgf5TIx0cH2B2cj6102PO8vXVT0EqTEPzAEFC/kbHy5vMbOhWM3oXXmZf0uhI6V/Qllz
+         jaIovOsNhMenk7An3fEcJcAGJoUxQtOksNWWxMLV/4c5UTzmiaI8yhqvNcEnNBhcj5Gs
+         gBfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bCaVky2m+KtWvdgOXzoJkN+wtnsS5A6HRHWj07Umdk0=;
+        b=WvSM77qUYTNUUNMfqDXiG33pJ0vbTBC2uuRWGYYfcv6FJgEbafvuM40oSmUX0Sud0X
+         hV+QgP75nOJLkIVMrtviBHA+AuIplvk2aBGXPzaudtClmD8GMjjZGsWxbuviM4HFAQnD
+         6nnCdc6Jm2FoLoKBrr62WqST3BmhybqtRr7LUbm8wdaM4agc8lnOHchkk/qgVbDqJ+x0
+         azmV7P5l/3mW5WvJRJb51BTfMDkbxarqzA2Ks9cM9Nh0IX1EgxwBSIIhMyoVyPzXZ+xL
+         eDQJqpEhlzgNNveikGCMRvHtOn2f+8pvPrifTyYIynh+Oxvwd+AEWXa6V+caEH+7IqlG
+         bjzA==
+X-Gm-Message-State: APjAAAXQjfNOnsG2D/5uQ4p8E444mVbOtRjuFR7C5bgy1vbQZXIA8imv
+        V9Rv3eh1hHH46Nt24iQhnJZK0/DKwvvR37qdVh4=
+X-Google-Smtp-Source: APXvYqwgXorKa+TE5RkAsuReNrHEoB5TYd7CuTxfWqq8r9twr8vddx3Y++rWF6jlAb70LbV/xve5ZUi04iCS6d7/elQ=
+X-Received: by 2002:aca:4306:: with SMTP id q6mr6773857oia.39.1562160019372;
+ Wed, 03 Jul 2019 06:20:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703131452.25085-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <CGME20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77@eucas1p2.samsung.com>
+ <20190703120916.19973-1-i.maximets@samsung.com>
+In-Reply-To: <20190703120916.19973-1-i.maximets@samsung.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Wed, 3 Jul 2019 15:20:08 +0200
+Message-ID: <CAJ8uoz1Wr+bJrO+HNtSD5b79ych-pNg7BxFiHVhzaMSGGAdqLA@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] xdp: fix race on generic receive path
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 3, 2019 at 2:09 PM Ilya Maximets <i.maximets@samsung.com> wrote:
+>
+> Unlike driver mode, generic xdp receive could be triggered
+> by different threads on different CPU cores at the same time
+> leading to the fill and rx queue breakage. For example, this
+> could happen while sending packets from two processes to the
+> first interface of veth pair while the second part of it is
+> open with AF_XDP socket.
+>
+> Need to take a lock for each generic receive to avoid race.
 
+I measured the performance degradation of rxdrop on my local machine
+and it went from 2.19 to 2.08, so roughly a 5% drop. I think we can
+live with this in XDP_SKB mode. If we at some later point in time need
+to boost performance in this mode, let us look at it then from a
+broader perspective and find the most low hanging fruit.
 
-Le 03/07/2019 à 15:14, Fuqian Huang a écrit :
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memset, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
+Thanks Ilya for this fix.
 
-s/memset/memcpy/
+Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
 
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 > ---
->   drivers/macintosh/adbhid.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/macintosh/adbhid.c b/drivers/macintosh/adbhid.c
-> index 75482eeab2c4..5d14bebfb58f 100644
-> --- a/drivers/macintosh/adbhid.c
-> +++ b/drivers/macintosh/adbhid.c
-> @@ -789,7 +789,8 @@ adbhid_input_register(int id, int default_id, int original_handler_id,
->   
->   	switch (default_id) {
->   	case ADB_KEYBOARD:
-> -		hid->keycode = kmalloc(sizeof(adb_to_linux_keycodes), GFP_KERNEL);
-> +		hid->keycode = kmemdup(adb_to_linux_keycodes,
-> +			sizeof(adb_to_linux_keycodes), GFP_KERNEL);
->   		if (!hid->keycode) {
->   			err = -ENOMEM;
->   			goto fail;
-> @@ -797,8 +798,6 @@ adbhid_input_register(int id, int default_id, int original_handler_id,
->   
->   		sprintf(hid->name, "ADB keyboard");
->   
-> -		memcpy(hid->keycode, adb_to_linux_keycodes, sizeof(adb_to_linux_keycodes));
-> -
->   		switch (original_handler_id) {
->   		default:
->   			keyboard_type = "<unknown>";
-> 
+>
+> Version 2:
+>     * spin_lock_irqsave --> spin_lock_bh.
+>
+>  include/net/xdp_sock.h |  2 ++
+>  net/xdp/xsk.c          | 31 ++++++++++++++++++++++---------
+>  2 files changed, 24 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+> index d074b6d60f8a..ac3c047d058c 100644
+> --- a/include/net/xdp_sock.h
+> +++ b/include/net/xdp_sock.h
+> @@ -67,6 +67,8 @@ struct xdp_sock {
+>          * in the SKB destructor callback.
+>          */
+>         spinlock_t tx_completion_lock;
+> +       /* Protects generic receive. */
+> +       spinlock_t rx_lock;
+>         u64 rx_dropped;
+>  };
+>
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index a14e8864e4fa..5e0637db92ea 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -123,13 +123,17 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>         u64 addr;
+>         int err;
+>
+> -       if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
+> -               return -EINVAL;
+> +       spin_lock_bh(&xs->rx_lock);
+> +
+> +       if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
+> +               err = -EINVAL;
+> +               goto out_unlock;
+> +       }
+>
+>         if (!xskq_peek_addr(xs->umem->fq, &addr) ||
+>             len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
+> -               xs->rx_dropped++;
+> -               return -ENOSPC;
+> +               err = -ENOSPC;
+> +               goto out_drop;
+>         }
+>
+>         addr += xs->umem->headroom;
+> @@ -138,13 +142,21 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>         memcpy(buffer, xdp->data_meta, len + metalen);
+>         addr += metalen;
+>         err = xskq_produce_batch_desc(xs->rx, addr, len);
+> -       if (!err) {
+> -               xskq_discard_addr(xs->umem->fq);
+> -               xsk_flush(xs);
+> -               return 0;
+> -       }
+> +       if (err)
+> +               goto out_drop;
+> +
+> +       xskq_discard_addr(xs->umem->fq);
+> +       xskq_produce_flush_desc(xs->rx);
+>
+> +       spin_unlock_bh(&xs->rx_lock);
+> +
+> +       xs->sk.sk_data_ready(&xs->sk);
+> +       return 0;
+> +
+> +out_drop:
+>         xs->rx_dropped++;
+> +out_unlock:
+> +       spin_unlock_bh(&xs->rx_lock);
+>         return err;
+>  }
+>
+> @@ -765,6 +777,7 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+>
+>         xs = xdp_sk(sk);
+>         mutex_init(&xs->mutex);
+> +       spin_lock_init(&xs->rx_lock);
+>         spin_lock_init(&xs->tx_completion_lock);
+>
+>         mutex_lock(&net->xdp.lock);
+> --
+> 2.17.1
+>
