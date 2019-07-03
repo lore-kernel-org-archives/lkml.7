@@ -2,154 +2,212 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64440C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D47DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D96B218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:56:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Nj/gDrwa"
+	by mail.kernel.org (Postfix) with ESMTP id 0A20F218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562162227;
+	bh=A/Y1BRKc8RjjvjySbfBBiJIL3q8z3CylHGuSSZg25hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mhHMxkaBexOHDohFZZGWdpTo4ugByTXqbiya9DXfPs3R3NGmVmck058oBLK3A/kQJ
+	 xSzPx78RooMQbNyMFm2kLMjbQ++iz61LfbCfI+FunN1I6h3Fr/UaMmN20KwRrnu3r7
+	 ETzkvsWJcrqvzKY5jNCzLhxrEMyaLz879H1bMsnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfGCN4C (ORCPT
+        id S1726825AbfGCN5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:56:02 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:20678 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725830AbfGCN4C (ORCPT
+        Wed, 3 Jul 2019 09:57:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41363 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCN5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:56:02 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63Dt5EO018724;
-        Wed, 3 Jul 2019 08:55:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=PODMain02222019;
- bh=L90T/GlgU1MaQGyAFE7vEL8Bp6VDhRgZMQRaYBA9ec4=;
- b=Nj/gDrwaFBX2pdJvGiLpjgRZAUioUtaCgRJYDcmTpJgiquleCI4TqvGwIi7lHBpTg6ZP
- Rax4PwyGhmj2PNloQLvCP9O+kWoFlsQTCmW3Jm818M8UcvaexmhGPHMcw2St3tWnxcqa
- v18GNO2MSplkvS0jTP6/pP+yAG98qUaIDR2wlnRKhOz2k0HDO6D1Cm0yYDqDJGD9FNz7
- JPk/wfi4kXvDo4DctmlUhbbLWecpKxnyucVqX61NRlSE2Il8FVx+7iYLTAiwyd0dCB8A
- v6K/SBaYEXO4IvvaujHShR+r1TqayrhWNyiXhmRrxFeuOyg+Aqy3wIqmrhqA00BxOqZk fQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=rf@opensource.cirrus.com
-Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2te4dr6mnw-1;
-        Wed, 03 Jul 2019 08:55:04 -0500
-Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail1.cirrus.com (Postfix) with ESMTP id 5DB74611C8BB;
-        Wed,  3 Jul 2019 08:55:04 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 3 Jul
- 2019 14:55:03 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Wed, 3 Jul 2019 14:55:03 +0100
-Received: from [198.90.251.101] (edi-sw-dsktp006.ad.cirrus.com [198.90.251.101])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 79B792A1;
-        Wed,  3 Jul 2019 14:55:03 +0100 (BST)
-Subject: Re: [PATCH 30/30] sound/soc: Use kmemdup rather than duplicating its
- implementation
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190703131842.26082-1-huangfq.daxian@gmail.com>
-From:   Richard Fitzgerald <rf@opensource.cirrus.com>
-Message-ID: <547c68b0-f55f-ca1d-c5b3-f6a5f89d93a9@opensource.cirrus.com>
-Date:   Wed, 3 Jul 2019 14:55:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Wed, 3 Jul 2019 09:57:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so2922316wrm.8;
+        Wed, 03 Jul 2019 06:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dKMDMyWa08xLpVvBOprd0gf66kxRqMrKCmCkMVp5v3w=;
+        b=g2vmXiLj5ietQUUQPKSXVooYWv6itxE5a7epTjrUwN8g/zpunWNeD5bHccaDKH+FEa
+         jC2td8uosCBax9QGHI7w32g2FVroOsI0gUwfTsE1ptRPlqfHN/9giuqWqsa+1nRAjbXI
+         MB4y2zMXQG5ugP/V/iUOuAxGzP5G0XJt0+68EdllvykSjx5h+k4ZoNMF8Mami4ULB8Kl
+         ZOLk9/goGM1TvXryWPu0P0a6pNy8hibQBGRIPazpphZLMZPLlk0VgQvPXkicm7ziafOv
+         xO5rI5usRhAtRrnJdkOLn818dokYHKxtHSUJQq3je8z+IF/1wltN3OA/Mf6dngiHR/1m
+         vDxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dKMDMyWa08xLpVvBOprd0gf66kxRqMrKCmCkMVp5v3w=;
+        b=NrYQNcc/NCH1GFOy2ATL8JNqZBkccn7wPVQaEja5/SBxrLcYWw0xbcES6wAVvqvi6g
+         j/7upleSbIzxRjgb5xdipLkkAwVIatbzq1+7VQeAtb0ik/bHEFnLGKZ3QMFN3cg+tPFf
+         Tsp8ESoK6aBl/fHjPLieJlg1Tzw6w9SLinDDEyZwFRlsgBYe/08l6GkiQMJBcR/TXhXM
+         UC/IyA2tJQk1sbZr0UhPY6f587mw2w/qejTcvTj9NjRy0AIPszyEZ/sNt1Qrq1Y1D2i9
+         3+F9C3FpVvfJ0bJCpFJr4vavXVMJwYPSLWnHJsoyc5gvfuCXgNkUSIAEOsFst+tFMbzH
+         rOUg==
+X-Gm-Message-State: APjAAAUoTZ32DhdDDripHdqRkGWnK1Ss+PviJ9QdyrmWUJH0Zo759cW/
+        eI1s3qOjEkJMwIkWu+YMu0U=
+X-Google-Smtp-Source: APXvYqzs6+DfaJgCdT2IvDks8GgHhcyyDQBYj2//ZGcTu00rEvUJ55UPsUDmB33gZFZ/BnRnaQq5NA==
+X-Received: by 2002:a5d:4e4d:: with SMTP id r13mr30872035wrt.295.1562162222509;
+        Wed, 03 Jul 2019 06:57:02 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id w67sm3725079wma.24.2019.07.03.06.57.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 06:57:01 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 15:56:59 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Mariano Pache <npache@redhat.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20190703135659.GB108545@gmail.com>
+References: <20190703032746.21692-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190703131842.26082-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907030170
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703032746.21692-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/19 14:18, Fuqian Huang wrote:
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memset, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
+
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
 > 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
->   sound/soc/codecs/wm0010.c             | 4 +---
->   sound/soc/intel/atom/sst/sst_loader.c | 3 +--
-
-Should be one patch per file as the drivers are not related to each
-other at all, and if one needed a revert you couldn't revert this
-patch because it would revert both drivers.
-
-But apart from that, for wm0010.c:
-Acked-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-
->   2 files changed, 2 insertions(+), 5 deletions(-)
+> 	Please consider pulling, this is on top of perf-core-for-mingo-5.3-20190701.
 > 
-> diff --git a/sound/soc/codecs/wm0010.c b/sound/soc/codecs/wm0010.c
-> index 727d6703c905..807826f30f58 100644
-> --- a/sound/soc/codecs/wm0010.c
-> +++ b/sound/soc/codecs/wm0010.c
-> @@ -515,7 +515,7 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
->   	dev_dbg(component->dev, "Downloading %zu byte stage 2 loader\n", fw->size);
->   
->   	/* Copy to local buffer first as vmalloc causes problems for dma */
-> -	img = kzalloc(fw->size, GFP_KERNEL | GFP_DMA);
-> +	img = kmemdup(&fw->data[0], fw->size, GFP_KERNEL | GFP_DMA);
->   	if (!img) {
->   		ret = -ENOMEM;
->   		goto abort2;
-> @@ -527,8 +527,6 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
->   		goto abort1;
->   	}
->   
-> -	memcpy(img, &fw->data[0], fw->size);
-> -
->   	spi_message_init(&m);
->   	memset(&t, 0, sizeof(t));
->   	t.rx_buf = out;
-> diff --git a/sound/soc/intel/atom/sst/sst_loader.c b/sound/soc/intel/atom/sst/sst_loader.c
-> index ce11c36848c4..cc95af35c060 100644
-> --- a/sound/soc/intel/atom/sst/sst_loader.c
-> +++ b/sound/soc/intel/atom/sst/sst_loader.c
-> @@ -288,14 +288,13 @@ static int sst_cache_and_parse_fw(struct intel_sst_drv *sst,
->   {
->   	int retval = 0;
->   
-> -	sst->fw_in_mem = kzalloc(fw->size, GFP_KERNEL);
-> +	sst->fw_in_mem = kmemdup(fw->data, fw->size, GFP_KERNEL);
->   	if (!sst->fw_in_mem) {
->   		retval = -ENOMEM;
->   		goto end_release;
->   	}
->   	dev_dbg(sst->dev, "copied fw to %p", sst->fw_in_mem);
->   	dev_dbg(sst->dev, "phys: %lx", (unsigned long)virt_to_phys(sst->fw_in_mem));
-> -	memcpy(sst->fw_in_mem, fw->data, fw->size);
->   	retval = sst_parse_fw_memcpy(sst, fw->size, &sst->memcpy_list);
->   	if (retval) {
->   		dev_err(sst->dev, "Failed to parse fw\n");
+> Best regards,
 > 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 06c642c0e9fceafd16b1a4c80d44b1c09e282215:
+> 
+>   perf jevents: Use nonlocal include statements in pmu-events.c (2019-07-01 22:50:42 -0300)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.3-20190703
+> 
+> for you to fetch changes up to 15a108af1a18b597bfbd7f7b3c7b4823bfbaf8df:
+> 
+>   perf script: Allow specifying the files to process guest samples (2019-07-03 00:13:25 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf metrics:
+> 
+>   Andi Kleen:
+> 
+>   - Fixes for SkylakeX and CascadeLakeX Intel vendor events.
+> 
+>   - Avoid extra ':' for --raw metrics.
+> 
+>   - Don't include duration_time in group.
+> 
+> perf script:
+> 
+>   Arnaldo Carvalho de Melo/Jiri Olsa:
+> 
+>   - Fix processing guest samples.
+> 
+> perf diff:
+> 
+>   Jin Yao:
+> 
+>   - Do diffs by basic blocks.
+> 
+> objtool:
+> 
+>   Jiri Olsa:
+> 
+>   - Fix build by linking against tools/lib/ctype.o sources.
+> 
+> perf pmu:
+> 
+>   John Garry:
+> 
+>   - Support more complex PMU event aliasing.
+> 
+>   - Add support for Hisi hip08 DDRC, HHA and L3C PMU aliasing.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (4):
+>       perf tools: Fix typos / broken sentences
+>       perf vendor events intel: Metric fixes for SKX/CLX
+>       perf list: Avoid extra : for --raw metrics
+>       perf tools metric: Don't include duration_time in group
+> 
+> Arnaldo Carvalho de Melo (1):
+>       perf script: Allow specifying the files to process guest samples
+> 
+> Jin Yao (7):
+>       perf symbol: Create block_info structure
+>       perf hists: Add block_info in hist_entry
+>       perf diff: Check if all data files with branch stacks
+>       perf diff: Use hists to manage basic blocks per symbol
+>       perf diff: Link same basic blocks among different data
+>       perf diff: Print the basic block cycles diff
+>       perf diff: Documentation -c cycles option
+> 
+> Jiri Olsa (1):
+>       objtool: Fix build by linking against tools/lib/ctype.o sources
+> 
+> John Garry (4):
+>       perf pmu: Support more complex PMU event aliasing
+>       perf jevents: Add support for Hisi hip08 DDRC PMU aliasing
+>       perf jevents: Add support for Hisi hip08 HHA PMU aliasing
+>       perf jevents: Add support for Hisi hip08 L3C PMU aliasing
+> 
+>  tools/objtool/Build                                |   5 +
+>  tools/perf/Documentation/perf-diff.txt             |  17 +-
+>  tools/perf/Documentation/perf-report.txt           |   2 +-
+>  tools/perf/Documentation/tips.txt                  |   2 +-
+>  tools/perf/builtin-diff.c                          | 382 ++++++++++++++++++++-
+>  tools/perf/builtin-script.c                        |  19 +
+>  .../arch/arm64/hisilicon/hip08/uncore-ddrc.json    |  44 +++
+>  .../arch/arm64/hisilicon/hip08/uncore-hha.json     |  51 +++
+>  .../arch/arm64/hisilicon/hip08/uncore-l3c.json     |  37 ++
+>  .../arch/x86/cascadelakex/clx-metrics.json         |   4 +-
+>  .../pmu-events/arch/x86/skylakex/skx-metrics.json  |  22 +-
+>  tools/perf/pmu-events/jevents.c                    |   3 +
+>  tools/perf/ui/stdio/hist.c                         |  27 ++
+>  tools/perf/util/hist.c                             |  41 ++-
+>  tools/perf/util/hist.h                             |   8 +
+>  tools/perf/util/metricgroup.c                      |  21 +-
+>  tools/perf/util/pmu.c                              |  46 ++-
+>  tools/perf/util/sort.h                             |  13 +
+>  tools/perf/util/srcline.c                          |   4 +-
+>  tools/perf/util/symbol.c                           |  22 ++
+>  tools/perf/util/symbol.h                           |  23 ++
+>  tools/perf/util/symbol_conf.h                      |   4 +-
+>  22 files changed, 753 insertions(+), 44 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
 
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
