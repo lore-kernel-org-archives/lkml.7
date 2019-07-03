@@ -2,114 +2,92 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D473C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A223C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A7F218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3/1i6PF"
+	by mail.kernel.org (Postfix) with ESMTP id DDC2A2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562171560;
+	bh=8hkx9D6cVHuLlyuoRR6plS3cZoqyazckirKKEEaVDhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hfok+BwGpoE07vVQx5Hz6wBNUxh7/f8vt2n0o8aym7r9q3hUpw3hsMfF68x3dJgU9
+	 degdeTHQsHP5DGWJ8O442PcBRVmdPu816CRLH4Fm09Uq+ok6u026Ldk6J+YYzdBQ8Y
+	 RgirK2OKn7djOaeYXq5JnRX+fRAQbE7JRH8IE9Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfGCQcf (ORCPT
+        id S1727285AbfGCQci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 3 Jul 2019 12:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbfGCQcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Jul 2019 12:32:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38062 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfGCQcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:32:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z75so1513916pgz.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=l0364bIasEWF4u6q6PoJgdA0dWNvfPQBCr9kLEyFzmc=;
-        b=A3/1i6PFKv8gEafTpu+DrcOtTvtUVbk5N0FhU3sAIRCeitnnDZl/16Vgwj94zhFZRw
-         sloUEURPQeMMX4uVZq7nUxbncgxJJDxnsQEx5LGUxopH1IJ5oNMFuliVpw+YwjuTn0Hl
-         hY7MHjdi8wl8/WsuuDcyV4wjpSseMOFafa32ggD5Q3LgDQHRgISniM1+DKZSTnFemvXw
-         3wJWkS0e/SqzyUZST9Fj96yx55xRxQMtTonyNNuCWyeObU4YNYhx0jMt3uqIpSf3Defm
-         btWbdptUzbuYrZ4cf/Q56RzBPSzsOSNjVzPMtbcFCHyFfcYSaXorV0t0OoOPb+dQEm7g
-         CXRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=l0364bIasEWF4u6q6PoJgdA0dWNvfPQBCr9kLEyFzmc=;
-        b=GHc8oFIFyCbci5nwXEGapzVx5MZz4342lwdkF6yKbzesihZAto9znyefFkBgoEGt40
-         pi65lnlym/d5dC2RgUVkkw1va6p/LvtqzsdiRQkqRHBY0NgFN/YUaRK7CF5oL+LsO3qF
-         cPY5/hFXGa7+4hlcMKPnRCHBs6wVWbRTPwM2AXVEHJKpFAkhlrI9djjv+zomHHEbwH24
-         uLeFFqgnzKmEo4JkNWVKz6Nz6piifHgvT7szSIXy6v2fj++LRorKxwYGxxuRuAvupuMt
-         39V2pfSPZ6AoDP4wRb+GsWSYQ2jxwS2DP/D7frI8AoaNmgivl7z6A1UCcCSRlBvg+ts3
-         qNIw==
-X-Gm-Message-State: APjAAAWkuVNslXlwzrtgekm6NuQLGROm4X0JBUdqUBtGgnbClf1FiFq9
-        mcgG0+hhcMr6GIpDjevVUyo=
-X-Google-Smtp-Source: APXvYqz95ExAz0RnIJX8vrhkHQw4WbHC6UJPq4iqb2Ol9St8WIphQDUOOlVKDM6wl0N9nBJSWgYktQ==
-X-Received: by 2002:a17:90a:b883:: with SMTP id o3mr13734677pjr.50.1562171554721;
-        Wed, 03 Jul 2019 09:32:34 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id a3sm3042487pff.122.2019.07.03.09.32.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:32:34 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 34/35] sound/soc/codecs: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:32:24 +0800
-Message-Id: <20190703163224.1029-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB002187F;
+        Wed,  3 Jul 2019 16:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562171554;
+        bh=8hkx9D6cVHuLlyuoRR6plS3cZoqyazckirKKEEaVDhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HlXDW6vx8wTFxhwAjRJH4wSDIXbJZ3SjmBvcvttiyLCS63EFVOW8+dJPOytcTUxD4
+         dIv7CTcdJKQrr2CVJHK32yAfvGXwaHezOLLG7CvxC4ztyPsXl7CsCKC3nJ3+MiTBtk
+         vwyZ4dKaKJ/Y08WQBFNAg/BcSzS9zX0nRZy79KOk=
+Date:   Wed, 3 Jul 2019 18:32:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     fatihaltinpinar@gmail.com
+Cc:     matthias.bgg@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] Staging: mt7621-dma: mtk-hsdma: fix a coding style issue
+Message-ID: <20190703163232.GA29325@kroah.com>
+References: <20190702080632.27470-1-fatihaltinpinar@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702080632.27470-1-fatihaltinpinar@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup is introduced to duplicate a region of memory in a neat way.
-Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-write the size twice (sometimes lead to mistakes), kmemdup improves
-readability, leads to smaller code and also reduce the chances of mistakes.
-Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+On Tue, Jul 02, 2019 at 11:06:32AM +0300, fatihaltinpinar@gmail.com wrote:
+> From: Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
+> 
+> Fixed a coding style issue. Removed curly brackets of an one
+> line if statement.
+> 
+> Signed-off-by: Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
+> ---
+>  drivers/staging/mt7621-dma/mtk-hsdma.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/mt7621-dma/mtk-hsdma.c b/drivers/staging/mt7621-dma/mtk-hsdma.c
+> index 0fbb9932d6bb..a58725dd2611 100644
+> --- a/drivers/staging/mt7621-dma/mtk-hsdma.c
+> +++ b/drivers/staging/mt7621-dma/mtk-hsdma.c
+> @@ -664,9 +664,8 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  
+>  	hsdma = devm_kzalloc(&pdev->dev, sizeof(*hsdma), GFP_KERNEL);
+> -	if (!hsdma) {
+> +	if (!hsdma)
+>  		return -EINVAL;
+> -	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	base = devm_ioremap_resource(&pdev->dev, res);
 
-Acked-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
-Changes in v2:
-  - Fix a typo in commit message (memset -> memcpy)
-  - Split into two patches
+This change is already in my tree, always be sure to work against the
+proper kernel tree for doing new development.
 
- sound/soc/codecs/wm0010.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+thanks,
 
-diff --git a/sound/soc/codecs/wm0010.c b/sound/soc/codecs/wm0010.c
-index 727d6703c905..807826f30f58 100644
---- a/sound/soc/codecs/wm0010.c
-+++ b/sound/soc/codecs/wm0010.c
-@@ -515,7 +515,7 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
- 	dev_dbg(component->dev, "Downloading %zu byte stage 2 loader\n", fw->size);
- 
- 	/* Copy to local buffer first as vmalloc causes problems for dma */
--	img = kzalloc(fw->size, GFP_KERNEL | GFP_DMA);
-+	img = kmemdup(&fw->data[0], fw->size, GFP_KERNEL | GFP_DMA);
- 	if (!img) {
- 		ret = -ENOMEM;
- 		goto abort2;
-@@ -527,8 +527,6 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
- 		goto abort1;
- 	}
- 
--	memcpy(img, &fw->data[0], fw->size);
--
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
- 	t.rx_buf = out;
--- 
-2.11.0
-
+greg k-h
