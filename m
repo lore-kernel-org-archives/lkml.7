@@ -2,215 +2,161 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD08C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD68C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2816E218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562185645;
-	bh=90lPrn9FCOvmaMGoRmz2Ce+oqF+p+Sz/GvLhh72WwM0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sFOq2NfAIRiKtzZmfWH+5HNadZlMwUsJsfx7uzqzMXNEhyz1Fchg6VLcR+qSV1Pnt
-	 UXeIhdvl1Kp2xiRqth0NFKpIlNy1WpbXUn2LjE1OFS2NkNp6TZVqkA38vK50G7sUQW
-	 mf4ShS62/XTLwCA9rJGeXSLe5CUkGKHP6t9uM06I=
+	by mail.kernel.org (Postfix) with ESMTP id 03F2D218BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCC5Njw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGCU1Y (ORCPT
+        id S1727172AbfGCU2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbfGCU1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:27:23 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20DFF218BA
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 20:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562185642;
-        bh=90lPrn9FCOvmaMGoRmz2Ce+oqF+p+Sz/GvLhh72WwM0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mB/Tx34FI8qtSy4nSC82hSafhYohmLQCmPf3uWeb9TPQGmWYQ200lA00jpIlcfn16
-         w30Cf/YTFXZerZNF1CE3ickBkGXYqYpklhOAOBrj+3jMGctEfri1V+y/aqdy5XBVCU
-         O79OBXS7mwNdJOE6dDFpjAUmKX4qfNJ1Ay12Tfa8=
-Received: by mail-wm1-f53.google.com with SMTP id s3so3506828wms.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:27:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAWJ8XO4VV9s0RAb6L71mdSOpAkovtm+xQB9+Qs6VgrRcaxvupx2
-        ZCZW9wAMcDUIv5deLncZDaHOSVljOsRBthZafwqi/A==
-X-Google-Smtp-Source: APXvYqxprk8oXGyeht1meo5mZFa2/qRdrSo5hhi/DQIMSl6vgSpNK1o584zTmfiTUO9E2JF8TNnvkuKR/H4lnh1fQ7o=
-X-Received: by 2002:a1c:a942:: with SMTP id s63mr9131647wme.76.1562185640630;
- Wed, 03 Jul 2019 13:27:20 -0700 (PDT)
+        Wed, 3 Jul 2019 16:28:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42269 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCU2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:28:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a10so3130089wrp.9;
+        Wed, 03 Jul 2019 13:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IDdbRLiXCB65ziZYGfUuZK0iXp9TkXgdisLvBRs8jaY=;
+        b=mCC5Njw7GStxXaKNTXARfVVNIV+nFsxO6MmEi+jNoVd8mNoh1//b8pnNh4PLjz+6wF
+         JBwW4E0zD6yjqS4DBwkqXjjNnHpDn9sbUZS05NGKW5NtHl8rVtix9gyf3k4cSeePmmTd
+         OYnP6nkSuxw13YpLr1+g35oK1zTuqtBEBT3dVnr/lg0cwXq7oMFMObMbLwp4SqXGPX0X
+         7OrJcyfj8Z7KoynzP3qqGMOk9fF8cQqffO6ZiRcamEZE7duWOsXUX+ab0lPr0kr1hAGg
+         Pq295HlsHLgwsFhpfuvQa4Dq+O/IFRhDBhWdhvCfhZKb4xa6yN0RbWz0OW9Y6Jh+ZtxF
+         IRmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IDdbRLiXCB65ziZYGfUuZK0iXp9TkXgdisLvBRs8jaY=;
+        b=rtwshVG1AYOQ/2Uqfjs66K1ZBt0zpmBaC1cq1845TQyrs9vnK+2WY89Zvsu2SfNLn1
+         69h0AqfO92OycxSoFckhanNBNaU3B46/pSHrlgoi3ccrqJ+LPLgM2IJc6npF7bKOOGXr
+         VaKHxlJXx1n4BM1h9Q96r2aGk+gAugwudSfax3L7wb+mKRh9rXQ6kkMErvBIU5e97VEm
+         hVtnI6JWkNedvkXTDTcEWtaBBtq3/V7Dgt4tMQpEOxY5ixLhGcMlzJpbcZCPwRKkHSw9
+         7017zNG44hB5N/zd+sUeu90rvOZ6/qlwojIfsn/sA0QuZUxHuZ6VtcKw6E3dsCcHEmIu
+         2SRQ==
+X-Gm-Message-State: APjAAAUsW208/tqGzN6NrWG0IhRUtHFJfSpdRCs1QLltLi1dgFDHTypp
+        gGONZSgOpbh+1Yj1Ps3Na/ykNZKj
+X-Google-Smtp-Source: APXvYqwbIo6riFOMJ1u6NjGAiNONXGCGelLqGoX9+1HEMIKIld8vupONM7TtIn9RDWkbcpr4UulPoQ==
+X-Received: by 2002:adf:a55b:: with SMTP id j27mr24033584wrb.154.1562185710395;
+        Wed, 03 Jul 2019 13:28:30 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd6:c00:4503:872e:8227:c4e0? (p200300EA8BD60C004503872E8227C4E0.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:4503:872e:8227:c4e0])
+        by smtp.googlemail.com with ESMTPSA id f204sm5096570wme.18.2019.07.03.13.28.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 13:28:29 -0700 (PDT)
+Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <20190703193724.246854-6-mka@chromium.org>
+ <e7fa2c8c-d53e-2480-d239-e2c0b362dc4f@gmail.com>
+Message-ID: <f25dedfc-d961-f278-3e55-9f0574557f84@gmail.com>
+Date:   Wed, 3 Jul 2019 22:22:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190703102731.236024951@infradead.org> <20190703102807.588906400@infradead.org>
-In-Reply-To: <20190703102807.588906400@infradead.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 3 Jul 2019 13:27:09 -0700
-X-Gmail-Original-Message-ID: <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
-Message-ID: <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
-To:     root <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e7fa2c8c-d53e-2480-d239-e2c0b362dc4f@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 3:28 AM root <peterz@infradead.org> wrote:
->
-> Despire the current efforts to read CR2 before tracing happens there
-> still exist a number of possible holes:
->
->   idtentry page_fault             do_page_fault           has_error_code=1
->     call error_entry
->       TRACE_IRQS_OFF
->         call trace_hardirqs_off*
->           #PF // modifies CR2
->
->       CALL_enter_from_user_mode
->         __context_tracking_exit()
->           trace_user_exit(0)
->             #PF // modifies CR2
->
->     call do_page_fault
->       address = read_cr2(); /* whoopsie */
->
-> And similar for i386.
->
-> Fix it by pulling the CR2 read into the entry code, before any of that
-> stuff gets a chance to run and ruin things.
->
-> Ideally we'll clean up the entry code by moving this tracing and
-> context tracking nonsense into C some day, but let's not delay fixing
-> this longer.
->
-> Reported-by: He Zhe <zhe.he@windriver.com>
-> Reported-by: Eiichi Tsukata <devel@etsukata.com>
-> Debugged-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/entry/entry_32.S       |   25 ++++++++++++++++++++++---
->  arch/x86/entry/entry_64.S       |   28 ++++++++++++++--------------
->  arch/x86/include/asm/kvm_para.h |    2 +-
->  arch/x86/include/asm/traps.h    |    2 +-
->  arch/x86/kernel/kvm.c           |    8 ++++----
->  arch/x86/mm/fault.c             |   28 ++++++++++------------------
->  6 files changed, 52 insertions(+), 41 deletions(-)
->
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1443,9 +1443,28 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vec
->
->  ENTRY(page_fault)
->         ASM_CLAC
-> -       pushl   $do_page_fault
-> -       ALIGN
-> -       jmp common_exception
-> +       pushl   $0; /* %gs's slot on the stack */
-> +
-> +       SAVE_ALL switch_stacks=1 skip_gs=1
-> +
-> +       ENCODE_FRAME_POINTER
-> +       UNWIND_ESPFIX_STACK
-> +
-> +       /* fixup %gs */
-> +       GS_TO_REG %ecx
-> +       REG_TO_PTGS %ecx
-> +       SET_KERNEL_GS %ecx
-> +
-> +       GET_CR2_INTO(%ecx)                      # might clobber %eax
-> +
-> +       /* fixup orig %eax */
-> +       movl    PT_ORIG_EAX(%esp), %edx         # get the error code
-> +       movl    $-1, PT_ORIG_EAX(%esp)          # no syscall to restart
-> +
-> +       TRACE_IRQS_OFF
-> +       movl    %esp, %eax                      # pt_regs pointer
-> +       call    do_page_fault
-> +       jmp     ret_from_exception
->  END(page_fault)
->
->  common_exception:
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -901,7 +901,7 @@ apicinterrupt IRQ_WORK_VECTOR                       irq_work
->   * @paranoid == 2 is special: the stub will never switch stacks.  This is for
->   * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
->   */
-> -.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0
-> +.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0 read_cr2=0
->  ENTRY(\sym)
->         UNWIND_HINT_IRET_REGS offset=\has_error_code*8
->
-> @@ -937,18 +937,27 @@ ENTRY(\sym)
->
->         .if \paranoid
->         call    paranoid_entry
-> +       /* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
->         .else
->         call    error_entry
->         .endif
->         UNWIND_HINT_REGS
-> -       /* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
->
-> -       .if \paranoid
-> +       .if \read_cr2
-> +       GET_CR2_INTO(%rdx);                     /* can clobber %rax */
-> +       .endif
-> +
->         .if \shift_ist != -1
->         TRACE_IRQS_OFF_DEBUG                    /* reload IDT in case of recursion */
->         .else
->         TRACE_IRQS_OFF
->         .endif
-> +
-> +       .if \paranoid == 0
-> +       testb   $3, CS(%rsp)
-> +       jz      .Lfrom_kernel_no_context_tracking_\@
-> +       CALL_enter_from_user_mode
-> +.Lfrom_kernel_no_context_tracking_\@:
->         .endif
->
->         movq    %rsp, %rdi                      /* pt_regs pointer */
-> @@ -1180,10 +1189,10 @@ idtentry xenint3                do_int3                 has_error_co
->  #endif
->
->  idtentry general_protection    do_general_protection   has_error_code=1
-> -idtentry page_fault            do_page_fault           has_error_code=1
-> +idtentry page_fault            do_page_fault           has_error_code=1        read_cr2=1
->
->  #ifdef CONFIG_KVM_GUEST
-> -idtentry async_page_fault      do_async_page_fault     has_error_code=1
-> +idtentry async_page_fault      do_async_page_fault     has_error_code=1        read_cr2=1
->  #endif
->
->  #ifdef CONFIG_X86_MCE
-> @@ -1338,18 +1347,9 @@ ENTRY(error_entry)
->         movq    %rax, %rsp                      /* switch stack */
->         ENCODE_FRAME_POINTER
->         pushq   %r12
-> -
-> -       /*
-> -        * We need to tell lockdep that IRQs are off.  We can't do this until
-> -        * we fix gsbase, and we should do it before enter_from_user_mode
-> -        * (which can take locks).
-> -        */
-> -       TRACE_IRQS_OFF
+On 03.07.2019 22:13, Heiner Kallweit wrote:
+> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
+>> The LED behavior of some Realtek PHYs is configurable. Add the
+>> property 'realtek,led-modes' to specify the configuration of the
+>> LEDs.
+>>
+>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Changes in v2:
+>> - patch added to the series
+>> ---
+>>  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
+>>  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
+>>  2 files changed, 26 insertions(+)
+>>  create mode 100644 include/dt-bindings/net/realtek.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+>> index 71d386c78269..40b0d6f9ee21 100644
+>> --- a/Documentation/devicetree/bindings/net/realtek.txt
+>> +++ b/Documentation/devicetree/bindings/net/realtek.txt
+>> @@ -9,6 +9,12 @@ Optional properties:
+>>  
+>>  	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
+>>  
+>> +- realtek,led-modes: LED mode configuration.
+>> +
+>> +	A 0..3 element vector, with each element configuring the operating
+>> +	mode of an LED. Omitted LEDs are turned off. Allowed values are
+>> +	defined in "include/dt-bindings/net/realtek.h".
+>> +
+>>  Example:
+>>  
+>>  mdio0 {
+>> @@ -20,5 +26,8 @@ mdio0 {
+>>  		reg = <1>;
+>>  		realtek,eee-led-mode-disable;
+>>  		realtek,enable-ssc;
+>> +		realtek,led-modes = <RTL8211E_LINK_ACTIVITY
+>> +				     RTL8211E_LINK_100
+>> +				     RTL8211E_LINK_1000>;
+>>  	};
+>>  };
+>> diff --git a/include/dt-bindings/net/realtek.h b/include/dt-bindings/net/realtek.h
+>> new file mode 100644
+>> index 000000000000..8d64f58d58f8
+>> --- /dev/null
+>> +++ b/include/dt-bindings/net/realtek.h
+>> @@ -0,0 +1,17 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _DT_BINDINGS_REALTEK_H
+>> +#define _DT_BINDINGS_REALTEK_H
+>> +
+>> +/* LED modes for RTL8211E PHY */
+>> +
+>> +#define RTL8211E_LINK_10		1
+>> +#define RTL8211E_LINK_100		2
+>> +#define RTL8211E_LINK_1000		4
+>> +#define RTL8211E_LINK_10_100		3
+>> +#define RTL8211E_LINK_10_1000		5
+>> +#define RTL8211E_LINK_100_1000		6
+>> +#define RTL8211E_LINK_10_100_1000	7
+>> +
+>> +#define RTL8211E_LINK_ACTIVITY		(1 << 16)
+> 
+> I don't see where this is used.
+> 
+Clear now, disregard my comment.
 
-This hunk looks wrong.  Am I missing some other place that handles the
-case where we enter from kernel mode and IRQs were on?
+>> +
+>> +#endif
+>>
+> 
+
