@@ -2,71 +2,75 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A964FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB71C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5BA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BAB2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ePJH9RCA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fu9RPMVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfGCMrq (ORCPT
+        id S1727281AbfGCMre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:47:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34461 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbfGCMrm (ORCPT
+        Wed, 3 Jul 2019 08:47:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38380 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCMrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:47:42 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c85so1247811pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:47:42 -0700 (PDT)
+        Wed, 3 Jul 2019 08:47:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so2669592wro.5;
+        Wed, 03 Jul 2019 05:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hatjJqYTsKuohwhchJlyiHY2qZcDvmLcyitdsqcWn4c=;
-        b=ePJH9RCAZuNdf2hwtyKq7cjNtW1CQTrtwUVrMm0Mf+DqmUFTJh7bfgiarNQgJ7MARo
-         9es1EjhmDkXMvWW5kT4V9T35pzd5V1rNK0y+h885CqtCdUtegFrSwG8Loc2mH+JthQ+d
-         pIASGmII6EePUz+aoDroGZx0SHHGnoWIpYreo=
+        bh=qXfAEOlH4aIpQXeFgILadkKYn01/VlG4XvVZEcPkJYY=;
+        b=fu9RPMVgXVFj4PgV3KF4+X0OrajMT8XRxnmdpd+teMNXTQldmYy+3On3v8YbjNRcoh
+         y8pu8JWKMBygejEkjCVH3FFo7TeUWFChx553OzBSnX7wB17SO+47EMJ25asq7QkekJRS
+         lEmerh2nRBiytWP6hWYZoku/WlMGJmLTtXi4MAqZ+3BWzctnGkUN5K92UzspI6a0gvCe
+         w2s98oiKc0aK9YThQsqY+9Mx/Fd0CP0NKNqfxWpVjuW191RQYzyMeInreFxiLzqT8ZB2
+         +WGt3/jdTI/5XUXWLMgohdHyulxJeidi4kLtVf6eg5Z9CewOrJyC/2f3DLPzGUQQI0gM
+         tXOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hatjJqYTsKuohwhchJlyiHY2qZcDvmLcyitdsqcWn4c=;
-        b=CEOrzG770igiOmumjboN63R0GOZZQqEjbgRhuLtg9ahTob6S0gqWp9VWjqBYNQXuc4
-         SZ0V//6w97zZqEcoewsOgzjX72kkXUjihlisS9aVd06x6uD50QV4LSNNP7VE1DyFgpXb
-         4aENMzKYDqBkoqbpMRVVXwm9ZrQlh67kr3+3LSmAXh36zkAa7+t1iFnMhmQgpSpJRpuV
-         wQTUZadeXBG8J80qUi57e1zHnESC4PdLn/psgBIxfVxjVLn8fsBgT9pVnnyD9XwXuFSf
-         K52vZLg738muqIiMtt73Oaf4brcZp5EvrvUJQWa+8C4PwQLUXzoAp1dKjRd5RH668+p2
-         NYMg==
-X-Gm-Message-State: APjAAAWTLZpA1N/wcn6fphC4l/fcD8jvlKrcdWIEDcgSSrGgcBnUdqeA
-        ou+sGGUszPPVKckAj5rwT/3KmQ==
-X-Google-Smtp-Source: APXvYqwLpRKVyfFUzoMzHnWbATMSBt8m/783O5FnhLbgPhqDGG7aT1ngbQxv3vRyjju7AdcglU6INQ==
-X-Received: by 2002:a17:90a:109:: with SMTP id b9mr12001649pjb.112.1562158061932;
-        Wed, 03 Jul 2019 05:47:41 -0700 (PDT)
-Received: from localhost.localdomain ([183.82.231.32])
-        by smtp.gmail.com with ESMTPSA id q1sm3735890pfn.178.2019.07.03.05.47.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 05:47:41 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 17/25] ARM: dts: sun8i: Switch R40 dts(i) to use SPDX identifier
-Date:   Wed,  3 Jul 2019 18:16:01 +0530
-Message-Id: <20190703124609.21435-18-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190703124609.21435-1-jagan@amarulasolutions.com>
-References: <20190703124609.21435-1-jagan@amarulasolutions.com>
+        bh=qXfAEOlH4aIpQXeFgILadkKYn01/VlG4XvVZEcPkJYY=;
+        b=k0U3aESoKtWqiIQMY6rxjgd7/jHC1QoEnH9934TBVkPRinVnvQqKwV/KD/+vIfCoYb
+         0rXVFjZyTdizShANKG4wVTbHBVHt4uKJynB9yFvfUkSjR6xbCiDsbgcIZIXtca/xx7kC
+         KJ0OhH7hyz04Vbi0WxwTJlL37mAvc+ptRn8FushRsDqW/7xFLIASmEcx+hyJh7Zr40iX
+         vnGQTIAqbKwvy4K4rYrbk2vB/YjbV1jIrbBU7tpjARbK4AZP6ufPQCpLeL1OeC7FFy9s
+         dRvYy9iVn8fEpK/YEdnZZCkG5JzfbAi8nF+et1vNKKm74/0zPJrAjAP0DIkGqaD1avgb
+         3qmw==
+X-Gm-Message-State: APjAAAUH2rD5XV19NwrwPUCDanWzQd1qyCeXAfZk4IDcg1RavfWAHRQq
+        p+mr/ziGpY/zYHmD1HSsGg9ETkkBAmo=
+X-Google-Smtp-Source: APXvYqxD6K+0ugAMNC/aj/0XoFB4rhxYFEfIRruIudKKenQi9Fn9L+MVPP9fnwZ3jnR+ZtZPVdDKtA==
+X-Received: by 2002:a5d:5186:: with SMTP id k6mr31267862wrv.30.1562158050417;
+        Wed, 03 Jul 2019 05:47:30 -0700 (PDT)
+Received: from heron.blarg.de (p200300DC6F443A000000000000000FD2.dip0.t-ipconnect.de. [2003:dc:6f44:3a00::fd2])
+        by smtp.gmail.com with ESMTPSA id o24sm5480588wmh.2.2019.07.03.05.47.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 05:47:29 -0700 (PDT)
+From:   Max Kellermann <max.kellermann@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        trond.myklebust@hammerspace.com, bfields@redhat.com,
+        gregkh@linuxfoundation.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, hughd@google.com,
+        anna.schumaker@netapp.com
+Cc:     linux-kernel@vger.kernel.org,
+        Max Kellermann <max.kellermann@gmail.com>
+Subject: [PATCH 4/4] nfs/super: check NFS_CAP_ACLS instead of the NFS version
+Date:   Wed,  3 Jul 2019 14:47:15 +0200
+Message-Id: <20190703124715.4319-4-max.kellermann@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703124715.4319-1-max.kellermann@gmail.com>
+References: <20190703124715.4319-1-max.kellermann@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,171 +78,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adopt the SPDX license identifier headers to ease license
-compliance management on Allwinner R40 dts(i) files.
+This sets MS_POSIXACL only if ACL support is really enabled, instead
+of always setting MS_POSIXACL if the NFS protocol version
+theoretically supports ACL.
 
-While the text specifies "of the GPL or the X11 license"
-but the actual license text matches the MIT license as
-specified at [0]
+The code comment says "We will [apply the umask] ourselves", but that
+happens in posix_acl_create() only if the kernel has POSIX ACL
+support.  Without it, posix_acl_create() is an empty dummy function.
 
-[0] https://spdx.org/licenses/MIT.html
+So let's not pretend we will apply the umask if we can already know
+that we will never.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+This fixes a problem where the umask is always ignored in the NFS
+client when compiled without CONFIG_FS_POSIX_ACL.  This is a 4 year
+old regression caused by commit 013cdf1088d723 which itself was not
+completely wrong, but failed to consider all the side effects by
+misdesigned VFS code.
+
+Signed-off-by: Max Kellermann <max.kellermann@gmail.com>
 ---
- .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 39 +------------------
- arch/arm/boot/dts/sun8i-r40.dtsi              | 39 +------------------
- .../boot/dts/sun8i-v40-bananapi-m2-berry.dts  | 39 +------------------
- 3 files changed, 3 insertions(+), 114 deletions(-)
+ fs/nfs/super.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-index 42d62d1ba1dc..79c307091270 100644
---- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -1,44 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-  * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
-  * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index c27ac96a95bd..e799296941ec 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2343,11 +2343,14 @@ void nfs_fill_super(struct super_block *sb, struct nfs_mount_info *mount_info)
+ 	if (data && data->bsize)
+ 		sb->s_blocksize = nfs_block_size(data->bsize, &sb->s_blocksize_bits);
  
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 6007d0cc252d..dac6b16fc320 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -1,44 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-  * Copyright 2017 Chen-Yu Tsai <wens@csie.org>
-  * Copyright 2017 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+-	if (server->nfs_client->rpc_ops->version != 2) {
++	if (NFS_SB(sb)->caps & NFS_CAP_ACLS) {
+ 		/* The VFS shouldn't apply the umask to mode bits. We will do
+ 		 * so ourselves when necessary.
+ 		 */
+ 		sb->s_flags |= SB_POSIXACL;
++	}
++
++	if (server->nfs_client->rpc_ops->version != 2) {
+ 		sb->s_time_gran = 1;
+ 		sb->s_export_op = &nfs_export_ops;
+ 	}
+@@ -2373,7 +2376,7 @@ static void nfs_clone_super(struct super_block *sb,
+ 	sb->s_time_gran = 1;
+ 	sb->s_export_op = old_sb->s_export_op;
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index 15c22b06fc4b..be05d16dffd2 100644
---- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-+++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -1,43 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-  * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
+-	if (server->nfs_client->rpc_ops->version != 2) {
++	if (NFS_SB(sb)->caps & NFS_CAP_ACLS) {
+ 		/* The VFS shouldn't apply the umask to mode bits. We will do
+ 		 * so ourselves when necessary.
+ 		 */
 -- 
-2.18.0.321.gffc6fa0e3
+2.20.1
 
