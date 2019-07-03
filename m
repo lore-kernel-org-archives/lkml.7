@@ -2,113 +2,95 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2111DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F416EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF742189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IwyYn5xb";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cEu0Eo/k"
+	by mail.kernel.org (Postfix) with ESMTP id 92D98218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562145105;
+	bh=9vDex9XUCwSmQC+2Hghtv36ZpISxOwD/Gmf81nZlWik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vcdkqlYZWs51yQf5rJh0PY+JM7T5AqAzJBSIfpxLgYyL+VaWlQaxskSrmwUsMA+qq
+	 KqWTL9udR61ciUwNvkS//ZpPW3RkSzCZ6hArRAL0PO7yLA5HkNNi+ajD4qNUZ99i8n
+	 Y2sSnnwbhqdmFXsHpOBKGjonPML8a0z3nud0gWX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGCJLS (ORCPT
+        id S1727381AbfGCJLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:11:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48244 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfGCJLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:11:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1652060A97; Wed,  3 Jul 2019 09:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562145076;
-        bh=nX45R+dm6a1Jwcb05CDNUgx4njh6ZeQnVggN92Rhfok=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IwyYn5xbQlKBd5czIMxMeX5+JmCORmGtYPOCCMxJFf7o2tP6ZeF1DdLW/kjhKQumd
-         NjKU5M9dpWYKu8mD1sOjnlx50LUzcmRDUDLh7e2l1u3m9U8Eu1eMf0Po03lF7kmzvY
-         B/NWYtuyNak548lgxE8K1YPt77Xx6H7Da8MiJW34=
-Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 3 Jul 2019 05:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfGCJLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 05:11:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D41360A0A;
-        Wed,  3 Jul 2019 09:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562145074;
-        bh=nX45R+dm6a1Jwcb05CDNUgx4njh6ZeQnVggN92Rhfok=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cEu0Eo/koIVPkWdry5K4U/iyWjCti1fQO0gIETQh0RFInFA5nvbtyEAz1rDl/ze/X
-         sEzNwmGt7Nn2mjoQgj1ac/6VIG54hQ2COGaHhsAU8NwEh8JqvE1y5GAFKo/njRBwRd
-         k7lg2EPqkAdJvYnIg4tkseG4OiD17285DOvKauH8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D41360A0A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] opp: Manage empty OPP tables with clk handle
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     vireshk@kernel.org, sboyd@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20190702043643.1746-1-rnayak@codeaurora.org>
- <20190702043643.1746-2-rnayak@codeaurora.org>
- <20190703085026.xe3hwxqah76b7np3@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <95cf4e44-d57a-9aa4-40ce-3b7013e10813@codeaurora.org>
-Date:   Wed, 3 Jul 2019 14:41:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E7C218A3;
+        Wed,  3 Jul 2019 09:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562145102;
+        bh=9vDex9XUCwSmQC+2Hghtv36ZpISxOwD/Gmf81nZlWik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s5FCR2G3XnAaeilDKP19uypgCUb0wqMcOmEBfO/jblK4DOr6tihH5MsIH6fipmS65
+         G8iSU3ZrboYUFjeH1oDxFgLMpPjKaESVELcLTGe2s6zTN4mAy/QSPEqKcFSIQFwxYS
+         tT06n2YzFxi2e7mQ7oHX15TBNHIX/P+g4a6PnRNI=
+Date:   Wed, 3 Jul 2019 11:11:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5.1 00/55] 5.1.16-stable review
+Message-ID: <20190703091139.GB12289@kroah.com>
+References: <20190702080124.103022729@linuxfoundation.org>
+ <CA+G9fYsJjfb2HakVDzUyuf9G9cQeO2DD0ErPQNHfVmKCv47BTA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703085026.xe3hwxqah76b7np3@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsJjfb2HakVDzUyuf9G9cQeO2DD0ErPQNHfVmKCv47BTA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[]..
->>   
+On Tue, Jul 02, 2019 at 11:09:47PM +0530, Naresh Kamboju wrote:
+> On Tue, 2 Jul 2019 at 13:34, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.1.16 release.
+> > There are 55 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.16-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
 > 
-> Explain the rationale behind this code here in a comment.
-> 
->> +	if (!_get_opp_count(opp_table)) {
->> +		ret = _generic_set_opp_clk_only(dev, clk, freq);
->> +		goto put_opp_table;
->> +	}
->> +
->>   	temp_freq = old_freq;
->>   	old_opp = _find_freq_ceil(opp_table, &temp_freq);
->>   	if (IS_ERR(old_opp)) {
-> 
-> Also, rebase over the OPP branch please:
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-thanks, I will fix/rebase and repost,
-in the meantime while I was testing this a little more I realized I also need
-something like the change below to avoid a refcount mismatch WARN when empty OPP
-table is removed using dev_pm_opp_of_remove_table()
+Great, thanks for testing and letting me know.
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index fa7d4d6d37b3..20128a88baf2 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -2118,7 +2118,8 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
-                 return;
-         }
-  
--       _put_opp_list_kref(opp_table);
-+       if (_get_opp_count(opp_table))
-+               _put_opp_list_kref(opp_table);
-  
-         /* Drop reference taken by _find_opp_table() */
-         dev_pm_opp_put_opp_table(opp_table);
-
-Does this look like a good way to fix it?
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+greg k-h
