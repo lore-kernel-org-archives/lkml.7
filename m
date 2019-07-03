@@ -2,86 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD41C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C89C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BB72184C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A8A218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZlkWDaRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGCI6d (ORCPT
+        id S1727320AbfGCI6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:58:33 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:9794 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726400AbfGCI6c (ORCPT
+        Wed, 3 Jul 2019 04:58:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37514 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGCI6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:58:32 -0400
-X-UUID: 97317b77af48444da774bf30f62fe1a9-20190703
-X-UUID: 97317b77af48444da774bf30f62fe1a9-20190703
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 122301073; Wed, 03 Jul 2019 16:58:27 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 3 Jul 2019 16:58:25 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 3 Jul 2019 16:58:25 +0800
-Message-ID: <1562144305.3550.0.camel@mtksdaap41>
-Subject: Re: [PATCH] checkpatch: avoid default n
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Miles Chen <miles.chen@mediatek.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 3 Jul 2019 16:58:25 +0800
-In-Reply-To: <be8a97c15249ff8a613910db5792c5bcdc75333c.camel@perches.com>
-References: <20190703083031.2950-1-miles.chen@mediatek.com>
-         <be8a97c15249ff8a613910db5792c5bcdc75333c.camel@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 3 Jul 2019 04:58:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s20so1564247otp.4;
+        Wed, 03 Jul 2019 01:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lAu76Ghsvr1W5j1QydPulQlx7ZJYjzlKVY1X6/0TpYQ=;
+        b=ZlkWDaRm+F6GwfJacfLPTumk+RVHVPMMeileI2NFwlgWvaiJJa1YnjrCbLUMsIZTUc
+         CKx7yqQmO1MAkEU5RkkY+fqX+pcF6C5bvfgt6DU9YQ6315Rh4ppt4NckuFzlirtXJdW4
+         bXauvIzlfByBCcQCbKj/dQMX+FO4YHk7dgt2BqHQWfBiN2GjTE1Kt7sRE/fpjaJZ233Y
+         7EucpqztgtTjxkJuI2CJoELGbgQ0UsLqicla54UrQ1s6uI5Sm5cP55KZgAMPom6TI6Lh
+         eDV3440fsQsEOPIEVaVO70VowN2JWlXH/Dl/w36YmK4Qx1CW/WuZmpxGGpX8efH5HEaO
+         wt6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lAu76Ghsvr1W5j1QydPulQlx7ZJYjzlKVY1X6/0TpYQ=;
+        b=sHywb0FLb2Z4mxmIKjmDJNsdGWfY6iISqSKrM17DPjAvg1WA3EAzbIWT4oJZNZu0rz
+         aK5bSB3QNB7rgXd8OAEaKPONdddZvkU3pHNuexzXcQvs3efd5cfv3LUHx5P45CU2jmvQ
+         P7Z5sQY+VECCLR04G0s3OMChLGNhqLv6IXIeHg84QUfdNoDTQ5M3HNTxSUgJzqgqk3q1
+         GtmP1ecvEI3kzvFHtG8n/i7j+Uz6VCfOE33QuBbUgXkmQJ3vaHCqVd9o0O3vw9yEGcLM
+         mKGGIHkZxP0s4UGMrMOBQP49pbAtU8ek9G2ra+LTZPG/afQVYZh0DnreHe+JA0GAiTQj
+         QNSw==
+X-Gm-Message-State: APjAAAWQ4LlPiwwViyd3kP8ru8QN5LkYisiDGMdf8AtH/CMM/p53gMEX
+        J0lUSTIOC0/PGEBKKdzV0GMTEafw1x//8JJFvGk=
+X-Google-Smtp-Source: APXvYqzGyUzewzJOLzZnZSEaNzpUQzbtDJSH6yWGpp+2eb3HVLQViI2Tq6G8hX6C+3lTL2C6HmGIAUahYpDsxQUBb1Q=
+X-Received: by 2002:a9d:14a:: with SMTP id 68mr26337864otu.96.1562144332818;
+ Wed, 03 Jul 2019 01:58:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
+ <20190702203523.2412-2-martin.blumenstingl@googlemail.com> <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 3 Jul 2019 10:58:41 +0200
+Message-ID: <CAFBinCCWzLyhzVcqHR0RY9+cSqDZ3EdJEim8SP4Mr2Q3M=OKTg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
+ and ARX300 PCIe PHYs
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 01:42 -0700, Joe Perches wrote:
-> On Wed, 2019-07-03 at 16:30 +0800, Miles Chen wrote:
-> > This change reports a warning when "default n" is used.
-> > 
-> > I have seen several "remove default n" patches, so I think
-> > it might be helpful to add this test in checkpatch.
-> > 
-> > tested:
-> > WARNING: 'default n' is the default value, no need to write it explicitly.
-> > +       default n
-> 
-> I don't think this is reasonable as there are
-> several uses like:
-> 
-> 		default y
-> 		default n if <foo>
-> 
-> For instance:
-> 
-> arch/alpha/Kconfig-config ALPHA_WTINT
-> arch/alpha/Kconfig-     bool "Use WTINT" if ALPHA_SRM || ALPHA_GENERIC
-> arch/alpha/Kconfig-     default y if ALPHA_QEMU
-> arch/alpha/Kconfig:     default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
-> arch/alpha/Kconfig:     default n if !ALPHA_SRM && !ALPHA_GENERIC
+Hi Rob,
 
-I've sent similar patch in 2016, my version won't complain about these.
+On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jul 2, 2019 at 2:35 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
+> > The IP block contains settings for the PHY and a PLL.
+> > The PLL mode is configurable through a dedicated #phy-cell in .dts.
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
+> >  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
+> >  2 files changed, 98 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> >  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> > new file mode 100644
+> > index 000000000000..b7b222e772d0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
+> > @@ -0,0 +1,87 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+>
+> The preference is (GPL-2.0 OR BSD-2-Clause) for new bindings.
+to make sure I understand this correctly:
+the license is then only valid for the bindings - is it fine if the
+driver uses GPL-2.0-only?
 
-https://lkml.org/lkml/2016/4/22/580
+I don't have any datasheet for these SoCs so all my knowledge is based
+on the GPL-2.0-only driver from the Lantiq board support package
+(called "UGW").
+the .yaml file is 100% my own work so I'm fine with having GPL-2.0 OR
+BSD-2-Clause
+however, that still has to be compatible with my driver, which I chose
+to be GPL-2.0-only because that's the license from the Lantiq board
+support package
 
-Joe.C
 
+Martin
