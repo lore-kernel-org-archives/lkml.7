@@ -2,174 +2,90 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130E0C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28F2C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E185E21880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC67021880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfGCGxC (ORCPT
+        id S1727186AbfGCGxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:53:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8131 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726670AbfGCGxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:53:02 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3264EADFA2A7DDD59756;
-        Wed,  3 Jul 2019 14:53:00 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
- 14:52:54 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH RESEND] staging: erofs: fix LZ4 limited bounced page mis-reuse
-Date:   Wed, 3 Jul 2019 14:52:09 +0800
-Message-ID: <20190703065209.81580-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+        Wed, 3 Jul 2019 02:53:19 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:63167 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCGxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 02:53:19 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id x636rBC3005738;
+        Wed, 3 Jul 2019 14:53:11 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
+        bbrezillon@kernel.org, dwmw2@infradead.org,
+        computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at,
+        robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com,
+        lee.jones@linaro.org, masonccyang@mxic.com.tw,
+        anders.roxell@linaro.org, christophe.kerello@st.com,
+        paul@crapouillou.net, devicetree@vger.kernel.org
+Subject: [PATCH v5 0/2] Add Macronix raw NAND controller driver
+Date:   Wed,  3 Jul 2019 15:15:42 +0800
+Message-Id: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG3.macronix.com x636rBC3005738
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like all lz77-based algrithms, lz4 has a dynamically populated
-("sliding window") dictionary and the maximum lookback distance
-is 65535. Therefore the number of bounced pages could be limited
-by erofs based on this property.
+Hi,
 
-However, just now we observed some lz4 sequences in the extreme
-case cannot be decompressed correctly after this feature is enabled,
-the root causes after analysis are clear as follows:
-1) max bounced pages should be 17 rather than 16 pages;
-2) considering the following case, the broken implementation
-   could reuse unsafely in advance (in other words, reuse it
-   less than a safe distance),
-   0 1 2 ... 16 17 18 ... 33 34
-   b             p  b         b
-   note that the bounce page that we are concerned was allocated
-   at 0, and it reused at 18 since page 17 exists, but it mis-reused
-   at 34 in advance again, which causes decompress failure.
+v5 patch including:
+1. compatible rename to "macronix,nand-controller"
+2. handle three clock in one
+3. other minor patches
 
-This patch resolves the issue by introducing a bitmap to mark
-whether the page in the same position of last round is a bounced
-page or not, and a micro stack data structure to store all
-available bounced pages.
+v4 patch back to only raw NAND controller driver instead of MFD,
+raw NAND and SPI driver. This is based on MFD maintainer, Lee Jones
+comments:
+MFD is for registering child devices of chips which offer genuine
+cross-subsystem functionality.
+It is not designed for mode selecting, or as a place to shove shared code 
+just because a better location doesn't appear to exist. 
 
-Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-No change since I observed that using j will break the logic.
-Note that "bit set in the bitmap means whether the page in the same position
-           of last round is a bounced page or not".
+v3 patch is to rename the title of SPI controller driver.
+"Patch Macronix SPI controller driver according to MX25F0A MFD driver"
 
- drivers/staging/erofs/decompressor.c | 50 ++++++++++++++++------------
- 1 file changed, 28 insertions(+), 22 deletions(-)
+v2s patches is to support Macronix MX25F0A MFD driver 
+for raw nand and spi controller which is separated 
+form previous patchset:
 
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index 80f1f39719ba..1fb0abb98dff 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -13,7 +13,7 @@
- #define LZ4_DISTANCE_MAX 65535	/* set to maximum value by default */
- #endif
- 
--#define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
-+#define LZ4_MAX_DISTANCE_PAGES	(DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE) + 1)
- #ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
- #define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
- #endif
-@@ -35,19 +35,28 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 	const unsigned int nr =
- 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
- 	struct page *availables[LZ4_MAX_DISTANCE_PAGES] = { NULL };
--	unsigned long unused[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
--					  BITS_PER_LONG)] = { 0 };
-+	unsigned long bounced[DIV_ROUND_UP(LZ4_MAX_DISTANCE_PAGES,
-+					   BITS_PER_LONG)] = { 0 };
- 	void *kaddr = NULL;
--	unsigned int i, j, k;
-+	unsigned int i, j, top;
- 
--	for (i = 0; i < nr; ++i) {
-+	top = 0;
-+	for (i = j = 0; i < nr; ++i, ++j) {
- 		struct page *const page = rq->out[i];
-+		struct page *victim;
- 
--		j = i & (LZ4_MAX_DISTANCE_PAGES - 1);
--		if (availables[j])
--			__set_bit(j, unused);
-+		if (j >= LZ4_MAX_DISTANCE_PAGES)
-+			j = 0;
-+
-+		/* 'valid' bounced can only be tested after a complete round */
-+		if (test_bit(j, bounced)) {
-+			DBG_BUGON(i < LZ4_MAX_DISTANCE_PAGES);
-+			DBG_BUGON(top >= LZ4_MAX_DISTANCE_PAGES);
-+			availables[top++] = rq->out[i - LZ4_MAX_DISTANCE_PAGES];
-+		}
- 
- 		if (page) {
-+			__clear_bit(j, bounced);
- 			if (kaddr) {
- 				if (kaddr + PAGE_SIZE == page_address(page))
- 					kaddr += PAGE_SIZE;
-@@ -59,27 +68,24 @@ static int lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- 			continue;
- 		}
- 		kaddr = NULL;
-+		__set_bit(j, bounced);
- 
--		k = find_first_bit(unused, LZ4_MAX_DISTANCE_PAGES);
--		if (k < LZ4_MAX_DISTANCE_PAGES) {
--			j = k;
--			get_page(availables[j]);
-+		if (top) {
-+			victim = availables[--top];
-+			get_page(victim);
- 		} else {
--			DBG_BUGON(availables[j]);
--
- 			if (!list_empty(pagepool)) {
--				availables[j] = lru_to_page(pagepool);
--				list_del(&availables[j]->lru);
--				DBG_BUGON(page_ref_count(availables[j]) != 1);
-+				victim = lru_to_page(pagepool);
-+				list_del(&victim->lru);
-+				DBG_BUGON(page_ref_count(victim) != 1);
- 			} else {
--				availables[j] = alloc_pages(GFP_KERNEL, 0);
--				if (!availables[j])
-+				victim = alloc_pages(GFP_KERNEL, 0);
-+				if (!victim)
- 					return -ENOMEM;
- 			}
--			availables[j]->mapping = Z_EROFS_MAPPING_STAGING;
-+			victim->mapping = Z_EROFS_MAPPING_STAGING;
- 		}
--		rq->out[i] = availables[j];
--		__clear_bit(j, unused);
-+		rq->out[i] = victim;
- 	}
- 	return kaddr ? 1 : 0;
- }
+https://patchwork.kernel.org/patch/10874679/
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+Mason Yang (2):
+  mtd: rawnand: Add Macronix raw NAND controller
+  dt-bindings: mtd: Document Macronix raw NAND controller bindings
+
+ .../devicetree/bindings/mtd/mxic-nand.txt          |  20 +
+ drivers/mtd/nand/raw/Kconfig                       |   6 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/mxic_nand.c                   | 557 +++++++++++++++++++++
+ 4 files changed, 584 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
+
 -- 
-2.17.1
+1.9.1
 
