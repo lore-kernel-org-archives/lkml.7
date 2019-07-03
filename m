@@ -2,138 +2,104 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE2CC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507B8C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5E1218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A335218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NPPjohpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfGCKHd (ORCPT
+        id S1727146AbfGCKJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:07:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34891 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfGCKHd (ORCPT
+        Wed, 3 Jul 2019 06:09:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39005 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbfGCKJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:07:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c27so2106241wrb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VNvFKH5K+pDMmuMUJ4DZzYn2K79WWFEugthw2tWzrCE=;
-        b=L5bSJ23nDj0fE71yEvu5iWM3J99PcKGk5vVt9hfZSoLVC4vBxHNzXRu1aFMgA9zVOc
-         o7SxFO3LWmFaSfblyzl2ERJzBxlwIv70ZvnDpXiDtZ+tlUr7Tdzkda1mE5XplWTccCar
-         qxYlXKh3DhX02EtD+5yijdeMmTCgo0XMQwbUkPBAz7fYFyHU20vPRqRHj/O3xELtNFTr
-         LXk74n5fpvUkib2ejjUHeLgnlOHH/SY79K6i/OkuJx7MHD0ftRrYz69xLcb2Nd4+F4AF
-         BdGOfrQLFSfY6fJ7irQ9WNjvwgE5kATWzG7FuhXV7T+nbD5JL0JWYav5Aq2Z8NctAxMV
-         LgJw==
-X-Gm-Message-State: APjAAAWLbvawjiNDCAEx/Vx/SVH0TmuED2xwXFgLuRd+hiwLkQVyheFK
-        GfrQ0X3/e4cdgqdadq7LdBC08A==
-X-Google-Smtp-Source: APXvYqzGzHZlSIMty2RhAvvB1Uo0isxGnCtD5XKYMHI9/IRY2pIO6xkm3T2evQoOaleJYQ+jY3ZeIw==
-X-Received: by 2002:adf:dfc4:: with SMTP id q4mr27669596wrn.54.1562148450882;
-        Wed, 03 Jul 2019 03:07:30 -0700 (PDT)
-Received: from steredhat (host21-207-dynamic.52-79-r.retail.telecomitalia.it. [79.52.207.21])
-        by smtp.gmail.com with ESMTPSA id z5sm1183115wmf.48.2019.07.03.03.07.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:07:30 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 12:07:27 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] vsock/virtio: several fixes in the .probe() and
- .remove()
-Message-ID: <20190703100727.kuwpyc5sksrgmoxb@steredhat>
-References: <20190628123659.139576-1-sgarzare@redhat.com>
- <20190701151113.GE11900@stefanha-x1.localdomain>
- <20190701170357.jtuhy3ank7mv6izb@steredhat>
- <20190703091453.GA11844@stefanha-x1.localdomain>
+        Wed, 3 Jul 2019 06:09:00 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63A78vA000403;
+        Wed, 3 Jul 2019 12:08:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yQLPGIAaYXazeAIq/YODkM7dpT27pO1tgwGE1je5OLc=;
+ b=NPPjohpl4RNSBC7RN6FWvoNHRNykLuIpwfpJ0wKleYHtrYmiXHHp0rL6nIsIxhOj3XPt
+ wvPP4xrcOtebmS/LHq/xKBBj3uWO+R5t46SeolR0ZCGwjUWIuw3JPOrO0bFbZYopEf0k
+ p8xbGCliCA2pNjMK9n/tho7/8x8ZPcKK3SCQ5jvOwJSI59jBcgGzBouElFPgzuAMJofr
+ kBgxG5LdWfl0A2EHqjQAhIrAFMWuI6szWjnngs2IMYLp2ZneuA83AIFmnEkwbCuKqTOS
+ EgI11ymbmakYjj6o31+aVu02Vlwx1QZ1/QaaOMJ9LBXCQgPC9HKB6VmwBJaGUkM2DtXB hQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tdwrv2j5b-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 03 Jul 2019 12:08:26 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E4D1231;
+        Wed,  3 Jul 2019 10:08:23 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B01B92681;
+        Wed,  3 Jul 2019 10:08:23 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
+ 12:08:23 +0200
+Received: from localhost (10.48.0.167) by webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019 12:08:23 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <alexandre.torgue@st.com>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] STM32 ADC analog switches supply control
+Date:   Wed, 3 Jul 2019 12:08:13 +0200
+Message-ID: <1562148496-26789-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703091453.GA11844@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.167]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:14:53AM +0100, Stefan Hajnoczi wrote:
-> On Mon, Jul 01, 2019 at 07:03:57PM +0200, Stefano Garzarella wrote:
-> > On Mon, Jul 01, 2019 at 04:11:13PM +0100, Stefan Hajnoczi wrote:
-> > > On Fri, Jun 28, 2019 at 02:36:56PM +0200, Stefano Garzarella wrote:
-> > > > During the review of "[PATCH] vsock/virtio: Initialize core virtio vsock
-> > > > before registering the driver", Stefan pointed out some possible issues
-> > > > in the .probe() and .remove() callbacks of the virtio-vsock driver.
-> > > > 
-> > > > This series tries to solve these issues:
-> > > > - Patch 1 adds RCU critical sections to avoid use-after-free of
-> > > >   'the_virtio_vsock' pointer.
-> > > > - Patch 2 stops workers before to call vdev->config->reset(vdev) to
-> > > >   be sure that no one is accessing the device.
-> > > > - Patch 3 moves the works flush at the end of the .remove() to avoid
-> > > >   use-after-free of 'vsock' object.
-> > > > 
-> > > > v2:
-> > > > - Patch 1: use RCU to protect 'the_virtio_vsock' pointer
-> > > > - Patch 2: no changes
-> > > > - Patch 3: flush works only at the end of .remove()
-> > > > - Removed patch 4 because virtqueue_detach_unused_buf() returns all the buffers
-> > > >   allocated.
-> > > > 
-> > > > v1: https://patchwork.kernel.org/cover/10964733/
-> > > 
-> > > This looks good to me.
-> > 
-> > Thanks for the review!
-> > 
-> > > 
-> > > Did you run any stress tests?  For example an SMP guest constantly
-> > > connecting and sending packets together with a script that
-> > > hotplug/unplugs vhost-vsock-pci from the host side.
-> > 
-> > Yes, I started an SMP guest (-smp 4 -monitor tcp:127.0.0.1:1234,server,nowait)
-> > and I run these scripts to stress the .probe()/.remove() path:
-> > 
-> > - guest
-> >   while true; do
-> >       cat /dev/urandom | nc-vsock -l 4321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock -l 5321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock -l 6321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock -l 7321 > /dev/null &
-> >       wait
-> >   done
-> > 
-> > - host
-> >   while true; do
-> >       cat /dev/urandom | nc-vsock 3 4321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock 3 5321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock 3 6321 > /dev/null &
-> >       cat /dev/urandom | nc-vsock 3 7321 > /dev/null &
-> >       sleep 2
-> >       echo "device_del v1" | nc 127.0.0.1 1234
-> >       sleep 1
-> >       echo "device_add vhost-vsock-pci,id=v1,guest-cid=3" | nc 127.0.0.1 1234
-> >       sleep 1
-> >   done
-> > 
-> > Do you think is enough or is better to have a test more accurate?
-> 
-> That's good when left running overnight so that thousands of hotplug
-> events are tested.
+This series adds support for SYSCFG bits that control ADC analog switches
+supply on STM32MP1 and STM32H7.
 
-Honestly I run the test for ~30 mins (because without the patch the
-crash happens in a few seconds), but of course, I'll run it this night :)
+The ADC inputs are multiplexed with analog switches which have reduced
+performances when their supply is below 2.7V. Analog switches supply
+can be controlled using SYSCFG bits, to reach full ADC performance.
 
-Thanks,
-Stefano
+---
+Changes in v2:
+- Rework since: "Add missing vdda-supply to STM32 ADC" series [1].
+- Booster is handled by a regulator driver, see
+  "regulator: add support for the STM32 ADC booster" series [2].
+- Only enable vdd regulator when needed
+- Fix typos
+
+[1] https://lkml.org/lkml/2019/6/19/411
+[2] https://lkml.org/lkml/2019/6/28/188
+
+Fabrice Gasnier (3):
+  dt-bindings: iio: adc: stm32: add analog switches supply control
+  iio: adc: stm32-adc: add analog switches supply control
+  ARM: dts: stm32: add syscfg to ADC on stm32mp157c
+
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   6 +
+ arch/arm/boot/dts/stm32mp157c.dtsi                 |   1 +
+ drivers/iio/adc/stm32-adc-core.c                   | 193 ++++++++++++++++++++-
+ 3 files changed, 199 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
