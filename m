@@ -2,107 +2,97 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB060C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB665C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6842063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0AC2063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="IzMsn6uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfGCB3M (ORCPT
+        id S1727473AbfGCBaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:29:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8687 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726652AbfGCB3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:29:12 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2D9FCF20B30474FBDB7F;
-        Wed,  3 Jul 2019 09:29:10 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
- 09:29:03 +0800
-Subject: Re: [PATCH] module: add usage links when calling ref_module func
-To:     Jessica Yu <jeyu@kernel.org>
-CC:     <rusty@rustcorp.com.au>, <kay.sievers@vrfy.org>,
-        <clabbe.montjoie@gmail.com>, <linux-kernel@vger.kernel.org>,
-        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-References: <8d7aa8b1-73a2-db7a-82c8-06917eddf235@huawei.com>
- <20190701135556.GA25484@linux-8ccs>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <4473a66b-4aee-1d22-aec8-9d6bceb5b303@huawei.com>
-Date:   Wed, 3 Jul 2019 09:28:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 2 Jul 2019 21:30:02 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43049 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbfGCBaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:30:02 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w17so748593qto.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=NdF561jXVNweNYUoOJz5cSdmi6GYXNKILSdaVQx92EI=;
+        b=IzMsn6uvAihHWC+xI4jQL5EXSlCpq89Da5vdBU8pF5mhxYLAaPUmIASa2aOAoImI4z
+         ZW13ivkgV55Kn0Z3u8kGsGNRnpgkewwp65DGh2RkUZezPSv7ZlUErLxqX/fHOGzlxuZD
+         VeK914OF8SpXCWrCjwBA5vVyoesm6F5V/zhjuh76NXpWTo6CbaHWisMfBk4yBSikYAJn
+         Z6GcfZje1egcCihtpUjrBHW4MyNIxEU+uuKVtY1QfRyYMKv5r+t+sqoQ4eW25NWYKZ1D
+         59tytOuMwbdGDIi9K+7/qswB5zK5rOp4cet11f1LJ1RpFzCo7h/X8QStr3ZKM6ehuNC8
+         obDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=NdF561jXVNweNYUoOJz5cSdmi6GYXNKILSdaVQx92EI=;
+        b=MjOCrgs+h0dNZLzAxkERVQCh9Bqa0P6ATnv1hjYVkV9eoQIfwwmyapScG3oNvh6j6n
+         NJWzhXF0djAzbcWyRSTyuCzQQNGpsjW4I+//1HRKYURwtaF+QyjA+b39Z/J/kMKKH6Hh
+         aUxH2tGSWYzH3A9lfr/1Bm0Gh1hbFXI+ciNaaBDaQkPopZRlHf8rgg50PLVKjojY7lUs
+         TlOcvagFf6oM5sZ5OQKx/hqbWavkgBffie33mdWsN/jY0pDZiCnwHkMti531xmGO4p6z
+         f/jmPJQQB8rEYixJvsbTZxw2/SXEWxsBGu/RZd0vJTqFpwvrRENIt6CJzUKfBiLbjhb9
+         N/ag==
+X-Gm-Message-State: APjAAAUC76eJPHp8+RO/PRiw3A17iflE3M0Ha+7kTldo66Rbw0ZmaMyN
+        BRwVuzHBOxTWl3D4O/5EnlXBHA==
+X-Google-Smtp-Source: APXvYqzonc3yIGfK+TZvGWD04lDWPLi1g4Tt4GSAnz3bkEJTGn3ZfsU0P9piR1RT0f0L6874RQ59zg==
+X-Received: by 2002:a0c:b2da:: with SMTP id d26mr18574230qvf.48.1562117401188;
+        Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id d188sm279477qkf.40.2019.07.02.18.29.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 18:30:01 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 18:29:56 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190702182956.26435d63@cakuba.netronome.com>
+In-Reply-To: <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+        <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20190701135556.GA25484@linux-8ccs>
-Content-Type: text/plain; charset="gb18030"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/1 21:55, Jessica Yu wrote:
-> +++ Zhiqiang Liu [28/06/19 20:32 +0800]:
->> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->>
->> Problem: Users can call ref_module func in their modules to construct
->> relationships with other modules. However, the holders
->> '/sys/module/<mod-name>/holders' of the target module donot include
->> the users` module. So lsmod command misses detailed info of 'Used by'.
->>
->> Here, we will add usage link of a to b's holder_dir.
->>
->> Fixes: 9bea7f239 ("module: fix bne2 "gave up waiting for init of module libcrc32c")
-> 
-> I think we can drop this tag; it doesn't fix a bug specifically
-> introduced by that particular commit.
-> 
-Thanks for your reply.
-I will remove the Fixes tag in v2 patch.
+On Tue,  2 Jul 2019 13:49:59 +0200 (CEST), Michal Kubecek wrote:
+> diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
+> new file mode 100644
+> index 000000000000..97c369aa290b
+> --- /dev/null
+> +++ b/Documentation/networking/ethtool-netlink.txt
+> @@ -0,0 +1,208 @@
+> +                        Netlink interface for ethtool
+> +                        =============================
+> +
+> +
+> +Basic information
+> +-----------------
 
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->> ---
->> kernel/module.c | 5 +++++
->> 1 file changed, 5 insertions(+)
->>
->> diff --git a/kernel/module.c b/kernel/module.c
->> index 80c7c09584cf..11c6aff37b1f 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -871,6 +871,11 @@ int ref_module(struct module *a, struct module *b)
->>         module_put(b);
->>         return err;
->>     }
->> +
->> +    err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
->> +    if (err)
->> +        return err;
-> 
-> We need to fix the error handling here - the module_use struct
-> allocated in the call to add_module_usage() needs to be freed (you
-> could just modify add_module_usage() to return the use pointer so that
-> it's easier to free from within ref_module()), module_put() needs to
-> be called, and the use struct should be removed from its respective
-> lists (see module_unload_free()).
-> 
-Thanks again for your advice.
-We will modify add_module_usage func to return the use pointer as your suggestion.
-In the error handling, We will call module_put() and call list_del() to remove the use.
-
-> Thanks,
-> 
-> Jessica
-> 
-> 
-> .
-> 
-
+Probably not a blocker for initial merging, but please note a TODO to
+convert the documentation to ReST.
