@@ -2,109 +2,131 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7FEC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A960C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4E72189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYCV3Ki+"
+	by mail.kernel.org (Postfix) with ESMTP id 3DB392189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562172561;
+	bh=5UXTFi0CEbz1XX+6Y/PdYUimmpk0z24ddtoROGBbQKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XQ8NMwzw5EpdZlOMXEPfwuMrHd5+lWXtVPjLvEk6D+r88Ly7fASv0Q+KZTgoNZ77p
+	 yYDUVzHE2lVIVvWDaMuBBeZK4XbElVWYuKa6vHrY5uLwH1p3lKRNLX7jU5nR1bz2W8
+	 euoSNrGPz2uy312NYnb4D7s4yEQr+z69AkvZY4YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfGCQsx (ORCPT
+        id S1727088AbfGCQtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:48:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43936 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCQsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:48:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w17so1203447qto.10;
-        Wed, 03 Jul 2019 09:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yJ/AMqCgjHOX7uREQW2b21H1rv+p0xkV9JezuXq3Lrs=;
-        b=PYCV3Ki+HIxfv3LCSaaOhpNO0ILCQojaCN/Usn1R7wPqtJthrqytqFJ3xAEs5RVllF
-         mcdBg1xGlEmpZV15vV47oY1ANNSVFV8PZqk8k+5J6Ap+moz06KU2dZf93XxMTp9crwOU
-         SbC2rSoy/zfmOE+STsNSaVc26bxGUhMkIFh0OeZwUdllN2mqxZuG3Cflqoaxki6KrQOR
-         UTuZv7+tBucPPxMZw/+l86b+cCSLX3Yt99lCF5r2NuM10pY1R6GrzKUWM/bTStwzrqSE
-         659SFGlMCIgDiUKxk1SUDlpkSmmt4eGi6ULQNjPth35HN0TmSpmkHLFFeEZni/epIC8D
-         Lv2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yJ/AMqCgjHOX7uREQW2b21H1rv+p0xkV9JezuXq3Lrs=;
-        b=nEngJeeZiYolpKUutDaLqpqHHKKGBZHfSfk09qD8reQPitkkojg9wU/VmkNyiiAZFJ
-         7ODPn/XAsc0Wtz1RV03ABiXaAiVXo59XQr3Py+972oGAZ52is1AMVwgo+FI748HLGfvF
-         SwWGqTg1x5M7UZxX89aQqe5Rb5X9reBqFv/nXRzOgWH91reb3D2SB8qUBqtj3nUomayo
-         JX4ZGJwBRtiHtDDXSYm2yUK2mLwAkcABZe8DnXZ3YSq6f0CRJl6uyqWc2rVoL7uEsJhP
-         urGCRJTbWVd2R1d/YLxf8jkwPQiBraZeYTl5QETXGvfxVAI9kUhqEKRWKNH3sH/2Ff6i
-         xntA==
-X-Gm-Message-State: APjAAAUJe+SwlPbB3Lac+m/TOJIkQWtjuLx9QcAPDzzXWXUKHIXEsGNz
-        pwzTYMPXuSSQPSO6tjpVV3As/yL5a4m9yzLMzio=
-X-Google-Smtp-Source: APXvYqzsFr7rYzgO9GtHdozh8mRRL64eWIT7m1KC+EQkslfS3kVovMPn+6YEufGDl076fJM7OZRCZ7UvZS6fd3bvZL4=
-X-Received: by 2002:a0c:c586:: with SMTP id a6mr33611361qvj.177.1562172531460;
- Wed, 03 Jul 2019 09:48:51 -0700 (PDT)
+        Wed, 3 Jul 2019 12:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfGCQtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:49:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C26812189E;
+        Wed,  3 Jul 2019 16:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562172558;
+        bh=5UXTFi0CEbz1XX+6Y/PdYUimmpk0z24ddtoROGBbQKs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vaRDZUAwNmHSWDt4obB6GGp8LjUm+cGa7RLT1qOKsMH3TnW3FNAM8VpppmjSqByd/
+         7m+gtgDpafiA6gaAmTusuVDBVglEj//TnmYlCzQfR2PhD0TfVV6IAwuAOacUvsCMgt
+         Z7jbpA+nIsOvoBWIi0N/clp0lA4rSgFtnEg2vjR8=
+Date:   Wed, 3 Jul 2019 18:49:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [GIT PULL 5/9] intel_th: msu: Introduce buffer driver interface
+Message-ID: <20190703164915.GA2240@kroah.com>
+References: <20190627125152.54905-1-alexander.shishkin@linux.intel.com>
+ <20190627125152.54905-6-alexander.shishkin@linux.intel.com>
+ <20190703155547.GA32438@kroah.com>
+ <87h883t6vd.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-References: <CGME20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77@eucas1p2.samsung.com>
- <20190703120916.19973-1-i.maximets@samsung.com> <CAJ8uoz1Wr+bJrO+HNtSD5b79ych-pNg7BxFiHVhzaMSGGAdqLA@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1Wr+bJrO+HNtSD5b79ych-pNg7BxFiHVhzaMSGGAdqLA@mail.gmail.com>
-From:   William Tu <u9012063@gmail.com>
-Date:   Wed, 3 Jul 2019 09:48:09 -0700
-Message-ID: <CALDO+SYj79zCV9A85OSbMFBQeor_z=ZT305HEoK3YWtCZLeR-A@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] xdp: fix race on generic receive path
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Ilya Maximets <i.maximets@samsung.com>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h883t6vd.fsf@ashishki-desk.ger.corp.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:20 AM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
->
-> On Wed, Jul 3, 2019 at 2:09 PM Ilya Maximets <i.maximets@samsung.com> wrote:
+On Wed, Jul 03, 2019 at 07:33:58PM +0300, Alexander Shishkin wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> >> +	/*
+> >> +	 * ->assign() called when buffer 'mode' is set to this driver
+> >> +	 *   (aka mode_store())
+> >> +	 * @device:	struct device * of the msc
+> >> +	 * @mode:	allows the driver to set HW mode (see the enum above)
+> >> +	 * Returns:	a pointer to a private structure associated with this
+> >> +	 *		msc or NULL in case of error. This private structure
+> >> +	 *		will then be passed into all other callbacks.
+> >> +	 */
+> >> +	void	*(*assign)(struct device *dev, int *mode);
+> >> +	/* ->unassign():	some other mode is selected, clean up */
+> >> +	void	(*unassign)(void *priv);
+> >> +	/*
+> >> +	 * ->alloc_window(): allocate memory for the window of a given
+> >> +	 *		size
+> >> +	 * @sgt:	pointer to sg_table, can be overridden by the buffer
+> >> +	 *		driver, or kept intact
+> >> +	 * Returns:	number of sg table entries <= number of pages;
+> >> +	 *		0 is treated as an allocation failure.
+> >> +	 */
+> >> +	int	(*alloc_window)(void *priv, struct sg_table **sgt,
+> >> +				size_t size);
+> >> +	void	(*free_window)(void *priv, struct sg_table *sgt);
+> >> +	/* ->activate():	trace has started */
+> >> +	void	(*activate)(void *priv);
+> >> +	/* ->deactivate():	trace is about to stop */
+> >> +	void	(*deactivate)(void *priv);
+> >> +	/*
+> >> +	 * ->ready():	window @sgt is filled up to the last block OR
+> >> +	 *		tracing is stopped by the user; this window contains
+> >> +	 *		@bytes data. The window in question transitions into
+> >> +	 *		the "LOCKED" state, indicating that it can't be used
+> >> +	 *		by hardware. To clear this state and make the window
+> >> +	 *		available to the hardware again, call
+> >> +	 *		intel_th_msc_window_unlock().
+> >> +	 */
+> >> +	int	(*ready)(void *priv, struct sg_table *sgt, size_t bytes);
+> >> +};
 > >
-> > Unlike driver mode, generic xdp receive could be triggered
-> > by different threads on different CPU cores at the same time
-> > leading to the fill and rx queue breakage. For example, this
-> > could happen while sending packets from two processes to the
-> > first interface of veth pair while the second part of it is
-> > open with AF_XDP socket.
-> >
-> > Need to take a lock for each generic receive to avoid race.
->
-> I measured the performance degradation of rxdrop on my local machine
-> and it went from 2.19 to 2.08, so roughly a 5% drop. I think we can
-> live with this in XDP_SKB mode. If we at some later point in time need
-> to boost performance in this mode, let us look at it then from a
-> broader perspective and find the most low hanging fruit.
->
-> Thanks Ilya for this fix.
->
-> Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
->
-> > Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> > Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> > ---
+> > Why isn't this based off of 'struct driver'?
+> 
+> It's not a real driver, in a sense that there's no underlying
+> device. None of the usual driver stuff applies.
 
-Tested on my machine and works ok.
-Tested-by: William Tu <u9012063@gmail.com>
+Then do not call it a "driver", as in the kernel we have a very
+well-defined and known definition of a driver.  Call it something else
+please.  Yes, naming is hard, but don't try to overload onto an already
+existing name.
+
+> It's still a set of callbacks, though. Should this be an elaborate
+> comment, should I replace the word "driver" with something else?
+
+Yes.
+
+> I'd really like to avoid shoehorning the whole 'struct device' +
+> 'struct driver' here.
+
+Why not?  If you have a driver, just make it a real one.  It not take
+all that much boiler-plate code to do so and then you get all of the
+things you will want in the end anyway (sysfs representation,
+attributes, auto-loading of modules, etc.)
+
+Try doing it "for real" and see what happens.
+
+thanks,
+
+greg k-h
