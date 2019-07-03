@@ -2,130 +2,188 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D72FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CCEC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2AC21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CCF21873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMgdo5cx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iiyk7YEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfGCCPC (ORCPT
+        id S1727375AbfGCCPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:02 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45575 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCCPC (ORCPT
+        Tue, 2 Jul 2019 22:15:11 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38384 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCCPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so299697plb.12;
-        Tue, 02 Jul 2019 19:15:01 -0700 (PDT)
+        Tue, 2 Jul 2019 22:15:11 -0400
+Received: by mail-yb1-f194.google.com with SMTP id j199so413076ybg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 19:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Isqfps/O6LwRnu+dRSzriy5CxI0umRBIFUrqM+okdCs=;
-        b=eMgdo5cxD8xocs0qEkS5EHNLEtNLZV+yO9aTlypZIbft8FBVAa/yS1ZqB/gmuI9J/0
-         Y8Pu2DxexEkDszk9Vt58d1mBAWJBnWu1X/ISi5igs1bfkab1EeO/UYJxuIodJvv+bug8
-         RLH6+zu3qy8OB+mCmUxEv2K/a6RmUkDmtOIcoYpld8hLAO5MFAPgxNp+m6D4M9n0Ouc3
-         DHY9n/2eiMdeYjvHF07NkRPu7wpGYeBMmMZXtpBr1e91vJDDJf405wmxpI0DIi/xxU+x
-         tuuOLTUVeWD5skWO0zu3+1OIW3Bq7UykHev7jtjweIeTsCh1C7mqHXKyVYOfCz+rDy+o
-         mSPA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z4kMOk/YYzNxvAMqof3qlRcj1ufp2J+QyDPgodF1yYw=;
+        b=iiyk7YEyFrfAkR7pTRXiVD380NzL8vxQaZ5+hcIAoDw8iJj34N1vSqKt3RjK7FLWK8
+         sAr5CPS96YlWyP4DXsI+bThnor8HI1cGdNCE7pqsLVNRUwGFPRYlU+oUgkeA+xLLaOsI
+         /j5mjzgdAAm9CP2keT5PwNmCW0T8wLsJJfI9xkjsHIL2JkM0Y2fuLQ7Y4Z/njqMRsClD
+         xSatZ0GZukQYYbdL3LJdwWQ4hqgm41WmnVlbCQmBs8x7CCCZfH7HadMOT/o8wgBzh6bR
+         o7IehN1cuVpQEJOQoXYwQDulFpOtqzsz6u+NDEPDNUpj7Pb8Wquk9+klhVAdKul9kcOm
+         ZGQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Isqfps/O6LwRnu+dRSzriy5CxI0umRBIFUrqM+okdCs=;
-        b=Aeavo+47bzaP0DLTpADFMMtDRqyFIN21vTuHT0oykWfA0sH1wajrDBV2i0dF5Xf084
-         XUu7NH3rM9vbTCbhwcbJebcbZvp/T9gBQeNcGa8qN0SzTEyCyB8icjg3U948Qmbx6IDr
-         8RnTIPCWbg/A7lZl7d9P+dcWhuXuKmTUA74yzhWCms0ASn8PmoYU9bqB99HxmEugOgfF
-         oH/UH5HFoylAjLfMLaSQQML6CYpU0EYJCGIZVXIWUlwbvane7Q1k25a9WJVTp4CIcTvq
-         oHu/TL77NNqXszzIg604TGu1JfHaCPpfFmZ4XQqJqhkDHfBkxvnYKhx4WENUL7tRTrV3
-         VhgQ==
-X-Gm-Message-State: APjAAAWtoVjybjiq8ADL66h6clmA+A7EqoyeqmmgdVMQM6Qn+wv6Ssxh
-        B2d0iuaULxImOdOiD6oFDa4=
-X-Google-Smtp-Source: APXvYqzbJaktcOHx/dP/TVDMSw89q+FpGXl/R5M9ermN1pbkJ4Zt5sJqY6gmBfin0c4K0V1idxIXQA==
-X-Received: by 2002:a17:902:b944:: with SMTP id h4mr30236136pls.179.1562120101420;
-        Tue, 02 Jul 2019 19:15:01 -0700 (PDT)
-Received: from debian.net.fpt ([2405:4800:58f7:1cb1:98e0:87d3:2c8b:b6ed])
-        by smtp.gmail.com with ESMTPSA id h2sm382955pgs.17.2019.07.02.19.14.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 19:15:00 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     tranmanphong@gmail.com
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        hans.verkuil@cisco.com, keescook@chromium.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        skhan@linuxfoundation.org,
-        syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com, glider@google.com
-Subject: [PATCH V2] media: usb: technisat-usb2: fix buffer overflow
-Date:   Wed,  3 Jul 2019 09:14:44 +0700
-Message-Id: <20190703021444.19954-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190702140211.28399-1-tranmanphong@gmail.com>
-References: <20190702140211.28399-1-tranmanphong@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z4kMOk/YYzNxvAMqof3qlRcj1ufp2J+QyDPgodF1yYw=;
+        b=cmr6NJwT4pgpXXr1kI5P5hZkvFOvwHyHn3GtDaHE6y8AGD+wNzn/iE41t2kLiT3HNr
+         8ejHKcwMScaTLa/z2qM/Ih0Nos1fWPVNsI5MLUjyLin82xTBpfbGoS2hFvTL3LIcP2hN
+         rvyM+cnvBqYyMKEXruGOflhiE31aEBHlUTEao5ENl6KpVBt5fBTgqSB31MqqF6iSzvs/
+         /I6j8NS7Jha10dsZ8NUdIe6fxiMCLY+2Y37ayVYKTN28HvhXomRXzCqVexVkHXSh5U5n
+         9HH8+9brZrjdugnytnJZmNo6jXC346sk9508FTeNNvNtmAbvDiXGHphoi3o36RUxyXgR
+         5aSA==
+X-Gm-Message-State: APjAAAWiukWdHKx9zQ7kWDhKlZaHvs8Mbbmy/Q1V1/DwlJHdfN3GzTIz
+        mbr5/QNhWEaLAFXaDj5jbWNAwlpRhgnQDjbe5o1NFA==
+X-Google-Smtp-Source: APXvYqx7+iYUlqDRuTHGsvqA9MgRxUZb/kkMYyWX2diA7ofyI42/WUrm/i42jjWqEXZ17jaHNf0hU48mcQ9DI9HFo5Y=
+X-Received: by 2002:a25:8109:: with SMTP id o9mr19519413ybk.132.1562120109299;
+ Tue, 02 Jul 2019 19:15:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190702075819.34787-1-walken@google.com> <20190702075819.34787-3-walken@google.com>
+ <20190702160913.ptg4p2jyb6ih43hb@linux-r8p5>
+In-Reply-To: <20190702160913.ptg4p2jyb6ih43hb@linux-r8p5>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Tue, 2 Jul 2019 19:14:55 -0700
+Message-ID: <CANN689HVDJXKEwB80yPAVwvRwnV4HfiucQVAho=dupKM_iKozw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] augmented rbtree: add new RB_DECLARE_CALLBACKS_MAX macro
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buffer will be overflow in case of the while loop can not break.
-Add the checking buffer condition in while loop for avoiding
-overlooping index.
+On Tue, Jul 2, 2019 at 9:09 AM Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+> On Tue, 02 Jul 2019, Michel Lespinasse wrote:
+>
+> >diff --git a/arch/x86/mm/pat_rbtree.c b/arch/x86/mm/pat_rbtree.c
+> >index fa16036fa592..2afad8e869fc 100644
+> >--- a/arch/x86/mm/pat_rbtree.c
+> >+++ b/arch/x86/mm/pat_rbtree.c
+> >@@ -54,23 +54,10 @@ static u64 get_subtree_max_end(struct rb_node *node)
+> >       return ret;
+> > }
+> >
+> >-static u64 compute_subtree_max_end(struct memtype *data)
+> >-{
+> >-      u64 max_end = data->end, child_max_end;
+> >-
+> >-      child_max_end = get_subtree_max_end(data->rb.rb_right);
+> >-      if (child_max_end > max_end)
+> >-              max_end = child_max_end;
+> >-
+> >-      child_max_end = get_subtree_max_end(data->rb.rb_left);
+> >-      if (child_max_end > max_end)
+> >-              max_end = child_max_end;
+> >-
+> >-      return max_end;
+> >-}
+> >+#define NODE_END(node) ((node)->end)
+> >
+> >-RB_DECLARE_CALLBACKS(static, memtype_rb_augment_cb, struct memtype, rb,
+> >-                   u64, subtree_max_end, compute_subtree_max_end)
+> >+RB_DECLARE_CALLBACKS_MAX(struct memtype, rb, u64, subtree_max_end, NODE_END,
+> >+                       static, memtype_rb_augment_cb)
+>
+> (unrelated to this patch)
+>
+> So fyi I've recently been looking at having the whole pat_rbtree use the (generic)
+> interval tree api, which would mean less code and more optimized. Of course,
+> unfortunately they aren't 100% compatible. Fundamentally the concept of overlaps
+> are different (pat_rbtree is does not consider overlap when 'node->start == end' -
+> same for the test to the right of the node). Thus for example interval_tree_iter_first()
+> won't necessarily return the same node as memtype_rb_lowest_match(). Similarly,
+> inserting a node with key collisions will have differences wrt what path to take;
+> equal 'start' in pat will go to the left, interval_tree to the right. All this,
+> I suspect, is inherited from how pat used to work with rbtree+list.
+>
+> So generic ones cannot be used and if we just use INTERVAL_TREE_DEFINE template for
+> pat and add the ad-hoc code does not make sense wrt cleanup, nor do we get the
+> optimizations. We could of course, add them manually (by using cached rbtrees, for
+> example) and forget about interval_tree altogether; just seems a shame.
 
-This issue was reported by syzbot
+Ehhh, I have my own list of gripes about interval tree (I'm
+responsible for some of these too):
 
-Reported-by: syzbot+eaaaf38a95427be88f4b@syzkaller.appspotmail.com
+- The majority of interval tree users (though either the
+interval_tree.h or the interval_tree_generic.h API) do not store any
+overlapping intervals, and as such they really don't have any reason
+to use an augmented rbtree in the first place. This seems to be true
+for at least drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c,
+drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c, drivers/gpu/drm/drm_mm.c,
+drivers/gpu/drm/radeon/radeon_mn.c,
+drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c, and probably
+(not 100% sure) also drivers/infiniband/hw/hfi1/mmu_rb.c and
+drivers/vhost/vhost.c. I think the reason they do that is because they
+like to have the auto-generated insert / remove / iter functions
+rather than writing their own as they would have to do through the
+base rbtree API. Not necessarily a huge problem but it is annoying
+when working on inteval tree to consider that the data structure is
+not optimal for most of its users.
 
-Tested-by:
-https://groups.google.com/d/msg/syzkaller-bugs/CySBCKuUOOs/t3PvVheSAAAJ
+- The intervals are represented as [start, last], where most
+everything else in the kernel uses [start, end[ (with last == end -
+1). The reason it was done that way was for stabbing queries - I
+thought these would be nicer to represent as a [stab, stab] interval
+rather than [stab, stab+1[. But, things didn't turn out that way
+because of huge pages, and we end up with stabbing queries in the
+[stab, stab + page_size - 1] format, at which point we could just as
+easily go for [stab, stab + page_size[ representation. Having looked
+into it, my understanding is that *all* current users of the interval
+tree API would be better served if the intervals were represented as
+[start, end[ like everywhere else in the kernel.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
-Change Log:
- * V2: add IR_MAX_BUFFER_INDEX and adjust the while loop condition as comments
----
- drivers/media/usb/dvb-usb/technisat-usb2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+- interval_tree_generic.h refers to interval_tree.h as being the
+generic one. I think this is quite confusing. To me
+interval_tree_generic is the generic implementation (it works with any
+scalar ITTYPE), and interval_tree.h is the specialized version (it
+works with unsigned long keys only). Fun fact, interval_tree.[c,h] was
+initially only meant as sample / test code - I thought everyone would
+use the generic version. Not a big deal, it's probably better for
+everyone to use the specialized version when applicable (unless they
+don't really need overlapping intervals in the first place, but that's
+a separate gripe).
 
-diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
-index c659e18b358b..cdabff97c1ea 100644
---- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-+++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-@@ -49,6 +49,7 @@ MODULE_PARM_DESC(disable_led_control,
- 		"disable LED control of the device (default: 0 - LED control is active).");
- 
- /* device private data */
-+#define IR_MAX_BUFFER_INDEX	63
- struct technisat_usb2_state {
- 	struct dvb_usb_device *dev;
- 	struct delayed_work green_led_work;
-@@ -56,7 +57,7 @@ struct technisat_usb2_state {
- 
- 	u16 last_scan_code;
- 
--	u8 buf[64];
-+	u8 buf[IR_MAX_BUFFER_INDEX + 1];
- };
- 
- /* debug print helpers */
-@@ -655,7 +656,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
- #endif
- 
- 	ev.pulse = 0;
--	while (1) {
-+	while (b <= (buf + IR_MAX_BUFFER_INDEX)) {
- 		ev.pulse = !ev.pulse;
- 		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
- 		ir_raw_event_store(d->rc_dev, &ev);
+- I don't like that interval tree API forces rb_leftmost caching on
+its users. I'm not sure what was the use case that motivated it, but I
+don' think it's a relevant optimization for most users - I can only
+see a benefit if people are frequently calling the iter_first function
+with a search interval that is to the left of the leftmost entry, and
+that doesn't seem to be relevant to the general case (in the general
+case, maintaining leftmost has a O(1) cost and its benefit is only
+expected to show up in 1/N cases, ....)
+
+Going back to your specific pat_rbtree.c comment, I think using
+interval trees could still work. The issue with end is the typical one
+([start, last] vs [start, end[) which can be worked around by
+adjusting the end by 1 (still hate having to do that though). The
+issue with insertion order may possibly not matter, as
+memtype_rb_check_conflict verifies that any overlapping ranges will
+have the same configured memory type. So maybe the order doesn't
+matter in the end ??? Not 100% sure about that one.
+
+Do you have any comments on the above gripes and do you think they
+would be worth addressing ?
+
 -- 
-2.11.0
-
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
