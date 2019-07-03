@@ -2,139 +2,187 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3329C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C45C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DFB218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A892F218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nHY7Db9T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ij7RZFuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfGCNAs (ORCPT
+        id S1727055AbfGCNBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:00:48 -0400
-Received: from node.akkea.ca ([192.155.83.177]:57972 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCNAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:00:47 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id BC92D4E204B; Wed,  3 Jul 2019 13:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1562158846; bh=jfEnQz6Z7lDitZDfZEU5tHLgi5WtCywGyso2NpbD6yM=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=nHY7Db9TTbezNC91mUbwu6U9bjG3WAnn/Vj2i/HuvYVxqG55+k/M/yHfQaRKCevGh
-         3gFNdY/MIMR/QthhXFfVDa7O2uYz6nSZ3Iz73qCjR3tpEJR21kbtwmGf4EUHZylfde
-         blLDPH5clasanypevgikazHmk+IrIti1LuSXTjuE=
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
-X-PHP-Originating-Script: 1000:rcube.php
+        Wed, 3 Jul 2019 09:01:42 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35432 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCNBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:01:42 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d23so2913298qto.2;
+        Wed, 03 Jul 2019 06:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zOwWMRCLSzYayOqA0/S/uTmbNChTaq0MzbltnUW5FxI=;
+        b=Ij7RZFuK5WQRiu8VSbvHSEhaJa/mnsaU9/5GhZF6CnxeIMzhTdAuqc96aLTEdFXXMK
+         yhBCFDrXKbouUzWN3Wq1gZf4qijAl1KOlRPwX0Utt+txkqQ+U4+vBSeGMUoi6Lvqn2v6
+         2leRJ39y6Fqh2uSDd2QxLoHAy8Kx/94WAFTRAisIzjfla05vWZeG+5iFYIa5TjLdHWYt
+         YPW8YkLBOKbvMW0LQQX0jWMN6WfWbgeIKrQ61FiVH1gpIUcEUpKXxBwBrSbkmMTB0ix6
+         7bBcdie+ko5W8MdakCdhk8BeYQUScEPtzJtVI/0LhHok751xTTFwoghZS0o6pD4GjLYH
+         49EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zOwWMRCLSzYayOqA0/S/uTmbNChTaq0MzbltnUW5FxI=;
+        b=rUHXO6M/sQUWXdRM54i9ex2F86TCbRyCuUordULC6cWNqGlQobZK7ezALh0Wx8rq2G
+         uvqLG/cWT0czXSYgSNVXNDV3enjluoPyUhb25/ApeV/otoVevYOtrlgtwilHfyQ8zqyq
+         eGS9vEhpHadab+Q++KCrFmCHTSoaexh9gH+oBmD6dgzmYcOY3WJ9WbGoGTm/SOJb60tW
+         SlyHpiyRDEfFPsc9Bv7FueafVdnDy4mgQ2EPGc+XOoqYKVK+CU1ckZHLlUP8zzBfa0/U
+         cYCsu+zVNqaDSvgsts+FnX7rGaS5cjhBGchHo4AeN4ib8KXrIUQ48cnntSo8mlJfim4E
+         WO+Q==
+X-Gm-Message-State: APjAAAWZFPXqUztqESnvzAP4G4Lkj7KA+msHbSQvplKzCI4plDssjE7Z
+        Zv3n3vWKuZI5GOU7/GUho/k=
+X-Google-Smtp-Source: APXvYqymLHrXn9+dZNQRLMDmXjtfMhrejm/JMPcr1rvuLJJOMPHIW3gnrvBehpb3Z2r96ynnnDbLCA==
+X-Received: by 2002:aed:39e5:: with SMTP id m92mr29964740qte.135.1562158900632;
+        Wed, 03 Jul 2019 06:01:40 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d9::105b? ([2620:10d:c091:480::2a6d])
+        by smtp.gmail.com with ESMTPSA id s127sm870575qkd.107.2019.07.03.06.01.39
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 06:01:40 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+References: <20190627095247.8792-1-chiu@endlessm.com>
+ <31f59db2-0e04-447b-48f8-66ea53ebfa7d@gmail.com>
+ <CAB4CAwcEdcg91Bgb+JoCdk_zQKsWT-K+cb07-5mrrx+__X2RMA@mail.gmail.com>
+Message-ID: <afa1e967-dba0-d6ea-fe62-67a9411638a7@gmail.com>
+Date:   Wed, 3 Jul 2019 09:01:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAB4CAwcEdcg91Bgb+JoCdk_zQKsWT-K+cb07-5mrrx+__X2RMA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jul 2019 07:00:46 -0600
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
-        Anson.Huang@nxp.com, andrew.smirnov@gmail.com,
-        ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190702132353.18632-1-andradanciu1997@gmail.com>
-References: <20190702132353.18632-1-andradanciu1997@gmail.com>
-Message-ID: <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andra,
-
-I tried this out on linux-next and I'm not able to record or play sound.
-
-I also added the sai2 entry to test out our devkit and get a PCM timeout 
-with that.
-
-On 2019-07-02 07:23, Andra Danciu wrote:
-> SAI3 and SAI6 nodes are used to connect to an external codec.
-> They have 1 Tx and 1 Rx dataline.
+On 7/2/19 11:25 PM, Chris Chiu wrote:
+> On Tue, Jul 2, 2019 at 8:44 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+>>
+>> On 6/27/19 5:52 AM, Chris Chiu wrote:
+>>> The WiFi tx power of RTL8723BU is extremely low after booting. So
+>>> the WiFi scan gives very limited AP list and it always fails to
+>>> connect to the selected AP. This module only supports 1x1 antenna
+>>> and the antenna is switched to bluetooth due to some incorrect
+>>> register settings.
+>>>
+>>> This commit hand over the antenna control to PTA, the wifi signal
+>>> will be back to normal and the bluetooth scan can also work at the
+>>> same time. However, the btcoexist still needs to be handled under
+>>> different circumstances. If there's a BT connection established,
+>>> the wifi still fails to connect until disconneting the BT.
+>>>
+>>> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+>>> ---
+>>>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 9 ++++++---
+>>>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 ++-
+>>>  2 files changed, 8 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> index 3adb1d3d47ac..6c3c70d93ac1 100644
+>>> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+>>>       /*
+>>>        * WLAN action by PTA
+>>>        */
+>>> -     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
+>>> +     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+>>>
+>>>       /*
+>>>        * BT select S0/S1 controlled by WiFi
+>>> @@ -1568,9 +1568,12 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+>>>       rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+>>>
+>>>       /*
+>>> -      * 0x280, 0x00, 0x200, 0x80 - not clear
+>>> +      * Different settings per different antenna position.
+>>> +      * Antenna switch to BT: 0x280, 0x00 (inverse)
+>>> +      * Antenna switch to WiFi: 0x0, 0x280 (inverse)
+>>> +      * Antenna controlled by PTA: 0x200, 0x80 (inverse)
+>>>        */
+>>> -     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+>>> +     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+>>>
+>>>       /*
+>>>        * Software control, antenna at WiFi side
+>>> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+>>> index 8136e268b4e6..87b2179a769e 100644
+>>> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+>>> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+>>> @@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+>>>
+>>>       /* Check if MAC is already powered on */
+>>>       val8 = rtl8xxxu_read8(priv, REG_CR);
+>>> +     val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
+>>>
+>>>       /*
+>>>        * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
+>>>        * initialized. First MAC returns 0xea, second MAC returns 0x00
+>>>        */
+>>> -     if (val8 == 0xea)
+>>> +     if (val8 == 0xea || !(val16 & BIT(11)))
+>>>               macpower = false;
+>>>       else
+>>>               macpower = true;
+>>
+>> This part I would like to ask you take a good look at the other chips to
+>> make sure you don't break support for 8192cu, 8723au, 8188eu with this.
+>>
+>> Cheers,
+>> Jes
 > 
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
-> Changes since v2:
-> 	- removed multiple new lines
+> I checked the vendor code of 8192cu and 8188eu, they don't have this part
+> of code to check the REG_CR before power on sequence. I can only find
+> similar code in rtl8723be.
+> if (tmp_u1b != 0 && tmp_u1b !=0xea)
+>     rtlhal->mac_func_enable = true;
 > 
-> Changes since v1:
-> 	- Added sai3 node because we need it to enable audio on pico-pi-8m
-> 	- Added commit description
+> By definition, the BIT(11) of REG_SYS_CLKR in rtl8xxxu_regs.h is
+> SYS_CLK_MAC_CLK_ENABLE. It seems to make sense to check this value
+> for macpower no matter what chip it is. I think I can make it more
+> self-expressive
+> as down below.
 > 
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29 
-> +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index d09b808eff87..736cf81b695e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -278,6 +278,20 @@
->  			#size-cells = <1>;
->  			ranges = <0x30000000 0x30000000 0x400000>;
-> 
-> +			sai6: sai@30030000 {
-> +				compatible = "fsl,imx8mq-sai",
+>  if (val8 == 0xea || !(val16 & SYS_CLK_MAC_CLK_ENABLE))
 
-I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't 
-the registers at a different offset from "fsl,imx6sx-sai".
+Yes, please always use the descriptive defines rather than hard coding
+the bit numbers.
 
-How is this supposed to work ?
+> And per the comment, this code is for 92DU-VC S3 hang problem and I think an
+> OR check for SYS_CLK_MAC_CLK_ENABLE is still safe for this.
 
-Thanks
-Angus
+Sounds reasonable - keep in mind that some of these bugs may have been
+fixed for one chip, and then just copied forward.
 
-> +					"fsl,imx6sx-sai";
-> +				reg = <0x30030000 0x10000>;
-> +				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MQ_CLK_SAI6_IPG>,
-> +					<&clk IMX8MQ_CLK_SAI6_ROOT>,
-> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +				dmas = <&sdma2 4 24 0>, <&sdma2 5 24 0>;
-> +				dma-names = "rx", "tx";
-> +				status = "disabled";
-> +			};
-> +
->  			gpio1: gpio@30200000 {
->  				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
->  				reg = <0x30200000 0x10000>;
-> @@ -728,6 +742,21 @@
->  				status = "disabled";
->  			};
-> 
-> +			sai3: sai@308c0000 {
-> +				compatible = "fsl,imx8mq-sai",
-> +					     "fsl,imx6sx-sai";
-> +				reg = <0x308c0000 0x10000>;
-> +				interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk IMX8MQ_CLK_SAI3_IPG>,
-> +					<&clk IMX8MQ_CLK_DUMMY>,
-> +					<&clk IMX8MQ_CLK_SAI3_ROOT>,
-> +					<&clk IMX8MQ_CLK_DUMMY>, <&clk IMX8MQ_CLK_DUMMY>;
-> +				clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> +				dmas = <&sdma1 12 24 0>, <&sdma1 13 24 0>;
-> +				dma-names = "rx", "tx";
-> +				status = "disabled";
-> +			};
-> +
->  			i2c1: i2c@30a20000 {
->  				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
->  				reg = <0x30a20000 0x10000>;
-
+Cheers,
+Jes
