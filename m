@@ -2,81 +2,246 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30314C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B78C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0697C21881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91CD21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfGCJxv (ORCPT
+        id S1727076AbfGCJyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:53:51 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:38337 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfGCJxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:53:51 -0400
-Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MYvPq-1i4UQO1u6a-00UvZs; Wed, 03 Jul 2019 11:53:48 +0200
-Subject: Re: [PATCH] fs/seq_file: Replace a seq_printf() call by seq_puts() in
- seq_hex_dump()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <8c295901-cdbd-a4a2-f23f-f63a58330f20@web.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <10744a9b-1c15-1581-8422-bbbf995c0da3@metux.net>
-Date:   Wed, 3 Jul 2019 11:53:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 3 Jul 2019 05:54:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55126 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbfGCJyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 05:54:21 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC33330BF1B2;
+        Wed,  3 Jul 2019 09:54:14 +0000 (UTC)
+Received: from [10.72.12.173] (ovpn-12-173.pek2.redhat.com [10.72.12.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B68E27F248;
+        Wed,  3 Jul 2019 09:54:00 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on
+ the_virtio_vsock
+To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+ <20190628123659.139576-2-sgarzare@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <05311244-ed23-d061-a620-7b83d83c11f5@redhat.com>
+Date:   Wed, 3 Jul 2019 17:53:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <8c295901-cdbd-a4a2-f23f-f63a58330f20@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190628123659.139576-2-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xiC9aC0SXQUwA+BYVt/+cV5O9DXdVDss0yAIx+MA2irR0N/sKsm
- udBlm60BA5MbOe92vuTq4Qt3CHgj6T+u2bceMRInHA27d/jhvjAD3DeH5KutUKXwt+tLYep
- QdblIoLPF2rdW/drmNZeV+qy7YXWSajmZ8+rL8bQFq7VTL1W0abzuK0cij6Qf+XH1GEir40
- kyRDkF1zIp2Ne74uoBkOQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aPL7KJiS+uI=:7S7IBlN8EoVT6GT1IlIKwA
- o12t/oiXZ0KNqic8DlaUWj/Org71srYU03+4+GFF/dqevDPvGGbubRHtcE2+GdaxFotH6DUBm
- sftkTKR7YXHAyDLPAX5wUGQt9IQFXOIQ/8fwocN8i9cAeXDvuLZ1hgsLo0IR6lqKyAdUp83OD
- Gd+Skw2CG+VTgfg6EDktkIDczBP7hj5Rv0jGmdj95wteby4rUo4clq9o+6ZyO8DcJpAp+B9Of
- A+gXm8RyVlzBhYyzBScR6vFRaPjHIKso3LGWcY++CWFLq8SeKc8zFr5moGuSPDs5oWrXgZP8s
- /glNL1Ka+kTuqx9h297iRDHVHezCSUeDHyIBm3exgs8nTLpwI9s1e0aZOKO46BV21gbsGzye7
- hbOl5A+UQRjFcVADjfSTgccapUQ53DM5AlQJlxEnDrPC3MRChfLbMj5Slts54QLuy6BSqYS2m
- y002WGW5kHjCgpgomdSUkHczm3i79jIBpdbFkVhBhg+eR5kjOng7wiT9vdFScM2f31nACvBzT
- xDfQCbw6MXb+twLPqBD4f2viePHc/cGSPXzelRkrGg+aPftF86kiqWbJgIRmpEUnBPexdaaFq
- Fv3uzrlGtsLE9bagQqWa21/Xuijy4kEQymMphQFvC3dXIkUKq8sZa8ypopLl9R62/ge6davtZ
- D4QPyAIjqvowjJ26I7ngOIBwiH0SQZh5W/tvNhLES9yEItSOVPFaFuiRx+osA8gcLDVdw41Vs
- /JQ5f6OQovUAp9WNjXrf1IlnTneUvD45u2SA74H839mWdij/18A9yU1iozg=
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 03 Jul 2019 09:54:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.19 18:38, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 2 Jul 2019 18:28:10 +0200
-> 
-> A string which did not contain a data format specification should be put
-> into a sequence. Thus use the corresponding function “seq_puts”.
 
-Looks good, but have you checked whether "m" could ever be NULL and
-whether seq_puts() has a check for that ?
+On 2019/6/28 下午8:36, Stefano Garzarella wrote:
+> Some callbacks used by the upper layers can run while we are in the
+> .remove(). A potential use-after-free can happen, because we free
+> the_virtio_vsock without knowing if the callbacks are over or not.
+>
+> To solve this issue we move the assignment of the_virtio_vsock at the
+> end of .probe(), when we finished all the initialization, and at the
+> beginning of .remove(), before to release resources.
+> For the same reason, we do the same also for the vdev->priv.
+>
+> We use RCU to be sure that all callbacks that use the_virtio_vsock
+> ended before freeing it. This is not required for callbacks that
+> use vdev->priv, because after the vdev->config->del_vqs() we are sure
+> that they are ended and will no longer be invoked.
+>
+> We also take the mutex during the .remove() to avoid that .probe() can
+> run while we are resetting the device.
+>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>   net/vmw_vsock/virtio_transport.c | 67 +++++++++++++++++++++-----------
+>   1 file changed, 44 insertions(+), 23 deletions(-)
+>
+> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> index 9c287e3e393c..7ad510ec12e0 100644
+> --- a/net/vmw_vsock/virtio_transport.c
+> +++ b/net/vmw_vsock/virtio_transport.c
+> @@ -65,19 +65,22 @@ struct virtio_vsock {
+>   	u32 guest_cid;
+>   };
+>   
+> -static struct virtio_vsock *virtio_vsock_get(void)
+> -{
+> -	return the_virtio_vsock;
+> -}
+> -
+>   static u32 virtio_transport_get_local_cid(void)
+>   {
+> -	struct virtio_vsock *vsock = virtio_vsock_get();
+> +	struct virtio_vsock *vsock;
+> +	u32 ret;
+>   
+> -	if (!vsock)
+> -		return VMADDR_CID_ANY;
+> +	rcu_read_lock();
+> +	vsock = rcu_dereference(the_virtio_vsock);
+> +	if (!vsock) {
+> +		ret = VMADDR_CID_ANY;
+> +		goto out_rcu;
+> +	}
+>   
+> -	return vsock->guest_cid;
+> +	ret = vsock->guest_cid;
+> +out_rcu:
+> +	rcu_read_unlock();
+> +	return ret;
+>   }
+>   
+>   static void virtio_transport_loopback_work(struct work_struct *work)
+> @@ -197,14 +200,18 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>   	struct virtio_vsock *vsock;
+>   	int len = pkt->len;
+>   
+> -	vsock = virtio_vsock_get();
+> +	rcu_read_lock();
+> +	vsock = rcu_dereference(the_virtio_vsock);
+>   	if (!vsock) {
+>   		virtio_transport_free_pkt(pkt);
+> -		return -ENODEV;
+> +		len = -ENODEV;
+> +		goto out_rcu;
+>   	}
+>   
+> -	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid)
+> -		return virtio_transport_send_pkt_loopback(vsock, pkt);
+> +	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid) {
+> +		len = virtio_transport_send_pkt_loopback(vsock, pkt);
+> +		goto out_rcu;
+> +	}
+>   
+>   	if (pkt->reply)
+>   		atomic_inc(&vsock->queued_replies);
+> @@ -214,6 +221,9 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>   	spin_unlock_bh(&vsock->send_pkt_list_lock);
+>   
+>   	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
+> +
+> +out_rcu:
+> +	rcu_read_unlock();
+>   	return len;
+>   }
+>   
+> @@ -222,12 +232,14 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>   {
+>   	struct virtio_vsock *vsock;
+>   	struct virtio_vsock_pkt *pkt, *n;
+> -	int cnt = 0;
+> +	int cnt = 0, ret;
+>   	LIST_HEAD(freeme);
+>   
+> -	vsock = virtio_vsock_get();
+> +	rcu_read_lock();
+> +	vsock = rcu_dereference(the_virtio_vsock);
+>   	if (!vsock) {
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto out_rcu;
+>   	}
+>   
+>   	spin_lock_bh(&vsock->send_pkt_list_lock);
+> @@ -255,7 +267,11 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>   			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+>   	}
+>   
+> -	return 0;
+> +	ret = 0;
+> +
+> +out_rcu:
+> +	rcu_read_unlock();
+> +	return ret;
+>   }
+>   
+>   static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+> @@ -590,8 +606,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>   	vsock->rx_buf_max_nr = 0;
+>   	atomic_set(&vsock->queued_replies, 0);
+>   
+> -	vdev->priv = vsock;
+> -	the_virtio_vsock = vsock;
+>   	mutex_init(&vsock->tx_lock);
+>   	mutex_init(&vsock->rx_lock);
+>   	mutex_init(&vsock->event_lock);
+> @@ -613,6 +627,9 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>   	virtio_vsock_event_fill(vsock);
+>   	mutex_unlock(&vsock->event_lock);
+>   
+> +	vdev->priv = vsock;
+> +	rcu_assign_pointer(the_virtio_vsock, vsock);
 
 
---mtx
+You probably need to use rcu_dereference_protected() to access 
+the_virtio_vsock in the function in order to survive from sparse.
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+
+> +
+>   	mutex_unlock(&the_virtio_vsock_mutex);
+>   	return 0;
+>   
+> @@ -627,6 +644,12 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>   	struct virtio_vsock *vsock = vdev->priv;
+>   	struct virtio_vsock_pkt *pkt;
+>   
+> +	mutex_lock(&the_virtio_vsock_mutex);
+> +
+> +	vdev->priv = NULL;
+> +	rcu_assign_pointer(the_virtio_vsock, NULL);
+
+
+This is still suspicious, can we access the_virtio_vsock through 
+vdev->priv? If yes, we may still get use-after-free since it was not 
+protected by RCU.
+
+Another more interesting question, I believe we will do singleton for 
+virtio_vsock structure. Then what's the point of using vdev->priv to 
+access the_virtio_vsock? It looks to me we can it brings extra troubles 
+for doing synchronization.
+
+Thanks
+
+
+> +	synchronize_rcu();
+> +
+>   	flush_work(&vsock->loopback_work);
+>   	flush_work(&vsock->rx_work);
+>   	flush_work(&vsock->tx_work);
+> @@ -666,12 +689,10 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>   	}
+>   	spin_unlock_bh(&vsock->loopback_list_lock);
+>   
+> -	mutex_lock(&the_virtio_vsock_mutex);
+> -	the_virtio_vsock = NULL;
+> -	mutex_unlock(&the_virtio_vsock_mutex);
+> -
+>   	vdev->config->del_vqs(vdev);
+>   
+> +	mutex_unlock(&the_virtio_vsock_mutex);
+> +
+>   	kfree(vsock);
+>   }
+>   
