@@ -2,95 +2,231 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02001C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B56C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0D32189F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="dxP42nkV"
+	by mail.kernel.org (Postfix) with ESMTP id 23C052189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 07:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfGCHmP (ORCPT
+        id S1727121AbfGCHtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 03:42:15 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42168 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfGCHmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 03:42:14 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so1454212qtk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 00:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vbcXnianh87vXEjFT9B3w4NaWyc5uSKsAaNy2YUdSho=;
-        b=dxP42nkV2Pahhr14oxk8h1+yFAtHKvsqK+i/hKWRTlIRRlRO5mFwJG9ui1MB8rtU01
-         sYBVHMMi8p89rlPnckYovpljhcmbRZ4OQRlLOvW6H/7OHl3KAogXVqLzGOQCoiFt55ei
-         f8pjU9lYEX7VRj04zhgxmYjCT4rICFJuuMGUyWSW7TClIYf535dZ5VJAi8skgOzIREJ3
-         m03y2w8s9hV7MBbsYwP59mI6vCoIycMafoNg10QoZMr+HEbKVS17+nW3aES4NDjsMMGv
-         SETeuUCeyOOlMJZoNazL/PITVGLR6bc/9zoUO2zpuWCq+hGalbrJpS7fuVPmMaVHbQJv
-         H/0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vbcXnianh87vXEjFT9B3w4NaWyc5uSKsAaNy2YUdSho=;
-        b=V4SGwb1hzRU0/ScKI1wSB0pyyL8s/bJC7hvsbdEVDLDf/LEXJ6MhiKvprEp/EB1vMj
-         g4xMNzviEYhqh3ygaRZ2ILAH9aSuFYDsPoqswEq/lB4iZUD91m3Qxx1/cww0cAM6IGd5
-         SbOPq+x98sVqMCN4NIQlCDNTAF9w64X88rQkXAqdZ0Ant6fFRc7EsPGPj5tz1qjNuVi+
-         QQbbm8FMDsn7Vb97oPJQX9PkMnb9Geld2PWoVm0J7niQreRG3K/xpjFdjlo5/BnZqFMQ
-         Zkq/c8IOp8CupVmcDBwvq7ul7BY+vV4oepNsusSTBjHxOosBbj7E2dVczsIH5wH3m9oH
-         LddA==
-X-Gm-Message-State: APjAAAV9UcltByj7HVojZDynUbfSsc/WAUQBKcdHfjVkhtr8hJ5Ugp63
-        Dui4UisHywuVF+B2KDZdUvYJXrJT6lUUCCsPVe3UiQ==
-X-Google-Smtp-Source: APXvYqw2helkZ3RMQLGNhGXrJACkePG5udZckFLg9KzZq3HT+da0RblRTkPUzH2vRKtJZ1SuWZitoxREttaJ45NLpCw=
-X-Received: by 2002:a0c:d4d0:: with SMTP id y16mr29761996qvh.191.1562139733812;
- Wed, 03 Jul 2019 00:42:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190627095247.8792-1-chiu@endlessm.com> <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
- <4c99866e-55b7-8852-c078-6b31dce21ee4@gmail.com>
-In-Reply-To: <4c99866e-55b7-8852-c078-6b31dce21ee4@gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 3 Jul 2019 15:42:02 +0800
-Message-ID: <CAD8Lp47mWH1-VsZaHr6_qmSU2EEOr9tQJ3CUhfi_JkQGgKpegA@mail.gmail.com>
-Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     Chris Chiu <chiu@endlessm.com>, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 3 Jul 2019 03:49:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33852 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727004AbfGCHtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 03:49:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BC4DBAD36;
+        Wed,  3 Jul 2019 07:49:44 +0000 (UTC)
+Date:   Wed, 03 Jul 2019 09:49:44 +0200
+Message-ID: <s5h36jno8vb.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     nick83ola <nick83ola@gmail.com>
+Cc:     "Wasko, Michal" <michal.wasko@linux.intel.com>,
+        alsa-devel@alsa-project.org, info@jensverwiebe.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [alsa-devel] [PATCH] ALSA: usb-audio: fix Line6 Helix audio format rates
+In-Reply-To: <CABPh3UMttE1s7oNt0-JLNm2N3wxb-JXBTLzMYZM42ENiy9NC9Q@mail.gmail.com>
+References: <20190702004439.30131-1-nick83ola@gmail.com>
+        <s5hlfxg4i4r.wl-tiwai@suse.de>
+        <4181a467-5332-c256-5124-513a0343ec70@linux.intel.com>
+        <s5ha7dw4egd.wl-tiwai@suse.de>
+        <CABPh3UMttE1s7oNt0-JLNm2N3wxb-JXBTLzMYZM42ENiy9NC9Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 8:42 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
-> We definitely don't want to bring over the vendor code, since it's a
-> pile of spaghetti, but we probably need to get something sorted. This
-> went down the drain when the bluetooth driver was added without taking
-> it into account - long after this driver was merged.
+On Wed, 03 Jul 2019 09:41:00 +0200,
+nick83ola wrote:
+> 
+> On Tue 2 Jul 2019, 16:57 Takashi Iwai, <tiwai@suse.de> wrote:
+> 
+>     On Tue, 02 Jul 2019 17:52:01 +0200,
+>     Wasko, Michal wrote:
+>     >
+>     > On 7/2/2019 4:37 PM, Takashi Iwai wrote:
+>     > > On Tue, 02 Jul 2019 02:43:14 +0200,
+>     > > Nicola Lunghi wrote:
+>     > >> Line6 Helix and HX stomp don't support retrieving
+>     > >> the number of clock sample rate.
+>     > >>
+>     > >> Add a quirk to return the default value of 48Khz.
+>     > >>
+>     > >> Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
+>     > > It's not particularly good place to put a quirk, but there seems no
+>     > > other better place, unfortunately. 
+> 
+> If you prefer I can add a function to quirk.c
 
-Yeah, I didn't mean bring over quite so literally.. Chris is studying
-it and figuring out the neatest way to reimplement the required bits.
+It's OK to place in format.c as a start.
 
-As for the relationship with bluetooth.. actually the bug that Chris
-is working on here is that the rtl8xxxu wifi signal is totally
-unusable *until* the bluetooth driver is loaded.
-Once the bluetooth driver is loaded, at the point of bluetooth
-firmware upload, the rtl8xxxu signal magiaclly strength becomes good.
-I think this is consistent with other rtl8xxxu problem reports that we
-saw lying around, although they had not been diagnosed in so much
-detail.
-The rtl8723bu vendor driver does not suffer this problem, it works
-fine with or without the bluetooth driver in place.
+>     Is this specific to certain unit
+>     > > or all I/Os on the device suffer from this problem?
+> 
+> This is specific to the helix line of line6
+> There are currently 4 devices in that line that I think shared their firmware
+> more or less.
+> Unfortunately I have only one device to test here (but maybe someone else can
+> add the others)
 
-Daniel
+Ah sorry I wasn't clear enough.  What I meant as "unit" is the USB
+descriptor unit (aka widget), a feature unit, a terminal, whatever.
+Does this error appear only once at parsing, or does it hit multiple
+times per device?
+
+>     > >
+>     > > In anyway, if the behavior is expected, we don't need to use
+>     > > dev_warn() to annoy users unnecessarily.  Replace it with dev_info().
+>     > >
+> 
+> Ok
+> 
+>     > > Also, the code that creates a single 48k entry would be better to be
+>     > > put into a function for readability.
+>     > >
+>     > > Could you resubmit with that change?
+>     > >
+> 
+> Yes (in quirks.c or here?)
+> 
+> Also I suspect that there' s a way to get the clock rates because windows
+> driver supports getting the rates and switching (and in Mac the device has the
+> same problem without a custom driver only supports 48khz)
+
+It might be some fixed list without inquiries?
+
+
+>     > >
+>     > > Thanks!
+>     > >
+>     > > Takashi
+>     >
+> 
+> Thank you
+> 
+>     > If the listed USB devices do not support sample rate format retrieval
+>     > then maybe it would be a better idea to perform below check before
+>     > sending message?
+>    
+>     Yes, if we know that it always fails, we don't need to query.
+> 
+> Sorry I don't understand this :-)
+
+Well, the error happens always on your device in the very same way,
+right?  Then we don't have to send the specific command that leads to
+an error, but takes the fixed 48k from the beginning.
+
+
+> My idea is that if line6 in the future fixes their code (they are quite active
+> on the helix line) the call will not fail and we get a proper device without
+> quirks.
+> But If the driver fail to get the clock this settings works as a "failsafe"
+> and get the device working.
+> I also tried to contact their support but they don't care a lot about Linux
+> for now :-(
+
+The fallback might be good, but I'm not sure whether there are many
+devices that hit the same problem.  If we encounter more, let's try to
+make it as a fallback.
+
+
+thanks,
+
+Takashi
+
+> 
+> I will clean this better and resubmit
+> Thank you
+> Nick
+> 
+>     > Have you also considered new function or macro that check device
+>     > support? This would separate formatfunctionality code from routine
+>     > that identifies applicable devices- in case if in future more devices
+>     > will require quirk.
+>    
+>     The split can be done later.  It's always hard to know what kind of
+>     quirk would be needed in future.  If any more devices show the same
+>     problem, we can reorganize the quirk in a saner way.
+> 
+>     thanks,
+>    
+>     Takashi
+> 
+>     >
+>     > Michal W.
+>     >
+>     > >> ---
+>     > >>   sound/usb/format.c | 28 +++++++++++++++++++++++++---
+>     > >>   1 file changed, 25 insertions(+), 3 deletions(-)
+>     > >>
+>     > >> diff --git a/sound/usb/format.c b/sound/usb/format.c
+>     > >> index c02b51a82775..05442f6ada62 100644
+>     > >> --- a/sound/usb/format.c
+>     > >> +++ b/sound/usb/format.c
+>     > >> @@ -313,10 +313,32 @@ static int parse_audio_format_rates_v2v3(struct
+>     snd_usb_audio *chip,
+>     > >>                          tmp, sizeof(tmp));
+>     > >>            if (ret < 0) {
+>     > >> -          dev_err(&dev->dev,
+>     > >> -                  "%s(): unable to retrieve number of sample rates
+>     (clock %d)\n",
+>     > >> +          switch (chip->usb_id) {
+>     > >> +          /* LINE 6 HX pedals don't support getting the clock sample
+>     rate.
+>     > >> +           * Set the framerate to 48khz by default
+>     > >> +           */
+>     > >> +          case USB_ID(0x0E41, 0x4244): /* HELIX */
+>     > >> +          case USB_ID(0x0E41, 0x4246): /* HX STOMP */
+>     > >> +                  dev_warn(&dev->dev,
+>     > >> +                          "%s(): line6 helix: unable to retrieve
+>     number of sample rates. Set it to default value (clock %d).\n",
+>     > >>                            __func__, clock);
+>     > >> -          goto err;
+>     > >> +                  fp->nr_rates = 1;
+>     > >> +                  fp->rate_min = 48000;
+>     > >> +                  fp->rate_max = 48000;
+>     > >> +                  fp->rates = SNDRV_PCM_RATE_48000;
+>     > >> +                  fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
+>     > >> +                  if (!fp->rate_table) {
+>     > >> +                          ret = -ENOMEM;
+>     > >> +                          goto err_free;
+>     > >> +                  }
+>     > >> +                  fp->rate_table[0] = 48000;
+>     > >> +                  return 0;
+>     > >> +          default:
+>     > >> +                  dev_err(&dev->dev,
+>     > >> +                          "%s(): unable to retrieve number of sample
+>     rates (clock %d)\n",
+>     > >> +                                  __func__, clock);
+>     > >> +                  goto err;
+>     > >> +          }
+>     > >>    }
+>     > >>            nr_triplets = (tmp[1] << 8) | tmp[0];
+>     > >> --
+>     > >> 2.19.1
+>     > >>
+>     > >>
+>     > > _______________________________________________
+>     > > Alsa-devel mailing list
+>     > > Alsa-devel@alsa-project.org
+>     > > https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>     > >
+>     >
+> 
+> 
