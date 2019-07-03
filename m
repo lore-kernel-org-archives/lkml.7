@@ -2,97 +2,218 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4909AC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833C5C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217F921852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0FB218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6BqioMG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifXnrPew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfGCSpH (ORCPT
+        id S1727158AbfGCSpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:45:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36214 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCSpH (ORCPT
+        Wed, 3 Jul 2019 14:45:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57556 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbfGCSpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:45:07 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q26so2507486lfc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 11:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lwL7OY0gNWaqAz8g888XgOT0QU+pPo6Fz6l72ernDnk=;
-        b=J6BqioMGnIUGMgw+WUUWZYDtzcbxXTqWSv7V0mjUaLDgSGZYj2C74mtre0YGgZQHmU
-         B36ldcRLfqX6msPyDZU9viW8pqKFlSCd9dAJJWlwLb7lGNlij6pBCLpHSa1JsN9qPYt1
-         L1CCXATRUrLB6lvLKxeGAgyKxjKcBXAj9N1/tYw5ty5wodmlCeKXImm7qLLjWjXK5WRw
-         mk4h3Q4diWLMb4FskgO5lw6+inNdQz3VPiKC3S7J/9I/OGpjVH0xzAT1xYrQeuYgGxS7
-         kPXZKS5TjsI0Nr/8EIFF4BS3x1atQ4uJukd1PldQnnXNtg0wzLFuSlD5Q+EMuOKShLXE
-         K5zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lwL7OY0gNWaqAz8g888XgOT0QU+pPo6Fz6l72ernDnk=;
-        b=sviu/fNfkHNAGjNwO1GDAr8KPoUm4dFK/yy+uQ7R1NTOnIB18ciPllT+aE9sdxnVtn
-         55Ocs+gscEixt+B94LBR8UBXGtrKHzvkHGZ41pydA7+lSP9zIUWCBxQjoTbUBww0Q++D
-         y4D7UlBECKXQAKSRxPHRFjT9xfh7VSo7KnA1zySpZZIlFh7xcBOmuRJEH1JDOXZMdJu/
-         Lam+pBcKtARdvwVAcsaFg+J0/NynzSRC+romqLEsvNU20Nk0G7LihCVTisSt1gti2OEt
-         QOXf3qlLUxa8CA7R9sk2Ni6Sqf2xkvk1xRQRa/kkjnLo2zH3joD5boPvIr8NhKRzVg/h
-         r3Mw==
-X-Gm-Message-State: APjAAAV7+o3wyuNqM8bevBJLRpewumhcxkvIVID+HmRKue8W2p1n12rd
-        h0kcKD8L7MPk/HrY/zfmdnYPsJKihWvdVE2DY6w=
-X-Google-Smtp-Source: APXvYqwxQ8LZckgiyHCxN+dUAHtaxvbDiTDnLwmLZL0pp1CCK2qiQvUeMWP5hjpgkk2mJyrfgFGoOc0WqWjqf21Q8IU=
-X-Received: by 2002:ac2:5324:: with SMTP id f4mr2679732lfh.156.1562179505561;
- Wed, 03 Jul 2019 11:45:05 -0700 (PDT)
+        Wed, 3 Jul 2019 14:45:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UhdzfqB+ekXr0a76nTnfNFoskUSEXQtkHxxjYnKYjTY=; b=ifXnrPewbD1CglQLGyI4uxM4Bi
+        RiD7ef8pTvkaeGMgCXwRB+w7xVgKJnhfkX+crTc4HemDtKC8PGY0IVIqIxKmUFAqHhXGSGoZ/2yek
+        rVrVS3JUBKDNluj42cUIdoTxc+MabgCeNPn0FMXxdaQ80U8nDF3epvxhGyQh/BPnY/NrZkwfSNH3b
+        SnwTZKxskOMoXVJUq+f0cFgpuylPWmdgEEQVVbdJ2TI5WeVczYMfh0+okClGrDruR9zvWCrK+NaJV
+        cBUlIPRXdxbHtCWgA4WUnvt6l3b1E60wpr03FAneVP1Z97WBVpUVfKV0X+ANJl8KMJ8Q3ueBwXlWe
+        I3UevQmw==;
+Received: from rap-us.hgst.com ([199.255.44.250] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hikFb-0007FI-Kp; Wed, 03 Jul 2019 18:45:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH 3/5] mm: move hmm_vma_fault to nouveau
+Date:   Wed,  3 Jul 2019 11:45:00 -0700
+Message-Id: <20190703184502.16234-4-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703184502.16234-1-hch@lst.de>
+References: <20190703184502.16234-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20190703001842.12238-1-alistair.francis@wdc.com>
- <20190703001842.12238-3-alistair.francis@wdc.com> <CAK8P3a37GLzp+w6m0SEV+9j_6sH91SuStyAEW-VzuJ5_dUCnZw@mail.gmail.com>
-In-Reply-To: <CAK8P3a37GLzp+w6m0SEV+9j_6sH91SuStyAEW-VzuJ5_dUCnZw@mail.gmail.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Wed, 3 Jul 2019 11:42:00 -0700
-Message-ID: <CAKmqyKP07futGV1WsZwvqGzeR646eo-ysVy9RCqaSOG-2qhH_g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv/include/uapi: Define a custom __SIGINFO struct
- for RV32
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alistair Francis <alistair.francis@wdc.com>,
-        linux-riscv-bounces@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 1:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Jul 3, 2019 at 2:21 AM Alistair Francis
-> <alistair.francis@wdc.com> wrote:
-> >
-> > The glibc implementation of siginfo_t results in an allignment of 8 bytes
-> > for the union _sifields on RV32. The kernel has an allignment of 4 bytes
-> > for the _sifields union. This results in information being lost when
-> > glibc parses the siginfo_t struct.
->
-> I think the problem is that you incorrectly defined clock_t to 64-bit,
-> while it is 32 bit in the kernel. You should fix the clock_t definition
-> instead, it would otherwise cause additional problems.
+hmm_vma_fault is marked as a legacy API to get rid of, but seems to suit
+the current nouveau flow.  Move it to the only user in preparation for
+fixing a locking bug involving caller and callee.
 
-That is the problem. I assume we want to change the kernel to use a
-64-bit clock_t.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 54 ++++++++++++++++++++++++++-
+ include/linux/hmm.h                   | 54 ---------------------------
+ 2 files changed, 53 insertions(+), 55 deletions(-)
 
-What I don't understand though is how that impacted this struct, it
-doesn't use clock_t at all, everything in the struct is an int or
-void*.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index 9d40114d7949..e831f4184a17 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -36,6 +36,13 @@
+ #include <linux/sort.h>
+ #include <linux/hmm.h>
+ 
++/*
++ * When waiting for mmu notifiers we need some kind of time out otherwise we
++ * could potentialy wait for ever, 1000ms ie 1s sounds like a long time to
++ * wait already.
++ */
++#define NOUVEAU_RANGE_FAULT_TIMEOUT 1000
++
+ struct nouveau_svm {
+ 	struct nouveau_drm *drm;
+ 	struct mutex mutex;
+@@ -475,6 +482,51 @@ nouveau_svm_fault_cache(struct nouveau_svm *svm,
+ 		fault->inst, fault->addr, fault->access);
+ }
+ 
++static int
++nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range,
++		    bool block)
++{
++	long ret;
++
++	/*
++	 * With the old API the driver must set each individual entries with
++	 * the requested flags (valid, write, ...). So here we set the mask to
++	 * keep intact the entries provided by the driver and zero out the
++	 * default_flags.
++	 */
++	range->default_flags = 0;
++	range->pfn_flags_mask = -1UL;
++
++	ret = hmm_range_register(range, mirror,
++				 range->start, range->end,
++				 PAGE_SHIFT);
++	if (ret)
++		return (int)ret;
++
++	if (!hmm_range_wait_until_valid(range, NOUVEAU_RANGE_FAULT_TIMEOUT)) {
++		/*
++		 * The mmap_sem was taken by driver we release it here and
++		 * returns -EAGAIN which correspond to mmap_sem have been
++		 * drop in the old API.
++		 */
++		up_read(&range->vma->vm_mm->mmap_sem);
++		return -EAGAIN;
++	}
++
++	ret = hmm_range_fault(range, block);
++	if (ret <= 0) {
++		if (ret == -EBUSY || !ret) {
++			/* Same as above, drop mmap_sem to match old API. */
++			up_read(&range->vma->vm_mm->mmap_sem);
++			ret = -EBUSY;
++		} else if (ret == -EAGAIN)
++			ret = -EBUSY;
++		hmm_range_unregister(range);
++		return ret;
++	}
++	return 0;
++}
++
+ static int
+ nouveau_svm_fault(struct nvif_notify *notify)
+ {
+@@ -649,7 +701,7 @@ nouveau_svm_fault(struct nvif_notify *notify)
+ 		range.values = nouveau_svm_pfn_values;
+ 		range.pfn_shift = NVIF_VMM_PFNMAP_V0_ADDR_SHIFT;
+ again:
+-		ret = hmm_vma_fault(&svmm->mirror, &range, true);
++		ret = nouveau_range_fault(&svmm->mirror, &range, true);
+ 		if (ret == 0) {
+ 			mutex_lock(&svmm->mutex);
+ 			if (!hmm_range_unregister(&range)) {
+diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+index 6b55e59fd8e3..657606f48796 100644
+--- a/include/linux/hmm.h
++++ b/include/linux/hmm.h
+@@ -475,60 +475,6 @@ long hmm_range_dma_unmap(struct hmm_range *range,
+ 			 dma_addr_t *daddrs,
+ 			 bool dirty);
+ 
+-/*
+- * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
+- *
+- * When waiting for mmu notifiers we need some kind of time out otherwise we
+- * could potentialy wait for ever, 1000ms ie 1s sounds like a long time to
+- * wait already.
+- */
+-#define HMM_RANGE_DEFAULT_TIMEOUT 1000
+-
+-/* This is a temporary helper to avoid merge conflict between trees. */
+-static inline int hmm_vma_fault(struct hmm_mirror *mirror,
+-				struct hmm_range *range, bool block)
+-{
+-	long ret;
+-
+-	/*
+-	 * With the old API the driver must set each individual entries with
+-	 * the requested flags (valid, write, ...). So here we set the mask to
+-	 * keep intact the entries provided by the driver and zero out the
+-	 * default_flags.
+-	 */
+-	range->default_flags = 0;
+-	range->pfn_flags_mask = -1UL;
+-
+-	ret = hmm_range_register(range, mirror,
+-				 range->start, range->end,
+-				 PAGE_SHIFT);
+-	if (ret)
+-		return (int)ret;
+-
+-	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+-		/*
+-		 * The mmap_sem was taken by driver we release it here and
+-		 * returns -EAGAIN which correspond to mmap_sem have been
+-		 * drop in the old API.
+-		 */
+-		up_read(&range->vma->vm_mm->mmap_sem);
+-		return -EAGAIN;
+-	}
+-
+-	ret = hmm_range_fault(range, block);
+-	if (ret <= 0) {
+-		if (ret == -EBUSY || !ret) {
+-			/* Same as above, drop mmap_sem to match old API. */
+-			up_read(&range->vma->vm_mm->mmap_sem);
+-			ret = -EBUSY;
+-		} else if (ret == -EAGAIN)
+-			ret = -EBUSY;
+-		hmm_range_unregister(range);
+-		return ret;
+-	}
+-	return 0;
+-}
+-
+ /* Below are for HMM internal use only! Not to be used by device driver! */
+ static inline void hmm_mm_init(struct mm_struct *mm)
+ {
+-- 
+2.20.1
 
-Alistair
-
->
->         Arnd
