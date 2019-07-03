@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFE0C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CE3C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33672187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDB52187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bf5rKFF1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZR4Y2xkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfGCQ2e (ORCPT
+        id S1727212AbfGCQ2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:28:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33523 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCQ2e (ORCPT
+        Wed, 3 Jul 2019 12:28:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42148 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGCQ2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:28:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m4so1520484pgk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:28:33 -0700 (PDT)
+        Wed, 3 Jul 2019 12:28:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so1525166pff.9;
+        Wed, 03 Jul 2019 09:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=q6zTyc1nJv74vcvWUitF7l7G4qhmg90JLY7Dww6BU2M=;
-        b=bf5rKFF1VVweUEDVW7/N2C3+96UepGoqntMuJ4l8GRvxYH48sUaPglMQlPBIH/8i2S
-         FU0TPl/G/Z0sVcAdC3x3GOuQ+OeE8U21/fO576KyFmLgdvn2p646emSbQcmqaAW2M0i0
-         jfBrfPrROSgiaSh2UUF/g0AxZ8bzLYhGYgWb6F8gm6fnAFM43OMfX0eUbjcv8FE0+blB
-         7WzuZ3luopqlqQ3CLP+//cnVWFcOdnD8mg6JYjBOEJTSNS+IJ7mXhpVX/ZykYfn3F2Kb
-         BmDJ/ZGJn8QhyQlpD0dkGWCoLyLYFyNkDsMoXbxsy4M9J17gyVbrVTWFm8rNkGTNiCjt
-         YEBw==
+        bh=Y22V+QiD3udZ68iGALmAszObqPvb6BnxuzJ2QUOgG5E=;
+        b=ZR4Y2xkZz4em40s7mAjpzAV9ClrWOWuoWJXIgaS7GPywVctv3VMbPQMrV8zy2qOsZn
+         KTB355sUPrmdy1EawHP87Wg8ipfxjYHMrsADVX1KQXxtWC9tBx0epno6wEp08DL4SIBR
+         c3DZL2hbg6ZClbf2AsIhzdbNyGuMJBqDwEVTsxqkRjwvlQBvfOmWq7UsyX5y+GJrPrZI
+         stewt+K3ismacqa+snLXMZgHpuTqA/JAvwwhub9uiKKHy1orFQsgYpJJxW/44+wlA2so
+         hV4TuAGsdf2eBiyk/pKfRXGN7R7z2EY4whktxue1r4z7pc8bdV/kQCnnVSRcPA7q1nxU
+         DF7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=q6zTyc1nJv74vcvWUitF7l7G4qhmg90JLY7Dww6BU2M=;
-        b=AAaCW9idlngNafTSrz7DNSVHWcz+T/tDpvQkTwdVDYxJy4JRmCBzxMi3xA1ednVPfQ
-         LAgGe0b5XeSfPZAXTW8k5MvYuF9swS50RRWOvEIReQ1JMEJdPJLfIvcZIsdrS6mgKJ+/
-         fJ3nWhm6fF3eBnmCd5xmN1USiz6Q4mg8ACXtfwjdwOtfkf77AghCfJhVIM07pprVSnnz
-         LYRJCMMZ5cr4FuzI4+NrgIMbHlqESZIBK5GQbOCD0IA1pEGaMn3zZRMhunH4Q9YYOCZM
-         h3UF9muqedwJZIFfQ7Pm1P5AxYqzo7vP/ZedduzdYqjEd+jy9Ma39Z1cU7is/YJHd/c7
-         YiNQ==
-X-Gm-Message-State: APjAAAVhwyMw9Zy8sysdGP/Cyq9kIK8bwmkLbsIVtbtm0h44ZlHOYIMI
-        KuMGPCgkr6Mt5u2qwG9FWsc=
-X-Google-Smtp-Source: APXvYqzuBu3lAhBxTAQpWu9qrEW9LmiH0SxWOGf/XoqbG/JYoGdIN8FmDpjEURl3KtjESfKXkb8GMw==
-X-Received: by 2002:a63:1e0b:: with SMTP id e11mr15175199pge.402.1562171313251;
-        Wed, 03 Jul 2019 09:28:33 -0700 (PDT)
+        bh=Y22V+QiD3udZ68iGALmAszObqPvb6BnxuzJ2QUOgG5E=;
+        b=q4WvfwW/YPrZ9S4t4PPwhN0AsFDfQvLNY/fMZkL+ngS+UMNCYcJ5DLJ70pHzuwSeHn
+         MyhFGedMW9HULq+VWZMyxD6LOXp4ij00OTy6SmrXBcW0pR/ljz0biC2DmaITi0BjT5ik
+         Cw7H0dK5Bga/546XEEFMiY7X1cpjazpBNBE9lmUK0qQ/uCvjq2w/fWxBJ35i4IQa0IWI
+         t1g12lY60krZ6NS7IObQfpVWmYcYqODrGbB25OA8OWAr2UK1tcfu1B97m80SuOZDDAA7
+         9KMbanH2XZ2aSBGUHSDc1j3K4GJRijg4lHzZhCya5F25v1Xg0uE+3WU2r0MMP/Rf5TCm
+         HFVA==
+X-Gm-Message-State: APjAAAVQPgxzT81uzYckWsuKoQZABFvMxK5laTfqoNtqhN5tsqcjhCM3
+        bL7bvKg682vK5BRXviMRkGc=
+X-Google-Smtp-Source: APXvYqxTgObwCcgoIWKwMobbwSi7RECPXR2FXREl1JcEbHpgPk4S9V4SjxBmUPfl2cOWcwaw2G64+g==
+X-Received: by 2002:a65:6204:: with SMTP id d4mr37728589pgv.104.1562171324924;
+        Wed, 03 Jul 2019 09:28:44 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id e11sm6589912pfm.35.2019.07.03.09.28.31
+        by smtp.googlemail.com with ESMTPSA id z14sm2767546pgs.79.2019.07.03.09.28.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:28:32 -0700 (PDT)
+        Wed, 03 Jul 2019 09:28:44 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 10/35] macintosh: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:28:21 +0800
-Message-Id: <20190703162821.32322-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 11/35] media/dvb: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:28:37 +0800
+Message-Id: <20190703162837.32369-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,32 +80,54 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- drivers/macintosh/adbhid.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/media/dvb-core/dvbdev.c             | 3 +--
+ drivers/media/dvb-frontends/drx39xyj/drxj.c | 5 ++---
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/macintosh/adbhid.c b/drivers/macintosh/adbhid.c
-index 75482eeab2c4..5d14bebfb58f 100644
---- a/drivers/macintosh/adbhid.c
-+++ b/drivers/macintosh/adbhid.c
-@@ -789,7 +789,8 @@ adbhid_input_register(int id, int default_id, int original_handler_id,
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index a3393cd4e584..e4abe8d34535 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -476,7 +476,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 		return -ENOMEM;
+ 	}
  
- 	switch (default_id) {
- 	case ADB_KEYBOARD:
--		hid->keycode = kmalloc(sizeof(adb_to_linux_keycodes), GFP_KERNEL);
-+		hid->keycode = kmemdup(adb_to_linux_keycodes,
-+			sizeof(adb_to_linux_keycodes), GFP_KERNEL);
- 		if (!hid->keycode) {
- 			err = -ENOMEM;
- 			goto fail;
-@@ -797,8 +798,6 @@ adbhid_input_register(int id, int default_id, int original_handler_id,
+-	dvbdevfops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
++	dvbdevfops = kmemdup(template->fops, sizeof(struct file_operations), GFP_KERNEL);
  
- 		sprintf(hid->name, "ADB keyboard");
+ 	if (!dvbdevfops){
+ 		kfree (dvbdev);
+@@ -492,7 +492,6 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 	dvbdev->fops = dvbdevfops;
+ 	init_waitqueue_head (&dvbdev->wait_queue);
  
--		memcpy(hid->keycode, adb_to_linux_keycodes, sizeof(adb_to_linux_keycodes));
+-	memcpy(dvbdevfops, template->fops, sizeof(struct file_operations));
+ 	dvbdevfops->owner = adap->module;
+ 
+ 	list_add_tail (&dvbdev->list_head, &adap->device_list);
+diff --git a/drivers/media/dvb-frontends/drx39xyj/drxj.c b/drivers/media/dvb-frontends/drx39xyj/drxj.c
+index a6876fa48753..2f5af4813a74 100644
+--- a/drivers/media/dvb-frontends/drx39xyj/drxj.c
++++ b/drivers/media/dvb-frontends/drx39xyj/drxj.c
+@@ -12287,7 +12287,8 @@ struct dvb_frontend *drx39xxj_attach(struct i2c_adapter *i2c)
+ 	if (state == NULL)
+ 		goto error;
+ 
+-	demod = kmalloc(sizeof(struct drx_demod_instance), GFP_KERNEL);
++	demod = kmemdup(&drxj_default_demod_g,
++			sizeof(struct drx_demod_instance), GFP_KERNEL);
+ 	if (demod == NULL)
+ 		goto error;
+ 
+@@ -12311,8 +12312,6 @@ struct dvb_frontend *drx39xxj_attach(struct i2c_adapter *i2c)
+ 	state->demod = demod;
+ 
+ 	/* setup the demod data */
+-	memcpy(demod, &drxj_default_demod_g, sizeof(struct drx_demod_instance));
 -
- 		switch (original_handler_id) {
- 		default:
- 			keyboard_type = "<unknown>";
+ 	demod->my_i2c_dev_addr = demod_addr;
+ 	demod->my_common_attr = demod_comm_attr;
+ 	demod->my_i2c_dev_addr->user_data = state;
 -- 
 2.11.0
 
