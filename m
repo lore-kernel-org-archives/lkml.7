@@ -2,37 +2,37 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A343C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A9BC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E48218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA852189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ccmsewjW"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dUAq2zu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfGCQtj (ORCPT
+        id S1727144AbfGCQtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:49:39 -0400
-Received: from mout.gmx.net ([212.227.15.15]:40339 "EHLO mout.gmx.net"
+        Wed, 3 Jul 2019 12:49:41 -0400
+Received: from mout.gmx.net ([212.227.15.15]:48639 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfGCQti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:49:38 -0400
+        id S1726430AbfGCQtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:49:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562172519;
-        bh=f9CkfFAhLTyBC2mK1XCTgP+oK3gUWu6kajz4IzQ916o=;
+        s=badeba3b8450; t=1562172515;
+        bh=Q4SNzBfUgmUaXEsp2/EkbHDrGPVnZzLCOAAZMoTbLHU=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ccmsewjWRWHoMNLF2s7g//LMWfgSyp06z3ShFt9/me5/llbudtpyDqAZ7RnoOn4Tt
-         CvC4e0v/3nmjUv0dhgQJy2sigeitMow5Sn9OcqLdqbvdjoj8dmxW0wXY/m+G+VQrOo
-         i3uwlTJ4K0nJ56PsJ7LtFjxsv6hWsHCF3gnGztF4=
+        b=dUAq2zu8k0rxZvBIT5mcoE2t0sC3jCT+ju9g6JRkYtSp4RB6PavjpCfVuJ3uQRRag
+         PtBvoecXZuNbglZNIfhDtks5YMtnk0+OSSOMgQzm+6QDyPXudrub7GdWqXzZqIxp28
+         vaAJLRKY6+Bm2vyaA7kTXQhbVzwli2iBr3QLmayg=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([217.61.158.204]) by mail.gmx.com
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MTRMs-1i5laU3QXU-00Tp6b; Wed, 03 Jul 2019 18:48:38 +0200
+ 1MbirE-1iF1363taI-00dD2d; Wed, 03 Jul 2019 18:48:35 +0200
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -57,33 +57,33 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         "Paul E . McKenney" <paulmck@linux.ibm.com>
 Cc:     Josef Friedl <josef.friedl@speed.at>,
         Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v2 7/7] arm: dts: mt6323: add keys, power-controller, rtc and codec
-Date:   Wed,  3 Jul 2019 18:48:22 +0200
-Message-Id: <20190703164822.17924-8-frank-w@public-files.de>
+Subject: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Date:   Wed,  3 Jul 2019 18:48:18 +0200
+Message-Id: <20190703164822.17924-4-frank-w@public-files.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190703164822.17924-1-frank-w@public-files.de>
 References: <20190703164822.17924-1-frank-w@public-files.de>
-X-Provags-ID: V03:K1:J5PTVldGZ2BtOOxdvMcmlO+wL7EiSfxjE9VHSxBCKJhbkcDQlEx
- Esz8v7fVJsxih/JVqdN1Xz4ToCcEotkG8nETqKCtpTZjnCWCEYhdAhXiwdENZNq5B9ALaPs
- YoBaBKrCd1vtz098oBC24Shrtkt4F4GsB4V19dGupv+0Vcm0eG0R/w64S1CugmqG8uGDnnG
- ZXLtwX8ZJAaVOUvXxwkPw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ykV+fAiJ0bE=:bYAiQp4RTDSPBbgVDfvdSU
- XzhISACTumkRFqupBxuQKLduJKimCuNWZglVJIt37DLMLw3+n8YOjkzy+31rLeZQOUYZvtRaF
- Sqjto3crgtUqjxK0YrdEGwu70YNCdvrTwsfAuTDG+PXrRXLjRM/5s2fayeOnczlpkM1w0VOV7
- eNCLq2Qy72II90gVKsvL3jvVcpdTZWQguisuYqiT0vCy3GqFzJ3pIyCa914/rvwh/L1hj16pV
- 91xEZ4csMdVhHCahybIFDx6qGbs28J6i32giKzVjyGfILSk9kDfjD0Wl3fuInAA0HOP+JGv9W
- XpjUH3RuiMldhEpbL8JbDMQxP/na3Ai1+cF8t39qAH9NUd0vtExElGOt035Z05eGbA38TTlxt
- kl0hRtPLSRbNnSrakMC9oBAbwTxjZVpBRrMfwPdkmdGlK9XMF2rmUcgwBJZgI1Xu4vfP3iKnp
- qgw/fiZcX54mg3PAxHR3lPDDseNTVWNmyMN5i6dEgSKLX0ibn1v1m471NiMGejISsmhRz/rje
- 4RlmsfErlTp1GwalRw+nSLlWtw0grTJl8L/6NCGkQXeb5IYECjeSJhcwrZJKFH+KaMKCUU3MO
- zlXHhbWWL4nQ8y3c2W2Va0kuimBZCOa7fNndZpjm/z1F17l9bzaxMorz9kzx7C5aaOfhGI7Fp
- 9fhhaZ1wzuiLUJAYswpw+4MpTC2AlrToXrRrjfd/nKHjE3fj+1mZqIXUPhwcQatiBXz6gIYus
- eqLYR+bdFy0mMuMx48q5RYwktraBnxph4eSoAltr6xQGslFCQDQcVQ7iCppVOc5MetAZ2VVfb
- UZrNFiCmM3+YVxojnQbNfPEhmomgngQwRf7pKvZO9j9M5HDMFb24NmsUho4+9n2icrM5xipIL
- YrnY515cISAYSiRQKC6XiU61Ff7PwW38TgBB7oP/sdAw86snuoB7JNWC+DzwIf1lfvw7IpTjk
- Q8RbRz1YOaLomovB9VHabs4hdYACWf4KZ6E3r0iNHwLzJ/85jux3C2jPM6nuBqrwBqfLs9jk2
- bsBGd61Hv/hEAHxPGsvJmt2wcMpHB/x9pSBqMYJWuRx26h+7WRPhmYSw3gdWgpZbHJsHG3KmK
- 91ATsTSyIjDuDg=
+X-Provags-ID: V03:K1:Doz5m2szHD54xebFCDZtFG1jkMhZkLcvMGXvCyriCBWcdSKa3Po
+ 9pNHVGegXnLoqrAeDO7HXgCEhNeUReGWchhh3UVvXcsL6dD65KFzYJ1tAzs8YKkI2gMYAJW
+ LC9Evz9eFQO1eF3akk3EL0bT7PfbiTi5oaw4VaP8f9vPXewf09C2JHPqAcdg9iEdYErjHpu
+ 1VcNABzfFOtmGkWQ3WBeA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XzjbtNDDVBI=:6fPDOhc3ib1mIDPeODXkCM
+ sGi1yA24Th45Cti4r6Y/VVlK7UWP/BLhd4poItsbr+IxQhAowvs6NNYsbHW3GH455oJZvioNF
+ Iz9au5ndpJA27wKgIKRuGvhb+0p59VDjdfiVFTfduF+yiu4c+G+S7rrqVatiaGL1nAucT4yel
+ 1JiS4o0cD/oOP58flHAPTxmJkMw0e93hr94qBZRn9BCNdG69zTFZkd7xpHZsp5uNOq7L3uKIU
+ yHj60ZWItxffMb4qH/X7ERxbLhEQwIY02T+NQtnZg4v2259rR5do7Upvh1RRUcolMeM7vGTYH
+ mgCAy2IOu53hldt6Q3fRSXGaI3OqMbu3WeoBN/RK1DPRzEDEdIYwAYr9BOdAr5VoUSQhzOjvj
+ qSjwMlr4ryLFhTrnOEqtJ6X0Xop8NoGrWRlf1jnVB9CTiqe3716CRqhlsNdaEVhghXX3dQjol
+ CGpdKc6iw9xvxM0zJz9l6x7g7GxkistvOnle7SMPISNaZwZER8Rza8QR9K1ZEfCGrSgVwihbE
+ e9Czk22vy05sRHcKC5Ke8nYPvGyskoGRZREhurmrTgSJBvVVymfKkSVH+FRux18hLEN25W0zA
+ 47AKfruN7OYXdawFTDu43VqZgGSe9KllIEO3TbTgAS3Idocr9sBaBWxDj7Hh9ALIi0qpMnjIR
+ o48+7naGWINRsknUz/s/qsc7S3ZEObFHqWKMKE8PHSCCOWLskDGq9tnr111598PVD7bldVS4F
+ mAAuPrrA+wagXuvlmZ5ZlYv13TTbALqZkA7i6sn+Pd1AMWo+FJfdpIUs9LUWBhnn9Lhp0uDI9
+ zodNRadZvE4BtssJmsUzNk3dfiD9vJssjxxPSrRx9P3DYOxchAu6Q1MbvuSSuFRES+fw2bgrn
+ 7wzeLS0IVG4/PofxgGy6FXVLzjjhnWUXj32h+vCPDiLKKMz/xZKW8CpWawz/b61VF+RAmqcRg
+ MsZPvcSJ4LR/1YfWdlAh7cX9Gwv6OzpVyFO3ZpiPobgO76SIKO4GKVKkiqEywfTOsnfZ+TOhc
+ ICjiGClrvXeiYyaHpfKONdnWyaH04Bbd0pCM/LW68c68SC8JSKo/kekPE6uBRNiLMkzjrYJyS
+ sfAoazhD4roxRs=
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -92,52 +92,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-support poweroff and power-related keys on bpi-r2
+- use regmap_read_poll_timeout to drop while-loop
+- use devm-api to drop remove-callback
+- add new compatible for mt6323
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 =2D--
- arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/rtc/rtc-mt6397.c | 55 ++++++++++++++++------------------------
+ 1 file changed, 22 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
-index ba397407c1dd..7fda40ab5fe8 100644
-=2D-- a/arch/arm/boot/dts/mt6323.dtsi
-+++ b/arch/arm/boot/dts/mt6323.dtsi
-@@ -238,5 +238,32 @@
- 				regulator-enable-ramp-delay =3D <216>;
- 			};
- 		};
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index c08ee5edf865..e5ddf0d0b6f1 100644
+=2D-- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -4,16 +4,19 @@
+ * Author: Tianping.Fang <tianping.fang@mediatek.com>
+ */
+
+-#include <linux/delay.h>
+-#include <linux/init.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/mt6397/core.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/rtc.h>
+ #include <linux/mfd/mt6397/rtc.h>
++#include <linux/mod_devicetable.h>
+
+ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+ {
+-	unsigned long timeout =3D jiffies + HZ;
+ 	int ret;
+ 	u32 data;
+
+@@ -21,19 +24,13 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rt=
+c)
+ 	if (ret < 0)
+ 		return ret;
+
+-	while (1) {
+-		ret =3D regmap_read(rtc->regmap, rtc->addr_base + RTC_BBPU,
+-				  &data);
+-		if (ret < 0)
+-			break;
+-		if (!(data & RTC_BBPU_CBUSY))
+-			break;
+-		if (time_after(jiffies, timeout)) {
+-			ret =3D -ETIMEDOUT;
+-			break;
+-		}
+-		cpu_relax();
+-	}
++	ret =3D regmap_read_poll_timeout(rtc->regmap,
++					rtc->addr_base + RTC_BBPU, data,
++					!(data & RTC_BBPU_CBUSY),
++					MTK_RTC_POLL_DELAY_US,
++					MTK_RTC_POLL_TIMEOUT);
++	if (ret < 0)
++		dev_err(rtc->dev, "failed to write WRTGE: %d\n", ret);
+
+ 	return ret;
+ }
+@@ -271,14 +268,11 @@ static int mtk_rtc_probe(struct platform_device *pde=
+v)
+
+ 	platform_set_drvdata(pdev, rtc);
+
+-	rtc->rtc_dev =3D devm_rtc_allocate_device(rtc->dev);
+-	if (IS_ERR(rtc->rtc_dev))
+-		return PTR_ERR(rtc->rtc_dev);
++	ret =3D devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
++					mtk_rtc_irq_handler_thread,
++					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
++					"mt6397-rtc", rtc);
+
+-	ret =3D request_threaded_irq(rtc->irq, NULL,
+-				   mtk_rtc_irq_handler_thread,
+-				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+-				   "mt6397-rtc", rtc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+ 			rtc->irq, ret);
+@@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev=
+)
+
+ 	device_init_wakeup(&pdev->dev, 1);
+
++	rtc->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(rtc->rtc_dev))
++		return PTR_ERR(rtc->rtc_dev);
 +
-+		mt6323keys: mt6323keys {
-+			compatible =3D "mediatek,mt6323-keys";
-+			mediatek,long-press-mode =3D <1>;
-+			power-off-time-sec =3D <0>;
-+
-+			power {
-+				linux,keycodes =3D <116>;
-+				wakeup-source;
-+			};
-+
-+			home {
-+				linux,keycodes =3D <114>;
-+			};
-+		};
-+
-+		codec: mt6397codec {
-+			compatible =3D "mediatek,mt6397-codec";
-+		};
-+
-+		power-controller {
-+			compatible =3D "mediatek,mt6323-pwrc";
-+		};
-+
-+		rtc {
-+			compatible =3D "mediatek,mt6323-rtc";
-+		};
- 	};
+ 	rtc->rtc_dev->ops =3D &mtk_rtc_ops;
+
+ 	ret =3D rtc_register_device(rtc->rtc_dev);
+@@ -302,15 +300,6 @@ static int mtk_rtc_probe(struct platform_device *pdev=
+)
+ 	return ret;
+ }
+
+-static int mtk_rtc_remove(struct platform_device *pdev)
+-{
+-	struct mt6397_rtc *rtc =3D platform_get_drvdata(pdev);
+-
+-	free_irq(rtc->irq, rtc);
+-
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ static int mt6397_rtc_suspend(struct device *dev)
+ {
+@@ -337,6 +326,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_sus=
+pend,
+ 			mt6397_rtc_resume);
+
+ static const struct of_device_id mt6397_rtc_of_match[] =3D {
++	{ .compatible =3D "mediatek,mt6323-rtc", },
+ 	{ .compatible =3D "mediatek,mt6397-rtc", },
+ 	{ }
  };
+@@ -349,7 +339,6 @@ static struct platform_driver mtk_rtc_driver =3D {
+ 		.pm =3D &mt6397_pm_ops,
+ 	},
+ 	.probe	=3D mtk_rtc_probe,
+-	.remove =3D mtk_rtc_remove,
+ };
+
+ module_platform_driver(mtk_rtc_driver);
 =2D-
 2.17.1
 
