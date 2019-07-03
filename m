@@ -2,160 +2,177 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927D2C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E530C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621392189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7c/MKHL"
+	by mail.kernel.org (Postfix) with ESMTP id 014102189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562145063;
+	bh=nTQJQz0aUFEnhElWalm9pUd5CXb56Zsx7NpZ+tqQ/5E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Zjlw7BU6XVTm3cuX2UZ3ZNiE8gsyRPRZOGdO8r7xUhQ9RxmPVfRMe2+JDgu1F4wn0
+	 xRBkp97wE1wZ51mNQhYTikNB6CniHmBhhm2/o02gjKCHBoju0ynP6R1W3IWUSWyVQ7
+	 tn60mjAEAHbltMR4ZBkrQwEppR4+RMV9FEySWV0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfGCJKy (ORCPT
+        id S1727370AbfGCJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:10:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41488 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbfGCJKy (ORCPT
+        Wed, 3 Jul 2019 05:11:01 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34666 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbfGCJK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:10:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 205so1557800ljj.8;
-        Wed, 03 Jul 2019 02:10:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dxK+dS4JuwEveW7RMUn+qtetDdgB8UT3+1wItb58QBs=;
-        b=T7c/MKHL8GJ+xUBAtBdg1dTSdeY78gn7VW80Su2Tp6ouwVZ2+dq4wkl9yDhEAvXKXO
-         iFHx6jGLz7apmjtxrrMp8BQCwxSpH12N+EOth6vF9cuh1j0lBWgjqt/FIhFB4OZ5Xdl9
-         l/T0REPvtUOS0yCHPtW0JE1fAIgl1JTm3iK+4GbfXZRzxhJT/GK06QfVZWTPt42UXNn3
-         rncN7B8y3FpfuKWK6d9H3Ya9OHjWtAg+gYkAW9tl69KCM5HHS7Kiq181+QZ3F0rHnDxn
-         x1nlCT5kiNqlPIS2LhbrToRck6Mp5OU1naQDr7l/m5F/a+t6TC5dJtp99DjcGvluCEs0
-         pBZA==
+        Wed, 3 Jul 2019 05:10:56 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so1616835otk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:10:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dxK+dS4JuwEveW7RMUn+qtetDdgB8UT3+1wItb58QBs=;
-        b=QyItY5IdKu8kYsQmMJ2vWj2PqUxdxydyMYS0HraY6EHghJa21MxYGWZ1HWYVLUXEfI
-         XZrqXE1UodA2kffeMxmCMveVJMFg0pYJiIrXu1050F9+fPS95NTdJKcHGxhSzJZUrH+U
-         Js60UHHb/YZ+yVXkkIBq6vyp+0ir25AIvUcRn/zuPOYhZjzrw8VXsSbm2GBnwXDUHl2O
-         3MiFdgYDDMq/woyK+dTzRKQbw4LiJXtIll/tUpanHVI6uvWUMBsoRZfQjQKH66ZR69gz
-         vqCtVeb1lWzEtwE7xAQJDjWAQBAYAj8kud+D3Br/H+AJXtOow8+wyniUu1Zk6JKIlmJ/
-         3uFw==
-X-Gm-Message-State: APjAAAWAMBzfyRc6Qa6YYU+0v1IHbwzQ32iYjfSQyuml72IBzjeFL5ko
-        f0yh6iHIVh4Ewktkmlfn154=
-X-Google-Smtp-Source: APXvYqybDJGFRx5l/ZcYbNpgvLzBtneuQMzQdHC6QyEFmzEnD3HR0eH68JHNVbEGCrCuAF8gIpofgQ==
-X-Received: by 2002:a2e:b0ea:: with SMTP id h10mr1928541ljl.50.1562145051967;
-        Wed, 03 Jul 2019 02:10:51 -0700 (PDT)
-Received: from krolik-desktop.lan ([91.238.216.6])
-        by smtp.gmail.com with ESMTPSA id p87sm354745ljp.50.2019.07.03.02.10.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 02:10:51 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     paweldembicki@gmail.com, linus.walleij@linaro.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
-Date:   Wed,  3 Jul 2019 11:10:48 +0200
-Message-Id: <20190703091048.1962-1-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190701152723.624-4-paweldembicki@gmail.com>
-References: <20190701152723.624-4-paweldembicki@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DciJ90nh1NzfXcJeF9DL81fOMF6IEI7qQaUbMDoK/ok=;
+        b=D0df0vV3AQOyeU9kHyW9lCS2FPRxLXLZmDF4Tsc8VesjfikKW4b5iQMJ3ENZXTKgsh
+         +1TpgO52ArMlFL48IG84lgekF3KuC2hs4ZUtJjE73eGQ9ioFSpwQte8womsAcq2R7xU4
+         4ioHcFbri4EJ98FpXldGQ+6oba6dqw9ZjiKkQ9IKqvnRdFKR5fBmtLKn2yVjLDPATCnE
+         gy5xMj6exF+mmKAQU1M9XXuY8uu5tZr8JrKxRSbe2kNmv/5sGHHET97ogminCfDRAjHc
+         HyIx76gnT/KQlaTb8GyeMVBvT9Eq9nja38IwhRMoir+sHUoq30QK61ZF+T2gD45Npk8f
+         jYew==
+X-Gm-Message-State: APjAAAWuECMq8/s+AaCsXby6hVOFo1jvE1fue8uX0MSbKelehisW7YhD
+        c+aPQ+cIwFxun/nFQ5ltwVzacDwWEBhd42VGU9I=
+X-Google-Smtp-Source: APXvYqza5e2FicbMKr5dqkoDR8/5pVuhNf2c6MThpTIwKh+O0DLItd1BhWLNz0X1CeBA1OglAGsa7GKg7RMI0hHwSCE=
+X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr13449335otn.266.1562145055618;
+ Wed, 03 Jul 2019 02:10:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190703071653.2799-1-gregkh@linuxfoundation.org> <20190703071653.2799-2-gregkh@linuxfoundation.org>
+In-Reply-To: <20190703071653.2799-2-gregkh@linuxfoundation.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 3 Jul 2019 11:10:44 +0200
+Message-ID: <CAJZ5v0goKqHXfG=nNprMtKTDj02s3U56BOGQTuqajcqVdqqFcw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] debugfs: log errors when something goes wrong
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver allow to use devices with disabled iCPU only.
+On Wed, Jul 3, 2019 at 9:17 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> As it is not recommended that debugfs calls be checked, it was pointed
+> out that major errors should still be logged somewhere so that
+> developers and users have a chance to figure out what went wrong.  To
+> help with this, error logging has been added to the debugfs core so that
+> it is not needed to be present in every individual file that calls
+> debugfs.
+>
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Reported-by: Takashi Iwai <tiwai@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Some devices have pre-initialised iCPU by bootloader.
-That state make switch unmanaged. This patch force reset
-if device is in unmanaged state. In the result chip lost
-internal firmware from RAM and it can be managed.
+Generally speaking
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-Changes in v2:
-- rebase commit after changes 1-3/4 patches
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 36 ++++++++++++--------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+> ---
+>  fs/debugfs/inode.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+> index f04c8475d9a1..7f43c8acfcbf 100644
+> --- a/fs/debugfs/inode.c
+> +++ b/fs/debugfs/inode.c
+> @@ -2,8 +2,9 @@
+>  /*
+>   *  inode.c - part of debugfs, a tiny little debug file system
+>   *
+> - *  Copyright (C) 2004 Greg Kroah-Hartman <greg@kroah.com>
+> + *  Copyright (C) 2004,2019 Greg Kroah-Hartman <greg@kroah.com>
+>   *  Copyright (C) 2004 IBM Inc.
+> + *  Copyright (C) 2019 Linux Foundation <gregkh@linuxfoundation.org>
+>   *
+>   *  debugfs is for people to use instead of /proc or /sys.
+>   *  See ./Documentation/core-api/kernel-api.rst for more details.
+> @@ -294,8 +295,10 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
+>
+>         error = simple_pin_fs(&debug_fs_type, &debugfs_mount,
+>                               &debugfs_mount_count);
+> -       if (error)
+> +       if (error) {
+> +               pr_err("Unable to pin filesystem for file '%s'\n", name);
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index 10063f31d9a3..4525702faf68 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -417,22 +417,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
- 	}
- 
- 	if (val == 0xffffffff) {
--		dev_info(vsc->dev, "chip seems dead, assert reset\n");
--		gpiod_set_value_cansleep(vsc->reset, 1);
--		/* Reset pulse should be 20ns minimum, according to datasheet
--		 * table 245, so 10us should be fine
--		 */
--		usleep_range(10, 100);
--		gpiod_set_value_cansleep(vsc->reset, 0);
--		/* Wait 20ms according to datasheet table 245 */
--		msleep(20);
--
--		ret = vsc73xx_read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
--				   VSC73XX_ICPU_MBOX_VAL, &val);
--		if (val == 0xffffffff) {
--			dev_err(vsc->dev, "seems not to help, giving up\n");
--			return -ENODEV;
--		}
-+		dev_info(vsc->dev, "chip seems dead.\n");
-+		return -EAGAIN;
- 	}
- 
- 	ret = vsc73xx_read(vsc, VSC73XX_BLOCK_SYSTEM, 0,
-@@ -483,9 +469,8 @@ static int vsc73xx_detect(struct vsc73xx *vsc)
- 	}
- 	if (icpu_si_boot_en && !icpu_pi_en) {
- 		dev_err(vsc->dev,
--			"iCPU enabled boots from SI, no external memory\n");
--		dev_err(vsc->dev, "no idea how to deal with this\n");
--		return -ENODEV;
-+			"iCPU enabled boots from PI/SI, no external memory\n");
-+		return -EAGAIN;
- 	}
- 	if (!icpu_si_boot_en && icpu_pi_en) {
- 		dev_err(vsc->dev,
-@@ -1158,6 +1143,19 @@ int vsc73xx_probe(struct vsc73xx *vsc)
- 		msleep(20);
- 
- 	ret = vsc73xx_detect(vsc);
-+	if (ret == -EAGAIN) {
-+		dev_err(vsc->dev,
-+			"Chip seams to be out of control. Assert reset and try again.\n");
-+		gpiod_set_value_cansleep(vsc->reset, 1);
-+		/* Reset pulse should be 20ns minimum, according to datasheet
-+		 * table 245, so 10us should be fine
-+		 */
-+		usleep_range(10, 100);
-+		gpiod_set_value_cansleep(vsc->reset, 0);
-+		/* Wait 20ms according to datasheet table 245 */
-+		msleep(20);
-+		ret = vsc73xx_detect(vsc);
-+	}
- 	if (ret) {
- 		dev_err(dev, "no chip found (%d)\n", ret);
- 		return -ENODEV;
--- 
-2.20.1
+But I'm not sure about the log level here.  Particularly, why would
+pr_info() not work?
 
+>                 return ERR_PTR(error);
+> +       }
+>
+>         /* If the parent is not specified, we create it in the root.
+>          * We need the root dentry to do this, which is in the super
+> @@ -309,6 +312,7 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
+>         dentry = lookup_one_len(name, parent, strlen(name));
+>         if (!IS_ERR(dentry) && d_really_is_positive(dentry)) {
+>                 dput(dentry);
+> +               pr_err("File '%s' already present!\n", name);
+>                 dentry = ERR_PTR(-EEXIST);
+>         }
+>
+> @@ -351,8 +355,11 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
+>                 return dentry;
+>
+>         inode = debugfs_get_inode(dentry->d_sb);
+> -       if (unlikely(!inode))
+> +       if (unlikely(!inode)) {
+> +               pr_err("out of free dentries, can not create file '%s'\n",
+> +                      name);
+>                 return failed_creating(dentry);
+> +       }
+>
+>         inode->i_mode = mode;
+>         inode->i_private = data;
+> @@ -513,8 +520,11 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
+>                 return dentry;
+>
+>         inode = debugfs_get_inode(dentry->d_sb);
+> -       if (unlikely(!inode))
+> +       if (unlikely(!inode)) {
+> +               pr_err("out of free dentries, can not create directory '%s'\n",
+> +                      name);
+>                 return failed_creating(dentry);
+> +       }
+>
+>         inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+>         inode->i_op = &simple_dir_inode_operations;
+> @@ -552,8 +562,11 @@ struct dentry *debugfs_create_automount(const char *name,
+>                 return dentry;
+>
+>         inode = debugfs_get_inode(dentry->d_sb);
+> -       if (unlikely(!inode))
+> +       if (unlikely(!inode)) {
+> +               pr_err("out of free dentries, can not create automount '%s'\n",
+> +                      name);
+>                 return failed_creating(dentry);
+> +       }
+>
+>         make_empty_dir_inode(inode);
+>         inode->i_flags |= S_AUTOMOUNT;
+> @@ -608,6 +621,8 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+>
+>         inode = debugfs_get_inode(dentry->d_sb);
+>         if (unlikely(!inode)) {
+> +               pr_err("out of free dentries, can not create symlink '%s'\n",
+> +                      name);
+>                 kfree(link);
+>                 return failed_creating(dentry);
+>         }
+> --
+> 2.22.0
+>
