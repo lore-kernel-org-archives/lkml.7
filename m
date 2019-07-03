@@ -2,116 +2,80 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2F0C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6E3C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD71218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QVisEJIZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7F8CF218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562163650;
+	bh=z+ceB3wIw2kFLTpFQ/DuTnqEHlSgoBJLYsU0/PM4rVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o7WF2UiH8UFQJvW/pUX48vqjrqSa+okKsSMV2yShbdbttIAgWAluun8ZSnhtpMl1p
+	 YqM/A7MwlN0WiX9IZMRPkYicwOQq0aA7kk0vCJREQTcNIIZBXjXPx2xFe4Qj+/Oe0M
+	 bD2UM3Ck+CdOlQ5Ac93GSkxhJ+lfZHqU4YqmMGRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfGCOUb (ORCPT
+        id S1727063AbfGCOUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:20:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39465 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGCOUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:20:30 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63EJEIp3323439
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:19:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63EJEIp3323439
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562163555;
-        bh=l+g9MQ1EnvRuflAwRD4OCi1i8pjHcUmnIYmOhq0xwEU=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=QVisEJIZT631+BzcWaaYCPhZWLFh0bUu9p7tfhry7kIFjXYITdi7KMUH5VHZEiO/f
-         sdm+Whqo29H3FelYcqlkHIkt37+dGoV1T36Uu8bQzww49HwaKu/Ay/kLIQtg3KWmJj
-         mQ8/LPWiFtdIPPZoD+0xLrex5TSxRny1LoDjaePOAyGRKi0/AFqyTFunRWoDTxTVPH
-         iuBASAQaQ13KQGBexJ3Wfe2ytlzxs2XFwRMOco5s7ws7WVTV7d6AhaLI2He021BfjD
-         hhR3h625HJQ9PQf7stJaJ5730yxeqorV/Lg8QNybEnl9zmRTAE8YZJBUsxYIhEbaLX
-         kPf2IFgIN0O7A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63EJDNY3323432;
-        Wed, 3 Jul 2019 07:19:13 -0700
-Date:   Wed, 3 Jul 2019 07:19:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-cpugv7qd5vzhbtvnlydo90jv@git.kernel.org>
-Cc:     hpa@zytor.com, yao.jin@linux.intel.com, namhyung@kernel.org,
-        tglx@linutronix.de, mingo@kernel.org, dsahern@gmail.com,
-        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        jolsa@kernel.org, acme@redhat.com
-Reply-To: hpa@zytor.com, yao.jin@linux.intel.com, jolsa@kernel.org,
-          acme@redhat.com, linux-kernel@vger.kernel.org,
-          adrian.hunter@intel.com, mingo@kernel.org, dsahern@gmail.com,
-          namhyung@kernel.org, tglx@linutronix.de
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf time-utils: Use skip_spaces()
-Git-Commit-ID: 9bb5a27ac7958ce11cb02463b5a5f7f160d60916
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 10:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfGCOUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:20:49 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F47C21881;
+        Wed,  3 Jul 2019 14:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562163648;
+        bh=z+ceB3wIw2kFLTpFQ/DuTnqEHlSgoBJLYsU0/PM4rVw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T4gcmT7AzNF+/+X+C1zP1wccnSIWXIXb6RN3zmRbL5pG18qE3EQUo1/2Q0wRH56Mb
+         Is/oGwE3tmZ29jswNXVC8DT6Kn0w1bj6vneC0Xyrd/3MLyi7+zO2pYbAcivKaeo28R
+         DLwPKKiA+J8ZG2W+hdUgTvGEYyCJQ8mtQt1g3M6I=
+Date:   Wed, 3 Jul 2019 10:20:47 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH AUTOSEL 5.1 11/51] ASoC: sun4i-codec: fix first delay on
+ Speaker
+Message-ID: <20190703142047.GX11506@sasha-vm>
+References: <20190626034117.23247-1-sashal@kernel.org>
+ <20190626034117.23247-11-sashal@kernel.org>
+ <20190626103741.GU5316@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <20190626103741.GU5316@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9bb5a27ac7958ce11cb02463b5a5f7f160d60916
-Gitweb:     https://git.kernel.org/tip/9bb5a27ac7958ce11cb02463b5a5f7f160d60916
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 25 Jun 2019 21:39:18 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 25 Jun 2019 21:39:18 -0300
+On Wed, Jun 26, 2019 at 11:37:41AM +0100, Mark Brown wrote:
+>On Tue, Jun 25, 2019 at 11:40:27PM -0400, Sasha Levin wrote:
+>> From: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+>>
+>> [ Upstream commit 1f2675f6655838aaf910f911fd0abc821e3ff3df ]
+>>
+>> Allwinner DAC seems to have a delay in the Speaker audio routing. When
+>> playing a sound for the first time, the sound gets chopped. On a second
+>> play the sound is played correctly. After some time (~5s) the issue gets
+>> back.
+>
+>This is inserting a big delay in the startup and might disrupt some
+>production system.
 
-perf time-utils: Use skip_spaces()
+But that would be a problem upstream as well, no?
 
-No change in behaviour intended.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-cpugv7qd5vzhbtvnlydo90jv@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/time-utils.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 369fa19dd596..c2abc259b51d 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <stdlib.h>
- #include <string.h>
-+#include <linux/string.h>
- #include <sys/time.h>
- #include <linux/time64.h>
- #include <time.h>
-@@ -141,10 +142,7 @@ static int perf_time__parse_strs(struct perf_time_interval *ptime,
- 	for (i = 0, p = str; i < num - 1; i++) {
- 		arg = p;
- 		/* Find next comma, there must be one */
--		p = strchr(p, ',') + 1;
--		/* Skip white space */
--		while (isspace(*p))
--			p++;
-+		p = skip_spaces(strchr(p, ',') + 1);
- 		/* Skip the value, must not contain space or comma */
- 		while (*p && !isspace(*p)) {
- 			if (*p++ == ',') {
+--
+Thanks,
+Sasha
