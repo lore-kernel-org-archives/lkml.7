@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2531C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE63C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968582187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF97D2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xWYBTfuK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TXAox2sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGCKTe (ORCPT
+        id S1727279AbfGCKTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:19:34 -0400
-Received: from mail-lf1-f46.google.com ([209.85.167.46]:37304 "EHLO
-        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfGCKTN (ORCPT
+        Wed, 3 Jul 2019 06:19:41 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37224 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfGCKTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:19:13 -0400
-Received: by mail-lf1-f46.google.com with SMTP id d11so1382291lfb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:11 -0700 (PDT)
+        Wed, 3 Jul 2019 06:19:12 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d11so1382246lfb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NO88iVnC5CJGavQX1+oifd5FyeZJrmYwPjjZG7dx1kY=;
-        b=xWYBTfuK3oxbaw2ihXoCR1u2W/q6BAnSu9cuBDvpQcBnRxJrqDr3icL3pTOdlndgs+
-         QXqo/j3RtvVa44pp6toHXNoIlGVhbRYMfCOW8QQO2ghQ06fy4ypjGdNgj7T9Gi5S4nOH
-         fDFkAFjhlOlGDQMVULlWzD8KpUv90CS0+hkcx7poj8wdLN0h+GvIUWY7wWwFh/2e/zKZ
-         Th5PGNeqgL0oopeVwiQuJfIXZrkJ/8ZHoOdgNR+0vdq+sL/bAraUeu0UcPNrBlJaB9XP
-         8/dgRutS7yeilCIy6OCRqECJt9lk/TMVy8V9XXmgTQE9iCu5K6dIjLmym3X+11dbFgqG
-         0OKw==
+        bh=F7JFqzRXqxTzUkcqfAtcONZlOP60PRysVxN4UPvDiWY=;
+        b=TXAox2sdWXBNBf+PRssojPI1C03UgoSeeRHKksHkDwWknje+kVCYI4gFwiCbZCxfEY
+         IkgI+mvbjSXUUB6DVZ5qMJ7mz1RVdPm+ypWOjvbis+zWk4d+AihqA88rbKHidV14PiWR
+         J8yJAfhdWtjTPK5Z2v3TiM8zork4wBqowDNGMSUVhiUMESHKEwOevdnHTiqLv97ldpif
+         SoRPCvwrJb0POJBqOSvXIBcFJr1Ti2uZmbHkbFTyPyKisAtav9ThkI6MNIQR4DREmk8a
+         ykPZHSrZYB4zt4dFwXwUr5VzE2AeqmubgnYNxQYwvfm+NLCO8HuyyY1LMKIpDwtXbVPI
+         LK9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NO88iVnC5CJGavQX1+oifd5FyeZJrmYwPjjZG7dx1kY=;
-        b=i0T4BWD2wGz7BBpIoFYzX2hIhmTlMmtlCRMbpee9cJ81ddzcFNvVi48c8TDF6u/Alk
-         YxhJVX56gO/Bcuw6aBAm0HjE16niE9SonsXPwO0VyeW1jbTFuejfKBgLOKcnqPZHyMIM
-         +F7Fsl1DSIN24vhAOIh3VhnJPZq3YS9k2Zd1MeHk5/mWtgzTqj3Nk2hm0yRUQ+fG0Kmn
-         3VK/YhJcHvp1JHJWwKAjOwChyrBc5IhaMtm/hyrtqtY/YhX+Jud3fFDXBFkm5ZYfrX1x
-         Smp8u5IN3Jo1ilI8WAFzyGV6h6u1fkf/lExUKwALmUMkDAFAFVBgqpVt8Bx/UeXMfQeE
-         /4Qw==
-X-Gm-Message-State: APjAAAUfuivDKUWaZ5ictPEhkwf+JfZPcxF68F5iyR47E7lJUsE0qrlZ
-        1yRSc/krBZA9btBjWp2vIM553A==
-X-Google-Smtp-Source: APXvYqxC06UjWw2SW6NYQYT0yijU13JSgMPdhUYpNUqdexFnLlc+oZSHl50a1BIfRBYkHx0LORdolw==
-X-Received: by 2002:ac2:419a:: with SMTP id z26mr14069127lfh.21.1562149150989;
-        Wed, 03 Jul 2019 03:19:10 -0700 (PDT)
+        bh=F7JFqzRXqxTzUkcqfAtcONZlOP60PRysVxN4UPvDiWY=;
+        b=XjuQ/hQJRR+yEYWhecajsR2oCVmQIwFzBALr25B0FSi4FE8cFzYNf7Go/EcWJLUxsM
+         VBa8zwbyEXMa4X0V+Q2iXEVgyPWCyXaP2lps/98WLwlapiG8NLEjLCf/KqOy+foAqW/h
+         OMCf6DkjjiOwcpJaywPxzu5so8SZaUJP19mnjoffuSe6rXCo0lnraI7QbvDbVJH3qRBq
+         9rHOcvM8rChmvSoZ33U2awNEmOdF6PuBywOEshXFFlRRITJzjdUc/DujdhY4brGPk0sW
+         KrFLKQcVRWqfLD8mgtcNic3rgsKRxmgLsy++jnN3VWz4FpgFPpMMAm5XWs2IED+e7Yu7
+         NJQg==
+X-Gm-Message-State: APjAAAXxRqqPgPGO4hz7Vbcdute7Od79pDTNkyUEgUeYLskWLw3PGpec
+        vQNmwvSkjKydzMhZwlUBmpxyYA==
+X-Google-Smtp-Source: APXvYqyjJ/dC++v25MO0K6HTcF98llYJkNq7R07VTHVGOQQa1klBHyw2COH6PNTUVmTlyk2e/+Qu4Q==
+X-Received: by 2002:ac2:46d5:: with SMTP id p21mr17199495lfo.133.1562149149849;
+        Wed, 03 Jul 2019 03:19:09 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.09
+        by smtp.gmail.com with ESMTPSA id i9sm67267lfl.10.2019.07.03.03.19.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:19:10 -0700 (PDT)
+        Wed, 03 Jul 2019 03:19:09 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v6 net-next 3/5] net: ethernet: ti: davinci_cpdma: allow desc split while down
-Date:   Wed,  3 Jul 2019 13:19:01 +0300
-Message-Id: <20190703101903.8411-4-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v6 net-next 2/5] net: ethernet: ti: davinci_cpdma: add dma mapped submit
+Date:   Wed,  3 Jul 2019 13:19:00 +0300
+Message-Id: <20190703101903.8411-3-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
 References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
@@ -74,81 +74,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's possible to set ring params while interfaces are down. When
-interface gets up it uses number of descs to fill rx queue and on
-later on changes to create rx pools. Usually, this resplit can happen
-after phy is up, but it can be needed before this, so allow it to
-happen while setting number of rx descs, when interfaces are down.
-Also, if no dependency on intf state, move it to cpdma layer, where
-it should be.
+In case if dma mapped packet needs to be sent, like with XDP
+page pool, the "mapped" submit can be used. This patch adds dma
+mapped submit based on regular one.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/net/ethernet/ti/cpsw_ethtool.c  |  9 ++++-----
- drivers/net/ethernet/ti/davinci_cpdma.c | 10 +++++++++-
- drivers/net/ethernet/ti/davinci_cpdma.h |  3 +--
- 3 files changed, 14 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/ti/davinci_cpdma.c | 89 ++++++++++++++++++++++---
+ drivers/net/ethernet/ti/davinci_cpdma.h |  4 ++
+ 2 files changed, 83 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index f60dc1dfc443..08d7aaee8299 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -664,15 +664,14 @@ int cpsw_set_ringparam(struct net_device *ndev,
- 
- 	cpsw_suspend_data_pass(ndev);
- 
--	cpdma_set_num_rx_descs(cpsw->dma, ering->rx_pending);
--
--	if (cpsw->usage_count)
--		cpdma_chan_split_pool(cpsw->dma);
-+	ret = cpdma_set_num_rx_descs(cpsw->dma, ering->rx_pending);
-+	if (ret)
-+		goto err;
- 
- 	ret = cpsw_resume_data_pass(ndev);
- 	if (!ret)
- 		return 0;
--
-+err:
- 	dev_err(cpsw->dev, "cannot set ring params, closing device\n");
- 	dev_close(ndev);
- 	return ret;
 diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 8da46394c0e7..4167b0b77c8e 100644
+index 5cf1758d425b..8da46394c0e7 100644
 --- a/drivers/net/ethernet/ti/davinci_cpdma.c
 +++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1423,8 +1423,16 @@ int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr)
- 	return ctlr->num_tx_desc;
- }
+@@ -139,6 +139,7 @@ struct submit_info {
+ 	int directed;
+ 	void *token;
+ 	void *data;
++	int flags;
+ 	int len;
+ };
  
--void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
-+int cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
+@@ -184,6 +185,8 @@ static struct cpdma_control_info controls[] = {
+ 				 (directed << CPDMA_TO_PORT_SHIFT));	\
+ 	} while (0)
+ 
++#define CPDMA_DMA_EXT_MAP		BIT(16)
++
+ static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
  {
+ 	struct cpdma_desc_pool *pool = ctlr->pool;
+@@ -1015,6 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+ 	struct cpdma_chan		*chan = si->chan;
+ 	struct cpdma_ctlr		*ctlr = chan->ctlr;
+ 	int				len = si->len;
++	int				swlen = len;
+ 	struct cpdma_desc __iomem	*desc;
+ 	dma_addr_t			buffer;
+ 	u32				mode;
+@@ -1036,16 +1040,22 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+ 		chan->stats.runt_transmit_buff++;
+ 	}
+ 
+-	buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
+-	ret = dma_mapping_error(ctlr->dev, buffer);
+-	if (ret) {
+-		cpdma_desc_free(ctlr->pool, desc, 1);
+-		return -EINVAL;
+-	}
+-
+ 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
+ 	cpdma_desc_to_port(chan, mode, si->directed);
+ 
++	if (si->flags & CPDMA_DMA_EXT_MAP) {
++		buffer = (u32)si->data;
++		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
++		swlen |= CPDMA_DMA_EXT_MAP;
++	} else {
++		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
++		ret = dma_mapping_error(ctlr->dev, buffer);
++		if (ret) {
++			cpdma_desc_free(ctlr->pool, desc, 1);
++			return -EINVAL;
++		}
++	}
++
+ 	/* Relaxed IO accessors can be used here as there is read barrier
+ 	 * at the end of write sequence.
+ 	 */
+@@ -1055,7 +1065,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
+ 	writel_relaxed(mode | len, &desc->hw_mode);
+ 	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
+ 	writel_relaxed(buffer, &desc->sw_buffer);
+-	writel_relaxed(len, &desc->sw_len);
++	writel_relaxed(swlen, &desc->sw_len);
+ 	desc_read(desc, sw_len);
+ 
+ 	__cpdma_chan_submit(chan, desc);
+@@ -1079,6 +1089,32 @@ int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	si.data = data;
+ 	si.len = len;
+ 	si.directed = directed;
++	si.flags = 0;
++
++	spin_lock_irqsave(&chan->lock, flags);
++	if (chan->state == CPDMA_STATE_TEARDOWN) {
++		spin_unlock_irqrestore(&chan->lock, flags);
++		return -EINVAL;
++	}
++
++	ret = cpdma_chan_submit_si(&si);
++	spin_unlock_irqrestore(&chan->lock, flags);
++	return ret;
++}
++
++int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
++				  dma_addr_t data, int len, int directed)
++{
++	struct submit_info si;
 +	unsigned long flags;
 +	int ret;
 +
-+	spin_lock_irqsave(&ctlr->lock, flags);
- 	ctlr->num_rx_desc = num_rx_desc;
- 	ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
-+	ret = cpdma_chan_split_pool(ctlr);
-+	spin_unlock_irqrestore(&ctlr->lock, flags);
++	si.chan = chan;
++	si.token = token;
++	si.data = (void *)(u32)data;
++	si.len = len;
++	si.directed = directed;
++	si.flags = CPDMA_DMA_EXT_MAP;
+ 
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	if (chan->state == CPDMA_STATE_TEARDOWN) {
+@@ -1103,6 +1139,32 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	si.data = data;
+ 	si.len = len;
+ 	si.directed = directed;
++	si.flags = 0;
 +
++	spin_lock_irqsave(&chan->lock, flags);
++	if (chan->state != CPDMA_STATE_ACTIVE) {
++		spin_unlock_irqrestore(&chan->lock, flags);
++		return -EINVAL;
++	}
++
++	ret = cpdma_chan_submit_si(&si);
++	spin_unlock_irqrestore(&chan->lock, flags);
 +	return ret;
++}
++
++int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
++			     dma_addr_t data, int len, int directed)
++{
++	struct submit_info si;
++	unsigned long flags;
++	int ret;
++
++	si.chan = chan;
++	si.token = token;
++	si.data = (void *)(u32)data;
++	si.len = len;
++	si.directed = directed;
++	si.flags = CPDMA_DMA_EXT_MAP;
+ 
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	if (chan->state != CPDMA_STATE_ACTIVE) {
+@@ -1140,10 +1202,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ 	uintptr_t			token;
+ 
+ 	token      = desc_read(desc, sw_token);
+-	buff_dma   = desc_read(desc, sw_buffer);
+ 	origlen    = desc_read(desc, sw_len);
+ 
+-	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
++	buff_dma   = desc_read(desc, sw_buffer);
++	if (origlen & CPDMA_DMA_EXT_MAP) {
++		origlen &= ~CPDMA_DMA_EXT_MAP;
++		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
++					chan->dir);
++	} else {
++		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
++	}
++
+ 	cpdma_desc_free(pool, desc, 1);
+ 	(*chan->handler)((void *)token, outlen, status);
  }
 diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 0271a20c2e09..d3cfe234d16a 100644
+index 9343c8c73c1b..0271a20c2e09 100644
 --- a/drivers/net/ethernet/ti/davinci_cpdma.h
 +++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -116,8 +116,7 @@ enum cpdma_control {
- int cpdma_control_get(struct cpdma_ctlr *ctlr, int control);
- int cpdma_control_set(struct cpdma_ctlr *ctlr, int control, int value);
- int cpdma_get_num_rx_descs(struct cpdma_ctlr *ctlr);
--void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc);
-+int cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc);
- int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr);
--int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr);
+@@ -77,8 +77,12 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
  
- #endif
+ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 			 struct cpdma_chan_stats *stats);
++int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
++			     dma_addr_t data, int len, int directed);
+ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 		      int len, int directed);
++int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
++				  dma_addr_t data, int len, int directed);
+ int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
+ 			   int len, int directed);
+ int cpdma_chan_process(struct cpdma_chan *chan, int quota);
 -- 
 2.17.1
 
