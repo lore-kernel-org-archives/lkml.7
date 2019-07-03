@@ -2,106 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F60C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25352C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC165218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDDC21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KrEzq7yW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UxSjmshB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfGCWGE (ORCPT
+        id S1727326AbfGCWIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:06:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42502 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGCWGE (ORCPT
+        Wed, 3 Jul 2019 18:08:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43017 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfGCWIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:06:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ycz23bS+Ty7b4itKG6Ov4WzbLqJ/+noHY6F+mh11CDg=; b=KrEzq7yWP9zUh5tQVChZPqEtP
-        cgxInZT3Qn1dUZS8vFJXW6zy8wDB0U78iU0v5dFJ/1LV4rbaKjCjRoSt75htGcYRJHBNNvGksI5vD
-        AoeRxyXSwVGFjGE5MZiArKAOo2CzP5x4ZWIZYiBjaM233l/l35ruMCHV+/Phy2eXAVMWs3vYfB+h9
-        F5bLBsodD1jI563A+jBhDmCoocIeoP9P3Vwf/cAoLPEpYwj07qM6nmGXXsjvp+kHvdydsodKov3xf
-        gguisfB398MGWeiPafKPraFdLfeE4v3fZJW+djSJUIiQ4FxC2uARQmQxSue9F7+an1taS7UIhEF/G
-        tn0uIlAAQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hinNU-0003qN-Or; Wed, 03 Jul 2019 22:05:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7E90920213044; Thu,  4 Jul 2019 00:05:22 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 00:05:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190703220522.GK3402@hirez.programming.kicks-ass.net>
-References: <20190703102731.236024951@infradead.org>
- <20190703102807.588906400@infradead.org>
- <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
- <20190703164701.54ef979a@gandalf.local.home>
+        Wed, 3 Jul 2019 18:08:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so1915131pfg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 15:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WjjWRdXySZkjpj26g1Pm4rzHQ2nCZawoM/TZfTFAezI=;
+        b=UxSjmshB/efA5VRE78aPgnfuO/Sq/XiYw8vG5chnT45W8s9eIhSvPBCC/mGRdhQRAM
+         aPD+zvMYLU6QJzAWBsTOmtbTqcGwnfwfDl1uFLrkBkjO6z7a5yH1SyE3GJ6Y5hBtDN+d
+         XZAsuPc8zy95h9yxwn1SR3uls7dO9xvIAB3do=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WjjWRdXySZkjpj26g1Pm4rzHQ2nCZawoM/TZfTFAezI=;
+        b=hlaVP1OeUfNyic6JKxnnqPDkZvguDCWcpHQIvM70d1ooKHfXYNI57hpXR1FZyqN0bR
+         N5I7FJgCWZNPsWaJ404XTUJgdssqoBMrUxFzg+lYwnAwb4MqXn90BK0bspY0hQIoL6nt
+         GwoZ/TvpFI8MJAQDCrJ9lvhf839ixTzJ41ftyKBmBSCzXQAiQlaTcNyfYiNb4FbUBahZ
+         YTj7mNSHd0rcVktaIFIHOeG+AnHdVEJCKEICiO+kCIxDobJrdlYYloqrDrKgzwOa7yD6
+         VmyHkiUIFehSpp21RJ06DCcgx5r8E37dtQffM/rbGdqQ4wfLnLpSRvcDdKQYSgXhHN2y
+         P5DA==
+X-Gm-Message-State: APjAAAWzX1OkDn65RoeuIwO2bLXwt63DMNvUDXtwtuIM760x5/dz3Zvh
+        jGth/bpHNonmCkjc+v4Isy1AtQ==
+X-Google-Smtp-Source: APXvYqyNI7R7rRmSWaIP0fI91rk/hM1ha6x5voe4cvZVNb4VcCHs7IcJLnAucRtMAGfGWBsihbi9aw==
+X-Received: by 2002:a17:90b:8d8:: with SMTP id ds24mr15201077pjb.135.1562191725828;
+        Wed, 03 Jul 2019 15:08:45 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id m16sm3360862pfd.127.2019.07.03.15.08.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 15:08:45 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 15:08:43 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Message-ID: <20190703220843.GJ250418@google.com>
+References: <20190703193724.246854-1-mka@chromium.org>
+ <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
+ <20190703213327.GH18473@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190703164701.54ef979a@gandalf.local.home>
+In-Reply-To: <20190703213327.GH18473@lunn.ch>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 04:47:01PM -0400, Steven Rostedt wrote:
-> On Wed, 3 Jul 2019 13:27:09 -0700
-> Andy Lutomirski <luto@kernel.org> wrote:
+On Wed, Jul 03, 2019 at 11:33:27PM +0200, Andrew Lunn wrote:
+> > I think if we're going to have custom properties for phys, we should
+> > have a compatible string to at least validate whether the custom
+> > properties are even valid for the node.
 > 
+> Hi Rob
 > 
-> > > @@ -1180,10 +1189,10 @@ idtentry xenint3                do_int3                 has_error_co
-> > >  #endif
-> > >
-> > >  idtentry general_protection    do_general_protection   has_error_code=1
-> > > -idtentry page_fault            do_page_fault           has_error_code=1
-> > > +idtentry page_fault            do_page_fault           has_error_code=1        read_cr2=1
-> > >
-> > >  #ifdef CONFIG_KVM_GUEST
-> > > -idtentry async_page_fault      do_async_page_fault     has_error_code=1
-> > > +idtentry async_page_fault      do_async_page_fault     has_error_code=1        read_cr2=1
-> > >  #endif
-> > >
-> > >  #ifdef CONFIG_X86_MCE
-> > > @@ -1338,18 +1347,9 @@ ENTRY(error_entry)
-> > >         movq    %rax, %rsp                      /* switch stack */
-> > >         ENCODE_FRAME_POINTER
-> > >         pushq   %r12
-> > > -
-> > > -       /*
-> > > -        * We need to tell lockdep that IRQs are off.  We can't do this until
-> > > -        * we fix gsbase, and we should do it before enter_from_user_mode
-> > > -        * (which can take locks).
-> > > -        */
-> > > -       TRACE_IRQS_OFF  
-> > 
-> > This hunk looks wrong.  Am I missing some other place that handles the
-> > case where we enter from kernel mode and IRQs were on?
+> What happens with other enumerable busses where a compatible string is
+> not used?
 > 
-> Yeah, looks like we might be missing a TRACE_IRQS_OFF from the
-> from_usermode_stack_switch path.
+> The Ethernet PHY subsystem will ignore the compatible string and load
+> the driver which fits the enumeration data. Using the compatible
+> string only to get the right YAML validator seems wrong. I would
+> prefer adding some other property with a clear name indicates its is
+> selecting the validator, and has nothing to do with loading the
+> correct driver. And it can then be used as well for USB and PCI
+> devices etc.
 
-Oh bugger, there's a second error_entry call.
+I also have doubts whether a compatible string is the right answer
+here. It's not needed/used by the subsystem, but would it be a
+required property because it's needed for validation?
