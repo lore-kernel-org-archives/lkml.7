@@ -2,65 +2,91 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B89C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9CC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960E1218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440F3218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xj2zv+NL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKS+5XM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfGCMRo (ORCPT
+        id S1726988AbfGCMSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:17:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33644 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCMRo (ORCPT
+        Wed, 3 Jul 2019 08:18:07 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:32938 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCMSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:17:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hc324U3gAsxTQ/xr9GNXQHJJuTwkj9Ztqk5d0xFNlFU=; b=Xj2zv+NLMKqcrDj7CARx0zOVI
-        jJK06jsuo+7e0kGWyVsxlo9JpCRcFvB70RUcxc76zUpG5U8ZMGyFvIObD6VE1TsfdpdgsvZhGdWFZ
-        3vKAdB1dzqzis3/L2txNhzx46f8QXrWRy0dYKjBKiFxHq3dZAxgiQCItF9xKq7V/WZXyz+Pxa6gC9
-        lxaJgQUtqqeiKyI1pjLnOiLEvaDiKkW/mQc6JeWowqfBpEQcuiPXAoV1PhCVx+RpVimMl2NcX+Q7n
-        fDLBWQsDHhwFnZcYUCn75x+jq0vtuq8cF1nAbAOALi8y6bGYnc4QT8GquQ/xpHG8pqAEUvHzvSFVu
-        a4VGSS+pA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hieCl-0000Gy-GK; Wed, 03 Jul 2019 12:17:43 +0000
-Date:   Wed, 3 Jul 2019 05:17:43 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Boaz Harrosh <openosd@gmail.com>, stable@vger.kernel.org,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190703121743.GH1729@bombadil.infradead.org>
-References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Wed, 3 Jul 2019 08:18:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h24so2668101qto.0;
+        Wed, 03 Jul 2019 05:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IjB7eIx91cGzvCzJPmHdtVCISw8X3L0amGAAfmCgnb8=;
+        b=SKS+5XM1x7Q2aAlwFM+0FFl021AbmFPeJWur5gPnzvrcDlOWGesHuHrReXgapS7D6H
+         HvB6jEeOyjTk69U4MugVZAZ8AV3wrWLMTe8QiShPEh1k1RRfV2y74vHiugcdfMyAqKF+
+         69BTwqfDfPbks2mtGThiF7QkN+hKJgAPGzkJfou7gPMSxYS8gdpkGRFTO2xrDwSs81iq
+         1BTfM0VeiE0d4m6JDguO0zhMzQn5pxDsVAIgx+rbaExD/NMkQWTTk7xrCU+Q12X8Q8l+
+         Fm0SVIHSvRXCNZa3zu4QQzPy5pMV9iwjndzM2FYse1EmZlxDkYcWLguuq2vBWtd4OMa0
+         QRMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IjB7eIx91cGzvCzJPmHdtVCISw8X3L0amGAAfmCgnb8=;
+        b=sJLZVxxnWuRyigVAdx36T5tFJqoZi7MD7KFOVcOTpa9zAv7LOW4WtzwsdgyrKnh6mU
+         GixrbcOY+Il2GMXqBJaB5jlFAUonsqyTfBje8yuMQsRLkZB+tI1hJXy/3UVclNDqEr4k
+         dL/E7ed403wgGNDL/Qd7D2dOIfx6fsjX+1sDcvASEpRNW4jxdOhChLbetsCM4zkj9qXS
+         PotcZhtnJZTXCbRNfdTdZRekyQad9yc29VSg7lIYUe3D2/swXmiL+ARcA+eoz/o5S4Ic
+         GX4vokak33dCINvfOhgrIqaQuSAl5MwinDlIJDUgL5lUUWBeErDJiJAQqeyyfpQEWwSU
+         vGaw==
+X-Gm-Message-State: APjAAAU/tc8PYB4/EbpF7HABTyjWqBCAUVGtafvTqH/287F14ZaU/vYV
+        kk/sO4D1qUD6gHZ6njS0Z5Prfd6if3tAgR8pfOnvnlVD
+X-Google-Smtp-Source: APXvYqwGgM5Phb3RLVd4Z4Ax+sqyMgVnOmoG73XQaHgqBxim7OM82B4e7D+F3YtEkaU8KgLKnUOB4WnOnJ6qFelDqsE=
+X-Received: by 2002:aed:38c2:: with SMTP id k60mr28886147qte.83.1562156286006;
+ Wed, 03 Jul 2019 05:18:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
+In-Reply-To: <ad2e4b58-268e-c9e5-8a66-8cb5dee8d91e@web.de>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 3 Jul 2019 05:17:54 -0700
+Message-ID: <CAPhsuW7CAfu07Y319eHUUi3Ln422-jMmpTHmy0rT+MxZnO8BBA@mail.gmail.com>
+Subject: Re: [PATCH] md-multipath: Replace a seq_printf() call by seq_putc()
+ in multipath_status()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Shaohua Li <shli@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 12:24:54AM -0700, Dan Williams wrote:
-> This fix may increase waitqueue contention, but a fix for that is saved
-> for a larger rework. In the meantime this fix is suitable for -stable
-> backports.
+On Mon, Jul 1, 2019 at 5:25 AM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 1 Jul 2019 13:07:55 +0200
+>
+> A single character (depending on a condition check) should be put
+> into a sequence. Thus use the corresponding function =E2=80=9Cseq_putc=E2=
+=80=9D.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-I think this is too big for what it is; just the two-line patch to stop
-incorporating the low bits of the PTE would be more appropriate.
+Can you explain why this is necessary?
+
+Thanks,
+Song
