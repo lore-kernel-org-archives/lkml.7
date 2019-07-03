@@ -2,146 +2,265 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E9C06514
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766B1C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49BF21881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B1B21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="lS558bHy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dQRSzZmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfGCElG (ORCPT
+        id S1726847AbfGCEqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 00:41:06 -0400
-Received: from mail-eopbgr1320103.outbound.protection.outlook.com ([40.107.132.103]:30509
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfGCElE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 00:41:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H4PKPSu1WPWTXhO9vNUYxnPV1KH9qJdP5SFxbohwxcm6cII9lrO84kk0xzmoZumdcypn926stSfdHN9gFj4a6o4gXjz4FfauId26tgQBVPmZdcZ6wxJ5JBSKS5fovZVXU2v59L4Txm0XiWeDjZRT0hGXtWSfdPlyw4YpjUK+OPV8WMYMhhOQLNOdygjft7HZZzQeuc+ybbdUMACAx5n1DaIqHHqt8jq9HWhC8yALT3SqltM5WFfPSs0eZ1TTbWxbjv/oHui75llbybsm2sgwGpz50jiY2mnTs8X6Rg1GR4Gqeio8jtb9R9wCkL9W36EC0qvDRAYl/2vxuWDYrOm/OQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2WKJJfKSHPJFQvBgNKUeZBkzs1/bCX93P1xBsmL9x8=;
- b=fn8lJjg64OkyMW1aITR7aODuq5IbjB99pLm3dLHoSW3YB5sZPMSqtUi7jowIIZOIc4qMO8EXMgzCj3MQQ9mMWaquVbRXtSOGN66xzXk5SXvaRk3c4xIjeHibFXvfufh+m5+EFLfhu28t6AyvNsxn04XKWuVUMjm21mHW15CYUQekb82HEH4IEbx0OODETA5DJagndHseywl3vNACxOYHDP486fu7GVLZzQ1seEgxeWwAU+v7YB4LYS6v1BvoajWkW0a/fpFxahDKUwOUirLuYhV+3cx9q5rrlLsaCLbyLlkAEMnfelcGJS+15yiXOskX9QYYhU3jXTPxEDhSFqLPAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2WKJJfKSHPJFQvBgNKUeZBkzs1/bCX93P1xBsmL9x8=;
- b=lS558bHylDJ1XUsT+7wOQr7ztHznA2M07dVbsEY6q+radpgpRYw1qc7njZ5nCeFjl1XZKvYPiWp3b7Fwk3Q1BIF8CDsDnJ6ycF7J1mUwecOHuuJK0vPJY99pHg17tM6ycW6YOtwNauzoFdndGJcbY2BaAWHihLK57wi2D9YYzsI=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0201.APCP153.PROD.OUTLOOK.COM (10.170.190.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.2; Wed, 3 Jul 2019 04:40:16 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::61b3:885f:a7e4:ec0b]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::61b3:885f:a7e4:ec0b%9]) with mapi id 15.20.2073.001; Wed, 3 Jul 2019
- 04:40:16 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Yuehaibing <yuehaibing@huawei.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: RE: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-Thread-Topic: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-Thread-Index: AQHVMVloxn4hFFa0E0C7KQrPGKhKRQ==
-Date:   Wed, 3 Jul 2019 04:40:16 +0000
-Message-ID: <PU1P153MB0169D4B9CBA09977186DA706BFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
- <20190703001541.GG1729@bombadil.infradead.org>
- <139b6a64-1980-412b-5870-88706084b288@infradead.org>
-In-Reply-To: <139b6a64-1980-412b-5870-88706084b288@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-03T04:40:14.5914706Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3862d5da-ee58-4f56-ac83-48b39e67d798;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:78d7:890f:ef80:9f4a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0573585a-458b-4787-48be-08d6ff708bc1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0201;
-x-ms-traffictypediagnostic: PU1P153MB0201:|PU1P153MB0201:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <PU1P153MB020146A6DCCA1ADD49B762D4BFFB0@PU1P153MB0201.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:590;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(396003)(366004)(346002)(136003)(54094003)(189003)(199004)(25786009)(446003)(256004)(52536014)(8990500004)(54906003)(6246003)(316002)(22452003)(10090500001)(305945005)(6436002)(46003)(486006)(55016002)(186003)(229853002)(7696005)(76176011)(6506007)(53546011)(4326008)(476003)(11346002)(102836004)(2906002)(10290500003)(74316002)(9686003)(8676002)(6306002)(81166006)(81156014)(64756008)(99286004)(33656002)(53936002)(8936002)(6116002)(86362001)(478600001)(966005)(14454004)(5660300002)(71190400001)(71200400001)(76116006)(73956011)(66446008)(66556008)(66476007)(7736002)(66946007)(110136005)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0201;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VDqlKapRSdkWHQkTk3r5ru79Oj3r4nuzQlzrH814a7Eg5nqNLqdbYisF+oqvkaIqT5jc0t0kWnNET1YlgpkjkSVXyHNgSfXAWfHahaMdFHZNURtu4yToD4pgKRsd/LjvRKBACl6B2A0NvUeHLQhg6YTgNrSncoY7AwWP9JibGNf7OFBeJ7x4yinmn+qmQcMBKIF+FkELVcrcKuvafXuT/YhWRnpX2btmpig64FSnuItofVZJo5x/FoI6jTotttLQcRbr8moPrrHBO/Jo14PpHoo5L2vnEi6VF6zGY3lSs6hBLgDFYpuSrABhpIgPEqUTw1VKrBFsNg48/j/L/x2GXOVpA2TLQ4YkAy/lkJuxWusAfVeR9aK6oi0O+fDyLwKgMGK0HbjxhHdT/gGCGU3as5kEshvWb7NUaNN/jYFgius=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 3 Jul 2019 00:46:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40091 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfGCEqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 00:46:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so728853wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wYhh1FZzURTT7jH4X0+BMDoH/6wRanTlqxHaq9ZAeIo=;
+        b=dQRSzZmUe1oWkQbqMVhHq7Z3a+ParxHjVuN4zzmMeN7jWd7RuDzM1G94+XusklGZRy
+         0JKGxw/gkYiH/09tv5hefVtrawoo77R3FEAormbcWaJFmx3cm1zSd8/S19kYiItWER7t
+         0LHQSv/BBFagOdYumbEf4hJUNIKYH5pz8CtlsuaUYveabhGr9qbVl8ixKBiqvjv5g610
+         TG/hvXsgFVUo9nrW9Ue0BxoaHLuZfYoNNxnyP2A9u0lwdA56n4aJX4mqCqy8E7/+hKeW
+         Q8T28gH8ChWgDJPL2up3LqflSLbF9sgnxiHRkoe/0n0MisFBWYHBdyN1hUgC6oSsOBX2
+         4Vyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wYhh1FZzURTT7jH4X0+BMDoH/6wRanTlqxHaq9ZAeIo=;
+        b=kg+vGKgVU2gQG48ngXrfCq6WnUC1LNySvOgMItE5/D8nqwPDIgwJPIQENylZEpHX5z
+         6SNz4r1I4XwpadkVjHIV0+5HKWX1WLK3Fy/Au96QkuIUnNXWaWw0D1h2dM8CrUpZRK4M
+         IZTpM7XgCOJ0rEZq/p5aJnYhKJe1AeFWVXNvnOMpLNfYYXFu4O3wK+1l+WBgHl04cvY/
+         r7Tm/JHXmyPXUQvIGealLRaMUDzHQxZQ1GG1fX14fX9b2o6PI+gC7LHE1xEiYdO2SFvF
+         KdlU0D9pSYnN67bTtt4Msra2ZIaG3GDFUiGaAbRs0hi5wobdqbzrCkEbYfdfGjkUHtID
+         gu/w==
+X-Gm-Message-State: APjAAAVzFZ7IdKY582DYh5chT4bViFVEPuujarl8wvVFQkQ9E8fYYrCK
+        DVmTwArMAG0DMHGQWbHYifHghoE559P4rBF1UL3SEw==
+X-Google-Smtp-Source: APXvYqypB8Gwxv/tNWr1/m7SPPHay5N8t9sQgm11whZDoZ0H119QZPeC/ixVqENlUCif7avjYDOVoJVygfC0VJYk2Rg=
+X-Received: by 2002:a1c:6a06:: with SMTP id f6mr5759985wmc.159.1562129162963;
+ Tue, 02 Jul 2019 21:46:02 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0573585a-458b-4787-48be-08d6ff708bc1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 04:40:16.1976
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0201
+References: <20190701213849.102759-1-maheshb@google.com> <alpine.DEB.2.21.1907021450320.5764@ramsan.of.borg>
+In-Reply-To: <alpine.DEB.2.21.1907021450320.5764@ramsan.of.borg>
+From:   =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= 
+        <maheshb@google.com>
+Date:   Tue, 2 Jul 2019 21:45:46 -0700
+Message-ID: <CAF2d9jhikNn94WD7mefMDpiZK-baCwsPJRXti_WSFE6_v+Ci-w@mail.gmail.com>
+Subject: Re: suspicious RCU usage (was: Re: [PATCHv3 next 1/3] loopback:
+ create blackhole net device similar to loopack.)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Mahesh Bandewar <mahesh@bandewar.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1oeXBl
-cnYtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUmFuZHkgRHVubGFwDQo+IFNl
-bnQ6IFR1ZXNkYXksIEp1bHkgMiwgMjAxOSA4OjI1IFBNDQo+IFRvOiBNYXR0aGV3IFdpbGNveCA8
-d2lsbHlAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+OyBsaW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOyBKYWtlDQo+IE9zaGlucyA8amFr
-ZW9AbWljcm9zb2Z0LmNvbT47IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFp
-eWFuZw0KPiBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2Vy
-DQo+IDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsgU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwu
-b3JnPjsgbGludXgtcGNpDQo+IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgQmpvcm4gSGVs
-Z2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBo
-djogZml4IHBjaS1oeXBlcnYgYnVpbGQsIGRlcGVuZHMgb24gU1lTRlMNCj4gDQo+IE9uIDcvMi8x
-OSA1OjE1IFBNLCBNYXR0aGV3IFdpbGNveCB3cm90ZToNCj4gPiBPbiBUdWUsIEp1bCAwMiwgMjAx
-OSBhdCAwNDoyNDozMFBNIC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+ID4+IEZyb206IFJh
-bmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiA+Pg0KPiA+PiBGaXggYnVpbGQg
-ZXJyb3JzIHdoZW4gYnVpbGRpbmcgYWxtb3N0LWFsbG1vZGNvbmZpZyBidXQgd2l0aCBTWVNGUw0K
-PiA+PiBub3Qgc2V0IChub3QgZW5hYmxlZCkuICBGaXhlcyB0aGVzZSBidWlsZCBlcnJvcnM6DQo+
-ID4+DQo+ID4+IEVSUk9SOiAicGNpX2Rlc3Ryb3lfc2xvdCIgW2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvcGNpLWh5cGVydi5rb10gdW5kZWZpbmVkIQ0KPiA+PiBFUlJPUjogInBjaV9jcmVhdGVfc2xv
-dCIgW2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5rb10gdW5kZWZpbmVkIQ0KPiA+
-Pg0KPiA+PiBkcml2ZXJzL3BjaS9zbG90Lm8gaXMgb25seSBidWlsdCB3aGVuIFNZU0ZTIGlzIGVu
-YWJsZWQsIHNvDQo+ID4+IHBjaS1oeXBlcnYubyBoYXMgYW4gaW1wbGljaXQgZGVwZW5kZW5jeSBv
-biBTWVNGUy4NCj4gPj4gTWFrZSB0aGF0IGV4cGxpY2l0Lg0KPiA+DQo+ID4gSSB3b25kZXIgaWYg
-d2Ugc2hvdWxkbid0IHJhdGhlciBwcm92aWRlIG5vLW9wIHZlcnNpb25zIG9mDQo+ID4gcGNpX2Ny
-ZWF0ZXxkZXN0cm95X3Nsb3QgZm9yIHdoZW4gU1lTRlMgaXMgbm90IHNldD8NCj4gPg0KPiANCj4g
-TWFrZXMgc2Vuc2UuICBJJ20gdGVzdC1idWlsZGluZyB0aGF0IG5vdy4NCj4gDQo+IC0tDQo+IH5S
-YW5keQ0KDQorIFl1ZWhhaWJpbmcsIHdobyBzdWJtaXR0ZWQgYSBzaW1pbGFyIHBhdGNoLCB3aGlj
-aCBJIGd1ZXNzIGlzIG5lZ2xlY3RlZA0KYXQgdGhlIGVuZCBvZiB0aGUgZGlzY3Vzc2lvbiBsYXN0
-IG1vbnRoOg0KDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS81LzMxLzU1OQ0KaHR0cHM6Ly9s
-a21sLm9yZy9sa21sLzIwMTkvNi8xNC83ODQNCmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzYv
-MTUvMjQNCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
+On Tue, Jul 2, 2019 at 5:54 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+>         Hi Mahesh,
+>
+> On Mon, 1 Jul 2019, Mahesh Bandewar wrote:
+> > Create a blackhole net device that can be used for "dead"
+> > dst entries instead of loopback device. This blackhole device differs
+> > from loopback in few aspects: (a) It's not per-ns. (b)  MTU on this
+> > device is ETH_MIN_MTU (c) The xmit function is essentially kfree_skb().
+> > and (d) since it's not registered it won't have ifindex.
+> >
+> > Lower MTU effectively make the device not pass the MTU check during
+> > the route check when a dst associated with the skb is dead.
+> >
+> > Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+>
+> This is now commit 4de83b88c66a1e4d ("loopback: create blackhole net
+> device similar to loopack.") in net-next, and causes the following
+> warning on arm64:
+>
+>      WARNING: suspicious RCU usage
+>      5.2.0-rc6-arm64-renesas-01699-g4de83b88c66a1e4d #263 Not tainted
+>      -----------------------------
+>      include/linux/rtnetlink.h:85 suspicious rcu_dereference_protected() usage!
+>
+>      other info that might help us debug this:
+>
+>
+>      rcu_scheduler_active = 2, debug_locks = 1
+>      no locks held by swapper/0/1.
+>
+thanks for the report. Let me take a look at this.
+
+>      stack backtrace:
+>      CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc6-arm64-renesas-01699-g4de83b88c66a1e4d #263
+>      Hardware name: Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+ (DT)
+>      Call trace:
+>       dump_backtrace+0x0/0x148
+>       show_stack+0x14/0x20
+>       dump_stack+0xd4/0x11c
+>       lockdep_rcu_suspicious+0xcc/0x110
+>       dev_init_scheduler+0x114/0x150
+>       blackhole_netdev_init+0x40/0x80
+>       do_one_initcall+0x178/0x37c
+>       kernel_init_freeable+0x490/0x530
+>       kernel_init+0x10/0x100
+>       ret_from_fork+0x10/0x1c
+>
+>
+> > ---
+> > v1->v2->v3
+> >  no change
+> >
+> > drivers/net/loopback.c    | 76 ++++++++++++++++++++++++++++++++++-----
+> > include/linux/netdevice.h |  2 ++
+> > 2 files changed, 69 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/net/loopback.c b/drivers/net/loopback.c
+> > index 87d361666cdd..3b39def5471e 100644
+> > --- a/drivers/net/loopback.c
+> > +++ b/drivers/net/loopback.c
+> > @@ -55,6 +55,13 @@
+> > #include <net/net_namespace.h>
+> > #include <linux/u64_stats_sync.h>
+> >
+> > +/* blackhole_netdev - a device used for dsts that are marked expired!
+> > + * This is global device (instead of per-net-ns) since it's not needed
+> > + * to be per-ns and gets initialized at boot time.
+> > + */
+> > +struct net_device *blackhole_netdev;
+> > +EXPORT_SYMBOL(blackhole_netdev);
+> > +
+> > /* The higher levels take care of making this non-reentrant (it's
+> >  * called with bh's disabled).
+> >  */
+> > @@ -150,12 +157,14 @@ static const struct net_device_ops loopback_ops = {
+> >       .ndo_set_mac_address = eth_mac_addr,
+> > };
+> >
+> > -/* The loopback device is special. There is only one instance
+> > - * per network namespace.
+> > - */
+> > -static void loopback_setup(struct net_device *dev)
+> > +static void gen_lo_setup(struct net_device *dev,
+> > +                      unsigned int mtu,
+> > +                      const struct ethtool_ops *eth_ops,
+> > +                      const struct header_ops *hdr_ops,
+> > +                      const struct net_device_ops *dev_ops,
+> > +                      void (*dev_destructor)(struct net_device *dev))
+> > {
+> > -     dev->mtu                = 64 * 1024;
+> > +     dev->mtu                = mtu;
+> >       dev->hard_header_len    = ETH_HLEN;     /* 14   */
+> >       dev->min_header_len     = ETH_HLEN;     /* 14   */
+> >       dev->addr_len           = ETH_ALEN;     /* 6    */
+> > @@ -174,11 +183,20 @@ static void loopback_setup(struct net_device *dev)
+> >               | NETIF_F_NETNS_LOCAL
+> >               | NETIF_F_VLAN_CHALLENGED
+> >               | NETIF_F_LOOPBACK;
+> > -     dev->ethtool_ops        = &loopback_ethtool_ops;
+> > -     dev->header_ops         = &eth_header_ops;
+> > -     dev->netdev_ops         = &loopback_ops;
+> > +     dev->ethtool_ops        = eth_ops;
+> > +     dev->header_ops         = hdr_ops;
+> > +     dev->netdev_ops         = dev_ops;
+> >       dev->needs_free_netdev  = true;
+> > -     dev->priv_destructor    = loopback_dev_free;
+> > +     dev->priv_destructor    = dev_destructor;
+> > +}
+> > +
+> > +/* The loopback device is special. There is only one instance
+> > + * per network namespace.
+> > + */
+> > +static void loopback_setup(struct net_device *dev)
+> > +{
+> > +     gen_lo_setup(dev, (64 * 1024), &loopback_ethtool_ops, &eth_header_ops,
+> > +                  &loopback_ops, loopback_dev_free);
+> > }
+> >
+> > /* Setup and register the loopback device. */
+> > @@ -213,3 +231,43 @@ static __net_init int loopback_net_init(struct net *net)
+> > struct pernet_operations __net_initdata loopback_net_ops = {
+> >       .init = loopback_net_init,
+> > };
+> > +
+> > +/* blackhole netdevice */
+> > +static netdev_tx_t blackhole_netdev_xmit(struct sk_buff *skb,
+> > +                                      struct net_device *dev)
+> > +{
+> > +     kfree_skb(skb);
+> > +     net_warn_ratelimited("%s(): Dropping skb.\n", __func__);
+> > +     return NETDEV_TX_OK;
+> > +}
+> > +
+> > +static const struct net_device_ops blackhole_netdev_ops = {
+> > +     .ndo_start_xmit = blackhole_netdev_xmit,
+> > +};
+> > +
+> > +/* This is a dst-dummy device used specifically for invalidated
+> > + * DSTs and unlike loopback, this is not per-ns.
+> > + */
+> > +static void blackhole_netdev_setup(struct net_device *dev)
+> > +{
+> > +     gen_lo_setup(dev, ETH_MIN_MTU, NULL, NULL, &blackhole_netdev_ops, NULL);
+> > +}
+> > +
+> > +/* Setup and register the blackhole_netdev. */
+> > +static int __init blackhole_netdev_init(void)
+> > +{
+> > +     blackhole_netdev = alloc_netdev(0, "blackhole_dev", NET_NAME_UNKNOWN,
+> > +                                     blackhole_netdev_setup);
+> > +     if (!blackhole_netdev)
+> > +             return -ENOMEM;
+> > +
+> > +     dev_init_scheduler(blackhole_netdev);
+> > +     dev_activate(blackhole_netdev);
+> > +
+> > +     blackhole_netdev->flags |= IFF_UP | IFF_RUNNING;
+> > +     dev_net_set(blackhole_netdev, &init_net);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +device_initcall(blackhole_netdev_init);
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index eeacebd7debb..88292953aa6f 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -4870,4 +4870,6 @@ do {                                                            \
+> > #define PTYPE_HASH_SIZE       (16)
+> > #define PTYPE_HASH_MASK       (PTYPE_HASH_SIZE - 1)
+> >
+> > +extern struct net_device *blackhole_netdev;
+> > +
+> > #endif        /* _LINUX_NETDEVICE_H */
+> >
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
+>
