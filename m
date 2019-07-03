@@ -2,55 +2,51 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FA7C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B52CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267DE21873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F05221873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120416;
-	bh=5qfLKjIfq/WGY9sh7ODWXhx/VbyKCD9kOMidnqRbOoA=;
+	s=default; t=1562120419;
+	bh=q3HRA+x29vjH5YyUZzzzuq4kXHelrYEzHhXXrwBuXTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUaBeoaHAXGR9KGngleE1G30guF4djHCVSh3D/SA8eilUpzlBv1Dw90eX6GJuzx73
-	 UmzGtY2tTWRYsXDHLgAMqCGLNlvWWtfOHZZcj04siUs7fOOrz9yDuffV0iyT7nde22
-	 LM+gqXGhZ4dxfB6mVuuHWkz7oK6sWiNB/uOC0qQg=
+	b=nRt9lbN13SJr3cn29uY90IA7SwcdBob7GfPDEe2iZLPa+6jN6f9jTdgeB8jAOM4Rw
+	 +mVg9VcUFWN5wPdTUtIHEbs3JczZX0c2A+S+J9PFp6ST7KNPuTrK0htNZeYXgi2zFl
+	 12DTRAS6ox26MwrYxcA4THI4CLdsLsLAd/bgDjhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfGCCS0 (ORCPT
+        id S1728016AbfGCCUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbfGCCSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:21 -0400
+        id S1727474AbfGCCS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F06F21873;
-        Wed,  3 Jul 2019 02:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6671C21873;
+        Wed,  3 Jul 2019 02:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120300;
-        bh=5qfLKjIfq/WGY9sh7ODWXhx/VbyKCD9kOMidnqRbOoA=;
+        s=default; t=1562120305;
+        bh=q3HRA+x29vjH5YyUZzzzuq4kXHelrYEzHhXXrwBuXTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBpu+Yx44UqQZrDZ/eMqgdMIkq7xoKlJcXSAgKOo5IYIIQbsOEIMnv3yQ+5v4Rgzj
-         GQsL+6GCqNQfv1tVYj7355vhKzdklX/zosNNhQX70BKQOFXMnakVr966hLtSo9L4j2
-         24w8thAiqbzZP4aS8Hl5oPxxqXNRatx+kCLq3S8E=
+        b=EZHb5/06/GcCqYAvHQZfmq6nlCv6jh9CFT+BT3APSuxn97Mjxt/gxlUQTw01H68ra
+         bIDvzsA6lFXiplY2AGpRv0dRyeRpE35atK6smCQUxEoafI4MH6CkRJvH4ckUgV+dnZ
+         Flbfnd/biScXWWNtXN2SZzhrBGwXfPAaTCl2KJnQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 04/13] ARM: omap2: remove incorrect __init annotation
-Date:   Tue,  2 Jul 2019 22:18:05 -0400
-Message-Id: <20190703021814.18385-4-sashal@kernel.org>
+Cc:     Sergej Benilov <sergej.benilov@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/13] sis900: fix TX completion
+Date:   Tue,  2 Jul 2019 22:18:09 -0400
+Message-Id: <20190703021814.18385-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
 References: <20190703021814.18385-1-sashal@kernel.org>
@@ -63,45 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Sergej Benilov <sergej.benilov@googlemail.com>
 
-[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
+[ Upstream commit 8ac8a01092b2added0749ef937037bf1912e13e3 ]
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+Since commit 605ad7f184b60cfaacbc038aa6c55ee68dee3c89 "tcp: refine TSO autosizing",
+outbound throughput is dramatically reduced for some connections, as sis900
+is doing TX completion within idle states only.
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+Make TX completion happen after every transmitted packet.
 
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
+Test:
+netperf
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+before patch:
+> netperf -H remote -l -2000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
+
+ 87380 327680 327680    253.44      0.06
+
+after patch:
+> netperf -H remote -l -10000000 -- -s 1000000
+MIGRATED TCP STREAM TEST from 0.0.0.0 () port 0 AF_INET to 95.223.112.76 () port 0 AF_INET : demo
+Recv   Send    Send
+Socket Socket  Message  Elapsed
+Size   Size    Size     Time     Throughput
+bytes  bytes   bytes    secs.    10^6bits/sec
+
+ 87380 327680 327680    5.38       14.89
+
+Thx to Dave Miller and Eric Dumazet for helpful hints
+
+Signed-off-by: Sergej Benilov <sergej.benilov@googlemail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/sis/sis900.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index a2dd13217c89..2819c43fe754 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+index 40bd88362e3d..693f9582173b 100644
+--- a/drivers/net/ethernet/sis/sis900.c
++++ b/drivers/net/ethernet/sis/sis900.c
+@@ -1057,7 +1057,7 @@ sis900_open(struct net_device *net_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
+ 
+@@ -1580,7 +1580,7 @@ static void sis900_tx_timeout(struct net_device *net_dev)
+ 	sw32(txdp, sis_priv->tx_ring_dma);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ }
+ 
+ /**
+@@ -1620,7 +1620,7 @@ sis900_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+ 			spin_unlock_irqrestore(&sis_priv->lock, flags);
+ 			return NETDEV_TX_OK;
+ 	}
+-	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
++	sis_priv->tx_ring[entry].cmdsts = (OWN | INTR | skb->len);
+ 	sw32(cr, TxENA | sr32(cr));
+ 
+ 	sis_priv->cur_tx ++;
+@@ -1676,7 +1676,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 	do {
+ 		status = sr32(isr);
+ 
+-		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
++		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|TxDESC|RxORN|RxERR|RxOK)) == 0)
+ 			/* nothing intresting happened */
+ 			break;
+ 		handled = 1;
+@@ -1686,7 +1686,7 @@ static irqreturn_t sis900_interrupt(int irq, void *dev_instance)
+ 			/* Rx interrupt */
+ 			sis900_rx(net_dev);
+ 
+-		if (status & (TxURN | TxERR | TxIDLE))
++		if (status & (TxURN | TxERR | TxIDLE | TxDESC))
+ 			/* Tx interrupt */
+ 			sis900_finish_xmit(net_dev);
+ 
+@@ -1898,8 +1898,8 @@ static void sis900_finish_xmit (struct net_device *net_dev)
+ 
+ 		if (tx_status & OWN) {
+ 			/* The packet is not transmitted yet (owned by hardware) !
+-			 * Note: the interrupt is generated only when Tx Machine
+-			 * is idle, so this is an almost impossible case */
++			 * Note: this is an almost impossible condition
++			 * in case of TxDESC ('descriptor interrupt') */
+ 			break;
+ 		}
+ 
+@@ -2475,7 +2475,7 @@ static int sis900_resume(struct pci_dev *pci_dev)
+ 	sis900_set_mode(sis_priv, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
+ 
+ 	/* Enable all known interrupts by setting the interrupt mask. */
+-	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE);
++	sw32(imr, RxSOVR | RxORN | RxERR | RxOK | TxURN | TxERR | TxIDLE | TxDESC);
+ 	sw32(cr, RxENA | sr32(cr));
+ 	sw32(ier, IE);
+ 
 -- 
 2.20.1
 
