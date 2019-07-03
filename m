@@ -2,108 +2,123 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23AFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55228C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7807420B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7DB20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cb/Pk1At"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8Gtpy6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGCAzn (ORCPT
+        id S1727267AbfGCA4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:55:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37961 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfGCAzl (ORCPT
+        Tue, 2 Jul 2019 20:56:35 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35466 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCA4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 20:55:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z75so255833pgz.5;
-        Tue, 02 Jul 2019 17:55:40 -0700 (PDT)
+        Tue, 2 Jul 2019 20:56:34 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d23so752015qto.2;
+        Tue, 02 Jul 2019 17:56:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hOIwG5g5qmRLAvMNTG4avtQVbsGFIvybNsnInhl+M4o=;
-        b=cb/Pk1At+z3oGkj9asXbRIPTNhtNNDhEo9ERURh8nDXjg9YfPprqQ0qQYHqhy6rSaF
-         JJspKzFbPkoHBG1kaQbIKL4Etz6H7aOfya+lfGpEAx6RnbpVdTd7Rxs7T0tbO5UisAdO
-         ZPS+HcJG5yjLZ5ZwaiZd06fGxx/3MPhHrBdRynVocTY4ZZQqWSgJAGtpgAcK2EM1t/IC
-         ql85Jt+6SJaTpykfV7iCWdY664TUtO6aseDda3Coj6ovwBG5auhQYjx2CnWoovXC0vYV
-         TGVurkVhHPuRr2MoDJiWpkQUxDkKogeLnLOiv6z74HHdSogerj7IJhsi3buT9J7QMe6q
-         XOyg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ohmey1Vg9RYAAD1Ed48jjZ7GHK/q9zc8KdCvb9YzKyg=;
+        b=u8Gtpy6jWhl+SHKw2Lmxv2oPwGvPxk04kBDj2/UcV0y2LADhqPIYfIrNEgnMacka1Q
+         FEcjg2uvKEPcOjmysHzPW0S0ljEE919ejk7D7+uN4ecFQ9mCy6rjvuIXAO48NoB+S+KG
+         xOiQ6jkqWECb2q4d6EnFXy0HB8w8SPMZ3MuZy6GpYUdOOHMKVpZ0k4RUEps6uWE3YqaT
+         Sc7mvsLOEsMk+N68dEBxDDXXab/SuJtE2256ICfp4e3/EeyhFBlDb5R3ECRVUEBpc76B
+         z8hoRcFNJv5PxQHbaOuCpNGHnoofBl+FpGDpxc/gnzz8V1xjKJgUedVMl3JhR7RuGijA
+         jZwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hOIwG5g5qmRLAvMNTG4avtQVbsGFIvybNsnInhl+M4o=;
-        b=t56r4wwcSIATbWPyUQVUHoUfq2qmO8W68jYB7o0rPFN0yRjQUvu/CAE0hvxAs3H9JL
-         p+uBoMc83Emy4mID6wbtSUlNEYRyAdNf1LhDDC7uoC2JgBMsPHj99Cbqg1Hzh7WFj26c
-         2pq3WMXRYqodO6wrXOdwA3/A+mZFfDg067OHAuPxu/XSMrPve91yiiL/qIgDXK5oPaVj
-         pTxlWSoouZ53BrGnfdfp1QvDsX0IqIH9XIHTgtyRFPl4kBu6CVxC51OyFZ8/vRiDovn4
-         vgsbsEMZx0hDW26C2HLWdQH1KjF0DXWvWq31y8phHSIyUfr+TK9127RE4abGwm1W5b07
-         xN/g==
-X-Gm-Message-State: APjAAAVtMqMX5jNO4sq4RwWIpEo4jcGCBvnVWCqit4ChjxcJPKLi3VZC
-        zeoAOT+uEDx/wGUsAV5iyNSH8iUxLEo=
-X-Google-Smtp-Source: APXvYqz77rLbSyHhgcZyWseydKse1/eh4HWO31E2oh1XmlIvsC+gQNegzx8lDeCvxQG38H30v200vA==
-X-Received: by 2002:a17:90a:2768:: with SMTP id o95mr8287011pje.37.1562108080227;
-        Tue, 02 Jul 2019 15:54:40 -0700 (PDT)
-Received: from continental ([189.58.144.164])
-        by smtp.gmail.com with ESMTPSA id k14sm135388pfg.6.2019.07.02.15.54.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:54:39 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 19:55:21 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <linux-block@vger.kernel.org>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        marcos.souza.org@gmail.com
-Subject: Re: [PATCH] driver: block: nbd: Replace magic number 9 with
- SECTOR_SHIFT
-Message-ID: <20190702225521.GA16741@continental>
-References: <20190624160933.23148-1-marcos.souza.org@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ohmey1Vg9RYAAD1Ed48jjZ7GHK/q9zc8KdCvb9YzKyg=;
+        b=Zbflz7sOLNyYPEb2MjzqSAz0SKP3188vGNUXn53yEHIS6DwA+NqppzAcgDlFi/GzMV
+         yrzOPdnYWubv8KfrAgnlwduRfbBobuA4f4qdtsIEGKAn+CllcW1EEAlsCaWrfubOxW8R
+         cNuvD/Km5T4Nv0b9Dhpfs7EFbvjiSqDQL8PujNmap53kXs1HuyguceMR8fKs+wSJVPsL
+         u+PC+6ppuVwfiBP8vyedUj+HYCTAem8RUTEV0cSvbcRN7D5ihI4iUJFfrppUpwXOLm+g
+         htnyN+DLnjkvz0m1njYgXUshvEXMhnAcgtSFnaS/1ht7KUbadEYB9xWkpypbRu+ISue9
+         sobQ==
+X-Gm-Message-State: APjAAAVpDvniXwmkIb8jzFTcI+xyV9L8fB8nmbcmsqXs34LprwJLQZEn
+        cEjbEHGkflaV5WWpNjxbQu29bp2fe1pGu38I6b0=
+X-Google-Smtp-Source: APXvYqztiuteWGCyZsoaHnUThtkJ88Z9Lbno9npjnKvIoAzmCyNgrITmQ0xPKpO1mfd+Qsn9yRVDw9tQiAOQOKhu1AQ=
+X-Received: by 2002:ac8:2b90:: with SMTP id m16mr27485334qtm.384.1562115393802;
+ Tue, 02 Jul 2019 17:56:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624160933.23148-1-marcos.souza.org@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190702163715.12649-1-smuchun@gmail.com> <CAJZ5v0jzVG5X8idR7Fy8g6=UPMpZ7eK6A_Uhqrer1aJFY1hX1w@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jzVG5X8idR7Fy8g6=UPMpZ7eK6A_Uhqrer1aJFY1hX1w@mail.gmail.com>
+From:   Muchun Song <smuchun@gmail.com>
+Date:   Wed, 3 Jul 2019 08:56:22 +0800
+Message-ID: <CAPSr9jE6Qfu4NpmDfUrS+hVad2OP+xr00yoJ3k5=e=f7ZKwY+g@mail.gmail.com>
+Subject: Re: [PATCH v2] PM: Move disabling/enabling runtime PM to
+ suspend/resume noirq
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping?
+Rafael J. Wysocki <rafael@kernel.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=883=E6=
+=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:54=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Jul 2, 2019 at 6:37 PM Muchun Song <smuchun@gmail.com> wrote:
+> >
+> > Currently, the PM core disables runtime PM for all devices right after
+> > executing subsystem/driver .suspend_late() callbacks for them and
+> > re-enables it right before executing subsystem/driver .resume_early()
+> > callbacks for them. This may lead to problems when there are two device=
+s
+> > such that the irq handler thread function executed for one of them
+> > depends on runtime PM working for the other. E.g. There are two devices=
+,
+> > one is i2c slave device depends on another device which can be the i2c
+> > adapter device. The slave device can generate system wakeup signals and
+> > is enabled to wake up the system(via call enable_irq_wake()). So, the i=
+rq
+> > of slave device is enabled. If a wakeup signal generate after executing
+> > subsystem/driver .suspend_late() callbacks. Then, the irq handler threa=
+d
+> > function will be called(The irq is requested via request_threaded_irq()=
+)
+> > and the slave device reads data via i2c adapter device(via i2c_transfer=
+()).
+> > In that case, it may be failed to read data because of the runtime PM
+> > disabled.
+> >
+> > It is also analogously for resume. If a wakeup signal generate when the
+> > system is in the sleep state. The irq handler thread function may be
+> > called before executing subsystem/driver .resume_early(). In that case,
+> > it also may be failed to read data because of the runtime PM disabled.
+> >
+>
+> This has been discussed for a number of times, documented and no, I'm
+> not going to apply this patch.
 
-On Mon, Jun 24, 2019 at 01:09:33PM -0300, Marcos Paulo de Souza wrote:
-> set_capacity expects the disk size in sectors of 512 bytes, and changing
-> the magic number 9 to SECTOR_SHIFT clarifies this intent.
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
->  drivers/block/nbd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 3a9bca3aa093..fd3bc061c600 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -288,7 +288,7 @@ static void nbd_size_update(struct nbd_device *nbd)
->  	}
->  	blk_queue_logical_block_size(nbd->disk->queue, config->blksize);
->  	blk_queue_physical_block_size(nbd->disk->queue, config->blksize);
-> -	set_capacity(nbd->disk, config->bytesize >> 9);
-> +	set_capacity(nbd->disk, config->bytesize >> SECTOR_SHIFT);
->  	if (bdev) {
->  		if (bdev->bd_disk) {
->  			bd_set_size(bdev, config->bytesize);
-> -- 
-> 2.21.0
-> 
+Thanks for your reply. I want to know why we can't do that, so where
+can I find the discussion?
+
+> PM-runtime cannot be relied on during the "noirq" stages of suspend
+> and resume, which is why it is disabled by the core in the "late" and
+> "early" stages, respectively.
+>
+
+What better solution do we have for the example I am talking about
+which is described in the commit message? Thanks.
+
+Yours,
+Muchun
