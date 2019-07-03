@@ -2,162 +2,208 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4143FC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FAC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEE82189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373A72189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfGCIcw (ORCPT
+        id S1727275AbfGCIep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:32:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51073 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbfGCIcw (ORCPT
+        Wed, 3 Jul 2019 04:34:45 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43813 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCIep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:32:52 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hiah5-0006oW-75; Wed, 03 Jul 2019 10:32:47 +0200
-Date:   Wed, 3 Jul 2019 10:32:47 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>
-Subject: [PATCH] x86/fpu: Make no387 and nofxsr work a little better on
- modern CPUs
-Message-ID: <20190703083247.57kjrmlxkai3vpw3@linutronix.de>
-References: <20190702213958.33291-1-andi@firstfloor.org>
- <alpine.DEB.2.21.1907030013130.1802@nanos.tec.linutronix.de>
+        Wed, 3 Jul 2019 04:34:45 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e3so1199581edr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:34:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J82z1LlQmnxvq8BGCR47A7grHNbwxVExo4k//gkAz/g=;
+        b=dcIDfcbYD2wHUppZ4g0+hI1k6e5Cl0ldZjOJmyCHFjIYRGOvI2I97wYL3V4Bij96TX
+         Sf4a1ccMUZ+lKD/sSkrovt+an96BwmyzP/58ftyva5J0unUYUdZ4hqb2lN1n9ixrw+YH
+         4P2aa8UKdxrJoeMUXE2nJ1xZGFPIPfMIkxN+4l4pS6j63h954pPdfAOua6Z7tpFu+5N8
+         /FshuFzJ0CUQ8TWFzX1c6yVWGrHRCwG2Jpz/xaBhSNVKDLuoCY0GlwHX3NLtY5s6fsna
+         mgSCjFjxJY0oUq7JmXFzS5Y/U6J4SY/BN66j7qxjYlJcPFv/80qeCwLA8f9bU6qG1kbu
+         6KDQ==
+X-Gm-Message-State: APjAAAWBZocRk0dqcA7x6is/zuioNsmHMdKanGvo3epzO9yNWrh+zds0
+        l7nOQRPtCLx4IHkTJaQ+3gCpE6We5oM=
+X-Google-Smtp-Source: APXvYqzF2UfidSwyyUx5ARMiahBg5ZrorXqb1TqrEdvL44cz8m6yOeQU5PG5zADZ6zklqXLoa+fXeQ==
+X-Received: by 2002:a17:906:4e42:: with SMTP id g2mr27947356ejw.304.1562142883275;
+        Wed, 03 Jul 2019 01:34:43 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id c49sm471083eda.74.2019.07.03.01.34.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 01:34:41 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id p11so1733529wro.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:34:40 -0700 (PDT)
+X-Received: by 2002:a5d:5009:: with SMTP id e9mr23708360wrt.279.1562142880511;
+ Wed, 03 Jul 2019 01:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907030013130.1802@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
+References: <20190702191613.11084-1-luca@z3ntu.xyz>
+In-Reply-To: <20190702191613.11084-1-luca@z3ntu.xyz>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 3 Jul 2019 16:34:29 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66gX83sR-aWgFKBX+BH7Mud_PaAMvw4eNctQZFMkBYo=g@mail.gmail.com>
+Message-ID: <CAGb2v66gX83sR-aWgFKBX+BH7Mud_PaAMvw4eNctQZFMkBYo=g@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: sunxi: sun50i-codec-analog: Add earpiece
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
+        ~martijnbraam/pmos-upstream@lists.sr.ht,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The command line option `no387' is designed to disable the FPU entirely.
-The documentation says to disable the coprocessor and the Kconfig entry
-for MATH_EMULATION says to set it in order to use emulation. It should
-be restricted to 32bit only because 64bit expect SSE (which includes
-basic FPU and there is not emulation for SSE).
+On Wed, Jul 3, 2019 at 3:17 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> This adds the necessary registers and audio routes to play audio using
+> the Earpiece, that's supported on the A64.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> So, first of all: This is my first audio patch and I hope I didn't make
+> too many mistakes :) , especially with the routes at the bottom of
+> the patch.
+>
+> What I'm really unsure about, is how the enable & mute registers should
+> be handled. Should I put both registers into a SOC_DOUBLE("Earpiece
+> Playback Switch",...)?
 
-The command line option `nofxsr' should also be limited to 32bit because
-FXSR is part of the required flags on 64bit so turning it off is not
-possible.
+What we normally have with sunxi is the "Enable" switches typically
+control whether a given function is active or not. With the earpiece
+output, it controls the amplifier for the output. This should be modeled
+as a separate DAPM widget, without a control, and let the framework
+deal with it.
 
-Clearing X86_FEATURE_FPU without emulation enabled will not work anyway
-and hang in fpu__init_system_early_generic() before console is enabled.
+The mute controls the signal, so you can just keep as a control.
 
-Setting additioal dependencies, ensures that the CPU still boots on a
-modern CPU. Otherwise, dropping FPU will leave FXSR enabled causing the
-kernel to crash early in fpu__init_system_mxcsr().
-With XSAVE support it will crash in fpu__init_cpu_xstate(). The problem
-is that xsetbv() with YMM set and SSE cleared is not allowed.  That
-means XSAVE has to be disabled. The XSAVE support is disabled in
-fpu__init_system_xstate_size_legacy() but it is too late. It can be
-removed, it has been added in commit
+>  sound/soc/sunxi/sun50i-codec-analog.c | 51 +++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>
+> diff --git a/sound/soc/sunxi/sun50i-codec-analog.c b/sound/soc/sunxi/sun50i-codec-analog.c
+> index d105c90c3706..6c19fea992c5 100644
+> --- a/sound/soc/sunxi/sun50i-codec-analog.c
+> +++ b/sound/soc/sunxi/sun50i-codec-analog.c
+> @@ -49,6 +49,15 @@
+>  #define SUN50I_ADDA_OR_MIX_CTRL_DACR           1
+>  #define SUN50I_ADDA_OR_MIX_CTRL_DACL           0
+>
+> +#define SUN50I_ADDA_EARPIECE_CTRL0     0x03
+> +#define SUN50I_ADDA_EARPIECE_CTRL0_EAR_RAMP_TIME       4
+> +#define SUN50I_ADDA_EARPIECE_CTRL0_ESPSR               0
+> +
+> +#define SUN50I_ADDA_EARPIECE_CTRL1     0x04
+> +#define SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_EN    7
+> +#define SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_MUTE  6
+> +#define SUN50I_ADDA_EARPIECE_CTRL1_ESP_VOL     0
+> +
+>  #define SUN50I_ADDA_LINEOUT_CTRL0      0x05
+>  #define SUN50I_ADDA_LINEOUT_CTRL0_LEN          7
+>  #define SUN50I_ADDA_LINEOUT_CTRL0_REN          6
+> @@ -172,6 +181,10 @@ static const DECLARE_TLV_DB_RANGE(sun50i_codec_lineout_vol_scale,
+>         2, 31, TLV_DB_SCALE_ITEM(-4350, 150, 0),
+>  );
+>
+> +static const DECLARE_TLV_DB_RANGE(sun50i_codec_earpiece_vol_scale,
+> +       0, 1, TLV_DB_SCALE_ITEM(TLV_DB_GAIN_MUTE, 0, 1),
+> +       2, 31, TLV_DB_SCALE_ITEM(-4350, 150, 0),
+> +);
+>
+>  /* volume / mute controls */
+>  static const struct snd_kcontrol_new sun50i_a64_codec_controls[] = {
+> @@ -225,6 +238,19 @@ static const struct snd_kcontrol_new sun50i_a64_codec_controls[] = {
+>                    SUN50I_ADDA_LINEOUT_CTRL0_LEN,
+>                    SUN50I_ADDA_LINEOUT_CTRL0_REN, 1, 0),
+>
+> +       SOC_SINGLE_TLV("Earpiece Playback Volume",
+> +                      SUN50I_ADDA_EARPIECE_CTRL1,
+> +                      SUN50I_ADDA_EARPIECE_CTRL1_ESP_VOL, 0x1f, 0,
+> +                      sun50i_codec_earpiece_vol_scale),
+> +
+> +       SOC_SINGLE("Earpiece Playback Switch (enable)",
+> +                  SUN50I_ADDA_EARPIECE_CTRL1,
+> +                  SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_EN, 1, 0),
 
-  1f999ab5a1360 ("x86, xsave: Disable xsave in i387 emulation mode")
+As mentioned above, this should be a DAPM widget instead.
 
-to use `no387' on a CPU with XSAVE support.
+> +
+> +       SOC_SINGLE("Earpiece Playback Switch",
+> +                  SUN50I_ADDA_EARPIECE_CTRL1,
+> +                  SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_MUTE, 1, 0),
+> +
+>  };
+>
+>  static const char * const sun50i_codec_hp_src_enum_text[] = {
+> @@ -257,6 +283,20 @@ static const struct snd_kcontrol_new sun50i_codec_lineout_src[] = {
+>                       sun50i_codec_lineout_src_enum),
+>  };
+>
+> +static const char * const sun50i_codec_earpiece_src_enum_text[] = {
+> +       "DACR", "DACL", "Right Analog Mixer", "Left Analog Mixer",
 
-All this happens before console output.
-After hat, the next possible crash is in RAID6 detect code because MMX
-remained enabled. With a 3DNOW enabled config it will explode in
-memcpy() for instance due to kernel_fpu_begin() but this is
-unconditionally enabled.
+I suggest dropping "Analog" to match what other controls, such as the
+Headphone Source" control, uses.
 
-This is enough to boot a Debian Wheezy on a 32bit qemu "host" CPU which
-supports everything up to XSAVES, AVX2 without 3DNOW. Later, Debian
-increased the minimum requirements to i686 which means it does not boot
-userland atleast due to CMOV.
+ChenYu
 
-After masking the additional features it still keeps SSE4A and 3DNOW*
-enabled (if present on the host) but those are unused in the kernel.
-
-Restrict `no387' and `nofxsr' otions to 32bit only. Add dependencies for
-FPU, FXSR to additionaly mask CMOV, MMX, XSAVE if FXSR or FPU is cleared.
-
-Link: https://lkml.kernel.org/r/20190701121710.vardxktdc63gtcj5@linutronix.de>
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- arch/x86/kernel/cpu/cpuid-deps.c |  5 +++++
- arch/x86/kernel/fpu/init.c       | 17 +++++++----------
- 2 files changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 2c0bd38a44ab1..e794e3860fc83 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -20,6 +20,7 @@ struct cpuid_dep {
-  * but it's difficult to tell that to the init reference checker.
-  */
- static const struct cpuid_dep cpuid_deps[] = {
-+	{ X86_FEATURE_FXSR,		X86_FEATURE_FPU	      },
- 	{ X86_FEATURE_XSAVEOPT,		X86_FEATURE_XSAVE     },
- 	{ X86_FEATURE_XSAVEC,		X86_FEATURE_XSAVE     },
- 	{ X86_FEATURE_XSAVES,		X86_FEATURE_XSAVE     },
-@@ -27,7 +28,11 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_PKU,		X86_FEATURE_XSAVE     },
- 	{ X86_FEATURE_MPX,		X86_FEATURE_XSAVE     },
- 	{ X86_FEATURE_XGETBV1,		X86_FEATURE_XSAVE     },
-+	{ X86_FEATURE_CMOV,		X86_FEATURE_FXSR      },
-+	{ X86_FEATURE_MMX,		X86_FEATURE_FXSR      },
-+	{ X86_FEATURE_MMXEXT,		X86_FEATURE_MMX       },
- 	{ X86_FEATURE_FXSR_OPT,		X86_FEATURE_FXSR      },
-+	{ X86_FEATURE_XSAVE,		X86_FEATURE_FXSR      },
- 	{ X86_FEATURE_XMM,		X86_FEATURE_FXSR      },
- 	{ X86_FEATURE_XMM2,		X86_FEATURE_XMM       },
- 	{ X86_FEATURE_XMM3,		X86_FEATURE_XMM2      },
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index ef0030e3fe6b9..5baae74af4f91 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -204,12 +204,6 @@ static void __init fpu__init_system_xstate_size_legacy(void)
- 	 */
- 
- 	if (!boot_cpu_has(X86_FEATURE_FPU)) {
--		/*
--		 * Disable xsave as we do not support it if i387
--		 * emulation is enabled.
--		 */
--		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
--		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
- 		fpu_kernel_xstate_size = sizeof(struct swregs_state);
- 	} else {
- 		if (boot_cpu_has(X86_FEATURE_FXSR))
-@@ -252,14 +246,17 @@ static void __init fpu__init_parse_early_param(void)
- 	char *argptr = arg;
- 	int bit;
- 
-+#ifdef CONFIG_X86_32
- 	if (cmdline_find_option_bool(boot_command_line, "no387"))
-+#ifdef CONFIG_MATH_EMULATION
- 		setup_clear_cpu_cap(X86_FEATURE_FPU);
-+#else
-+		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
-+#endif
- 
--	if (cmdline_find_option_bool(boot_command_line, "nofxsr")) {
-+	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
- 		setup_clear_cpu_cap(X86_FEATURE_FXSR);
--		setup_clear_cpu_cap(X86_FEATURE_FXSR_OPT);
--		setup_clear_cpu_cap(X86_FEATURE_XMM);
--	}
-+#endif
- 
- 	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
- 		fpu__xstate_clear_all_cpu_caps();
--- 
-2.20.1
-
+> +};
+> +
+> +static SOC_ENUM_SINGLE_DECL(sun50i_codec_earpiece_src_enum,
+> +                           SUN50I_ADDA_EARPIECE_CTRL0,
+> +                           SUN50I_ADDA_EARPIECE_CTRL0_ESPSR,
+> +                           sun50i_codec_earpiece_src_enum_text);
+> +
+> +static const struct snd_kcontrol_new sun50i_codec_earpiece_src[] = {
+> +       SOC_DAPM_ENUM("Earpiece Source Playback Route",
+> +                     sun50i_codec_earpiece_src_enum),
+> +};
+> +
+>  static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
+>         /* DAC */
+>         SND_SOC_DAPM_DAC("Left DAC", NULL, SUN50I_ADDA_MIX_DAC_CTRL,
+> @@ -285,6 +325,10 @@ static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
+>                          SND_SOC_NOPM, 0, 0, sun50i_codec_lineout_src),
+>         SND_SOC_DAPM_OUTPUT("LINEOUT"),
+>
+> +       SND_SOC_DAPM_MUX("Earpiece Source Playback Route",
+> +                        SND_SOC_NOPM, 0, 0, sun50i_codec_earpiece_src),
+> +       SND_SOC_DAPM_OUTPUT("EARPIECE"),
+> +
+>         /* Microphone inputs */
+>         SND_SOC_DAPM_INPUT("MIC1"),
+>
+> @@ -388,6 +432,13 @@ static const struct snd_soc_dapm_route sun50i_a64_codec_routes[] = {
+>         { "Line Out Source Playback Route", "Mono Differential",
+>                 "Right Mixer" },
+>         { "LINEOUT", NULL, "Line Out Source Playback Route" },
+> +
+> +       /* Earpiece Routes */
+> +       { "Earpiece Source Playback Route", "DACL", "Left DAC" },
+> +       { "Earpiece Source Playback Route", "DACR", "Right DAC" },
+> +       { "Earpiece Source Playback Route", "Left Analog Mixer", "Left Mixer" },
+> +       { "Earpiece Source Playback Route", "Right Analog Mixer", "Right Mixer" },
+> +       { "EARPIECE", NULL, "Earpiece Source Playback Route" },
+>  };
+>
+>  static const struct snd_soc_component_driver sun50i_codec_analog_cmpnt_drv = {
+> --
+> 2.22.0
+>
