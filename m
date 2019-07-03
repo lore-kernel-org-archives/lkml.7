@@ -2,120 +2,133 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086C1C4646D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D68C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5BC21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F4B21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Z5JHl88Y";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="G33F4WMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfGCQLV (ORCPT
+        id S1726811AbfGCQM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:11:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48176 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfGCQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:11:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 09:11:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="172182766"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Jul 2019 09:11:17 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] tpm: Document UEFI event log quirks
-Date:   Wed,  3 Jul 2019 19:11:05 +0300
-Message-Id: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 3 Jul 2019 12:12:58 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:52112 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725847AbfGCQM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 12:12:58 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D06E1C00FF;
+        Wed,  3 Jul 2019 16:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562170377; bh=0HCbz62W0SD90lgw0eWLOaeWUqNPRKl575wG2TM8rHs=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Z5JHl88YhGRScP/0PYjz7Yk/PsU47jnxe1+BR6t14LJHkP60SA1ITl0otDn2RmBvs
+         CZmvnbQV49ikmBOmoOVdxVPeIVlTiSolrEbWM/k7PaD39OKmIgy+GoOoelMa6Z3BSS
+         NC/9T5E6Ez+cPLp5joh2qfpDuQ72mjgOzGiQRNSzXyWB73HU/gif0MHqbAXBoNsiKF
+         tUlnAmyML52yfg4Bmp8eXeB6O9qLm8aCPpqhUUCciraa+bLp45qfWnPYreXUxpa1AV
+         8d9SvF8BF9skYToGrbyBSUql+rrcrYN0S5SyJe8+DfAzNfIX2vFGDd9GGYRHINgKHN
+         x9/wsmdrqOWNg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 53140A0091;
+        Wed,  3 Jul 2019 16:12:55 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 3 Jul 2019 09:12:54 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 3 Jul 2019 09:12:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0HCbz62W0SD90lgw0eWLOaeWUqNPRKl575wG2TM8rHs=;
+ b=G33F4WMKb/KhpMthlv7VmD/9oMiO/KkiaQmqQO3RVRJMNqe2ZMmojaNveYNnysb/3HOl9UiMKcWROS69UCTL8qzzJ09Ru+d+Hvh26/Be0TeSsggv+QNHh+2H3x3wgW4b8o7wlIarA5CMnIrL6k9AN/B1FlHnBVUx9Z+rjwa42uU=
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
+ BN6PR1201MB0051.namprd12.prod.outlook.com (10.174.114.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.17; Wed, 3 Jul 2019 16:12:52 +0000
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f]) by BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::c4ec:41a0:dfb5:767f%10]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 16:12:52 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARC: hide unused function unw_hdr_alloc
+Thread-Topic: [PATCH] ARC: hide unused function unw_hdr_alloc
+Thread-Index: AQHVMaTXsiWHeSj06keYhFaxN9Sn16a5EQgA
+Date:   Wed, 3 Jul 2019 16:12:52 +0000
+Message-ID: <7584cf05-e3f9-7027-a08c-87efbfb0f608@synopsys.com>
+References: <20190703133940.1493249-1-arnd@arndb.de>
+In-Reply-To: <20190703133940.1493249-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [198.182.56.5]
+x-clientproxiedby: BY5PR13CA0024.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::37) To BN6PR1201MB0035.namprd12.prod.outlook.com
+ (2603:10b6:405:4d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cb45f0df-a691-4a7b-c633-08d6ffd14c7d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0051;
+x-ms-traffictypediagnostic: BN6PR1201MB0051:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN6PR1201MB00517F35FC591D14F8A10B8FB6FB0@BN6PR1201MB0051.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:773;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(66066001)(64756008)(66446008)(66476007)(58126008)(5660300002)(229853002)(6486002)(66556008)(54906003)(66946007)(52116002)(65826007)(31696002)(6306002)(73956011)(6512007)(7736002)(316002)(81156014)(4326008)(86362001)(65956001)(65806001)(81166006)(26005)(8676002)(305945005)(64126003)(386003)(6506007)(8936002)(476003)(53546011)(76176011)(53936002)(186003)(36756003)(4744005)(71200400001)(71190400001)(486006)(6436002)(6916009)(99286004)(25786009)(31686004)(446003)(966005)(102836004)(11346002)(2616005)(3846002)(6116002)(14454004)(68736007)(6246003)(478600001)(14444005)(2906002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0051;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3zh/duXv5tHB8MMX2s0mv3KoCjMmNbRB6VegnCkIAJ41fly7Sy/8rc19tjv3dhSufVrl00JSVI/9y4tBphOj9c1qOpLypcsnhZ3kyRzOvRF2FH5P6pDbXllYLQTGRi8ZQev8gTJn7959mkAU40G4Lmj43m+xgz+bqKIFCC8cpvQ/EcFugH2u7MqRe7BXclng4pYW/+zHmG8BVaNx9eh6nwlR54VQ5NTvvDPGZ8PFUzDviN59x3SNZqEuXRJbFXjft7xleI3+sxSsKFv37AWcD0ehXOF7rr4bhXlSFCS5+IAMkYowd2O2wcZvJZs7ZNRI9VPxQPZ4MU0zvygsHTGpVgp5jbmdETRGXRCcjQA4jYM/+uvFbUEvVZW7mD2IFFJJNLaGnVBfWzDTx9bdvq6xFsyX0d+2wDO28ag58bJiJ5c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FA708647CF42D248BF5FBACD6EAC489D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb45f0df-a691-4a7b-c633-08d6ffd14c7d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 16:12:52.1737
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0051
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some weird quirks when it comes to UEFI event log. Provide a
-brief introduction to TPM event log mechanism and describe the quirks
-and how they can be sorted out.
-
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- Documentation/security/tpm/tpm-eventlog.rst | 53 +++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm-eventlog.rst
-
-diff --git a/Documentation/security/tpm/tpm-eventlog.rst b/Documentation/security/tpm/tpm-eventlog.rst
-new file mode 100644
-index 000000000000..2ca8042bdb17
---- /dev/null
-+++ b/Documentation/security/tpm/tpm-eventlog.rst
-@@ -0,0 +1,53 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============
-+TPM Event Log
-+=============
-+
-+| Authors:
-+| Stefan Berger <stefanb@linux.vnet.ibm.com>
-+
-+This document briefly describes what TPM log is and how it is handed
-+over from the preboot firmware to the operating system.
-+
-+Introduction
-+============
-+
-+The preboot firmware maintains an event log that gets new entries every
-+time something gets hashed by it to any of the PCR registers. The events
-+are segregated by their type and contain the value of the hashed PCR
-+register. Typically, the preboot firmware will hash the components to
-+who execution is to be handed over or actions relevant to the boot
-+process.
-+
-+The main application for this is remote attestation and the reason why
-+it is useful is nicely put in the very first section of [1]:
-+
-+"Attestation is used to provide information about the platform’s state
-+to a challenger. However, PCR contents are difficult to interpret;
-+therefore, attestation is typically more useful when the PCR contents
-+are accompanied by a measurement log. While not trusted on their own,
-+the measurement log contains a richer set of information than do the PCR
-+contents. The PCR contents are used to provide the validation of the
-+measurement log."
-+
-+UEFI event log
-+==============
-+
-+UEFI provided event log has a few somewhat weird quirks.
-+
-+Before calling ExitBootServices() Linux EFI stub copies the event log to
-+a custom configuration table defined by the stub itself. Unfortanely,
-+the events generated by ExitBootServices() do end up to the table.
-+
-+The firmware provides so called final events configuration table to sort
-+out this issue. Events gets mirrored to this table after the first time
-+EFI_TCG2_PROTOCOL.GetEventLog() gets called.
-+
-+This introduces another problem: nothing guarantees that it is not
-+called before the stub gets to run. Thus, it needs to copy the final
-+events table preboot size to the custom configuration table so that
-+kernel offset it later on.
-+
-+[1] https://trustedcomputinggroup.org/resource/pc-client-specific-platform-firmware-profile-specification/
-+[2] The final concatenation is done in drivers/char/tpm/eventlog/efi.c
--- 
-2.20.1
-
+T24gNy8zLzE5IDY6MzkgQU0sIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+IEFzIGtlcm5lbGNpLm9y
+ZyByZXBvcnRzLCANCg0KQ3VyaW91cywgaG93IGFyZSB5b3UgZ2V0dGluZyB0aGVzZSByZXBvcnRz
+ID8gSSB3YW50IHRvIHNlZSBhcyB3ZWxsLg0KDQo+IHRoaXMgZnVuY3Rpb24gaXMgbm90IHVzZWQg
+aW4NCj4gdmRrX2hzMzhfZGVmY29uZmlnOg0KPiANCj4gYXJjaC9hcmMva2VybmVsL3Vud2luZC5j
+OjE4ODoxNDogd2FybmluZzogJ3Vud19oZHJfYWxsb2MnIGRlZmluZWQgYnV0IG5vdCB1c2VkIFst
+V3VudXNlZC1mdW5jdGlvbl0NCj4gDQo+IEZpeGVzOiBiYzc5YzlhNzIxNjUgKCJBUkM6IGR3MiB1
+bndpbmQ6IFJlaW5zdGFudGUgdW53aW5kaW5nIG91dCBvZiBtb2R1bGVzIikNCj4gTGluazogaHR0
+cHM6Ly9rZXJuZWxjaS5vcmcvYnVpbGQvaWQvNWQxY2FlM2Y1OWI1MTQzMDAzNDBjMTMyL2xvZ3Mv
+DQo+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVy
+Z21hbm4gPGFybmRAYXJuZGIuZGU+DQoNClRoeCwgZG8geW91IHdhbnQgbWUgdG8gcGljayB0aGlz
+IHVwIHZpYSBhcmMgdHJlZS4NCg0KVGh4LA0KLVZpbmVldA0K
