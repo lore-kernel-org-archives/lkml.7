@@ -2,203 +2,323 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B503C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B35C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AFB218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080FD218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GPiaNAql"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XZHHbEsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfGCKAj (ORCPT
+        id S1727025AbfGCKB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:00:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40579 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfGCKAi (ORCPT
+        Wed, 3 Jul 2019 06:01:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36938 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfGCKB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:00:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so1663437wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:00:36 -0700 (PDT)
+        Wed, 3 Jul 2019 06:01:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w13so1482599eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:01:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hSoC8nCs+Ob8KpfWiAi2Egv+8x1VlTi1X6Jdz/e0TiE=;
-        b=GPiaNAqlidJ00jvmbOg+47CWfJuM45shHFlTIhUeIz4jD7SzAN4JOxAmjsR3J77NYE
-         6fn5HBiY4d9so3sU7iDfDk60j9T1KO75VJ5iQW02N+ZbShqn3EXR+mzEHYzj2XvNKiMS
-         vIA7Fc4ru6OJxZahc5yN8EK5MGWuVPeTOXwSbaxZSlmYolZOmJgrgYDb6U8aLLbdvQOT
-         xd9/MebBpd5j0BEgUNdQUUi8MGKL5mLowQmHQx9cqWmHZ78xFGEDFT1OXKCw4g0aAEKg
-         XCEVPmbltka1ruj/nkEsjkjbj/JbrfKuavcSe1AVcXKXb/rMBfk+QHGqodZkolThbFo6
-         cjAg==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aSerdf2DO7Omic2w+oNZyPee/VO/jfA+Kk59Tlp7L3M=;
+        b=XZHHbEshRHyinFuyW6TPlL33umZPDibfUV4mNEG7Ilmf0G6HIbH/4SNKjbWu5TnJn7
+         A8qZBFnh9rgDFhSdgtkm0dunXHM5/55EFXVy6XZfEKQcbuPDR4xdEMcHYLByNWJXNns6
+         IjlMx+mXyBCOxNexUV8S9todbAhrW2dznldDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hSoC8nCs+Ob8KpfWiAi2Egv+8x1VlTi1X6Jdz/e0TiE=;
-        b=W+unFNZMoJflhP6fmofeL+orzhL4sRe6exmjJVIErMEAnsNAX8zsYNtqYwxjed+THM
-         3/7fub0QFXAc0d6CsP5bS3VRvIDRNjE/BaAVd51wnWUzhJtWQPSv/Cwp7qIoCTPtqeF5
-         2mu39Iz8NrOgTFrDiWWUuCqI6VCdyq42pgO2US+tKN6mUlo4DM2dseAcksC/KWEZoAZ2
-         T+3e5C+OOQc+nEA6mY1Lpc6xv3U4GpPhTSqlvSkFfSQPXifbMfjBQ7592HobjhOnQLFb
-         XalAp+JWmMVy+MDLlNB1to2U3xMj4wCpL0CYHH3e6ZQYCx/CsFY24GF/vfAF4rOXx+iG
-         iBtg==
-X-Gm-Message-State: APjAAAVgRQlB1DfA80pg3qWceAHIMo1IISaROAawWz3Ng/mnqOK4LJzv
-        d5q48lHR1fHRTtmXhlrv1ecXCQ==
-X-Google-Smtp-Source: APXvYqyjnisJdnYjmgXQwAxd0u+GRWZQWek8Q0MirKmW/6kbwY/YptViRFJf/sYkiTHIsQAMpqnmvg==
-X-Received: by 2002:a1c:ca06:: with SMTP id a6mr7504214wmg.48.1562148035749;
-        Wed, 03 Jul 2019 03:00:35 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id e7sm1387470wmd.0.2019.07.03.03.00.33
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=aSerdf2DO7Omic2w+oNZyPee/VO/jfA+Kk59Tlp7L3M=;
+        b=YDR2WnSxn98xiVHY6L2iCCj3yVb1uDyCg9myBFx2bB3SrILKRd72yHVq99UstULiJJ
+         npIc1HH7iTHL9JDlUNpUb2d1K4xaaVDTIidOsQK/gEU0GgevOHcs4t0rZDA+LN2AytOW
+         zedRZA3azljiYRNqqO5NBleTzF+Q6QzgATArLxaJgoFbsstfQAORrlMN4HhJsFZtBgiG
+         VSYlzniGQYJI4xgBVIx77doRUramIwhK0DALPrZJDRdT0SNMOLcyGZ24suwea0SeBZnR
+         KwYkVgcn5PoBqTHZKVJl4eTV9tsB7MDMimT/EWMKZkSKRKYednxYCBCPwRazgdLBmh2c
+         Xefg==
+X-Gm-Message-State: APjAAAXLV+I9bJ6HuDzukZSZ38M3FUf/zQJq94tx5RQaOLi53uWNpmFA
+        vyjuuTNLi3lf9Y7jtOewCXHWxg==
+X-Google-Smtp-Source: APXvYqzT18OCU2y0XM+rXVAOV95cRRI8IZfUaElhsUGDU0cOAnnDhXYeIyzKjKGCVkM2DuuolQu3lw==
+X-Received: by 2002:a50:b107:: with SMTP id k7mr42238866edd.193.1562148113780;
+        Wed, 03 Jul 2019 03:01:53 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id t13sm540506edd.13.2019.07.03.03.01.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:00:35 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 11:00:32 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Changbin Du <changbin.du@intel.com>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 10/11] perf intel-pt: Smatch: Fix potential NULL
- pointer dereference
-Message-ID: <20190703100032.yx5genhqcrit4z5p@holly.lan>
-References: <20190702103420.27540-1-leo.yan@linaro.org>
- <20190702103420.27540-11-leo.yan@linaro.org>
- <cfef1777-141e-4223-e0c1-1a3f3aee1d3c@intel.com>
- <20190703013553.GB6852@leoy-ThinkPad-X240s>
+        Wed, 03 Jul 2019 03:01:53 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 12:01:49 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds VRR support
+Message-ID: <20190703100149.GF15868@phenom.ffwll.local>
+Mail-Followup-To: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+References: <1562138723-29546-1-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190703013553.GB6852@leoy-ThinkPad-X240s>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1562138723-29546-1-git-send-email-lowry.li@arm.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 09:35:54AM +0800, Leo Yan wrote:
-> Hi Adrian,
+On Wed, Jul 03, 2019 at 07:26:16AM +0000, Lowry Li (Arm Technology China) wrote:
+> Adds a new drm property "vrr" and "vrr_enable" and implemented
+> the set/get functions, through which userspace could set vfp
+> data to komeda.
 > 
-> On Tue, Jul 02, 2019 at 02:07:40PM +0300, Adrian Hunter wrote:
-> > On 2/07/19 1:34 PM, Leo Yan wrote:
-> > > Based on the following report from Smatch, fix the potential
-> > > NULL pointer dereference check.
-> > 
-> > It never is NULL.  Remove the NULL test if you want:
-> > 
-> > -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> > +	if (session->itrace_synth_opts->set) {
-> > 
-> > But blindly making changes like below is questionable.
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  .../gpu/drm/arm/display/komeda/d71/d71_component.c |  6 +++
+>  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   | 62 ++++++++++++++++++++++
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.h    | 12 +++++
+>  .../gpu/drm/arm/display/komeda/komeda_pipeline.h   |  4 +-
+>  4 files changed, 83 insertions(+), 1 deletion(-)
 > 
-> Thanks for suggestions.
+> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> index ed3f273..c1355f5 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> @@ -1065,6 +1065,7 @@ static void d71_timing_ctrlr_update(struct komeda_component *c,
+>  				    struct komeda_component_state *state)
+>  {
+>  	struct drm_crtc_state *crtc_st = state->crtc->state;
+> +	struct komeda_crtc_state *kcrtc_st = to_kcrtc_st(crtc_st);
+>  	struct drm_display_mode *mode = &crtc_st->adjusted_mode;
+>  	u32 __iomem *reg = c->reg;
+>  	u32 hactive, hfront_porch, hback_porch, hsync_len;
+> @@ -1102,6 +1103,9 @@ static void d71_timing_ctrlr_update(struct komeda_component *c,
+>  		value |= BS_CTRL_DL;
+>  	}
+>  
+> +	if (kcrtc_st->en_vrr)
+> +		malidp_write32_mask(reg, BS_VINTERVALS, 0x3FFF, kcrtc_st->vfp);
+> +
+>  	malidp_write32(reg, BLK_CONTROL, value);
+>  }
+>  
+> @@ -1171,6 +1175,8 @@ static int d71_timing_ctrlr_init(struct d71_dev *d71,
+>  	ctrlr = to_ctrlr(c);
+>  
+>  	ctrlr->supports_dual_link = true;
+> +	ctrlr->supports_vrr = true;
+> +	set_range(&ctrlr->vfp_range, 0, 0x3FF);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> index 4f580b0..3744e6d 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -467,6 +467,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc)
+>  
+>  	state = kzalloc(sizeof(*state), GFP_KERNEL);
+>  	if (state) {
+> +		state->vfp = 0;
+> +		state->en_vrr = 0;
+>  		crtc->state = &state->base;
+>  		crtc->state->crtc = crtc;
+>  	}
+> @@ -487,6 +489,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc)
+>  	new->affected_pipes = old->active_pipes;
+>  	new->clock_ratio = old->clock_ratio;
+>  	new->max_slave_zorder = old->max_slave_zorder;
+> +	new->vfp = old->vfp;
+> +	new->en_vrr = old->en_vrr;
+>  
+>  	return &new->base;
+>  }
+> @@ -525,6 +529,30 @@ static void komeda_crtc_vblank_disable(struct drm_crtc *crtc)
+>  
+>  	if (property == kcrtc->clock_ratio_property) {
+>  		*val = kcrtc_st->clock_ratio;
+> +	} else if (property == kcrtc->vrr_property) {
+> +		*val = kcrtc_st->vfp;
+> +	} else if (property == kcrtc->vrr_enable_property) {
+> +		*val = kcrtc_st->en_vrr;
+> +	} else {
+> +		DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int komeda_crtc_atomic_set_property(struct drm_crtc *crtc,
+> +					   struct drm_crtc_state *state,
+> +					   struct drm_property *property,
+> +					   uint64_t val)
+> +{
+> +	struct komeda_crtc *kcrtc = to_kcrtc(crtc);
+> +	struct komeda_crtc_state *kcrtc_st = to_kcrtc_st(state);
+> +
+> +	if (property == kcrtc->vrr_property) {
+> +		kcrtc_st->vfp = val;
+> +	} else if (property == kcrtc->vrr_enable_property) {
+> +		kcrtc_st->en_vrr = val;
+>  	} else {
+>  		DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
+>  		return -EINVAL;
+> @@ -544,6 +572,7 @@ static void komeda_crtc_vblank_disable(struct drm_crtc *crtc)
+>  	.enable_vblank		= komeda_crtc_vblank_enable,
+>  	.disable_vblank		= komeda_crtc_vblank_disable,
+>  	.atomic_get_property	= komeda_crtc_atomic_get_property,
+> +	.atomic_set_property	= komeda_crtc_atomic_set_property,
+>  };
+>  
+>  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms,
+> @@ -613,6 +642,35 @@ static int komeda_crtc_create_slave_planes_property(struct komeda_crtc *kcrtc)
+>  	return 0;
+>  }
+>  
+> +static int komeda_crtc_create_vrr_property(struct komeda_crtc *kcrtc)
+> +{
+> +	struct drm_crtc *crtc = &kcrtc->base;
+> +	struct drm_property *prop;
+> +	struct komeda_timing_ctrlr *ctrlr = kcrtc->master->ctrlr;
+> +
+> +	if (!ctrlr->supports_vrr)
+> +		return 0;
+> +
+> +	prop = drm_property_create_range(crtc->dev, DRM_MODE_PROP_ATOMIC, "vrr",
+> +					 ctrlr->vfp_range.start,
+> +					 ctrlr->vfp_range.end);
+> +	if (!prop)
+> +		return -ENOMEM;
+> +
+> +	drm_object_attach_property(&crtc->base, prop, 0);
+> +	kcrtc->vrr_property = prop;
+> +
+> +	prop = drm_property_create_bool(crtc->dev, DRM_MODE_PROP_ATOMIC,
+> +					"enable_vrr");
+
+Uh, what exactly are you doing reinventing uapi properties that we already
+standardized?
+
+> +	if (!prop)
+> +		return -ENOMEM;
+> +
+> +	drm_object_attach_property(&crtc->base, prop, 0);
+> +	kcrtc->vrr_enable_property = prop;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct drm_plane *
+>  get_crtc_primary(struct komeda_kms_dev *kms, struct komeda_crtc *crtc)
+>  {
+> @@ -659,6 +717,10 @@ static int komeda_crtc_add(struct komeda_kms_dev *kms,
+>  	if (err)
+>  		return err;
+>  
+> +	err = komeda_crtc_create_vrr_property(kcrtc);
+> +	if (err)
+> +		return err;
+> +
+>  	return err;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> index dc1d436..d0cf838 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> @@ -98,6 +98,12 @@ struct komeda_crtc {
+>  
+>  	/** @slave_planes_property: property for slaves of the planes */
+>  	struct drm_property *slave_planes_property;
+
+And this seems to not be the first time this happened. Looking at komeda
+with a quick git grep on properties you've actually accumulated quite a
+pile of such driver properties already. Where's the userspace for this?
+Where's the uapi discussions for this stuff? Where's the igt tests for
+this (yes a bunch are after we agreed to have testcases for this).
+
+I know that in the past we've been somewhat sloppy properties, but that
+was a mistake and we've cranked down on this hard. Probably need to fix
+this with a pile of reverts and start over.
+-Daniel
+
+> +
+> +	/** @vrr_property: property for variable refresh rate */
+> +	struct drm_property *vrr_property;
+> +
+> +	/** @vrr_enable_property: property for enable/disable the vrr */
+> +	struct drm_property *vrr_enable_property;
+>  };
+>  
+>  /**
+> @@ -126,6 +132,12 @@ struct komeda_crtc_state {
+>  
+>  	/** @max_slave_zorder: the maximum of slave zorder */
+>  	u32 max_slave_zorder;
+> +
+> +	/** @vfp: the value of vertical front porch */
+> +	u32 vfp;
+> +
+> +	/** @en_vrr: enable status of variable refresh rate */
+> +	u8 en_vrr : 1;
+>  };
+>  
+>  /** struct komeda_kms_dev - for gather KMS related things */
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> index 00e8083..66d7664 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> @@ -336,7 +336,9 @@ struct komeda_improc_state {
+>  /* display timing controller */
+>  struct komeda_timing_ctrlr {
+>  	struct komeda_component base;
+> -	u8 supports_dual_link : 1;
+> +	u8 supports_dual_link : 1,
+> +	   supports_vrr : 1;
+> +	struct malidp_range vfp_range;
+>  };
+>  
+>  struct komeda_timing_ctrlr_state {
+> -- 
+> 1.9.1
 > 
-> I checked report and script commands, as you said, both command will
-> always set session->itrace_synth_opts.  For these two commands, we can
-> safely remove the NULL test.
-> 
-> Because perf tool contains many sub commands, so I don't have much
-> confidence it's very safe to remove the NULL test for all cases; e.g.
-> there have cases which will process aux trace buffer but without
-> itrace options; for this case, session->itrace_synth_opts might be NULL.
-> 
-> For either way (remove NULL test or keep NULL test), I don't want to
-> introduce regression and extra efforts by my patch.  So want to double
-> confirm with you for this :)
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Review is useful to ensure the chosen solution is correct but
-unless I missed something the non-regression reasoning here is easy
-easy. In its original form and despite the check, the code will
-always dereference session->itrace_synth_opts, therefore removing
-the check cannot makes things worse.
-
-
-Daniel.
-
-
-PS Of course we do also have to check that
-   itrace_synth_opts__set_default() isn't a macro... but it isn't.
-
-
-> > >   tools/perf/util/intel-pt.c:3200
-> > >   intel_pt_process_auxtrace_info() error: we previously assumed
-> > >   'session->itrace_synth_opts' could be null (see line 3196)
-> > > 
-> > >   tools/perf/util/intel-pt.c:3206
-> > >   intel_pt_process_auxtrace_info() warn: variable dereferenced before
-> > >   check 'session->itrace_synth_opts' (see line 3200)
-> > > 
-> > > tools/perf/util/intel-pt.c
-> > > 3196         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> > > 3197                 pt->synth_opts = *session->itrace_synth_opts;
-> > > 3198         } else {
-> > > 3199                 itrace_synth_opts__set_default(&pt->synth_opts,
-> > > 3200                                 session->itrace_synth_opts->default_no_sample);
-> > >                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > 3201                 if (!session->itrace_synth_opts->default_no_sample &&
-> > > 3202                     !session->itrace_synth_opts->inject) {
-> > > 3203                         pt->synth_opts.branches = false;
-> > > 3204                         pt->synth_opts.callchain = true;
-> > > 3205                 }
-> > > 3206                 if (session->itrace_synth_opts)
-> > >                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > 3207                         pt->synth_opts.thread_stack =
-> > > 3208                                 session->itrace_synth_opts->thread_stack;
-> > > 3209         }
-> > > 
-> > > To dismiss the potential NULL pointer dereference, this patch validates
-> > > the pointer 'session->itrace_synth_opts' before access its elements.
-> > > 
-> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > ---
-> > >  tools/perf/util/intel-pt.c | 5 ++---
-> > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> > > index 550db6e77968..88b567bdf1f9 100644
-> > > --- a/tools/perf/util/intel-pt.c
-> > > +++ b/tools/perf/util/intel-pt.c
-> > > @@ -3195,7 +3195,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
-> > >  
-> > >  	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> > >  		pt->synth_opts = *session->itrace_synth_opts;
-> > > -	} else {
-> > > +	} else if (session->itrace_synth_opts) {
-> > >  		itrace_synth_opts__set_default(&pt->synth_opts,
-> > >  				session->itrace_synth_opts->default_no_sample);
-> > >  		if (!session->itrace_synth_opts->default_no_sample &&
-> > > @@ -3203,8 +3203,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
-> > >  			pt->synth_opts.branches = false;
-> > >  			pt->synth_opts.callchain = true;
-> > >  		}
-> > > -		if (session->itrace_synth_opts)
-> > > -			pt->synth_opts.thread_stack =
-> > > +		pt->synth_opts.thread_stack =
-> > >  				session->itrace_synth_opts->thread_stack;
-> > >  	}
-> > >  
-> > > 
-> > 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
