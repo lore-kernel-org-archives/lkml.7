@@ -2,102 +2,117 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504D9C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF05CC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244EB2184C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="j8ufLMJq"
+	by mail.kernel.org (Postfix) with ESMTP id 8617E20659
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562177278;
+	bh=ZxI9gMDVDvOvvdaFk/4FqawZmpkLnN9reXrQQEldQl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pa85SR0zeZ5i6nTzAhM4mdiAqpjhAmvseqCA/Wd76MvzlTiCFKfh80jWy9YlKoYyn
+	 636cA/tbsWSLEzfzZBexio0Dw62c0fzFVvDGjqOwL9FAO/tNyJ81jlfKKVI832ouTD
+	 3Oq/qde64ErhrySrR3/ouP1bxqwiRH00wQAaIhr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfGCSHE (ORCPT
+        id S1727076AbfGCSH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:07:04 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:59254 "EHLO mail.z3ntu.xyz"
+        Wed, 3 Jul 2019 14:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfGCSHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:07:01 -0400
-Received: from localhost.localdomain (80-110-121-20.cgn.dynamic.surfer.at [80.110.121.20])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 7B752C6432;
-        Wed,  3 Jul 2019 18:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1562177219; bh=aPToY7twoPc/frU4dp+Z2DD+iPJlG9FAsZ0bAsYXf04=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=j8ufLMJqJsEuP/4OP3alP0ja620IMh7DMJe4xw6oONMHuHLt9efUqnYTvwaRxyW/g
-         +lFZFu1QHNrqzi4x4vazeTCYph2ZnAx/ba4Awljv/zJpN6FtgAy+sw5jCN0HjgnW+n
-         6ul7a+hJiSbByBjHqXrPu2Dxg3lVRTUBQ4AnpTjM=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-iio@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Hannes Schmelzer <hannes.schmelzer@br-automation.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Martijn Braam <martijn@brixit.nl>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~martijnbraam/pmos-upstream@lists.sr.ht,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Subject: [PATCH 3/3] iio: light: stk3310: Add device tree support
-Date:   Wed,  3 Jul 2019 20:05:59 +0200
-Message-Id: <20190703180604.9840-3-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190703180604.9840-1-luca@z3ntu.xyz>
-References: <20190703180604.9840-1-luca@z3ntu.xyz>
+        id S1726574AbfGCSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:07:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E29B120659;
+        Wed,  3 Jul 2019 18:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562177276;
+        bh=ZxI9gMDVDvOvvdaFk/4FqawZmpkLnN9reXrQQEldQl0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fBBCK7og15DSyF/hOj2RnfgNRUSXku173qRIunFe/CHFoGjzefwa0z5F7vH8glKEd
+         HFGwlyQ4kUdP+spPljGC3ojj533UJgKIRefjIlVgDprO+HcMoJGxZqLWEb3l+tKlVf
+         JDlhw9ig0jIKywgEkhCmI+Pl6STPdn3HaYgXeRBw=
+Date:   Wed, 3 Jul 2019 20:07:53 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Wu Hao <hao.wu@intel.com>,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
+ DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+Message-ID: <20190703180753.GA24723@kroah.com>
+References: <20190628004951.6202-1-mdf@kernel.org>
+ <20190628004951.6202-7-mdf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190628004951.6202-7-mdf@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree support for the stk33xx family of ambient light sensors.
+On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
+> From: Wu Hao <hao.wu@intel.com>
+> 
+> In order to support virtualization usage via PCIe SRIOV, this patch
+> adds two ioctls under FPGA Management Engine (FME) to release and
+> assign back the port device. In order to safely turn Port from PF
+> into VF and enable PCIe SRIOV, it requires user to invoke this
+> PORT_RELEASE ioctl to release port firstly to remove userspace
+> interfaces, and then configure the PF/VF access register in FME.
+> After disable SRIOV, it requires user to invoke this PORT_ASSIGN
+> ioctl to attach the port back to PF.
+> 
+>  Ioctl interfaces:
+>  * DFL_FPGA_FME_PORT_RELEASE
+>    Release platform device of given port, it deletes port platform
+>    device to remove related userspace interfaces on PF, then
+>    configures PF/VF access mode to VF.
+> 
+>  * DFL_FPGA_FME_PORT_ASSIGN
+>    Assign platform device of given port back to PF, it configures
+>    PF/VF access mode to PF, then adds port platform device back to
+>    re-enable related userspace interfaces on PF.
 
-Tested-by: Martijn Braam <martijn@brixit.nl>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/iio/light/stk3310.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Why are you not using the "generic" bind/unbind facility that userspace
+already has for this with binding drivers to devices?  Why a special
+ioctl?
 
-diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
-index b955183edfe8..185c24a75ae6 100644
---- a/drivers/iio/light/stk3310.c
-+++ b/drivers/iio/light/stk3310.c
-@@ -679,9 +679,18 @@ static const struct acpi_device_id stk3310_acpi_id[] = {
- 
- MODULE_DEVICE_TABLE(acpi, stk3310_acpi_id);
- 
-+static const struct of_device_id stk3310_of_match[] = {
-+	{ .compatible = "sensortek,stk3310", },
-+	{ .compatible = "sensortek,stk3311", },
-+	{ .compatible = "sensortek,stk3335", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, stk3310_of_match);
-+
- static struct i2c_driver stk3310_driver = {
- 	.driver = {
- 		.name = "stk3310",
-+		.of_match_table = stk3310_of_match,
- 		.pm = STK3310_PM_OPS,
- 		.acpi_match_table = ACPI_PTR(stk3310_acpi_id),
- 	},
--- 
-2.22.0
+> --- a/include/uapi/linux/fpga-dfl.h
+> +++ b/include/uapi/linux/fpga-dfl.h
+> @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
+>  
+>  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
+>  
+> +/**
+> + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
+> + *					struct dfl_fpga_fme_port_release)
+> + *
+> + * Driver releases the port per Port ID provided by caller.
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +struct dfl_fpga_fme_port_release {
+> +	/* Input */
+> +	__u32 argsz;		/* Structure length */
+> +	__u32 flags;		/* Zero for now */
+> +	__u32 port_id;
+> +};
 
+meta-comment, why do all of your structures for ioctls have argsz?  You
+"know" the size of the structure already, it's part of the ioctl
+definition.  You shouldn't need to also set it again, right?  Otherwise
+ALL Linux ioctls would need something crazy like this.
+
+thanks,
+
+greg k-h
