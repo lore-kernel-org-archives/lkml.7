@@ -2,192 +2,217 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43298C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01EDC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E20321850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qs5PqRNz"
+	by mail.kernel.org (Postfix) with ESMTP id C7AC621850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562164261;
+	bh=Tc67iOYKOnhcj6xw3ykPYuHASpmsGFxuHzhwP5CK3tU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AoxG5nv7URMDRJEEyAgLQHlwdVb4cXeHmwuMkRmqilloWJGU6hJDg3iZcGvuOW8bK
+	 Az68yNOmIjCMc0kXIWypn7Gvr/lOGNGYCG2acK0jl/4hTZ69U0VHGI9UbUPER+42zI
+	 YxvaG5shfgierLs6FkBCxhxgkt6nnPAvjw8FRQM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfGCOaa (ORCPT
+        id S1727027AbfGCObA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:30:30 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35995 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfGCOaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:30:30 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63ETEvY3326977
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:29:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63ETEvY3326977
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562164155;
-        bh=uZpO31xVY2Ag8uoOXFHDUwuOrzNCk5z+2XOby4/sCr4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Qs5PqRNzIjYYxIlaSXWSGwNYDHqwovExs9fxeqp0y7x8oUrDw4+8Ep4binn0SUU8i
-         72i1hqwwzOdR0iUF8w4JoCfHSuOhjJ7MgQ/nG/aPnvO6fDHez2i5U5d9Okc9odm35Z
-         rOf9LWmQMF9Pl3QGc1kw9Vn4N6mx4d8deRfAXS41TltDezjBZ7l9r/hhiZTRhklelE
-         9hfdMOM4Uul9hGHNu2ylJim05iKQ63fi5fBIfN5rnk1+IR2H+4UHJAZlT/laKFD4s2
-         YxvssncaHLmyNJMumPPARoJY3nbMUO4izaCwdMJGdt0IFpkWTWvGCfK5Bx4qzHBsxm
-         XjA3nNVhDLF0Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63ETEeW3326971;
-        Wed, 3 Jul 2019 07:29:14 -0700
-Date:   Wed, 3 Jul 2019 07:29:14 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-2f87f33f4226523df9c9cc28f9874ea02fcc3d3f@git.kernel.org>
-Cc:     tglx@linutronix.de, ak@linux.intel.com, kan.liang@linux.intel.com,
-        mingo@kernel.org, acme@redhat.com, jolsa@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org
-Reply-To: tglx@linutronix.de, ak@linux.intel.com, mingo@kernel.org,
-          kan.liang@linux.intel.com, hpa@zytor.com, acme@redhat.com,
-          jolsa@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20190624193711.35241-4-andi@firstfloor.org>
-References: <20190624193711.35241-4-andi@firstfloor.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf stat: Fix group lookup for metric group
-Git-Commit-ID: 2f87f33f4226523df9c9cc28f9874ea02fcc3d3f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Jul 2019 10:31:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47884 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbfGCObA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:31:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3C80AD76;
+        Wed,  3 Jul 2019 14:30:58 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 16:30:57 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Kuo-Hsin Yang <vovoy@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: scan anonymous pages on file refaults
+Message-ID: <20190703143057.GQ978@dhcp22.suse.cz>
+References: <20190628111627.GA107040@google.com>
+ <20190701081038.GA83398@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190701081038.GA83398@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2f87f33f4226523df9c9cc28f9874ea02fcc3d3f
-Gitweb:     https://git.kernel.org/tip/2f87f33f4226523df9c9cc28f9874ea02fcc3d3f
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Mon, 24 Jun 2019 12:37:10 -0700
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 1 Jul 2019 22:50:41 -0300
+On Mon 01-07-19 16:10:38, Kuo-Hsin Yang wrote:
+> When file refaults are detected and there are many inactive file pages,
+> the system never reclaim anonymous pages, the file pages are dropped
+> aggressively when there are still a lot of cold anonymous pages and
+> system thrashes.  This issue impacts the performance of applications
+> with large executable, e.g. chrome.
+> 
+> With this patch, when file refault is detected, inactive_list_is_low()
+> always returns true for file pages in get_scan_count() to enable
+> scanning anonymous pages.
+> 
+> The problem can be reproduced by the following test program.
+> 
+> ---8<---
+> void fallocate_file(const char *filename, off_t size)
+> {
+> 	struct stat st;
+> 	int fd;
+> 
+> 	if (!stat(filename, &st) && st.st_size >= size)
+> 		return;
+> 
+> 	fd = open(filename, O_WRONLY | O_CREAT, 0600);
+> 	if (fd < 0) {
+> 		perror("create file");
+> 		exit(1);
+> 	}
+> 	if (posix_fallocate(fd, 0, size)) {
+> 		perror("fallocate");
+> 		exit(1);
+> 	}
+> 	close(fd);
+> }
+> 
+> long *alloc_anon(long size)
+> {
+> 	long *start = malloc(size);
+> 	memset(start, 1, size);
+> 	return start;
+> }
+> 
+> long access_file(const char *filename, long size, long rounds)
+> {
+> 	int fd, i;
+> 	volatile char *start1, *end1, *start2;
+> 	const int page_size = getpagesize();
+> 	long sum = 0;
+> 
+> 	fd = open(filename, O_RDONLY);
+> 	if (fd == -1) {
+> 		perror("open");
+> 		exit(1);
+> 	}
+> 
+> 	/*
+> 	 * Some applications, e.g. chrome, use a lot of executable file
+> 	 * pages, map some of the pages with PROT_EXEC flag to simulate
+> 	 * the behavior.
+> 	 */
+> 	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
+> 		      fd, 0);
+> 	if (start1 == MAP_FAILED) {
+> 		perror("mmap");
+> 		exit(1);
+> 	}
+> 	end1 = start1 + size / 2;
+> 
+> 	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
+> 	if (start2 == MAP_FAILED) {
+> 		perror("mmap");
+> 		exit(1);
+> 	}
+> 
+> 	for (i = 0; i < rounds; ++i) {
+> 		struct timeval before, after;
+> 		volatile char *ptr1 = start1, *ptr2 = start2;
+> 		gettimeofday(&before, NULL);
+> 		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
+> 			sum += *ptr1 + *ptr2;
+> 		gettimeofday(&after, NULL);
+> 		printf("File access time, round %d: %f (sec)\n", i,
+> 		       (after.tv_sec - before.tv_sec) +
+> 		       (after.tv_usec - before.tv_usec) / 1000000.0);
+> 	}
+> 	return sum;
+> }
+> 
+> int main(int argc, char *argv[])
+> {
+> 	const long MB = 1024 * 1024;
+> 	long anon_mb, file_mb, file_rounds;
+> 	const char filename[] = "large";
+> 	long *ret1;
+> 	long ret2;
+> 
+> 	if (argc != 4) {
+> 		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS\n");
+> 		exit(0);
+> 	}
+> 	anon_mb = atoi(argv[1]);
+> 	file_mb = atoi(argv[2]);
+> 	file_rounds = atoi(argv[3]);
+> 
+> 	fallocate_file(filename, file_mb * MB);
+> 	printf("Allocate %ld MB anonymous pages\n", anon_mb);
+> 	ret1 = alloc_anon(anon_mb * MB);
+> 	printf("Access %ld MB file pages\n", file_mb);
+> 	ret2 = access_file(filename, file_mb * MB, file_rounds);
+> 	printf("Print result to prevent optimization: %ld\n",
+> 	       *ret1 + ret2);
+> 	return 0;
+> }
+> ---8<---
+> 
+> Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the
+> program fills ram with 2048 MB memory, access a 200 MB file for 10
+> times.  Without this patch, the file cache is dropped aggresively and
+> every access to the file is from disk.
+> 
+>   $ ./thrash 2048 200 10
+>   Allocate 2048 MB anonymous pages
+>   Access 200 MB file pages
+>   File access time, round 0: 2.489316 (sec)
+>   File access time, round 1: 2.581277 (sec)
+>   File access time, round 2: 2.487624 (sec)
+>   File access time, round 3: 2.449100 (sec)
+>   File access time, round 4: 2.420423 (sec)
+>   File access time, round 5: 2.343411 (sec)
+>   File access time, round 6: 2.454833 (sec)
+>   File access time, round 7: 2.483398 (sec)
+>   File access time, round 8: 2.572701 (sec)
+>   File access time, round 9: 2.493014 (sec)
+> 
+> With this patch, these file pages can be cached.
+> 
+>   $ ./thrash 2048 200 10
+>   Allocate 2048 MB anonymous pages
+>   Access 200 MB file pages
+>   File access time, round 0: 2.475189 (sec)
+>   File access time, round 1: 2.440777 (sec)
+>   File access time, round 2: 2.411671 (sec)
+>   File access time, round 3: 1.955267 (sec)
+>   File access time, round 4: 0.029924 (sec)
+>   File access time, round 5: 0.000808 (sec)
+>   File access time, round 6: 0.000771 (sec)
+>   File access time, round 7: 0.000746 (sec)
+>   File access time, round 8: 0.000738 (sec)
+>   File access time, round 9: 0.000747 (sec)
 
-perf stat: Fix group lookup for metric group
+How does the reclaim behave with workloads with file backed data set
+not fitting into the memory? Aren't we going to to swap a lot -
+something that the heuristic is protecting from?
 
-The metric group code tries to find a group it added earlier in the
-evlist. Fix the lookup to handle groups with partially overlaps
-correctly. When a sub string match fails and we reset the match, we have
-to compare the first element again.
+> Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
+> Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
+> Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: <stable@vger.kernel.org> # 4.12+
 
-I also renamed the find_evsel function to find_evsel_group to make its
-purpose clearer.
-
-With the earlier changes this fixes:
-
-Before:
-
-  % perf stat -M UPI,IPC sleep 1
-  ...
-         1,032,922      uops_retired.retire_slots #      1.1 UPI
-         1,896,096      inst_retired.any
-         1,896,096      inst_retired.any
-         1,177,254      cpu_clk_unhalted.thread
-
-After:
-
-  % perf stat -M UPI,IPC sleep 1
-  ...
-        1,013,193      uops_retired.retire_slots #      1.1 UPI
-           932,033      inst_retired.any
-           932,033      inst_retired.any          #      0.9 IPC
-         1,091,245      cpu_clk_unhalted.thread
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: b18f3e365019 ("perf stat: Support JSON metrics in perf stat")
-Link: http://lkml.kernel.org/r/20190624193711.35241-4-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 90cd84e2a503..bc25995255ab 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -85,26 +85,49 @@ struct egroup {
- 	const char *metric_expr;
- };
- 
--static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
--				     const char **ids,
--				     int idnum,
--				     struct perf_evsel **metric_events)
-+static bool record_evsel(int *ind, struct perf_evsel **start,
-+			 int idnum,
-+			 struct perf_evsel **metric_events,
-+			 struct perf_evsel *ev)
-+{
-+	metric_events[*ind] = ev;
-+	if (*ind == 0)
-+		*start = ev;
-+	if (++*ind == idnum) {
-+		metric_events[*ind] = NULL;
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
-+					   const char **ids,
-+					   int idnum,
-+					   struct perf_evsel **metric_events)
- {
- 	struct perf_evsel *ev, *start = NULL;
- 	int ind = 0;
- 
- 	evlist__for_each_entry (perf_evlist, ev) {
-+		if (ev->collect_stat)
-+			continue;
- 		if (!strcmp(ev->name, ids[ind])) {
--			metric_events[ind] = ev;
--			if (ind == 0)
--				start = ev;
--			if (++ind == idnum) {
--				metric_events[ind] = NULL;
-+			if (record_evsel(&ind, &start, idnum,
-+					 metric_events, ev))
- 				return start;
--			}
- 		} else {
-+			/*
-+			 * We saw some other event that is not
-+			 * in our list of events. Discard
-+			 * the whole match and start again.
-+			 */
- 			ind = 0;
- 			start = NULL;
-+			if (!strcmp(ev->name, ids[ind])) {
-+				if (record_evsel(&ind, &start, idnum,
-+						 metric_events, ev))
-+					return start;
-+			}
- 		}
- 	}
- 	/*
-@@ -134,8 +157,8 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			ret = -ENOMEM;
- 			break;
- 		}
--		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
--				   metric_events);
-+		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
-+					 metric_events);
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
+-- 
+Michal Hocko
+SUSE Labs
