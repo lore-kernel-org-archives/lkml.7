@@ -2,198 +2,608 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC5DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD72C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5677C21721
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fujitsu.onmicrosoft.com header.i=@fujitsu.onmicrosoft.com header.b="b1zWJ6Ln"
+	by mail.kernel.org (Postfix) with ESMTP id 6DFBC21721
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfGCCpx (ORCPT
+        id S1727411AbfGCCxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:45:53 -0400
-Received: from esa20.fujitsucc.c3s2.iphmx.com ([216.71.158.65]:33702 "EHLO
-        esa20.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726430AbfGCCpw (ORCPT
+        Tue, 2 Jul 2019 22:53:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22024 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbfGCCxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:45:52 -0400
-X-IronPort-AV: E=McAfee;i="6000,8403,9306"; a="4806661"
-X-IronPort-AV: E=Sophos;i="5.63,445,1557154800"; 
-   d="scan'208";a="4806661"
-Received: from mail-ty1jpn01lp2050.outbound.protection.outlook.com (HELO JPN01-TY1-obe.outbound.protection.outlook.com) ([104.47.93.50])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jul 2019 11:45:46 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector1-fujitsu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zKZcpOoFqfOdgRPnmJeccFquOud/T2brELsNWogYUig=;
- b=b1zWJ6Lnojg8Jzvh60hsQneJ6+l+ZoMpkDhM7ia7Dwn2XCD93rz3p//tr0JBSj7zWZlJ5v15xi+gC5HnFiWy9SN1zxGjzVZNdbAcaiplA7f40Ada9RSKb4LbKLK1us33C3eY77dfEobfP4FGwcemydvx8qJgxz2Jmnk10BY+UlQ=
-Received: from OSAPR01MB4993.jpnprd01.prod.outlook.com (20.179.178.151) by
- OSAPR01MB1970.jpnprd01.prod.outlook.com (52.134.235.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.17; Wed, 3 Jul 2019 02:45:43 +0000
-Received: from OSAPR01MB4993.jpnprd01.prod.outlook.com
- ([fe80::59f0:837d:b06f:9dbd]) by OSAPR01MB4993.jpnprd01.prod.outlook.com
- ([fe80::59f0:837d:b06f:9dbd%5]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 02:45:43 +0000
-From:   "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
-To:     Will Deacon <will@kernel.org>,
-        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
-CC:     Will Deacon <will.deacon@arm.com>,
-        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
- instruction within the same inner shareable domain
-Thread-Topic: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
- instruction within the same inner shareable domain
-Thread-Index: AQHVJRmVihUXsBTsv0iIDHwIrvWdbKagEvcAgAqT5QCABLTDgIAI7WYA
-Date:   Wed, 3 Jul 2019 02:45:43 +0000
-Message-ID: <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
-References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
- <20190617170328.GJ30800@fuggles.cambridge.arm.com>
- <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
- <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
-In-Reply-To: <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qi.fuli@fujitsu.com; 
-x-originating-ip: [114.160.9.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4ab4ca5-e4fb-43d5-284d-08d6ff608b17
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:OSAPR01MB1970;
-x-ms-traffictypediagnostic: OSAPR01MB1970:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <OSAPR01MB19701E6EB1C353066FA2274AF7FB0@OSAPR01MB1970.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(376002)(396003)(39860400002)(189003)(199004)(2906002)(6436002)(8936002)(68736007)(4326008)(31696002)(8676002)(31686004)(186003)(7736002)(476003)(966005)(81166006)(86362001)(6486002)(66446008)(305945005)(53936002)(71190400001)(64756008)(66556008)(66476007)(71200400001)(478600001)(81156014)(73956011)(66946007)(486006)(99286004)(76116006)(256004)(316002)(76176011)(14444005)(66066001)(6506007)(53546011)(6512007)(3846002)(102836004)(25786009)(54906003)(446003)(110136005)(26005)(11346002)(5660300002)(14454004)(6246003)(229853002)(85182001)(6116002)(6306002)(777600001);DIR:OUT;SFP:1101;SCL:1;SRVR:OSAPR01MB1970;H:OSAPR01MB4993.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MJ85Zbk0ejfeqNRHSsVBjer52CAFTxFHXmDYsonueIj4A1hmJ8brdkBDOSeUBILRwERGZIKdFYP4kEsglYIXAG5wygvWb0VqAiUjuOQqICDgu8s0AA0tx7IJ32d/PkFVQ3nTQp90SHeCCtrgnrSbfndG+lla4dx/6+QSybWhEtC/Fo8il6jOZ4JWvo71TLuJzdcIz3MXsjj85ONvKVymYCTUZIulLd+2NRZ6Kyk5fejs/1sBCCsRkoh598J5ywxPpDXHlkd/ScGLXY7eRqM7tShT6EdNrNulGCEBdeFQ3/piQRm9s99ZZYR/Ih8mQIwHDZnN5ExW73pUk/ZWtPC6cSBJajhz3B4h5syjx7AUJXOUpfEBrHalirGl5AorfIQAVZKv1gwTdcFgp5gdxjk4pQZ6+HH0EaPsoAq1T8bAFKg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9AFE113769931F44996C217BB96D8C55@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 2 Jul 2019 22:53:12 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x632q9Fo066066
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2019 22:53:08 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tgj213est-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 22:53:08 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 3 Jul 2019 03:53:05 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 03:53:04 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x632qqiR34341138
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 02:52:52 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17C97A4053;
+        Wed,  3 Jul 2019 02:53:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FB45A404D;
+        Wed,  3 Jul 2019 02:53:00 +0000 (GMT)
+Received: from [9.85.75.18] (unknown [9.85.75.18])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Jul 2019 02:53:00 +0000 (GMT)
+Subject: Re: [RFC PATCH v2 09/12] powerpc/ptrace: split out ADV_DEBUG_REGS
+ related functions.
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1561735587.git.christophe.leroy@c-s.fr>
+ <79b765523f7d45f93cc3b636fec57055f52801b3.1561735588.git.christophe.leroy@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 3 Jul 2019 08:22:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4ab4ca5-e4fb-43d5-284d-08d6ff608b17
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 02:45:43.4668
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qi.fuli@jp.fujitsu.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1970
+In-Reply-To: <79b765523f7d45f93cc3b636fec57055f52801b3.1561735588.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070302-0028-0000-0000-0000037FD689
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070302-0029-0000-0000-0000244012C6
+Message-Id: <62ced601-d768-65e8-cdcd-bb649259390c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgV2lsbCwNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KDQpPbiA2LzI3LzE5IDc6Mjcg
-UE0sIFdpbGwgRGVhY29uIHdyb3RlOg0KPiBPbiBNb24sIEp1biAyNCwgMjAxOSBhdCAxMDozNDow
-MkFNICswMDAwLCBxaS5mdWxpQGZ1aml0c3UuY29tIHdyb3RlOg0KPj4gT24gNi8xOC8xOSAyOjAz
-IEFNLCBXaWxsIERlYWNvbiB3cm90ZToNCj4+PiBPbiBNb24sIEp1biAxNywgMjAxOSBhdCAxMToz
-Mjo1M1BNICswOTAwLCBUYWthbyBJbmRvaCB3cm90ZToNCj4+Pj4gRnJvbTogVGFrYW8gSW5kb2gg
-PGluZG91LnRha2FvQGZ1aml0c3UuY29tPg0KPj4+Pg0KPj4+PiBJIGZvdW5kIGEgcGVyZm9ybWFu
-Y2UgaXNzdWUgcmVsYXRlZCBvbiB0aGUgaW1wbGVtZW50YXRpb24gb2YgTGludXgncyBUTEINCj4+
-Pj4gZmx1c2ggZm9yIGFybTY0Lg0KPj4+Pg0KPj4+PiBXaGVuIEkgcnVuIGEgc2luZ2xlLXRocmVh
-ZGVkIHRlc3QgcHJvZ3JhbSBvbiBtb2RlcmF0ZSBlbnZpcm9ubWVudCwgaXQNCj4+Pj4gdXN1YWxs
-eSB0YWtlcyAzOW1zIHRvIGZpbmlzaCBpdHMgd29yay4gSG93ZXZlciwgd2hlbiBJIHB1dCBhIHNt
-YWxsDQo+Pj4+IGFwcHJpY2F0aW9uLCB3aGljaCBqdXN0IGNhbGxzIG1wcm90ZXN0KCkgY29udGlu
-dW91c2x5LCBvbiBvbmUgb2Ygc2libGluZw0KPj4+PiBjb3JlcyBhbmQgcnVuIGl0IHNpbXVsdGFu
-ZW91c2x5LCB0aGUgdGVzdCBwcm9ncmFtIHNsb3dzIGRvd24gc2lnbmlmaWNhbnRseS4NCj4+Pj4g
-SXQgYmVjb21lcyA0OW1zKDEyNSUpIG9uIFRodW5kZXJYMi4gSSBhbHNvIGRldGVjdGVkIHRoZSBz
-YW1lIHByb2JsZW0gb24NCj4+Pj4gVGh1bmRlclgxIGFuZCBGdWppdHN1IEE2NEZYLg0KPj4+IFRo
-aXMgaXMgYSBwcm9ibGVtIGZvciBhbnkgYXBwbGljYXRpb25zIHRoYXQgc2hhcmUgaGFyZHdhcmUg
-cmVzb3VyY2VzIHdpdGgNCj4+PiBlYWNoIG90aGVyLCBzbyBJIGRvbid0IHRoaW5rIGl0J3Mgc29t
-ZXRoaW5nIHdlIHNob3VsZCBiZSB0b28gY29uY2VybmVkIGFib3V0DQo+Pj4gYWRkcmVzc2luZyB1
-bmxlc3MgdGhlcmUgaXMgYSBwcmFjdGljYWwgRG9TIHNjZW5hcmlvLCB3aGljaCB0aGVyZSBkb2Vz
-bid0DQo+Pj4gYXBwZWFyIHRvIGJlIGluIHRoaXMgY2FzZS4gSXQgbWF5IGJlIHRoYXQgdGhlIHJl
-YWwgYW5zd2VyIGlzICJkb24ndCBjYWxsDQo+Pj4gbXByb3RlY3QoKSBpbiBhIGxvb3AiLg0KPj4g
-SSB0aGluayB0aGVyZSBoYXMgYmVlbiBhIG1pc3VuZGVyc3RhbmRpbmcsIHBsZWFzZSBsZXQgbWUg
-ZXhwbGFpbi4NCj4+IFRoaXMgYXBwbGljYXRpb24gaXMganVzdCBhbiBleGFtcGxlIHVzaW5nIGZv
-ciByZXByb2R1Y2luZyB0aGUNCj4+IHBlcmZvcm1hbmNlIGlzc3VlIHdlIGZvdW5kLg0KPj4gT3Vy
-IG9yaWdpbmFsIHB1cnBvc2UgaXMgcmVkdWNpbmcgT1Mgaml0dGVyIGJ5IHRoaXMgc2VyaWVzLg0K
-Pj4gVGhlIE9TIGppdHRlciBvbiBtYXNzaXZlbHkgcGFyYWxsZWwgcHJvY2Vzc2luZyBzeXN0ZW1z
-IGhhdmUgYmVlbiBrbm93bg0KPj4gYW5kIHN0dWRpZWQgZm9yIG1hbnkgeWVhcnMuDQo+PiBUaGUg
-Mi41JSBPUyBqaXR0ZXIgY2FuIHJlc3VsdCBpbiBvdmVyIGEgZmFjdG9yIG9mIDIwIHNsb3dkb3du
-IGZvciB0aGUNCj4+IHNhbWUgYXBwbGljYXRpb24gWzFdLg0KPiBJIHRoaW5rIGl0J3Mgd29ydGgg
-cG9pbnRpbmcgb3V0IHRoYXQgdGhlIHN5c3RlbSBpbiBxdWVzdGlvbiB3YXMgbmVpdGhlcg0KPiBB
-Uk0tYmFzZWQgbm9yIHJ1bm5pbmcgTGludXgsIHNvIEknZCBiZSBjYXV0aW91cyBpbiBhcHBseWlu
-ZyB0aGUgY29uY2x1c2lvbnMNCj4gb2YgdGhhdCBwYXBlciBkaXJlY3RseSB0byBvdXIgVExCIGlu
-dmFsaWRhdGlvbiBjb2RlLiBGdXJ0aGVybW9yZSwgdGhlIG5vaXNlDQo+IGJlaW5nIGdlbmVyYXRl
-ZCBpbiB0aGVpciBleHBlcmltZW50cyB1c2VzIGEgdGltZXIgaW50ZXJydXB0LCB3aGljaCBoYXMg
-YQ0KPiAvdmFzdGx5LyBkaWZmZXJlbnQgcHJvZmlsZSB0byBhIERWTSBtZXNzYWdlIGluIHRlcm1z
-IG9mIGJvdGggc3lzdGVtIGltcGFjdA0KPiBhbmQgZnJlcXVlbmN5Lg0KTXkgb3JpZ2luYWwgcHVy
-cG9zZSB3YXMgdG8gZXhwbGFpbiB0aGF0IHRoZSBPUyBqaXR0ZXIgaXMgYSB2aXRhbCBpc3N1ZSBm
-b3INCmxhcmdlLXNjYWxlIEhQQyBlbnZpcm9ubWVudCBieSByZWZlcmVuY2luZyB0aGlzIHBhcGVy
-Lg0KUGxlYXNlIGFsbG93IG1lIHRvIGludHJvZHVjZSB0aGUgaXNzdWUgdGhhdCBoYWQgb2NjdXJy
-ZWQgdG8gb3VyIEhQQyANCmVudmlyb25tZW50Lg0KV2UgdXNlZCBGV1EgWzFdIHRvIGRvIGFuIGV4
-cGVyaW1lbnQgb24gMSBub2RlIG9mIG91ciBIUEMgZW52aXJvbm1lbnQsDQp3ZSBleHBlY3RlZCBp
-dCB3b3VsZCBiZSB0ZW5zIG9mIG1pY3Jvc2Vjb25kcyBvZiBtYXhpbXVtIE9TIGppdHRlciwgYnV0
-IA0KaXQgd2FzDQpodW5kcmVkcyBvZiBtaWNyb3NlY29uZHMsIHdoaWNoIGRpZG4ndCBtZWV0IG91
-ciByZXF1aXJlbWVudC4gV2UgdHJpZWQgdG8gDQpmaW5kDQpvdXQgdGhlIGNhdXNlIGJ5IHVzaW5n
-IGZ0cmFjZSwgYnV0IHdlIGNhbm5vdCBmaW5kIGFueSBwcm9jZXNzZXMgd2hpY2ggd291bGQNCmNh
-dXNlIG5vaXNlIGFuZCBvbmx5IGtuZXcgdGhlIGV4dGVuc2lvbiBvZiBwcm9jZXNzaW5nIHRpbWUu
-IFRoZW4gd2UgDQpjb25maXJtZWQNCnRoZSBDUFUgaW5zdHJ1Y3Rpb24gY291bnQgdGhyb3VnaCBD
-UFUgUE1VLCB3ZSBhbHNvIGRpZG4ndCBmaW5kIGFueSBjaGFuZ2VzLg0KSG93ZXZlciwgd2UgZm91
-bmQgdGhhdCB3aXRoIHRoZSBpbmNyZWFzZSBvZiB0aGF0IHRoZSBUTEIgZmxhc2ggd2FzIGNhbGxl
-ZCwNCnRoZSBub2lzZSB3YXMgYWxzbyBpbmNyZWFzaW5nLiBIZXJlIHdlIHVuZGVyc3Rvb2QgdGhh
-dCB0aGUgY2F1c2Ugb2YgdGhpcyANCmlzc3VlDQppcyB0aGUgaW1wbGVtZW50YXRpb24gb2YgTGlu
-dXgncyBUTEIgZmx1c2ggZm9yIGFybTY0LCBlc3BlY2lhbGx5IHVzZSBvZiANClRMQkktaXMNCmlu
-c3RydWN0aW9uIHdoaWNoIGlzIGEgYnJvYWRjYXN0IHRvIGFsbCBwcm9jZXNzb3IgY29yZSBvbiB0
-aGUgc3lzdGVtLiANClRoZXJlZm9yZSwNCndlIG1hZGUgdGhpcyBwYXRjaCBzZXQgdG8gZml4IHRo
-aXMgaXNzdWUuIEFmdGVyIHRlc3RpbmcgZm9yIHNldmVyYWwgDQp0aW1lcywgdGhlDQpub2lzZSB3
-YXMgcmVkdWNlZCBhbmQgb3VyIG9yaWdpbmFsIGdvYWwgd2FzIGFjaGlldmVkLCBzbyB3ZSBkbyB0
-aGluayANCnRoaXMgcGF0Y2gNCm1ha2VzIHNlbnNlLg0KDQpBcyBJIG1lbnRpb25lZCwgdGhlIE9T
-IGppdHRlciBpcyBhIHZpdGFsIGlzc3VlIGZvciBsYXJnZS1zY2FsZSBIUEMgDQplbnZpcm9ubWVu
-dC4NCldlIHRyaWVkIGEgbG90IG9mIHRoaW5ncyB0byByZWR1Y2UgdGhlIE9TIGppdHRlci4gT25l
-IG9mIHRoZW0gaXMgdGFzayANCnNlcGFyYXRpb24NCmJldHdlZW4gdGhlIENQVXMgd2hpY2ggYXJl
-IHVzZWQgZm9yIGNvbXB1dGluZyBhbmQgdGhlIENQVXMgd2hpY2ggYXJlIA0KdXNlZCBmb3INCm1h
-aW50ZW5hbmNlLiBBbGwgb2YgdGhlIGRhZW1vbiBwcm9jZXNzZXMgYW5kIEkvTyBpbnRlcnJ1cHRz
-IGFyZSBib3VuZGVuIA0KdG8gdGhlDQptYWludGVuYW5jZSBDUFVzLiBGdXJ0aGVyIG1vcmUsIHdl
-IHVzZWQgbm9oel9mdWxsIHRvIGF2b2lkIHRoZSBub2lzZSANCmNhdXNlZCBieQ0KY29tcHV0aW5n
-IENQVSBpbnRlcnJ1cHRpb24sIGJ1dCBhbGwgb2YgdGhlIENQVXMgd2VyZSBhZmZlY3RlZCBieSBU
-TEJJLWlzDQppbnN0cnVjdGlvbiwgdGhlIHRhc2sgc2VwYXJhdGlvbiBvZiBDUFVzIGRpZG4ndCB3
-b3JrLiBUaGVyZWZvcmUsIHdlIA0Kd291bGQgbGlrZQ0KdG8gaW1wbGVtZW50IHRoYXQgVExCIGZs
-dXNoIGlzIGRvbmUgb24gbWluaW1hbCBDUFVzIHRvIHJlZHVjaW5nIHRoZSBPUyANCmppdHRlcg0K
-YnkgdXNpbmcgdGhpcyBwYXRjaCBzZXQuDQoNClsxXSBodHRwczovL2FzYy5sbG5sLmdvdi9zZXF1
-b2lhL2JlbmNobWFya3MvRlRRX3N1bW1hcnlfdjEuMS5wZGYNCg0KVGhhbmtzLA0KUUkgRnVsaQ0K
-DQo+PiBUaG91Z2ggaXQgbWF5IGJlIGFuIGV4dHJlbWUgZXhhbXBsZSwgcmVkdWNpbmcgdGhlIE9T
-IGppdHRlciBoYXMgYmVlbiBhbg0KPj4gaXNzdWUgaW4gSFBDIGVudmlyb25tZW50Lg0KPj4NCj4+
-IFsxXSBGZXJyZWlyYSwgS3VydCBCLiwgUGF0cmljayBCcmlkZ2VzLCBhbmQgUm9uIEJyaWdodHdl
-bGwuDQo+PiAiQ2hhcmFjdGVyaXppbmcgYXBwbGljYXRpb24gc2Vuc2l0aXZpdHkgdG8gT1MgaW50
-ZXJmZXJlbmNlIHVzaW5nDQo+PiBrZXJuZWwtbGV2ZWwgbm9pc2UgaW5qZWN0aW9uLiIgUHJvY2Vl
-ZGluZ3Mgb2YgdGhlIDIwMDggQUNNL0lFRUUNCj4+IGNvbmZlcmVuY2Ugb24gU3VwZXJjb21wdXRp
-bmcuIElFRUUgUHJlc3MsIDIwMDguDQo+Pg0KPj4+PiBJIHN1cHBvc2UgdGhlIHJvb3QgY2F1c2Ug
-b2YgdGhpcyBpc3N1ZSBpcyB0aGUgaW1wbGVtZW50YXRpb24gb2YgTGludXgncyBUTEINCj4+Pj4g
-Zmx1c2ggZm9yIGFybTY0LCBlc3BlY2lhbGx5IHVzZSBvZiBUTEJJLWlzIGluc3RydWN0aW9uIHdo
-aWNoIGlzIGEgYnJvYWRjYXN0DQo+Pj4+IHRvIGFsbCBwcm9jZXNzb3IgY29yZSBvbiB0aGUgc3lz
-dGVtLiBJbiBjYXNlIG9mIHRoZSBhYm92ZSBzaXR1YXRpb24sDQo+Pj4+IFRMQkktaXMgaXMgY2Fs
-bGVkIGJ5IG1wcm90ZWN0KCkuDQo+Pj4gT24gdGhlIGZsaXAgc2lkZSwgTGludXggaXMgcHJvdmlk
-aW5nIHRoZSBoYXJkd2FyZSB3aXRoIGVub3VnaCBpbmZvcm1hdGlvbg0KPj4+IG5vdCB0byBicm9h
-ZGNhc3QgdG8gY29yZXMgZm9yIHdoaWNoIHRoZSByZW1vdGUgVExCcyBkb24ndCBoYXZlIGVudHJp
-ZXMNCj4+PiBhbGxvY2F0ZWQgZm9yIHRoZSBBU0lEIGJlaW5nIGludmFsaWRhdGVkLiBJIHdvdWxk
-IHNheSB0aGF0IHRoZSByb290IGNhdXNlDQo+Pj4gb2YgdGhlIGlzc3VlIGlzIHRoYXQgdGhpcyBm
-aWx0ZXJpbmcgaXMgbm90IHRha2luZyBwbGFjZS4NCj4+IERvIHlvdSBtZWFuIHRoYXQgdGhlIGZp
-bHRlciBzaG91bGQgYmUgaW1wbGVtZW50ZWQgaW4gaGFyZHdhcmU/DQo+IFllcy4gSWYgeW91J3Jl
-IGJ1aWxkaW5nIGEgbGFyZ2Ugc3lzdGVtIGFuZCB5b3UgY2FyZSBhYm91dCAiaml0dGVyIiwgdGhl
-bg0KPiB5b3UgZWl0aGVyIG5lZWQgdG8gcGFydGl0aW9uIGl0IGluIHN1Y2ggYSB3YXkgdGhhdCBz
-b3VyY2VzIG9mIG5vaXNlIGFyZQ0KPiBjb250YWluZWQsIG9yIHlvdSBuZWVkIHRvIGludHJvZHVj
-ZSBmaWx0ZXJzIHRvIGxpbWl0IHRoZWlyIHNjb3BlLiBSZXdyaXRpbmcNCj4gdGhlIGxvdy1sZXZl
-bCBtZW1vcnktbWFuYWdlbWVudCBwYXJ0cyBvZiB0aGUgb3BlcmF0aW5nIHN5c3RlbSBpcyBhIHJl
-ZA0KPiBoZXJyaW5nIGFuZCBpbXBvc2VzIGEgbmVlZGxlc3MgYnVyZGVuIG9uIGV2ZXJ5Ym9keSBl
-bHNlIHdpdGhvdXQgc29sdmluZw0KPiB0aGUgcmVhbCBwcm9ibGVtLCB3aGljaCBpcyB0aGF0IGNv
-bnRlbmRlZCB1c2Ugb2Ygc2hhcmVkIHJlc291cmNlcyBkb2Vzbid0DQo+IHNjYWxlLg0KPg0KPiBX
-aWxs
+
+
+On 6/28/19 9:17 PM, Christophe Leroy wrote:
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-adv.c b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+> new file mode 100644
+> index 000000000000..86e71fa6c5c8
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+> @@ -0,0 +1,487 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/sched.h>
+> +#include <linux/mm.h>
+> +#include <linux/smp.h>
+> +#include <linux/errno.h>
+> +#include <linux/ptrace.h>
+> +#include <linux/regset.h>
+> +#include <linux/tracehook.h>
+> +#include <linux/elf.h>
+> +#include <linux/user.h>
+> +#include <linux/security.h>
+> +#include <linux/signal.h>
+> +#include <linux/seccomp.h>
+> +#include <linux/audit.h>
+> +#include <trace/syscall.h>
+> +#include <linux/hw_breakpoint.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/context_tracking.h>
+> +#include <linux/nospec.h>
+> +
+> +#include <linux/uaccess.h>
+> +#include <linux/pkeys.h>
+> +#include <asm/page.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/switch_to.h>
+> +#include <asm/tm.h>
+> +#include <asm/asm-prototypes.h>
+> +#include <asm/debug.h>
+> +#include <asm/hw_breakpoint.h>
+> +
+> +#include <kernel/ptrace/ptrace-decl.h>
+> +
+> +void user_enable_single_step(struct task_struct *task)
+> +{
+> +	struct pt_regs *regs = task->thread.regs;
+> +
+> +	if (regs != NULL) {
+> +		task->thread.debug.dbcr0 &= ~DBCR0_BT;
+> +		task->thread.debug.dbcr0 |= DBCR0_IDM | DBCR0_IC;
+> +		regs->msr |= MSR_DE;
+> +	}
+> +	set_tsk_thread_flag(task, TIF_SINGLESTEP);
+> +}
+> +
+> +void user_enable_block_step(struct task_struct *task)
+> +{
+> +	struct pt_regs *regs = task->thread.regs;
+> +
+> +	if (regs != NULL) {
+> +		task->thread.debug.dbcr0 &= ~DBCR0_IC;
+> +		task->thread.debug.dbcr0 = DBCR0_IDM | DBCR0_BT;
+> +		regs->msr |= MSR_DE;
+> +	}
+> +	set_tsk_thread_flag(task, TIF_SINGLESTEP);
+> +}
+> +
+> +void user_disable_single_step(struct task_struct *task)
+> +{
+> +	struct pt_regs *regs = task->thread.regs;
+> +
+> +	if (regs != NULL) {
+> +		/*
+> +		 * The logic to disable single stepping should be as
+> +		 * simple as turning off the Instruction Complete flag.
+> +		 * And, after doing so, if all debug flags are off, turn
+> +		 * off DBCR0(IDM) and MSR(DE) .... Torez
+> +		 */
+> +		task->thread.debug.dbcr0 &= ~(DBCR0_IC|DBCR0_BT);
+> +		/*
+> +		 * Test to see if any of the DBCR_ACTIVE_EVENTS bits are set.
+> +		 */
+> +		if (!DBCR_ACTIVE_EVENTS(task->thread.debug.dbcr0,
+> +					task->thread.debug.dbcr1)) {
+> +			/*
+> +			 * All debug events were off.....
+> +			 */
+> +			task->thread.debug.dbcr0 &= ~DBCR0_IDM;
+> +			regs->msr &= ~MSR_DE;
+> +		}
+> +	}
+> +	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+> +}
+> +
+> +int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data)
+> +{
+> +	/* For ppc64 we support one DABR and no IABR's at the moment (ppc64).
+> +	 *  For embedded processors we support one DAC and no IAC's at the
+> +	 *  moment.
+> +	 */
+
+I guess mentioning DABR and IABR doesn't make sense in ptrace-adv.c?
+
+> +	if (addr > 0)
+> +		return -EINVAL;
+> +
+> +	/* The bottom 3 bits in dabr are flags */
+
+Same here.
+
+> +	if ((data & ~0x7UL) >= TASK_SIZE)
+> +		return -EIO;
+> +
+> +	/* As described above, it was assumed 3 bits were passed with the data
+> +	 *  address, but we will assume only the mode bits will be passed
+> +	 *  as to not cause alignment restrictions for DAC-based processors.
+> +	 */
+> +
+> +	/* DAC's hold the whole address without any mode flags */
+> +	task->thread.debug.dac1 = data & ~0x3UL;
+> +
+> +	if (task->thread.debug.dac1 == 0) {
+> +		dbcr_dac(task) &= ~(DBCR_DAC1R | DBCR_DAC1W);
+> +		if (!DBCR_ACTIVE_EVENTS(task->thread.debug.dbcr0,
+> +					task->thread.debug.dbcr1)) {
+> +			task->thread.regs->msr &= ~MSR_DE;
+> +			task->thread.debug.dbcr0 &= ~DBCR0_IDM;
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	/* Read or Write bits must be set */
+> +
+> +	if (!(data & 0x3UL))
+> +		return -EINVAL;
+> +
+> +	/* Set the Internal Debugging flag (IDM bit 1) for the DBCR0
+> +	   register */
+> +	task->thread.debug.dbcr0 |= DBCR0_IDM;
+> +
+> +	/* Check for write and read flags and set DBCR0
+> +	   accordingly */
+> +	dbcr_dac(task) &= ~(DBCR_DAC1R|DBCR_DAC1W);
+> +	if (data & 0x1UL)
+> +		dbcr_dac(task) |= DBCR_DAC1R;
+> +	if (data & 0x2UL)
+> +		dbcr_dac(task) |= DBCR_DAC1W;
+> +	task->thread.regs->msr |= MSR_DE;
+> +	return 0;
+> +}
+> +
+> +static long set_instruction_bp(struct task_struct *child,
+> +			      struct ppc_hw_breakpoint *bp_info)
+> +{
+> +	int slot;
+> +	int slot1_in_use = ((child->thread.debug.dbcr0 & DBCR0_IAC1) != 0);
+> +	int slot2_in_use = ((child->thread.debug.dbcr0 & DBCR0_IAC2) != 0);
+> +	int slot3_in_use = ((child->thread.debug.dbcr0 & DBCR0_IAC3) != 0);
+> +	int slot4_in_use = ((child->thread.debug.dbcr0 & DBCR0_IAC4) != 0);
+> +
+> +	if (dbcr_iac_range(child) & DBCR_IAC12MODE)
+> +		slot2_in_use = 1;
+> +	if (dbcr_iac_range(child) & DBCR_IAC34MODE)
+> +		slot4_in_use = 1;
+> +
+> +	if (bp_info->addr >= TASK_SIZE)
+> +		return -EIO;
+> +
+> +	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT) {
+> +
+> +		/* Make sure range is valid. */
+> +		if (bp_info->addr2 >= TASK_SIZE)
+> +			return -EIO;
+> +
+> +		/* We need a pair of IAC regsisters */
+> +		if ((!slot1_in_use) && (!slot2_in_use)) {
+> +			slot = 1;
+> +			child->thread.debug.iac1 = bp_info->addr;
+> +			child->thread.debug.iac2 = bp_info->addr2;
+> +			child->thread.debug.dbcr0 |= DBCR0_IAC1;
+> +			if (bp_info->addr_mode ==
+> +					PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE)
+> +				dbcr_iac_range(child) |= DBCR_IAC12X;
+> +			else
+> +				dbcr_iac_range(child) |= DBCR_IAC12I;
+> +#if CONFIG_PPC_ADV_DEBUG_IACS > 2
+> +		} else if ((!slot3_in_use) && (!slot4_in_use)) {
+> +			slot = 3;
+> +			child->thread.debug.iac3 = bp_info->addr;
+> +			child->thread.debug.iac4 = bp_info->addr2;
+> +			child->thread.debug.dbcr0 |= DBCR0_IAC3;
+> +			if (bp_info->addr_mode ==
+> +					PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE)
+> +				dbcr_iac_range(child) |= DBCR_IAC34X;
+> +			else
+> +				dbcr_iac_range(child) |= DBCR_IAC34I;
+> +#endif
+> +		} else
+> +			return -ENOSPC;
+> +	} else {
+> +		/* We only need one.  If possible leave a pair free in
+> +		 * case a range is needed later
+> +		 */
+> +		if (!slot1_in_use) {
+> +			/*
+> +			 * Don't use iac1 if iac1-iac2 are free and either
+> +			 * iac3 or iac4 (but not both) are free
+> +			 */
+> +			if (slot2_in_use || (slot3_in_use == slot4_in_use)) {
+> +				slot = 1;
+> +				child->thread.debug.iac1 = bp_info->addr;
+> +				child->thread.debug.dbcr0 |= DBCR0_IAC1;
+> +				goto out;
+> +			}
+> +		}
+> +		if (!slot2_in_use) {
+> +			slot = 2;
+> +			child->thread.debug.iac2 = bp_info->addr;
+> +			child->thread.debug.dbcr0 |= DBCR0_IAC2;
+> +#if CONFIG_PPC_ADV_DEBUG_IACS > 2
+> +		} else if (!slot3_in_use) {
+> +			slot = 3;
+> +			child->thread.debug.iac3 = bp_info->addr;
+> +			child->thread.debug.dbcr0 |= DBCR0_IAC3;
+> +		} else if (!slot4_in_use) {
+> +			slot = 4;
+> +			child->thread.debug.iac4 = bp_info->addr;
+> +			child->thread.debug.dbcr0 |= DBCR0_IAC4;
+> +#endif
+> +		} else
+> +			return -ENOSPC;
+> +	}
+> +out:
+> +	child->thread.debug.dbcr0 |= DBCR0_IDM;
+> +	child->thread.regs->msr |= MSR_DE;
+> +
+> +	return slot;
+> +}
+> +
+> +static int del_instruction_bp(struct task_struct *child, int slot)
+> +{
+> +	switch (slot) {
+> +	case 1:
+> +		if ((child->thread.debug.dbcr0 & DBCR0_IAC1) == 0)
+> +			return -ENOENT;
+> +
+> +		if (dbcr_iac_range(child) & DBCR_IAC12MODE) {
+> +			/* address range - clear slots 1 & 2 */
+> +			child->thread.debug.iac2 = 0;
+> +			dbcr_iac_range(child) &= ~DBCR_IAC12MODE;
+> +		}
+> +		child->thread.debug.iac1 = 0;
+> +		child->thread.debug.dbcr0 &= ~DBCR0_IAC1;
+> +		break;
+> +	case 2:
+> +		if ((child->thread.debug.dbcr0 & DBCR0_IAC2) == 0)
+> +			return -ENOENT;
+> +
+> +		if (dbcr_iac_range(child) & DBCR_IAC12MODE)
+> +			/* used in a range */
+> +			return -EINVAL;
+> +		child->thread.debug.iac2 = 0;
+> +		child->thread.debug.dbcr0 &= ~DBCR0_IAC2;
+> +		break;
+> +#if CONFIG_PPC_ADV_DEBUG_IACS > 2
+> +	case 3:
+> +		if ((child->thread.debug.dbcr0 & DBCR0_IAC3) == 0)
+> +			return -ENOENT;
+> +
+> +		if (dbcr_iac_range(child) & DBCR_IAC34MODE) {
+> +			/* address range - clear slots 3 & 4 */
+> +			child->thread.debug.iac4 = 0;
+> +			dbcr_iac_range(child) &= ~DBCR_IAC34MODE;
+> +		}
+> +		child->thread.debug.iac3 = 0;
+> +		child->thread.debug.dbcr0 &= ~DBCR0_IAC3;
+> +		break;
+> +	case 4:
+> +		if ((child->thread.debug.dbcr0 & DBCR0_IAC4) == 0)
+> +			return -ENOENT;
+> +
+> +		if (dbcr_iac_range(child) & DBCR_IAC34MODE)
+> +			/* Used in a range */
+> +			return -EINVAL;
+> +		child->thread.debug.iac4 = 0;
+> +		child->thread.debug.dbcr0 &= ~DBCR0_IAC4;
+> +		break;
+> +#endif
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int set_dac(struct task_struct *child, struct ppc_hw_breakpoint *bp_info)
+> +{
+> +	int byte_enable =
+> +		(bp_info->condition_mode >> PPC_BREAKPOINT_CONDITION_BE_SHIFT)
+> +		& 0xf;
+> +	int condition_mode =
+> +		bp_info->condition_mode & PPC_BREAKPOINT_CONDITION_MODE;
+> +	int slot;
+> +
+> +	if (byte_enable && (condition_mode == 0))
+> +		return -EINVAL;
+> +
+> +	if (bp_info->addr >= TASK_SIZE)
+> +		return -EIO;
+> +
+> +	if ((dbcr_dac(child) & (DBCR_DAC1R | DBCR_DAC1W)) == 0) {
+> +		slot = 1;
+> +		if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
+> +			dbcr_dac(child) |= DBCR_DAC1R;
+> +		if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
+> +			dbcr_dac(child) |= DBCR_DAC1W;
+> +		child->thread.debug.dac1 = (unsigned long)bp_info->addr;
+> +#if CONFIG_PPC_ADV_DEBUG_DVCS > 0
+> +		if (byte_enable) {
+> +			child->thread.debug.dvc1 =
+> +				(unsigned long)bp_info->condition_value;
+> +			child->thread.debug.dbcr2 |=
+> +				((byte_enable << DBCR2_DVC1BE_SHIFT) |
+> +				 (condition_mode << DBCR2_DVC1M_SHIFT));
+> +		}
+> +#endif
+> +#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> +	} else if (child->thread.debug.dbcr2 & DBCR2_DAC12MODE) {
+> +		/* Both dac1 and dac2 are part of a range */
+> +		return -ENOSPC;
+> +#endif
+> +	} else if ((dbcr_dac(child) & (DBCR_DAC2R | DBCR_DAC2W)) == 0) {
+> +		slot = 2;
+> +		if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
+> +			dbcr_dac(child) |= DBCR_DAC2R;
+> +		if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
+> +			dbcr_dac(child) |= DBCR_DAC2W;
+> +		child->thread.debug.dac2 = (unsigned long)bp_info->addr;
+> +#if CONFIG_PPC_ADV_DEBUG_DVCS > 0
+> +		if (byte_enable) {
+> +			child->thread.debug.dvc2 =
+> +				(unsigned long)bp_info->condition_value;
+> +			child->thread.debug.dbcr2 |=
+> +				((byte_enable << DBCR2_DVC2BE_SHIFT) |
+> +				 (condition_mode << DBCR2_DVC2M_SHIFT));
+> +		}
+> +#endif
+> +	} else
+> +		return -ENOSPC;
+> +	child->thread.debug.dbcr0 |= DBCR0_IDM;
+> +	child->thread.regs->msr |= MSR_DE;
+> +
+> +	return slot + 4;
+> +}
+> +
+> +static int del_dac(struct task_struct *child, int slot)
+> +{
+> +	if (slot == 1) {
+> +		if ((dbcr_dac(child) & (DBCR_DAC1R | DBCR_DAC1W)) == 0)
+> +			return -ENOENT;
+> +
+> +		child->thread.debug.dac1 = 0;
+> +		dbcr_dac(child) &= ~(DBCR_DAC1R | DBCR_DAC1W);
+> +#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> +		if (child->thread.debug.dbcr2 & DBCR2_DAC12MODE) {
+> +			child->thread.debug.dac2 = 0;
+> +			child->thread.debug.dbcr2 &= ~DBCR2_DAC12MODE;
+> +		}
+> +		child->thread.debug.dbcr2 &= ~(DBCR2_DVC1M | DBCR2_DVC1BE);
+> +#endif
+> +#if CONFIG_PPC_ADV_DEBUG_DVCS > 0
+> +		child->thread.debug.dvc1 = 0;
+> +#endif
+> +	} else if (slot == 2) {
+> +		if ((dbcr_dac(child) & (DBCR_DAC2R | DBCR_DAC2W)) == 0)
+> +			return -ENOENT;
+> +
+> +#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> +		if (child->thread.debug.dbcr2 & DBCR2_DAC12MODE)
+> +			/* Part of a range */
+> +			return -EINVAL;
+> +		child->thread.debug.dbcr2 &= ~(DBCR2_DVC2M | DBCR2_DVC2BE);
+> +#endif
+> +#if CONFIG_PPC_ADV_DEBUG_DVCS > 0
+> +		child->thread.debug.dvc2 = 0;
+> +#endif
+> +		child->thread.debug.dac2 = 0;
+> +		dbcr_dac(child) &= ~(DBCR_DAC2R | DBCR_DAC2W);
+> +	} else
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> +static int set_dac_range(struct task_struct *child,
+> +			 struct ppc_hw_breakpoint *bp_info)
+> +{
+> +	int mode = bp_info->addr_mode & PPC_BREAKPOINT_MODE_MASK;
+> +
+> +	/* We don't allow range watchpoints to be used with DVC */
+> +	if (bp_info->condition_mode)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Best effort to verify the address range.  The user/supervisor bits
+> +	 * prevent trapping in kernel space, but let's fail on an obvious bad
+> +	 * range.  The simple test on the mask is not fool-proof, and any
+> +	 * exclusive range will spill over into kernel space.
+> +	 */
+> +	if (bp_info->addr >= TASK_SIZE)
+> +		return -EIO;
+> +	if (mode == PPC_BREAKPOINT_MODE_MASK) {
+> +		/*
+> +		 * dac2 is a bitmask.  Don't allow a mask that makes a
+> +		 * kernel space address from a valid dac1 value
+> +		 */
+> +		if (~((unsigned long)bp_info->addr2) >= TASK_SIZE)
+> +			return -EIO;
+> +	} else {
+> +		/*
+> +		 * For range breakpoints, addr2 must also be a valid address
+> +		 */
+> +		if (bp_info->addr2 >= TASK_SIZE)
+> +			return -EIO;
+> +	}
+> +
+> +	if (child->thread.debug.dbcr0 &
+> +	    (DBCR0_DAC1R | DBCR0_DAC1W | DBCR0_DAC2R | DBCR0_DAC2W))
+> +		return -ENOSPC;
+> +
+> +	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
+> +		child->thread.debug.dbcr0 |= (DBCR0_DAC1R | DBCR0_IDM);
+> +	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
+> +		child->thread.debug.dbcr0 |= (DBCR0_DAC1W | DBCR0_IDM);
+> +	child->thread.debug.dac1 = bp_info->addr;
+> +	child->thread.debug.dac2 = bp_info->addr2;
+> +	if (mode == PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE)
+> +		child->thread.debug.dbcr2  |= DBCR2_DAC12M;
+> +	else if (mode == PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE)
+> +		child->thread.debug.dbcr2  |= DBCR2_DAC12MX;
+> +	else	/* PPC_BREAKPOINT_MODE_MASK */
+> +		child->thread.debug.dbcr2  |= DBCR2_DAC12MM;
+> +	child->thread.regs->msr |= MSR_DE;
+> +
+> +	return 5;
+> +}
+> +#endif /* CONFIG_PPC_ADV_DEBUG_DAC_RANGE */
+> +
+> +long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_info)
+> +{
+> +	if (bp_info->version != 1)
+> +		return -ENOTSUPP;
+> +	/*
+> +	 * Check for invalid flags and combinations
+> +	 */
+> +	if ((bp_info->trigger_type == 0) ||
+> +	    (bp_info->trigger_type & ~(PPC_BREAKPOINT_TRIGGER_EXECUTE |
+> +				       PPC_BREAKPOINT_TRIGGER_RW)) ||
+> +	    (bp_info->addr_mode & ~PPC_BREAKPOINT_MODE_MASK) ||
+> +	    (bp_info->condition_mode &
+> +	     ~(PPC_BREAKPOINT_CONDITION_MODE |
+> +	       PPC_BREAKPOINT_CONDITION_BE_ALL)))
+> +		return -EINVAL;
+> +#if CONFIG_PPC_ADV_DEBUG_DVCS == 0
+> +	if (bp_info->condition_mode != PPC_BREAKPOINT_CONDITION_NONE)
+> +		return -EINVAL;
+> +#endif
+> +
+> +	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_EXECUTE) {
+> +		if ((bp_info->trigger_type != PPC_BREAKPOINT_TRIGGER_EXECUTE) ||
+> +		    (bp_info->condition_mode != PPC_BREAKPOINT_CONDITION_NONE))
+> +			return -EINVAL;
+> +		return set_instruction_bp(child, bp_info);
+> +	}
+> +	if (bp_info->addr_mode == PPC_BREAKPOINT_MODE_EXACT)
+> +		return set_dac(child, bp_info);
+> +
+> +#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> +	return set_dac_range(child, bp_info);
+> +#else
+> +	return -EINVAL;
+> +#endif
+> +}
+> +
+> +long ppc_del_hwdebug(struct task_struct *child, long data)
+> +{
+> +	int rc;
+> +
+> +	if (data <= 4)
+> +		rc = del_instruction_bp(child, (int)data);
+> +	else
+> +		rc = del_dac(child, (int)data - 4);
+> +
+> +	if (!rc) {
+> +		if (!DBCR_ACTIVE_EVENTS(child->thread.debug.dbcr0,
+> +					child->thread.debug.dbcr1)) {
+> +			child->thread.debug.dbcr0 &= ~DBCR0_IDM;
+> +			child->thread.regs->msr &= ~MSR_DE;
+> +		}
+> +	}
+> +	return rc;
+> +}
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> index e12f6615fc1d..bdba09a87aea 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> @@ -174,3 +174,8 @@ int tm_cgpr32_set(struct task_struct *target, const struct user_regset *regset,
+>  /* ptrace-view */
+>  
+>  extern const struct user_regset_view user_ppc_native_view;
+> +
+> +/* ptrace-(no)adv */
+> +int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data);
+> +long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_info);
+> +long ppc_del_hwdebug(struct task_struct *child, long data);
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> new file mode 100644
+> index 000000000000..7db330c94538
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+
+ptrace-noadv.c looks good to me.
+
