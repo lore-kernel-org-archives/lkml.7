@@ -2,323 +2,457 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B35C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D33EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080FD218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1069218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XZHHbEsh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UGVJnHcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfGCKB4 (ORCPT
+        id S1727034AbfGCKCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:01:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36938 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGCKB4 (ORCPT
+        Wed, 3 Jul 2019 06:02:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33296 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfGCKCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:01:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w13so1482599eds.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 03:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aSerdf2DO7Omic2w+oNZyPee/VO/jfA+Kk59Tlp7L3M=;
-        b=XZHHbEshRHyinFuyW6TPlL33umZPDibfUV4mNEG7Ilmf0G6HIbH/4SNKjbWu5TnJn7
-         A8qZBFnh9rgDFhSdgtkm0dunXHM5/55EFXVy6XZfEKQcbuPDR4xdEMcHYLByNWJXNns6
-         IjlMx+mXyBCOxNexUV8S9todbAhrW2dznldDY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=aSerdf2DO7Omic2w+oNZyPee/VO/jfA+Kk59Tlp7L3M=;
-        b=YDR2WnSxn98xiVHY6L2iCCj3yVb1uDyCg9myBFx2bB3SrILKRd72yHVq99UstULiJJ
-         npIc1HH7iTHL9JDlUNpUb2d1K4xaaVDTIidOsQK/gEU0GgevOHcs4t0rZDA+LN2AytOW
-         zedRZA3azljiYRNqqO5NBleTzF+Q6QzgATArLxaJgoFbsstfQAORrlMN4HhJsFZtBgiG
-         VSYlzniGQYJI4xgBVIx77doRUramIwhK0DALPrZJDRdT0SNMOLcyGZ24suwea0SeBZnR
-         KwYkVgcn5PoBqTHZKVJl4eTV9tsB7MDMimT/EWMKZkSKRKYednxYCBCPwRazgdLBmh2c
-         Xefg==
-X-Gm-Message-State: APjAAAXLV+I9bJ6HuDzukZSZ38M3FUf/zQJq94tx5RQaOLi53uWNpmFA
-        vyjuuTNLi3lf9Y7jtOewCXHWxg==
-X-Google-Smtp-Source: APXvYqzT18OCU2y0XM+rXVAOV95cRRI8IZfUaElhsUGDU0cOAnnDhXYeIyzKjKGCVkM2DuuolQu3lw==
-X-Received: by 2002:a50:b107:: with SMTP id k7mr42238866edd.193.1562148113780;
-        Wed, 03 Jul 2019 03:01:53 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id t13sm540506edd.13.2019.07.03.03.01.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 03:01:53 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 12:01:49 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Adds VRR support
-Message-ID: <20190703100149.GF15868@phenom.ffwll.local>
-Mail-Followup-To: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-References: <1562138723-29546-1-git-send-email-lowry.li@arm.com>
+        Wed, 3 Jul 2019 06:02:39 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x63A2RnB114238;
+        Wed, 3 Jul 2019 05:02:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562148147;
+        bh=Kwg9Mka6KDKRGKUYfvfeqzLwq3NCDyknNEAqVF+wJeQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UGVJnHcEt6rcky4MCon0C9zh5urZAzqh9uzNM4v04/Z8P0Qftkh+Y98VEFSTOEegZ
+         pUiqLEryziFzXyS6nnMFHFQIPTZ7CsUlddq3Y5WDFmdjvbeTsUS3fmQj+9peN0u+0g
+         9YSvBjNJCZQlMn0NsDL4xFT1rrcIQtxsaW5dKhEY=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x63A2RQh069990
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 3 Jul 2019 05:02:27 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 3 Jul
+ 2019 05:02:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 3 Jul 2019 05:02:26 -0500
+Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x63A2O6p015028;
+        Wed, 3 Jul 2019 05:02:24 -0500
+Subject: Re: [PATCH 3/4] backlight: add led-backlight driver
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <jingoohan1@gmail.com>, <dmurphy@ti.com>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>
+References: <20190701151423.30768-1-jjhiblot@ti.com>
+ <20190701151423.30768-4-jjhiblot@ti.com>
+ <20190702095434.d426lichmaffz7a5@holly.lan>
+ <531e237c-b570-5270-6fc3-6629a8bf7acd@ti.com>
+ <20190702130434.frbx7jkec27ejbpo@holly.lan>
+ <72c45311-c710-dc2d-a6de-68e44ea8436a@ti.com>
+ <20190703094457.etmbbjhhssbdkveo@holly.lan>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <a8886ae9-31ec-de4c-0a83-5f681582a0b9@ti.com>
+Date:   Wed, 3 Jul 2019 12:02:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562138723-29546-1-git-send-email-lowry.li@arm.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190703094457.etmbbjhhssbdkveo@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 07:26:16AM +0000, Lowry Li (Arm Technology China) wrote:
-> Adds a new drm property "vrr" and "vrr_enable" and implemented
-> the set/get functions, through which userspace could set vfp
-> data to komeda.
-> 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  .../gpu/drm/arm/display/komeda/d71/d71_component.c |  6 +++
->  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   | 62 ++++++++++++++++++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.h    | 12 +++++
->  .../gpu/drm/arm/display/komeda/komeda_pipeline.h   |  4 +-
->  4 files changed, 83 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> index ed3f273..c1355f5 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> @@ -1065,6 +1065,7 @@ static void d71_timing_ctrlr_update(struct komeda_component *c,
->  				    struct komeda_component_state *state)
->  {
->  	struct drm_crtc_state *crtc_st = state->crtc->state;
-> +	struct komeda_crtc_state *kcrtc_st = to_kcrtc_st(crtc_st);
->  	struct drm_display_mode *mode = &crtc_st->adjusted_mode;
->  	u32 __iomem *reg = c->reg;
->  	u32 hactive, hfront_porch, hback_porch, hsync_len;
-> @@ -1102,6 +1103,9 @@ static void d71_timing_ctrlr_update(struct komeda_component *c,
->  		value |= BS_CTRL_DL;
->  	}
->  
-> +	if (kcrtc_st->en_vrr)
-> +		malidp_write32_mask(reg, BS_VINTERVALS, 0x3FFF, kcrtc_st->vfp);
-> +
->  	malidp_write32(reg, BLK_CONTROL, value);
->  }
->  
-> @@ -1171,6 +1175,8 @@ static int d71_timing_ctrlr_init(struct d71_dev *d71,
->  	ctrlr = to_ctrlr(c);
->  
->  	ctrlr->supports_dual_link = true;
-> +	ctrlr->supports_vrr = true;
-> +	set_range(&ctrlr->vfp_range, 0, 0x3FF);
->  
->  	return 0;
->  }
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> index 4f580b0..3744e6d 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> @@ -467,6 +467,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc)
->  
->  	state = kzalloc(sizeof(*state), GFP_KERNEL);
->  	if (state) {
-> +		state->vfp = 0;
-> +		state->en_vrr = 0;
->  		crtc->state = &state->base;
->  		crtc->state->crtc = crtc;
->  	}
-> @@ -487,6 +489,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc)
->  	new->affected_pipes = old->active_pipes;
->  	new->clock_ratio = old->clock_ratio;
->  	new->max_slave_zorder = old->max_slave_zorder;
-> +	new->vfp = old->vfp;
-> +	new->en_vrr = old->en_vrr;
->  
->  	return &new->base;
->  }
-> @@ -525,6 +529,30 @@ static void komeda_crtc_vblank_disable(struct drm_crtc *crtc)
->  
->  	if (property == kcrtc->clock_ratio_property) {
->  		*val = kcrtc_st->clock_ratio;
-> +	} else if (property == kcrtc->vrr_property) {
-> +		*val = kcrtc_st->vfp;
-> +	} else if (property == kcrtc->vrr_enable_property) {
-> +		*val = kcrtc_st->en_vrr;
-> +	} else {
-> +		DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int komeda_crtc_atomic_set_property(struct drm_crtc *crtc,
-> +					   struct drm_crtc_state *state,
-> +					   struct drm_property *property,
-> +					   uint64_t val)
-> +{
-> +	struct komeda_crtc *kcrtc = to_kcrtc(crtc);
-> +	struct komeda_crtc_state *kcrtc_st = to_kcrtc_st(state);
-> +
-> +	if (property == kcrtc->vrr_property) {
-> +		kcrtc_st->vfp = val;
-> +	} else if (property == kcrtc->vrr_enable_property) {
-> +		kcrtc_st->en_vrr = val;
->  	} else {
->  		DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
->  		return -EINVAL;
-> @@ -544,6 +572,7 @@ static void komeda_crtc_vblank_disable(struct drm_crtc *crtc)
->  	.enable_vblank		= komeda_crtc_vblank_enable,
->  	.disable_vblank		= komeda_crtc_vblank_disable,
->  	.atomic_get_property	= komeda_crtc_atomic_get_property,
-> +	.atomic_set_property	= komeda_crtc_atomic_set_property,
->  };
->  
->  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms,
-> @@ -613,6 +642,35 @@ static int komeda_crtc_create_slave_planes_property(struct komeda_crtc *kcrtc)
->  	return 0;
->  }
->  
-> +static int komeda_crtc_create_vrr_property(struct komeda_crtc *kcrtc)
-> +{
-> +	struct drm_crtc *crtc = &kcrtc->base;
-> +	struct drm_property *prop;
-> +	struct komeda_timing_ctrlr *ctrlr = kcrtc->master->ctrlr;
-> +
-> +	if (!ctrlr->supports_vrr)
-> +		return 0;
-> +
-> +	prop = drm_property_create_range(crtc->dev, DRM_MODE_PROP_ATOMIC, "vrr",
-> +					 ctrlr->vfp_range.start,
-> +					 ctrlr->vfp_range.end);
-> +	if (!prop)
-> +		return -ENOMEM;
-> +
-> +	drm_object_attach_property(&crtc->base, prop, 0);
-> +	kcrtc->vrr_property = prop;
-> +
-> +	prop = drm_property_create_bool(crtc->dev, DRM_MODE_PROP_ATOMIC,
-> +					"enable_vrr");
+Daniel,
 
-Uh, what exactly are you doing reinventing uapi properties that we already
-standardized?
+On 03/07/2019 11:44, Daniel Thompson wrote:
+> On Tue, Jul 02, 2019 at 05:17:21PM +0200, Jean-Jacques Hiblot wrote:
+>> Daniel,
+>>
+>> On 02/07/2019 15:04, Daniel Thompson wrote:
+>>> On Tue, Jul 02, 2019 at 12:59:53PM +0200, Jean-Jacques Hiblot wrote:
+>>>> Hi Daniel,
+>>>>
+>>>> On 02/07/2019 11:54, Daniel Thompson wrote:
+>>>>> On Mon, Jul 01, 2019 at 05:14:22PM +0200, Jean-Jacques Hiblot wrote:
+>>>>>> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>>>>>>
+>>>>>> This patch adds a led-backlight driver (led_bl), which is mostly similar to
+>>>>>> pwm_bl except the driver uses a LED class driver to adjust the brightness
+>>>>>> in the HW.
+>>>>>>
+>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>>>>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>>>>>> ---
+>>>>>>     drivers/video/backlight/Kconfig  |   7 +
+>>>>>>     drivers/video/backlight/Makefile |   1 +
+>>>>>>     drivers/video/backlight/led_bl.c | 217 +++++++++++++++++++++++++++++++
+>>>>>>     3 files changed, 225 insertions(+)
+>>>>>>     create mode 100644 drivers/video/backlight/led_bl.c
+>>>>>>
+>>>>>> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+>>>>>> index 8b081d61773e..585a1787618c 100644
+>>>>>> --- a/drivers/video/backlight/Kconfig
+>>>>>> +++ b/drivers/video/backlight/Kconfig
+>>>>>> @@ -458,6 +458,13 @@ config BACKLIGHT_RAVE_SP
+>>>>>>     	help
+>>>>>>     	  Support for backlight control on RAVE SP device.
+>>>>>> +config BACKLIGHT_LED
+>>>>>> +	tristate "Generic LED based Backlight Driver"
+>>>>>> +	depends on LEDS_CLASS && OF
+>>>>>> +	help
+>>>>>> +	  If you have a LCD backlight adjustable by LED class driver, say Y
+>>>>>> +	  to enable this driver.
+>>>>>> +
+>>>>>>     endif # BACKLIGHT_CLASS_DEVICE
+>>>>>>     endmenu
+>>>>>> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+>>>>>> index 63c507c07437..2a67642966a5 100644
+>>>>>> --- a/drivers/video/backlight/Makefile
+>>>>>> +++ b/drivers/video/backlight/Makefile
+>>>>>> @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+>>>>>>     obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+>>>>>>     obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+>>>>>>     obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
+>>>>>> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+>>>>>> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..e699924cc2bc
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/video/backlight/led_bl.c
+>>>>>> @@ -0,0 +1,217 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>> +/*
+>>>>>> + * Copyright (C) 2015-2018 Texas Instruments Incorporated -  http://www.ti.com/
+>>>>>> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>>>>>> + *
+>>>>>> + * Based on pwm_bl.c
+>>>>>> + */
+>>>>>> +
+>>>>>> +#include <linux/backlight.h>
+>>>>>> +#include <linux/gpio/consumer.h>
+>>>>>> +#include <linux/leds.h>
+>>>>>> +#include <linux/module.h>
+>>>>>> +#include <linux/platform_device.h>
+>>>>>> +#include <linux/regulator/consumer.h>
+>>>>>> +#include <linux/slab.h>
+>>>>>> +
+>>>>>> +struct led_bl_data {
+>>>>>> +	struct device		*dev;
+>>>>>> +	struct backlight_device	*bl_dev;
+>>>>>> +
+>>>>>> +	unsigned int		*levels;
+>>>>>> +	bool			enabled;
+>>>>>> +	struct regulator	*power_supply;
+>>>>>> +	struct gpio_desc	*enable_gpio;
+>>>>> For the PWM driver the power_supply and enable_gpio are part of managing
+>>>>> a dumb LED driver device that is downstream of the PWM.
+>>>>>
+>>>>> What is their purpose when we wrap an LED device? Put another why why isn't
+>>>>> the LED device driver responsible for this?
+>>>> This question came up when the patch was first proposed in 2015. Here is the
+>>>> answer from Tomi at the time. It is still relevant.
+>>>>
+>>>> "These are for the backlight, not for the LED chip. So "LED" here is a
+>>>> chip that produces (most likely) a PWM signal, and "backlight" is the
+>>>> collection of components that use the PWM to produce the backlight
+>>>> itself, and use the power-supply and gpios."
+>>> Expanded significantly in the associated thread, right?
+>>> https://patchwork.kernel.org/patch/7293991/
+>>>
+>>> Also still relevant is whether the LED device is being correctly
+>>> modelled if the act of turning on the LED doesn't, in fact, turn the LED
+>>> on. Is it *really* a correct implementation of an LED device that
+>>> setting it to LED_FULL using sysfs doesn't cause it to light up?
+>> What I understood from the discussion between Rob and Tomi is that the
+>> child-node of the LED controller should be considered a backlight device,
+>> not a simple LED. I'm not sure if the sysfs interface is still relevant in
+>> that case. Maybe it should just be disabled by the backlight driver
+>> (possible with led_sysfs_disable())
+> led_sysfs_disable() sounds like a sensible change but that's not quite
+> what I mean.
+>
+> It is more a thought experiment to see if the power control *should* be
+> implemented by the backlight. Consider what happens if we *don't*
+> enable CONFIG_BACKLIGHT_LED in the kernel: we would still have an LED
+> device and it would not work correctly.
+>
+> In other words I naively expect turning on an LED using the LED API
+> (any of them, sysfs or kernel) to result in the LED turning on.
+> Implementing a workaround in the client for what appears to be
+> something missing in the LED driver strikes me as odd. Why shouldn't
+> the regulator be managed in the LED driver?
 
-> +	if (!prop)
-> +		return -ENOMEM;
-> +
-> +	drm_object_attach_property(&crtc->base, prop, 0);
-> +	kcrtc->vrr_enable_property = prop;
-> +
-> +	return 0;
-> +}
-> +
->  static struct drm_plane *
->  get_crtc_primary(struct komeda_kms_dev *kms, struct komeda_crtc *crtc)
->  {
-> @@ -659,6 +717,10 @@ static int komeda_crtc_add(struct komeda_kms_dev *kms,
->  	if (err)
->  		return err;
->  
-> +	err = komeda_crtc_create_vrr_property(kcrtc);
-> +	if (err)
-> +		return err;
-> +
->  	return err;
->  }
->  
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
-> index dc1d436..d0cf838 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
-> @@ -98,6 +98,12 @@ struct komeda_crtc {
->  
->  	/** @slave_planes_property: property for slaves of the planes */
->  	struct drm_property *slave_planes_property;
+I see your point. Indeed having the regulator handled in the LED-core 
+makes sense in a lot of situations
 
-And this seems to not be the first time this happened. Looking at komeda
-with a quick git grep on properties you've actually accumulated quite a
-pile of such driver properties already. Where's the userspace for this?
-Where's the uapi discussions for this stuff? Where's the igt tests for
-this (yes a bunch are after we agreed to have testcases for this).
+I'll think about it.
 
-I know that in the past we've been somewhat sloppy properties, but that
-was a mistake and we've cranked down on this hard. Probably need to fix
-this with a pile of reverts and start over.
--Daniel
+>
+>
+>>> Actually there is another area where I think an LED backlight should
+>>> perhaps be held to a higher standard than a PWM backlight and that is
+>>> handling backlights composed of multiple LEDs.
+>>>
+>>> Using the TLC591xx examples from the thread above... these are
+>>> multi-channel (8 or 16) LED controllers and I don't think its
+>>> speculative to assume that a backlight could constructed using
+>>> one of these could require multiple LEDs.
+>> In that case, the device-tree model must be quite different.
+>>
+>> Actually the best way to do that is to use the model from Tomi
+>> https://patchwork.kernel.org/patch/7293991/ and modify it to handle more
+>> than one LED
+>> <https://patchwork.kernel.org/patch/7293991/>
+>>
+>> I'm not completely sure that people would start making real backlight this
+>> way though. It is much more probable that the ouput of the led ctrl is
+>> connected to a single control input of a real backlight than to actual LEDs.
+> I'm afraid I don't follow this. If you have a backlight composed of mutliple
+> strings why wouldn't each string be attached directly to the output an of LED
+> driver chip such as the TLC591xx family.
 
-> +
-> +	/** @vrr_property: property for variable refresh rate */
-> +	struct drm_property *vrr_property;
-> +
-> +	/** @vrr_enable_property: property for enable/disable the vrr */
-> +	struct drm_property *vrr_enable_property;
->  };
->  
->  /**
-> @@ -126,6 +132,12 @@ struct komeda_crtc_state {
->  
->  	/** @max_slave_zorder: the maximum of slave zorder */
->  	u32 max_slave_zorder;
-> +
-> +	/** @vfp: the value of vertical front porch */
-> +	u32 vfp;
-> +
-> +	/** @en_vrr: enable status of variable refresh rate */
-> +	u8 en_vrr : 1;
->  };
->  
->  /** struct komeda_kms_dev - for gather KMS related things */
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> index 00e8083..66d7664 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> @@ -336,7 +336,9 @@ struct komeda_improc_state {
->  /* display timing controller */
->  struct komeda_timing_ctrlr {
->  	struct komeda_component base;
-> -	u8 supports_dual_link : 1;
-> +	u8 supports_dual_link : 1,
-> +	   supports_vrr : 1;
-> +	struct malidp_range vfp_range;
->  };
->  
->  struct komeda_timing_ctrlr_state {
-> -- 
-> 1.9.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+OK. It makes sense.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I'll rework the series in this direction: multiple LED devices handled 
+by one backlight device
+
+Thanks,
+
+JJ
+
+>
+>
+> Daniel.
+>
+>
+>>
+>> JJ
+>>
+>>>
+>>> Daniel.
+>>>
+>>>
+>>>>>> +
+>>>>>> +	struct led_classdev *led_cdev;
+>>>>>> +
+>>>>>> +	unsigned int max_brightness;
+>>>>>> +	unsigned int default_brightness;
+>>>>>> +};
+>>>>>> +
+>>>>>> +static void led_bl_set_brightness(struct led_bl_data *priv, int brightness)
+>>>>>> +{
+>>>>>> +	int err;
+>>>>>> +
+>>>>>> +	if (!priv->enabled) {
+>>>>>> +		err = regulator_enable(priv->power_supply);
+>>>>>> +		if (err < 0)
+>>>>>> +			dev_err(priv->dev, "failed to enable power supply\n");
+>>>>>> +
+>>>>>> +		if (priv->enable_gpio)
+>>>>>> +			gpiod_set_value_cansleep(priv->enable_gpio, 1);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	led_set_brightness(priv->led_cdev, priv->levels[brightness]);
+>>>>>> +
+>>>>>> +	priv->enabled = true;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static void led_bl_power_off(struct led_bl_data *priv)
+>>>>>> +{
+>>>>>> +	if (!priv->enabled)
+>>>>>> +		return;
+>>>>>> +
+>>>>>> +	led_set_brightness(priv->led_cdev, LED_OFF);
+>>>>>> +
+>>>>>> +	if (priv->enable_gpio)
+>>>>>> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
+>>>>>> +
+>>>>>> +	regulator_disable(priv->power_supply);
+>>>>>> +
+>>>>>> +	priv->enabled = false;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int led_bl_update_status(struct backlight_device *bl)
+>>>>>> +{
+>>>>>> +	struct led_bl_data *priv = bl_get_data(bl);
+>>>>>> +	int brightness = bl->props.brightness;
+>>>>>> +
+>>>>>> +	if (bl->props.power != FB_BLANK_UNBLANK ||
+>>>>>> +	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
+>>>>>> +	    bl->props.state & BL_CORE_FBBLANK)
+>>>>>> +		brightness = 0;
+>>>>>> +
+>>>>>> +	if (brightness > 0)
+>>>>>> +		led_bl_set_brightness(priv, brightness);
+>>>>>> +	else
+>>>>>> +		led_bl_power_off(priv);
+>>>>>> +
+>>>>>> +	return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static const struct backlight_ops led_bl_ops = {
+>>>>>> +	.update_status	= led_bl_update_status,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static int led_bl_parse_dt(struct device *dev,
+>>>>>> +			   struct led_bl_data *priv)
+>>>>>> +{
+>>>>>> +	struct device_node *node = dev->of_node;
+>>>>>> +	int num_levels;
+>>>>>> +	u32 *levels;
+>>>>>> +	u32 value;
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	if (!node)
+>>>>>> +		return -ENODEV;
+>>>>>> +
+>>>>>> +	num_levels = of_property_count_u32_elems(node, "brightness-levels");
+>>>>> Is there any reason that this function cannot use the (more generic)
+>>>>> device property API throughout this function?
+>>>> No reason. The code is a bit old, and can do with an update.
+>>>>
+>>>> Are you thinking of of_property_read_u32_array(), or another function ?
+>>>>
+>>>> JJ
+>>>>
+>>>>>
+>>>>> Daniel.
+>>>>>
+>>>>>
+>>>>>> +	if (num_levels < 0)
+>>>>>> +		return num_levels;
+>>>>>> +
+>>>>>> +	levels = devm_kzalloc(dev, sizeof(u32) * num_levels, GFP_KERNEL);
+>>>>>> +	if (!levels)
+>>>>>> +		return -ENOMEM;
+>>>>>> +
+>>>>>> +	ret = of_property_read_u32_array(node, "brightness-levels",
+>>>>>> +					 levels,
+>>>>>> +					 num_levels);
+>>>>>> +	if (ret < 0)
+>>>>>> +		return ret;
+>>>>>> +
+>>>>>> +	ret = of_property_read_u32(node, "default-brightness-level", &value);
+>>>>>> +	if (ret < 0)
+>>>>>> +		return ret;
+>>>>>> +
+>>>>>> +	if (value >= num_levels) {
+>>>>>> +		dev_err(dev, "invalid default-brightness-level\n");
+>>>>>> +		return -EINVAL;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	priv->levels = levels;
+>>>>>> +	priv->max_brightness = num_levels - 1;
+>>>>>> +	priv->default_brightness = value;
+>>>>>> +
+>>>>>> +	return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int led_bl_probe(struct platform_device *pdev)
+>>>>>> +{
+>>>>>> +	struct backlight_properties props;
+>>>>>> +	struct led_bl_data *priv;
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>>>>> +	if (!priv)
+>>>>>> +		return -ENOMEM;
+>>>>>> +
+>>>>>> +	platform_set_drvdata(pdev, priv);
+>>>>>> +
+>>>>>> +	priv->dev = &pdev->dev;
+>>>>>> +	priv->led_cdev = to_led_classdev(pdev->dev.parent);
+>>>>>> +
+>>>>>> +	ret = led_bl_parse_dt(&pdev->dev, priv);
+>>>>>> +	if (ret < 0) {
+>>>>>> +		if (ret != -EPROBE_DEFER)
+>>>>>> +			dev_err(&pdev->dev, "failed to parse DT data\n");
+>>>>>> +		return ret;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	priv->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+>>>>>> +			    GPIOD_OUT_LOW);
+>>>>>> +	if (IS_ERR(priv->enable_gpio)) {
+>>>>>> +		ret = PTR_ERR(priv->enable_gpio);
+>>>>>> +		goto err;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	priv->power_supply = devm_regulator_get(&pdev->dev, "power");
+>>>>>> +	if (IS_ERR(priv->power_supply)) {
+>>>>>> +		ret = PTR_ERR(priv->power_supply);
+>>>>>> +		goto err;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	memset(&props, 0, sizeof(struct backlight_properties));
+>>>>>> +	props.type = BACKLIGHT_RAW;
+>>>>>> +	props.max_brightness = priv->max_brightness;
+>>>>>> +	priv->bl_dev = backlight_device_register(dev_name(&pdev->dev),
+>>>>>> +			&pdev->dev, priv, &led_bl_ops, &props);
+>>>>>> +	if (IS_ERR(priv->bl_dev)) {
+>>>>>> +		dev_err(&pdev->dev, "failed to register backlight\n");
+>>>>>> +		ret = PTR_ERR(priv->bl_dev);
+>>>>>> +		goto err;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	priv->bl_dev->props.brightness = priv->default_brightness;
+>>>>>> +	backlight_update_status(priv->bl_dev);
+>>>>>> +
+>>>>>> +	return 0;
+>>>>>> +
+>>>>>> +err:
+>>>>>> +
+>>>>>> +	return ret;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int led_bl_remove(struct platform_device *pdev)
+>>>>>> +{
+>>>>>> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
+>>>>>> +	struct backlight_device *bl = priv->bl_dev;
+>>>>>> +
+>>>>>> +	backlight_device_unregister(bl);
+>>>>>> +
+>>>>>> +	led_bl_power_off(priv);
+>>>>>> +
+>>>>>> +	return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static const struct of_device_id led_bl_of_match[] = {
+>>>>>> +	{ .compatible = "led-backlight" },
+>>>>>> +	{ }
+>>>>>> +};
+>>>>>> +
+>>>>>> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
+>>>>>> +
+>>>>>> +static struct platform_driver led_bl_driver = {
+>>>>>> +	.driver		= {
+>>>>>> +		.name		= "led-backlight",
+>>>>>> +		.of_match_table	= of_match_ptr(led_bl_of_match),
+>>>>>> +	},
+>>>>>> +	.probe		= led_bl_probe,
+>>>>>> +	.remove		= led_bl_remove,
+>>>>>> +};
+>>>>>> +
+>>>>>> +module_platform_driver(led_bl_driver);
+>>>>>> +
+>>>>>> +MODULE_DESCRIPTION("LED based Backlight Driver");
+>>>>>> +MODULE_LICENSE("GPL");
+>>>>>> +MODULE_ALIAS("platform:led-backlight");
+>>>>>> -- 
+>>>>>> 2.17.1
+>>>>>>
