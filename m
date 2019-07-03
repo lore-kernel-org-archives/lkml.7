@@ -2,215 +2,128 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E9FC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479382187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="WK1LTosJ"
+	by mail.kernel.org (Postfix) with ESMTP id 1813A218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562173664;
+	bh=/RsbjU0GcwuC/hHmX+8fVG3Hp6wHqgpo3y9n61F0SxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QUnIFR7CJpGo8U6dopCbw3O9RHRyM2JJCJcHdZxpiPko4iB2mrR7fjZzXfdLYt3BJ
+	 Wg/g6vqFX6EwnCswhwMKPI9K0GhOW2pxr9GgalUnuRe3Bt/pFf0X0QkU3coAaKjwG1
+	 9fu3lvDUF661HFx28zjVpK3xoDmCizRQt+MVtS7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfGCRHi (ORCPT
+        id S1727090AbfGCRHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:07:38 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40380 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCRHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:07:38 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so4460538qtn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=iDFeFMyT2U7JQmce0VUJLeDvLUOySf0ELUoe2q9TOhY=;
-        b=WK1LTosJfDKwwIrJLaNLGi1PA5EhRaBD+WQuzXg8rfDSAf7xjQRs7cHW9igpOAG9/9
-         +RKIX/h3ZoUMLfQbkhD6S4qrntlz1gzUw56mdWC2I64VPAsmld0qtFfd07gv4eHuzD5k
-         Luewx4VQiZEFQ+SAwdEreWovzqqoIpo5/aEXC5yezjhwK1ThkMVPuiUiF4S7zEqO8rcw
-         2+C5TO7iNikn7hB5I3ToYVn2q8U7EIWMxjFDjeF3md8USVQwY4C56fjqk0m+OBM4gjiN
-         fP0aEr6J4Kr4SGQKSl0qnJaKpSJSG9PpPmJKCH+GTKwAvju+0NABu4N5HqOmElu8QhBQ
-         Lq+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=iDFeFMyT2U7JQmce0VUJLeDvLUOySf0ELUoe2q9TOhY=;
-        b=M/LFlXwULJRfd/skWdpS3HWMh8ZqY/UIfAyUh1kSaUX4023pn4IheSk+EqPtyKRUje
-         7vUiw3KqCBHXxrHCxyo7fGkwasEOgMAvoJcU/eeZElBIK2lQS2MiOv6lUpvDnSJRnwm7
-         +4xq5UC+Jv+HQ7X7Set+sobBKZxIReTJ5eWVt9k+D7eL3BmrfJUUbbp9pBUwQndBzCzp
-         tuMsA9zHblPhKWjcwWIeAsf95m4uO52xPhrixxmAkHiBGxpN96pP+BkKIEv193NzxwAS
-         kgmpX0WSpYDGunnbxwAlWzfdgaSGgMp603JLyP/oRoHv2Cws6LloRgU5+/EUACPfxPsj
-         lMEg==
-X-Gm-Message-State: APjAAAWAIeorIWSQnbOSfzAraL7CdL1I7L4Fnn3fMiFqg8MTHoNVKJqJ
-        zwBxaibm0VBWakxPF3UMQm5WvQ==
-X-Google-Smtp-Source: APXvYqxnXmlq2XfogmijD7TtlQbONsZgaV0EFWmc8VsIoskHbtJQwpEWfiSLUO38Og7TutdVW4HZjA==
-X-Received: by 2002:ac8:689a:: with SMTP id m26mr31563036qtq.192.1562173657048;
-        Wed, 03 Jul 2019 10:07:37 -0700 (PDT)
-Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id w19sm1034941qkj.66.2019.07.03.10.07.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 10:07:35 -0700 (PDT)
-Message-ID: <ab95840aebab924f1326be99563f7db5dea3767a.camel@ndufresne.ca>
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-Date:   Wed, 03 Jul 2019 13:07:33 -0400
-In-Reply-To: <CAAFQd5A0gg4RCKkPd-m2_5=ZyDzZ7hnH9AnTrt7ciXQPPHZU2Q@mail.gmail.com>
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
-         <1cb8cc0c89f0017962226fdb84ae11e763fdd233.camel@ndufresne.ca>
-         <CAAFQd5A0gg4RCKkPd-m2_5=ZyDzZ7hnH9AnTrt7ciXQPPHZU2Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-dfbemp9bAxOuHi8Q1srM"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 3 Jul 2019 13:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726430AbfGCRHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:07:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B1A2187F;
+        Wed,  3 Jul 2019 17:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562173661;
+        bh=/RsbjU0GcwuC/hHmX+8fVG3Hp6wHqgpo3y9n61F0SxY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0nxWUS1La7/zEKqHAoUcBBVMRp2NYddXSWFXok0//5VtJVIdUHfaOpP+d/yq+9yex
+         UNMulkzSIaZm2boFWUuypl2hdK47+RKfEpM5PUMrKg9KRDy5yVKQMta6VZPmYTEY3Q
+         S1lI+T8f/apMXIIHf3mwnwco6ZlFoYmsGCh77dOU=
+Date:   Wed, 3 Jul 2019 19:07:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/9] usb: Add USB subsystem notifications [ver #5]
+Message-ID: <20190703170738.GA24672@kroah.com>
+References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
+ <156173698939.15137.11150923486478934112.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156173698939.15137.11150923486478934112.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 04:49:49PM +0100, David Howells wrote:
+> Add a USB subsystem notification mechanism whereby notifications about
+> hardware events such as device connection, disconnection, reset and I/O
+> errors, can be reported to a monitoring process asynchronously.
+> 
+> Firstly, an event queue needs to be created:
+> 
+> 	fd = open("/dev/event_queue", O_RDWR);
+> 	ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, page_size << n);
+> 
+> then a notification can be set up to report USB notifications via that
+> queue:
+> 
+> 	struct watch_notification_filter filter = {
+> 		.nr_filters = 1,
+> 		.filters = {
+> 			[0] = {
+> 				.type = WATCH_TYPE_USB_NOTIFY,
+> 				.subtype_filter[0] = UINT_MAX;
+> 			},
+> 		},
+> 	};
+> 	ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+> 	notify_devices(fd, 12);
+> 
+> After that, records will be placed into the queue when events occur on a
+> USB device or bus.  Records are of the following format:
+> 
+> 	struct usb_notification {
+> 		struct watch_notification watch;
+> 		__u32	error;
+> 		__u32	reserved;
+> 		__u8	name_len;
+> 		__u8	name[0];
+> 	} *n;
+> 
+> Where:
+> 
+> 	n->watch.type will be WATCH_TYPE_USB_NOTIFY
+> 
+> 	n->watch.subtype will be the type of notification, such as
+> 	NOTIFY_USB_DEVICE_ADD.
+> 
+> 	n->watch.info & WATCH_INFO_LENGTH will indicate the length of the
+> 	record.
+> 
+> 	n->watch.info & WATCH_INFO_ID will be the second argument to
+> 	device_notify(), shifted.
+> 
+> 	n->error and n->reserved are intended to convey information such as
+> 	error codes, but are currently not used
+> 
+> 	n->name_len and n->name convey the USB device name as an
+> 	unterminated string.  This may be truncated - it is currently
+> 	limited to a maximum 63 chars.
+> 
+> Note that it is permissible for event records to be of variable length -
+> or, at least, the length may be dependent on the subtype.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> cc: linux-usb@vger.kernel.org
 
---=-dfbemp9bAxOuHi8Q1srM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mercredi 03 juillet 2019 =C3=A0 18:04 +0900, Tomasz Figa a =C3=A9crit :
-> On Wed, Jun 5, 2019 at 12:19 AM Nicolas Dufresne <nicolas@ndufresne.ca> w=
-rote:
-> > Le lundi 03 juin 2019 =C3=A0 13:28 +0200, Hans Verkuil a =C3=A9crit :
-> > > Since Thomasz was very busy with other things, I've taken over this
-> > > patch series. This v4 includes his draft changes and additional chang=
-es
-> > > from me.
-> > >=20
-> > > This series attempts to add the documentation of what was discussed
-> > > during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
-> > > later Embedded Linux Conference Europe 2014 in D=C3=BCsseldorf and th=
-en
-> > > eventually written down by Pawel Osciak and tweaked a bit by Chrome O=
-S
-> > > video team (but mostly in a cosmetic way or making the document more
-> > > precise), during the several years of Chrome OS using the APIs in
-> > > production.
-> > >=20
-> > > Note that most, if not all, of the API is already implemented in
-> > > existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention o=
-f
-> > > this series is just to formalize what we already have.
-> > >=20
-> > > Thanks everyone for the huge amount of useful comments to previous
-> > > versions of this series. Much of the credits should go to Pawel Oscia=
-k
-> > > too, for writing most of the original text of the initial RFC.
-> > >=20
-> > > This v4 incorporates all known comments (let me know if I missed
-> > > something!) and should be complete for the decoder.
-> > >=20
-> > > For the encoder there are two remaining TODOs for the API:
-> > >=20
-> > > 1) Setting the frame rate so bitrate control can make sense, since
-> > >    they need to know this information.
-> > >=20
-> > >    Suggested solution: require support for ENUM_FRAMEINTERVALS for th=
-e
-> > >    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
-> > >    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow b=
-oth
-> > >    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both si=
-nce
-> > >    this is not a CAPTURE vs OUTPUT thing, it is global to both queues=
-.
-> >=20
-> > I agree, as long as it's documented. I can imagine how this could be
-> > confusing for new users.
-> >=20
-> > > 2) Interactions between OUTPUT and CAPTURE formats.
-> > >=20
-> > >    The main problem is what to do if the capture sizeimage is too sma=
-ll
-> > >    for the OUTPUT resolution when streaming starts.
-> > >=20
-> > >    Proposal: width and height of S_FMT(OUTPUT) are used to
-> > >    calculate a minimum sizeimage (app may request more). This is
-> > >    driver-specific.
-> > >=20
-> > >    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
-> > >    for the encoder (i.e. we don't support mid-stream resolution
-> > >    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
-> > >    supported. See https://patchwork.linuxtv.org/patch/56478/ for
-> > >    the patch adding this flag.
-> > >=20
-> > >    Of course, if we start to support mid-stream resolution
-> > >    changes (or other changes that require a source change event),
-> > >    then this flag should be dropped by the encoder driver and
-> > >    documentation on how to handle the source change event should
-> > >    be documented in the encoder spec. I prefer to postpone this
-> > >    until we have an encoder than can actually do mid-stream
-> > >    resolution changes.
-> > >=20
-> > >    If sizeimage of the OUTPUT is too small for the CAPTURE
-> > >    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
-> > >    then the second STREAMON (either CAPTURE or OUTPUT) will
-> > >    return -ENOMEM since there is not enough memory to do the
-> > >    encode.
-> >=20
-> > You seem confident that we will know immediately if it's too small. But
-> > what I remember is that HW has an interrupt for this, allowing
-> > userspace to allocate a larger buffer and resume.
-> >=20
-> > Should we make the capture queue independent of the streaming state, so
-> > that we can streamoff/reqbufs/.../streamon to resume from an ENOMEM
-> > error ? And shouldn't ENOMEM be returned by the following capture DQBUF
-> > when such an interrupt is raised ?
-> >=20
->=20
-> The idea was that stopping the CAPTURE queue would reset the encoder,
-> i.e. start encoding a new, independent stream after the streaming
-> starts again. Still, given that one would normally need to reallocate
-> the buffers on some significant stream parameter change, that would
-> normally require emitting all the relevant headers anyway, so it
-> probably doesn't break anything?
-
-The capture buffer size is a prediction, so even without any parameters
-changes, the size could become insufficient. On the other hand, we have
-managed to predict quite well so far in many applications.
-
-Note, I didn't remember that encoder CAPTURE queue streamoff was the
-one triggering the reset. In GStreamer, I always streamoff both, so I
-never had to think about this. One thing is clear though, it will be
-really hard to extend later with this hard relationship between
-allocation, streaming state and encoder state. I'm sure we can survive
-this, there is probably plenty of workaround, including spreading
-encoded data across multiple buffer as Hans suggested.
-
->=20
-> Best regards,
-> Tomasz
-
---=-dfbemp9bAxOuHi8Q1srM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXRzg1QAKCRBxUwItrAao
-HMraAKC88zEuzXd6pu0fMQkMWBE3oSD3KACgt2V2wZKA8sgVtLy3w7QAvAa1Ilo=
-=8xgV
------END PGP SIGNATURE-----
-
---=-dfbemp9bAxOuHi8Q1srM--
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
