@@ -2,152 +2,189 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1CCC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B88EC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F37321871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmVJrnqC"
+	by mail.kernel.org (Postfix) with ESMTP id 675EF21871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfGCW1f (ORCPT
+        id S1727337AbfGCWdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:27:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39367 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfGCW1c (ORCPT
+        Wed, 3 Jul 2019 18:33:55 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39158 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfGCWdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:27:32 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so3604049otq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 15:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D2V6DzWpvWTZUVXRvfBLQmJzwket1ppQ/Sc433n2/Nc=;
-        b=mmVJrnqCbKv1e50NHEEmq1OoZcpLFVzXU1X0qha21y2dJYbJVVyXKBEbwD21H0Mkgw
-         h/pzQH1i/cFTXLvSSY6Y7n59RwLUZcrCmeuukwEY4k/Lo9bGBRLuZNkIgrPHl1HS03AC
-         OWUDKWQRtkeieoHAoX0gRZwbxw3WnSvdRASvuTP6kW5aM813Tt/j5PdUafTZPbKKbMra
-         gKgMcDSUa4+X34/vSWbaD/LaTsKT+LwlKVKKr6kkhh/t3Uxtz323Sa0VnxegvVnRsiu+
-         vPk5h/fsjfGfJb/7UkUDTYIOl5rREmnWwt90bN88b56oX7k2sb9B7ix0LvIfbyyJKanU
-         jZuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D2V6DzWpvWTZUVXRvfBLQmJzwket1ppQ/Sc433n2/Nc=;
-        b=bZJ+cw1RWC/v2iXDYMQhZgjz7+QzqNxyi/Y7kXdBNCpNjHP02Tuaiksq8GQ9XTr1qE
-         ASgOK3lOZHyUOx7+o8HDIrLgWgmcx0nI6oEvDcI9WlHX4DDqgmmVgnjiZNdUPgK13XJh
-         tSED3yTDzUHVHNxPsreierKR99v9yYf4rYwnarr6CesWufYUluCSFjOfzzcS7T1YEs6h
-         DWeZ0J+ApIkgK8onFurYBKowsJFkjjDn36urToHGigmCGwZxW5pV4my+hpOAgdkzuAkI
-         BVeO9KttQ6ZoeOqENARNp2Abs46oG8NruV9vs3JK5hHHHzeOP8qnzGOXV7EVDiENdj3K
-         HWgw==
-X-Gm-Message-State: APjAAAWXnnaQp2P7kGtssP5uM7rgoFfgjk8GqQljdQMPBhV35IYggM2/
-        Wyh2bzvQuTGVPkprmuaNdRS511dgl3IrlqjJx+Eykw==
-X-Google-Smtp-Source: APXvYqyeTTr+WvpeAKpXyj3063djbPHVPYZg4Jf5vvwk7ke/KotikoqN8p0GhSt6ugm8Gb7SQ9BHig9URCNweka4tb0=
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr27558240otp.225.1562192851493;
- Wed, 03 Jul 2019 15:27:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702004811.136450-1-saravanak@google.com> <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
- <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
-In-Reply-To: <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 3 Jul 2019 15:26:46 -0700
-Message-ID: <CAGETcx_by9aShONfSAR8rfhC69nBzeEhrZSHhOb7HuUBeCu=JA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe ordering
-To:     David Collins <collinsd@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 3 Jul 2019 18:33:54 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id B04AA8060F; Thu,  4 Jul 2019 00:33:39 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 00:33:50 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, Alan Cox <alan@llwyncelyn.cymru>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Rob Herring <robh@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/3] serdev support for n_gsm
+Message-ID: <20190703223350.GA1762@amd>
+References: <20190114012528.2367-1-tony@atomide.com>
+ <20190118115958.GA5532@kroah.com>
+ <20190121105735.GI3691@localhost>
+ <20190121170116.GA5544@atomide.com>
+ <20190124163932.GZ3691@localhost>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
+In-Reply-To: <20190124163932.GZ3691@localhost>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 5:59 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Jul 2, 2019 at 5:03 PM David Collins <collinsd@codeaurora.org> wrote:
-> >
-> > Hello Saravana,
-> >
-> > On 7/1/19 5:48 PM, Saravana Kannan wrote:
-> > ...
-> > > TODO:
-> > > - For the case of consumer child sub-nodes being added by a parent
-> > >   device after late_initcall_sync we might be able to address that by
-> > >   recursively parsing all child nodes and adding all their suppliers as
-> > >   suppliers of the parent node too. The parent probe will add the
-> > >   children before its probe is completed and that will prevent the
-> > >   supplier's sync_state from being executed before the children are
-> > >   probed.
-> > >
-> > > But I'll write that part once I see how this series is received.
-> >
-> > I don't think that this scheme will work in all cases.  It can also lead
-> > to probing deadlock.
-> >
-> > Here is an example:
-> >
-> > Three DT devices (top level A with subnodes B and C):
-> > /A
-> > /A/B
-> > /A/C
-> > C is a consumer of B.
-> >
-> > When device A is created, a search of its subnodes will find the link from
-> > C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
-> > will fail and add A to the wait_for_suppliers list.  This will cause the
-> > probe of A to fail with -EPROBE_DEFER (thanks to the check in
-> > device_links_check_suppliers()).  As a result device B will not be created
-> > and device A will never probe.
-> >
-> > You could try to resolve this situation by detecting the cycle and *not*
-> > adding A to the wait_for_suppliers list.  However, that would get us back
-> > to the problem we had before.  A would be allowed to probe which would
-> > then result in devices being added for B and C.  If the device for B is
-> > added before C, then it would be allowed to immediately probe and
-> > (assuming this all takes place after late_initcall_sync thanks to modules)
-> > its sync_state() callback would be called since no consumer devices are
-> > linked to B.
-> >
-> > Please note that to change this example from theoretical to practical,
-> > replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
-> > pm8998-rpmh-regulators in [1].
->
-> Interesting use case.
->
-> First, to clarify my TODO: I was initially thinking of the recursive
-> "up-heritance" of suppliers from child to parent to handle cases where
-> the supplier is a device from some other top level device (or its
-> child). My thinking has evolved a bit on that. I think the parent
-> needs to inherit only from it's immediate children and not its
-> grandchildren (the child is responsible for handling grandchildren
-> suppliers). I'll also have to make sure I don't try to create a link
-> from a parent device to one of its child device nodes (should be easy
-> to check).
->
-> Anyway, going back to your case, for dependencies between child nodes
-> of a parent, can't the parent just populate them in the right order?
-> You can loop through the children and add them in multiple stages.
->
-> I'll continue to think if I can come up with anything nicer on the
-> drivers, but even if we can't come up with anything better, we can
-> still make sync_state() work.
 
-There's actually a much better way to handle this case where you won't
-have to handle ordering on the driver side. I just need to add one or
-two patches to my patch series. I'll send that out sometime next week.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
--Saravana
+> and sorry about the reply latency. This is quite a lot to think about.
+>=20
+> I'm also adding Kishon and Mark on CC (e.g. for the phy and ASoC
+> bits).
+
+I just wanted to ask... any news here?
+
+> > For some user space examples, I have posted scripts to send and receive
+> > SMS at [3], and Pavel has ofono patches [4] below. Seems like we can
+> > also add support to ModemManager along the similar lines. And for the
+> > serdev drivers, those implement standard Linux interfaces for apps
+> > to use.
+> >=20
+> > For PM, about a year ago I tried making things work with a user space
+> > solution and it sucked big time[5]. The power management makes sense
+> > to do in the kernel driver at least in this case as there are shared
+> > GPIO pins between the USB PHY and TS 27.010 UART. The shared GPIOs
+> > are handled by the phy-mapphone-mdm6600 driver.
+> >=20
+> > With the serdev n_gsm MFD driver, the only thing that needs to be done
+> > to idle the modem is to enable autosuspend for the OHCI interface. So
+> > no spefific coordination between various components is needed for PM
+> > beyond that. Things idle just fine using PM runtime.
+>=20
+> Yeah, I don't envy you trying to get this to work (and now I'm getting
+> dragged into it ;) ).
+
+Yeah, and now I'm in, too. I'd really like to have an useful
+phone. Droid4 seems like best candidate.
+
+> It would really help with a high-level outline of the modem and its
+> components. I've done my best to derive it from these patches and the
+> code you link to, but that info needs to go in the patch descriptions
+> (or cover letter).
+
+Are you ready for the crazyness?
+
+There are two modems in droid 4. I don't care about the LTE one. The
+GSM one is connected with few USB channels, and few multiplexed
+channels over UART.
+
+One of USB channels is standard AT commands.
+One of USB channels is QMI.
+But using USB means big power consumption, so it is better to use
+multiplexed channels over UART.
+
+Few of those look vaguely like AT commands, but voice and sms and
+=2E.. are going over separate channels. One of those contains NMEA data
+(packet in AT lookalike).
+
+> > Sure that's doable. But notice that we actually need to kick the
+> > serdev GNSS interface to get more data. It's not a passive GNSS
+> > data feed in this case. So it's not going to be just a case of
+> > cat /dev/motmdm4 > /dev/ugnss. Without the serdev GNSS driver,
+> > it would be some-custom-app -i /dev/motmdm4 -o /dev/ugnss.
+>=20
+> Yeah, I remember us discussing that briefly off list.
+> =20
+> > And without the n_gsm serdev support, it's a mess of some app
+> > similar to [5] initializing n_gsm, trying to deal with the USB
+> > PHY PM, dealing with Motorola custom packet numbering, kicking
+> > GNSS device, feeding data to /dev/ugnss. Hmm I think I've already
+> > been there just to be able to type AT commands to the modem and
+> > it did not work :)
+>=20
+> It's a mess indeed, but I'd rather see user-space dealing with until we
+> figure out how best to do it in the kernel. ;)
+
+Userspace should be shielded from hardware-specific mess :-(.
+
+> > Anyways, for the serdev kernel drivers, the criteria I've tried
+> > to follow is: "Can this serdev device driver make user space
+> > apps use standard Linux interfaces for the hardware?"
+> >=20
+> > So for the serdev Alsa ASoC driver, user space can use the standard
+> > Alsa interface for setting voice call volume. And for the serdev
+> > GNSS driver, user space can use /dev/gnss0.
+>=20
+> I understand. Both drivers appears to be using AT commands for control.
+> It would be interesting to hear what Mark has to say about the codec
+> driver too. Moving AT handling into the kernel scares me a bit. If we
+> already have a telephony stack to deal with it in user-space, my
+> inclination is to let it continue to handle it.
+
+These "Motorola AT" commands are really a bit different from standard
+AT commands. I was working on userspace, and got something... but
+could not get SMSes to work.
+
+> Modem-managed GNSS is also different from receivers connected directly
+> to the host. It's really the modem that drives the GNSS receiver, and
+> offers a higher-level interface to the host, for example, by buffering
+> output which the host can later request. It may or may not be the
+> kernel's job to periodically poll the modem to recreate an NMEA feed so
+> to speak.
+>=20
+> But the end-result of having it accessible through a standard interface
+> is of course appealing.
+
+We'd really like unified interface for the GPS receivers, please. In
+the Droid4 case, there's separate channel on the UART that has just
+the GPS... so it is really quite similar to normal GPS.
+
+We won't have proper driver for the modem anytime soon, but it would
+be good to be able to use the GPS in the meantime.
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0dLU4ACgkQMOfwapXb+vJW5gCgmYIFuIwzONDK9HMxxjeYazDy
+zG0AnAwd55BTAOguHDpuIumZ7Y7CKmmU
+=s0eS
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
