@@ -4,56 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7691C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E44C06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD321897
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DF42187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120314;
-	bh=kumXHhRnri6jbJPnNt4viVoUMVJo5P8udpUziq8b2aI=;
+	s=default; t=1562120320;
+	bh=6hQsemkxImaDJCUqYWKffBbCMlJUrsMfuYi1mxHeXl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BboIM+Xn5jU7pjZyXQH5ZpOIhKz8qb2Zr1sxLT0vPgk8NEAo6UjS6wO3nA9LgU5ae
-	 qToLMc+YciBieucLjFPaF+rT8CgM1u74U/kcPXxik08uXvjZg68b6ndacHW5arzO/l
-	 uA/ihQFXCMvSEiZ+33INiyNW0mwCQ+d/YZ5I/v9Q=
+	b=SoREhb0+ws7IyRCzVWLTBORW0AqLrDZctPVPqL0uo0HUyH6ZxG7tFR+EuvpYkCLAi
+	 jKKMAHATLOkUX/iC2ybX5isYSthN7F4+GhBzf0i9SaBunPDaKVjUnFpXPkkGtvOAM7
+	 Gvy594HB4Qj2sZi5AgMuVakSMfCvLxk2b4F5KIdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfGCCSd (ORCPT
+        id S1728293AbfGCCSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:18:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfGCCS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:18:26 -0400
+        id S1727464AbfGCCSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:18:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74493218A3;
-        Wed,  3 Jul 2019 02:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8251C21873;
+        Wed,  3 Jul 2019 02:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120306;
-        bh=kumXHhRnri6jbJPnNt4viVoUMVJo5P8udpUziq8b2aI=;
+        s=default; t=1562120309;
+        bh=6hQsemkxImaDJCUqYWKffBbCMlJUrsMfuYi1mxHeXl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPCfe14YzNmLf+6N/MCeaxuQK/OEdazOsCgdAH5RcnwbAt2HpfgknfKu7AeN2W10t
-         Gnwf/t1YzuheqjGTDqa7hdGeWuPJYH4NmfUqZVKCS8SbQ52tb+lEjgrCLxIdwSVPAZ
-         xYjY1wtKKutH/CLTZRK7ljb6wJ1ZeSsogiW+c0js=
+        b=tn/qju4QJdXXsLu1kSF63L9bDgzzLkg7+hU5953GEVOVqemSe0mdSR2H2ifhAZKfQ
+         wG54wd5ZDN/K8iB7oLVTJoz2cDq4nWDIHwbFpg/TRMhshbX+T1N3M661LGY+ANn3nP
+         RguqY3rnDvXuwn36JAY2TRT1UulUBiFHDfCHK+IM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/13] ARM: dts: imx6ul: fix PWM[1-4] interrupts
-Date:   Tue,  2 Jul 2019 22:18:10 -0400
-Message-Id: <20190703021814.18385-9-sashal@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/13] x86/boot/64: Fix crash if kernel image crosses page table boundary
+Date:   Tue,  2 Jul 2019 22:18:12 -0400
+Message-Id: <20190703021814.18385-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021814.18385-1-sashal@kernel.org>
 References: <20190703021814.18385-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,62 +65,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 
-[ Upstream commit 3cf10132ac8d536565f2c02f60a3aeb315863a52 ]
+[ Upstream commit 81c7ed296dcd02bc0b4488246d040e03e633737a ]
 
-According to the i.MX6UL/L RM, table 3.1 "ARM Cortex A7 domain interrupt
-summary", the interrupts for the PWM[1-4] go from 83 to 86.
+A kernel which boots in 5-level paging mode crashes in a small percentage
+of cases if KASLR is enabled.
 
-Fixes: b9901fe84f02 ("ARM: dts: imx6ul: add pwm[1-4] nodes")
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+This issue was tracked down to the case when the kernel image unpacks in a
+way that it crosses an 1G boundary. The crash is caused by an overrun of
+the PMD page table in __startup_64() and corruption of P4D page table
+allocated next to it. This particular issue is not visible with 4-level
+paging as P4D page tables are not used.
+
+But the P4D and the PUD calculation have similar problems.
+
+The PMD index calculation is wrong due to operator precedence, which fails
+to confine the PMDs in the PMD array on wrap around.
+
+The P4D calculation for 5-level paging and the PUD calculation calculate
+the first index correctly, but then blindly increment it which causes the
+same issue when a kernel image is located across a 512G and for 5-level
+paging across a 46T boundary.
+
+This wrap around mishandling was introduced when these parts moved from
+assembly to C.
+
+Restore it to the correct behaviour.
+
+Fixes: c88d71508e36 ("x86/boot/64: Rewrite startup_64() in C")
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190620112345.28833-1-kirill.shutemov@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/head64.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 036aeba4f02c..49f4bdc0d864 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -342,7 +342,7 @@
- 			pwm1: pwm@02080000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02080000 0x4000>;
--				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM1>,
- 					 <&clks IMX6UL_CLK_PWM1>;
- 				clock-names = "ipg", "per";
-@@ -353,7 +353,7 @@
- 			pwm2: pwm@02084000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02084000 0x4000>;
--				interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM2>,
- 					 <&clks IMX6UL_CLK_PWM2>;
- 				clock-names = "ipg", "per";
-@@ -364,7 +364,7 @@
- 			pwm3: pwm@02088000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x02088000 0x4000>;
--				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM3>,
- 					 <&clks IMX6UL_CLK_PWM3>;
- 				clock-names = "ipg", "per";
-@@ -375,7 +375,7 @@
- 			pwm4: pwm@0208c000 {
- 				compatible = "fsl,imx6ul-pwm", "fsl,imx27-pwm";
- 				reg = <0x0208c000 0x4000>;
--				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6UL_CLK_PWM4>,
- 					 <&clks IMX6UL_CLK_PWM4>;
- 				clock-names = "ipg", "per";
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 45b5c6c4a55e..7c67d8939f3e 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -117,26 +117,27 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+ 
+-		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
+-		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
+-		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
++		i = physaddr >> P4D_SHIFT;
++		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
++		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
+ 	} else {
+ 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
+ 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
+ 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
+ 	}
+ 
+-	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
+-	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
+-	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
++	i = physaddr >> PUD_SHIFT;
++	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
++	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+ 
+ 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
+ 	pmd_entry += sme_get_me_mask();
+ 	pmd_entry +=  physaddr;
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
+-		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
+-		pmd[idx] = pmd_entry + i * PMD_SIZE;
++		int idx = i + (physaddr >> PMD_SHIFT);
++
++		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
+ 	}
+ 
+ 	/*
 -- 
 2.20.1
 
