@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56B3C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D715C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A476521852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED81821852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GTJzXA6i"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="i4hKdNtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfGCU7h (ORCPT
+        id S1727422AbfGCU7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:59:37 -0400
-Received: from mail-eopbgr150049.outbound.protection.outlook.com ([40.107.15.49]:60289
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Wed, 3 Jul 2019 16:59:42 -0400
+Received: from mail-eopbgr20068.outbound.protection.outlook.com ([40.107.2.68]:3438
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727280AbfGCU7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:59:32 -0400
+        id S1727374AbfGCU7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:59:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FvsWJrvejOHxRClN3xZ1gkKefbbL+X6CPpVlIbOXHYc=;
- b=GTJzXA6ir3gFOEEfmpkarS4nFiqdXecrfHwOfYRCOCvcP9yI8Vie68AbRw9+OlB7M50RGW+dII71bALretx7HWkzW2DYb7BvniftqsBUDktYTVG2du/pK5xtMWsaEH0pqfhd9uhJPqHd7X4Ybx+rnGrlELuNCfEQoEFj0imLJrE=
+ bh=KgUxk8dTq2mwEo0f64PnQenk2A+dVjDkixjbOZafERk=;
+ b=i4hKdNtKsjKexZmvTrhMprGAYoj0eBvAFHOy9AAmSgXf3PmuEBZvtcXPExgiAmmXlRV2S283GKjdLPwrJw45pxy2uIwioT6feAvN2mUGKD2zjmtGS+ACgZ+ImUop7jHi2vsAJJcMjAG9gIAanSZbu00Y/yqu4KI34IMJaXFEj3k=
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com (20.179.233.20) by
- VE1PR04MB6592.eurprd04.prod.outlook.com (20.179.234.208) with Microsoft SMTP
+ VE1PR04MB6464.eurprd04.prod.outlook.com (20.179.233.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.17; Wed, 3 Jul 2019 20:59:30 +0000
+ 15.20.2032.20; Wed, 3 Jul 2019 20:59:34 +0000
 Received: from VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::a5ca:7c9c:6b18:eb0a]) by VE1PR04MB6463.eurprd04.prod.outlook.com
  ([fe80::a5ca:7c9c:6b18:eb0a%6]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
- 20:59:30 +0000
+ 20:59:34 +0000
 From:   Roy Pledge <roy.pledge@nxp.com>
 To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -42,13 +42,13 @@ To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Leo Li <leoyang.li@nxp.com>
 CC:     Roy Pledge <roy.pledge@nxp.com>
-Subject: [PATCH v2 3/7] soc/fsl/qbman: Cleanup QMan queues if device was
- already initialized
-Thread-Topic: [PATCH v2 3/7] soc/fsl/qbman: Cleanup QMan queues if device was
- already initialized
-Thread-Index: AQHVMeI1E8Yqep3QnkaAT4Gy8a4rQg==
-Date:   Wed, 3 Jul 2019 20:59:30 +0000
-Message-ID: <1562187548-32261-4-git-send-email-roy.pledge@nxp.com>
+Subject: [PATCH v2 5/7] soc/fsl/qbman: Disable interrupts during portal
+ recovery
+Thread-Topic: [PATCH v2 5/7] soc/fsl/qbman: Disable interrupts during portal
+ recovery
+Thread-Index: AQHVMeI3m+zN+6qPYUWl0LfMgTCdFQ==
+Date:   Wed, 3 Jul 2019 20:59:34 +0000
+Message-ID: <1562187548-32261-6-git-send-email-roy.pledge@nxp.com>
 References: <1562187548-32261-1-git-send-email-roy.pledge@nxp.com>
 In-Reply-To: <1562187548-32261-1-git-send-email-roy.pledge@nxp.com>
 Reply-To: Roy Pledge <roy.pledge@nxp.com>
@@ -65,159 +65,127 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [72.142.119.78]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc1c4512-6da9-4399-df53-08d6fff95779
+x-ms-office365-filtering-correlation-id: d39507a1-14ce-4117-e6e0-08d6fff959be
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6592;
-x-ms-traffictypediagnostic: VE1PR04MB6592:
-x-microsoft-antispam-prvs: <VE1PR04MB659261256A3841F9EF70218286FB0@VE1PR04MB6592.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6464;
+x-ms-traffictypediagnostic: VE1PR04MB6464:
+x-microsoft-antispam-prvs: <VE1PR04MB6464D0F382604B426D56919086FB0@VE1PR04MB6464.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
 x-forefront-prvs: 00872B689F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(199004)(189003)(2616005)(6636002)(52116002)(2201001)(446003)(86362001)(476003)(7736002)(11346002)(110136005)(44832011)(3450700001)(256004)(6486002)(478600001)(5660300002)(305945005)(486006)(99286004)(14454004)(316002)(43066004)(66446008)(66946007)(73956011)(6512007)(8936002)(50226002)(81166006)(81156014)(3846002)(26005)(6116002)(71200400001)(186003)(71190400001)(2501003)(68736007)(64756008)(53936002)(386003)(66066001)(25786009)(8676002)(102836004)(76176011)(66556008)(6506007)(2906002)(66476007)(36756003)(4326008)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6592;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(189003)(199004)(14454004)(2501003)(81156014)(81166006)(4326008)(478600001)(305945005)(8676002)(14444005)(2906002)(7736002)(50226002)(476003)(486006)(2616005)(446003)(25786009)(11346002)(3450700001)(86362001)(2201001)(68736007)(44832011)(36756003)(66946007)(26005)(66476007)(66556008)(64756008)(73956011)(71200400001)(71190400001)(66066001)(53936002)(6116002)(52116002)(386003)(6506007)(66446008)(8936002)(256004)(102836004)(186003)(99286004)(6486002)(5660300002)(110136005)(316002)(3846002)(6436002)(43066004)(6512007)(6636002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6464;H:VE1PR04MB6463.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dRiOS99F3NK1mL8s5JFdD178voaZR/v23tvnZ3N+aQoDbJgsylRiYpUY7JT845GgiYHbSW1YR625ai9SEB+8C50ercoBEymX4gqFQGQxPa5jEMEkiAkz0spaCtSJS8ppjA628ap4AUSxMsZuzZlaZ2QvXjKqo5o+kUEFK9FWEnu48DJhAfrd9BBhHSVDqBoQ2ICVsXsVWCwcrk33cJGj9tJTK1s1zCSY/GuinnNCAiOLt5EdnRRdn83Uw870nTTrOu0zf2u1y62urEiQoerOLebTSkZc6JRn5xCQ50NkG1jUKSQv2b0TnHQPBItQf4Gsn9MRNyFFRdLerjEwkDYWBqduf72QTtAa4TwtjEMUgsnM7ZIsnBynmHuokFXQqc2iBvm01v5DbSpQ11ev7Zpmqk5enN9zU6DLI3DQlTJ6qP4=
+x-microsoft-antispam-message-info: b2tb+cnlCGLO6Cr4cDnbpjigDcG8OxQWhJ7ZLckKI2XbMqk9j9QhyHHDUAiP7to7/z68wuWYwah8Iq6qiElouoosgn9Gy+TSQHlIRHNkf+hmEeLnrtSRsTQVqbXEIKGd4JwE8os5lvYtbnUrzjp5+TmX5/tgsFXrwz+UHbVKmKxUpziHmRrPTKnHE3wgWHQPKL9KpfSomwB2izTrvZAS4LZpg32PjHG4NxAWgS15qRnBPMXzwGyOKq7vDgNFjm1XcidGcDXIA5BDhqKy/0fg2MbcsU6B9ReKdffW53TyeHR6VM4kbbqIF+ye0DiWOpxmvkLKFT9kMerd+M67WXeeTuMb4TneyNzBARUanaqWqDhTBspnLwbr51hEibCy1pg/L3+EE0fcPv0498fBwPLaiXretD05/ggs0moMvfCAYF8=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc1c4512-6da9-4399-df53-08d6fff95779
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 20:59:30.2326
+X-MS-Exchange-CrossTenant-Network-Message-Id: d39507a1-14ce-4117-e6e0-08d6fff959be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 20:59:34.2173
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: roy.pledge@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the QMan device was previously initialized make sure all the
-frame queues are out of service once all the portals are probed.
-This handles the case where the kernel is restarted without the
-SoC being reset (kexec for example)
+Disable the QBMan interrupts during recovery.
 
 Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
 ---
- drivers/soc/fsl/qbman/qman.c        |  4 ++--
- drivers/soc/fsl/qbman/qman_ccsr.c   | 13 ++++++++++++-
- drivers/soc/fsl/qbman/qman_portal.c | 18 +++++++++++++++++-
- drivers/soc/fsl/qbman/qman_priv.h   |  7 +++++++
- 4 files changed, 38 insertions(+), 4 deletions(-)
+ drivers/soc/fsl/qbman/qman.c      | 22 +++++++++++++++++++---
+ drivers/soc/fsl/qbman/qman_ccsr.c |  1 +
+ drivers/soc/fsl/qbman/qman_priv.h |  1 +
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
-index 636f83f..f10f77d 100644
+index 2989504..4a99ce5 100644
 --- a/drivers/soc/fsl/qbman/qman.c
 +++ b/drivers/soc/fsl/qbman/qman.c
-@@ -2581,7 +2581,7 @@ static int _qm_dqrr_consume_and_match(struct qm_porta=
-l *p, u32 fqid, int s,
- #define qm_dqrr_drain_nomatch(p) \
- 	_qm_dqrr_consume_and_match(p, 0, 0, false)
+@@ -1070,6 +1070,20 @@ int qman_wq_alloc(void)
+ 	return 0;
+ }
 =20
--static int qman_shutdown_fq(u32 fqid)
-+int qman_shutdown_fq(u32 fqid)
- {
- 	struct qman_portal *p;
- 	struct device *dev;
-@@ -2754,7 +2754,7 @@ static int qman_shutdown_fq(u32 fqid)
-=20
- 		DPAA_ASSERT((mcr->verb & QM_MCR_VERB_MASK) =3D=3D
- 			    QM_MCR_VERB_ALTER_OOS);
--		if (mcr->result) {
-+		if (mcr->result !=3D QM_MCR_RESULT_OK) {
- 			dev_err(dev, "OOS fail: FQ 0x%x (0x%x)\n",
- 				fqid, mcr->result);
- 			ret =3D -EIO;
++
++void qman_enable_irqs(void)
++{
++	int i;
++
++	for (i =3D 0; i < num_possible_cpus(); i++) {
++		if (affine_portals[i]) {
++			qm_out(&affine_portals[i]->p, QM_REG_ISR, 0xffffffff);
++			qm_out(&affine_portals[i]->p, QM_REG_IIR, 0);
++		}
++
++	}
++}
++
+ /*
+  * This is what everything can wait on, even if it migrates to a different=
+ cpu
+  * to the one whose affine portal it is waiting on.
+@@ -1269,8 +1283,8 @@ static int qman_create_portal(struct qman_portal *por=
+tal,
+ 	qm_out(p, QM_REG_ISDR, isdr);
+ 	portal->irq_sources =3D 0;
+ 	qm_out(p, QM_REG_IER, 0);
+-	qm_out(p, QM_REG_ISR, 0xffffffff);
+ 	snprintf(portal->irqname, MAX_IRQNAME, IRQNAME, c->cpu);
++	qm_out(p, QM_REG_IIR, 1);
+ 	if (request_irq(c->irq, portal_isr, 0, portal->irqname,	portal)) {
+ 		dev_err(c->dev, "request_irq() failed\n");
+ 		goto fail_irq;
+@@ -1290,7 +1304,7 @@ static int qman_create_portal(struct qman_portal *por=
+tal,
+ 	isdr &=3D ~(QM_PIRQ_DQRI | QM_PIRQ_MRI);
+ 	qm_out(p, QM_REG_ISDR, isdr);
+ 	if (qm_dqrr_current(p)) {
+-		dev_err(c->dev, "DQRR unclean\n");
++		dev_dbg(c->dev, "DQRR unclean\n");
+ 		qm_dqrr_cdc_consume_n(p, 0xffff);
+ 	}
+ 	if (qm_mr_current(p) && drain_mr_fqrni(p)) {
+@@ -1303,8 +1317,10 @@ static int qman_create_portal(struct qman_portal *po=
+rtal,
+ 	}
+ 	/* Success */
+ 	portal->config =3D c;
++	qm_out(p, QM_REG_ISR, 0xffffffff);
+ 	qm_out(p, QM_REG_ISDR, 0);
+-	qm_out(p, QM_REG_IIR, 0);
++	if (!qman_requires_cleanup())
++		qm_out(p, QM_REG_IIR, 0);
+ 	/* Write a sane SDQCR */
+ 	qm_dqrr_sdqcr_set(p, portal->sdqcr);
+ 	return 0;
 diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman=
 _ccsr.c
-index 39f6fc1..fcf77e0 100644
+index fcf77e0..8d17643 100644
 --- a/drivers/soc/fsl/qbman/qman_ccsr.c
 +++ b/drivers/soc/fsl/qbman/qman_ccsr.c
-@@ -483,7 +483,7 @@ RESERVEDMEM_OF_DECLARE(qman_pfdr, "fsl,qman-pfdr", qman=
-_pfdr);
+@@ -735,6 +735,7 @@ int qman_requires_cleanup(void)
 =20
- #endif
-=20
--static unsigned int qm_get_fqid_maxcnt(void)
-+unsigned int qm_get_fqid_maxcnt(void)
+ void qman_done_cleanup(void)
  {
- 	return fqd_sz / 64;
++	qman_enable_irqs();
+ 	__qman_requires_cleanup =3D 0;
  }
-@@ -728,6 +728,17 @@ int qman_is_probed(void)
- }
- EXPORT_SYMBOL_GPL(qman_is_probed);
 =20
-+int qman_requires_cleanup(void)
-+{
-+	return __qman_requires_cleanup;
-+}
-+
-+void qman_done_cleanup(void)
-+{
-+	__qman_requires_cleanup =3D 0;
-+}
-+
-+
- static int fsl_qman_probe(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
-diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qm=
-an_portal.c
-index 75717bc..153727c 100644
---- a/drivers/soc/fsl/qbman/qman_portal.c
-+++ b/drivers/soc/fsl/qbman/qman_portal.c
-@@ -233,7 +233,7 @@ static int qman_portal_probe(struct platform_device *pd=
-ev)
- 	struct device_node *node =3D dev->of_node;
- 	struct qm_portal_config *pcfg;
- 	struct resource *addr_phys[2];
--	int irq, cpu, err;
-+	int irq, cpu, err, i;
- 	u32 val;
-=20
- 	err =3D qman_is_probed();
-@@ -328,6 +328,22 @@ static int qman_portal_probe(struct platform_device *p=
-dev)
- 	if (!cpu_online(cpu))
- 		qman_offline_cpu(cpu);
-=20
-+	if (__qman_portals_probed =3D=3D 1 && qman_requires_cleanup()) {
-+		/*
-+		 * QMan wasn't reset prior to boot (Kexec for example)
-+		 * Empty all the frame queues so they are in reset state
-+		 */
-+		for (i =3D 0; i < qm_get_fqid_maxcnt(); i++) {
-+			err =3D  qman_shutdown_fq(i);
-+			if (err) {
-+				dev_err(dev, "Failed to shutdown frame queue %d\n",
-+					i);
-+				goto err_portal_init;
-+			}
-+		}
-+		qman_done_cleanup();
-+	}
-+
- 	return 0;
-=20
- err_portal_init:
 diff --git a/drivers/soc/fsl/qbman/qman_priv.h b/drivers/soc/fsl/qbman/qman=
 _priv.h
-index 0451571..a8a35fe 100644
+index a8a35fe..fd1cf54 100644
 --- a/drivers/soc/fsl/qbman/qman_priv.h
 +++ b/drivers/soc/fsl/qbman/qman_priv.h
-@@ -272,3 +272,10 @@ extern struct qman_portal *affine_portals[NR_CPUS];
- extern struct qman_portal *qman_dma_portal;
- const struct qm_portal_config *qman_get_qm_portal_config(
- 						struct qman_portal *portal);
-+
-+unsigned int qm_get_fqid_maxcnt(void);
-+
-+int qman_shutdown_fq(u32 fqid);
-+
-+int qman_requires_cleanup(void);
-+void qman_done_cleanup(void);
+@@ -279,3 +279,4 @@ int qman_shutdown_fq(u32 fqid);
+=20
+ int qman_requires_cleanup(void);
+ void qman_done_cleanup(void);
++void qman_enable_irqs(void);
 --=20
 2.7.4
 
