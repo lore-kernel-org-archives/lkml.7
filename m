@@ -2,171 +2,226 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5342C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1EBC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE94F21880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528DA21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bew0bE1v"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gffr7v2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfGCEj7 (ORCPT
+        id S1727008AbfGCElB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 00:39:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34054 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfGCEj7 (ORCPT
+        Wed, 3 Jul 2019 00:41:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58000 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfGCElA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 00:39:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so575863pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 21:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xcs6LVebZeYfm34tR+E2iNRTl8rNqT5+HyCV9cmyWAg=;
-        b=bew0bE1vCsEia5mVlCBgThQkoqZt0DhnInUjeC77F/hf/+eC+B0SiAETi90XUiO6KV
-         6iu+WAqDm/w4DbOoYmBau0bh4sjSRrLiEwCEqq3zaol5B7pM/Ab1FsynaKaGKMg7/u09
-         +R7IgIITU1Yrg8Ynt/NttzgZEPOT5UeLuOnqM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xcs6LVebZeYfm34tR+E2iNRTl8rNqT5+HyCV9cmyWAg=;
-        b=CsNyuyYH6J4RZ+byQa599xHmZFTkfuZ6Yn12oEUfYgXXZ2ktzc3lz1sZV9Oy+LLBgT
-         Zvi5VUz8H7UVoPYlqVF4hQhdRfEp4sDcSrvoASC79oUTqhE453f8Wl8YGYj1wRPhytXr
-         vOXRV03aQlCdpsjyIuvg1ejDEKlklQ0V7gJZYKOBwgpEy3hJMgcpcXVecdiav28ZQxRM
-         CgXiqu5VzMYIzRsxJiS1Rx9nG1j0NqLNknAPNqyW7Rz05EMO0dVEoanZiiDN2iohi3PM
-         AL8/MNRoHeGiJ+4TZoknTxtBtZXLGoeovdibJRYujcJWxXmjL8TwfhvUK63PGAh0dLjb
-         cI6g==
-X-Gm-Message-State: APjAAAVLttn52FqFKPMJiz6c4xLDqsocCPGAACz0rYS8RpmcmTI72YIv
-        7ObPjNIRWmtzgu+DT/c65PZl67ULkr4=
-X-Google-Smtp-Source: APXvYqxxjCQ6yRUV3c52rlRzqGy1yqDWJHn798vUrWS/J1C2iV1HH1EAt8lqZZD5YDDjfcyTxrlDuA==
-X-Received: by 2002:a63:1723:: with SMTP id x35mr34081099pgl.233.1562128797851;
-        Tue, 02 Jul 2019 21:39:57 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 2sm678953pff.174.2019.07.02.21.39.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 21:39:56 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [RFC] rcuperf: Make rcuperf test more robust for !expedited mode
-Date:   Wed,  3 Jul 2019 00:39:45 -0400
-Message-Id: <20190703043945.128825-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Wed, 3 Jul 2019 00:41:00 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x634eVON110690;
+        Tue, 2 Jul 2019 23:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562128831;
+        bh=9bNKxvF0VLaczyeBCMEhxw7ZpdNmUS6nr2XWDzekiGQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gffr7v2fV2c7P/IFTTqSI0mrnnt+97yxTUNcfFBLTBTW9Owv8vr7t+80x3hsNM9T1
+         3oEjbwoqE9Jnm+PS2QB38Zt7QbcEqQugnvizHQljQD+W892+j3ntlwH+yLPl6QDvJX
+         vdw2DhQuhDEUQ7SoRDfgM9OqyZoudOeQcIk3fhgs=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x634eV6x112951
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Jul 2019 23:40:31 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Jul
+ 2019 23:40:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 2 Jul 2019 23:40:30 -0500
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x634eMAK021478;
+        Tue, 2 Jul 2019 23:40:24 -0500
+Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Tokunori Ikegami <ikegami.t@gmail.com>
+References: <20190625075746.10439-1-vigneshr@ti.com>
+ <20190625075746.10439-4-vigneshr@ti.com>
+ <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
+Date:   Wed, 3 Jul 2019 10:11:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that rcuperf run concurrently with init starting up.
-During this time, the system is running all grace periods as expedited.
-However, rcuperf can also be run in a normal mode. The rcuperf test
-depends on a holdoff before starting the test to ensure grace periods
-start later. This works fine with the default holdoff time however it is
-not robust in situations where init takes greater than the holdoff time
-the finish running. Or, as in my case:
 
-I modified the rcuperf test locally to also run a thread that did
-preempt disable/enable in a loop. This had the effect of slowing down
-init. The end result was "batches:" counter was 0. This was because only
-expedited GPs seem to happen, not normal ones which led to the
-rcu_state.gp_seq counter remaining constant across grace periods which
-unexpectedly happen to be expedited.
 
-This led me to debug that even though the test could be for normal GP
-performance, because init has still not run enough, the
-rcu_unexpedited_gp() call would not have run yet. In other words, the
-test would concurrently with init booting in expedited GP mode.
+On 02/07/19 11:23 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+> 
+>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>> Bus interface between a host system master and one or more slave
+>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
+>>
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash with respect to bits per clock
+>> cycle. But HyperBus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, HyperBus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+> 
+>    I have at least created my HyperBus driver and unfortunately I'm having serious
+> issues with the design of the support core (see below)...
+> 
+> [...]
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..63a9e64895bc
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,154 @@
+> [...]
+>> +int hyperbus_register_device(struct hyperbus_device *hbdev)
+>> +{
+>> +	const struct hyperbus_ops *ops;
+>> +	struct hyperbus_ctlr *ctlr;
+>> +	struct device_node *np;
+>> +	struct map_info *map;
+>> +	struct resource res;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
+>> +		pr_err("hyperbus: please fill all the necessary fields!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	np = hbdev->np;
+>> +	ctlr = hbdev->ctlr;
+>> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
+>> +		return -ENODEV;
+>> +
+>> +	hbdev->memtype = HYPERFLASH;
+>> +
+>> +	ret = of_address_to_resource(np, 0, &res);
+> 
+>    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
+> like a property of the HB controller. In my case, the flash device in the DT has
+> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
+> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
+> 
 
-To fix this properly, let us just check for whether rcu_unexpedited_gp()
-was called yet before starting the writer test. With this, the holdoff
-parameter could also be dropped or reduced to speed up the test.
+You could declare R/O MMIO region in controla and set up a translation using ranges
+from slave's reg CS based reg mapping like:
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-Please consider this patch as an RFC only! This is the first time I am
-running the RCU performance tests, thanks!
-
-Question:
-I actually did not know that expedited gp does not increment
-rcu_state.gp_seq. Does expedited GPs not go through the same RCU-tree
-machinery as non-expedited? If yes, why doesn't rcu_state.gp_seq
-increment when we are expedited? If no, why not?
-
- kernel/rcu/rcu.h     | 2 ++
- kernel/rcu/rcuperf.c | 5 +++++
- kernel/rcu/update.c  | 9 +++++++++
- 3 files changed, 16 insertions(+)
-
-diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-index 8fd4f82c9b3d..5d30dbc7000b 100644
---- a/kernel/rcu/rcu.h
-+++ b/kernel/rcu/rcu.h
-@@ -429,12 +429,14 @@ static inline void srcu_init(void) { }
- static inline bool rcu_gp_is_normal(void) { return true; }
- static inline bool rcu_gp_is_expedited(void) { return false; }
- static inline void rcu_expedite_gp(void) { }
-+static inline bool rcu_expedite_gp_called(void) { }
- static inline void rcu_unexpedite_gp(void) { }
- static inline void rcu_request_urgent_qs_task(struct task_struct *t) { }
- #else /* #ifdef CONFIG_TINY_RCU */
- bool rcu_gp_is_normal(void);     /* Internal RCU use. */
- bool rcu_gp_is_expedited(void);  /* Internal RCU use. */
- void rcu_expedite_gp(void);
-+bool rcu_expedite_gp_called(void);
- void rcu_unexpedite_gp(void);
- void rcupdate_announce_bootup_oddness(void);
- void rcu_request_urgent_qs_task(struct task_struct *t);
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 4513807cd4c4..9902857d3cc6 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -375,6 +375,11 @@ rcu_perf_writer(void *arg)
- 	if (holdoff)
- 		schedule_timeout_uninterruptible(holdoff * HZ);
- 
-+	// Wait for rcu_unexpedite_gp() to be called from init to avoid
-+	// doing expedited GPs if we are not supposed to
-+	while (!gp_exp && rcu_expedite_gp_called())
-+		schedule_timeout_uninterruptible(1);
++	hbmc: hyperbus@47034000 {
++		compatible = "ti,am654-hbmc";
++		reg = <0x0 0x47034000 0x0 0x100>,
++			<0x5 0x00000000 0x1 0x0000000>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
++			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
 +
- 	t = ktime_get_mono_fast_ns();
- 	if (atomic_inc_return(&n_rcu_perf_writer_started) >= nrealwriters) {
- 		t_rcu_perf_writer_started = t;
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 249517058b13..840f62805d62 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -154,6 +154,15 @@ void rcu_expedite_gp(void)
- }
- EXPORT_SYMBOL_GPL(rcu_expedite_gp);
- 
-+/**
-+ * rcu_expedite_gp_called - Was there a prior call to rcu_expedite_gp()?
-+ */
-+bool rcu_expedite_gp_called(void)
-+{
-+	return (atomic_read(&rcu_expedited_nesting) != 0);
-+}
-+EXPORT_SYMBOL_GPL(rcu_expedite_gp_called);
-+
- /**
-  * rcu_unexpedite_gp - Cancel prior rcu_expedite_gp() invocation
-  *
++		/* Slave flash node */
++		flash@0,0 {
++			compatible = "cypress,hyperflash", "cfi-flash";
++			reg = <0x0 0x0 0x4000000>;
++		};
++	};
+
+If you use just CS# how would you handle CS to MMIO region mapping? 
+Does both CS use the same MMIO base for reads?
+
+
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dev = ctlr->dev;
+>> +	map = &hbdev->map;
+>> +	map->size = resource_size(&res);
+>> +	map->virt = devm_ioremap_resource(dev, &res);
+>> +	if (IS_ERR(map->virt))
+>> +		return PTR_ERR(map->virt);
+> 
+>    Again, I doubt that this should be done here, and not in the HB controller driver...
+
+If multiple CS use same MMIO base, then I can make this part of code non fatal
+when reg entry is a single cell and introduce notion of CS like SPI
+
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
+
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+Regards
+Vignesh
