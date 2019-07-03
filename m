@@ -2,122 +2,124 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2071C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AA4C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B801C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562124558;
-	bh=PneQkg/1LoiWhbHo/3kRwa199moyjmS6osDZ1+b+hS4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgzSmdwwEW3v6TxlS2nOLXMYDOzDOvmCGVf1yhyiYtsgeskpBmBTNCl7kZ1UbdMXf
-	 q3hHFWRpSgs64pTR8bwIsoFS2S1nVpfeF2pcJZhegkxfox/lQ0MKnBJnxKwtiQvev3
-	 HR4f/KkJTxyJKjGOtRqRxx6Aos6Rox7qgTWj73bM=
+	by mail.kernel.org (Postfix) with ESMTP id A23342054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfGCD3R (ORCPT
+        id S1727612AbfGCD3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbfGCD3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:29:00 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D077218B6;
-        Wed,  3 Jul 2019 03:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562124539;
-        bh=PneQkg/1LoiWhbHo/3kRwa199moyjmS6osDZ1+b+hS4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kvd+ENDB7zDqW2Ebb0df8TU5h7q7TI/vwu2+wQFaLnHAY8ORUcvHD9Ck8VpaF+FQU
-         +vAiNDdbt9+E/1fVg775cgDCnM1RgDFJtrfT9jrGsIj1dPwde80nZpsyEkCS98cXSU
-         cUEMt1yDkxVGW1oTWgqrMd42duFX4WFk7ibgfM/8=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 16/18] perf tools metric: Don't include duration_time in group
-Date:   Wed,  3 Jul 2019 00:27:44 -0300
-Message-Id: <20190703032746.21692-17-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190703032746.21692-1-acme@kernel.org>
-References: <20190703032746.21692-1-acme@kernel.org>
+        Tue, 2 Jul 2019 23:29:21 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54595 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727598AbfGCD3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:29:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TVvOVSB_1562124555;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TVvOVSB_1562124555)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 03 Jul 2019 11:29:16 +0800
+Subject: [PATCH 2/4] numa: append per-node execution info in memory.numa_stat
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+Message-ID: <825ebaf0-9f71-bbe1-f054-7fa585d61af1@linux.alibaba.com>
+Date:   Wed, 3 Jul 2019 11:29:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+This patch introduced numa execution information, to imply the numa
+efficiency.
 
-The Memory_BW metric generates groups including duration_time, which
-maps to a software event.
+By doing 'cat /sys/fs/cgroup/memory/CGROUP_PATH/memory.numa_stat', we
+see new output line heading with 'exectime', like:
 
-For some reason this makes the group always not count.
+  exectime 311900 407166
 
-Always put duration_time outside a group when generating metrics.  It's
-always the same time, so no need to group it.
+which means the tasks of this cgroup executed 311900 micro seconds on
+node 0, and 407166 ms on node 1.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190628220737.13259-3-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Combined with the memory node info, we can estimate the numa efficiency,
+for example if the node memory info is:
+
+  total=206892 N0=21933 N1=185171
+
+By monitoring the increments, if the topology keep in this way and
+locality is not nice, then it imply numa balancing can't help migrate
+the memory from node 1 to 0 which is accessing by tasks on node 0, or
+tasks can't migrate to node 1 for some reason, then you may consider
+to bind the cgroup on the cpus of node 1.
+
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
 ---
- tools/perf/util/metricgroup.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ include/linux/memcontrol.h |  1 +
+ mm/memcontrol.c            | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7d36435fa84c..d8164574cb16 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -409,6 +409,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			const char **ids;
- 			int idnum;
- 			struct egroup *eg;
-+			bool no_group = false;
- 
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
-@@ -419,11 +420,25 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				strbuf_addf(events, ",");
- 			for (j = 0; j < idnum; j++) {
- 				pr_debug("found event %s\n", ids[j]);
-+				/*
-+				 * Duration time maps to a software event and can make
-+				 * groups not count. Always use it outside a
-+				 * group.
-+				 */
-+				if (!strcmp(ids[j], "duration_time")) {
-+					if (j > 0)
-+						strbuf_addf(events, "}:W,");
-+					strbuf_addf(events, "duration_time");
-+					no_group = true;
-+					continue;
-+				}
- 				strbuf_addf(events, "%s%s",
--					j == 0 ? "{" : ",",
-+					j == 0 || no_group ? "{" : ",",
- 					ids[j]);
-+				no_group = false;
- 			}
--			strbuf_addf(events, "}:W");
-+			if (!no_group)
-+				strbuf_addf(events, "}:W");
- 
- 			eg = malloc(sizeof(struct egroup));
- 			if (!eg) {
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 0a30d14c9f43..deeca9db17d8 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -190,6 +190,7 @@ enum memcg_numa_locality_interval {
+
+ struct memcg_stat_numa {
+ 	u64 locality[NR_NL_INTERVAL];
++	u64 exectime;
+ };
+
+ #endif
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2edf3f5ac4b9..d5f48365770f 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3575,6 +3575,18 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+ 		seq_printf(m, " %u", jiffies_to_msecs(sum));
+ 	}
+ 	seq_putc(m, '\n');
++
++	seq_puts(m, "exectime");
++	for_each_online_node(nr) {
++		int cpu;
++		u64 sum = 0;
++
++		for_each_cpu(cpu, cpumask_of_node(nr))
++			sum += per_cpu(memcg->stat_numa->exectime, cpu);
++
++		seq_printf(m, " %llu", jiffies_to_msecs(sum));
++	}
++	seq_putc(m, '\n');
+ #endif
+
+ 	return 0;
+@@ -3606,6 +3618,7 @@ void memcg_stat_numa_update(struct task_struct *p)
+ 	memcg = mem_cgroup_from_task(p);
+ 	if (idx != -1)
+ 		this_cpu_inc(memcg->stat_numa->locality[idx]);
++	this_cpu_inc(memcg->stat_numa->exectime);
+ 	rcu_read_unlock();
+ }
+ #endif
 -- 
-2.20.1
+2.14.4.44.g2045bb6
 
