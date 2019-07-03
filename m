@@ -2,95 +2,120 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE01C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F23C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375632085A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DEA2085A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WGpDCOMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfGCDST (ORCPT
+        id S1727197AbfGCDTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:18:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727049AbfGCDST (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:18:19 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x633HYDC080429
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2019 23:18:18 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tgm3e8ej2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:18:18 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 3 Jul 2019 04:18:16 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Jul 2019 04:18:12 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x633ICfc60948496
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jul 2019 03:18:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0501AE04D;
-        Wed,  3 Jul 2019 03:18:11 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B7CAAE051;
-        Wed,  3 Jul 2019 03:18:09 +0000 (GMT)
-Received: from [9.85.75.18] (unknown [9.85.75.18])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Jul 2019 03:18:09 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 11/12] powerpc/ptrace: create ppc_gethwdinfo()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <cover.1561735587.git.christophe.leroy@c-s.fr>
- <b25d2a4c5d6ea848b9b4e434bc4c67833c8e9268.1561735588.git.christophe.leroy@c-s.fr>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Wed, 3 Jul 2019 08:48:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 2 Jul 2019 23:19:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45009 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfGCDTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:19:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dmYy57H3z9s3Z;
+        Wed,  3 Jul 2019 13:19:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562123990;
+        bh=aMWKOPSg19BlgZYYRdTAeDuWdyK4008Ci9t23AgoYmc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WGpDCOMhZ5mCZafXgpr0Q3LbI/LB2ykkEYmFQu39VtYUcGByi5iuGjP3wa+92ncVT
+         byr9vPGP5Kprwo+779+wax1wNMcLwbSwSKjR1tt0i0UMgauJQ0008vKb0WCSpwHvzB
+         R31Kliv5Jq9vepw+Iyah5jNH9sbLM8o2fugowwDcXomGoMksOwBNfnjQq1vseQoyBb
+         a5LRpijyS2xyddbq4UdAYBMzBJL5Xj9LhYQvuno9ulclnLuxsxBxrU1UFYVTCTlKlt
+         Y7KaWz075bmxych4hRQFA948UuaAZyDaosn1XhYVlG+dKC1Wj/+nwn/Dc30cwqVduw
+         gnA8SMgeE/HiA==
+Date:   Wed, 3 Jul 2019 13:19:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the block tree with the xfs tree
+Message-ID: <20190703131948.37b05189@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <b25d2a4c5d6ea848b9b4e434bc4c67833c8e9268.1561735588.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070303-0012-0000-0000-0000032EAEF1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070303-0013-0000-0000-00002167FF34
-Message-Id: <eef5961b-220a-30ca-2a78-22e25331f024@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=863 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907030038
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/FYqSM1F0geViJaDykvbS9Vo"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/FYqSM1F0geViJaDykvbS9Vo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 6/28/19 9:18 PM, Christophe Leroy wrote:
-> Create ippc_gethwdinfo() to handle PPC_PTRACE_GETHWDBGINFO and
-> reduce ifdef mess
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
+Today's linux-next merge of the block tree got a conflict in:
 
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+  fs/xfs/xfs_aops.c
 
+between commit:
+
+  a24737359667 ("xfs: simplify xfs_chain_bio")
+
+from the xfs tree and commit:
+
+  79d08f89bb1b ("block: fix .bi_size overflow")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/xfs/xfs_aops.c
+index bb769d9c5250,11f703d4a605..000000000000
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@@ -790,8 -782,8 +790,8 @@@ xfs_add_to_ioend
+  		atomic_inc(&iop->write_count);
+ =20
+  	if (!merged) {
+- 		if (bio_full(wpc->ioend->io_bio))
++ 		if (bio_full(wpc->ioend->io_bio, len))
+ -			xfs_chain_bio(wpc->ioend, wbc, bdev, sector);
+ +			wpc->ioend->io_bio =3D xfs_chain_bio(wpc->ioend->io_bio);
+  		bio_add_page(wpc->ioend->io_bio, page, len, poff);
+  	}
+ =20
+
+--Sig_/FYqSM1F0geViJaDykvbS9Vo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0cHtUACgkQAVBC80lX
+0GxjbQf7BHHTZllJ6X240rzOrgZ8DA7+yeR4uy9cFKqJlpTY+2ImMN1UnEVUxLpW
+CppMNCEWVQOMSpLMnkFYt7H+VPbj8Z64Ta6Znv0GxXhYlpgz8AiPx8I1e3Ua3vd+
+oEG5GPh4wNTzBzXjxnPD/BtezzGwvvyZPYxoCqlvOj8A6KvyxnpfgqET88JC2POb
+tvp/BBo8pwVlGhm9vnj5uKPs7YRE4DwC/uWzBZApXLrewdpADXzi3iRAisWclezA
+Uv7rIA3t4RXMN3onQAlsEIuECyNNqO8TTvNng5iLwM94Rr0VQieakCaonRPAv9eg
+RnPFmW8oA9eR6zK14SmKlJXKebzVlg==
+=7nq4
+-----END PGP SIGNATURE-----
+
+--Sig_/FYqSM1F0geViJaDykvbS9Vo--
