@@ -2,118 +2,169 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2A8C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B9EC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7FA2189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503842189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562176566;
-	bh=L3h7wwKgvwILQUaF8E4p9qXMhfRYyp+VoJCbvfQ0d1I=;
+	s=default; t=1562176618;
+	bh=5x9nYr/bGtljeo+8XgQwsEz86LG7/Qa1TONMqcKMLrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bLsqe77h/IuapyuYcoyX/js64IiCzrCio+G0i2bW9JliuSAQxE345CZdU7k+unmEi
-	 9xV3/0EGgs3cA9unLO5xoU/prw1H+yzLE5Kp5drNPTOlU/l/GLgB+JZ+Q/h7B0V6+m
-	 a24ycyu09L4UT6+uEA0P+EYT+zW5IXAI4SbY4luk=
+	b=FO6XNcGKTHdR8wym5hk/QeJXMNhAb9zAaRHBF4Y5V4he9kF/CE9rTDlxaYDDsswUc
+	 WOxR7FpLw6aYv2KVkHFYB/5sjO9mlI1nBH+YwCseypCw5Of+y65HTUPMxToar9psZS
+	 OlRSeQP2Eh2QK2N6hZWag/JzErafvhSOESmYYc/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfGCR4F (ORCPT
+        id S1727100AbfGCR45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 13:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfGCR4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:56:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725933AbfGCR44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:56:56 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 984D62184C;
-        Wed,  3 Jul 2019 17:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9D752184C;
+        Wed,  3 Jul 2019 17:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562176564;
-        bh=L3h7wwKgvwILQUaF8E4p9qXMhfRYyp+VoJCbvfQ0d1I=;
+        s=default; t=1562176615;
+        bh=5x9nYr/bGtljeo+8XgQwsEz86LG7/Qa1TONMqcKMLrY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EamyrQd6SFdTCUkrd3JVNgORmJpot8kSicTmfnpNtpOFgou59PJYhclDTX4yMTVqb
-         Ei9nKrIVWVRliYzhfwVexZKisw9hktv8CpdGtuQNCjOKe6PHFxEu0UDaRHO2egUJLM
-         Qkeg35NPByPrcSazHY1rb7beXr4SY+zY5qWMwZJQ=
-Date:   Wed, 3 Jul 2019 19:56:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Wu Hao <hao.wu@intel.com>,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 04/15] fpga: dfl: fme: support 512bit data width PR
-Message-ID: <20190703175601.GA14034@kroah.com>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-5-mdf@kernel.org>
+        b=SA8RPFrWCwm9msjhObImMtqTZdAN5oNTrvABGhRXT/ipfE+q9BkK9sOiE82WKFakY
+         Ov2czFSZ62pGhHWnaKDWxfjfG99LMRHQRewYtS7WVBORQA78tJ04yQhn0WNyKyYEBL
+         NyXflP/xQJtjvF8NiKQ9CYWZ8sHyALj0BwM5HReo=
+Date:   Wed, 3 Jul 2019 12:56:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v3 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20190703175654.GN128603@google.com>
+References: <cover.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190628004951.6202-5-mdf@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <a0534c2ec69e0d7e03c4da3e8d539e8591a5686c.1561061640.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 05:49:40PM -0700, Moritz Fischer wrote:
-> From: Wu Hao <hao.wu@intel.com>
+On Thu, Jun 20, 2019 at 01:38:42PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> In early partial reconfiguration private feature, it only
-> supports 32bit data width when writing data to hardware for
-> PR. 512bit data width PR support is an important optimization
-> for some specific solutions (e.g. XEON with FPGA integrated),
-> it allows driver to use AVX512 instruction to improve the
-> performance of partial reconfiguration. e.g. programming one
-> 100MB bitstream image via this 512bit data width PR hardware
-> only takes ~300ms, but 32bit revision requires ~3s per test
-> result.
-> 
-> Please note now this optimization is only done on revision 2
-> of this PR private feature which is only used in integrated
-> solution that AVX512 is always supported. This revision 2
-> hardware doesn't support 32bit PR.
-> 
-> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> Since pci_prg_resp_pasid_required() function has dependency on both
+> PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> CONFIG_PCI_PASID config options are enabled.
+
+This is likely just confusion on my part, but I don't understand what
+you're doing here.
+
+pci_prg_resp_pasid_required() does not actually *depend* on the
+CONFIG_PCI_PRI config symbol.
+
+It is currently compiled only if CONFIG_PCI_ATS=y (which controls
+compilation of the entire ats.c) and CONFIG_PCI_PASID=y (since it's
+within #ifdef CONFIG_PCI_PASID).
+
+pci_prg_resp_pasid_required() is called by attach_device()
+(amd_iommu.c), which is only compiled if CONFIG_AMD_IOMMU=y, and that
+selects PCI_PRI.
+
+It is also called by iommu_enable_dev_iotlb() (intel-iommu.c).  That
+file is compiled if CONFIG_INTEL_IOMMU=y and the call itself is inside
+#ifdef CONFIG_INTEL_IOMMU_SVM.  But I don't see the PCI_PRI connection
+here.
+
+If this is just to limit the visibility, say that.  But I don't think
+that's really a good reason.  The chain of config symbols seems a
+little too complicated.
+
+> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> interface.")
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  drivers/fpga/dfl-fme-main.c |   3 +
->  drivers/fpga/dfl-fme-mgr.c  | 113 +++++++++++++++++++++++++++++++-----
->  drivers/fpga/dfl-fme-pr.c   |  43 +++++++++-----
->  drivers/fpga/dfl-fme.h      |   2 +
->  drivers/fpga/dfl.h          |   5 ++
->  5 files changed, 135 insertions(+), 31 deletions(-)
+>  drivers/pci/ats.c       | 10 ++++++----
+>  include/linux/pci-ats.h | 12 +++++++++---
+>  2 files changed, 15 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 086ad2420ade..076d74f6416d 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -21,6 +21,8 @@
->  #include "dfl.h"
->  #include "dfl-fme.h"
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index 97c08146534a..f9eeb7db0db3 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_pasid_features);
 >  
-> +#define DRV_VERSION	"0.8"
+> +#ifdef CONFIG_PCI_PRI
 > +
->  static ssize_t ports_num_show(struct device *dev,
->  			      struct device_attribute *attr, char *buf)
+>  /**
+>   * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+>   *				 status.
+> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+>   *
+>   * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+>   *
+> - * Even though the PRG response PASID status is read from PRI Status
+> - * Register, since this API will mainly be used by PASID users, this
+> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> - * CONFIG_PCI_PRI.
+> + * Since this API has dependency on both PRI and PASID, protect it
+> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+>   */
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
 >  {
-> @@ -277,3 +279,4 @@ MODULE_DESCRIPTION("FPGA Management Engine driver");
->  MODULE_AUTHOR("Intel Corporation");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("platform:dfl-fme");
-> +MODULE_VERSION(DRV_VERSION);
-
-No, we ripped out these useless "driver version" things all over the
-place, please do not add them back in again.  They mean nothing and
-confuse people to no end.
-
-I'll not take this patch, sorry.
-
-greg k-h
+> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+>  
+> +#endif
+> +
+>  #define PASID_NUMBER_SHIFT	8
+>  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>  /**
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 1ebb88e7c184..1a0bdaee2f32 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>  void pci_restore_pasid_state(struct pci_dev *pdev);
+>  int pci_pasid_features(struct pci_dev *pdev);
+>  int pci_max_pasids(struct pci_dev *pdev);
+> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>  
+>  #else  /* CONFIG_PCI_PASID */
+>  
+> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+>  	return -EINVAL;
+>  }
+>  
+> +#endif /* CONFIG_PCI_PASID */
+> +
+> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+> +
+> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +
+> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+> +
+>  static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  {
+>  	return 0;
+>  }
+> -#endif /* CONFIG_PCI_PASID */
+> -
+> +#endif
+>  
+>  #endif /* LINUX_PCI_ATS_H*/
+> -- 
+> 2.21.0
+> 
