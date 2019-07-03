@@ -2,125 +2,110 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D0EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A8EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3F8218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562160616;
-	bh=cTnWaBSee+lzmHVjDnO8oDfQOivVCKCn+qdIVLNTsGU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1VP+RzSQLgIBsBAJr2snPL7VLvohtrZQ597OM8IytPpPqup9t7cZ0BzYWb+nMQnP/
-	 YkKObsbLgk9uAT9+ZEJIQ33k2Vp3js0mnP/HSjEb+kE3LhD7ub4UUWZZsdNIIhEynm
-	 A1e/Pbcf4v2BgEhE+zIaD9rZ8ii+Tsg4sNV5oI5I=
+	by mail.kernel.org (Postfix) with ESMTP id 1773E21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfGCNaO (ORCPT
+        id S1726621AbfGCNdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbfGCNaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:30:14 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20E1218A6;
-        Wed,  3 Jul 2019 13:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562160613;
-        bh=cTnWaBSee+lzmHVjDnO8oDfQOivVCKCn+qdIVLNTsGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BqdXSUPSo303eoTU7vVKkQ4GfPqANU4J/QUjenOb4vVv9QGo42NYw5JSZz3ho7ZFO
-         aKEaVwlYydckJDB7R675dG1+ZpJBx/+Iea1OQd1f/k67lpSgO75ZbOX6U3aXA+Yoxc
-         gp9uhKoupJTIZp8Y2k/rnprqfMEh0HjrmIg9p/is=
-Received: by mail-qt1-f174.google.com with SMTP id p15so872874qtl.3;
-        Wed, 03 Jul 2019 06:30:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAX1qQ2kckLplWnL27COxsi57AWhdgao1WuXSSFeLu/wD3CRqJy3
-        4vtWZzRG+z9NcH7C4uZKaTFgN9BvM1o/IFQ7Gg==
-X-Google-Smtp-Source: APXvYqxIzyo7Lo/IajElk+Um68Us5zqISzGqoLwLUoKgjLKIwKRbqQpJeeZ+IUrlBWM2FQbSmw0DMax53XREB/jPi84=
-X-Received: by 2002:a0c:acef:: with SMTP id n44mr32868030qvc.39.1562160612082;
- Wed, 03 Jul 2019 06:30:12 -0700 (PDT)
+        Wed, 3 Jul 2019 09:33:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40614 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725847AbfGCNdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:33:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ED4ACB76E;
+        Wed,  3 Jul 2019 13:33:13 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 818F91E0D71; Wed,  3 Jul 2019 15:33:13 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 15:33:13 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: reiserfs: journal: Change return type of
+ dirty_one_transaction
+Message-ID: <20190703133313.GA16008@quack2.suse.cz>
+References: <20190702175430.GA5882@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190702203523.2412-1-martin.blumenstingl@googlemail.com>
- <20190702203523.2412-2-martin.blumenstingl@googlemail.com>
- <CAL_Jsq+3H-cbrUna27RJ1o0w5MxaubkA9hcZjpWsaEYnx6bWQg@mail.gmail.com> <CAFBinCCWzLyhzVcqHR0RY9+cSqDZ3EdJEim8SP4Mr2Q3M=OKTg@mail.gmail.com>
-In-Reply-To: <CAFBinCCWzLyhzVcqHR0RY9+cSqDZ3EdJEim8SP4Mr2Q3M=OKTg@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 3 Jul 2019 07:30:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK4t+M69CJ3Q+Sf9Q10jheDzHsMoNdjPCQ7x5rfGGq6Kw@mail.gmail.com>
-Message-ID: <CAL_JsqK4t+M69CJ3Q+Sf9Q10jheDzHsMoNdjPCQ7x5rfGGq6Kw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add binding for the Lantiq VRX200
- and ARX300 PCIe PHYs
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702175430.GA5882@hari-Inspiron-1545>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 2:58 AM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Rob,
->
-> On Wed, Jul 3, 2019 at 1:34 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Jul 2, 2019 at 2:35 PM Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> > >
-> > > Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
-> > > The IP block contains settings for the PHY and a PLL.
-> > > The PLL mode is configurable through a dedicated #phy-cell in .dts.
-> > >
-> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > > ---
-> > >  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 87 +++++++++++++++++++
-> > >  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
-> > >  2 files changed, 98 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> > >  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> > > new file mode 100644
-> > > index 000000000000..b7b222e772d0
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> > > @@ -0,0 +1,87 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > The preference is (GPL-2.0 OR BSD-2-Clause) for new bindings.
-> to make sure I understand this correctly:
-> the license is then only valid for the bindings - is it fine if the
-> driver uses GPL-2.0-only?
+On Tue 02-07-19 23:24:30, Hariprasad Kelam wrote:
+> Change return type of dirty_one_transaction from int to void. As this
+> function always return success.
+> 
+> Fixes below issue reported by coccicheck
+> fs/reiserfs/journal.c:1690:5-8: Unneeded variable: "ret". Return "0" on
+> line 1719
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-Yes, as this isn't derived from the driver code nor used by the driver
-code (though that would be fine).
+I can see Andrew already picked up the cleanup. The patch looks good to me.
+Feel free to add:
 
-BTW, 'GPL-2.0-only' is the newer, preferred form of 'GPL-2.0', so I
-guess we should be using (GPL-2.0-only OR BSD-2-Clause).
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> I don't have any datasheet for these SoCs so all my knowledge is based
-> on the GPL-2.0-only driver from the Lantiq board support package
-> (called "UGW").
-> the .yaml file is 100% my own work so I'm fine with having GPL-2.0 OR
-> BSD-2-Clause
-> however, that still has to be compatible with my driver, which I chose
-> to be GPL-2.0-only because that's the license from the Lantiq board
-> support package
->
->
-> Martin
+								Honza
+
+
+> ---
+>  fs/reiserfs/journal.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/reiserfs/journal.c b/fs/reiserfs/journal.c
+> index 36346dc..4517a13 100644
+> --- a/fs/reiserfs/journal.c
+> +++ b/fs/reiserfs/journal.c
+> @@ -94,7 +94,7 @@ static int journal_join(struct reiserfs_transaction_handle *th,
+>  			struct super_block *sb);
+>  static void release_journal_dev(struct super_block *super,
+>  			       struct reiserfs_journal *journal);
+> -static int dirty_one_transaction(struct super_block *s,
+> +static void dirty_one_transaction(struct super_block *s,
+>  				 struct reiserfs_journal_list *jl);
+>  static void flush_async_commits(struct work_struct *work);
+>  static void queue_log_writer(struct super_block *s);
+> @@ -1682,12 +1682,11 @@ static int write_one_transaction(struct super_block *s,
+>  }
+>  
+>  /* used by flush_commit_list */
+> -static int dirty_one_transaction(struct super_block *s,
+> +static void dirty_one_transaction(struct super_block *s,
+>  				 struct reiserfs_journal_list *jl)
+>  {
+>  	struct reiserfs_journal_cnode *cn;
+>  	struct reiserfs_journal_list *pjl;
+> -	int ret = 0;
+>  
+>  	jl->j_state |= LIST_DIRTY;
+>  	cn = jl->j_realblock;
+> @@ -1716,7 +1715,6 @@ static int dirty_one_transaction(struct super_block *s,
+>  		}
+>  		cn = cn->next;
+>  	}
+> -	return ret;
+>  }
+>  
+>  static int kupdate_transactions(struct super_block *s,
+> -- 
+> 2.7.4
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
