@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEFEC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD12C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA69218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AE8218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfGCLEs (ORCPT
+        id S1727137AbfGCLEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:04:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51671 "EHLO
+        Wed, 3 Jul 2019 07:04:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51601 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfGCLEP (ORCPT
+        with ESMTP id S1726434AbfGCLEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:04:15 -0400
+        Wed, 3 Jul 2019 07:04:09 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hid3d-0002d1-4t; Wed, 03 Jul 2019 13:04:13 +0200
-Message-Id: <20190703105916.951339398@linutronix.de>
+        id 1hid3X-0002bQ-Mf; Wed, 03 Jul 2019 13:04:07 +0200
+Message-Id: <20190703105915.895135937@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Jul 2019 12:54:46 +0200
+Date:   Wed, 03 Jul 2019 12:54:35 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch 15/18] x86/apic: Add static key to Control IPI shorthands
+Subject: [patch 04/18] x86/apic: Move IPI inlines into ipi.c
 References: <20190703105431.096822793@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -42,113 +42,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IPI shorthand functionality delivers IPI/NMI broadcasts to all CPUs in
-the system. This can have similar side effects as the MCE broadcasting when
-CPUs are waiting in the BIOS or are offlined.
-
-The kernel tracks already the state of offlined CPUs whether they have been
-brought up at least once so that the CR4 MCE bit is set to make sure that
-MCE broadcasts can't brick the machine.
-
-Utilize that information and compare it to the cpu_present_mask. If all
-present CPUs have been brought up at least once then the broadcast side
-effect is mitigated by disabling regular interrupt/IPI delivery in the APIC
-itself and by the cpu_ignore_nmi check at the begin of the NMI handler.
-
-Use a static key to switch between broadcasting via shorthands or sending
-the IPI/NMI one by one.
+No point in having them in an header file.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/apic.h  |    2 ++
- arch/x86/kernel/apic/ipi.c   |   24 +++++++++++++++++++++++-
- arch/x86/kernel/apic/local.h |    6 ++++++
- arch/x86/kernel/cpu/common.c |    2 ++
- 4 files changed, 33 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/ipi.h |   19 -------------------
+ arch/x86/kernel/apic/ipi.c |   16 +++++++++++++---
+ 2 files changed, 13 insertions(+), 22 deletions(-)
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -505,8 +505,10 @@ extern int default_check_phys_apicid_pre
+--- a/arch/x86/include/asm/ipi.h
++++ b/arch/x86/include/asm/ipi.h
+@@ -71,27 +71,8 @@ extern void default_send_IPI_mask_sequen
+ extern void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask,
+ 							 int vector);
  
- #ifdef CONFIG_SMP
- bool apic_id_is_primary_thread(unsigned int id);
-+void apic_smt_update(void);
- #else
- static inline bool apic_id_is_primary_thread(unsigned int id) { return false; }
-+static inline void apic_smt_update(void) { }
- #endif
+-/* Avoid include hell */
+-#define NMI_VECTOR 0x02
+-
+ extern int no_broadcast;
  
- extern void irq_enter(void);
+-static inline void __default_local_send_IPI_allbutself(int vector)
+-{
+-	if (no_broadcast || vector == NMI_VECTOR)
+-		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
+-	else
+-		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector, apic->dest_logical);
+-}
+-
+-static inline void __default_local_send_IPI_all(int vector)
+-{
+-	if (no_broadcast || vector == NMI_VECTOR)
+-		apic->send_IPI_mask(cpu_online_mask, vector);
+-	else
+-		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector, apic->dest_logical);
+-}
+-
+ #ifdef CONFIG_X86_32
+ extern void default_send_IPI_mask_sequence_logical(const struct cpumask *mask,
+ 							 int vector);
 --- a/arch/x86/kernel/apic/ipi.c
 +++ b/arch/x86/kernel/apic/ipi.c
-@@ -5,6 +5,8 @@
+@@ -198,15 +198,25 @@ void default_send_IPI_allbutself(int vec
+ 	 * if there are no other CPUs in the system then we get an APIC send
+ 	 * error if we try to broadcast, thus avoid sending IPIs in this case.
+ 	 */
+-	if (!(num_online_cpus() > 1))
++	if (num_online_cpus() < 2)
+ 		return;
  
- #include "local.h"
- 
-+DEFINE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
-+
- #ifdef CONFIG_SMP
- #ifdef CONFIG_HOTPLUG_CPU
- #define DEFAULT_SEND_IPI	(1)
-@@ -28,7 +30,27 @@ static int __init print_ipi_mode(void)
- 	return 0;
- }
- late_initcall(print_ipi_mode);
--#endif
-+
-+void apic_smt_update(void)
-+{
-+	/*
-+	 * Do not switch to broadcast mode if:
-+	 * - Disabled on the command line
-+	 * - Only a single CPU is online
-+	 * - Not all present CPUs have been at least booted once
-+	 *
-+	 * The latter is important as the local APIC might be in some
-+	 * random state and a broadcast might cause havoc. That's
-+	 * especially true for NMI broadcasting.
-+	 */
-+	if (apic_ipi_shorthand_off || num_online_cpus() == 1 ||
-+	    !cpumask_equal(cpu_present_mask, &cpus_booted_once_mask)) {
-+		static_branch_disable(&apic_use_ipi_shorthand);
+-	__default_local_send_IPI_allbutself(vector);
++	if (no_broadcast || vector == NMI_VECTOR) {
++		apic->send_IPI_mask_allbutself(cpu_online_mask, vector);
 +	} else {
-+		static_branch_enable(&apic_use_ipi_shorthand);
++		__default_send_IPI_shortcut(APIC_DEST_ALLBUT, vector,
++					    apic->dest_logical);
 +	}
-+}
-+#endif /* CONFIG_SMP */
- 
- static inline int __prepare_ICR2(unsigned int mask)
- {
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -7,6 +7,9 @@
-  * (c) 1998-99, 2000 Ingo Molnar <mingo@redhat.com>
-  * (c) 2002,2003 Andi Kleen, SuSE Labs.
-  */
-+
-+#include <linux/jump_label.h>
-+
- #include <asm/apic.h>
- 
- /* APIC flat 64 */
-@@ -22,6 +25,9 @@ int x2apic_phys_pkg_id(int initial_apici
- void x2apic_send_IPI_self(int vector);
- 
- /* IPI */
-+
-+DECLARE_STATIC_KEY_FALSE(apic_use_ipi_shorthand);
-+
- static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
- 					 unsigned int dest)
- {
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1888,4 +1888,6 @@ void arch_smt_update(void)
- {
- 	/* Handle the speculative execution misfeatures */
- 	cpu_bugs_smt_update();
-+	/* Check whether IPI broadcasting can be enabled */
-+	apic_smt_update();
  }
+ 
+ void default_send_IPI_all(int vector)
+ {
+-	__default_local_send_IPI_all(vector);
++	if (no_broadcast || vector == NMI_VECTOR) {
++		apic->send_IPI_mask(cpu_online_mask, vector);
++	} else {
++		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector,
++					    apic->dest_logical);
++	}
+ }
+ 
+ void default_send_IPI_self(int vector)
 
 
