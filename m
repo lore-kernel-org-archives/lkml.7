@@ -2,151 +2,89 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0193C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECCC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A1B218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D237218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfGCNMG (ORCPT
+        id S1727034AbfGCNMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:12:06 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41812 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfGCNMG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:12:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id x17so2551849iog.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:12:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=0LKzWy3rKCKUf2ADkmhCBlAO8nooReUA+k7uMtJw9z8=;
-        b=OLa5roTOTrNPC0PvArfne7Q2OsxbOy6J4PC9/nnQ3uaeZHLDWQiLV1yXvc6UL1biYA
-         QAZvwh3rfG0g8umf4np1RaocBDAFbXaj+II+gtq6T/EQItU3LCkaX0/9MkT5dnlwYlJM
-         rnVFjmk4mospHE0UZeYQ2ZF7reGCdcdQa6XPh5Bv8nKX84p07vHWX19A67/vcu/FdMx2
-         7cfOOqhgGnF3l+0HuUU8b5o+zDy5F4NY8DcpjLuyTQOH6fIPjlqfGlJuRevQ1dRWyUuK
-         hVXbIhoZwX+iNpb3IKh8k81mI60eLXrJcJk42HV9uHin9DFvpX0zuxw9w9KcZQlXlcBK
-         0R8g==
-X-Gm-Message-State: APjAAAUjKOwwO4nAFrdsYxR92e69DOzg11HvWwqdzyASlHKV821XB2PL
-        8aXTtYqA4xyqDkeoAI/KAw/TDJ8zbiab4ljXI+O/NPEkudOx
-X-Google-Smtp-Source: APXvYqzjw5aaitiWWD6dEocipz83t7ATXlepPRhnUXEFvzDxK0lxT2Q2XJhDNQIEV9xnvLBTPgvvzofYGptzSTHYKvri+paEh/nX
+        Wed, 3 Jul 2019 09:12:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33376 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfGCNMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:12:40 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 92AF1308FEC6;
+        Wed,  3 Jul 2019 13:12:19 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7702C1001B04;
+        Wed,  3 Jul 2019 13:12:13 +0000 (UTC)
+Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
+ caches
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190702183730.14461-1-longman@redhat.com>
+ <20190703065628.GK978@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <9ade5859-b937-c1ac-9881-2289d734441d@redhat.com>
+Date:   Wed, 3 Jul 2019 09:12:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:b696:: with SMTP id i22mr10221274jam.87.1562159525386;
- Wed, 03 Jul 2019 06:12:05 -0700 (PDT)
-Date:   Wed, 03 Jul 2019 06:12:05 -0700
-In-Reply-To: <00000000000035c756058848954a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000097dfa5058cc69be3@google.com>
-Subject: Re: KASAN: use-after-free Read in hci_cmd_timeout
-From:   syzbot <syzbot+19a9f729f05272857487@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190703065628.GK978@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 03 Jul 2019 13:12:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On 7/3/19 2:56 AM, Michal Hocko wrote:
+> On Tue 02-07-19 14:37:30, Waiman Long wrote:
+>> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
+>> file to shrink the slab by flushing all the per-cpu slabs and free
+>> slabs in partial lists. This applies only to the root caches, though.
+>>
+>> Extends this capability by shrinking all the child memcg caches and
+>> the root cache when a value of '2' is written to the shrink sysfs file.
+> Why do we need a new value for this functionality? I would tend to think
+> that skipping memcg caches is a bug/incomplete implementation. Or is it
+> a deliberate decision to cover root caches only?
 
-HEAD commit:    eca94432 Bluetooth: Fix faulty expression for minimum encr..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1006cc8ba00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6451f0da3d42d53
-dashboard link: https://syzkaller.appspot.com/bug?extid=19a9f729f05272857487
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125b7999a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176deefba00000
+It is just that I don't want to change the existing behavior of the
+current code. It will definitely take longer to shrink both the root
+cache and the memcg caches. If we all agree that the only sensible
+operation is to shrink root cache and the memcg caches together. I am
+fine just adding memcg shrink without changing the sysfs interface
+definition and be done with it.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19a9f729f05272857487@syzkaller.appspotmail.com
-
-Bluetooth: hci0: command 0xfc11 tx timeout
-==================================================================
-BUG: KASAN: use-after-free in hci_cmd_timeout+0x1fe/0x220  
-net/bluetooth/hci_core.c:2614
-Read of size 8 at addr ffff88809e8a3c48 by task kworker/0:5/9461
-
-CPU: 0 PID: 9461 Comm: kworker/0:5 Not tainted 5.2.0-rc7+ #40
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events hci_cmd_timeout
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
-  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  hci_cmd_timeout+0x1fe/0x220 net/bluetooth/hci_core.c:2614
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 9446:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
-  slab_post_alloc_hook mm/slab.h:437 [inline]
-  slab_alloc mm/slab.c:3326 [inline]
-  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
-  skb_clone+0x154/0x3d0 net/core/skbuff.c:1321
-  hci_cmd_work+0xe0/0x2a0 net/bluetooth/hci_core.c:4495
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 1501:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3432 [inline]
-  kmem_cache_free+0x86/0x260 mm/slab.c:3698
-  kfree_skbmem net/core/skbuff.c:620 [inline]
-  kfree_skbmem+0xc5/0x150 net/core/skbuff.c:614
-  __kfree_skb net/core/skbuff.c:677 [inline]
-  kfree_skb net/core/skbuff.c:694 [inline]
-  kfree_skb+0xf0/0x390 net/core/skbuff.c:688
-  hci_dev_do_open+0xb20/0x1760 net/bluetooth/hci_core.c:1550
-  hci_power_on+0x10d/0x580 net/bluetooth/hci_core.c:2171
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff88809e8a3b80
-  which belongs to the cache skbuff_head_cache of size 224
-The buggy address is located 200 bytes inside of
-  224-byte region [ffff88809e8a3b80, ffff88809e8a3c60)
-The buggy address belongs to the page:
-page:ffffea00027a28c0 refcount:1 mapcount:0 mapping:ffff88821baabb40  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00027b2d08 ffffea00021b83c8 ffff88821baabb40
-raw: 0000000000000000 ffff88809e8a3040 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809e8a3b00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88809e8a3b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88809e8a3c00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                                               ^
-  ffff88809e8a3c80: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-  ffff88809e8a3d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Cheers,
+Longman
 
