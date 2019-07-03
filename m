@@ -2,131 +2,130 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0303AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEE9C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0819206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83B9206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jc6n7jBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfGCBZl (ORCPT
+        id S1727477AbfGCBZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:25:41 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:53870 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfGCBZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:25:41 -0400
-Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 3C9D01080821BB1EDA5F;
-        Wed,  3 Jul 2019 09:25:39 +0800 (CST)
-Received: from DGGEMI524-MBX.china.huawei.com ([169.254.7.145]) by
- dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0399.000;
- Wed, 3 Jul 2019 09:25:29 +0800
-From:   chengzhihao <chengzhihao1@huawei.com>
-To:     "david.oberhollenzer@sigma-star.at" 
-        <david.oberhollenzer@sigma-star.at>,
-        "richard@nod.at" <richard@nod.at>,
-        "david@sigma-star.at" <david@sigma-star.at>,
-        "boris.brezillon@free-electrons.com" 
-        <boris.brezillon@free-electrons.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFJGQyB2Ml0gbXRkOiB1Ymk6IEFkZCBmYXN0bWFwIHN5?=
- =?gb2312?Q?sfs_attribute?=
-Thread-Topic: [PATCH RFC v2] mtd: ubi: Add fastmap sysfs attribute
-Thread-Index: AQHVLakkEpLEJIeKg0yEh5ZV5Mu1B6a4IOEQ
-Date:   Wed, 3 Jul 2019 01:25:28 +0000
-Message-ID: <0B80F9D4116B2F4484E7279D5A66984F793E33@dggemi524-mbx.china.huawei.com>
-References: <1561723581-70340-1-git-send-email-chengzhihao1@huawei.com>
-In-Reply-To: <1561723581-70340-1-git-send-email-chengzhihao1@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.224.82]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 2 Jul 2019 21:25:59 -0400
+Received: from mail-ed1-f50.google.com ([209.85.208.50]:42922 "EHLO
+        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbfGCBZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:25:58 -0400
+Received: by mail-ed1-f50.google.com with SMTP id z25so371283edq.9;
+        Tue, 02 Jul 2019 18:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iwz65avk0f/RVYyKHLQjdNvxMZcgy+RzsGyBsM/m87E=;
+        b=Jc6n7jBm97mAvshr0fb/+jJV51H5AJKiJiMbjM/ReftdwufEfb70lK4ZkkbRHUK216
+         rJ5wVZAiPoVRmFxAc/XYVurtEZCjyjKkBCmrOJeVVdKO/B2t2YFzIiNdnROpXW4o/95b
+         SO6+9K/mNErFkxKTr28/Z+4vRwYT0yFsh1QGdl/zj892xmNC+xrEuJH71Q9ogPqxk/6V
+         xrIJHfFep+3lpyhmV7N8d/ni0rEzdl6EP75/kHFINZqep674pizWO3MpAmdOoc54OgEX
+         e2ot/13DMG1Wtu+VZpVYkBwoK8GZw2BdTuSs5XJEeN/r6lJzHwJQQCMT5+za8g4VO7Yu
+         3c+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iwz65avk0f/RVYyKHLQjdNvxMZcgy+RzsGyBsM/m87E=;
+        b=Sm1h4SZlRtgeHXGx7MjEdZqUQthIQBZh+4tAjq4GgNNT4vr33CadPPZdRsvrRR/Zvj
+         vr8h0e+CtIbn2SYuC/JUehpJxUJOB6b6K/KWZ9OEOy8GI9ouYB6gr9m95dVK0/cEl0Ji
+         V+C7VVMrIEY28NyP2D2ZX/WUZ4OXRzZxxnvTJ07USInGg7gEoZbFoIdQlC/cvX5U/zRG
+         fUJWv/jBW560liyWsBxO/QaLTLxiVNm1p9mb0qmLKrdYMUIMNyI6hSlJCSqlJZwMYLzd
+         jKYC8J280qYzZrlUx8nAlyA5jG96PWOE63lQ9rUj20bRfHW0/Dt+AfyJS3TQkZgqSr3N
+         MHlQ==
+X-Gm-Message-State: APjAAAVVS1n4F4qgNgHHfsnIiEg44anFN0E7kAyMdVO44LLHtBZBLyiO
+        pNhqnQoI+IDttVtLXa0Cm1s=
+X-Google-Smtp-Source: APXvYqwGl54w+Ikuy3dP0wltd7CGiue8snyL34ahEULNWHszDm8iYpLIABCZtv5+e1gtZn6FOx9Uag==
+X-Received: by 2002:a50:a5b7:: with SMTP id a52mr39299193edc.237.1562117156841;
+        Tue, 02 Jul 2019 18:25:56 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.211.18])
+        by smtp.gmail.com with ESMTPSA id 43sm204196edz.87.2019.07.02.18.25.54
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 18:25:56 -0700 (PDT)
+Subject: Re: pagecache locking
+To:     Patrick Farrell <pfarrell@whamcloud.com>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+ <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+ <20190617224714.GR14363@dread.disaster.area>
+ <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
+ <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+ <20190619103838.GB32409@quack2.suse.cz>
+ <20190619223756.GC26375@dread.disaster.area>
+ <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
+ <DM6PR19MB250857CB8A3A1C8279D6F2F3C5FB0@DM6PR19MB2508.namprd19.prod.outlook.com>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <9bc50b26-d424-d48a-16db-6fd7e0e88f79@gmail.com>
+Date:   Wed, 3 Jul 2019 04:25:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <DM6PR19MB250857CB8A3A1C8279D6F2F3C5FB0@DM6PR19MB2508.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cGluZyB+DQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBjaGVuZ3poaWhhbyANCreiy83K
-sbzkOiAyMDE5xOo21MIyOMjVIDIwOjA2DQrK1bz+yMs6IGRhdmlkLm9iZXJob2xsZW56ZXJAc2ln
-bWEtc3Rhci5hdDsgcmljaGFyZEBub2QuYXQ7IGRhdmlkQHNpZ21hLXN0YXIuYXQ7IGJvcmlzLmJy
-ZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb207IHpoYW5neWkgKEYpIDx5aS56aGFuZ0BodWF3ZWku
-Y29tPg0Ks63LzTogbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGNoZW5nemhpaGFvIDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNvbT4NCtb3
-zOI6IFtQQVRDSCBSRkMgdjJdIG10ZDogdWJpOiBBZGQgZmFzdG1hcCBzeXNmcyBhdHRyaWJ1dGUN
-Cg0KVGhlIFVCSSBkZXZpY2UgY2FuIGJlIGF0dGFjaGVkIHRvIGEgTVREIGRldmljZSB2aWEgZmFz
-dG1hcCBieSBzZXR0aW5nIENPTkZJR19NVERfVUJJX0ZBU1RNQVAgdG8gJ3knIChJZiB0aGVyZSBh
-bHJlYWR5IGV4aXN0cyBhIGZhc3RtYXAgb24gdGhlIFVCSSBkZXZpY2UpLiBUbyBzdXBwb3J0IHNv
-bWUgZGVidWdnaW5nIHNjZW5hcmlvcywgYXR0YWNoaW5nIHByb2Nlc3MgYnkgZmFzdG1hcCBjYW4g
-YmUgY29uZmlybWVkIGluIGRtZXNnLiBJZiB0aGUgVUJJIGRldmljZSBpcyBhdHRhY2hlZCBieSBm
-YXN0bWFwLCBsb2dzIGxpa2UgZm9sbG93aW5nIHdpbGwgYXBwZWFyIGluIGRtZXNnOg0KDQogIHVi
-aTA6IGF0dGFjaGVkIGJ5IGZhc3RtYXANCg0KSWYgbXVsdGlwbGUgVUJJIGRldmljZXMgYXJlIGF0
-dGFjaGVkIHRvIG11bHRpcGxlIE1URCBkZXZpY2VzIGF0IHRoZSBzYW1lIHRpbWUsIGhvdyB0byBk
-aXN0aW5ndWlzaCB3aGljaCBVQkkgZGV2aWNlcyBhcmUgc3VjY2Vzc2Z1bGx5IGF0dGFjaGVkIGJ5
-IGZhc3RtYXA/IEV4dHJhY3RpbmcgYXR0YWNoaW5nIGluZm9ybWF0aW9uIGZvciBlYWNoIFVCSSBk
-ZXZpY2Ugb25lIGJ5IG9uZSBmcm9tIGRtZXNnIGlzIGEgd2F5LiBBIGJldHRlciBtZXRob2QgaXMg
-dG8gcmVjb3JkIGZhc3RtYXAgZXhpc3RlbmNlIGluIHN5c2ZzLCBzbyBpdCBjYW4gYmUgb2J0YWlu
-ZWQgYnkgdXNlcnNwYWNlIHRvb2xzLg0KDQpUaGlzIHBhdGNoIGV4cG9zZXMgZmFzdG1hcCBvbiBz
-eXNmcy4gU3VwcG9zZSB5b3UgYXR0YWNoIGFuIFVCSSBkZXZpY2UgdG8gYSBNVEQgZGV2aWNlIGJ5
-IGZhc3RtYXA6IGlmIGZhc3RtYXAgZXF1YWxzIHRvICcxJywgdGhhdCBpcywgdGhlIGZhc3RtYXAg
-Z2VuZXJhdGVkIGJlZm9yZSBsYXN0IGRldGFjaGluZyBvcGVyYXRpb24gaXMgY29uZmlybWVkIHZh
-bGlkLiBFbHNlLCB0aGVyZSBtYXkgYmUgc29tZSBwcm9ibGVtcyB3aXRoIG9sZCBmYXN0bWFwLiBC
-ZXNpZGVzLCB1c2Vyc3BhY2UgdG9vbCBjYW4gYWxzbyBjaGVjayB3aGV0aGVyIHRoZSBmYXN0bWFw
-IHVwZGF0aW5nIHRyaWdnZXJlZCBieSBvdGhlciBvcGVyYXRpb25zIChzdWNoIGFzIHJlc2l6ZSB2
-b2x1bWUpIGlzIHN1Y2Nlc3NmdWwgYnkgcmVhZGluZyB0aGlzIHN5c2ZzIGF0dHJpYnV0ZS4NCg0K
-U2lnbmVkLW9mZi1ieTogWmhpaGFvIENoZW5nIDxjaGVuZ3poaWhhbzFAaHVhd2VpLmNvbT4NCi0t
-LQ0KIERvY3VtZW50YXRpb24vQUJJL3N0YWJsZS9zeXNmcy1jbGFzcy11YmkgfCAxNSArKysrKysr
-KysrKysrKysNCiBkcml2ZXJzL210ZC91YmkvYnVpbGQuYyAgICAgICAgICAgICAgICAgIHwgIDkg
-KysrKysrKystDQogMiBmaWxlcyBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9u
-KC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL0FCSS9zdGFibGUvc3lzZnMtY2xhc3Mt
-dWJpIGIvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWNsYXNzLXViaQ0KaW5kZXggYTZi
-MzI0MC4uMWQ5NmNmMCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vQUJJL3N0YWJsZS9zeXNm
-cy1jbGFzcy11YmkNCisrKyBiL0RvY3VtZW50YXRpb24vQUJJL3N0YWJsZS9zeXNmcy1jbGFzcy11
-YmkNCkBAIC0xMTYsNiArMTE2LDIxIEBAIERlc2NyaXB0aW9uOg0KIAkJZGV2aWNlLCBhbmQgIjBc
-biIgaWYgaXQgaXMgY2xlYXJlZC4gVUJJIGRldmljZXMgbWFyayB0aGVtc2VsdmVzDQogCQlhcyBy
-ZWFkLW9ubHkgd2hlbiB0aGV5IGRldGVjdCBhbiB1bnJlY292ZXJhYmxlIGVycm9yLg0KIA0KK1do
-YXQ6CQkvc3lzL2NsYXNzL3ViaS91YmlYL2Zhc3RtYXANCitEYXRlOgkJSnVuZSAyMDE5DQorS2Vy
-bmVsVmVyc2lvbjoJNS4yDQorQ29udGFjdDoJbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmcN
-CitEZXNjcmlwdGlvbjoNCisJCUNvbnRhaW5zIEFTQ0lJICIxXG4iIGlmIHRoZXJlIGV4aXN0cyBh
-IGZhc3RtYXAgb24gVUJJIGRldmljZSwNCisJCWFuZCAiMFxuIiBpZiB0aGVyZSBub3QgZXhpc3Rz
-IGEgZmFzdG1hcCBvbiBVQkkgZGV2aWNlLiBBZnRlcg0KKwkJYXR0YWNoaW5nIHRoZSBVQkkgZGV2
-aWNlIHRvIGEgTVREIGRldmljZSB2aWEgZmFzdG1hcCwgdXNlcnNwYWNlDQorCQl0b29sIGNhbiBz
-ZW5zZSB0aGF0IHRoZXJlIGlzIGEgZmFzdG1hcCBvbiBVQkkgZGV2aWNlICBieQ0KKwkJY2hlY2tp
-bmcgc3lzZnMgYXR0cmlidXRlICdmYXN0bWFwJywgdGhhdCBpcywgdGhlIGZhc3RtYXANCisJCWdl
-bmVyYXRlZCBiZWZvcmUgbGFzdCBkZXRhY2hpbmcgb3BlcmF0aW9uIGlzIHZhbGlkLiBJbiBhZGRp
-dGlvbiwNCisJCXVzZXJzcGFjZSB0b29sIGNhbiBhbHNvIGNoZWNrIHdoZXRoZXIgdGhlIGZhc3Rt
-YXAgdXBkYXRpbmcNCisJCXRyaWdnZXJlZCBieSB2b2x1bWUgb3BlcmF0aW9uIGlzIHN1Y2Nlc3Nm
-dWwgYnkgcmVhZGluZyB0aGlzDQorCQlzeXNmcyBhdHRyaWJ1dGUuDQorDQogV2hhdDoJCS9zeXMv
-Y2xhc3MvdWJpL3ViaVgvdG90YWxfZXJhc2VibG9ja3MNCiBEYXRlOgkJSnVseSAyMDA2DQogS2Vy
-bmVsVmVyc2lvbjoJMi42LjIyDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvdWJpL2J1aWxkLmMg
-Yi9kcml2ZXJzL210ZC91YmkvYnVpbGQuYyBpbmRleCBkNjM2YmJlLi4wY2Q2YjhlIDEwMDY0NA0K
-LS0tIGEvZHJpdmVycy9tdGQvdWJpL2J1aWxkLmMNCisrKyBiL2RyaXZlcnMvbXRkL3ViaS9idWls
-ZC5jDQpAQCAtMTQwLDYgKzE0MCw4IEBAIHN0YXRpYyBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSBk
-ZXZfbXRkX251bSA9DQogCV9fQVRUUihtdGRfbnVtLCBTX0lSVUdPLCBkZXZfYXR0cmlidXRlX3No
-b3csIE5VTEwpOyAgc3RhdGljIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlIGRldl9yb19tb2RlID0N
-CiAJX19BVFRSKHJvX21vZGUsIFNfSVJVR08sIGRldl9hdHRyaWJ1dGVfc2hvdywgTlVMTCk7DQor
-c3RhdGljIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlIGRldl9mYXN0bWFwID0NCisJX19BVFRSKGZh
-c3RtYXAsIFNfSVJVR08sIGRldl9hdHRyaWJ1dGVfc2hvdywgTlVMTCk7DQogDQogLyoqDQogICog
-dWJpX3ZvbHVtZV9ub3RpZnkgLSBzZW5kIGEgdm9sdW1lIGNoYW5nZSBub3RpZmljYXRpb24uDQpA
-QCAtMzc4LDcgKzM4MCwxMSBAQCBzdGF0aWMgc3NpemVfdCBkZXZfYXR0cmlidXRlX3Nob3coc3Ry
-dWN0IGRldmljZSAqZGV2LA0KIAkJcmV0ID0gc3ByaW50ZihidWYsICIlZFxuIiwgdWJpLT5tdGQt
-PmluZGV4KTsNCiAJZWxzZSBpZiAoYXR0ciA9PSAmZGV2X3JvX21vZGUpDQogCQlyZXQgPSBzcHJp
-bnRmKGJ1ZiwgIiVkXG4iLCB1YmktPnJvX21vZGUpOw0KLQllbHNlDQorCWVsc2UgaWYgKGF0dHIg
-PT0gJmRldl9mYXN0bWFwKSB7DQorCQlkb3duX3dyaXRlKCZ1YmktPmZtX3Byb3RlY3QpOw0KKwkJ
-cmV0ID0gc3ByaW50ZihidWYsICIlZFxuIiwgdWJpLT5mbSA/IDEgOiAwKTsNCisJCXVwX3dyaXRl
-KCZ1YmktPmZtX3Byb3RlY3QpOw0KKwl9IGVsc2UNCiAJCXJldCA9IC1FSU5WQUw7DQogDQogCXVi
-aV9wdXRfZGV2aWNlKHViaSk7DQpAQCAtMzk4LDYgKzQwNCw3IEBAIHN0YXRpYyBzdHJ1Y3QgYXR0
-cmlidXRlICp1YmlfZGV2X2F0dHJzW10gPSB7DQogCSZkZXZfYmd0X2VuYWJsZWQuYXR0ciwNCiAJ
-JmRldl9tdGRfbnVtLmF0dHIsDQogCSZkZXZfcm9fbW9kZS5hdHRyLA0KKwkmZGV2X2Zhc3RtYXAu
-YXR0ciwNCiAJTlVMTA0KIH07DQogQVRUUklCVVRFX0dST1VQUyh1YmlfZGV2KTsNCi0tDQoyLjcu
-NA0KDQo=
+On 03/07/2019 04:07, Patrick Farrell wrote:
+> Recursively read locking is generally unsafe, that’s why lockdep
+> complains about it.  The common RW lock primitives are queued in
+> their implementation, meaning this recursive read lock sequence:
+> P1 - read (gets lock)
+> P2 - write
+> P1 - read
+> 
+> Results not in a successful read lock, but P1 blocking behind P2,
+> which is blocked behind P1.  
+
+> Readers are not allowed to jump past waiting writers.
+
+OK thanks that makes sense. I did not know about that last part. Its a kind
+of a lock fairness I did not know we have.
+
+So I guess I'll keep my two locks than. The write_locker is the SLOW
+path for me anyway, right?
+
+[if we are already at the subject, Do mutexes have the same lock fairness as
+ above? Do the write_lock side of rw_sem have same fairness? Something I never
+ figured out]
+
+Thanks
+Boaz
+
+> 
+> - Patrick
