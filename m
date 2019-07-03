@@ -2,85 +2,96 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBE6C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA6BC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1AA218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C37218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iLSnAFiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGCIiL (ORCPT
+        id S1727198AbfGCIkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:38:11 -0400
-Received: from outbound-smtp15.blacknight.com ([46.22.139.232]:51680 "EHLO
-        outbound-smtp15.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726400AbfGCIiL (ORCPT
+        Wed, 3 Jul 2019 04:40:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39303 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbfGCIkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:38:11 -0400
-Received: from mail.blacknight.com (unknown [81.17.254.11])
-        by outbound-smtp15.blacknight.com (Postfix) with ESMTPS id BDD0A1C34A1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 09:38:08 +0100 (IST)
-Received: (qmail 31277 invoked from network); 3 Jul 2019 08:38:08 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 3 Jul 2019 08:38:08 -0000
-Date:   Wed, 3 Jul 2019 09:38:03 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hillf Danton <hdanton@sina.com>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm, vmscan: prevent useless kswapd loops
-Message-ID: <20190703083803.GA2737@techsingularity.net>
-References: <20190701201847.251028-1-shakeelb@google.com>
+        Wed, 3 Jul 2019 04:40:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so1465689ljh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9KQGKN1/JTwYz+i5tykBtO8/dfvkSTRXZ7mV96ulxlo=;
+        b=iLSnAFiMtzOcyZkCnNoQdCnKRs/FrQMu9BQk1miyt08q/upQDSxsM5dd/sr+THA+cz
+         Ma0puGzE/ZswYwh4FVWRnwkJAgjJiowH28UihrQ5Ew/UvWeQ1X3ci4rGe9jCtXrSXrhu
+         VJcSzn2usHUy1hcueneTZAxbX0WIJ/GbSxZcQqCLs5riBu/oyqVMlrHbwbYdGATqrbN6
+         XevkFpUuWujEosPpkR/Vjq9lnzSkFDPYZB9dCECqE0OpBr/Bgz2s7iUQBPkcrmFdU3Py
+         +LZHudN2XD/KZduddVlkuwmpp3WdxkpwOUshIpl7p6/p7b3bfcWeCi9olwlgW6sw26ku
+         wAGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9KQGKN1/JTwYz+i5tykBtO8/dfvkSTRXZ7mV96ulxlo=;
+        b=FDvMzGkFzHrqeqD6mtGgUvQTz6RX64ighmyQyChZvqFmocVsWNiu3xK0y7qd7CKnnq
+         ppc87cYqRTrg69LPDyu5JHye/MAvXEY9YDlkm0u6XOgJC0begpHrPXDbrM92/sQQB5dD
+         pENoi13/DauYPU1vd9FtuUgKQaQpH1M/VStQuJ+Y2n9kS5U2198aweLvMt4P/nSt7bsT
+         NKzEhsM3GOqWfnmAXv66AFuMzgLQwl+dJhzNzWbFU+pquW+x85DuOm+i4bCOVctrkCkv
+         M5FhBQt8RRcPFy/hdl61RnKkgZGPogsRL6io5GHoH2bo0A9rHYBPkZmQY4HolYJrEiWa
+         p3xw==
+X-Gm-Message-State: APjAAAWmNO9Yai3xzFHUc3lZ9EKfmckmb/LeHif1L9/Fg/JTp2SIq0Ax
+        Z5ot5pSlbw2BQN5VObCysgk3k+yDazF6IeGC879mCg==
+X-Google-Smtp-Source: APXvYqwjCAdp2pYFgLkejdEEDh9nRCMtaIIni+TVcrXpKnpbZ14+0z+JW8gDE5GUfqGr6bXIV3oih+tOTO8H8yN1rZI=
+X-Received: by 2002:a2e:650a:: with SMTP id z10mr20360931ljb.28.1562143213537;
+ Wed, 03 Jul 2019 01:40:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20190701201847.251028-1-shakeelb@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190628023838.15426-1-andrew@aj.id.au>
+In-Reply-To: <20190628023838.15426-1-andrew@aj.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jul 2019 10:40:02 +0200
+Message-ID: <CACRpkdaxiFR3ezt4FzhRxpqc4DYYjsbBeysPUaaQH+_QgYjudw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] pinctrl: aspeed: Preparation for AST2600
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 01:18:47PM -0700, Shakeel Butt wrote:
-> On production we have noticed hard lockups on large machines running
-> large jobs due to kswaps hoarding lru lock within isolate_lru_pages when
-> sc->reclaim_idx is 0 which is a small zone. The lru was couple hundred
-> GiBs and the condition (page_zonenum(page) > sc->reclaim_idx) in
-> isolate_lru_pages was basically skipping GiBs of pages while holding the
-> LRU spinlock with interrupt disabled.
-> 
-> On further inspection, it seems like there are two issues:
-> 
-> 1) If the kswapd on the return from balance_pgdat() could not sleep
-> (i.e. node is still unbalanced), the classzone_idx is unintentionally
-> set to 0  and the whole reclaim cycle of kswapd will try to reclaim
-> only the lowest and smallest zone while traversing the whole memory.
-> 
-> 2) Fundamentally isolate_lru_pages() is really bad when the allocation
-> has woken kswapd for a smaller zone on a very large machine running very
-> large jobs. It can hoard the LRU spinlock while skipping over 100s of
-> GiBs of pages.
-> 
-> This patch only fixes the (1). The (2) needs a more fundamental solution.
-> To fix (1), in the kswapd context, if pgdat->kswapd_classzone_idx is
-> invalid use the classzone_idx of the previous kswapd loop otherwise use
-> the one the waker has requested.
-> 
-> Fixes: e716f2eb24de ("mm, vmscan: prevent kswapd sleeping prematurely
-> due to mismatched classzone_idx")
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Hi Andrew,
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+On Fri, Jun 28, 2019 at 4:39 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Hello!
+>
+> The ASPEED AST2600 is in the pipeline, and we have enough information to start
+> preparing to upstream support for it. This series lays some ground work;
+> splitting the bindings and dicing the implementation up a little further to
+> facilitate differences between the 2600 and previous SoC generations.
+>
+> v2 addresses Rob's comments on the bindings conversion patches. v1 can be found
+> here:
 
--- 
-Mel Gorman
-SUSE Labs
+I have applied this series, I had to strip some changes of the header
+because it was based on some SPDX cleanups upstream but no
+big deal I think. Check the result please.
+
+Yours,
+Linus Walleij
