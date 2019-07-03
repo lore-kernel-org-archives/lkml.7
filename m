@@ -5,170 +5,163 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B42C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E84BC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2A721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F2421882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OkcOafZY"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TSpRi0Z2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfGCUqC (ORCPT
+        id S1727282AbfGCUqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:46:02 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43771 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbfGCUqC (ORCPT
+        Wed, 3 Jul 2019 16:46:07 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1531 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbfGCUqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:46:02 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so1839062plb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 13:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oTkEYpQN/NBrw7dXftOXN7NBhFg/b02Ykn5JMD61qmE=;
-        b=OkcOafZYWFlnQelddhq7i4lqrly5qcCx1qYzJ+ecsWDMJzQ2dFg89kVrIQv2hpEZqB
-         7othDvtesYLJySESnzt4Ci5m6AQOlnr3Tk3zDMwfYqyJCVdAEJ6W9o5T3xNFkFzHCkZW
-         QCNIqyTea7m73B/bU4NsRGjdzugdxxmwUs0ug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oTkEYpQN/NBrw7dXftOXN7NBhFg/b02Ykn5JMD61qmE=;
-        b=JtJ+V4JM0n0N+bHZtmhSKKzjB7yg9wwhcP7fLJl8q8tAb7cdlbR0NtXMceb+la1gmc
-         u3kyBajmlhlWj4aUI+wePtN1KzxKTepa6K1VDs5keH6WPUpfAGxsJOuHJv4nF7RwFVDk
-         Wde1QaLcjOm6Rde5B5MzY5ma8VsjtogxkRiHfK6sCQlyYSuFrTGsc+MFG5PR5SKKVofl
-         Mid3VnKNL+0YPyEEFlTnHD9BEx/Z9ORmIwAkn4RyUQIa47yD1pwZCdedq08Fa69kt0dV
-         bOxiMBOfjtzZUgCO6En5Eb/wrUeXfga3IFspfvJonJRS4anwQfRRzkACJPExBrCRZYIO
-         DdwA==
-X-Gm-Message-State: APjAAAWtnxDy8JhcxJtEE7MRFMEz+diNkvA95c9JDTy0Scn4YJAt8bQf
-        O6UxF1TxkQ//raUceAtW+NXXdg==
-X-Google-Smtp-Source: APXvYqzUW8l4EWMeThaai5UNtNS7VKQQXt96zHjfC393F6AbD2cn+V1EPxmDKgh1E1+59GXvnCD3kw==
-X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr44050568plb.292.1562186761658;
-        Wed, 03 Jul 2019 13:46:01 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id b126sm3510935pfa.126.2019.07.03.13.46.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 13:46:01 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 13:45:59 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 7/7] net: phy: realtek: configure RTL8211E LEDs
-Message-ID: <20190703204559.GH250418@google.com>
-References: <20190703193724.246854-1-mka@chromium.org>
- <20190703193724.246854-7-mka@chromium.org>
- <189ec367-2085-056b-61a9-90f0044b55ba@gmail.com>
+        Wed, 3 Jul 2019 16:46:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1d140a0007>; Wed, 03 Jul 2019 13:46:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 03 Jul 2019 13:46:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 03 Jul 2019 13:46:03 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
+ 2019 20:46:02 +0000
+Subject: Re: [PATCH 4/5] nouveau: unlock mmap_sem on all errors from
+ nouveau_range_fault
+To:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20190703184502.16234-1-hch@lst.de>
+ <20190703184502.16234-5-hch@lst.de>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <ec5e86a4-4a60-0dd5-797c-41b21e3a091a@nvidia.com>
+Date:   Wed, 3 Jul 2019 13:46:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <189ec367-2085-056b-61a9-90f0044b55ba@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190703184502.16234-5-hch@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562186762; bh=HwGmCz10Ci8GwJ1IjwMoUJAJeEMJSYtD2O20Ed/Ggn0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TSpRi0Z2SY1PHzP7KqCWwxKUB7G7m2aHuiHMaA+9zP4+plxdtT8gQdk4j/bAX75jR
+         ie5dx3Vb3i48qambjEboni/xwCBSBYFfWIVo7DXI/FiT8Ul+vFRdVDMeGda752Ju2A
+         /faZi69iPodzzziBC24xask8p2w8tOrV67rfXnwmepxxW9gqMmKv8bpJ2kHbtImsld
+         paeawUfZJ1OaKL7ImUmpDFGnWOkmofheb70vsKR3CJ1F3qa7X4zWMBap07oQfA7/l1
+         edHl7WUUACR964z3YaQirWTw8Cyvej6xdanAN7TJ3NW3ryuhpXhblUsxTU4iuod6sZ
+         CFn2uVwfp3Juw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:28:17PM +0200, Heiner Kallweit wrote:
-> On 03.07.2019 21:37, Matthias Kaehlcke wrote:
-> > Configure the RTL8211E LEDs behavior when the device tree property
-> > 'realtek,led-modes' is specified.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Changes in v2:
-> > - patch added to the series
-> > ---
-> >  drivers/net/phy/realtek.c | 63 +++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 61 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> > index 45fee4612031..559aec547738 100644
-> > --- a/drivers/net/phy/realtek.c
-> > +++ b/drivers/net/phy/realtek.c
-> > @@ -9,6 +9,7 @@
-> >   * Copyright (c) 2004 Freescale Semiconductor, Inc.
-> >   */
-> >  #include <linux/bitops.h>
-> > +#include <linux/bits.h>
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > @@ -35,6 +36,15 @@
-> >  #define RTL8211E_EEE_LED_MODE1			0x05
-> >  #define RTL8211E_EEE_LED_MODE2			0x06
-> >  
-> > +/* RTL8211E extension page 44 */
-> > +#define RTL8211E_LACR				0x1a
-> > +#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
-> > +#define RLT8211E_LACR_LEDACTCTRL_MASK		GENMASK(6, 4)
-> > +#define RTL8211E_LCR				0x1c
-> > +#define RTL8211E_LCR_LEDCTRL_MASK		(GENMASK(2, 0) | \
-> > +						 GENMASK(6, 4) | \
-> > +						 GENMASK(10, 8))
-> > +
-> >  /* RTL8211E extension page 160 */
-> >  #define RTL8211E_SCR				0x1a
-> >  #define RTL8211E_SCR_DISABLE_RXC_SSC		BIT(2)
-> > @@ -124,6 +134,56 @@ static int rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
-> >  	return phy_restore_page(phydev, oldpage, ret);
-> >  }
-> >  
-> > +static int rtl8211e_config_leds(struct phy_device *phydev)
-> > +{
-> > +	struct device *dev = &phydev->mdio.dev;
-> > +	int count, i, oldpage, ret;
-> > +	u16 lacr_bits = 0, lcr_bits = 0;
-> > +
-> > +	if (!dev->of_node)
-> > +		return 0;
-> > +
-> > +	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
-> > +		rtl8211e_disable_eee_led_mode(phydev);
-> > +
-> > +	count = of_property_count_elems_of_size(dev->of_node,
-> > +						"realtek,led-modes",
-> > +						sizeof(u32));
-> > +	if (count < 0 || count > 3)
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0; i < count; i++) {
-> > +		u32 val;
-> > +
-> > +		of_property_read_u32_index(dev->of_node,
-> > +					   "realtek,led-modes", i, &val);
-> > +		lacr_bits |= (u16)(val >> 16) <<
-> > +			(RLT8211E_LACR_LEDACTCTRL_SHIFT + i);
+
+On 7/3/19 11:45 AM, Christoph Hellwig wrote:
+> Currently nouveau_svm_fault expects nouveau_range_fault to never unlock
+> mmap_sem, but the latter unlocks it for a random selection of error
+> codes. Fix this up by always unlocking mmap_sem for non-zero return
+> values in nouveau_range_fault, and only unlocking it in the caller
+> for successful returns.
 > 
-> This may be done in an easier to read way:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+
+> ---
+>   drivers/gpu/drm/nouveau/nouveau_svm.c | 15 ++++++++-------
+>   1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> if (val & RTL8211E_LINK_ACTIVITY)
-> 	lacr_bits |= BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + i);
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> index e831f4184a17..c0cf7aeaefb3 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -500,8 +500,10 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range,
 
-indeed, that's more readable, thanks for the suggestion!
+You can delete the comment "With the old API the driver must ..."
+(not visible in the patch here).
+I suggest moving the two assignments:
+	range->default_flags = 0;
+	range->pfn_flags_mask = -1UL;
+to just above the "again:" where the other range.xxx fields are
+initialized in nouveau_svm_fault().
 
-> > +		lcr_bits |= (u16)(val & 0xf) << (i * 4);
-> > +	}
-> > +
-> > +	oldpage = rtl8211e_select_ext_page(phydev, 44);
-> > +	if (oldpage < 0) {
-> > +		dev_err(dev, "failed to select extended page: %d\n", oldpage);
+>   	ret = hmm_range_register(range, mirror,
+>   				 range->start, range->end,
+>   				 PAGE_SHIFT);
+> -	if (ret)
+> +	if (ret) {
+> +		up_read(&range->vma->vm_mm->mmap_sem; >   		return (int)ret;
+> +	}
+>   
+>   	if (!hmm_range_wait_until_valid(range, NOUVEAU_RANGE_FAULT_TIMEOUT)) {
+>   		/*
+
+You can delete this comment (only the first line is visible here)
+since it is about the "old API".
+Also, it should return -EBUSY not -EAGAIN since it means there was a
+range invalidation collision (similar to hmm_range_fault() if
+!range->valid).
+
+> @@ -515,15 +517,14 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range,
+>   
+>   	ret = hmm_range_fault(range, block);
+
+nouveau_range_fault() is only called with "block = true" so
+could eliminate the block parameter and pass true here.
+
+>   	if (ret <= 0) {
+> -		if (ret == -EBUSY || !ret) {
+> -			/* Same as above, drop mmap_sem to match old API. */
+> -			up_read(&range->vma->vm_mm->mmap_sem);
+> -			ret = -EBUSY;
+> -		} else if (ret == -EAGAIN)
+> +		if (ret == 0)
+>   			ret = -EBUSY;
+> +		if (ret != -EAGAIN)
+> +			up_read(&range->vma->vm_mm->mmap_sem);
+
+Can ret == -EAGAIN happen if "block = true"?
+Generally, I prefer the read_down()/read_up() in the same function
+(i.e., nouveau_svm_fault()) but I can see why it should be here
+if hmm_range_fault() can return with mmap_sem unlocked.
+
+>   		hmm_range_unregister(range);
+>   		return ret;
+>   	}
+> +
+>   	return 0;
+>   }
+>   
+> @@ -718,8 +719,8 @@ nouveau_svm_fault(struct nvif_notify *notify)
+>   						NULL);
+>   			svmm->vmm->vmm.object.client->super = false;
+>   			mutex_unlock(&svmm->mutex);
+> +			up_read(&svmm->mm->mmap_sem);
+>   		}
+> -		up_read(&svmm->mm->mmap_sem);
+>   
+
+The "else" case should check for -EBUSY and goto again.
+
+>   		/* Cancel any faults in the window whose pages didn't manage
+>   		 * to keep their valid bit, or stay writeable when required.
 > 
-> In a PHY driver it may be more appropriate to use phydev_err() et al,
-> even though effectively it's the same.
-
-sounds good, I'll change it to the phydev_err() et al.
-
-Thanks for the reviews!
-
-Matthias
