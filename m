@@ -2,133 +2,193 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD9C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7362EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4756A218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aosT7HgR"
+	by mail.kernel.org (Postfix) with ESMTP id 4E8FC218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfGCNSz (ORCPT
+        id S1727335AbfGCNTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:18:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34119 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCNSz (ORCPT
+        Wed, 3 Jul 2019 09:19:05 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:56569 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfGCNTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:18:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p10so1256720pgn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=maPFzMJxkxDi9/pzkIAhWooIBm7u3WPHY1fXuOXs5zg=;
-        b=aosT7HgRTdAbUppuudBPEzJ5pAmqaRAM0pjZ5iT+PWRrWYST1xeX6Xg/S/8RoHVDUm
-         4Xm8U8hXNZEcomAuxcorC3N4GyZ8WxFaFUQ/5HtbxaeEYQCH5WWczrE/QcbClgcko6B3
-         9kXHOCMR/9EsFpDnkT2jNADO7Pj8UR/UsKWkZsti/bmm5ZZf2Y3K9ue5eSO1LGT/i5mL
-         mIXWsl+tNvt4VwOAS4ueIwoKhVcnXGXRnzs1h9TePUhSTwYP4EgWn6AJumJ9XHsliVvz
-         CpEpd205rEkSkJK4oCUyn4k76oP1BcszDg3hnJY7MNXl3bDVJA50IllerePntRebQNK9
-         Y5Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=maPFzMJxkxDi9/pzkIAhWooIBm7u3WPHY1fXuOXs5zg=;
-        b=t9obyyTzb9+CE7mVHYl8BZ8C2zjNDCVSBuqc9Z5BuB4OOTg7oH/DFXWfl/bKFykAxM
-         8hJG0kBrSm+AZa+UPQoId0qlooJNFMX9iUbNGPFoDZazmJRMRCJUAKapGPftqtr9EkPs
-         O1TPhIaVoq1cxIxYW2fuI+IuV2bcZG5u0cpR+brazJcEDTFRLDbFeZhcutPgm0cftF6c
-         dEfj932s7DHydT0zAOWOmJuoKZtLxTh6jTkPVZIGhVjkiNKp0PI3/oU84hAMDzwChN4y
-         5TrZzxAzfYfimnKAd5me1iUYgwo3q1MBz0sdtNMJRqAnrHrAXLF6PQiDVnlvwqfsexBf
-         pJpQ==
-X-Gm-Message-State: APjAAAXaTFLlehFjrUt3N3RCk24qXbE+aK0/UjkszH0fish4LXxs/ycV
-        Rl0hGH2oTeQMTCUNZDth5hY=
-X-Google-Smtp-Source: APXvYqxo3SWL87xvyOihIZ6tX+GIYgZ0rb8EldB2PBtlU5U2zf9aHiucu/yYrAvdt0jDdkhJJGdVAg==
-X-Received: by 2002:a63:b547:: with SMTP id u7mr38243790pgo.322.1562159934678;
-        Wed, 03 Jul 2019 06:18:54 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id n140sm2562504pfd.132.2019.07.03.06.18.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 06:18:54 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 30/30] sound/soc: Use kmemdup rather than duplicating its implementation
-Date:   Wed,  3 Jul 2019 21:18:42 +0800
-Message-Id: <20190703131842.26082-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 3 Jul 2019 09:19:04 -0400
+Received: from [192.168.1.110] ([95.114.150.241]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N3bCH-1iiyh62CiR-010fKK; Wed, 03 Jul 2019 15:18:59 +0200
+Subject: [priv] Re: [PATCH 1/2] serial/8250: Add support for NI-Serial
+ PXI/PXIe+485 devices.
+To:     jeyentam <je.yen.tam@ni.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190702032323.28967-1-je.yen.tam@ni.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <435fe9ba-04c9-e797-f750-4eebffa82fe9@metux.net>
+Date:   Wed, 3 Jul 2019 15:18:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <20190702032323.28967-1-je.yen.tam@ni.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ZraLU6jp07TzmqFrdpAh1/pJG17eTeKa+NEbflnuowq2gylTRPQ
+ cTTFuZzCqz9imexlEL1Y/bIj8yC8vx6t9OrG0l715jNll3ZULqckRboS6wGNt3cT74YuhNb
+ jzsw/ROntEX2H2g9HZ6nuYVpSpbc3rBI4HAqK/d+JfM6TWPqPY9ABQ9qfoJs5LWPNQSwj+t
+ AqBJmVMDza0OxUtJvrtKg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9nJDnKfsRV8=:nIyfrdfVogZnxdtcaBIs4o
+ iu+SAjT44lhiCnv9gxvPdu2+W5JKUu12hR2fJ4yh9IMIys+QNX60HDEY4XOPuBX8CFn2Eg4wa
+ k5qDraTDTYN7yMCoB0BTMgh0awxd3gde6enVv3z9H8O64saq9b7+DpXNGsyrwAHx9LSck4RL+
+ 6sLQlAJF79/pSG8Rj307n7hIZhiPI42OeRPUkoVmeT6sZRbr61WseJwJVxZmCNUnTGuMTmfDh
+ Yin29vpbnUvFUSPkHv6aJkZqHOyC+fi/MP4ha9NGndP7P27ZrqqgJp4vbQfe2Kp6E+SGXhIxw
+ 8KVPWJC4NM2K+oi/TYv13S3Y8S0kSSF0SUV/cDWSQmEIOy5K3Evs0O1Jh/OKeLI4e89pcZjVY
+ TLNehBYgWABVR45zFJnAkisWmdsvjaYnlyynTaWv8+Tj5CQ73Wm2W8da2gAwbBNzEys9vs++X
+ 94RndhFFdVbXpqOEj6/+qAkykpGRWFStjwE1CneLFTujn+KeUT0zsjlctmzMuiRaY96oBlP2d
+ gk31gZ1ftIYTClytUHaaGLrWfkwdpfOQoivsvX4PkhQWfwI8/tg7SWj4tujRSMbso78yMdW0C
+ JUTY5NF0bsrdGGRYbVhV5DjYLfFFLnu0dPO6z6k5Oqv+15lXynLHp6Y4+cZ7IJne9YRmjTzPt
+ XxWRX2Dyo1Nf7FzpuVLmDIUIg59HjJk5CNabWuGwV2ZyX+HelhfDAkoHsYUazyy4S5DE2rHsp
+ l5z3yUwMnuBVLVnZ04AISeWda0LmKa792+wThxinV+bv8AXvim3KkKT/zj0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemdup is introduced to duplicate a region of memory in a neat way.
-Rather than kmalloc/kzalloc + memset, which the programmer needs to
-write the size twice (sometimes lead to mistakes), kmemdup improves
-readability, leads to smaller code and also reduce the chances of mistakes.
-Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
+On 02.07.19 05:23, jeyentam wrote:
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- sound/soc/codecs/wm0010.c             | 4 +---
- sound/soc/intel/atom/sst/sst_loader.c | 3 +--
- 2 files changed, 2 insertions(+), 5 deletions(-)
+Hi,
 
-diff --git a/sound/soc/codecs/wm0010.c b/sound/soc/codecs/wm0010.c
-index 727d6703c905..807826f30f58 100644
---- a/sound/soc/codecs/wm0010.c
-+++ b/sound/soc/codecs/wm0010.c
-@@ -515,7 +515,7 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
- 	dev_dbg(component->dev, "Downloading %zu byte stage 2 loader\n", fw->size);
- 
- 	/* Copy to local buffer first as vmalloc causes problems for dma */
--	img = kzalloc(fw->size, GFP_KERNEL | GFP_DMA);
-+	img = kmemdup(&fw->data[0], fw->size, GFP_KERNEL | GFP_DMA);
- 	if (!img) {
- 		ret = -ENOMEM;
- 		goto abort2;
-@@ -527,8 +527,6 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
- 		goto abort1;
- 	}
- 
--	memcpy(img, &fw->data[0], fw->size);
--
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
- 	t.rx_buf = out;
-diff --git a/sound/soc/intel/atom/sst/sst_loader.c b/sound/soc/intel/atom/sst/sst_loader.c
-index ce11c36848c4..cc95af35c060 100644
---- a/sound/soc/intel/atom/sst/sst_loader.c
-+++ b/sound/soc/intel/atom/sst/sst_loader.c
-@@ -288,14 +288,13 @@ static int sst_cache_and_parse_fw(struct intel_sst_drv *sst,
- {
- 	int retval = 0;
- 
--	sst->fw_in_mem = kzalloc(fw->size, GFP_KERNEL);
-+	sst->fw_in_mem = kmemdup(fw->data, fw->size, GFP_KERNEL);
- 	if (!sst->fw_in_mem) {
- 		retval = -ENOMEM;
- 		goto end_release;
- 	}
- 	dev_dbg(sst->dev, "copied fw to %p", sst->fw_in_mem);
- 	dev_dbg(sst->dev, "phys: %lx", (unsigned long)virt_to_phys(sst->fw_in_mem));
--	memcpy(sst->fw_in_mem, fw->data, fw->size);
- 	retval = sst_parse_fw_memcpy(sst, fw->size, &sst->memcpy_list);
- 	if (retval) {
- 		dev_err(sst->dev, "Failed to parse fw\n");
+better writing to you personally, off-list.
+
+> Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
+> 
+> Signed-off-by: jeyentam <je.yen.tam@ni.com>
+                  ^^^^^^
+maybe it would be nice to have your real name here.
+
+> @@ -1,10 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - *  Probe module for 8250/16550-type PCI serial ports.
+> + *	Probe module for 8250/16550-type PCI serial ports.
+>   *
+> - *  Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
+> + *	Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
+>   *
+> - *  Copyright (C) 2001 Russell King, All Rights Reserved.
+> + *	Copyright (C) 2001 Russell King, All Rights Reserved.
+>   */
+>  #undef DEBUG
+>  #include <linux/module.h>
+
+Why all these whitespace-only changes ? I doubt that anybody seriously
+wanna review that.
+
+As I know Greg, he's doesn't like whitespace-only changes at all, unless
+you give him an really good reason for it.
+
+> @@ -730,8 +730,16 @@ static int pci_ni8430_init(struct pci_dev *dev)
+>  }
+>  
+>  /* UART Port Control Register */
+> -#define NI8430_PORTCON	0x0f
+> -#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
+
+I'd prefer that name change as a separate (previous) patch.
+
+> +#define NI16550_PCR_OFFSET				  0x0f
+> +#define NI16550_PCR_RS422				  0x00
+> +#define NI16550_PCR_ECHO_RS485			  0x01
+> +#define NI16550_PCR_DTR_RS485			  0x02
+> +#define NI16550_PCR_AUTO_RS485			  0x03
+> +#define NI16550_PCR_WIRE_MODE_MASK		  0x03
+> +#define NI16550_PCR_TXVR_ENABLE_BIT		  (1 << 3)
+> +#define NI16550_PCR_RS485_TERMINATION_BIT (1 << 6)
+> +#define NI16550_ACR_DTR_AUTO_DTR		  (0x2 << 3)
+> +#define NI16550_ACR_DTR_MANUAL_DTR		  (0x0 << 3)
+
+you should use the BIT() macro here.
+
+> +static int pci_ni8431_config_rs485(struct uart_port *port,
+> +	struct serial_rs485 *rs485)
+> +{
+> +	u8 pcr, acr;
+> +
+> +	struct uart_8250_port *up;
+> +
+> +	up = container_of(port, struct uart_8250_port, port);
+> +
+> +	acr = up->acr;
+> +
+> +	dev_dbg(port->dev, "ni16550_config_rs485\n");
+
+don't leave in such hackish debug helpers
+
+> +	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
+
+is that indirection really necessary ? (IOW: are there separate
+implementations needed ?)
+
+> +static int pci_ni8431_setup(struct serial_private *priv,
+> +		 const struct pciserial_board *board,
+> +		 struct uart_8250_port *uart, int idx)
+> +{
+> +	u8 pcr, acr;
+> +	struct pci_dev *dev = priv->dev;
+> +	void __iomem *addr;
+> +	unsigned int bar, offset = board->first_offset;
+
+maybe size_t for offset ?
+
+> @@ -1956,6 +2077,87 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
+>  		.setup		= pci_ni8430_setup,
+>  		.exit		= pci_ni8430_exit,
+>  	},
+> +	{
+> +		.vendor		= PCI_VENDOR_ID_NI,
+> +		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
+> +		.subvendor	= PCI_ANY_ID,
+> +		.subdevice	= PCI_ANY_ID,
+> +		.init		= pci_ni8430_init,
+> +		.setup		= pci_ni8430_setup,
+> +		.exit		= pci_ni8430_exit,
+> +	},
+
+We should have a config sym for that, so only those who really need the
+device can enable it.
+
+OTOH, it would be even nicer to have this as an extra module.
+
+
+Nevertheless its good that you NI folks now start making your products
+usable on mainline kernel, instead of this really ridiculous and broken-
+by-design "nikal"/daqmx crap (which even sometimes introduce 0day-
+exploitable leaks allowing remote machine takeover - I've posted one
+@full-disclosure several month ago. One of the reasons why I was banned
+from the forums - criticism in general seems to be disliked there)
+
+Over the recent years, I tried to get some specs on the cRIOs, in order
+to write proper drivers and bring them to mainline (currently these
+boxes might be nice for dumb PLC, but nothing more, and the marketing
+claim "linux support" is just wrong). But there was no way of getting
+anything from NI (not even after several calls with product management
+and development team). And playing around w/ LV was in no way any
+option. So I had to tell my client that cRIOs are completely unusable
+for him, and some >$1M purchases went off the table.
+(I've rarely seen any company so hostile against Linux support like NI)
+
+
+good luck,
+
+--mtx
+
 -- 
-2.11.0
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
