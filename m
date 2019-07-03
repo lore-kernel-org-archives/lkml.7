@@ -2,355 +2,152 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A6EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1CCC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B2721871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F37321871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0btV7qN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmVJrnqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfGCW1b (ORCPT
+        id S1727442AbfGCW1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:27:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35892 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfGCW1a (ORCPT
+        Wed, 3 Jul 2019 18:27:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39367 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfGCW1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:27:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dR8rT6j2M0ly/hhLtGGd/Pl7BP9JO2M9xU7J236aZE4=; b=Q0btV7qNug0FYaQRyhqhr3dpC
-        Sqdvr01db6up1aYCvpUM0mEeFGvu7Q43A1wGQikv/32GhPh1rKMyGTbpPVsOMxaaquHhGZS4q45zI
-        UpUSf7s2/PQ11MaRou3a73NzowXN90P1kX7jgVveuux8Juh4RR85mj/9LUYGyd5tLsOZexziLlsK5
-        YJ0TOvaWT8obuO2nzr0SAGa6O2pIDfgjKQx+dgU8Uy+I/4NdHbMD7TT1UkkpOhWbwtiisulQ6AcKk
-        G+URVE9JSUfbi2yyu1uIgowBU/HKsNENLTZX5OXA4Qv56yOMgtichI7l+b5+LhvpxZt3jt9ne2+tU
-        JnD8U641w==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hinin-0003Lf-Lg; Wed, 03 Jul 2019 22:27:25 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] kernel/cpu: hotplug; fix non-SYSFS build errors in
- arch/x86/power/
-Message-ID: <9906a70d-7a4a-03a1-f555-07231570364d@infradead.org>
-Date:   Wed, 3 Jul 2019 15:27:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 18:27:32 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r21so3604049otq.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 15:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D2V6DzWpvWTZUVXRvfBLQmJzwket1ppQ/Sc433n2/Nc=;
+        b=mmVJrnqCbKv1e50NHEEmq1OoZcpLFVzXU1X0qha21y2dJYbJVVyXKBEbwD21H0Mkgw
+         h/pzQH1i/cFTXLvSSY6Y7n59RwLUZcrCmeuukwEY4k/Lo9bGBRLuZNkIgrPHl1HS03AC
+         OWUDKWQRtkeieoHAoX0gRZwbxw3WnSvdRASvuTP6kW5aM813Tt/j5PdUafTZPbKKbMra
+         gKgMcDSUa4+X34/vSWbaD/LaTsKT+LwlKVKKr6kkhh/t3Uxtz323Sa0VnxegvVnRsiu+
+         vPk5h/fsjfGfJb/7UkUDTYIOl5rREmnWwt90bN88b56oX7k2sb9B7ix0LvIfbyyJKanU
+         jZuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D2V6DzWpvWTZUVXRvfBLQmJzwket1ppQ/Sc433n2/Nc=;
+        b=bZJ+cw1RWC/v2iXDYMQhZgjz7+QzqNxyi/Y7kXdBNCpNjHP02Tuaiksq8GQ9XTr1qE
+         ASgOK3lOZHyUOx7+o8HDIrLgWgmcx0nI6oEvDcI9WlHX4DDqgmmVgnjiZNdUPgK13XJh
+         tSED3yTDzUHVHNxPsreierKR99v9yYf4rYwnarr6CesWufYUluCSFjOfzzcS7T1YEs6h
+         DWeZ0J+ApIkgK8onFurYBKowsJFkjjDn36urToHGigmCGwZxW5pV4my+hpOAgdkzuAkI
+         BVeO9KttQ6ZoeOqENARNp2Abs46oG8NruV9vs3JK5hHHHzeOP8qnzGOXV7EVDiENdj3K
+         HWgw==
+X-Gm-Message-State: APjAAAWXnnaQp2P7kGtssP5uM7rgoFfgjk8GqQljdQMPBhV35IYggM2/
+        Wyh2bzvQuTGVPkprmuaNdRS511dgl3IrlqjJx+Eykw==
+X-Google-Smtp-Source: APXvYqyeTTr+WvpeAKpXyj3063djbPHVPYZg4Jf5vvwk7ke/KotikoqN8p0GhSt6ugm8Gb7SQ9BHig9URCNweka4tb0=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr27558240otp.225.1562192851493;
+ Wed, 03 Jul 2019 15:27:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190702004811.136450-1-saravanak@google.com> <7900c670-5b3a-f950-dec9-70d98d94a84f@codeaurora.org>
+ <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
+In-Reply-To: <CAGETcx--+3BNjYZ6cgirNr_uZjU0464UHSUcaVHh_uTO2yWTCQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 3 Jul 2019 15:26:46 -0700
+Message-ID: <CAGETcx_by9aShONfSAR8rfhC69nBzeEhrZSHhOb7HuUBeCu=JA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Solve postboot supplier cleanup and optimize probe ordering
+To:     David Collins <collinsd@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tue, Jul 2, 2019 at 5:59 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Jul 2, 2019 at 5:03 PM David Collins <collinsd@codeaurora.org> wrote:
+> >
+> > Hello Saravana,
+> >
+> > On 7/1/19 5:48 PM, Saravana Kannan wrote:
+> > ...
+> > > TODO:
+> > > - For the case of consumer child sub-nodes being added by a parent
+> > >   device after late_initcall_sync we might be able to address that by
+> > >   recursively parsing all child nodes and adding all their suppliers as
+> > >   suppliers of the parent node too. The parent probe will add the
+> > >   children before its probe is completed and that will prevent the
+> > >   supplier's sync_state from being executed before the children are
+> > >   probed.
+> > >
+> > > But I'll write that part once I see how this series is received.
+> >
+> > I don't think that this scheme will work in all cases.  It can also lead
+> > to probing deadlock.
+> >
+> > Here is an example:
+> >
+> > Three DT devices (top level A with subnodes B and C):
+> > /A
+> > /A/B
+> > /A/C
+> > C is a consumer of B.
+> >
+> > When device A is created, a search of its subnodes will find the link from
+> > C to B.  Since device B hasn't been created yet, of_link_to_suppliers()
+> > will fail and add A to the wait_for_suppliers list.  This will cause the
+> > probe of A to fail with -EPROBE_DEFER (thanks to the check in
+> > device_links_check_suppliers()).  As a result device B will not be created
+> > and device A will never probe.
+> >
+> > You could try to resolve this situation by detecting the cycle and *not*
+> > adding A to the wait_for_suppliers list.  However, that would get us back
+> > to the problem we had before.  A would be allowed to probe which would
+> > then result in devices being added for B and C.  If the device for B is
+> > added before C, then it would be allowed to immediately probe and
+> > (assuming this all takes place after late_initcall_sync thanks to modules)
+> > its sync_state() callback would be called since no consumer devices are
+> > linked to B.
+> >
+> > Please note that to change this example from theoretical to practical,
+> > replace "A" with apps_rsc, "B" with pmi8998-rpmh-regulators, and "C" with
+> > pm8998-rpmh-regulators in [1].
+>
+> Interesting use case.
+>
+> First, to clarify my TODO: I was initially thinking of the recursive
+> "up-heritance" of suppliers from child to parent to handle cases where
+> the supplier is a device from some other top level device (or its
+> child). My thinking has evolved a bit on that. I think the parent
+> needs to inherit only from it's immediate children and not its
+> grandchildren (the child is responsible for handling grandchildren
+> suppliers). I'll also have to make sure I don't try to create a link
+> from a parent device to one of its child device nodes (should be easy
+> to check).
+>
+> Anyway, going back to your case, for dependencies between child nodes
+> of a parent, can't the parent just populate them in the right order?
+> You can loop through the children and add them in multiple stages.
+>
+> I'll continue to think if I can come up with anything nicer on the
+> drivers, but even if we can't come up with anything better, we can
+> still make sync_state() work.
 
-Fix link errors when building almost-allmodconfig but CONFIG_SYSFS
-is not set/enabled.
-
-The missing functions should not be inside #if CONFIG_SYSFS/#endif.
-
-The non-SYSFS stub for __store_smt_control() is no longer needed.
-
-This is almost all code movement and a little ifdef-fery changes.
-
-Fixes these build errors:
-
-ld: arch/x86/power/cpu.o: in function `hibernate_resume_nonboot_cpu_disable':
-cpu.c:(.text+0x9f4): undefined reference to `cpuhp_smt_enable'
-ld: arch/x86/power/hibernate.o: in function `arch_resume_nosmt':
-hibernate.c:(.text+0x7f7): undefined reference to `cpuhp_smt_enable'
-ld: hibernate.c:(.text+0x809): undefined reference to `cpuhp_smt_disable'
-
-Fixes: 98f8cdce1db5 ("cpu/hotplug: Add sysfs state interface")
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-pm@vger.kernel.org
----
- kernel/cpu.c |  242 +++++++++++++++++++++++--------------------------
- 1 file changed, 118 insertions(+), 124 deletions(-)
-
---- lnx-52-rc7.orig/kernel/cpu.c
-+++ lnx-52-rc7/kernel/cpu.c
-@@ -376,7 +376,7 @@ static void lockdep_release_cpus_lock(vo
- {
- }
- 
--#endif	/* CONFIG_HOTPLUG_CPU */
-+#endif /* CONFIG_HOTPLUG_CPU */
- 
- /*
-  * Architectures that need SMT-specific errata handling during SMT hotplug
-@@ -1892,6 +1892,123 @@ void __cpuhp_remove_state(enum cpuhp_sta
- }
- EXPORT_SYMBOL(__cpuhp_remove_state);
- 
-+#ifdef CONFIG_HOTPLUG_CPU
-+
-+static void cpuhp_offline_cpu_device(unsigned int cpu)
-+{
-+	struct device *dev = get_cpu_device(cpu);
-+
-+	dev->offline = true;
-+	/* Tell user space about the state change */
-+	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
-+}
-+
-+static void cpuhp_online_cpu_device(unsigned int cpu)
-+{
-+	struct device *dev = get_cpu_device(cpu);
-+
-+	dev->offline = false;
-+	/* Tell user space about the state change */
-+	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
-+}
-+
-+int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
-+{
-+	int cpu, ret = 0;
-+
-+	cpu_maps_update_begin();
-+	for_each_online_cpu(cpu) {
-+		if (topology_is_primary_thread(cpu))
-+			continue;
-+		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
-+		if (ret)
-+			break;
-+		/*
-+		 * As this needs to hold the cpu maps lock it's impossible
-+		 * to call device_offline() because that ends up calling
-+		 * cpu_down() which takes cpu maps lock. cpu maps lock
-+		 * needs to be held as this might race against in kernel
-+		 * abusers of the hotplug machinery (thermal management).
-+		 *
-+		 * So nothing would update device:offline state. That would
-+		 * leave the sysfs entry stale and prevent onlining after
-+		 * smt control has been changed to 'off' again. This is
-+		 * called under the sysfs hotplug lock, so it is properly
-+		 * serialized against the regular offline usage.
-+		 */
-+		cpuhp_offline_cpu_device(cpu);
-+	}
-+	if (!ret)
-+		cpu_smt_control = ctrlval;
-+	cpu_maps_update_done();
-+	return ret;
-+}
-+
-+int cpuhp_smt_enable(void)
-+{
-+	int cpu, ret = 0;
-+
-+	cpu_maps_update_begin();
-+	cpu_smt_control = CPU_SMT_ENABLED;
-+	for_each_present_cpu(cpu) {
-+		/* Skip online CPUs and CPUs on offline nodes */
-+		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
-+			continue;
-+		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
-+		if (ret)
-+			break;
-+		/* See comment in cpuhp_smt_disable() */
-+		cpuhp_online_cpu_device(cpu);
-+	}
-+	cpu_maps_update_done();
-+	return ret;
-+}
-+
-+#if defined(CONFIG_HOTPLUG_SMT) && defined(CONFIG_SYSFS)
-+static ssize_t
-+__store_smt_control(struct device *dev, struct device_attribute *attr,
-+		    const char *buf, size_t count)
-+{
-+	int ctrlval, ret;
-+
-+	if (sysfs_streq(buf, "on"))
-+		ctrlval = CPU_SMT_ENABLED;
-+	else if (sysfs_streq(buf, "off"))
-+		ctrlval = CPU_SMT_DISABLED;
-+	else if (sysfs_streq(buf, "forceoff"))
-+		ctrlval = CPU_SMT_FORCE_DISABLED;
-+	else
-+		return -EINVAL;
-+
-+	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED)
-+		return -EPERM;
-+
-+	if (cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	ret = lock_device_hotplug_sysfs();
-+	if (ret)
-+		return ret;
-+
-+	if (ctrlval != cpu_smt_control) {
-+		switch (ctrlval) {
-+		case CPU_SMT_ENABLED:
-+			ret = cpuhp_smt_enable();
-+			break;
-+		case CPU_SMT_DISABLED:
-+		case CPU_SMT_FORCE_DISABLED:
-+			ret = cpuhp_smt_disable(ctrlval);
-+			break;
-+		}
-+	}
-+
-+	unlock_device_hotplug();
-+	return ret ? ret : count;
-+}
-+#endif /* CONFIG_HOTPLUG_SMT && CONFIG_SYSFS */
-+
-+#endif /* CONFIG_HOTPLUG_CPU */
-+
- #if defined(CONFIG_SYSFS) && defined(CONFIG_HOTPLUG_CPU)
- static ssize_t show_cpuhp_state(struct device *dev,
- 				struct device_attribute *attr, char *buf)
-@@ -2044,129 +2161,6 @@ static const struct attribute_group cpuh
- 	NULL
- };
- 
--#ifdef CONFIG_HOTPLUG_SMT
--
--static void cpuhp_offline_cpu_device(unsigned int cpu)
--{
--	struct device *dev = get_cpu_device(cpu);
--
--	dev->offline = true;
--	/* Tell user space about the state change */
--	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
--}
--
--static void cpuhp_online_cpu_device(unsigned int cpu)
--{
--	struct device *dev = get_cpu_device(cpu);
--
--	dev->offline = false;
--	/* Tell user space about the state change */
--	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
--}
--
--int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
--{
--	int cpu, ret = 0;
--
--	cpu_maps_update_begin();
--	for_each_online_cpu(cpu) {
--		if (topology_is_primary_thread(cpu))
--			continue;
--		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
--		if (ret)
--			break;
--		/*
--		 * As this needs to hold the cpu maps lock it's impossible
--		 * to call device_offline() because that ends up calling
--		 * cpu_down() which takes cpu maps lock. cpu maps lock
--		 * needs to be held as this might race against in kernel
--		 * abusers of the hotplug machinery (thermal management).
--		 *
--		 * So nothing would update device:offline state. That would
--		 * leave the sysfs entry stale and prevent onlining after
--		 * smt control has been changed to 'off' again. This is
--		 * called under the sysfs hotplug lock, so it is properly
--		 * serialized against the regular offline usage.
--		 */
--		cpuhp_offline_cpu_device(cpu);
--	}
--	if (!ret)
--		cpu_smt_control = ctrlval;
--	cpu_maps_update_done();
--	return ret;
--}
--
--int cpuhp_smt_enable(void)
--{
--	int cpu, ret = 0;
--
--	cpu_maps_update_begin();
--	cpu_smt_control = CPU_SMT_ENABLED;
--	for_each_present_cpu(cpu) {
--		/* Skip online CPUs and CPUs on offline nodes */
--		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
--			continue;
--		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
--		if (ret)
--			break;
--		/* See comment in cpuhp_smt_disable() */
--		cpuhp_online_cpu_device(cpu);
--	}
--	cpu_maps_update_done();
--	return ret;
--}
--
--
--static ssize_t
--__store_smt_control(struct device *dev, struct device_attribute *attr,
--		    const char *buf, size_t count)
--{
--	int ctrlval, ret;
--
--	if (sysfs_streq(buf, "on"))
--		ctrlval = CPU_SMT_ENABLED;
--	else if (sysfs_streq(buf, "off"))
--		ctrlval = CPU_SMT_DISABLED;
--	else if (sysfs_streq(buf, "forceoff"))
--		ctrlval = CPU_SMT_FORCE_DISABLED;
--	else
--		return -EINVAL;
--
--	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED)
--		return -EPERM;
--
--	if (cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
--		return -ENODEV;
--
--	ret = lock_device_hotplug_sysfs();
--	if (ret)
--		return ret;
--
--	if (ctrlval != cpu_smt_control) {
--		switch (ctrlval) {
--		case CPU_SMT_ENABLED:
--			ret = cpuhp_smt_enable();
--			break;
--		case CPU_SMT_DISABLED:
--		case CPU_SMT_FORCE_DISABLED:
--			ret = cpuhp_smt_disable(ctrlval);
--			break;
--		}
--	}
--
--	unlock_device_hotplug();
--	return ret ? ret : count;
--}
--
--#else /* !CONFIG_HOTPLUG_SMT */
--static ssize_t
--__store_smt_control(struct device *dev, struct device_attribute *attr,
--		    const char *buf, size_t count)
--{
--	return -ENODEV;
--}
--#endif /* CONFIG_HOTPLUG_SMT */
--
- static const char *smt_states[] = {
- 	[CPU_SMT_ENABLED]		= "on",
- 	[CPU_SMT_DISABLED]		= "off",
+There's actually a much better way to handle this case where you won't
+have to handle ordering on the driver side. I just need to add one or
+two patches to my patch series. I'll send that out sometime next week.
 
 
+-Saravana
