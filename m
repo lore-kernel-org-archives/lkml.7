@@ -2,245 +2,98 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D11C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 590FEC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E38218AD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3356621881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VGm4cgty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfGCRoA (ORCPT
+        id S1727066AbfGCRox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:44:00 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:9663 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfGCRn7 (ORCPT
+        Wed, 3 Jul 2019 13:44:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45034 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGCRow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:43:59 -0400
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: rE1PPiUYLx+553PsS26Oksn7RexOFKwbp8ae46DhGB/64c3y1B8aHgZXiE5SGq0Sa9UxFpVlt+
- ZL/6ZbYqHeMlMEgoRzBmrALe/TKpJWXvXTpxmgqCCESMqSpp5w0X44Cf0OwaVFjqLZYNLA0Jbq
- 2NKHealGMif/ysgufrg943fsEX4QlejwJ6OyjEhnJtOjUKjrtL1bJAPtzWo28FZOG8LkOlynZh
- 77t6DNBpk49LLY7g5mUU8wqd+T8ymlTKYnuD76xnUKLBc0yn+8s/WYsfT6bJ633QmHXWm6xBm/
- mPw=
-X-SBRS: 2.7
-X-MesageID: 2556619
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.63,446,1557201600"; 
-   d="scan'208";a="2556619"
-Subject: Re: [Xen-devel] [PATCH v2 4/9] x86/mm/tlb: Flush remote and local
- TLBs concurrently
-To:     Nadav Amit <namit@vmware.com>, Juergen Gross <jgross@suse.com>
-CC:     Sasha Levin <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20190702235151.4377-1-namit@vmware.com>
- <20190702235151.4377-5-namit@vmware.com>
- <d89e2b57-8682-153e-33d8-98084e9983d6@suse.com>
- <A4BC0EDE-71F0-455D-964A-7250D005FB56@vmware.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
- 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
- 6+ahAA==
-Message-ID: <6038042c-917f-d361-5d79-f0205152fe00@citrix.com>
-Date:   Wed, 3 Jul 2019 18:43:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 13:44:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so1588485pgl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=E+nIXNVtybGCJQ9qhR+v7ySrKVmdYkqu+JpBB3XRK44=;
+        b=VGm4cgtyuTX82jA5Q7OkqzviUC7ZS3E1fwHKamsDm+UAbbNRF67b8ZYcwOoKfx6UvT
+         yD5jrQPVE8fBsT1+7vjAyGEBXYa708NL3AAHTpXQubo0l2bhrBSZ871MN0nZ/AJiwdd8
+         xrfc7Y7NXHqF0sXfiwb+/eqvImMniB0H6K3E6+fFwnJ7JwlfEe20OqqGToK5uwTXqNq/
+         4pye2K9cVhUqpj6h3YTAUMB9h4p5cICiXBCmdrbIp416i+hvmLHO+Baviv4uDez5FViF
+         v9o1XoL+AFUzvC8K+LVa3P09MOhAkKLAup6cLLiTT5fr0x9vDqitwp12MaBNuyZM4TFU
+         CSew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=E+nIXNVtybGCJQ9qhR+v7ySrKVmdYkqu+JpBB3XRK44=;
+        b=PJS2NPICb9o2xP2wc1QUTvtsnTF9VO81BXi7lFOa567Y9KK1VbsJTsDcJqIJzdkd4z
+         duyjoKcUru1kA8VNW2ve9BUzucBQhXrUkYf/CuM9J1twUZA3wnBTCtYl/hclJSTU6ScF
+         6CscusTwlEwO5W5hF6shEN+cHRzI7YU5AYexEp0af0YbqzuTouhbd62GEx9Cl28Rvi5K
+         2vs+DMB4Gu3dJRU3T7IIkrhR8ncWlfvoy+MBo7gkb2Qy9hNsolg+AJJ1zJ/QngCrQ2UQ
+         L9Bn+dDNCVWS4Rtv8SMmsd/wzYCrTrWEHlCQbmHzZRO0lywWE7bRGNXyiF3Q5n0EuhRD
+         KmVA==
+X-Gm-Message-State: APjAAAXTEzkhUIzkmWAZjzdnpE0jU0CgKUZnT2aJtgR1z0wUdydnrBtB
+        c3gPWWgIhoLf7UIrF5tpc3LpxQ==
+X-Google-Smtp-Source: APXvYqwArpI7P6wKPUVysPVfB3+fPhZXcp1OWM5P/heFWlYBdzn2JqcYRDrKS9rawXIy3vL2I9zG4Q==
+X-Received: by 2002:a63:6286:: with SMTP id w128mr29708938pgb.12.1562175891115;
+        Wed, 03 Jul 2019 10:44:51 -0700 (PDT)
+Received: from [100.112.64.100] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id y68sm3021050pfy.164.2019.07.03.10.44.49
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 03 Jul 2019 10:44:50 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 10:44:30 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Oleg Nesterov <oleg@redhat.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Hugh Dickins <hughd@google.com>,
+        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        hch@lst.de, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+In-Reply-To: <20190703173546.GB21672@redhat.com>
+Message-ID: <alpine.LSU.2.11.1907031039180.1132@eggly.anvils>
+References: <1559161526-618-1-git-send-email-cai@lca.pw> <20190530080358.GG2623@hirez.programming.kicks-ass.net> <82e88482-1b53-9423-baad-484312957e48@kernel.dk> <20190603123705.GB3419@hirez.programming.kicks-ass.net> <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+ <alpine.LSU.2.11.1906301542410.1105@eggly.anvils> <97d2f5cc-fe98-f28e-86ce-6fbdeb8b67bd@kernel.dk> <20190702150615.1dfbbc2345c1c8f4d2a235c0@linux-foundation.org> <20190703173546.GB21672@redhat.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <A4BC0EDE-71F0-455D-964A-7250D005FB56@vmware.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 18:02, Nadav Amit wrote:
->> On Jul 3, 2019, at 7:04 AM, Juergen Gross <jgross@suse.com> wrote:
->>
->> On 03.07.19 01:51, Nadav Amit wrote:
->>> To improve TLB shootdown performance, flush the remote and local TLBs
->>> concurrently. Introduce flush_tlb_multi() that does so. Introduce
->>> paravirtual versions of flush_tlb_multi() for KVM, Xen and hyper-v (Xen
->>> and hyper-v are only compile-tested).
->>> While the updated smp infrastructure is capable of running a function on
->>> a single local core, it is not optimized for this case. The multiple
->>> function calls and the indirect branch introduce some overhead, and
->>> might make local TLB flushes slower than they were before the recent
->>> changes.
->>> Before calling the SMP infrastructure, check if only a local TLB flush
->>> is needed to restore the lost performance in this common case. This
->>> requires to check mm_cpumask() one more time, but unless this mask is
->>> updated very frequently, this should impact performance negatively.
->>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->>> Cc: Sasha Levin <sashal@kernel.org>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: Borislav Petkov <bp@alien8.de>
->>> Cc: x86@kernel.org
->>> Cc: Juergen Gross <jgross@suse.com>
->>> Cc: Paolo Bonzini <pbonzini@redhat.com>
->>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->>> Cc: Andy Lutomirski <luto@kernel.org>
->>> Cc: Peter Zijlstra <peterz@infradead.org>
->>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>> Cc: linux-hyperv@vger.kernel.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: virtualization@lists.linux-foundation.org
->>> Cc: kvm@vger.kernel.org
->>> Cc: xen-devel@lists.xenproject.org
->>> Signed-off-by: Nadav Amit <namit@vmware.com>
->>> ---
->>>  arch/x86/hyperv/mmu.c                 | 13 +++---
->>>  arch/x86/include/asm/paravirt.h       |  6 +--
->>>  arch/x86/include/asm/paravirt_types.h |  4 +-
->>>  arch/x86/include/asm/tlbflush.h       |  9 ++--
->>>  arch/x86/include/asm/trace/hyperv.h   |  2 +-
->>>  arch/x86/kernel/kvm.c                 | 11 +++--
->>>  arch/x86/kernel/paravirt.c            |  2 +-
->>>  arch/x86/mm/tlb.c                     | 65 ++++++++++++++++++++-------
->>>  arch/x86/xen/mmu_pv.c                 | 20 ++++++---
->>>  include/trace/events/xen.h            |  2 +-
->>>  10 files changed, 91 insertions(+), 43 deletions(-)
->> ...
->>
->>> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
->>> index beb44e22afdf..19e481e6e904 100644
->>> --- a/arch/x86/xen/mmu_pv.c
->>> +++ b/arch/x86/xen/mmu_pv.c
->>> @@ -1355,8 +1355,8 @@ static void xen_flush_tlb_one_user(unsigned long addr)
->>>  	preempt_enable();
->>>  }
->>>  -static void xen_flush_tlb_others(const struct cpumask *cpus,
->>> -				 const struct flush_tlb_info *info)
->>> +static void xen_flush_tlb_multi(const struct cpumask *cpus,
->>> +				const struct flush_tlb_info *info)
->>>  {
->>>  	struct {
->>>  		struct mmuext_op op;
->>> @@ -1366,7 +1366,7 @@ static void xen_flush_tlb_others(const struct cpumask *cpus,
->>>  	const size_t mc_entry_size = sizeof(args->op) +
->>>  		sizeof(args->mask[0]) * BITS_TO_LONGS(num_possible_cpus());
->>>  -	trace_xen_mmu_flush_tlb_others(cpus, info->mm, info->start, info->end);
->>> +	trace_xen_mmu_flush_tlb_multi(cpus, info->mm, info->start, info->end);
->>>    	if (cpumask_empty(cpus))
->>>  		return;		/* nothing to do */
->>> @@ -1375,9 +1375,17 @@ static void xen_flush_tlb_others(const struct cpumask *cpus,
->>>  	args = mcs.args;
->>>  	args->op.arg2.vcpumask = to_cpumask(args->mask);
->>>  -	/* Remove us, and any offline CPUS. */
->>> +	/* Flush locally if needed and remove us */
->>> +	if (cpumask_test_cpu(smp_processor_id(), to_cpumask(args->mask))) {
->>> +		local_irq_disable();
->>> +		flush_tlb_func_local(info);
->> I think this isn't the correct function for PV guests.
->>
->> In fact it should be much easier: just don't clear the own cpu from the
->> mask, that's all what's needed. The hypervisor is just fine having the
->> current cpu in the mask and it will do the right thing.
-> Thanks. I will do so in v3. I don’t think Hyper-V people would want to do
-> the same, unfortunately, since it would induce VM-exit on TLB flushes.
+On Wed, 3 Jul 2019, Oleg Nesterov wrote:
+> On 07/02, Andrew Morton wrote:
+> > On Mon, 1 Jul 2019 08:22:32 -0600 Jens Axboe <axboe@kernel.dk> wrote:
+> > 
+> > > Andrew, can you queue Oleg's patch for 5.2? You can also add my:
+> > > 
+> > > Reviewed-by: Jens Axboe <axboe@kernel.dk>
+> > 
+> > Sure.  Although things are a bit of a mess.  Oleg, can we please have a
+> > clean resend with signoffs and acks, etc?
+> 
+> OK, will do tomorrow. This cleanup can be improved, we can avoid get/put_task_struct
+> altogether, but need to recheck.
 
-Why do you believe the vmexit matters?  You're talking one anyway for
-the IPI.
+Thank you, Oleg. But, with respect, I'd caution against making it cleverer
+at the last minute: what you posted already is understandable, works, has
+Jen's Reviewed-by and my Acked-by: it just lacks a description and signoff.
 
-Intel only have virtualised self-IPI, and while AMD do have working
-non-self IPIs, you still take a vmexit anyway if any destination vcpu
-isn't currently running in non-root mode (IIRC).
-
-At that point, you might as well have the hypervisor do all the hard
-work via a multi-cpu shootdown/flush hypercall, rather than trying to
-arrange it locally.
-
-~Andrew
+Hugh
