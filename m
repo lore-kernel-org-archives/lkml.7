@@ -2,238 +2,102 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40E9C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D69C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779CC2189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF2E2189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:26:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yr0j9Ul0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfGCI0h (ORCPT
+        id S1727300AbfGCI0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:26:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8442 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfGCI0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:26:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 01:26:36 -0700
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="157893901"
-Received: from mwasko-mobl.ger.corp.intel.com (HELO [10.237.137.181]) ([10.237.137.181])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 03 Jul 2019 01:26:33 -0700
-Subject: Re: [alsa-devel] [PATCH] ALSA: usb-audio: fix Line6 Helix audio
- format rates
-To:     Takashi Iwai <tiwai@suse.de>, nick83ola <nick83ola@gmail.com>
-Cc:     alsa-devel@alsa-project.org, info@jensverwiebe.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Richard Fontana <rfontana@redhat.com>,
-        Jussi Laako <jussi@sonarnerd.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-References: <20190702004439.30131-1-nick83ola@gmail.com>
- <s5hlfxg4i4r.wl-tiwai@suse.de>
- <4181a467-5332-c256-5124-513a0343ec70@linux.intel.com>
- <s5ha7dw4egd.wl-tiwai@suse.de>
- <CABPh3UMttE1s7oNt0-JLNm2N3wxb-JXBTLzMYZM42ENiy9NC9Q@mail.gmail.com>
- <s5h36jno8vb.wl-tiwai@suse.de>
-From:   "Wasko, Michal" <michal.wasko@linux.intel.com>
-Message-ID: <38462424-4e2b-bdbd-f7cc-ea94385924e0@linux.intel.com>
-Date:   Wed, 3 Jul 2019 10:26:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 04:26:46 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33343 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCI0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:26:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y17so1151787lfe.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oH+9JEmEdviHn94a7cG/CrP0XnCuvPvdHugovk+1QmU=;
+        b=Yr0j9Ul0MKP0dkHoy9so7SqHZjz9YPD/8RtaQYq/QS7hJpMV/YgCE0T28eXT7jCvlS
+         yQmRZqNvwMQEyd90J4bhV4PHy5Gm9rZDQYOpw2HFGrqYnG13mxGub7/M3rR+pIskS9RH
+         1ZhsY0q7Hm/aXru8eSnmkm75xGDWYmso+K5aSBOYCjI/wj4NuxVFuJ9B+ojMYRnIcO8d
+         ix3snxZ0ZJj71x7B6n368jZ9X6YaizA+Ee6+uCLuReo2lBUjxx1g9henIp9r5WGP0WwN
+         b1C0fz0nbOuKbXmvt7NjhZPWDwy5iWE/yLpyxrSwtom7abqcgKnr4Xu5GbBkbajHu7wK
+         5jhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oH+9JEmEdviHn94a7cG/CrP0XnCuvPvdHugovk+1QmU=;
+        b=ciIQoNHp1C7xfgOP2anCzVNgZ0S2r1NC4tLQjZvJfuOPdQDql3Eb8E26cXbVzsXO3I
+         XwZbCx8OySlJKEH2EbRD8WPx4Xg21ESGL4Iu/R4EK2VPyVdkMuzGCSC0IK+8XbsvjuQf
+         iI0Feh0JNmrzgYVDASFaEYUpeZ18LbVomLwaSXuO+nUWGeRFlHEYSFrz+HDCY0c7J8vA
+         kTJ6RtL1irCzcuahSNZ3qD27W+ar9lJy6m+6YEB6Zxk6UWeb3Y+3wOUV4QF3cLjim29k
+         WlWcjXYHyDBOJmKGszgtWGDqKcldu1W3Nf1GKYXKeddLP5F5MjBetiztDqAnrv2ei4aQ
+         tOww==
+X-Gm-Message-State: APjAAAX/Iqrf2iTtYRZHjEla9udut1ddO2QLJZGk0C4N+PkXGFiem4t+
+        cG7L2p3zS38B9ElR+YKb42Efh2j8EtMW98LxPEPPWw==
+X-Google-Smtp-Source: APXvYqymr6EoLSqXvq3rkC3hBxhdSlL8Q76rBENOFxvbDxQXxxcFrCLNfqvoaHdBizGqM1M/jk306H+kUmo4riz9AkI=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr16672551lfh.92.1562142403839;
+ Wed, 03 Jul 2019 01:26:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <s5h36jno8vb.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1561472086-23360-1-git-send-email-neeraju@codeaurora.org>
+In-Reply-To: <1561472086-23360-1-git-send-email-neeraju@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jul 2019 10:26:32 +0200
+Message-ID: <CACRpkdbfTTnEbCM4R_F_KYN9ys=VwCLQ5d1cYsx9LQOyTd5dwA@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: qcom: Add irq_enable callback for msm gpio
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Timur Tabi <timur@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/2019 9:49 AM, Takashi Iwai wrote:
+On Tue, Jun 25, 2019 at 4:14 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 
-> On Wed, 03 Jul 2019 09:41:00 +0200,
-> nick83ola wrote:
->> On Tue 2 Jul 2019, 16:57 Takashi Iwai, <tiwai@suse.de> wrote:
->>
->>      On Tue, 02 Jul 2019 17:52:01 +0200,
->>      Wasko, Michal wrote:
->>      >
->>      > On 7/2/2019 4:37 PM, Takashi Iwai wrote:
->>      > > On Tue, 02 Jul 2019 02:43:14 +0200,
->>      > > Nicola Lunghi wrote:
->>      > >> Line6 Helix and HX stomp don't support retrieving
->>      > >> the number of clock sample rate.
->>      > >>
->>      > >> Add a quirk to return the default value of 48Khz.
->>      > >>
->>      > >> Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
->>      > > It's not particularly good place to put a quirk, but there seems no
->>      > > other better place, unfortunately.
->>
->> If you prefer I can add a function to quirk.c
-> It's OK to place in format.c as a start.
+> From: Srinivas Ramana <sramana@codeaurora.org>
 >
->>      Is this specific to certain unit
->>      > > or all I/Os on the device suffer from this problem?
->>
->> This is specific to the helix line of line6
->> There are currently 4 devices in that line that I think shared their firmware
->> more or less.
->> Unfortunately I have only one device to test here (but maybe someone else can
->> add the others)
-> Ah sorry I wasn't clear enough.  What I meant as "unit" is the USB
-> descriptor unit (aka widget), a feature unit, a terminal, whatever.
-> Does this error appear only once at parsing, or does it hit multiple
-> times per device?
+> Introduce the irq_enable callback which will be same as irq_unmask
+> except that it will also clear the status bit before unmask.
 >
->>      > >
->>      > > In anyway, if the behavior is expected, we don't need to use
->>      > > dev_warn() to annoy users unnecessarily.  Replace it with dev_info().
->>      > >
->>
->> Ok
->>
->>      > > Also, the code that creates a single 48k entry would be better to be
->>      > > put into a function for readability.
->>      > >
->>      > > Could you resubmit with that change?
->>      > >
->>
->> Yes (in quirks.c or here?)
->>
->> Also I suspect that there' s a way to get the clock rates because windows
->> driver supports getting the rates and switching (and in Mac the device has the
->> same problem without a custom driver only supports 48khz)
-> It might be some fixed list without inquiries?
+> This will help in clearing any erroneous interrupts that would
+> have got latched when the interrupt is not in use.
 >
+> There may be devices like UART which can use the same gpio line
+> for data rx as well as a wakeup gpio when in suspend. The data that
+> was flowing on the line may latch the interrupt and when we enable
+> the interrupt before going to suspend, this would trigger the
+> unexpected interrupt. This change helps clearing the interrupt
+> so that these unexpected interrupts gets cleared.
 >
->>      > >
->>      > > Thanks!
->>      > >
->>      > > Takashi
->>      >
->>
->> Thank you
->>
->>      > If the listed USB devices do not support sample rate format retrieval
->>      > then maybe it would be a better idea to perform below check before
->>      > sending message?
->>     
->>      Yes, if we know that it always fails, we don't need to query.
->>
->> Sorry I don't understand this :-)
-> Well, the error happens always on your device in the very same way,
-> right?  Then we don't have to send the specific command that leads to
-> an error, but takes the fixed 48k from the beginning.
+> Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> ---
 >
->
->> My idea is that if line6 in the future fixes their code (they are quite active
->> on the helix line) the call will not fail and we get a proper device without
->> quirks.
->> But If the driver fail to get the clock this settings works as a "failsafe"
->> and get the device working.
->> I also tried to contact their support but they don't care a lot about Linux
->> for now :-(
-> The fallback might be good, but I'm not sure whether there are many
-> devices that hit the same problem.  If we encounter more, let's try to
-> make it as a fallback.
-> thanks,
->
-> Takashi
-Since there is a chance that the issue will be addressed in USB device FW
-thanthe fallback mechanism will make sense. It would cover eventual future
-scenario withdevices that will have the issue fixed.
+> Changes since v2:
+> - Renamed function to msm_gpio_irq_clear_unmask()
 
-Michal W.
->> I will clean this better and resubmit
->> Thank you
->> Nick
->>
->>      > Have you also considered new function or macro that check device
->>      > support? This would separate formatfunctionality code from routine
->>      > that identifies applicable devices- in case if in future more devices
->>      > will require quirk.
->>     
->>      The split can be done later.  It's always hard to know what kind of
->>      quirk would be needed in future.  If any more devices show the same
->>      problem, we can reorganize the quirk in a saner way.
->>
->>      thanks,
->>     
->>      Takashi
->>
->>      >
->>      > Michal W.
->>      >
->>      > >> ---
->>      > >>   sound/usb/format.c | 28 +++++++++++++++++++++++++---
->>      > >>   1 file changed, 25 insertions(+), 3 deletions(-)
->>      > >>
->>      > >> diff --git a/sound/usb/format.c b/sound/usb/format.c
->>      > >> index c02b51a82775..05442f6ada62 100644
->>      > >> --- a/sound/usb/format.c
->>      > >> +++ b/sound/usb/format.c
->>      > >> @@ -313,10 +313,32 @@ static int parse_audio_format_rates_v2v3(struct
->>      snd_usb_audio *chip,
->>      > >>                          tmp, sizeof(tmp));
->>      > >>            if (ret < 0) {
->>      > >> -          dev_err(&dev->dev,
->>      > >> -                  "%s(): unable to retrieve number of sample rates
->>      (clock %d)\n",
->>      > >> +          switch (chip->usb_id) {
->>      > >> +          /* LINE 6 HX pedals don't support getting the clock sample
->>      rate.
->>      > >> +           * Set the framerate to 48khz by default
->>      > >> +           */
->>      > >> +          case USB_ID(0x0E41, 0x4244): /* HELIX */
->>      > >> +          case USB_ID(0x0E41, 0x4246): /* HX STOMP */
->>      > >> +                  dev_warn(&dev->dev,
->>      > >> +                          "%s(): line6 helix: unable to retrieve
->>      number of sample rates. Set it to default value (clock %d).\n",
->>      > >>                            __func__, clock);
->>      > >> -          goto err;
->>      > >> +                  fp->nr_rates = 1;
->>      > >> +                  fp->rate_min = 48000;
->>      > >> +                  fp->rate_max = 48000;
->>      > >> +                  fp->rates = SNDRV_PCM_RATE_48000;
->>      > >> +                  fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
->>      > >> +                  if (!fp->rate_table) {
->>      > >> +                          ret = -ENOMEM;
->>      > >> +                          goto err_free;
->>      > >> +                  }
->>      > >> +                  fp->rate_table[0] = 48000;
->>      > >> +                  return 0;
->>      > >> +          default:
->>      > >> +                  dev_err(&dev->dev,
->>      > >> +                          "%s(): unable to retrieve number of sample
->>      rates (clock %d)\n",
->>      > >> +                                  __func__, clock);
->>      > >> +                  goto err;
->>      > >> +          }
->>      > >>    }
->>      > >>            nr_triplets = (tmp[1] << 8) | tmp[0];
->>      > >> --
->>      > >> 2.19.1
->>      > >>
->>      > >>
->>      > > _______________________________________________
->>      > > Alsa-devel mailing list
->>      > > Alsa-devel@alsa-project.org
->>      > > https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->>      > >
->>      >
->>
->>
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+Patch applied, unless Bjorn complains!
+
+Yours,
+Linus Walleij
