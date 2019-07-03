@@ -7,133 +7,102 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923CCC06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9047EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68EB821881
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601122187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120202;
-	bh=/Ee2WZO4rde4TtUHzNrdFEtRJg+LA0aD8ucF+Vmu5hw=;
+	s=default; t=1562120206;
+	bh=hDN+aGT3OiKMxarLMhNarocFprAxKpWY3qy8Dxr1DEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N01OFYyA1MIu7mjAFfceog1pBbMXU02KZ3dc4jhBaWAWqgVpdRegF0c25BMSdLgO3
-	 7Ve1jEZPgYU25FdOKkga9v+VqR+IaVMTTk2jCqri0BNCBAnOuJDOFQeKUvdTXE2hRs
-	 qz2GQwkIggtfiCzc7mucb0aIOceuGQ8JPRjfBfkw=
+	b=E8y0e3LVCc/hmput6ObTqRRikWBFPmsoxJxMpB5Zsg0MqBr/5pQWjCTk0rUWPg2sO
+	 wVtOOUkUJHsoS/d2GRui1wwMQ5NpZsKvEWB9Ar2PE0AQtt9BIlBuU7B7XRbh7kKAop
+	 5e+QWnjDzr4G2azvkFG5eJtZBthIFiiu3bYAMTTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfGCCQl (ORCPT
+        id S1728037AbfGCCQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbfGCCQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:39 -0400
+        id S1728015AbfGCCQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA3C21882;
-        Wed,  3 Jul 2019 02:16:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E636521880;
+        Wed,  3 Jul 2019 02:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120198;
-        bh=/Ee2WZO4rde4TtUHzNrdFEtRJg+LA0aD8ucF+Vmu5hw=;
+        s=default; t=1562120200;
+        bh=hDN+aGT3OiKMxarLMhNarocFprAxKpWY3qy8Dxr1DEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9SjWcmjK0rxw0F0lCYr9ZTxm2A6fR1L9YL9m3M/FAiQy9SGDVLxyry4fbavOhEXY
-         8QjdgWPXS71nzH6UmbtuEX+hJx9Xm2cura7nU+7JVgoBjx5PxJmPds8YfrcuzCK0Nf
-         ddDV1NQR9rQ2fxCbZRouuHN9us/gOVazawcx7dcI=
+        b=pv37dDIZM3yBs3Kj5nB+ojADNmzLGT/6s1wiLXXBR4ZOnPFogmDgo8QY+J/3YYt7J
+         Q/kCMAovG2SytcVIAbZOiMJ5uEPcQfQNeAsWLN0u02u3ho5GDj57+2vbU5Vr5zLkQN
+         uKfCtZ/mI1Dx5JJmzp03Jp0KewCc0Eq4fgSJgjR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Oros <poros@redhat.com>, Ivan Vecera <ivecera@redhat.com>,
+Cc:     Roland Hii <roland.king.guan.hii@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/26] be2net: fix link failure after ethtool offline test
-Date:   Tue,  2 Jul 2019 22:16:08 -0400
-Message-Id: <20190703021625.18116-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 11/26] net: stmmac: fixed new system time seconds value calculation
+Date:   Tue,  2 Jul 2019 22:16:10 -0400
+Message-Id: <20190703021625.18116-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Oros <poros@redhat.com>
+From: Roland Hii <roland.king.guan.hii@intel.com>
 
-[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
+[ Upstream commit a1e5388b4d5fc78688e5e9ee6641f779721d6291 ]
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+When ADDSUB bit is set, the system time seconds field is calculated as
+the complement of the seconds part of the update value.
 
-Changes in v2:
-- added fixes header
+For example, if 3.000000001 seconds need to be subtracted from the
+system time, this field is calculated as
+2^32 - 3 = 4294967296 - 3 = 0x100000000 - 3 = 0xFFFFFFFD
 
-Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
-Signed-off-by: Petr Oros <poros@redhat.com>
-Reviewed-by: Ivan Vecera <ivecera@redhat.com>
+Previously, the 0x100000000 is mistakenly written as 100000000.
+
+This is further simplified from
+  sec = (0x100000000ULL - sec);
+to
+  sec = -sec;
+
+Fixes: ba1ffd74df74 ("stmmac: fix PTP support for GMAC4")
+Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index bfb16a474490..d1905d50c26c 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -895,7 +895,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
- {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 8d9cc2157afd..7423262ce590 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -122,7 +122,7 @@ static int adjust_systime(void __iomem *ioaddr, u32 sec, u32 nsec,
+ 		 * programmed with (2^32 – <new_sec_value>)
+ 		 */
+ 		if (gmac4)
+-			sec = (100000000ULL - sec);
++			sec = -sec;
  
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -906,6 +906,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
- 
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
-+
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -926,13 +929,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
- 	}
- 
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
- }
- 
+ 		value = readl(ioaddr + PTP_TCR);
+ 		if (value & PTP_TCR_TSCTRLSSR)
 -- 
 2.20.1
 
