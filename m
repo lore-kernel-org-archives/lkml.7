@@ -2,175 +2,173 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A2FC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403D8C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726212189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2qyXvKO"
+	by mail.kernel.org (Postfix) with ESMTP id 179A12189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfGCJO6 (ORCPT
+        id S1727306AbfGCJPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:14:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45099 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfGCJO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:14:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so1853014wre.12;
-        Wed, 03 Jul 2019 02:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lMART3am9pWyOxnMhWlb45/gJVQGInIr11h4R6xfxH4=;
-        b=f2qyXvKO8+f+AuUjin7CqwXeE0Ga3HeWuyEYBaaGc+UwaFejqxHfryHROkXHME8FVm
-         6cPDGURKrLajBSDB5utM0xsCZaUabbFOrG+2XFvmbYZUHrxr3vgl1DOVYBYhg9Gp3Fke
-         bDwJtfXwC47tA8rOx0XMa7+yoHyrS/9KvykBXxpgXpz3j9fFzrJUg1J4F+ipFHFCrawG
-         2nJ0Cm+iBz3IRm9WIYGSwS+QYx1YPn8rZ/k8Am5vZwXO5dJVcHjg/fEcHlZ9QDVUxwQ2
-         NXgh3/xHAgoeUv7K6QLjQlwN9YUIFsd5zHBiSp26KsLJaLDUOUZkGrLkO/XEtcHuMLd3
-         2R4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lMART3am9pWyOxnMhWlb45/gJVQGInIr11h4R6xfxH4=;
-        b=bwSmgPJKywFPEfknoTn+Rg3hi1nHLbEWPYCpCjkKBWMDXCzOCZNgtikOJf8iq/WxzY
-         61Nyv2OC12SKsReSHDW4636lIJARIK2EStyT5uqNiDHHJ3WakAvJhD2svfnNznfUWCn4
-         GGQ4FtKrf75gI8P6RdtqQ0a9OntT5pplFoJpjq1lyd4Vez1ysgL2Om+3wWllcwIf/iqb
-         33dCA97SyA7LfX310df/Xhe2eo395EXZgv2YLODjgRCQW94e0JTmmNs4k3rWlFNCczpo
-         NP5OyA5NBFV4+sZbyB6vDRiNKeuy2cdc8N5qxrusSUuJUQ1TFHrv6lOvTXWIGSIAmOMO
-         R/tg==
-X-Gm-Message-State: APjAAAW7FImwhwnvbmiQEjzq2CaGwx4AShtIfMu7NdiGqUVovKRqwDQ9
-        r+bxDr7/J1Zfs0dA5OPgLbU=
-X-Google-Smtp-Source: APXvYqzasBfYpcZTJ2DlrlFwe3DY2hUvRtKYYQff/WD1ChvV/9imQB0Ha2M7v94UGw7/KW2Dc9TQZQ==
-X-Received: by 2002:adf:e803:: with SMTP id o3mr4360588wrm.69.1562145295443;
-        Wed, 03 Jul 2019 02:14:55 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id b2sm1921496wrp.72.2019.07.03.02.14.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 02:14:54 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 10:14:53 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] vsock/virtio: several fixes in the .probe() and
- .remove()
-Message-ID: <20190703091453.GA11844@stefanha-x1.localdomain>
-References: <20190628123659.139576-1-sgarzare@redhat.com>
- <20190701151113.GE11900@stefanha-x1.localdomain>
- <20190701170357.jtuhy3ank7mv6izb@steredhat>
+        Wed, 3 Jul 2019 05:15:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:42096 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727186AbfGCJPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 05:15:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F400344;
+        Wed,  3 Jul 2019 02:15:02 -0700 (PDT)
+Received: from big-swifty.cambridge.arm.com (e120212.arm.com [10.1.26.64])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AC293F246;
+        Wed,  3 Jul 2019 02:14:56 -0700 (PDT)
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guo Ren <ren_guo@c-sky.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Talel Shenhar <talel@amazon.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Zeev Zilberman <zeev@amazon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] irqchip updates for Linux 5.3
+Date:   Wed,  3 Jul 2019 10:14:03 +0100
+Message-Id: <20190703091403.11855-1-marc.zyngier@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <20190701170357.jtuhy3ank7mv6izb@steredhat>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here's the round of irqchip updates for 5.3. This time around, a
+couple of new drivers (RZ1A and al-fic), ACPI support for the exiu
+driver and its GPIO companion, a quirk for the GICv2m-like widget in
+the Amazon Graviton, and a bunch of cleanups (mostly in the Renesas
+drivers).
 
-On Mon, Jul 01, 2019 at 07:03:57PM +0200, Stefano Garzarella wrote:
-> On Mon, Jul 01, 2019 at 04:11:13PM +0100, Stefan Hajnoczi wrote:
-> > On Fri, Jun 28, 2019 at 02:36:56PM +0200, Stefano Garzarella wrote:
-> > > During the review of "[PATCH] vsock/virtio: Initialize core virtio vs=
-ock
-> > > before registering the driver", Stefan pointed out some possible issu=
-es
-> > > in the .probe() and .remove() callbacks of the virtio-vsock driver.
-> > >=20
-> > > This series tries to solve these issues:
-> > > - Patch 1 adds RCU critical sections to avoid use-after-free of
-> > >   'the_virtio_vsock' pointer.
-> > > - Patch 2 stops workers before to call vdev->config->reset(vdev) to
-> > >   be sure that no one is accessing the device.
-> > > - Patch 3 moves the works flush at the end of the .remove() to avoid
-> > >   use-after-free of 'vsock' object.
-> > >=20
-> > > v2:
-> > > - Patch 1: use RCU to protect 'the_virtio_vsock' pointer
-> > > - Patch 2: no changes
-> > > - Patch 3: flush works only at the end of .remove()
-> > > - Removed patch 4 because virtqueue_detach_unused_buf() returns all t=
-he buffers
-> > >   allocated.
-> > >=20
-> > > v1: https://patchwork.kernel.org/cover/10964733/
-> >=20
-> > This looks good to me.
->=20
-> Thanks for the review!
->=20
-> >=20
-> > Did you run any stress tests?  For example an SMP guest constantly
-> > connecting and sending packets together with a script that
-> > hotplug/unplugs vhost-vsock-pci from the host side.
->=20
-> Yes, I started an SMP guest (-smp 4 -monitor tcp:127.0.0.1:1234,server,no=
-wait)
-> and I run these scripts to stress the .probe()/.remove() path:
->=20
-> - guest
->   while true; do
->       cat /dev/urandom | nc-vsock -l 4321 > /dev/null &
->       cat /dev/urandom | nc-vsock -l 5321 > /dev/null &
->       cat /dev/urandom | nc-vsock -l 6321 > /dev/null &
->       cat /dev/urandom | nc-vsock -l 7321 > /dev/null &
->       wait
->   done
->=20
-> - host
->   while true; do
->       cat /dev/urandom | nc-vsock 3 4321 > /dev/null &
->       cat /dev/urandom | nc-vsock 3 5321 > /dev/null &
->       cat /dev/urandom | nc-vsock 3 6321 > /dev/null &
->       cat /dev/urandom | nc-vsock 3 7321 > /dev/null &
->       sleep 2
->       echo "device_del v1" | nc 127.0.0.1 1234
->       sleep 1
->       echo "device_add vhost-vsock-pci,id=3Dv1,guest-cid=3D3" | nc 127.0.=
-0.1 1234
->       sleep 1
->   done
->=20
-> Do you think is enough or is better to have a test more accurate?
+Please pull,
 
-That's good when left running overnight so that thousands of hotplug
-events are tested.
+	M.
 
-Stefan
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
------BEGIN PGP SIGNATURE-----
+are available in the Git repository at:
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl0ccg0ACgkQnKSrs4Gr
-c8hyTQgAmrtuLTRHUWq+SnSxTw9xESj0gUVZd4sbTh6S0V4rPGdVbra3YbPfZfkH
-IaakopaoNOkTWrPnhYmwgU30HpR8IAq/y7clSCsRIfPUYDSZok/iyag75Cy5oKno
-lVANXMQYQ4Kgkq07R+BER41HW3MELCrSAX57rIat1F1OD3KouG6YicgmP7wetWcU
-HVXVfjP7u1a2lUmuBdlcgPKX05STySKyNEQ3QdtLI6bgM6rGkx8OYn38Qe9cQuyi
-zVG7+8JLFoJav87vvcIIB0IT8ifWocctQY//efyVVnrfHN6T5/35TPcM4bBW8HrK
-Zs+bh7qyccexuuow4DrBHexFCIdtCw==
-=jl/1
------END PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-5.3
 
---6TrnltStXW4iwmi0--
+for you to fetch changes up to 3dae67ce600caaa92c9af6e0cb6cad2db2632a0a:
+
+  irqchip/gic-pm: Remove PM_CLK dependency (2019-07-03 09:33:01 +0100)
+
+----------------------------------------------------------------
+irqchip updates for Linux 5.3:
+
+- ACPI support for the exiu and mb86s7x drivers
+- New Renesas RZ/A1, Amazon al-fic drivers
+- Add quirk for Amazon Graviton GICv2m widget
+- Large Renesas driver cleanup
+- CSky mpintc trigger type fixes
+- Meson G12A driver support
+- Various minor cleanups
+
+----------------------------------------------------------------
+Ard Biesheuvel (4):
+      acpi/irq: Implement helper to create hierachical domains
+      irqchip/exiu: Preparatory refactor for ACPI support
+      irqchip/exiu: Implement ACPI support
+      gpio: mb86s7x: Enable ACPI support
+
+Geert Uytterhoeven (10):
+      dt-bindings: interrupt-controller: Add Renesas RZ/A1 Interrupt Controller
+      irqchip: Add Renesas RZ/A1 Interrupt Controller driver
+      irqchip/renesas-irqc: Remove unneeded inclusion of <linux/spinlock.h>
+      irqchip/renesas-irqc: Remove error messages on out-of-memory conditions
+      irqchip/renesas-irqc: Add helper variable dev = &pdev->dev
+      irqchip/renesas-irqc: Replace irqc_priv.pdev by irqc_priv.dev
+      irqchip/renesas-irqc: Convert to managed initializations
+      irqchip: Enable compile-testing for Renesas drivers
+      irqchip/renesas-intc-irqpin: Use proper irq_chip name and parent
+      irqchip/renesas-irqc: Use proper irq_chip name and parent
+
+Guo Ren (3):
+      irqchip/irq-csky-mpintc: Add triger type
+      dt-bindings: interrupt-controller: Update csky mpintc
+      irqchip/irq-csky-mpintc: Remove unnecessary loop in interrupt handler
+
+Gustavo A. R. Silva (1):
+      irqchip/qcom: Use struct_size() in devm_kzalloc()
+
+Jiangfeng Xiao (1):
+      irqchip/gic: Add dependency for ARM_GIC_MAX_NR
+
+Kefeng Wang (1):
+      irqchip/mbigen: Stop printing kernel addresses
+
+Sameer Pujar (1):
+      irqchip/gic-pm: Remove PM_CLK dependency
+
+Talel Shenhar (2):
+      dt-bindings: interrupt-controller: Add Amazon's Annapurna Labs FIC
+      irqchip/al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
+
+Xingyu Chen (2):
+      dt-bindings: interrupt-controller: New binding for Meson-G12A SoC
+      irqchip/meson-gpio: Add support for Meson-G12A SoC
+
+Zeev Zilberman (1):
+      irqchip/gic-v2m: Add support for Amazon Graviton variant of GICv3+GICv2m
+
+ .../interrupt-controller/amazon,al-fic.txt         |  29 +++
+ .../amlogic,meson-gpio-intc.txt                    |   1 +
+ .../bindings/interrupt-controller/csky,mpintc.txt  |  20 +-
+ .../interrupt-controller/renesas,rza1-irqc.txt     |  43 ++++
+ MAINTAINERS                                        |   6 +
+ drivers/acpi/irq.c                                 |  26 ++
+ drivers/gpio/gpio-mb86s7x.c                        |  51 +++-
+ drivers/irqchip/Kconfig                            |  32 ++-
+ drivers/irqchip/Makefile                           |   2 +
+ drivers/irqchip/irq-al-fic.c                       | 278 ++++++++++++++++++++
+ drivers/irqchip/irq-csky-mpintc.c                  |  86 ++++++-
+ drivers/irqchip/irq-gic-v2m.c                      |  85 +++++--
+ drivers/irqchip/irq-gic-v3.c                       |   3 +
+ drivers/irqchip/irq-mbigen.c                       |   3 +-
+ drivers/irqchip/irq-meson-gpio.c                   |   1 +
+ drivers/irqchip/irq-renesas-intc-irqpin.c          |   3 +-
+ drivers/irqchip/irq-renesas-irqc.c                 |  91 +++----
+ drivers/irqchip/irq-renesas-rza1.c                 | 283 +++++++++++++++++++++
+ drivers/irqchip/irq-sni-exiu.c                     | 142 ++++++++---
+ drivers/irqchip/qcom-irq-combiner.c                |   5 +-
+ include/linux/acpi.h                               |   7 +
+ include/linux/irqchip/arm-gic-common.h             |   5 +
+ include/linux/irqchip/arm-gic.h                    |   3 -
+ 23 files changed, 1067 insertions(+), 138 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+ create mode 100644 drivers/irqchip/irq-al-fic.c
+ create mode 100644 drivers/irqchip/irq-renesas-rza1.c
