@@ -2,226 +2,146 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1EBC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E9C06514
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528DA21880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49BF21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 04:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gffr7v2f"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="lS558bHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfGCElB (ORCPT
+        id S1727065AbfGCElG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 00:41:01 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58000 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfGCElA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 00:41:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x634eVON110690;
-        Tue, 2 Jul 2019 23:40:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562128831;
-        bh=9bNKxvF0VLaczyeBCMEhxw7ZpdNmUS6nr2XWDzekiGQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gffr7v2fV2c7P/IFTTqSI0mrnnt+97yxTUNcfFBLTBTW9Owv8vr7t+80x3hsNM9T1
-         3oEjbwoqE9Jnm+PS2QB38Zt7QbcEqQugnvizHQljQD+W892+j3ntlwH+yLPl6QDvJX
-         vdw2DhQuhDEUQ7SoRDfgM9OqyZoudOeQcIk3fhgs=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x634eV6x112951
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Jul 2019 23:40:31 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Jul
- 2019 23:40:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 2 Jul 2019 23:40:30 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x634eMAK021478;
-        Tue, 2 Jul 2019 23:40:24 -0500
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Tokunori Ikegami <ikegami.t@gmail.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
- <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <5009c418-a051-a42a-f78a-360f7230dd2b@ti.com>
-Date:   Wed, 3 Jul 2019 10:11:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <31657fd1-c1c9-7672-14c1-e6f67eee6ac1@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 3 Jul 2019 00:41:06 -0400
+Received: from mail-eopbgr1320103.outbound.protection.outlook.com ([40.107.132.103]:30509
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725807AbfGCElE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 00:41:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H4PKPSu1WPWTXhO9vNUYxnPV1KH9qJdP5SFxbohwxcm6cII9lrO84kk0xzmoZumdcypn926stSfdHN9gFj4a6o4gXjz4FfauId26tgQBVPmZdcZ6wxJ5JBSKS5fovZVXU2v59L4Txm0XiWeDjZRT0hGXtWSfdPlyw4YpjUK+OPV8WMYMhhOQLNOdygjft7HZZzQeuc+ybbdUMACAx5n1DaIqHHqt8jq9HWhC8yALT3SqltM5WFfPSs0eZ1TTbWxbjv/oHui75llbybsm2sgwGpz50jiY2mnTs8X6Rg1GR4Gqeio8jtb9R9wCkL9W36EC0qvDRAYl/2vxuWDYrOm/OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2WKJJfKSHPJFQvBgNKUeZBkzs1/bCX93P1xBsmL9x8=;
+ b=fn8lJjg64OkyMW1aITR7aODuq5IbjB99pLm3dLHoSW3YB5sZPMSqtUi7jowIIZOIc4qMO8EXMgzCj3MQQ9mMWaquVbRXtSOGN66xzXk5SXvaRk3c4xIjeHibFXvfufh+m5+EFLfhu28t6AyvNsxn04XKWuVUMjm21mHW15CYUQekb82HEH4IEbx0OODETA5DJagndHseywl3vNACxOYHDP486fu7GVLZzQ1seEgxeWwAU+v7YB4LYS6v1BvoajWkW0a/fpFxahDKUwOUirLuYhV+3cx9q5rrlLsaCLbyLlkAEMnfelcGJS+15yiXOskX9QYYhU3jXTPxEDhSFqLPAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2WKJJfKSHPJFQvBgNKUeZBkzs1/bCX93P1xBsmL9x8=;
+ b=lS558bHylDJ1XUsT+7wOQr7ztHznA2M07dVbsEY6q+radpgpRYw1qc7njZ5nCeFjl1XZKvYPiWp3b7Fwk3Q1BIF8CDsDnJ6ycF7J1mUwecOHuuJK0vPJY99pHg17tM6ycW6YOtwNauzoFdndGJcbY2BaAWHihLK57wi2D9YYzsI=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0201.APCP153.PROD.OUTLOOK.COM (10.170.190.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.2; Wed, 3 Jul 2019 04:40:16 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::61b3:885f:a7e4:ec0b]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::61b3:885f:a7e4:ec0b%9]) with mapi id 15.20.2073.001; Wed, 3 Jul 2019
+ 04:40:16 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Yuehaibing <yuehaibing@huawei.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: RE: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
+Thread-Topic: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
+Thread-Index: AQHVMVloxn4hFFa0E0C7KQrPGKhKRQ==
+Date:   Wed, 3 Jul 2019 04:40:16 +0000
+Message-ID: <PU1P153MB0169D4B9CBA09977186DA706BFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
+ <20190703001541.GG1729@bombadil.infradead.org>
+ <139b6a64-1980-412b-5870-88706084b288@infradead.org>
+In-Reply-To: <139b6a64-1980-412b-5870-88706084b288@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-03T04:40:14.5914706Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3862d5da-ee58-4f56-ac83-48b39e67d798;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:78d7:890f:ef80:9f4a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0573585a-458b-4787-48be-08d6ff708bc1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0201;
+x-ms-traffictypediagnostic: PU1P153MB0201:|PU1P153MB0201:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <PU1P153MB020146A6DCCA1ADD49B762D4BFFB0@PU1P153MB0201.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:590;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(396003)(366004)(346002)(136003)(54094003)(189003)(199004)(25786009)(446003)(256004)(52536014)(8990500004)(54906003)(6246003)(316002)(22452003)(10090500001)(305945005)(6436002)(46003)(486006)(55016002)(186003)(229853002)(7696005)(76176011)(6506007)(53546011)(4326008)(476003)(11346002)(102836004)(2906002)(10290500003)(74316002)(9686003)(8676002)(6306002)(81166006)(81156014)(64756008)(99286004)(33656002)(53936002)(8936002)(6116002)(86362001)(478600001)(966005)(14454004)(5660300002)(71190400001)(71200400001)(76116006)(73956011)(66446008)(66556008)(66476007)(7736002)(66946007)(110136005)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0201;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VDqlKapRSdkWHQkTk3r5ru79Oj3r4nuzQlzrH814a7Eg5nqNLqdbYisF+oqvkaIqT5jc0t0kWnNET1YlgpkjkSVXyHNgSfXAWfHahaMdFHZNURtu4yToD4pgKRsd/LjvRKBACl6B2A0NvUeHLQhg6YTgNrSncoY7AwWP9JibGNf7OFBeJ7x4yinmn+qmQcMBKIF+FkELVcrcKuvafXuT/YhWRnpX2btmpig64FSnuItofVZJo5x/FoI6jTotttLQcRbr8moPrrHBO/Jo14PpHoo5L2vnEi6VF6zGY3lSs6hBLgDFYpuSrABhpIgPEqUTw1VKrBFsNg48/j/L/x2GXOVpA2TLQ4YkAy/lkJuxWusAfVeR9aK6oi0O+fDyLwKgMGK0HbjxhHdT/gGCGU3as5kEshvWb7NUaNN/jYFgius=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0573585a-458b-4787-48be-08d6ff708bc1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 04:40:16.1976
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/07/19 11:23 PM, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
-> 
->> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->> Bus interface between a host system master and one or more slave
->> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called HyperFlash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in HyperBus
->> specification[1].
->>
->> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash with respect to bits per clock
->> cycle. But HyperBus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, HyperBus memory controllers seem to abstract implementation details
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering HyperFlash devices with MTD framework. MTD
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. HyperBus
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single HyperFlash device. HyperFlash core parses MMIO access
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> HyperBus specification can be found at[1]
->> HyperFlash datasheet can be found at[2]
->>
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>     Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> [...]
-> 
->    I have at least created my HyperBus driver and unfortunately I'm having serious
-> issues with the design of the support core (see below)...
-> 
-> [...]
->> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->> new file mode 100644
->> index 000000000000..63a9e64895bc
->> --- /dev/null
->> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->> @@ -0,0 +1,154 @@
-> [...]
->> +int hyperbus_register_device(struct hyperbus_device *hbdev)
->> +{
->> +	const struct hyperbus_ops *ops;
->> +	struct hyperbus_ctlr *ctlr;
->> +	struct device_node *np;
->> +	struct map_info *map;
->> +	struct resource res;
->> +	struct device *dev;
->> +	int ret;
->> +
->> +	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
->> +		pr_err("hyperbus: please fill all the necessary fields!\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	np = hbdev->np;
->> +	ctlr = hbdev->ctlr;
->> +	if (!of_device_is_compatible(np, "cypress,hyperflash"))
->> +		return -ENODEV;
->> +
->> +	hbdev->memtype = HYPERFLASH;
->> +
->> +	ret = of_address_to_resource(np, 0, &res);
-> 
->    Hm, I doubt that the HB devices are wholly mapped into memory space, that seems
-> like a property of the HB controller. In my case, the flash device in the DT has
-> only single-cell "reg" prop (equal to the chip select #). Then this function returns 
-> -EINVAL and the registration fails. Also, in my case such mapping is R/O, not R/W.
-> 
-
-You could declare R/O MMIO region in controla and set up a translation using ranges
-from slave's reg CS based reg mapping like:
-
-+	hbmc: hyperbus@47034000 {
-+		compatible = "ti,am654-hbmc";
-+		reg = <0x0 0x47034000 0x0 0x100>,
-+			<0x5 0x00000000 0x1 0x0000000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-+			 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
-+
-+		/* Slave flash node */
-+		flash@0,0 {
-+			compatible = "cypress,hyperflash", "cfi-flash";
-+			reg = <0x0 0x0 0x4000000>;
-+		};
-+	};
-
-If you use just CS# how would you handle CS to MMIO region mapping? 
-Does both CS use the same MMIO base for reads?
-
-
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev = ctlr->dev;
->> +	map = &hbdev->map;
->> +	map->size = resource_size(&res);
->> +	map->virt = devm_ioremap_resource(dev, &res);
->> +	if (IS_ERR(map->virt))
->> +		return PTR_ERR(map->virt);
-> 
->    Again, I doubt that this should be done here, and not in the HB controller driver...
-
-If multiple CS use same MMIO base, then I can make this part of code non fatal
-when reg entry is a single cell and introduce notion of CS like SPI
-
-> 
-> [...]
-> 
-> MBR, Sergei
-> 
-
--- 
-Regards
-Vignesh
+PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1oeXBl
+cnYtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUmFuZHkgRHVubGFwDQo+IFNl
+bnQ6IFR1ZXNkYXksIEp1bHkgMiwgMjAxOSA4OjI1IFBNDQo+IFRvOiBNYXR0aGV3IFdpbGNveCA8
+d2lsbHlAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc+OyBsaW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOyBKYWtlDQo+IE9zaGlucyA8amFr
+ZW9AbWljcm9zb2Z0LmNvbT47IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgSGFp
+eWFuZw0KPiBaaGFuZyA8aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2Vy
+DQo+IDxzdGhlbW1pbkBtaWNyb3NvZnQuY29tPjsgU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwu
+b3JnPjsgbGludXgtcGNpDQo+IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgQmpvcm4gSGVs
+Z2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUENJOiBo
+djogZml4IHBjaS1oeXBlcnYgYnVpbGQsIGRlcGVuZHMgb24gU1lTRlMNCj4gDQo+IE9uIDcvMi8x
+OSA1OjE1IFBNLCBNYXR0aGV3IFdpbGNveCB3cm90ZToNCj4gPiBPbiBUdWUsIEp1bCAwMiwgMjAx
+OSBhdCAwNDoyNDozMFBNIC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+ID4+IEZyb206IFJh
+bmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiA+Pg0KPiA+PiBGaXggYnVpbGQg
+ZXJyb3JzIHdoZW4gYnVpbGRpbmcgYWxtb3N0LWFsbG1vZGNvbmZpZyBidXQgd2l0aCBTWVNGUw0K
+PiA+PiBub3Qgc2V0IChub3QgZW5hYmxlZCkuICBGaXhlcyB0aGVzZSBidWlsZCBlcnJvcnM6DQo+
+ID4+DQo+ID4+IEVSUk9SOiAicGNpX2Rlc3Ryb3lfc2xvdCIgW2RyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvcGNpLWh5cGVydi5rb10gdW5kZWZpbmVkIQ0KPiA+PiBFUlJPUjogInBjaV9jcmVhdGVfc2xv
+dCIgW2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpLWh5cGVydi5rb10gdW5kZWZpbmVkIQ0KPiA+
+Pg0KPiA+PiBkcml2ZXJzL3BjaS9zbG90Lm8gaXMgb25seSBidWlsdCB3aGVuIFNZU0ZTIGlzIGVu
+YWJsZWQsIHNvDQo+ID4+IHBjaS1oeXBlcnYubyBoYXMgYW4gaW1wbGljaXQgZGVwZW5kZW5jeSBv
+biBTWVNGUy4NCj4gPj4gTWFrZSB0aGF0IGV4cGxpY2l0Lg0KPiA+DQo+ID4gSSB3b25kZXIgaWYg
+d2Ugc2hvdWxkbid0IHJhdGhlciBwcm92aWRlIG5vLW9wIHZlcnNpb25zIG9mDQo+ID4gcGNpX2Ny
+ZWF0ZXxkZXN0cm95X3Nsb3QgZm9yIHdoZW4gU1lTRlMgaXMgbm90IHNldD8NCj4gPg0KPiANCj4g
+TWFrZXMgc2Vuc2UuICBJJ20gdGVzdC1idWlsZGluZyB0aGF0IG5vdy4NCj4gDQo+IC0tDQo+IH5S
+YW5keQ0KDQorIFl1ZWhhaWJpbmcsIHdobyBzdWJtaXR0ZWQgYSBzaW1pbGFyIHBhdGNoLCB3aGlj
+aCBJIGd1ZXNzIGlzIG5lZ2xlY3RlZA0KYXQgdGhlIGVuZCBvZiB0aGUgZGlzY3Vzc2lvbiBsYXN0
+IG1vbnRoOg0KDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS81LzMxLzU1OQ0KaHR0cHM6Ly9s
+a21sLm9yZy9sa21sLzIwMTkvNi8xNC83ODQNCmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzYv
+MTUvMjQNCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
