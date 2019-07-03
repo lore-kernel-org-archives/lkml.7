@@ -2,127 +2,89 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58184C06510
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946F5C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D50120673
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AF120645
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XUQwjWyC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="he2DovYU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfGCBMc (ORCPT
+        id S1727231AbfGCBMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:12:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43181 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfGCBMc (ORCPT
+        Tue, 2 Jul 2019 21:12:36 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:37557 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfGCBMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:12:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so713011wru.10;
-        Tue, 02 Jul 2019 18:12:30 -0700 (PDT)
+        Tue, 2 Jul 2019 21:12:34 -0400
+Received: by mail-yw1-f68.google.com with SMTP id u141so360951ywe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
-        b=XUQwjWyCmFtubExU8PzLfrARKbRw0z6VjMVgtYU+nuxrdym1bhC67W5aqZ0gvRp2RA
-         Y4QWsxI5SX8pExi6QbbpNea2gV0wgrrowlSJD162cBQ8hrAlEUwZJ6jda65+Zw33aycH
-         Bc8BEhLoPQ1HqSu743IaGvR59natR4WKtzKZlCtC7Oo1YZE9trffuFxEi49iEc8RCe2Y
-         W+fdIzsAH5jFAJotXlGdNxgq+fq2UDAASRRPmKbOdyIUXH4UPZygJMzJzTUsedDVNw8L
-         cqMGNk56GQfMOrA2HQW6S/tM146UXAwA0LJ6Q/UiLKdYfpaSKxHF2JO1Yo95MzwmMU6h
-         oSNw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V8AIGJyicRZYtqGrmcePHnOlgzCw65qs5E9QHHoWBTE=;
+        b=he2DovYUy55yQQcixOTOCfqaqOCIDKJ+wXV08HXaGfYZ9+SI6BGv1htdlSxkWbeEC6
+         qpe6JY8cJwaKiVR+evcDUQEKE/a4Eu49905uPiTRL/MbvWKxBwDE6snnpzMuhvitUgrh
+         viipBTuzMDk1yScVUpTiR+tbs7l1XefM84EdnOnCmq0COj7jLrM2IH2kHd3EHxUKSNxa
+         bBubggBUMM0CyZlbouRl9k5kYdl9aJHCBpGoI0pd3TPmdLtA6NF8g3FHoI888383SgZc
+         GT/tWSRK3mDXuEwRi6OTyqt2/uBZk+z8eEhNKOqkZBKVwYHD+piQAPy3Nxfojp2StnjF
+         f63A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K7ni9UM28FpD/k7nkpFsWw7aGdJuOADK0tvwXCdIFII=;
-        b=LJaHLe3Vn+1XpKVADLHMKBluSK+yUXW7Hli6ptxRdZjTdso+usVv3CgJgJKFyaIRd8
-         1lbYBCzgf8NIEvKbr4rW5vt4p+3VXIYr74C1fPwQT5ciS/PIdahPjxSVCOxq9IkOqEt6
-         fVYGY+mRUIP6JhGvAW//eQiQQ9w/OXfbjngiFkVe2RwQ0s+LPhlhiSiyAXPIUrSWhEsk
-         JbjTsBBS6teO3crPOFbxsDipRcz+jtRqcXNA4iWdkNYlULXlQN0oDC1UFYfUiTdd/q4V
-         eLzIfwJaSGY4n+fXaXri3ogSOC5tPEn4poQishdOWYKYacPTlTzNXVJAxEmfRPggfMVL
-         l6Rg==
-X-Gm-Message-State: APjAAAXLek65CEn2UIrzNa9u4liaV74D7NfLYcVpDYO6JcNkHUFn951W
-        2PGgBUTdLIYhYH1mt1xYe5TB1Qy/
-X-Google-Smtp-Source: APXvYqxuWTZ6QLovwtI+F2WWdSLMlSfZ3cTk0wHb/ZmTptUJUfUzP7v+CkTEDhHX8agLoms9Ecm8CQ==
-X-Received: by 2002:adf:e9c6:: with SMTP id l6mr4014wrn.216.1562106790356;
-        Tue, 02 Jul 2019 15:33:10 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:33:09 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     blogic@openwrt.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
-Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/4] gpio: stp-xway: improve module clock error handling
-Date:   Wed,  3 Jul 2019 00:32:46 +0200
-Message-Id: <20190702223248.31934-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
-References: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V8AIGJyicRZYtqGrmcePHnOlgzCw65qs5E9QHHoWBTE=;
+        b=K3D0mdvFuqiy070mf7ihjd3aG9U99WRaIebJD7sOGuUSzTkdCO+IvKOLkpR9g177NO
+         r64QLNk1ExnMHY9CBKbTa4fdGtyPphqvs0Rr52JcRBBQzB7FrOCeTbaNdlw+omzZxf+C
+         ktX4U5UNwOi8WsC/nFYAnIBK13t1SN1M+U4jPs/Lpv/eR51LHKvnxwwWRXa22uP/QwRi
+         J3ZnkR3xPOBQEBbgb0sfZupv6FE3yAtdyUcJMACq2VsPeTGgNQ8cOf/nrSRbyrU/R5Eu
+         wTNedG6TjhqG83FjNQ+ZRjLo4ESAmwFCJIM1VSCaUj+dvO2+THxzJSEIKMjcG63d5Ye0
+         jE+g==
+X-Gm-Message-State: APjAAAUjJqzXcb3fZExVBoI0gpK9l6IGI8fOU3dRowW3Cb59BxKw4VxZ
+        VWe8YhB3aRP9LvJM+S8RGBdmbWYoU37XDvHY0e/MpaNaAfU=
+X-Google-Smtp-Source: APXvYqy6l89dNmQiXZbn5Tz5340voBBdb8GKyP54Bnh3k0fZEaivKza9tydd3SPYnJq1AfDPFc7pv5rq1RP7PDpHLGc=
+X-Received: by 2002:a0d:dfc4:: with SMTP id i187mr19764925ywe.146.1562116353082;
+ Tue, 02 Jul 2019 18:12:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190702075819.34787-1-walken@google.com> <20190702075819.34787-4-walken@google.com>
+ <20190702115225.GB3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190702115225.GB3419@hirez.programming.kicks-ass.net>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Tue, 2 Jul 2019 18:12:20 -0700
+Message-ID: <CANN689HTCisvT-Pcj9koPZ85b7OY3mOBc8S3X2-eZiVWGhwmqg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] augmented rbtree: rework the RB_DECLARE_CALLBACKS
+ macro definition
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Three module clock error handling improvements:
-- use devm_clk_get() so the clock instance can be freed if
-  devm_gpiochip_add_data() fails later on
-- switch to clk_prepare_enable() so the driver is ready whenever the
-  lantiq target switches to the common clock framework
-- disable the clock again (using clk_disable_unprepare()) if
-  devm_gpiochip_add_data()
+On Tue, Jul 2, 2019 at 4:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > - Reorder the RB_DECLARE_CALLBACKS macro arguments, following the
+> >   style of the INTERVAL_TREE_DEFINE macro, so that RBSTATIC and RBNAME
+> >   are passed last.
+>
+> That's, IMO, a weird change. C has storage type and name first, why
+> would you want to put that last. If anything, change
+> INTERVAL_TREE_DEFINE().
 
-All of these are virtually no-ops with the current lantiq target.
-However, these will be relevant if we switch to the common clock
-framework.
+Makes sense, will do. I'll have to make it a v3 of the patchset
+because RB_DECLARE_CALLBACKS_MAX was introduced with the opposite
+argument order. Oh well, no big deal.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/gpio/gpio-stp-xway.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
-index a3326255ce3c..b31e08f84681 100644
---- a/drivers/gpio/gpio-stp-xway.c
-+++ b/drivers/gpio/gpio-stp-xway.c
-@@ -256,18 +256,23 @@ static int xway_stp_probe(struct platform_device *pdev)
- 	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
- 		chip->edge = XWAY_STP_FALLING;
- 
--	clk = clk_get(&pdev->dev, NULL);
-+	clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(clk)) {
- 		dev_err(&pdev->dev, "Failed to get clock\n");
- 		return PTR_ERR(clk);
- 	}
--	clk_enable(clk);
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
- 
- 	xway_stp_hw_init(chip);
- 
- 	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
--	if (ret)
-+	if (ret) {
-+		clk_disable_unprepare(clk);
- 		return ret;
-+	}
- 
- 	dev_info(&pdev->dev, "Init done\n");
- 
 -- 
-2.22.0
-
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
