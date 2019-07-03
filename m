@@ -3,84 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA5C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E460EC06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A810C218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562162794;
-	bh=EQE2AB00UJwl1CmyF0ZvFrESw4yDTpobY4maUeEVR7w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QysaGG4jBJz+0+CPfcgZq7LnoAiznPzaJYZnIl+RAdW/rgMFRHucu6cut2llXl5JP
-	 7Yimt918/g85yQ662D4GKJs6q64BRAz3wBucLAzPmAYy5oPmjeuDfNtzsMlds8hEB5
-	 6emM/1nT5KSbOSJnNcomGWSPPsbfC4Ca4nq+9Tb0=
+	by mail.kernel.org (Postfix) with ESMTP id B89A8218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="IaL+27Zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfGCOGd (ORCPT
+        id S1727093AbfGCOGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:06:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37849 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGCOGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:06:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w13so2229939eds.4;
-        Wed, 03 Jul 2019 07:06:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EQE2AB00UJwl1CmyF0ZvFrESw4yDTpobY4maUeEVR7w=;
-        b=G3CAvAjocAfAQRir7gq72jKW5PylYRhrB3+8Dd07VotfcJPQyDQik8mca+Upw7lYC0
-         +XkPdR/yzfUzjPN3VI6lCT15Yc58aZxbCBPu3zbyw2frp9OVWYe1j9jrNumxYfI79lQD
-         f/JUbNmKajm3iDr4JQkZ1GTE36CCWwRLYCyBzSNzaOW7UD3cvsGsrcHGz+lnWLiXV6+v
-         VlrJ1az3zbqlZsWDohsU8iRbFbXNAW2XuW8j+IyRatTINC9l4x4+RvYnB5aEfUfQlkQg
-         K29tw8LThw4DC7+qrfeFpS0Nb+AUZgiDCW3i/Ay4Q7HEnb1n59R672IccH4fKF7PsNmb
-         O04g==
-X-Gm-Message-State: APjAAAVhRdZ//67ezOhYt7yCvRsOlWj+heXKaaKMy4Kdg2gE89NJ04vf
-        /Ve2VWbJns97jByHd2dcrzOlj2VzVqhCCYg9lhXU2o/W
-X-Google-Smtp-Source: APXvYqz/rXKE6GzLTqkAWS9E8zUyxS+aktUOHYbeJBTlYcE7ngS8LHrt6vsxluFJYFhNK8lzRxgFWhtB0bTCbItT1Xk=
-X-Received: by 2002:a50:9871:: with SMTP id h46mr42642796edb.69.1562162790944;
- Wed, 03 Jul 2019 07:06:30 -0700 (PDT)
+        Wed, 3 Jul 2019 10:06:43 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:50038 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbfGCOGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:06:43 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id ifuBhTEEDzEP4ifuChmkRq; Wed, 03 Jul 2019 08:06:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1562162801; bh=7AK3lAbPF9IfZtK/nk2VLf17bp+n2IvH1EnM0vORmP0=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=IaL+27ZfIqBmuii6sZ3okVn3xSxjweag474KxqDBMa1FgBhv3K1rSE7CQsgC2taXC
+         q1ScbRrWclDFN6C0E15Nw0iFDCUvYCEscxYVmuGf3Uwdei/qzr4iz/H7e5lW53o0EA
+         IelIl0UsWuYk1UitJDSMzdTM09DZ/YrONwPDxbcnBRp7XpcWCCNbIJQhdiwuDgnZ1+
+         FJJDBOgYBEL+OT0erv1JyxiqAU5VcDABAFTMPfgfJbWIgKq/KoWtzrBltT/SDJ9eg8
+         usKMsHfjkJC5ZaYkeIoibnRYHto825gsy119vpkVC+yC2Du7TwlgovUz38mMHm+2A4
+         1TCMuFTAPN7qQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=cYmsUULM c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=Ye9q-bpsAAAA:8 a=_UL-ih6NGSuCdm9YO5gA:9 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Alan Jenkins'" <alan.christopher.jenkins@gmail.com>
+Cc:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <2ff025f1-9a3e-3eae-452b-ef84824009b4@gmail.com>
+In-Reply-To: <2ff025f1-9a3e-3eae-452b-ef84824009b4@gmail.com>
+Subject: RE: NO_HZ_IDLE causes consistently low cpu "iowait" time (and higher cpu "idle" time)
+Date:   Wed, 3 Jul 2019 07:06:38 -0700
+Message-ID: <000001d531a8$8931b2a0$9b9517e0$@net>
 MIME-Version: 1.0
-References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
- <20190626223851.19138-11-srinivas.pandruvada@linux.intel.com>
- <CAHp75VfMDpKyYnZkZw51dwcEt5neQwGuZUaB7yEFQW6fjRYCqg@mail.gmail.com>
- <CAJvTdK=S1vPGg9HZjUxJN2aXSfSXBDyYYLawONA0PP_yKvf19A@mail.gmail.com> <CAHp75VfY+u4L85VncaLYFcoFwa0OzTo__ZKZGboRXmyQ50mCOA@mail.gmail.com>
-In-Reply-To: <CAHp75VfY+u4L85VncaLYFcoFwa0OzTo__ZKZGboRXmyQ50mCOA@mail.gmail.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Wed, 3 Jul 2019 10:06:19 -0400
-Message-ID: <CAJvTdKkZjzD_TgyZ_VGZHTQr-07va91faSWB_SSRCRyp-qAejg@mail.gmail.com>
-Subject: Re: [PATCH 10/10] tools/power/x86: A tool to validate Intel Speed
- Select commands
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Alan Cox <alan@linux.intel.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        David Arcari <darcari@redhat.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdUwImbbpKczS7J+QT6mtzDQSlV++wBga9sA
+X-CMAE-Envelope: MS4wfLfa/TsVw7qsXoaZUNI35eH5/9QXw8OFOcVUuyGy7kGEXi8HE4vcaj5OKz54NsHJWEe/KYMubp1CqxycGXUfs5oX3M914iOWRqu6t+EqpnbdvBrzcYWZ
+ F/aK1XZGYY+Fh0UiXrhTC8fvPTUxIPWeTjBYT6TAYM5q0Qb03V9xDtMO8Lt+v3PyLiQz06Y79b7+bhpGAJ4s7N/CNejp4c1+HGgr+c3sum0bi7kSa1Re+Apq
+ vFO9qF0KRddNfey7QNWUCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I hope this is applicable for v2.
+On 2019.07.01 08:34 Alan Jenkins wrote:
 
-Yes, Srinivas is doing the right thing.
+> Hi
 
-thanks,
--Len
+Hi,
+
+> I tried running a simple test:
+>
+>     dd if=testfile iflag=direct bs=1M of=/dev/null
+>
+> With my default settings, `vmstat 10` shows something like 85% idle time 
+> to 15% iowait time. I have 4 CPUs, so this is much less than one CPU 
+> worth of iowait time.
+>
+> If I boot with "nohz=off", I see idle time fall to 75% or below, and 
+> iowait rise to about 25%, equivalent to one CPU.  That is what I had 
+> originally expected.
+>
+> (I can also see my expected numbers, if I disable *all* C-states and 
+> force polling using `pm_qos_resume_latency_us` in sysfs).
+>
+> The numbers above are from a kernel somewhere around v5.2-rc5.  I saw 
+> the "wrong" results on some previous kernels as well.  I just now 
+> realized the link to NO_HZ_IDLE.[1]
+>
+> [1] 
+> https://unix.stackexchange.com/questions/517757/my-basic-assumption-about-system-iowait-does-not-hold/527836#527836
+>
+> I did not find any information about this high level of inaccuracy. Can 
+> anyone explain, is this behaviour expected?
+
+I'm not commenting on expected behaviour or not, just that it is
+inconsistent.
+
+>
+> I found several patches that mentioned "iowait" and NO_HZ_IDLE. But if 
+> they described this problem, it was not clear to me.
+>
+> I thought this might also be affecting the "IO pressure" values from the 
+> new "pressure stall information"... but I am too confused already, so I 
+> am only asking about iowait at the moment :-).
+
+Using your workload, I confirm inconsistent behaviour for /proc/stat
+(which vmstat uses) between kernels 4.15, 4.16, and 4.17:
+4.15 does what you expect, no matter idle states enabled or disabled.
+4.16 doesn't do what you expect regardless. (although a little erratic.)
+>= 4.17 does what you expect with only idle state 0 enabled, and doesn't otherwise.
+
+Actual test data vmstat (/proc/stat) (8 CPUs, 12.5% = 1 CPU)):
+Kernel	idle/iowait %	Idle states >= 1
+4.15		88/12			enabled
+4.15		88/12			disabled
+4.16		99/1			enabled
+4.16		99/1			disabled
+4.17		98/2			enabled
+4.17		88/12			disabled
+
+Note 1: I never booted with "nohz=off" because the tick never turns off for
+idle state 0, which is good enough for testing.
+
+Note 2: Myself, I don't use /proc/stat for idle time statistics. I use:
+/sys/devices/system/cpu/cpu*/cpuidle/state*/time
+And they seem to always be consistent at the higher idle percentage number.
+
+Unless someone has some insight, the next step is kernel bisection,
+once for between kernel 4.15 and 4.16, then again between 4.16 and 4.17.
+The second bisection might go faster with knowledge gained from the first.
+Alan: Can you do kernel bisection? I can only do it starting maybe Friday.
+
+... Doug
 
 
-> > Acked-by: Len Brown <len.brown@intel.com>
