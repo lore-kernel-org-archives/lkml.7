@@ -2,125 +2,100 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DATE_IN_PAST_24_48,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE95EC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD4CC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5E9218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF278218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbfGCJrz (ORCPT
+        id S1727017AbfGCJuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:47:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47630 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfGCJrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:47:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7ADFDB15C;
-        Wed,  3 Jul 2019 09:47:51 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 285CE1E433D; Mon,  1 Jul 2019 14:11:19 +0200 (CEST)
-Date:   Mon, 1 Jul 2019 14:11:19 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-Message-ID: <20190701121119.GE31621@quack2.suse.cz>
-References: <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
- <20190627195948.GB4286@bombadil.infradead.org>
- <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
- <20190629160336.GB1180@bombadil.infradead.org>
- <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
- <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
- <20190630152324.GA15900@bombadil.infradead.org>
+        Wed, 3 Jul 2019 05:50:03 -0400
+Received: from www62.your-server.de ([213.133.104.62]:51416 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfGCJuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 05:50:03 -0400
+Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hibtd-0006bp-Bc; Wed, 03 Jul 2019 11:49:49 +0200
+Received: from [2a02:1205:5054:6d70:b45c:ec96:516a:e956] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hibtd-0000Zx-1y; Wed, 03 Jul 2019 11:49:49 +0200
+Subject: Re: [PATCH bpf 1/3] bpf, x32: Fix bug with ALU64 {LSH,RSH,ARSH} BPF_X
+ shift by 0
+To:     Luke Nelson <lukenels@cs.washington.edu>,
+        linux-kernel@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20190629055759.28365-1-luke.r.nels@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <5c2080f4-532e-d239-13b1-4a5a620f6c33@iogearbox.net>
+Date:   Wed, 3 Jul 2019 11:49:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190630152324.GA15900@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190629055759.28365-1-luke.r.nels@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25499/Wed Jul  3 10:03:10 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 30-06-19 08:23:24, Matthew Wilcox wrote:
-> On Sun, Jun 30, 2019 at 01:01:04AM -0700, Dan Williams wrote:
-> > @@ -215,7 +216,7 @@ static wait_queue_head_t
-> > *dax_entry_waitqueue(struct xa_state *xas,
-> >          * queue to the start of that PMD.  This ensures that all offsets in
-> >          * the range covered by the PMD map to the same bit lock.
-> >          */
-> > -       if (dax_is_pmd_entry(entry))
-> > +       //if (dax_is_pmd_entry(entry))
-> >                 index &= ~PG_PMD_COLOUR;
-> >         key->xa = xas->xa;
-> >         key->entry_start = index;
+On 06/29/2019 07:57 AM, Luke Nelson wrote:
+> The current x32 BPF JIT for shift operations is not correct when the
+> shift amount in a register is 0. The expected behavior is a no-op, whereas
+> the current implementation changes bits in the destination register.
 > 
-> Hah, that's a great naive fix!  Thanks for trying that out.
+> The following example demonstrates the bug. The expected result of this
+> program is 1, but the current JITed code returns 2.
 > 
-> I think my theory was slightly mistaken, but your fix has the effect of
-> fixing the actual problem too.
+>   r0 = 1
+>   r1 = 1
+>   r2 = 0
+>   r1 <<= r2
+>   if r1 == 1 goto end
+>   r0 = 2
+> end:
+>   exit
 > 
-> The xas->xa_index for a PMD is going to be PMD-aligned (ie a multiple of
-> 512), but xas_find_conflict() does _not_ adjust xa_index (... which I
-> really should have mentioned in the documentation).  So we go to sleep
-> on the PMD-aligned index instead of the index of the PTE.  Your patch
-> fixes this by using the PMD-aligned index for PTEs too.
+> The bug is caused by an incorrect assumption by the JIT that a shift by
+> 32 clear the register. On x32 however, shifts use the lower 5 bits of
+> the source, making a shift by 32 equivalent to a shift by 0.
 > 
-> I'm trying to come up with a clean fix for this.  Clearly we
-> shouldn't wait for a PTE entry if we're looking for a PMD entry.
-> But what should get_unlocked_entry() return if it detects that case?
-> We could have it return an error code encoded as an internal entry,
-> like grab_mapping_entry() does.  Or we could have it return the _locked_
-> PTE entry, and have callers interpret that.
+> This patch fixes the bug using double-precision shifts, which also
+> simplifies the code.
 > 
-> At least get_unlocked_entry() is static, but it's got quite a few callers.
-> Trying to discern which ones might ask for a PMD entry is a bit tricky.
-> So this seems like a large patch which might have bugs.
+> Fixes: 03f5781be2c7 ("bpf, x86_32: add eBPF JIT compiler for ia32")
+> Co-developed-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
-Yeah. So get_unlocked_entry() is used in several cases:
-
-1) Case where we already have entry at given index but it is locked and we
-need it unlocked so that we can do our thing `(dax_writeback_one(),
-dax_layout_busy_page()).
-
-2) Case where we want any entry covering given index (in
-__dax_invalidate_entry()). This is essentially the same as case 1) since we
-have already looked up the entry (just didn't propagate that information
-from mm/truncate.c) - we want any unlocked entry covering given index.
-
-3) Cases where we really want entry at given index and we have some entry
-order constraints (dax_insert_pfn_mkwrite(), grab_mapping_entry()).
-
-Honestly I'd make the rule that get_unlocked_entry() returns entry of any
-order that is covering given index. I agree it may be unnecessarily waiting
-for PTE entry lock for the case where in case 3) we are really looking only
-for PMD entry but that seems like a relatively small cost for the
-simplicity of the interface.
-
-BTW, looking into the xarray code, I think I found another difference
-between the old radix tree code and the new xarray code that could cause
-issues. In the old radix tree code if we tried to insert PMD entry but
-there was some PTE entry in the covered range, we'd get EEXIST error back
-and the DAX fault code relies on this. I don't see how similar behavior is
-achieved by xas_store()...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Series applied, thanks!
