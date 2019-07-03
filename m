@@ -2,106 +2,112 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0AFC46478
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FD4C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DBF218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562164626;
-	bh=l/MbGoWcXqKBSAv5GFNfVVKuFR2oJ9rqff5o1kOK3y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aUMctnch1gNO8zSVAc/aTXeJikoAVu6Sd3D7eOKUqgcIWHYF1bIAMpMzGTZbME8OL
-	 5iHydrGX7ZVMNqtS8oxGjxNYMDOUK3w84gBb2fiOWEjD3XUXHK8NDPX1VDWcHSxPS7
-	 yPj+JjcGcD8UyBlJef3IhqJ3RvhTN2cWm7xGeJ3M=
+	by mail.kernel.org (Postfix) with ESMTP id 3C6A1218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfGCOhF (ORCPT
+        id S1727031AbfGCOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:37:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50812 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726430AbfGCOhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:37:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 11175AF60;
-        Wed,  3 Jul 2019 14:37:03 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 16:37:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH] mm, slab: Extend slab/shrink to shrink all the memcg
- caches
-Message-ID: <20190703143701.GR978@dhcp22.suse.cz>
-References: <20190702183730.14461-1-longman@redhat.com>
- <20190703065628.GK978@dhcp22.suse.cz>
- <9ade5859-b937-c1ac-9881-2289d734441d@redhat.com>
+        Wed, 3 Jul 2019 10:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfGCOhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 10:37:18 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC6A21871;
+        Wed,  3 Jul 2019 14:37:17 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 10:37:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 12/16] kprobes: Initialize kprobes at
+ postcore_initcall
+Message-ID: <20190703103715.32579c25@gandalf.local.home>
+In-Reply-To: <20190703102504.13344555@gandalf.local.home>
+References: <20190526191828.466305460@goodmis.org>
+        <20190526191848.266163206@goodmis.org>
+        <20190702165008.GC34718@lakrids.cambridge.arm.com>
+        <20190703100205.0b58f3bf@gandalf.local.home>
+        <20190703140832.GD48312@arrakis.emea.arm.com>
+        <20190703102402.1319b928@gandalf.local.home>
+        <20190703102504.13344555@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ade5859-b937-c1ac-9881-2289d734441d@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 03-07-19 09:12:13, Waiman Long wrote:
-> On 7/3/19 2:56 AM, Michal Hocko wrote:
-> > On Tue 02-07-19 14:37:30, Waiman Long wrote:
-> >> Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
-> >> file to shrink the slab by flushing all the per-cpu slabs and free
-> >> slabs in partial lists. This applies only to the root caches, though.
-> >>
-> >> Extends this capability by shrinking all the child memcg caches and
-> >> the root cache when a value of '2' is written to the shrink sysfs file.
-> > Why do we need a new value for this functionality? I would tend to think
-> > that skipping memcg caches is a bug/incomplete implementation. Or is it
-> > a deliberate decision to cover root caches only?
-> 
-> It is just that I don't want to change the existing behavior of the
-> current code. It will definitely take longer to shrink both the root
-> cache and the memcg caches.
+This would be the official patch:
 
-Does that matter? To whom and why? I do not expect this interface to be
-used heavily.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH] kprobes: Run init_test_probes() later in boot up
 
-> If we all agree that the only sensible
-> operation is to shrink root cache and the memcg caches together. I am
-> fine just adding memcg shrink without changing the sysfs interface
-> definition and be done with it.
+It was reported that the moving of the kprobe initialization earlier in the
+boot process caused arm64 to crash. This was due to arm64 depending on the
+BRK handler being registered first, but the init_test_probes() can be called
+before that happens.
 
-The existing documentation is really modest on the actual semantic:
-Description:
-                The shrink file is written when memory should be reclaimed from
-                a cache.  Empty partial slabs are freed and the partial list is
-                sorted so the slabs with the fewest available objects are used
-                first.
+By moving the init_test_probes() to later in the boot process, the BRK
+handler is now guaranteed to be initialized before init_test_probes() is
+called.
 
-which to me sounds like all slabs are free and nobody should be really
-thinking of memcgs. This is simply drop_caches kinda thing. We surely do
-not want to drop caches only for the root memcg for /proc/sys/vm/drop_caches
-right?
+Link: http://lkml.kernel.org/r/20190702165008.GC34718@lakrids.cambridge.arm.com
 
+Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/kprobes.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 5471efbeb937..5a6ecd7bfd73 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2235,6 +2235,8 @@ static struct notifier_block kprobe_module_nb = {
+ extern unsigned long __start_kprobe_blacklist[];
+ extern unsigned long __stop_kprobe_blacklist[];
+ 
++static bool run_kprobe_tests __initdata;
++
+ static int __init init_kprobes(void)
+ {
+ 	int i, err = 0;
+@@ -2286,11 +2288,19 @@ static int __init init_kprobes(void)
+ 	kprobes_initialized = (err == 0);
+ 
+ 	if (!err)
+-		init_test_probes();
++		run_kprobe_tests = true;
+ 	return err;
+ }
+ subsys_initcall(init_kprobes);
+ 
++static int __init run_init_test_probes(void)
++{
++	if (run_kprobe_tests)
++		init_test_probes();
++	return 0;
++}
++module_init(run_init_test_probes);
++
+ #ifdef CONFIG_DEBUG_FS
+ static void report_probe(struct seq_file *pi, struct kprobe *p,
+ 		const char *sym, int offset, char *modname, struct kprobe *pp)
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
