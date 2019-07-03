@@ -2,84 +2,86 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933BFC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69EDC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B41821882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B474621882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfGCUAF (ORCPT
+        id S1727188AbfGCUAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:00:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55765 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfGCUAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:00:05 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hilQ1-0007N7-UG; Wed, 03 Jul 2019 21:59:54 +0200
-Date:   Wed, 3 Jul 2019 21:59:52 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Helen Koike <helen.koike@collabora.com>
-cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com, Zheng Yang <zhengyang@rock-chips.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v7 04/14] media: rkisp1: add Rockchip MIPI Synopsys DPHY
- driver
-In-Reply-To: <20190703190910.32633-5-helen.koike@collabora.com>
-Message-ID: <alpine.DEB.2.21.1907032153410.1802@nanos.tec.linutronix.de>
-References: <20190703190910.32633-1-helen.koike@collabora.com> <20190703190910.32633-5-helen.koike@collabora.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 3 Jul 2019 16:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbfGCUAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:00:12 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE6B21882;
+        Wed,  3 Jul 2019 20:00:11 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 16:00:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, shuah <shuah@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] ftrace/selftest: Test if set_event/ftrace_pid
+ exists before writing
+Message-ID: <20190703160009.31ef5cb7@gandalf.local.home>
+In-Reply-To: <20190703195300.408302485@goodmis.org>
+References: <20190703194959.596805445@goodmis.org>
+        <20190703195300.408302485@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Helen,
+On Wed, 03 Jul 2019 15:50:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Wed, 3 Jul 2019, Helen Koike wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> While testing on a very old kernel (3.5), the tests failed because the write
+> to set_event_pid in the setup code, did not exist. The tests themselves
+> could pass, but the setup failed causing an error.
+> 
+> Other files test for existance before writing to them. Do the same for
+> set_event_pid and set_ftrace_pid.
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/testing/selftests/ftrace/test.d/functions | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> index 779ec11f61bd..a7b06291e32c 100644
+> --- a/tools/testing/selftests/ftrace/test.d/functions
+> +++ b/tools/testing/selftests/ftrace/test.d/functions
+> @@ -91,8 +91,8 @@ initialize_ftrace() { # Reset ftrace to initial-state
+>      reset_events_filter
+>      reset_ftrace_filter
+>      disable_events
+> -    echo > set_event_pid	# event tracer is always on
+> -    echo > set_ftrace_pid
+> +    [ -f set_event_pid ] && echo > set_event_pid  # event tracer is always on
 
-> @@ -0,0 +1,412 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Rockchip MIPI Synopsys DPHY driver
-> + *
-> + * Based on:
-> + *
-> + * Copyright (C) 2016 FuZhou Rockchip Co., Ltd.
-> + * Author: Yakir Yang <ykk@@rock-chips.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
+I probably should remove that comment, because I believe that was why
+it wasn't tested :-/
 
-So the SPDX-Identifiers says: GPL-2.0+ and here someone copied a broken
-boiler plate text which could be interpreted as GPLv2 only because the 'or
-at your option any later version' part was removed.
+-- Steve
 
-Can you please remove that boiler plate language? It's redundant
-information. The SPDX license identifier is unambiguous, machine readable
-and legally binding license information.
 
-Thanks,
+> +    [ -f set_ftrace_pid ] && echo > set_ftrace_pid
+>      [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
+>      [ -f set_graph_function ] && echo | tee set_graph_*
+>      [ -f stack_trace_filter ] && echo > stack_trace_filter
 
-	tglx
