@@ -2,122 +2,126 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0701C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1176C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD15A21850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA29D21850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F7bhBp4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfGCNum (ORCPT
+        id S1726989AbfGCNvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:50:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:48496 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfGCNum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:50:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 789612B;
-        Wed,  3 Jul 2019 06:50:41 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 739C93F718;
-        Wed,  3 Jul 2019 06:50:40 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 14:50:38 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 12/16] kprobes: Initialize kprobes at
- postcore_initcall
-Message-ID: <20190703135037.GC48312@arrakis.emea.arm.com>
-References: <20190526191828.466305460@goodmis.org>
- <20190526191848.266163206@goodmis.org>
- <20190702165008.GC34718@lakrids.cambridge.arm.com>
+        Wed, 3 Jul 2019 09:51:21 -0400
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:61006
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbfGCNvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:51:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s2mSe+b7wNO0CxfTOhQmarb46NeTm9G0eXlk4fgdyJw=;
+ b=F7bhBp4bFQ8SYcXqjaaqdDn0waaPkaoGlsgZ5I4hEzAOkjSejUf2APksWv2cmc5v59YncOjT+Y2A3nmuDbWm1QqM8joV7L8fPLKlRYZ0t4M36dYMxGuwJVL0VyUafRnEi6UEqSm85urK4GiW88ddJDDvYUUJiLTRT7P/mlljORE=
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
+ VI1PR04MB5648.eurprd04.prod.outlook.com (20.178.125.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Wed, 3 Jul 2019 13:51:17 +0000
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b]) by VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b%5]) with mapi id 15.20.2032.019; Wed, 3 Jul 2019
+ 13:51:17 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
+Thread-Topic: [PATCH v4 03/16] crypto: caam - move tasklet_init() call down
+Thread-Index: AQHVMXdGY7YVraimN0KG3E6/ZzGQWw==
+Date:   Wed, 3 Jul 2019 13:51:16 +0000
+Message-ID: <VI1PR04MB505565EC5520F4820E234A84EEFB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
+ <20190703081327.17505-4-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [82.144.34.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af6df985-4c44-418b-1098-08d6ffbd8558
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5648;
+x-ms-traffictypediagnostic: VI1PR04MB5648:
+x-microsoft-antispam-prvs: <VI1PR04MB5648129F53E1527C61D555E1EEFB0@VI1PR04MB5648.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 00872B689F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(376002)(136003)(396003)(199004)(189003)(478600001)(76176011)(25786009)(7696005)(110136005)(99286004)(5660300002)(9686003)(102836004)(54906003)(229853002)(6506007)(68736007)(66556008)(91956017)(64756008)(6436002)(73956011)(52536014)(66476007)(66946007)(6636002)(53546011)(316002)(26005)(66446008)(76116006)(6246003)(486006)(446003)(74316002)(4326008)(86362001)(8676002)(7736002)(44832011)(66066001)(33656002)(2906002)(81166006)(81156014)(14454004)(14444005)(6116002)(3846002)(476003)(8936002)(71190400001)(71200400001)(186003)(53936002)(305945005)(256004)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5648;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ih9HYL9NM9JlmsOPztgTiLh9CwOYwEjRXbns49LkcUn+BdSsxzV3HZYGmXjm8ON9fEw9l/myTWzGqLw7IMPK53OC1uGXu9U+kZVoCoy4iRDmmrviy0DrZ7//TsckHNyXhGMtqo6hZOR74nOZngBrRPmCee55vfmG0zRgxpA0ebzyTdLtPrREkNemWs2sewecTbIzKl7JySXGGQ2Yv7mQu4qHwTOPR1nryMzvR2Xen00f4z+8DasMBt1shmx4f7ryitqrnlI2+q3P5FQIvO7MFrZ4r/nLseQII9eaTzCuOKmNUbRrvDm7/xJd3b4qMpZhE19lZ+06b8o3cIz094e/xjJXPFZEut/hxnsG+BlPZwRp8kF3ZsRHyxLJpugbKEtKWzqdRAWNiBqsX3wvNMHcn/tT4b2dSdd4U6TzmP0/5Is=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702165008.GC34718@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af6df985-4c44-418b-1098-08d6ffbd8558
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2019 13:51:16.8687
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5648
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 05:50:09PM +0100, Mark Rutland wrote:
-> On Sun, May 26, 2019 at 03:18:40PM -0400, Steven Rostedt wrote:
-> > From: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > Initialize kprobes at postcore_initcall level instead of module_init
-> > since kprobes is not a module, and it depends on only subsystems
-> > initialized in core_initcall.
-> > This will allow ftrace kprobe event to add new events when it is
-> > initializing because ftrace kprobe event is initialized at
-> > later initcall level.
-> > 
-> > Link: http://lkml.kernel.org/r/155851394736.15728.13626739508905120098.stgit@devnote2
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > ---
-> >  kernel/kprobes.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index b1ea30a5540e..54aaaad00a47 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -2289,6 +2289,7 @@ static int __init init_kprobes(void)
-> >  		init_test_probes();
-> >  	return err;
-> >  }
-> > +postcore_initcall(init_kprobes);
-> 
-> As a heads-up, this is causing boot-time failures on arm64.
-> 
-> On arm64 kprobes depends on the BRK handler we register in
-> debug_traps_init(), which is an arch_initcall.
-> 
-> As of this change, init_krprobes() calls init_test_probes() before
-> that's registered, so we end up hitting a BRK before we can handle it.
-
-Thanks Mark for identifying this.
-
-So we either revert the above commit in -next or queue the one below
-together with the rest of the kprobes changes (I can queue it via the
-arm64 for-next/core assuming that the above commit id remains stable):
-
---------------8<------------------------------------
-From de4f4d30bab3d77d6643a6fa9ba1deff73dac7f2 Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Wed, 3 Jul 2019 14:44:23 +0100
-Subject: [PATCH] arm64: Initialise the debug traps earlier
-
-Commit b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
-makes init_kprobes() a postcore_initcall while the arm64 handling of the
-BRK instruction is initialised at arch_initcall level. Make the arm64
-debug_traps_init() a core_initcall.
-
-Fixes: b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/kernel/debug-monitors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index f8719bd30850..81770105cd8e 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -382,7 +382,7 @@ static int __init debug_traps_init(void)
- 			      TRAP_BRKPT, "ptrace BRK handler");
- 	return 0;
- }
--arch_initcall(debug_traps_init);
-+core_initcall(debug_traps_init);
- 
- /* Re-enable single step for syscall restarting. */
- void user_rewind_single_step(struct task_struct *task)
+On 7/3/2019 11:14 AM, Andrey Smirnov wrote:=0A=
+> Move tasklet_init() call further down in order to simplify error path=0A=
+> cleanup. No functional change intended.=0A=
+> =0A=
+> diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c=0A=
+> index 4b25b2fa3d02..a7ca2bbe243f 100644=0A=
+> --- a/drivers/crypto/caam/jr.c=0A=
+> +++ b/drivers/crypto/caam/jr.c=0A=
+> @@ -441,15 +441,13 @@ static int caam_jr_init(struct device *dev)=0A=
+>   =0A=
+>   	jrp =3D dev_get_drvdata(dev);=0A=
+>   =0A=
+> -	tasklet_init(&jrp->irqtask, caam_jr_dequeue, (unsigned long)dev);=0A=
+> -=0A=
+>   	/* Connect job ring interrupt handler. */=0A=
+>   	error =3D request_irq(jrp->irq, caam_jr_interrupt, IRQF_SHARED,=0A=
+>   			    dev_name(dev), dev);=0A=
+>   	if (error) {=0A=
+>   		dev_err(dev, "can't connect JobR %d interrupt (%d)\n",=0A=
+>   			jrp->ridx, jrp->irq);=0A=
+> -		goto out_kill_deq;=0A=
+> +		return error;=0A=
+>   	}=0A=
+=0A=
+The caam_jr_interrupt handler can schedule the tasklet so it makes sense =
+=0A=
+to have it be initialized ahead of request_irq. In theory it's possible =0A=
+for an interrupt to be triggered immediately when request_irq is called.=0A=
+=0A=
+I'm not very familiar with the CAAM ip, can you ensure no interrupts are =
+=0A=
+pending in HW at probe time? The "no functional change" part is not obvious=
+.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
