@@ -2,101 +2,123 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B1EC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB80C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E2621993
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C4A21993
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 00:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfGCAaC convert rfc822-to-8bit (ORCPT
+        id S1727330AbfGCAaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 20:30:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56863 "EHLO mga11.intel.com"
+        Tue, 2 Jul 2019 20:30:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11554 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfGCA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727294AbfGCA36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 20:29:58 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:20:53 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2019 17:29:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,444,1557212400"; 
-   d="scan'208";a="184617637"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2019 17:20:53 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 2 Jul 2019 17:20:53 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 2 Jul 2019 17:20:52 -0700
-Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 2 Jul 2019 17:20:52 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
- CRSMSX103.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
- Tue, 2 Jul 2019 18:20:50 -0600
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH] selftests/x86/fsgsbase: Fix some test case bugs
-Thread-Topic: [PATCH] selftests/x86/fsgsbase: Fix some test case bugs
-Thread-Index: AQHVMR6idqkf2SQVKkywk8XhSQW+kaa4bKyA
-Date:   Wed, 3 Jul 2019 00:20:49 +0000
-Message-ID: <77F4123B-C10E-4EC0-AD2B-F7F3223BA3BA@intel.com>
-References: <46e6a60f8992fd54da12203e820c35daadaeffb5.1562103506.git.luto@kernel.org>
-In-Reply-To: <46e6a60f8992fd54da12203e820c35daadaeffb5.1562103506.git.luto@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.252.192.184]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DCB9B83EF095F141AEB935CC0833E756@intel.com>
-Content-Transfer-Encoding: 8BIT
+X-IronPort-AV: E=Sophos;i="5.63,445,1557212400"; 
+   d="scan'208";a="315413534"
+Received: from unknown (HELO [10.239.196.136]) ([10.239.196.136])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2019 17:29:55 -0700
+Subject: Re: [PATCH v5 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>, rkrcmar@redhat.com,
+        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, jingqi.liu@intel.com
+References: <20190620084620.17974-1-tao3.xu@intel.com>
+ <20190620084620.17974-3-tao3.xu@intel.com>
+ <b2cfa1d015315c74af6cee1c00185e5c68cfa397.camel@linux.intel.com>
+ <22533924-f7e8-4b50-d5fe-7cbcc9295b53@redhat.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <05d4c029-79f4-e513-1778-a7c245a48ad7@intel.com>
+Date:   Wed, 3 Jul 2019 08:29:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <22533924-f7e8-4b50-d5fe-7cbcc9295b53@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On Jul 2, 2019, at 14:38, Andy Lutomirski <luto@kernel.org> wrote:
+On 7/3/2019 12:37 AM, Paolo Bonzini wrote:
+> On 20/06/19 11:46, Xiaoyao Li wrote:
+>> You cannot put the atomic switch here. What if umwait_control_cached is changed
+>> at runtime? Host kernel patch exposed a sysfs interface to let it happen.
 > 
-> @@ -494,16 +489,24 @@ static void test_ptrace_write_gsbase(void)
-> 		 * selector value is changed or not by the GSBASE write in
-> 		 * a ptracer.
-> 		 */
-> -		if (gs != 0x7) {
-> +		if (gs != *shared_scratch) {
-> 			nerrs++;
-> 			printf("[FAIL]\tGS changed to %lx\n", gs);
+> Thanks for the review, Xiaoyao.  I agree with both of your remarks.
+> 
+> Paolo
+> 
+Hi paolo,
 
-There is one more point to be fixed like this.
-So, this diff also needs to be applied:
+The issues have been solved in v6 patches, could you help to review v6 
+patches?
 
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index de8c80a..c9da4c5 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -472,7 +472,7 @@ static void test_ptrace_write_gsbase(void)
- 
-                gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
- 
--               if (gs != 0x7) {
-+               if (gs != *shared_scratch) {
-                        nerrs++;
-                        printf("[FAIL]\tGS is not prepared with nonzero\n");
-                        goto END;
+Thanks
 
-Thanks for the cleanup & the fix!
+Tao
+
+>>> +		break;
+>>>   	case MSR_IA32_SPEC_CTRL:
+>>>   		if (!msr_info->host_initiated &&
+>>>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>>> @@ -4126,6 +4148,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool
+>>> init_event)
+>>>   	vmx->rmode.vm86_active = 0;
+>>>   	vmx->spec_ctrl = 0;
+>>>   
+>>> +	vmx->msr_ia32_umwait_control = 0;
+>>> +
+>>>   	vcpu->arch.microcode_version = 0x100000000ULL;
+>>>   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+>>>   	kvm_set_cr8(vcpu, 0);
+>>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+>>> index 61128b48c503..8485bec7c38a 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.h
+>>> +++ b/arch/x86/kvm/vmx/vmx.h
+>>> @@ -14,6 +14,8 @@
+>>>   extern const u32 vmx_msr_index[];
+>>>   extern u64 host_efer;
+>>>   
+>>> +extern u32 umwait_control_cached;
+>>> +
+>>>   #define MSR_TYPE_R	1
+>>>   #define MSR_TYPE_W	2
+>>>   #define MSR_TYPE_RW	3
+>>> @@ -194,6 +196,7 @@ struct vcpu_vmx {
+>>>   #endif
+>>>   
+>>>   	u64		      spec_ctrl;
+>>> +	u64		      msr_ia32_umwait_control;
+>>>   
+>>>   	u32 vm_entry_controls_shadow;
+>>>   	u32 vm_exit_controls_shadow;
+>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>> index 83aefd759846..4480de459bf4 100644
+>>> --- a/arch/x86/kvm/x86.c
+>>> +++ b/arch/x86/kvm/x86.c
+>>> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
+>>>   	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
+>>>   	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
+>>>   	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
+>>> +	MSR_IA32_UMWAIT_CONTROL,
+>>>   };
+>>>   
+>>>   static unsigned num_msrs_to_save;
+>>
+> 
+
