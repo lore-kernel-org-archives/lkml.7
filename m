@@ -2,128 +2,233 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB81C06513
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69456C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317C6218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43546218C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfGCLEJ (ORCPT
+        id S1727107AbfGCLEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:04:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51591 "EHLO
+        Wed, 3 Jul 2019 07:04:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51598 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfGCLEI (ORCPT
+        with ESMTP id S1726621AbfGCLEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:04:08 -0400
+        Wed, 3 Jul 2019 07:04:09 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hid3V-0002b4-BI; Wed, 03 Jul 2019 13:04:05 +0200
-Message-Id: <20190703105431.096822793@linutronix.de>
+        id 1hid3W-0002bL-UT; Wed, 03 Jul 2019 13:04:07 +0200
+Message-Id: <20190703105915.785771388@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Jul 2019 12:54:31 +0200
+Date:   Wed, 03 Jul 2019 12:54:34 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch 00/18] x86/apic: Support for IPI shorthands
+Subject: [patch 03/18] x86/apic: Make apic_pending_intr_clear() more robust
+References: <20190703105431.096822793@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent discussion about using HPET as NMI watchdog made me look into
-IPI shorthand support. Also Nadav wanted to look into shorthands to speed
-up certain TLB operations.
+In course of developing shorthand based IPI support issues with the
+function which tries to clear eventually pending ISR bits in the local APIC
+were observed.
 
-The support for IPI shorthands is rather limited right now and basically
-got rendered useless by making it depend on CPU_HOTPLUG=n.
+  1) O-day testing triggered the WARN_ON() in apic_pending_intr_clear().
 
-The reason for this is that shorthands are broadcasted and in case that not
-all present CPUs have been brought up this might end up with a similar
-effect as the dreaded MCE broadcast.
+     This warning is emitted when the function fails to clear pending ISR
+     bits or observes pending IRR bits which are not delivered to the CPU
+     after the stale ISR bit(s) are ACK'ed.
 
-But this can be handled smarter than just preventing shorthands if CPU
-hotplug is enabled. The kernel already deals with the MCE broadcast issue
-for the 'nosmt' case. It brings up all present CPUs and then shuts down the
-SMT siblings right away after they did the basic initialization and set
-CR4.MCE.
+     Unfortunately the function only emits a WARN_ON() and fails to dump
+     the IRR/ISR content. That's useless for debugging.
 
-The core CPU hotplug code keeps track of that information already, so it
-can be used to decide whether IPI shorthands can be used safely or not.
+     Feng added spot on debug printk's which revealed that the stale IRR
+     bit belonged to the APIC timer interrupt vector, but adding ad hoc
+     debug code does not help with sporadic failures in the field.
 
-If all present CPUs have been brought up at least once it's safe to switch
-to IPI shorthand mode. The switch over is done with a static key and can be
-prevented completely with the existing (so far 32bit only) command line
-option.
+     Rework the loop so the full IRR/ISR contents are saved and on failure
+     dumped.
 
-As a offlined CPU still receives IPIs the offline code is changed to soft
-disable the local APIC so the offline CPU will not be bothered by shorthand
-based IPIs. In soft disabled state the APIC still handles NMI, INIT, SIPI
-so onlining will work as before.
+  2) The loop termination logic is interesting at best.
 
-To support NMI based shorthand IPIs the NMI handler gets a new check right
-at the beginning of the handler code which lets the handler ignore the NMI
-on a offline CPU and not call through the whole spaghetti maze of NMI
-handling.
+     If the machine has no TSC or cpu_khz is not known yet it tries 1
+     million times to ack stale IRR/ISR bits. What?
 
-Soft disabling the local APIC on the offlined CPU unearthed a KVM APIC
-emulation issue which is only relevant for CPU0 hotplug testing. The fix is
-in the KVM tree already, but there is no need to have this dependency here.
-(0-day folks are aware of it).
+     With TSC it uses the TSC to calculate the loop termination. It takes a
+     timestamp at entry and terminates the loop when:
 
-The APIC setup function has also a few minor issues which are addressed in
-this series as well.
+     	  (rdtsc() - start_timestamp) >= (cpu_hkz << 10)
 
-Part of the series is also a consolidation of the APIC code which was
-necessary to not spread all the shorthand implementation details to header
-files etc.
+     That's roughly one second.
 
-It survived testing on a range of different machines including NMI
-shorthand IPIs. Aside of the KVM APIC issue, which is only relevant in
-combination with CPU0 hotplug testing, there are no known side effects.
+     Both methods are problematic. The APIC has 256 vectors, which means
+     that in theory max. 256 IRR/ISR bits can be set. In practice this is
+     impossible as the first 32 vectors are reserved and not affected and
+     the chance that more than a few bits are set is close to zero.
 
-The series is also available from git:
+     With the pure loop based approach the 1 million retries are complete
+     overkill.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/ipi
+     With TSC this can terminate too early in a guest which is running on a
+     heavily loaded host even with only a couple of IRR/ISR bits set. The
+     reason is that after acknowledging the highest priority ISR bit,
+     pending IRRs must get serviced first before the next round of
+     acknowledge can take place as the APIC (real and virtualized) does not
+     honour EOI without a preceeding interrupt on the CPU. And every APIC
+     read/write takes a VMEXIT if the APIC is virtualized. While trying to
+     reproduce the issue 0-day reported it was observed that the guest was
+     scheduled out long enough under heavy load that it terminated after 8
+     iterations.
 
-Thanks,
+     Make the loop terminate after 512 iterations. That's plenty enough
+     in any case and does not take endless time to complete.
 
-	tglx
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/apic/apic.c |  111 +++++++++++++++++++++++++-------------------
+ 1 file changed, 65 insertions(+), 46 deletions(-)
 
-8<-------------------
- arch/x86/include/asm/apic_flat_64.h     |    8 -
- arch/x86/include/asm/ipi.h              |  109 ----------------------
- arch/x86/kernel/apic/x2apic.h           |    9 -
- b/arch/x86/include/asm/apic.h           |    3 
- b/arch/x86/include/asm/bugs.h           |    2 
- b/arch/x86/include/asm/processor.h      |    2 
- b/arch/x86/kernel/apic/apic.c           |  155 ++++++++++++++++++++------------
- b/arch/x86/kernel/apic/apic_flat_64.c   |   41 +++-----
- b/arch/x86/kernel/apic/apic_noop.c      |   18 ---
- b/arch/x86/kernel/apic/apic_numachip.c  |    8 -
- b/arch/x86/kernel/apic/bigsmp_32.c      |    9 -
- b/arch/x86/kernel/apic/ipi.c            |  103 +++++++++++++++------
- b/arch/x86/kernel/apic/local.h          |   68 ++++++++++++++
- b/arch/x86/kernel/apic/probe_32.c       |   41 --------
- b/arch/x86/kernel/apic/probe_64.c       |   16 ---
- b/arch/x86/kernel/apic/x2apic_cluster.c |   26 +++--
- b/arch/x86/kernel/apic/x2apic_phys.c    |   29 +++--
- b/arch/x86/kernel/apic/x2apic_uv_x.c    |   28 -----
- b/arch/x86/kernel/cpu/bugs.c            |    2 
- b/arch/x86/kernel/cpu/common.c          |   11 ++
- b/arch/x86/kernel/nmi.c                 |    3 
- b/arch/x86/kernel/smpboot.c             |   13 ++
- b/include/linux/cpumask.h               |    2 
- b/kernel/cpu.c                          |   11 +-
- 24 files changed, 354 insertions(+), 363 deletions(-)
-
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1453,54 +1453,72 @@ static void lapic_setup_esr(void)
+ 			oldvalue, value);
+ }
+ 
++#define APIC_IR_REGS		APIC_ISR_NR
++#define APIC_IR_BITS		(APIC_IR_REGS * 32)
++#define APIC_IR_MAPSIZE		(APIC_IR_BITS / BITS_PER_LONG)
++
++union apic_ir {
++	unsigned long	map[APIC_IR_MAPSIZE];
++	u32		regs[APIC_IR_REGS];
++};
++
++static bool apic_check_and_ack(union apic_ir *irr, union apic_ir *isr)
++{
++	int i, bit;
++
++	/* Read the IRRs */
++	for (i = 0; i < APIC_IR_REGS; i++)
++		irr->regs[i] = apic_read(APIC_IRR + i * 0x10);
++
++	/* Read the ISRs */
++	for (i = 0; i < APIC_IR_REGS; i++)
++		isr->regs[i] = apic_read(APIC_ISR + i * 0x10);
++
++	/*
++	 * If the ISR map is not empty. ACK the APIC and run another round
++	 * to verify whether a pending IRR has been unblocked and turned
++	 * into a ISR.
++	 */
++	if (!bitmap_empty(isr->map, APIC_IR_BITS)) {
++		/*
++		 * There can be multiple ISR bits set when a high priority
++		 * interrupt preempted a lower priority one. Issue an ACK
++		 * per set bit.
++		 */
++		for_each_set_bit(bit, isr->map, APIC_IR_BITS)
++			ack_APIC_irq();
++		return true;
++	}
++
++	return !bitmap_empty(irr->map, APIC_IR_BITS);
++}
++
++/*
++ * After a crash, we no longer service the interrupts and a pending
++ * interrupt from previous kernel might still have ISR bit set.
++ *
++ * Most probably by now the CPU has serviced that pending interrupt and it
++ * might not have done the ack_APIC_irq() because it thought, interrupt
++ * came from i8259 as ExtInt. LAPIC did not get EOI so it does not clear
++ * the ISR bit and cpu thinks it has already serivced the interrupt. Hence
++ * a vector might get locked. It was noticed for timer irq (vector
++ * 0x31). Issue an extra EOI to clear ISR.
++ *
++ * If there are pending IRR bits they turn into ISR bits after a higher
++ * priority ISR bit has been acked.
++ */
+ static void apic_pending_intr_clear(void)
+ {
+-	long long max_loops = cpu_khz ? cpu_khz : 1000000;
+-	unsigned long long tsc = 0, ntsc;
+-	unsigned int queued;
+-	unsigned long value;
+-	int i, j, acked = 0;
+-
+-	if (boot_cpu_has(X86_FEATURE_TSC))
+-		tsc = rdtsc();
+-	/*
+-	 * After a crash, we no longer service the interrupts and a pending
+-	 * interrupt from previous kernel might still have ISR bit set.
+-	 *
+-	 * Most probably by now CPU has serviced that pending interrupt and
+-	 * it might not have done the ack_APIC_irq() because it thought,
+-	 * interrupt came from i8259 as ExtInt. LAPIC did not get EOI so it
+-	 * does not clear the ISR bit and cpu thinks it has already serivced
+-	 * the interrupt. Hence a vector might get locked. It was noticed
+-	 * for timer irq (vector 0x31). Issue an extra EOI to clear ISR.
+-	 */
+-	do {
+-		queued = 0;
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--)
+-			queued |= apic_read(APIC_IRR + i*0x10);
+-
+-		for (i = APIC_ISR_NR - 1; i >= 0; i--) {
+-			value = apic_read(APIC_ISR + i*0x10);
+-			for_each_set_bit(j, &value, 32) {
+-				ack_APIC_irq();
+-				acked++;
+-			}
+-		}
+-		if (acked > 256) {
+-			pr_err("LAPIC pending interrupts after %d EOI\n", acked);
+-			break;
+-		}
+-		if (queued) {
+-			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
+-				ntsc = rdtsc();
+-				max_loops = (long long)cpu_khz << 10;
+-				max_loops -= ntsc - tsc;
+-			} else {
+-				max_loops--;
+-			}
+-		}
+-	} while (queued && max_loops > 0);
+-	WARN_ON(max_loops <= 0);
++	union apic_ir irr, isr;
++	unsigned int i;
++
++	/* 512 loops are way oversized and give the APIC a chance to obey. */
++	for (i = 0; i < 512; i++) {
++		if (!apic_check_and_ack(&irr, &isr))
++			return;
++	}
++	/* Dump the IRR/ISR content if that failed */
++	pr_warn("APIC: Stale IRR: %256pb ISR: %256pb\n", irr.map, isr.map);
+ }
+ 
+ /**
+@@ -1573,6 +1591,7 @@ static void setup_local_APIC(void)
+ 	value &= ~APIC_TPRI_MASK;
+ 	apic_write(APIC_TASKPRI, value);
+ 
++	/* Clear eventually stale ISR/IRR bits */
+ 	apic_pending_intr_clear();
+ 
+ 	/*
 
 
