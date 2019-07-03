@@ -2,175 +2,294 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFD0C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A1FC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0D0218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D942189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 09:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nncV+N97"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PclZ6cGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfGCJEj (ORCPT
+        id S1727217AbfGCJIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 05:04:39 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45754 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfGCJEj (ORCPT
+        Wed, 3 Jul 2019 05:08:00 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39110 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfGCJIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:04:39 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a14so1281199edv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:04:37 -0700 (PDT)
+        Wed, 3 Jul 2019 05:08:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p24so1212913lfo.6;
+        Wed, 03 Jul 2019 02:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Q/EYz2rSpQqq5aTgZ1tZo0aZ4bOY/6+aI3OLsg1wExc=;
-        b=nncV+N97AgUiMkEcr3PyqwUVCi/flMy0shrmwVJcLqyjTsaytge8nr7U2CuCK2JDKG
-         dFZoJZ/ShU43HlX6Af1U/VfEr6YA0ExzbHURymZaLEVNkQ/1bpgsJirnRaFGE6M+eaSb
-         dmuxzpxzeN0PyN2G/AQG0qWQUYmTJ0Ormdd88=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3vyXLhcZmY9wdde3eL521RhW8CECQuom4LE2YV+rSac=;
+        b=PclZ6cGIvW1KdSLX6VoGKbiTIeu5+vinnhbHXh9jw26gy9P6N+ovnsB0OiEYYbCGTr
+         PZuGO0mC1G+eJ66FLB53bE5U0vqw9apMyHxDxiJT+2b2lxGVIqGCjNgJvS+7UBxWeF85
+         GQYWiggmiNedxT1NG2YSW2Wigq39mda81R6Y0yT1vQqrTCUpJlCdBmhOHQN8IGsnZnRi
+         OrUbEe8Eiq/NSQgC/hqtbKUHi8jN46eM4LW0j5IaYkMki5x3xRr62/kgaifUObPY3Krz
+         QobG41ve9zMKmM1WIKO0avb5jMBEsYF/4S47ESnk1CITjjWkZQ310+pYRy66ONmKQkH5
+         4TRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q/EYz2rSpQqq5aTgZ1tZo0aZ4bOY/6+aI3OLsg1wExc=;
-        b=IYYik4878QuH56v3mLa2r0b1//44xtQOm0IEUnhSkmEzHnZrsQ0+IkTY7W6eLA8cUt
-         lFAkfgLM2iVilnU1/VWmvXCmDCdUdQGjHaJNbKIdu2sEzbQHvWaJeMsDWY5IZ7GfZcTy
-         B4I1mUdpdstY6NcxdSfNrFZNg2j8LRbOz3CQgvdzVKst12BY1EcffgXW1QnnX7tZC/K7
-         yB7HNMkxs4OQOgv1vgthhiSu8Lfx1RD9/eUN/SDViOHJOVE/5rg12Gz6ehh59PbnK8KF
-         zITYScjfRu2gewXs7gh6HDN3E1krAOctM4/loLfJ3qyjvOcbmrt7/bVl+D0pWhYLkRdy
-         HcnQ==
-X-Gm-Message-State: APjAAAW2LBuhhBrlHXVu6ZX40TZ5OeH3pN6NyGsXfi+9pzQp0Pu8vuyL
-        9Jv76rxgdV2FPU4nf0uqMCBIgsIPK1cKFg==
-X-Google-Smtp-Source: APXvYqzZL65sBn1hdWR3qWu/t3Sq3CCKNKgC3JPGJFUMbHV/AzqJitSJm3JrZzYvaUOhZZUoM8l77Q==
-X-Received: by 2002:a17:906:2510:: with SMTP id i16mr33018569ejb.130.1562144676294;
-        Wed, 03 Jul 2019 02:04:36 -0700 (PDT)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id f36sm496892ede.47.2019.07.03.02.04.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 02:04:35 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id b2so608114wrx.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 02:04:34 -0700 (PDT)
-X-Received: by 2002:adf:f246:: with SMTP id b6mr29292267wrp.92.1562144674125;
- Wed, 03 Jul 2019 02:04:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3vyXLhcZmY9wdde3eL521RhW8CECQuom4LE2YV+rSac=;
+        b=t8LSDPn9fY3SK+i/ZDwj0cVYNqRywuXqyI6mO5QMtYw7fw/LMCLHG/4a/K3TYWBg0Q
+         hFvg7vWMhBftb90JctHDcnVpwaw1xGWIrySymUBabVl5li3z0lUHFSVcbDQsimFksDIq
+         9z06ZZ+elSi1I2mTqbQC9VHEtZ0G8A1mRYXrhVfuE8FWWM6G4LwyIKsTolHI7tKKnNLV
+         rc8GMvMnAZfXx2cI8ilfsdB1YMFj5y0KYaSHh3eWGL4cmraazFb6LloK2PmUyQdmY7Yf
+         QjIclK8R323IMjuCbyNZyQUQwhqC1SZ986TYj7KtvaKlaesPg8Psv9pcCnmthnudTFFM
+         x2Cg==
+X-Gm-Message-State: APjAAAVCcARcsbKoukXhfA4MInRnzvPzEwjbGKA7U0wH/iNKcNdA1Yi7
+        ra+VoVvdNOZW9YxpHrM9YCs=
+X-Google-Smtp-Source: APXvYqwqb3/FH5fyDg0fZ/J7/dXfUSGhiubXTbuqCypbXGZLu1cX88j70vDwOHXbRG9Go5V7kRNlfg==
+X-Received: by 2002:ac2:5938:: with SMTP id v24mr2730731lfi.161.1562144876375;
+        Wed, 03 Jul 2019 02:07:56 -0700 (PDT)
+Received: from krolik-desktop.lan ([91.238.216.6])
+        by smtp.gmail.com with ESMTPSA id u21sm364427lju.2.2019.07.03.02.07.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 02:07:55 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     paweldembicki@gmail.com, linus.walleij@linaro.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/4] net: dsa: vsc73xx: add support for parallel mode
+Date:   Wed,  3 Jul 2019 11:07:31 +0200
+Message-Id: <20190703090732.1760-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190701152723.624-3-paweldembicki@gmail.com>
+References: <20190701152723.624-3-paweldembicki@gmail.com>
 MIME-Version: 1.0
-References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl> <1cb8cc0c89f0017962226fdb84ae11e763fdd233.camel@ndufresne.ca>
-In-Reply-To: <1cb8cc0c89f0017962226fdb84ae11e763fdd233.camel@ndufresne.ca>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 3 Jul 2019 18:04:21 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5A0gg4RCKkPd-m2_5=ZyDzZ7hnH9AnTrt7ciXQPPHZU2Q@mail.gmail.com>
-Message-ID: <CAAFQd5A0gg4RCKkPd-m2_5=ZyDzZ7hnH9AnTrt7ciXQPPHZU2Q@mail.gmail.com>
-Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Pawel Osciak <posciak@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 12:19 AM Nicolas Dufresne <nicolas@ndufresne.ca> wro=
-te:
->
-> Le lundi 03 juin 2019 =C3=A0 13:28 +0200, Hans Verkuil a =C3=A9crit :
-> > Since Thomasz was very busy with other things, I've taken over this
-> > patch series. This v4 includes his draft changes and additional changes
-> > from me.
-> >
-> > This series attempts to add the documentation of what was discussed
-> > during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
-> > later Embedded Linux Conference Europe 2014 in D=C3=BCsseldorf and then
-> > eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
-> > video team (but mostly in a cosmetic way or making the document more
-> > precise), during the several years of Chrome OS using the APIs in
-> > production.
-> >
-> > Note that most, if not all, of the API is already implemented in
-> > existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
-> > this series is just to formalize what we already have.
-> >
-> > Thanks everyone for the huge amount of useful comments to previous
-> > versions of this series. Much of the credits should go to Pawel Osciak
-> > too, for writing most of the original text of the initial RFC.
-> >
-> > This v4 incorporates all known comments (let me know if I missed
-> > something!) and should be complete for the decoder.
-> >
-> > For the encoder there are two remaining TODOs for the API:
-> >
-> > 1) Setting the frame rate so bitrate control can make sense, since
-> >    they need to know this information.
-> >
-> >    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
-> >    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
-> >    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow bot=
-h
-> >    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both sinc=
-e
-> >    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
->
-> I agree, as long as it's documented. I can imagine how this could be
-> confusing for new users.
->
-> >
-> > 2) Interactions between OUTPUT and CAPTURE formats.
-> >
-> >    The main problem is what to do if the capture sizeimage is too small
-> >    for the OUTPUT resolution when streaming starts.
-> >
-> >    Proposal: width and height of S_FMT(OUTPUT) are used to
-> >    calculate a minimum sizeimage (app may request more). This is
-> >    driver-specific.
-> >
-> >    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
-> >    for the encoder (i.e. we don't support mid-stream resolution
-> >    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
-> >    supported. See https://patchwork.linuxtv.org/patch/56478/ for
-> >    the patch adding this flag.
-> >
-> >    Of course, if we start to support mid-stream resolution
-> >    changes (or other changes that require a source change event),
-> >    then this flag should be dropped by the encoder driver and
-> >    documentation on how to handle the source change event should
-> >    be documented in the encoder spec. I prefer to postpone this
-> >    until we have an encoder than can actually do mid-stream
-> >    resolution changes.
-> >
-> >    If sizeimage of the OUTPUT is too small for the CAPTURE
-> >    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
-> >    then the second STREAMON (either CAPTURE or OUTPUT) will
-> >    return -ENOMEM since there is not enough memory to do the
-> >    encode.
->
-> You seem confident that we will know immediately if it's too small. But
-> what I remember is that HW has an interrupt for this, allowing
-> userspace to allocate a larger buffer and resume.
->
-> Should we make the capture queue independent of the streaming state, so
-> that we can streamoff/reqbufs/.../streamon to resume from an ENOMEM
-> error ? And shouldn't ENOMEM be returned by the following capture DQBUF
-> when such an interrupt is raised ?
->
+This patch add platform part of vsc73xx driver.
+It allows to use chip connected by parallel interface.
 
-The idea was that stopping the CAPTURE queue would reset the encoder,
-i.e. start encoding a new, independent stream after the streaming
-starts again. Still, given that one would normally need to reallocate
-the buffers on some significant stream parameter change, that would
-normally require emitting all the relevant headers anyway, so it
-probably doesn't break anything?
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+Changes in v2:
+- drop mutex
+- fix indentation
 
-Best regards,
-Tomasz
+ drivers/net/dsa/Kconfig                    |   8 ++
+ drivers/net/dsa/Makefile                   |   1 +
+ drivers/net/dsa/vitesse-vsc73xx-platform.c | 160 +++++++++++++++++++++
+ 3 files changed, 169 insertions(+)
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-platform.c
+
+diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
+index 4ab2aa09e2e4..80965808949d 100644
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -116,4 +116,12 @@ config NET_DSA_VITESSE_VSC73XX_SPI
+ 	---help---
+ 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
+ 	  and VSC7398 SparX integrated ethernet switches in SPI managed mode.
++
++config NET_DSA_VITESSE_VSC73XX_PLATFORM
++	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
++	depends on HAS_IOMEM
++	select NET_DSA_VITESSE_VSC73XX
++	---help---
++	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
++	  and VSC7398 SparX integrated ethernet switches in Platform managed mode.
+ endmenu
+diff --git a/drivers/net/dsa/Makefile b/drivers/net/dsa/Makefile
+index 117bf78be211..d5e4c668ac03 100644
+--- a/drivers/net/dsa/Makefile
++++ b/drivers/net/dsa/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
+ obj-$(CONFIG_NET_DSA_SMSC_LAN9303_I2C) += lan9303_i2c.o
+ obj-$(CONFIG_NET_DSA_SMSC_LAN9303_MDIO) += lan9303_mdio.o
+ obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX) += vitesse-vsc73xx-core.o
++obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX_PLATFORM) += vitesse-vsc73xx-platform.o
+ obj-$(CONFIG_NET_DSA_VITESSE_VSC73XX_SPI) += vitesse-vsc73xx-spi.o
+ obj-y				+= b53/
+ obj-y				+= microchip/
+diff --git a/drivers/net/dsa/vitesse-vsc73xx-platform.c b/drivers/net/dsa/vitesse-vsc73xx-platform.c
+new file mode 100644
+index 000000000000..149d921b8499
+--- /dev/null
++++ b/drivers/net/dsa/vitesse-vsc73xx-platform.c
+@@ -0,0 +1,160 @@
++// SPDX-License-Identifier: GPL-2.0
++/* DSA driver for:
++ * Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
++ * Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
++ * Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
++ * Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
++ *
++ * This driver takes control of the switch chip over Platform and
++ * configures it to route packages around when connected to a CPU port.
++ *
++ * Copyright (C) 2019 pawel Dembicki <paweldembicki@gmail.com>
++ * Based on vitesse-vsc-spi.c by:
++ * Copyright (C) 2018 Linus Wallej <linus.walleij@linaro.org>
++ * Includes portions of code from the firmware uploader by:
++ * Copyright (C) 2009 Gabor Juhos <juhosg@openwrt.org>
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++#include "vitesse-vsc73xx.h"
++
++#define VSC73XX_CMD_PLATFORM_BLOCK_SHIFT		14
++#define VSC73XX_CMD_PLATFORM_BLOCK_MASK			0x7
++#define VSC73XX_CMD_PLATFORM_SUBBLOCK_SHIFT		10
++#define VSC73XX_CMD_PLATFORM_SUBBLOCK_MASK		0xf
++#define VSC73XX_CMD_PLATFORM_REGISTER_SHIFT		2
++
++/**
++ * struct vsc73xx_platform - VSC73xx Platform state container
++ */
++struct vsc73xx_platform {
++	struct platform_device	*pdev;
++	void __iomem		*base_addr;
++	struct vsc73xx		vsc;
++};
++
++static const struct vsc73xx_ops vsc73xx_platform_ops;
++
++static u32 vsc73xx_make_addr(u8 block, u8 subblock, u8 reg)
++{
++	u32 ret;
++
++	ret = (block & VSC73XX_CMD_PLATFORM_BLOCK_MASK)
++		<< VSC73XX_CMD_PLATFORM_BLOCK_SHIFT;
++	ret |= (subblock & VSC73XX_CMD_PLATFORM_SUBBLOCK_MASK)
++		<< VSC73XX_CMD_PLATFORM_SUBBLOCK_SHIFT;
++	ret |= reg << VSC73XX_CMD_PLATFORM_REGISTER_SHIFT;
++
++	return ret;
++}
++
++static int vsc73xx_platform_read(struct vsc73xx *vsc, u8 block, u8 subblock,
++				 u8 reg, u32 *val)
++{
++	struct vsc73xx_platform *vsc_platform = vsc->priv;
++	u32 offset;
++
++	if (!vsc73xx_is_addr_valid(block, subblock))
++		return -EINVAL;
++
++	offset = vsc73xx_make_addr(block, subblock, reg);
++	*val = ioread32be(vsc_platform->base_addr + offset);
++
++	return 0;
++}
++
++static int vsc73xx_platform_write(struct vsc73xx *vsc, u8 block, u8 subblock,
++				  u8 reg, u32 val)
++{
++	struct vsc73xx_platform *vsc_platform = vsc->priv;
++	u32 offset;
++
++	if (!vsc73xx_is_addr_valid(block, subblock))
++		return -EINVAL;
++
++	offset = vsc73xx_make_addr(block, subblock, reg);
++	iowrite32be(val, vsc_platform->base_addr + offset);
++
++	return 0;
++}
++
++static int vsc73xx_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct vsc73xx_platform *vsc_platform;
++	struct resource *res = NULL;
++	int ret;
++
++	vsc_platform = devm_kzalloc(dev, sizeof(*vsc_platform), GFP_KERNEL);
++	if (!vsc_platform)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, vsc_platform);
++	vsc_platform->pdev = pdev;
++	vsc_platform->vsc.dev = dev;
++	vsc_platform->vsc.priv = vsc_platform;
++	vsc_platform->vsc.ops = &vsc73xx_platform_ops;
++
++	/* obtain I/O memory space */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "cannot obtain I/O memory space\n");
++		ret = -ENXIO;
++		return ret;
++	}
++
++	vsc_platform->base_addr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(vsc_platform->base_addr)) {
++		dev_err(&pdev->dev, "cannot request I/O memory space\n");
++		ret = -ENXIO;
++		return ret;
++	}
++
++	return vsc73xx_probe(&vsc_platform->vsc);
++}
++
++static int vsc73xx_platform_remove(struct platform_device *pdev)
++{
++	struct vsc73xx_platform *vsc_platform = platform_get_drvdata(pdev);
++
++	return vsc73xx_remove(&vsc_platform->vsc);
++}
++
++static const struct vsc73xx_ops vsc73xx_platform_ops = {
++	.read = vsc73xx_platform_read,
++	.write = vsc73xx_platform_write,
++};
++
++static const struct of_device_id vsc73xx_of_match[] = {
++	{
++		.compatible = "vitesse,vsc7385",
++	},
++	{
++		.compatible = "vitesse,vsc7388",
++	},
++	{
++		.compatible = "vitesse,vsc7395",
++	},
++	{
++		.compatible = "vitesse,vsc7398",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, vsc73xx_of_match);
++
++static struct platform_driver vsc73xx_platform_driver = {
++	.probe = vsc73xx_platform_probe,
++	.remove = vsc73xx_platform_remove,
++	.driver = {
++		.name = "vsc73xx-platform",
++		.of_match_table = vsc73xx_of_match,
++	},
++};
++module_platform_driver(vsc73xx_platform_driver);
++
++MODULE_AUTHOR("Pawel Dembicki <paweldembicki@gmail.com>");
++MODULE_DESCRIPTION("Vitesse VSC7385/7388/7395/7398 Platform driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
+
