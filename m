@@ -2,123 +2,129 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00127C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEBFC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF40E218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jFQPczeo"
+	by mail.kernel.org (Postfix) with ESMTP id 5952021882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 17:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfGCRcn (ORCPT
+        id S1726964AbfGCRdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 13:32:43 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11351 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfGCRcn (ORCPT
+        Wed, 3 Jul 2019 13:33:38 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37152 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCRdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:32:43 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1ce6b90000>; Wed, 03 Jul 2019 10:32:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 03 Jul 2019 10:32:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 03 Jul 2019 10:32:42 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
- 2019 17:32:40 +0000
-Subject: Re: [PATCH 19/22] mm: always return EBUSY for invalid ranges in
- hmm_range_{fault,snapshot}
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-nvdimm@lists.01.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190701062020.19239-1-hch@lst.de>
- <20190701062020.19239-20-hch@lst.de>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <85c88d71-2c25-38ff-a4a3-bfd66fff72b7@nvidia.com>
-Date:   Wed, 3 Jul 2019 10:32:39 -0700
+        Wed, 3 Jul 2019 13:33:37 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s20so3219853otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 10:33:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sN8SjiSoTlwKd+MHKIy7hmdapLfkm12Ci8ci1qQb/50=;
+        b=bNDjHuEUrugTgzP0gvqzL7DSmiwSwez/CNzT1FzKFUxKi4nTxD3gTz0vy6dknFrckC
+         y5oh5peNE5yE0ltUCZG0jAFllK1SDknGIuLokLLZrZl2GLigvljH219O4eW8fMJa72jQ
+         Y4yiNiN4Udi9d985b7SvKt69R3u0Nodl1Ms5UWUiPNUFEI+g+gCBAyHxiH7N9foozLKv
+         G2iwlZH7uM44IxttuklhaTNjFNN2dOdnovkOMFzcMGEwadYsCnTSPVyOe7S143S6j66n
+         x2vdQ7V2MoXQS5HbMwiLZXtSns7mxDIc8OKyeZuh6ID4ANneQwxRilZ4qjokxpINt++q
+         mhuw==
+X-Gm-Message-State: APjAAAVQXNvFs+2aPPWiybMNZRhPA62vpJBO1T8jCM9Bcd9NP+UU9BRM
+        ocixi9bdNH41YH9bcCWXiCs=
+X-Google-Smtp-Source: APXvYqxaAv4XfhTXyzOQEO5Mh5YfM0MiSUILT0WL4cl68IyGEe7Admy91MEMDtoIkz91MLOpjRO6+g==
+X-Received: by 2002:a9d:7248:: with SMTP id a8mr31564520otk.363.1562175216928;
+        Wed, 03 Jul 2019 10:33:36 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id 132sm924488oid.47.2019.07.03.10.33.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 10:33:36 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Fix use-after-free bug when ports are removed
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Bates <sbates@raithlin.com>
+References: <20190703170136.21515-1-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e88bed6b-c487-e224-1434-ba9912495a33@grimberg.me>
+Date:   Wed, 3 Jul 2019 10:33:31 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190701062020.19239-20-hch@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190703170136.21515-1-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562175161; bh=h5APIAGCLtc3sbvDunYYsjAxWo0bLP7WU/0gBEeeI0w=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jFQPczeoa9GgO31iCc1i+leEDWlzjjir863TTILBB/y92fjmJ/f1sRLtX+VAJ+7kT
-         w92vvah6B8huA4GwU+UVeQT0gcXzN2h0pOn1OhPiqQgIiYhz+alEB4KdiyBILqdNjF
-         iPKpJwcfB8ejE/ycfI+hpo2hU5HhQCvtjkyBzaQyOAlSWgEb0SBv3a75TxnJ6bQu96
-         N0rQy1PEp6S5xBst7hP92U8L+tvob0E2tubrjAKpvUgVgwpry+THodovSht9UYcLga
-         YagJXvoKcVLlFOE7Nc+UP4wF3Mu6pxJqPDNSCJG6taQO+xhoGrUVb+lnZnXTS7ATQt
-         SJRIeqmOivyvQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Hey,
 
-On 6/30/19 11:20 PM, Christoph Hellwig wrote:
-> We should not have two different error codes for the same condition.  In
-> addition this really complicates the code due to the special handling of
-> EAGAIN that drops the mmap_sem due to the FAULT_FLAG_ALLOW_RETRY logic
-> in the core vm.
+Hey Logan,
+
+> NVME target ports can be removed while there are still active
+> controllers. Largely this is fine, except some admin commands
+> can access the req->port (for example, id-ctrl uses the port's
+> inline date size as part of it's response). This was found
+> while testing with KASAN.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-
-Probably should update the "Return:" comment above
-hmm_range_snapshot() too.
-
-> ---
->   mm/hmm.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
+> Two patches follow which disconnect active controllers when the
+> ports are removed for loop and rdma. I'm not sure if fc has the
+> same issue and have no way to test this.
 > 
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index c85ed7d4e2ce..d125df698e2b 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -974,7 +974,7 @@ long hmm_range_snapshot(struct hmm_range *range)
->   	do {
->   		/* If range is no longer valid force retry. */
->   		if (!range->valid)
-> -			return -EAGAIN;
-> +			return -EBUSY;
->   
->   		vma = find_vma(hmm->mm, start);
->   		if (vma == NULL || (vma->vm_flags & device_vma))
-> @@ -1069,10 +1069,8 @@ long hmm_range_fault(struct hmm_range *range, bool block)
->   
->   	do {
->   		/* If range is no longer valid force retry. */
-> -		if (!range->valid) {
-> -			up_read(&hmm->mm->mmap_sem);
-> -			return -EAGAIN;
-> -		}
-> +		if (!range->valid)
-> +			return -EBUSY;
->   
->   		vma = find_vma(hmm->mm, start);
->   		if (vma == NULL || (vma->vm_flags & device_vma))
-> 
+> Alternatively, we could add reference counting to the struct port,
+> but I think this is a more involved change and could be done later
+> after we fix the bug quickly.
+
+I don't think that when removing a port the expectation is that
+all associated controllers remain intact (although they can, which
+was why we did not remove them), so I think its fine to change that
+if it causes issues.
+
+Can we handle this in the core instead (also so we'd be consistent
+across transports)?
+
+How about this untested patch instead?
+--
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 0587707b1a25..12b58e568810 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -277,6 +277,21 @@ void nvmet_unregister_transport(const struct 
+nvmet_fabrics_ops *ops)
+  }
+  EXPORT_SYMBOL_GPL(nvmet_unregister_transport);
+
++void nvmet_port_del_ctrls(struct nvmet_port *port)
++{
++       struct nvmet_subsys_link *l;
++       struct nvmet_ctrl *ctrl;
++
++       list_for_each_entry(l, &port->subsystems, entry) {
++               mutex_lock(&l->subsys->lock);
++               list_for_each_entry(ctrl, &l->subsys->ctrls, subsys_entry) {
++                       if (ctrl->port == port)
++                               ctrl->ops->delete_ctrl(ctrl);
++               }
++               mutex_unlock(&l->subsys->lock);
++       }
++}
++
+  int nvmet_enable_port(struct nvmet_port *port)
+  {
+         const struct nvmet_fabrics_ops *ops;
+@@ -321,6 +336,8 @@ void nvmet_disable_port(struct nvmet_port *port)
+
+         lockdep_assert_held(&nvmet_config_sem);
+
++       nvmet_port_del_ctrls(port);
++
+         port->enabled = false;
+         port->tr_ops = NULL;
+--
