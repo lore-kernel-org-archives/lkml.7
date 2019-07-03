@@ -2,106 +2,108 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2979FC4646D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B053FC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBA42187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85ED521897
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 06:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bvu8UZRF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQrvKYN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfGCGgg (ORCPT
+        id S1727179AbfGCGhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 02:36:36 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46587 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfGCGgf (ORCPT
+        Wed, 3 Jul 2019 02:37:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40495 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfGCGhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 02:36:35 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so638405pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 23:36:35 -0700 (PDT)
+        Wed, 3 Jul 2019 02:37:46 -0400
+Received: by mail-io1-f68.google.com with SMTP id n5so2153457ioc.7;
+        Tue, 02 Jul 2019 23:37:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2mLMfQ4nvAKGOVEbA2uhHQT7JEZMjE5/snh70yqtuzY=;
-        b=Bvu8UZRFuBAAR4SgwLLN2JKKgPvnC9BWAueAeKYJVn6aGQZ8u7BOAgd81xdeRHUo+F
-         htQmElWKQHk0jGUA3Op5+r1V7U/d76LuZgUJn7nl878FPvbt9mNc6yd/QoNDV+qkew3H
-         H07uBJoEfdcf8T6XUoPC9wov/lnQdAZBS4tfJIWIcRN51KZPxWP4VfSRtDl97e1ObDVl
-         fjOSWJCoyuunHJlK2EqLJcI/NrsIFSz/4zYGB3b4VAomuwA5WWRMOFZdaqN/Uv8iINlj
-         T9H2Sm6u2lQMPIyFiIezClthfneLAvigb0HFApzTdDSqpvKb4nH8yhM1mgQ4dwxBJDwz
-         I5Og==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FOIxNlDzVh5kXdl9uOiCioxQI2rCCNBXDcfxZ9oiGn4=;
+        b=oQrvKYN6+Oa/mi5oqHJm/0u1d3bIJSZvqt/2eGg8P4ktEZTx14HyMyCIxEvYI2B47V
+         4VsUmdNttA9TSM+TZLgpm0PDvKjyAgy6GUAREped91mDu/QX+CltfgdXh38jba5ZKmhd
+         P2AK0d/w1qNtPkjFY9xb5mktdhaE7uih5Av11615R4hJy0wb0yzqczDF7HYpVFJpv6/6
+         s3hCxB8VolfGSXpmccI/iIYtGaaqPGqKhLuh5cU3IXY74iOMUdruB89oozjiPO3Dy+gr
+         pZlFmom46AbUUceksx7V0grs2DsemIajtC3WLtW8zVxkoNwidJm0HYjD3bK6ejRS98NQ
+         05ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2mLMfQ4nvAKGOVEbA2uhHQT7JEZMjE5/snh70yqtuzY=;
-        b=FoTAFTejVKe8GPSZnE4h6SORJlDVkYTv3ZP7b4BunmCVOD28Kb8O2JIPlGLL2kLg7I
-         74fTccKs9/fBFM6B3tvi6dJGiQjit1j6N5N13FkW8B5jQ9lHgjaIfhwNxMMbNQiU5TlL
-         3FljDKKaPi83DbtOZ4r31iBAWOPfkYaUAfn93aH1RX1xUXt0ToTwYNXZ4mcXhtVnZiVH
-         0zZTdBeQxcKcwSShGZs5ZSVjMr7BFUo3wxWCorHlBSFdrrlKcDXwysd/fNwYZEA7Tx1F
-         /jwt3jrbmHu8ap61/BwlQ05wK7kDtNCJnJS+hCBuwn2V6nVt+mqN22KvPsIlK1AEnZZ9
-         CAeQ==
-X-Gm-Message-State: APjAAAWa8zYQ0hTCN5UWeGJsIDMQKQonqZOZfpqf0K5Do+Wmkng+M1ll
-        KvyJq18xNi4FWdvy16iq0MLlyw==
-X-Google-Smtp-Source: APXvYqwpA64nFtKGwqnu2eFe0F3WBDW99irwxsCQNcCbw7Vli1g91dpgBBCSJqTtLsaS2ZkP/a14NQ==
-X-Received: by 2002:a17:902:7793:: with SMTP id o19mr40000598pll.110.1562135794873;
-        Tue, 02 Jul 2019 23:36:34 -0700 (PDT)
-Received: from localhost ([122.172.21.205])
-        by smtp.gmail.com with ESMTPSA id 137sm2105787pfz.112.2019.07.02.23.36.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jul 2019 23:36:34 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 12:06:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
-Message-ID: <20190703063632.hl2lipcoeehplyxq@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FOIxNlDzVh5kXdl9uOiCioxQI2rCCNBXDcfxZ9oiGn4=;
+        b=UEDxaF+aYdGrgVc3Gt1/Du0+jG0uYirsVwt55eUdCSEG6tO0p1Vv3dHiQ8PrAuVDEf
+         jRVl4RybltNLOPkjXod4eA+ZtgPV4Ih9JvvtCo9B4I1av7KxDyMNh7d6n3FyiQJSwp3Z
+         BXZMva5a1U33rOC9phhiA5fKVB825N8TxCxdnmyfUpDFfn0pDsFArBZKL3L1khQv5SaH
+         xUHteoje2g+A4F6EEACFCaY/CaWkf8EQcVMiah6GL4aeNKQhYRMpi1EP2+fpAmQ/B1O6
+         LsXpmiDerVCnaigWPAKAfeEUgewQiOlprSn/AuIng+pfKT/V/1tVxXWvR08vvhN6ZmMo
+         cNmw==
+X-Gm-Message-State: APjAAAUPHhJ/YlGRPF5U4A60Bw0qsM33lvgcZHAbsfIqA+A7dYQxmDeG
+        7cVp5ZWeJFeBtFKUEuqAQLqGtgDl9yHi6h83ROeqpeV+
+X-Google-Smtp-Source: APXvYqzUoLIbKm+T5fsnG1Of6uNoe9L4Lk43sPF5Mm1NCv7QtIHFm6oVd5rzrOle8bjQuRlwvYUdK+/9Ip+p+q6a0f8=
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr4379048ioa.12.1562135865720;
+ Tue, 02 Jul 2019 23:37:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703011020.151615-1-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20190617160339.29179-1-andrew.smirnov@gmail.com>
+ <20190617160339.29179-2-andrew.smirnov@gmail.com> <VI1PR0402MB3485542286BC0F8814DE4EB098FD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485542286BC0F8814DE4EB098FD0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 2 Jul 2019 23:37:41 -0700
+Message-ID: <CAHQ1cqH4t7zge8ceNQ9GSA=ioMNJxerz9qJ4vtgY_Gh0Bz689A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] crypto: caam - move DMA mask selection into a function
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-07-19, 18:10, Saravana Kannan wrote:
-> Interconnects and interconnect paths quantify their performance levels in
-> terms of bandwidth and not in terms of frequency. So similar to how we have
-> frequency based OPP tables in DT and in the OPP framework, we need
-> bandwidth OPP table support in the OPP framework and in DT. Since there can
-> be more than one interconnect path used by a device, we also need a way to
-> assign a bandwidth OPP table to an interconnect path.
-> 
-> This patch series:
-> - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
-> - Adds interconnect-opp-table property to interconnect DT bindings
-> - Adds OPP helper functions for bandwidth OPP tables
-> - Adds icc_get_opp_table() to get the OPP table for an interconnect path
-> 
-> So with the DT bindings added in this patch series, the DT for a GPU
-> that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> something like this:
+On Thu, Jun 27, 2019 at 3:50 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 6/17/2019 7:04 PM, Andrey Smirnov wrote:
+> > Exactly the same code to figure out DMA mask is repeated twice in the
+> > driver code. To avoid repetition, move that logic into a standalone
+> > subroutine in intern.h. While at it re-shuffle the code to make it
+> > more readable with early returns.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Spencer <christopher.spencer@sea.co.uk>
+> > Cc: Cory Tusar <cory.tusar@zii.aero>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
+> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
+>
+> Being the 1st patch in the series and not i.MX8-specific, I'd say it shou=
+ld
+> be merged separately.
+>
 
-And what changed since V2 ?
+Can it be done by cherry picking it from the series or does it have to
+be submitted as a separate patch? I am hoping the former is possible
+since it'd make life easier for me.
 
--- 
-viresh
+Thanks,
+Andrey Smirnov
