@@ -2,70 +2,72 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ABFC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE4C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B114B218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFE1218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 11:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="008PJMdw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ykrBiKDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfGCLo7 (ORCPT
+        id S1727071AbfGCLqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 07:44:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52792 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfGCLo7 (ORCPT
+        Wed, 3 Jul 2019 07:46:01 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:34183 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfGCLqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 07:44:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so1875275wms.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 04:44:56 -0700 (PDT)
+        Wed, 3 Jul 2019 07:46:01 -0400
+Received: by mail-wm1-f46.google.com with SMTP id w9so2736611wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 04:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=xRM3DVh9DsuQz16USxYQS7Smf9h6SGJQ053F4dMRpRU=;
-        b=008PJMdwKFL2Oxdt2I5iMPhyZ3qVvnb5aME0kmmtc0GTVVxzy1c8mMdK1Ev5ILA5O2
-         55KzKDHcgmyPERgyfBQdCIpl7i34/xMgWGtyI1n2GDG5u8+qzUceCoCaRL10e+8gVihE
-         QBSlmpptkADAqWWgyTOn8qpsNjo1ivBNFObhwjr5QQxRA5YbPIUoB0ysw824tvFNqv3g
-         ABqJNiB1kB0PaDZew2/r3ZzQYBG56gBJ3INrF4e4EJkbYQaGU9FC6OY60lP0tU/qfhWi
-         8nsbvzCSQjI3oY4gVKcRFtifPn+RALASmAkRkh9oGFuomkGj50d/13S4V+kk+imEbSBe
-         g8OA==
+        bh=GOBgbpxojxMl8coS8J3cq4yo2RoH1jW/e7h/wxggz4c=;
+        b=ykrBiKDZ51FcAY735DtHGeIYEPrwR/4jtBD/q5JY+AXGKOFDRQ5B+CPwXu+OCuibRt
+         GhGIS8Qw0R6gbW8wgKA+ami4A2cbrtgCTd+WAxQwT2YzIWLIai1ieek/BgeGtiLu1JAY
+         +43EQoCC94+kipR1XJoab2Xfl2kAIRgLvgPhoGOF7pURLSGx0gW+EA7qGtXPdrW+kAW7
+         Yz6eqjvgIQ5leHLc8u9ayuz3Ow0Q8RisuJNz6jBGm+1DMBh1IhcyBR8gmrI7OTBUnR6N
+         stvlF2wPN7PprcPJyvcoR9x/CbARLrpc9LkxEkl2+JmuGK0m/cbgQDhKKG324fnPD0Z7
+         1EgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=xRM3DVh9DsuQz16USxYQS7Smf9h6SGJQ053F4dMRpRU=;
-        b=Io4qYPxvVUQ8pg+ozDgg3KZ7JlZWHECs9NYKnuMFVqBalb49xWj/kRAh1ojc/RblTN
-         e/b49TDkCjw1/uXDk9yEf+QZkp7UgBawBo+pzeER4a/vAFEUgl1f8+y37S4kQTJiP7DT
-         NTHq3HSirUbwX3tP5g8KfoZbB5dQO1mtEcDjplEPrpAFWwhLPGvUOaqzDjDMc2yYZZPe
-         2Oc1zwn69tzZ+61FMCl1Kw6/FXpG+UpR1xnTGVFX7JS3jBDZXEu3glfD/CYmT7rK89s/
-         e4iqahVChuMaGin27Bhr/Ly1m0lC7Jaqh31Kl57kodzXlgZih4oNWdqwgTdTUn3dajlj
-         hvSg==
-X-Gm-Message-State: APjAAAV4JDK80vhqMOihlpvPWKuAD933DsGUKKSVZZ1U2/EJkXFJBcPX
-        JXlgCQ5wOmiFE1ey3BY1kfEEeEaEkO8=
-X-Google-Smtp-Source: APXvYqxDoWWv8HvVXmL+edDBfuGwhfZa/FRH6SaeQwpQNUT+YtGlMokLtVzi9wOEdoQLYaytnzb4NQ==
-X-Received: by 2002:a1c:b707:: with SMTP id h7mr7699725wmf.45.1562154295737;
-        Wed, 03 Jul 2019 04:44:55 -0700 (PDT)
+        bh=GOBgbpxojxMl8coS8J3cq4yo2RoH1jW/e7h/wxggz4c=;
+        b=DoXH+gsziMYInQJud6ranIFApSoi7Mw6GBDw6KI5PS+61UjYMFxnFWE8VGMM/igX4E
+         3aMjR+yIEyTt89eu1HAnzoyDV6Sl3SiX+db1ly0vqdT0biReM5l+iipqiagni/c3qg2o
+         SAntc/0cjSB7+Ijp21Q8anvc8na+lDh3GGNZr2KzSv68emQdk2GP3AUq1R8XU30LIkY4
+         tsEu+pktVla5gdK20NuWAihKIrZeAlj3dTUk6wfvA1iwpg6FZOtcoGPGlTcBUmj5Pli8
+         Px7SS1NbFPNmpC277H/H2VNfJnAEfugp7jEz1lVntP25IJdjDVTgwI1xShme9WvtW0Vo
+         mtPQ==
+X-Gm-Message-State: APjAAAWQOiU2u6FXIrbC1htB50lLonnk+TvXzdZs3eJUDf7DMjfu8grY
+        Yxggptfq5OtehqkJihy33cvFyg==
+X-Google-Smtp-Source: APXvYqw+skoO2LrF8gWtsaxalNiHg0yjnfbTvFDIZ518EQIeqbT4UgASAm+Yr22eQXGR43xzLm+8wA==
+X-Received: by 2002:a1c:cf0b:: with SMTP id f11mr8111165wmg.138.1562154357836;
+        Wed, 03 Jul 2019 04:45:57 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t63sm1870384wmt.6.2019.07.03.04.44.54
+        by smtp.gmail.com with ESMTPSA id q12sm1271288wrp.83.2019.07.03.04.45.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 04:44:55 -0700 (PDT)
-Subject: Re: [RFC 06/11] soc: amlogic: clk-measure: Add support for SM1
+        Wed, 03 Jul 2019 04:45:57 -0700 (PDT)
+Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     jbrunet@baylibre.com, khilman@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190701104705.18271-1-narmstrong@baylibre.com>
- <20190701104705.18271-7-narmstrong@baylibre.com>
- <CAFBinCD8aBVo-WTaKTe7JyxqFyd=cVXDzHpwED4dx=rUtE3Uig@mail.gmail.com>
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        amergnat@baylibre.com
+References: <20190701091258.3870-1-narmstrong@baylibre.com>
+ <20190701091258.3870-5-narmstrong@baylibre.com>
+ <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -118,12 +120,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <eebfb5d6-21bf-f759-c74e-3eb7d04820e4@baylibre.com>
-Date:   Wed, 3 Jul 2019 13:44:54 +0200
+Message-ID: <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
+Date:   Wed, 3 Jul 2019 13:45:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCD8aBVo-WTaKTe7JyxqFyd=cVXDzHpwED4dx=rUtE3Uig@mail.gmail.com>
+In-Reply-To: <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -132,111 +134,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2019 01:51, Martin Blumenstingl wrote:
-> Hi Neil,
+On 03/07/2019 01:16, Martin Blumenstingl wrote:
+> +Cc Alexandre Mergnat
 > 
-> On Mon, Jul 1, 2019 at 12:49 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Add the clk-measurer clocks IDs for the Amlogic SM1 SoC family.
+>> Add a setup() callback in the eeclk structure, to call an optional
+>> call() function at end of eeclk probe to setup clocks.
+>>
+>> It's used for the G12A clock controller to setup the CPU clock notifiers.
 >>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  drivers/soc/amlogic/meson-clk-measure.c | 134 ++++++++++++++++++++++++
->>  1 file changed, 134 insertions(+)
->>
->> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
->> index f09b404b39d3..e32e97613000 100644
->> --- a/drivers/soc/amlogic/meson-clk-measure.c
->> +++ b/drivers/soc/amlogic/meson-clk-measure.c
->> @@ -357,6 +357,136 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
->>         CLK_MSR_ID(122, "audio_pdm_dclk"),
->>  };
->>
->> +static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
->> +       CLK_MSR_ID(0, "ring_osc_out_ee_0"),
->> +       CLK_MSR_ID(1, "ring_osc_out_ee_1"),
->> +       CLK_MSR_ID(2, "ring_osc_out_ee_2"),
->> +       CLK_MSR_ID(3, "ring_osc_out_ee_3"),
->> +       CLK_MSR_ID(4, "gp0_pll"),
->> +       CLK_MSR_ID(5, "gp1_pll"),
->> +       CLK_MSR_ID(6, "enci"),
->> +       CLK_MSR_ID(7, "clk81"),
->> +       CLK_MSR_ID(8, "encp"),
->> +       CLK_MSR_ID(9, "encl"),
->> +       CLK_MSR_ID(10, "vdac"),
->> +       CLK_MSR_ID(11, "eth_tx"),
->> +       CLK_MSR_ID(12, "hifi_pll"),
->> +       CLK_MSR_ID(13, "mod_tcon"),
->> +       CLK_MSR_ID(14, "fec_0"),
->> +       CLK_MSR_ID(15, "fec_1"),
->> +       CLK_MSR_ID(16, "fec_2"),
->> +       CLK_MSR_ID(17, "sys_pll_div16"),
->> +       CLK_MSR_ID(18, "sys_cpu_div16"),
->> +       CLK_MSR_ID(19, "lcd_an_ph2"),
->> +       CLK_MSR_ID(20, "rtc_osc_out"),
->> +       CLK_MSR_ID(21, "lcd_an_ph3"),
->> +       CLK_MSR_ID(22, "eth_phy_ref"),
->> +       CLK_MSR_ID(23, "mpll_50m"),
->> +       CLK_MSR_ID(24, "eth_125m"),
->> +       CLK_MSR_ID(25, "eth_rmii"),
->> +       CLK_MSR_ID(26, "sc_int"),
->> +       CLK_MSR_ID(27, "in_mac"),
->> +       CLK_MSR_ID(28, "sar_adc"),
->> +       CLK_MSR_ID(29, "pcie_inp"),
->> +       CLK_MSR_ID(30, "pcie_inn"),
->> +       CLK_MSR_ID(31, "mpll_test_out"),
->> +       CLK_MSR_ID(32, "vdec"),
->> +       CLK_MSR_ID(34, "eth_mpll_50m"),
->> +       CLK_MSR_ID(35, "mali"),
->> +       CLK_MSR_ID(36, "hdmi_tx_pixel"),
->> +       CLK_MSR_ID(37, "cdac"),
->> +       CLK_MSR_ID(38, "vdin_meas"),
->> +       CLK_MSR_ID(39, "bt656"),
->> +       CLK_MSR_ID(40, "arm_ring_osc_out_4"),
->> +       CLK_MSR_ID(41, "eth_rx_or_rmii"),
->> +       CLK_MSR_ID(42, "mp0_out"),
->> +       CLK_MSR_ID(43, "fclk_div5"),
->> +       CLK_MSR_ID(44, "pwm_b"),
->> +       CLK_MSR_ID(45, "pwm_a"),
->> +       CLK_MSR_ID(46, "vpu"),
->> +       CLK_MSR_ID(47, "ddr_dpll_pt"),
->> +       CLK_MSR_ID(48, "mp1_out"),
->> +       CLK_MSR_ID(49, "mp2_out"),
->> +       CLK_MSR_ID(50, "mp3_out"),
->> +       CLK_MSR_ID(51, "sd_emmc_c"),
->> +       CLK_MSR_ID(52, "sd_emmc_b"),
->> +       CLK_MSR_ID(53, "sd_emmc_a"),
->> +       CLK_MSR_ID(54, "vpu_clkc"),
->> +       CLK_MSR_ID(55, "vid_pll_div_out"),
->> +       CLK_MSR_ID(56, "wave420l_a"),
->> +       CLK_MSR_ID(57, "wave420l_c"),
->> +       CLK_MSR_ID(58, "wave420l_b"),
->> +       CLK_MSR_ID(59, "hcodec"),
->> +       CLK_MSR_ID(40, "arm_ring_osc_out_5"),
-> is this index 40 or 60?
-
-Exact it's 60, thanks for spotting
-
+> this will probably work fine, but I want do double check first
 > 
->> +       CLK_MSR_ID(61, "gpio_msr"),
->> +       CLK_MSR_ID(62, "hevcb"),
->> +       CLK_MSR_ID(63, "dsi_meas"),
->> +       CLK_MSR_ID(64, "spicc_1"),
->> +       CLK_MSR_ID(65, "spicc_0"),
->> +       CLK_MSR_ID(66, "vid_lock"),
->> +       CLK_MSR_ID(67, "dsi_phy"),
->> +       CLK_MSR_ID(68, "hdcp22_esm"),
->> +       CLK_MSR_ID(69, "hdcp22_skp"),
->> +       CLK_MSR_ID(70, "pwm_f"),
->> +       CLK_MSR_ID(71, "pwm_e"),
->> +       CLK_MSR_ID(72, "pwm_d"),
->> +       CLK_MSR_ID(73, "pwm_c"),
->> +       CLK_MSR_ID(74, "arm_ring_osc_out_6"),
->> +       CLK_MSR_ID(75, "hevcf"),
->> +       CLK_MSR_ID(74, "arm_ring_osc_out_7"),
-> is this index 74 or 76?
-> 
+> are we planning to get rid of meson-eeclk (mid-term)?
 
-Exact, it's 76 !
+AFAIK no, but maybe I'm not aware of it !
 
 Neil
+
+> Alex has some patches to get rid of all these IN_PREFIX logic.
+> I'm asking because if we want to get rid of meson-eeclk it may be the
+> time to do so now to have less logic to migrate later on
+> 
+> 
+> Martin
+> 
+
