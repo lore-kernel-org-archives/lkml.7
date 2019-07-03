@@ -2,111 +2,91 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653B5C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427BC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8162189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE6B2189E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tozxBVBj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="McGlDSOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfGCMk7 (ORCPT
+        id S1726871AbfGCMlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:40:59 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:51649 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCMk7 (ORCPT
+        Wed, 3 Jul 2019 08:41:39 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38468 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfGCMlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:40:59 -0400
-Received: by mail-wm1-f46.google.com with SMTP id 207so2064640wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:40:57 -0700 (PDT)
+        Wed, 3 Jul 2019 08:41:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b11so1670970lfa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:41:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=REnOeEN5yGA6DyLHYZUXObOyZCyVPJqos2PFAeloT7k=;
-        b=tozxBVBj8Zx3/S4JOAkF4a5m+vhqYKE2FZcfa+qH6ELSArafWHyGRNUtG6pNYT7Ovt
-         R3w4RriHSl55srSSXoSz60ResDvaxdxcBnlkj77F1MXPQ82WER6328sXmSyr5Z/EMTin
-         kAZt+LVQ3GpKa9SEdo5HpNqtgLpy66dR5K8Djxhcrqms6IOr5yD+bp93WooNpo0sBFbv
-         TGgkW76J/K7eDePQ7M63uxp8HWfr5Jom2D9uQA5KFDp+H3ySKnVMtExmwcvKwU1UfH8C
-         bPoMr/V3aIqJ9xwS5Nyy04U+/UEKh5x/GE1NtHu/xl/qRUSD744fvS0ieYvdzSYsxMnV
-         HdWw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xy4atC47KUkhRxvml94Kq1gg6hZsMUYINS4fjvWdvCo=;
+        b=McGlDSOxEhWCKthKIE+gpLcPxbWgwKMrrLO60s7Qh4nwlG49H+YLqxceuhzil1otMt
+         K37j2Icrf10zt7CxCWNJi1UDiM+ejYhV1kb2j1jWfRnwY8u9S0O8PtNMWArTBz4Gxb7w
+         R6teFD8bDFWDPt5c9JoIKrYC48wvC/px85/MDRT+SA9nxDgoBNhSks7DE4FDo61vDmEL
+         V0gSZfi9DaWn1asSSQN0/4VhIQ83nmB9GVns7ibbxOSDedWet6lcvPkvFoETlRymLS1n
+         yo8SnuurCvS+8qYuBTeAx/GTnUFau/ttRSu97efdls7MS/OtVLUq/sefWcGcGf0dQr7l
+         yuZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=REnOeEN5yGA6DyLHYZUXObOyZCyVPJqos2PFAeloT7k=;
-        b=YnugyOxuCdcw2DCCViF4/XxVmpq8aC7qXoXxVMqcyt7lU265/RZkRmoW46EwhBROPK
-         SuxlsKbWjq/rvNK1gNF45xpohO7q8+Kpm40zieA455rNQjjE/ujRq3/86ffsXFuLOge7
-         ptinJG2iV3Gz3JFJ0j77W2qiycRYG/KiwBuphXO7phnUzJZCX2/wdsEve54zA71nTwAe
-         UYkssaRnPOB3llQwSH0iQD/XNFRhhiXHYDULGSvsQM182jTU+BrOBQvOosQs68to/sIm
-         fXF6hAgB0cpQ0ORUqmrMviUO7/dRNSNGVLnBLkWJ59chDmiFaNQbDsRSSts2+l3Xqjcp
-         arAQ==
-X-Gm-Message-State: APjAAAWcSf1n53sAOEFNcIMqZBrziCPFi0PBzTXy9zvYhqLfoATYnOUx
-        GLQTUFKaut2tXPJ/AYcRmp9Etw==
-X-Google-Smtp-Source: APXvYqzv39vxjEOuFXIZd2izLbkL+W+voUSFY7XUgtQYBiXS3oC/SBtBaMlJedbypMkeWFSaJyc9mQ==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr2879582wml.97.1562157657223;
-        Wed, 03 Jul 2019 05:40:57 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c65sm2327372wma.44.2019.07.03.05.40.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 05:40:56 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        amergnat@baylibre.com
-Subject: Re: [RFC/RFT v3 04/14] clk: meson: eeclk: add setup callback
-In-Reply-To: <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
-References: <20190701091258.3870-1-narmstrong@baylibre.com> <20190701091258.3870-5-narmstrong@baylibre.com> <CAFBinCA1gUUbEj=++1rGcFQ1RdyxSheofAo=TKw3-UaenFAcug@mail.gmail.com> <301695b6-52ba-92b1-ca1a-d4d587b33eeb@baylibre.com>
-Date:   Wed, 03 Jul 2019 14:40:55 +0200
-Message-ID: <1jo92b70ko.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xy4atC47KUkhRxvml94Kq1gg6hZsMUYINS4fjvWdvCo=;
+        b=bddhppcK1XpFOBAqqlNxlP/CtGmkoVVYRK1hUPykYEp3R6YfoO3iE/P6lvq5/4wlUU
+         EkjUNPW4sIQ/GPzMkCFmWhEJMUs68HIHffsZkA2923kALNz1H8s8B9vQeY85EJ1i8Y3O
+         5dxEOu6DxwD4NhBqDFcnpqiEsqVAFezTnHfziFXGGzT3fR9YrcHfWE3JlRW59YUMk2wi
+         jQyak+2rcBIBJhAZApAYjLXfL1PX9Lq0BazK+Vkr+GBnTzcjCqOHw6F5Xh3ghWr/srMv
+         KCBjUWrAVJ2SRT02XI/gdQ8iecPO/nhAX0ajIrPim4M+RptqMByPvB9PzMqCLSUNFYSR
+         Oi0A==
+X-Gm-Message-State: APjAAAXBY43w9aU55aTYyYt76Kr1J2OnlSMGbQGXU2ma/lfOxn9sWuk6
+        Ox8HOb2q1xjj3xPUmmA55fpUNdUTJvQGXRpFt8kH0Q==
+X-Google-Smtp-Source: APXvYqxSZq8kK+Sf3ly/VpTa30WhTR81fi6H8aQwENAVhDZ+xbderjUjpKdryIIlUpIb+lO7f/hQ0SNAIZdSKuEFh/Q=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr18395121lff.115.1562157697300;
+ Wed, 03 Jul 2019 05:41:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190701152723.624-1-paweldembicki@gmail.com> <20190703085757.1027-1-paweldembicki@gmail.com>
+In-Reply-To: <20190703085757.1027-1-paweldembicki@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jul 2019 14:41:26 +0200
+Message-ID: <CACRpkdabQbVosWjD22E6pM8t3gu8c=5qNMEtRsp2HLV0PJ9nYg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 03 Jul 2019 at 13:45, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, Jul 3, 2019 at 10:58 AM Pawel Dembicki <paweldembicki@gmail.com> wrote:
 
-> On 03/07/2019 01:16, Martin Blumenstingl wrote:
->> +Cc Alexandre Mergnat
->> 
->> On Mon, Jul 1, 2019 at 11:13 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>
->>> Add a setup() callback in the eeclk structure, to call an optional
->>> call() function at end of eeclk probe to setup clocks.
->>>
->>> It's used for the G12A clock controller to setup the CPU clock notifiers.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> this will probably work fine, but I want do double check first
->> 
->> are we planning to get rid of meson-eeclk (mid-term)?
+> This commit introduce how to use vsc73xx platform driver.
 >
-> AFAIK no, but maybe I'm not aware of it !
->
-> Neil
->
->> Alex has some patches to get rid of all these IN_PREFIX logic.
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> ---
+> Changes in v2:
+> - Drop -spi and -platform suffix
+> - Change commit message
 
-The prefix logic will go away with Alex's rework, so are the input clock
-But meson-eeclk, which is just a common probe function do avoid
-repeating the same things over and over, will stay
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
->> I'm asking because if we want to get rid of meson-eeclk it may be the
-
-May I ask why ?
-
->> time to do so now to have less logic to migrate later on
->> 
->> 
->> Martin
->> 
+Yours,
+Linus Walleij
