@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5056C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFADC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99552187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A380321881
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120193;
-	bh=faa1a6s2txMEfksmcTfd11t6p3UsuBe9WIt3KIrJGSQ=;
+	s=default; t=1562120197;
+	bh=Vax1MVjoW4XnIG0uQMSCfa0qyH3DTn2Y5luSLf2Qd9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyW+rpMuvseLKDUvf1heJHTOFSlK7BpghK4rdjBGXPXwSGt2Qyb8iSbm/cM1Eoxrv
-	 rX8X2ryOK31AMHRtXsw6Bx4wkX/1RkRRFljfC3mW7Zr+i1vBMpy2N88OxPxxNi5ekp
-	 asK9JtIYAqRglhPiljoj7Htb1mKmDTT4stwvfDCk=
+	b=Mukh6gR7DmLEwO/eZE+PyK9xy8PUYiFwoVmxUQWD00mTKNgLwmfwTJR93uIGU00dN
+	 UjBWYlbDGuxkGP+9yxFwMj30MqagSDXxcL3+eU3bK7uLEwEXOebX7x8xXkageofTX2
+	 s4LV8cahFZ8lkfnH5xy58aUhO6yUl2aajyVA8stk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfGCCQc (ORCPT
+        id S1727984AbfGCCQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54812 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbfGCCQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:29 -0400
+        id S1727958AbfGCCQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94B8421882;
-        Wed,  3 Jul 2019 02:16:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C58B02187F;
+        Wed,  3 Jul 2019 02:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120188;
-        bh=faa1a6s2txMEfksmcTfd11t6p3UsuBe9WIt3KIrJGSQ=;
+        s=default; t=1562120192;
+        bh=Vax1MVjoW4XnIG0uQMSCfa0qyH3DTn2Y5luSLf2Qd9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUP9blv3ZeWL6mosxocT6ZFYpqaxUbw8WlfPNVrROC6C7K0SRlO8TdVb43OvvA2pX
-         PLxVUTwV21X2Z8YoRT45KIxlGjRZ7U+0bonNlbSnAoKDV8GOKGWJRpZKaqEXUTXfTs
-         KoAFB5Pe8Q52N6xtJ2RLT04ZGx6qpN/YObLjv5pw=
+        b=DKuBSfRdcOBAefsEaKFhrf39FmR2Y5m+4K9D1D01T7ni1hiCziGZMGzwi897GQR4s
+         MSXut9AcTN7HEtyZIPJ8U2fj9wEaKZAeT8ecql0yWDSfsb6AlDOgUHZnwhgyUmYi0g
+         fCZTAU4EdbrfUSVyhpzJIVLfWLmsJ8T8md1bgArs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/26] clk: ti: clkctrl: Fix returning uninitialized data
-Date:   Tue,  2 Jul 2019 22:16:01 -0400
-Message-Id: <20190703021625.18116-2-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/26] ARM: dts: gemini Fix up DNS-313 compatible string
+Date:   Tue,  2 Jul 2019 22:16:04 -0400
+Message-Id: <20190703021625.18116-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
@@ -62,63 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 41b3588dba6ef4b7995735a97e47ff0aeea6c276 ]
+[ Upstream commit 36558020128b1a48b7bddd5792ee70e3f64b04b0 ]
 
-If we do a clk_get() for a clock that does not exists, we have
-_ti_omap4_clkctrl_xlate() return uninitialized data if no match
-is found. This can be seen in some cases with SLAB_DEBUG enabled:
+It's a simple typo in the DNS file, which was pretty serious.
+No scripts were working properly. Fix it up.
 
-Unable to handle kernel paging request at virtual address 5a5a5a5a
-...
-clk_hw_create_clk.part.33
-sysc_notifier_call
-notifier_call_chain
-blocking_notifier_call_chain
-device_add
-
-Let's fix this by setting a found flag only when we find a match.
-
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clkctrl.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/gemini-dlink-dns-313.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index ca3218337fd7..dfaa5aad0692 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -229,6 +229,7 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
- {
- 	struct omap_clkctrl_provider *provider = data;
- 	struct omap_clkctrl_clk *entry;
-+	bool found = false;
+diff --git a/arch/arm/boot/dts/gemini-dlink-dns-313.dts b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
+index d1329322b968..361dccd6c7ee 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dns-313.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dns-313.dts
+@@ -11,7 +11,7 @@
  
- 	if (clkspec->args_count != 2)
- 		return ERR_PTR(-EINVAL);
-@@ -238,11 +239,13 @@ static struct clk_hw *_ti_omap4_clkctrl_xlate(struct of_phandle_args *clkspec,
+ / {
+ 	model = "D-Link DNS-313 1-Bay Network Storage Enclosure";
+-	compatible = "dlink,dir-313", "cortina,gemini";
++	compatible = "dlink,dns-313", "cortina,gemini";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
  
- 	list_for_each_entry(entry, &provider->clocks, node) {
- 		if (entry->reg_offset == clkspec->args[0] &&
--		    entry->bit_offset == clkspec->args[1])
-+		    entry->bit_offset == clkspec->args[1]) {
-+			found = true;
- 			break;
-+		}
- 	}
- 
--	if (!entry)
-+	if (!found)
- 		return ERR_PTR(-EINVAL);
- 
- 	return entry->clk;
 -- 
 2.20.1
 
