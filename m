@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E460C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59299C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169E9218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3109E218A6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 19:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SBPe3IE5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AXXxF24y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfGCThc (ORCPT
+        id S1727198AbfGCThj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 15:37:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37303 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfGCThb (ORCPT
+        Wed, 3 Jul 2019 15:37:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34672 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfGCThe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 15:37:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bh12so1769089plb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 12:37:31 -0700 (PDT)
+        Wed, 3 Jul 2019 15:37:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so1777560plt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 12:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DQZ58FD/CMop10T7Gp1bzD+eWeahigYqOQwY2UyguU8=;
-        b=SBPe3IE51/7ccubMHDlsTs11O7jUmvYCXQFNbE9FVfb49LtIoeT+lamCuOhFuBs2Oh
-         Hpm6bDBdEmGVl3OXVsxoe/nrh9Lg/2IZATTZFWB2+lWtQrFbjycVF/q+j2XPnd8cdTyq
-         Hj0UzTsvFWGfGVOi9VpYwZh2sTZ1//TQrbatw=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LhyRUTRIu1qpsqXn5o9IxSwcYlELpmg3DK5gV7vvo4k=;
+        b=AXXxF24y4ZnmX35FkssBaHobBhB2G/2sniSMqPwRUcbbronGlChj6KUb34z6/0EDwg
+         ry7q8B8r1kmpgoaejPsEEX3aeGji3B9DPbED4WmbyKbretJxCm4I4XskKNuWq2iXNb29
+         A76Ep9fNh4Jp+0mlNKSmS/s2GpGqQ+2xjjzT4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DQZ58FD/CMop10T7Gp1bzD+eWeahigYqOQwY2UyguU8=;
-        b=neF9/RA9lBFxwAW1NEIDSLlpvPN9IHJhp1E4RXDeUpJ7ev6Pb7JZbp7tjrt7lNpO1a
-         TvzE8BtkvRdK0dX3ZOHNvcyqUhBAW+dAuZp2FlYov/BI8YUkF/s59o4KITYgfY5i3QuA
-         ij5qvQuEBWCruoyHtNz3uetEQ2rwuwfyWtCgk+JGHgalTu3DEWNpfcmYTj2QSQZaTZ3I
-         gCOTacFKdWbLkpwNaCCVw7wfw0hcu/MaFo+w37tKST7Tx1xw6hq87gXUiMeXBJtqzTlM
-         xvmecoCCKNhrlolSlNhaur3Vim9VsgTz7oLsy2sARQadwj+25QfIFWIKla4nQgnsIzUa
-         TMDg==
-X-Gm-Message-State: APjAAAXZIwyquNnRaoBbFz4c76uXGMclIkPS80KQgRp4wZqjadNRogXx
-        l2wZKZIZFEvWi1MeOSvCY2M7Sl/vMDQ=
-X-Google-Smtp-Source: APXvYqwettcIVbccD5RzpnI6VqVTrml29NMabd0/WlB/vXOclHQ2+VMYlYdocXXEbA3GVQufuQckyw==
-X-Received: by 2002:a17:902:e40f:: with SMTP id ci15mr44437556plb.103.1562182651183;
-        Wed, 03 Jul 2019 12:37:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LhyRUTRIu1qpsqXn5o9IxSwcYlELpmg3DK5gV7vvo4k=;
+        b=CKxAZKFNdP3Dy8JvkJ2ivZ2QOCECOEuzSrHwWbK8cnlrbDnw3rxkuKjAm1aQf/kp3n
+         Y6mY1omVKZti2IcFNMkHzI6qfhiuJq1iTlzgXuRxCFrVf7RkArBWntbyNe3SO22UziR6
+         MNbiTQ1lRZYvBIafKTwtQAx9U/ikan6FAvNVYKex91Bk9kFBxu00ON1ArmBpqswTxWZP
+         yPEqVpgbDGqZirtH4ipliwdSPC3EEovzVBIrigqUtVnPx/cWbI29avvCPd9iuVYWajAo
+         p1qB56fi9wcACiFbk9g3zafUo/z/51uBn9tjV8KmCkP397xIFgAT9daMqtTEK+v0nq2o
+         dgKw==
+X-Gm-Message-State: APjAAAWP/fNmGdn80JijT2FhKpcxsEmukZJoExZ5sD9A/CW/++YdrBR6
+        q+GV6aIjFqKXu+0wo5ZONTSloQ==
+X-Google-Smtp-Source: APXvYqx2zcPaDUE+NEA7dMtqcm7Nr0Gll2dkZwmIPLTBF4nCY4JvXULR0j76QP0tqbRl/LAYHJpkzQ==
+X-Received: by 2002:a17:902:f01:: with SMTP id 1mr43967938ply.170.1562182653824;
+        Wed, 03 Jul 2019 12:37:33 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id q5sm3145126pgj.49.2019.07.03.12.37.30
+        by smtp.gmail.com with ESMTPSA id v4sm3227006pff.45.2019.07.03.12.37.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 12:37:30 -0700 (PDT)
+        Wed, 03 Jul 2019 12:37:33 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     "David S . Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -64,10 +64,12 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Date:   Wed,  3 Jul 2019 12:37:18 -0700
-Message-Id: <20190703193724.246854-1-mka@chromium.org>
+Subject: [PATCH v2 3/7] dt-bindings: net: realtek: Add property to enable SSC
+Date:   Wed,  3 Jul 2019 12:37:20 -0700
+Message-Id: <20190703193724.246854-3-mka@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190703193724.246854-1-mka@chromium.org>
+References: <20190703193724.246854-1-mka@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,44 +77,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the 'realtek,eee-led-mode-disable' property to disable EEE
-LED mode on Realtek PHYs that support it.
+Add the 'realtek,enable-ssc' property to enable Spread Spectrum
+Clocking (SSC) on Realtek PHYs that support it.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v2:
-- document 'realtek,eee-led-mode-disable' instead of
-  'realtek,enable-ssc' in the initial version
+- patch added to the series (kind of, it already existed, but now
+  the binding is created by another patch)
 ---
- .../devicetree/bindings/net/realtek.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/realtek.txt
+ Documentation/devicetree/bindings/net/realtek.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-new file mode 100644
-index 000000000000..63f7002fa704
---- /dev/null
+index 63f7002fa704..71d386c78269 100644
+--- a/Documentation/devicetree/bindings/net/realtek.txt
 +++ b/Documentation/devicetree/bindings/net/realtek.txt
-@@ -0,0 +1,19 @@
-+Realtek PHY properties.
+@@ -5,6 +5,10 @@ This document describes properties of Realtek PHYs.
+ Optional properties:
+ - realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
+ 
++- realtek,enable-ssc : Enable Spread Spectrum Clocking (SSC) on this port.
 +
-+This document describes properties of Realtek PHYs.
++	SSC is only available on some Realtek PHYs (e.g. RTL8211E).
 +
-+Optional properties:
-+- realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
-+
-+Example:
-+
-+mdio0 {
-+	compatible = "snps,dwmac-mdio";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	ethphy: ethernet-phy@1 {
-+		reg = <1>;
-+		realtek,eee-led-mode-disable;
-+	};
-+};
+ Example:
+ 
+ mdio0 {
+@@ -15,5 +19,6 @@ mdio0 {
+ 	ethphy: ethernet-phy@1 {
+ 		reg = <1>;
+ 		realtek,eee-led-mode-disable;
++		realtek,enable-ssc;
+ 	};
+ };
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
