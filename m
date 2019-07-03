@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA622C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A1BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A9B205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525EC21850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 03:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562124485;
-	bh=XG5Ax5wYlyRFcG75pT+QEnD+Oji60YXfoFK70TFx5R8=;
+	s=default; t=1562124489;
+	bh=q7M2F4zoZ0CpIX7ww5jNqfy1l2eO6EPtwSQhPoxFxUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LsQZfRYNw9iBouzkZdkcAqKKH/AWpQHi7wNjpi6TyoITNThtbJ2jTlNy6XpnGuuJN
-	 JPBTz3t53xt5WVyVTWgRJyLAGrz68Qdes85KKc3tHbuAvUr0R7TL6nt7hFz+Duq8kR
-	 hm3GU/h9OpGRSXW1b14bCVUfen/q76vTWZROLR7Q=
+	b=q9s9L5igVjiNo6HxVGZB12CnOLBRM3ZEGPcVtP3ct82HTGhQaQUgCR43U7W+6dOpM
+	 U1+tzDwguaCS1yy5mWQLOa5n4EXF06VxY1FNvpSIaqn4DPWmMlUhIozRfITwhv7L7o
+	 1RVnSWMI7pUHXE0NGJZizriWBSEo6uo5XA/mEZxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfGCD2E (ORCPT
+        id S1727320AbfGCD2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 23:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 23:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfGCD2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 23:28:03 -0400
+        id S1727049AbfGCD2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 23:28:07 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6BBB21871;
-        Wed,  3 Jul 2019 03:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A316921881;
+        Wed,  3 Jul 2019 03:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562124482;
-        bh=XG5Ax5wYlyRFcG75pT+QEnD+Oji60YXfoFK70TFx5R8=;
+        s=default; t=1562124486;
+        bh=q7M2F4zoZ0CpIX7ww5jNqfy1l2eO6EPtwSQhPoxFxUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I06FKFFLI0aOLfN9fdLNH+WRPvuuvbLZ8yDDvoa15mHFQP4XNnNjKatzuEEKCxI4d
-         H/JWwHfSxBZFycINu3KIgXxk/7Hrs7UZ8HWeJyellnxKO6TkAR9bUNGX+Bcyewfk0i
-         M3TgsuhA1yaSljvYwuIqjt2nRY2ioptcclP12rro=
+        b=dyZpjhOHZSrEn+0JJCtKezOnxJKRdQjZvkppW88FIraBNNHj4k/i+Rxns9AA2JLdG
+         gYFLlWAU/j91Q7vTCFI1AjtvMCDVnYA8f1676sq6SpBIiRoPdkjqPb98oJmVi2aQ1n
+         uVgV2febpKjo4Fq1Ai0BiRVelYgqIAzjZWJLIPag=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 02/18] perf symbol: Create block_info structure
-Date:   Wed,  3 Jul 2019 00:27:30 -0300
-Message-Id: <20190703032746.21692-3-acme@kernel.org>
+Subject: [PATCH 03/18] perf hists: Add block_info in hist_entry
+Date:   Wed,  3 Jul 2019 00:27:31 -0300
+Message-Id: <20190703032746.21692-4-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703032746.21692-1-acme@kernel.org>
 References: <20190703032746.21692-1-acme@kernel.org>
@@ -66,15 +66,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-'perf diff' currently can only diff symbols(functions).
+The block_info contains the program basic block information, i.e,
+contains the start address and the end address of this basic block and
+how much cycles it takes.
 
-We should expand it to diff cycles of individual programs blocks as
-reported by timed LBR.  This would allow to identify changes in specific
-code accurately.
+We need to compare, sort and even print out the basic block by some
+orders, i.e. sort by cycles.
 
-We need a new structure to maintain the basic block information, such as,
-symbol(function), start/end address of this block, cycles. This patch
-creates this structure and with some ops.
+For this purpose, we add block_info field to hist_entry. In order not to
+impact current interface, we creates a new function
+hists__add_entry_block.
+
+ v6:
+ ---
+ Remove the 'ops' argument in hists__add_entry_block
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -83,82 +88,111 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1561713784-30533-2-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1561713784-30533-3-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol.c | 22 ++++++++++++++++++++++
- tools/perf/util/symbol.h | 23 +++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+ tools/perf/util/hist.c | 20 ++++++++++++++++++--
+ tools/perf/util/hist.h |  5 +++++
+ tools/perf/util/sort.h |  1 +
+ 3 files changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 46d2c03814a1..ae2ce255e848 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2351,3 +2351,25 @@ struct mem_info *mem_info__new(void)
- 		refcount_set(&mi->refcnt, 1);
- 	return mi;
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index fb3271fd420c..c4defff151ed 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -574,6 +574,8 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 			 */
+ 			mem_info__zput(entry->mem_info);
+ 
++			block_info__zput(entry->block_info);
++
+ 			/* If the map of an existing hist_entry has
+ 			 * become out-of-date due to an exec() or
+ 			 * similar, update it.  Otherwise we will
+@@ -645,6 +647,7 @@ __hists__add_entry(struct hists *hists,
+ 		   struct symbol *sym_parent,
+ 		   struct branch_info *bi,
+ 		   struct mem_info *mi,
++		   struct block_info *block_info,
+ 		   struct perf_sample *sample,
+ 		   bool sample_self,
+ 		   struct hist_entry_ops *ops)
+@@ -677,6 +680,7 @@ __hists__add_entry(struct hists *hists,
+ 		.hists	= hists,
+ 		.branch_info = bi,
+ 		.mem_info = mi,
++		.block_info = block_info,
+ 		.transaction = sample->transaction,
+ 		.raw_data = sample->raw_data,
+ 		.raw_size = sample->raw_size,
+@@ -699,7 +703,7 @@ struct hist_entry *hists__add_entry(struct hists *hists,
+ 				    struct perf_sample *sample,
+ 				    bool sample_self)
+ {
+-	return __hists__add_entry(hists, al, sym_parent, bi, mi,
++	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
+ 				  sample, sample_self, NULL);
  }
-+
-+struct block_info *block_info__get(struct block_info *bi)
-+{
-+	if (bi)
-+		refcount_inc(&bi->refcnt);
-+	return bi;
-+}
-+
-+void block_info__put(struct block_info *bi)
-+{
-+	if (bi && refcount_dec_and_test(&bi->refcnt))
-+		free(bi);
-+}
-+
-+struct block_info *block_info__new(void)
-+{
-+	struct block_info *bi = zalloc(sizeof(*bi));
-+
-+	if (bi)
-+		refcount_set(&bi->refcnt, 1);
-+	return bi;
-+}
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 9a8fe012910a..12755b42ea93 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -131,6 +131,17 @@ struct mem_info {
- 	refcount_t		refcnt;
- };
  
-+struct block_info {
-+	struct symbol		*sym;
-+	u64			start;
-+	u64			end;
-+	u64			cycles;
-+	u64			cycles_aggr;
-+	int			num;
-+	int			num_aggr;
-+	refcount_t		refcnt;
-+};
-+
- struct addr_location {
- 	struct machine *machine;
- 	struct thread *thread;
-@@ -332,4 +343,16 @@ static inline void __mem_info__zput(struct mem_info **mi)
+@@ -712,10 +716,22 @@ struct hist_entry *hists__add_entry_ops(struct hists *hists,
+ 					struct perf_sample *sample,
+ 					bool sample_self)
+ {
+-	return __hists__add_entry(hists, al, sym_parent, bi, mi,
++	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
+ 				  sample, sample_self, ops);
+ }
  
- #define mem_info__zput(mi) __mem_info__zput(&mi)
- 
-+struct block_info *block_info__new(void);
-+struct block_info *block_info__get(struct block_info *bi);
-+void   block_info__put(struct block_info *bi);
-+
-+static inline void __block_info__zput(struct block_info **bi)
++struct hist_entry *hists__add_entry_block(struct hists *hists,
++					  struct addr_location *al,
++					  struct block_info *block_info)
 +{
-+	block_info__put(*bi);
-+	*bi = NULL;
++	struct hist_entry entry = {
++		.block_info = block_info,
++		.hists = hists,
++	}, *he = hists__findnew_entry(hists, &entry, al, false);
++
++	return he;
 +}
 +
-+#define block_info__zput(bi) __block_info__zput(&bi)
+ static int
+ iter_next_nop_entry(struct hist_entry_iter *iter __maybe_unused,
+ 		    struct addr_location *al __maybe_unused)
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 76ff6c6d03b8..c670122b4e40 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -16,6 +16,7 @@ struct addr_location;
+ struct map_symbol;
+ struct mem_info;
+ struct branch_info;
++struct block_info;
+ struct symbol;
+ 
+ enum hist_filter {
+@@ -149,6 +150,10 @@ struct hist_entry *hists__add_entry_ops(struct hists *hists,
+ 					struct perf_sample *sample,
+ 					bool sample_self);
+ 
++struct hist_entry *hists__add_entry_block(struct hists *hists,
++					  struct addr_location *al,
++					  struct block_info *bi);
 +
- #endif /* __PERF_SYMBOL */
+ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+ 			 int max_stack_depth, void *arg);
+ 
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index ce376a73f964..43623fa874b2 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -144,6 +144,7 @@ struct hist_entry {
+ 	long			time;
+ 	struct hists		*hists;
+ 	struct mem_info		*mem_info;
++	struct block_info	*block_info;
+ 	void			*raw_data;
+ 	u32			raw_size;
+ 	int			num_res;
 -- 
 2.20.1
 
