@@ -2,124 +2,189 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5DDC06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B760CC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF602063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819432063F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PRkXgnbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfGCBgC (ORCPT
+        id S1727483AbfGCBgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:36:02 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:51903 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726963AbfGCBgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:36:01 -0400
-Received: from [192.168.0.3] (ip5f5bf2d3.dynamic.kabel-deutschland.de [95.91.242.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E667F2067CFE0;
-        Tue,  2 Jul 2019 23:59:48 +0200 (CEST)
-Subject: Regression caused by commit c54f24e3 (nfsd: fix performance-limiting
- session calculation)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     "J. Bruce Fields" <bfields@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>
-References: <20190702165107.93C8A2067CFDD@mx.molgen.mpg.de>
- <8c3e0249-b17f-4bd2-4a46-afd4d35f4763@molgen.mpg.de>
-Cc:     Chris Tracy <ctracy@engr.scu.edu>, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, it+linux-nfs@molgen.mpg.de
-Message-ID: <0b5fdd56-d570-c787-cd56-7e6d0ba65225@molgen.mpg.de>
-Date:   Tue, 2 Jul 2019 23:59:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 2 Jul 2019 21:36:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46194 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfGCBgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:36:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z23so552560ote.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E2MNJNc0I8SY9kpTYL4zXVRKevXLFfOR8LtkzYCFYP8=;
+        b=PRkXgnbejC/VB9+KXb4YewettRGuuiReipmTOyCGjNfN+UlPVFmB1qcV6KaskT+iPt
+         Xdt7aspktUfzrU1W5HJ0qw7BOeqxXC3gDyB3yjaMb/leXWiKQ7J/NhOnstDi/DYadqUc
+         Ab1sUvmz8dtcDu/NeHwTRZG+Y8HYq28MJWLl+Nuk4GaoKgCzqTuTyznilpie7ih+9kSe
+         oaIFnji/asaBd/m66PPlG03NvkCpUJYwMUS/UfmVKlWPEX/3Ajs8/REuZcBVq/FOItqk
+         HV9RXVR9I/ipnMmWgTy8jG06q4ISQ/nxIPUQOsH3XCrNPMG3nZ8bH40yE1y5yi5Nn0/x
+         LXfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E2MNJNc0I8SY9kpTYL4zXVRKevXLFfOR8LtkzYCFYP8=;
+        b=kBXmqDumNIxZwRmg0pJB6Q+O2kSzVMFRKoX5b2GoNV+gAM6Lwj2QfgbE7MBHUbNWjw
+         030i2WP1+L2i0ZKYyEcfqopVWZbAiKxkgyrXoNtngh/J48uxwrOPvVJpgYQuKElrb/gI
+         pXeuHq1diJpWO4i/xDFoNg5Qd7l+67dOiiOC1beTh3h4lKP+OPnOX/K4olUfCS1jcWeS
+         skmXITPEwYOVJzfZ9ToPK20GnxP4+jigjU7/tfy6hcyN9laY0iea66auIuOjnqq43XH+
+         9IhVzcRuz0l0n85pIVx4tXENKdfXldoFcv5VCWq4NQrb1jp1RJcGQUoFcs9kYic+gdcS
+         +3vA==
+X-Gm-Message-State: APjAAAUADKFM/WhvbMCKT6CAW7vQm5FBFOfm1Ea9nny34rALkdmKykmu
+        1iTNOzhkoTWsAEmMMbmJGWwG0g==
+X-Google-Smtp-Source: APXvYqwGefhythDt/68wjxjOg0JL3+QasPI0nNvcZJItdd0qB/SHQCSt1CpNo+ij1fqyCtyrlOcIrw==
+X-Received: by 2002:a9d:7f0e:: with SMTP id j14mr25247006otq.87.1562117764484;
+        Tue, 02 Jul 2019 18:36:04 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id n26sm344887otq.10.2019.07.02.18.35.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Jul 2019 18:36:03 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 09:35:54 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 10/11] perf intel-pt: Smatch: Fix potential NULL
+ pointer dereference
+Message-ID: <20190703013553.GB6852@leoy-ThinkPad-X240s>
+References: <20190702103420.27540-1-leo.yan@linaro.org>
+ <20190702103420.27540-11-leo.yan@linaro.org>
+ <cfef1777-141e-4223-e0c1-1a3f3aee1d3c@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <8c3e0249-b17f-4bd2-4a46-afd4d35f4763@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfef1777-141e-4223-e0c1-1a3f3aee1d3c@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Bruce,
+Hi Adrian,
 
-
-Could it be that commit c54f24e3 (nfsd: fix performance-limiting session 
-calculation) causes a regression on big memory machines (1 TB)?
-
-> From c54f24e338ed2a35218f117a4a1afb5f9e2b4e64 Mon Sep 17 00:00:00 2001
-> From: "J. Bruce Fields" <bfields@redhat.com>
-> Date: Thu, 21 Feb 2019 10:47:00 -0500
-> Subject: [PATCH] nfsd: fix performance-limiting session calculation
+On Tue, Jul 02, 2019 at 02:07:40PM +0300, Adrian Hunter wrote:
+> On 2/07/19 1:34 PM, Leo Yan wrote:
+> > Based on the following report from Smatch, fix the potential
+> > NULL pointer dereference check.
 > 
-> We're unintentionally limiting the number of slots per nfsv4.1 session
-> to 10.  Often more than 10 simultaneous RPCs are needed for the best
-> performance.
+> It never is NULL.  Remove the NULL test if you want:
 > 
-> This calculation was meant to prevent any one client from using up more
-> than a third of the limit we set for total memory use across all clients
-> and sessions.  Instead, it's limiting the client to a third of the
-> maximum for a single session.
+> -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> +	if (session->itrace_synth_opts->set) {
 > 
-> Fix this.
+> But blindly making changes like below is questionable.
+
+Thanks for suggestions.
+
+I checked report and script commands, as you said, both command will
+always set session->itrace_synth_opts.  For these two commands, we can
+safely remove the NULL test.
+
+Because perf tool contains many sub commands, so I don't have much
+confidence it's very safe to remove the NULL test for all cases; e.g.
+there have cases which will process aux trace buffer but without
+itrace options; for this case, session->itrace_synth_opts might be NULL.
+
+For either way (remove NULL test or keep NULL test), I don't want to
+introduce regression and extra efforts by my patch.  So want to double
+confirm with you for this :)
+
+Thanks,
+Leo Yan
+
+> >   tools/perf/util/intel-pt.c:3200
+> >   intel_pt_process_auxtrace_info() error: we previously assumed
+> >   'session->itrace_synth_opts' could be null (see line 3196)
+> > 
+> >   tools/perf/util/intel-pt.c:3206
+> >   intel_pt_process_auxtrace_info() warn: variable dereferenced before
+> >   check 'session->itrace_synth_opts' (see line 3200)
+> > 
+> > tools/perf/util/intel-pt.c
+> > 3196         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> > 3197                 pt->synth_opts = *session->itrace_synth_opts;
+> > 3198         } else {
+> > 3199                 itrace_synth_opts__set_default(&pt->synth_opts,
+> > 3200                                 session->itrace_synth_opts->default_no_sample);
+> >                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > 3201                 if (!session->itrace_synth_opts->default_no_sample &&
+> > 3202                     !session->itrace_synth_opts->inject) {
+> > 3203                         pt->synth_opts.branches = false;
+> > 3204                         pt->synth_opts.callchain = true;
+> > 3205                 }
+> > 3206                 if (session->itrace_synth_opts)
+> >                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > 3207                         pt->synth_opts.thread_stack =
+> > 3208                                 session->itrace_synth_opts->thread_stack;
+> > 3209         }
+> > 
+> > To dismiss the potential NULL pointer dereference, this patch validates
+> > the pointer 'session->itrace_synth_opts' before access its elements.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/intel-pt.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> > index 550db6e77968..88b567bdf1f9 100644
+> > --- a/tools/perf/util/intel-pt.c
+> > +++ b/tools/perf/util/intel-pt.c
+> > @@ -3195,7 +3195,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+> >  
+> >  	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> >  		pt->synth_opts = *session->itrace_synth_opts;
+> > -	} else {
+> > +	} else if (session->itrace_synth_opts) {
+> >  		itrace_synth_opts__set_default(&pt->synth_opts,
+> >  				session->itrace_synth_opts->default_no_sample);
+> >  		if (!session->itrace_synth_opts->default_no_sample &&
+> > @@ -3203,8 +3203,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+> >  			pt->synth_opts.branches = false;
+> >  			pt->synth_opts.callchain = true;
+> >  		}
+> > -		if (session->itrace_synth_opts)
+> > -			pt->synth_opts.thread_stack =
+> > +		pt->synth_opts.thread_stack =
+> >  				session->itrace_synth_opts->thread_stack;
+> >  	}
+> >  
+> > 
 > 
-> Reported-by: Chris Tracy <ctracy@engr.scu.edu>
-> Cc: stable@vger.kernel.org
-> Fixes: de766e570413 "nfsd: give out fewer session slots as limit approaches"
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> ---
->  fs/nfsd/nfs4state.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index fb3c9844c82a..6a45fb00c5fc 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1544,16 +1544,16 @@ static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
->  {
->  	u32 slotsize = slot_bytes(ca);
->  	u32 num = ca->maxreqs;
-> -	int avail;
-> +	unsigned long avail, total_avail;
->  
->  	spin_lock(&nfsd_drc_lock);
-> -	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION,
-> -		    nfsd_drc_max_mem - nfsd_drc_mem_used);
-> +	total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
-> +	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
->  	/*
->  	 * Never use more than a third of the remaining memory,
->  	 * unless it's the only way to give this client a slot:
->  	 */
-> -	avail = clamp_t(int, avail, slotsize, avail/3);
-> +	avail = clamp_t(int, avail, slotsize, total_avail/3);
->  	num = min_t(int, num, avail / slotsize);
->  	nfsd_drc_mem_used += num * slotsize;
->  	spin_unlock(&nfsd_drc_lock);
-
-Booting a 80 threads, 1 TB server with Linux 4.19.56 and Linux 5.2-rc7 
-causes connections problems for the clients. The problems do not happen 
-on servers with just 96 GB memory for example. Bisecting points to the 
-two commits below (and I can only continue tomorrow).
-
-c54f24e338ed2a35218f117a4a1afb5f9e2b4e64 (nfsd: fix performance-limiting 
-session calculation)
-8127d82705998568b52ac724e28e00941538083d (NFS: Don't recoalesce on error 
-in nfs_pageio_complete_mirror())
-
-If you have things I could do to verify this besides reverting it
-tomorrow, please tell. It’d be great if it could be fixed before Linux
-5.2 is released.
-
-
-Kind regards,
-
-Paul
