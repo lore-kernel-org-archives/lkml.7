@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93466C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BC0C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6855A2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E368E2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 16:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncz+4Nxh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJUvklVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfGCQcK (ORCPT
+        id S1727289AbfGCQcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 12:32:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39098 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfGCQcJ (ORCPT
+        Wed, 3 Jul 2019 12:32:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40642 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfGCQcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 12:32:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so1536795pfe.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:32:09 -0700 (PDT)
+        Wed, 3 Jul 2019 12:32:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so1507719pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 09:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=FY+ZBBtXcmHqcIWsRbQ4qMYQ9CLYFu3E2aO2yWzMrUA=;
-        b=ncz+4NxhM1cxYl3UgwPV4btCGh1174GprNdVwIpAWXJz6I5bvKFFEfPf5Zew80EQjq
-         qmU0eOEeD2aGIIMd4AlAcu7wVwNlGBVCFBymAlmHqGR6ZFV0nfJ506DFl95qNsh/9AuH
-         ag8re/SC6ebDbsx4XLUzeqUTGnFEu4DkM0qGzKE/rMT50bl3A6pxLfgc78EtqSVVWYR2
-         9xUJV5JoTDj230DR2WFcTAgzthazOvVdfx3sEmPz85HMRblkEe2hMgOv6Ddey8QQHmzM
-         9GubnNcV/jh1WqVaBBi3avLEy+cSvaXBHE4SDwtIlGd+GElRU8mhmWOnsUDqA5BKzi3e
-         +3Sg==
+        bh=MCqMV61NT0BMmX6Fho6eWqPzt3K0aDZuWTbDCpVsXg4=;
+        b=vJUvklVEWOje9plOQWmkgMd6LPxQbDPJiXUs7nd/tN99P4Fgce3N04lgxpoh2kvBde
+         2Fwgt6TDdRpNjRxC2bNiJAn+mldjNvG8EoYiYLY88avJySuQiMuiV5e+52EbkBjbWqos
+         iLdsSmcjump8t6f/u/yZJgTN4cIGxTWqIztSWthJTNriyvvAqwg6/zXwqE7z4/TJD7bU
+         9tdy+9+WNRlojHWJBg/1F/BfaCDM0UGmvQ2h10e/p0SGrP/dWOQVEwu6gFRb80mfF8nJ
+         ta+djES2kNC9DWqi9irBzFZmndX5aiu1AEIm4aXIt8Q+3c8HYlZby/pun8LKo0bXC2a6
+         QI6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FY+ZBBtXcmHqcIWsRbQ4qMYQ9CLYFu3E2aO2yWzMrUA=;
-        b=iJnrW+cy4vno6FRJIjplBREyol0cMPm1TqoAtrJmlsyIbyND3f/a12cjyEyfjKy+23
-         NN4+iB8HresfscJOll9gnw6ZM6E8lMZ/n/ae08ima/9vtYtsWFtWsem5+O+TzibAlTuf
-         8UVMeOKGGur9rFMMHEb0RajJnR7Pjg+fd30P3y9bcKUV21EAMci62N0KDB9gBpL8ecNl
-         IWO7209E6hi0opOBkLTI2wpRvumUm9O73FCLoCXmXoVIJPc/m1vOgO3gQPXYu3dI8esU
-         kZmUNKOKByYoXWxBgkkTGckTkmmVcj0pS8SXzPHjnDzywRWjjs8Q1hXkI3RXBpu8haGk
-         +5pw==
-X-Gm-Message-State: APjAAAXdgv1UFHzA8ihUGLbIxaE0g0sIPsfxDbG47290IWtt+Q3B1q5z
-        5yrMj6cNiFKQ/ISqN7RQg1Y=
-X-Google-Smtp-Source: APXvYqy4RNABHR6FpDAN772vA0sEu4XwdGTGVimwrGr+s1fv0K3wRBwgvuEPHNZuBmo2cOzy0B5fTw==
-X-Received: by 2002:a65:42c6:: with SMTP id l6mr39388184pgp.442.1562171529277;
-        Wed, 03 Jul 2019 09:32:09 -0700 (PDT)
+        bh=MCqMV61NT0BMmX6Fho6eWqPzt3K0aDZuWTbDCpVsXg4=;
+        b=O77O8fswlP3bB/EG1IE7/OtrkGzKjEGxOnTZOJzZPRcFeAXVI8dOIWtNQezuHp2rly
+         X1Z0NO4cklZvEcoHbQY5IoPaGJ70RzwwkfWSTPWxts9GTTB+Nls7mN8NgDSw+NVV/p2S
+         6pCfrn2OI9txAvZ7VF/mPxa1OVLKiqOhBl77TYfHbvr3uwVIoCrldY/9hVtEqklCH+3w
+         QdO6neF7lAB92lJTEAmcwP6nyltbxLPwKn9MqOydhU3MIXypHzwzrTqu8qM0eswWY1xd
+         /LwMOxPltBSlx5LrObeuLjyex7mrFf3157HYLW1F4SG+wZgedgiH7XPrvabpS2XVpiDg
+         MnGQ==
+X-Gm-Message-State: APjAAAUCvWGwpx7Eq/IdrwiOibigt8/5FJEdhajJ4oBVkVuOlTIvmG32
+        11VPQMtdxEUXib3reuxBZ58=
+X-Google-Smtp-Source: APXvYqx9GpVL2Bu58gTxRuCwso/86Y6z+4rkZRsGNZDYLI0KH5vJXcyuP5jqo5pqwCu+oDVe42pwGA==
+X-Received: by 2002:a17:90b:8cd:: with SMTP id ds13mr13034487pjb.141.1562171538615;
+        Wed, 03 Jul 2019 09:32:18 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id n89sm11315483pjc.0.2019.07.03.09.32.06
+        by smtp.googlemail.com with ESMTPSA id o12sm2270041pjr.22.2019.07.03.09.32.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 09:32:08 -0700 (PDT)
+        Wed, 03 Jul 2019 09:32:18 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Bob Copeland <me@bobcopeland.com>,
-        linux-karma-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2 32/35] omfs: Use kmemdup rather than duplicating its implementation
-Date:   Thu,  4 Jul 2019 00:31:58 +0800
-Message-Id: <20190703163158.937-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 33/35] sound/pci: Use kmemdup rather than duplicating its implementation
+Date:   Thu,  4 Jul 2019 00:32:10 +0800
+Message-Id: <20190703163210.983-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,27 +80,26 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Fix a typo in commit message (memset -> memcpy)
 
- fs/omfs/inode.c | 3 +--
+ sound/pci/echoaudio/echoaudio.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/omfs/inode.c b/fs/omfs/inode.c
-index 08226a835ec3..1aa0c0a224b1 100644
---- a/fs/omfs/inode.c
-+++ b/fs/omfs/inode.c
-@@ -363,12 +363,11 @@ static int omfs_get_imap(struct super_block *sb)
- 		bh = sb_bread(sb, block++);
- 		if (!bh)
- 			goto nomem_free;
--		*ptr = kmalloc(sb->s_blocksize, GFP_KERNEL);
-+		*ptr = kmemdup(bh->b_data, sb->s_blocksize, GFP_KERNEL);
- 		if (!*ptr) {
- 			brelse(bh);
- 			goto nomem_free;
- 		}
--		memcpy(*ptr, bh->b_data, sb->s_blocksize);
- 		if (count < sb->s_blocksize)
- 			memset((void *)*ptr + count, 0xff,
- 				sb->s_blocksize - count);
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index b612a536a5a1..35bd3e7c8ce1 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -2189,11 +2189,10 @@ static int snd_echo_resume(struct device *dev)
+ 	u32 pipe_alloc_mask;
+ 	int err;
+ 
+-	commpage_bak = kmalloc(sizeof(*commpage), GFP_KERNEL);
++	commpage_bak = kmemdup(commpage, sizeof(*commpage), GFP_KERNEL);
+ 	if (commpage_bak == NULL)
+ 		return -ENOMEM;
+ 	commpage = chip->comm_page;
+-	memcpy(commpage_bak, commpage, sizeof(*commpage));
+ 
+ 	err = init_hw(chip, chip->pci->device, chip->pci->subsystem_device);
+ 	if (err < 0) {
 -- 
 2.11.0
 
