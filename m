@@ -2,82 +2,136 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15181C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF738C46478
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E050821880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C8C21880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="oDlYrGwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfGCFfC (ORCPT
+        id S1727086AbfGCFf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 01:35:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:37998 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfGCFfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 01:35:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36FF42B;
-        Tue,  2 Jul 2019 22:35:01 -0700 (PDT)
-Received: from [10.162.42.95] (p8cg001049571a15.blr.arm.com [10.162.42.95])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14A2D3F718;
-        Tue,  2 Jul 2019 22:36:52 -0700 (PDT)
-Subject: Re: [DRAFT] mm/kprobes: Add generic kprobe_fault_handler() fallback
- definition
-To:     Guenter Roeck <linux@roeck-us.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org
-References: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
- <1561973757-5445-1-git-send-email-anshuman.khandual@arm.com>
- <8c6b9525-5dc5-7d17-cee1-b75d5a5121d6@roeck-us.net>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fc68afaa-32e1-a265-aae2-e4a9440f4c95@arm.com>
-Date:   Wed, 3 Jul 2019 11:05:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <8c6b9525-5dc5-7d17-cee1-b75d5a5121d6@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
+        Wed, 3 Jul 2019 01:35:56 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50438 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfGCFfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 01:35:55 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 703D0886BF;
+        Wed,  3 Jul 2019 17:35:52 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1562132152;
+        bh=KQWnpm9RproF/VxwuhPLKuKDVgFcnFTyTJg/2G04uVU=;
+        h=From:To:CC:Subject:Date;
+        b=oDlYrGwv/RC5Kh5tAamwn7p9oZzOalNOh7k4C/TVa9ipax086Kl0F1vXzTnWO2K5z
+         ffIp82w8FeBWli1zyTN5JFJJysTiKDs+FXmUARSw1mv5y+5n20MVigrRPK6FIOPLrR
+         W/p9LhlIFjnKrrOQeel68boCCAzVRE/sVfjZbrVXKQbg7XXCj0eJmMGfLk7Opyy0I2
+         kfcQiLrx0wAfQyvJT3nm6sGm6LZlY7MGPpGN48uMdKmcSaRsP8f7kRmH/fhmI9eGLK
+         EtikRp4NpgfirpEjXXeewy5B25iTZjwhQESgdoG09HyAsBabB3q+zz1kPqi8gwd3BD
+         X1JiP1Av+Fueg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d1c3eb70000>; Wed, 03 Jul 2019 17:35:51 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 3 Jul 2019 17:35:47 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 3 Jul 2019 17:35:47 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: gpio desc flags being lost
+Thread-Topic: gpio desc flags being lost
+Thread-Index: AQHVMWEqVhtjrKesFkiEOodI/qBrrg==
+Date:   Wed, 3 Jul 2019 05:35:46 +0000
+Message-ID: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 07/01/2019 06:58 PM, Guenter Roeck wrote:
-> On 7/1/19 2:35 AM, Anshuman Khandual wrote:
->> Architectures like parisc enable CONFIG_KROBES without having a definition
->> for kprobe_fault_handler() which results in a build failure. Arch needs to
->> provide kprobe_fault_handler() as it is platform specific and cannot have
->> a generic working alternative. But in the event when platform lacks such a
->> definition there needs to be a fallback.
->>
->> This adds a stub kprobe_fault_handler() definition which not only prevents
->> a build failure but also makes sure that kprobe_page_fault() if called will
->> always return negative in absence of a sane platform specific alternative.
->>
->> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
->> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
->> just be dropped. Only on x86 it needs to be added back locally as it gets
->> used in a !CONFIG_KPROBES function do_general_protection().
->>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> I am planning to go with approach unless we just want to implement a stub
->> definition for parisc to get around the build problem for now.
->>
->> Hello Guenter,
->>
->> Could you please test this in your parisc setup. Thank you.
->>
-> 
-> With this patch applied on top of next-20190628, parisc:allmodconfig builds
-> correctly. I scheduled a full build for tonight for all architectures.
-
-How did that come along ? Did this pass all build tests ?
+Hi LinusW, Bartosz,=0A=
+=0A=
+I was debugging something else and I noticed a problem with the gpio =0A=
+framework or the gpio-mmio driver (or both) in 5.2.0-rc6.=0A=
+=0A=
+I have some gpio hogs in my device tree which seem to get requested at =0A=
+startup as expected=0A=
+=0A=
+...=0A=
+GPIO line 456 (sw-reset) hogged as output/low=0A=
+GPIO line 459 (phy-1g-reset) hogged as output/low=0A=
+GPIO line 460 (i2c-reset) hogged as output/low=0A=
+GPIO line 461 (lm81-reset) hogged as output/low=0A=
+GPIO line 462 (phy-led-reset) hogged as output/low=0A=
+GPIO line 448 (pcie-reset) hogged as output/low=0A=
+..=0A=
+=0A=
+I wanted to see what state these lines were in=0A=
+=0A=
+# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:=0A=
+=0A=
+gpiochip3: GPIOs 456-463, parent: platform/fffa00020.dev-reset-ctl, =0A=
+fffa00020.dev-reset-ctl:=0A=
+=0A=
+I expected the hogs to show up here.=0A=
+=0A=
+# echo 448 >/sys/class/gpio/export=0A=
+=0A=
+Now I'm pretty sure I shouldn't be allowed to do that.=0A=
+=0A=
+# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:gpio-448 (                    |sysfs =0A=
+     ) in  lo=0A=
+=0A=
+Doing a bit of debugging so far I see that after startup the desc->flags =
+=0A=
+for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x801)=
+.=0A=
+=0A=
+I happen to have a 4.8.17 kernel for the board I'm using. Testing with =0A=
+that seems to be OK.=0A=
+=0A=
+[root@linuxbox ~]# uname -a=0A=
+Linux linuxbox 4.8.17-at1+ #3 SMP Wed Jul 3 05:30:55 UTC 2019 ppc GNU/Linux=
+=0A=
+[root@linuxbox ~]# cat /sys/kernel/debug/gpio=0A=
+gpiochip4: GPIOs 448-455, parent: platform/fffa00029.dev-reset-ctl-2, =0A=
+fffa00029.dev-reset-ctl-2:=0A=
+  gpio-448 (                    |pcie-reset          ) out lo=0A=
+=0A=
+gpiochip3: GPIOs 456-463, parent: platform/fffa00020.dev-reset-ctl, =0A=
+fffa00020.dev-reset-ctl:=0A=
+  gpio-456 (                    |sw-reset            ) out lo=0A=
+  gpio-459 (                    |phy-1g-reset        ) out lo=0A=
+  gpio-460 (                    |i2c-reset           ) out lo=0A=
+  gpio-461 (                    |lm81-reset          ) out lo=0A=
+  gpio-462 (                    |phy-led-reset       ) out lo=0A=
+=0A=
+[root@linuxbox ~]# echo 448 >/sys/class/gpio/export=0A=
+sh: write error: Device or resource busy=0A=
+=0A=
+I'll do some proper bisecting tomorrow, but figured you might want to =0A=
+know sooner rather than later.=0A=
