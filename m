@@ -5,38 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DEC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0FAC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D94218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52976218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 20:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfGCUcZ (ORCPT
+        id S1727304AbfGCUcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 16:32:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:3964 "EHLO mga14.intel.com"
+        Wed, 3 Jul 2019 16:32:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60930 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbfGCUcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 16:32:20 -0400
+        id S1726550AbfGCUcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 16:32:19 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 13:32:19 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 13:32:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
-   d="scan'208";a="158089425"
+   d="scan'208";a="158089410"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
   by orsmga008.jf.intel.com with ESMTP; 03 Jul 2019 13:32:18 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v4 7/8] PCI/DPC: Add support for DPC recovery on NON_FATAL errors
-Date:   Wed,  3 Jul 2019 13:29:54 -0700
-Message-Id: <10eab0aeb3edad3cbe385ec1e96ea5e5497bde80.1562185606.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Subject: [PATCH v4 2/8] PCI/ACPI: Expose EDR support via _OSC to BIOS
+Date:   Wed,  3 Jul 2019 13:29:49 -0700
+Message-Id: <345e16361762a8d047a32a1380877dc0f2909559.1562185606.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1562185606.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1562185606.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -49,45 +51,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Currently, in native mode, DPC driver is configured to trigger DPC only
-for FATAL errors and hence it only supports port recovery for FATAL
-errors. But with Error Disconnect Recover (EDR) support, DPC
-configuration is done by firmware, and hence we should expect DPC
-triggered for both FATAL/NON-FATAL errors. So add support for DPC
-recovery with NON-FATAL errors.
+As per PCI firmware specification r3.2 Downstream Port Containment
+Related Enhancements ECN, sec 4.5.1, table 4-4, if OS supports EDR,
+it should expose its support to BIOS by setting bit 7 of _OSC Support
+Field.
 
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/dpc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/acpi/pci_root.c | 3 +++
+ include/linux/acpi.h    | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 214fa623228e..34f4e6ca24df 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -267,15 +267,20 @@ static void dpc_process_error(struct dpc_dev *dpc)
- 	/* show RP PIO error detail information */
- 	if (dpc->rp_extensions && reason == 3 && ext_reason == 0)
- 		dpc_process_rp_pio_error(dpc);
--	else if (reason == 0 &&
-+	else if (reason <= 2 &&
- 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
- 		 aer_get_device_error_info(pdev, &info)) {
- 		aer_print_error(pdev, &info);
- 		pci_cleanup_aer_uncorrect_error_status(pdev);
--		pci_aer_clear_fatal_status(pdev);
-+		if (reason != 1)
-+			pci_aer_clear_fatal_status(pdev);
- 	}
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index fa35c2b5b998..361f8b177c6c 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -132,6 +132,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
+ 	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
+ 	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
+ 	{ OSC_PCI_MSI_SUPPORT, "MSI" },
++	{ OSC_PCI_EDR_SUPPORT, "EDR" },
+ 	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
+ };
  
--	/* We configure DPC so it only triggers on ERR_FATAL */
-+	/*
-+	 * Irrespective of whether the DPC event is triggered by
-+	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
-+	 * use the FATAL error recovery path for both cases.
-+	 */
- 	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
- }
+@@ -442,6 +443,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+ 	if (pci_msi_enabled())
+ 		support |= OSC_PCI_MSI_SUPPORT;
++	if (IS_ENABLED(CONFIG_PCIE_EDR))
++		support |= OSC_PCI_EDR_SUPPORT;
+ 
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 61ab40bff45c..24ac0435ef3b 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -504,6 +504,7 @@ extern bool osc_pc_lpi_support_confirmed;
+ #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
+ #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
+ #define OSC_PCI_MSI_SUPPORT			0x00000010
++#define OSC_PCI_EDR_SUPPORT			0x00000080
+ #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
+ #define OSC_PCI_SUPPORT_MASKS			0x0000011f
  
 -- 
 2.21.0
