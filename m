@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0FEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F439C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1C421874
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C513421874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120353;
-	bh=fusrjSC3Sq/gFouZErRVtzqGiMNmm8dio6TO9oYvEto=;
+	s=default; t=1562120359;
+	bh=3LGD3ZXA9YNPb1KDPwEDA616er0ij4of3wGQGGwwqjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gR32qFULqA+OgNUZXV+44EUZvgArB6uwjG1KZ8ZFJHG0ZStXwp2SQmLn7YMWo6yvq
-	 rHwROQh75+y3qVRBltiafsb6rmG6nRZjh5xrEwEgOcD2cUQsW4C+cgJtVvUNIgPegf
-	 z7l7MQx0uzadqJN5fjdS/tS5Gxf4Na6m79SGqoF8=
+	b=YSmIwFr35zf51d5KgCbCgoicKDuRlYnUwZjKgZ1k53cxQY5HQ7bf0SwzpKQRf9+5I
+	 40P3jRx7pQFG7jYI59hIsYoTHfVDv2uEPAkSvdiYECjnBQaT2rgzrZGRKgSb1oE5sT
+	 XVpVUzES6f2x1J9zNPQGsAQ5YlXgeVfPe6h5/ghE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbfGCCTL (ORCPT
+        id S1727902AbfGCCTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbfGCCTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:19:04 -0400
+        id S1728399AbfGCCTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:19:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD94B2189F;
-        Wed,  3 Jul 2019 02:19:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 287152187F;
+        Wed,  3 Jul 2019 02:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120343;
-        bh=fusrjSC3Sq/gFouZErRVtzqGiMNmm8dio6TO9oYvEto=;
+        s=default; t=1562120346;
+        bh=3LGD3ZXA9YNPb1KDPwEDA616er0ij4of3wGQGGwwqjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEoTjYyJ7GJJ4uJb6V4F39ZoLMkXm09PEnNK1TiVfnHfui34ZSaKEQqHuZBw7RuV5
-         StPpNTAO4XaT+6l6DVm7igW0irf4KRsHvZ9TcsB7y7uNLiGusuyn+aPn8OQR9k6jvi
-         8++4tH4+SznTlwEvQ8I1CT9Dp8kiUgjM8yzlV6/c=
+        b=c6ElJd4As6Nd0GVWFpmcYXn2jUJ4LVVYoK5pQ+JeU3Q/PJpkn9+rBJ/1UCrmfVFPy
+         pcja97+JTAASHhiiBnXovwyrsO4wTaNOVnqwyet714DdgE3kchxFQkA/ZtLDr/kTGh
+         xSCNe22vpd7L6iQrkWp5AdsfWvV955eplwtpkGCI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Oros <poros@redhat.com>, Ivan Vecera <ivecera@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/6] be2net: fix link failure after ethtool offline test
-Date:   Tue,  2 Jul 2019 22:18:55 -0400
-Message-Id: <20190703021858.18653-3-sashal@kernel.org>
+Cc:     Milan Broz <gmazyland@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 6/6] dm verity: use message limit for data block corruption message
+Date:   Tue,  2 Jul 2019 22:18:58 -0400
+Message-Id: <20190703021858.18653-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021858.18653-1-sashal@kernel.org>
 References: <20190703021858.18653-1-sashal@kernel.org>
@@ -59,81 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Oros <poros@redhat.com>
+From: Milan Broz <gmazyland@gmail.com>
 
-[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
+[ Upstream commit 2eba4e640b2c4161e31ae20090a53ee02a518657 ]
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+DM verity should also use DMERR_LIMIT to limit repeat data block
+corruption messages.
 
-Changes in v2:
-- added fixes header
-
-Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
-Signed-off-by: Petr Oros <poros@redhat.com>
-Reviewed-by: Ivan Vecera <ivecera@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/md/dm-verity.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 51bfe74be8d4..4e5646b3da09 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -868,7 +868,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
- {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
- 
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -879,6 +879,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
- 
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
-+
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -899,13 +902,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
+diff --git a/drivers/md/dm-verity.c b/drivers/md/dm-verity.c
+index ccf41886ebcf..7054afd49f82 100644
+--- a/drivers/md/dm-verity.c
++++ b/drivers/md/dm-verity.c
+@@ -221,8 +221,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
+ 		BUG();
  	}
  
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
- }
+-	DMERR("%s: %s block %llu is corrupted", v->data_dev->name, type_str,
+-		block);
++	DMERR_LIMIT("%s: %s block %llu is corrupted", v->data_dev->name,
++		    type_str, block);
  
+ 	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
+ 		DMERR("%s: reached maximum errors", v->data_dev->name);
 -- 
 2.20.1
 
