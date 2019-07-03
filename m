@@ -2,92 +2,255 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EB5C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6A9C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B70F218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C41218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Owd0tfEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfGCIle (ORCPT
+        id S1727315AbfGCIlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:41:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:41344 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbfGCIle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:41:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6D0D344;
-        Wed,  3 Jul 2019 01:41:33 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B4C93F718;
-        Wed,  3 Jul 2019 01:41:32 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the char-misc tree with the
- driver-core tree
-To:     sfr@canb.auug.org.au, mst@redhat.com, greg@kroah.com
-Cc:     joro@8bytes.org, Jean-Philippe.Brucker@arm.com,
-        natechancellor@gmail.com, arnd@arndb.de,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mathieu.poirier@linaro.org
-References: <20190701190940.7f23ac15@canb.auug.org.au>
- <20190701200418.GA72724@archlinux-epyc>
- <20190702141803.GA13685@ostrya.localdomain>
- <20190702151817.GD3310@8bytes.org>
- <20190702112125-mutt-send-email-mst@kernel.org>
- <20190702155851.GF3310@8bytes.org>
- <20190702130511-mutt-send-email-mst@kernel.org>
- <20190703074109.4b2ca5bc@canb.auug.org.au>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <7b1b518b-1ca6-3650-a6ed-c2f63859a160@arm.com>
-Date:   Wed, 3 Jul 2019 09:41:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 3 Jul 2019 04:41:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51754 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfGCIlz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:41:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 207so1294364wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t5N8I7wEmJ6HOEIfi29uN+iq2nZL3QfcpDhp/+r5Tfs=;
+        b=Owd0tfEG4z+Ja7ipl7ny0lXZRvaAvafi8rSvt0tt3SJoeMLCPiGVm8cFKBgqOc4wpJ
+         nmHlseIDNXL+2zG35fYL6zghIdLjgObIb4UXEIVt+K4tINgUst/RNHHiPiWfs3VehgSB
+         C5hPbAYJtgudWXqqbt6nhJj+ohREBqi2JFIxNKZXuh32UVJd1lytzlorF6OpV7UHeaxa
+         Zqtw3hNOyfnNtpGw4mKbhQ6O2eHJr0o5zG4ATLRN23td7vODiBmUH22v4IL+FWpiov4F
+         FdYPTuimaDESzB1MKpXhL+8VTFLUX7lFWwVgiZLZAT1UrKzqMryvtunqPpgDK2fNxebA
+         Wg6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t5N8I7wEmJ6HOEIfi29uN+iq2nZL3QfcpDhp/+r5Tfs=;
+        b=pZYmSSn526sNjqViovAehlsmkwZOgbkJTV7LlrALoczSA7qF3h6rs9pBsE9zE7DDHy
+         +liyXg7Qyh6EacjdTD8OG2p+bcI40Lu3vhTo08aRdXJnjxe5Q3I+RLYoGMfiK9U0NcgS
+         ts3VK2Qd+VzgKEUTdtfFs6jofqYrv9qr4/YdwX644SaEhNyV9gSngPWun7pphQMVHJK5
+         6GyClpm8W0E10VY/tnojw5LaxtegfhbahXV9TZdqnxgN9MjnGwJnM5MatUyCZiICicQU
+         dU0c/YpO9o3W405gU7g1EwfAfaHn9WVemwmjyuYlzovE78JKerdZDCMuWdgz/Cp8PJd+
+         /ONQ==
+X-Gm-Message-State: APjAAAXbLqGZsnAmWh0Vllmv0NePNSomS1vVXyl80D6Me0j77NGh4LGI
+        KMK9MI9iv3NjWuZVQB+oFpo=
+X-Google-Smtp-Source: APXvYqzNouve+r8ub3DWu5xqFsX/jRygJbF0WLOU4WtPeaI2pdeOLhmouxt0Q8oqqvjhSlEC/qYf5A==
+X-Received: by 2002:a7b:c148:: with SMTP id z8mr7162482wmi.142.1562143312409;
+        Wed, 03 Jul 2019 01:41:52 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id e7sm1943096wrt.94.2019.07.03.01.41.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Jul 2019 01:41:52 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 10:41:51 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190703084151.GR2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+ <20190702122521.GN2250@nanopsycho>
+ <20190702145241.GD20101@unicorn.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190703074109.4b2ca5bc@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702145241.GD20101@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg, Stephen, All,
+Tue, Jul 02, 2019 at 04:52:41PM CEST, mkubecek@suse.cz wrote:
+>On Tue, Jul 02, 2019 at 02:25:21PM +0200, Jiri Pirko wrote:
+>> Tue, Jul 02, 2019 at 01:49:59PM CEST, mkubecek@suse.cz wrote:
+>> >+Request header
+>> >+--------------
+>> >+
+>> >+Each request or reply message contains a nested attribute with common header.
+>> >+Structure of this header is
+>> 
+>> Missing ":"
+>
+>OK
+>
+>> >+
+>> >+    ETHTOOL_A_HEADER_DEV_INDEX	(u32)		device ifindex
+>> >+    ETHTOOL_A_HEADER_DEV_NAME	(string)	device name
+>> >+    ETHTOOL_A_HEADER_INFOMASK	(u32)		info mask
+>> >+    ETHTOOL_A_HEADER_GFLAGS	(u32)		flags common for all requests
+>> >+    ETHTOOL_A_HEADER_RFLAGS	(u32)		request specific flags
+>> >+
+>> >+ETHTOOL_A_HEADER_DEV_INDEX and ETHTOOL_A_HEADER_DEV_NAME identify the device
+>> >+message relates to. One of them is sufficient in requests, if both are used,
+>> >+they must identify the same device. Some requests, e.g. global string sets, do
+>> >+not require device identification. Most GET requests also allow dump requests
+>> >+without device identification to query the same information for all devices
+>> >+providing it (each device in a separate message).
+>> >+
+>> >+Optional info mask allows to ask only for a part of data provided by GET
+>> 
+>> How this "infomask" works? What are the bits related to? Is that request
+>> specific?
+>
+>The interpretation is request specific, the information returned for
+>a GET request is divided into multiple parts and client can choose to
+>request one of them (usually one). In the code so far, infomask bits
+>correspond to top level (nest) attributes but I would rather not make it
+>a strict rule.
 
-On 02/07/2019 22:41, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Tue, 2 Jul 2019 13:05:59 -0400 "Michael S. Tsirkin" <mst@redhat.com> wrote:
->>
->> On Tue, Jul 02, 2019 at 05:58:51PM +0200, Joerg Roedel wrote:
->>> On Tue, Jul 02, 2019 at 11:23:34AM -0400, Michael S. Tsirkin wrote:
->>>> I can drop virtio iommu from my tree. Where's yours? I'd like to take a
->>>> last look and send an ack.
->>>
->>> It is not in my tree yet, because I was waiting for your ack on the
->>> patches wrt. the spec.
->>>
->>> Given that the merge window is pretty close I can't promise to take it
->>> into my tree for v5.3 when you ack it, so if it should go upstream this
->>> time its better to keep it in your tree.
->>
->> Hmm. But then the merge build fails. I guess I will have to include the
->> patch in the pull request then?
->>
-> 
-> All you (and the driver-core maintainer) need to do is make sure you
-> tell Linus that the merge requires the fix ... he can then apply it to
-> the merge commit just as I have.  Linus has asked that maintainers do
-> not (in general) cross merge to avoid these (semantic) conflicts.
-> Sometimes, in more complex cases, it may be necessary for maintainers
-> to share a (non changing) subset of their trees, but this case is
-> pretty trivial.
-> 
+Wait, so it is a matter of verbosity? If you have multiple parts and the
+user is able to chose one of them, why don't you rather have multiple
+get commands, one per bit. This infomask construct seems redundant to me.
 
-Please let me know if there is something I could help with.
 
-Cheers
-Suzuki
+>
+>I'll make the paragraph more verbose.
+>
+>> >+request types. If omitted or zero, all data is returned. The two flag bitmaps
+>> >+allow enabling requestoptions; ETHTOOL_A_HEADER_GFLAGS are global flags common
+>> 
+>> s/requestoptions;/request options./  ?
+>
+>Yes.
+>
+>> >+for all request types, flags recognized in ETHTOOL_A_HEADER_RFLAGS and their
+>> >+interpretation are specific for each request type. Global flags are
+>> >+
+>> >+    ETHTOOL_RF_COMPACT		use compact format bitsets in reply
+>> 
+>> Why "RF"? Isn't this "GF"? I would like "ETHTOOL_GFLAG_COMPACT" better.
+>
+>RF as Request Flags. At the moment, global flags use ETHTOOL_RF_name
+>pattern and request specific flags ETHTOOL_RF_msgtype_name. GFLAG and
+>RFLAG would probably show the relation better, so how about
+>
+>  ETHTOOL_GFLAG_name          for global
+>  ETHTOOL_RFLAG_msgtype_name  for request specific
+
+Yep, as I suggested. Looks fine to me.
+
+
+>
+>> >+    ETHTOOL_RF_REPLY		send optional reply (SET and ACT requests)
+>> >+
+>> >+Request specific flags are described with each request type. For both flag
+>> >+attributes, new flags should follow the general idea that if the flag is not
+>> >+set, the behaviour is the same as (or closer to) the behaviour before it was
+>> 
+>> "closer to" ? That would be unfortunate I believe...
+>
+>There may be situations where it cannot be exactly the same, e.g.
+>because the flag affects interpretation of an attribute which was
+>introduced together with the flag. How about "...the behaviour is
+>backward compatible"?
+
+Ok.
+
+
+>
+>
+>> >+List of message types
+>> >+---------------------
+>> >+
+>> >+All constants identifying message types use ETHTOOL_CMD_ prefix and suffix
+>> >+according to message purpose:
+>> >+
+>> >+    _GET	userspace request to retrieve data
+>> >+    _SET	userspace request to set data
+>> >+    _ACT	userspace request to perform an action
+>> >+    _GET_REPLY	kernel reply to a GET request
+>> >+    _SET_REPLY	kernel reply to a SET request
+>> >+    _ACT_REPLY  kernel reply to an ACT request
+>> >+    _NTF	kernel notification
+>> >+
+>> >+"GET" requests are sent by userspace applications to retrieve device
+>> >+information. They usually do not contain any message specific attributes.
+>> >+Kernel replies with corresponding "GET_REPLY" message. For most types, "GET"
+>> >+request with NLM_F_DUMP and no device identification can be used to query the
+>> >+information for all devices supporting the request.
+>> >+
+>> >+If the data can be also modified, corresponding "SET" message with the same
+>> >+layout as "GET" reply is used to request changes. Only attributes where
+>> 
+>> s/"GET" reply"/"GET_REPLY" ?
+>> Maybe better to emphasize that the "GET_REPLY" is the one corresponding
+>> with "SET". But perhaps I got this sentence all wrong :/
+>
+>OK
+>
+>> >+a change is requested are included in such request (also, not all attributes
+>> >+may be changed). Replies to most "SET" request consist only of error code and
+>> >+extack; if kernel provides additional data, it is sent in the form of
+>> >+corresponding "SET_REPLY" message (if ETHTOOL_RF_REPLY flag was set in request
+>> >+header).
+>> >+
+>> >+Data modification also triggers sending a "NTF" message with a notification.
+>> >+These usually bear only a subset of attributes which was affected by the
+>> >+change. The same notification is issued if the data is modified using other
+>> >+means (mostly ioctl ethtool interface). Unlike notifications from ethtool
+>> >+netlink code which are only sent if something actually changed, notifications
+>> >+triggered by ioctl interface may be sent even if the request did not actually
+>> >+change any data.
+>> 
+>> Interesting. What's the reason for that?
+>
+>Most setting commands in ioctl interface do not even query the original
+>state, they just pass the structure from ioctl() to ethtool_ops handler.
+>We could add retrieving the original state first but I suppose we would
+>still have to call the handler anyway even if requested values are the
+>same (as that's what kernel does now) and it's not clear if omitting the
+>notification in such case is the right thing to do.
+
+Okay, got it. Better notification with no change than no notification.
+
+
+>
+>> >diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+>> >index 3ebfab2bca66..f30e0da88be5 100644
+>> >--- a/net/ethtool/Makefile
+>> >+++ b/net/ethtool/Makefile
+>> >@@ -1,3 +1,7 @@
+>> > # SPDX-License-Identifier: GPL-2.0
+>> > 
+>> >-obj-y		+= ioctl.o
+>> >+obj-y				+= ioctl.o
+>> >+
+>> >+obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+>> 
+>> Hmm, I wonder, why not to make this always on? We want users to use
+>> it, memory savings in case it is off would be minimal. RTNetlink is also
+>> always on. Ethtool ioctl is also always on.
+>
+>We have already discussed this in the previous version. Someone claimed
+>earlier that building a kernel without ethtool interface would make
+>sense for some minimalistic systems. My plan is to make the ioctl
+>interface also optional once it's possible for (sufficiently new)
+>ethtool to work without it.
+
+Okay, pardon me. I don't recall that conversation.
+
+>
+>Michal
