@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BE4C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A41C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A08121880
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08665218B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120139;
-	bh=m+R1xwEJppbiE3wvoUXAJkKObqcuGeLx/Si7OCzOa2I=;
+	s=default; t=1562120148;
+	bh=bsu1JAQ9SZ8V8yrVxPe2S8YU2BS6wdUY6ofAWad7b5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQ4u7WktG9t8UBMb3TWNK7q6gTY/AWp0f1CRgD4uDRAAgQvT1NQtTD4Xt9chbrwyI
-	 lVCyQS2BzBEd8clud3fR5cVqHlGhQMHdRGzwmXsI0Kv4svjSenKCjHf+higxH9rD43
-	 YfpjgpB+ZGJ29dVo5lKNWwk7h/8BslYlDJzjthUo=
+	b=TZWhn6YyZitO8eB6TdO8ZVvg2THZ3FoiE/HtwJwpmtmXM/MTynZVAunTfmuMEd93l
+	 gHKGorV1pBQL4hOJtX5fyPVyKzp89Jgt71EK4Fcs9QytsFxPmieZonozcvIiO3VZOZ
+	 jbgrhAQGFd4fsmKjZIeMzyvKjqPSCiJ0er5VTgmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfGCCPi (ORCPT
+        id S1727186AbfGCCPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727622AbfGCCPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:36 -0400
+        id S1727651AbfGCCPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD6221873;
-        Wed,  3 Jul 2019 02:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F38002189E;
+        Wed,  3 Jul 2019 02:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120136;
-        bh=m+R1xwEJppbiE3wvoUXAJkKObqcuGeLx/Si7OCzOa2I=;
+        s=default; t=1562120140;
+        bh=bsu1JAQ9SZ8V8yrVxPe2S8YU2BS6wdUY6ofAWad7b5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MevqsPRWXIuyLFX9gqZs7UluRFtdj2SfLVw7MIOXiXyjuFdfqSiMM87kGE62ouYf8
-         MoiJFW6QlHQ/KHss40SMVLtkqC1+ILMk1U1LpzpT/OxddP36CWmWQRRJqu9tajDmR7
-         tn/mOOfakHzgh2YF2u3PgeEDkivSbApGKrEcFE2U=
+        b=uqs2vaIziCSBo/sJgEmWcny1D7Sc/jGvMmgYlbMMx0RuDZx/39G9M2lbukqTcxxaC
+         gutExrmBjWNvlbwk/V2DwC+5MQcKoCWCQp0LISj58kMIM2CLkw7dLIPSQbYHegsswG
+         HlNVHfPOaTTriA3g1Nc6M5ZM6UAW35Y4naRZ15KE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 13/39] afs: Fix uninitialised spinlock afs_volume::cb_break_lock
-Date:   Tue,  2 Jul 2019 22:14:48 -0400
-Message-Id: <20190703021514.17727-13-sashal@kernel.org>
+Cc:     Petr Oros <poros@redhat.com>, Ivan Vecera <ivecera@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 16/39] be2net: fix link failure after ethtool offline test
+Date:   Tue,  2 Jul 2019 22:14:51 -0400
+Message-Id: <20190703021514.17727-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -58,95 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Petr Oros <poros@redhat.com>
 
-[ Upstream commit 90fa9b64523a645a97edc0bdcf2d74759957eeee ]
+[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
 
-Fix the cb_break_lock spinlock in afs_volume struct by initialising it when
-the volume record is allocated.
+Certain cards in conjunction with certain switches need a little more
+time for link setup that results in ethtool link test failure after
+offline test. Patch adds a loop that waits for a link setup finish.
 
-Also rename the lock to cb_v_break_lock to distinguish it from the lock of
-the same name in the afs_server struct.
+Changes in v2:
+- added fixes header
 
-Without this, the following trace may be observed when a volume-break
-callback is received:
-
-  INFO: trying to register non-static key.
-  the code is fine but needs lockdep annotation.
-  turning off the locking correctness validator.
-  CPU: 2 PID: 50 Comm: kworker/2:1 Not tainted 5.2.0-rc1-fscache+ #3045
-  Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
-  Workqueue: afs SRXAFSCB_CallBack
-  Call Trace:
-   dump_stack+0x67/0x8e
-   register_lock_class+0x23b/0x421
-   ? check_usage_forwards+0x13c/0x13c
-   __lock_acquire+0x89/0xf73
-   lock_acquire+0x13b/0x166
-   ? afs_break_callbacks+0x1b2/0x3dd
-   _raw_write_lock+0x2c/0x36
-   ? afs_break_callbacks+0x1b2/0x3dd
-   afs_break_callbacks+0x1b2/0x3dd
-   ? trace_event_raw_event_afs_server+0x61/0xac
-   SRXAFSCB_CallBack+0x11f/0x16c
-   process_one_work+0x2c5/0x4ee
-   ? worker_thread+0x234/0x2ac
-   worker_thread+0x1d8/0x2ac
-   ? cancel_delayed_work_sync+0xf/0xf
-   kthread+0x11f/0x127
-   ? kthread_park+0x76/0x76
-   ret_from_fork+0x24/0x30
-
-Fixes: 68251f0a6818 ("afs: Fix whole-volume callback handling")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
+Signed-off-by: Petr Oros <poros@redhat.com>
+Reviewed-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/callback.c | 4 ++--
- fs/afs/internal.h | 2 +-
- fs/afs/volume.c   | 1 +
- 3 files changed, 4 insertions(+), 3 deletions(-)
+ .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index 128f2dbe256a..fee6fde79e6b 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -278,9 +278,9 @@ static void afs_break_one_callback(struct afs_server *server,
- 			struct afs_super_info *as = AFS_FS_S(cbi->sb);
- 			struct afs_volume *volume = as->volume;
+diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+index 6e635debc7fd..cfa01efa5b48 100644
+--- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
++++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+@@ -895,7 +895,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 			 u64 *data)
+ {
+ 	struct be_adapter *adapter = netdev_priv(netdev);
+-	int status;
++	int status, cnt;
+ 	u8 link_status = 0;
  
--			write_lock(&volume->cb_break_lock);
-+			write_lock(&volume->cb_v_break_lock);
- 			volume->cb_v_break++;
--			write_unlock(&volume->cb_break_lock);
-+			write_unlock(&volume->cb_v_break_lock);
- 		} else {
- 			data.volume = NULL;
- 			data.fid = *fid;
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 3904ab0b9563..fd0750fb96a5 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -582,7 +582,7 @@ struct afs_volume {
- 	unsigned int		servers_seq;	/* Incremented each time ->servers changes */
+ 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
+@@ -906,6 +906,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
  
- 	unsigned		cb_v_break;	/* Break-everything counter. */
--	rwlock_t		cb_break_lock;
-+	rwlock_t		cb_v_break_lock;
+ 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
  
- 	afs_voltype_t		type;		/* type of volume */
- 	short			error;
-diff --git a/fs/afs/volume.c b/fs/afs/volume.c
-index f6eba2def0a1..3e8dbee09f87 100644
---- a/fs/afs/volume.c
-+++ b/fs/afs/volume.c
-@@ -47,6 +47,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
- 	atomic_set(&volume->usage, 1);
- 	INIT_LIST_HEAD(&volume->proc_link);
- 	rwlock_init(&volume->servers_lock);
-+	rwlock_init(&volume->cb_v_break_lock);
- 	memcpy(volume->name, vldb->name, vldb->name_len + 1);
++	/* check link status before offline tests */
++	link_status = netif_carrier_ok(netdev);
++
+ 	if (test->flags & ETH_TEST_FL_OFFLINE) {
+ 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
+ 			test->flags |= ETH_TEST_FL_FAILED;
+@@ -926,13 +929,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 	}
  
- 	slist = afs_alloc_server_list(params->cell, params->key, vldb, type_mask);
+-	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
+-	if (status) {
+-		test->flags |= ETH_TEST_FL_FAILED;
+-		data[4] = -1;
+-	} else if (!link_status) {
++	/* link status was down prior to test */
++	if (!link_status) {
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 		data[4] = 1;
++		return;
++	}
++
++	for (cnt = 10; cnt; cnt--) {
++		status = be_cmd_link_status_query(adapter, NULL, &link_status,
++						  0);
++		if (status) {
++			test->flags |= ETH_TEST_FL_FAILED;
++			data[4] = -1;
++			break;
++		}
++
++		if (link_status)
++			break;
++
++		msleep_interruptible(500);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
