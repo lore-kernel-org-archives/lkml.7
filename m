@@ -7,56 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44517C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BE4C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19CAF2189F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A08121880
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120136;
-	bh=9j/jU9tlExDPyT0raXIiYsUGaZECYufQ8Ge/GwJO1nM=;
+	s=default; t=1562120139;
+	bh=m+R1xwEJppbiE3wvoUXAJkKObqcuGeLx/Si7OCzOa2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1G3+FXKmiTaRZuti1EzgkPs+IxVkcCMhj20ep9V2SNF9TSfB5sEztije8RdgRgD7
-	 Uuc/esEZOMwYou0wwZUgevZT8wXE7SwgQuUd17hNjZ2WSaz7WDlt8twgTRIsIK3bmO
-	 f+kD4zFKp4JNwpa+HHp+Av7r/QfOGr1tmG2uKAeY=
+	b=NQ4u7WktG9t8UBMb3TWNK7q6gTY/AWp0f1CRgD4uDRAAgQvT1NQtTD4Xt9chbrwyI
+	 lVCyQS2BzBEd8clud3fR5cVqHlGhQMHdRGzwmXsI0Kv4svjSenKCjHf+higxH9rD43
+	 YfpjgpB+ZGJ29dVo5lKNWwk7h/8BslYlDJzjthUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfGCCPf (ORCPT
+        id S1727639AbfGCCPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfGCCPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:15:33 -0400
+        id S1727622AbfGCCPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:15:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D45021881;
-        Wed,  3 Jul 2019 02:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD6221873;
+        Wed,  3 Jul 2019 02:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120132;
-        bh=9j/jU9tlExDPyT0raXIiYsUGaZECYufQ8Ge/GwJO1nM=;
+        s=default; t=1562120136;
+        bh=m+R1xwEJppbiE3wvoUXAJkKObqcuGeLx/Si7OCzOa2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOjZRbchS23SJTD0rf1gLLjwFUtUU+8+kRAnak5EhHiaB3CO0gay6hby38BIHLnHw
-         ohPkzCdJRyrOsHJD29pPsHfVTteD3A1jsJZ27qTSlg8fy42+dvYsZ49OD5lu2D+EPY
-         VE2LaNLS/K1/1IbMBoWC+Xb0yVQfjdSoi53Na+FU=
+        b=MevqsPRWXIuyLFX9gqZs7UluRFtdj2SfLVw7MIOXiXyjuFdfqSiMM87kGE62ouYf8
+         MoiJFW6QlHQ/KHss40SMVLtkqC1+ILMk1U1LpzpT/OxddP36CWmWQRRJqu9tajDmR7
+         tn/mOOfakHzgh2YF2u3PgeEDkivSbApGKrEcFE2U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>,
-        Young Xiao <92siuyang@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 10/39] perf/core: Fix perf_sample_regs_user() mm check
-Date:   Tue,  2 Jul 2019 22:14:45 -0400
-Message-Id: <20190703021514.17727-10-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 13/39] afs: Fix uninitialised spinlock afs_volume::cb_break_lock
+Date:   Tue,  2 Jul 2019 22:14:48 -0400
+Message-Id: <20190703021514.17727-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
 References: <20190703021514.17727-1-sashal@kernel.org>
@@ -69,52 +58,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c ]
+[ Upstream commit 90fa9b64523a645a97edc0bdcf2d74759957eeee ]
 
-perf_sample_regs_user() uses 'current->mm' to test for the presence of
-userspace, but this is insufficient, consider use_mm().
+Fix the cb_break_lock spinlock in afs_volume struct by initialising it when
+the volume record is allocated.
 
-A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
-PF_KTHREAD after it sets the new ->mm but before it drops to userspace
-for the first time.
+Also rename the lock to cb_v_break_lock to distinguish it from the lock of
+the same name in the afs_server struct.
 
-Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
+Without this, the following trace may be observed when a volume-break
+callback is received:
 
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Reported-by: Young Xiao <92siuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+  INFO: trying to register non-static key.
+  the code is fine but needs lockdep annotation.
+  turning off the locking correctness validator.
+  CPU: 2 PID: 50 Comm: kworker/2:1 Not tainted 5.2.0-rc1-fscache+ #3045
+  Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
+  Workqueue: afs SRXAFSCB_CallBack
+  Call Trace:
+   dump_stack+0x67/0x8e
+   register_lock_class+0x23b/0x421
+   ? check_usage_forwards+0x13c/0x13c
+   __lock_acquire+0x89/0xf73
+   lock_acquire+0x13b/0x166
+   ? afs_break_callbacks+0x1b2/0x3dd
+   _raw_write_lock+0x2c/0x36
+   ? afs_break_callbacks+0x1b2/0x3dd
+   afs_break_callbacks+0x1b2/0x3dd
+   ? trace_event_raw_event_afs_server+0x61/0xac
+   SRXAFSCB_CallBack+0x11f/0x16c
+   process_one_work+0x2c5/0x4ee
+   ? worker_thread+0x234/0x2ac
+   worker_thread+0x1d8/0x2ac
+   ? cancel_delayed_work_sync+0xf/0xf
+   kthread+0x11f/0x127
+   ? kthread_park+0x76/0x76
+   ret_from_fork+0x24/0x30
+
+Fixes: 68251f0a6818 ("afs: Fix whole-volume callback handling")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/callback.c | 4 ++--
+ fs/afs/internal.h | 2 +-
+ fs/afs/volume.c   | 1 +
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index dc7dead2d2cc..f33bd0a89391 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5913,7 +5913,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
- 		regs_user->regs = regs;
--	} else if (current->mm) {
-+	} else if (!(current->flags & PF_KTHREAD)) {
- 		perf_get_regs_user(regs_user, regs, regs_user_copy);
- 	} else {
- 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+diff --git a/fs/afs/callback.c b/fs/afs/callback.c
+index 128f2dbe256a..fee6fde79e6b 100644
+--- a/fs/afs/callback.c
++++ b/fs/afs/callback.c
+@@ -278,9 +278,9 @@ static void afs_break_one_callback(struct afs_server *server,
+ 			struct afs_super_info *as = AFS_FS_S(cbi->sb);
+ 			struct afs_volume *volume = as->volume;
+ 
+-			write_lock(&volume->cb_break_lock);
++			write_lock(&volume->cb_v_break_lock);
+ 			volume->cb_v_break++;
+-			write_unlock(&volume->cb_break_lock);
++			write_unlock(&volume->cb_v_break_lock);
+ 		} else {
+ 			data.volume = NULL;
+ 			data.fid = *fid;
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 3904ab0b9563..fd0750fb96a5 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -582,7 +582,7 @@ struct afs_volume {
+ 	unsigned int		servers_seq;	/* Incremented each time ->servers changes */
+ 
+ 	unsigned		cb_v_break;	/* Break-everything counter. */
+-	rwlock_t		cb_break_lock;
++	rwlock_t		cb_v_break_lock;
+ 
+ 	afs_voltype_t		type;		/* type of volume */
+ 	short			error;
+diff --git a/fs/afs/volume.c b/fs/afs/volume.c
+index f6eba2def0a1..3e8dbee09f87 100644
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -47,6 +47,7 @@ static struct afs_volume *afs_alloc_volume(struct afs_fs_context *params,
+ 	atomic_set(&volume->usage, 1);
+ 	INIT_LIST_HEAD(&volume->proc_link);
+ 	rwlock_init(&volume->servers_lock);
++	rwlock_init(&volume->cb_v_break_lock);
+ 	memcpy(volume->name, vldb->name, vldb->name_len + 1);
+ 
+ 	slist = afs_alloc_server_list(params->cell, params->key, vldb, type_mask);
 -- 
 2.20.1
 
