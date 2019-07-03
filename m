@@ -2,104 +2,109 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554F0C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB40C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28DA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067B52187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 10:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JF8ea33r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfGCKVK (ORCPT
+        id S1727319AbfGCKVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 06:21:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30136 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727013AbfGCKVJ (ORCPT
+        Wed, 3 Jul 2019 06:21:15 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11455 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727314AbfGCKVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 06:21:09 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63AKvjY058550
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Jul 2019 06:21:08 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tgst024c5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:21:03 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <maier@linux.ibm.com>;
-        Wed, 3 Jul 2019 11:20:11 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Jul 2019 11:20:08 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x63AK7qr34800090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Jul 2019 10:20:07 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 007124C044;
-        Wed,  3 Jul 2019 10:20:07 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B087C4C04A;
-        Wed,  3 Jul 2019 10:20:06 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.152.97.10])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Jul 2019 10:20:06 +0000 (GMT)
-From:   Steffen Maier <maier@linux.ibm.com>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] docs: s390: restore content and update s390dbf.rst
-Date:   Wed,  3 Jul 2019 12:19:46 +0200
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19070310-0028-0000-0000-0000037FF27A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070310-0029-0000-0000-000024403038
-Message-Id: <1562149189-1417-1-git-send-email-maier@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=744 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907030125
+        Wed, 3 Jul 2019 06:21:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1c81940000>; Wed, 03 Jul 2019 03:21:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 03 Jul 2019 03:21:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 03 Jul 2019 03:21:11 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jul
+ 2019 10:21:08 +0000
+Subject: Re: [PATCH 4.19 00/72] 4.19.57-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190702080124.564652899@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1890f906-16d6-a3c3-69fd-d604dafd6889@nvidia.com>
+Date:   Wed, 3 Jul 2019 11:21:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190702080124.564652899@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562149268; bh=XS6F2p121XQG5c7JeVGcXx6l921vqyQyVWylrICfnmQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JF8ea33rGnNeQcMc8z9WSnBue+eDiF7EulRgiLUOh5CmTm5hQjSfKhRaoT/eUqFqC
+         aVPxqG6LlWh9d3unyQEM7RrngEHPOfNF1WjhyZ3iNXJHSWisz7z4ssBktAJxUfu8yJ
+         HwaUUR496DkYez8Wjr1vDu6hG1KtwBKFMH0/zuqUBecGXzQhVekSQqIRhdQjnaTdBa
+         1xW1fsILXYRAYd3s/FYzr0p99FPn9q0d7ZU1XpfzyF/VhEM0fyZ7jEaJBsK34MExyc
+         Eq0uLtUOxbpuWHpWb6ZzNc62PfhX35og4yHOkDGbNIghBDdoFSUWaOKSu/lg+TDAHF
+         TPROgk9ruoMvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is based on top of the 3 s390 patches Heiko already queued on our
-s390 features branch.
-[("Re: [PATCH v3 00/33] Convert files to ReST - part 1")
- https://www.spinics.net/lists/linux-doc/msg66137.html
- https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/Documentation/s390?h=features]
 
-If I was not mistaken, some documentation was accidentally lost
-and patch 1 restores it.
+On 02/07/2019 09:01, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.57 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu 04 Jul 2019 07:59:45 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.57-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-After having looked closer, I came up with patches 2 and 3.
-Rendered successfully on a current Fedora 30 and it looks good:
-$ make SPHINXDIRS="s390" htmldocs
+All tests are passing for Tegra ...
 
-Steffen Maier (3):
-  docs: s390: restore important non-kdoc parts of s390dbf.rst
-  docs: s390: unify and update s390dbf kdocs at debug.c
-  docs: s390: s390dbf: typos and formatting, update crash command
+Test results for stable-v4.19:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
- Documentation/s390/s390dbf.rst | 390 +++++++++++++++++++++++++++++++++++++++--
- arch/s390/include/asm/debug.h  | 112 ++----------
- arch/s390/kernel/debug.c       | 105 +++++++++--
- 3 files changed, 473 insertions(+), 134 deletions(-)
+Linux version:	4.19.57-rc1-g4d057dfd72c6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
 
 -- 
-1.8.3.1
-
+nvpublic
