@@ -2,95 +2,97 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8429DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F130C06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7A420989
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E42821871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 05:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SFkzNcwp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srbeKWsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfGCFFk (ORCPT
+        id S1726998AbfGCFHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 01:05:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfGCFFj (ORCPT
+        Wed, 3 Jul 2019 01:07:48 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33650 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfGCFHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 01:05:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xEl2+/JTzzBOI/KV08MgmserEhjFmkUWQJwBIctYK4M=; b=SFkzNcwpjtj88+RFf39lES3Nd
-        UpEcUpbr23nX5AEzz3vL5og98hLt9afZrefE1veDbp33W2fNzY6fiTDq/ZJFVjhy8BllljujBxzWS
-        yaLerA+zNO8n0GkdayN//eyGJEMgsEuGAHkd56kiBBCaMIJsoj2KmKlRvpF+HAYJ+nIIwUk/ma7sZ
-        Z0cFW8szsaDtrvg6Xcm6y+X7hqBshGj6AqlCQveshLz891vkxCojG2foWThJYXK2pUqzcv5OK0Xet
-        TMhCxUfwjxawsGr/NcgAYfeOulsmWaQdu7vy2Qh+1c16wohWxtsy8NKAj8B/v2f+pZke8Fsvdlnbd
-        EBXhfvzfg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hiXSZ-0008SV-NI; Wed, 03 Jul 2019 05:05:36 +0000
-Subject: Re: [PATCH] PCI: hv: fix pci-hyperv build, depends on SYSFS
-To:     Dexuan Cui <decui@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org>
- <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <99059dd0-3b53-a8b8-5573-18edf449085a@infradead.org>
-Date:   Tue, 2 Jul 2019 22:05:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 01:07:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m4so565525pgk.0;
+        Tue, 02 Jul 2019 22:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KC7vgfyqe3Eg8Fe1+cMp4HakvNx6nu/Qukkr/Zk8t/0=;
+        b=srbeKWsd0T/FmFJeZxZX7XrU5K3lDCf5qczxFm+i5RUqeXG+OCfkkW8149MtSQhKj6
+         fGwbnqWrgmJBZAwS3AApMwK4kUnwtbbSqz+TmPLM8OqtnnGEpoboCbl11ftNyPRqtbrt
+         bGa2KdPXks6Erg/8ptcXNZ4juObXOCcoOC/UyzTUO3Y3oH10eD4NzKWsKHpB6bdPSoeb
+         S3yBjKhYISR5UqcCEVzYfkDcKqoZvtiodtB6SNlE0bgk+S4+AjPVoZuyfbSl5wRvevKs
+         QscFbuAeKVUlK0eFhG1hplIswYg2zzIrOYcjT31zSA4Qwc2453gf/MCKild1aDXyYq13
+         gLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KC7vgfyqe3Eg8Fe1+cMp4HakvNx6nu/Qukkr/Zk8t/0=;
+        b=uFgaTTku+7otAnaT306kTE9Q5qzldMdlSMXhgO07jvsdaDrKkBYyMu46PrD1Xf9+71
+         P5GicNWHyPGEtVbYiUcIxbqR59y5pnIlO7V8qTo59ReiOqMyolzzm7W3/aMLgfdiJm7N
+         qfQAQWqqx5CRaMkZ0ofAvmgZqVue+JPJgKSkdQokeaHTp6ODDVrg1ymrUCkiXkauPGg0
+         MxZlTi+7IJBbAuUFUnm+XLd/a16Otw3FW/rGnGmjjVcHp9IRhFHVhpC3l6wKiRrzKqJT
+         W8TGY0Fb+7sYUxwB2vDYDOAFkQwpBMJBjQ0GPXZoW4gv2v4QgeRYPfIq4fuHAJjcMFFI
+         NCeg==
+X-Gm-Message-State: APjAAAXCKPZHNYPh/xc5vxis/TyaMSbxtj3Q1bY4HnNphC3UPiHiRzJC
+        NhBes6cywukpp9SoBoEEl7yThfnf
+X-Google-Smtp-Source: APXvYqzaXU3faS5JxOfTe2eOA7XoPTCkRS8vgP7gCgNPRUQr40ZbYSPxaM3Z7U4pYHyaX7bZGuIuwQ==
+X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr9819718pjb.37.1562130466964;
+        Tue, 02 Jul 2019 22:07:46 -0700 (PDT)
+Received: from localhost.localdomain ([175.223.36.210])
+        by smtp.gmail.com with ESMTPSA id v184sm831351pgd.34.2019.07.02.22.07.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Jul 2019 22:07:46 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] posix_acl: fix stale posix_acl_update_mode() comment
+Date:   Wed,  3 Jul 2019 14:07:40 +0900
+Message-Id: <20190703050740.13730-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <PU1P153MB016931FDE7BF095FB85783EEBFFB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 9:33 PM, Dexuan Cui wrote:
->> From: linux-hyperv-owner@vger.kernel.org
->> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Randy Dunlap
->> Sent: Tuesday, July 2, 2019 4:25 PM
->> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
->>
->> drivers/pci/slot.o is only built when SYSFS is enabled, so
->> pci-hyperv.o has an implicit dependency on SYSFS.
->> Make that explicit.
->>
->> Also, depending on X86 && X86_64 is not needed, so just change that
->> to depend on X86_64.
->>
->> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft
->> Hyper-V VMs")
-> 
-> I think the Fixes tag should be:
-> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-> 
-> Thanks,
-> -- Dexuan
-> 
+inode_change_ok() was renamed to setattr_prepare() in 4.8-rc1.
 
-Thanks.  I did have a little trouble with that.
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ fs/posix_acl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index 84ad1c90d535..a76aa995a95d 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -637,7 +637,7 @@ EXPORT_SYMBOL_GPL(posix_acl_create);
+  * file mode, set *acl to NULL to indicate that no ACL should be set.
+  *
+  * As with chmod, clear the setgit bit if the caller is not in the owning group
+- * or capable of CAP_FSETID (see inode_change_ok).
++ * or capable of CAP_FSETID (see setattr_prepare).
+  *
+  * Called from set_acl inode operations.
+  */
 -- 
-~Randy
+2.22.0
+
