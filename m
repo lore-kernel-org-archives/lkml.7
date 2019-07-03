@@ -2,99 +2,204 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14329C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3247AC06510
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0992089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rKpfxsJD"
+	by mail.kernel.org (Postfix) with ESMTP id 109082089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfGCBGn (ORCPT
+        id S1727184AbfGCBHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:06:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37140 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfGCBGm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:06:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v14so739034wrr.4;
-        Tue, 02 Jul 2019 18:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S20bz31fyF77AkCnu33n045r7OsD3M49ELgeQB5vs2I=;
-        b=rKpfxsJDnfWd69UQSEtuSYNwHLwMhWWZHwStq/bYSyaH6PbKVNxQURWaJgcGWFPN9m
-         u/JWYj3XXSbXBVPn/ysJyfDQiWWzEqwYJXt0mHyG4W9IAc6c1XDcPtRBCzvcTRIuMzol
-         jQ2G1QvgzZNZv2XpMUuCdqFR/hD+sdI6Hgmbs4OcnIlQOyGozzyNfRYRsmm/ENnDnmaj
-         j6q6GSXYZoB5okODrjO6w+dnZEbx5tCHLU091aDt7NmZeZ77F+ZJitaNpwgIe++MB0R5
-         MG9z4IdCowKEICdq/Bb5zIFlNoGXQWr8uaFO+lu8RgQMnMp8to7n3kyjMMsuM1q/Lkb2
-         3GBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S20bz31fyF77AkCnu33n045r7OsD3M49ELgeQB5vs2I=;
-        b=mYlkd/ZHdUUoXmtfaVGzOGgGBTVFaop78jeLky30dCFmPwFPrbyd+PE1rF6IngZkXW
-         uNk3wj3nFwYP5D5Lw5zx0v4kT4wCFW7izBVruthvnV/nuLrnkwdF9mK21pje4tISyPeM
-         AS/0aNa63GtnJEXnehOdjgrweRaKEHpgjZWcYrVxfIwVwSoYT5qU775u4uijJWh/0iWt
-         fGvfX2UmbzUlLzR8AiYDXZT7yBBtGaQPNd7vx64skeieYwfELtx6uuBAkGaYcdXfBScG
-         Xc9FNZulZxxQTfL07/NJTOf0xxXTuC24T7ePSkfM4Ac+XcAGY/dUHcsXZBaqjVg6jH9d
-         /8fA==
-X-Gm-Message-State: APjAAAWN2UIgGDqndabBf2NQu0wgX/iMzerFdu+Qpx8Xqytz+U0MgCUr
-        DzWiaKvURnMgYcsNzYTTuz6bvvp0
-X-Google-Smtp-Source: APXvYqx1Hug9iFC4i/SltSeb9jObF12BCPzD2m1B8Z2jZTjofJXOFWZBgti1p0PY0OsOf/6wXgWnHw==
-X-Received: by 2002:a5d:5112:: with SMTP id s18mr24167876wrt.111.1562106788347;
-        Tue, 02 Jul 2019 15:33:08 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133D62000A09003363445C98E.dip0.t-ipconnect.de. [2003:f1:33d6:2000:a090:336:3445:c98e])
-        by smtp.googlemail.com with ESMTPSA id 18sm253513wmg.43.2019.07.02.15.33.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 15:33:07 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     blogic@openwrt.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
-Cc:     dev@kresin.me, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/4] gpio: stp-xway: small cleanups and improvements
-Date:   Wed,  3 Jul 2019 00:32:44 +0200
-Message-Id: <20190702223248.31934-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 2 Jul 2019 21:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfGCBHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 21:07:34 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA5C20673;
+        Wed,  3 Jul 2019 01:07:32 +0000 (UTC)
+Date:   Tue, 2 Jul 2019 21:07:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     shuah <shuah@kernel.org>, Po-Hsu Lin <po-hsu.lin@canonical.com>,
+        mingo@redhat.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: skip ftrace test if FTRACE was not
+ enabled
+Message-ID: <20190702210730.2c041882@gandalf.local.home>
+In-Reply-To: <20190703091147.064029248fed5066ea5e5d2b@kernel.org>
+References: <20190702062358.7330-1-po-hsu.lin@canonical.com>
+        <4a44dd22-be88-ce5b-5c9b-6a3759b6c2eb@kernel.org>
+        <20190703091147.064029248fed5066ea5e5d2b@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series brings a few small cleanups and improvements to the stp-xway
-driver:
-- enable compile-testing
-- preparation for whenever the lantiq target switches to the common clock
-  framework
-- easier to read (for me)
+On Wed, 3 Jul 2019 09:11:47 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-None of these fixes any known bugs so there's no Fixes tag anywhere.
+> Hi Po-Hsu Lin,
+> 
+> On Tue, 2 Jul 2019 13:22:26 -0600
+> shuah <shuah@kernel.org> wrote:
+> 
+> > Hi Po-Hsu Lin,
+> > 
+> > On 7/2/19 12:23 AM, Po-Hsu Lin wrote:  
+> > > The ftrace test will need to have CONFIG_FTRACE enabled to make the
+> > > ftrace directory available.
+> > > 
+> > > Add an additional check to skip this test if the CONFIG_FTRACE was not
+> > > enabled.  
+> 
+> Sorry, NAK for config check.
 
-It's probably too late for inclusion into Linux 5.3. No need to rush,
-I'm happy with 5.4 as well.
+Agreed, as  my test boxes do not hold the source code of the kernel
+they are running.
+
+> 
+> > > 
+> > > This will be helpful to avoid a false-positive test result when testing
+> > > it directly with the following commad against a kernel that does not
+> > > have CONFIG_FTRACE enabled:  
+> 
+> Would you know tools/testing/selftests/ftrace/config (and other config files
+> in each tests) ?
+> 
+> Since each selftest depends specific configurations, those configs are
+> written in config file, and tester must enable it using 
+> "scripts/kconfig/merge_config.sh".
+> 
+> We can not check the kernel config in some cases, e.g. distro kernel,
+> cross-build kernel, remote build kernel etc. Also, the .config file
+> can be a config file for another kernel build.
+> 
+> So please take care of your kernel configuration. If you find any test
+> failed even if you enable configs in config file under that test, please
+> report it, since that is a bug.
+> 
+> 
+> Thank you,
+> 
+> > >      make -C tools/testing/selftests TARGETS=ftrace run_tests
+> > > 
+> > > The test result on an Ubuntu KVM kernel will be changed from:
+> > >      selftests: ftrace: ftracetest
+> > >      ========================================
+> > >      Error: No ftrace directory found
+> > >      not ok 1..1 selftests: ftrace: ftracetest [FAIL]
+> > > To:  
+> > 
+> > Thanks for the patch.
+> > 
+> > Check patch fails with the above To:
+> > 
+> > WARNING: Use a single space after To:
+> > #107:
+> > To:
+> > 
+> > ERROR: Unrecognized email address: ''
+> > #107:
+> > To:
+> > 
+> > total: 1 errors, 1 warnings, 23 lines checked
+> > 
+> > 
+> > Please fix and send v2.
+> >   
+> > >      selftests: ftrace: ftracetest
+> > >      ========================================
+> > >      CONFIG_FTRACE was not enabled, test skipped.
+> > >      not ok 1..1 selftests: ftrace: ftracetest [SKIP]
+> > > 
+> > > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> > > ---
+> > >   tools/testing/selftests/ftrace/ftracetest | 11 ++++++++++-
+> > >   1 file changed, 10 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> > > index 6d5e9e8..6c8322e 100755
+> > > --- a/tools/testing/selftests/ftrace/ftracetest
+> > > +++ b/tools/testing/selftests/ftrace/ftracetest
+> > > @@ -7,6 +7,9 @@
+> > >   #  Written by Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+> > >   #  
+> > 
+> > Hmm. You havem't cc'ed Masami on this. Adding Masami.
+> > 
+> > I would think Masami should be on the Signed-off-by as well,
+> > since he is the author.
+> >   
+> > >   
+> > > +# Kselftest framework requirement - SKIP code is 4.
+> > > +ksft_skip=4
+> > > +
+> > >   usage() { # errno [message]
+> > >   [ ! -z "$2" ] && echo $2
+> > >   echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
+> > > @@ -139,7 +142,13 @@ parse_opts $*
+> > >   
+> > >   # Verify parameters
+> > >   if [ -z "$TRACING_DIR" -o ! -d "$TRACING_DIR" ]; then
+
+I'm thinking if we didn't find the TRACING_DIR (-z "$TRACING_DIR"
+returns true), then we exit with the skip. I don't believe we should be
+testing ftrace if tracefs isn't even loaded. Or something like:
+
+	err_ret=1
+	err_skip=4
+
+	errexit() {
+	  echo "Error: $1" 1>&2
+	  exit $err_ret
+	}
+
+	[..]
+
+	if [ -z "$TRACING_DIR" ]; then
+	  save_err=$err_ret
+	  err_ret=$err_skip
+	  mount -t tracefs nodev /sys/kernel/tracing ||
+	    errexit "kernel does not have tracefs"
+	  err_ret=$save_err
+	  TRACING_DIR="/sys/kernel/tracing"
+	fi
+	if [ ! -d "$TRACING_DIR" ]; then
+	  errexit "tracefs is not a directory?"
+	fi
+
+Would something like that work?
+
+-- Steve
 
 
-Martin Blumenstingl (4):
-  gpio: stp-xway: simplify error handling in xway_stp_probe()
-  gpio: stp-xway: improve module clock error handling
-  gpio: stp-xway: get rid of the #include <lantiq_soc.h> dependency
-  gpio: stp-xway: allow compile-testing
-
- drivers/gpio/Kconfig         |  3 ++-
- drivers/gpio/gpio-stp-xway.c | 33 +++++++++++++++++----------------
- 2 files changed, 19 insertions(+), 17 deletions(-)
-
--- 
-2.22.0
+> > > -  errexit "No ftrace directory found"
+> > > +  ftrace_enabled=`grep "^CONFIG_FTRACE=y" /lib/modules/$(uname -r)/build/.config`
+> > > +  if [ -z "$ftrace_enabled" ]; then
+> > > +    echo "CONFIG_FTRACE was not enabled, test skipped."
+> > > +    exit $ksft_skip
+> > > +  else
+> > > +    errexit "No ftrace directory found"
+> > > +  fi
+> > >   fi
+> > >   
+> > >   # Preparing logs
+> > >   
+> > 
+> > thanks,
+> > -- Shuah  
+> 
+> 
 
