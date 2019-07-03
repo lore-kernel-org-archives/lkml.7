@@ -2,86 +2,89 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A27C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298F0C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479D521852
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KqQnIs8M"
+	by mail.kernel.org (Postfix) with ESMTP id 0004C21852
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfGCVoB (ORCPT
+        id S1727422AbfGCVo5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:44:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:58149 "EHLO ozlabs.org"
+        Wed, 3 Jul 2019 17:44:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50343 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfGCVoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:44:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fF3y2p5sz9sBp;
-        Thu,  4 Jul 2019 07:43:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562190238;
-        bh=Ta/mVq55yYgD8k96u5P7ESQsk0sEgaqQnXZMCcskANw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KqQnIs8MZSmiIczpAGFiPCT7scPa7cBLa+37s+NC/rXz1zU6d2dIA/JZBHxLsz7dx
-         gubhrS6DOByf9e0mR6L2QiqukcjMHKDQXmQQeNHR9qE77ZtFKMhKrU6XIsmKWk/RKO
-         b3an3+cwbXlSecOiTdpsX48FgyeAnC66zP/DEvSidbOh9hVFtggvvJKwyF4agzP2FN
-         DLrx3EacuxBf1Veh7iPel/I3BR+KJG9gSksMld+YT7Ul2JOttg2EqdrubFzB3rPZIa
-         5cKdfNCXBLQy/RbL+PPexb7JwwtY/UuK8jKpN0auvhWvPIA6/1kNbApOPs6GnYz79Z
-         S6zfeuIjJuCcA==
-Date:   Thu, 4 Jul 2019 07:43:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the amdgpu tree
-Message-ID: <20190704074357.5dc09442@canb.auug.org.au>
+        id S1727116AbfGCVo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:44:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 14:44:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,448,1557212400"; 
+   d="scan'208";a="184861600"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Jul 2019 14:44:55 -0700
+Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 3 Jul 2019 14:44:55 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.70]) by
+ ORSMSX112.amr.corp.intel.com ([169.254.3.232]) with mapi id 14.03.0439.000;
+ Wed, 3 Jul 2019 14:44:55 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
+ function iavf_debug_d
+Thread-Topic: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
+ function iavf_debug_d
+Thread-Index: AQHVMJ5XiQrcda6PCk6e4wmTDurJL6a5b8lw
+Date:   Wed, 3 Jul 2019 21:44:55 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3FD2B4@ORSMSX104.amr.corp.intel.com>
+References: <20190702062021.41524-1-yuehaibing@huawei.com>
+In-Reply-To: <20190702062021.41524-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWU0MDViMDUtOWIyMy00YjFhLWJhZmEtZTA0ZjZmNzg1NzY0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiazgyelwvMVNkSFBKQ0ZTM3BsTCtcL1hZdzNWSjdTeTVCeWN4MGFtRWpEN2I3dW1Xc0hZVUFtZzl2NUNmeklVWW90In0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/MW.9nop8aAmhk0S2wC2=atR"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MW.9nop8aAmhk0S2wC2=atR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of YueHaibing
+> Sent: Monday, July 1, 2019 11:20 PM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net;
+> intel-wired-lan@lists.osuosl.org
+> Cc: netdev@vger.kernel.org; YueHaibing <yuehaibing@huawei.com>; linux-
+> kernel@vger.kernel.org
+> Subject: [Intel-wired-lan] [PATCH net-next] iavf: remove unused debug
+> function iavf_debug_d
+> 
+> There is no caller of function iavf_debug_d() in tree since commit
+> 75051ce4c5d8 ("iavf: Fix up debug print macro"), so it can be removed.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/net/ethernet/intel/iavf/iavf_main.c | 22 ----------------------
+>  1 file changed, 22 deletions(-)
 
-Hi all,
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-Commit
 
-  841e58962647 ("drm/amdgpu/psp: add psp support for navi14")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/MW.9nop8aAmhk0S2wC2=atR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0dIZ0ACgkQAVBC80lX
-0GxUVQf/fzP7U+28zPbMEJMks9RAQLAkXGOA5iuESXk1txhfJUCO9wyTzI6lu68u
-TEnYJNvmm4v4Cqh5LZkBpR1MEBRg8KDXZctzUmPPHraLLVRSjWjYVNCmY4Cb5ZGS
-S7OA2B64EmWb7Lem8cJXYYVB0vAhueRTnPUfi+jjjLCMZtn4a1FzLlYNIAwLWmeg
-DH2uxUNNGTClGZTD5U4XUsVr5DJ2jSKvzOu8JvAEAJEKc/gYXjQnGs0eLOtRO5iG
-8tWBEGRqD7D5O6qDxN/p5d1/x9F6VAwER1PP4JCKTTfLajtY1j9fLoh/N366lyRd
-SVmYWulk6WHDLKvV3iO/ytRCVBF49Q==
-=EH5v
------END PGP SIGNATURE-----
-
---Sig_/MW.9nop8aAmhk0S2wC2=atR--
