@@ -3,117 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8375DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8306C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591B22089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2842089C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="OluhLlRu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTQ/vUCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfGCB2m (ORCPT
+        id S1727335AbfGCB2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:28:42 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37601 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfGCB2m (ORCPT
+        Tue, 2 Jul 2019 21:28:46 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34017 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfGCB2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:28:42 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y57so799444qtk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
+        Tue, 2 Jul 2019 21:28:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u18so788105wru.1;
+        Tue, 02 Jul 2019 18:28:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=GPq+X9gZ7QNxQQpyYuv9TfK86Mv6GcvklT40SAlmU6I=;
-        b=OluhLlRuwPPuipU6cP5uCepLi5qwIPWoKIg+SrFLDnLIPWUVwbd20cNRHrpJjZodcI
-         bpTfkHot5f3AkN85zqhxB7iu7g8RRnhrvj4IDi9J+ymngPXPpvvKixZ7uy4vgS/CpA7o
-         LI1K0P6e1HWNz859c3xzR/LWinE4y3gtVbPZH4ZvuxbazmVyd+SVfrHLVQLiU6nwTytT
-         lRThvht5Y8GvFutbWJKr2+mpp75TF8D0xUlKGgFCuC32BUvu+jKEjJFrlKkH00pq5Qnf
-         sTnjxik3lFu9C92pKOnsGh5sW4gcox6NBLporHj4ibDswJqbrUtUe/3vWdLsvqNcBeVL
-         Gt1A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yy/jJe6Qlwwp1Uwe0Cit54zA7Vf11kpokyvinUCks7c=;
+        b=aTQ/vUCfodZFR5bl0E3g9XXd7THPV9nPu2mYp1+I8zMhs9sW7E6Ryo+nF5yEJRUyNX
+         fI8WUsDhjEVt5q7xnTAgk5AA+5WeigU53ZxjE4QoGIwbCvPIcq4EZoVsRxM6FKfrPuov
+         Qv+OEuln/KI5BLM4Pcsc6t/+OoqYbY+FJfgqqCNBwH5J9qIXgp7HRmXM/Hp/6QQGgZD3
+         RYP/lR0JWxJM/E4pW5wsV+9KSD10OM3lmMEU8ATdAqNCmgb6fDdjtBE+6ORfdyU9DXjd
+         JVUjqtL75spzdpAY6myj7OjBc40Gef9T6W9tBjtXlgTblrPH+kg8uUbhXkFlI1Wc3GOk
+         D0Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=GPq+X9gZ7QNxQQpyYuv9TfK86Mv6GcvklT40SAlmU6I=;
-        b=a1uNNEJdeq9selqvPQzYTf5/laZ8W4fCn++M6SNXVAUivQWnzly/5RhdKiXteYfyxa
-         bSasmxYLHjn5eKdmy1bRsPR7oITRO/4e06Gb4pWaGjaL8MZCPiGU7ismw0MdPv+X1c9f
-         QrxrUh97GCHMg/Mqgj2v7k/HU2nnjv5f1xn1b8pbkLfrzG+TTemD2tsplg6GfoHPotpS
-         QgbIUzzseVGm+coX9v1klUMMnSb76CLFn0QmY+orKy+YRUS0CvvnIu/35Qk9/iNTKAI4
-         1nA10G67rHGaEgE5YFOGZ3z2Ob0/vJaFtyX/uqX2H9NDwK5Q9OLqGlJ2EuJcOHkEDytY
-         F0rw==
-X-Gm-Message-State: APjAAAXliJfViDNaAlh/qI5WLLEok8g91qfTYyKC/pz5u63pYXQAEKa8
-        bIFQhu1YAjuZ8FyqhA4sy9fNag==
-X-Google-Smtp-Source: APXvYqzYSgXl8r6+whN1TzV4O/DdC6Y7yHmiVDY0vvy0MVaR9rm+bdJH9PclIsRiwOBEWrYeIC7k2Q==
-X-Received: by 2002:ac8:224d:: with SMTP id p13mr27884664qtp.154.1562117321444;
-        Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 18sm247144qke.131.2019.07.02.18.28.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 18:28:41 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 18:28:35 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 05/15] ethtool: helper functions for netlink
- interface
-Message-ID: <20190702182835.69c9ac67@cakuba.netronome.com>
-In-Reply-To: <20190702163437.GE20101@unicorn.suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
-        <44957b13e8edbced71aca893908d184eb9e57341.1562067622.git.mkubecek@suse.cz>
-        <20190702130515.GO2250@nanopsycho>
-        <20190702163437.GE20101@unicorn.suse.cz>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yy/jJe6Qlwwp1Uwe0Cit54zA7Vf11kpokyvinUCks7c=;
+        b=VbS7125Xu3y5i7b1GwiKV/aytg+I8tAWJI2xvqGtxl0ED+cm2aucFHw3lFV3KJapiY
+         +Vy31Z2g9gZBZt4jT7MKTl/ZllRd0SvT+nMrZY7/nKayAIFhxyiUtMEktmEshbA4duOa
+         AkakRNiI53CsVW4TU13pNqCjt3k4wciDg5TNmfSQYhk2F8Zw9fkwV78TF9oE10e4E/i7
+         k5vDcMtASQFf4S4hBhsTT2+wdZbOnlRUDyTMnMRAFSB2e+yRsdBVKZ6awTN5DiA/Od+B
+         sTXmcwFJbouc44PwvZD6dnkzToyyCy9KGxuXJg9WsqtHLt5wJTipAigwtUWmsbP1mrBQ
+         ojLg==
+X-Gm-Message-State: APjAAAV1xcLOF4U5PjewohHXwh1FasFaNAcfgz2Q+DQ3sUJdxRHBVhZw
+        oUJTjZsY8ni3/qRLr5iSQbTxjutHdGTFrma2rPArj2PdkVA=
+X-Google-Smtp-Source: APXvYqzIEb02aajpAGNava/id0J1XqTeNG0vVxYK5uLbQYjjwdzYTBzNUK+/I5XN+jnCDfKY6KrEoXRwtDvbB0DH4xE=
+X-Received: by 2002:adf:dec3:: with SMTP id i3mr14133575wrn.74.1562117322653;
+ Tue, 02 Jul 2019 18:28:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190701213304.34eeaef8@canb.auug.org.au> <20190701231036.GC23718@mellanox.com>
+In-Reply-To: <20190701231036.GC23718@mellanox.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 2 Jul 2019 21:28:30 -0400
+Message-ID: <CADnq5_OGiOZaz8V1aLLNL9F88pkthKh4ytYMaaFZ8j3XbgOnkg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the hmm tree
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Yang, Philip" <Philip.Yang@amd.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 18:34:37 +0200, Michal Kubecek wrote:
-> > >+	ret = nla_parse_nested(tb, ETHTOOL_A_HEADER_MAX, nest,
-> > >+			       policy ?: dflt_header_policy, extack);
-> > >+	if (ret < 0)  
-> > 
-> > if (ret)
-> > 
-> > Same remark goes to the rest of the code (also the rest of the patches),
-> > in case called function cannot return positive values.  
-> 
-> The "if (ret < 0)" idiom for "on error do ..." is so ubiquitous through
-> the whole kernel that I don't think it's worth it to carefully check
-> which function can return a positive value and which cannot and risk
-> that one day I overlook that some function. And yet another question is
-> what exactly "cannot return" means: is it whenever the function does not
-> return a positive value or only if it's explicitly documented not to?
-> 
-> Looking at existing networking code, e.g. net/netfilter (except ipvs),
-> net/sched or net/core/rtnetlink.c are using "if (ret < 0)" rather
-> uniformly. And (as you objected to the check of genl_register_family()
-> previous patch) even genetlink itself has
-> 
-> 	err = genl_register_family(&genl_ctrl);
-> 	if (err < 0)
-> 		goto problem;
-> 
-> in genl_init().
+On Tue, Jul 2, 2019 at 3:24 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Mon, Jul 01, 2019 at 09:33:04PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the hmm tree, today's linux-next build (x86_64 allmodconfig)
+> > failed like this:
+> >
+> > mm/hmm.c: In function 'hmm_get_or_create':
+> > mm/hmm.c:50:2: error: implicit declaration of function 'lockdep_assert_held_exclusive'; did you mean 'lockdep_assert_held_once'? [-Werror=implicit-function-declaration]
+> >   lockdep_assert_held_exclusive(&mm->mmap_sem);
+> >   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >   lockdep_assert_held_once
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c: In function 'amdgpu_ttm_tt_get_user_pages':
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:778:28: error: passing argument 2 of 'hmm_range_register' from incompatible pointer type [-Werror=incompatible-pointer-types]
+> >   hmm_range_register(range, mm, start,
+> >                             ^~
+> > In file included from drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:35:
+> > include/linux/hmm.h:464:29: note: expected 'struct hmm_mirror *' but argument is of type 'struct mm_struct *'
+> >           struct hmm_mirror *mirror,
+> >           ~~~~~~~~~~~~~~~~~~~^~~~~~
+> >
+> > Caused by commit
+> >
+> >   e36acfe6c86d ("mm/hmm: Use hmm_mirror not mm as an argument for hmm_range_register")
+> >
+> > interacting with commit
+> >
+> >   66c45500bfdc ("drm/amdgpu: use new HMM APIs and helpers")
+> >
+> > from the drm tree.
+> >
+> > All I could do for now was to mark the AMDGPU driver broken.  Please
+> > submit a merge for for me (and later Linus) to use.
+>
+> This is expected, the AMD guys have the resolution for this from when
+> they tested hmm.git..
+>
+> I think we are going to have to merge hmm.git into the amdgpu tree and
+> push the resolution forward, as it looks kind of complicated to shift
+> onto Linus or DRM.
+>
+> Probably amdgpu needs to gain a few patches making the hmm_mirror
+> visible to amdgpu_ttm.c and then the merge resolution will be simple?
+>
+> AMD/DRM we have a few days left to decide on how best to handle the
+> conflict, thanks.
 
-I agree with Jiri, if a function only returns "0, or -errno" it's
-easier to parse if the error check is not only for negative values.
-At least to my eyes.
+Philip and Felix have been working on a branch with hmm merged into
+drm-next with all the conflicts fixes up.  I'll post it out tomorrow
+once I get Felix's latest revisions.
 
-What I'm not sure about is whether we want to delay the merging of this
-interface over this..
+Alex
+
+>
+> Regards,
+> Jason
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
