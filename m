@@ -2,82 +2,157 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20506C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283F7C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE16221873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0286221873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562120232;
+	bh=aDN70qcwkeDqPdAinBSB8dWscJxpUhdC/Ecsaa5kelI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fnc3Ijt7qqItPqc8n6cOY3kW9ky3qdxlVxYHlqF/J1C+U93h+w8sEw78GKFHJT2Dx
+	 /gpEqBdJehE3PWBZ6KMzgfdRVlOYjsiPzJsZy+9lVr0GnHrODXzEL58gAbbPuN3XkP
+	 oL4PQG1JmAdOTOSCe6VsCDDLytnfMxyh7ercyhoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfGCCRB (ORCPT
+        id S1728163AbfGCCRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Jul 2019 22:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728126AbfGCCRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Jul 2019 22:17:01 -0400
-Received: from zg8tmtyylji0my4xnjqunzqa.icoremail.net ([162.243.164.74]:60134
-        "HELO zg8tmtyylji0my4xnjqunzqa.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1728112AbfGCCQ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:58 -0400
-X-Greylist: delayed 380 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jul 2019 22:16:57 EDT
-Received: from localhost (unknown [111.202.192.3])
-        by email1 (Coremail) with SMTP id AQBjCgDXpmB2Dhxd6PNCAA--.52124S2;
-        Wed, 03 Jul 2019 10:10:18 +0800 (CST)
-From:   Peng Wang <rocking@whu.edu.cn>
-To:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Wang <rocking@whu.edu.cn>
-Subject: [PATCH] cgroup: minor tweak for logic to get cgroup css
-Date:   Wed,  3 Jul 2019 10:07:49 +0800
-Message-Id: <20190703020749.22988-1-rocking@whu.edu.cn>
-X-Mailer: git-send-email 2.19.1
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4781321897;
+        Wed,  3 Jul 2019 02:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562120220;
+        bh=aDN70qcwkeDqPdAinBSB8dWscJxpUhdC/Ecsaa5kelI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l8dVMOpBO3vY2IM4ZhmytHl+I8Hz9mg36iNi4lPoJQ3T+cpKARJ7z4UcdN/AllnBJ
+         Hv6sgYROtACMTc5052fHK8c4Kpfs3uEzqjf5YYuOhgwQml6PqFMPnHsVTd5lDqkl5n
+         b8MoHT7Y8voXsp/0DD9/JixaL1b8nwJwA9OEkDG8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/26] pinctrl: mediatek: Update cur_mask in mask/mask ops
+Date:   Tue,  2 Jul 2019 22:16:24 -0400
+Message-Id: <20190703021625.18116-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
+References: <20190703021625.18116-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQBjCgDXpmB2Dhxd6PNCAA--.52124S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xry8CF1ftr1UuFWxArykGrg_yoWxCrb_Aw
-        1Iva12gry8Aw1jkr4qgws5XFWkKF4YgF1vvr4UtFy7JFyUtFs8t34fJF15JFsxuFn3XryD
-        JrW3WrykGrn7ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4U
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUgVyxUUUUU=
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We could only handle the case that css exists
-and css_try_get_online() fails.
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+[ Upstream commit 9d957a959bc8c3dfe37572ac8e99affb5a885965 ]
+
+During suspend/resume, mtk_eint_mask may be called while
+wake_mask is active. For example, this happens if a wake-source
+with an active interrupt handler wakes the system:
+irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+that it can be handled later on in the resume flow.
+
+However, this may happen before mtk_eint_do_resume is called:
+in this case, wake_mask is loaded, and cur_mask is restored
+from an older copy, re-enabling the interrupt, and causing
+an interrupt storm (especially for level interrupts).
+
+Step by step, for a line that has both wake and interrupt enabled:
+ 1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+    enabled at hardware level)
+ 2. System suspends, resumes due to that line (at this stage EINT_EN
+    == wake_mask)
+ 3. irq_pm_check_wakeup is called, and disables the interrupt =>
+    EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+ 4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+    it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
+    is not yet ready to handle the interrupt.
+
+This patch fixes the issue in step 3, by recording all mask/unmask
+changes in cur_mask. This also avoids the need to read the current
+mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
+function.
+
+The interrupt will be re-enabled properly later on, sometimes after
+mtk_eint_do_resume, when the driver is ready to handle it.
+
+Fixes: 58a5e1b64bb0 ("pinctrl: mediatek: Implement wake handler and suspend resume")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Sean Wang <sean.wang@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/mediatek/mtk-eint.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index bf9dbffd46b1..a988d77f6c6d 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -488,7 +488,7 @@ static struct cgroup_subsys_state *cgroup_tryget_css(struct cgroup *cgrp,
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index b9f3c02ba59d..564cfaee129d 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_set);
  
- 	rcu_read_lock();
- 	css = cgroup_css(cgrp, ss);
--	if (!css || !css_tryget_online(css))
-+	if (css && !css_tryget_online(css))
- 		css = NULL;
- 	rcu_read_unlock();
++	eint->cur_mask[d->hwirq >> 5] &= ~mask;
++
+ 	writel(mask, reg);
+ }
  
+@@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
+ 	void __iomem *reg = mtk_eint_get_offset(eint, d->hwirq,
+ 						eint->regs->mask_clr);
+ 
++	eint->cur_mask[d->hwirq >> 5] |= mask;
++
+ 	writel(mask, reg);
+ 
+ 	if (eint->dual_edge[d->hwirq])
+@@ -217,19 +221,6 @@ static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
+ 	}
+ }
+ 
+-static void mtk_eint_chip_read_mask(const struct mtk_eint *eint,
+-				    void __iomem *base, u32 *buf)
+-{
+-	int port;
+-	void __iomem *reg;
+-
+-	for (port = 0; port < eint->hw->ports; port++) {
+-		reg = base + eint->regs->mask + (port << 2);
+-		buf[port] = ~readl_relaxed(reg);
+-		/* Mask is 0 when irq is enabled, and 1 when disabled. */
+-	}
+-}
+-
+ static int mtk_eint_irq_request_resources(struct irq_data *d)
+ {
+ 	struct mtk_eint *eint = irq_data_get_irq_chip_data(d);
+@@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+ 
+ int mtk_eint_do_suspend(struct mtk_eint *eint)
+ {
+-	mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
+ 	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+ 
+ 	return 0;
 -- 
-2.19.1
+2.20.1
 
