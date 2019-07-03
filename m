@@ -2,98 +2,122 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB100C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0701C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECFA21850
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ygibtc7g"
+	by mail.kernel.org (Postfix) with ESMTP id CD15A21850
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfGCNuX (ORCPT
+        id S1726969AbfGCNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:50:23 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55014 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfGCNuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:50:22 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g135so2297762wme.4;
-        Wed, 03 Jul 2019 06:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YFbVXlxoYz2j0yWH+kl6Asgr36XCltStIn0g6Mr9B8w=;
-        b=Ygibtc7gTh0+cqjA02xazjen9ww1ScHU0j2G5jXkqHMZmtEfu05BjQPbn5MK8Ln+61
-         EjBq/NFluFO5KnsyGCyPHTvG6jM2mN+AuNyfdXhe2J/ZM3vxBHXtf5wIO5o+BPmDwMJm
-         GV/N+F9vOP9DYBk0e+tyqVlWcYoWzf2ll2jyTRte6u6Abnw9ol/A51ankU8DBtFqvSkZ
-         tUVdPEeUbWSyioBh562LebC2aeKKQx6I7jWR984QpIVZ9QyhClxMWERqxk6LLSY8Dca+
-         9w4/V2hPdzZha1HJovwsTBkD75Wijy9EoYcSA+f6OzkkYhuTQXTT/UwvNxaft6i2YiBb
-         wlOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YFbVXlxoYz2j0yWH+kl6Asgr36XCltStIn0g6Mr9B8w=;
-        b=epmGl0mc3LMLPP9t+FQOZ0Mfe0tkWD26YPwc//4kVboh9ZXrfclXAV0LTNs4FS97/I
-         4+Lq/PbMU6kLIy/ifiFRJuaxXOA9BOXjgQdnzIbZAGmoqaL7lOzfC7WRMtSG2N2UDLka
-         lc2SqxlgCN1A+REwDvhUDUxyPH4IcNw9diJuuEpsK3jf1Nwh86AlgJVZLbTN+bZq9Rlw
-         NmGcD5ZYfKcm/iDrSZiJQDFaiBZ5iRDI360n/qe+3ZjSi6NNXa+6aVsdqPvG9FXbMqcc
-         ydDXcZtY8lziYLPX4fmcxWcyFz/wYLcejCxN0utwBOGxqRBx207YkSV8owgWYg1AGmvm
-         ut8w==
-X-Gm-Message-State: APjAAAXV5EEIgLbozquHIjx2K6OY+VKNZbfz6U4e2oi/Bsmk/u2mFOGc
-        tQdg9pz01hHFGGJblSPHzq4=
-X-Google-Smtp-Source: APXvYqwUh87fuoSZF/FPYj+B5TiydkOU+kjZrA/YtS4lovdEJlLn3AcrxHFEkISCsO2az/sjn1zqtQ==
-X-Received: by 2002:a7b:cd04:: with SMTP id f4mr8722390wmj.64.1562161820234;
-        Wed, 03 Jul 2019 06:50:20 -0700 (PDT)
-Received: from puskevit.guest.wlan ([195.142.153.182])
-        by smtp.gmail.com with ESMTPSA id t80sm2669920wmt.26.2019.07.03.06.50.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 06:50:19 -0700 (PDT)
-From:   Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
-X-Google-Original-From: Fatih ALTINPINAR
-To:     herbert@gondor.apana.org.au
-Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
-Subject: [PATCH] Crypto: aegis128l: fix a coding stlye issue
-Date:   Wed,  3 Jul 2019 16:49:35 +0300
-Message-Id: <20190703134935.24747-1-fatihaltinpinar@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jul 2019 09:50:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:48496 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfGCNum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:50:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 789612B;
+        Wed,  3 Jul 2019 06:50:41 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 739C93F718;
+        Wed,  3 Jul 2019 06:50:40 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 14:50:38 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [for-next][PATCH 12/16] kprobes: Initialize kprobes at
+ postcore_initcall
+Message-ID: <20190703135037.GC48312@arrakis.emea.arm.com>
+References: <20190526191828.466305460@goodmis.org>
+ <20190526191848.266163206@goodmis.org>
+ <20190702165008.GC34718@lakrids.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702165008.GC34718@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
+On Tue, Jul 02, 2019 at 05:50:09PM +0100, Mark Rutland wrote:
+> On Sun, May 26, 2019 at 03:18:40PM -0400, Steven Rostedt wrote:
+> > From: Masami Hiramatsu <mhiramat@kernel.org>
+> > 
+> > Initialize kprobes at postcore_initcall level instead of module_init
+> > since kprobes is not a module, and it depends on only subsystems
+> > initialized in core_initcall.
+> > This will allow ftrace kprobe event to add new events when it is
+> > initializing because ftrace kprobe event is initialized at
+> > later initcall level.
+> > 
+> > Link: http://lkml.kernel.org/r/155851394736.15728.13626739508905120098.stgit@devnote2
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  kernel/kprobes.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index b1ea30a5540e..54aaaad00a47 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -2289,6 +2289,7 @@ static int __init init_kprobes(void)
+> >  		init_test_probes();
+> >  	return err;
+> >  }
+> > +postcore_initcall(init_kprobes);
+> 
+> As a heads-up, this is causing boot-time failures on arm64.
+> 
+> On arm64 kprobes depends on the BRK handler we register in
+> debug_traps_init(), which is an arch_initcall.
+> 
+> As of this change, init_krprobes() calls init_test_probes() before
+> that's registered, so we end up hitting a BRK before we can handle it.
 
-Fixed a coding style issue. Removed curly brackets of an one
-line for statement.
+Thanks Mark for identifying this.
 
-Signed-of-by: Fatih ALTINPINAR <fatihaltinpinar@gmail.com>
+So we either revert the above commit in -next or queue the one below
+together with the rest of the kprobes changes (I can queue it via the
+arm64 for-next/core assuming that the above commit id remains stable):
+
+--------------8<------------------------------------
+From de4f4d30bab3d77d6643a6fa9ba1deff73dac7f2 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Wed, 3 Jul 2019 14:44:23 +0100
+Subject: [PATCH] arm64: Initialise the debug traps earlier
+
+Commit b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
+makes init_kprobes() a postcore_initcall while the arm64 handling of the
+BRK instruction is initialised at arch_initcall level. Make the arm64
+debug_traps_init() a core_initcall.
+
+Fixes: b5f8b32c93b2 ("kprobes: Initialize kprobes at postcore_initcall")
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- crypto/aegis128l.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/kernel/debug-monitors.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/aegis128l.c b/crypto/aegis128l.c
-index 9bca3d619a22..6c70e718c9c4 100644
---- a/crypto/aegis128l.c
-+++ b/crypto/aegis128l.c
-@@ -104,9 +104,8 @@ static void crypto_aegis128l_init(struct aegis_state *state,
- 	crypto_aegis_block_xor(&state->blocks[6], &crypto_aegis_const[1]);
- 	crypto_aegis_block_xor(&state->blocks[7], &crypto_aegis_const[0]);
- 
--	for (i = 0; i < 10; i++) {
-+	for (i = 0; i < 10; i++)
- 		crypto_aegis128l_update_a(state, &chunk);
--	}
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index f8719bd30850..81770105cd8e 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -382,7 +382,7 @@ static int __init debug_traps_init(void)
+ 			      TRAP_BRKPT, "ptrace BRK handler");
+ 	return 0;
  }
+-arch_initcall(debug_traps_init);
++core_initcall(debug_traps_init);
  
- static void crypto_aegis128l_ad(struct aegis_state *state,
--- 
-2.17.1
-
+ /* Re-enable single step for syscall restarting. */
+ void user_rewind_single_step(struct task_struct *task)
