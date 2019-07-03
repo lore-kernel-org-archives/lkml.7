@@ -2,120 +2,70 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB0EC5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B257BC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A227218A5
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HINRG2JQ"
+	by mail.kernel.org (Postfix) with ESMTP id 861AE218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGCIkW (ORCPT
+        id S1727285AbfGCIlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:40:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41477 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbfGCIkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:40:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45dvgj2YDcz9s8m;
-        Wed,  3 Jul 2019 18:40:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562143218;
-        bh=1gdQY+IG37Chq420+xnxxU0x3yvGw0besHVydkYixH4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HINRG2JQoHY9GVjqahdxAuuFzhyzOAo5HhLsFHRB4ZupHGU0BmNpGu8jAtwB67Syg
-         23bbY2+0qxDShlz8mms7EBk9Un5csxOTUQh4z16iNf7v5F6y+BWX60JwGjVwt8uIPA
-         AVzZeCJJUYtfbuKFiyl4vpcgM4Uauspy2E9GwhzBEd0YG4lsHditpdhF5nE7LGqI4I
-         1n94hB0TSiQMAImSaseEX7JAtxp3ZdH/W0HJVgCuxwvKqNsh4Pm7xXlAd7mFMDINoA
-         qyhUtSYTYLeTxhZP1xOtDfwS+ZNnCsc1TH1lrOwB2dlgZtix+wsJHqqQgDUCws27ef
-         4b65rQQa87b7Q==
-Date:   Wed, 3 Jul 2019 18:40:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Mahesh Bandewar <maheshb@google.com>
-Subject: linux-next: manual merge of the akpm-current tree with the net-next
- tree
-Message-ID: <20190703184015.61a8f998@canb.auug.org.au>
+        Wed, 3 Jul 2019 04:41:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35395 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbfGCIlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:41:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so1665630qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 01:41:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vpaf9lU2R84ri7xVwxgAUugNK8mi0QVQIdzUzZXfbDo=;
+        b=Zr9JRl7Mnkg75XR4ijGTZUMfjuQ85kDMUgiqHMezT6hUNubz+5rhKOop9D9uMBZNg/
+         F6jQsa5pHVsN1mP0mdgw5Xx1i4gB2lLx2XLxxnpbZRUYrULnz3eDNoMr+VWWp0SHBqXg
+         U0Q4SFyF/uUItst3CrjfnvlXHqBrV75YvlOglwT0sSkEa9zgmLG8tTXc0SGsVSDUocGt
+         YPkkmmtUn7CidzSOdMdax+LKS2BbuEo+17L7mivrfopcylIka/XWkvbUAs2klc1IUQeQ
+         7UKWvmNcn+cQdr/27cfYjlf2pfZR0x4hAlHDN5jzHStVyDvWa2c7MTCDsWEy6YgFZL9J
+         IexQ==
+X-Gm-Message-State: APjAAAVQ+OND8B/EfrcY00OZvoPMpsvo7JrVsfQl9bd26qRQt/KsUOE/
+        3udJkNx/AXvVywJHFNbqKYYT7RjHzy/V7A/1+Io=
+X-Google-Smtp-Source: APXvYqw/isIQVR86YurJHzzVWpoyagqBaU3E+QG77fJEsMus7eMH/CMpf6rQRAAXL61ej0CTyYTenRfAOEb6VYIdOxk=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr29008003qtd.18.1562143262038;
+ Wed, 03 Jul 2019 01:41:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4R+rc6xvUJpW.8x1EQPYfk7"; protocol="application/pgp-signature"
+References: <20190703001842.12238-1-alistair.francis@wdc.com> <20190703001842.12238-3-alistair.francis@wdc.com>
+In-Reply-To: <20190703001842.12238-3-alistair.francis@wdc.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 3 Jul 2019 10:40:45 +0200
+Message-ID: <CAK8P3a37GLzp+w6m0SEV+9j_6sH91SuStyAEW-VzuJ5_dUCnZw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv/include/uapi: Define a custom __SIGINFO struct
+ for RV32
+To:     Alistair Francis <alistair.francis@wdc.com>
+Cc:     linux-riscv-bounces@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alistair Francis <alistair23@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4R+rc6xvUJpW.8x1EQPYfk7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 3, 2019 at 2:21 AM Alistair Francis
+<alistair.francis@wdc.com> wrote:
+>
+> The glibc implementation of siginfo_t results in an allignment of 8 bytes
+> for the union _sifields on RV32. The kernel has an allignment of 4 bytes
+> for the _sifields union. This results in information being lost when
+> glibc parses the siginfo_t struct.
 
-Hi all,
+I think the problem is that you incorrectly defined clock_t to 64-bit,
+while it is 32 bit in the kernel. You should fix the clock_t definition
+instead, it would otherwise cause additional problems.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
-
-  lib/Makefile
-
-between commit:
-
-  509e56b37cc3 ("blackhole_dev: add a selftest")
-
-from the net-next tree and commit:
-
-  c86f3a66de9a ("lib: introduce test_meminit module")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc lib/Makefile
-index 0c3c197a7801,05980c802500..000000000000
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@@ -91,7 -91,7 +91,8 @@@ obj-$(CONFIG_TEST_DEBUG_VIRTUAL) +=3D tes
-  obj-$(CONFIG_TEST_MEMCAT_P) +=3D test_memcat_p.o
-  obj-$(CONFIG_TEST_OBJAGG) +=3D test_objagg.o
-  obj-$(CONFIG_TEST_STACKINIT) +=3D test_stackinit.o
- +obj-$(CONFIG_TEST_BLACKHOLE_DEV) +=3D test_blackhole_dev.o
-+ obj-$(CONFIG_TEST_MEMINIT) +=3D test_meminit.o
- =20
-  obj-$(CONFIG_TEST_LIVEPATCH) +=3D livepatch/
- =20
-
---Sig_/4R+rc6xvUJpW.8x1EQPYfk7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0cae8ACgkQAVBC80lX
-0Gy3AggApB/d89kJt8k4S0magqHTtThobbRxQS/Eokve8980MKdI2SylS1g1SHxk
-b3yXfswf08n8YNr63UlzlBuBTWc6TVWeu4xqz5Mja8jHwHOt9e5OjcnQL2BUDZE5
-XsLipIx8OpUYJLZ2rTgQUuexv3fl4kS8LJfChcnjSR2uqQFGmGT9UPTWHWRq+VeF
-6mEVd2sOC/ljN5J+NSwukifSynMGYNHR8vHb08/KJKzANtG8Fxg4r9WbQCu1EVuk
-6iLhv8y4QjK9QUiDAjMqJZ4S44LdN3K3W72sPnEMRfFCzS01vmxDpFRHSxH+/QO1
-3ors+tI/7ezFS0hT0L5MmGaMnvCd2g==
-=eUEy
------END PGP SIGNATURE-----
-
---Sig_/4R+rc6xvUJpW.8x1EQPYfk7--
+        Arnd
