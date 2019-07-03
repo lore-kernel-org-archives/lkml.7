@@ -8,60 +8,61 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A85DC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D78AC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB8D218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6682218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7CQM8ZD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyZggC58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGCNSI (ORCPT
+        id S1727326AbfGCNST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:18:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40868 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfGCNSH (ORCPT
+        Wed, 3 Jul 2019 09:18:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44173 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfGCNST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:18:07 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so1241798pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:18:07 -0700 (PDT)
+        Wed, 3 Jul 2019 09:18:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so1265730pfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 06:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=Hggecp1J+pdV9ln1gXz86pKkAe6jbFwdutsQVSWvACY=;
-        b=X7CQM8ZDr3/XMvsumnENiXiDx1duWsXiknUhw75n4V1facoPscVA7J7IfiQPophGdg
-         XBKrXL+iiozX6syhhUpNBpNdcc5sz8CjIUzTL2lv9zW1iTi/Gw3BSTFSaPVJl8iOqPpB
-         hlz+rA6lYu3wASur3Sq0vB8d+Ymg/ABfezuuUVDE7qBaAlpT9X+328MomvAh77JyNd/B
-         NggFpl7qR8ndKWqnZj2XUYftoE85ZwrRxk4E31Cs2kI3V9/o9tRLTDGxdTsskEDkQgTV
-         ZniA0xUX9jCPKJlQKnrVQD6wK0Q4d8jZdqA07pXo14RQWcCIolMxw/7FWPrYgtCY8wJa
-         ppgg==
+        bh=OWDPGe6tZjA1ZZEdo2HJ+MoOn08G0gVe3rmUgt2yGp0=;
+        b=hyZggC58Rxch+GACWSx41usrigkIMgWGQDdkcsotR58aFZftEmhMUI3yi4iSud/h2a
+         oIWUTjjhx1e0LP0YJu/SkSukvDXl0ALOjbFObkk51tSHgE4CcyPQolfYkzERRM5SunwZ
+         dLbh8ScLb937V8i94JoAkGq1Gqr1cwUryU9ACwULocPYad1jlmJdxoNTQ+3IBbgfLiaW
+         JPWoJFb4w/mzjZOtLU/7agKPUbfceFGQYMjsmCgmSC6lf5HMbA2V+ptSuXm00QY/G+fv
+         a3GneB8POaFJQoUb264EaXiZCRBRGi98ob0T3+gHE3ck5MySNzm6AHnAocZuWg7/fQUV
+         ELOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Hggecp1J+pdV9ln1gXz86pKkAe6jbFwdutsQVSWvACY=;
-        b=nT6jP5drt7H26Xr4mc8ZIJzO56qLGA+8UPyFkdvQVdM/S0TScg5CzL38SRwN5s56VK
-         T7GefWONu81HcNTCXJBE+l7/HOh9xF1Ls4bQJfMqYJ+0X80WB4iUFyEl9ZGUA+o+hxea
-         lKYMIBuFo8FqQYr7iiNMAxkvh8o19tPD0C7/KnAn/TINBmngxqcDwlv9z6IsWsTopOu/
-         fvZF3y/X0zSrXUaImVRv30OZ8eejObNSr3G2POK7n/t2bu+1rp1Kcf8g3SmS726mkMi5
-         abRddqhN0/RVuVuzHlC5xsR/UnlHewiFAtflyH7bfv0oHc41ZvIhKI+b1GVEio9+2I9u
-         S0ww==
-X-Gm-Message-State: APjAAAXzb/onWZQMh7rJXKBqF8GlpLfVw9SbDzUv+xajQRXwdlG7QgLS
-        coxQ9ysESIEfs3vfOizfmDA=
-X-Google-Smtp-Source: APXvYqzz9NU0QsBtLGX+R5YXtiP12B3R/8sZ5cDSZ7uLONpeJjwUii/XvzHhR+vuqiWCqhIOPLLEZw==
-X-Received: by 2002:a65:664d:: with SMTP id z13mr33374105pgv.99.1562159886867;
-        Wed, 03 Jul 2019 06:18:06 -0700 (PDT)
+        bh=OWDPGe6tZjA1ZZEdo2HJ+MoOn08G0gVe3rmUgt2yGp0=;
+        b=RfUJ8fqqJPIeSe7ODhU+OPc6h2bjI4uKvqfkv3VP+/0fKuSi6x7puH1v/PVGwAZARh
+         UddYwr2StxLSNG0eAO+nZilHSq47eNix//zNKheYxnKAaYv+iU6yeCxeHMa4n+rA6y62
+         LgFt3UEJuoIP47l+0xqXZiaY0is/rk01j986KU+pDVXlT0RRiFBHEkJZ0XjuxxB5S30X
+         rSHfYAoSAXwclxVro0Fj5npVJ/IFH3g3D8+7slaS4+Zn8kPa4mAGNLu29Sg9nk7iGgKu
+         CMUQA9lZNeeB7v33giwSSHxUpV6LVrQMwROaUSab4HMAe+SBSc0GP1ZaZfHzLvdS8fLg
+         Cn0Q==
+X-Gm-Message-State: APjAAAVF1GSB468ncz5XrM2f/wAm0mvsZJTbHL3rUSXFIkhy2KSvz+3i
+        pkA1YyNfTJazPxeK3utXKPg=
+X-Google-Smtp-Source: APXvYqzmKIEmMpeylFjnLE21xCZcmp44jGsi5N0UZivd5lHnrB+j/X7IcnFWkTYy6TSmtgF1UzW4oQ==
+X-Received: by 2002:a17:90a:23ce:: with SMTP id g72mr12845778pje.77.1562159898441;
+        Wed, 03 Jul 2019 06:18:18 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id k19sm8183914pgl.42.2019.07.03.06.18.04
+        by smtp.googlemail.com with ESMTPSA id o95sm2058389pjb.4.2019.07.03.06.18.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 06:18:06 -0700 (PDT)
+        Wed, 03 Jul 2019 06:18:17 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Anton Altaparmakov <anton@tuxera.com>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 26/30] ntfs: Use kmemdup rather than duplicating its implementation
-Date:   Wed,  3 Jul 2019 21:17:58 +0800
-Message-Id: <20190703131758.25875-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 27/30] ocfs2: Use kmemdup rather than duplicating its implementation
+Date:   Wed,  3 Jul 2019 21:18:08 +0800
+Message-Id: <20190703131808.25921-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,32 +78,68 @@ Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- fs/ntfs/dir.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/ocfs2/alloc.c      | 8 +++-----
+ fs/ocfs2/localalloc.c | 6 ++----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/fs/ntfs/dir.c b/fs/ntfs/dir.c
-index 3c4811469ae8..eed63f045bd5 100644
---- a/fs/ntfs/dir.c
-+++ b/fs/ntfs/dir.c
-@@ -1158,14 +1158,14 @@ static int ntfs_readdir(struct file *file, struct dir_context *actor)
- 	 * map the mft record without deadlocking.
- 	 */
- 	rc = le32_to_cpu(ctx->attr->data.resident.value_length);
--	ir = kmalloc(rc, GFP_NOFS);
-+	/* Copy the index root value (it has been verified in read_inode). */
-+	ir = kmemdup((u8 *)ctx->attr +
-+		le16_to_cpu(ctx->attr->data.resident.value_offset), rc, GFP_NOFS);
- 	if (unlikely(!ir)) {
- 		err = -ENOMEM;
- 		goto err_out;
+diff --git a/fs/ocfs2/alloc.c b/fs/ocfs2/alloc.c
+index d1348fc4ca6d..d4911d70c326 100644
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -6191,17 +6191,15 @@ int ocfs2_begin_truncate_log_recovery(struct ocfs2_super *osb,
+ 	if (le16_to_cpu(tl->tl_used)) {
+ 		trace_ocfs2_truncate_log_recovery_num(le16_to_cpu(tl->tl_used));
+ 
+-		*tl_copy = kmalloc(tl_bh->b_size, GFP_KERNEL);
++		/* Assuming the write-out below goes well, this copy
++		 * will be passed back to recovery for processing. */
++		*tl_copy = kmemdup(tl_bh->b_data, tl_bh->b_size, GFP_KERNEL);
+ 		if (!(*tl_copy)) {
+ 			status = -ENOMEM;
+ 			mlog_errno(status);
+ 			goto bail;
+ 		}
+ 
+-		/* Assuming the write-out below goes well, this copy
+-		 * will be passed back to recovery for processing. */
+-		memcpy(*tl_copy, tl_bh->b_data, tl_bh->b_size);
+-
+ 		/* All we need to do to clear the truncate log is set
+ 		 * tl_used. */
+ 		tl->tl_used = 0;
+diff --git a/fs/ocfs2/localalloc.c b/fs/ocfs2/localalloc.c
+index f03674afbd30..158e5af767fd 100644
+--- a/fs/ocfs2/localalloc.c
++++ b/fs/ocfs2/localalloc.c
+@@ -424,12 +424,11 @@ void ocfs2_shutdown_local_alloc(struct ocfs2_super *osb)
+ 	bh = osb->local_alloc_bh;
+ 	alloc = (struct ocfs2_dinode *) bh->b_data;
+ 
+-	alloc_copy = kmalloc(bh->b_size, GFP_NOFS);
++	alloc_copy = kmemdup(alloc, bh->b_size, GFP_NOFS);
+ 	if (!alloc_copy) {
+ 		status = -ENOMEM;
+ 		goto out_commit;
  	}
--	/* Copy the index root value (it has been verified in read_inode). */
--	memcpy(ir, (u8*)ctx->attr +
--			le16_to_cpu(ctx->attr->data.resident.value_offset), rc);
-+
- 	ntfs_attr_put_search_ctx(ctx);
- 	unmap_mft_record(ndir);
- 	ctx = NULL;
+-	memcpy(alloc_copy, alloc, bh->b_size);
+ 
+ 	status = ocfs2_journal_access_di(handle, INODE_CACHE(local_alloc_inode),
+ 					 bh, OCFS2_JOURNAL_ACCESS_WRITE);
+@@ -1272,13 +1271,12 @@ static int ocfs2_local_alloc_slide_window(struct ocfs2_super *osb,
+ 	 * local alloc shutdown won't try to double free main bitmap
+ 	 * bits. Make a copy so the sync function knows which bits to
+ 	 * free. */
+-	alloc_copy = kmalloc(osb->local_alloc_bh->b_size, GFP_NOFS);
++	alloc_copy = kmemdup(alloc, osb->local_alloc_bh->b_size, GFP_NOFS);
+ 	if (!alloc_copy) {
+ 		status = -ENOMEM;
+ 		mlog_errno(status);
+ 		goto bail;
+ 	}
+-	memcpy(alloc_copy, alloc, osb->local_alloc_bh->b_size);
+ 
+ 	status = ocfs2_journal_access_di(handle,
+ 					 INODE_CACHE(local_alloc_inode),
 -- 
 2.11.0
 
