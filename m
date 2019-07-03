@@ -2,93 +2,100 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408B0C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF4C06513
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C886218A6
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562168756;
-	bh=pm5rTouD6xHz++5CAMKe/cfXETNu2i0/sl/YoyPzmz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C9nRA7LqK1VGV+YGvZvJdlK4wGwSOly5Ij2Jz4e9xG6svCT73UqBJBWw2FbkrChOO
-	 yY0o0Eex0jUpTUZk/uk/K//mhRhPYkZ/rOjgU+9OhaTlyn+BLAjAUDfU7Q7REqBJUL
-	 DDHeI8MKa/ap7L/+cHFDBFY6tLpVyk50M28OLKaU=
+	by mail.kernel.org (Postfix) with ESMTP id 2A1FC218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 15:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HV+JnjgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfGCPpz (ORCPT
+        id S1726997AbfGCPrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 11:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCPpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 11:45:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FEB218B8;
-        Wed,  3 Jul 2019 15:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562168753;
-        bh=pm5rTouD6xHz++5CAMKe/cfXETNu2i0/sl/YoyPzmz8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=soBEtjfJ/l3Z4chuNxK1t5vLtLgUoRPkRzzUwzsQAE+LKmhhknDyaTvtC/b07t0rN
-         EnWLpr+7MmQoFtaIKhmT0LztTb+CzAoIatUXwvXZmCTyGjYF73jmqFr/OG19QADdce
-         WemDWe3+VbHrZySKD1wcjKvSo47OyF834+sOgSpQ=
-Date:   Wed, 3 Jul 2019 17:45:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [GIT PULL 1/9] intel_th: msu: Fix unused variable warning on
- arm64 platform
-Message-ID: <20190703154551.GA19371@kroah.com>
-References: <20190627125152.54905-1-alexander.shishkin@linux.intel.com>
- <20190627125152.54905-2-alexander.shishkin@linux.intel.com>
+        Wed, 3 Jul 2019 11:47:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46780 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfGCPrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 11:47:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c5kOloQ+WKclVgeWbSMLX2CoWuvmPxmxrcEhF8nzqns=; b=HV+JnjgFvWKjV4CCm3LWNei+D
+        dUQKdFpMgH9c7rrzBjIXKkcJmHfgvDLB/WAqpvJ85YhAxls3FjsnA0ioLob9VZbnQQJbtcq2/fkgL
+        oswHKQkgdurqbO1Lecz3uaI0H1QfUF93Gmia3dxrNobIbd+5s5Hmt2PyB2S+Uo3EgYdV9UMC6BR5h
+        uWqfZOlarNzVMFxAFe9LAZVBzLVAMWnzYhg5OI7sbYmYdFyV2+nCogciXfogxQNahbsmIayIytAyg
+        w2cjhCNkefcxaW6b9xkLQoMDP/TBLkKdwn0YSfYiXuaLYFvPrq9QgRlCaBW11Tr3+Q4EBFRoQbyw3
+        qcfPIWf3A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hihTJ-0000Vu-0v; Wed, 03 Jul 2019 15:47:01 +0000
+Date:   Wed, 3 Jul 2019 08:47:00 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+Message-ID: <20190703154700.GI1729@bombadil.infradead.org>
+References: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+ <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org>
+ <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org>
+ <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+ <20190630152324.GA15900@bombadil.infradead.org>
+ <20190701121119.GE31621@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190627125152.54905-2-alexander.shishkin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190701121119.GE31621@quack2.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 03:51:44PM +0300, Alexander Shishkin wrote:
-> From: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> 
-> Commit ba39bd8306057 ("intel_th: msu: Switch over to scatterlist")
-> introduced the following warnings on non-x86 architectures, as a result
-> of reordering the multi mode buffer allocation sequence:
-> 
-> > drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_alloc’:
-> > drivers/hwtracing/intel_th/msu.c:783:21: warning: unused variable ‘i’
-> > [-Wunused-variable]
-> > int ret = -ENOMEM, i;
-> >                    ^
-> > drivers/hwtracing/intel_th/msu.c: In function ‘msc_buffer_win_free’:
-> > drivers/hwtracing/intel_th/msu.c:863:6: warning: unused variable ‘i’
-> > [-Wunused-variable]
-> > int i;
-> >     ^
-> 
-> Fix this compiler warning by factoring out set_memory sequences and making
-> them x86-only.
-> 
-> Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> Fixes: ba39bd8306057 ("intel_th: msu: Switch over to scatterlist")
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> ---
->  drivers/hwtracing/intel_th/msu.c | 40 +++++++++++++++++++++-----------
->  1 file changed, 27 insertions(+), 13 deletions(-)
+On Mon, Jul 01, 2019 at 02:11:19PM +0200, Jan Kara wrote:
+> BTW, looking into the xarray code, I think I found another difference
+> between the old radix tree code and the new xarray code that could cause
+> issues. In the old radix tree code if we tried to insert PMD entry but
+> there was some PTE entry in the covered range, we'd get EEXIST error back
+> and the DAX fault code relies on this. I don't see how similar behavior is
+> achieved by xas_store()...
 
-Does not apply to my tree :(
+Are you referring to this?
+
+-               entry = dax_make_locked(0, size_flag | DAX_EMPTY);
+-
+-               err = __radix_tree_insert(&mapping->i_pages, index,
+-                               dax_entry_order(entry), entry);
+-               radix_tree_preload_end();
+-               if (err) {
+-                       xa_unlock_irq(&mapping->i_pages);
+-                       /*
+-                        * Our insertion of a DAX entry failed, most likely
+-                        * because we were inserting a PMD entry and it
+-                        * collided with a PTE sized entry at a different
+-                        * index in the PMD range.  We haven't inserted
+-                        * anything into the radix tree and have no waiters to
+-                        * wake.
+-                        */
+-                       return ERR_PTR(err);
+-               }
+
+If so, that can't happen any more because we no longer drop the i_pages
+lock while the entry is NULL, so the entry is always locked while the
+i_pages lock is dropped.
