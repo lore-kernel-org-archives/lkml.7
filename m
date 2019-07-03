@@ -2,120 +2,103 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF367C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8606FC06511
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A81721882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F29221882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wtXWiip2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfGCVag (ORCPT
+        id S1727400AbfGCVa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:30:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56928 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfGCVag (ORCPT
+        Wed, 3 Jul 2019 17:30:56 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51132 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfGCVaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:30:36 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1himpl-0001Uy-5x; Wed, 03 Jul 2019 23:30:33 +0200
-Date:   Wed, 3 Jul 2019 23:30:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nadav Amit <namit@vmware.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>
-Subject: Re: [patch 16/18] x86/apic: Convert 32bit to IPI shorthand static
- key
-In-Reply-To: <F521E659-4F8A-44FC-994B-5B9E2B229184@vmware.com>
-Message-ID: <alpine.DEB.2.21.1907032324020.1802@nanos.tec.linutronix.de>
-References: <20190703105431.096822793@linutronix.de> <20190703105917.044463061@linutronix.de> <1DC35A28-DEBC-4A46-AC35-3AADD23AA40D@vmware.com> <alpine.DEB.2.21.1907032213250.1802@nanos.tec.linutronix.de> <F521E659-4F8A-44FC-994B-5B9E2B229184@vmware.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 3 Jul 2019 17:30:55 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 91366886BF;
+        Thu,  4 Jul 2019 09:30:53 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1562189453;
+        bh=1L1sB9h+79NdmQLMdwPjbfag8Y1xUTAYaNEw33rFiZI=;
+        h=From:To:CC:Subject:Date:References;
+        b=wtXWiip2DUI7Ot83NkMWRf5xL6PKzLb46Ef3+Hy47vNeWbY4j5LWGdUOu/LTGxBBE
+         DtjD401hLKopVFc/PiJ4vpWYQFNExSU7ZC9F+10SxnMNSGKIAgaYQBRd4MWZKl05wL
+         xJZUHhNOOQHU6Cy061gSUlMCjCzUsdu7hOPLcD9ZOrPMneudthcrnfpA0nJpGN+h7B
+         map2n2/YxJM7hjW0xrRkh3N+FouogNHRhEruIBIMqOKiztar2IulxFsHSmMW8sFoZ0
+         yc8281N1OzD/J5xC7XyVpR/SwhRt7OJ/VBqTeWT0ZTGB+/8YMAF1agROSXY6sBt4Yi
+         pFk21uKLteOJg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d1d1e8e0000>; Thu, 04 Jul 2019 09:30:54 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Thu, 4 Jul 2019 09:30:50 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Thu, 4 Jul 2019 09:30:50 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: gpio desc flags being lost
+Thread-Topic: gpio desc flags being lost
+Thread-Index: AQHVMWEqVhtjrKesFkiEOodI/qBrrg==
+Date:   Wed, 3 Jul 2019 21:30:50 +0000
+Message-ID: <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
+References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
+ <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
+ <f9eb3387ed384676b0b298e4da7eeaf0@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-749829697-1562189433=:1802"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-749829697-1562189433=:1802
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 3 Jul 2019, Nadav Amit wrote:
-> > On Jul 3, 2019, at 1:34 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > On Wed, 3 Jul 2019, Nadav Amit wrote:
-> >>> On Jul 3, 2019, at 3:54 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>> void default_send_IPI_all(int vector)
-> >>> {
-> >>> -	if (apic_ipi_shorthand_off || vector == NMI_VECTOR) {
-> >>> +	if (static_branch_likely(&apic_use_ipi_shorthand)) {
-> >>> 		apic->send_IPI_mask(cpu_online_mask, vector);
-> >>> 	} else {
-> >>> 		__default_send_IPI_shortcut(APIC_DEST_ALLINC, vector);
-> >> 
-> >> It may be better to check the static-key in native_send_call_func_ipi() (and
-> >> other callers if there are any), and remove all the other checks in
-> >> default_send_IPI_all(), x2apic_send_IPI_mask_allbutself(), etc.
-> > 
-> > That makes sense. Should have thought about that myself, but hunting that
-> > APIC emulation issue was affecting my brain obviously :)
-> 
-> Well, if you used VMware and not KVM... ;-)
-
-Then I would have hunted some other bug probably :)
- 
-> >> void native_send_call_func_ipi(const struct cpumask *mask)
-> >> {
-> >> -	cpumask_var_t allbutself;
-> >> -
-> >> -	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
-> >> -		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
-> >> -		return;
-> >> +	int cpu, this_cpu = smp_processor_id();
-> >> +	bool allbutself = true;
-> >> +	bool self = false;
-> >> +
-> >> +	for_each_cpu_and_not(cpu, cpu_online_mask, mask) {
-> >> +
-> >> +		if (cpu != this_cpu) {
-> >> +			allbutself = false;
-> >> +			break;
-> >> +		}
-> >> +		self = true;
-> > 
-> > That accumulates to a large iteration in the worst case. 
-> 
-> I don’t understand why. There should be at most two iterations - one for
-> self and one for another core. So _find_next_bit() will be called at most
-> twice. _find_next_bit() has its own loop, but I don’t think overall it is as
-
-Indeed, misread the code and right the bit search should be fast.
-
-> bad as calling alloc_cpumask_var(), cpumask_copy() and cpumask_equal(),
-> which also have loops.
->
-> I don’t have numbers (and I doubt they are very significant), but the cpumask
-> allocation showed when I was profiling my microbenchmark.
-
-Yes, that alloc/free part is completely bogus.
-
-Thanks,
-
-	tglx
-
---8323329-749829697-1562189433=:1802--
+On 3/07/19 9:29 PM, Chris Packham wrote:=0A=
+> On 3/07/19 6:28 PM, Linus Walleij wrote:=0A=
+>> On Wed, Jul 3, 2019 at 7:35 AM Chris Packham=0A=
+>> <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
+>>=0A=
+>>> Doing a bit of debugging so far I see that after startup the desc->flag=
+s=0A=
+>>> for those gpios is 0. But for the hogged ones it should be 0x800 (or 0x=
+801).=0A=
+>>=0A=
+>> Yeah that is wrong.=0A=
+>>=0A=
+>>> I'll do some proper bisecting tomorrow, but figured you might want to=
+=0A=
+>>> know sooner rather than later.=0A=
+>>=0A=
+>> Thanks, I have another critical GPIO fix queued so would be great if we=
+=0A=
+>> can fix this too before v5.2 is released.=0A=
+> =0A=
+> Bit of an update. v4.19.54 works, v5.1.15 is broken. I'll keep bisecting=
+=0A=
+> between those tomorrow.=0A=
+> =0A=
+=0A=
+The problem is caused by commit 3edfb7bd76bd1cba ("gpiolib: Show correct =
+=0A=
+direction from the beginning"). I'll see if I can whip up a patch to fix it=
+.=0A=
