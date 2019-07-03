@@ -2,100 +2,197 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEAEC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4901DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1532089C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234C4218B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 01:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfGCBAg (ORCPT
+        id S1727512AbfGCBBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 21:00:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49758 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfGCBAd (ORCPT
+        Tue, 2 Jul 2019 21:01:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:42907 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfGCBBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 21:00:33 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hiQnE-0008F2-DZ; Tue, 02 Jul 2019 23:58:28 +0200
-Date:   Tue, 2 Jul 2019 23:58:27 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Craig Topper <craig.topper@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Stephen Hines <srhines@google.com>
-Subject: Re: objtool warnings in prerelease clang-9
-In-Reply-To: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
-References: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 2 Jul 2019 21:01:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id f22so666962ioj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2019 18:01:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=+jAjzkxOy88eEU8Ro2pPWiTTvCPP5IpFAzSx1DNnSMI=;
+        b=bEXj5wHke1nwI9rnBpfwUCfdFXo0Qvpx2szMdrTXAS5oDU/0qFgK5dv0mWi13dAqzD
+         TEUF8EwV8q3G8wi7wEJ+UoGk2Ni9pQWoiVKj6xlM0HGR7bhEJbI9keyzOo0E6hnxrX+D
+         1Ul/Kl/MKgTE2wcmOxLhgYboSkva2oCtaXayQmN2C+UN3bFHxyDH2/uRiK56dlAUDWtC
+         hk+KXYKCG0HdiYhyyYEFYFjB2SZm9ooAPfO5nLkz3m2Lsl7SWQn/6YOyXp5BYjyBxNiO
+         Wxxjw4yndcvCGYkQPD3pcb0gpzblqao3lBaqJfyVGjw/SnzWfF0lYvWo5OxXN4VHfwb+
+         aOFg==
+X-Gm-Message-State: APjAAAXSx8U+7lQxyEGMwbe4XxqX8XC1+MBzS9y0x12UUpzOiSUSs8Y7
+        9dCqKkSEtYD9+x+il2cAXcKSo0ioVcryRuOsRz1tVJKaSG7L
+X-Google-Smtp-Source: APXvYqzjtwIxcClrQ8XIltsZj2funW9a0OSCqz+qgF2HIq0hhl1QFKSyjXAm4ZoAahCxLQd8iP/64TBx7P5Tka13hq8b4LlO4o9H
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a02:a581:: with SMTP id b1mr40177373jam.84.1562115666965;
+ Tue, 02 Jul 2019 18:01:06 -0700 (PDT)
+Date:   Tue, 02 Jul 2019 18:01:06 -0700
+In-Reply-To: <0000000000002e03f40586a3e512@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006d7e14058cbc6545@google.com>
+Subject: Re: KASAN: use-after-free Read in cpia2_usb_disconnect
+From:   syzbot <syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andreyknvl@google.com,
+        hverkuil-cisco@xs4all.nl, keescook@chromium.org,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick,
+syzbot has found a reproducer for the following crash on:
 
-On Tue, 2 Jul 2019, Nick Desaulniers wrote:
+HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e19043a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
+dashboard link: https://syzkaller.appspot.com/bug?extid=0c90fc937c84f97d0aa6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147d42eda00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=104c268ba00000
 
-> TL;DR
-> LLVM currently has a bug when unrolling loops containing asm goto and
-> we have a fix in hand.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0c90fc937c84f97d0aa6@syzkaller.appspotmail.com
 
-<snip>
+cpia2: Message: count = 1, register[0] = 0x0
+cpia2: Unexpected error: -19
+==================================================================
+BUG: KASAN: use-after-free in cpia2_usb_disconnect+0x1a4/0x1c0  
+drivers/media/usb/cpia2/cpia2_usb.c:898
+Read of size 8 at addr ffff8881cf6c4e50 by task kworker/1:1/22
 
-> 
-> Conservatively, we can block loop unrolling when we see asm goto in a loop:
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #13
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x67/0x231 mm/kasan/report.c:188
+  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+  kasan_report+0xe/0x20 mm/kasan/common.c:614
+  cpia2_usb_disconnect+0x1a4/0x1c0 drivers/media/usb/cpia2/cpia2_usb.c:898
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1081 [inline]
+  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+  device_del+0x460/0xb80 drivers/base/core.c:2274
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2197
+  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1409/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Makes sense in order to make progress.
+Allocated by task 22:
+  save_stack+0x1b/0x80 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  cpia2_init_camera_struct+0x40/0x110  
+drivers/media/usb/cpia2/cpia2_core.c:2176
+  cpia2_usb_probe.cold+0x37/0x45a drivers/media/usb/cpia2/cpia2_usb.c:833
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-> This causes objtool to not find any issues in
-> arch/x86/kernel/cpu/mtrr/generic.o.  I don't observe any duplication
-> in the __jump_table section of the resulting .o file.  It also cuts
-> down the objtool warnings I observe in a defconfig (listed at the
-> beginning of the email) from 4 to 2. (platform-quirks.o predates asm
-> goto,
+Freed by task 22:
+  save_stack+0x1b/0x80 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+  slab_free_hook mm/slub.c:1421 [inline]
+  slab_free_freelist_hook mm/slub.c:1448 [inline]
+  slab_free mm/slub.c:2994 [inline]
+  kfree+0xd7/0x280 mm/slub.c:3949
+  v4l2_device_release drivers/media/v4l2-core/v4l2-device.c:55 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  v4l2_device_put+0x76/0x90 drivers/media/v4l2-core/v4l2-device.c:60
+  cpia2_usb_disconnect+0x79/0x1c0 drivers/media/usb/cpia2/cpia2_usb.c:896
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1081 [inline]
+  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+  device_del+0x460/0xb80 drivers/base/core.c:2274
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2197
+  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1409/0x3590 drivers/usb/core/hub.c:5432
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-It does not have asm goto inside :)
+The buggy address belongs to the object at ffff8881cf6c4400
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 2640 bytes inside of
+  4096-byte region [ffff8881cf6c4400, ffff8881cf6c5400)
+The buggy address belongs to the page:
+page:ffffea00073db000 refcount:1 mapcount:0 mapping:ffff8881dac02600  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 0000000000000000 0000000100000001 ffff8881dac02600
+raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-> i915_gem_execbuffer.o is likely a separate bug).
-
-platform-quirks.o:
-
-        if (x86_platform.set_legacy_features)
-  74:   4c 8b 1d 00 00 00 00    mov    0x0(%rip),%r11        # 7b <x86_early_init_platform_quirks+0x7b>
-  7b:   4d 85 db                test   %r11,%r11
-  7e:   0f 85 00 00 00 00       jne    84 <x86_early_init_platform_quirks+0x84>
-                x86_platform.set_legacy_features();
-}
-  84:   c3                      retq   
-
-That jne jumps to __x86_indirect_thunk_r11, aka. ratpoutine.
-
-No idea why objtool thinks that the instruction at 0x84 is not
-reachable. Josh?
-
-Thanks,
-
-	tglx
-
-
+Memory state around the buggy address:
+  ffff8881cf6c4d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881cf6c4d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881cf6c4e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff8881cf6c4e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881cf6c4f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
