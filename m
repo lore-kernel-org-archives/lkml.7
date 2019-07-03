@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8222CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72400C5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C38E218C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BA521873
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120224;
-	bh=lFzRqlmTJxSOnVz+cl2mYFmVOAR2LBHpGsjnis/YTpA=;
+	s=default; t=1562120226;
+	bh=eQJgn9fyUC0oz1fbl32vimo1aaaM/DsvQRu/EQBSVgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDngLp+rAYPTa7fONcrOp5z72jDGyEQaFJQDpbhapk62zeRDRPUFARGuiYwRqoIje
-	 DIkQvh4LttcIAzV7NXzOYJZgslkp9ZSiSAhsNY9qSCbgDz2MdIaTeUunRuZnrJ89vB
-	 PD/5MOF+78gt7JYXXszNzWOETFPcx7gKzS++5ewM=
+	b=KooaH2gfV1iK7FglHk9IiQhgcMij9sgd3pqSdcZloNGI+1bcQz8xk5ntlin/WBmUk
+	 /wO5JWAx5i2E+JRgFXtrTRnwOXI2FSJNTgGeq46tvMZ3eeEKToim4/Pkb2OuE8jIUJ
+	 1pGYhuSvAakwVTX2vIFzyBOiAUR4A+5cB+VcH6uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfGCCRC (ORCPT
+        id S1728154AbfGCCRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55406 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:17:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbfGCCQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:59 -0400
+        id S1728122AbfGCCRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:17:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4163E218A0;
-        Wed,  3 Jul 2019 02:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF53121874;
+        Wed,  3 Jul 2019 02:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120218;
-        bh=lFzRqlmTJxSOnVz+cl2mYFmVOAR2LBHpGsjnis/YTpA=;
+        s=default; t=1562120222;
+        bh=eQJgn9fyUC0oz1fbl32vimo1aaaM/DsvQRu/EQBSVgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDGU8fdtYmJu0mSR0lNlYh0vEMkuELOjrO94iqkh4qvqBeZlwf7YGJCINHNoVfBRw
-         isl5JIesDDtv8czV+tbiBvJILkhJLGSPh3PMXY1FP5PLQBIHxVNIbG5Fz0613XggIF
-         fc3tsck5x6ay/XYYPcxJNo2OrURhEk9NgTREO9Hk=
+        b=NMOfZ4gYkvuXiJDFZuM2Wk5pF1NKpaRCDawLNkLBuTAl5unQemWmtFXZrFujMCpp1
+         JObuhb+N0+TUGevmYDRAiK28TcJHuHrCF+wqbZ8hL3tzs0+DolU3wIdhhSAF5PDd7g
+         7Ih4s7HTSEU0Xxo1JDdRfMu0YVDqPrD9BFawfo1Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 24/26] cpu/hotplug: Fix out-of-bounds read when setting fail state
-Date:   Tue,  2 Jul 2019 22:16:23 -0400
-Message-Id: <20190703021625.18116-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 26/26] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
+Date:   Tue,  2 Jul 2019 22:16:25 -0400
+Message-Id: <20190703021625.18116-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
@@ -59,72 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Vinod Koul <vkoul@kernel.org>
 
-[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
+[ Upstream commit 8f9fab480c7a87b10bb5440b5555f370272a5d59 ]
 
-Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
-can control `struct cpuhp_step *sp` address, results in the following
-global-out-of-bounds read.
+DIV_ROUND_UP_ULL adds the two arguments and then invokes
+DIV_ROUND_DOWN_ULL.  But on a 32bit system the addition of two 32 bit
+values can overflow.  DIV_ROUND_DOWN_ULL does it correctly and stashes
+the addition into a unsigned long long so cast the result to unsigned
+long long here to avoid the overflow condition.
 
-Reproducer:
-
-  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
-
-KASAN report:
-
-  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
-  Read of size 8 at addr ffffffff89734438 by task bash/1941
-
-  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
-  Call Trace:
-   write_cpuhp_fail+0x2cd/0x2e0
-   dev_attr_store+0x58/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f05e4f4c970
-
-  The buggy address belongs to the variable:
-   cpu_hotplug_lock+0x98/0xa0
-
-  Memory state around the buggy address:
-   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-                                          ^
-   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Add a sanity check for the value written from user space.
-
-Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: peterz@infradead.org
-Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
+[akpm@linux-foundation.org: DIV_ROUND_UP_ULL must be an rval]
+Link: http://lkml.kernel.org/r/20190625100518.30753-1-vkoul@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kernel.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 5d65eae893bd..ad33c03c69b0 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1925,6 +1925,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 3d83ebb302cf..f6f94e54ab96 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -118,7 +118,8 @@
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
+ 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
  
-+	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * Cannot fail STARTING/DYING callbacks.
- 	 */
+-#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
++#define DIV_ROUND_UP_ULL(ll, d) \
++	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
+ 
+ #if BITS_PER_LONG == 32
+ # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
 -- 
 2.20.1
 
