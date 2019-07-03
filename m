@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BACC5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8222CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6162189F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C38E218C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120220;
-	bh=pvsV0E3wfeyMZiXx8n41Viey/p3iOFz9a2lFzgoqqr4=;
+	s=default; t=1562120224;
+	bh=lFzRqlmTJxSOnVz+cl2mYFmVOAR2LBHpGsjnis/YTpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OR5RHZmWIJ2Xq/Xf507pyaGOIWDb0V//R8l/AYedctFCFrGbyDNfsnQqBhgV9TWvo
-	 mawureHOYCabXE6xHhAwEZbzxTaLys75lG+yMqGjzREswcfIAX6DTZLNIkT89rG851
-	 kdwoyEl/yLHmYfgJjC+qXwpSMT/UrSJkUio7wBfw=
+	b=KDngLp+rAYPTa7fONcrOp5z72jDGyEQaFJQDpbhapk62zeRDRPUFARGuiYwRqoIje
+	 DIkQvh4LttcIAzV7NXzOYJZgslkp9ZSiSAhsNY9qSCbgDz2MdIaTeUunRuZnrJ89vB
+	 PD/5MOF+78gt7JYXXszNzWOETFPcx7gKzS++5ewM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfGCCQ7 (ORCPT
+        id S1728143AbfGCCRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfGCCQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:56 -0400
+        id S1728122AbfGCCQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5B12189F;
-        Wed,  3 Jul 2019 02:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4163E218A0;
+        Wed,  3 Jul 2019 02:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120215;
-        bh=pvsV0E3wfeyMZiXx8n41Viey/p3iOFz9a2lFzgoqqr4=;
+        s=default; t=1562120218;
+        bh=lFzRqlmTJxSOnVz+cl2mYFmVOAR2LBHpGsjnis/YTpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXv2AX5X6ty5qIFIy7ouHuYQ7Vi5AnOO94VPwYCx5+74KWgYlF0tMFun0jEgMrynq
-         svM3djte7Sgh9+S4f676FUmXqaXkkid0N0k7BPOb9UsTCgpG/EshUwbTL62tY7N1W1
-         2/aKbomfyAeGeHHQJ6jU6UxxDPUI74zw6ti4vnMM=
+        b=QDGU8fdtYmJu0mSR0lNlYh0vEMkuELOjrO94iqkh4qvqBeZlwf7YGJCINHNoVfBRw
+         isl5JIesDDtv8czV+tbiBvJILkhJLGSPh3PMXY1FP5PLQBIHxVNIbG5Fz0613XggIF
+         fc3tsck5x6ay/XYYPcxJNo2OrURhEk9NgTREO9Hk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/26] HID: multitouch: Add pointstick support for ALPS Touchpad
-Date:   Tue,  2 Jul 2019 22:16:21 -0400
-Message-Id: <20190703021625.18116-22-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        Thomas Gleixner <tglx@linutronix.de>, peterz@infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/26] cpu/hotplug: Fix out-of-bounds read when setting fail state
+Date:   Tue,  2 Jul 2019 22:16:23 -0400
+Message-Id: <20190703021625.18116-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
@@ -59,50 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit 0a95fc733da375de0688d0f1fd3a2869a1c1d499 ]
+[ Upstream commit 33d4a5a7a5b4d02915d765064b2319e90a11cbde ]
 
-There's a new ALPS touchpad/pointstick combo device that requires
-MT_CLS_WIN_8_DUAL to make its pointsitck work as a mouse.
+Setting invalid value to /sys/devices/system/cpu/cpuX/hotplug/fail
+can control `struct cpuhp_step *sp` address, results in the following
+global-out-of-bounds read.
 
-The device can be found on HP ZBook 17 G5.
+Reproducer:
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+  # echo -2 > /sys/devices/system/cpu/cpu0/hotplug/fail
+
+KASAN report:
+
+  BUG: KASAN: global-out-of-bounds in write_cpuhp_fail+0x2cd/0x2e0
+  Read of size 8 at addr ffffffff89734438 by task bash/1941
+
+  CPU: 0 PID: 1941 Comm: bash Not tainted 5.2.0-rc6+ #31
+  Call Trace:
+   write_cpuhp_fail+0x2cd/0x2e0
+   dev_attr_store+0x58/0x80
+   sysfs_kf_write+0x13d/0x1a0
+   kernfs_fop_write+0x2bc/0x460
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f05e4f4c970
+
+  The buggy address belongs to the variable:
+   cpu_hotplug_lock+0x98/0xa0
+
+  Memory state around the buggy address:
+   ffffffff89734300: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffffff89734380: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
+  >ffffffff89734400: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+                                          ^
+   ffffffff89734480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   ffffffff89734500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Add a sanity check for the value written from user space.
+
+Fixes: 1db49484f21ed ("smp/hotplug: Hotplug state fail injection")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: peterz@infradead.org
+Link: https://lkml.kernel.org/r/20190627024732.31672-1-devel@etsukata.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 4 ++++
- 2 files changed, 5 insertions(+)
+ kernel/cpu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 4ff61fb43500..700874ab9b5f 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -82,6 +82,7 @@
- #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
- #define HID_DEVICE_ID_ALPS_U1		0x1215
- #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
-+#define HID_DEVICE_ID_ALPS_1222		0x1222
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 5d65eae893bd..ad33c03c69b0 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1925,6 +1925,9 @@ static ssize_t write_cpuhp_fail(struct device *dev,
+ 	if (ret)
+ 		return ret;
  
- 
- #define USB_VENDOR_ID_AMI		0x046b
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 184e49036e1d..f9167d0e095c 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1788,6 +1788,10 @@ static const struct hid_device_id mt_devices[] = {
- 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
- 			USB_VENDOR_ID_ALPS_JP,
- 			HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP) },
-+	{ .driver_data = MT_CLS_WIN_8_DUAL,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_ALPS_JP,
-+			HID_DEVICE_ID_ALPS_1222) },
- 
- 	/* Lenovo X1 TAB Gen 2 */
- 	{ .driver_data = MT_CLS_WIN_8_DUAL,
++	if (fail < CPUHP_OFFLINE || fail > CPUHP_ONLINE)
++		return -EINVAL;
++
+ 	/*
+ 	 * Cannot fail STARTING/DYING callbacks.
+ 	 */
 -- 
 2.20.1
 
