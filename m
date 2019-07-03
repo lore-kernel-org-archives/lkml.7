@@ -2,93 +2,101 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB7C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F2DC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C729218A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562177409;
-	bh=0yHrCqLUVM5hmhFa2U+32z6di/Py3HZt/DwDkp6e8k4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rEq/+KglIBYhCyJWTananxKnDut8XTRLav6sUG11jMRi18min6ieYCzIt4gmBR9J6
-	 fZRnzhUdIIWxhk2jr8KEf3qQD8tejpmTcrSovuholS6/yrnSG3RpsYsJ6nbydbBI6q
-	 yF5YgVUVmslseB6gOS8MfRLmYV5FCT/FbvyuEGbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3D948218BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 18:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGCSKI (ORCPT
+        id S1726841AbfGCSNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 14:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37486 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 14:13:23 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39872 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfGCSKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 14:10:07 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB77C21882;
-        Wed,  3 Jul 2019 18:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562177407;
-        bh=0yHrCqLUVM5hmhFa2U+32z6di/Py3HZt/DwDkp6e8k4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i3bEBz7RhkfhSgVniQwrOtHLlfu2anpHF7Eud3yb9BJeWAOaiXOLX/kikKXmWWrPf
-         dg2ik1CcBv1Hiuo++gSNs3NPKFHyaCcWSorEMeQQQbqOen//fBy/QCqKZRcy5EFWII
-         2ct1bCz75s7IeB94vyLC4cHuVhhoSwg1WYcUbmxo=
-Date:   Wed, 3 Jul 2019 14:10:05 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH AUTOSEL 5.1 11/51] ASoC: sun4i-codec: fix first delay on
- Speaker
-Message-ID: <20190703181005.GB2733@sasha-vm>
-References: <20190626034117.23247-1-sashal@kernel.org>
- <20190626034117.23247-11-sashal@kernel.org>
- <20190626103741.GU5316@sirena.org.uk>
- <20190703142047.GX11506@sasha-vm>
- <20190703170744.GB3490@sirena.org.uk>
+        id S1726473AbfGCSNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 14:13:23 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hijks-0001bI-IX; Wed, 03 Jul 2019 12:13:19 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Bates <sbates@raithlin.com>
+References: <20190703170136.21515-1-logang@deltatee.com>
+ <e88bed6b-c487-e224-1434-ba9912495a33@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c072210c-1f44-2803-4781-15ff6f72a07a@deltatee.com>
+Date:   Wed, 3 Jul 2019 12:13:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190703170744.GB3490@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e88bed6b-c487-e224-1434-ba9912495a33@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/2] Fix use-after-free bug when ports are removed
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 06:07:44PM +0100, Mark Brown wrote:
->On Wed, Jul 03, 2019 at 10:20:47AM -0400, Sasha Levin wrote:
->> On Wed, Jun 26, 2019 at 11:37:41AM +0100, Mark Brown wrote:
->> > On Tue, Jun 25, 2019 at 11:40:27PM -0400, Sasha Levin wrote:
->
->> > > Allwinner DAC seems to have a delay in the Speaker audio routing. When
->> > > playing a sound for the first time, the sound gets chopped. On a second
->> > > play the sound is played correctly. After some time (~5s) the issue gets
->> > > back.
->
->> > This is inserting a big delay in the startup and might disrupt some
->> > production system.
->
->> But that would be a problem upstream as well, no?
->
->There's a difference between a problem that gets introduced in normal
->development tracking upstream and something that gets dropped into a
->stable release, we don't want people deciding that stable is something
->they can't just take en masse without really looking at what's in there.
 
-Sure, but I don't see any work upstream on trying to correct this?
 
-These sort of things are a reason why users stick with the same kernel
-for years, which is what we'd like to avoid.
+On 2019-07-03 11:33 a.m., Sagi Grimberg wrote:
+>> NVME target ports can be removed while there are still active
+>> controllers. Largely this is fine, except some admin commands
+>> can access the req->port (for example, id-ctrl uses the port's
+>> inline date size as part of it's response). This was found
+>> while testing with KASAN.
+>>
+>> Two patches follow which disconnect active controllers when the
+>> ports are removed for loop and rdma. I'm not sure if fc has the
+>> same issue and have no way to test this.
+>>
+>> Alternatively, we could add reference counting to the struct port,
+>> but I think this is a more involved change and could be done later
+>> after we fix the bug quickly.
+> 
+> I don't think that when removing a port the expectation is that
+> all associated controllers remain intact (although they can, which
+> was why we did not remove them), so I think its fine to change that
+> if it causes issues.
+> 
+> Can we handle this in the core instead (also so we'd be consistent
+> across transports)?
 
-I'll drop this for now...
+Yes, that would be much better if we can sort out some other issues below...
 
---
-Thanks,
-Sasha
+> How about this untested patch instead?
+
+I've found a couple of problems with the patch:
+
+1) port->subsystems will always be empty before nvmet_disable_port() is
+called. We'd have to restructure things a little perhaps so that when a
+subsystem is removed from a port, all the active controllers for that
+subsys/port combo would be removed.
+
+2) loop needs to call flush_workqueue(nvme_delete_wq) somewhere,
+otherwise there's a small window after the port disappears while
+commands can still be submitted. We can actually still hit the bug with
+a tight loop.
+
+Maybe there's other cleanup that could be done to solve this: it does
+seem like all three transports need to keep their own lists of open
+controllers and loops through them to delete them. In theory, that could
+be made common so there's common code to manage the list per transport
+which would remove some boiler plate code. If we want to go this route
+though, I'd suggest using my patches as is for now and doing the cleanup
+in the next cycle.
+
+Logan
