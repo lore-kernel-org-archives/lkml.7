@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E015C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B6C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6864218B0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9AD218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 12:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UA7UGlHR"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="b0zu5dXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfGCMsF (ORCPT
+        id S1727463AbfGCMsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 08:48:05 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41866 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfGCMsC (ORCPT
+        Wed, 3 Jul 2019 08:48:08 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35205 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbfGCMsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 08:48:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id m30so1228555pff.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:48:01 -0700 (PDT)
+        Wed, 3 Jul 2019 08:48:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so1207874plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 05:48:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FMQphdJ64iQsEVpyBusVHfTIMxMniBqKY4+0bLvkoAA=;
-        b=UA7UGlHR6Hwn5bSUrmKs5QLv1R4SRkBFGqJtRsXcsIgSbUXFU/nEYw0wNDyrExxOXQ
-         hF/+GNW+Qmwky7+rUXr9jNc0cfpqOsh9Yg39dQ3L/PUXEoSMb/8pLkbw5oCNeGYgpvZT
-         UO73nWHPua3f/JHaqule0B4IiwgqIZ42g62MY=
+        bh=E6uRjcermCh0vpVDEIEhbk7Fmo6X2a/vaz5WmKDnX10=;
+        b=b0zu5dXrKN9pCZXKQexawbFEbckTVyo7Y/CfUphYXkxBdh2IGsT/Jiic87Zy8Is5az
+         kcSfZXgiA2mF/PXqlXlpWn1OqxsBgwmr+4kug7T0brB9AekUPJb1WqzOoXeJ9OtHcQgf
+         nP0sPALi9wKcBwgWOflx1NbBZUv2KO7vIVEZ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FMQphdJ64iQsEVpyBusVHfTIMxMniBqKY4+0bLvkoAA=;
-        b=U2aMa7G2/bKRjj/PhVk38VSA5Oyj0XY915EQObdGH3rtLd4VjjnzptHT13hXWwiPlf
-         xkNi1DhG6n+TVVZEtKSSSOleDDU+UyY82WriG2mRPJy8gdFR2BPR92eIQKX4/dLvpxhv
-         KqfEthxxyYTzyoEh9ppMUii2+qLQjuWVg2kZaHYM2mjrfdK0vzvv4K979qgKEvNxjkpt
-         jvZtUB242vu+r8K9WcGBvtWF/KlTzB/pEuvucT8K+P4i/57VaRs8w2Ae5TifNiaeCnq+
-         /ZMgBtVcVyBGcSE749z+Ljbeq01KdmfP4+N1GTTuO086nVH2HNn/D5j42RYcyOoqONjQ
-         V1Og==
-X-Gm-Message-State: APjAAAVCpC8ySTuoG/dwbmt4Moi86reCv4cg4a5CVnv5AjFPO91AFFEo
-        jZw71m71HdlrxSOoj01RNjapFg==
-X-Google-Smtp-Source: APXvYqxLiEYgPyMNbx3XxrQIXXIjt/6A59kyKAqEgoW99PXOWerG4iymshDm9C2zM0qOpwr1vHlo1Q==
-X-Received: by 2002:a65:6454:: with SMTP id s20mr35365529pgv.15.1562158081276;
-        Wed, 03 Jul 2019 05:48:01 -0700 (PDT)
+        bh=E6uRjcermCh0vpVDEIEhbk7Fmo6X2a/vaz5WmKDnX10=;
+        b=IzadaEMU2KAU3Ekn/VvpKS2K+IYoBaNvjEf5Z/dW3+4YmhhmHIxaYMdccHF1WWY0uc
+         6+59zeZhcSYwjCEfZIXf9ITPsmIbi5hy4STrsyD8ZqdtqFufVbIeQNaEGHlN6jigr93J
+         +x9L3JPk9rLeBxGotuSBcbLgptxtEGXUOjd1RvB6P/iryMjDj1e5qxpQTL9pH/OoEiDd
+         Sj56euNIIA21849Au2aKDt/2mIbGWhEyEZnDOeNazQ2MLnP/vkzmMegwnbIBZSp7nQNu
+         wZsXdoxViF7otBACnLUN4JrBEfsTpCVCqUacFXwuv3TW4hvSMvIX/pasiK+kRZZry0rx
+         Hv4g==
+X-Gm-Message-State: APjAAAXPOSgTbZ66TnH+O8+TCuW1joTRnYOMIOUGyqVPGX17BZ6oMns4
+        BdEI2jkWcb9SYInZb5qzKgcl5Q==
+X-Google-Smtp-Source: APXvYqzwwj7W+UdpQxGHCSMx8CuXgmzpcfjEKHlgFijFZGBYMqD+T8XyO9rvp8IZ+HN0rWDQ0Iu9EA==
+X-Received: by 2002:a17:902:a60d:: with SMTP id u13mr34396176plq.144.1562158084588;
+        Wed, 03 Jul 2019 05:48:04 -0700 (PDT)
 Received: from localhost.localdomain ([183.82.231.32])
-        by smtp.gmail.com with ESMTPSA id q1sm3735890pfn.178.2019.07.03.05.47.58
+        by smtp.gmail.com with ESMTPSA id q1sm3735890pfn.178.2019.07.03.05.48.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 05:48:00 -0700 (PDT)
+        Wed, 03 Jul 2019 05:48:04 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,9 +61,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 23/25] ARM: dts: axp22x: Switch to use SPDX identifier
-Date:   Wed,  3 Jul 2019 18:16:07 +0530
-Message-Id: <20190703124609.21435-24-jagan@amarulasolutions.com>
+Subject: [PATCH 24/25] ARM: dts: axp809: Switch to use SPDX identifier
+Date:   Wed,  3 Jul 2019 18:16:08 +0530
+Message-Id: <20190703124609.21435-25-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190703124609.21435-1-jagan@amarulasolutions.com>
 References: <20190703124609.21435-1-jagan@amarulasolutions.com>
@@ -75,7 +75,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Adopt the SPDX license identifier headers to ease license
-compliance management on axp22x.dtsi.
+compliance management on axp809.dtsi.
 
 While the text specifies "of the GPL or the X11 license"
 but the actual license text matches the MIT license as
@@ -85,13 +85,13 @@ specified at [0]
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/axp22x.dtsi | 39 +----------------------------------
+ arch/arm/boot/dts/axp809.dtsi | 39 +----------------------------------
  1 file changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index 65a07a67aca9..900317df05ff 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
+diff --git a/arch/arm/boot/dts/axp809.dtsi b/arch/arm/boot/dts/axp809.dtsi
+index ab8e5f2d9246..53a902b29d6f 100644
+--- a/arch/arm/boot/dts/axp809.dtsi
++++ b/arch/arm/boot/dts/axp809.dtsi
 @@ -1,45 +1,8 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
  /*
