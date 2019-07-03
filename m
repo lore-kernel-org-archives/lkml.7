@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22669C5B57D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A1AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E273721873
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D408A21874
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 02:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562120457;
-	bh=Aeh1Pnz51BbGOzC67Bac39NpqcFOp3F1K5sQsWf4tu8=;
+	s=default; t=1562120463;
+	bh=Q9xGE9S4674mQZc11CtxVVU6MEbdl6REXUoTXVQ4/KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lN1Y7cNI0VXI0LumVuq9u/5eHFy3UTTUNzN1ChN6P4cDwMb1EM0vcRlK4EQ2Piar2
-	 TX66VEbPKfJ4tk9/1G5ZhPpBu7GgqlFifb6/q+TdM8jMUq6WwOMJ9huNDQueerxMj5
-	 hrUMaICP+QX2dQwuKHMpBpC5FFTPOg4aDnALfDyk=
+	b=vNfiWZ2aE0OSGyX8i3e07EtJ4N2S0c1/QFKqiwmJ9pywFTHTVGonbRlrqbrgTI/J9
+	 zAOQOEUbyoAZo24GpCQclytb8ulhGGIkVAzfN8+Rz8ImV7h4EOH0FQrogqO8frsU83
+	 5Z/As4LL4O8eeZXdW396ckh/R9A8ULlcy9wSRG0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfGCCUz (ORCPT
+        id S1728249AbfGCCVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jul 2019 22:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
+        Tue, 2 Jul 2019 22:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfGCCQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jul 2019 22:16:34 -0400
+        id S1727939AbfGCCQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:16:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC9121881;
-        Wed,  3 Jul 2019 02:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB6882187F;
+        Wed,  3 Jul 2019 02:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562120193;
-        bh=Aeh1Pnz51BbGOzC67Bac39NpqcFOp3F1K5sQsWf4tu8=;
+        s=default; t=1562120189;
+        bh=Q9xGE9S4674mQZc11CtxVVU6MEbdl6REXUoTXVQ4/KM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOZvHWf9q5pwgw1HyQmPLttBZoukdbR20vTqTxOJXrTrV8ZHBFubTaNFx8xs8/601
-         XklKnByxRcdD+MnE/QJc5pjURv17PHk+NYxRXvD2XWrYVnGv8v7kMvzEqF34CrS5H5
-         LkoIXhuQlprTfhOKjMnUOQxCKzHvSp0RF/EJHfvU=
+        b=lz6S4g2Bsgz1eXuoCWXHo9o/tasHKowCyCJN1IGfg1/s7w/9iKQ1jgHpSyquB7WWI
+         fJdS5G/0le5IouoDnMQyBecFkCnHkeux/YS2m+NTC1eb3f6qYaCx9SdjOTUczYCT8+
+         epnDE/BO3nVrkliIc8sLQuVgDnLyEA5i+oV0XOXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 06/26] ARM: omap2: remove incorrect __init annotation
-Date:   Tue,  2 Jul 2019 22:16:05 -0400
-Message-Id: <20190703021625.18116-6-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/26] efi/bgrt: Drop BGRT status field reserved bits check
+Date:   Tue,  2 Jul 2019 22:16:02 -0400
+Message-Id: <20190703021625.18116-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190703021625.18116-1-sashal@kernel.org>
 References: <20190703021625.18116-1-sashal@kernel.org>
@@ -63,45 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
+[ Upstream commit a483fcab38b43fb34a7f12ab1daadd3907f150e2 ]
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+Starting with ACPI 6.2 bits 1 and 2 of the BGRT status field are no longer
+reserved. These bits are now used to indicate if the image needs to be
+rotated before being displayed.
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+The first device using these bits has now shown up (the GPD MicroPC) and
+the reserved bits check causes us to reject the valid BGRT table on this
+device.
 
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
+Rather then changing the reserved bits check, allowing only the 2 new bits,
+instead just completely remove it so that we do not end up with a similar
+problem when more bits are added in the future.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/efi-bgrt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 05858f966f7d..dfa65fc2c82b 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
+index b22ccfb0c991..2bf4d31f4967 100644
+--- a/drivers/firmware/efi/efi-bgrt.c
++++ b/drivers/firmware/efi/efi-bgrt.c
+@@ -50,11 +50,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
+ 		       bgrt->version);
+ 		goto out;
+ 	}
+-	if (bgrt->status & 0xfe) {
+-		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
+-		       bgrt->status);
+-		goto out;
+-	}
+ 	if (bgrt->image_type != 0) {
+ 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
+ 		       bgrt->image_type);
 -- 
 2.20.1
 
