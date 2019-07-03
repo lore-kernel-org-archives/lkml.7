@@ -2,61 +2,61 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD3C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE32AC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A9D218A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D2E218A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkeUm4vd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXBXHY2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfGCIOE (ORCPT
+        id S1727574AbfGCIPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:14:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33447 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbfGCIOB (ORCPT
+        Wed, 3 Jul 2019 04:15:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33748 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfGCIOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:14:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c14so819211plo.0;
-        Wed, 03 Jul 2019 01:14:00 -0700 (PDT)
+        Wed, 3 Jul 2019 04:14:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so870044pfq.0;
+        Wed, 03 Jul 2019 01:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OifUTPwtrbsJcu6VA62AeaQvTf5xpoAnkAcZtXAOudc=;
-        b=RkeUm4vdTQplnZ0XHutG+0YjlWSYn2RR3xrnOtOpnjBHI5MrUr+EZ64nJqO3fiIMHW
-         2I1GFBDlbXQ+bNqbrcKpbaUDkMSHnYzIFpmXlY1jc95gSKNtSbNyPgPVAtJraYNW3WeA
-         Rexerdwa8iQwzLlg/n/1fW04icWqp9apaoJACzojiR17cvRlXWYCIJseh19PjwWHhwFE
-         0tUSQpeLNj1sxU8dybDcSiiwO1bFFHJwj9sn+7uG5uunB8eg7LRQN4T0wKj2ASs9PuwR
-         FYG9nLmr1cYV46fimhJgulDlLy7y3I5mCaJ0JSW9eL0ETLHDX0XjixwIEyi8Iyhapk4d
-         H7pQ==
+        bh=6BcX9hRF1ZcJg0bLQVxEUNzqf7x1OYXFm4Avex33mzw=;
+        b=NXBXHY2rOfDIIefdmLBUtihvwLxZoamAXmXEhzmcHgE1//wHqu3N1fJ0mn8cVhHOCY
+         oEG9EAi5UrMAFjLuT380GshZwbi9WWx5FVLWdP/QZyW9ZAA6CmM3qbw/f1ahx9RcQLxR
+         FYTyL4nso9PO/ba16bytiqE7aorc8O6S/c7ZG7OM023sGc1+izwyw7WiDvL9v4W1cKf4
+         ZPBVAVDOOGRRfS7TyyW5v/plLynTgr+i6pL/B09mmY+WQOv9bmJkP46+e3MZTYcWPq2C
+         xdcMXwaK6ASx+lfT91VB/cds4KVep1xnFDTRrWZSpQ/g+xIZYhkynwJ8X82KgADmODYy
+         8DMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OifUTPwtrbsJcu6VA62AeaQvTf5xpoAnkAcZtXAOudc=;
-        b=rzlACjUncwzQXCkYXo8jOi/CbXCLAdBvuh6cWqgFlKwINTc2rzTZrQogxynbSU8qnn
-         UOVkIbxisWq7CVFKVbiEfKM6bdD8wwamv8B6Ji1PRF2Zwj5jxu6Y2X6UVayV/fxLhuPW
-         qs3ACo8ImSfrXRM6ajBlNqX2P7f0D6bYMewo2pp7wttsOwf/QulcHKGsK3/PfEfCWXDE
-         lYhCjxjDwHLR3CVrOqyqwO9nbHVG3AWeAHlLU6e5gYWSL/0VTKRbVVVI3nF6OzGa7p+g
-         V8Cq/XnXOmFtoE9ztEcbGqgurHz+YJAm0b+BWsghtYPrs9sdAuFBqu8kEtsdXRPQhz0A
-         Xlfg==
-X-Gm-Message-State: APjAAAVDUHfDAPr7x4l9fGpfVidunzwFkxq1sQbnNDnjgpv44YwGqjoS
-        nFqDc9yMFLrVcU83lBoPVoPCS7Jsb04=
-X-Google-Smtp-Source: APXvYqw74n/nvcZTjUc0R/uZJgn2K8rJ499Jx4fuaW4NLJt2xKHFsoxoOr9HbTVDD1K+OVam/pJEvg==
-X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr41847886plb.158.1562141639924;
-        Wed, 03 Jul 2019 01:13:59 -0700 (PDT)
+        bh=6BcX9hRF1ZcJg0bLQVxEUNzqf7x1OYXFm4Avex33mzw=;
+        b=Q2EnOC8f1HTJluq2GyFhl+J0Ga5rVU/aBc+O1uR5IZ6XD/8wR+7ZZhRaxq4OYc/vZH
+         rpENtXBCB8Y8jLCw2BwOC0Z0kOAkP6xCulZSIjvi0Q/LCGeHNElfpHBuCMKX76fZZzyI
+         yzPBSZc5P/fQCRZt+LX7NKe0DVWO63x8uKPuxXiqCa59i28NwzhGFu6qRDqCFIgmypE7
+         PlRkZzlsnYrszhlcr3DOMD/p3cqnyFxRaYPUz6mGDwqSNQGys6CbQe2g3BCBX8nj23qr
+         r5bY/bMETOitxnFZ2mtMmbhRIyPtwW/aawWhVNRK4Y7P2ivuMjam2+x7RlXzTrshmnHj
+         IHhw==
+X-Gm-Message-State: APjAAAXtevJdkHSOe9Nq/vSOGeuNEhF8Why8c1k4e8W594K0SgkM5OZz
+        vwd1iaDWRrdrexBH2yqVEK+dDTH6g6Y=
+X-Google-Smtp-Source: APXvYqw8B01YxlWv3cdvdz1KbV9dJR9VvgR4WsLnkObSzKzJf+FzgcxEKHUe8Cq+m7lYJnf+Gu0+ww==
+X-Received: by 2002:a63:3f84:: with SMTP id m126mr34593874pga.213.1562141642532;
+        Wed, 03 Jul 2019 01:14:02 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.13.58
+        by smtp.gmail.com with ESMTPSA id d2sm1445306pgo.0.2019.07.03.01.14.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 01:13:59 -0700 (PDT)
+        Wed, 03 Jul 2019 01:14:01 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/16] crypto: caam - simplify clock initialization
-Date:   Wed,  3 Jul 2019 01:13:13 -0700
-Message-Id: <20190703081327.17505-3-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 04/16] crypto: caam - use deveres to allocate 'entinfo'
+Date:   Wed,  3 Jul 2019 01:13:15 -0700
+Message-Id: <20190703081327.17505-5-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190703081327.17505-1-andrew.smirnov@gmail.com>
 References: <20190703081327.17505-1-andrew.smirnov@gmail.com>
@@ -82,9 +82,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify clock initialization code by converting it to use clk-bulk,
-devres and soc_device_match() match table. No functional change
-intended.
+Use deveres to allocate 'entinfo' and drop corresponding call to
+kfree(). No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Spencer <christopher.spencer@sea.co.uk>
@@ -97,289 +96,31 @@ Cc: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/ctrl.c   | 203 +++++++++++++++++------------------
- drivers/crypto/caam/intern.h |   7 +-
- 2 files changed, 98 insertions(+), 112 deletions(-)
+ drivers/crypto/caam/jr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index e674d8770cdb..908d3ecf6d1c 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -25,16 +25,6 @@ EXPORT_SYMBOL(caam_dpaa2);
- #include "qi.h"
- #endif
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index a7ca2bbe243f..fc7deb445aa8 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -125,7 +125,6 @@ static int caam_jr_shutdown(struct device *dev)
+ 			  jrp->inpring, inpbusaddr);
+ 	dma_free_coherent(dev, sizeof(struct jr_outentry) * JOBR_DEPTH,
+ 			  jrp->outring, outbusaddr);
+-	kfree(jrp->entinfo);
  
--/*
-- * i.MX targets tend to have clock control subsystems that can
-- * enable/disable clocking to our device.
-- */
--static inline struct clk *caam_drv_identify_clk(struct device *dev,
--						char *clk_name)
--{
--	return caam_imx ? devm_clk_get(dev, clk_name) : NULL;
--}
--
- /*
-  * Descriptor to instantiate RNG State Handle 0 in normal mode and
-  * load the JDKEK, TDKEK and TDSK registers
-@@ -342,13 +332,6 @@ static int caam_remove(struct platform_device *pdev)
- 	/* Unmap controller region */
- 	iounmap(ctrl);
- 
--	/* shut clocks off before finalizing shutdown */
--	clk_disable_unprepare(ctrlpriv->caam_ipg);
--	if (ctrlpriv->caam_mem)
--		clk_disable_unprepare(ctrlpriv->caam_mem);
--	clk_disable_unprepare(ctrlpriv->caam_aclk);
--	if (ctrlpriv->caam_emi_slow)
--		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
- 	return 0;
- }
- 
-@@ -497,20 +480,102 @@ static const struct of_device_id caam_match[] = {
- };
- MODULE_DEVICE_TABLE(of, caam_match);
- 
-+struct caam_imx_data {
-+	const struct clk_bulk_data *clks;
-+	int num_clks;
-+};
-+
-+static const struct clk_bulk_data caam_imx6_clks[] = {
-+	{ .id = "ipg" },
-+	{ .id = "mem" },
-+	{ .id = "aclk" },
-+	{ .id = "emi_slow" },
-+};
-+
-+static const struct caam_imx_data caam_imx6_data = {
-+	.clks = caam_imx6_clks,
-+	.num_clks = ARRAY_SIZE(caam_imx6_clks),
-+};
-+
-+static const struct clk_bulk_data caam_imx7_clks[] = {
-+	{ .id = "ipg" },
-+	{ .id = "aclk" },
-+};
-+
-+static const struct caam_imx_data caam_imx7_data = {
-+	.clks = caam_imx7_clks,
-+	.num_clks = ARRAY_SIZE(caam_imx7_clks),
-+};
-+
-+static const struct clk_bulk_data caam_imx6ul_clks[] = {
-+	{ .id = "ipg" },
-+	{ .id = "mem" },
-+	{ .id = "aclk" },
-+};
-+
-+static const struct caam_imx_data caam_imx6ul_data = {
-+	.clks = caam_imx6ul_clks,
-+	.num_clks = ARRAY_SIZE(caam_imx6ul_clks),
-+};
-+
-+static const struct soc_device_attribute caam_imx_soc_table[] = {
-+	{ .soc_id = "i.MX6UL", .data = &caam_imx6ul_data },
-+	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
-+	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
-+	{ .family = "Freescale i.MX" },
-+};
-+
-+static void disable_clocks(void *data)
-+{
-+	struct caam_drv_private *ctrlpriv = data;
-+
-+	clk_bulk_disable_unprepare(ctrlpriv->num_clks, ctrlpriv->clks);
-+}
-+
-+static int init_clocks(struct device *dev,
-+		       struct caam_drv_private *ctrlpriv,
-+		       const struct caam_imx_data *data)
-+{
-+	int ret;
-+
-+	ctrlpriv->num_clks = data->num_clks;
-+	ctrlpriv->clks = devm_kmemdup(dev, data->clks,
-+				      data->num_clks * sizeof(data->clks[0]),
-+				      GFP_KERNEL);
-+	if (!ctrlpriv->clks)
-+		return -ENOMEM;
-+
-+	ret = devm_clk_bulk_get(dev, ctrlpriv->num_clks, ctrlpriv->clks);
-+	if (ret) {
-+		dev_err(dev,
-+			"Failed to request all necessary clocks\n");
-+		return ret;
-+	}
-+
-+	ret = clk_bulk_prepare_enable(ctrlpriv->num_clks, ctrlpriv->clks);
-+	if (ret) {
-+		dev_err(dev,
-+			"Failed to prepare/enable all necessary clocks\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /* Probe routine for CAAM top (controller) level */
- static int caam_probe(struct platform_device *pdev)
- {
- 	int ret, ring, gen_sk, ent_delay = RTSDCTL_ENT_DLY_MIN;
- 	u64 caam_id;
--	static const struct soc_device_attribute imx_soc[] = {
--		{.family = "Freescale i.MX"},
--		{},
--	};
-+	const struct soc_device_attribute *imx_soc_match;
- 	struct device *dev;
- 	struct device_node *nprop, *np;
- 	struct caam_ctrl __iomem *ctrl;
- 	struct caam_drv_private *ctrlpriv;
--	struct clk *clk;
- #ifdef CONFIG_DEBUG_FS
- 	struct caam_perfmon *perfmon;
- #endif
-@@ -527,91 +592,25 @@ static int caam_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, ctrlpriv);
- 	nprop = pdev->dev.of_node;
- 
--	caam_imx = (bool)soc_device_match(imx_soc);
--
--	/* Enable clocking */
--	clk = caam_drv_identify_clk(&pdev->dev, "ipg");
--	if (IS_ERR(clk)) {
--		ret = PTR_ERR(clk);
--		dev_err(&pdev->dev,
--			"can't identify CAAM ipg clk: %d\n", ret);
--		return ret;
--	}
--	ctrlpriv->caam_ipg = clk;
--
--	if (!of_machine_is_compatible("fsl,imx7d") &&
--	    !of_machine_is_compatible("fsl,imx7s") &&
--	    !of_machine_is_compatible("fsl,imx7ulp")) {
--		clk = caam_drv_identify_clk(&pdev->dev, "mem");
--		if (IS_ERR(clk)) {
--			ret = PTR_ERR(clk);
--			dev_err(&pdev->dev,
--				"can't identify CAAM mem clk: %d\n", ret);
--			return ret;
-+	imx_soc_match = soc_device_match(caam_imx_soc_table);
-+	if (imx_soc_match) {
-+		if (!imx_soc_match->data) {
-+			dev_err(dev, "No clock data provided for i.MX SoC");
-+			return -EINVAL;
- 		}
--		ctrlpriv->caam_mem = clk;
--	}
- 
--	clk = caam_drv_identify_clk(&pdev->dev, "aclk");
--	if (IS_ERR(clk)) {
--		ret = PTR_ERR(clk);
--		dev_err(&pdev->dev,
--			"can't identify CAAM aclk clk: %d\n", ret);
--		return ret;
--	}
--	ctrlpriv->caam_aclk = clk;
--
--	if (!of_machine_is_compatible("fsl,imx6ul") &&
--	    !of_machine_is_compatible("fsl,imx7d") &&
--	    !of_machine_is_compatible("fsl,imx7s") &&
--	    !of_machine_is_compatible("fsl,imx7ulp")) {
--		clk = caam_drv_identify_clk(&pdev->dev, "emi_slow");
--		if (IS_ERR(clk)) {
--			ret = PTR_ERR(clk);
--			dev_err(&pdev->dev,
--				"can't identify CAAM emi_slow clk: %d\n", ret);
-+		ret = init_clocks(dev, ctrlpriv, imx_soc_match->data);
-+		if (ret)
- 			return ret;
--		}
--		ctrlpriv->caam_emi_slow = clk;
--	}
--
--	ret = clk_prepare_enable(ctrlpriv->caam_ipg);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can't enable CAAM ipg clock: %d\n", ret);
--		return ret;
--	}
--
--	if (ctrlpriv->caam_mem) {
--		ret = clk_prepare_enable(ctrlpriv->caam_mem);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "can't enable CAAM secure mem clock: %d\n",
--				ret);
--			goto disable_caam_ipg;
--		}
--	}
--
--	ret = clk_prepare_enable(ctrlpriv->caam_aclk);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "can't enable CAAM aclk clock: %d\n", ret);
--		goto disable_caam_mem;
--	}
--
--	if (ctrlpriv->caam_emi_slow) {
--		ret = clk_prepare_enable(ctrlpriv->caam_emi_slow);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "can't enable CAAM emi slow clock: %d\n",
--				ret);
--			goto disable_caam_aclk;
--		}
- 	}
-+	caam_imx = (bool)imx_soc_match;
- 
- 	/* Get configuration properties from device tree */
- 	/* First, get register page */
- 	ctrl = of_iomap(nprop, 0);
- 	if (ctrl == NULL) {
- 		dev_err(dev, "caam: of_iomap() failed\n");
--		ret = -ENOMEM;
--		goto disable_caam_emi_slow;
-+		return -ENOMEM;
- 	}
- 
- 	caam_little_end = !(bool)(rd_reg32(&ctrl->perfmon.status) &
-@@ -899,16 +898,6 @@ static int caam_probe(struct platform_device *pdev)
- #endif
- iounmap_ctrl:
- 	iounmap(ctrl);
--disable_caam_emi_slow:
--	if (ctrlpriv->caam_emi_slow)
--		clk_disable_unprepare(ctrlpriv->caam_emi_slow);
--disable_caam_aclk:
--	clk_disable_unprepare(ctrlpriv->caam_aclk);
--disable_caam_mem:
--	if (ctrlpriv->caam_mem)
--		clk_disable_unprepare(ctrlpriv->caam_mem);
--disable_caam_ipg:
--	clk_disable_unprepare(ctrlpriv->caam_ipg);
  	return ret;
  }
+@@ -465,7 +464,8 @@ static int caam_jr_init(struct device *dev)
+ 	if (!jrp->outring)
+ 		goto out_free_inpring;
  
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index ec25d260fa40..1f01703f510a 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -94,11 +94,8 @@ struct caam_drv_private {
- 				   Handles of the RNG4 block are initialized
- 				   by this driver */
+-	jrp->entinfo = kcalloc(JOBR_DEPTH, sizeof(*jrp->entinfo), GFP_KERNEL);
++	jrp->entinfo = devm_kcalloc(dev, JOBR_DEPTH, sizeof(*jrp->entinfo),
++				    GFP_KERNEL);
+ 	if (!jrp->entinfo)
+ 		goto out_free_outring;
  
--	struct clk *caam_ipg;
--	struct clk *caam_mem;
--	struct clk *caam_aclk;
--	struct clk *caam_emi_slow;
--
-+	struct clk_bulk_data *clks;
-+	int num_clks;
- 	/*
- 	 * debugfs entries for developer view into driver/device
- 	 * variables at runtime.
 -- 
 2.21.0
 
