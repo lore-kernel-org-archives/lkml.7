@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1C6C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A959C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5C121871
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138DB21871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 14:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZvRqjHpS"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HNkfUXk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfGCOkP (ORCPT
+        id S1727006AbfGCOlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 10:40:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39923 "EHLO
+        Wed, 3 Jul 2019 10:41:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60035 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfGCOkK (ORCPT
+        with ESMTP id S1726305AbfGCOlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 10:40:10 -0400
+        Wed, 3 Jul 2019 10:41:04 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63EdYSC3329150
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x63EeJBY3329263
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Jul 2019 07:39:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63EdYSC3329150
+        Wed, 3 Jul 2019 07:40:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x63EeJBY3329263
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562164775;
-        bh=9UO2tseUPI+6EDIOvnGezrt9XxIG+YSJbodqrs0fvYQ=;
+        s=2019061801; t=1562164820;
+        bh=UEdOFydQGy8OSSloP0N3Ai6LSB0S5b2jw8pBRqi/bQs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ZvRqjHpSTfSID79l5nEc13nsov/klFz5pwzbTRoJYq4mQ5xD0dtdP30rDvwSTeyog
-         rcAkU1sYLwH9ReCd2LmifCUgT8y6XvUZS0UYQ4wSOlgV33JRn2aL3cXTXgvQMJg+dN
-         HOBS+A8Ut37psiPdOYYUvaesyhgfhh9ycFFV8zeuEsrw6KlkNaYUB0x70Ag6vWAqis
-         s5m2E69/GsiWWI5U6KU1D3ltHC3IcxGGTFGIv0DRaozvUMPA8qIHEsixpHelv2U+G3
-         bO51LrzKsXocOgt2K68beSNAJKWguRT3S8g2S1R2gCHSFOtv3xNqHjCJoRmsxUT2fq
-         dXwrXAGZ9OUvw==
+        b=HNkfUXk/q3IN4QrelD93pj4vWygqePaxQvz1n5SigBnhFYF7LPuZ95OYXRpZpSZvc
+         lu21d89i8K7B9MYQt61sHyuaIoYVnW7KDxboFSG2+B8t70kfIpZlTEdA5OSYLKFy1T
+         bJ9BsXw9iYgsBAEtPUSkXyYH2qW7w2YwYZ0VgXE9Sg7Fr6Sxarh4SZdewj5Sx3hy54
+         Bwj8CwN0PGra/mCmv9TWgzyLKUwiAUI7F3hzrqtJ8v1jJeB60u+ELlRN8qLZpj4iV2
+         hf/GLS2dKo5Ok6+GxyLOPn57AJuBN1/pANs6E0udL+5ay2zOxmNaA0JborFpcNt/Tv
+         VSFwbwyUAYf9w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63EdY8H3329147;
-        Wed, 3 Jul 2019 07:39:34 -0700
-Date:   Wed, 3 Jul 2019 07:39:34 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x63EeIwk3329260;
+        Wed, 3 Jul 2019 07:40:18 -0700
+Date:   Wed, 3 Jul 2019 07:40:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for John Garry <tipbot@zytor.com>
-Message-ID: <tip-8f5b703add99473b59b4a38a6b66afbafc29d92e@git.kernel.org>
-Cc:     tmricht@linux.ibm.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, ben@decadent.org.uk, hpa@zytor.com,
-        mathieu.poirier@linaro.org, zhangshaokun@hisilicon.com,
-        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, mingo@kernel.org, will.deacon@arm.com,
-        namhyung@kernel.org, tglx@linutronix.de, john.garry@huawei.com,
-        ak@linux.intel.com, acme@redhat.com, mark.rutland@arm.com,
-        brueckner@linux.ibm.com
-Reply-To: mathieu.poirier@linaro.org, zhangshaokun@hisilicon.com,
-          tmricht@linux.ibm.com, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, ben@decadent.org.uk, hpa@zytor.com,
-          acme@redhat.com, mark.rutland@arm.com, brueckner@linux.ibm.com,
-          kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
-          mingo@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-          will.deacon@arm.com, tglx@linutronix.de, john.garry@huawei.com,
-          ak@linux.intel.com
-In-Reply-To: <1561732552-143038-4-git-send-email-john.garry@huawei.com>
-References: <1561732552-143038-4-git-send-email-john.garry@huawei.com>
+Message-ID: <tip-edd93a4076cf18ede423c167de6d6fb8e4211e7b@git.kernel.org>
+Cc:     hpa@zytor.com, alexander.shishkin@linux.intel.com,
+        mingo@kernel.org, namhyung@kernel.org, kan.liang@linux.intel.com,
+        john.garry@huawei.com, brueckner@linux.ibm.com,
+        mark.rutland@arm.com, zhangshaokun@hisilicon.com,
+        peterz@infradead.org, ben@decadent.org.uk, ak@linux.intel.com,
+        jolsa@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        tmricht@linux.ibm.com, mathieu.poirier@linaro.org,
+        will.deacon@arm.com, acme@redhat.com
+Reply-To: ben@decadent.org.uk, ak@linux.intel.com, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          jolsa@kernel.org, mathieu.poirier@linaro.org,
+          tmricht@linux.ibm.com, will.deacon@arm.com, acme@redhat.com,
+          hpa@zytor.com, namhyung@kernel.org, mingo@kernel.org,
+          alexander.shishkin@linux.intel.com, kan.liang@linux.intel.com,
+          zhangshaokun@hisilicon.com, mark.rutland@arm.com,
+          brueckner@linux.ibm.com, john.garry@huawei.com
+In-Reply-To: <1561732552-143038-5-git-send-email-john.garry@huawei.com>
+References: <1561732552-143038-5-git-send-email-john.garry@huawei.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf jevents: Add support for Hisi hip08 HHA PMU
+Subject: [tip:perf/core] perf jevents: Add support for Hisi hip08 L3C PMU
  aliasing
-Git-Commit-ID: 8f5b703add99473b59b4a38a6b66afbafc29d92e
+Git-Commit-ID: edd93a4076cf18ede423c167de6d6fb8e4211e7b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -80,18 +80,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8f5b703add99473b59b4a38a6b66afbafc29d92e
-Gitweb:     https://git.kernel.org/tip/8f5b703add99473b59b4a38a6b66afbafc29d92e
+Commit-ID:  edd93a4076cf18ede423c167de6d6fb8e4211e7b
+Gitweb:     https://git.kernel.org/tip/edd93a4076cf18ede423c167de6d6fb8e4211e7b
 Author:     John Garry <john.garry@huawei.com>
-AuthorDate: Fri, 28 Jun 2019 22:35:51 +0800
+AuthorDate: Fri, 28 Jun 2019 22:35:52 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 2 Jul 2019 16:08:15 -0300
+CommitDate: Tue, 2 Jul 2019 16:08:16 -0300
 
-perf jevents: Add support for Hisi hip08 HHA PMU aliasing
+perf jevents: Add support for Hisi hip08 L3C PMU aliasing
 
-Add support for Hisi hip08 HHA PMU aliasing.
+Add support for Hisi hip08 L3C PMU aliasing.
 
-The kernel driver is in drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+The kernel driver is in drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
@@ -109,79 +109,65 @@ Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linuxarm@huawei.com
-Link: http://lkml.kernel.org/r/1561732552-143038-4-git-send-email-john.garry@huawei.com
+Link: http://lkml.kernel.org/r/1561732552-143038-5-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arch/arm64/hisilicon/hip08/uncore-hha.json     | 51 ++++++++++++++++++++++
+ .../arch/arm64/hisilicon/hip08/uncore-l3c.json     | 37 ++++++++++++++++++++++
  tools/perf/pmu-events/jevents.c                    |  1 +
- 2 files changed, 52 insertions(+)
+ 2 files changed, 38 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
 new file mode 100644
-index 000000000000..447d3064de90
+index 000000000000..ca48747642e1
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
-@@ -0,0 +1,51 @@
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+@@ -0,0 +1,37 @@
 +[
 +   {
 +	    "EventCode": "0x00",
-+	    "EventName": "uncore_hisi_hha.rx_ops_num",
-+	    "BriefDescription": "The number of all operations received by the HHA",
-+	    "PublicDescription": "The number of all operations received by the HHA",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.rd_cpipe",
++	    "BriefDescription": "Total read accesses",
++	    "PublicDescription": "Total read accesses",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
 +	    "EventCode": "0x01",
-+	    "EventName": "uncore_hisi_hha.rx_outer",
-+	    "BriefDescription": "The number of all operations received by the HHA from another socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another socket",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.wr_cpipe",
++	    "BriefDescription": "Total write accesses",
++	    "PublicDescription": "Total write accesses",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
 +	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_hha.rx_sccl",
-+	    "BriefDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.rd_hit_cpipe",
++	    "BriefDescription": "Total read hits",
++	    "PublicDescription": "Total read hits",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
-+	    "EventCode": "0x1c",
-+	    "EventName": "uncore_hisi_hha.rd_ddr_64b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 64bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x03",
++	    "EventName": "uncore_hisi_l3c.wr_hit_cpipe",
++	    "BriefDescription": "Total write hits",
++	    "PublicDescription": "Total write hits",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
-+	    "EventCode": "0x1d",
-+	    "EventName": "uncore_hisi_hha.wr_dr_64b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
-+	    "EventCode": "0x1e",
-+	    "EventName": "uncore_hisi_hha.rd_ddr_128b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
-+	    "EventCode": "0x1f",
-+	    "EventName": "uncore_hisi_hha.wr_ddr_128b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x04",
++	    "EventName": "uncore_hisi_l3c.victim_num",
++	    "BriefDescription": "l3c precharge commands",
++	    "PublicDescription": "l3c precharge commands",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +]
 diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index d5997741f1d8..3c95affd85a4 100644
+index 3c95affd85a4..287a6f10ca48 100644
 --- a/tools/perf/pmu-events/jevents.c
 +++ b/tools/perf/pmu-events/jevents.c
-@@ -237,6 +237,7 @@ static struct map {
- 	{ "CPU-M-SF", "cpum_sf" },
+@@ -238,6 +238,7 @@ static struct map {
  	{ "UPI LL", "uncore_upi" },
  	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
-+	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+ 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
++	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
  	{}
  };
  
