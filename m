@@ -2,120 +2,123 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548E8C5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F40218C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26823218A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 21:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYi5BifZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfGCVv3 (ORCPT
+        id S1727407AbfGCVvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 17:51:29 -0400
-Received: from verein.lst.de ([213.95.11.211]:55501 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfGCVv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 17:51:28 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C562368B05; Wed,  3 Jul 2019 23:51:26 +0200 (CEST)
-Date:   Wed, 3 Jul 2019 23:51:26 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] nouveau: unlock mmap_sem on all errors from
- nouveau_range_fault
-Message-ID: <20190703215126.GA17366@lst.de>
-References: <20190703184502.16234-1-hch@lst.de> <20190703184502.16234-5-hch@lst.de> <ec5e86a4-4a60-0dd5-797c-41b21e3a091a@nvidia.com>
+        Wed, 3 Jul 2019 17:51:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60244 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfGCVvg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 17:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZbA9KwVcttCbnvX3vkkEhRhS2gc/db618QfIxsAyRR4=; b=uYi5BifZnsHyKM9VVXWgGtvI7
+        Uj14MK76lhxLh952LvTu8srnvZVU01S8YB04BoNbV267huFN/uPr63ONtipgyM8htE6RZvAFBbrlo
+        1lPsFEu2h8VBr+XedkdNV/Y3WJ19WdczYOlv43xq1Bc1yRPNEXm4XELUGWe4FRJHc2bGZ1p4QWsCU
+        Yu7PXkUxC/gQZvYBiteSQMp9NCOAW2cP2BQkcXxOjHxQiTuYKtcceIZpbZRIApGvSlVSGuHnS1tyw
+        qAzkEoVLaOfMsUHZHsZ025ftfQ5oMw0ii/hnMzfpvAJnthRPTscx7JDHwnKEd8KIOwvRgzNkYUmQL
+        DI+2Khm9w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hin9s-0000uj-TE; Wed, 03 Jul 2019 21:51:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7ACBD202173E0; Wed,  3 Jul 2019 23:51:18 +0200 (CEST)
+Date:   Wed, 3 Jul 2019 23:51:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tglx@linutronix.de, bp@alien8.de, mingo@kernel.org,
+        luto@kernel.org, torvalds@linux-foundation.org, hpa@zytor.com,
+        dave.hansen@linux.intel.com, jgross@suse.com,
+        linux-kernel@vger.kernel.org, zhe.he@windriver.com,
+        joel@joelfernandes.org, devel@etsukata.com
+Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
+Message-ID: <20190703215118.GI3402@hirez.programming.kicks-ass.net>
+References: <20190703102731.236024951@infradead.org>
+ <20190703102807.588906400@infradead.org>
+ <20190703202231.GI16275@worktop.programming.kicks-ass.net>
+ <20190703162942.63c750a3@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ec5e86a4-4a60-0dd5-797c-41b21e3a091a@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190703162942.63c750a3@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 01:46:02PM -0700, Ralph Campbell wrote:
-> You can delete the comment "With the old API the driver must ..."
-> (not visible in the patch here).
+On Wed, Jul 03, 2019 at 04:29:42PM -0400, Steven Rostedt wrote:
+> On Wed, 3 Jul 2019 22:22:31 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Wed, Jul 03, 2019 at 12:27:34PM +0200, root wrote:
+> > > Despire the current efforts to read CR2 before tracing happens there
+> > > still exist a number of possible holes:
+> > > 
+> > >   idtentry page_fault             do_page_fault           has_error_code=1
+> > >     call error_entry
+> > >       TRACE_IRQS_OFF
+> > >         call trace_hardirqs_off*
+> > >           #PF // modifies CR2
+> > > 
+> > >       CALL_enter_from_user_mode
+> > >         __context_tracking_exit()
+> > >           trace_user_exit(0)
+> > >             #PF // modifies CR2
+> > > 
+> > >     call do_page_fault
+> > >       address = read_cr2(); /* whoopsie */
+> > > 
+> > > And similar for i386.
+> > > 
+> > > Fix it by pulling the CR2 read into the entry code, before any of that
+> > > stuff gets a chance to run and ruin things.
+> > > 
+> > > Ideally we'll clean up the entry code by moving this tracing and
+> > > context tracking nonsense into C some day, but let's not delay fixing
+> > > this longer.
+> > >   
+> > 
+> > > @@ -1180,10 +1189,10 @@ idtentry xenint3		do_int3			has_error_co
+> > >  #endif
+> > >  
+> > >  idtentry general_protection	do_general_protection	has_error_code=1
+> > > -idtentry page_fault		do_page_fault		has_error_code=1
+> > > +idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
+> > >  
+> > >  #ifdef CONFIG_KVM_GUEST
+> > > -idtentry async_page_fault	do_async_page_fault	has_error_code=1
+> > > +idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
+> > >  #endif  
+> > 
+> > While going over the various idt handlers, I found that we probably also
+> > need read_cr2 on do_double_fault(), otherwise it is susceptible to the
+> > same problem.
+> > 
+> 
+> BTW, do you plan on making this for stable? Even though it's rather
+> invasive. Or should we just apply the band-aids first, have them
+> backported to stable, and then put this change on top of them for
+> upstream?
 
-Sure.
+So I don't particularly care about stable; and the band-aids
+(trace_irqs_off_cr2) is known broken so I really don't see the point.
 
-> I suggest moving the two assignments:
-> 	range->default_flags = 0;
-> 	range->pfn_flags_mask = -1UL;
-> to just above the "again:" where the other range.xxx fields are
-> initialized in nouveau_svm_fault().
-
-For now I really just want to move the code around.  As Jason pointed
-out the flow will need some major rework, and I'd rather not mess
-with little things like this for now.  Especially as I assume Jerome
-must have an update to the proper API ready given that he both
-wrote that new API and the nouveau code.
-
-> You can delete this comment (only the first line is visible here)
-> since it is about the "old API".
-
-Ok.
-
-> Also, it should return -EBUSY not -EAGAIN since it means there was a
-> range invalidation collision (similar to hmm_range_fault() if
-> !range->valid).
-
-Yes, probably.
-
-
->> @@ -515,15 +517,14 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct hmm_range *range,
->>     	ret = hmm_range_fault(range, block);
->
-> nouveau_range_fault() is only called with "block = true" so
-> could eliminate the block parameter and pass true here.
-
-Indeed.
-
->
->>   	if (ret <= 0) {
->> -		if (ret == -EBUSY || !ret) {
->> -			/* Same as above, drop mmap_sem to match old API. */
->> -			up_read(&range->vma->vm_mm->mmap_sem);
->> -			ret = -EBUSY;
->> -		} else if (ret == -EAGAIN)
->> +		if (ret == 0)
->>   			ret = -EBUSY;
->> +		if (ret != -EAGAIN)
->> +			up_read(&range->vma->vm_mm->mmap_sem);
->
-> Can ret == -EAGAIN happen if "block = true"?
-
-I don't think so, we can remove that.
-
-> Generally, I prefer the read_down()/read_up() in the same function
-> (i.e., nouveau_svm_fault()) but I can see why it should be here
-> if hmm_range_fault() can return with mmap_sem unlocked.
-
-Yes, in the long run this all needs a major cleanup..
-
-
->>   @@ -718,8 +719,8 @@ nouveau_svm_fault(struct nvif_notify *notify)
->>   						NULL);
->>   			svmm->vmm->vmm.object.client->super = false;
->>   			mutex_unlock(&svmm->mutex);
->> +			up_read(&svmm->mm->mmap_sem);
->>   		}
->> -		up_read(&svmm->mm->mmap_sem);
->>   
->
-> The "else" case should check for -EBUSY and goto again.
-
-It should if I were trying to fix this.  But this is just code
-inspection and I don't even have the hardware, so I'll have to leave
-that for someone who can do real development on the driver.
+That said, these patches should apply to most recent kernels (post PTI)
+without too much rejects.
