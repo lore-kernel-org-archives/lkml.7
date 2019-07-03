@@ -2,107 +2,110 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7797C0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDFC5B578
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C028C2189E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F07E218A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 08:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ySIPEOGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfGCI07 (ORCPT
+        id S1727217AbfGCI2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 04:26:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8690 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727241AbfGCI06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:26:58 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 02220F79422AA3A77CC8;
-        Wed,  3 Jul 2019 16:26:56 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 3 Jul 2019
- 16:26:49 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <sdf@google.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 bpf-next] bpf: cgroup: Fix build error without CONFIG_NET
-Date:   Wed, 3 Jul 2019 16:26:30 +0800
-Message-ID: <20190703082630.51104-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
-References: <fd312c26-db8e-cae3-1c14-869d8e3a62ae@fb.com>
+        Wed, 3 Jul 2019 04:28:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40361 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfGCI2Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 04:28:16 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x638S2083205103
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Jul 2019 01:28:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x638S2083205103
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562142483;
+        bh=9UlTJipWCRtOw5/9IBZBryeb5TA2GQdlEvSESszGafI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ySIPEOGI5mK+Gn8qHTjkIwe+1RLMC+ynOGLDKY3Oj54hYncVX+l2VypfxGB3jR1ZV
+         pEhP+SyCOi+cImO3ghDgUDHUkEmFsK7aPal67rswvTYdDvExeWkOCZ+XEd2D+ogxpB
+         1hXI/ihExpKncZ55Ua5XNLX2J0I6dW6Pr9hZBmEeRm9lvtdyYjOODqUt/S+NgYjACQ
+         yhwrPVCBhlDVwIpGEncett0ADrGhFdgWZ7wm0nV3725z2T9hKWUZZ6741YYGsgUM1e
+         Fm7L6iNenqmg5p3kevCCikRonjilJNdJNCyxh3F4Y7Fu8RVMachhgd+tFIzB+xruMZ
+         X+VPsrtTbrMWA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x638S2TQ3205100;
+        Wed, 3 Jul 2019 01:28:02 -0700
+Date:   Wed, 3 Jul 2019 01:28:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-32232b350d7cd93cdc65fe5a453e6a40b539e9f9@git.kernel.org>
+Cc:     namit@vmware.com, mingo@kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, hpa@zytor.com, bigeasy@linutronix.de,
+        luto@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: luto@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
+          namit@vmware.com, mingo@kernel.org, bigeasy@linutronix.de
+In-Reply-To: <20190701173354.2pe62hhliok2afea@linutronix.de>
+References: <20190701173354.2pe62hhliok2afea@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/ldt: Initialize the context lock for init_mm
+Git-Commit-ID: 32232b350d7cd93cdc65fe5a453e6a40b539e9f9
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_NET is not set and CONFIG_CGROUP_BPF=y,
-gcc building fails:
+Commit-ID:  32232b350d7cd93cdc65fe5a453e6a40b539e9f9
+Gitweb:     https://git.kernel.org/tip/32232b350d7cd93cdc65fe5a453e6a40b539e9f9
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Mon, 1 Jul 2019 19:33:54 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 3 Jul 2019 10:25:04 +0200
 
-kernel/bpf/cgroup.o: In function `cg_sockopt_func_proto':
-cgroup.c:(.text+0x237e): undefined reference to `bpf_sk_storage_get_proto'
-cgroup.c:(.text+0x2394): undefined reference to `bpf_sk_storage_delete_proto'
-kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_getsockopt':
-(.text+0x2a1f): undefined reference to `lock_sock_nested'
-(.text+0x2ca2): undefined reference to `release_sock'
-kernel/bpf/cgroup.o: In function `__cgroup_bpf_run_filter_setsockopt':
-(.text+0x3006): undefined reference to `lock_sock_nested'
-(.text+0x32bb): undefined reference to `release_sock'
+x86/ldt: Initialize the context lock for init_mm
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Stanislav Fomichev <sdf@fomichev.me>
-Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The mutex mm->context->lock for init_mm is not initialized for init_mm.
+This wasn't a problem because it remained unused. This changed however
+since commit
+	4fc19708b165c ("x86/alternatives: Initialize temporary mm for patching")
+
+Initialize the mutex for init_mm.
+
+Fixes: 4fc19708b165c ("x86/alternatives: Initialize temporary mm for patching")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nadav Amit <namit@vmware.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20190701173354.2pe62hhliok2afea@linutronix.de
+
 ---
-v2: use ifdef macro
----
- kernel/bpf/cgroup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/mmu.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 76fa007..0a00eac 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -939,6 +939,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
- }
- EXPORT_SYMBOL(__cgroup_bpf_run_filter_sysctl);
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 5ff3e8af2c20..e78c7db87801 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -59,6 +59,7 @@ typedef struct {
+ #define INIT_MM_CONTEXT(mm)						\
+ 	.context = {							\
+ 		.ctx_id = 1,						\
++		.lock = __MUTEX_INITIALIZER(mm.context.lock),		\
+ 	}
  
-+#ifdef CONFIG_NET
- static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
- 					     enum bpf_attach_type attach_type)
- {
-@@ -1120,6 +1121,7 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 	return ret;
- }
- EXPORT_SYMBOL(__cgroup_bpf_run_filter_getsockopt);
-+#endif
- 
- static ssize_t sysctl_cpy_dir(const struct ctl_dir *dir, char **bufp,
- 			      size_t *lenp)
-@@ -1386,10 +1388,12 @@ static const struct bpf_func_proto *
- cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
- 	switch (func_id) {
-+#ifdef CONFIG_NET
- 	case BPF_FUNC_sk_storage_get:
- 		return &bpf_sk_storage_get_proto;
- 	case BPF_FUNC_sk_storage_delete:
- 		return &bpf_sk_storage_delete_proto;
-+#endif
- #ifdef CONFIG_INET
- 	case BPF_FUNC_tcp_sock:
- 		return &bpf_tcp_sock_proto;
--- 
-2.7.4
-
-
+ void leave_mm(int cpu);
