@@ -2,204 +2,148 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1323C06511
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F3FC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCC0218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF08218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m01HNG6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfGCNJn (ORCPT
+        id S1727011AbfGCNKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:09:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:36251 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfGCNJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:09:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 06:09:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,446,1557212400"; 
-   d="scan'208";a="172127499"
-Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Jul 2019 06:09:40 -0700
-Date:   Wed, 3 Jul 2019 21:08:17 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-Message-ID: <20190703130817.GA1978@___>
-References: <20190703091339.1847-1-tiwei.bie@intel.com>
- <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
- <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
+        Wed, 3 Jul 2019 09:10:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34819 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCNKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 09:10:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c27so2781320wrb.2;
+        Wed, 03 Jul 2019 06:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Bobaa50WXbR9Y4LcY/j1xmyJEA8EpS2B/y8I4HgN8Y=;
+        b=m01HNG6wrx/reIarGAfsQfArF84e7O4uyXNBjqkc9OOTg8rv7kmLMtGi/FGFpq/IHM
+         LLFm+60f/VkHVa/kdCHMn3Gdk31L0i7zSM8d7O9Yop9simcXDE2BFiTdV5wWl9ApObxn
+         dF3oVE8bQ7aJhpHFPcU+LGNtNDRgbAxjQfMy5gHMowF1EQq5jWLIvX2mz5NOP6Cr5jva
+         WH7a83cBEgSceLeUh7dtKLV7cUNsAVryRJWwIGXFU7WSdK0WzKrsuFiIxA3/ARt4L5p4
+         5kvXGVYykMG1z5CkyV+VVwmJ2z9YwW1gBVglW86TSqLoXPg99UbW1QKZ/wEPhWppm3xq
+         72Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Bobaa50WXbR9Y4LcY/j1xmyJEA8EpS2B/y8I4HgN8Y=;
+        b=AEqEQhW8J79qychvVLeQYIvs7ZwWlOQJCVN87SU0wX5b3FN/fsVhTKXbpZi1W7QMGk
+         UdNrRjV6Qh2skfKsT0lnyYCNkrGaPdfzq9mh2QwLfkaPhIyIGSEwOrKgRzNRhl1EvkRv
+         HzsgJZnen8uSjec5PoGcORNgdAG/Shq6InLBRsGSBN8nsi3vvpOQzyMNgR2ThdJ0RJjV
+         zXvLcxbmGKilKLW6q6MYg0C36DwV9p3W2N+VlAKjwQ/VZrKUpu+cTLcY0mSEGMxxCSif
+         tV2AhbIW7MQAzvbvj7vV7DkEA91B4A46D0uLLJgwQhg58b3cSP4O/G9wQTVjoOiexqgm
+         wCEw==
+X-Gm-Message-State: APjAAAWeiXFCRqMALzTyoQs3zf0ovszVj3IFfOUW+JOrsdngz2LSG1QL
+        YFmpKOOrRCMpl3qfz9WvOsPkoB71sAYPnPwB9tk=
+X-Google-Smtp-Source: APXvYqzxRCWgYBv94XndsktY7TXLYzN563M7b6eZz6JCymcmhJ0NgQ/r9yxy7ERMDwsgfwNkZOv6T+elFv3Cp6CEi1w=
+X-Received: by 2002:adf:b69a:: with SMTP id j26mr21775717wre.93.1562159449703;
+ Wed, 03 Jul 2019 06:10:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190702132353.18632-1-andradanciu1997@gmail.com> <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
+In-Reply-To: <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 3 Jul 2019 16:10:38 +0300
+Message-ID: <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Andra Danciu <andradanciu1997@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, andrew.smirnov@gmail.com,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
-> On 2019/7/3 下午7:52, Tiwei Bie wrote:
-> > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
-> > > On 2019/7/3 下午5:13, Tiwei Bie wrote:
-> > > > Details about this can be found here:
-> > > > 
-> > > > https://lwn.net/Articles/750770/
-> > > > 
-> > > > What's new in this version
-> > > > ==========================
-> > > > 
-> > > > A new VFIO device type is introduced - vfio-vhost. This addressed
-> > > > some comments from here: https://patchwork.ozlabs.org/cover/984763/
-> > > > 
-> > > > Below is the updated device interface:
-> > > > 
-> > > > Currently, there are two regions of this device: 1) CONFIG_REGION
-> > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
-> > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
-> > > > can be used to notify the device.
-> > > > 
-> > > > 1. CONFIG_REGION
-> > > > 
-> > > > The region described by CONFIG_REGION is the main control interface.
-> > > > Messages will be written to or read from this region.
-> > > > 
-> > > > The message type is determined by the `request` field in message
-> > > > header. The message size is encoded in the message header too.
-> > > > The message format looks like this:
-> > > > 
-> > > > struct vhost_vfio_op {
-> > > > 	__u64 request;
-> > > > 	__u32 flags;
-> > > > 	/* Flag values: */
-> > > >    #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
-> > > > 	__u32 size;
-> > > > 	union {
-> > > > 		__u64 u64;
-> > > > 		struct vhost_vring_state state;
-> > > > 		struct vhost_vring_addr addr;
-> > > > 	} payload;
-> > > > };
-> > > > 
-> > > > The existing vhost-kernel ioctl cmds are reused as the message
-> > > > requests in above structure.
-> > > 
-> > > Still a comments like V1. What's the advantage of inventing a new protocol?
-> > I'm trying to make it work in VFIO's way..
-> > 
-> > > I believe either of the following should be better:
-> > > 
-> > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
-> > > extend it with e.g notify region. The advantages is that all exist userspace
-> > > program could be reused without modification (or minimal modification). And
-> > > vhost API hides lots of details that is not necessary to be understood by
-> > > application (e.g in the case of container).
-> > Do you mean reusing vhost's ioctl on VFIO device fd directly,
-> > or introducing another mdev driver (i.e. vhost_mdev instead of
-> > using the existing vfio_mdev) for mdev device?
-> 
-> 
-> Can we simply add them into ioctl of mdev_parent_ops?
+On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
+>
+> Hi Andra,
+>
+> I tried this out on linux-next and I'm not able to record or play sound.
+>
+> I also added the sai2 entry to test out our devkit and get a PCM timeout
+> with that.
 
-Right, either way, these ioctls have to be and just need to be
-added in the ioctl of the mdev_parent_ops. But another thing we
-also need to consider is that which file descriptor the userspace
-will do the ioctl() on. So I'm wondering do you mean let the
-userspace do the ioctl() on the VFIO device fd of the mdev
-device?
+Hi Angus,
 
-> 
-> 
-> > 
-[...]
-> > > > 3. VFIO interrupt ioctl API
-> > > > 
-> > > > VFIO interrupt ioctl API is used to setup device interrupts.
-> > > > IRQ-bypass can also be supported.
-> > > > 
-> > > > Currently, the data path interrupt can be configured via the
-> > > > VFIO_VHOST_VQ_IRQ_INDEX with virtqueue's callfd.
-> > > 
-> > > How about DMA API? Do you expect to use VFIO IOMMU API or using vhost
-> > > SET_MEM_TABLE? VFIO IOMMU API is more generic for sure but with
-> > > SET_MEM_TABLE DMA can be done at the level of parent device which means it
-> > > can work for e.g the card with on-chip IOMMU.
-> > Agree. In this RFC, it assumes userspace will use VFIO IOMMU API
-> > to do the DMA programming. But like what you said, there could be
-> > a problem when using cards with on-chip IOMMU.
-> 
-> 
-> Yes, another issue is SET_MEM_TABLE can not be used to update just a part of
-> the table. This seems less flexible than VFIO API but it could be extended.
+There are still lots of SAI patches that need to be upstream. Me and Andra
+will be working on that over this summer.
 
-Agree.
+>
+> On 2019-07-02 07:23, Andra Danciu wrote:
+> > SAI3 and SAI6 nodes are used to connect to an external codec.
+> > They have 1 Tx and 1 Rx dataline.
+> >
+> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> > ---
+> > Changes since v2:
+> >       - removed multiple new lines
+> >
+> > Changes since v1:
+> >       - Added sai3 node because we need it to enable audio on pico-pi-8m
+> >       - Added commit description
+> >
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
+> > +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index d09b808eff87..736cf81b695e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -278,6 +278,20 @@
+> >                       #size-cells = <1>;
+> >                       ranges = <0x30000000 0x30000000 0x400000>;
+> >
+> > +                     sai6: sai@30030000 {
+> > +                             compatible = "fsl,imx8mq-sai",
+>
+> I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
+> the registers at a different offset from "fsl,imx6sx-sai".
 
-> 
-> 
-> > 
-> > > And what's the plan for vIOMMU?
-> > As this RFC assumes userspace will use VFIO IOMMU API, userspace
-> > just needs to follow the same way like what vfio-pci device does
-> > in QEMU to support vIOMMU.
-> 
-> 
-> Right, this is more a question for the qemu part. It means it needs to go
-> for ordinary VFIO path to get all notifiers/listeners support from vIOMMU.
+Yes, you are right on this. We are trying to slowly push all our internal-tree
+patches to mainline. Obviously, with started with low hanging fruits, DTS
+nodes and small SAI fixes.
 
-Yeah.
+Soon, we will start to send patches for SAI IP ipgrade for imx8.
 
-> 
-> 
-> > 
-> > > 
-> > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> > > > ---
-> > > >    drivers/vhost/Makefile     |   2 +
-> > > >    drivers/vhost/vdpa.c       | 770 +++++++++++++++++++++++++++++++++++++
-> > > >    include/linux/vdpa_mdev.h  |  72 ++++
-> > > >    include/uapi/linux/vfio.h  |  19 +
-> > > >    include/uapi/linux/vhost.h |  25 ++
-> > > >    5 files changed, 888 insertions(+)
-> > > >    create mode 100644 drivers/vhost/vdpa.c
-> > > >    create mode 100644 include/linux/vdpa_mdev.h
-> > > 
-> > > We probably need some sample parent device implementation. It could be a
-> > > software datapath like e.g we can start from virtio-net device in guest or a
-> > > vhost/tap on host.
-> > Yeah, something like this would be interesting!
-> 
-> 
-> Plan to do something like that :) ?
+>
+> How is this supposed to work ?
+>
 
-I don't have a plan yet.. But it's something that can be done I think.
+For the moment it won't work unless we will upstream all our SAI
+internal patches.
+But we will get there hopefully this summer.
 
 Thanks,
-Tiwei
-
-> 
-> Thanks
-> 
-> 
-> > 
-> > Thanks,
-> > Tiwei
-> > 
-> > > Thanks
-> > > 
-> > > 
+Daniel.
