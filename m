@@ -8,61 +8,64 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B005AC0650E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC98C0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7BE218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0B0218A0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 13:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhOw5255"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQcna9PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfGCNPi (ORCPT
+        id S1727231AbfGCNPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 09:15:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38976 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfGCNPh (ORCPT
+        Wed, 3 Jul 2019 09:15:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46815 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGCNPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 09:15:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so755320pgi.6;
-        Wed, 03 Jul 2019 06:15:37 -0700 (PDT)
+        Wed, 3 Jul 2019 09:15:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so1222543pls.13;
+        Wed, 03 Jul 2019 06:15:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=ILHmsjtfRRicWNzLnmhrIVL4UzVkveonMyetzJ32jH4=;
-        b=mhOw52556w11m0noUzXUpVV693CBRe3OCMQDjJvG2mK3WBGuXFKC7DLNcLJH0Mvfyz
-         KPBXnxZe9uZm11awxCxejCGsMDhdZQY/XHgc61P+qPh8N7vmizjP1Jsn05teVCOM5c6y
-         xyAw4PIkvtUXS6dAR3rmH9wvmYzgUM6Hjko2ybBxOSwtP45T+85v4Y7b9JVRRuEtGd+Z
-         5eA9PIIewXWe6BbdS8g2jPKScKWW5qL9tncQFBQaQY8cyVlbV3qJ7LcPyymlZUfzlxuk
-         9r/3Citbr9ZVh0bWjWAAhH7DPzfp51j22VFzRnlm+5prB/y6O3SI523f1Iq2QmpLuLcX
-         XP2A==
+        bh=LDQEYa+SYRPSXa6Z0KLZW9PBv8GE8Q8lsLimzp9JewE=;
+        b=nQcna9PTESD3RoynbhwHnSnUmp5C5172N/oEukmKxN4f2z/XThQtuh/onzbIz2hPQ4
+         KqlBuOrjS1QHbMggUh0QpljV/f9lD206sVyTfMJosviVDX0o+50RyZ7LxuSkNSr24lyX
+         W9BkpOWwH8WTqY1ljJQGKkc9yFsOts73Gg3PfUEe/4bB1eDr7VFhNpX0gpBSx57GncxH
+         KrYj9Xy1/9ytaFKRSW53JGXd132Th3yTKTk8FoFxhFpWmDhmexvHj0TaV513OE0yL8lY
+         PfqHTy+SV7ViVb9XsCA6a3F3a/ISHybOKNk62GMvG0Y8Jt8pAPUX9/3d6o/IzFyRmurB
+         qQqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ILHmsjtfRRicWNzLnmhrIVL4UzVkveonMyetzJ32jH4=;
-        b=JFuXdi+FlxK2aX7pXMiKUbNwIseTqcBBHpCDB/t4t+bs0zJv4pKMEFhApdMrX7h2mX
-         HbcGRwBIlD1IE6i14+Ywfh6aX8fhqfDwPcUyZzZJ2wAALWB2HI5S4N/x4CMVWMHqeZlL
-         8AzQfUhm2VJ2qHmciDnh4kbZ9ydqFO1HydWV+ERu1eSLboYk6aX3JIuBns6TPnJVpbxJ
-         ApCOehfVO+CwYhzAdUEDtus26B5cfHAs92YtgJNU9j/Hxu3gQyEB9UdTGAqfxTCxlwaX
-         rdOt0WpyGzI2v4hEojo7Gp1AkIZYQvGsKo+YX+gZTMrlcu88T51P6GnlPp/YW2Nj7nmR
-         dVjA==
-X-Gm-Message-State: APjAAAX8n0GpQtg4AoaFfU0wYBMaz4FSe8yDuFouMGzmch0GnjDsbSBd
-        Gspb7GMWXonbe8FHkYOr6V0=
-X-Google-Smtp-Source: APXvYqyWOxDc2Kn9dSXUswi0xM6YVAKeVA/hYVvF9QVnkx15R8vTsKEGmXy90RUyiI9vV5T4i4JFDw==
-X-Received: by 2002:a63:f501:: with SMTP id w1mr19642417pgh.444.1562159736917;
-        Wed, 03 Jul 2019 06:15:36 -0700 (PDT)
+        bh=LDQEYa+SYRPSXa6Z0KLZW9PBv8GE8Q8lsLimzp9JewE=;
+        b=Tx/tRuFdP/bervDf/60Axds/wM6IVqyUkOZGq1Sa3N6piEqrKuiubclW6krxygiFZi
+         4PW8SwKHEHeqlC+UXv65Zek5f2MQ+6liu7NYh45tGR72cPB5Sg0CmkQT/uXOz1WJNd8l
+         u1pmHeg4/8yxe9byK0Tf+ManZVGjwOJSxJl3qizXCUDgBbWe3G6xRQOupCIVa8bNocWV
+         rSyHFXXWBmZjURPxI1I9CLB8DEMwCbtLdjnfKSuoU+IX89SKxn+Cnoe2LOMAe0xn+cTu
+         TUAcG7QiGxl8zzD7UEMy/d7/9M1Ob/K4IdGYsogbDx0MtMvjockHcZ9kFYCqEH6iV/1H
+         FGeg==
+X-Gm-Message-State: APjAAAXTT5XmGl0Vwmh3UyCIBgQNG/K8TBbgqMnCVIJvCAC7ygfQwFRv
+        jd3Ep2lgYiW/MF0bM4nIzpY=
+X-Google-Smtp-Source: APXvYqzbEbGSd38TnKedTO7iV+o3OuKmTVu4X5miAXlN4my9KxRt6PNKYskMAzIqkFz39V0iJCsyjg==
+X-Received: by 2002:a17:902:722:: with SMTP id 31mr41709199pli.163.1562159750070;
+        Wed, 03 Jul 2019 06:15:50 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id u134sm2386515pfc.19.2019.07.03.06.15.34
+        by smtp.googlemail.com with ESMTPSA id h62sm5716627pgc.54.2019.07.03.06.15.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 06:15:36 -0700 (PDT)
+        Wed, 03 Jul 2019 06:15:49 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Antoine Jacquet <royale@zerezo.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 12/30] media/usb: Use kmemdup rather than duplicating its implementation
-Date:   Wed,  3 Jul 2019 21:15:26 +0800
-Message-Id: <20190703131526.25223-1-huangfq.daxian@gmail.com>
+Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH 13/30] message/fusion: Use kmemdup rather than duplicating its implementation
+Date:   Wed,  3 Jul 2019 21:15:39 +0800
+Message-Id: <20190703131539.25270-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,47 +81,28 @@ Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/media/usb/em28xx/em28xx-cards.c | 3 +--
- drivers/media/usb/zr364xx/zr364xx.c     | 4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ drivers/message/fusion/mptbase.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
-index 1283c7ca9ad5..6e33782c3ca6 100644
---- a/drivers/media/usb/em28xx/em28xx-cards.c
-+++ b/drivers/media/usb/em28xx/em28xx-cards.c
-@@ -3566,13 +3566,12 @@ static int em28xx_init_dev(struct em28xx *dev, struct usb_device *udev,
- static int em28xx_duplicate_dev(struct em28xx *dev)
- {
- 	int nr;
--	struct em28xx *sec_dev = kzalloc(sizeof(*sec_dev), GFP_KERNEL);
-+	struct em28xx *sec_dev = kmemdup(dev, sizeof(*sec_dev), GFP_KERNEL);
+diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
+index d8882b0a1338..e0c57cecddd3 100644
+--- a/drivers/message/fusion/mptbase.c
++++ b/drivers/message/fusion/mptbase.c
+@@ -6001,13 +6001,12 @@ mpt_findImVolumes(MPT_ADAPTER *ioc)
+ 	if (mpt_config(ioc, &cfg) != 0)
+ 		goto out;
  
- 	if (!sec_dev) {
- 		dev->dev_next = NULL;
- 		return -ENOMEM;
+-	mem = kmalloc(iocpage2sz, GFP_KERNEL);
++	mem = kmemdup((u8 *)pIoc2, iocpage2sz, GFP_KERNEL);
+ 	if (!mem) {
+ 		rc = -ENOMEM;
+ 		goto out;
  	}
--	memcpy(sec_dev, dev, sizeof(*sec_dev));
- 	/* Check to see next free device and mark as used */
- 	do {
- 		nr = find_first_zero_bit(em28xx_devused, EM28XX_MAXBOARDS);
-diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
-index 37a7992585df..39df6bfece2c 100644
---- a/drivers/media/usb/zr364xx/zr364xx.c
-+++ b/drivers/media/usb/zr364xx/zr364xx.c
-@@ -199,12 +199,10 @@ static int send_control_msg(struct usb_device *udev, u8 request, u16 value,
- {
- 	int status;
  
--	unsigned char *transfer_buffer = kmalloc(size, GFP_KERNEL);
-+	unsigned char *transfer_buffer = kmemdup(cp, size, GFP_KERNEL);
- 	if (!transfer_buffer)
- 		return -ENOMEM;
+-	memcpy(mem, (u8 *)pIoc2, iocpage2sz);
+ 	ioc->raid_data.pIocPg2 = (IOCPage2_t *) mem;
  
--	memcpy(transfer_buffer, cp, size);
--
- 	status = usb_control_msg(udev,
- 				 usb_sndctrlpipe(udev, 0),
- 				 request,
+ 	mpt_read_ioc_pg_3(ioc);
 -- 
 2.11.0
 
