@@ -2,115 +2,355 @@ Return-Path: <SRS0=FHjv=VA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE410C5B578
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A6EC0650E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0572218A0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562192824;
-	bh=54TJQdnmI9JIs7sWIgYE9UCADvIt2r39ssBw13F7Kc8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AqdnQgj/1vKHosaV/ofFqQzITVyq8hkl8QR32zy8e9iDNCq0Xjz4aHtwOSGM4Dud8
-	 YXqgO0YXRVQHWkuzJ95zp832ju5QEAeWuxEc1ikX6wKtNEqqSqnQg5920+Cy7Y3EDP
-	 jNpWKWc+xbbCeSCxwMuklNQDV9InLmourxSGJ1Jg=
+	by mail.kernel.org (Postfix) with ESMTP id 24B2721871
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jul 2019 22:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0btV7qN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfGCW1C (ORCPT
+        id S1727419AbfGCW1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 18:27:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfGCW1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 18:27:02 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42BF3218BA
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jul 2019 22:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562192821;
-        bh=54TJQdnmI9JIs7sWIgYE9UCADvIt2r39ssBw13F7Kc8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wr6r8hn0+u4xuDAmaFtOooZkqTaLMD5/MjU59XcM7mVU/EX15u1jID8nIi9mAfv3B
-         Yoea+eS8UJlTXSUZXM5Es/Vw7xSnhQdeJQEgONaMnO0ztzFUdaSBvsVPm3UBXwM/NK
-         vmqa8UC1cqXJig+N2OKGY5cuJlPPRXtQA4snemcg=
-Received: by mail-wm1-f42.google.com with SMTP id c6so3995767wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 15:27:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAWkmq1nSM6npEfdqsmPQTbZeMwYeOs9top4quCDEo0Z3VM1pkMz
-        owN11obWGGzzAh4aRBL2m3+YOK+CHf21zURhA+DZwg==
-X-Google-Smtp-Source: APXvYqxF3U2OW9rexTtLNZvPFG3EuT8YJk1XnSYqRuywgPoqAC8039SaP1Ldg02xrhCtt1keIB6RuDIfAF2nAeEOrFs=
-X-Received: by 2002:a7b:c149:: with SMTP id z9mr879318wmi.0.1562192819761;
- Wed, 03 Jul 2019 15:26:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190703102731.236024951@infradead.org> <20190703102807.588906400@infradead.org>
- <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com> <20190703220057.GJ3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190703220057.GJ3402@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 3 Jul 2019 15:26:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrUEsKt=CyM634Lp265hjJg0Jm==gvN_-_UwGp9S6Mt=MA@mail.gmail.com>
-Message-ID: <CALCETrUEsKt=CyM634Lp265hjJg0Jm==gvN_-_UwGp9S6Mt=MA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
+        Wed, 3 Jul 2019 18:27:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35892 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfGCW1a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 18:27:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dR8rT6j2M0ly/hhLtGGd/Pl7BP9JO2M9xU7J236aZE4=; b=Q0btV7qNug0FYaQRyhqhr3dpC
+        Sqdvr01db6up1aYCvpUM0mEeFGvu7Q43A1wGQikv/32GhPh1rKMyGTbpPVsOMxaaquHhGZS4q45zI
+        UpUSf7s2/PQ11MaRou3a73NzowXN90P1kX7jgVveuux8Juh4RR85mj/9LUYGyd5tLsOZexziLlsK5
+        YJ0TOvaWT8obuO2nzr0SAGa6O2pIDfgjKQx+dgU8Uy+I/4NdHbMD7TT1UkkpOhWbwtiisulQ6AcKk
+        G+URVE9JSUfbi2yyu1uIgowBU/HKsNENLTZX5OXA4Qv56yOMgtichI7l+b5+LhvpxZt3jt9ne2+tU
+        JnD8U641w==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hinin-0003Lf-Lg; Wed, 03 Jul 2019 22:27:25 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] kernel/cpu: hotplug; fix non-SYSFS build errors in
+ arch/x86/power/
+Message-ID: <9906a70d-7a4a-03a1-f555-07231570364d@infradead.org>
+Date:   Wed, 3 Jul 2019 15:27:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 3:01 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jul 03, 2019 at 01:27:09PM -0700, Andy Lutomirski wrote:
-> > On Wed, Jul 3, 2019 at 3:28 AM root <peterz@infradead.org> wrote:
->
-> > > @@ -1338,18 +1347,9 @@ ENTRY(error_entry)
-> > >         movq    %rax, %rsp                      /* switch stack */
-> > >         ENCODE_FRAME_POINTER
-> > >         pushq   %r12
-> > > -
-> > > -       /*
-> > > -        * We need to tell lockdep that IRQs are off.  We can't do this until
-> > > -        * we fix gsbase, and we should do it before enter_from_user_mode
-> > > -        * (which can take locks).
-> > > -        */
-> > > -       TRACE_IRQS_OFF
-> >
-> > This hunk looks wrong.  Am I missing some other place that handles the
-> > case where we enter from kernel mode and IRQs were on?
->
-> > > -   CALL_enter_from_user_mode
-> > >     ret
-> > >
-> > >  .Lerror_entry_done:
-> > > -   TRACE_IRQS_OFF
-> > >     ret
-> > >
-> > >     /*
->
-> Did you perchance mean to complain about the .Lerror_entry_done one?
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Yes, duh.
+Fix link errors when building almost-allmodconfig but CONFIG_SYSFS
+is not set/enabled.
 
-I would suggest compiling with DEBUG_LOCKDEP and running perf and the
-x86 selftests.  IIRC that's what catches most of the IRQ flag tracing
-errors.
+The missing functions should not be inside #if CONFIG_SYSFS/#endif.
 
->
-> Because I'm not seeing how the one before CALL_enter_from_user_mode can
-> ever be from-kernel.
->
-> But yes, that .Lerror_entry_done one looks fishy.
+The non-SYSFS stub for __store_smt_control() is no longer needed.
+
+This is almost all code movement and a little ifdef-fery changes.
+
+Fixes these build errors:
+
+ld: arch/x86/power/cpu.o: in function `hibernate_resume_nonboot_cpu_disable':
+cpu.c:(.text+0x9f4): undefined reference to `cpuhp_smt_enable'
+ld: arch/x86/power/hibernate.o: in function `arch_resume_nosmt':
+hibernate.c:(.text+0x7f7): undefined reference to `cpuhp_smt_enable'
+ld: hibernate.c:(.text+0x809): undefined reference to `cpuhp_smt_disable'
+
+Fixes: 98f8cdce1db5 ("cpu/hotplug: Add sysfs state interface")
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-pm@vger.kernel.org
+---
+ kernel/cpu.c |  242 +++++++++++++++++++++++--------------------------
+ 1 file changed, 118 insertions(+), 124 deletions(-)
+
+--- lnx-52-rc7.orig/kernel/cpu.c
++++ lnx-52-rc7/kernel/cpu.c
+@@ -376,7 +376,7 @@ static void lockdep_release_cpus_lock(vo
+ {
+ }
+ 
+-#endif	/* CONFIG_HOTPLUG_CPU */
++#endif /* CONFIG_HOTPLUG_CPU */
+ 
+ /*
+  * Architectures that need SMT-specific errata handling during SMT hotplug
+@@ -1892,6 +1892,123 @@ void __cpuhp_remove_state(enum cpuhp_sta
+ }
+ EXPORT_SYMBOL(__cpuhp_remove_state);
+ 
++#ifdef CONFIG_HOTPLUG_CPU
++
++static void cpuhp_offline_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = true;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
++}
++
++static void cpuhp_online_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = false;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
++}
++
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	for_each_online_cpu(cpu) {
++		if (topology_is_primary_thread(cpu))
++			continue;
++		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
++		if (ret)
++			break;
++		/*
++		 * As this needs to hold the cpu maps lock it's impossible
++		 * to call device_offline() because that ends up calling
++		 * cpu_down() which takes cpu maps lock. cpu maps lock
++		 * needs to be held as this might race against in kernel
++		 * abusers of the hotplug machinery (thermal management).
++		 *
++		 * So nothing would update device:offline state. That would
++		 * leave the sysfs entry stale and prevent onlining after
++		 * smt control has been changed to 'off' again. This is
++		 * called under the sysfs hotplug lock, so it is properly
++		 * serialized against the regular offline usage.
++		 */
++		cpuhp_offline_cpu_device(cpu);
++	}
++	if (!ret)
++		cpu_smt_control = ctrlval;
++	cpu_maps_update_done();
++	return ret;
++}
++
++int cpuhp_smt_enable(void)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	cpu_smt_control = CPU_SMT_ENABLED;
++	for_each_present_cpu(cpu) {
++		/* Skip online CPUs and CPUs on offline nodes */
++		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
++			continue;
++		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
++		if (ret)
++			break;
++		/* See comment in cpuhp_smt_disable() */
++		cpuhp_online_cpu_device(cpu);
++	}
++	cpu_maps_update_done();
++	return ret;
++}
++
++#if defined(CONFIG_HOTPLUG_SMT) && defined(CONFIG_SYSFS)
++static ssize_t
++__store_smt_control(struct device *dev, struct device_attribute *attr,
++		    const char *buf, size_t count)
++{
++	int ctrlval, ret;
++
++	if (sysfs_streq(buf, "on"))
++		ctrlval = CPU_SMT_ENABLED;
++	else if (sysfs_streq(buf, "off"))
++		ctrlval = CPU_SMT_DISABLED;
++	else if (sysfs_streq(buf, "forceoff"))
++		ctrlval = CPU_SMT_FORCE_DISABLED;
++	else
++		return -EINVAL;
++
++	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED)
++		return -EPERM;
++
++	if (cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
++		return -ENODEV;
++
++	ret = lock_device_hotplug_sysfs();
++	if (ret)
++		return ret;
++
++	if (ctrlval != cpu_smt_control) {
++		switch (ctrlval) {
++		case CPU_SMT_ENABLED:
++			ret = cpuhp_smt_enable();
++			break;
++		case CPU_SMT_DISABLED:
++		case CPU_SMT_FORCE_DISABLED:
++			ret = cpuhp_smt_disable(ctrlval);
++			break;
++		}
++	}
++
++	unlock_device_hotplug();
++	return ret ? ret : count;
++}
++#endif /* CONFIG_HOTPLUG_SMT && CONFIG_SYSFS */
++
++#endif /* CONFIG_HOTPLUG_CPU */
++
+ #if defined(CONFIG_SYSFS) && defined(CONFIG_HOTPLUG_CPU)
+ static ssize_t show_cpuhp_state(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+@@ -2044,129 +2161,6 @@ static const struct attribute_group cpuh
+ 	NULL
+ };
+ 
+-#ifdef CONFIG_HOTPLUG_SMT
+-
+-static void cpuhp_offline_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = true;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
+-}
+-
+-static void cpuhp_online_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = false;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+-}
+-
+-int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	for_each_online_cpu(cpu) {
+-		if (topology_is_primary_thread(cpu))
+-			continue;
+-		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
+-		if (ret)
+-			break;
+-		/*
+-		 * As this needs to hold the cpu maps lock it's impossible
+-		 * to call device_offline() because that ends up calling
+-		 * cpu_down() which takes cpu maps lock. cpu maps lock
+-		 * needs to be held as this might race against in kernel
+-		 * abusers of the hotplug machinery (thermal management).
+-		 *
+-		 * So nothing would update device:offline state. That would
+-		 * leave the sysfs entry stale and prevent onlining after
+-		 * smt control has been changed to 'off' again. This is
+-		 * called under the sysfs hotplug lock, so it is properly
+-		 * serialized against the regular offline usage.
+-		 */
+-		cpuhp_offline_cpu_device(cpu);
+-	}
+-	if (!ret)
+-		cpu_smt_control = ctrlval;
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-int cpuhp_smt_enable(void)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	cpu_smt_control = CPU_SMT_ENABLED;
+-	for_each_present_cpu(cpu) {
+-		/* Skip online CPUs and CPUs on offline nodes */
+-		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
+-			continue;
+-		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
+-		if (ret)
+-			break;
+-		/* See comment in cpuhp_smt_disable() */
+-		cpuhp_online_cpu_device(cpu);
+-	}
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-
+-static ssize_t
+-__store_smt_control(struct device *dev, struct device_attribute *attr,
+-		    const char *buf, size_t count)
+-{
+-	int ctrlval, ret;
+-
+-	if (sysfs_streq(buf, "on"))
+-		ctrlval = CPU_SMT_ENABLED;
+-	else if (sysfs_streq(buf, "off"))
+-		ctrlval = CPU_SMT_DISABLED;
+-	else if (sysfs_streq(buf, "forceoff"))
+-		ctrlval = CPU_SMT_FORCE_DISABLED;
+-	else
+-		return -EINVAL;
+-
+-	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED)
+-		return -EPERM;
+-
+-	if (cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
+-		return -ENODEV;
+-
+-	ret = lock_device_hotplug_sysfs();
+-	if (ret)
+-		return ret;
+-
+-	if (ctrlval != cpu_smt_control) {
+-		switch (ctrlval) {
+-		case CPU_SMT_ENABLED:
+-			ret = cpuhp_smt_enable();
+-			break;
+-		case CPU_SMT_DISABLED:
+-		case CPU_SMT_FORCE_DISABLED:
+-			ret = cpuhp_smt_disable(ctrlval);
+-			break;
+-		}
+-	}
+-
+-	unlock_device_hotplug();
+-	return ret ? ret : count;
+-}
+-
+-#else /* !CONFIG_HOTPLUG_SMT */
+-static ssize_t
+-__store_smt_control(struct device *dev, struct device_attribute *attr,
+-		    const char *buf, size_t count)
+-{
+-	return -ENODEV;
+-}
+-#endif /* CONFIG_HOTPLUG_SMT */
+-
+ static const char *smt_states[] = {
+ 	[CPU_SMT_ENABLED]		= "on",
+ 	[CPU_SMT_DISABLED]		= "off",
+
+
