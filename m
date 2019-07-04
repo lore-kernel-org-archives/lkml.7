@@ -2,67 +2,179 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CDC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ADDC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FCA218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562260206;
-	bh=wUPuiCtsjKFMCYJwXnPf2S8IohnAIH4M9GvNy802eGE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2h0mRCgeiMXSNSM2l7b+O6xNo7eHvZIzhhG4pksiTOcnT6X4cETQIeAvmELg74g9R
-	 nVOFejeuWfYqhM7CNYpn3TQVEyxOFCi/7ROTPgnNENYXZcsr0pHRoX3GgkPnNkMLJl
-	 6lVgKMPM9z9pkYdrjEmjVTUGyjl9tpexzwn+Iqz8=
+	by mail.kernel.org (Postfix) with ESMTP id 23415218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HuH/JsuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfGDRKF (ORCPT
+        id S1727389AbfGDRMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 13:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfGDRKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 13:10:04 -0400
-Subject: Re: [GIT PULL] sound fixes for 5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562260204;
-        bh=wUPuiCtsjKFMCYJwXnPf2S8IohnAIH4M9GvNy802eGE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=peCfyuGT1OBXfWgwjeYY+MMupoOFhIrCFvqS5ylBKRre+Yjtt8HmLPOIRuXScHdeE
-         eMLLoTwCrPY5C7chTTEtyj0iOQcZXV0oSlFrMJPIa1W+hHl37cAnq6sXBDZPM9e7Rl
-         1wL0Hf5dlWXdahdiLJDOMI5aAHCNI2CgWKmcSMXo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <s5h8ste2kn4.wl-tiwai@suse.de>
-References: <s5h8ste2kn4.wl-tiwai@suse.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <s5h8ste2kn4.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.2
-X-PR-Tracked-Commit-Id: 3450121997ce872eb7f1248417225827ea249710
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c212ddaee2fd21e8d756dbc3c6119e3259b38fd0
-Message-Id: <156226020401.21087.4911880582513267664.pr-tracker-bot@kernel.org>
-Date:   Thu, 04 Jul 2019 17:10:04 +0000
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Thu, 4 Jul 2019 13:12:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46266 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbfGDRL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 13:11:59 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so4641694lfh.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 10:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CTw8LgIZLrVf0RNEYgPzuF2QYpEPgzEFcRlidCnudh0=;
+        b=HuH/JsuO8405NViujKhNY1PieKnPq4PjbXEVCQ8+n9tCjMRS8m7dARScFiDdFYh3k8
+         n32TRp7u0m6z3B0D9FzZ2syCVdiokCbih6m/OLiRNp/yIxKjzN9OoRbwwvyX4acKfZ0a
+         HiR74sR6doIrqFfn15vn/I7sCL+1WNOGHamtMsZpL4+x80kHV63tLlnZhnCVz1yKiYdt
+         JwoXpYR/t9TGopxvLD9dXbWfd1Y3kfx/ZltscCN7A6jCa3yiAZfHo6lStppWvT8UbzjI
+         YAjvVwLHFfOqGwE9KnRSjpbwTrjMjNB6bUSqQx3zlUXk30JToslEQ9jX8eIx8jlyYSkY
+         Pp4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=CTw8LgIZLrVf0RNEYgPzuF2QYpEPgzEFcRlidCnudh0=;
+        b=aTYV1Hw/AwmG7YLSco1qFhZHJWsmPWnsTKix2vCCXJXavF46/fLJhyu6VjUzWIKpif
+         iCbrRSARiN7VgcFZ01y00xA+ECfpSqoAIu4rnjIEYCTofT8IqhzegW7izrA4vBkzUsJx
+         ohtRv93t67xTJt1DYR7fYlgXXY57U5DOZM9resTbg4JbUjhVtPQI3k0/Bw/oHa8iJiRu
+         aubSdRPkXDEKQkwWKFIjjIuERq+58oyNnlaBEO4nVj8zmJelcZMjtvJ0cY3cAlhNry2B
+         FQKOU3CGAi/jE1qHwhyut13r3Ya1d5fCvUlJdPl7HXWi4o69UoIPMedLNHeyDQMpjbe0
+         +tBw==
+X-Gm-Message-State: APjAAAVrfuVugCWp2ICOOdRX36hvKI5WtbWvuLgFtbUAj+QJb+TN/JpY
+        1bAZR/jF3J6A5lFoheRrj5/RxKe96xA=
+X-Google-Smtp-Source: APXvYqwC1GwtWVldB9WJdDmz7RXuTaX/Qg+aRxyVkDoNEMfG5HVm/l90xvLZWEUL8tSpzufWb3TkNw==
+X-Received: by 2002:ac2:5442:: with SMTP id d2mr1501791lfn.70.1562260316525;
+        Thu, 04 Jul 2019 10:11:56 -0700 (PDT)
+Received: from khorivan ([46.211.38.218])
+        by smtp.gmail.com with ESMTPSA id w21sm669798lfl.84.2019.07.04.10.11.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 10:11:56 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 20:11:41 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v6 net-next 1/5] xdp: allow same allocator usage
+Message-ID: <20190704171135.GB2923@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+ <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
+ <20190703194013.02842e42@carbon>
+ <20190704102239.GA3406@khorivan>
+ <20190704144144.5edd18eb@carbon>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190704144144.5edd18eb@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 04 Jul 2019 11:50:55 +0200:
+On Thu, Jul 04, 2019 at 02:41:44PM +0200, Jesper Dangaard Brouer wrote:
+>On Thu, 4 Jul 2019 13:22:40 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> On Wed, Jul 03, 2019 at 07:40:13PM +0200, Jesper Dangaard Brouer wrote:
+>> >On Wed,  3 Jul 2019 13:18:59 +0300
+>> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>> >
+>> >> First of all, it is an absolute requirement that each RX-queue have
+>> >> their own page_pool object/allocator. And this change is intendant
+>> >> to handle special case, where a single RX-queue can receive packets
+>> >> from two different net_devices.
+>> >>
+>> >> In order to protect against using same allocator for 2 different rx
+>> >> queues, add queue_index to xdp_mem_allocator to catch the obvious
+>> >> mistake where queue_index mismatch, as proposed by Jesper Dangaard
+>> >> Brouer.
+>> >>
+>> >> Adding this on xdp allocator level allows drivers with such dependency
+>> >> change the allocators w/o modifications.
+>> >>
+>> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> >> ---
+>> >>  include/net/xdp_priv.h |  2 ++
+>> >>  net/core/xdp.c         | 55 ++++++++++++++++++++++++++++++++++++++++++
+>> >>  2 files changed, 57 insertions(+)
+>> >>
+>> >> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+>> >> index 6a8cba6ea79a..9858a4057842 100644
+>> >> --- a/include/net/xdp_priv.h
+>> >> +++ b/include/net/xdp_priv.h
+>> >> @@ -18,6 +18,8 @@ struct xdp_mem_allocator {
+>> >>  	struct rcu_head rcu;
+>> >>  	struct delayed_work defer_wq;
+>> >>  	unsigned long defer_warn;
+>> >> +	unsigned long refcnt;
+>> >> +	u32 queue_index;
+>> >>  };
+>> >
+>> >I don't like this approach, because I think we need to extend struct
+>> >xdp_mem_allocator with a net_device pointer, for doing dev_hold(), to
+>> >correctly handle lifetime issues. (As I tried to explain previously).
+>> >This will be much harder after this change, which is why I proposed the
+>> >other patch.
+>> My concern comes not from zero also.
+>> It's partly continuation of not answered questions from here:
+>> https://lwn.net/ml/netdev/20190625122822.GC6485@khorivan/
+>>
+>> "For me it's important to know only if it means that alloc.count is
+>> freed at first call of __mem_id_disconnect() while shutdown.
+>> The workqueue for the rest is connected only with ring cache protected
+>> by ring lock and not supposed that alloc.count can be changed while
+>> workqueue tries to shutdonwn the pool."
+>
+>Yes.  The alloc.count is only freed on first call.  I considered
+>changing the shutdown API, to have two shutdown calls, where the call
+>used from the work-queue will not have the loop emptying alloc.count,
+>but instead have a WARN_ON(alloc.count), as it MUST be empty (once is
+>code running from work-queue).
+>
+>> So patch you propose to leave works only because of luck, because fast
+>> cache is cleared before workqueue is scheduled and no races between two
+>> workqueues for fast cache later. I'm not really against this patch, but
+>> I have to try smth better.
+>
+>It is not "luck".  It does the correct thing as we never enter the
+>while loop in __page_pool_request_shutdown() from a work-queue, but it
+>is not obvious from the code.  The not-so-nice thing is that two
+>work-queue shutdowns will be racing with each-other, in the multi
+>netdev use-case, but access to the ptr_ring is safe/locked.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.2
+So, having this, and being prudent to generic code changes, lets roll back
+to idea from v.4:
+https://lkml.org/lkml/2019/6/25/996
+but use changes from following patch, reintroducing page destroy:
+https://www.spinics.net/lists/netdev/msg583145.html
+with appropriate small modifications for cpsw.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c212ddaee2fd21e8d756dbc3c6119e3259b38fd0
+In case of some issue connected with it (not supposed), or two/more
+allocators used by cpsw, or one more driver having such multi ndev
+capabilities (supposed), would be nice to use this link as reference
+and it can be base for similar modifications.
 
-Thank you!
+Unless Jesper disagrees with this ofc.
+
+I will send v7 soon after verification is completed.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards,
+Ivan Khoronzhuk
