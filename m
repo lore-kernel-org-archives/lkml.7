@@ -3,76 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449EDC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C91C06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0072189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D2D218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfGDMVz (ORCPT
+        id S1727765AbfGDMWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:21:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39669 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727647AbfGDMVz (ORCPT
+        Thu, 4 Jul 2019 08:22:00 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:33462 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbfGDMV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:21:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so6408767wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:21:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IH5zFYo1I5yjDEFdSVBMphkk2e8qYCoEzKFKC+uCucg=;
-        b=cBVc7hqmQwWLY6jJm24+y16+sO56cI9+6vQf3qUO7rvC7ElLrY/glj5RVxdw9IT1/S
-         dQDko5gToIXNryctd5GRoUOeVVqItHwdLXNZFXM28y9ynyVL14WHWfL3trPA98HPfo8r
-         GIMd8HnevQytyhuTir9p/Ny0yiSNHHrOaPe2k34mkgHCV++YOpFT+8qj+RGljno5/n37
-         R9C7Ut4KzcPbuoEuVR5fNZ6LMqzRkNe0YBeDmpNup9Q/ME5mSZKKHF00NovWBnSfZdTq
-         0K1FALb0uVfNoA4qxmDsIfTMoTqn33FvhRNblfcJLWqAUF+9rVRHkpNKZfSIcC6QgYuN
-         xZgA==
-X-Gm-Message-State: APjAAAUFYyO7OWBJbbTi4at/rsLHrAJ1wqkwD6lfzDS6iL+ffF3IjTH5
-        zAEyjpgPDVc1dhTFepn0iWRC0Q==
-X-Google-Smtp-Source: APXvYqyjO1a9mpW7A6dWRWc0jAR3JNhppp4YOZ0mcNfqSvhVO8tXA5JBoRVCHUfbrijja++M6EUxeg==
-X-Received: by 2002:adf:f591:: with SMTP id f17mr35262462wro.119.1562242913349;
-        Thu, 04 Jul 2019 05:21:53 -0700 (PDT)
-Received: from [10.201.49.68] (nat-pool-mxp-u.redhat.com. [149.6.153.187])
-        by smtp.gmail.com with ESMTPSA id u6sm1683941wrw.15.2019.07.04.05.21.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 05:21:52 -0700 (PDT)
-Subject: Re: [PATCH 0/4] kvm: x86: introduce CONFIG_KVM_DEBUG
-To:     wang.yi59@zte.com.cn
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        up2wing@gmail.com, wang.liang82@zte.com.cn
-References: <201907041011168747592@zte.com.cn>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <02bdc233-b846-3350-2f6c-2d578d735c0e@redhat.com>
-Date:   Thu, 4 Jul 2019 14:21:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <201907041011168747592@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 4 Jul 2019 08:21:59 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hj0kL-0005pG-4r; Thu, 04 Jul 2019 14:21:53 +0200
+Message-ID: <2f1a8edb0b000b4eb7adcaca0d1fb05fdd73a587.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 04 Jul 2019 14:21:52 +0200
+In-Reply-To: <20190704121718.GS20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+         <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+         <20190703114933.GW2250@nanopsycho> <20190703181851.GP20101@unicorn.suse.cz>
+         <20190704080435.GF2250@nanopsycho> <20190704115236.GR20101@unicorn.suse.cz>
+         <6c070d62ffe342f5bc70556ef0f85740d04ae4a3.camel@sipsolutions.net>
+         <20190704121718.GS20101@unicorn.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/19 04:11, wang.yi59@zte.com.cn wrote:
->> For MMU_DEBUG, the way to go is to add more tracepoints, but then
->> converting all pgprintk occurrences to tracepoints would be wrong.  You
->> can only find the "right" tracepoints when debugging MMU code.  I do
->> have a couple patches in this area, I will send them when possible.
+On Thu, 2019-07-04 at 14:17 +0200, Michal Kubecek wrote:
+> On Thu, Jul 04, 2019 at 02:03:02PM +0200, Johannes Berg wrote:
+> > On Thu, 2019-07-04 at 13:52 +0200, Michal Kubecek wrote:
+> > > 
+> > > There is still the question if it it should be implemented as a nested
+> > > attribute which could look like the current compact form without the
+> > > "list" flag (if there is no mask, it's a list). Or an unstructured data
+> > > block consisting of u32 bit length 
+> > 
+> > You wouldn't really need the length, since the attribute has a length
+> > already :-)
 > 
-> Agreed. Hoping your patches.
+> It has byte length, not bit length. The bitmaps we are dealing with
+> can have any bit length, not necessarily multiples of 8 (or even 32).
 
-I sent them earlier, see "KVM: some x86 MMU cleanup and new tracepoints".
+Not sure why that matters? You have the mask, so you don't really need
+to additionally say that you're only going up to a certain bit?
 
-Paolo
+I mean, say you want to set some bits <=17, why would you need to say
+that they're <=17 if you have a
+ value: 0b00000000'000000xx'xxxxxxxx'xxxxxxxx
+ mask:  0b00000000'00000011'11111111'11111111
+
+johannes
+
