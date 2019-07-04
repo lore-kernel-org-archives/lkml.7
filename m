@@ -2,133 +2,109 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752C0C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EC9C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5437021850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E65B21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfGDLy3 (ORCPT
+        id S1727700AbfGDLzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:54:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32802 "EHLO mx1.redhat.com"
+        Thu, 4 Jul 2019 07:55:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49876 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbfGDLy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:54:29 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 705D03083394;
-        Thu,  4 Jul 2019 11:54:28 +0000 (UTC)
-Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 99A408E61A;
-        Thu,  4 Jul 2019 11:54:15 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 13:54:14 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        brouer@redhat.com
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Message-ID: <20190704135414.0dd5df76@carbon>
-In-Reply-To: <BN8PR12MB3266BC5322AADFAC49D9BAFAD3FA0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
-        <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-        <20190704120018.4523a119@carbon>
-        <BN8PR12MB3266BC5322AADFAC49D9BAFAD3FA0@BN8PR12MB3266.namprd12.prod.outlook.com>
+        id S1727590AbfGDLzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:55:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:55:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
+   d="scan'208";a="339585232"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 04 Jul 2019 04:55:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id BA57D12C; Thu,  4 Jul 2019 14:55:33 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mans Rullgard <mans@mansr.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 1/2] kernel.h: Update comment about simple_strto<foo>() functions
+Date:   Thu,  4 Jul 2019 14:55:31 +0300
+Message-Id: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 04 Jul 2019 11:54:28 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 10:13:37 +0000
-Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+There were discussions in the past about use cases for
+simple_strto<foo>() functions and, in some rare cases,
+they have a benefit over kstrto<foo>() ones.
 
-> From: Jesper Dangaard Brouer <brouer@redhat.com>
-> 
-> > The page_pool DMA mapping cannot be "kept" when page traveling into the
-> > network stack attached to an SKB.  (Ilias and I have a long term plan[1]
-> > to allow this, but you cannot do it ATM).  
-> 
-> The reason I recycle the page is this previous call to:
-> 
-> 	skb_copy_to_linear_data()
-> 
-> So, technically, I'm syncing to CPU the page(s) and then memcpy to a 
-> previously allocated SKB ... So it's safe to just recycle the mapping I 
-> think.
+Update a comment to reduce confusion about special use cases.
 
-I didn't notice the skb_copy_to_linear_data(), will copy the entire
-frame, thus leaving the page unused and avail for recycle.
+Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+- update comment based on Geert's input
+ include/linux/kernel.h | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-Then it looks like you are doing the correct thing.  I will appreciate
-if you could add a comment above the call like:
-
-   /* Data payload copied into SKB, page ready for recycle */
-   page_pool_recycle_direct(rx_q->page_pool, buf->page);
-
-
-> Its kind of using bounce buffers and I do see performance gain in this 
-> (I think the reason is because my setup uses swiotlb for DMA mapping).
-> 
-> Anyway, I'm open to some suggestions on how to improve this ...
-
-I was surprised to see page_pool being used outside the surrounding XDP
-APIs (included/net/xdp.h).  For you use-case, where you "just" use
-page_pool as a driver-local fast recycle-allocator for RX-ring that
-keeps pages DMA mapped, it does make a lot of sense.  It simplifies the
-driver a fair amount:
-
-  3 files changed, 63 insertions(+), 144 deletions(-)
-
-Thanks for demonstrating a use-case for page_pool besides XDP, and for
-simplifying a driver with this.
-
-
-> > Also remember that the page_pool requires you driver to do the
-> > DMA-sync operation.  I see a dma_sync_single_for_cpu(), but I
-> > didn't see a dma_sync_single_for_device() (well, I noticed one
-> > getting removed). (For some HW Ilias tells me that the
-> > dma_sync_single_for_device can be elided, so maybe this can still
-> > be correct for you).  
-> 
-> My HW just needs descriptors refilled which are in different coherent 
-> region so I don't see any reason for dma_sync_single_for_device() ...
-
-For you use-case, given you are copying out the data, and not writing
-into it, then I don't think you need to do sync for device (before
-giving the device the page again for another RX-ring cycle).
-
-The way I understand the danger: if writing to the DMA memory region,
-and not doing the DMA-sync for-device, then the HW/coherency-system can
-write-back the memory later.  Which creates a race with the DMA-device,
-if it is receiving a packet and is doing a write into same DMA memory
-region.  Someone correct me if I misunderstood this...
-
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 0c9bc231107f..63663c44933d 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -332,8 +332,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Used as a replacement for the simple_strtoull. Return code must be checked.
+ */
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+ {
+@@ -361,8 +360,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+  * @res: Where to write the result of the conversion on success.
+  *
+  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+- * Used as a replacement for the obsolete simple_strtoull. Return code must
+- * be checked.
++ * Used as a replacement for the simple_strtoull. Return code must be checked.
+  */
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+ {
+@@ -438,7 +436,16 @@ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t
+ 	return kstrtoint_from_user(s, count, base, res);
+ }
+ 
+-/* Obsolete, do not use.  Use kstrto<foo> instead */
++/*
++ * Use kstrto<foo> instead.
++ *
++ * NOTE: The simple_strto<foo> does not check for overflow and,
++ *	 depending on the input, may give interesting results.
++ *
++ * Use these functions if and only if you cannot use kstrto<foo>, because
++ * the number is not immediately followed by a NUL-character in the buffer.
++ * Keep in mind above caveat.
++ */
+ 
+ extern unsigned long simple_strtoul(const char *,char **,unsigned int);
+ extern long simple_strtol(const char *,char **,unsigned int);
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.20.1
+
