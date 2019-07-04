@@ -5,36 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8A4C46486
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FECC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15032085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF2B2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfGDOHB (ORCPT
+        id S1727746AbfGDOHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:07:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8702 "EHLO huawei.com"
+        Thu, 4 Jul 2019 10:07:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8700 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726794AbfGDOGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:06:31 -0400
+        id S1727365AbfGDOGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:06:30 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 071282E3EF254570DEE0;
-        Thu,  4 Jul 2019 22:06:27 +0800 (CST)
+        by Forcepoint Email with ESMTP id EEB5710051764C2361E9;
+        Thu,  4 Jul 2019 22:06:26 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 22:06:17 +0800
+ 14.3.439.0; Thu, 4 Jul 2019 22:06:16 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 7/9] net: hns3: add default value for tc_size and tc_offset
-Date:   Thu, 4 Jul 2019 22:04:26 +0800
-Message-ID: <1562249068-40176-8-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/9] net: hns3: fix port capbility updating issue
+Date:   Thu, 4 Jul 2019 22:04:22 +0800
+Message-ID: <1562249068-40176-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
 References: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,50 +48,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Li <lipeng321@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-This patch adds default value for tc_size and tc_offset, or it may
-get random value and used later.
+Currently, the driver queries the media port information, and
+updates the port capability periodically. But it sets an error
+mac->speed_type value, which stops update port capability.
 
+Fixes: 88d10bd6f730 ("net: hns3: add support for multiple media type")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 94c94e1..2abd5f5 100644
+index 2ecc10a..94c94e1 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4092,11 +4092,11 @@ int hclge_rss_init_hw(struct hclge_dev *hdev)
- 	struct hclge_vport *vport = hdev->vport;
- 	u8 *rss_indir = vport[0].rss_indirection_tbl;
- 	u16 rss_size = vport[0].alloc_rss_size;
-+	u16 tc_offset[HCLGE_MAX_TC_NUM] = {0};
-+	u16 tc_size[HCLGE_MAX_TC_NUM] = {0};
- 	u8 *key = vport[0].rss_hash_key;
- 	u8 hfunc = vport[0].rss_algo;
--	u16 tc_offset[HCLGE_MAX_TC_NUM];
- 	u16 tc_valid[HCLGE_MAX_TC_NUM];
--	u16 tc_size[HCLGE_MAX_TC_NUM];
- 	u16 roundup_size;
- 	unsigned int i;
- 	int ret;
-@@ -9036,12 +9036,12 @@ static int hclge_set_channels(struct hnae3_handle *handle, u32 new_tqps_num,
- {
- 	struct hclge_vport *vport = hclge_get_vport(handle);
- 	struct hnae3_knic_private_info *kinfo = &vport->nic.kinfo;
-+	u16 tc_offset[HCLGE_MAX_TC_NUM] = {0};
- 	struct hclge_dev *hdev = vport->back;
-+	u16 tc_size[HCLGE_MAX_TC_NUM] = {0};
- 	int cur_rss_size = kinfo->rss_size;
- 	int cur_tqps = kinfo->num_tqps;
--	u16 tc_offset[HCLGE_MAX_TC_NUM];
- 	u16 tc_valid[HCLGE_MAX_TC_NUM];
--	u16 tc_size[HCLGE_MAX_TC_NUM];
- 	u16 roundup_size;
- 	u32 *rss_indir;
- 	unsigned int i;
+@@ -2663,6 +2663,7 @@ static int hclge_get_sfp_info(struct hclge_dev *hdev, struct hclge_mac *mac)
+ 		mac->speed_ability = le32_to_cpu(resp->speed_ability);
+ 		mac->autoneg = resp->autoneg;
+ 		mac->support_autoneg = resp->autoneg_ability;
++		mac->speed_type = QUERY_ACTIVE_SPEED;
+ 		if (!resp->active_fec)
+ 			mac->fec_mode = 0;
+ 		else
 -- 
 2.7.4
 
