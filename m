@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3C5C5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2E8C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1622189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DBE2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 01:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562204426;
-	bh=j1e5K397GOFxArrHxqfLUHpYnhdJhDl8rYvA29AmH+Y=;
+	s=default; t=1562204632;
+	bh=kQAEK5VVkvoAS5XR7TfMu7NeMcpfDqaAMpmpfv1CiOA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xBjTG+V7jrJdPqVh90mqRmoxB6SRLknq0OHg+wk3jt8KEEKfgJWwa6SIT0gadu+zl
-	 LZlppd9+/QyNk6xkMQCyeNz9lp+RjVylCWw/kZUiJcsqua9kGhRLfzXcCqepLpnf5z
-	 rZTAd0WnLm2QFPr/NwvtXH4niXC7ChB9xXrqWBg4=
+	b=x/csSHDNrbUVa9TMXr5RpCrTi0rDmD99SWcDCqIi24i4RrU5hkULZYQvLhQothAcm
+	 OkcMjJk4flwvYPtPb4k2Xu8mqjocyii69LPSRARbAMUXzog4VsPVa8NEo2CDJ/d5ua
+	 f3Rh1KSrYR5m4bn6zWbNXOf1gD7ppX/ThqfuHjfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfGDBkZ (ORCPT
+        id S1727123AbfGDBnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 21:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Wed, 3 Jul 2019 21:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfGDBkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 21:40:24 -0400
+        id S1726955AbfGDBnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 21:43:50 -0400
 Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9983C2184C;
-        Thu,  4 Jul 2019 01:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C852187F;
+        Thu,  4 Jul 2019 01:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562204423;
-        bh=j1e5K397GOFxArrHxqfLUHpYnhdJhDl8rYvA29AmH+Y=;
+        s=default; t=1562204629;
+        bh=kQAEK5VVkvoAS5XR7TfMu7NeMcpfDqaAMpmpfv1CiOA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Iar3/Wntc4z5U/ghQkBAzmTcAdCKqXeGngR3NPjFOw9OsxD84jAL2qH++Rj9efYbz
-         h0vnQ/sn4njNwiXjjenZm9MS6QMo/rUQf74BZDawC7k/sY2qIe66/wfbXhMO0ETXXZ
-         U+BeBgJ1ypuxaNP3qUWaffgFquLzmfIrQ8B7K1rE=
-Date:   Thu, 4 Jul 2019 10:40:17 +0900
+        b=yh6WuuFKfCFJrq0yJAsplVd9D06xBx3bekefETLRcs+XVxtfED8JfsjSvRDMya3Lk
+         vEjI+dA9q38fH1AKIlV6ucbGtHCwnrzWanq0Q/bJ3S7cDxc8UwuNo156maNVzu9bhe
+         WEe60Xg85y3oekCSFQL2IKneVUpooRJZGIc/g6/g=
+Date:   Thu, 4 Jul 2019 10:43:45 +0900
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     linux-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
         shuah <shuah@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Po-Hsu Lin <po-hsu.lin@canonical.com>
-Subject: Re: [PATCH 1/2] ftrace/selftests: Return the skip code when tracing
- directory not configured in kernel
-Message-Id: <20190704104017.b90d34d78e8a9ebec73185f2@kernel.org>
-In-Reply-To: <20190703195300.213665674@goodmis.org>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] ftrace/selftest: Test if set_event/ftrace_pid
+ exists before writing
+Message-Id: <20190704104345.3aaa736c4db0d9c78845fb87@kernel.org>
+In-Reply-To: <20190703195300.408302485@goodmis.org>
 References: <20190703194959.596805445@goodmis.org>
-        <20190703195300.213665674@goodmis.org>
+        <20190703195300.408302485@goodmis.org>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,109 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 03 Jul 2019 15:50:00 -0400
+On Wed, 03 Jul 2019 15:50:01 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> If the kernel is not configured with ftrace enabled, the ftracetest
-> selftests should return the error code of "4" as that is the kselftests
-> "skip" code, and not "1" which means an error.
+> While testing on a very old kernel (3.5), the tests failed because the write
+> to set_event_pid in the setup code, did not exist. The tests themselves
+> could pass, but the setup failed causing an error.
 > 
-> To determine if ftrace is enabled, first the newer "tracefs" is searched for
-> in /proc/mounts. If it is not found, then "debugfs" is searched for (as old
-> kernels do not have tracefs). If that is not found, an attempt to mount the
-> tracefs or debugfs is performed. This is done by seeing first if the
-> /sys/kernel/tracing directory exists. If it does than tracefs is configured
-> in the kernel and an attempt to mount it is performed.
-> 
-> If /sys/kernel/tracing does not exist, then /sys/kernel/debug is tested to
-> see if that directory exists. If it does, then an attempt to mount debugfs
-> on that directory is performed. If it does not exist, then debugfs is not
-> configured in the running kernel and the test exits with the skip code.
-> 
-> If either mount fails, then a normal error is returned as they do exist in
-> the kernel but something went wrong to mount them.
-> 
-> This changes the test to always try the tracefs file system first as it has
-> been in the kernel for some time now and it is better to test it if it is
-> available instead of always testing debugfs.
-> 
-> Link: http://lkml.kernel.org/r/20190702062358.7330-1-po-hsu.lin@canonical.com
-> 
-> Reported-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  tools/testing/selftests/ftrace/ftracetest | 38 +++++++++++++++++++----
->  1 file changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> index 136387422b00..edf5ea35d2a7 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-> @@ -23,9 +23,15 @@ echo "		            If <dir> is -, all logs output in console only"
->  exit $1
->  }
->  
-> +# default error
-> +err_ret=1
-> +
-> +# kselftest skip code is 4
-> +err_skip=4
-> +
->  errexit() { # message
->    echo "Error: $1" 1>&2
-> -  exit 1
-> +  exit $err_ret
->  }
->  
->  # Ensuring user privilege
-> @@ -116,11 +122,31 @@ parse_opts() { # opts
->  }
->  
->  # Parameters
-> -DEBUGFS_DIR=`grep debugfs /proc/mounts | cut -f2 -d' ' | head -1`
-> -if [ -z "$DEBUGFS_DIR" ]; then
-> -    TRACING_DIR=`grep tracefs /proc/mounts | cut -f2 -d' ' | head -1`
-> -else
-> -    TRACING_DIR=$DEBUGFS_DIR/tracing
-> +TRACING_DIR=`grep tracefs /proc/mounts | cut -f2 -d' ' | head -1`
-> +if [ -z "$TRACING_DIR" ]; then
-> +    DEBUGFS_DIR=`grep debugfs /proc/mounts | cut -f2 -d' ' | head -1`
-> +    if [ -z "$DEBUGFS_DIR" ]; then
-> +	# If tracefs exists, then so does /sys/kernel/tracing
 
-Ah, indeed. the mount point also may not exist on older kernel.
+Oops, I've missed it.
 
-OK, this looks good to me.
+> Other files test for existance before writing to them. Do the same for
+> set_event_pid and set_ftrace_pid.
+
+Looks good to me,
 
 Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
 Thank you!
 
-> +	if [ -d "/sys/kernel/tracing" ]; then
-> +	    mount -t tracefs nodev /sys/kernel/tracing ||
-> +	      errexit "Failed to mount /sys/kernel/tracing"
-> +	    TRACING_DIR="/sys/kernel/tracing"
-> +	# If debugfs exists, then so does /sys/kernel/debug
-> +	elif [ -d "/sys/kernel/debug" ]; then
-> +	    mount -t debugfs nodev /sys/kernel/debug ||
-> +	      errexit "Failed to mount /sys/kernel/debug"
-> +	    TRACING_DIR="/sys/kernel/debug/tracing"
-> +	else
-> +	    err_ret=$err_skip
-> +	    errexit "debugfs and tracefs are not configured in this kernel"
-> +	fi
-> +    else
-> +	TRACING_DIR="$DEBUGFS_DIR/tracing"
-> +    fi
-> +fi
-> +if [ ! -d "$TRACING_DIR" ]; then
-> +    err_ret=$err_skip
-> +    errexit "ftrace is not configured in this kernel"
->  fi
->  
->  TOP_DIR=`absdir $0`
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/testing/selftests/ftrace/test.d/functions | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> index 779ec11f61bd..a7b06291e32c 100644
+> --- a/tools/testing/selftests/ftrace/test.d/functions
+> +++ b/tools/testing/selftests/ftrace/test.d/functions
+> @@ -91,8 +91,8 @@ initialize_ftrace() { # Reset ftrace to initial-state
+>      reset_events_filter
+>      reset_ftrace_filter
+>      disable_events
+> -    echo > set_event_pid	# event tracer is always on
+> -    echo > set_ftrace_pid
+> +    [ -f set_event_pid ] && echo > set_event_pid  # event tracer is always on
+> +    [ -f set_ftrace_pid ] && echo > set_ftrace_pid
+>      [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
+>      [ -f set_graph_function ] && echo | tee set_graph_*
+>      [ -f stack_trace_filter ] && echo > stack_trace_filter
 > -- 
 > 2.20.1
 > 
