@@ -3,117 +3,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B585FC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE1CC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9859B2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0BC21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfGDGUy (ORCPT
+        id S1727300AbfGDGXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:20:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59588 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725879AbfGDGUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:20:54 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 45670AA97B57D36471A2;
-        Thu,  4 Jul 2019 14:20:44 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
- 14:20:36 +0800
-Subject: Re: [PATCH RFC 0/3] Support CPU hotplug for ARM64
-To:     Jia He <hejianet@gmail.com>, <rjw@rjwysocki.net>,
-        <catalin.marinas@arm.com>, <james.morse@arm.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>
-References: <1561720392-45907-1-git-send-email-wangxiongfeng2@huawei.com>
- <2b22cf4d-9646-9f20-41ae-cceb83d9791b@gmail.com>
- <135ee490-a5a6-46c9-208e-81849b20d6b6@huawei.com>
- <7898e483-a8e4-39a2-358f-8fcf838c242f@gmail.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <e9acd13e-2501-4b62-496d-e8a5cb872191@huawei.com>
-Date:   Thu, 4 Jul 2019 14:17:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Thu, 4 Jul 2019 02:23:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39678 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725879AbfGDGXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:23:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 23:23:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
+   d="scan'208";a="247853485"
+Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.151])
+  by orsmga001.jf.intel.com with ESMTP; 03 Jul 2019 23:22:58 -0700
+Date:   Thu, 4 Jul 2019 14:21:34 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com
+Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
+Message-ID: <20190704062134.GA21116@___>
+References: <20190703091339.1847-1-tiwei.bie@intel.com>
+ <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
+ <20190703115245.GA22374@___>
+ <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
+ <20190703130817.GA1978@___>
+ <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <7898e483-a8e4-39a2-358f-8fcf838c242f@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+In-Reply-To: <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/4 14:04, Jia He wrote:
-> Hi Xiongfeng
+On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
+> On 2019/7/3 下午9:08, Tiwei Bie wrote:
+> > On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
+> > > On 2019/7/3 下午7:52, Tiwei Bie wrote:
+> > > > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/3 下午5:13, Tiwei Bie wrote:
+> > > > > > Details about this can be found here:
+> > > > > > 
+> > > > > > https://lwn.net/Articles/750770/
+> > > > > > 
+> > > > > > What's new in this version
+> > > > > > ==========================
+> > > > > > 
+> > > > > > A new VFIO device type is introduced - vfio-vhost. This addressed
+> > > > > > some comments from here:https://patchwork.ozlabs.org/cover/984763/
+> > > > > > 
+> > > > > > Below is the updated device interface:
+> > > > > > 
+> > > > > > Currently, there are two regions of this device: 1) CONFIG_REGION
+> > > > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
+> > > > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
+> > > > > > can be used to notify the device.
+> > > > > > 
+> > > > > > 1. CONFIG_REGION
+> > > > > > 
+> > > > > > The region described by CONFIG_REGION is the main control interface.
+> > > > > > Messages will be written to or read from this region.
+> > > > > > 
+> > > > > > The message type is determined by the `request` field in message
+> > > > > > header. The message size is encoded in the message header too.
+> > > > > > The message format looks like this:
+> > > > > > 
+> > > > > > struct vhost_vfio_op {
+> > > > > > 	__u64 request;
+> > > > > > 	__u32 flags;
+> > > > > > 	/* Flag values: */
+> > > > > >     #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
+> > > > > > 	__u32 size;
+> > > > > > 	union {
+> > > > > > 		__u64 u64;
+> > > > > > 		struct vhost_vring_state state;
+> > > > > > 		struct vhost_vring_addr addr;
+> > > > > > 	} payload;
+> > > > > > };
+> > > > > > 
+> > > > > > The existing vhost-kernel ioctl cmds are reused as the message
+> > > > > > requests in above structure.
+> > > > > Still a comments like V1. What's the advantage of inventing a new protocol?
+> > > > I'm trying to make it work in VFIO's way..
+> > > > 
+> > > > > I believe either of the following should be better:
+> > > > > 
+> > > > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
+> > > > > extend it with e.g notify region. The advantages is that all exist userspace
+> > > > > program could be reused without modification (or minimal modification). And
+> > > > > vhost API hides lots of details that is not necessary to be understood by
+> > > > > application (e.g in the case of container).
+> > > > Do you mean reusing vhost's ioctl on VFIO device fd directly,
+> > > > or introducing another mdev driver (i.e. vhost_mdev instead of
+> > > > using the existing vfio_mdev) for mdev device?
+> > > Can we simply add them into ioctl of mdev_parent_ops?
+> > Right, either way, these ioctls have to be and just need to be
+> > added in the ioctl of the mdev_parent_ops. But another thing we
+> > also need to consider is that which file descriptor the userspace
+> > will do the ioctl() on. So I'm wondering do you mean let the
+> > userspace do the ioctl() on the VFIO device fd of the mdev
+> > device?
+> > 
 > 
-> Sorry, I missed your latter mail, you used a emulated SCI interrupt
+> Yes.
 
-Yes, I only used a emulated SCI interrupt. My colleague is working on the qemu part.
-He used the GED device in qemu. But there is still some other issues with the qemu
-and he is working on it.
+Got it! I'm not sure what's Alex opinion on this. If we all
+agree with this, I can do it in this way.
 
+> Is there any other way btw?
+
+Just a quick thought.. Maybe totally a bad idea. I was thinking
+whether it would be odd to do non-VFIO's ioctls on VFIO's device
+fd. So I was wondering whether it's possible to allow binding
+another mdev driver (e.g. vhost_mdev) to the supported mdev
+devices. The new mdev driver, vhost_mdev, can provide similar
+ways to let userspace open the mdev device and do the vhost ioctls
+on it. To distinguish with the vfio_mdev compatible mdev devices,
+the device API of the new vhost_mdev compatible mdev devices
+might be e.g. "vhost-net" for net?
+
+So in VFIO case, the device will be for passthru directly. And
+in VHOST case, the device can be used to accelerate the existing
+virtualized devices.
+
+How do you think?
+
+Thanks,
+Tiwei
 > 
-> ---
-> Cheers,
-> Justin (Jia He)
+> Thanks
 > 
-> On 2019/7/4 11:26, Xiongfeng Wang wrote:
->> Hi Justin,
->>
->> On 2019/7/4 11:00, Jia He wrote:
->>> Hi Xiongfeng
->>>
->>> It is a little bit awkful that I am also  investigating acpi based cpu hotplug issue silimar with
->>>
->>> your idea. My question is your purpose to implement the vcpu hotplug in arm64 qemu?
->> Yes, my purpose is to implement the vcpu hotplug in arm64 qemu. So that I can add or remove vcpu
->> without shutting down the Guest OS.
->>
->> Thanks,
->> Xiongfeng
->>
->>> Thanks for the ellaboration
->>>
->>> ---
->>> Cheers,
->>> Justin (Jia He)
->>>
->>> On 2019/6/28 19:13, Xiongfeng Wang wrote:
->>>> This patchset mark all the GICC node in MADT as possible CPUs even though it
->>>> is disabled. But only those enabled GICC node are marked as present CPUs.
->>>> So that kernel will initialize some CPU related data structure in advance before
->>>> the CPU is actually hot added into the system. This patchset also implement
->>>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
->>>> needed to enable CPU hotplug.
->>>>
->>>> To support CPU hotplug, we need to add all the possible GICC node in MADT
->>>> including those CPUs that are not present but may be hot added later. Those
->>>> CPUs are marked as disabled in GICC nodes.
->>>>
->>>> Xiongfeng Wang (3):
->>>>     ACPI / scan: evaluate _STA for processors declared via ASL Device
->>>>       statement
->>>>     arm64: mark all the GICC nodes in MADT as possible cpu
->>>>     arm64: Add CPU hotplug support
->>>>
->>>>    arch/arm64/kernel/acpi.c  | 22 ++++++++++++++++++++++
->>>>    arch/arm64/kernel/setup.c | 19 ++++++++++++++++++-
->>>>    arch/arm64/kernel/smp.c   | 11 +++++------
->>>>    drivers/acpi/scan.c       | 12 ++++++++++++
->>>>    4 files changed, 57 insertions(+), 7 deletions(-)
->>>>
->>> .
->>>
-
