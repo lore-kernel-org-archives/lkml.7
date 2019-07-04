@@ -2,75 +2,90 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0BCC46484
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40F9C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F932218C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07F7218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfGDQfj (ORCPT
+        id S1727240AbfGDQgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:35:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59611 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfGDQd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:33:59 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hj4gH-0005eh-UD; Thu, 04 Jul 2019 18:33:58 +0200
-Message-Id: <20190704155608.544562614@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 04 Jul 2019 17:51:48 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>
-Subject: [patch V2 03/25] x86/apic: Soft disable APIC before initializing it
-References: <20190704155145.617706117@linutronix.de>
+        Thu, 4 Jul 2019 12:36:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39708 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726038AbfGDQgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 12:36:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E4F22AEF5;
+        Thu,  4 Jul 2019 16:36:40 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 1ACAFDA89D; Thu,  4 Jul 2019 18:37:21 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 18:37:21 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] btrfs: fix memory leak of path on error return path
+Message-ID: <20190704163721.GA20977@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Colin King <colin.king@canonical.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190702141028.11566-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702141028.11566-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the APIC was already enabled on entry of setup_local_APIC() then
-disabling it soft via the SPIV register makes a lot of sense.
+On Tue, Jul 02, 2019 at 03:10:28PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently if the allocation of roots or tmp_ulist fails the error handling
+> does not free up the allocation of path causing a memory leak. Fix this by
+> freeing path with a call to btrfs_free_path before taking the error return
+> path.
+> 
+> Addresses-Coverity: ("Resource leak")
 
-That masks all LVT entries and brings it into a well defined state.
+Does this have an id, that coverity uses?
 
-Otherwise previously enabled LVTs which are not touched in the setup
-function stay unmasked and might surprise the just booting kernel.
+> Fixes: 5911c8fe05c5 ("btrfs: fiemap: preallocate ulists for btrfs_check_shared")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  fs/btrfs/extent_io.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 1eb671c16ff1..d7f37a33d597 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -4600,6 +4600,7 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+>  	tmp_ulist = ulist_alloc(GFP_KERNEL);
+>  	if (!roots || !tmp_ulist) {
+>  		ret = -ENOMEM;
+> +		btrfs_free_path(path);
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/kernel/apic/apic.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+This fixes only one leak, therere are more that I spotted while
+reviewing this patch. The gotos from the while-loop jump to
+out_free_list but that leave the path behind.
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1493,6 +1493,14 @@ static void setup_local_APIC(void)
- 		return;
- 	}
- 
-+	/*
-+	 * If this comes from kexec/kcrash the APIC might be enabled in
-+	 * SPIV. Soft disable it before doing further initialization.
-+	 */
-+	value = apic_read(APIC_SPIV);
-+	value &= ~APIC_SPIV_APIC_ENABLED;
-+	apic_write(APIC_SPIV, value);
-+
- #ifdef CONFIG_X86_32
- 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
- 	if (lapic_is_integrated() && apic->disable_esr) {
+That's why the exit block is a better place for the cleanups. This
+requires proper nesting of the cleanup calls, that's slightly
+inconvenient in this case. The free_path is before call to
+unlock_extent_cached so when the ordre is switched and free_path moved
+to out_free_ulist, then all the leaks are addressed in one go.
 
-
+Bummer that the leaks escaped sight of original patch author (me), 2
+reviewers and now 1 fix reviewer.
