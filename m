@@ -2,247 +2,144 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E1BC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5397C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9CF21721
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B019321721
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfGDQrX (ORCPT
+        id S1727259AbfGDQrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:47:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49602 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfGDQrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:47:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 57C1F3001822;
-        Thu,  4 Jul 2019 16:47:14 +0000 (UTC)
-Received: from firesoul.localdomain (ovpn-200-46.brq.redhat.com [10.40.200.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3389717104;
-        Thu,  4 Jul 2019 16:47:09 +0000 (UTC)
-Received: from [192.168.5.1] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id A1AB43009AF0C;
-        Thu,  4 Jul 2019 18:47:07 +0200 (CEST)
-Subject: [PATCH net-next V2] net: core: page_pool: add user refcnt and
- reintroduce page_pool_destroy
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        ivan.khoronzhuk@linaro.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Date:   Thu, 04 Jul 2019 18:47:07 +0200
-Message-ID: <156225871578.1603.6630229522953924907.stgit@firesoul>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 4 Jul 2019 12:47:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47922 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGDQrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 12:47:53 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hj4ti-0000RA-Ta; Thu, 04 Jul 2019 16:47:51 +0000
+To:     dsterba@suse.cz, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190702141028.11566-1-colin.king@canonical.com>
+ <20190704163721.GA20977@twin.jikos.cz>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH][next] btrfs: fix memory leak of path on error return path
+Message-ID: <366d87f9-96ea-ecc3-6464-9d20e3050248@canonical.com>
+Date:   Thu, 4 Jul 2019 17:47:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 04 Jul 2019 16:47:22 +0000 (UTC)
+In-Reply-To: <20190704163721.GA20977@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jesper recently removed page_pool_destroy() (from driver invocation) and
-moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
-handle in-flight packets/pages. This created an asymmetry in drivers
-create/destroy pairs.
+On 04/07/2019 17:37, David Sterba wrote:
+> On Tue, Jul 02, 2019 at 03:10:28PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Currently if the allocation of roots or tmp_ulist fails the error handling
+>> does not free up the allocation of path causing a memory leak. Fix this by
+>> freeing path with a call to btrfs_free_path before taking the error return
+>> path.
+>>
+>> Addresses-Coverity: ("Resource leak")
+> 
+> Does this have an id, that coverity uses?
 
-This patch reintroduce page_pool_destroy and add page_pool user refcnt.
-This serves the purpose to simplify drivers error handling as driver now
-drivers always calls page_pool_destroy() and don't need to track if
-xdp_rxq_info_reg_mem_model() was unsuccessful.
+Not a public one that I know of. These are based on private scans I run
+in Canonical.
 
-This could be used for a special cases where a single RX-queue (with a single
-page_pool) provides packets for two net_device'es, and thus needs to register
-the same page_pool twice with two xdp_rxq_info structures. This use-case is
-explicitly denied in this V2 patch, as it needs more discussion upstream.
+> 
+>> Fixes: 5911c8fe05c5 ("btrfs: fiemap: preallocate ulists for btrfs_check_shared")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  fs/btrfs/extent_io.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+>> index 1eb671c16ff1..d7f37a33d597 100644
+>> --- a/fs/btrfs/extent_io.c
+>> +++ b/fs/btrfs/extent_io.c
+>> @@ -4600,6 +4600,7 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+>>  	tmp_ulist = ulist_alloc(GFP_KERNEL);
+>>  	if (!roots || !tmp_ulist) {
+>>  		ret = -ENOMEM;
+>> +		btrfs_free_path(path);
+> 
+> This fixes only one leak, therere are more that I spotted while
+> reviewing this patch. The gotos from the while-loop jump to
+> out_free_list but that leave the path behind>
+> That's why the exit block is a better place for the cleanups. This
+> requires proper nesting of the cleanup calls, that's slightly
+> inconvenient in this case. The free_path is before call to
+> unlock_extent_cached so when the ordre is switched and free_path moved
+> to out_free_ulist, then all the leaks are addressed in one go.
 
-This patch is primarily to ease API usage for drivers. The recently merged
-netsec driver, actually have a bug in this area, which is solved by this API
-change.
+Oh, yes. Even static analysis missed that too!
 
-This patch is a modified version of Ivan Khoronzhu's original patch.
+> 
+> Bummer that the leaks escaped sight of original patch author (me), 2
+> reviewers and now 1 fix reviewer.
+> 
+Given that you can see more issues, I'll leave the fix in your capable
+hands.
 
-Link: https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
-Fixes: 5c67bf0ec4d0 ("net: netsec: Use page_pool API")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
-
-I hope we can agree on this first step. Afterwards we can discuss, which is the
-best approach for Ivan's two netdev's with one RX-queue API change.
-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    6 ++---
- drivers/net/ethernet/socionext/netsec.c           |    8 ++----
- include/net/page_pool.h                           |   26 +++++++++++++++++++++
- net/core/page_pool.c                              |    8 ++++++
- net/core/xdp.c                                    |    9 +++++++
- 5 files changed, 48 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 1085040675ae..ce1c7a449eae 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -545,10 +545,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 	}
- 	err = xdp_rxq_info_reg_mem_model(&rq->xdp_rxq,
- 					 MEM_TYPE_PAGE_POOL, rq->page_pool);
--	if (err) {
--		page_pool_free(rq->page_pool);
-+	if (err)
- 		goto err_free;
--	}
- 
- 	for (i = 0; i < wq_sz; i++) {
- 		if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
-@@ -613,6 +611,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 	if (rq->xdp_prog)
- 		bpf_prog_put(rq->xdp_prog);
- 	xdp_rxq_info_unreg(&rq->xdp_rxq);
-+	page_pool_destroy(rq->page_pool);
- 	mlx5_wq_destroy(&rq->wq_ctrl);
- 
- 	return err;
-@@ -643,6 +642,7 @@ static void mlx5e_free_rq(struct mlx5e_rq *rq)
- 	}
- 
- 	xdp_rxq_info_unreg(&rq->xdp_rxq);
-+	page_pool_destroy(rq->page_pool);
- 	mlx5_wq_destroy(&rq->wq_ctrl);
- }
- 
-diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
-index 5544a722543f..43ab0ce90704 100644
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -1210,15 +1210,11 @@ static void netsec_uninit_pkt_dring(struct netsec_priv *priv, int id)
- 		}
- 	}
- 
--	/* Rx is currently using page_pool
--	 * since the pool is created during netsec_setup_rx_dring(), we need to
--	 * free the pool manually if the registration failed
--	 */
-+	/* Rx is currently using page_pool */
- 	if (id == NETSEC_RING_RX) {
- 		if (xdp_rxq_info_is_reg(&dring->xdp_rxq))
- 			xdp_rxq_info_unreg(&dring->xdp_rxq);
--		else
--			page_pool_free(dring->page_pool);
-+		page_pool_destroy(dring->page_pool);
- 	}
- 
- 	memset(dring->desc, 0, sizeof(struct netsec_desc) * DESC_NUM);
-diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-index ee9c871d2043..0a0984d8f5d5 100644
---- a/include/net/page_pool.h
-+++ b/include/net/page_pool.h
-@@ -101,6 +101,12 @@ struct page_pool {
- 	struct ptr_ring ring;
- 
- 	atomic_t pages_state_release_cnt;
-+
-+	/* A page_pool is strictly tied to a single RX-queue being
-+	 * protected by NAPI, due to above pp_alloc_cache.  This
-+	 * refcnt serves purpose is to simplify drivers error handling.
-+	 */
-+	refcount_t user_cnt;
- };
- 
- struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp);
-@@ -134,6 +140,15 @@ static inline void page_pool_free(struct page_pool *pool)
- #endif
- }
- 
-+/* Drivers use this instead of page_pool_free */
-+static inline void page_pool_destroy(struct page_pool *pool)
-+{
-+	if (!pool)
-+		return;
-+
-+	page_pool_free(pool);
-+}
-+
- /* Never call this directly, use helpers below */
- void __page_pool_put_page(struct page_pool *pool,
- 			  struct page *page, bool allow_direct);
-@@ -201,4 +216,15 @@ static inline bool is_page_pool_compiled_in(void)
- #endif
- }
- 
-+static inline unsigned int page_pool_get(struct page_pool *pool)
-+{
-+	refcount_inc(&pool->user_cnt);
-+	return refcount_read(&pool->user_cnt);
-+}
-+
-+static inline bool page_pool_put(struct page_pool *pool)
-+{
-+	return refcount_dec_and_test(&pool->user_cnt);
-+}
-+
- #endif /* _NET_PAGE_POOL_H */
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index b366f59885c1..3272dc7a8c81 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -49,6 +49,9 @@ static int page_pool_init(struct page_pool *pool,
- 
- 	atomic_set(&pool->pages_state_release_cnt, 0);
- 
-+	/* Driver calling page_pool_create() also call page_pool_destroy() */
-+	refcount_set(&pool->user_cnt, 1);
-+
- 	if (pool->p.flags & PP_FLAG_DMA_MAP)
- 		get_device(pool->p.dev);
- 
-@@ -70,6 +73,7 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
- 		kfree(pool);
- 		return ERR_PTR(err);
- 	}
-+
- 	return pool;
- }
- EXPORT_SYMBOL(page_pool_create);
-@@ -356,6 +360,10 @@ static void __warn_in_flight(struct page_pool *pool)
- 
- void __page_pool_free(struct page_pool *pool)
- {
-+	/* Only last user actually free/release resources */
-+	if (!page_pool_put(pool))
-+		return;
-+
- 	WARN(pool->alloc.count, "API usage violation");
- 	WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
- 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index b29d7b513a18..57c2317d9ce5 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -370,6 +370,15 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
- 		goto err;
- 	}
- 
-+	if (type == MEM_TYPE_PAGE_POOL) {
-+		if (page_pool_get(xdp_alloc->page_pool) > 2) {
-+			WARN(1, "API misuse, argue to enable use-case");
-+			page_pool_put(xdp_alloc->page_pool);
-+			errno = -EINVAL;
-+			goto err;
-+		}
-+	}
-+
- 	mutex_unlock(&mem_id_lock);
- 
- 	trace_mem_connect(xdp_alloc, xdp_rxq);
+Colin
 
