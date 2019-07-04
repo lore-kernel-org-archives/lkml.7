@@ -2,102 +2,147 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE31C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96423C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E282220693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626DD218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562242476;
+	bh=BS6LHDQQf9/yApkc167DvFPp/dm0Nvl/xbr6rW/uOMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jokq+B599ti6NxhaNQE98vGGMKdlewGoFmqSIdy6RZeM2StGKQZU/0OlhBe/k7zDK
+	 /x5DEM+RAadlq5yQt5Onlp3YpoUSrRCHZ2a/Iqpg84UoqgAviEL8uGoDcaX9hFPCJA
+	 KqSSZ5JCeZrOiW4NoJGDIB+7+tYqyWBhCFELU1gI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfGDMKe (ORCPT
+        id S1727694AbfGDMOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:10:34 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37707 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfGDMKe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:10:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s20so5763790otp.4;
-        Thu, 04 Jul 2019 05:10:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J7m+O+up5FGnrJOrM1NTZjuCCOYBaAlc+EU+VST+P0o=;
-        b=ic3Tirp2LhDgUc3OVqfrOg+5Ad4v+eg6vpA/WUjQem3aHFjvnEj6nFiTJQ9AGN8S2s
-         +2Zd8/jw9Ch3ItvXWZhtx3ovKkNDLb1j2Zc9cxQclyUrick2xW+CBV/ffJ6BLOQdToaf
-         IR4ZNS+JbRks6TP47th7GbdxmAvHD7gXAPCVrBzAgoQmMXb8penX0u2NXGUC8TUTkMd5
-         /pVXMH2zaZEg77vHw0xMK+vlDfu4V9kcd1Z+3oA/1Vlrurm2D+mFNEnpXYItVe/NvGX7
-         KY5sVniiP+27Jr1HzzgnVwqpHLrVNhDNiixNYv7gylWTFJDdHlTEMQwaDttS1sB/7l78
-         cytg==
-X-Gm-Message-State: APjAAAUg+bLQ1KFXy3eOO4OjPbe0VEheeuP1kPacWDasepl0AessRVmr
-        dZYH/l0phaA2O4htFf7h/A/0DgYEF8hemdXiRRs=
-X-Google-Smtp-Source: APXvYqwYVnlGQV7NAmK+2d/0Yyxu0t2VshoBe2404yndi+GEtMIgW92/ip8BqYBix9Pi1jCPsHVu+iyF3JLrAsJ2CFk=
-X-Received: by 2002:a9d:704f:: with SMTP id x15mr13127896otj.297.1562242233106;
- Thu, 04 Jul 2019 05:10:33 -0700 (PDT)
+        Thu, 4 Jul 2019 08:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727615AbfGDMOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:14:34 -0400
+Received: from localhost (unknown [89.205.128.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D3CE2189E;
+        Thu,  4 Jul 2019 12:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562242474;
+        bh=BS6LHDQQf9/yApkc167DvFPp/dm0Nvl/xbr6rW/uOMk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T42g+aCDmCVC6bfEvGPCpvXwZ1ofsiUI9KeQsI2FzhxjqAtzdZPhda/+PfapxY9/v
+         JrqQHUgMUJn1YU3r6uLtE7RGyGh5uqLlpy3NkPf6pm2PsjiXG7SvTyE8hAAJntIo6+
+         hlTth0h0LLcT1J8nkxC4ZeRwv4KYeeP7GjPSbnas=
+Date:   Thu, 4 Jul 2019 14:11:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Romain Izard <romain.izard.pro@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH 01/12 v2] Platform: add a dev_groups pointer to struct
+ platform_driver
+Message-ID: <20190704121143.GA5007@kroah.com>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+ <20190704084617.3602-2-gregkh@linuxfoundation.org>
+ <20190704093200.GM13424@localhost>
+ <20190704104311.GA16681@kroah.com>
 MIME-Version: 1.0
-References: <20190704113800.3299636-1-arnd@arndb.de> <20190704120756.GA1582@kunai>
-In-Reply-To: <20190704120756.GA1582@kunai>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 4 Jul 2019 14:10:22 +0200
-Message-ID: <CAMuHMdXDN60WWFerok1h05COdNNPZTMDCgKXejmQZMj9B6y5Cw@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: gyroadc: fix uninitialized return code
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704104311.GA16681@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Platform drivers like to add sysfs groups to their device, but right now
+they have to do it "by hand".  The driver core should handle this for
+them, but there is no way to get to the bus-default attribute groups as
+all platform devices are "special and unique" one-off drivers/devices.
 
-On Thu, Jul 4, 2019 at 2:08 PM Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Thu, Jul 04, 2019 at 01:37:47PM +0200, Arnd Bergmann wrote:
-> > gcc-9 complains about a blatant uninitialized variable use that
-> > all earlier compiler versions missed:
-> >
-> > drivers/iio/adc/rcar-gyroadc.c:510:5: warning: 'ret' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> >
-> > Return -EINVAL instead here.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 059c53b32329 ("iio: adc: Add Renesas GyroADC driver")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> This is correct but missing that the above 'return ret' is broken, too.
-> ret is initialized but 0 in that case.
+To combat this, add a dev_groups pointer to platform_driver which allows
+a platform driver to set up a list of default attributes that will be
+properly created and removed by the platform driver core when a probe()
+function is successful and removed right before the device is unbound.
 
-Nice catch! Oh well, given enough eyeballs, ...
+Cc: Richard Gong <richard.gong@linux.intel.com>
+Cc: Romain Izard <romain.izard.pro@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mans Rullgard <mans@mansr.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2: addressed Johan's comments by reordering when we remove the files
+    from the device, and clean up on an error in a nicer way.  Ended up
+    making the patch smaller overall, always nice.
 
-> And maybe we can use something else than -EINVAL for this case? I am on
-> the go right now, I will look for a suggestion later.
+ drivers/base/platform.c         | 16 +++++++++++++++-
+ include/linux/platform_device.h |  1 +
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
--EINVAL is correct here (and in the above case, too), IMHO.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 713903290385..74428a1e03f3 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -614,8 +614,20 @@ static int platform_drv_probe(struct device *_dev)
+ 
+ 	if (drv->probe) {
+ 		ret = drv->probe(dev);
+-		if (ret)
++		if (ret) {
++			dev_pm_domain_detach(_dev, true);
++			goto out;
++		}
++	}
++	if (drv->dev_groups) {
++		ret = device_add_groups(_dev, drv->dev_groups);
++		if (ret) {
++			if (drv->remove)
++				drv->remove(dev);
+ 			dev_pm_domain_detach(_dev, true);
++			return ret;
++		}
++		kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
+ 	}
+ 
+ out:
+@@ -638,6 +650,8 @@ static int platform_drv_remove(struct device *_dev)
+ 	struct platform_device *dev = to_platform_device(_dev);
+ 	int ret = 0;
+ 
++	if (drv->dev_groups)
++		device_remove_groups(_dev, drv->dev_groups);
+ 	if (drv->remove)
+ 		ret = drv->remove(dev);
+ 	dev_pm_domain_detach(_dev, true);
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index cc464850b71e..027f1e1d7af8 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -190,6 +190,7 @@ struct platform_driver {
+ 	int (*resume)(struct platform_device *);
+ 	struct device_driver driver;
+ 	const struct platform_device_id *id_table;
++	const struct attribute_group **dev_groups;
+ 	bool prevent_deferred_probe;
+ };
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.22.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
