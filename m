@@ -2,74 +2,99 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225AEC06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D2EC4646D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83C3218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CEB218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfGDKbV (ORCPT
+        id S1727580AbfGDKb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:31:21 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45016 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbfGDKbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:31:20 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 052E7205C8;
-        Thu,  4 Jul 2019 12:31:19 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E286A201B0;
-        Thu,  4 Jul 2019 12:31:18 +0200 (CEST)
-Subject: Re: [PATCH v2] media: si2168: Refactor command setup code
-To:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Brad Love <brad@nextdimension.cc>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <c28a0da0-7264-4d23-94f1-3bd614383843@free.fr>
- <20190704101401.GG22408@latitude>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <2dfb88d8-be2b-c6b6-fe39-6083dd418ccc@free.fr>
-Date:   Thu, 4 Jul 2019 12:31:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Jul 2019 06:31:29 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47330 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbfGDKb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:31:27 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 8f56e755e5c9ce7d; Thu, 4 Jul 2019 12:31:25 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Tri Vo <trong@android.com>, viresh.kumar@linaro.org,
+        rafael@kernel.org, hridya@google.com, sspatil@google.com,
+        kaleshsingh@google.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2] PM / wakeup: show wakeup sources stats in sysfs
+Date:   Thu, 04 Jul 2019 12:31:24 +0200
+Message-ID: <3451189.hAX5mKGt1u@kreacher>
+In-Reply-To: <20190628151040.GA14074@kroah.com>
+References: <20190627000412.GA527@kroah.com> <20190627225335.72107-1-trong@android.com> <20190628151040.GA14074@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190704101401.GG22408@latitude>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jul  4 12:31:19 2019 +0200 (CEST)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/2019 12:14, Jonathan Neuschäfer wrote:
-
-> On Thu, Jul 04, 2019 at 11:58:45AM +0200, Marc Gonzalez wrote:
->> >From ceb5f687f3f7dab2fb9d5b34408d9cf83a0be228 Mon Sep 17 00:00:00 2001
->> From: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> Date: Mon, 1 Jul 2019 12:58:31 +0200
->> Subject: [PATCH v2] media: si2168: Refactor command setup code
->>
->> Refactor the command setup code, and let the compiler determine
->> the size of each command.
->>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+On Friday, June 28, 2019 5:10:40 PM CEST Greg KH wrote:
+> On Thu, Jun 27, 2019 at 03:53:35PM -0700, Tri Vo wrote:
+> > Userspace can use wakeup_sources debugfs node to plot history of suspend
+> > blocking wakeup sources over device's boot cycle. This information can
+> > then be used (1) for power-specific bug reporting and (2) towards
+> > attributing battery consumption to specific processes over a period of
+> > time.
+> > 
+> > However, debugfs doesn't have stable ABI. For this reason, expose wakeup
+> > sources statistics in sysfs under /sys/power/wakeup_sources/<name>/
+> > 
+> > Embedding a struct kobject into struct wakeup_source changes lifetime
+> > requirements on the latter. To that end, change deallocation of struct
+> > wakeup_source using kfree to kobject_put().
+> > 
+> > Change struct wakelock's wakeup_source member to a pointer to decouple
+> > lifetimes of struct wakelock and struct wakeup_source for above reason.
+> > 
+> > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> > source statistics in sysfs.
+> > 
+> > Signed-off-by: Tri Vo <trong@android.com>
 > 
-> Reviewed-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> Ok, this looks much better, but I don't like the use of a "raw" kobject
+> here.  It is much simpler, and less code, to use 'struct device'
+> instead.
+> 
+> As proof, I reworked the patch to do just that, and it saves over 50
+> lines of .c code, which is always nice :)
 
-Thanks for the review.
+Thanks for taking the time to do that!
 
-I see that I messed up the header, I'll respin a v3, and add your tag.
+> Attached below is the reworked code, along with the updated
+> documentation file.  It creates devices in a virtual class, and you can
+> easily iterate over them all by looking in /sys/class/wakeup/.
 
-Regards.
+That actually is nice - no need to add anything under /sys/power/.
+
+> Note, I'm note quite sure you need all of the changes you made in
+> kernel/power/wakelock.c when you make the structure contain a pointer to
+> the wakeup source and not the structure itself, but I just went with it
+> and got it all to build properly.
+
+I'm not really sure about it either.
+
+> Also note, I've not actually tested this at all, only built it, so I
+> _strongly_ suggest that you test this to make sure it really works :)
+> 
+> What do you think?
+
+I agree with the direction. :-)
+
+Cheers!
+
+
+
