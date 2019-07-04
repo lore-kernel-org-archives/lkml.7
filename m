@@ -5,36 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054F9C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4BDC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83382085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6032E2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfGDOGo (ORCPT
+        id S1727682AbfGDOGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:06:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8704 "EHLO huawei.com"
+        Thu, 4 Jul 2019 10:06:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8701 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727576AbfGDOGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:06:41 -0400
+        id S1727442AbfGDOGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:06:33 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0AFFA5B9C1AEE576C324;
-        Thu,  4 Jul 2019 22:06:27 +0800 (CST)
+        by Forcepoint Email with ESMTP id F2A60F18719F914A0E8D;
+        Thu,  4 Jul 2019 22:06:26 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 22:06:16 +0800
+ 14.3.439.0; Thu, 4 Jul 2019 22:06:17 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 4/9] net: hns3: add all IMP return code
-Date:   Thu, 4 Jul 2019 22:04:23 +0800
-Message-ID: <1562249068-40176-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 8/9] net: hns3: bitwise operator should use unsigned type
+Date:   Thu, 4 Jul 2019 22:04:27 +0800
+Message-ID: <1562249068-40176-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
 References: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,189 +48,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Li <lipeng321@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-Currently, the HNS3 driver just defines part of IMP return code,
-This patch supplements all the remaining IMP return code, and adds
-a function to convert this code to the error number.
+There are some bitwise operator used signed type, this patch fixes
+them with unsigned type.
 
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 43 +++++++++++++++++-----
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  8 ++++
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   | 38 ++++++++++++++++---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.h   | 14 +++++--
- 4 files changed, 85 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  9 +++--
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 43 ++++++++++++----------
+ 3 files changed, 29 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index 667c3be..22f6acd 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -188,12 +188,43 @@ static bool hclge_is_special_opcode(u16 opcode)
- 	return false;
- }
- 
-+static int hclge_cmd_convert_err_code(u16 desc_ret)
-+{
-+	switch (desc_ret) {
-+	case HCLGE_CMD_EXEC_SUCCESS:
-+		return 0;
-+	case HCLGE_CMD_NO_AUTH:
-+		return -EPERM;
-+	case HCLGE_CMD_NOT_SUPPORTED:
-+		return -EOPNOTSUPP;
-+	case HCLGE_CMD_QUEUE_FULL:
-+		return -EXFULL;
-+	case HCLGE_CMD_NEXT_ERR:
-+		return -ENOSR;
-+	case HCLGE_CMD_UNEXE_ERR:
-+		return -ENOTBLK;
-+	case HCLGE_CMD_PARA_ERR:
-+		return -EINVAL;
-+	case HCLGE_CMD_RESULT_ERR:
-+		return -ERANGE;
-+	case HCLGE_CMD_TIMEOUT:
-+		return -ETIME;
-+	case HCLGE_CMD_HILINK_ERR:
-+		return -ENOLINK;
-+	case HCLGE_CMD_QUEUE_ILLEGAL:
-+		return -ENXIO;
-+	case HCLGE_CMD_INVALID:
-+		return -EBADR;
-+	default:
-+		return -EIO;
-+	}
-+}
-+
- static int hclge_cmd_check_retval(struct hclge_hw *hw, struct hclge_desc *desc,
- 				  int num, int ntc)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index ab5a339..310afa70 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -951,8 +951,9 @@ static int hns3_set_l2l3l4(struct sk_buff *skb, u8 ol4_proto,
+ static void hns3_set_txbd_baseinfo(u16 *bdtp_fe_sc_vld_ra_ri, int frag_end)
  {
- 	u16 opcode, desc_ret;
- 	int handle;
--	int retval;
- 
- 	opcode = le16_to_cpu(desc[0].opcode);
- 	for (handle = 0; handle < num; handle++) {
-@@ -207,17 +238,9 @@ static int hclge_cmd_check_retval(struct hclge_hw *hw, struct hclge_desc *desc,
- 	else
- 		desc_ret = le16_to_cpu(desc[0].retval);
- 
--	if (desc_ret == HCLGE_CMD_EXEC_SUCCESS)
--		retval = 0;
--	else if (desc_ret == HCLGE_CMD_NO_AUTH)
--		retval = -EPERM;
--	else if (desc_ret == HCLGE_CMD_NOT_SUPPORTED)
--		retval = -EOPNOTSUPP;
--	else
--		retval = -EIO;
- 	hw->cmq.last_status = desc_ret;
- 
--	return retval;
-+	return hclge_cmd_convert_err_code(desc_ret);
+ 	/* Config bd buffer end */
+-	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_FE_B, !!frag_end);
+-	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_VLD_B, 1);
++	if (!!frag_end)
++		hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_FE_B, 1U);
++	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_VLD_B, 1U);
  }
  
- /**
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index d23ab2b..96840d8 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -41,6 +41,14 @@ enum hclge_cmd_return_status {
- 	HCLGE_CMD_NO_AUTH	= 1,
- 	HCLGE_CMD_NOT_SUPPORTED	= 2,
- 	HCLGE_CMD_QUEUE_FULL	= 3,
-+	HCLGE_CMD_NEXT_ERR	= 4,
-+	HCLGE_CMD_UNEXE_ERR	= 5,
-+	HCLGE_CMD_PARA_ERR	= 6,
-+	HCLGE_CMD_RESULT_ERR	= 7,
-+	HCLGE_CMD_TIMEOUT	= 8,
-+	HCLGE_CMD_HILINK_ERR	= 9,
-+	HCLGE_CMD_QUEUE_ILLEGAL	= 10,
-+	HCLGE_CMD_INVALID	= 11,
- };
- 
- enum hclge_cmd_status {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 31db6d6..652b796 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -177,6 +177,38 @@ void hclgevf_cmd_setup_basic_desc(struct hclgevf_desc *desc,
- 		desc->flag &= cpu_to_le16(~HCLGEVF_CMD_FLAG_WR);
+ static int hns3_fill_desc_vtags(struct sk_buff *skb,
+@@ -2575,7 +2576,7 @@ static bool hns3_parse_vlan_tag(struct hns3_enet_ring *ring,
+ 	}
  }
  
-+static int hclgevf_cmd_convert_err_code(u16 desc_ret)
-+{
-+	switch (desc_ret) {
-+	case HCLGEVF_CMD_EXEC_SUCCESS:
-+		return 0;
-+	case HCLGEVF_CMD_NO_AUTH:
-+		return -EPERM;
-+	case HCLGEVF_CMD_NOT_SUPPORTED:
-+		return -EOPNOTSUPP;
-+	case HCLGEVF_CMD_QUEUE_FULL:
-+		return -EXFULL;
-+	case HCLGEVF_CMD_NEXT_ERR:
-+		return -ENOSR;
-+	case HCLGEVF_CMD_UNEXE_ERR:
-+		return -ENOTBLK;
-+	case HCLGEVF_CMD_PARA_ERR:
-+		return -EINVAL;
-+	case HCLGEVF_CMD_RESULT_ERR:
-+		return -ERANGE;
-+	case HCLGEVF_CMD_TIMEOUT:
-+		return -ETIME;
-+	case HCLGEVF_CMD_HILINK_ERR:
-+		return -ENOLINK;
-+	case HCLGEVF_CMD_QUEUE_ILLEGAL:
-+		return -ENXIO;
-+	case HCLGEVF_CMD_INVALID:
-+		return -EBADR;
-+	default:
-+		return -EIO;
-+	}
-+}
+-static int hns3_alloc_skb(struct hns3_enet_ring *ring, int length,
++static int hns3_alloc_skb(struct hns3_enet_ring *ring, unsigned int length,
+ 			  unsigned char *va)
+ {
+ #define HNS3_NEED_ADD_FRAG	1
+@@ -2818,8 +2819,8 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
+ 	struct sk_buff *skb = ring->skb;
+ 	struct hns3_desc_cb *desc_cb;
+ 	struct hns3_desc *desc;
++	unsigned int length;
+ 	u32 bd_base_info;
+-	int length;
+ 	int ret;
+ 
+ 	desc = &ring->desc[ring->next_to_clean];
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index a2b73d6..848b866 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -610,7 +610,7 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
+ 
+ #define hnae3_buf_size(_ring) ((_ring)->buf_size)
+ #define hnae3_page_order(_ring) (get_order(hnae3_buf_size(_ring)))
+-#define hnae3_page_size(_ring) (PAGE_SIZE << hnae3_page_order(_ring))
++#define hnae3_page_size(_ring) (PAGE_SIZE << (u32)hnae3_page_order(_ring))
+ 
+ /* iterator for handling rings in ring group */
+ #define hns3_for_each_ring(pos, head) \
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 2abd5f5..3fde5471 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -1360,8 +1360,9 @@ static int hclge_map_tqps_to_func(struct hclge_dev *hdev, u16 func_id,
+ 	req = (struct hclge_tqp_map_cmd *)desc.data;
+ 	req->tqp_id = cpu_to_le16(tqp_pid);
+ 	req->tqp_vf = func_id;
+-	req->tqp_flag = !is_pf << HCLGE_TQP_MAP_TYPE_B |
+-			1 << HCLGE_TQP_MAP_EN_B;
++	req->tqp_flag = 1U << HCLGE_TQP_MAP_EN_B;
++	if (!is_pf)
++		req->tqp_flag |= 1U << HCLGE_TQP_MAP_TYPE_B;
+ 	req->tqp_vid = cpu_to_le16(tqp_vid);
+ 
+ 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+@@ -2320,7 +2321,8 @@ static int hclge_set_autoneg_en(struct hclge_dev *hdev, bool enable)
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_AN_MODE, false);
+ 
+ 	req = (struct hclge_config_auto_neg_cmd *)desc.data;
+-	hnae3_set_bit(flag, HCLGE_MAC_CFG_AN_EN_B, !!enable);
++	if (enable)
++		hnae3_set_bit(flag, HCLGE_MAC_CFG_AN_EN_B, 1U);
+ 	req->cfg_an_cmd_flag = cpu_to_le32(flag);
+ 
+ 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+@@ -5935,20 +5937,20 @@ static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
+ 	int ret;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_MAC_MODE, false);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_TX_EN_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_RX_EN_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_PAD_TX_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_PAD_RX_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_1588_TX_B, 0);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_1588_RX_B, 0);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_APP_LP_B, 0);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_LINE_LP_B, 0);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_FCS_TX_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_RX_FCS_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_RX_FCS_STRIP_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_TX_OVERSIZE_TRUNCATE_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_RX_OVERSIZE_TRUNCATE_B, enable);
+-	hnae3_set_bit(loop_en, HCLGE_MAC_TX_UNDER_MIN_ERR_B, enable);
 +
- /* hclgevf_cmd_send - send command to command queue
-  * @hw: pointer to the hw struct
-  * @desc: prefilled descriptor for describing the command
-@@ -259,11 +291,7 @@ int hclgevf_cmd_send(struct hclgevf_hw *hw, struct hclgevf_desc *desc, int num)
- 			else
- 				retval = le16_to_cpu(desc[0].retval);
++	if (enable) {
++		hnae3_set_bit(loop_en, HCLGE_MAC_TX_EN_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_RX_EN_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_PAD_TX_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_PAD_RX_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_FCS_TX_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_RX_FCS_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_RX_FCS_STRIP_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_TX_OVERSIZE_TRUNCATE_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_RX_OVERSIZE_TRUNCATE_B, 1U);
++		hnae3_set_bit(loop_en, HCLGE_MAC_TX_UNDER_MIN_ERR_B, 1U);
++	}
++
+ 	req->txrx_pad_fcs_loop_en = cpu_to_le32(loop_en);
  
--			if ((enum hclgevf_cmd_return_status)retval ==
--			    HCLGEVF_CMD_EXEC_SUCCESS)
--				status = 0;
--			else
--				status = -EIO;
-+			status = hclgevf_cmd_convert_err_code(retval);
- 			hw->cmq.last_status = (enum hclgevf_cmd_status)retval;
- 			ntc++;
- 			handle++;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.h
-index 47030b4..127a434 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.h
-@@ -46,9 +46,17 @@ struct hclgevf_cmq_ring {
+ 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+@@ -6310,8 +6312,8 @@ static int hclge_update_desc_vfid(struct hclge_desc *desc, int vfid, bool clr)
+ {
+ #define HCLGE_VF_NUM_IN_FIRST_DESC 192
  
- enum hclgevf_cmd_return_status {
- 	HCLGEVF_CMD_EXEC_SUCCESS	= 0,
--	HCLGEVF_CMD_NO_AUTH	= 1,
--	HCLGEVF_CMD_NOT_EXEC	= 2,
--	HCLGEVF_CMD_QUEUE_FULL	= 3,
-+	HCLGEVF_CMD_NO_AUTH		= 1,
-+	HCLGEVF_CMD_NOT_SUPPORTED	= 2,
-+	HCLGEVF_CMD_QUEUE_FULL		= 3,
-+	HCLGEVF_CMD_NEXT_ERR		= 4,
-+	HCLGEVF_CMD_UNEXE_ERR		= 5,
-+	HCLGEVF_CMD_PARA_ERR		= 6,
-+	HCLGEVF_CMD_RESULT_ERR		= 7,
-+	HCLGEVF_CMD_TIMEOUT		= 8,
-+	HCLGEVF_CMD_HILINK_ERR		= 9,
-+	HCLGEVF_CMD_QUEUE_ILLEGAL	= 10,
-+	HCLGEVF_CMD_INVALID		= 11,
- };
+-	int word_num;
+-	int bit_num;
++	unsigned int word_num;
++	unsigned int bit_num;
  
- enum hclgevf_cmd_status {
+ 	if (vfid > 255 || vfid < 0)
+ 		return -EIO;
+@@ -7972,7 +7974,8 @@ static int hclge_send_reset_tqp_cmd(struct hclge_dev *hdev, u16 queue_id,
+ 
+ 	req = (struct hclge_reset_tqp_queue_cmd *)desc.data;
+ 	req->tqp_id = cpu_to_le16(queue_id & HCLGE_RING_ID_MASK);
+-	hnae3_set_bit(req->reset_req, HCLGE_TQP_RESET_B, enable);
++	if (enable)
++		hnae3_set_bit(req->reset_req, HCLGE_TQP_RESET_B, 1U);
+ 
+ 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (ret) {
 -- 
 2.7.4
 
