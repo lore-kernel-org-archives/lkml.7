@@ -5,40 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DF5C46495
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F225CC46495
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE04920881
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D437121738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfGDX6D (ORCPT
+        id S1727869AbfGDX6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 19:58:03 -0400
-Received: from smtprelay0031.hostedemail.com ([216.40.44.31]:57128 "EHLO
+        Thu, 4 Jul 2019 19:58:06 -0400
+Received: from smtprelay0103.hostedemail.com ([216.40.44.103]:32820 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727748AbfGDX6C (ORCPT
+        by vger.kernel.org with ESMTP id S1727748AbfGDX6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 19:58:02 -0400
+        Thu, 4 Jul 2019 19:58:04 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 89177100E806B;
-        Thu,  4 Jul 2019 23:58:00 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 4F990182CED2A;
+        Thu,  4 Jul 2019 23:58:03 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: swim69_62de18b54c925
-X-Filterd-Recvd-Size: 1809
+X-HE-Tag: join74_63508f115542a
+X-Filterd-Recvd-Size: 1508
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jul 2019 23:57:59 +0000 (UTC)
+        Thu,  4 Jul 2019 23:58:02 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] net: ethernet: sun4i-emac: Fix misuse of strlcpy
-Date:   Thu,  4 Jul 2019 16:57:45 -0700
-Message-Id: <faf2d0e7c0260d24b6e90c55bb7fec7496e5e76a.1562283944.git.joe@perches.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 7/8] tty: hvcs: Fix odd use of strlcpy
+Date:   Thu,  4 Jul 2019 16:57:47 -0700
+Message-Id: <1be432798311378947ec4e6051cad1235b6eccbb.1562283944.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <cover.1562283944.git.joe@perches.com>
 References: <cover.1562283944.git.joe@perches.com>
@@ -47,28 +46,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Probable cut&paste typo - use the correct field size.
+Use the typical style of array, not the equivalent &array[0].
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
+ drivers/tty/hvc/hvcs.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 9e06dff619c3..40a359dd90b4 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -224,8 +224,8 @@ static int emac_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
- static void emac_get_drvinfo(struct net_device *dev,
- 			      struct ethtool_drvinfo *info)
- {
--	strlcpy(info->driver, DRV_NAME, sizeof(DRV_NAME));
--	strlcpy(info->version, DRV_VERSION, sizeof(DRV_VERSION));
-+	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
- 	strlcpy(info->bus_info, dev_name(&dev->dev), sizeof(info->bus_info));
+diff --git a/drivers/tty/hvc/hvcs.c b/drivers/tty/hvc/hvcs.c
+index cb4db1b3ca3c..b6c1c1be06f9 100644
+--- a/drivers/tty/hvc/hvcs.c
++++ b/drivers/tty/hvc/hvcs.c
+@@ -871,8 +871,8 @@ static void hvcs_set_pi(struct hvcs_partner_info *pi, struct hvcs_struct *hvcsd)
+ 	hvcsd->p_partition_ID  = pi->partition_ID;
+ 
+ 	/* copy the null-term char too */
+-	strlcpy(&hvcsd->p_location_code[0],
+-			&pi->location_code[0], sizeof(hvcsd->p_location_code));
++	strlcpy(hvcsd->p_location_code, pi->location_code,
++		sizeof(hvcsd->p_location_code));
  }
  
+ /*
 -- 
 2.15.0
 
