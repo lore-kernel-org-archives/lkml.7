@@ -2,101 +2,214 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8090C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B25C06516
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8975620828
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2884E20828
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfGDLqA (ORCPT
+        id S1727613AbfGDLqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:46:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2275 "EHLO mga01.intel.com"
+        Thu, 4 Jul 2019 07:46:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2313 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:45:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727436AbfGDLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:46:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:45:58 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:46:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="339583474"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga005.jf.intel.com with ESMTP; 04 Jul 2019 04:45:56 -0700
-Date:   Thu, 4 Jul 2019 19:29:13 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190704112913.GA24884@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-7-mdf@kernel.org>
- <20190703180753.GA24723@kroah.com>
- <20190703233058.GA15825@hao-dev>
- <20190704053927.GB347@kroah.com>
- <20190704063106.GA24777@hao-dev>
- <20190704082013.GE6438@kroah.com>
- <20190704085855.GB7391@hao-dev>
- <20190704110449.GC1404@kroah.com>
+   d="scan'208";a="363334703"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by fmsmga006.fm.intel.com with ESMTP; 04 Jul 2019 04:46:33 -0700
+Message-ID: <f0d67f0dc48ca8162c666c988da5147cb92b623b.camel@linux.intel.com>
+Subject: Re: [PATCH v3] tpm: Get TCG log from TPM2 ACPI table for tpm2
+ systems
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jordan Hand <jordanhand22@gmail.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 04 Jul 2019 14:46:32 +0300
+In-Reply-To: <20190624174643.21746-1-jorhand@microsoft.com>
+References: <20190624174643.21746-1-jorhand@microsoft.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704110449.GC1404@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 01:04:49PM +0200, Greg KH wrote:
-> On Thu, Jul 04, 2019 at 04:58:55PM +0800, Wu Hao wrote:
-> > > > Hope things could be more clear now. :)
-> > > 
-> > > That's nice for the vfio stuff, but you are just a "normal" driver here.
-> > > You want an ioctl that just does one thing, no arguments, no flags, no
-> > > anything.  No need for a size argument then at all.  These ioctls don't
-> > > even need a structure for them!
-> > > 
-> > > Don't try to be fancy, it's not needed, it's not like you are running
-> > > out of ioctl space...
-> > 
-> > Thanks a lot for the comments and suggestions.
-> > 
-> > That's true, it's a "normal" driver, maybe I overly considered the
-> > extensibility of it. OK, Let me rework this patch to remove argsz from
-> > these two ioctls.
-> > 
-> > What about the existing ioctls for this driver, they have argsz too.
-> > shall I prepare another patch to remove them as well?
+On Mon, 2019-06-24 at 10:46 -0700, Jordan Hand wrote:
+> From: Jordan Hand <jordanhand22@gmail.com>
+>
+> For TPM2-based systems, retrieve the TCG log from the TPM2 ACPI table.
+> The TPM2 ACPI table is defined in section 7.3 of the TCG ACPI
+> Specification (see link).
+
+You are claiming here that this applies to all systems I've never used
+even a single one that uses it. How can you possibly back this up?  I've
+been aware that SeaBIOS does use it but only now became aware that it
+has been also updated to the standard. This kind of change is welcome
+but lets scope things properly.
+
+Unfortunately, also the short summary looks like pure nonsense at the
+moment. What are "TCG log", "tpm2 systems" and why is TPM2 not
+capitalized there?
+
+For short summary I'd just put "tpm: Parse event log from TPM2 table"
+
+> The TPM2 table is used primarily by legacy BIOS in place of the TCPA table
+> when the system's TPM is version 2.0 to denote (among other metadata) the
+
+"for TPM2 systems"
+
+Stick with a single notation. If count correctly you use in total three
+different notations for the same thing in the commit message.
+
+> location of the crypto-agile TCG log. In particluar, the SeaBios firmware
+> used by default by QEMU makes use of this table for crypto-agile logs.
+
+crypto-agile log should be enough given the context.
+
+> Link:
 > 
-> I am hoping you actually have users for those ioctls in userspace today?
-> If not, and no one is using them, then yes, please fix those too.
+https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
 
-Yes, we have a few users, not many, e.g. https://github.com/OPAE/opae-sdk
+Should be in the same line. You should also separate them with a single
+space character, not with a new line character.
 
-I believe we may have more users as we are submitting code to make this
-driver more usable.
+This is a more sane URL for the resource to use:
 
-Let me think about this, if we want to do this clean up, we have to 
-increase the API version to tell everybody, things are changed. If
-finally we decide to do this clean up, that will be a new patch after
-this patchset.
+https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
 
-Many Thanks for your patient guide and suggestions. :)
+>
 
-Hao
+Remove this extra new line character.
 
-> 
-> thanks,
-> 
-> greg k-h
+> Signed-off-by: Jordan Hand <jordanhand22@gmail.com>
+> ---
+>
+> Same as v2 with more descriptive commit message
+>
+>  drivers/char/tpm/eventlog/acpi.c | 67 +++++++++++++++++++++++---------
+>  1 file changed, 48 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/char/tpm/eventlog/acpi.c
+> b/drivers/char/tpm/eventlog/acpi.c
+> index 63ada5e53f13..b945c4ff3af6 100644
+> --- a/drivers/char/tpm/eventlog/acpi.c
+> +++ b/drivers/char/tpm/eventlog/acpi.c
+> @@ -41,17 +41,31 @@ struct acpi_tcpa {
+>  	};
+>  };
+>
+> +struct acpi_tpm2 {
+> +	struct acpi_table_header hdr;
+> +	u16 platform_class;
+> +	u16 reserved;
+> +	u64 control_area_addr;
+> +	u32 start_method;
+> +	u8 start_method_params[12];
+> +	u32 log_max_len;
+> +	u64 log_start_addr;
+> +} __packed;
+
+This is a duplicate definition to struct acpi_table_tpm2 located in
+include/acpi/actbl3.h. If you need to update that file, please do it
+as a separate commit.
+
+Other examples of use can be found from tpm_crb.c and tpm_tis.c.
+Please skim them through.
+
+> +
+>  /* read binary bios log */
+>  int tpm_read_log_acpi(struct tpm_chip *chip)
+>  {
+> -	struct acpi_tcpa *buff;
+> +	struct acpi_table_header *buff;
+> +	struct acpi_tcpa *tcpa;
+> +	struct acpi_tpm2 *tpm2;
+> +
+
+A trailing new line.
+
+>  	acpi_status status;
+>  	void __iomem *virt;
+>  	u64 len, start;
+> +	int log_type;
+>  	struct tpm_bios_log *log;
+> -
+> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> -		return -ENODEV;
+> +	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
+> +	acpi_string table_sig;
+>
+>  	log = &chip->log;
+>
+> @@ -61,26 +75,41 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
+>  	if (!chip->acpi_dev_handle)
+>  		return -ENODEV;
+>
+> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
+> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
+> -				(struct acpi_table_header **)&buff);
+> +	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
+> +	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
+> +	status = acpi_get_table(table_sig, 1, &buff);
+>
+>  	if (ACPI_FAILURE(status))
+>  		return -ENODEV;
+>
+> -	switch(buff->platform_class) {
+> -	case BIOS_SERVER:
+> -		len = buff->server.log_max_len;
+> -		start = buff->server.log_start_addr;
+> -		break;
+> -	case BIOS_CLIENT:
+> -	default:
+> -		len = buff->client.log_max_len;
+> -		start = buff->client.log_start_addr;
+> -		break;
+> +	/* If log_max_len and log_start_addr are set, start_method_params will
+> +	 * be 12 bytes, according to TCG ACPI spec. If start_method_params is
+> +	 * fewer than 12 bytes, the TCG log is not available
+> +	 */
+
+What is start_method_params? I don't understand this comment. Please
+remove and instead implement validation to all branches.
+
+> +	if (is_tpm2 && (buff->length == sizeof(struct acpi_tpm2))) {
+> +		tpm2 = (struct acpi_tpm2 *)buff;
+> +		len = tpm2->log_max_len;
+> +		start = tpm2->log_start_addr;
+> +		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
+> +	} else {
+
+Instead "else if (buff->length == sizeof(struct acpi_tcpa)" and return
+-EINVAL if neither matches.
+
+Logically that is a distinct change so you need to turn this into
+a patch set where the first patch contains only the change that
+validates that the length for TCPA and return -EINVAL if not.
+
+> +		tcpa = (struct acpi_tcpa *)buff;
+
+Did not look everything in the detail because there is still so much
+groundwork to do but this will branch to use TCPA table with a TPM2
+chip when the length differs from sizeof(struct acpi_tpm2).
+
+/Jarkko
+
