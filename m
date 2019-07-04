@@ -2,56 +2,60 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D31C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1466FC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7187218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E420A218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGDJKP (ORCPT
+        id S1727387AbfGDJKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:10:15 -0400
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:51098
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727153AbfGDJKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:10:15 -0400
-Received: from feckert01.dev.tdt.de (unknown [10.2.3.40])
-        by mail.dev.tdt.de (Postfix) with ESMTPSA id D9CD921441;
-        Thu,  4 Jul 2019 09:02:13 +0000 (UTC)
-From:   Florian Eckert <fe@dev.tdt.de>
-To:     Eckert.Florian@googlemail.com, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Eckert <fe@dev.tdt.de>
-Subject: [PATCH 0/3] Update pcengines-apuv2 platform device
-Date:   Thu,  4 Jul 2019 11:02:02 +0200
-Message-Id: <20190704090205.19400-1-fe@dev.tdt.de>
-X-Mailer: git-send-email 2.11.0
+        Thu, 4 Jul 2019 05:10:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:37328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbfGDJKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:10:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D119C344;
+        Thu,  4 Jul 2019 02:10:32 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29ED13F703;
+        Thu,  4 Jul 2019 02:10:32 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 10:10:26 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 04/11] firmware: arm_scpi: convert platform driver to use
+ dev_groups
+Message-ID: <20190704091025.GA10622@e107155-lin>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+ <20190704084617.3602-5-gregkh@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704084617.3602-5-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds the following changes to this pcengines-apuv2
-platform device.
+On Thu, Jul 04, 2019 at 10:46:10AM +0200, Greg Kroah-Hartman wrote:
+> Platform drivers now have the option to have the platform core create
+> and remove any needed sysfs attribute files.  So take advantage of that
+> and do not register "by hand" a sysfs group of attributes.
+> 
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-* Add mpcie reset gpio export
-* Add legacy leds gpio definitions
-* Update gpio buttion definitions
+Assuming you plan to take this series as a whole,
 
-Florian Eckert (3):
-  platform/x86/pcengines-apuv2: add mpcie reset gpio export
-  platform/x86/pcengines-apuv2: add legacy leds gpio definitions
-  platform//x86/pcengines-apuv2: update gpio button definition
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
- drivers/platform/x86/pcengines-apuv2.c | 32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
-
--- 
-2.11.0
-
+--
+Regards,
+Sudeep
