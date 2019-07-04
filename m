@@ -2,77 +2,101 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A756CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C6C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7485B218A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562277334;
-	bh=UPTxVNPgLE7Dg+v4vbdt7pjYfg3G0fYHNbLUFJOJsAo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lwBa1YA64rxSCkrXit8qe8wpb1vxgeUEVK+J+v+I+xiQngazYm4ugjDfwxnzdzden
-	 B8f+5ScAKRzUDJ2jEKmputf27hFtlhRhDZoYxU9grH+9dQrc00syT7d9O4Q2U1zJT4
-	 NVUXHmL6ZqHa/SKo1PL39QFn/j0eD5nxmVXFyBgE=
+	by mail.kernel.org (Postfix) with ESMTP id 2576E21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ujp3QmVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfGDVzd (ORCPT
+        id S1727506AbfGDV5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 17:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727338AbfGDVzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 17:55:32 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E4E218C3
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2019 21:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562277331;
-        bh=UPTxVNPgLE7Dg+v4vbdt7pjYfg3G0fYHNbLUFJOJsAo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=htaEIL3e3mj7eLuVxA9vniy5FxObCL+0EBZf9DhGVjuxAorXHzCax7IzNSJ2rHFC6
-         8H8l3FfZf131KRyoYNMvMU+38ulo/yEhBDRz7AlBeXVQ5lq0kjPYND1AEyMvRcOqib
-         xqk+s4cqW6x6gZ32ASpnH3Fe9b3Vx/G3irLc1JlY=
-Received: by mail-wr1-f54.google.com with SMTP id n9so7933831wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 14:55:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTOUUsQiHa5w2AZQ38dsle/X53GT+6LndQ5FiT61PjRW4Hbvpt
-        hCdOUForK0Q1M1FLCtxXUn1uqgL1qXx+TGe0g6MhDw==
-X-Google-Smtp-Source: APXvYqynsGWfU6tSI1xxFu4PUXLCJzliGJvAE8jO/S7FMZKXbIT6FbKVhPrcIvjN53Yny/EjOhAMFhdH4Wq1fXWcBpI=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr417959wro.343.1562277330223;
- Thu, 04 Jul 2019 14:55:30 -0700 (PDT)
+        Thu, 4 Jul 2019 17:57:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37793 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDV5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 17:57:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id e5so10855761iok.4;
+        Thu, 04 Jul 2019 14:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nj+rzUZGPqNyT1DZeu2Av7HuuzM7T7JYl6p3NYhknn8=;
+        b=Ujp3QmVs+l454k/ITR9Axi10EwfvczIkphlFECMdXBQeuBvmjjJfcVmgJdnwW/+AlN
+         IUG3TXy9g8xKjXufXQnQA/DVlYqHnSTRFrD9DEcd+TtRrSnQ3kFRHP9L8O0qOcisu+Lv
+         aiAL8wseNs7zTvYeonZkYT0hUi3aRJgBx0hlPK03EUVMocUbjEQogSEME5nBRJ+ricaM
+         uV06V5oxmEgjjsNrEKj9YCCyHa01234qXID4WxdUddbXxEkSIeKn+yMLPpfxMRARmwvY
+         m3kJiik8YQ3y8R+p/Sir8zZr240zrIdnqrybm9ZjCk7E13Hfp1621AxMuDV6qs+fTV04
+         ZfSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nj+rzUZGPqNyT1DZeu2Av7HuuzM7T7JYl6p3NYhknn8=;
+        b=ERLzakgy8YwwQ+P71ovH6SURYnRrW3SC3ytSpAdvebT829gyzsoMgQjbBgBjkQ6HxH
+         elljndwFjRKgsH9X4u5jm7oIqIsEAW99u+iCxjYrqjKr2NhOhT9CON1c3S6S+09rrUF9
+         gW4BBPRCpExwWoIu5mlEyNLvCBNAPlpQbGMzPXyWkSq6H/2HuAd3Wj6ZMHpN0XJ6h/xE
+         mN9L/kS7NOb/61W5p94NOm9/ajVtgc8/74hNPIl4V/fl3sqt1lFcB0dCYijXjk0g5724
+         UOnbdrl5kI2Nea3W3vztyo8MoHbzj9hoqXYtIp+xq2fJvGhNvRtKILEPMSkWZVdAhyqW
+         tlVw==
+X-Gm-Message-State: APjAAAXJq0n1bVgSEcN5o6m52C7SjvA6Hbt4Fk7ULzMTx5VfdLFVhmuF
+        ER4CebFLPSxp4cyZoaZOKbz56dtvgKFG8HUPxk4=
+X-Google-Smtp-Source: APXvYqyR6CruPNYROHA1gS+xODfFPQgVwSBzFGUGReZxEolIGxk1Z8sJWGXQQ+OzCtK4IAAFLY2UQJdKdV/SFDZ2eKs=
+X-Received: by 2002:a02:878a:: with SMTP id t10mr393023jai.112.1562277450605;
+ Thu, 04 Jul 2019 14:57:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190704195555.580363209@infradead.org> <20190704200050.477489028@infradead.org>
-In-Reply-To: <20190704200050.477489028@infradead.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 4 Jul 2019 14:55:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrX_3FvH6rhW08x+=PMGO3HoE0fcp2LRvykyL2604fiS0w@mail.gmail.com>
-Message-ID: <CALCETrX_3FvH6rhW08x+=PMGO3HoE0fcp2LRvykyL2604fiS0w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] x86/entry/64: Update comments and sanity tests for create_gap
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+References: <20190703171924.31801-1-paweldembicki@gmail.com>
+ <20190703171924.31801-5-paweldembicki@gmail.com> <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYsA5437Sb8J539AJ=cYtnO2MiD7w7V_Emrmk8dNKbaEQ@mail.gmail.com>
+From:   =?UTF-8?Q?Pawe=C5=82_Dembicki?= <paweldembicki@gmail.com>
+Date:   Thu, 4 Jul 2019 23:57:19 +0200
+Message-ID: <CAJN1Kkydjopnd8tZ+RgRUNXW1k6ygFGaaFZvCzB+RDp1K6KFFg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 1:03 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On 4/7/19 09:22 Linus Walleij <linus.walleij@linaro.org> wrote:
 >
+> My devices do not have direct access to the reset line so I
+> can't assert reset no matter how I try, if it works for you, the
+> code is certainly better like this.
 >
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+In P2020RDB, VSC7385 reset is connected to GPIO. U-boot put binary
+file to iCPU and make VSC7385 unmanaged.
+However reset flush internal memory and iCPU stop.
+In this case bootlog looks like that:
+
+[    2.989047] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
+[    2.996192] vsc73xx-platform ffb00000.switch: iCPU enabled boots
+from PI/SI, no external memory
+[    3.005057] vsc73xx-platform ffb00000.switch: Chip seems to be out
+of control. Assert reset and try again.
+[    3.045034] vsc73xx-platform ffb00000.switch: VSC7385 (rev: 2) switch found
+[    3.052171] vsc73xx-platform ffb00000.switch: iCPU disabled, no
+external memory
+
+Best Regards,
+Pawel Dembicki
