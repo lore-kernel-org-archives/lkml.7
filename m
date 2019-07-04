@@ -2,112 +2,112 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EBAC46497
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0025C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5D121852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2A6218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562273616;
+	bh=fHB5OlE7wI5HD4vTrIqKCfUtCNsXUfIwuF85zxThTaM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mPmGNNowWSCeQqzAZAbxvrwGub5leweKfwWI3dOum5CFEUVHipRJAPnaWKF674pK5
+	 zHqPqLcggfXsifsp7ocskKtynwbFjL0MyAJ1qpIDp3TVMPDf/GAvI2wQSxW/RTRuzC
+	 C8t/Gi7FqQ42iRYKYEq4Lkch0PHdgAvbQt+SNqF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfGDUuz (ORCPT
+        id S1727324AbfGDUxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 16:50:55 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:63211 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfGDUux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 16:50:53 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hj8gs-0006Im-Ui from Cedric_Hombourger@mentor.com ; Thu, 04 Jul 2019 13:50:50 -0700
-Received: from FRG-W10-HOMBOUR.world.mentorg.com (137.202.0.90) by
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Thu, 4 Jul 2019 21:50:46 +0100
-From:   Cedric Hombourger <Cedric_Hombourger@mentor.com>
-To:     <ben@decadent.org.uk>
-CC:     <yamada.masahiro@socionext.com>, <isar-users@googlegroups.com>,
-        <michal.lkml@markovi.net>, <linux-kbuild@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <riku.voipio@linaro.org>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Subject: [PATCH v3 1/1] builddeb: generate multi-arch friendly linux-libc-dev package
-Date:   Thu, 4 Jul 2019 22:50:27 +0200
-Message-ID: <1562273427-204-2-git-send-email-Cedric_Hombourger@mentor.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562273427-204-1-git-send-email-Cedric_Hombourger@mentor.com>
-References: <432e997617a0669886cd9ea5ceac7c1a2173044b.camel@decadent.org.uk>
- <1562273427-204-1-git-send-email-Cedric_Hombourger@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+        Thu, 4 Jul 2019 16:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726871AbfGDUxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 16:53:35 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2C02083B;
+        Thu,  4 Jul 2019 20:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562273613;
+        bh=fHB5OlE7wI5HD4vTrIqKCfUtCNsXUfIwuF85zxThTaM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OQmQWxaH1tJEFpi4jbH2I0D8Oz0s8ym/oz7j+tkYDL6g7uXejsiAtUfU38+BcV/zG
+         WtCh68hjwLBB9taaYo4e3bDMPmWrR9i+UT4qpOtAdX2eFfSmQP9IMd9eq3skgpik5y
+         k6rJVQlxs70evg6Q6C0OlifqVvpdw/5LksGoBaQQ=
+Date:   Thu, 4 Jul 2019 13:53:32 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Message-Id: <20190704135332.234891ac6ce641bf29913d06@linux-foundation.org>
+In-Reply-To: <20190704195934.GA23542@mellanox.com>
+References: <cover.1558547956.git.robin.murphy@arm.com>
+        <20190626073533.GA24199@infradead.org>
+        <20190626123139.GB20635@lakrids.cambridge.arm.com>
+        <20190626153829.GA22138@infradead.org>
+        <20190626154532.GA3088@mellanox.com>
+        <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
+        <20190704115324.c9780d01ef6938ab41403bf9@linux-foundation.org>
+        <20190704195934.GA23542@mellanox.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debian-based distributions place libc header files in a machine
-specific directory (/usr/include/<libc-machine>) instead of
-/usr/include/asm to support installation of the linux-libc-dev
-package from multiple architectures. Move headers installed by
-"make headers_install" accordingly using Debian's tuple from
-dpkg-architecture.
+On Thu, 4 Jul 2019 19:59:38 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
----
- scripts/package/builddeb | 8 ++++++++
- scripts/package/mkdebian | 5 +++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+> On Thu, Jul 04, 2019 at 11:53:24AM -0700, Andrew Morton wrote:
+> > On Wed, 26 Jun 2019 20:35:51 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+> > 
+> > > > Let me know and I can help orchestate this.
+> > > 
+> > > Well.  Whatever works.  In this situation I'd stage the patches after
+> > > linux-next and would merge them up after the prereq patches have been
+> > > merged into mainline.  Easy.
+> > 
+> > All right, what the hell just happened? 
+> 
+> Christoph's patch series for the devmap & hmm rework finally made it
+> into linux-next
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index b03dd56a4782..15a034e18c37 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -132,6 +132,14 @@ fi
- if [ "$ARCH" != "um" ]; then
- 	$MAKE -f $srctree/Makefile headers_check
- 	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
-+	if [ -n "$debarch" ]; then
-+		# move asm headers to /usr/include/<libc-machine>/asm to match the structure
-+		# used by Debian-based distros (to support multi-arch) but only if ARCH was
-+		# translated to Debian's (debarch) - this is done by mkdebian
-+		host_arch=$(dpkg-architecture -a$debarch -qDEB_HOST_MULTIARCH)
-+		mkdir $libc_headers_dir/usr/include/$host_arch
-+		mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$host_arch/
-+	fi
- fi
- 
- # Install the maintainer scripts
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 8351584cb24e..2d670ae2cabc 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -197,6 +197,7 @@ Architecture: $debarch
- Description: Linux support headers for userspace development
-  This package provides userspaces headers from the Linux kernel.  These headers
-  are used by the installed headers for GNU glibc and other system libraries.
-+Multi-Arch: same
- 
- Package: $dbg_packagename
- Section: debug
-@@ -212,11 +213,11 @@ cat <<EOF > debian/rules
- srctree ?= .
- 
- build:
--	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
-+	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
- 	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile
- 
- binary-arch:
--	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
-+	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
- 	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
- 
- clean:
--- 
-2.11.0
+We're talking about "dev_pagemap related cleanups v4", yes?
+
+I note that linux-next contains "mm: remove the HMM config option"
+which was present in Christoph's v3 series but wasn't present in v4. 
+Perhaps something has gone wrong here.
+
+> sorry, it took quite a few iterations on the list to
+> get all the reviews and tests, and figure out how to resolve some
+> other conflicting things. So it just made it this week.
+> 
+> Recall, this is the patch series I asked you about routing a few weeks
+> ago, as it really exceeded the small area that hmm.git was supposed to
+> cover. I think we are both caught off guard how big the conflict is!
+
+I guess I was distracted - I should have taken a look to see how
+mergable it all was.
+
+It's a large patchset and it appears to be mainly (entirely?) code
+cleanups.  I don't think such material would be appropriate for a late
+-rc7 merge even if it didn't conflict with lots of other higher
+priority pending functional changes and fixes!
 
