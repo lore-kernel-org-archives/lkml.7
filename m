@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48470C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E216C46486
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11575218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567C720828
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562257980;
-	bh=1VSPrCG5g+SemXBbZN2ZTL/fb0YLG30gRoIbYrAEUN0=;
+	s=default; t=1562257984;
+	bh=GEnFJ/8txDVmOhxPRs32Kk+fQM7JlJ8sVP7gs2efdyE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=sO5gFqzfkUZff/wZBSWlEUee6o1NCRxrwxLMkLmRzdtO141hF+1ukd3KifBuWgMKm
-	 AS3eN6oXrOyKsYz9NCFogkuRKQHomkNcoUObWfTnuetNttiFtHUb6ffJfenrUPFbz4
-	 C+EyGCDKVXQJYO0FzoMq08/g4E5MMOOrWYLsNv/4=
+	b=wmBP9q7mYUxxfvyNe5L4kufykpiSNOlXIfkIHw+5YV8T1w50TFj1H4XudywuX6YJk
+	 bv5IEzeUAisR8B42tdXr2PjfPOl7GrvkEaSeOBFwQp2pIRFgirMcQTT7C7cNAhu2tz
+	 j0xL2kfWMm+uW09aeT6OlwNu77peGAz/D0v77USU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfGDQc7 (ORCPT
+        id S1727256AbfGDQc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:32:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56582 "EHLO
+        Thu, 4 Jul 2019 12:32:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56584 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfGDQc6 (ORCPT
+        with ESMTP id S1727235AbfGDQc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jul 2019 12:32:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1AIFQaA/yGya6PgQ4uo+dPDqJJntVtbtF2QXpwMlyKI=; b=LmPDO7LwQOJE
-        INd866FxaGz7Lpe+YKfQBO/smqq+XHtYHkcos3TIKdo81n9gjrT0Y9SXsu/fVPLixJggtfRmCVq/J
-        5d0qZU7RVrgTtAizsQezpJ9UXJcrnOHSWML3e8UEEUXYn267gq+oZzUNZbMOdlKbqjrd4qnNF3YP/
-        SPcv0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=zodjW5Kg1HRKcHIXz7+5/nzLctd0FssqPejVzR5xjNo=; b=ptdhzaPBmYoy
+        Jgo0YKTkqnEIHLLsL39hKKC1MZ6bt7RFLUuZ+9/F6jEFUXbeV7USqwsLND37VKxs0UMVMwx2Sp3h8
+        v4ZQ6akAS+yCStzYHNOYhcKEPbebAUPP6sj7+OdpJiiwknm+APgZHKPnRL5Zd+vPxJ4doNe/5K+vR
+        XeDlI=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hj4fH-0001Hb-S2; Thu, 04 Jul 2019 16:32:55 +0000
+        id 1hj4fH-0001Hc-Vh; Thu, 04 Jul 2019 16:32:56 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EDDB027430B0; Thu,  4 Jul 2019 17:32:54 +0100 (BST)
+        id 2611D2742EB1; Thu,  4 Jul 2019 17:32:55 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max77650: use vsel_step" to the regulator tree
-In-Reply-To: <20190703161035.31808-3-brgl@bgdev.pl>
+Subject: Applied "regulator: implement selector stepping" to the regulator tree
+In-Reply-To: <20190703161035.31808-2-brgl@bgdev.pl>
 X-Patchwork-Hint: ignore
-Message-Id: <20190704163254.EDDB027430B0@ypsilon.sirena.org.uk>
-Date:   Thu,  4 Jul 2019 17:32:54 +0100 (BST)
+Message-Id: <20190704163255.2611D2742EB1@ypsilon.sirena.org.uk>
+Date:   Thu,  4 Jul 2019 17:32:55 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max77650: use vsel_step
+   regulator: implement selector stepping
 
 has been applied to the regulator tree at
 
@@ -86,170 +86,130 @@ to this mail.
 Thanks,
 Mark
 
-From 3c7577d442a76c2015dd765497395fb394b78051 Mon Sep 17 00:00:00 2001
+From 2da8d9473e20a2f6645dcb0cea4848a2c1e83af9 Mon Sep 17 00:00:00 2001
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date: Wed, 3 Jul 2019 18:10:35 +0200
-Subject: [PATCH] regulator: max77650: use vsel_step
+Date: Wed, 3 Jul 2019 18:10:34 +0200
+Subject: [PATCH] regulator: implement selector stepping
 
-Use the new vsel_step field in the regulator description to instruct
-the regulator API on the required voltage ramping. Switch to using the
-generic regmap helpers for voltage setting and remove the old set_voltage
-callback that handcoded the selector stepping.
+Some regulators require that the requested voltage be reached gradually
+by setting all or some of the intermediate values. Implement a new field
+in the regulator description struct that allows users to specify the
+number of selectors by which the regulator API should step when ramping
+the voltage up/down.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Link: https://lore.kernel.org/r/20190703161035.31808-3-brgl@bgdev.pl
+Link: https://lore.kernel.org/r/20190703161035.31808-2-brgl@bgdev.pl
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max77650-regulator.c | 73 ++++----------------------
- 1 file changed, 9 insertions(+), 64 deletions(-)
+ drivers/regulator/core.c         | 63 ++++++++++++++++++++++++++++++++
+ include/linux/regulator/driver.h |  6 +++
+ 2 files changed, 69 insertions(+)
 
-diff --git a/drivers/regulator/max77650-regulator.c b/drivers/regulator/max77650-regulator.c
-index b79fe93c8edb..e57fc9197d62 100644
---- a/drivers/regulator/max77650-regulator.c
-+++ b/drivers/regulator/max77650-regulator.c
-@@ -108,67 +108,6 @@ static int max77650_regulator_disable(struct regulator_dev *rdev)
- 				  MAX77650_REGULATOR_DISABLED);
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 9d3ed13b7f12..df82e2a8442a 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3106,6 +3106,66 @@ static int _regulator_call_set_voltage_sel(struct regulator_dev *rdev,
+ 	return ret;
  }
  
--static int max77650_regulator_set_voltage_sel(struct regulator_dev *rdev,
--					      unsigned int sel)
--{
--	struct max77650_regulator_desc *rdesc = rdev_get_drvdata(rdev);
--	int rv = 0, curr, diff;
--	bool ascending;
--
--	/*
--	 * If the regulator is disabled, we can program the desired
--	 * voltage right away.
--	 */
--	if (!max77650_regulator_is_enabled(rdev)) {
--		if (rdesc == &max77651_SBB1_desc)
--			return regulator_set_voltage_sel_pickable_regmap(rdev,
--									 sel);
--		else
--			return regulator_set_voltage_sel_regmap(rdev, sel);
--	}
--
--	/*
--	 * Otherwise we need to manually ramp the output voltage up/down
--	 * one step at a time.
--	 */
--
--	if (rdesc == &max77651_SBB1_desc)
--		curr = regulator_get_voltage_sel_pickable_regmap(rdev);
--	else
--		curr = regulator_get_voltage_sel_regmap(rdev);
--
--	if (curr < 0)
--		return curr;
--
--	diff = curr - sel;
--	if (diff == 0)
--		return 0; /* Already there. */
--	else if (diff > 0)
--		ascending = false;
--	else
--		ascending = true;
--
--	/*
--	 * Make sure we'll get to the right voltage and break the loop even if
--	 * the selector equals 0.
--	 */
--	for (ascending ? curr++ : curr--;; ascending ? curr++ : curr--) {
--		if (rdesc == &max77651_SBB1_desc)
--			rv = regulator_set_voltage_sel_pickable_regmap(rdev,
--								       curr);
--		else
--			rv = regulator_set_voltage_sel_regmap(rdev, curr);
--
--		if (rv)
--			return rv;
--
--		if (curr == sel)
--			break;
--	}
--
--	return 0;
--}
--
- static const struct regulator_ops max77650_regulator_LDO_ops = {
- 	.is_enabled		= max77650_regulator_is_enabled,
- 	.enable			= max77650_regulator_enable,
-@@ -176,7 +115,7 @@ static const struct regulator_ops max77650_regulator_LDO_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
- 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
--	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.set_active_discharge	= regulator_set_active_discharge_regmap,
- };
- 
-@@ -187,7 +126,7 @@ static const struct regulator_ops max77650_regulator_SBB_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
- 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
--	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.get_current_limit	= regulator_get_current_limit_regmap,
- 	.set_current_limit	= regulator_set_current_limit_regmap,
- 	.set_active_discharge	= regulator_set_active_discharge_regmap,
-@@ -200,7 +139,7 @@ static const struct regulator_ops max77651_SBB1_regulator_ops = {
- 	.disable		= max77650_regulator_disable,
- 	.list_voltage		= regulator_list_voltage_pickable_linear_range,
- 	.get_voltage_sel	= regulator_get_voltage_sel_pickable_regmap,
--	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
-+	.set_voltage_sel	= regulator_set_voltage_sel_pickable_regmap,
- 	.get_current_limit	= regulator_get_current_limit_regmap,
- 	.set_current_limit	= regulator_set_current_limit_regmap,
- 	.set_active_discharge	= regulator_set_active_discharge_regmap,
-@@ -217,6 +156,7 @@ static struct max77650_regulator_desc max77650_LDO_desc = {
- 		.min_uV			= 1350000,
- 		.uV_step		= 12500,
- 		.n_voltages		= 128,
-+		.vsel_step		= 1,
- 		.vsel_mask		= MAX77650_REGULATOR_V_LDO_MASK,
- 		.vsel_reg		= MAX77650_REG_CNFG_LDO_A,
- 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
-@@ -242,6 +182,7 @@ static struct max77650_regulator_desc max77650_SBB0_desc = {
- 		.min_uV			= 800000,
- 		.uV_step		= 25000,
- 		.n_voltages		= 64,
-+		.vsel_step		= 1,
- 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
- 		.vsel_reg		= MAX77650_REG_CNFG_SBB0_A,
- 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
-@@ -271,6 +212,7 @@ static struct max77650_regulator_desc max77650_SBB1_desc = {
- 		.min_uV			= 800000,
- 		.uV_step		= 12500,
- 		.n_voltages		= 64,
-+		.vsel_step		= 1,
- 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
- 		.vsel_reg		= MAX77650_REG_CNFG_SBB1_A,
- 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
-@@ -301,6 +243,7 @@ static struct max77650_regulator_desc max77651_SBB1_desc = {
- 		.linear_ranges		= max77651_sbb1_volt_ranges,
- 		.n_linear_ranges	= ARRAY_SIZE(max77651_sbb1_volt_ranges),
- 		.n_voltages		= 58,
-+		.vsel_step		= 1,
- 		.vsel_range_mask	= MAX77651_REGULATOR_V_SBB1_RANGE_MASK,
- 		.vsel_range_reg		= MAX77650_REG_CNFG_SBB1_A,
- 		.vsel_mask		= MAX77651_REGULATOR_V_SBB1_MASK,
-@@ -332,6 +275,7 @@ static struct max77650_regulator_desc max77650_SBB2_desc = {
- 		.min_uV			= 800000,
- 		.uV_step		= 50000,
- 		.n_voltages		= 64,
-+		.vsel_step		= 1,
- 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
- 		.vsel_reg		= MAX77650_REG_CNFG_SBB2_A,
- 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
-@@ -361,6 +305,7 @@ static struct max77650_regulator_desc max77651_SBB2_desc = {
- 		.min_uV			= 2400000,
- 		.uV_step		= 50000,
- 		.n_voltages		= 64,
-+		.vsel_step		= 1,
- 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
- 		.vsel_reg		= MAX77650_REG_CNFG_SBB2_A,
- 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
++static int _regulator_set_voltage_sel_step(struct regulator_dev *rdev,
++					   int uV, int new_selector)
++{
++	const struct regulator_ops *ops = rdev->desc->ops;
++	int diff, old_sel, curr_sel, ret;
++
++	/* Stepping is only needed if the regulator is enabled. */
++	if (!_regulator_is_enabled(rdev))
++		goto final_set;
++
++	if (!ops->get_voltage_sel)
++		return -EINVAL;
++
++	old_sel = ops->get_voltage_sel(rdev);
++	if (old_sel < 0)
++		return old_sel;
++
++	diff = new_selector - old_sel;
++	if (diff == 0)
++		return 0; /* No change needed. */
++
++	if (diff > 0) {
++		/* Stepping up. */
++		for (curr_sel = old_sel + rdev->desc->vsel_step;
++		     curr_sel < new_selector;
++		     curr_sel += rdev->desc->vsel_step) {
++			/*
++			 * Call the callback directly instead of using
++			 * _regulator_call_set_voltage_sel() as we don't
++			 * want to notify anyone yet. Same in the branch
++			 * below.
++			 */
++			ret = ops->set_voltage_sel(rdev, curr_sel);
++			if (ret)
++				goto try_revert;
++		}
++	} else {
++		/* Stepping down. */
++		for (curr_sel = old_sel - rdev->desc->vsel_step;
++		     curr_sel > new_selector;
++		     curr_sel -= rdev->desc->vsel_step) {
++			ret = ops->set_voltage_sel(rdev, curr_sel);
++			if (ret)
++				goto try_revert;
++		}
++	}
++
++final_set:
++	/* The final selector will trigger the notifiers. */
++	return _regulator_call_set_voltage_sel(rdev, uV, new_selector);
++
++try_revert:
++	/*
++	 * At least try to return to the previous voltage if setting a new
++	 * one failed.
++	 */
++	(void)ops->set_voltage_sel(rdev, old_sel);
++	return ret;
++}
++
+ static int _regulator_set_voltage_time(struct regulator_dev *rdev,
+ 				       int old_uV, int new_uV)
+ {
+@@ -3179,6 +3239,9 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				selector = ret;
+ 				if (old_selector == selector)
+ 					ret = 0;
++				else if (rdev->desc->vsel_step)
++					ret = _regulator_set_voltage_sel_step(
++						rdev, best_val, selector);
+ 				else
+ 					ret = _regulator_call_set_voltage_sel(
+ 						rdev, best_val, selector);
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 377da2357118..f0d7b0496e54 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -286,6 +286,11 @@ enum regulator_type {
+  * @vsel_range_mask: Mask for register bitfield used for range selector
+  * @vsel_reg: Register for selector when using regulator_regmap_X_voltage_
+  * @vsel_mask: Mask for register bitfield used for selector
++ * @vsel_step: Specify the resolution of selector stepping when setting
++ *	       voltage. If 0, then no stepping is done (requested selector is
++ *	       set directly), if >0 then the regulator API will ramp the
++ *	       voltage up/down gradually each time increasing/decreasing the
++ *	       selector by the specified step value.
+  * @csel_reg: Register for current limit selector using regmap set_current_limit
+  * @csel_mask: Mask for register bitfield used for current limit selector
+  * @apply_reg: Register for initiate voltage change on the output when
+@@ -360,6 +365,7 @@ struct regulator_desc {
+ 	unsigned int vsel_range_mask;
+ 	unsigned int vsel_reg;
+ 	unsigned int vsel_mask;
++	unsigned int vsel_step;
+ 	unsigned int csel_reg;
+ 	unsigned int csel_mask;
+ 	unsigned int apply_reg;
 -- 
 2.20.1
 
