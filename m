@@ -2,120 +2,102 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABD8C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195E1C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D3B2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CB62189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YiGOffgR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl9EX14h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfGDCrl (ORCPT
+        id S1727237AbfGDC7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 22:47:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:49351 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbfGDCrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:47:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fMpL5xkVz9s8m;
-        Thu,  4 Jul 2019 12:47:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562208458;
-        bh=GVe4xrn2rOWFVcjZMJTJ2pwArPRGQ7EWoXRAyNj6knY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YiGOffgR/+4nR6IKGpQAxRNzGJG1jxoFiqD/4isKY5EgN4zec40nvKEhchD6t2M0v
-         H/bdAGsif9c3/thrfKLllL9GU3lpihZiUy/Fabx3UXasyVUazkevGZ5u6dBLZJ9MZh
-         zuBBT4sdeqkTKqhQ4xxLQJ8jD8F14dL/gXyrix6AQtOdHt34ruv9YL95jM7yfuIN3D
-         6gVXiXr45xh32W0AxF5BsVP3Z4z17XigtPbaRcC7Yc76zJUaDoPQoym+jBa/Csqydk
-         7B0OGAnVM7xxVVa5+7VYw4TkjWFTs83kdjKMkkNgAiJM0/Tpg5mLjMtJzgCyfKmizG
-         TJwsyMV7i500g==
-Date:   Thu, 4 Jul 2019 12:47:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: linux-next: manual merge of the mlx5-next tree with the rdma tree
-Message-ID: <20190704124738.1e88cb69@canb.auug.org.au>
+        Wed, 3 Jul 2019 22:59:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36251 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGDC7N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 22:59:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c13so2182388pgg.3;
+        Wed, 03 Jul 2019 19:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cdGNxnCG0dRMJ1+NSl9LIvswxDirWPGLvHhxjBvgLBg=;
+        b=Bl9EX14hsyMh1TbRFVAEiPY0YsMGwRNJWb2jOLCWtq7VYUpc+Ql3X+vnTdwsTE1Mjj
+         Xw9R1qbJpqWcPybC7B/4RG5+d59sPyJCOZzCCxjhSDSApD/n6IPglHdt/fcT9ydtbEVg
+         ffSFi0Jj5aV7aIMjHpL1sAI1iE84I/CbvJSfZpn6rDAaWruQmzghG4LzCpXVd3PORL2Z
+         pNF0Sczh2Zjp5O8TRn+d/rAsHF/+bfpymK9A0HdTgKJoYO/lm5t/iebFplNiir/Rx5g9
+         7Z2JrMpPys+PhYLJ2Kky+19jH1ijK+GvCEP5DXD35+lJDXF/M2G6/4p2QTqoI09W2hXb
+         9AkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cdGNxnCG0dRMJ1+NSl9LIvswxDirWPGLvHhxjBvgLBg=;
+        b=IKZuZeCvr39NJOK62Bu748wVj6nlM9BXRf5IDzbhzcZImxheDjiLBOy+Dt1iXcFU0f
+         VlVo9JXfnfg2XhulwyAGqVOBHLqKAr6nyEFQcy0sF1RIZak9+YMnENsY6b0w5yTr0AQf
+         l47vE/vNFa+2JrGI3JMIPHfe83GpbqkJqrAm/zDOtc8JN6SsDN0GGYaNp8sSrLM7xDZY
+         rxJIqx9Jb+js101TxEicU7aXzJ+AewevhS7KfG8nTtq6mVTOAe3zDOlkHPvUM2ZKgcsw
+         m95flLL+xQKEkNk2mR37px6oebq3OmV0f4CyGM4IzctbL1h+T3b71ulj0R71BaOFtO5b
+         fYog==
+X-Gm-Message-State: APjAAAXLxKGTIj5miWSKjwUBEM7yQbaJA6eCT88fHKWFrPOTy0L413yE
+        Mp6wwfoVo8aUkJWIe0nSRCo=
+X-Google-Smtp-Source: APXvYqwY4iu+EFJOXIvAaE4uZFsF5WtzhQD09WQtvm68YZFKudL5xQwT7dxwcZl7ElVVmQ6BOF4glQ==
+X-Received: by 2002:a17:90b:d82:: with SMTP id bg2mr16831319pjb.87.1562209153111;
+        Wed, 03 Jul 2019 19:59:13 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id i36sm3472199pgl.70.2019.07.03.19.59.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 19:59:12 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 08:29:06 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ethernet: allwinner: Remove unneeded memset
+Message-ID: <20190704025906.GA20005@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Kw=JJxg7OagalCIGq8.vbuP"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Kw=JJxg7OagalCIGq8.vbuP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Remove unneeded memset as alloc_etherdev is using kvzalloc which uses
+__GFP_ZERO flag
 
-Hi all,
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Today's linux-next merge of the mlx5-next tree got a conflict in:
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 9e06dff..6253e5e 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -818,7 +818,6 @@ static int emac_probe(struct platform_device *pdev)
+ 	SET_NETDEV_DEV(ndev, &pdev->dev);
+ 
+ 	db = netdev_priv(ndev);
+-	memset(db, 0, sizeof(*db));
+ 
+ 	db->dev = &pdev->dev;
+ 	db->ndev = ndev;
+-- 
+2.7.4
 
-  drivers/infiniband/hw/mlx5/cq.c
-
-between commit:
-
-  e39afe3d6dbd ("RDMA: Convert CQ allocations to be under core responsibili=
-ty")
-
-from the rdma tree and commit:
-
-  38164b771947 ("net/mlx5: mlx5_core_create_cq() enhancements")
-
-from the mlx5-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/infiniband/hw/mlx5/cq.c
-index bfe3efdd77d7,4efbbd2fce0c..000000000000
---- a/drivers/infiniband/hw/mlx5/cq.c
-+++ b/drivers/infiniband/hw/mlx5/cq.c
-@@@ -891,7 -891,8 +891,8 @@@ int mlx5_ib_create_cq(struct ib_cq *ibc
-  	int entries =3D attr->cqe;
-  	int vector =3D attr->comp_vector;
-  	struct mlx5_ib_dev *dev =3D to_mdev(ibdev);
-+ 	u32 out[MLX5_ST_SZ_DW(create_cq_out)];
- -	struct mlx5_ib_cq *cq;
- +	struct mlx5_ib_cq *cq =3D to_mcq(ibcq);
-  	int uninitialized_var(index);
-  	int uninitialized_var(inlen);
-  	u32 *cqb =3D NULL;
-
---Sig_/Kw=JJxg7OagalCIGq8.vbuP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0daMoACgkQAVBC80lX
-0Gy14AgAlHFOm16bEAUrmZltrSXr6+Rt2jBud18OPAcIhwSQ1HFmj7L6vVE6pD5Y
-Wnm4xUuwNkaCZAdSWGID6cJjjOCaYwzPL+eZNpYsyvvauQLq/IqJmPTX90zZNGUL
-owSu6JL57Hg2YnBX9qkduS+0qWY64HKZrqaheDNpo0r1qzY6wLk+Qz3LvB9E2FOu
-mCjNf4HOMlaN3SYR8jlggODS4PTPvXqVpxd6qxg5P9fnT/E6mgBPpsDNcAIrZ0w4
-GRlCpYvABoFgmXdooox7o/YDO1HyY4EkHIxpbFa2vhwilhX1LHBy59Q1PbQr6mnw
-73uk32OliVCJpI/v06f6s7HZmvhULg==
-=Nzdt
------END PGP SIGNATURE-----
-
---Sig_/Kw=JJxg7OagalCIGq8.vbuP--
