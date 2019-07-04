@@ -2,167 +2,159 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AA6C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06617C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E2E218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF42218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfGDJTd (ORCPT
+        id S1727356AbfGDJTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:19:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33614 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfGDJTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:19:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h24so7378782qto.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:19:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UU1LRzgJ9KtlIamPG1rpTOdBbiRt377kXD3IRu4KTEc=;
-        b=WgiZHTN9qZ6nFhuCUpG2LVjkyW3WX5VDZn4TPjBad3pSSXROgjqBp1RCASoCNesZKM
-         uKmDqEW+/vZyuouz5O1CbpKmDHpq7hwd6G9I6i2VnFgXheNpwr9VuM67k6yFhqS0Nxda
-         t2kkB3GVbtz+tlKxd6aKOBM6sI/DHcRznSwyXPHaPQNeW+V20ZId5LiEchdeyP4HD4G1
-         InWh36VgRRFtPKRVPfxoBRTv+5IP97KvQb05+UqZAbKjaFQNWzavpl17tDkOP69sL4N+
-         bvPgwVWmrywkbqOZJytsNfl27XaLTd+7vrR23siorcjR2VjOb8K5CZfzRiBxsakmIHY7
-         y7UA==
-X-Gm-Message-State: APjAAAWwpLPfQQ9zlqsA41v6erOc3/EE5CD3kwd9KJJf2ylWTgpDDKxg
-        suJPIJdFEdA4dl8tboiStjZYPys6Dx/MghUj62wk8IhE34o=
-X-Google-Smtp-Source: APXvYqz9HnBRmgYL+EgQde6QoC+3TNiwekg2y+kqVusM0V3Keg/hNYgvdDkMLVnEv4+p3P8DAILsb6JwSzdx30DpREE=
-X-Received: by 2002:aed:3363:: with SMTP id u90mr2705494qtd.7.1562231969777;
- Thu, 04 Jul 2019 02:19:29 -0700 (PDT)
+        Thu, 4 Jul 2019 05:19:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42448 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727147AbfGDJTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:19:50 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9AFED3082129;
+        Thu,  4 Jul 2019 09:19:49 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AF2D1001B1B;
+        Thu,  4 Jul 2019 09:19:41 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 11:19:39 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v6 net-next 5/5] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190704111939.5d845071@carbon>
+In-Reply-To: <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+        <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-References: <20190703005202.7578-1-alistair.francis@wdc.com>
- <mvmk1czh9y6.fsf@suse.de> <CAKmqyKPn9GBg=n1j-ZpEdCN4Qfi5qfNtEVgpgF8rYRpof4eNDA@mail.gmail.com>
- <mvmpnmqfepx.fsf@suse.de>
-In-Reply-To: <mvmpnmqfepx.fsf@suse.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 4 Jul 2019 11:19:13 +0200
-Message-ID: <CAK8P3a2NmdoHzFGKrzw4CBYDOBtZHDQCGsWE_L0UbG+w0bGWkA@mail.gmail.com>
-Subject: Re: [PATCH RESEND 0/2] RISC-V: Handle the siginfo_t offset problem
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Alistair Francis <alistair23@gmail.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 04 Jul 2019 09:19:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 9:20 AM Andreas Schwab <schwab@suse.de> wrote:
->
-> On Jul 03 2019, Alistair Francis <alistair23@gmail.com> wrote:
->
-> > On Wed, Jul 3, 2019 at 12:08 AM Andreas Schwab <schwab@suse.de> wrote:
-> >>
-> >> On Jul 02 2019, Alistair Francis <alistair.francis@wdc.com> wrote:
-> >>
-> >> > In the RISC-V 32-bit glibc port [1] the siginfo_t struct in the kernel
-> >> > doesn't line up with the struct in glibc. In glibc world the _sifields
-> >> > union is 8 byte alligned (although I can't figure out why)
-> >>
-> >> Try ptype/o in gdb.
-> >
-> > That's a useful tip, I'll be sure to use that next time.
->
-> It was a serious note.  If the structs don't line up then there is a
-> mismatch in types that cannot be solved by adding spurious padding.  You
-> need to fix the types instead.
+On Wed,  3 Jul 2019 13:19:03 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-Would it be an option to align all the basic typedefs (off_t, time_t,
-clock_t, ...)
-between glibc and kernel then, and just use the existing
-sysdeps/unix/sysv/linux/generic/bits/typesizes.h after all to avoid
-surprises like this?
+> Add XDP support based on rx page_pool allocator, one frame per page.
+> Page pool allocator is used with assumption that only one rx_handler
+> is running simultaneously. DMA map/unmap is reused from page pool
+> despite there is no need to map whole page.
+> 
+> Due to specific of cpsw, the same TX/RX handler can be used by 2
+> network devices, so special fields in buffer are added to identify
+> an interface the frame is destined to. Thus XDP works for both
+> interfaces, that allows to test xdp redirect between two interfaces
+> easily. Aslo, each rx queue have own page pools, but common for both
+> netdevs.
+> 
+> XDP prog is common for all channels till appropriate changes are added
+> in XDP infrastructure. Also, once page_pool recycling becomes part of
+> skb netstack some simplifications can be added, like removing
+> page_pool_release_page() before skb receive.
+> 
+> In order to keep rx_dev while redirect, that can be somehow used in
+> future, do flush in rx_handler, that allows to keep rx dev the same
+> while reidrect. It allows to conform with tracing rx_dev pointed
+> by Jesper.
 
-As of v2 the functional difference is
+So, you simply call xdp_do_flush_map() after each xdp_do_redirect().
+It will kill RX-bulk and performance, but I guess it will work.
 
--#define __INO_T_TYPE        __ULONGWORD_TYPE
-+#define __INO_T_TYPE    __UQUAD_TYPE
- #define __INO64_T_TYPE        __UQUAD_TYPE
- #define __MODE_T_TYPE        __U32_TYPE
--#define __NLINK_T_TYPE        __U32_TYPE
--#define __OFF_T_TYPE        __SLONGWORD_TYPE
-+#define __NLINK_T_TYPE    __UQUAD_TYPE
-+#define __OFF_T_TYPE    __SQUAD_TYPE
- #define __OFF64_T_TYPE        __SQUAD_TYPE
--#define __RLIM_T_TYPE        __ULONGWORD_TYPE
-+#define __RLIM_T_TYPE      __UQUAD_TYPE
- #define __RLIM64_T_TYPE        __UQUAD_TYPE
--#define    __BLKCNT_T_TYPE        __SLONGWORD_TYPE
-+#define __BLKCNT_T_TYPE    __SQUAD_TYPE
- #define    __BLKCNT64_T_TYPE    __SQUAD_TYPE
--#define    __FSBLKCNT_T_TYPE    __ULONGWORD_TYPE
-+#define __FSBLKCNT_T_TYPE  __UQUAD_TYPE
- #define    __FSBLKCNT64_T_TYPE    __UQUAD_TYPE
--#define    __FSFILCNT_T_TYPE    __ULONGWORD_TYPE
-+#define __FSFILCNT_T_TYPE  __UQUAD_TYPE
- #define    __FSFILCNT64_T_TYPE    __UQUAD_TYPE
--#define    __FSWORD_T_TYPE        __SWORD_TYPE
-+#define __FSWORD_T_TYPE   __SQUAD_TYPE
--#define __CLOCK_T_TYPE        __SLONGWORD_TYPE
--#define __TIME_T_TYPE        __SLONGWORD_TYPE
-+#define __CLOCK_T_TYPE     __SQUAD_TYPE
-+#define __TIME_T_TYPE      __SQUAD_TYPE
- #define __USECONDS_T_TYPE    __U32_TYPE
--#define __SUSECONDS_T_TYPE    __SLONGWORD_TYPE
-+#define __SUSECONDS_T_TYPE __SQUAD_TYPE
--#define __BLKSIZE_T_TYPE    __S32_TYPE
-+#define __BLKSIZE_T_TYPE   __SQUAD_TYPE
- #define __FSID_T_TYPE        struct { int __val[2]; }
- #define __SSIZE_T_TYPE        __SWORD_TYPE
--#define __SYSCALL_SLONG_TYPE    __SLONGWORD_TYPE
--#define __SYSCALL_ULONG_TYPE    __ULONGWORD_TYPE
--#define __CPU_MASK_TYPE     __ULONGWORD_TYPE
-+#define __SYSCALL_SLONG_TYPE __SQUAD_TYPE
-+#define __SYSCALL_ULONG_TYPE __UQUAD_TYPE
-+#define __CPU_MASK_TYPE    __UQUAD_TYPE
+I guess, we can optimized it later, by e.g. in function calling
+cpsw_run_xdp() have a variable that detect if net_device changed
+(priv->ndev) and then call xdp_do_flush_map() when needed.
 
--#ifdef __LP64__
- # define __RLIM_T_MATCHES_RLIM64_T    1
--#else
--# define __RLIM_T_MATCHES_RLIM64_T    0
--#endif
 
-+#define __ASSUME_TIME64_SYSCALLS 1
-+#define __ASSUME_RLIM64_SYSCALLS 1
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
+>  drivers/net/ethernet/ti/Kconfig        |   1 +
+>  drivers/net/ethernet/ti/cpsw.c         | 485 ++++++++++++++++++++++---
+>  drivers/net/ethernet/ti/cpsw_ethtool.c |  66 +++-
+>  drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
+>  4 files changed, 502 insertions(+), 57 deletions(-)
+> 
+[...]
+> +static int cpsw_run_xdp(struct cpsw_priv *priv, int ch, struct xdp_buff *xdp,
+> +			struct page *page)
+> +{
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	struct net_device *ndev = priv->ndev;
+> +	int ret = CPSW_XDP_CONSUMED;
+> +	struct xdp_frame *xdpf;
+> +	struct bpf_prog *prog;
+> +	u32 act;
+> +
+> +	rcu_read_lock();
+> +
+> +	prog = READ_ONCE(priv->xdp_prog);
+> +	if (!prog) {
+> +		ret = CPSW_XDP_PASS;
+> +		goto out;
+> +	}
+> +
+> +	act = bpf_prog_run_xdp(prog, xdp);
+> +	switch (act) {
+> +	case XDP_PASS:
+> +		ret = CPSW_XDP_PASS;
+> +		break;
+> +	case XDP_TX:
+> +		xdpf = convert_to_xdp_frame(xdp);
+> +		if (unlikely(!xdpf))
+> +			goto drop;
+> +
+> +		cpsw_xdp_tx_frame(priv, xdpf, page);
+> +		break;
+> +	case XDP_REDIRECT:
+> +		if (xdp_do_redirect(ndev, xdp, prog))
+> +			goto drop;
+> +
+> +		/* as flush requires rx_dev to be per NAPI handle and there
+> +		 * is can be two devices putting packets on bulk queue,
+> +		 * do flush here avoid this just for sure.
+> +		 */
+> +		xdp_do_flush_map();
 
-Since the sysdeps/unix/sysv/linux/generic/bits/typesizes.h definitions
-generally match the kernel, anything diverging from that has the potential
-of breaking it, so the difference should probably be kept to the absolute
-minimum.
+> +		break;
+> +	default:
+> +		bpf_warn_invalid_xdp_action(act);
+> +		/* fall through */
+> +	case XDP_ABORTED:
+> +		trace_xdp_exception(ndev, prog, act);
+> +		/* fall through -- handle aborts by dropping packet */
+> +	case XDP_DROP:
+> +		goto drop;
+> +	}
+> +out:
+> +	rcu_read_unlock();
+> +	return ret;
+> +drop:
+> +	rcu_read_unlock();
+> +	page_pool_recycle_direct(cpsw->page_pool[ch], page);
+> +	return ret;
+> +}
 
-I think these ones are wrong and will cause bugs similar to the clock_t
-issue if they are used with kernel interfaces:
-__NLINK_T_TYPE, __FSWORD_T_TYPE, __CLOCK_T_TYPE,
-__BLKSIZE_T_TYPE, __SYSCALL_ULONG_TYPE,
-__SYSCALL_SLONG_TYPE, __CPU_MASK_TYPE
-
-These are fine as long as they are only used in user space and to
-wrap kernel syscalls, but I think most of them can end up being
-passed to the kernel, so it seems safer not to have rv32 diverge
-without a good reason.
-
-The remaining ones (__INO_T_TYPE, __OFF_T_TYPE, __BLKCNT_T_TYPE,
-__FSBLKCNT_T_TYPE, __FSFILCNT_T_TYPE, __TIME_T_TYPE) all
-follow the pattern where the kernel has an old 32-bit type and a new
-64-bit type, but the kernel tries not to expose the 32-bit interfaces
-to user space on new architectures and only provide the 64-bit
-replacements, but there are a couple of interfaces that never got
-replaced, typically in driver and file system ioctls.
-
-Since glibc already has code to deal with the 64-bit types and that
-is well tested, it would seem safer to me to just #undef the old
-types completely rather than defining them to 64-bit, which would
-make them incompatible with the kernel's types.
-
-       Arnd
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
