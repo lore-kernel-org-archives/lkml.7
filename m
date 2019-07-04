@@ -2,134 +2,110 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B482DC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB54C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4D32085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2656D2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfGDNyr (ORCPT
+        id S1727269AbfGDN4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:54:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9871 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfGDNyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:54:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 06:54:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,451,1557212400"; 
-   d="scan'208";a="247944715"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga001.jf.intel.com with ESMTP; 04 Jul 2019 06:54:45 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hj2CC-0006dy-GA; Thu, 04 Jul 2019 16:54:44 +0300
-Date:   Thu, 4 Jul 2019 16:54:44 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mfd: Add support for Merrifield Basin Cove PMIC
-Message-ID: <20190704135444.GA9224@smile.fi.intel.com>
-References: <20190612101945.55065-1-andriy.shevchenko@linux.intel.com>
- <20190624161348.GB21119@dell>
- <20190626092601.GH9224@smile.fi.intel.com>
- <20190626101727.GN21119@dell>
- <20190626111043.GJ9224@smile.fi.intel.com>
- <20190627134446.GD2000@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627134446.GD2000@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 4 Jul 2019 09:56:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56662 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726817AbfGDN4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:56:47 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64DmBf8058669
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 09:56:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2thjncg7u2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 09:56:45 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
+        Thu, 4 Jul 2019 14:56:43 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Jul 2019 14:56:41 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64DudPB50593958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jul 2019 13:56:39 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1C035204E;
+        Thu,  4 Jul 2019 13:56:39 +0000 (GMT)
+Received: from [9.102.27.58] (unknown [9.102.27.58])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C821B52052;
+        Thu,  4 Jul 2019 13:56:37 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
+ driver
+From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
+In-Reply-To: <1562241547.6165.81.camel@linux.ibm.com>
+Date:   Thu, 4 Jul 2019 19:26:36 +0530
+Cc:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        George Wilson <gcwilson@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Content-Transfer-Encoding: 7bit
+References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
+ <1562241547.6165.81.camel@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-TM-AS-GCONF: 00
+x-cbid: 19070413-0016-0000-0000-0000028F398A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070413-0017-0000-0000-000032ECD8C2
+Message-Id: <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=919 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 02:44:46PM +0100, Lee Jones wrote:
-> On Wed, 26 Jun 2019, Andy Shevchenko wrote:
+
+> On 04-Jul-2019, at 5:29 PM, Mimi Zohar <zohar@linux.ibm.com> wrote:
 > 
-> > On Wed, Jun 26, 2019 at 11:17:27AM +0100, Lee Jones wrote:
-> > > On Wed, 26 Jun 2019, Andy Shevchenko wrote:
-> > > > On Mon, Jun 24, 2019 at 05:13:48PM +0100, Lee Jones wrote:
-> > > > > On Wed, 12 Jun 2019, Andy Shevchenko wrote:
-> > 
-> > > > > > Add an MFD driver for Intel Merrifield Basin Cove PMIC.
-> > 
-> > > > > > +	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
-> > > > > > +		ret = platform_get_irq(pdev, i);
-> > > > > 
-> > > > > If you already know the order, define the children's device IDs in the
-> > > > > parent's shared header ('intel_soc_pmic_mrfld.h'?) and retreive them
-> > > > > like:
-> > > > > 
-> > > > >   platform_get_irq(pdev->parent, <SUITABLE_DEFINED_ID>);
-> > > > > 
-> > > > > Then you can skip all of this platform device -> platform device hoop
-> > > > > jumping.
-> > > > 
-> > > > The idea of MFD is to get children to be parent agnostic
-> > > > (at least to some extent). What you are proposing here
-> > > > seems like disadvantage from MFD philosophy. No?
-> > > 
-> > > Not at all.  The idea of MFD is to split up support for monolithic h/w
-> > > such that they can be handled properly by their appropriate
-> > > subsystems, and by extension, maintained by the associated subject
-> > > matter experts.
-> > > 
-> > > Children are often aware of their parents (some siblings are even
-> > > aware of each other!), and many expect and depend on the data-sets
-> > > provided by their parents.
-> > 
-> > Yes, that's true and that's why I put wording "to some extent" above.
-> > 
-> > > For instance (this example may come to bite me in the behind, but),
-> > > taken from this very patch, where is this consumed?
-> > > 
-> > >  platform_set_drvdata(pdev, pmic);
-> > 
-> > Yes. It's used in children. BUT. This structure covers several PMIC chips and
-> > the children driver doesn't know which generation / version of PMIC is serving.
-> > 
-> > What you are proposing with the change is to strictly link the children driver
-> > to PMIC gen X ver Y, while above example doesn't do that.
-> 
-> Well that is a different argument. :)
+> On Wed, 2019-07-03 at 23:32 -0400, Nayna Jain wrote:
+>> The nr_allocated_banks and allocated banks are initialized as part of
+>> tpm_chip_register. Currently, this is done as part of auto startup
+>> function. However, some drivers, like the ibm vtpm driver, do not run
+>> auto startup during initialization. This results in uninitialized memory
+>> issue and causes a kernel panic during boot.
+>> 
+>> This patch moves the pcr allocation outside the auto startup function
+>> into tpm_chip_register. This ensures that allocated banks are initialized
+>> in any case.
+>> 
+>> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+>> PCR read")
+>> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-> I still don't really like the idea of sucking one set of platform data
-> just to place in another.  The implementation even looks hacky.
+Thanks for the fix. Kernel boots fine with this fix.
 
-To me it looks straight forward. We get a description of MFD and split it
-accordingly. Look at the rest of Intel PMIC drivers, they are built on the
-same principles.
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
 
-"Thanks" to firmware here, that does more, than on other PMICs, that's why we
-have several IRQ resources, but from hardware point of view it's still an MFD.
-
-> What if you were to provide the child driver with its IRQ index?
-> Perhaps via platform data?
-
-It seems some people would like to bring up Shady Cove PMIC support in the
-future, which seems to behave in a similar way, while the (most of the) drivers
-can be re-used.
-
-So, for me it will look like a hack in each of PMIC driver to have additional
-platform data for whatever can be passed using well-established facilities,
-like device resources.
-
-> > So, I'm not convinced it's a good change to have.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks
+-Sachin
 
