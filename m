@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1610C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3251C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7086218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDDF218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230005;
-	bh=/nscaZ8tOKoA1xhpKbG/KBNAKedrtqbPGjp5wJ1TSpQ=;
+	s=default; t=1562230009;
+	bh=qDsoNfsoAOs9wQLEjtZdH7zRe0ETNhvRROLwfA8DRXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uvHHQXlrXCgKJe5J2BH9u4fAmCl8q8hpDLfC9J995KGi0v0eLOakkumM8ZW/ly9tL
-	 M7jHEaa13AUazhNLf6Q5jn0ZHDbpkYi+fq7OSb/h7SNFeUCvPV+Ywr7zztinWsHzOz
-	 P6ydEvLMEolWmcw/mCeTAvfSvpyEfSmbqAKyiJJY=
+	b=TUK67OJ8+ea2zHOvjt8YednTnQet4UM+n+AaVeEzkILMyxnxAbG2gnGESTK92jqG+
+	 UOB2L5XU8qhzML3csFL8zDwGf3uhW0EXqsvuIV8W+/6dkyj60FNQvQkW8AsCI0i+MG
+	 9GHU4mLkTGAIQvC8uIkP9LEYWqDmo+GcVWKRN+HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGDIqo (ORCPT
+        id S1727287AbfGDIqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfGDIqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:46:42 -0400
+        id S1727046AbfGDIqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626A0218A6;
-        Thu,  4 Jul 2019 08:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EB32189E;
+        Thu,  4 Jul 2019 08:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230001;
-        bh=/nscaZ8tOKoA1xhpKbG/KBNAKedrtqbPGjp5wJ1TSpQ=;
+        s=default; t=1562230005;
+        bh=qDsoNfsoAOs9wQLEjtZdH7zRe0ETNhvRROLwfA8DRXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+DCsUahJo9iDLvMN0Xcu4HnNamjXiAT94J/+uj5N3iNe97RaB4mbBXXducoiirEQ
-         9SeyP2XeHF8q+au1V8zq5T3zJ5GQXBFD9ndhdnYrrDIQRlPEFKdmUcbbvpsZ3DwoIv
-         P5TLC/YESUEnwbFOB7AJWeQG22osfis4URZS4F78=
+        b=PJbNVZnmAt1ZI3t9MNgeTiHd9YW3QXIe1uyr34tZQYHwRF2nq0XSRknBh0l32lJsb
+         5I0UkWP0ML13giLk3u8T8a/OMJirTipHyD+ubiVQydEdTPzeY4eS9W58Lb9mzLk4cZ
+         9lPZiL3qq0EFpf7hnmwQISE0p03yd9LK4pGb75bA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 10/11] input: keyboard: gpio_keys: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:16 +0200
-Message-Id: <20190704084617.3602-11-gregkh@linuxfoundation.org>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: [PATCH 11/11] input: axp20x-pek: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:17 +0200
+Message-Id: <20190704084617.3602-12-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -59,53 +61,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a bunch of sysfs files.
+and do not register "by hand" a sysfs group of attributes.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-input@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/keyboard/gpio_keys.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/input/misc/axp20x-pek.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 6cd199e8a370..1f6547440edb 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -354,10 +354,7 @@ static struct attribute *gpio_keys_attrs[] = {
- 	&dev_attr_disabled_switches.attr,
+diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+index debeeaeb8812..baff6dcbe392 100644
+--- a/drivers/input/misc/axp20x-pek.c
++++ b/drivers/input/misc/axp20x-pek.c
+@@ -195,15 +195,12 @@ DEVICE_ATTR(startup, 0644, axp20x_show_attr_startup, axp20x_store_attr_startup);
+ DEVICE_ATTR(shutdown, 0644, axp20x_show_attr_shutdown,
+ 	    axp20x_store_attr_shutdown);
+ 
+-static struct attribute *axp20x_attributes[] = {
++static struct attribute *axp20x_attrs[] = {
+ 	&dev_attr_startup.attr,
+ 	&dev_attr_shutdown.attr,
  	NULL,
  };
 -
--static const struct attribute_group gpio_keys_attr_group = {
--	.attrs = gpio_keys_attrs,
+-static const struct attribute_group axp20x_attribute_group = {
+-	.attrs = axp20x_attributes,
 -};
-+ATTRIBUTE_GROUPS(gpio_keys);
++ATTRIBUTE_GROUPS(axp20x);
  
- static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
+ static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
  {
-@@ -856,13 +853,6 @@ static int gpio_keys_probe(struct platform_device *pdev)
+@@ -356,13 +353,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
  
- 	fwnode_handle_put(child);
+ 	axp20x_pek->info = (struct axp20x_info *)match->driver_data;
  
--	error = devm_device_add_group(dev, &gpio_keys_attr_group);
+-	error = devm_device_add_group(&pdev->dev, &axp20x_attribute_group);
 -	if (error) {
--		dev_err(dev, "Unable to export keys/switches, error: %d\n",
+-		dev_err(&pdev->dev, "Failed to create sysfs attributes: %d\n",
 -			error);
 -		return error;
 -	}
 -
- 	error = input_register_device(input);
- 	if (error) {
- 		dev_err(dev, "Unable to register input device, error: %d\n",
-@@ -1025,6 +1015,7 @@ static void gpio_keys_shutdown(struct platform_device *pdev)
- }
+ 	platform_set_drvdata(pdev, axp20x_pek);
  
- static struct platform_driver gpio_keys_device_driver = {
-+	.dev_groups	= gpio_keys_groups,
- 	.probe		= gpio_keys_probe,
- 	.shutdown	= gpio_keys_shutdown,
+ 	return 0;
+@@ -406,6 +396,7 @@ static const struct platform_device_id axp_pek_id_match[] = {
+ MODULE_DEVICE_TABLE(platform, axp_pek_id_match);
+ 
+ static struct platform_driver axp20x_pek_driver = {
++	.dev_groups	= axp20x_groups,
+ 	.probe		= axp20x_pek_probe,
+ 	.id_table	= axp_pek_id_match,
  	.driver		= {
 -- 
 2.22.0
