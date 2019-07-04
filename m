@@ -2,173 +2,247 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E1C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E1BC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA42421721
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Jbehj5O5"
+	by mail.kernel.org (Postfix) with ESMTP id BC9CF21721
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfGDQqd (ORCPT
+        id S1727209AbfGDQrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:46:33 -0400
-Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:38088
-        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbfGDQqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:46:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1562258792; bh=EZlfHG9qy5wQ4KEgN887WZYPerk7S+APpyCQOSbTFhE=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=Jbehj5O5hYjpjpSt0vPgVq1bE4rRkfL7AKxTplLtKnht8ThCsd/unenKgrfEdAjP/s4qNDS+0fhpgQtVCnuaOgFGopVaGRjm/zQ9d89poWon+QTZyDFCNAqzjVoUVnA0Q+6el1kTs/VvTw5WsWx3yS5Zo8iz3tlHR0oiik3U0iVD97p7nThjY1yMRjq3c8rnp8s6bnu8pbS3kZ19TgK6P2WXISg+D7LTVQu7eDuxB6J3ZX7ZuJKk27Cq5Rat6NxhM3ySYQODDGHzgcgWFh7eeiX1NlNETtRIIYvt0tzbS+fXrhEquw1ElW7nAUnkh71FzXaPEEAh0CIe6Qgh8sCHMw==
-X-YMail-OSG: nPFdYIUVM1kSQ4ZioqeMyLSU.xw55DWLV66joC42IIiyjLduv75Diy8YoEierQM
- Yc.hHL6EcutscZzSr77xrgQQwkDvyzAQFYMAGboOrpn5rixShHSwguwA4rUNvtHm8z6IdbOwXIhj
- 4KVxw5FD4qmD87NKoqTzly7EM5itiBbxp74urrXas_cvO03PKc4N2wI1NEgrR31x1L3Zc8yRUVEj
- .VfvxWAlEBLAvkvFc38uzotiTSZX_T4qYWDCpmlkZduIi_ceDX0Rz4xzmI74Hs79.6zN3GDUmMs2
- NLq.cMnRHw2nf.5D2DpFfw0Kq8Y3gvCc5WXP6GIm8WpiDQspAgUJwADw.JJ0ritziJovjRbcOrYD
- LLWr2dS974NJJfQoKQPoiGy7B669i1gTT1NaaZgTY.guGVIXa5hh93nJ6v8dYx56PpvWLoRV4J6z
- HAhPGnznrFgs5i2oKuZSoWyGAJ3eSHDXyguEBVgMqNrByjzjnrWTve46tUd6gmLCeuKvltiRaU04
- 2Pn5I4s_B8cN_xnSU7gPKTapeTf.P5l3frPzHri4I4RcB3IXVNt07PPFJj870A3EHJROqC2Ejvbf
- kBvhb_AJHvByQ0qv0ITCvBRqMmvopMLtWxFEdFmqohohIkFMfS57DhU6D.MPkaICH9rdkffuaopD
- nn6ZO0U82MuHK.E7hd.n_C9YQBO5qUZG2xB0t.H5.2Zm_bFHtV3XOFQYe4_jQ9LYLLvYQpBU3KUX
- 78hIdamLTGIcz.tB24ZrF0mMXXvHOMsQJuCpUrebMOmZHnHvJSdQHpPuDksDr1lo4AcNBZjbKbkN
- kZlZG9bXtX0npmjO3f8qqCa3e5XXzmtml4GfkE_oRnCZsMwq5d_7MzjAC2fQ4LsTr2M1I28EkMHg
- MRBp0Q.PvYeswI9V9SDd.GgE0ikY1KP.j.ySUv18VcKgp1eB_eNuZnYeszDckRd4i2E91hIeWW7z
- X5NPC_PVLbAqt6Ao4UtAoM1vEwlnJOHypeyGtDxW9CSGX_Td0c2bespvdR4PBcCg1nlgiLQy5Vse
- poml85TXXliq73dtWRl2AAizzXnsyFXG8Pz8OK1jOyg1_9nqcHBu.yY91T.d59eHRqndZ7NRQHOL
- GOopaFofG7EpdTrFURuXB1tTqDMNgy8wT.E0IpOo9O4EU5tiCv32JhzU86ovLzWgUPoTOMzhf42e
- sQbqOBRJHHrvvZWfvbUpb7v448eAJf7svif5ZksCHjQYR.8pQqWxjqcxQoOE-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 4 Jul 2019 16:46:32 +0000
-Received: by smtp410.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1631fc8e5a9a266c18b69f8870d578a3;
-          Thu, 04 Jul 2019 16:46:28 +0000 (UTC)
-Subject: Re: [PATCH] erofs: promote erofs from staging
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Cc:     devel@driverdev.osuosl.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190704133413.43012-1-gaoxiang25@huawei.com>
- <20190704135002.GB13609@kroah.com>
- <29e713d5-8146-80cf-8ffd-138b15349489@huawei.com>
- <20190704141819.GA5782@kroah.com>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <56db548b-a285-7862-dc84-2cd15d948431@aol.com>
-Date:   Fri, 5 Jul 2019 00:46:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 12:47:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49602 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfGDQrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 12:47:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 57C1F3001822;
+        Thu,  4 Jul 2019 16:47:14 +0000 (UTC)
+Received: from firesoul.localdomain (ovpn-200-46.brq.redhat.com [10.40.200.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3389717104;
+        Thu,  4 Jul 2019 16:47:09 +0000 (UTC)
+Received: from [192.168.5.1] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id A1AB43009AF0C;
+        Thu,  4 Jul 2019 18:47:07 +0200 (CEST)
+Subject: [PATCH net-next V2] net: core: page_pool: add user refcnt and
+ reintroduce page_pool_destroy
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        ivan.khoronzhuk@linaro.org,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, jakub.kicinski@netronome.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Date:   Thu, 04 Jul 2019 18:47:07 +0200
+Message-ID: <156225871578.1603.6630229522953924907.stgit@firesoul>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20190704141819.GA5782@kroah.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 04 Jul 2019 16:47:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jesper recently removed page_pool_destroy() (from driver invocation) and
+moved shutdown and free of page_pool into xdp_rxq_info_unreg(), in-order to
+handle in-flight packets/pages. This created an asymmetry in drivers
+create/destroy pairs.
 
+This patch reintroduce page_pool_destroy and add page_pool user refcnt.
+This serves the purpose to simplify drivers error handling as driver now
+drivers always calls page_pool_destroy() and don't need to track if
+xdp_rxq_info_reg_mem_model() was unsuccessful.
 
-On 2019/7/4 ????10:18, Greg Kroah-Hartman wrote:
-> On Thu, Jul 04, 2019 at 10:00:53PM +0800, Gao Xiang wrote:
->> Hi Greg,
->>
->> On 2019/7/4 21:50, Greg Kroah-Hartman wrote:
->>> On Thu, Jul 04, 2019 at 09:34:13PM +0800, Gao Xiang wrote:
->>>> EROFS file system has been in Linux-staging for about a year.
->>>> It has been proved to be stable enough to move out of staging
->>>> by 10+ millions of HUAWEI Android mobile phones on the market
->>>> from EMUI 9.0.1, and it was promoted as one of the key features
->>>> of EMUI 9.1 [1], including P30(pro).
->>>>
->>>> EROFS is a read-only file system designed to save extra storage
->>>> space with guaranteed end-to-end performance by applying
->>>> fixed-size output compression, inplace I/O and decompression
->>>> inplace technologies [2] to Linux filesystem.
->>>>
->>>> In our observation, EROFS is one of the fastest Linux compression
->>>> filesystem using buffered I/O in the world. It will support
->>>> direct I/O in the future if needed. EROFS even has better read
->>>> performance in a large CR range compared with generic uncompressed
->>>> file systems with proper CPU-storage combination, which is
->>>> a reason why erofs can be landed to speed up mobile phone
->>>> performance, and which can be probably used for other use cases
->>>> such as LiveCD and Docker image as well.
->>>>
->>>> Currently erofs supports 4k LZ4 fixed-size output compression
->>>> since LZ4 is the fastest widely-used decompression solution in
->>>> the world and 4k leads to unnoticable read amplification for
->>>> the worst case. More compression algorithms and cluster sizes
->>>> could be added later, which depends on the real requirement.
->>>>
->>>> More informations about erofs itself are available at:
->>>>  Documentation/filesystems/erofs.txt
->>>>  https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
->>>>
->>>> erofs-utils (mainly mkfs.erofs now) is available at
->>>> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
->>>>
->>>> Preliminary iomap support has been pending in erofs mailing
->>>> list by Chao Yu. The key issue is that current iomap doesn't
->>>> support tail-end packing inline data yet, it should be
->>>> resolved later.
->>>>
->>>> Thanks to many contributors in the last year, the code is more
->>>> clean and improved. We hope erofs can be used in wider use cases
->>>> so let's promote erofs out of staging and enhance it more actively.
->>>>
->>>> Share comments about erofs! We think erofs is useful to
->>>> community as a part of Linux upstream :)
->>>
->>> I don't know if this format is easy for the linux-fsdevel people to
->>> review, it forces them to look at the in-kernel code, which makes it
->>> hard to quote.
->>>
->>> Perhaps just make a patch that adds the filesystem to the tree and after
->>> it makes it through review, I can delete the staging version?  We've
->>> been doing that for wifi drivers that move out of staging as it seems to
->>> be a bit easier.
->>
->> OK, I will resend the whole patchset later as you suggested, but it will
->> lack of information about some original authors and I'd like to know who
->> is responsible to merge this kind of request to Linux upstream... maybe Linus?
-> 
-> I don't know who adds new filesystems to the tree these days.  Usually
-> you need to get some acks from the fsdevel developers first, and then it
-> can go directly to Linus in one of the merge windows.
+This could be used for a special cases where a single RX-queue (with a single
+page_pool) provides packets for two net_device'es, and thus needs to register
+the same page_pool twice with two xdp_rxq_info structures. This use-case is
+explicitly denied in this V2 patch, as it needs more discussion upstream.
 
-Hope that fs guys could eventually take some glances / time on erofs
-since it's more useful than romfs/cramfs/squashfs for read-only
-performance scenario since storage space is not tight and slow than 10
-years before, even for some embedded devices such as mobile phones/pads.
-and compression file system could not be designed for saving storage
-space only like these...
+This patch is primarily to ease API usage for drivers. The recently merged
+netsec driver, actually have a bug in this area, which is solved by this API
+change.
 
-I think except for unzip_vle.c (which works fine, but not very cleaned
-as other files), erofs is clean enough for reviewing...
+This patch is a modified version of Ivan Khoronzhu's original patch.
 
-> 
->> And it could be more consistent to leave staging version for linux-5.3
->> because we still use it, but anyway, I will do it now.
-> 
-> Yeah, it's too late for 5.3-rc1, so don't worry.  I'll not delete
-> anything until it's actually in someone else's tree on its way to Linus.
+Link: https://lore.kernel.org/netdev/20190625175948.24771-2-ivan.khoronzhuk@linaro.org/
+Fixes: 5c67bf0ec4d0 ("net: netsec: Use page_pool API")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+---
 
-Sound great, I will tidy the whole patchset up and hope it eventually be
-ok...
+I hope we can agree on this first step. Afterwards we can discuss, which is the
+best approach for Ivan's two netdev's with one RX-queue API change.
 
-Thanks,
-Gao Xiang
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    6 ++---
+ drivers/net/ethernet/socionext/netsec.c           |    8 ++----
+ include/net/page_pool.h                           |   26 +++++++++++++++++++++
+ net/core/page_pool.c                              |    8 ++++++
+ net/core/xdp.c                                    |    9 +++++++
+ 5 files changed, 48 insertions(+), 9 deletions(-)
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 1085040675ae..ce1c7a449eae 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -545,10 +545,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 	}
+ 	err = xdp_rxq_info_reg_mem_model(&rq->xdp_rxq,
+ 					 MEM_TYPE_PAGE_POOL, rq->page_pool);
+-	if (err) {
+-		page_pool_free(rq->page_pool);
++	if (err)
+ 		goto err_free;
+-	}
+ 
+ 	for (i = 0; i < wq_sz; i++) {
+ 		if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
+@@ -613,6 +611,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 	if (rq->xdp_prog)
+ 		bpf_prog_put(rq->xdp_prog);
+ 	xdp_rxq_info_unreg(&rq->xdp_rxq);
++	page_pool_destroy(rq->page_pool);
+ 	mlx5_wq_destroy(&rq->wq_ctrl);
+ 
+ 	return err;
+@@ -643,6 +642,7 @@ static void mlx5e_free_rq(struct mlx5e_rq *rq)
+ 	}
+ 
+ 	xdp_rxq_info_unreg(&rq->xdp_rxq);
++	page_pool_destroy(rq->page_pool);
+ 	mlx5_wq_destroy(&rq->wq_ctrl);
+ }
+ 
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index 5544a722543f..43ab0ce90704 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -1210,15 +1210,11 @@ static void netsec_uninit_pkt_dring(struct netsec_priv *priv, int id)
+ 		}
+ 	}
+ 
+-	/* Rx is currently using page_pool
+-	 * since the pool is created during netsec_setup_rx_dring(), we need to
+-	 * free the pool manually if the registration failed
+-	 */
++	/* Rx is currently using page_pool */
+ 	if (id == NETSEC_RING_RX) {
+ 		if (xdp_rxq_info_is_reg(&dring->xdp_rxq))
+ 			xdp_rxq_info_unreg(&dring->xdp_rxq);
+-		else
+-			page_pool_free(dring->page_pool);
++		page_pool_destroy(dring->page_pool);
+ 	}
+ 
+ 	memset(dring->desc, 0, sizeof(struct netsec_desc) * DESC_NUM);
+diff --git a/include/net/page_pool.h b/include/net/page_pool.h
+index ee9c871d2043..0a0984d8f5d5 100644
+--- a/include/net/page_pool.h
++++ b/include/net/page_pool.h
+@@ -101,6 +101,12 @@ struct page_pool {
+ 	struct ptr_ring ring;
+ 
+ 	atomic_t pages_state_release_cnt;
++
++	/* A page_pool is strictly tied to a single RX-queue being
++	 * protected by NAPI, due to above pp_alloc_cache.  This
++	 * refcnt serves purpose is to simplify drivers error handling.
++	 */
++	refcount_t user_cnt;
+ };
+ 
+ struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp);
+@@ -134,6 +140,15 @@ static inline void page_pool_free(struct page_pool *pool)
+ #endif
+ }
+ 
++/* Drivers use this instead of page_pool_free */
++static inline void page_pool_destroy(struct page_pool *pool)
++{
++	if (!pool)
++		return;
++
++	page_pool_free(pool);
++}
++
+ /* Never call this directly, use helpers below */
+ void __page_pool_put_page(struct page_pool *pool,
+ 			  struct page *page, bool allow_direct);
+@@ -201,4 +216,15 @@ static inline bool is_page_pool_compiled_in(void)
+ #endif
+ }
+ 
++static inline unsigned int page_pool_get(struct page_pool *pool)
++{
++	refcount_inc(&pool->user_cnt);
++	return refcount_read(&pool->user_cnt);
++}
++
++static inline bool page_pool_put(struct page_pool *pool)
++{
++	return refcount_dec_and_test(&pool->user_cnt);
++}
++
+ #endif /* _NET_PAGE_POOL_H */
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index b366f59885c1..3272dc7a8c81 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -49,6 +49,9 @@ static int page_pool_init(struct page_pool *pool,
+ 
+ 	atomic_set(&pool->pages_state_release_cnt, 0);
+ 
++	/* Driver calling page_pool_create() also call page_pool_destroy() */
++	refcount_set(&pool->user_cnt, 1);
++
+ 	if (pool->p.flags & PP_FLAG_DMA_MAP)
+ 		get_device(pool->p.dev);
+ 
+@@ -70,6 +73,7 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+ 		kfree(pool);
+ 		return ERR_PTR(err);
+ 	}
++
+ 	return pool;
+ }
+ EXPORT_SYMBOL(page_pool_create);
+@@ -356,6 +360,10 @@ static void __warn_in_flight(struct page_pool *pool)
+ 
+ void __page_pool_free(struct page_pool *pool)
+ {
++	/* Only last user actually free/release resources */
++	if (!page_pool_put(pool))
++		return;
++
+ 	WARN(pool->alloc.count, "API usage violation");
+ 	WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
+ 
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index b29d7b513a18..57c2317d9ce5 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -370,6 +370,15 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 		goto err;
+ 	}
+ 
++	if (type == MEM_TYPE_PAGE_POOL) {
++		if (page_pool_get(xdp_alloc->page_pool) > 2) {
++			WARN(1, "API misuse, argue to enable use-case");
++			page_pool_put(xdp_alloc->page_pool);
++			errno = -EINVAL;
++			goto err;
++		}
++	}
++
+ 	mutex_unlock(&mem_id_lock);
+ 
+ 	trace_mem_connect(xdp_alloc, xdp_rxq);
+
