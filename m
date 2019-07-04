@@ -2,106 +2,133 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232A6C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FFCC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C14218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDFB218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562251018;
+	bh=eY5h5wV1q93Mi0mceVC1VOPNUqDT5+8cE0JFd7WV+yY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0JsLOxRT2zJXNj5Wz012yuOIgIMpRkF7uO1iAXbTn+C3I0QMpsIPlK6Y8FnxWAU94
+	 muQTJn5byLQtC9Ur1n3DXO1NXjI1Kh0cdsaY0pTKlU6jBSGbUvN9Z7v3ac8HUWVYvP
+	 VdotTkq0hCuXRnAYw1iX+HzNmxKkgYYcdHI3SEyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfGDOfG (ORCPT
+        id S1727543AbfGDOg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:35:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21278 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727246AbfGDOfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:35:05 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64EPR4A048181
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 10:35:04 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2thjeba4hk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 10:35:04 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 4 Jul 2019 15:35:02 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 15:34:59 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64EYww439453020
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 14:34:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4282AE045;
-        Thu,  4 Jul 2019 14:34:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A97BEAE04D;
-        Thu,  4 Jul 2019 14:34:55 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.85.70.183])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 14:34:55 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] ftrace: Check for successful allocation of hash
-Date:   Thu,  4 Jul 2019 20:04:42 +0530
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
+        Thu, 4 Jul 2019 10:36:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727246AbfGDOg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:36:56 -0400
+Received: from localhost (unknown [89.205.128.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0581E218A6;
+        Thu,  4 Jul 2019 14:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562251016;
+        bh=eY5h5wV1q93Mi0mceVC1VOPNUqDT5+8cE0JFd7WV+yY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P7o0+PBK3wVKujqDcjwCIVfuNRX8POo5H/2+NT2gKYWJZVVVaF5p+gMC/kEYzLu+v
+         SyVCBZhEYYzd4nGd3Upb0ZgcT6HmLr5cdLAcu+yalIRFzDYjf8XJ4bf60AtJkSAC1Y
+         IWH7VIbIsE6XJZdLXWcRr1vqWhfmbKMszBWpEY68=
+Date:   Thu, 4 Jul 2019 16:36:49 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] omap-iommu: no need to check return value of debugfs_create
+ functions
+Message-ID: <20190704143649.GA11697@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070414-4275-0000-0000-00000349248A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070414-4276-0000-0000-0000385943CD
-Message-Id: <26e92574f25ad23e7cafa3cf5f7a819de1832cbe.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=951 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040181
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In register_ftrace_function_probe(), we are not checking the return
-value of alloc_and_copy_ftrace_hash(). The subsequent call to
-ftrace_match_records() may end up dereferencing the same. Add a check to
-ensure this doesn't happen.
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/trace/ftrace.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Warning, not even test-built, but "should" work :)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 0791eafb693d..0d5f7d4a4936 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4328,6 +4328,11 @@ register_ftrace_function_probe(char *glob, struct trace_array *tr,
- 	old_hash = *orig_hash;
- 	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, old_hash);
+ drivers/iommu/omap-iommu-debug.c | 35 ++++++--------------------------
+ 1 file changed, 6 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
+index 4abc0ef522a8..cea851702f54 100644
+--- a/drivers/iommu/omap-iommu-debug.c
++++ b/drivers/iommu/omap-iommu-debug.c
+@@ -239,17 +239,6 @@ DEBUG_FOPS_RO(regs);
+ DEFINE_SHOW_ATTRIBUTE(tlb);
+ DEFINE_SHOW_ATTRIBUTE(pagetable);
  
-+	if (!hash) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	ret = ftrace_match_records(hash, glob, strlen(glob));
+-#define __DEBUG_ADD_FILE(attr, mode)					\
+-	{								\
+-		struct dentry *dent;					\
+-		dent = debugfs_create_file(#attr, mode, obj->debug_dir,	\
+-					   obj, &attr##_fops);	        \
+-		if (!dent)						\
+-			goto err;					\
+-	}
+-
+-#define DEBUG_ADD_FILE_RO(name) __DEBUG_ADD_FILE(name, 0400)
+-
+ void omap_iommu_debugfs_add(struct omap_iommu *obj)
+ {
+ 	struct dentry *d;
+@@ -257,23 +246,13 @@ void omap_iommu_debugfs_add(struct omap_iommu *obj)
+ 	if (!iommu_debug_root)
+ 		return;
  
- 	/* Nothing found? */
+-	obj->debug_dir = debugfs_create_dir(obj->name, iommu_debug_root);
+-	if (!obj->debug_dir)
+-		return;
++	d = debugfs_create_dir(obj->name, iommu_debug_root);
++	obj->debug_dir = d;
+ 
+-	d = debugfs_create_u32("nr_tlb_entries", 0400, obj->debug_dir,
+-			       &obj->nr_tlb_entries);
+-	if (!d)
+-		return;
+-
+-	DEBUG_ADD_FILE_RO(regs);
+-	DEBUG_ADD_FILE_RO(tlb);
+-	DEBUG_ADD_FILE_RO(pagetable);
+-
+-	return;
+-
+-err:
+-	debugfs_remove_recursive(obj->debug_dir);
++	debugfs_create_u32("nr_tlb_entries", 0400, d, &obj->nr_tlb_entries);
++	debugfs_create_file("regs", 0400, d, obj, &attrregs_fops);
++	debugfs_create_file("tlb", 0400, d, obj, &attrtlb_fops);
++	debugfs_create_file("pagetable", 0400, d, obj, &attrpagetable_fops);
+ }
+ 
+ void omap_iommu_debugfs_remove(struct omap_iommu *obj)
+@@ -287,8 +266,6 @@ void omap_iommu_debugfs_remove(struct omap_iommu *obj)
+ void __init omap_iommu_debugfs_init(void)
+ {
+ 	iommu_debug_root = debugfs_create_dir("omap_iommu", NULL);
+-	if (!iommu_debug_root)
+-		pr_err("can't create debugfs dir\n");
+ }
+ 
+ void __exit omap_iommu_debugfs_exit(void)
 -- 
 2.22.0
 
