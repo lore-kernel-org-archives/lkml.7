@@ -2,204 +2,121 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D383C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBDDC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231CA21852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900C821852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eovQFprJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GVswGwjQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfGDJqD (ORCPT
+        id S1727515AbfGDJqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:46:03 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40937 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbfGDJqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:46:03 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a21so5530312ljh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YYSoaxyHn+OM7aLthyxFHVYuodYLIoIqvvJaHptzBW4=;
-        b=eovQFprJeSZaE++AS9nDZt1iR2MzTyS585nK95TbQmehKLXEuvtOqtVr8Gh/jAnGh+
-         Z8HcHBiStRqfcni3OuuH9Vj6n2tUiy8jFYBzEDlDEopmoG+5QBuzkLmivT4bed+L/Rqo
-         Q6eJ4eKK/30EzpbroLrQSAGHZ4A0GFYYXaHk6QJAwsZ8oGhCUG93dnnQgzNKk02L9OLl
-         CyLu462lyW3o/ht1IhvrZ3n3RF/hvUqQrAjvL/YQrvPrjeFUUJ3uM4Ot4UrMI656yrV/
-         0x1qkUd3PX/ek1NQsi5krsJzTIShRVu7zoqaQeW6inFZ795ypOBVdCYXD2zLzIjsfFbg
-         jh4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=YYSoaxyHn+OM7aLthyxFHVYuodYLIoIqvvJaHptzBW4=;
-        b=tM5bnhm2VbRC0nNhHPMSNrLInKMuMqurysZCrFRGvgL7k3oC80jODNUllCB3c2EYut
-         7xc5Qd42Ff/S8ukTLn5HaXtvYxT3eJwH6HKak35Hwe4LKD7c3Oteb0/asWUpHTdRv+nd
-         Yu8Jpcl/fHBTvWBJdMOzLGsh+t8GVvt+PkmixRxdQ/sc0wV1RD80UYw9rnz1Xl4O5Bs+
-         570DhNWP0AK5iweAkqS1m14jac+pvNkdoQYHbrE1Tudy4B8eqWNjCXugJSsZUuRypTP2
-         S4uNirf2Gausi7xzgj0lXHPztAgenUGNJudsEU3P6CLTm2tmzjdZPYZV+eFyrfcpKW9g
-         gXzg==
-X-Gm-Message-State: APjAAAWgLsopSlMZCy4i1AqZOQckACyB/HhazdKA4Bnuk7Gg3U1kPpJ1
-        CJV4A31/lJ6yd4PAdZwF/mZ00w==
-X-Google-Smtp-Source: APXvYqyyYuPxgewfoieiOqZgkRU8UL4Ww37bWQBHmCbGGhDFNJ0CvJI6TpKMajeRuajxKk9qXCe48g==
-X-Received: by 2002:a2e:9a13:: with SMTP id o19mr24559296lji.102.1562233560531;
-        Thu, 04 Jul 2019 02:46:00 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id s1sm1004610ljd.83.2019.07.04.02.45.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jul 2019 02:46:00 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 12:45:57 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-Subject: Re: [PATCH v6 net-next 5/5] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190704094556.GB19839@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
- <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
- <20190704111939.5d845071@carbon>
+        Thu, 4 Jul 2019 05:46:21 -0400
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:12172
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727433AbfGDJqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:46:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ljhj7FeAXiWI5a7VODEiedFpUN79C177M6SU/g6CbqU=;
+ b=GVswGwjQhGypOVx18cNaiBWndm/j8ynoNRE6RBh3lDSUGeNnTk2pjqlEkPYR3XLIBOt++gq8iRDbz+9DpvZR0jwso0njgxfeAssc+srZ+/e7/7W5BH3wZB4gG3X0nTSolWA4k4J238WLoaDMwpv5Q/GSI/aqISsEoevWEg3VKlU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3913.eurprd04.prod.outlook.com (52.134.65.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Thu, 4 Jul 2019 09:46:17 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
+ 09:46:17 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+Thread-Topic: [PATCH V2 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+Thread-Index: AQHVMkvG0A7TyfvQREempPzkyhw2Raa6NMqAgAAA3KA=
+Date:   Thu, 4 Jul 2019 09:46:17 +0000
+Message-ID: <DB3PR0402MB39167FBAA2A3867148063F83F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190704092600.38015-1-Anson.Huang@nxp.com>
+ <1562233305.6641.8.camel@pengutronix.de>
+In-Reply-To: <1562233305.6641.8.camel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 281aeadd-c385-48ee-99a5-08d700647609
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3913;
+x-ms-traffictypediagnostic: DB3PR0402MB3913:
+x-microsoft-antispam-prvs: <DB3PR0402MB39137D96F5F59631D53A906CF5FA0@DB3PR0402MB3913.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(66946007)(76116006)(64756008)(186003)(66446008)(26005)(44832011)(73956011)(66476007)(76176011)(102836004)(478600001)(66556008)(2501003)(6506007)(110136005)(476003)(316002)(486006)(68736007)(2906002)(446003)(81166006)(8936002)(5660300002)(33656002)(11346002)(8676002)(81156014)(7696005)(52536014)(71200400001)(229853002)(71190400001)(74316002)(7736002)(99286004)(305945005)(66066001)(9686003)(14444005)(2201001)(6116002)(55016002)(25786009)(256004)(53936002)(7416002)(86362001)(4326008)(3846002)(14454004)(6436002)(6246003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3913;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kNusKhIU6hMPzMyqe3C1XzQtvxCaFbhVS/0x5zhRA4X4mdybEX1BOlByZyTmG2xYeuNzPddlfRxg724yYlbQ2kZdVGV5V8BlSc3Mzym2ySp4QLoLh2Nxw5ETlq8jogxkcz6Yss81SSKNslKZ+e0mIl/u5+fneh2NXSuy9ATlRGsY3bs+f19Zc2Vig8O+vrBr+3wNCJxqMGRXRRZKmTGmsykuueTfYLXTzDimkJXeOugTX7LQ64YA/h0ky1WusgS8u/nd8/hgjxycBU8Fuwet6S7Wji2535o9G/dfA4Dv+C/Xh+iSUQpDPhWSEHaKjQUHKeCie1xA0v/GosvpLneUjCBjsWQJirWUgEFc3WQ3jbylwUgcwr0aDvSHYSi4Ru1p/o1D5BSpHNIuxtWtcs0zgn82mP2IKj8Hzbj0k3ghobI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190704111939.5d845071@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 281aeadd-c385-48ee-99a5-08d700647609
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 09:46:17.2885
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 11:19:39AM +0200, Jesper Dangaard Brouer wrote:
->On Wed,  3 Jul 2019 13:19:03 +0300
->Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
->
->> Add XDP support based on rx page_pool allocator, one frame per page.
->> Page pool allocator is used with assumption that only one rx_handler
->> is running simultaneously. DMA map/unmap is reused from page pool
->> despite there is no need to map whole page.
->>
->> Due to specific of cpsw, the same TX/RX handler can be used by 2
->> network devices, so special fields in buffer are added to identify
->> an interface the frame is destined to. Thus XDP works for both
->> interfaces, that allows to test xdp redirect between two interfaces
->> easily. Aslo, each rx queue have own page pools, but common for both
->> netdevs.
->>
->> XDP prog is common for all channels till appropriate changes are added
->> in XDP infrastructure. Also, once page_pool recycling becomes part of
->> skb netstack some simplifications can be added, like removing
->> page_pool_release_page() before skb receive.
->>
->> In order to keep rx_dev while redirect, that can be somehow used in
->> future, do flush in rx_handler, that allows to keep rx dev the same
->> while reidrect. It allows to conform with tracing rx_dev pointed
->> by Jesper.
->
->So, you simply call xdp_do_flush_map() after each xdp_do_redirect().
->It will kill RX-bulk and performance, but I guess it will work.
->
->I guess, we can optimized it later, by e.g. in function calling
->cpsw_run_xdp() have a variable that detect if net_device changed
->(priv->ndev) and then call xdp_do_flush_map() when needed.
-
-It's problem of cpsw already and can be optimized locally by own
-bulk queues for instance, if it will be simple if really needed ofc.
-
->
->
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  drivers/net/ethernet/ti/Kconfig        |   1 +
->>  drivers/net/ethernet/ti/cpsw.c         | 485 ++++++++++++++++++++++---
->>  drivers/net/ethernet/ti/cpsw_ethtool.c |  66 +++-
->>  drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
->>  4 files changed, 502 insertions(+), 57 deletions(-)
->>
->[...]
->> +static int cpsw_run_xdp(struct cpsw_priv *priv, int ch, struct xdp_buff *xdp,
->> +			struct page *page)
->> +{
->> +	struct cpsw_common *cpsw = priv->cpsw;
->> +	struct net_device *ndev = priv->ndev;
->> +	int ret = CPSW_XDP_CONSUMED;
->> +	struct xdp_frame *xdpf;
->> +	struct bpf_prog *prog;
->> +	u32 act;
->> +
->> +	rcu_read_lock();
->> +
->> +	prog = READ_ONCE(priv->xdp_prog);
->> +	if (!prog) {
->> +		ret = CPSW_XDP_PASS;
->> +		goto out;
->> +	}
->> +
->> +	act = bpf_prog_run_xdp(prog, xdp);
->> +	switch (act) {
->> +	case XDP_PASS:
->> +		ret = CPSW_XDP_PASS;
->> +		break;
->> +	case XDP_TX:
->> +		xdpf = convert_to_xdp_frame(xdp);
->> +		if (unlikely(!xdpf))
->> +			goto drop;
->> +
->> +		cpsw_xdp_tx_frame(priv, xdpf, page);
->> +		break;
->> +	case XDP_REDIRECT:
->> +		if (xdp_do_redirect(ndev, xdp, prog))
->> +			goto drop;
->> +
->> +		/* as flush requires rx_dev to be per NAPI handle and there
->> +		 * is can be two devices putting packets on bulk queue,
->> +		 * do flush here avoid this just for sure.
->> +		 */
->> +		xdp_do_flush_map();
->
->> +		break;
->> +	default:
->> +		bpf_warn_invalid_xdp_action(act);
->> +		/* fall through */
->> +	case XDP_ABORTED:
->> +		trace_xdp_exception(ndev, prog, act);
->> +		/* fall through -- handle aborts by dropping packet */
->> +	case XDP_DROP:
->> +		goto drop;
->> +	}
->> +out:
->> +	rcu_read_unlock();
->> +	return ret;
->> +drop:
->> +	rcu_read_unlock();
->> +	page_pool_recycle_direct(cpsw->page_pool[ch], page);
->> +	return ret;
->> +}
->
->-- 
->Best regards,
->  Jesper Dangaard Brouer
->  MSc.CS, Principal Kernel Engineer at Red Hat
->  LinkedIn: http://www.linkedin.com/in/brouer
-
--- 
-Regards,
-Ivan Khoronzhuk
+SGksIFBoaWxpcHANCg0KPiBPbiBUaHUsIDIwMTktMDctMDQgYXQgMTc6MjUgKzA4MDAsIEFuc29u
+Lkh1YW5nQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
+QG54cC5jb20+DQo+ID4NCj4gPiBpLk1YOE1NIGNhbiByZXVzZSBpLk1YOE1RJ3MgcmVzZXQgZHJp
+dmVyLCB1cGRhdGUgdGhlIGNvbXBhdGlibGUNCj4gPiBwcm9wZXJ0eSBhbmQgcmVsYXRlZCBpbmZv
+IHRvIHN1cHBvcnQgaS5NWDhNTS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5n
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IE5ldyBwYXRjaC4NCj4gPiAtLS0N
+Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L2ZzbCxpbXg3LXNy
+Yy50eHQgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcmVzZXQvZnNsLGlteDctc3JjLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L2ZzbCxpbXg3LXNyYy50eHQNCj4gPiBpbmRleCAxM2Uw
+OTUxLi5iYzI0YzQ1IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9yZXNldC9mc2wsaW14Ny1zcmMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L2ZzbCxpbXg3LXNyYy50eHQNCj4gPiBAQCAtNyw3ICs3
+LDcgQEAgY29udHJvbGxlciBiaW5kaW5nIHVzYWdlLg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVz
+Og0KPiA+ICAtIGNvbXBhdGlibGU6DQo+ID4gIAktIEZvciBpLk1YNyBTb0NzIHNob3VsZCBiZSAi
+ZnNsLGlteDdkLXNyYyIsICJzeXNjb24iDQo+ID4gLQktIEZvciBpLk1YOE1RIFNvQ3Mgc2hvdWxk
+IGJlICJmc2wsaW14OG1xLXNyYyIsICJzeXNjb24iDQo+ID4gKwktIEZvciBpLk1YOE1RL2kuTVg4
+TU0gU29DcyBzaG91bGQgYmUgImZzbCxpbXg4bXEtc3JjIiwgInN5c2NvbiINCj4gDQo+IFBsZWFz
+ZSBzdGlsbCBhZGQgdGhlICJmc2wsaW14OG1tLXNyYyIgZm9yIGkuTVg4TU0sIGp1c3QgaW4gY2Fz
+ZSBhIHNpZ25pZmljYW50DQo+IGRpZmZlcmVuY2UgaXMgZGlzY292ZXJlZCBsYXRlci4NCg0KT0ss
+IHRoZW4gSSB3aWxsIGFkZCBhIG5ldyBsaW5lIGFzIGJlbG93Og0KDQpGb3IgaS5NWDhNTSBTb0Nz
+IHNob3VsZCBiZSAiZnNsLGlteDhtbS1zcmMiLCAiZnNsLGlteDhtcS1zcmMiLCAic3lzY29uIg0K
+DQpBbnNvbi4NCg0KPiANCj4gcmVnYXJkcw0KPiBQaGlsaXBwDQo=
