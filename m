@@ -2,97 +2,100 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FCAC46497
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C46C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4AE2184C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PKUNdXaX"
+	by mail.kernel.org (Postfix) with ESMTP id A0563218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfGDVIV (ORCPT
+        id S1727522AbfGDVKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 17:08:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47461 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfGDVIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 17:08:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45frDL267jz9sBp;
-        Fri,  5 Jul 2019 07:08:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562274498;
-        bh=uiKym7gdeDlyMdoWAy3bdqHaCGNeEnlC8k+Noqqs0Yw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PKUNdXaXg6FqSKQOpFK/jvd0Jwon/XU7Pz3k704jZr9wWPZo35q+IH0uz/+zMSEoS
-         eRkhnG4fyxCIMY+8iRse7oonn4AGOIxoGmpT4TLPgsG6h7gNNhiSlXMj/dwjcCGmBV
-         Q2IlcMDt0w7GKqxpvkYIwMsyHRrRwzG1eykLKHJdDp6N1Jo4VnYsWWcTnJtN4PM2mk
-         QSFF8dRHVwviQKy+7ddmcR5yCZVWP2NZywdb2N3zm1P3tvR/09a/B0dvGWS5Ct5h1h
-         cHfKs6ZHQ5SZj3Uw3n8+8F5EyylgRfpHBlebJZ7hLgsyEdqFoJ3JA+mf/dyca0WBk7
-         zjY/BrbQ7Trzw==
-Date:   Fri, 5 Jul 2019 07:08:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the hmm
- tree
-Message-ID: <20190705070810.1e01ea9d@canb.auug.org.au>
-In-Reply-To: <20190704132836.GM3401@mellanox.com>
-References: <20190704205536.32740b34@canb.auug.org.au>
-        <20190704125539.GL3401@mellanox.com>
-        <20190704230133.1fe67031@canb.auug.org.au>
-        <20190704132836.GM3401@mellanox.com>
+        Thu, 4 Jul 2019 17:10:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60128 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbfGDVKP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 17:10:15 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hj8zb-0000KI-Vc; Thu, 04 Jul 2019 23:10:12 +0200
+Date:   Thu, 4 Jul 2019 23:10:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: [PATCH] cpu/hotplug: Cache number of online CPUs
+In-Reply-To: <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com>
+Message-ID: <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de> <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/.mdJ876r_5mgmleKxQi6puG"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.mdJ876r_5mgmleKxQi6puG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 4 Jul 2019, Mathieu Desnoyers wrote:
 
-Hi Jason,
+> ----- On Jul 4, 2019, at 4:42 PM, Thomas Gleixner tglx@linutronix.de wrote:
+> 
+> > Revaluating the bitmap wheight of the online cpus bitmap in every
+> > invocation of num_online_cpus() over and over is a pretty useless
+> > exercise. Especially when num_online_cpus() is used in code pathes like the
+> > IPI delivery of x86 or the membarrier code.
+> > 
+> > Cache the number of online CPUs in the core and just return the cached
+> > variable.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > ---
+> > include/linux/cpumask.h |   16 +++++++---------
+> > kernel/cpu.c            |   16 ++++++++++++++++
+> > 2 files changed, 23 insertions(+), 9 deletions(-)
+> > 
+> > --- a/include/linux/cpumask.h
+> > +++ b/include/linux/cpumask.h
+> > @@ -95,8 +95,13 @@ extern struct cpumask __cpu_active_mask;
+> > #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+> > #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+> > 
+> > +extern unsigned int __num_online_cpus;
+> 
+> [...]
+> 
+> > +
+> > +void set_cpu_online(unsigned int cpu, bool online)
+> > +{
+> > +	lockdep_assert_cpus_held();
+> 
+> I don't think it is required that the cpu_hotplug lock is held
+> when reading __num_online_cpus, right ?
 
-On Thu, 4 Jul 2019 13:28:41 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> BTW, do you use a script to get these conflicting patch commit ID
-> automatically? It is so helpful to have them.
+Errm, that's the update function. And this is better called from a hotplug
+lock held region and not from some random crappy code.
 
-No, I just use gitk and a bit of searching.  Though often there are not
-many possible commits to search.
+> I would have expected the increment/decrement below to be performed
+> with a WRITE_ONCE(), and use a READ_ONCE() when reading the current
+> value.
 
---=20
-Cheers,
-Stephen Rothwell
+What for?
 
---Sig_/.mdJ876r_5mgmleKxQi6puG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+num_online_cpus() is racy today vs. CPU hotplug operations as
+long as you don't hold the hotplug lock.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0earsACgkQAVBC80lX
-0GzS7gf8CTB2erFpQ9ri/9IBqbNwdjk/6yvzDws8bx1+yLuYWdWkGvoAxnjV2Ixu
-uEoGvI+lg1O2AfNWa/NIcy1a8iqBkf/tFm7ZA6P7W1O7AIwp8VVL/rYEbMVe3Qjk
-YlmU/t2cdAFfdfOPMRVbOcbCUrI9llIiqO+BeSM/up6x3NfeJuAl/AQiWwl4EQP9
-u59RW+Im0Byq5SRSH72BmexZlIRaWqlEWMwWddGzkrrmgbX558LBxK+YuocW7+x0
-NgTnZEFv4RMd85Xk58vXvCt+0DtgH+HqdA7bAz8++ccRg8Q0zYoiLWEJivffXnmP
-DMBF2a5n1VXM+O28IqT0ChRuSKB28w==
-=WSr2
------END PGP SIGNATURE-----
+	tglx
 
---Sig_/.mdJ876r_5mgmleKxQi6puG--
+
+
