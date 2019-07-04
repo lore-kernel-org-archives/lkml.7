@@ -2,85 +2,93 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52820C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2747C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5B9205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA3C205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562238269;
-	bh=vV9Dk6cX3Mr0RtFJ3RONfbTd7mSbJq5K8CSm3zvrN0E=;
+	s=default; t=1562238294;
+	bh=HOf3Gt574sW018UHM7jh+XFy1sW2z2WUCnb0QJPFYoI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lOfZ2KljfSK1TnSPpIjeGeS1G3H85u9XHt/GLzI4Trj2KoaMaNZwUyjzHip4QdiEd
-	 AtFXAvCK2JenFwD79HhJIch+a1Cg9RaJJmIv0F9JDq2j+kn+WpzHXzfdgRRvCwQtFA
-	 P879aN/0PieH0Q2ZSbG/IBm/nPbmMZsrHsCxuDkI=
+	b=k8jwiPKQ901203JrWMrFWrr6jFSLeMA4aGRURdpfv/Cddf0nY6eFOtF0jPd/bDe6O
+	 YUeZgWpB4OwrX9Uo8HFMyOTkWEsQK8y3juEl69Gtdzcg8y0BA9gvoORQj6s1JFhwBG
+	 Wby/xgGX4XE5LkU1MXwV/HszAn69nTM4AkL+TS7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfGDLE2 (ORCPT
+        id S1727637AbfGDLEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:04:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35270 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727499AbfGDLE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:04:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7483FAEAF;
-        Thu,  4 Jul 2019 11:04:26 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 13:04:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Kuo-Hsin Yang <vovoy@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: scan anonymous pages on file refaults
-Message-ID: <20190704110425.GD5620@dhcp22.suse.cz>
-References: <20190628111627.GA107040@google.com>
- <20190701081038.GA83398@google.com>
- <20190703143057.GQ978@dhcp22.suse.cz>
- <20190704094716.GA245276@google.com>
+        Thu, 4 Jul 2019 07:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbfGDLEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:04:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E312205C9;
+        Thu,  4 Jul 2019 11:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562238292;
+        bh=HOf3Gt574sW018UHM7jh+XFy1sW2z2WUCnb0QJPFYoI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=02zEdmnU0sRzYtS80yJ6C96y1XRaDizVgNgwTeOxUkCCgUaDD92ze6QDP5muTHIkR
+         voz341lKhKUFLdPp6QW4EG/ymk0RSKBkOEZiMGHSoPyOlTt3dxePLhkLYH4dtxFZTB
+         PtZLtlmeAo7O6EcPSqJc50zf3yNJndWayWbtLpFg=
+Date:   Thu, 4 Jul 2019 13:04:49 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
+ DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+Message-ID: <20190704110449.GC1404@kroah.com>
+References: <20190628004951.6202-1-mdf@kernel.org>
+ <20190628004951.6202-7-mdf@kernel.org>
+ <20190703180753.GA24723@kroah.com>
+ <20190703233058.GA15825@hao-dev>
+ <20190704053927.GB347@kroah.com>
+ <20190704063106.GA24777@hao-dev>
+ <20190704082013.GE6438@kroah.com>
+ <20190704085855.GB7391@hao-dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704094716.GA245276@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190704085855.GB7391@hao-dev>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 04-07-19 17:47:16, Kuo-Hsin Yang wrote:
-> On Wed, Jul 03, 2019 at 04:30:57PM +0200, Michal Hocko wrote:
+On Thu, Jul 04, 2019 at 04:58:55PM +0800, Wu Hao wrote:
+> > > Hope things could be more clear now. :)
 > > 
-> > How does the reclaim behave with workloads with file backed data set
-> > not fitting into the memory? Aren't we going to to swap a lot -
-> > something that the heuristic is protecting from?
+> > That's nice for the vfio stuff, but you are just a "normal" driver here.
+> > You want an ioctl that just does one thing, no arguments, no flags, no
+> > anything.  No need for a size argument then at all.  These ioctls don't
+> > even need a structure for them!
 > > 
+> > Don't try to be fancy, it's not needed, it's not like you are running
+> > out of ioctl space...
 > 
-> In common case, most of the pages in a large file backed data set are
-> non-executable. When there are a lot of non-executable file pages,
-> usually more file pages are scanned because of the recent_scanned /
-> recent_rotated ratio.
+> Thanks a lot for the comments and suggestions.
 > 
-> I modified the test program to set the accessed sizes of the executable
-> and non-executable file pages respectively. The test program runs on 2GB
-> RAM VM with kernel 5.2.0-rc7 and this patch, allocates 2000 MB anonymous
-> memory, then accesses 100 MB executable file pages and 2100 MB
-> non-executable file pages for 10 times. The test also prints the file
-> and anonymous page sizes in kB from /proc/meminfo. There are not too
-> many swaps in this test case. I got similar test result without this
-> patch.
+> That's true, it's a "normal" driver, maybe I overly considered the
+> extensibility of it. OK, Let me rework this patch to remove argsz from
+> these two ioctls.
+> 
+> What about the existing ioctls for this driver, they have argsz too.
+> shall I prepare another patch to remove them as well?
 
-Could you record swap out stats please? Also what happens if you have
-multiple readers?
+I am hoping you actually have users for those ioctls in userspace today?
+If not, and no one is using them, then yes, please fix those too.
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+thanks,
+
+greg k-h
