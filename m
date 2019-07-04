@@ -2,108 +2,196 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B80C5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6C5C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15712187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04892187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="pnCXRsvC"
+	dkim=pass (1024-bit key) header.d=enatel.net header.i=@enatel.net header.b="c7utuNKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfGDCXL (ORCPT
+        id S1727271AbfGDCYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 22:23:11 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45733 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfGDCXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:23:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u10so3098133lfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 19:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+J4G3+w2a6rqwsRd6naD6kRP3PZ6p5YJ6mI8owInsUY=;
-        b=pnCXRsvCD/RtzrcOSH9XKM3pNpuZOmeLWIatc8U7JlkVMu98m1tFHyX9W8gckaXPfe
-         b17ruB40N/kd408MIOehV98cOnIGdS2i5T85oAKHFtbQungZe4RQZXnoR3DvdoUOY49T
-         A8Qralpdl860WzVeFgeSpieoUbth90cEXEwDDfG2ufwTCrsWhxFOKEEtU/VdnRP/Ma1P
-         crPt3nVPNZZP45KVGlF3FSxFbEvNPhhYU+4eKXQyZkt8EnoLeDvdkLNiM9WDsGZxLtVf
-         vkQFJrmKD9kDeXJtME/5Hl5v6hn8fG8k5HTT33wk8Phx9tWBoUoQbHDcM06FR4ZmfGpB
-         MiQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+J4G3+w2a6rqwsRd6naD6kRP3PZ6p5YJ6mI8owInsUY=;
-        b=ewxbT6LiPVJCR1wuxFYNFA1tpvtlPbCzd2EQx3wfhwB8sGJIlA3snUHGGVaqqYHg1M
-         6CewarYtlsAMKD7wZhr+DvsTu16TcHu5VKXbiDrDLuuGkHKWf3Rj/mYL7ZNA1ctHjl9a
-         BgVqvFba0A0cbz2zdiHy8+De9prIZnB1gZILPBoog7HXks3ocayKgU06yKmAxLWVmJKf
-         yY7jK9tIKOuwrraZg9v6UQFfFCyeOmtOBX6CDN4BVqRYiu17PP4Ge2TqP5HxNQFVnNsi
-         yDYFHdzxKmUvooJtsFwzU8prLnJChJs5iUoFUgdv3f9rm8JtzQu3C5nEQmhpIi6UJhRC
-         /G4w==
-X-Gm-Message-State: APjAAAUDf/iV9uW3lnQoLAUfDOY1io70T44EUJ/RQ/fgqJNqblhU/f47
-        uvI3W8OyXOemJD46wPslwfxYfA==
-X-Google-Smtp-Source: APXvYqwF1IDr3Zsnm8ndisg8PoI+GaRFZUtCxu7aZqBri2om9izSF5ZXvmOqrvAsLWKwdQBn04FOlA==
-X-Received: by 2002:ac2:4351:: with SMTP id o17mr297792lfl.100.1562206988730;
-        Wed, 03 Jul 2019 19:23:08 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id o11sm635357lfl.15.2019.07.03.19.23.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jul 2019 19:23:07 -0700 (PDT)
-Date:   Wed, 3 Jul 2019 19:20:43 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Heiko Stuebner <heiko@sntech.de>, arm@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] soc: rockchip: work around clang warning
-Message-ID: <20190704022043.gwcwasi6jni2qctm@localhost>
-References: <20190703153112.2767411-1-arnd@arndb.de>
+        Wed, 3 Jul 2019 22:24:47 -0400
+Received: from mail-eopbgr1360114.outbound.protection.outlook.com ([40.107.136.114]:38064
+        "EHLO AUS01-ME1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726736AbfGDCYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 22:24:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=enatel.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nMIo1SZa+eynOSYX5aVd8+q17JR7nB5+wh4yTJ8VGdo=;
+ b=c7utuNKrTi7vTa6NHSg8tCg7ufOFJjUUPh7HFODl/5P2eZnJ/fgV3BE9SvjIhy0ry9HF7+AuUSz/WsXzSVB+C7j6vRxEDsoJMdtQTKVrsQPa+Ju6G9gcFVZOimQoX0nn9GdUUK8IyFvatKxCZ2uEKm3bTn0mQuQz/Z9wNyWrvJ0=
+Received: from SYCPR01CA0011.ausprd01.prod.outlook.com (2603:10c6:10:31::23)
+ by ME2PR01MB4132.ausprd01.prod.outlook.com (2603:10c6:220:23::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.16; Thu, 4 Jul
+ 2019 02:24:42 +0000
+Received: from SY3AUS01FT004.eop-AUS01.prod.protection.outlook.com
+ (2a01:111:f400:7eb5::200) by SYCPR01CA0011.outlook.office365.com
+ (2603:10c6:10:31::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2032.18 via Frontend
+ Transport; Thu, 4 Jul 2019 02:24:42 +0000
+Authentication-Results: spf=pass (sender IP is 111.69.51.18)
+ smtp.mailfrom=enatel.net; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=enatel.net;
+Received-SPF: Pass (protection.outlook.com: domain of enatel.net designates
+ 111.69.51.18 as permitted sender) receiver=protection.outlook.com;
+ client-ip=111.69.51.18; helo=mail.enatel.co.nz;
+Received: from mail.enatel.co.nz (111.69.51.18) by
+ SY3AUS01FT004.mail.protection.outlook.com (10.152.234.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Thu, 4 Jul 2019 02:24:41 +0000
+Received: from michael-Latitude-5590 (172.26.6.16) by mail.enatel.co.nz
+ (192.168.1.8) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Jul 2019
+ 14:24:38 +1200
+Date:   Thu, 4 Jul 2019 14:24:39 +1200
+From:   Michael McCormick <michael.mccormick@enatel.net>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] rtc: pcf85063: Add support for specifying the clkout
+ frequency from device tree node.
+Message-ID: <20190704022439.GA13102@michael-Latitude-5590>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190703153112.2767411-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.26.6.16]
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:111.69.51.18;IPV:CAL;SCL:-1;CTRY:NZ;EFV:NLI;SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39830400003)(136003)(396003)(2980300002)(374574003)(199004)(189003)(2906002)(26826003)(356004)(70586007)(86362001)(486006)(72206003)(5660300002)(70206006)(2201001)(1076003)(126002)(14444005)(33716001)(69596002)(476003)(478600001)(336012)(186003)(7736002)(16526019)(9686003)(55016002)(8936002)(3846002)(97756001)(33656002)(6116002)(23726003)(8676002)(305945005)(106002)(26005)(77096007)(8746002)(81156014)(76130400001)(50466002)(47776003)(46406003)(316002)(81166006)(58126008)(110136005)(2101003);DIR:OUT;SFP:1102;SCL:1;SRVR:ME2PR01MB4132;H:mail.enatel.co.nz;FPR:;SPF:Pass;LANG:en;PTR:18.51.69.111.static.snap.net.nz;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c29f8c3a-80a6-4975-bb84-08d70026c5b9
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:ME2PR01MB4132;
+X-MS-TrafficTypeDiagnostic: ME2PR01MB4132:
+X-Microsoft-Antispam-PRVS: <ME2PR01MB4132CA7A7D1457D1E877BF8989FA0@ME2PR01MB4132.ausprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-MS-Oob-TLC-OOBClassifiers: OLM:1751;
+X-Forefront-PRVS: 0088C92887
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: YpyxGPr7Cqc/jrJ8p/K/uM4gdFBnGkqaZ2ez0o+F02M+6zG1ghpJ0icbSwqqBNSYw8lL/wy1wdltY2uxQ5g5aRGy3L/f3u7/Res/NJxAi6a036XNYMPDTwwfx1PSKyX/B0fcSEkeo7/I7lQT1+B1hUNkRgoG4r2MGbBxoAgs5RYIpJktIcxjMLfHVDSH7Zk9cSzTjyR8yPKsHZQtIpYmbiCToznEIJxFs2iiyEikDOrvUflLY8XN8ZWoKiMgV4aM+hoCSGn0MLEVz968DBgRRBXIocd5c6a4p+x7UpyPK6KH+wEcP9c6uSzW00YkMke5SXSmH73iB4iZrd/GyjDne3RUP8F1CNqd67BTBneGKEI7fiNxvitO8OeQI+REeggLb9nXMKWcRr2jJhE+XSVpJOOiP4G3Uy0AKFfg3Xl1/8w=
+X-OriginatorOrg: enatel.net
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2019 02:24:41.4469
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c29f8c3a-80a6-4975-bb84-08d70026c5b9
+X-MS-Exchange-CrossTenant-Id: 60c5af6b-3b0c-4e87-85d7-9a81b4eb7f32
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=60c5af6b-3b0c-4e87-85d7-9a81b4eb7f32;Ip=[111.69.51.18];Helo=[mail.enatel.co.nz]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME2PR01MB4132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 05:30:59PM +0200, Arnd Bergmann wrote:
-> clang emits a warning about a negative shift count for an
-> unused part of a conditional constant expression:
-> 
-> drivers/soc/rockchip/pm_domains.c:795:21: error: shift count is negative [-Werror,-Wshift-count-negative]
->         [RK3328_PD_VIO]         = DOMAIN_RK3328(-1, 8, 8, false),
->                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/soc/rockchip/pm_domains.c:129:2: note: expanded from macro 'DOMAIN_RK3328'
->         DOMAIN_M(pwr, pwr, req, (req) + 10, req, wakeup)
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/soc/rockchip/pm_domains.c:105:33: note: expanded from macro 'DOMAIN_M'
->         .status_mask = (status >= 0) ? BIT(status) : 0, \
->                                        ^~~~~~~~~~~
-> include/linux/bits.h:6:24: note: expanded from macro 'BIT'
-> 
-> This is a bug in clang that will be fixed in the future, but in order
-> to build cleanly with clang-8, it would be helpful to shut up this
-> warning. This file is the only instance reported by kernelci at the
-> moment.
-> 
-> The best solution I could come up with is to move the BIT() usage
-> out of the macro into the instantiation, so we can avoid using
-> BIT(-1).
-> 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=38789
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Primarily this allows the clkout signal to be disabled and save some
+power when running off battery backup. However, all hardware implemented
+values are implemented. Uses default value of 32768Hz if node is not
+specified.
 
-Thanks, queued under arm/drivers now.
+Signed-off-by: Michael McCormick <michael.mccormick@enatel.net>
+---
+ drivers/rtc/rtc-pcf85063.c | 52 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index 1afa6d9fa9fb..5c19381899ed 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -37,6 +37,9 @@
+ #define PCF85063_REG_CTRL2             0x01
+ #define PCF85063_CTRL2_AF              BIT(6)
+ #define PCF85063_CTRL2_AIE             BIT(7)
++#define PCF85063_CTRL2_COF2            BIT(2)
++#define PCF85063_CTRL2_COF1            BIT(1)
++#define PCF85063_CTRL2_COF0            BIT(0)
+
+ #define PCF85063_REG_OFFSET            0x02
+ #define PCF85063_OFFSET_SIGN_BIT       6       /* 2's complement sign bit =
+*/
+@@ -369,6 +372,51 @@ static int pcf85063_load_capacitance(struct pcf85063 *=
+pcf85063,
+                                  PCF85063_REG_CTRL1_CAP_SEL, reg);
+ }
+
++static int pcf85063_set_clkout_mode(struct pcf85063 *pcf85063,
++                                   const struct device_node *np)
++{
++       u32 load =3D 32768;
++       u8 reg =3D 0;
++
++       of_property_read_u32(np, "clockout-frequency", &load);
++       switch (load) {
++       case 0:
++               reg =3D PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1 |
++                     PCF85063_CTRL2_COF0;
++               break;
++       case 1:
++               reg =3D PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1;
++               break;
++       case 1024:
++               reg =3D PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF0;
++               break;
++       case 2048:
++               reg =3D PCF85063_CTRL2_COF2;
++               break;
++       case 4096:
++               reg =3D PCF85063_CTRL2_COF1 | PCF85063_CTRL2_COF0;
++               break;
++       case 8192:
++               reg =3D PCF85063_CTRL2_COF1;
++               break;
++       case 16384:
++               reg =3D PCF85063_CTRL2_COF0;
++               break;
++       case 32768:
++               reg =3D 0;
++               break;
++       default:
++               dev_warn(&pcf85063->rtc->dev,
++                       "Unknown clockout-frequency: %d. Assuming 32768", l=
+oad);
++               reg =3D 0;
++               break;
++       }
++
++       return regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
++                                 PCF85063_CTRL2_COF2 | PCF85063_CTRL2_COF1=
+ |
++                                 PCF85063_CTRL2_COF0, reg);
++}
++
+ static const struct pcf85063_config pcf85063a_config =3D {
+        .regmap =3D {
+                .reg_bits =3D 8,
+@@ -443,6 +491,10 @@ static int pcf85063_probe(struct i2c_client *client)
+                dev_warn(&client->dev, "failed to set xtal load capacitance=
+: %d",
+                         err);
+
++       err =3D pcf85063_set_clkout_mode(pcf85063, client->dev.of_node);
++       if (err < 0)
++               dev_warn(&client->dev, "failed to set clock out mode: %d", =
+err);
++
+        pcf85063->rtc->ops =3D &pcf85063_rtc_ops;
+        pcf85063->rtc->range_min =3D RTC_TIMESTAMP_BEGIN_2000;
+        pcf85063->rtc->range_max =3D RTC_TIMESTAMP_END_2099;
+--
+2.17.1
 
 
--Olof
+
+**CONFIDENTIALITY STATEMENT**
+This message is intended for the sole use of the individual(s) and/or entit=
+y to whom it is addressed, and may contain information that is legally priv=
+ileged, confidential, and exempt from disclosure under applicable law. If y=
+ou are not the intended addressee, nor authorized to receive for the intend=
+ed addressee, you are hereby notified that dissemination, distribution, cop=
+ying or disclosure of this message is strictly prohibited. If you have rece=
+ived this message in error please immediately advise the sender by reply em=
+ail, and delete the message.
