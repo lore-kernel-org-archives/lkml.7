@@ -2,280 +2,119 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35DAC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96CEC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF9E2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4782189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J89GIpdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfGDNtT (ORCPT
+        id S1727278AbfGDNtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:49:19 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57016 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbfGDNtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:49:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 92FE31A05D5;
-        Thu,  4 Jul 2019 15:49:15 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 87B0F1A05EF;
-        Thu,  4 Jul 2019 15:49:10 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 61348402C3;
-        Thu,  4 Jul 2019 21:49:04 +0800 (SGT)
-From:   fugang.duan@nxp.com
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, jslaby@suse.com, fugang.duan@nxp.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, u.kleine-koenig@pengutronix.de,
-        daniel.baluta@nxp.com
-Subject: [PATCH RESEND tty/serial 1/1] tty: serial: fsl_lpuart: add imx8qxp support
-Date:   Thu,  4 Jul 2019 21:40:07 +0800
-Message-Id: <20190704134007.2316-1-fugang.duan@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 4 Jul 2019 09:49:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33434 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfGDNtp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:49:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so2999066pfq.0;
+        Thu, 04 Jul 2019 06:49:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=q57G3q5Jt82bTMu8+pXuQ4swwABbsqmtrU7b+V+udHQ=;
+        b=J89GIpdl9vKHz3FgttcdMCi4jN9+xe07Evf04UK3O7nzrBkjOVT5a5bO+/QHxY5qvj
+         cE4Qx8h49JdeORrNZx6evR57H8CrPJ08znX/iaN3hbAxJU6VJIInZrPk0wc+WSprOtAZ
+         jNdKQW56ZQvrAwCbVsPfzkc6rW+ZALqDAggA/FeOVcibuT7jHHePBaQ3Fb79+hny+VGT
+         adVgjqJUuiFxEV3be6nndLxV14iCNZUTtlPNxJL886YUS58gSCIITapMlKd5ABmlvxRf
+         1CrcdhQEhWDKemXCcl7xnaAIAX72rvW9fAWY599oFxRq+86HJTi0vV8jT74XCOrLjlV7
+         MGBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=q57G3q5Jt82bTMu8+pXuQ4swwABbsqmtrU7b+V+udHQ=;
+        b=fghlAxvvXu2hylvH96Eg7YXxUBSS4MOQaRZDOUUxTCSB8iOaRNV39BYEd4nHm/XwTL
+         0lhCsSQW0OMGgrt3N/quqFd4bqeD36VXOdYd105l6yRLd0A8hkOWW8FLsW4cdWe65njL
+         ewuew88h86lUVdQjxmzmGvOdV7vAb+604erc4UU4zhWAfdI/df98qaDgPMV9jUFAlkpq
+         v3bR0uOAHHerqoIhKMhN4vQifeuSyn5xV0vSDuCZly8frkjs9rBTNUNNKLodVaPqBYTc
+         0ajr3LCv2ri0z4aZukS4lMT4N7MbPRgsprd3aYJv22hXedG7Is1gJ54p+/8CHM+bM3cR
+         Z4aA==
+X-Gm-Message-State: APjAAAVpR7ctCckCFvWbwXnFC1nO6yTHlHUzxvNWMZrdmt6jdnQFcI/R
+        KmoF5gaZUxyOYLlYxXqph9RYCbNFmTHt5vJzh7BisjNO
+X-Google-Smtp-Source: APXvYqwvGhLTYCzCEeb37MdSjdnT4A0T7iNNbizQi4/kAir/H2MzjkbUVVzl5BbHHDxIQUGSP+Je4vUBg/AJBxE1f2w=
+X-Received: by 2002:a17:90a:d681:: with SMTP id x1mr19501121pju.13.1562248184725;
+ Thu, 04 Jul 2019 06:49:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190704093553.49904-1-yuehaibing@huawei.com>
+In-Reply-To: <20190704093553.49904-1-yuehaibing@huawei.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Thu, 4 Jul 2019 22:49:33 +0900
+Message-ID: <CAC5umyi6S0eV2AOwpxmYh-HhNaMHEKZzgnG9PteVRR0i35rV4w@mail.gmail.com>
+Subject: Re: [PATCH] regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rafael@kernel.org, wsa+renesas@sang-engineering.com,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>, khoroshilov@ispras.ru,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+2019=E5=B9=B47=E6=9C=884=E6=97=A5(=E6=9C=A8) 18:36 YueHaibing <yuehaibing@h=
+uawei.com>:
+>
+> REGMAP_SCCB is selected by ov772x and ov9650 drivers,
+> but CONFIG_REGMAP may not, so building will fails:
+>
+> rivers/media/i2c/ov772x.c: In function ov772x_probe:
+> drivers/media/i2c/ov772x.c:1360:22: error: variable ov772x_regmap_config =
+has initializer but incomplete type
+>   static const struct regmap_config ov772x_regmap_config =3D {
+>                       ^~~~~~~~~~~~~
+> drivers/media/i2c/ov772x.c:1361:4: error: const struct regmap_config has =
+no member named reg_bits
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 5bbf32217bf9 ("media: ov772x: use SCCB regmap")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/base/regmap/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+> index c8bbf53..a498413 100644
+> --- a/drivers/base/regmap/Kconfig
+> +++ b/drivers/base/regmap/Kconfig
+> @@ -4,7 +4,7 @@
+>  # subsystems should select the appropriate symbols.
+>
+>  config REGMAP
+> -       default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W=
+1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
+> +       default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W=
+1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SCCB || REGMAP_I3C)
+>         select IRQ_DOMAIN if REGMAP_IRQ
+>         bool
 
-The lpuart of imx8ulp is basically the same as imx7ulp, but it
-has new feature support based on imx7ulp, like it can assert a
-DMA request on EOP(end-of-packet). imx8ulp lpuart use two clocks,
-one is ipg bus clock that is used to access registers, the other
-is baud clock that is used to transmit-receive data.
+Looks good.
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- drivers/tty/serial/fsl_lpuart.c | 106 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 86 insertions(+), 20 deletions(-)
+Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 2f24d97..92dad2b 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -234,9 +234,18 @@
- 
- static DEFINE_IDA(fsl_lpuart_ida);
- 
-+enum lpuart_type {
-+	VF610_LPUART,
-+	LS1021A_LPUART,
-+	IMX7ULP_LPUART,
-+	IMX8QXP_LPUART,
-+};
-+
- struct lpuart_port {
- 	struct uart_port	port;
--	struct clk		*clk;
-+	enum lpuart_type	devtype;
-+	struct clk		*ipg_clk;
-+	struct clk		*baud_clk;
- 	unsigned int		txfifo_size;
- 	unsigned int		rxfifo_size;
- 
-@@ -261,19 +270,29 @@ struct lpuart_port {
- };
- 
- struct lpuart_soc_data {
--	char	iotype;
--	u8	reg_off;
-+	enum lpuart_type devtype;
-+	char iotype;
-+	u8 reg_off;
- };
- 
- static const struct lpuart_soc_data vf_data = {
-+	.devtype = VF610_LPUART,
- 	.iotype = UPIO_MEM,
- };
- 
- static const struct lpuart_soc_data ls_data = {
-+	.devtype = LS1021A_LPUART,
- 	.iotype = UPIO_MEM32BE,
- };
- 
--static struct lpuart_soc_data imx_data = {
-+static struct lpuart_soc_data imx7ulp_data = {
-+	.devtype = IMX7ULP_LPUART,
-+	.iotype = UPIO_MEM32,
-+	.reg_off = IMX_REG_OFF,
-+};
-+
-+static struct lpuart_soc_data imx8qxp_data = {
-+	.devtype = IMX8QXP_LPUART,
- 	.iotype = UPIO_MEM32,
- 	.reg_off = IMX_REG_OFF,
- };
-@@ -281,7 +300,8 @@ static struct lpuart_soc_data imx_data = {
- static const struct of_device_id lpuart_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-lpuart",	.data = &vf_data, },
- 	{ .compatible = "fsl,ls1021a-lpuart",	.data = &ls_data, },
--	{ .compatible = "fsl,imx7ulp-lpuart",	.data = &imx_data, },
-+	{ .compatible = "fsl,imx7ulp-lpuart",	.data = &imx7ulp_data, },
-+	{ .compatible = "fsl,imx8qxp-lpuart",	.data = &imx8qxp_data, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, lpuart_dt_ids);
-@@ -289,6 +309,11 @@ MODULE_DEVICE_TABLE(of, lpuart_dt_ids);
- /* Forward declare this for the dma callbacks*/
- static void lpuart_dma_tx_complete(void *arg);
- 
-+static inline bool is_imx8qxp_lpuart(struct lpuart_port *sport)
-+{
-+	return sport->devtype == IMX8QXP_LPUART;
-+}
-+
- static inline u32 lpuart32_read(struct uart_port *port, u32 off)
- {
- 	switch (port->iotype) {
-@@ -314,6 +339,39 @@ static inline void lpuart32_write(struct uart_port *port, u32 val,
- 	}
- }
- 
-+static int __lpuart_enable_clks(struct lpuart_port *sport, bool is_en)
-+{
-+	int ret = 0;
-+
-+	if (is_en) {
-+		ret = clk_prepare_enable(sport->ipg_clk);
-+		if (ret)
-+			return ret;
-+
-+		ret = clk_prepare_enable(sport->baud_clk);
-+		if (ret) {
-+			clk_disable_unprepare(sport->ipg_clk);
-+			return ret;
-+		}
-+	} else {
-+		clk_disable_unprepare(sport->baud_clk);
-+		clk_disable_unprepare(sport->ipg_clk);
-+	}
-+
-+	return 0;
-+}
-+
-+static unsigned int lpuart_get_baud_clk_rate(struct lpuart_port *sport)
-+{
-+	if (is_imx8qxp_lpuart(sport))
-+		return clk_get_rate(sport->baud_clk);
-+
-+	return clk_get_rate(sport->ipg_clk);
-+}
-+
-+#define lpuart_enable_clks(x)	__lpuart_enable_clks(x, true)
-+#define lpuart_disable_clks(x)	__lpuart_enable_clks(x, false)
-+
- static void lpuart_stop_tx(struct uart_port *port)
- {
- 	unsigned char temp;
-@@ -2069,7 +2127,7 @@ lpuart_console_get_options(struct lpuart_port *sport, int *baud,
- 	brfa = readb(sport->port.membase + UARTCR4);
- 	brfa &= UARTCR4_BRFA_MASK;
- 
--	uartclk = clk_get_rate(sport->clk);
-+	uartclk = lpuart_get_baud_clk_rate(sport);
- 	/*
- 	 * baud = mod_clk/(16*(sbr[13]+(brfa)/32)
- 	 */
-@@ -2112,7 +2170,7 @@ lpuart32_console_get_options(struct lpuart_port *sport, int *baud,
- 	bd = lpuart32_read(&sport->port, UARTBAUD);
- 	bd &= UARTBAUD_SBR_MASK;
- 	sbr = bd;
--	uartclk = clk_get_rate(sport->clk);
-+	uartclk = lpuart_get_baud_clk_rate(sport);
- 	/*
- 	 * baud = mod_clk/(16*(sbr[13]+(brfa)/32)
- 	 */
-@@ -2286,6 +2344,7 @@ static int lpuart_probe(struct platform_device *pdev)
- 	sport->port.mapbase = res->start;
- 	sport->port.dev = &pdev->dev;
- 	sport->port.type = PORT_LPUART;
-+	sport->devtype = sdata->devtype;
- 	ret = platform_get_irq(pdev, 0);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "cannot obtain irq\n");
-@@ -2301,20 +2360,27 @@ static int lpuart_probe(struct platform_device *pdev)
- 
- 	sport->port.rs485_config = lpuart_config_rs485;
- 
--	sport->clk = devm_clk_get(&pdev->dev, "ipg");
--	if (IS_ERR(sport->clk)) {
--		ret = PTR_ERR(sport->clk);
--		dev_err(&pdev->dev, "failed to get uart clk: %d\n", ret);
-+	sport->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-+	if (IS_ERR(sport->ipg_clk)) {
-+		ret = PTR_ERR(sport->ipg_clk);
-+		dev_err(&pdev->dev, "failed to get uart ipg clk: %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = clk_prepare_enable(sport->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to enable uart clk: %d\n", ret);
--		return ret;
-+	sport->baud_clk = NULL;
-+	if (is_imx8qxp_lpuart(sport)) {
-+		sport->baud_clk = devm_clk_get(&pdev->dev, "baud");
-+		if (IS_ERR(sport->baud_clk)) {
-+			ret = PTR_ERR(sport->baud_clk);
-+			dev_err(&pdev->dev, "failed to get uart baud clk: %d\n", ret);
-+			return ret;
-+		}
- 	}
- 
--	sport->port.uartclk = clk_get_rate(sport->clk);
-+	ret = lpuart_enable_clks(sport);
-+	if (ret)
-+		return ret;
-+	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
- 
- 	lpuart_ports[sport->port.line] = sport;
- 
-@@ -2362,7 +2428,7 @@ static int lpuart_probe(struct platform_device *pdev)
- 
- failed_attach_port:
- failed_irq_request:
--	clk_disable_unprepare(sport->clk);
-+	lpuart_disable_clks(sport);
- 	return ret;
- }
- 
-@@ -2374,7 +2440,7 @@ static int lpuart_remove(struct platform_device *pdev)
- 
- 	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 
--	clk_disable_unprepare(sport->clk);
-+	lpuart_disable_clks(sport);
- 
- 	if (sport->dma_tx_chan)
- 		dma_release_channel(sport->dma_tx_chan);
-@@ -2439,7 +2505,7 @@ static int lpuart_suspend(struct device *dev)
- 	}
- 
- 	if (sport->port.suspended && !irq_wake)
--		clk_disable_unprepare(sport->clk);
-+		lpuart_disable_clks(sport);
- 
- 	return 0;
- }
-@@ -2451,7 +2517,7 @@ static int lpuart_resume(struct device *dev)
- 	unsigned long temp;
- 
- 	if (sport->port.suspended && !irq_wake)
--		clk_prepare_enable(sport->clk);
-+		lpuart_enable_clks(sport);
- 
- 	if (lpuart_is_32(sport)) {
- 		lpuart32_setup_watermark(sport);
--- 
-2.7.4
-
+A similar problem exists for REGMAP_SOUNDWIRE. But I can't find any users
+of regmap_init_sdw (i.e. REGMAP_SOUNDWIRE).
