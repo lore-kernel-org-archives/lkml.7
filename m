@@ -2,140 +2,238 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1CC06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36246C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDD821852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:49:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iYkf0pBb"
+	by mail.kernel.org (Postfix) with ESMTP id EC82F21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfGDJtp (ORCPT
+        id S1727485AbfGDJu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:49:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39383 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfGDJto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:49:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so5893644wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1MIoOEOe3L5d36m+qCZDoY0pkUg2eAP10ETnUDXURVc=;
-        b=iYkf0pBbjyD/sMU9ZtotVTX8Nj3cxIR2B5uXK1I26edqdDIxfXtqMM59ghJg2dKRJf
-         5aUq/96A4mUDW94U1nSMqrDgpoVn6wHpHG4JeDahR0ZMZaUrHDM60OfM2ag/mOjBUISZ
-         +SBU3xRW4w5b3mqiRLbRkDPrnnb76hXhE6Ws0ji6YEGq03He/KDmekfES9DVyOOanIY6
-         uj0sXT+pBLWaO1l+JNM6YUPPc2/h2BEv8sS1W55F0ApXfa/KjiWU2f9pW3TC1OrPA2do
-         Zv63DV6YqCF6lsGu2AOSHyYrxEMWGL/jgNvxIng+3iToCFCjiJxumk5HCrkaF3w1Iksw
-         WhNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1MIoOEOe3L5d36m+qCZDoY0pkUg2eAP10ETnUDXURVc=;
-        b=o5K2x8UgsfE0LT2MEcCDABuBUruIldzwDMbZJFEywJvKJ2q6dfeIxuv1AL6FXtRk3F
-         BITtKxUkIhvjkEPwvomH+Pbn+/X+Li3+QLH05ogyGKVj5kz5VtAYctdmtTJmxd1gMyWX
-         GupB+LUHM0S+0abY3VON2E1Dvw85Lhblu4TO9FW7a4+/zoWngEDTbNsAWyMfImEjq/kW
-         MBb6EsmxWqAd2xthfIDbsVZys/GR+NS0hZGKzqa67mgts12UZiN7kmp0YsgxBK9rhiyC
-         VlOuSt3ZACpPik4pOkQiNBP3+siUS+8BBbcQ+Jaz1dcoF+5kdGFy4Bd7VKVcVSWtETGR
-         OmtQ==
-X-Gm-Message-State: APjAAAUOfiyObUfctVqxRhRcdUg70lGb+R8BQT6Za+v4RK9L+B7lmqaS
-        ukJzY1EwC2wFkckXnLW+3CN73Q==
-X-Google-Smtp-Source: APXvYqxcLaXdXgLAL6JPh0AW/8TU+NXoREQxcAVjjr+ZeZjYaPbS9BIb6pMHKdkLw2iT6OLr+lLjIA==
-X-Received: by 2002:adf:db12:: with SMTP id s18mr32305455wri.335.1562233782623;
-        Thu, 04 Jul 2019 02:49:42 -0700 (PDT)
-Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
-        by smtp.gmail.com with ESMTPSA id y16sm4796099wru.28.2019.07.04.02.49.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 02:49:41 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 12:49:38 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH v6 net-next 5/5] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190704094938.GA27382@apalos>
-References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
- <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
- <20190704111939.5d845071@carbon>
- <20190704093902.GA26927@apalos>
- <20190704094329.GA19839@khorivan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704094329.GA19839@khorivan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 4 Jul 2019 05:50:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47122 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727257AbfGDJu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:50:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 28F55AEA3;
+        Thu,  4 Jul 2019 09:50:55 +0000 (UTC)
+Date:   Thu, 04 Jul 2019 11:50:55 +0200
+Message-ID: <s5h8ste2kn4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.2
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 12:43:30PM +0300, Ivan Khoronzhuk wrote:
-> On Thu, Jul 04, 2019 at 12:39:02PM +0300, Ilias Apalodimas wrote:
-> >On Thu, Jul 04, 2019 at 11:19:39AM +0200, Jesper Dangaard Brouer wrote:
-> >>On Wed,  3 Jul 2019 13:19:03 +0300
-> >>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >>
-> >>> Add XDP support based on rx page_pool allocator, one frame per page.
-> >>> Page pool allocator is used with assumption that only one rx_handler
-> >>> is running simultaneously. DMA map/unmap is reused from page pool
-> >>> despite there is no need to map whole page.
-> >>>
-> >>> Due to specific of cpsw, the same TX/RX handler can be used by 2
-> >>> network devices, so special fields in buffer are added to identify
-> >>> an interface the frame is destined to. Thus XDP works for both
-> >>> interfaces, that allows to test xdp redirect between two interfaces
-> >>> easily. Aslo, each rx queue have own page pools, but common for both
-> >>> netdevs.
-> >>>
-> >>> XDP prog is common for all channels till appropriate changes are added
-> >>> in XDP infrastructure. Also, once page_pool recycling becomes part of
-> >>> skb netstack some simplifications can be added, like removing
-> >>> page_pool_release_page() before skb receive.
-> >>>
-> >>> In order to keep rx_dev while redirect, that can be somehow used in
-> >>> future, do flush in rx_handler, that allows to keep rx dev the same
-> >>> while reidrect. It allows to conform with tracing rx_dev pointed
-> >>> by Jesper.
-> >>
-> >>So, you simply call xdp_do_flush_map() after each xdp_do_redirect().
-> >>It will kill RX-bulk and performance, but I guess it will work.
-> >>
-> >>I guess, we can optimized it later, by e.g. in function calling
-> >>cpsw_run_xdp() have a variable that detect if net_device changed
-> >>(priv->ndev) and then call xdp_do_flush_map() when needed.
-> >I tried something similar on the netsec driver on my initial development.
-> >On the 1gbit speed NICs i saw no difference between flushing per packet vs
-> >flushing on the end of the NAPI handler.
-> >The latter is obviously better but since the performance impact is negligible on
-> >this particular NIC, i don't think this should be a blocker.
-> >Please add a clear comment on this and why you do that on this driver,
-> >so people won't go ahead and copy/paste this approach
-> Sry, but I did this already, is it not enouph?
-The flush *must* happen there to avoid messing the following layers. The comment
-says something like 'just to be sure'. It's not something that might break, it's
-something that *will* break the code and i don't think that's clear with the
-current comment.
+Linus,
 
-So i'd prefer something like 
-'We must flush here, per packet, instead of doing it in bulk at the end of
-the napi handler.The RX devices on this particular hardware is sharing a
-common queue, so the incoming device might change per packet'
+please pull sound fixes for v5.2 from:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.2
 
-Thanks
-/Ilias
-> 
-> -- 
-> Regards,
-> Ivan Khoronzhuk
+The topmost commit is 3450121997ce872eb7f1248417225827ea249710
+
+----------------------------------------------------------------
+
+sound fixes for 5.2
+
+Here are a collection of small fixes for:
+- A race with ASoC HD-audio registration
+- LINE6 usb-audio memory overwrite by malformed descriptor
+- FireWire MIDI handling
+- Missing cast for bit shifts in a few USB-audio quirks
+- The wrong function calls in minor OSS sequencer code paths
+- A couple of HD-audio quirks
+
+----------------------------------------------------------------
+
+Colin Ian King (2):
+      ALSA: usb-audio: fix sign unintended sign extension on left shifts
+      ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
+
+Dennis Wassenberg (1):
+      ALSA: hda/realtek - Change front mic location for Lenovo M710q
+
+Evan Green (1):
+      ALSA: hda: Fix widget_mutex incomplete protection
+
+Richard Sailer (1):
+      ALSA: hda/realtek: Add quirks for several Clevo notebook barebones
+
+Takashi Iwai (1):
+      ALSA: line6: Fix write on zero-sized buffer
+
+Takashi Sakamoto (1):
+      ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
+
+---
+ sound/core/seq/oss/seq_oss_ioctl.c |  2 +-
+ sound/core/seq/oss/seq_oss_rw.c    |  2 +-
+ sound/firewire/amdtp-am824.c       |  2 +-
+ sound/hda/hdac_device.c            | 18 ++++++++++++------
+ sound/pci/hda/patch_realtek.c      |  8 +++++---
+ sound/usb/line6/pcm.c              |  5 +++++
+ sound/usb/mixer_quirks.c           |  4 ++--
+ 7 files changed, 27 insertions(+), 14 deletions(-)
+
+diff --git a/sound/core/seq/oss/seq_oss_ioctl.c b/sound/core/seq/oss/seq_oss_ioctl.c
+index 96ad01fb668c..ccf682689ec9 100644
+--- a/sound/core/seq/oss/seq_oss_ioctl.c
++++ b/sound/core/seq/oss/seq_oss_ioctl.c
+@@ -49,7 +49,7 @@ static int snd_seq_oss_oob_user(struct seq_oss_devinfo *dp, void __user *arg)
+ 	if (copy_from_user(ev, arg, 8))
+ 		return -EFAULT;
+ 	memset(&tmpev, 0, sizeof(tmpev));
+-	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.client, dp->addr.port);
+ 	tmpev.time.tick = 0;
+ 	if (! snd_seq_oss_process_event(dp, (union evrec *)ev, &tmpev)) {
+ 		snd_seq_oss_dispatch(dp, &tmpev, 0, 0);
+diff --git a/sound/core/seq/oss/seq_oss_rw.c b/sound/core/seq/oss/seq_oss_rw.c
+index 79ef430e56e1..537d5f423e20 100644
+--- a/sound/core/seq/oss/seq_oss_rw.c
++++ b/sound/core/seq/oss/seq_oss_rw.c
+@@ -161,7 +161,7 @@ insert_queue(struct seq_oss_devinfo *dp, union evrec *rec, struct file *opt)
+ 	memset(&event, 0, sizeof(event));
+ 	/* set dummy -- to be sure */
+ 	event.type = SNDRV_SEQ_EVENT_NOTEOFF;
+-	snd_seq_oss_fill_addr(dp, &event, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &event, dp->addr.client, dp->addr.port);
+ 
+ 	if (snd_seq_oss_process_event(dp, rec, &event))
+ 		return 0; /* invalid event - no need to insert queue */
+diff --git a/sound/firewire/amdtp-am824.c b/sound/firewire/amdtp-am824.c
+index cc6eb30f03a2..71168728940a 100644
+--- a/sound/firewire/amdtp-am824.c
++++ b/sound/firewire/amdtp-am824.c
+@@ -320,7 +320,7 @@ static void read_midi_messages(struct amdtp_stream *s,
+ 	u8 *b;
+ 
+ 	for (f = 0; f < frames; f++) {
+-		port = (s->data_block_counter + f) % 8;
++		port = (8 - s->tx_first_dbc + s->data_block_counter + f) % 8;
+ 		b = (u8 *)&buffer[p->midi_position];
+ 
+ 		len = b[0] - 0x80;
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index 6907dbefd08c..3842f9d34b7c 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -400,27 +400,33 @@ static void setup_fg_nodes(struct hdac_device *codec)
+ int snd_hdac_refresh_widgets(struct hdac_device *codec, bool sysfs)
+ {
+ 	hda_nid_t start_nid;
+-	int nums, err;
++	int nums, err = 0;
+ 
++	/*
++	 * Serialize against multiple threads trying to update the sysfs
++	 * widgets array.
++	 */
++	mutex_lock(&codec->widget_lock);
+ 	nums = snd_hdac_get_sub_nodes(codec, codec->afg, &start_nid);
+ 	if (!start_nid || nums <= 0 || nums >= 0xff) {
+ 		dev_err(&codec->dev, "cannot read sub nodes for FG 0x%02x\n",
+ 			codec->afg);
+-		return -EINVAL;
++		err = -EINVAL;
++		goto unlock;
+ 	}
+ 
+ 	if (sysfs) {
+-		mutex_lock(&codec->widget_lock);
+ 		err = hda_widget_sysfs_reinit(codec, start_nid, nums);
+-		mutex_unlock(&codec->widget_lock);
+ 		if (err < 0)
+-			return err;
++			goto unlock;
+ 	}
+ 
+ 	codec->num_nodes = nums;
+ 	codec->start_nid = start_nid;
+ 	codec->end_nid = start_nid + nums;
+-	return 0;
++unlock:
++	mutex_unlock(&codec->widget_lock);
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_refresh_widgets);
+ 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 5b3c26991f26..6f3a35949cdd 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2448,9 +2448,10 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1558, 0x9501, "Clevo P950HR", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1558, 0x95e1, "Clevo P95xER", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1558, 0x95e2, "Clevo P950ER", ALC1220_FIXUP_CLEVO_P950),
+-	SND_PCI_QUIRK(0x1558, 0x96e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
+-	SND_PCI_QUIRK(0x1558, 0x97e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
+-	SND_PCI_QUIRK(0x1558, 0x65d1, "Tuxedo Book XC1509", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
++	SND_PCI_QUIRK(0x1558, 0x96e1, "Clevo P960[ER][CDFN]-K", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1558, 0x97e1, "Clevo P970[ER][CDFN]", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1558, 0x65d1, "Clevo PB51[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
++	SND_PCI_QUIRK(0x1558, 0x67d1, "Clevo PB71[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
+ 	SND_PCI_QUIRK_VENDOR(0x1558, "Clevo laptop", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x161f, 0x2054, "Medion laptop", ALC883_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x17aa, 0x3a0d, "Lenovo Y530", ALC882_FIXUP_LENOVO_Y530),
+@@ -7074,6 +7075,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3111, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+diff --git a/sound/usb/line6/pcm.c b/sound/usb/line6/pcm.c
+index 21127e4958b2..2c03e0f6bf72 100644
+--- a/sound/usb/line6/pcm.c
++++ b/sound/usb/line6/pcm.c
+@@ -556,6 +556,11 @@ int line6_init_pcm(struct usb_line6 *line6,
+ 	line6pcm->max_packet_size_out =
+ 		usb_maxpacket(line6->usbdev,
+ 			usb_sndisocpipe(line6->usbdev, ep_write), 1);
++	if (!line6pcm->max_packet_size_in || !line6pcm->max_packet_size_out) {
++		dev_err(line6pcm->line6->ifcdev,
++			"cannot get proper max packet size\n");
++		return -EINVAL;
++	}
+ 
+ 	spin_lock_init(&line6pcm->out.lock);
+ 	spin_lock_init(&line6pcm->in.lock);
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 1f6011f36bb0..199fa157a411 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -741,7 +741,7 @@ static int snd_ni_control_init_val(struct usb_mixer_interface *mixer,
+ 		return err;
+ 	}
+ 
+-	kctl->private_value |= (value << 24);
++	kctl->private_value |= ((unsigned int)value << 24);
+ 	return 0;
+ }
+ 
+@@ -902,7 +902,7 @@ static int snd_ftu_eff_switch_init(struct usb_mixer_interface *mixer,
+ 	if (err < 0)
+ 		return err;
+ 
+-	kctl->private_value |= value[0] << 24;
++	kctl->private_value |= (unsigned int)value[0] << 24;
+ 	return 0;
+ }
+ 
