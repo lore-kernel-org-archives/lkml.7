@@ -2,217 +2,204 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B37C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72432C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60B1218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C3D218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY8QOJDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfGDJPo (ORCPT
+        id S1727372AbfGDJPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:15:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47754 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfGDJPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:15:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 02:15:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="169397368"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga006.jf.intel.com with ESMTP; 04 Jul 2019 02:15:38 -0700
-Date:   Thu, 4 Jul 2019 16:58:55 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190704085855.GB7391@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-7-mdf@kernel.org>
- <20190703180753.GA24723@kroah.com>
- <20190703233058.GA15825@hao-dev>
- <20190704053927.GB347@kroah.com>
- <20190704063106.GA24777@hao-dev>
- <20190704082013.GE6438@kroah.com>
+        Thu, 4 Jul 2019 05:15:52 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45063 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbfGDJPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:15:51 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a14so4727735edv.12;
+        Thu, 04 Jul 2019 02:15:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HYh8uIsv5SY3upo+7MXL8T7kCOGTod8uAtZ1But3kW8=;
+        b=OY8QOJDOrhMyQ5dDb6kKTo4d6AQsIFgtYQlMTIVeick9XEDxS+U3Ycj3KcieRs9kB7
+         VQL48xQY7SV+/Xj7jnl0PYWzC2/ME8qD9SP17GQN+iBykJXI/pspXSkO1ec3XB0WGOhx
+         OhbfHAKTUEvm/G8HtmCZKGkxf4EyVsXR1HaJ6YWA/toL5oC6DYZAQc+a+X99UUtcLbm1
+         SzpsQcj8czCDhxclPriUuRcvkBERQKaiGq0X4x/iZVzkpksRkWpkPIQq5q8n57v/x4wn
+         6Bd0wd9nBgp/NBF9dlsVufvKRXuDKwzi40G3r+8CgWS36AdnWXGwQiBqj49h159Tkwqw
+         pFLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HYh8uIsv5SY3upo+7MXL8T7kCOGTod8uAtZ1But3kW8=;
+        b=mdAEUw46SW4vc2UhOMTy36QHlMhkZA4A/Oaf6MBbA62c+8IjeIIvFkzys50IHiI4Tk
+         12u4bsIplFP3BvtrcRpT5tVMSpP7cnNbGMxw/elRsuY4dFcXtmZ3VYts5LIJkTA5TRBR
+         PKwVrovVzoyRUjcnMiiazojeW1pu++Nj+bC1aat+/Uptp4sjZAAxnjxS6EGTs9CENwZa
+         HWTO/5QaG0YQVYx+N4ZeFx1Zm6qZvHzHx9Iuu+0DpkKw23h2z77Ir3Z4s4Y31t9coXSQ
+         E7hpWdZAxChIqVh5H7ET1wYmYhokFUtCOiHF4CIYp272YsstfIC6W/7kRQokt2uBF1yp
+         2LsQ==
+X-Gm-Message-State: APjAAAXbJAxJ3ySAleZyXfWiSHtUkpSZhyrbz5ZfeKQhIHjtbFMwYRj4
+        C0poom9KdvwjvF4OD/S0jAU=
+X-Google-Smtp-Source: APXvYqwSed+Z6lgrrgoqKwEoCliO+eHU8uiNycKmvDZMK+ib0MoCExlkCL7yM8bCeirQJD1QBSi20A==
+X-Received: by 2002:a05:6402:397:: with SMTP id o23mr48488412edv.68.1562231749382;
+        Thu, 04 Jul 2019 02:15:49 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.54])
+        by smtp.gmail.com with ESMTPSA id v47sm1495559edc.80.2019.07.04.02.15.47
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 02:15:48 -0700 (PDT)
+Subject: Re: [PATCH v2 5/7] power: reset: add driver for mt6323 poweroff
+To:     Frank Wunderlich <frank-w@public-files.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Cc:     Josef Friedl <josef.friedl@speed.at>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-6-frank-w@public-files.de>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <d162c95d-773e-f364-0e06-07f67c5b0cbc@gmail.com>
+Date:   Thu, 4 Jul 2019 11:15:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704082013.GE6438@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190703164822.17924-6-frank-w@public-files.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 10:20:13AM +0200, Greg KH wrote:
-> On Thu, Jul 04, 2019 at 02:31:06PM +0800, Wu Hao wrote:
-> > On Thu, Jul 04, 2019 at 07:39:27AM +0200, Greg KH wrote:
-> > > On Thu, Jul 04, 2019 at 07:30:58AM +0800, Wu Hao wrote:
-> > > > On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
-> > > > > On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
-> > > > > > From: Wu Hao <hao.wu@intel.com>
-> > > > > > 
-> > > > > > In order to support virtualization usage via PCIe SRIOV, this patch
-> > > > > > adds two ioctls under FPGA Management Engine (FME) to release and
-> > > > > > assign back the port device. In order to safely turn Port from PF
-> > > > > > into VF and enable PCIe SRIOV, it requires user to invoke this
-> > > > > > PORT_RELEASE ioctl to release port firstly to remove userspace
-> > > > > > interfaces, and then configure the PF/VF access register in FME.
-> > > > > > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
-> > > > > > ioctl to attach the port back to PF.
-> > > > > > 
-> > > > > >  Ioctl interfaces:
-> > > > > >  * DFL_FPGA_FME_PORT_RELEASE
-> > > > > >    Release platform device of given port, it deletes port platform
-> > > > > >    device to remove related userspace interfaces on PF, then
-> > > > > >    configures PF/VF access mode to VF.
-> > > > > > 
-> > > > > >  * DFL_FPGA_FME_PORT_ASSIGN
-> > > > > >    Assign platform device of given port back to PF, it configures
-> > > > > >    PF/VF access mode to PF, then adds port platform device back to
-> > > > > >    re-enable related userspace interfaces on PF.
-> > > > > 
-> > > > > Why are you not using the "generic" bind/unbind facility that userspace
-> > > > > already has for this with binding drivers to devices?  Why a special
-> > > > > ioctl?
-> > > > 
-> > > > Hi Greg,
-> > > > 
-> > > > Actually we think it should be safer that making the device invisble than
-> > > > just unbinding its driver. Looks like user can try to rebind it at any
-> > > > time and we don't have any method to stop them.
-> > > 
-> > > Why do you want to "stop" the user from doing something?  They asked to
-> > > do it, why prevent it?  If they ask to do something foolish, well, they
-> > > get to keep the pieces :)
-> > 
-> > Actually this is for SRIOV support, as we are moving FPGA accelerator from
-> > PF to VF, so we don't want users to see the FPGA accelerator from PF any
-> > more. We can't allow user to touch same FPGA accelerator from both PF and
-> > VF side (it leads to hardware erros).
+
+
+On 03/07/2019 18:48, Frank Wunderlich wrote:
+> From: Josef Friedl <josef.friedl@speed.at>
 > 
-> Ick, ok, this needs to be documented really well then.
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 
-Yes, we have add relateded descriptions for virtualization support in that
-documentation patch.
-
-[PATCH 05/15] Documentation: fpga: dfl: add descriptions for virtualization
-and new interfaces.
-
-> 
-> > > > > > --- a/include/uapi/linux/fpga-dfl.h
-> > > > > > +++ b/include/uapi/linux/fpga-dfl.h
-> > > > > > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
-> > > > > >  
-> > > > > >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
-> > > > > >  
-> > > > > > +/**
-> > > > > > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
-> > > > > > + *					struct dfl_fpga_fme_port_release)
-> > > > > > + *
-> > > > > > + * Driver releases the port per Port ID provided by caller.
-> > > > > > + * Return: 0 on success, -errno on failure.
-> > > > > > + */
-> > > > > > +struct dfl_fpga_fme_port_release {
-> > > > > > +	/* Input */
-> > > > > > +	__u32 argsz;		/* Structure length */
-> > > > > > +	__u32 flags;		/* Zero for now */
-> > > > > > +	__u32 port_id;
-> > > > > > +};
-> > > > > 
-> > > > > meta-comment, why do all of your structures for ioctls have argsz?  You
-> > > > > "know" the size of the structure already, it's part of the ioctl
-> > > > > definition.  You shouldn't need to also set it again, right?  Otherwise
-> > > > > ALL Linux ioctls would need something crazy like this.
-> > > > 
-> > > > Actually we followed the same method as vfio.
-> > > 
-> > > vfio is a protocol on "the wire", right?  Not an ioctl.
-> > > 
-> > > > The major purpose should be extendibility, as we really need this to
-> > > > be sth long term maintainable.
-> > > 
-> > > You can't change ioctl structure sizes at any time.
-> > > 
-> > > > It really helps, if we add some new members for extentions/enhancement
-> > > > under the same ioctl.
-> > > 
-> > > You don't do that.
-> > > 
-> > > > I don't think everybody needs this, but my consideration here is if
-> > > > newer generations of hardware/specs come with some extentions, I still
-> > > > hope we can resue these IOCTLs as much as we could, instead of
-> > > > creating more new ones.
-> > > 
-> > > You create new ones, like everyone else does, as you can not change old
-> > > code.  By trying to "version" structures like this, it's just going to
-> > > be a nightmare.
-> > 
-> > Actually i learned this from vfio code here, it's not trying to "version"
-> > structures, let me copy the comments from vfio header file. It should be
-> > more clear than above short description from me.
-> > 
-> >  "include/uapi/linux/vfio.h"
-> > 
-> >  /*
-> >   * The IOCTL interface is designed for extensibility by embedding the
-> >   * structure length (argsz) and flags into structures passed between
-> >   * kernel and userspace.  We therefore use the _IO() macro for these
-> >   * defines to avoid implicitly embedding a size into the ioctl request.
-> >   * As structure fields are added, argsz will increase to match and flag
-> >   * bits will be defined to indicate additional fields with valid data.
-> >   * It's *always* the caller's responsibility to indicate the size of
-> >   * the structure passed by setting argsz appropriately.
-> >   */
-> > 
-> >  For example.
-> > 
-> >  struct vfio_device_info {
-> >         __u32   argsz;
-> >         __u32   flags;
-> >  #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
-> >  #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
-> >  #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
-> >  #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
-> >  #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
-> >  #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
-> >         __u32   num_regions;    /* Max region index + 1 */
-> >         __u32   num_irqs;       /* Max IRQ index + 1 */
-> > 
-> > Hope things could be more clear now. :)
-> 
-> That's nice for the vfio stuff, but you are just a "normal" driver here.
-> You want an ioctl that just does one thing, no arguments, no flags, no
-> anything.  No need for a size argument then at all.  These ioctls don't
-> even need a structure for them!
-> 
-> Don't try to be fancy, it's not needed, it's not like you are running
-> out of ioctl space...
-
-Thanks a lot for the comments and suggestions.
-
-That's true, it's a "normal" driver, maybe I overly considered the
-extensibility of it. OK, Let me rework this patch to remove argsz from
-these two ioctls.
-
-What about the existing ioctls for this driver, they have argsz too.
-shall I prepare another patch to remove them as well?
-
-Hao
-
-> 
-> thanks,
-> 
-> greg k-h
+Why is there a Signed-off-by from Josef for this patch but not for the others?
