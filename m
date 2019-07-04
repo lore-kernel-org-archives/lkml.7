@@ -2,34 +2,35 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF1C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5753AC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79F1218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364932064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfGDLsO (ORCPT
+        id S1727684AbfGDLsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:48:14 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:55146 "EHLO mxct.zte.com.cn"
+        Thu, 4 Jul 2019 07:48:20 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:55268 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:48:12 -0400
+        id S1727669AbfGDLsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:48:17 -0400
 Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 25E194A1888AAFC85ED7;
-        Thu,  4 Jul 2019 19:48:08 +0800 (CST)
+        by Forcepoint Email with ESMTPS id D972EEECE78B6B671F1C;
+        Thu,  4 Jul 2019 19:48:13 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x64BloNE014331;
-        Thu, 4 Jul 2019 19:47:50 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id x64BlpKl014390;
+        Thu, 4 Jul 2019 19:47:51 +0800 (GMT-8)
         (envelope-from wang.yi59@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070419482011-2086631 ;
-          Thu, 4 Jul 2019 19:48:20 +0800 
+          with ESMTP id 2019070419482202-2086634 ;
+          Thu, 4 Jul 2019 19:48:22 +0800 
 From:   Yi Wang <wang.yi59@zte.com.cn>
 To:     pbonzini@redhat.com
 Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
@@ -37,34 +38,63 @@ Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
         linux-kernel@vger.kernel.org, peterz@infradead.org,
         xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
         wang.liang82@zte.com.cn
-Subject: [PATCH 0/2] fix likely hint of sched_info_on()
-Date:   Thu, 4 Jul 2019 19:46:13 +0800
-Message-Id: <1562240775-16086-1-git-send-email-wang.yi59@zte.com.cn>
+Subject: [PATCH 2/2] sched: fix unlikely use of sched_info_on()
+Date:   Thu, 4 Jul 2019 19:46:15 +0800
+Message-Id: <1562240775-16086-3-git-send-email-wang.yi59@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562240775-16086-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1562240775-16086-1-git-send-email-wang.yi59@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-04 19:48:20,
+ 21, 2013) at 2019-07-04 19:48:22,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-04 19:47:55,
-        Serialize complete at 2019-07-04 19:47:55
-X-MAIL: mse-fl2.zte.com.cn x64BloNE014331
+ 2019-07-04 19:47:56,
+        Serialize complete at 2019-07-04 19:47:56
+X-MAIL: mse-fl2.zte.com.cn x64BlpKl014390
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When make defconfig, CONFIG_SCHEDSTATS is set to be y, so
-sched_info_on() is 'likely' to be true. However, some functions
-invoke this function with unlikely hint or use no hint. Let's
-fix this.
+sched_info_on() is called with unlikely hint, however, the test
+is to be true when make defconfig. So replace unlikely with
+likely.
 
-Yi Wang (2):
-  kvm: x86: add likely to sched_info_on()
-  sched: fix unlikely use of sched_info_on()
-
- arch/x86/kvm/cpuid.c | 2 +-
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
  kernel/sched/stats.h | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index aa0de24..b7a7c4d 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -157,7 +157,7 @@ static inline void sched_info_dequeued(struct rq *rq, struct task_struct *t)
+ {
+ 	unsigned long long now = rq_clock(rq), delta = 0;
+ 
+-	if (unlikely(sched_info_on()))
++	if (likely(sched_info_on()))
+ 		if (t->sched_info.last_queued)
+ 			delta = now - t->sched_info.last_queued;
+ 	sched_info_reset_dequeued(t);
+@@ -192,7 +192,7 @@ static void sched_info_arrive(struct rq *rq, struct task_struct *t)
+  */
+ static inline void sched_info_queued(struct rq *rq, struct task_struct *t)
+ {
+-	if (unlikely(sched_info_on())) {
++	if (likely(sched_info_on())) {
+ 		if (!t->sched_info.last_queued)
+ 			t->sched_info.last_queued = rq_clock(rq);
+ 	}
+@@ -239,7 +239,7 @@ static inline void sched_info_depart(struct rq *rq, struct task_struct *t)
+ static inline void
+ sched_info_switch(struct rq *rq, struct task_struct *prev, struct task_struct *next)
+ {
+-	if (unlikely(sched_info_on()))
++	if (likely(sched_info_on()))
+ 		__sched_info_switch(rq, prev, next);
+ }
+ 
 -- 
 1.8.3.1
 
