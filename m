@@ -8,58 +8,59 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6CFC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB539C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87139218BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F89021850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0U1d28c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iz/0nekw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfGDN2v (ORCPT
+        id S1727284AbfGDN3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:28:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39062 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfGDN2v (ORCPT
+        Thu, 4 Jul 2019 09:29:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43335 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfGDN3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:28:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so2957666pfe.6;
-        Thu, 04 Jul 2019 06:28:50 -0700 (PDT)
+        Thu, 4 Jul 2019 09:29:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so2951007pfg.10;
+        Thu, 04 Jul 2019 06:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=C3bHvTquVsi+QkqeP9kBzeld7vh/G3nOdaz58xEHRUw=;
-        b=P0U1d28c4dAUPsJQTBNm+JrpF5GtXpCeRrj4L//7J4ktJUETZQ2XzW2aVDxq9XOqBK
-         xir4QnnNsel45AZhoXchJQvks3gb1U/NuVIIh8cmzbqd0BQYVZ4Aa2pZJD8CArI3Y8iQ
-         5W4SSWnODZsO8tXXulrcjtcyUBYd1SvwrOXQuvGhN17RJNWPmeBPhuJQioiFJFXEtjPH
-         cZIEFOsGG1gyxGfvi5sqhQ1vPQIEOuvGrLRdVVLSiP414lzOMais1uHYfVMEI50LRylj
-         tPenhbu19AANqO+bgUUE/kclvyn42yFMW/53k8wL+GzkcWXrck4sbe5dKlZzCpptP7V9
-         Ca3w==
+        bh=NrC7YQIZ5xkcRSKo/zQi/MpzVFzLaSD9GHzJTC7a//g=;
+        b=Iz/0nekwO8pPV/SzqU8khxYHcCdXuYX1M+qJ521b99EYKHqU/Atmqmv0wQM/0Y45wi
+         dTod0mc6aImFiEqTP+Jg0VikDrpGhNItxApZZAtDK3uxpmCLAlJVB3tjBMTc311GrLNz
+         Xog1gTY3fIz05+aeHS/zhAB2ajUUomt7iqBwFxkYDGVMArc0i0c8cfPnZ4dTLsvg5kes
+         JnonHke14k2tewx2i4G/nPcLMQZ9VvGSmfUev2Jd6oaCMiOPpFjREypeig7b/G1lb0pr
+         AG1dndriXbhndb0WdXetR2nKFUgVkryEWruySfyvlgx9u3fhJueIp6w9wyXp40yq4MaX
+         81xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C3bHvTquVsi+QkqeP9kBzeld7vh/G3nOdaz58xEHRUw=;
-        b=fvY52GJ5qE2t44coS+ffo6PA0ArgdAejfGzUGeFtJet2mLsrw0FLghBVlyVTR1Tk2n
-         vUrimPxIcfMsX8jfpSjKgB0W0e43+ngEG7kwCzHzbSYs0+hPcZTfKhWvivVXcHyWojHh
-         uXZhRRgGMw2N9c/qpdI8CJCuaCkFscny3Dlpt4RoCVJYGCrvHtbVPrkTOo56+6ISl7N7
-         1tPZAVxVrCr1ls9meldWZGOrfGOndXN5gN49eJAMJxogrpXEcS6UODYe9jnfDZukSjxW
-         x+hdTkcY7t38mcA724gTYVlFvJ66e4tTYFjeBO8K2bE7e5pP9a05GZNnI8bNdDkr+FZx
-         jh3w==
-X-Gm-Message-State: APjAAAV9pMf/SFo1nvhu4srSIT4U9XRpDBrTKjiZiTQKzXfzP5y/wi5p
-        HmHLp7gSe4Tmac47qp5YceSfiMps+COybxYtd7M=
-X-Google-Smtp-Source: APXvYqyBXRj45MJ/uyjUwIBQviIUhrB6XJ4UUA6ceL6TLExCxn0N3MsOp6KC60LDoS0Kb+G97dzRlhqanQVtRTqM4Zg=
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr19948932pjb.20.1562246930294;
- Thu, 04 Jul 2019 06:28:50 -0700 (PDT)
+        bh=NrC7YQIZ5xkcRSKo/zQi/MpzVFzLaSD9GHzJTC7a//g=;
+        b=mIv4TU0LtJj+Xun7y5ux/MpUzEYFAwJA6ibFqD7oRGJNEO+UUr9h0QPEfDJVGBynRn
+         0v6R05VoJK/MxZ5ktGQoJEnXT4ifUE3eZCooxamFovJ62EPyUQPJDG05QZF//KRaI6Dc
+         4RZDdZiOllCMpM+9hY0LSYOzer0HPhIN3q6Uy7l4XYu3VrzZWGSRErl5+4r16bkozF6T
+         dYngU9t0MjTQTymVvnj6tYjwPlYOt4yhdY/NbQbQJ19+tpFDB0jefwOOTGZAwWeEjUqr
+         AYSPG15av85I7ha9XU2ZaGqczgLB5wvb1wzlr+MUkANkHXQPfU6DPPSZkpnHLrOGRYQi
+         1fgw==
+X-Gm-Message-State: APjAAAUZ9o3APde0MrenrjV7+ZXaOjuxvklcvPSeNVLDXiIz6J0/J75n
+        M+errbJVBkS/vA2WubaZBKDmRgmuwUslk2D7Kq8=
+X-Google-Smtp-Source: APXvYqwb1D9+iZPTUcDo5vyAriSzsNK4XGd4dk5LVB+YuJBuLA57w0wyufhGvW3VS5yM/T8UOblbblFrLFtm1bDo4fY=
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr24859212pgc.74.1562246952477;
+ Thu, 04 Jul 2019 06:29:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org> <20190704084617.3602-6-gregkh@linuxfoundation.org>
-In-Reply-To: <20190704084617.3602-6-gregkh@linuxfoundation.org>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org> <20190704084617.3602-7-gregkh@linuxfoundation.org>
+In-Reply-To: <20190704084617.3602-7-gregkh@linuxfoundation.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 4 Jul 2019 16:28:39 +0300
-Message-ID: <CAHp75VdLZGM3EY3LeorYLgD-8rXUL_jQ9qdTSAfaRnyvwJp+QA@mail.gmail.com>
-Subject: Re: [PATCH 05/11] olpc: x01: convert platform driver to use dev_groups
+Date:   Thu, 4 Jul 2019 16:29:01 +0300
+Message-ID: <CAHp75VekHC9S3o6=GvDo7EsCQwR68OYzdDecA0NeJ6yodtgT3g@mail.gmail.com>
+Subject: Re: [PATCH 06/11] platform: x86: hp-wmi: convert platform driver to
+ use dev_groups
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Darren Hart <dvhart@infradead.org>,
@@ -80,7 +81,7 @@ On Thu, Jul 4, 2019 at 11:47 AM Greg Kroah-Hartman
 >
 > Platform drivers now have the option to have the platform core create
 > and remove any needed sysfs attribute files.  So take advantage of that
-> and do not register "by hand" a lid sysfs file.
+> and do not register "by hand" a bunch of sysfs files.
 >
 
 Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
@@ -95,60 +96,101 @@ Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Cc: platform-driver-x86@vger.kernel.org
 > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  arch/x86/platform/olpc/olpc-xo1-sci.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
+>  drivers/platform/x86/hp-wmi.c | 47 +++++++++--------------------------
+>  1 file changed, 12 insertions(+), 35 deletions(-)
 >
-> diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
-> index 25ce1b3b0732..ce1948918dd2 100644
-> --- a/arch/x86/platform/olpc/olpc-xo1-sci.c
-> +++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
-> @@ -157,6 +157,12 @@ static ssize_t lid_wake_mode_set(struct device *dev,
->  static DEVICE_ATTR(lid_wake_mode, S_IWUSR | S_IRUGO, lid_wake_mode_show,
->                    lid_wake_mode_set);
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 2521e45280b8..b4ed5902737a 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -502,6 +502,17 @@ static DEVICE_ATTR_RO(dock);
+>  static DEVICE_ATTR_RO(tablet);
+>  static DEVICE_ATTR_RW(postcode);
 >
-> +static struct attribute *lid_attrs[] = {
-> +       &dev_attr_lid_wake_mode.attr,
+> +static struct attribute *hp_wmi_attrs[] = {
+> +       &dev_attr_display.attr,
+> +       &dev_attr_hddtemp.attr,
+> +       &dev_attr_als.attr,
+> +       &dev_attr_dock.attr,
+> +       &dev_attr_tablet.attr,
+> +       &dev_attr_postcode.attr,
 > +       NULL,
 > +};
-> +ATTRIBUTE_GROUPS(lid);
+> +ATTRIBUTE_GROUPS(hp_wmi);
 > +
->  /*
->   * Process all items in the EC's SCI queue.
->   *
-> @@ -510,17 +516,8 @@ static int setup_lid_switch(struct platform_device *pdev)
->                 goto err_register;
->         }
->
-> -       r = device_create_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
-> -       if (r) {
-> -               dev_err(&pdev->dev, "failed to create wake mode attr: %d\n", r);
-> -               goto err_create_attr;
-> -       }
-> -
->         return 0;
->
-> -err_create_attr:
-> -       input_unregister_device(lid_switch_idev);
-> -       lid_switch_idev = NULL;
->  err_register:
->         input_free_device(lid_switch_idev);
->         return r;
-> @@ -528,7 +525,6 @@ static int setup_lid_switch(struct platform_device *pdev)
->
->  static void free_lid_switch(void)
+>  static void hp_wmi_notify(u32 value, void *context)
 >  {
-> -       device_remove_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
->         input_unregister_device(lid_switch_idev);
+>         struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+> @@ -678,16 +689,6 @@ static void hp_wmi_input_destroy(void)
+>         input_unregister_device(hp_wmi_input_dev);
 >  }
 >
-> @@ -629,6 +625,7 @@ static struct platform_driver xo1_sci_driver = {
->         .remove = xo1_sci_remove,
->         .suspend = xo1_sci_suspend,
->         .resume = xo1_sci_resume,
-> +       .dev_groups = lid_groups,
+> -static void cleanup_sysfs(struct platform_device *device)
+> -{
+> -       device_remove_file(&device->dev, &dev_attr_display);
+> -       device_remove_file(&device->dev, &dev_attr_hddtemp);
+> -       device_remove_file(&device->dev, &dev_attr_als);
+> -       device_remove_file(&device->dev, &dev_attr_dock);
+> -       device_remove_file(&device->dev, &dev_attr_tablet);
+> -       device_remove_file(&device->dev, &dev_attr_postcode);
+> -}
+> -
+>  static int __init hp_wmi_rfkill_setup(struct platform_device *device)
+>  {
+>         int err, wireless;
+> @@ -858,8 +859,6 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+>
+>  static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  {
+> -       int err;
+> -
+>         /* clear detected rfkill devices */
+>         wifi_rfkill = NULL;
+>         bluetooth_rfkill = NULL;
+> @@ -869,35 +868,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>         if (hp_wmi_rfkill_setup(device))
+>                 hp_wmi_rfkill2_setup(device);
+>
+> -       err = device_create_file(&device->dev, &dev_attr_display);
+> -       if (err)
+> -               goto add_sysfs_error;
+> -       err = device_create_file(&device->dev, &dev_attr_hddtemp);
+> -       if (err)
+> -               goto add_sysfs_error;
+> -       err = device_create_file(&device->dev, &dev_attr_als);
+> -       if (err)
+> -               goto add_sysfs_error;
+> -       err = device_create_file(&device->dev, &dev_attr_dock);
+> -       if (err)
+> -               goto add_sysfs_error;
+> -       err = device_create_file(&device->dev, &dev_attr_tablet);
+> -       if (err)
+> -               goto add_sysfs_error;
+> -       err = device_create_file(&device->dev, &dev_attr_postcode);
+> -       if (err)
+> -               goto add_sysfs_error;
+>         return 0;
+> -
+> -add_sysfs_error:
+> -       cleanup_sysfs(device);
+> -       return err;
+>  }
+>
+>  static int __exit hp_wmi_bios_remove(struct platform_device *device)
+>  {
+>         int i;
+> -       cleanup_sysfs(device);
+>
+>         for (i = 0; i < rfkill2_count; i++) {
+>                 rfkill_unregister(rfkill2[i].rfkill);
+> @@ -968,6 +944,7 @@ static struct platform_driver hp_wmi_driver = {
+>                 .pm = &hp_wmi_pm_ops,
+>         },
+>         .remove = __exit_p(hp_wmi_bios_remove),
+> +       .dev_groups = hp_wmi_groups,
 >  };
 >
->  static int __init xo1_sci_init(void)
+>  static int __init hp_wmi_init(void)
 > --
 > 2.22.0
 >
