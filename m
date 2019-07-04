@@ -2,124 +2,152 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59E5C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4353FC46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D98218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562248209;
-	bh=4PW5nvqwyM7OR+LkvB9HftlbPSqldTl/coy/yvrWKxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MZBp4ymUUY/WNpaHTW0mMpmmgHEycIQM+z7LfywBlaAEdrheX2bCAJBd2kDp6urtt
-	 p/X1FBI1qCSuCe7/2aIcHlQUbx491ygmWmXq93gKJOMNc+Rg1c60Zr+02AtvpE0wNT
-	 H1XPwjpirjpGaqqDXFQANSgC47SXE/KUgbNAQoRM=
+	by mail.kernel.org (Postfix) with ESMTP id 191D22189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:51:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmowFyFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfGDNuI (ORCPT
+        id S1727314AbfGDNvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:50:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbfGDNuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:50:08 -0400
-Received: from localhost (unknown [89.205.128.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B59A2189E;
-        Thu,  4 Jul 2019 13:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562248207;
-        bh=4PW5nvqwyM7OR+LkvB9HftlbPSqldTl/coy/yvrWKxU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ucoXT08wHmr8LEIrhMwCPFo2B2CESRhk4c1QaPyOMSVIVfwKpp2wK4u2CWjB9E6jK
-         IjY5K1wr3jyZvhQWV6j0EzxOjN4gNXVcLQJ7RE6r7BOeVog2NHJ8erjRCxGhtuB9AY
-         W0BjsmE4xg0UCS9jTo+EmWl7a90CBqzFPDPzQlwM=
-Date:   Thu, 4 Jul 2019 15:50:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, linux-fsdevel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH] erofs: promote erofs from staging
-Message-ID: <20190704135002.GB13609@kroah.com>
-References: <20190704133413.43012-1-gaoxiang25@huawei.com>
+        Thu, 4 Jul 2019 09:51:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42581 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfGDNvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:51:41 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z25so5479390edq.9;
+        Thu, 04 Jul 2019 06:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B2NJUH3gYGgBtbx3WN1Ity0pDWugJQ7jF9R1ADUX4lk=;
+        b=hmowFyFGkwXbEFC/kyfNcBrt9V9cHjiQIm+Z0EQg+YQlW5rfQRBhO6IWD/BOPARcU8
+         ejkMVH9q8Bv/mYnS9q+JYZEaMW6sagrnojzOC/UCdqT3UYZIjmJv7Ok7r+uMy0DWvY2q
+         G5LjM3qwC79ZEsjXxJ0NSXeUDTWElwdMq1sg4TDlJPFAn7vz9L3Kwr5DLPndWA2aCO4w
+         IB/oKVx3QJxAdG6Tq411VPBtbkIiFTSiT3hkWex2/NgQhoJVAqWD0dH+LHbaf/Tbrcbx
+         1M15JCpoSLDBP5ASs7mwSbbI91QiAFOyTYcOBf7okxvzYFcPQesKfXn0kM/zjR+Jzwwq
+         DICw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B2NJUH3gYGgBtbx3WN1Ity0pDWugJQ7jF9R1ADUX4lk=;
+        b=dCr6fzGm9rML/HyST07z3XMwPl0a/itl5n3d7VL/8hDQ3c5dy8suykniEDIaUhjXPI
+         kwjrZpqm4zW1BGMzzGPmGmN+5tPivLGCzxRSSY8N4aZ+Ptcn5I1b+AQVFSPYog6XTks9
+         e8knkUib2mImr5JxDHuRsBCQEl8z2ReX8opXaXFD5vWDzVeyHzviJkrQXxHC1ZOZTyFx
+         KATzBgzDgDtAri7/x9XmkQSr7+mC1QVLsvFc2EZWejNB8TqpDX1AWOl6MrdE2DH/Fsu6
+         KidQ8L9/Sv487vCPhMGyVb0FBvSdNOjT2NIIVi5To8sDH5phQ3WktKXq6r+J3ZOsgb0d
+         EQuQ==
+X-Gm-Message-State: APjAAAV5vhLAnL1pT9Xq6WvSA2s2XrKDk4ITGbbvQoeg6tKdUpdsujvX
+        LF3MEMfduCuGK7LIi2rmItywA03dPrv22238i9Y=
+X-Google-Smtp-Source: APXvYqy0BJY/7zHhJ8fIDLe2X+6WEGO81pJJSvAlHI679eDU3T2nzWxvLXnNB4Rdv1E6hpJcX38qgxrxWALFF2nDlLo=
+X-Received: by 2002:a17:906:6802:: with SMTP id k2mr14814143ejr.174.1562248299953;
+ Thu, 04 Jul 2019 06:51:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704133413.43012-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190702202631.32148-1-robdclark@gmail.com> <20190702202631.32148-2-robdclark@gmail.com>
+ <20190704082001.GD6546@8bytes.org>
+In-Reply-To: <20190704082001.GD6546@8bytes.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 4 Jul 2019 06:51:23 -0700
+Message-ID: <CAF6AEGtjMqoFprY+r6zwUxxpm9iFfN-n-uNad3w9vxOCcTrQJA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] iommu: add support for drivers that manage iommu explicitly
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        aarch64-laptops@lists.linaro.org,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joe Perches <joe@perches.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 09:34:13PM +0800, Gao Xiang wrote:
-> EROFS file system has been in Linux-staging for about a year.
-> It has been proved to be stable enough to move out of staging
-> by 10+ millions of HUAWEI Android mobile phones on the market
-> from EMUI 9.0.1, and it was promoted as one of the key features
-> of EMUI 9.1 [1], including P30(pro).
-> 
-> EROFS is a read-only file system designed to save extra storage
-> space with guaranteed end-to-end performance by applying
-> fixed-size output compression, inplace I/O and decompression
-> inplace technologies [2] to Linux filesystem.
-> 
-> In our observation, EROFS is one of the fastest Linux compression
-> filesystem using buffered I/O in the world. It will support
-> direct I/O in the future if needed. EROFS even has better read
-> performance in a large CR range compared with generic uncompressed
-> file systems with proper CPU-storage combination, which is
-> a reason why erofs can be landed to speed up mobile phone
-> performance, and which can be probably used for other use cases
-> such as LiveCD and Docker image as well.
-> 
-> Currently erofs supports 4k LZ4 fixed-size output compression
-> since LZ4 is the fastest widely-used decompression solution in
-> the world and 4k leads to unnoticable read amplification for
-> the worst case. More compression algorithms and cluster sizes
-> could be added later, which depends on the real requirement.
-> 
-> More informations about erofs itself are available at:
->  Documentation/filesystems/erofs.txt
->  https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
-> 
-> erofs-utils (mainly mkfs.erofs now) is available at
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
-> 
-> Preliminary iomap support has been pending in erofs mailing
-> list by Chao Yu. The key issue is that current iomap doesn't
-> support tail-end packing inline data yet, it should be
-> resolved later.
-> 
-> Thanks to many contributors in the last year, the code is more
-> clean and improved. We hope erofs can be used in wider use cases
-> so let's promote erofs out of staging and enhance it more actively.
-> 
-> Share comments about erofs! We think erofs is useful to
-> community as a part of Linux upstream :)
+On Thu, Jul 4, 2019 at 1:20 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Jul 02, 2019 at 01:26:18PM -0700, Rob Clark wrote:
+> > 1) In some cases the bootloader takes the iommu out of bypass and
+> >    enables the display.  This is in particular a problem on the aarch64
+> >    laptops that exist these days, and modern snapdragon android devices.
+> >    (Older devices also enabled the display in bootloader but did not
+> >    take the iommu out of bypass.)  Attaching a DMA or IDENTITY domain
+> >    while scanout is active, before the driver has a chance to intervene,
+> >    makes things go *boom*
+>
+> Just to make sure I get this right: The bootloader inializes the SMMU
+> and creates non-identity mappings for the GPU? And when the SMMU driver
+> in Linux takes over this breaks display output.
 
-I don't know if this format is easy for the linux-fsdevel people to
-review, it forces them to look at the in-kernel code, which makes it
-hard to quote.
+correct
 
-Perhaps just make a patch that adds the filesystem to the tree and after
-it makes it through review, I can delete the staging version?  We've
-been doing that for wifi drivers that move out of staging as it seems to
-be a bit easier.
+> > +     /*
+> > +      * If driver is going to manage iommu directly, then avoid
+> > +      * attaching any non driver managed domain.  There could
+> > +      * be already active dma underway (ie. scanout in case of
+> > +      * bootloader enabled display), and interfering with that
+> > +      * will make things go *boom*
+> > +      */
+> > +     if ((domain->type != IOMMU_DOMAIN_UNMANAGED) &&
+> > +         dev->driver && dev->driver->driver_manages_iommu)
+> > +             return 0;
+> > +
+>
+> When the default domain is attached, there is usually no driver attached
+> yet. I think this needs to be communicated by the firmware to Linux and
+> the code should check against that.
 
-thanks,
+At least for the OF case, it happens in the of_dma_configure() which
+happens from really_probe(), so there is normally a driver.  There are
+a few exceptional cases, where drivers call of_dma_configure() on
+their own sub-device without a driver attached (hence the need to
+check if dev->driver is NULL).
 
-greg k-h
+I'm also interested in the ACPI case eventually... the aarch64
+"windows" laptops do have ACPI.  But for now we are booting with DT
+since there is quite a lot of work before we get to point of using
+ACPI.  (In particular, under windows, device power management is done
+thru a Platform Extension  Plugin (PEP), but so far linux has no such
+mechanism.)
+
+We really don't have control of the firmware.  But when arm-smmu is
+probed it can read back the hw state and figure out what is going on
+(with an RFC series[1] from Bjorn which was posted earlier), so we
+don't really need to depend on the firmware.
+
+> > -     bool suppress_bind_attrs;       /* disables bind/unbind via sysfs */
+> > +     bool suppress_bind_attrs:1;     /* disables bind/unbind via sysfs */
+> > +     bool driver_manages_iommu:1;    /* driver manages IOMMU explicitly */
+>
+> How does this field get set?
+
+
+It is set in the driver in the second patch[2] in this series.
+
+BR,
+-R
+
+[1] https://www.spinics.net/lists/arm-kernel/msg732246.html
+[2] https://patchwork.freedesktop.org/patch/315291/
