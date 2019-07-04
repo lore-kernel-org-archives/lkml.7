@@ -2,101 +2,95 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCBFC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF6C46480
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5652189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mNMoh5UH"
+	by mail.kernel.org (Postfix) with ESMTP id 9D6922189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfGDNFa (ORCPT
+        id S1727287AbfGDNGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:05:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfGDNFa (ORCPT
+        Thu, 4 Jul 2019 09:06:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51250 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbfGDNGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:05:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7doTKV97OLObJ2URRWGKRUEPdTwo2Fw8thDoTxcupKw=; b=mNMoh5UHOzTLQeigOfF3xqnij
-        V7pMqlyctC/O1GnPHjnn8z5Fj3baBhoKbj2jxTskM6fNiw4nx04+RbL79UDYdhkmvwxwpw7F2vwfd
-        yiG9XHVVS8O2syI2TK2dnodXYyLpuU4Pm/kx7LWinbeYf6qd7DCcwAA+hbpFZMxRC7g3Fo+2GzhWl
-        weq5IXicaKO6A+y1/df97Aa+/wVMsgJPrSAmFAQ/MFkXSICiNla+G6g2yweWYw0o9YTL1WMerRV6A
-        mk+m5uipbxFIrfNh6sJ3kFc4baf4llrZmNEYY3YXVwCxO+x6C115sWSpL0vF2nNgZN6KsnxpKFxq5
-        sEIndIz3g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hj1QE-0003YF-R2; Thu, 04 Jul 2019 13:05:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 42B4120AF0744; Thu,  4 Jul 2019 15:05:09 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 15:05:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, Chris Mason <clm@fb.com>
-Subject: Re: [PATCH 1/1] tools/dtrace: initial implementation of DTrace
-Message-ID: <20190704130509.GO3402@hirez.programming.kicks-ass.net>
-References: <201907040313.x643D8Pg025951@userv0121.oracle.com>
- <201907040314.x643EUoA017906@aserv0122.oracle.com>
+        Thu, 4 Jul 2019 09:06:07 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E9D8F287FCD;
+        Thu,  4 Jul 2019 14:06:04 +0100 (BST)
+Date:   Thu, 4 Jul 2019 15:06:01 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Pawel Osciak <posciak@chromium.org>
+Subject: Re: [PATCH v2 1/2] media: uapi: Add VP8 stateless decoder API
+Message-ID: <20190704150601.05509027@collabora.com>
+In-Reply-To: <dadc0a899608939b456ea714c86d56ad0a3a08f9.camel@collabora.com>
+References: <20190702170016.5210-1-ezequiel@collabora.com>
+        <20190702170016.5210-2-ezequiel@collabora.com>
+        <4206efe071473daee60cc330ae7934697110516f.camel@collabora.com>
+        <dadc0a899608939b456ea714c86d56ad0a3a08f9.camel@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201907040314.x643EUoA017906@aserv0122.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 08:14:30PM -0700, Kris Van Hees wrote:
-> +int dt_bpf_attach(int event_id, int bpf_fd)
-> +{
-> +	int			event_fd;
-> +	int			rc;
-> +	struct perf_event_attr	attr = {};
-> +
-> +	attr.type = PERF_TYPE_TRACEPOINT;
-> +	attr.sample_type = PERF_SAMPLE_RAW;
-> +	attr.sample_period = 1;
-> +	attr.wakeup_events = 1;
-> +	attr.config = event_id;
-> +
-> +	/* Register the event (based on its id), and obtain a fd. */
-> +	event_fd = perf_event_open(&attr, -1, 0, -1, 0);
-> +	if (event_fd < 0) {
-> +		perror("sys_perf_event_open");
-> +		return -1;
-> +	}
-> +
-> +	/* Enable the probe. */
-> +	rc = ioctl(event_fd, PERF_EVENT_IOC_ENABLE, 0);
+On Thu, 04 Jul 2019 10:00:33 -0300
+Ezequiel Garcia <ezequiel@collabora.com> wrote:
 
-AFAICT you didn't use attr.disabled = 1, so this IOC_ENABLE is
-completely superfluous.
 
-> +	if (rc < 0) {
-> +		perror("PERF_EVENT_IOC_ENABLE");
-> +		return -1;
-> +	}
-> +
-> +	/* Associate the BPF program with the event. */
-> +	rc = ioctl(event_fd, PERF_EVENT_IOC_SET_BPF, bpf_fd);
-> +	if (rc < 0) {
-> +		perror("PERF_EVENT_IOC_SET_BPF");
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
+> 
+> Oops, this is just an internal note, it seems I forgot to remove this one.
+> 
+> > I am right to think that this is basically the size in bits of the
+> > frame header ? Maybe it could be another way to formulate it ? I'm just
+> > trying to think of formulation that will better guide the developers
+> > implementing the parser feeding this. You basically need to parse the
+> > header to get this size (as everything is dynamically sized).
+> >   
+> 
+> Depending what you call "frame header", then yes, it's the size in bits.
+> 
+>                              first_part_size          parttion_sizes[0]
+>                                 ^                     ^
+>                                 |                     |
+>                        +--------+------+        +-----+-----+
+>                        | control part  |        |           |
+>    +--------+----------------+------------------+-----------+-----+-----------+
+>    | tag 3B | extra 7B | hdr | mb_data | dct sz | dct part0 | ... | dct partn |
+>    +--------+-----------------------------------+-----------+-----+-----------+
+> 
+> The above shows a VP8 frame, "macroblock_bit_offset" is the size in bits of
+> the "hdr" portion: i.e. the header of the first partition (aka control partition).
+> 
+> Thinking about it, the current description is quite confusing.
+> 
+> How about:
+> 
+> "Size in bits of the frame header. In other words, this the size in bits of the header
+> portion of the first partition".
+
+How about having a similar diagram somewhere in the spec? It's usually
+much clearer than a sentence, at least that's my opinion.
