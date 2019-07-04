@@ -2,89 +2,123 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F536C06511
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13226C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ECF218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62BC218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjed64kf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ffmju7yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfGDAh6 (ORCPT
+        id S1727619AbfGDAhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 20:37:58 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40445 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfGDAhw (ORCPT
+        Wed, 3 Jul 2019 20:37:50 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:49937 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfGDAhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 20:37:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e8so4296136otl.7;
-        Wed, 03 Jul 2019 17:37:52 -0700 (PDT)
+        Wed, 3 Jul 2019 20:37:47 -0400
+Received: by mail-pg1-f202.google.com with SMTP id 30so2571430pgk.16
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 17:37:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=kxKadiwStil9way1kU8jzMyzFN0LuSwbCGE20CmySOI=;
-        b=jjed64kf8UigzT5xPFuCz/Amv7WWAE+6rjJhQtW2VDYH4cmOmzA1vr44kYsoBJTpaz
-         dJmiqSYb2ZTRxwDk5JuHdcjKJ1tt72V4tLsn/8xmWsM/qHhCw/Cr1Qs+zLIW2q8s5iuC
-         MQSfIJ+VsVcLXWy+RUH9ED/MSwMEMEBjK/KP6ffPBTB6e6uWXWZI1ifhvzW58Qyx7Vvr
-         ZN22H0p7boLb9J44FTlPFArT0f5wu4yteSCNHHpkeNr7RTHwux9vATkCmlo8CEGbSew4
-         kx97el09vrfVjyi0FZbZgiXfUR+fVhTswAljsD+iQn2erhsvaOybMBJU1fF8SS6VWd8c
-         arOg==
+        bh=XlrqH678HDR84yo41rM73BaaQaGuXs9XZZneq4FOZeY=;
+        b=ffmju7yr7gRfaJbHZ/EKKmVncl8VlWULQaThQY06zll3+6WpQG6lpGZ4OPQmMivptS
+         8hDYradWvLpP2Ynet+Ye7uV0kLczbf6RFD8mFVTANX2yg7wM9YbXidQ/FQZgq07MWegb
+         OGw9om8WRHzmMMnObSBGoIx3ybtRj+V2h+ffEXd5lxF3Nc0UTcEdl8L3/UVHObrq7Hpr
+         pb1JvhsO78qMQnHwg/Ed80IloOa6WYSoqzkmmaIisIDaOlJlxgcTtQcFCed7VfZAR09f
+         b9pzfPkA2sw/PBcf5XMV0Aycvwei2GOmUX9h6Qyralx5M52IFq4n3EvX8Bsm6682vUXZ
+         cuVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kxKadiwStil9way1kU8jzMyzFN0LuSwbCGE20CmySOI=;
-        b=GZNbAhG8AcZHCLBvgKQYZPJTL++tg0X+IJIBWg3JPvxf6pRS0J5DkaFxt1RJdWAcv6
-         UINOVLTMl0NrN3dtjKglmu56T1jV5gd8KLdFIKbBJ8d6hmc5mvep9tqS20oWznIWbWQT
-         y3LAa5GNeTiP76NcRYmBI3GNLgF7IpVciMp91Qxy2D+FWixTupvVGZTJxyhwzlnhFJ4/
-         1sA/8MEvEhDqDgF1i26BQh70rbt4wOxk2EWkSgcj6OsTjKFN7ncFKZQUeVwbx+EKx5UP
-         u5UaxhjcG6aC0vzR6bhNBbhGzMKGW2GuPX+gaDb2ZSQCGIHDih5whw0qau5UbKYo+7MJ
-         a4Ww==
-X-Gm-Message-State: APjAAAWJSl1JNPLnJs4jTfBYbLh3WkFAN8CJsixLDzAPJMalVETjrhs3
-        gpCQwV61xjAp0c26Iwy9z+oY1GDaslJvqIUL1YQ=
-X-Google-Smtp-Source: APXvYqzeYi0PDoaiISTn2M9/7d/KVcBfQ7O2/IKHGPqh7tH9DMLVPheOsLoY4L/bml6SlwrjRhF2NNyFcfJgV6g/VzA=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr12145726oto.118.1562200672188;
- Wed, 03 Jul 2019 17:37:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560474949-20497-1-git-send-email-wanpengli@tencent.com>
- <1560474949-20497-2-git-send-email-wanpengli@tencent.com> <CANRm+CzUvTTOuYhsGErSDxdNSmxVr7o8d66DF0KOk4v3Meajmg@mail.gmail.com>
- <CANRm+Cw0vmqi4s4HhnMqs=hZZixHmU87CGO_ujTGoN_Osjx76g@mail.gmail.com>
- <CANRm+Cz9Lc5rA7-2yLLX7wiemM-gdvWvQQdGVrvkYanYO9TwgA@mail.gmail.com> <18fd2372-45d8-0bff-79e7-373a8b7d129c@redhat.com>
-In-Reply-To: <18fd2372-45d8-0bff-79e7-373a8b7d129c@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 4 Jul 2019 08:37:44 +0800
-Message-ID: <CANRm+CyykkkvCP0sS6SBOMO_XFYVviOGNcQOMuudGZ3y0y1YQg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=XlrqH678HDR84yo41rM73BaaQaGuXs9XZZneq4FOZeY=;
+        b=mOaOB2ki69Jx9gkbEU0r7BrG/pFqzaGORorSFn9YO1Ok37h4CNhWGdgqkgy2TK6SeG
+         Gx5YPastZUuM5oY9KnKHiClVT6/XS803PZkDpbaAZSE963fCKlnxXnhlB2T8q7XusLJG
+         eWMil65luL6jlhz+ZDlMcNpK7T6j8NSbKMqsGvlqheAJtTWnZuHutBINILDkiIFJV6D6
+         GrYAJeY/sGLzJNBMOk8ypRsWRyqbcBTBGD7gQRiXIdXR3Fc2xLCgXFH3/VHi8SJdgBB4
+         qjp7VhgPwXWiz2QlpuTgm341/OsIxTsukhaFEGSCzo3RvUfNNkBHECbsKLad3Iboa1za
+         FkdQ==
+X-Gm-Message-State: APjAAAUlrRAOn56iSRLH9tmUwW6QlN0i3qCfkhU69yE31O79aMeqlqNi
+        OeZh4PB1k0MeMTqouePCGe0lTGFN2RG+iG1UF7rGNA==
+X-Google-Smtp-Source: APXvYqzEyrStQtoN+0MmqxKcoxkpwGwMdPWPCVJ2v+rt7FevA703DgZaVQugKeZ2rVGA0cnHCH+IEhNvyiDaQ8b6b05Cdg==
+X-Received: by 2002:a63:1b07:: with SMTP id b7mr39423299pgb.133.1562200665901;
+ Wed, 03 Jul 2019 17:37:45 -0700 (PDT)
+Date:   Wed,  3 Jul 2019 17:36:03 -0700
+In-Reply-To: <20190704003615.204860-1-brendanhiggins@google.com>
+Message-Id: <20190704003615.204860-7-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190704003615.204860-1-brendanhiggins@google.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v6 06/18] kbuild: enable building KUnit
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 at 22:13, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 03/07/19 02:48, Wanpeng Li wrote:
-> > Hi Paolo, how about this patchset? Patch 2/2 is easy to take, do you
-> > have more concern about patch 1/2?
->
-> I don't know.  It seems somewhat hard to tune and in cyclictest it only
-> happens for preemption_timer=N.  Are you using preemption_timer=N
-> together with the LAPIC-timer-on-service-CPU patches?
+KUnit is a new unit testing framework for the kernel and when used is
+built into the kernel as a part of it. Add KUnit to the root Kconfig and
+Makefile to allow it to be actually built.
 
-A 25ns conservative value makes no benefit for cyclictest any more
-even when preemption_timer=N. Btw, maybe it is the time to merge the
-LAPIC-timer-on-service-CPU patches now. :)
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ Kconfig  | 2 ++
+ Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Regards,
-Wanpeng Li
+diff --git a/Kconfig b/Kconfig
+index 48a80beab6853..10428501edb78 100644
+--- a/Kconfig
++++ b/Kconfig
+@@ -30,3 +30,5 @@ source "crypto/Kconfig"
+ source "lib/Kconfig"
+ 
+ source "lib/Kconfig.debug"
++
++source "kunit/Kconfig"
+diff --git a/Makefile b/Makefile
+index fabc127d127f9..44e0d730dd5b6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -991,7 +991,7 @@ endif
+ PHONY += prepare0
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+-core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
++core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ kunit/
+ 
+ vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
+ 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
