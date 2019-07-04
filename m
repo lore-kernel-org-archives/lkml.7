@@ -2,108 +2,110 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD25CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA31C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A830721852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E209821882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="noWI4Xsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfGDHPC (ORCPT
+        id S1727408AbfGDHQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:15:02 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40528 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfGDHPC (ORCPT
+        Thu, 4 Jul 2019 03:16:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39752 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727209AbfGDHQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:15:02 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so5002994otl.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:15:01 -0700 (PDT)
+        Thu, 4 Jul 2019 03:16:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so5072889ljh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CM3CA+ac86LStxn0A7zCf+sHc6gVIK+nURjGT/ZVURM=;
+        b=noWI4Xsww4AJnpE58QFOvduhB9wBWDFkpSe+Vwy2fZ0AOCB5779/gGsN9l9X3L3+Vz
+         2U5Mk11jDXkh5zK+rXiY70rSTYMLGD7BnXPYnyoCcVx8i4GKaFI7DmR0K3KNh6+ITsLa
+         +ZIwOEF1CtSL/fsKuACAzNIn1sAWmf3FOy9180YbvETQeZ8FwqoZUTSzZJ38suahAHQ6
+         2/pTGWkhA96+/1UdRfkOfONEpVlxYmnxyH5DD4tqyT6zU50JG5MO65uD+2RKBnlx17GQ
+         u3caugrGFRIDPf3gx/miR319qEwsnJDN2icdIMupqu+FmXg/MqUQprrULNQponZsL/jF
+         B9Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZIJ6I4kylF0BPBkwVx1NeJTqIv5Ok8DYkWpGVavV2KA=;
-        b=tcmWJHHI14296PqkiKK/MXLf+dXKsBbJrlR42OA8OJ7GF9ouW2gxSftQk8DUZZmYva
-         HOmTKqAS5hey7DRi3ojJgImCFWC8+vx0+dZauLMdTxAAV3Qe6OvGT/wOHrqZzWLY/Aq9
-         E4hpjjqtQItYMb5fHT/fx3uj5eAHPsBg65K9yBJ3v8/cqqZxdeSvbaDyz9nY4g5J1H7F
-         KT6inQBIHFFTVLs0fSPule0eK+0iJIXYNWhsdglV/yhg7FmRlL+PecGTUxEj/39GGgHm
-         Oy5h4NKYYQzwCOqMnXLmCEKrAhSXf3hDp00s30X8LrsIlhiIVsEpRZXdAB+XE85tjEiP
-         iSFQ==
-X-Gm-Message-State: APjAAAUnffibV6s5bC+4kysfy5BuOAz/aUBTxWUJ2Ls1anUqgEhEgqln
-        kYT5lT2gofEAOHnDv9q7Ph7qsl4owrHhm1IPq8g=
-X-Google-Smtp-Source: APXvYqwRR5UTh1n5Wb4zp4t58gm3siYOJBWZnUuHSrPJ10zSpDGUZlxY94sfN3zdbAXzFqFykcUksOOqiqtwmyDKkx0=
-X-Received: by 2002:a9d:704f:: with SMTP id x15mr12209735otj.297.1562224501509;
- Thu, 04 Jul 2019 00:15:01 -0700 (PDT)
+        bh=CM3CA+ac86LStxn0A7zCf+sHc6gVIK+nURjGT/ZVURM=;
+        b=dT1kO/Jqcig0OaiviuzNbOIpMkllA2PzcckNl3Vapq9tEItKrxNBdWuZVFpigRBWlO
+         hCNsxGWzddKL/Z0pHP3j+OjNhTFIcu3NV8LjB6W0kK1UD67Nk395glgKv3BvzYB2kvgl
+         Ntm2mzBzLUDcN8h2tJgiGdUacxUHkdA7WnrLmDa++N/i6TECQEMBJWGFfeIxpcO/qRSQ
+         +AXMNRFjWNGnKKCcLC/I3h6wLNsF0DiZsQZcLCnUXBAQmx5JGFtnpgY+ZGcHvw4k0/8Q
+         +c/ToGJgrr43A+K3p2Effcnx9xqdx1s0GPiqYPZw4Or4SUjRfcthvKsoK8xcJ3hbHUGN
+         SPBQ==
+X-Gm-Message-State: APjAAAWq8ht1GPErBTmwDH8jnYEFONuujyJedCEx4Oshf41M58dETeX3
+        YB99Tnix51TcRYLjXqGWOhcwb43lykgC3em6B4956A==
+X-Google-Smtp-Source: APXvYqzE9S7+MBd9cz3CLYgD2cxe0CiQIYN/YmMnO+BXFTBBIuqXEJP5eErh26Lm2r6+xg1JL2/RPnz20gM0wD6QESg=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr5076509ljg.62.1562224582501;
+ Thu, 04 Jul 2019 00:16:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626093943.49780-1-andriy.shevchenko@linux.intel.com>
- <CAMuHMdWm7ftYNVQfjLdPxvzZQLa6mWQvjE8vGo98-QOGeyjZFQ@mail.gmail.com> <20190703143728.GS9224@smile.fi.intel.com>
-In-Reply-To: <20190703143728.GS9224@smile.fi.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 4 Jul 2019 09:14:50 +0200
-Message-ID: <CAMuHMdXZzgbGoZvbAcQoe-h9_SNyppLm_Z0YZk4Jax6qhVZY3A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kernel.h: Update comment about simple_strto<foo>() functions
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>
+References: <20190703171924.31801-1-paweldembicki@gmail.com> <20190703171924.31801-4-paweldembicki@gmail.com>
+In-Reply-To: <20190703171924.31801-4-paweldembicki@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Jul 2019 09:16:10 +0200
+Message-ID: <CACRpkdaLZ8XeyLhH_mzwb5phRNvuwuUgecWKBVa1Z7L0QqH_bw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] net: dsa: vsc73xx: add support for parallel mode
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Pawel,
 
-On Wed, Jul 3, 2019 at 4:37 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Wed, Jun 26, 2019 at 01:00:45PM +0200, Geert Uytterhoeven wrote:
-> > On Wed, Jun 26, 2019 at 11:39 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > --- a/include/linux/kernel.h
-> > > +++ b/include/linux/kernel.h
-> >
-> > > @@ -437,7 +435,15 @@ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t
-> > >         return kstrtoint_from_user(s, count, base, res);
-> > >  }
-> > >
-> > > -/* Obsolete, do not use.  Use kstrto<foo> instead */
-> > > +/*
-> > > + * Use kstrto<foo> instead.
-> > > + *
-> > > + * NOTE: The simple_strto<foo> does not check for overflow and,
-> > > + *      depending on the input, may give interesting results.
-> > > + *
-> > > + * Use these functions if and only if the code will need in place
-> > > + * conversion and otherwise looks very ugly. Keep in mind above caveat.
-> >
-> > What do you mean by "in place conversion"?
-> > The input buffer is const, and not modified by the callee.
-> > Do you mean that these functions do not require NUL termination (just
-> > after the number), and the characters making up the number don't have to
-> > be copied to a separate buffer to make them NUL-terminated?
+this looks overall good and the following is just
+documentation nit-pick so feel free to add my
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+On Wed, Jul 3, 2019 at 7:21 PM Pawel Dembicki <paweldembicki@gmail.com> wrote:
+
+> This patch add platform part of vsc73xx driver.
+> It allows to use chip connected by parallel interface.
 >
-> The second one, could you propose better wording for that?
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-What about:
+I would elaborate on the fact that we're dealing with memory-mapped
+I/O but perhaps even more important to do that in the source code file and
+Kconfig so it is close to the users rather than in the changelog.
 
-"Use these functions if and only if you cannot use kstrto<foo>, because
- the number is not immediately followed by a NUL-character in the buffer.
- Keep in mind above caveat."
+Write something about the address bus wireing making all
+accesses big endian.
 
-Gr{oetje,eeting}s,
+> +config NET_DSA_VITESSE_VSC73XX_PLATFORM
+> +       tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
+> +       depends on HAS_IOMEM
+> +       select NET_DSA_VITESSE_VSC73XX
+> +       ---help---
+> +         This enables support for the Vitesse VSC7385, VSC7388, VSC7395
+> +         and VSC7398 SparX integrated ethernet switches in Platform managed mode.
 
-                        Geert
+I would insert something about memory-mapped I/O mode
+over a CPU-attached address bus.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
