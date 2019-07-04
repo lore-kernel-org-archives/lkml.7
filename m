@@ -2,140 +2,204 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BC9C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D383C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5983F21852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562233514;
-	bh=fL3fjaT5LjT7P/lMwtXeUbaBr9aPAqgdK15I2XNjl3c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=cnQtxtjZVje4gfBJL96RDsReoGjBA+pIhCixBLQt2/BZ3VSLBy5pLVdVOMkbo1YTH
-	 plDF2ylz00nM3mrcUZonNS4yx3PMwLGbP9f7u48dw/zj+PHnunDPO8XFw/LoRuVe7Y
-	 zvftJstA/pQhNVEShyDPafVwiugbqki3aclZ/YAI=
+	by mail.kernel.org (Postfix) with ESMTP id 231CA21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eovQFprJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfGDJpN (ORCPT
+        id S1727500AbfGDJqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:45:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2174 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbfGDJpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:45:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 02:45:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="184965334"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jul 2019 02:45:09 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Pawel Laszczak <pawell@cadence.com>, Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>
-Subject: RE: linux-next: build failure after merge of the usb and usb-gadget trees
-In-Reply-To: <BYAPR07MB4709BB98AE258C4AC4EE6F60DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au> <20190704065949.GA32707@kroah.com> <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com> <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com> <87imsiyzo3.fsf@linux.intel.com> <BYAPR07MB4709076903F55352193FC78FDDFA0@BYAPR07MB4709.namprd07.prod.outlook.com> <BYAPR07MB4709BB98AE258C4AC4EE6F60DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Date:   Thu, 04 Jul 2019 12:45:09 +0300
-Message-ID: <874l426sm2.fsf@linux.intel.com>
+        Thu, 4 Jul 2019 05:46:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40937 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfGDJqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:46:03 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so5530312ljh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YYSoaxyHn+OM7aLthyxFHVYuodYLIoIqvvJaHptzBW4=;
+        b=eovQFprJeSZaE++AS9nDZt1iR2MzTyS585nK95TbQmehKLXEuvtOqtVr8Gh/jAnGh+
+         Z8HcHBiStRqfcni3OuuH9Vj6n2tUiy8jFYBzEDlDEopmoG+5QBuzkLmivT4bed+L/Rqo
+         Q6eJ4eKK/30EzpbroLrQSAGHZ4A0GFYYXaHk6QJAwsZ8oGhCUG93dnnQgzNKk02L9OLl
+         CyLu462lyW3o/ht1IhvrZ3n3RF/hvUqQrAjvL/YQrvPrjeFUUJ3uM4Ot4UrMI656yrV/
+         0x1qkUd3PX/ek1NQsi5krsJzTIShRVu7zoqaQeW6inFZ795ypOBVdCYXD2zLzIjsfFbg
+         jh4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=YYSoaxyHn+OM7aLthyxFHVYuodYLIoIqvvJaHptzBW4=;
+        b=tM5bnhm2VbRC0nNhHPMSNrLInKMuMqurysZCrFRGvgL7k3oC80jODNUllCB3c2EYut
+         7xc5Qd42Ff/S8ukTLn5HaXtvYxT3eJwH6HKak35Hwe4LKD7c3Oteb0/asWUpHTdRv+nd
+         Yu8Jpcl/fHBTvWBJdMOzLGsh+t8GVvt+PkmixRxdQ/sc0wV1RD80UYw9rnz1Xl4O5Bs+
+         570DhNWP0AK5iweAkqS1m14jac+pvNkdoQYHbrE1Tudy4B8eqWNjCXugJSsZUuRypTP2
+         S4uNirf2Gausi7xzgj0lXHPztAgenUGNJudsEU3P6CLTm2tmzjdZPYZV+eFyrfcpKW9g
+         gXzg==
+X-Gm-Message-State: APjAAAWgLsopSlMZCy4i1AqZOQckACyB/HhazdKA4Bnuk7Gg3U1kPpJ1
+        CJV4A31/lJ6yd4PAdZwF/mZ00w==
+X-Google-Smtp-Source: APXvYqyyYuPxgewfoieiOqZgkRU8UL4Ww37bWQBHmCbGGhDFNJ0CvJI6TpKMajeRuajxKk9qXCe48g==
+X-Received: by 2002:a2e:9a13:: with SMTP id o19mr24559296lji.102.1562233560531;
+        Thu, 04 Jul 2019 02:46:00 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id s1sm1004610ljd.83.2019.07.04.02.45.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 02:46:00 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 12:45:57 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [PATCH v6 net-next 5/5] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190704094556.GB19839@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+ <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
+ <20190704111939.5d845071@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190704111939.5d845071@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-Pawel Laszczak <pawell@cadence.com> writes:
-
->>>
->>>
->>>Hi,
->>>
->>>Pawel Laszczak <pawell@cadence.com> writes:
->>>
->>>>>
->>>>>Hi,
->>>>>
->>>>>On Thu, Jul 4, 2019 at 9:59 AM Greg KH <greg@kroah.com> wrote:
->>>>>>
->>>>>> On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
->>>>>> > Hi all,
->>>>>> >
->>>>>> > After merging the usb tree, today's linux-next build (arm
->>>>>> > multi_v7_defconfig) failed like this:
->>>>>> >
->>>>>> > arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_output_dwc3_log_ctrl':
->>>>>> > trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
->>>>>> >
->>>>>> > Caused by commit
->>>>>> >
->>>>>> >   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
->>>>>> >
->>>>>> > I have used the usb tree from next-20190703 for today.
->>>>>> >
->>>>>> > This also occurs in the usb-gadget tree so I have used the version of
->>>>>> > that from next-20190703 as well.
->>>>>>
->>>>>> Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can you
->>>>>> take a look at this to see if I messed something up?
->>>>>
->>>>>This looks like it was caused by Pawel's patches.
->>>>>
->>>>>I'll try to reproduce here and see what's causing it.
->>>>
->>>> Problem is in my Patch. I reproduced it, but I don't understand why compiler
->>>> complains about usb_decode_ctrl. It's compiled into libcomposite.ko and
->>>> declaration is in drivers/usb/gadget.h.
->>>
->>>That's because in multi_v7_defconfig dwc3 is built-in while libcomposite
->>>is a module:
->>>
->>>CONFIG_USB_DWC3=y
->>>CONFIG_USB_LIBCOMPOSITE=m
->>>
->>>
->>>I remember that when you were doing this work, I asked you to move
->>>functions to usb/common. Why did you deviate from that suggestion? It's
->>>clear that decoding a ctrl request can be used by peripheral and host
->>>and we wouldn't have to deal with this problem if you had just followed
->>>the suggestion.
->>
->>Some time ago Greg wrote:
->>" It's nice to have these in a common place, but you just bloated all of
->>the USB-enabled systems in the world for the use of 2 odd-ball system
->>controllers that almost no one has :) "
->>
->>So I moved these functions to gadget directory.
->>
->>It was mistake that I added debug.c file to libcomposite.ko.
->>
+On Thu, Jul 04, 2019 at 11:19:39AM +0200, Jesper Dangaard Brouer wrote:
+>On Wed,  3 Jul 2019 13:19:03 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 >
-> I think that the best choice is leaving debug.c file 
-> In drivers/usb/gadget/ directory. 
+>> Add XDP support based on rx page_pool allocator, one frame per page.
+>> Page pool allocator is used with assumption that only one rx_handler
+>> is running simultaneously. DMA map/unmap is reused from page pool
+>> despite there is no need to map whole page.
+>>
+>> Due to specific of cpsw, the same TX/RX handler can be used by 2
+>> network devices, so special fields in buffer are added to identify
+>> an interface the frame is destined to. Thus XDP works for both
+>> interfaces, that allows to test xdp redirect between two interfaces
+>> easily. Aslo, each rx queue have own page pools, but common for both
+>> netdevs.
+>>
+>> XDP prog is common for all channels till appropriate changes are added
+>> in XDP infrastructure. Also, once page_pool recycling becomes part of
+>> skb netstack some simplifications can be added, like removing
+>> page_pool_release_page() before skb receive.
+>>
+>> In order to keep rx_dev while redirect, that can be somehow used in
+>> future, do flush in rx_handler, that allows to keep rx dev the same
+>> while reidrect. It allows to conform with tracing rx_dev pointed
+>> by Jesper.
 >
-> But to do this I must to add this file to drivers/usb/dwc3/Makefile file and 
-> drivers/usb/cdns3/Makefile. The code will be compiled into both drivers,
-> It will increase the size of kernel only when these driver will be enabled.
+>So, you simply call xdp_do_flush_map() after each xdp_do_redirect().
+>It will kill RX-bulk and performance, but I guess it will work.
 >
-> What do you think about such solution ? 
+>I guess, we can optimized it later, by e.g. in function calling
+>cpsw_run_xdp() have a variable that detect if net_device changed
+>(priv->ndev) and then call xdp_do_flush_map() when needed.
 
-Frankly, I think it's not a solution :-)
+It's problem of cpsw already and can be optimized locally by own
+bulk queues for instance, if it will be simple if really needed ofc.
 
-If we _must_ keep it under drivers/usb/gadget, then we need to find a
-way to build this so that if any user is built-in, that file has to be
-built-in as well.
+>
+>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  drivers/net/ethernet/ti/Kconfig        |   1 +
+>>  drivers/net/ethernet/ti/cpsw.c         | 485 ++++++++++++++++++++++---
+>>  drivers/net/ethernet/ti/cpsw_ethtool.c |  66 +++-
+>>  drivers/net/ethernet/ti/cpsw_priv.h    |   7 +
+>>  4 files changed, 502 insertions(+), 57 deletions(-)
+>>
+>[...]
+>> +static int cpsw_run_xdp(struct cpsw_priv *priv, int ch, struct xdp_buff *xdp,
+>> +			struct page *page)
+>> +{
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	struct net_device *ndev = priv->ndev;
+>> +	int ret = CPSW_XDP_CONSUMED;
+>> +	struct xdp_frame *xdpf;
+>> +	struct bpf_prog *prog;
+>> +	u32 act;
+>> +
+>> +	rcu_read_lock();
+>> +
+>> +	prog = READ_ONCE(priv->xdp_prog);
+>> +	if (!prog) {
+>> +		ret = CPSW_XDP_PASS;
+>> +		goto out;
+>> +	}
+>> +
+>> +	act = bpf_prog_run_xdp(prog, xdp);
+>> +	switch (act) {
+>> +	case XDP_PASS:
+>> +		ret = CPSW_XDP_PASS;
+>> +		break;
+>> +	case XDP_TX:
+>> +		xdpf = convert_to_xdp_frame(xdp);
+>> +		if (unlikely(!xdpf))
+>> +			goto drop;
+>> +
+>> +		cpsw_xdp_tx_frame(priv, xdpf, page);
+>> +		break;
+>> +	case XDP_REDIRECT:
+>> +		if (xdp_do_redirect(ndev, xdp, prog))
+>> +			goto drop;
+>> +
+>> +		/* as flush requires rx_dev to be per NAPI handle and there
+>> +		 * is can be two devices putting packets on bulk queue,
+>> +		 * do flush here avoid this just for sure.
+>> +		 */
+>> +		xdp_do_flush_map();
+>
+>> +		break;
+>> +	default:
+>> +		bpf_warn_invalid_xdp_action(act);
+>> +		/* fall through */
+>> +	case XDP_ABORTED:
+>> +		trace_xdp_exception(ndev, prog, act);
+>> +		/* fall through -- handle aborts by dropping packet */
+>> +	case XDP_DROP:
+>> +		goto drop;
+>> +	}
+>> +out:
+>> +	rcu_read_unlock();
+>> +	return ret;
+>> +drop:
+>> +	rcu_read_unlock();
+>> +	page_pool_recycle_direct(cpsw->page_pool[ch], page);
+>> +	return ret;
+>> +}
+>
+>-- 
+>Best regards,
+>  Jesper Dangaard Brouer
+>  MSc.CS, Principal Kernel Engineer at Red Hat
+>  LinkedIn: http://www.linkedin.com/in/brouer
 
 -- 
-balbi
+Regards,
+Ivan Khoronzhuk
