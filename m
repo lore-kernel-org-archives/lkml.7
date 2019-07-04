@@ -2,110 +2,231 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AE4C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9EC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127112189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A812189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfGDMxT (ORCPT
+        id S1727207AbfGDMxx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:53:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37780 "EHLO mx1.suse.de"
+        Thu, 4 Jul 2019 08:53:53 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33052 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725945AbfGDMxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:53:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 03806B049;
-        Thu,  4 Jul 2019 12:53:17 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 2655DE0159; Thu,  4 Jul 2019 14:53:15 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 14:53:15 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
-Message-ID: <20190704125315.GT20101@unicorn.suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
- <20190703114933.GW2250@nanopsycho>
- <20190703181851.GP20101@unicorn.suse.cz>
- <20190704080435.GF2250@nanopsycho>
- <20190704115236.GR20101@unicorn.suse.cz>
- <6c070d62ffe342f5bc70556ef0f85740d04ae4a3.camel@sipsolutions.net>
- <20190704121718.GS20101@unicorn.suse.cz>
- <2f1a8edb0b000b4eb7adcaca0d1fb05fdd73a587.camel@sipsolutions.net>
+        id S1725945AbfGDMxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:53:52 -0400
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 3DA421FEFF57E93EA4C0;
+        Thu,  4 Jul 2019 13:53:51 +0100 (IST)
+Received: from LHREML524-MBS.china.huawei.com ([169.254.2.154]) by
+ lhreml709-cah.china.huawei.com ([10.201.108.32]) with mapi id 14.03.0415.000;
+ Thu, 4 Jul 2019 13:53:41 +0100
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "John Garry" <john.garry@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>
+Subject: RE: [PATCH v7 3/6] vfio/type1: Update iova list on detach
+Thread-Topic: [PATCH v7 3/6] vfio/type1: Update iova list on detach
+Thread-Index: AQHVLDHlzsp7WZ6o0k2WlwGboVZ1gKa5VF+AgAEhqmA=
+Date:   Thu, 4 Jul 2019 12:53:41 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F2DDB80@lhreml524-mbs.china.huawei.com>
+References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
+        <20190626151248.11776-4-shameerali.kolothum.thodi@huawei.com>
+ <20190703143451.0ae4e9f7@x1.home>
+In-Reply-To: <20190703143451.0ae4e9f7@x1.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.206.221]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f1a8edb0b000b4eb7adcaca0d1fb05fdd73a587.camel@sipsolutions.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 02:21:52PM +0200, Johannes Berg wrote:
-> On Thu, 2019-07-04 at 14:17 +0200, Michal Kubecek wrote:
-> > On Thu, Jul 04, 2019 at 02:03:02PM +0200, Johannes Berg wrote:
-> > > On Thu, 2019-07-04 at 13:52 +0200, Michal Kubecek wrote:
-> > > > 
-> > > > There is still the question if it it should be implemented as a nested
-> > > > attribute which could look like the current compact form without the
-> > > > "list" flag (if there is no mask, it's a list). Or an unstructured data
-> > > > block consisting of u32 bit length 
-> > > 
-> > > You wouldn't really need the length, since the attribute has a length
-> > > already :-)
-> > 
-> > It has byte length, not bit length. The bitmaps we are dealing with
-> > can have any bit length, not necessarily multiples of 8 (or even 32).
+
+
+> -----Original Message-----
+> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On
+> Behalf Of Alex Williamson
+> Sent: 03 July 2019 21:35
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: eric.auger@redhat.com; pmorel@linux.vnet.ibm.com;
+> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
+> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
+> kevin.tian@intel.com
+> Subject: Re: [PATCH v7 3/6] vfio/type1: Update iova list on detach
 > 
-> Not sure why that matters? You have the mask, so you don't really need
-> to additionally say that you're only going up to a certain bit?
+> On Wed, 26 Jun 2019 16:12:45 +0100
+> Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
 > 
-> I mean, say you want to set some bits <=17, why would you need to say
-> that they're <=17 if you have a
->  value: 0b00000000'000000xx'xxxxxxxx'xxxxxxxx
->  mask:  0b00000000'00000011'11111111'11111111
+> > Get a copy of iova list on _group_detach and try to update the list.
+> > On success replace the current one with the copy. Leave the list as
+> > it is if update fails.
+> >
+> > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 91
+> +++++++++++++++++++++++++++++++++
+> >  1 file changed, 91 insertions(+)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> b/drivers/vfio/vfio_iommu_type1.c
+> > index b6bfdfa16c33..e872fb3a0f39 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -1873,12 +1873,88 @@ static void vfio_sanity_check_pfn_list(struct
+> vfio_iommu *iommu)
+> >  	WARN_ON(iommu->notifier.head);
+> >  }
+> >
+> > +/*
+> > + * Called when a domain is removed in detach. It is possible that
+> > + * the removed domain decided the iova aperture window. Modify the
+> > + * iova aperture with the smallest window among existing domains.
+> > + */
+> > +static void vfio_iommu_aper_expand(struct vfio_iommu *iommu,
+> > +				   struct list_head *iova_copy)
+> > +{
+> > +	struct vfio_domain *domain;
+> > +	struct iommu_domain_geometry geo;
+> > +	struct vfio_iova *node;
+> > +	dma_addr_t start = 0;
+> > +	dma_addr_t end = (dma_addr_t)~0;
+> > +
+> > +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> > +		iommu_domain_get_attr(domain->domain,
+> DOMAIN_ATTR_GEOMETRY,
+> > +				      &geo);
+> > +		if (geo.aperture_start > start)
+> > +			start = geo.aperture_start;
+> > +		if (geo.aperture_end < end)
+> > +			end = geo.aperture_end;
+> > +	}
+> > +
+> > +	/* Modify aperture limits. The new aper is either same or bigger */
+> > +	node = list_first_entry(iova_copy, struct vfio_iova, list);
+> > +	node->start = start;
+> > +	node = list_last_entry(iova_copy, struct vfio_iova, list);
+> > +	node->end = end;
+> > +}
+> > +
+> > +/*
+> > + * Called when a group is detached. The reserved regions for that
+> > + * group can be part of valid iova now. But since reserved regions
+> > + * may be duplicated among groups, populate the iova valid regions
+> > + * list again.
+> > + */
+> > +static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
+> > +				   struct list_head *iova_copy)
+> > +{
+> > +	struct vfio_domain *d;
+> > +	struct vfio_group *g;
+> > +	struct vfio_iova *node;
+> > +	dma_addr_t start, end;
+> > +	LIST_HEAD(resv_regions);
+> > +	int ret;
+> > +
+> > +	list_for_each_entry(d, &iommu->domain_list, next) {
+> > +		list_for_each_entry(g, &d->group_list, next)
+> > +			iommu_get_group_resv_regions(g->iommu_group,
+> > +						     &resv_regions);
+> 
+> Need to account for failure case here too.
 
-One scenario that I can see from the top of my head would be user
-running
+Ok.
 
-  ethtool -s <dev> advertise 0x...
+> > +	}
+> > +
+> > +	if (list_empty(&resv_regions))
+> > +		return 0;
+> > +
+> > +	node = list_first_entry(iova_copy, struct vfio_iova, list);
+> > +	start = node->start;
+> > +	node = list_last_entry(iova_copy, struct vfio_iova, list);
+> > +	end = node->end;
+> > +
+> > +	/* purge the iova list and create new one */
+> > +	vfio_iommu_iova_free(iova_copy);
+> > +
+> > +	ret = vfio_iommu_aper_resize(iova_copy, start, end);
+> > +	if (ret)
+> > +		goto done;
+> > +
+> > +	/* Exclude current reserved regions from iova ranges */
+> > +	ret = vfio_iommu_resv_exclude(iova_copy, &resv_regions);
+> > +done:
+> > +	vfio_iommu_resv_free(&resv_regions);
+> > +	return ret;
+> > +}
+> > +
+> >  static void vfio_iommu_type1_detach_group(void *iommu_data,
+> >  					  struct iommu_group *iommu_group)
+> >  {
+> >  	struct vfio_iommu *iommu = iommu_data;
+> >  	struct vfio_domain *domain;
+> >  	struct vfio_group *group;
+> > +	bool iova_copy_fail;
+> > +	LIST_HEAD(iova_copy);
+> >
+> >  	mutex_lock(&iommu->lock);
+> >
+> > @@ -1901,6 +1977,12 @@ static void vfio_iommu_type1_detach_group(void
+> *iommu_data,
+> >  		}
+> >  	}
+> >
+> > +	/*
+> > +	 * Get a copy of iova list. If success, use copy to update the
+> > +	 * list and to replace the current one.
+> > +	 */
+> > +	iova_copy_fail = !!vfio_iommu_iova_get_copy(iommu, &iova_copy);
+> > +
+> >  	list_for_each_entry(domain, &iommu->domain_list, next) {
+> >  		group = find_iommu_group(domain, iommu_group);
+> >  		if (!group)
+> > @@ -1926,10 +2008,19 @@ static void
+> vfio_iommu_type1_detach_group(void *iommu_data,
+> >  			iommu_domain_free(domain->domain);
+> >  			list_del(&domain->next);
+> >  			kfree(domain);
+> > +			if (!iova_copy_fail && !list_empty(&iommu->domain_list))
+> > +				vfio_iommu_aper_expand(iommu, &iova_copy);
+> >  		}
+> >  		break;
+> >  	}
+> >
+> > +	if (!iova_copy_fail && !list_empty(&iommu->domain_list)) {
+> > +		if (!vfio_iommu_resv_refresh(iommu, &iova_copy))
+> > +			vfio_iommu_iova_insert_copy(iommu, &iova_copy);
+> > +		else
+> > +			vfio_iommu_iova_free(&iova_copy);
+> > +	}
+> 
+> The iova_copy_fail and list_empty tests are rather ugly, could we avoid
+> them by pushing the tests to the expand and refresh functions?  ie. it
+> looks like vfio_iommu_aper_expand() could test list_empty(iova_copy),
+> the list_for_each on domain_list doesn't need special handling.  Same
+> for vfio_iommu_resv_refresh().  This would also fix the bug above that
+> I think we don't free iova_copy if domain_list becomes empty during
+> this operation.  Thanks,
 
-with hex value representing some subset of link modes. Now if ethtool
-version is behind kernel and recognizes fewer link modes than kernel
-but in a way that the number rounded up to bytes or words would be the
-same, kernel has no way to recognize of those zero bits on top of the
-mask are zero on purpose or just because userspace doesn't know about
-them. In general, I believe the absence of bit length information is
-something protocols would have to work around sometimes.
+Agree. I will change that in next revision.
 
-The submitted implementation doesn't have this problem as it can tell
-kernel "this is a list" (i.e. I'm not sending a value/mask pair, I want
-exactly these bits to be set). Thus it can easily implement requests of
-both types (value/mask or just value):
-
-  ethtool -s <dev> advertise 0x2f
-  ethtool -s <dev> advertise 0x08/0x0c
-  ethtool -s <dev> advertise 100baseT/Full off 1000baseT/Full on
-
-and could be as easily extended to support also
-
-  ethtool -s <dev> advertise 100baseT/Full 1000baseT/Full
-
-Michal
+Thanks,
+Shameer
