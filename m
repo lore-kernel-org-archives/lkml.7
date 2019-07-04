@@ -7,48 +7,44 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3251C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80B0C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBDDF218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CA2218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230009;
-	bh=qDsoNfsoAOs9wQLEjtZdH7zRe0ETNhvRROLwfA8DRXo=;
+	s=default; t=1562230014;
+	bh=qtIWUlZhhHDXDpXDtHcNJNcCL7CfAeK4osJtqxlinjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUK67OJ8+ea2zHOvjt8YednTnQet4UM+n+AaVeEzkILMyxnxAbG2gnGESTK92jqG+
-	 UOB2L5XU8qhzML3csFL8zDwGf3uhW0EXqsvuIV8W+/6dkyj60FNQvQkW8AsCI0i+MG
-	 9GHU4mLkTGAIQvC8uIkP9LEYWqDmo+GcVWKRN+HM=
+	b=IKNC/FaCxV+13tBw2tOGoZRjjmpuWc9944vbVSCWUEe2sQR31m4LGjKQbSpuc3ove
+	 QRSM3UjaXRqa8ZPUHGVtUdkDm37l8qtaIBssbqWEz0WI/73S5Epqy3pz+noopEWYxC
+	 /3rikIwhyeoBtWN15g12ipDTthVCW3vPk2Zb9SNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGDIqr (ORCPT
+        id S1727312AbfGDIqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfGDIqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:46:45 -0400
+        id S1727046AbfGDIqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4EB32189E;
-        Thu,  4 Jul 2019 08:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2062189E;
+        Thu,  4 Jul 2019 08:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230005;
-        bh=qDsoNfsoAOs9wQLEjtZdH7zRe0ETNhvRROLwfA8DRXo=;
+        s=default; t=1562230007;
+        bh=qtIWUlZhhHDXDpXDtHcNJNcCL7CfAeK4osJtqxlinjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJbNVZnmAt1ZI3t9MNgeTiHd9YW3QXIe1uyr34tZQYHwRF2nq0XSRknBh0l32lJsb
-         5I0UkWP0ML13giLk3u8T8a/OMJirTipHyD+ubiVQydEdTPzeY4eS9W58Lb9mzLk4cZ
-         9lPZiL3qq0EFpf7hnmwQISE0p03yd9LK4pGb75bA=
+        b=IG//GIHoNqgkq2z+t6Bjz6KO7Rh5y3z+iamhj72CD8u7+VgFbEQ0q/odyajknog48
+         5LqbvsICZnRrZH4ycDqs2euu9VEXB5phKT1n+K01idiwxvzU188LYcyLAPivSys+/P
+         L1ZTROUNhaCzIfst0WBd3CalPy+wyjiKvH7HqzxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-input@vger.kernel.org
-Subject: [PATCH 11/11] input: axp20x-pek: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:17 +0200
-Message-Id: <20190704084617.3602-12-gregkh@linuxfoundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 02/11] uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:08 +0200
+Message-Id: <20190704084617.3602-3-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -63,59 +59,72 @@ Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
 and do not register "by hand" a sysfs group of attributes.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-input@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/misc/axp20x-pek.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+ drivers/uio/uio_fsl_elbc_gpcm.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-index debeeaeb8812..baff6dcbe392 100644
---- a/drivers/input/misc/axp20x-pek.c
-+++ b/drivers/input/misc/axp20x-pek.c
-@@ -195,15 +195,12 @@ DEVICE_ATTR(startup, 0644, axp20x_show_attr_startup, axp20x_store_attr_startup);
- DEVICE_ATTR(shutdown, 0644, axp20x_show_attr_shutdown,
- 	    axp20x_store_attr_shutdown);
+diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+index 450e2f5c9b43..05a9cb10a419 100644
+--- a/drivers/uio/uio_fsl_elbc_gpcm.c
++++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+@@ -71,6 +71,13 @@ static ssize_t reg_store(struct device *dev, struct device_attribute *attr,
+ static DEVICE_ATTR(reg_br, 0664, reg_show, reg_store);
+ static DEVICE_ATTR(reg_or, 0664, reg_show, reg_store);
  
--static struct attribute *axp20x_attributes[] = {
-+static struct attribute *axp20x_attrs[] = {
- 	&dev_attr_startup.attr,
- 	&dev_attr_shutdown.attr,
- 	NULL,
- };
--
--static const struct attribute_group axp20x_attribute_group = {
--	.attrs = axp20x_attributes,
--};
-+ATTRIBUTE_GROUPS(axp20x);
- 
- static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
++static struct attribute *uio_fsl_elbc_gpcm_attrs[] = {
++	&dev_attr_reg_br.attr,
++	&dev_attr_reg_or.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(uio_fsl_elbc_gpcm);
++
+ static ssize_t reg_show(struct device *dev, struct device_attribute *attr,
+ 			char *buf)
  {
-@@ -356,13 +353,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+@@ -411,25 +418,12 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
+ 	/* store private data */
+ 	platform_set_drvdata(pdev, info);
  
- 	axp20x_pek->info = (struct axp20x_info *)match->driver_data;
- 
--	error = devm_device_add_group(&pdev->dev, &axp20x_attribute_group);
--	if (error) {
--		dev_err(&pdev->dev, "Failed to create sysfs attributes: %d\n",
--			error);
--		return error;
--	}
+-	/* create sysfs files */
+-	ret = device_create_file(priv->dev, &dev_attr_reg_br);
+-	if (ret)
+-		goto out_err3;
+-	ret = device_create_file(priv->dev, &dev_attr_reg_or);
+-	if (ret)
+-		goto out_err4;
 -
- 	platform_set_drvdata(pdev, axp20x_pek);
+ 	dev_info(priv->dev,
+ 		 "eLBC/GPCM device (%s) at 0x%llx, bank %d, irq=%d\n",
+ 		 priv->name, (unsigned long long)res.start, priv->bank,
+ 		 irq != NO_IRQ ? irq : -1);
  
  	return 0;
-@@ -406,6 +396,7 @@ static const struct platform_device_id axp_pek_id_match[] = {
- MODULE_DEVICE_TABLE(platform, axp_pek_id_match);
+-out_err4:
+-	device_remove_file(priv->dev, &dev_attr_reg_br);
+-out_err3:
+-	platform_set_drvdata(pdev, NULL);
+-	uio_unregister_device(info);
+ out_err2:
+ 	if (priv->shutdown)
+ 		priv->shutdown(info, true);
+@@ -448,8 +442,6 @@ static int uio_fsl_elbc_gpcm_remove(struct platform_device *pdev)
+ 	struct uio_info *info = platform_get_drvdata(pdev);
+ 	struct fsl_elbc_gpcm *priv = info->priv;
  
- static struct platform_driver axp20x_pek_driver = {
-+	.dev_groups	= axp20x_groups,
- 	.probe		= axp20x_pek_probe,
- 	.id_table	= axp_pek_id_match,
- 	.driver		= {
+-	device_remove_file(priv->dev, &dev_attr_reg_or);
+-	device_remove_file(priv->dev, &dev_attr_reg_br);
+ 	platform_set_drvdata(pdev, NULL);
+ 	uio_unregister_device(info);
+ 	if (priv->shutdown)
+@@ -477,6 +469,7 @@ static struct platform_driver uio_fsl_elbc_gpcm_driver = {
+ 	},
+ 	.probe = uio_fsl_elbc_gpcm_probe,
+ 	.remove = uio_fsl_elbc_gpcm_remove,
++	.dev_groups = uio_fsl_elbc_gpcm_groups,
+ };
+ module_platform_driver(uio_fsl_elbc_gpcm_driver);
+ 
 -- 
 2.22.0
 
