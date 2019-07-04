@@ -2,158 +2,126 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B39C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2C7C0651C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41A92082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="imINaO/4"
+	by mail.kernel.org (Postfix) with ESMTP id B18A32082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562243653;
+	bh=f0Dtp/K8dgz6cj/ONzWqDVitP8jRezf5RyFFfddUMuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DlICW2Ewxr8Zsre8/o/eRXQ2Z2+5u0L/bv3+CGz0QGtV2iv5hZBYtvL036iCjYukY
+	 Q6JPFha/o+hRJKeIDc4uekt9CM41tp4dCp8FwhPYYsV0OdE/Mj/nTyjOxwlsomsYfw
+	 kZW6iicorfnNf/Y2c+7OZDoPOSy+qGmlpHkZ1mxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfGDMdl (ORCPT
+        id S1727797AbfGDMeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:33:41 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38945 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbfGDMdl (ORCPT
+        Thu, 4 Jul 2019 08:34:12 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44343 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbfGDMeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:33:41 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190704123339euoutp027d6ca338251a7d56274f3d2e795abd96~uNEtlE8DU1753517535euoutp02P
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2019 12:33:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190704123339euoutp027d6ca338251a7d56274f3d2e795abd96~uNEtlE8DU1753517535euoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562243619;
-        bh=mYLCby5nlISaQhXXuJdUjXravGum4plveihG8QiRIG4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=imINaO/461IxCKbNTOJOzm9Xdv5whpFZyVnsuC1B0lK+MvJrA25yW1SfP78VtQRtv
-         Nyf6m0/jwJYZjiSjN//7HUT/aXGHPzt97tvaxPTYjNO8XYayzuP+jco9tfJL0dGEVP
-         8Cjw3n13J/Te9elmM7ZIsT9nN/Kpcz7yky7chRPg=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190704123338eucas1p10d40920fbdb0b1427562f7df660946c3~uNEs9Mane2422424224eucas1p1O;
-        Thu,  4 Jul 2019 12:33:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 12.0F.04377.222FD1D5; Thu,  4
-        Jul 2019 13:33:38 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190704123337eucas1p1514a97326732843cca28573659266158~uNEsNoJmH2133121331eucas1p1c;
-        Thu,  4 Jul 2019 12:33:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190704123337eusmtrp1e0080ccb381db80ebe5f8beaca270666~uNEr-Y2G91415714157eusmtrp1B;
-        Thu,  4 Jul 2019 12:33:37 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-60-5d1df222b385
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7E.28.04146.122FD1D5; Thu,  4
-        Jul 2019 13:33:37 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190704123337eusmtip2c0b915691796defb198fd7bfae90e363~uNErkqYkS1170411704eusmtip2E;
-        Thu,  4 Jul 2019 12:33:36 +0000 (GMT)
-Subject: Re: [PATCH 3/3] drm/bridge: ti-sn65dsi86: correct dsi mode_flags
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        lkml <linux-kernel@vger.kernel.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <dcb2b28d-38d9-255d-e91f-05e6e713aee0@samsung.com>
-Date:   Thu, 4 Jul 2019 14:33:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Thu, 4 Jul 2019 08:34:12 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r15so4126489lfm.11;
+        Thu, 04 Jul 2019 05:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WZGgIFqntPiBjka+Oo35Sy0erf1ztfXIu7MoeeCl7sI=;
+        b=U9w9DXvX6ZI9Ka2kloHxm/f4bFuu9xySWFoJtdxm/VYD4Rkc+XAKcMy5K7CBhciu02
+         SEq/+/Pio+BB9Rco4ZaD6BQbo6UwGX6CfbA1orS2o/JIML3G8areymFCYg7SLLSgm3y2
+         Cnp97gucU6HsG/BSS9GfAu2abg4TzfWCJELRa/XBgL1f/xeIB3En/q4vqN48n5X6v7fy
+         x47DQ9CxjWYjlNCwtb+lMVZAz1Xj+t38c8RSSwnnzhmdHJu6mqPPM6G7fucCRDrfcmjN
+         htaCUlrr8Pu2JHWIcLLuzeYPjlMTFg3a3UkK9gM+OPsHnkqzEMY4VnSl/1mq6NmYB0cV
+         MwFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WZGgIFqntPiBjka+Oo35Sy0erf1ztfXIu7MoeeCl7sI=;
+        b=anVep3fciviRt4QnTG02L59A3HEUgknfjws8vkkqY765ZbYNB6T1InsRm/kpBcOlVD
+         T+gbDHxCtyK7j1wsKAp4Lkq068MJhe8Cy64gOVqLghaoKXPEwUe+dLZ6UjFmEgye1bEX
+         AehmWzsAUPz508fJw4FINQfqPBXmWhoG9Z066XUXwvIqDhnNE0OEwdQlaY1pZ2CQcGjt
+         8kuNez7tEPk2tmELCbhppzaxqqy0kgCZSvBHiFZayaQO6HYT7QWldKp7Su28/uGwwj1D
+         xFqih3a4Zati+vVJLktTU98BCmBfAAM0KN4rwsJaM4AmIsBNnRlwiuXRbpeD1rRiP1Ne
+         NYbA==
+X-Gm-Message-State: APjAAAXVBkqAcYg7FBQZ0u+yAwA/UTpPPfOW0bRWRp1oSS3XkIB7lFkW
+        f9/WHfU2pyV9MwwZILbF6zI=
+X-Google-Smtp-Source: APXvYqySbtfjf5ef9HvwH/IVOxIOPBsJfR47YKZt5UHXpmB0NuOgbexAL27Jj/lAMUuPKodQ3L6YNA==
+X-Received: by 2002:ac2:4351:: with SMTP id o17mr1633834lfl.100.1562243649805;
+        Thu, 04 Jul 2019 05:34:09 -0700 (PDT)
+Received: from rric.localdomain (83-233-147-164.cust.bredband2.com. [83.233.147.164])
+        by smtp.gmail.com with ESMTPSA id b25sm866069lfq.11.2019.07.04.05.34.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 05:34:08 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 14:34:00 +0200
+From:   Robert Richter <rric@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
+        pmladek@suse.com, ast@kernel.org, daniel@iogearbox.net,
+        akpm@linux-foundation.org, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        oprofile-list@lists.sf.net, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 2/3] module: Fix up module_notifier return values.
+Message-ID: <20190704123359.jumjke6p7p5r7wbx@rric.localdomain>
+References: <20190624091843.859714294@infradead.org>
+ <20190624092109.805742823@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <CAOCk7Nq91abTQ02dUNY=8_mgY_kuwU4MFxdO71AjWz1nwUkBGA@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djPc7pKn2RjDS418Fn0njvJZPF/20Rm
-        iytf37NZtC3/xmzROXEJu8XE/WfZLS7vmsNmce3nY2aL5wt/MFvc3XCW0YHLY3bDRRaPvd8W
-        sHjsnHWX3WN2x0xWj+3fHrB63O8+zuTxeZNcAHsUl01Kak5mWWqRvl0CV0brjilsBRO4KiZe
-        2c7cwPiHvYuRk0NCwERi1dEdjF2MXBxCAisYJSYv+s8C4XxhlLjW28AO4XxmlFi15TNcy+Vz
-        PawgtpDAckaJlceDIYreMkqc+n+cDSQhLOApsebaMkYQW0TAR2Ld/mXMIDazwBUmiaX3bEFs
-        NgFNib+bb4LV8wrYSXTsmsACYrMIqEh8WrAerFdUIELi8pZdjBA1ghInZz4Bq+EUCJRou78C
-        aqa8RPPW2VC2uMStJ/OZQA6SELjELrHiQjsLxNUuEn1XHrJC2MISr45vgfpGRuL05B6omnqJ
-        +ytamCGaOxgltm7YyQyRsJY4fPwiUDMH0AZNifW79EFMCQFHiZfT/SFMPokbbwUhTuCTmLRt
-        OjNEmFeio00IYoaixP2zW6HmiUssvfCVbQKj0iwkj81C8swsJM/MQli7gJFlFaN4amlxbnpq
-        sVFearlecWJucWleul5yfu4mRmDKOv3v+JcdjLv+JB1iFOBgVOLhfbBFJlaINbGsuDL3EKME
-        B7OSCO/330Ah3pTEyqrUovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFIN
-        jF6ar5X7L+vI3krJCJEvefCvR3T7b77k0IPVp35u2/j35LJJfw2U5Zof3pf55f9u9t540T8O
-        q07cW75K4+Gc45veHPP9NsFuoWHXotWvvC2tSzjtEjichPOVb53R6Hpwfv2CpTMff/7X831G
-        V7WhXGgvy8qAW5EHWNeWbBERMFbjWMBcrLAuIlSJpTgj0VCLuag4EQCHbv8iVQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xe7qKn2RjDXZ0S1v0njvJZPF/20Rm
-        iytf37NZtC3/xmzROXEJu8XE/WfZLS7vmsNmce3nY2aL5wt/MFvc3XCW0YHLY3bDRRaPvd8W
-        sHjsnHWX3WN2x0xWj+3fHrB63O8+zuTxeZNcAHuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6R
-        iaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXkbrjilsBRO4KiZe2c7cwPiHvYuRk0NCwETi8rke
-        1i5GLg4hgaWMEpc+fYBKiEvsnv+WGcIWlvhzrYsNoug1o0TvzStgRcICnhJrri1jBLFFBHwk
-        1u1fxgxSxCxwjUni3/yPTCAJIYEJzBLflyaA2GwCmhJ/N99kA7F5BewkOnZNYAGxWQRUJD4t
-        WA82SFQgQqKvbTZUjaDEyZlPwGo4BQIl2u6vALuIWUBd4s+8S1C2vETz1tlQtrjErSfzmSYw
-        Cs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERip24793LyD8dLG
-        4EOMAhyMSjy8D7bIxAqxJpYVV+YeYpTgYFYS4f3+GyjEm5JYWZValB9fVJqTWnyI0RTouYnM
-        UqLJ+cAkklcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgbGhcqVn
-        7nWXCQYsgiVz1rqrmXzOy0y7vV+z/7XWQaml8dmp999nmW2uDWdkizWKN6w0Mj1kdF0xQ8rh
-        cONJla8GkUYTGphM73hp3WStXVTibZcV3Nk8L49lwauzRg+5dcJSevf8cL4jeXf7Qtn/+rWc
-        92773GLXFvdYUfEm9ILk59rv8gePKrEUZyQaajEXFScCAHzz3sfqAgAA
-X-CMS-MailID: 20190704123337eucas1p1514a97326732843cca28573659266158
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190702172346epcas1p29ebecfac70d87abb5379f00cdd1a913a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190702172346epcas1p29ebecfac70d87abb5379f00cdd1a913a
-References: <20190702154419.20812-1-robdclark@gmail.com>
-        <20190702154419.20812-4-robdclark@gmail.com>
-        <CAOCk7NrXko8xR1Ovg6HrP2ZpS83mjZoOWdae-mq_QJMRzeENLQ@mail.gmail.com>
-        <CAF6AEGsUve1NnzF2kEeW0jwgXnxZTgFaHbq-c-+CKru1jS9tWg@mail.gmail.com>
-        <CGME20190702172346epcas1p29ebecfac70d87abb5379f00cdd1a913a@epcas1p2.samsung.com>
-        <CAOCk7Nq91abTQ02dUNY=8_mgY_kuwU4MFxdO71AjWz1nwUkBGA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624092109.805742823@infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.2019 19:23, Jeffrey Hugo wrote:
-> On Tue, Jul 2, 2019 at 11:12 AM Rob Clark <robdclark@gmail.com> wrote:
->> On Tue, Jul 2, 2019 at 10:09 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->>> On Tue, Jul 2, 2019 at 9:46 AM Rob Clark <robdclark@gmail.com> wrote:
->>>> -       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
->>>> -                         MIPI_DSI_MODE_EOT_PACKET | MIPI_DSI_MODE_VIDEO_HSE;
->>>> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
->>> Did you check this against the datasheet?  Per my reading, EOT_PACKET
->>> and VIDEO_HSE appear valid.  I don't know about VIDEO_SYNC_PULSE.
->> The EOT flat is badly named:
->>
->> /* disable EoT packets in HS mode */
->> #define MIPI_DSI_MODE_EOT_PACKET    BIT(9)
->>
->> I can double check out HSE, but this was one of the setting
->> differences between bootloader and kernel
-> Ah yeah, you are right.  My eyes apparently skipped over the "disable".
->
-> If the bootloader is not setting the HSE, then I can't think of a
-> reason why we would be having an issue also not setting it.
->
-> Seems good to me
->
-> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->
->
-Yes, the flags require cleanup.
+On 24.06.19 11:18:45, Peter Zijlstra wrote:
+> While auditing all module notifiers I noticed a whole bunch of fail
+> wrt the return value. Notifiers have a 'special' return semantics.
+> 
+> Cc: Robert Richter <rric@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: oprofile-list@lists.sf.net
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  drivers/oprofile/buffer_sync.c |    4 ++--
+>  kernel/module.c                |    9 +++++----
+>  kernel/trace/bpf_trace.c       |    8 ++++++--
+>  kernel/trace/trace.c           |    2 +-
+>  kernel/trace/trace_events.c    |    2 +-
+>  kernel/trace/trace_printk.c    |    4 ++--
+>  kernel/tracepoint.c            |    2 +-
+>  7 files changed, 18 insertions(+), 13 deletions(-)
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
-
-
+Reviewed-by: Robert Richter <rric@kernel.org>
