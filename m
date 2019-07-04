@@ -2,36 +2,38 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A42C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F0C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B2D20881
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DE1218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfGDNNE (ORCPT
+        id S1727232AbfGDNRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:13:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43744 "EHLO mx1.suse.de"
+        Thu, 4 Jul 2019 09:17:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45078 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726994AbfGDNND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:13:03 -0400
+        id S1725945AbfGDNRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:17:03 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0FE18B114;
-        Thu,  4 Jul 2019 13:13:02 +0000 (UTC)
-Date:   Thu, 04 Jul 2019 15:13:01 +0200
-Message-ID: <s5ho92a0wpu.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id DA072AC2E;
+        Thu,  4 Jul 2019 13:17:01 +0000 (UTC)
+Date:   Thu, 04 Jul 2019 15:17:01 +0200
+Message-ID: <s5hmuhu0wj6.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     "Fuqian Huang" <huangfq.daxian@gmail.com>
-Cc:     <alsa-devel@alsa-project.org>, "Jaroslav Kysela" <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 33/35] sound/pci: Use kmemdup rather than duplicating its implementation
-In-Reply-To: <20190703163210.983-1-huangfq.daxian@gmail.com>
-References: <20190703163210.983-1-huangfq.daxian@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     <alsa-devel@alsa-project.org>,
+        Connor McAdams <conmanx360@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/ca0132 - remove redundant assignment to variable 'changed'
+In-Reply-To: <20190704124425.2142-1-colin.king@canonical.com>
+References: <20190704124425.2142-1-colin.king@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -42,49 +44,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 03 Jul 2019 18:32:10 +0200,
-Fuqian Huang wrote:
+On Thu, 04 Jul 2019 14:44:25 +0200,
+Colin King wrote:
 > 
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
-> Changes in v2:
->   - Fix a typo in commit message (memset -> memcpy)
+> The variable 'changed' is being initialized with a value that is never
+> read and it is being updated later with a new value. The initialization
+> is redundant and can be removed.
 > 
->  sound/pci/echoaudio/echoaudio.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-> index b612a536a5a1..35bd3e7c8ce1 100644
-> --- a/sound/pci/echoaudio/echoaudio.c
-> +++ b/sound/pci/echoaudio/echoaudio.c
-> @@ -2189,11 +2189,10 @@ static int snd_echo_resume(struct device *dev)
->  	u32 pipe_alloc_mask;
->  	int err;
->  
-> -	commpage_bak = kmalloc(sizeof(*commpage), GFP_KERNEL);
-> +	commpage_bak = kmemdup(commpage, sizeof(*commpage), GFP_KERNEL);
->  	if (commpage_bak == NULL)
->  		return -ENOMEM;
->  	commpage = chip->comm_page;
-> -	memcpy(commpage_bak, commpage, sizeof(*commpage));
->  
->  	err = init_hw(chip, chip->pci->device, chip->pci->subsystem_device);
->  	if (err < 0) {
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-The patch is obviously wrong and leads to a crash.  See that the
-assignment of the source address is done after the kmalloc() call but
-before memcpy().  With kmemdup(), this will be screwed up.
+Applied, thanks.
 
-This error could be caught easily by just compiling the kernel, too.
-Please do at least the proper build test at the next time.
-
-
-thanks,
 
 Takashi
