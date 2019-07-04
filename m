@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE64C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F793C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A284218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AABF218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0ZDqOUp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqPBl+sR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfGDJdK (ORCPT
+        id S1727477AbfGDJdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:33:10 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38851 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbfGDJdG (ORCPT
+        Thu, 4 Jul 2019 05:33:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35553 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbfGDJdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:33:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so5359599wmj.3;
-        Thu, 04 Jul 2019 02:33:04 -0700 (PDT)
+        Thu, 4 Jul 2019 05:33:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c27so5877376wrb.2;
+        Thu, 04 Jul 2019 02:33:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vD2wscCUTIxvAcaXu6IxNc1J6EFhwYX7r/38KI9pR+A=;
-        b=j0ZDqOUpfrhRUxEypZP6NYNfLcN5su/X3Se4lbNuQuCfLNkXqr5TLDcxY1vhd25xNq
-         Ic1D0M+DucKf9HblggnpwDrKKCATcFdrQ7zgsdK09CTFodFE1bXbgjM5X2aoQkHmh21K
-         2MbwjfkJzx55ws9QmVN526HKLwesuHmiJK2kWxMGzJZTjXFndOgKRVPJyb4n2nu0DVCl
-         DIWMDl3a14dAgsVLgJ99pXSxBPw2DiMPlMgs0FCX5ngq4ye0OaGpStArVq8gpCzDiJND
-         lq4Kn0UyWxaYAoV6KYTiuNeyUwH/7uQlIPbv7sC0agG5CHTyjaAiqlYmSq4zeHZ++nDP
-         TbyA==
+        bh=UqWiooHq5j8Ew9WEk0aj8+8Yrq5uPGrk8n3zQP9fKKU=;
+        b=HqPBl+sR8JPEDRf9enYLsB7j7gT0C/OGYvMwp4sIHT2Xvgo5u5IJ2V5JmbeWUoHOW3
+         L/b2xeWftvHwrp67fP3ILqip2YMsw1kknUHZePTr3rehcHL55Z54x2B0Mql8IOWUCNqT
+         hXsrwyZWIFnVu63OHT1n2ve2U+eBkupq7sAP/bDHUY2XF4HjM+GbinWjdXHOBgHmqLfH
+         Y8kfKN+n7mGyzKWzW67gCcjO5FLseo0r8xNnTF3qUqO1tHNueapME/A5d3v1zXj6ckGx
+         xvuBDoX+MVfOx5D+AvBjNFrioj1CEaHfN3SAmD50nDYclW1Z4OU2lr/npvm7TqCzLd+B
+         5skQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=vD2wscCUTIxvAcaXu6IxNc1J6EFhwYX7r/38KI9pR+A=;
-        b=DejbJG1WF6uK0WI9hxSYl/PyRAg//G9i6iqbg+Ha3ZuLJOYqW6HFUHYevFGz0ntxCR
-         VIvWl6N493W5UTMS/7ATQXb61sDqsL5ah2260wNglVZHGx7vnFl5+pETcc+2cQ/ef9sD
-         Qf2ClW8qRMTJhf1Kum6UfI+L/LGl4OpdAOG643HemuMn+9ZY27wWC0MC0kVJcuMWEc3J
-         Y3/MXjQ85sNiX+p6m+/nASm55cnzfY+Go9aPFF4zP65zsMGbHYG7VkY2hARA+lBhrFPM
-         SYOUsOTpP8wILJEpHDmHK4OE+artO9BD22krbQ0Kqu+3CFnndb+pqU6UESfPJPnzMpeo
-         +T1Q==
-X-Gm-Message-State: APjAAAUL8sNxZ6VHHq0JB2ZgqcWawVTcZmfpfY5GVSSxOW3KjL9yG8Ao
-        Wr3nPdF5AIXfjxhAnfjQ61V67yCFwmQ=
-X-Google-Smtp-Source: APXvYqzuzhFqsgGVplP6ATDYoIicFVUCLYT7WgdWgZEfRZpkUpqfibtezWWUXoLWy9SvEpe9FaqCKQ==
-X-Received: by 2002:a1c:2e09:: with SMTP id u9mr11819125wmu.137.1562232783514;
-        Thu, 04 Jul 2019 02:33:03 -0700 (PDT)
+        bh=UqWiooHq5j8Ew9WEk0aj8+8Yrq5uPGrk8n3zQP9fKKU=;
+        b=WNPN3kbRlhxJFm3e7PoZYBbkazMQ6VfjK2w6qs7c7q9GfRBj3QGRUC9vpBxRATb8TY
+         sQClhUWHk0jUYoGo/ItEErE1pVKeZz7hMqA83EOupfH1TsT7XBc3ubr8pFl8GQjlqYY9
+         ISVh9rLcFm7DO1IHenXITRyC6TjllWCMHicJeCLQ2ZRaHWyV0Sx1cWShu5ZyOdrrtIyk
+         QLZairr0UZeenoGhr+SzYPH6wfamtLyqJcmeO0N+iwvD9vRD508n0nbT28Mk/R48aKJu
+         BcbwbxpoGU5iwLmHUZ1gE8vYErxMXpa2Ammxw908DwQNdubZd3+RnNOVf0NlWN8gq7AO
+         KIuQ==
+X-Gm-Message-State: APjAAAUkeKRCxklrGZkYkrQFfgL5zd1bJyO5p3HHyEFkp4c15Zdam1sG
+        J51FOK1uxET5e1QPmg2VuPsgPdcgVWk=
+X-Google-Smtp-Source: APXvYqxw0spNmWoC6OG4NWhD6eVeBhwY6RPkrkVwHhEmQO2QSe6OcfkRddA+1a+pRBNxYwigW0vBXQ==
+X-Received: by 2002:adf:eb49:: with SMTP id u9mr3321589wrn.215.1562232780406;
+        Thu, 04 Jul 2019 02:33:00 -0700 (PDT)
 Received: from donizetti.redhat.com (nat-pool-mxp-u.redhat.com. [149.6.153.187])
-        by smtp.gmail.com with ESMTPSA id m9sm4868320wrn.92.2019.07.04.02.33.02
+        by smtp.gmail.com with ESMTPSA id m9sm4868320wrn.92.2019.07.04.02.32.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 04 Jul 2019 02:33:02 -0700 (PDT)
+        Thu, 04 Jul 2019 02:32:59 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     sean.j.christopherson@intel.com, vkuznets@redhat.com
-Subject: [PATCH 5/5] KVM: x86: add tracepoints around __direct_map and FNAME(fetch)
-Date:   Thu,  4 Jul 2019 11:32:56 +0200
-Message-Id: <20190704093256.12989-6-pbonzini@redhat.com>
+Subject: [PATCH 2/5] KVM: x86: make FNAME(fetch) and __direct_map more similar
+Date:   Thu,  4 Jul 2019 11:32:53 +0200
+Message-Id: <20190704093256.12989-3-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190704093256.12989-1-pbonzini@redhat.com>
 References: <20190704093256.12989-1-pbonzini@redhat.com>
@@ -72,146 +72,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are useful in debugging shadow paging.
+These two functions are basically doing the same thing through
+kvm_mmu_get_page, link_shadow_page and mmu_set_spte; yet, for historical
+reasons, their code looks very different.  This patch tries to take the
+best of each and make them very similar, so that it is easy to understand
+changes that apply to both of them.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu.c         | 13 ++++-----
- arch/x86/kvm/mmutrace.h    | 59 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/paging_tmpl.h |  2 ++
- 3 files changed, 67 insertions(+), 7 deletions(-)
+ arch/x86/kvm/mmu.c         | 53 ++++++++++++++++++--------------------
+ arch/x86/kvm/paging_tmpl.h | 30 ++++++++++-----------
+ 2 files changed, 39 insertions(+), 44 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 0629a89bb070..6248c39a33ef 100644
+index 6fc5c389f5a1..af9dafa54f85 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -143,9 +143,6 @@ module_param(dbg, bool, 0644);
+@@ -3181,40 +3181,39 @@ static void direct_pte_prefetch(struct kvm_vcpu *vcpu, u64 *sptep)
+ 	__direct_pte_prefetch(vcpu, sp, sptep);
+ }
  
- #include <trace/events/kvm.h>
- 
--#define CREATE_TRACE_POINTS
--#include "mmutrace.h"
--
- #define SPTE_HOST_WRITEABLE	(1ULL << PT_FIRST_AVAIL_BITS_SHIFT)
- #define SPTE_MMU_WRITEABLE	(1ULL << (PT_FIRST_AVAIL_BITS_SHIFT + 1))
- 
-@@ -269,9 +266,13 @@ static u64 __read_mostly shadow_nonpresent_or_rsvd_lower_gfn_mask;
- static u8 __read_mostly shadow_phys_bits;
- 
- static void mmu_spte_set(u64 *sptep, u64 spte);
-+static bool is_executable_pte(u64 spte);
- static union kvm_mmu_page_role
- kvm_mmu_calc_root_page_role(struct kvm_vcpu *vcpu);
- 
-+#define CREATE_TRACE_POINTS
-+#include "mmutrace.h"
-+
- 
- static inline bool kvm_available_flush_tlb_with_range(void)
+-static int __direct_map(struct kvm_vcpu *vcpu, int write, int map_writable,
+-			int level, gfn_t gfn, kvm_pfn_t pfn, bool prefault)
++static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
++			int map_writable, int level, kvm_pfn_t pfn,
++			bool prefault)
  {
-@@ -3086,10 +3087,7 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep, unsigned pte_access,
- 		ret = RET_PF_EMULATE;
+-	struct kvm_shadow_walk_iterator iterator;
++	struct kvm_shadow_walk_iterator it;
+ 	struct kvm_mmu_page *sp;
+-	int emulate = 0;
+-	gfn_t pseudo_gfn;
++	int ret;
++	gfn_t gfn = gpa >> PAGE_SHIFT;
++	gfn_t base_gfn = gfn;
  
- 	pgprintk("%s: setting spte %llx\n", __func__, *sptep);
--	pgprintk("instantiating %s PTE (%s) at %llx (%llx) addr %p\n",
--		 is_large_pte(*sptep)? "2MB" : "4kB",
--		 *sptep & PT_WRITABLE_MASK ? "RW" : "R", gfn,
--		 *sptep, sptep);
-+	trace_kvm_mmu_set_spte(level, gfn, sptep);
- 	if (!was_rmapped && is_large_pte(*sptep))
- 		++vcpu->kvm->stat.lpages;
- 
-@@ -3200,6 +3198,7 @@ static int __direct_map(struct kvm_vcpu *vcpu, gpa_t gpa, int write,
  	if (!VALID_PAGE(vcpu->arch.mmu->root_hpa))
- 		return RET_PF_RETRY;
+-		return 0;
++		return RET_PF_RETRY;
  
-+	trace_kvm_mmu_spte_requested(gpa, level, pfn);
- 	for_each_shadow_entry(vcpu, gpa, it) {
- 		base_gfn = gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
- 		if (it.level == level)
-diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
-index dd30dccd2ad5..d8001b4bca05 100644
---- a/arch/x86/kvm/mmutrace.h
-+++ b/arch/x86/kvm/mmutrace.h
-@@ -301,6 +301,65 @@ TRACE_EVENT(
- 		  __entry->kvm_gen == __entry->spte_gen
- 	)
- );
-+
-+TRACE_EVENT(
-+	kvm_mmu_set_spte,
-+	TP_PROTO(int level, gfn_t gfn, u64 *sptep),
-+	TP_ARGS(level, gfn, sptep),
-+
-+	TP_STRUCT__entry(
-+		__field(u64, gfn)
-+		__field(u64, spte)
-+		__field(u64, sptep)
-+		__field(u8, level)
-+		/* These depend on page entry type, so compute them now.  */
-+		__field(bool, r)
-+		__field(bool, x)
-+		__field(u8, u)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->gfn = gfn;
-+		__entry->spte = *sptep;
-+		__entry->sptep = virt_to_phys(sptep);
-+		__entry->level = level;
-+		__entry->r = shadow_present_mask || (__entry->spte & PT_PRESENT_MASK);
-+		__entry->x = is_executable_pte(__entry->spte);
-+		__entry->u = shadow_user_mask ? !!(__entry->spte & shadow_user_mask) : -1;
-+	),
-+
-+	TP_printk("gfn %llx spte %llx (%s%s%s%s) level %d at %llx",
-+		  __entry->gfn, __entry->spte,
-+		  __entry->r ? "r" : "-",
-+		  __entry->spte & PT_WRITABLE_MASK ? "w" : "-",
-+		  __entry->x ? "x" : "-",
-+		  __entry->u == -1 ? "" : (__entry->u ? "u" : "-"),
-+		  __entry->level, __entry->sptep
-+	)
-+);
-+
-+TRACE_EVENT(
-+	kvm_mmu_spte_requested,
-+	TP_PROTO(gpa_t addr, int level, kvm_pfn_t pfn),
-+	TP_ARGS(addr, level, pfn),
-+
-+	TP_STRUCT__entry(
-+		__field(u64, gfn)
-+		__field(u64, pfn)
-+		__field(u8, level)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->gfn = addr >> PAGE_SHIFT;
-+		__entry->pfn = pfn | (__entry->gfn & (KVM_PAGES_PER_HPAGE(level) - 1));
-+		__entry->level = level;
-+	),
-+
-+	TP_printk("gfn %llx pfn %llx level %d",
-+		  __entry->gfn, __entry->pfn, __entry->level
-+	)
-+);
-+
- #endif /* _TRACE_KVMMMU_H */
+-	for_each_shadow_entry(vcpu, (u64)gfn << PAGE_SHIFT, iterator) {
+-		if (iterator.level == level) {
+-			emulate = mmu_set_spte(vcpu, iterator.sptep, ACC_ALL,
+-					       write, level, gfn, pfn, prefault,
+-					       map_writable);
+-			direct_pte_prefetch(vcpu, iterator.sptep);
+-			++vcpu->stat.pf_fixed;
++	for_each_shadow_entry(vcpu, gpa, it) {
++		base_gfn = gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
++		if (it.level == level)
+ 			break;
+-		}
  
- #undef TRACE_INCLUDE_PATH
+-		drop_large_spte(vcpu, iterator.sptep);
+-		if (!is_shadow_present_pte(*iterator.sptep)) {
+-			u64 base_addr = iterator.addr;
++		drop_large_spte(vcpu, it.sptep);
++		if (!is_shadow_present_pte(*it.sptep)) {
++			sp = kvm_mmu_get_page(vcpu, base_gfn, it.addr,
++					      it.level - 1, true, ACC_ALL);
+ 
+-			base_addr &= PT64_LVL_ADDR_MASK(iterator.level);
+-			pseudo_gfn = base_addr >> PAGE_SHIFT;
+-			sp = kvm_mmu_get_page(vcpu, pseudo_gfn, iterator.addr,
+-					      iterator.level - 1, 1, ACC_ALL);
+-
+-			link_shadow_page(vcpu, iterator.sptep, sp);
++			link_shadow_page(vcpu, it.sptep, sp);
+ 		}
+ 	}
+-	return emulate;
++
++	ret = mmu_set_spte(vcpu, it.sptep, ACC_ALL,
++			   write, level, base_gfn, pfn, prefault,
++			   map_writable);
++	direct_pte_prefetch(vcpu, it.sptep);
++	++vcpu->stat.pf_fixed;
++	return ret;
+ }
+ 
+ static void kvm_send_hwpoison_signal(unsigned long address, struct task_struct *tsk)
+@@ -3538,8 +3537,7 @@ static int nonpaging_map(struct kvm_vcpu *vcpu, gva_t v, u32 error_code,
+ 		goto out_unlock;
+ 	if (likely(!force_pt_level))
+ 		transparent_hugepage_adjust(vcpu, &gfn, &pfn, &level);
+-	r = __direct_map(vcpu, write, map_writable, level, gfn, pfn, prefault);
+-
++	r = __direct_map(vcpu, v, write, map_writable, level, pfn, prefault);
+ out_unlock:
+ 	spin_unlock(&vcpu->kvm->mmu_lock);
+ 	kvm_release_pfn_clean(pfn);
+@@ -4165,8 +4163,7 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
+ 		goto out_unlock;
+ 	if (likely(!force_pt_level))
+ 		transparent_hugepage_adjust(vcpu, &gfn, &pfn, &level);
+-	r = __direct_map(vcpu, write, map_writable, level, gfn, pfn, prefault);
+-
++	r = __direct_map(vcpu, gpa, write, map_writable, level, pfn, prefault);
+ out_unlock:
+ 	spin_unlock(&vcpu->kvm->mmu_lock);
+ 	kvm_release_pfn_clean(pfn);
 diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/paging_tmpl.h
-index f39b381a8b88..e9d110fdcb8e 100644
+index 2db96401178e..bfd89966832b 100644
 --- a/arch/x86/kvm/paging_tmpl.h
 +++ b/arch/x86/kvm/paging_tmpl.h
-@@ -670,6 +670,8 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
+@@ -623,6 +623,7 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
+ 	struct kvm_shadow_walk_iterator it;
+ 	unsigned direct_access, access = gw->pt_access;
+ 	int top_level, ret;
++	gfn_t base_gfn;
  
- 	base_gfn = gw->gfn;
+ 	direct_access = gw->pte_access;
  
-+	trace_kvm_mmu_spte_requested(addr, gw->level, pfn);
-+
- 	for (; shadow_walk_okay(&it); shadow_walk_next(&it)) {
+@@ -667,31 +668,29 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, gva_t addr,
+ 			link_shadow_page(vcpu, it.sptep, sp);
+ 	}
+ 
+-	for (;
+-	     shadow_walk_okay(&it) && it.level > hlevel;
+-	     shadow_walk_next(&it)) {
+-		gfn_t direct_gfn;
++	base_gfn = gw->gfn;
+ 
++	for (; shadow_walk_okay(&it); shadow_walk_next(&it)) {
  		clear_sp_write_flooding_count(it.sptep);
- 		base_gfn = gw->gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
++		base_gfn = gw->gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
++		if (it.level == hlevel)
++			break;
++
+ 		validate_direct_spte(vcpu, it.sptep, direct_access);
+ 
+ 		drop_large_spte(vcpu, it.sptep);
+ 
+-		if (is_shadow_present_pte(*it.sptep))
+-			continue;
+-
+-		direct_gfn = gw->gfn & ~(KVM_PAGES_PER_HPAGE(it.level) - 1);
+-
+-		sp = kvm_mmu_get_page(vcpu, direct_gfn, addr, it.level-1,
+-				      true, direct_access);
+-		link_shadow_page(vcpu, it.sptep, sp);
++		if (!is_shadow_present_pte(*it.sptep)) {
++			sp = kvm_mmu_get_page(vcpu, base_gfn, addr,
++					      it.level - 1, true, direct_access);
++			link_shadow_page(vcpu, it.sptep, sp);
++		}
+ 	}
+ 
+-	clear_sp_write_flooding_count(it.sptep);
+ 	ret = mmu_set_spte(vcpu, it.sptep, gw->pte_access, write_fault,
+-			   it.level, gw->gfn, pfn, prefault, map_writable);
++			   it.level, base_gfn, pfn, prefault, map_writable);
+ 	FNAME(pte_prefetch)(vcpu, gw, it.sptep);
+-
++	++vcpu->stat.pf_fixed;
+ 	return ret;
+ 
+ out_gpte_changed:
+@@ -854,7 +853,6 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gva_t addr, u32 error_code,
+ 		transparent_hugepage_adjust(vcpu, &walker.gfn, &pfn, &level);
+ 	r = FNAME(fetch)(vcpu, addr, &walker, write_fault,
+ 			 level, pfn, map_writable, prefault);
+-	++vcpu->stat.pf_fixed;
+ 	kvm_mmu_audit(vcpu, AUDIT_POST_PAGE_FAULT);
+ 
+ out_unlock:
 -- 
 2.21.0
+
 
