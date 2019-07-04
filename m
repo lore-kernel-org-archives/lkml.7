@@ -2,81 +2,80 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB29C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B3C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8182064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA03820828
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfGDLsE (ORCPT
+        id S1727651AbfGDLsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:48:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56750 "EHLO mx1.redhat.com"
+        Thu, 4 Jul 2019 07:48:11 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:55180 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:48:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1DDA0C057F3C;
-        Thu,  4 Jul 2019 11:47:58 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-222.ams2.redhat.com [10.36.116.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE0381001925;
-        Thu,  4 Jul 2019 11:47:57 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id E47B811AB8; Thu,  4 Jul 2019 13:47:56 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 13:47:56 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 14/18] drm/virtio: rework
- virtio_gpu_transfer_from_host_ioctl fencing
-Message-ID: <20190704114756.eavkszsgsyymns3m@sirius.home.kraxel.org>
-References: <20190702141903.1131-1-kraxel@redhat.com>
- <20190702141903.1131-15-kraxel@redhat.com>
- <CAPaKu7T3GvYVMueYgJFhADFSFEVbHEdaupw8=mq_+i150a1mLA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7T3GvYVMueYgJFhADFSFEVbHEdaupw8=mq_+i150a1mLA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 04 Jul 2019 11:48:04 +0000 (UTC)
+        id S1727635AbfGDLsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:48:11 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 7B9B0E408963C162CBD9;
+        Thu,  4 Jul 2019 19:48:08 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x64BlpUZ061122;
+        Thu, 4 Jul 2019 19:47:51 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070419482107-2086632 ;
+          Thu, 4 Jul 2019 19:48:21 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH 1/2] kvm: x86: add likely to sched_info_on()
+Date:   Thu, 4 Jul 2019 19:46:14 +0800
+Message-Id: <1562240775-16086-2-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562240775-16086-1-git-send-email-wang.yi59@zte.com.cn>
+References: <1562240775-16086-1-git-send-email-wang.yi59@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-04 19:48:21,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-04 19:47:56,
+        Serialize complete at 2019-07-04 19:47:56
+X-MAIL: mse-fl1.zte.com.cn x64BlpUZ061122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 01:05:12PM -0700, Chia-I Wu wrote:
-> On Tue, Jul 2, 2019 at 7:19 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> > Switch to the virtio_gpu_array_* helper workflow.
-> (just repeating my question on patch 6)
-> 
-> Does this fix the obj refcount issue?  When was the issue introduced?
+The condition to test is likely() to be true when make defconfig.
+Add the hint.
 
-obj refcount should be fine in both old and new code.
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kvm/cpuid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-old code:
-  drm_gem_object_lookup
-  drm_gem_object_put_unlocked
-
-new code:
-  virtio_gpu_array_from_handles
-  virtio_gpu_array_put_free (in virtio_gpu_dequeue_ctrl_func).
-
-Or did I miss something?
-
-cheers,
-  Gerd
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 4992e7c..64fff41 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -642,7 +642,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 			     (1 << KVM_FEATURE_ASYNC_PF_VMEXIT) |
+ 			     (1 << KVM_FEATURE_PV_SEND_IPI);
+ 
+-		if (sched_info_on())
++		if (likely(sched_info_on()))
+ 			entry->eax |= (1 << KVM_FEATURE_STEAL_TIME);
+ 
+ 		entry->ebx = 0;
+-- 
+1.8.3.1
 
