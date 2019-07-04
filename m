@@ -2,111 +2,246 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F7C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AF2C4647D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEBF2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFC42189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tdaY9WTJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oP1/IB8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfGDNBj (ORCPT
+        id S1727205AbfGDNEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:01:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:41165 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfGDNBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:01:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fdQm3jMfz9sBp;
-        Thu,  4 Jul 2019 23:01:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562245296;
-        bh=wi9xuffeOzlu3jAUH5WeWRsq/Q57g6q/g02//NAupm0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tdaY9WTJh7KZ0DGwkpSNcihubZcxbcr6eEyyHqgv7JYEntjyAcJjgurL9PFLArxAo
-         Dw/TsPrm8fR+ZEGeIdRUkwgubsznC7Hz1HrApMXP1lTp8yfBjb0mGWP0aeYWSXcVhN
-         NNPeE4YIqiBAX95w0HpKnIzpzBOkL/BypsbBrW6RKEJp2JQsso74HLL1ULL94R4NiX
-         6YElMoHkXt0THhu9Ipj/HjDkYNZtvCoPMpv1NWfoDP50q/JkIRTqtdd/eqYgmnp7Pw
-         YHChm6ob80NhRZ8Tu7U6jj63dK2YZ1V5xq1yb27UapdoRj0sIY9Dctb0e9hoLjMBrf
-         XF3iJNffqjU8Q==
-Date:   Thu, 4 Jul 2019 23:01:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the hmm
- tree
-Message-ID: <20190704230133.1fe67031@canb.auug.org.au>
-In-Reply-To: <20190704125539.GL3401@mellanox.com>
-References: <20190704205536.32740b34@canb.auug.org.au>
-        <20190704125539.GL3401@mellanox.com>
+        Thu, 4 Jul 2019 09:04:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34140 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfGDNEC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=A8lube6VOC1n1Ro1DrRjg3Qay/jXwcb/kBxaGnfYb1I=; b=oP1/IB8pNI0kgtZF9ZuO6yzAf
+        eeY2wLSdG3wfbjwRQnM0MsivnnKwO2DskCit2dD/Dr5mEpwttnCy59J576LlVL2vPJUNFGoibScb/
+        dSZiBrJ2Kp6plaXBrKRseaj743DHcaBNXdsqHjAMUOe2Yezcx/sTn5DsuT/g9wnHOuB2c1L1de1Jz
+        UmS5SQZawetrsQWgQRoHKXQFKZxqulrpSTQVT4lBHs8Be0/8GBO7aoMNW3dFAjPhN0IzqNnafPV9i
+        zknuO2fWe31eQauOYZRxLdDqRmI5S248Ohx7yl3hrRGFkPxIsBoDEjbpERXxGnd8MUk0cjUcaH5OE
+        XnttOPwFg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hj1Ok-0002Bb-Vm; Thu, 04 Jul 2019 13:03:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3D10820AF0743; Thu,  4 Jul 2019 15:03:36 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 15:03:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kris Van Hees <kris.van.hees@oracle.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, Chris Mason <clm@fb.com>
+Subject: Re: [PATCH 1/1] tools/dtrace: initial implementation of DTrace
+Message-ID: <20190704130336.GN3402@hirez.programming.kicks-ass.net>
+References: <201907040313.x643D8Pg025951@userv0121.oracle.com>
+ <201907040314.x643EUoA017906@aserv0122.oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/tVMXQfMxeXIw7WTvCxvQfHP"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201907040314.x643EUoA017906@aserv0122.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tVMXQfMxeXIw7WTvCxvQfHP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 03, 2019 at 08:14:30PM -0700, Kris Van Hees wrote:
+> +/*
+> + * Read the data_head offset from the header page of the ring buffer.  The
+> + * argument is declared 'volatile' because it references a memory mapped page
+> + * that the kernel may be writing to while we access it here.
+> + */
+> +static u64 read_rb_head(volatile struct perf_event_mmap_page *rb_page)
+> +{
+> +	u64	head = rb_page->data_head;
+> +
+> +	asm volatile("" ::: "memory");
+> +
+> +	return head;
+> +}
+> +
+> +/*
+> + * Write the data_tail offset in the header page of the ring buffer.  The
+> + * argument is declared 'volatile' because it references a memory mapped page
+> + * that the kernel may be writing to while we access it here.
 
-Hi Jason,
+s/writing/reading/
 
-On Thu, 4 Jul 2019 12:55:43 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> On Thu, Jul 04, 2019 at 08:55:36PM +1000, Stephen Rothwell wrote:
-> >=20
-> > Today's linux-next merge of the akpm-current tree got a conflict in:
-> >=20
-> >   mm/memory_hotplug.c
-> >=20
-> > between commit:
-> >=20
-> >   514caf23a70f ("memremap: replace the altmap_valid field with a PGMAP_=
-ALTMAP_VALID flag")
-> >=20
-> > from the hmm tree and commit:
-> >=20
-> >   db30f881e2d7 ("mm/hotplug: kill is_dev_zone() usage in __remove_pages=
-()") =20
->=20
-> There must be another commit involved for the 'unsigned long nr,
-> start_sec, end_sec;' lines..
+> + */
+> +static void write_rb_tail(volatile struct perf_event_mmap_page *rb_page,
+> +			  u64 tail)
+> +{
+> +	asm volatile("" ::: "memory");
+> +
+> +	rb_page->data_tail = tail;
+> +}
 
-Yeah, there was, but that didn't actually create a conflict.  That hunk
-is only there because I removed the initialisation of map_offset.
+That volatile usage is atrocious (kernel style would have you use
+{READ,WRITE}_ONCE()). Also your comments fail to mark these as
+load_acquire and store_release. And by only using a compiler barrier
+you're hard assuming TSO, which is somewhat fragile at best.
 
---=20
-Cheers,
-Stephen Rothwell
+Alternatively, you can use the C11 bits and write:
 
---Sig_/tVMXQfMxeXIw7WTvCxvQfHP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+	return __atomic_load_n(&rb_page->data_head, __ATOMIC_ACQUIRE);
 
------BEGIN PGP SIGNATURE-----
+	__atomic_store_n(&rb_page->data_tail, tail, __ATOMIC_RELEASE);
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0d+K0ACgkQAVBC80lX
-0GxQ/Qf7Bl4eULvQ8CruWMkgGN1Xs04I+4aRGbKwPY/ZgGV1nogi0GDU+rbOyIYx
-weKj2KUWM2RE1DV7BpvzkONY8Li0hVT/B0wrZ3UH43rQLWPneaiw1Kr7ZBLImAVa
-xeRVYS+owsHk9eWnyOWvLjRcdHI79y/bTjLhj3edys8kqiRNVWC+RipZxTdN/8rl
-vcLNxewaAY9bFM8/CCozNWXMI1YcEOOa37Ilzn4x1/p8HNMANTALzgee7VtbkzpK
-q8SmmfxZUB3NYRMCaf/yqDM208DrZRXpPTGk0FVEYjE5eapMkrFW0m3G91EtCE68
-R15L/af1czzwaz1t6zrQ36bEj5SJaA==
-=t4d8
------END PGP SIGNATURE-----
+> +/*
+> + * Process and output the probe data at the supplied address.
+> + */
+> +static int output_event(int cpu, u64 *buf)
+> +{
+> +	u8				*data = (u8 *)buf;
+> +	struct perf_event_header	*hdr;
+> +
+> +	hdr = (struct perf_event_header *)data;
+> +	data += sizeof(struct perf_event_header);
+> +
+> +	if (hdr->type == PERF_RECORD_SAMPLE) {
+> +		u8		*ptr = data;
+> +		u32		i, size, probe_id;
+> +
+> +		/*
+> +		 * struct {
+> +		 *	struct perf_event_header	header;
+> +		 *	u32				size;
+> +		 *	u32				probe_id;
+> +		 *	u32				gap;
+> +		 *	u64				data[n];
+> +		 * }
+> +		 * and data points to the 'size' member at this point.
+> +		 */
+> +		if (ptr > (u8 *)buf + hdr->size) {
+> +			fprintf(stderr, "BAD: corrupted sample header\n");
+> +			goto out;
+> +		}
+> +
+> +		size = *(u32 *)data;
+> +		data += sizeof(size);
+> +		ptr += sizeof(size) + size;
+> +		if (ptr != (u8 *)buf + hdr->size) {
+> +			fprintf(stderr, "BAD: invalid sample size\n");
+> +			goto out;
+> +		}
+> +
+> +		probe_id = *(u32 *)data;
+> +		data += sizeof(probe_id);
+> +		size -= sizeof(probe_id);
+> +		data += sizeof(u32);		/* skip 32-bit gap */
+> +		size -= sizeof(u32);
+> +		buf = (u64 *)data;
+> +
+> +		printf("%3d %6d ", cpu, probe_id);
+> +		for (i = 0, size /= sizeof(u64); i < size; i++)
+> +			printf("%#016lx ", buf[i]);
+> +		printf("\n");
+> +	} else if (hdr->type == PERF_RECORD_LOST) {
+> +		u64	lost;
+> +
+> +		/*
+> +		 * struct {
+> +		 *	struct perf_event_header	header;
+> +		 *	u64				id;
+> +		 *	u64				lost;
+> +		 * }
+> +		 * and data points to the 'id' member at this point.
+> +		 */
+> +		lost = *(u64 *)(data + sizeof(u64));
+> +
+> +		printf("[%ld probes dropped]\n", lost);
+> +	} else
+> +		fprintf(stderr, "UNKNOWN: record type %d\n", hdr->type);
+> +
+> +out:
+> +	return hdr->size;
+> +}
 
---Sig_/tVMXQfMxeXIw7WTvCxvQfHP--
+I see a distinct lack of wrapping support. AFAICT when buf+hdr->size
+wraps you're doing out-of-bounds accesses.
+
+> +/*
+> + * Process the available probe data in the given buffer.
+> + */
+> +static void process_data(struct dtrace_buffer *buf)
+> +{
+> +	/* This is volatile because the kernel may be updating the content. */
+> +	volatile struct perf_event_mmap_page	*rb_page = buf->base;
+> +	u8					*base = (u8 *)buf->base +
+> +							buf->page_size;
+> +	u64					head = read_rb_head(rb_page);
+> +
+> +	while (rb_page->data_tail != head) {
+> +		u64	tail = rb_page->data_tail;
+> +		u64	*ptr = (u64 *)(base + tail % buf->data_size);
+> +		int	len;
+> +
+> +		len = output_event(buf->cpu, ptr);
+> +
+> +		write_rb_tail(rb_page, tail + len);
+> +		head = read_rb_head(rb_page);
+> +	}
+> +}
+
+more volatile yuck.
+
+Also:
+
+	for (;;) {
+		head = __atomic_load_n(&rb_page->data_head, __ATOMIC_ACQUIRE);
+		tail = __atomic_load_n(&rb_page->data_tail, __ATOMIC_RELAXED);
+
+		if (head == tail)
+			break;
+
+		do {
+			hdr = buf->base + (tail & ((1UL << buf->data_shift) - 1));
+			if ((tail >> buf->data_shift) !=
+			    ((tail + hdr->size) >> buf->data_shift))
+				/* handle wrap case */
+			else
+				/* normal case */
+
+			tail += hdr->size;
+		} while (tail != head);
+
+		__atomic_store_n(&rb_page->data_tail, tail, __ATOMIC_RELEASE);
+	}
+
+Or something.
+
+> +/*
+> + * Wait for data to become available in any of the buffers.
+> + */
+> +int dt_buffer_poll(int epoll_fd, int timeout)
+> +{
+> +	struct epoll_event	events[dt_numcpus];
+> +	int			i, cnt;
+> +
+> +	cnt = epoll_wait(epoll_fd, events, dt_numcpus, timeout);
+> +	if (cnt < 0)
+> +		return -errno;
+> +
+> +	for (i = 0; i < cnt; i++)
+> +		process_data((struct dtrace_buffer *)events[i].data.ptr);
+> +
+> +	return cnt;
+> +}
+
+Or make sure to read on the CPU by having a poll thread per CPU, then
+you can do away with the memory barriers.
