@@ -2,100 +2,180 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F37BC5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470DAC5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7F12187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114CD218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P/9Q0U57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfGDAcK (ORCPT
+        id S1727534AbfGDAhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 20:32:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17261 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbfGDAcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 20:32:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 17:32:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="164499846"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2019 17:32:07 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>, <jhladky@redhat.com>,
-        <lvenanci@redhat.com>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
-References: <20190624025604.30896-1-ying.huang@intel.com>
-        <20190624140950.GF2947@suse.de>
-        <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
-        <20190703091747.GA13484@suse.de>
-Date:   Thu, 04 Jul 2019 08:32:06 +0800
-In-Reply-To: <20190703091747.GA13484@suse.de> (Mel Gorman's message of "Wed, 3
-        Jul 2019 10:17:47 +0100")
-Message-ID: <87ef3663nd.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+        Wed, 3 Jul 2019 20:37:03 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:36480 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbfGDAhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 20:37:03 -0400
+Received: by mail-vk1-f202.google.com with SMTP id l68so449886vkb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 17:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=3dkcwHp7UkbBjeC+jKJgdEez1r7JnE/QFVNxh/Av3lE=;
+        b=P/9Q0U57X0Mjr2pSdVR3fq5Q9Stk+yaqd+YUm9sq0ou6AVsZSt/1N/33ozuhbgY2vA
+         l95M1OTPG7AMpCdkXNxZwoF74wXCpWnPckCjmlCUOfpVWb6OUe1dqoKeBMLQ2rRoWAC+
+         fNHaGobDGBWH78hBlHjYyz8R5pV2r1lKhN6q853RMfM6pw8GA8VVYjvcvo3uf8gDuuir
+         ENB2mZWRXg62IrhKkC86LfkNF4vHPkE6nmhUv9Xome467fLx+E9J0pgZrqEdzyy++0mz
+         884zs7eBSkOyiHbrPJJuzc+Z2DaP9Fz7PcxSltbsQgqsrKy/bR2ai8bDNYsLrfqN7e+f
+         Qiwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=3dkcwHp7UkbBjeC+jKJgdEez1r7JnE/QFVNxh/Av3lE=;
+        b=XJUI7T7X9MrVqeGG/1nOrQj3YDZ5e+aRCDCO5/dynAA7LHtvDVyQheU9qW77iV2lO1
+         BsBMcFSuczu3IO2PxDrsJDANYSh7Al4BfbvXeHwkaUl3l4hrthexfg6SL9HKsHn9UEKw
+         hR3juyv1EC0NEFh1wKo5IqS7Xq3gZw1aR7vvbeJMu2T7EeXXWc6LiJ//bS0o3EuQz4wK
+         uRXA4Yb66oVMlMxT4x0X2L+OmdQ6gCn/kZXR67HRKzuHCZAkykZFVi5s2qs0jveZdzqp
+         O5c4EZTm6+SQFVHn/45cLOnySVgdu935KxLRLZ06VFGLokMOnDx8362d5XC52CKZ8obY
+         1bDw==
+X-Gm-Message-State: APjAAAWwF3zwVO7wrL3hLio+3cETbJIm/TIV21leqEZr7jI8hjjVEK8W
+        ayH+GuWzSQLhKb4Z9p6z0FlI+3KFlvltaISBqawDBg==
+X-Google-Smtp-Source: APXvYqxifi+9P2uuB2xECPxDjII80enpIo8mSlNTAxiC8KmAvRxtyVWjtDGXaCnqTdPCo5Xn7dOc4Z0daGhonP28ve9Qzg==
+X-Received: by 2002:a1f:5945:: with SMTP id n66mr6468396vkb.58.1562200621022;
+ Wed, 03 Jul 2019 17:37:01 -0700 (PDT)
+Date:   Wed,  3 Jul 2019 17:35:57 -0700
+Message-Id: <20190704003615.204860-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v6 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mel Gorman <mgorman@suse.de> writes:
+## TL;DR
 
-> On Tue, Jun 25, 2019 at 09:23:22PM +0800, huang ying wrote:
->> On Mon, Jun 24, 2019 at 10:25 PM Mel Gorman <mgorman@suse.de> wrote:
->> >
->> > On Mon, Jun 24, 2019 at 10:56:04AM +0800, Huang Ying wrote:
->> > > The autonuma scan period should be increased (scanning is slowed down)
->> > > if the majority of the page accesses are shared with other processes.
->> > > But in current code, the scan period will be decreased (scanning is
->> > > speeded up) in that situation.
->> > >
->> > > This patch fixes the code.  And this has been tested via tracing the
->> > > scan period changing and /proc/vmstat numa_pte_updates counter when
->> > > running a multi-threaded memory accessing program (most memory
->> > > areas are accessed by multiple threads).
->> > >
->> >
->> > The patch somewhat flips the logic on whether shared or private is
->> > considered and it's not immediately obvious why that was required. That
->> > aside, other than the impact on numa_pte_updates, what actual
->> > performance difference was measured and on on what workloads?
->> 
->> The original scanning period updating logic doesn't match the original
->> patch description and comments.  I think the original patch
->> description and comments make more sense.  So I fix the code logic to
->> make it match the original patch description and comments.
->> 
->> If my understanding to the original code logic and the original patch
->> description and comments were correct, do you think the original patch
->> description and comments are wrong so we need to fix the comments
->> instead?  Or you think we should prove whether the original patch
->> description and comments are correct?
->> 
->
-> I'm about to get knocked offline so cannot answer properly. The code may
-> indeed be wrong and I have observed higher than expected NUMA scanning
-> behaviour than expected although not enough to cause problems. A comment
-> fix is fine but if you're changing the scanning behaviour, it should be
-> backed up with data justifying that the change both reduces the observed
-> scanning and that it has no adverse performance implications.
+This is a pretty straightforward follow-up to Stephen and Luis' comments
+on PATCH v5: There is nothing that really changes any functionality or
+usage with the minor exception that I renamed `struct kunit_module` to
+`struct kunit_suite`. Nevertheless, a good deal of clean ups and fixes.
+See "Changes Since Last Version" section below.
 
-Got it!  Thanks for comments!  As for performance testing, do you have
-some candidate workloads?
+As for our current status, right now we got Reviewed-bys on all patches
+except:
 
-Best Regards,
-Huang, Ying
+- [PATCH v6 08/18] objtool: add kunit_try_catch_throw to the noreturn
+  list
+
+However, it would probably be good to get reviews/acks from the
+subsystem maintainers on:
+
+- [PATCH v6 06/18] kbuild: enable building KUnit
+- [PATCH v6 08/18] objtool: add kunit_try_catch_throw to the noreturn
+  list
+- [PATCH v6 15/18] Documentation: kunit: add documentation for KUnit
+- [PATCH v6 17/18] kernel/sysctl-test: Add null pointer test for
+  sysctl.c:proc_dointvec()
+
+Other than that, I think we should be good to go.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2-rc7/v6 branch.
+
+## Changes Since Last Version
+
+Aside from renaming `struct kunit_module` to `struct kunit_suite`, there
+isn't really anything in here that changes any functionality:
+
+- Rebased on v5.2-rc7
+- Got rid of spinlocks.
+  - Now update success field using WRITE_ONCE. - Suggested by Stephen
+  - Other instances replaced by mutex. - Suggested by Stephen and Luis
+- Renamed `struct kunit_module` to `struct kunit_suite`. - Inspired by
+  Luis.
+- Fixed a broken example of how to use kunit_tool. - Pointed out by Ted
+- Added descriptions to unit tests. - Suggested by Luis
+- Labeled unit tests which tested the API. - Suggested by Luis
+- Made a number of minor cleanups. - Suggested by Luis and Stephen.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2-rc7/v6
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
