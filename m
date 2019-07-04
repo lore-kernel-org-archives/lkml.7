@@ -2,137 +2,117 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F1BC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C8DC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1132082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0001321850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfGDMjR (ORCPT
+        id S1727793AbfGDMjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:39:17 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:48295 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfGDMjR (ORCPT
+        Thu, 4 Jul 2019 08:39:21 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51012 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfGDMjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:39:17 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hj116-0005xc-CT from Cedric_Hombourger@mentor.com ; Thu, 04 Jul 2019 05:39:12 -0700
-Received: from [172.30.65.44] (137.202.0.90) by svr-ies-mbx-02.mgc.mentorg.com
- (139.181.222.2) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 4 Jul
- 2019 13:39:05 +0100
-Subject: Re: [PATCH] builddeb: generate multi-arch friendly linux-libc-dev
- package
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-CC:     <isar-users@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-References: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
- <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-From:   Cedric Hombourger <cedric_hombourger@mentor.com>
-Message-ID: <df3c389f-25a7-b5b8-b8c2-1732638ef3ed@mentor.com>
-Date:   Thu, 4 Jul 2019 14:39:03 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 08:39:20 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 3C0E028A758
+Message-ID: <6b8d2c435335a81d362d18f23bc4229601b2f512.camel@collabora.com>
+Subject: Re: [PATCH v2 1/2] media: uapi: Add VP8 stateless decoder API
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Pawel Osciak <posciak@chromium.org>
+Date:   Thu, 04 Jul 2019 09:39:10 -0300
+In-Reply-To: <1562164149.4604.9.camel@pengutronix.de>
+References: <20190702170016.5210-1-ezequiel@collabora.com>
+         <20190702170016.5210-2-ezequiel@collabora.com>
+         <1562164149.4604.9.camel@pengutronix.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-04.mgc.mentorg.com (139.181.222.4) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yamada-san
+Hi Philipp,
 
-Thanks for your review of this patch. Answers below
+Thanks a lot for reviewing.
 
-On 7/4/2019 2:43 AM, Masahiro Yamada wrote:
-> CCed a couple of people.
->
-> On Mon, Jun 17, 2019 at 3:15 PM Cedric Hombourger
-> <Cedric_Hombourger@mentor.com> wrote:
->> Debian-based distributions place libc header files in a machine
->> specific directory (/usr/include/<libc-machine>) instead of
->> /usr/include/asm to support installation of the linux-libc-dev
->> package from multiple architectures. Move headers installed by
->> "make headers_install" accordingly.
->>
->> Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
->> Reviewed-by: Henning Schild <henning.schild@siemens.com>
->> ---
->>   scripts/package/builddeb | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
->> index b03dd56a4782..8f7afb3a84e9 100755
->> --- a/scripts/package/builddeb
->> +++ b/scripts/package/builddeb
->> @@ -132,6 +132,11 @@ fi
->>   if [ "$ARCH" != "um" ]; then
->>          $MAKE -f $srctree/Makefile headers_check
->>          $MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
->> +       # move asm headers to /usr/include/<libc-machine>/asm to match the structure
->> +       # used by Debian-based distros (to support multi-arch)
->> +       libc_mach=$($CC -dumpmachine)
->> +       mkdir $libc_headers_dir/usr/include/$libc_mach
->> +       mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$libc_mach/
->>   fi
->>
->>   # Install the maintainer scripts
->
-> I am not sure but,
-> I just worried about the backward compatibility...
+On Wed, 2019-07-03 at 16:29 +0200, Philipp Zabel wrote:
+> On Tue, 2019-07-02 at 14:00 -0300, Ezequiel Garcia wrote:
+> > From: Pawel Osciak <posciak@chromium.org>
+> > 
+> > Add the parsed VP8 frame pixel format and controls, to be used
+> > with the new stateless decoder API for VP8 to provide parameters
+> > for accelerator (aka stateless) codecs.
+> > 
+> > Signed-off-by: Pawel Osciak <posciak@chromium.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > --
+> > Changes from v1:
+> > * Move 1-bit fields to flags in the respective structures.
+> > * Add padding fields to make all structures 8-byte aligned.
+> > * Reorder fields where needed to avoid padding as much as possible.
+> > * Fix documentation as needed.
+> > 
+> > Changes from RFC:
+> > * Make sure the uAPI has the same size on x86, x86_64, arm and arm64.
+> > * Move entropy coder state fields to a struct.
+> > * Move key_frame field to the flags.
+> > * Remove unneeded first_part_offset field.
+> > * Add documentation.
+> > ---
+> >  Documentation/media/uapi/v4l/biblio.rst       |  10 +
+> >  .../media/uapi/v4l/ext-ctrls-codec.rst        | 323 ++++++++++++++++++
+> >  .../media/uapi/v4l/pixfmt-compressed.rst      |  20 ++
+> >  drivers/media/v4l2-core/v4l2-ctrls.c          |   8 +
+> >  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+> >  include/media/v4l2-ctrls.h                    |   3 +
+> >  include/media/vp8-ctrls.h                     | 110 ++++++
+> >  7 files changed, 475 insertions(+)
+> >  create mode 100644 include/media/vp8-ctrls.h
+> > 
+[..]
+> > +    * - __u8
+> > +      - ``num_dct_parts``
+> > +      - Number of DCT coefficients partitions.
+> 
+> I assume this must be no larger than 8. Is this mandated by the spec? If
+> so, should it be documented here and checked by v4l2-core?
+> 
 
-this patch is actually addressing a compatibility problem with 
-multi-arch capable distros (all the major Debian-based distros that I 
-know of are) where the currently generated libc headers packages is 
-placing arch specific headers where all arch compilers installed on the 
-system would find them
+Good catch.
 
-> Was this previously broken?
+Yes, it's mandated. The header [1] contains a two-bit field
+called "log2_nbr_of_dct_partitions", so partition count must
+be 1, 2, 4 or 8.
+  
+[1] https://www.rfc-editor.org/rfc/rfc6386.html#section-9.5
 
-yes (as noted above) but would only be seen on systems with multi-arch 
-packages / development tools installed
+I'll add this to the documentation.
 
-> I guess debian is using own control file
-> instead of the one in upstream kernel.
-> So, this is almost a matter for developers, I think.
+Also, I think this can be checked in std_validate().
 
-Correct. Debian and some others use their own.
+Thanks,
+Ezequiel
 
-We (Mentor and Siemens) as well as other folks from the embedded 
-community build embedded platforms using Debian as a base and recent 
-kernels (so we can run Debian on e.g. recent Arm64 hardware designs). 
-This is achieved by using Isar (https://github.com/ilbers/isar). The 
-custom kernel recipe it provides uses builddeb since that feature is 
-mainline. It also allows us to use custom kernels regardless of the 
-Debian-based distro we use (Raspbian, Ubuntu, Debian, etc.)
-
-> How did debian-base distros managed this before,
-> and will this introduce no breakage?
-
-We would expect desktop distros to continue using their own 
-debian/{control,rules} files but would recommend to have the .deb 
-produce by the kernel be better aligned with Debian so we can swap their 
-"old" kernels with recent LTS or recent HEAD kernels.
-
-Hope I was able to shed some light on our use-case / motivation.
-
-> Ben,
-> Could you comment on this?
->
->
