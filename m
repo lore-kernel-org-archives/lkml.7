@@ -2,137 +2,148 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D09C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF9BC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536662133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7DAD2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MNlvGOO1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="i1G+7Xw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbfGDHtM (ORCPT
+        id S1727365AbfGDHwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:49:12 -0400
-Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:45390
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725945AbfGDHtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:49:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+        Thu, 4 Jul 2019 03:52:08 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:20626 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726087AbfGDHwI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:52:08 -0400
+X-Greylist: delayed 3204 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jul 2019 03:52:07 EDT
+Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x646uvOj005162;
+        Thu, 4 Jul 2019 01:58:41 -0500
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2050.outbound.protection.outlook.com [104.47.37.50])
+        by mx0a-00010702.pphosted.com with ESMTP id 2thbqmg5ha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jul 2019 01:58:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector1-nio365-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bg3YVZyZix9ibFcYWOAmR1P6Nh6H6haGJXEGrezCKN0=;
- b=MNlvGOO1bE3gwqoiyFfMX5odP8T+TWf78MbA83x0OAD/GJt9aK4yiMkabyBGFRCZ1Wtv4OHc0r4HwAg6lsU+phZs4bX5n99clwnjuGwiMzfMaoQboWr9WzKV0rsyRHrFoy/bzsEU0+ModE6TGHFKOzC1r7FX4uiD3tYO2ipyPfU=
-Received: from DB7PR04MB5051.eurprd04.prod.outlook.com (20.176.234.223) by
- DB7PR04MB4185.eurprd04.prod.outlook.com (52.134.111.27) with Microsoft SMTP
+ bh=Tj0dlnp/PVorpElrc/fkekJ98Qvl7E5TOUrYYbxaI0Y=;
+ b=i1G+7Xw/DX9pq1Rk2vjPPMcgv7I9BtNx7C3IgUjJsiR0j2E67jzswkbT4WuJ5o8E3vrXu35HzEU1Y6dJGJAyLKvltdtyyKsTM9sAxTbsq5d1Hv0LLZN1YWdfdRw570nvaB0I679ZppYhrOD+ADeB92qi/eCQu3KMLOCwkneWnh8=
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com (20.179.21.161) by
+ MN2PR04MB5904.namprd04.prod.outlook.com (20.179.23.139) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.16; Thu, 4 Jul 2019 07:49:07 +0000
-Received: from DB7PR04MB5051.eurprd04.prod.outlook.com
- ([fe80::6c98:1416:8221:bdfc]) by DB7PR04MB5051.eurprd04.prod.outlook.com
- ([fe80::6c98:1416:8221:bdfc%4]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
- 07:49:07 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend
- opp
-Thread-Index: AQHVMjEDVn995bhE70i5OsdReRFRhA==
-Date:   Thu, 4 Jul 2019 07:49:07 +0000
-Message-ID: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
-References: <20190704061403.8249-1-Anson.Huang@nxp.com>
- <20190704061403.8249-2-Anson.Huang@nxp.com>
+ 15.20.2032.20; Thu, 4 Jul 2019 06:58:39 +0000
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7]) by MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7%5]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
+ 06:58:39 +0000
+From:   Je Yen Tam <je.yen.tam@ni.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Thread-Topic: [EXTERNAL] Re: [PATCH V2 2/2] PCI: Add NI-Serial PXI/PXIe+485
+ device IDs
+Thread-Index: AQHVMXB865RUzFDHYki64KPD1/QjN6a4kdOAgAF0UiA=
+Date:   Thu, 4 Jul 2019 06:58:39 +0000
+Message-ID: <MN2PR04MB5920BB86A99B1ABF946B2373B7FA0@MN2PR04MB5920.namprd04.prod.outlook.com>
+References: <20190703072516.34199-1-je.yen.tam@ni.com>
+ <20190703083605.GA8996@kroah.com>
+In-Reply-To: <20190703083605.GA8996@kroah.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [82.144.34.2]
+x-originating-ip: [130.164.75.17]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f05be104-3873-4909-9548-08d700541803
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4185;
-x-ms-traffictypediagnostic: DB7PR04MB4185:
-x-microsoft-antispam-prvs: <DB7PR04MB41851512C4255B5A3548A931EEFA0@DB7PR04MB4185.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-ms-office365-filtering-correlation-id: 65ff0b80-6cf0-4ccc-9fc4-08d7004d0b5d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB5904;
+x-ms-traffictypediagnostic: MN2PR04MB5904:
+x-microsoft-antispam-prvs: <MN2PR04MB59041A4C708F4B9A33D768C1B7FA0@MN2PR04MB5904.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(366004)(396003)(199004)(189003)(33656002)(9686003)(71190400001)(81156014)(81166006)(102836004)(26005)(229853002)(446003)(55016002)(53936002)(6116002)(8936002)(316002)(54906003)(71200400001)(186003)(110136005)(476003)(44832011)(486006)(3846002)(91956017)(6436002)(7416002)(478600001)(68736007)(76116006)(73956011)(6506007)(15650500001)(6246003)(4744005)(7736002)(66946007)(305945005)(64756008)(66446008)(66556008)(66476007)(86362001)(14444005)(256004)(5660300002)(4326008)(2501003)(99286004)(53546011)(52536014)(76176011)(66066001)(74316002)(25786009)(7696005)(14454004)(8676002)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4185;H:DB7PR04MB5051.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(376002)(346002)(39860400002)(189003)(199004)(26005)(76176011)(7696005)(99286004)(102836004)(6916009)(6436002)(186003)(6116002)(86362001)(6506007)(3846002)(68736007)(25786009)(229853002)(478600001)(14454004)(6246003)(55016002)(9686003)(4326008)(53936002)(54906003)(316002)(8936002)(81156014)(81166006)(8676002)(33656002)(66066001)(486006)(305945005)(7736002)(5660300002)(74316002)(52536014)(2906002)(71200400001)(256004)(11346002)(73956011)(64756008)(66556008)(66476007)(66946007)(66446008)(446003)(71190400001)(76116006)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5904;H:MN2PR04MB5920.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: ni.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PRJDAL7OvTH5whHzKkeF/40C9fZaeEpPHcI9fzXDbyWGVTmzg8YmFbx9mWBlwatAcZFEn9dpR6rdKRucH83HyO0+3kgnGgKWgdA8UThJaaPeLQC46dIcAAxA5wmYxgS/Y7N4sMlXg1h2avH58VK0EA91JNC5ZVIarVFqwCR84jep+WVFoEdU5x+1+9iKgih0U6rpSYtyPRA9SSH2A1H8kwjvGqFDrSgdx81wCfqWUGKbQO4DdR+h5/ngmOMgqQ/AW7k8+pMxXc1sC5LVg5XyjTtrZKTJ9pNVh8M3M6B8980hKuu9HcE93utaqZvKIoy9hCpHEf3tbc6S4sg28Rx1F3ktv6e4ukziKdAHWxjFpU/X2XzjdikA6H9sc8pJyhyOUeBpnxS/2oDiNvdyVXQzuvxq8eUgOIElCuqHotIz4jk=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: URHkMACEs+yob06jTMlA1nupCCAmJc0pdfNJtOTaEtvCts86PJS7VqS3h0eoqwJpKDamT/sjUwPhd0yo3iaqY5svEK0t1E7wCcO5O8/3lpKLh+p7vUQqFQFUr1GVA7bIdBW6x28dXaZueLKYbPtZ504Q5Z1oIYlBDHoV2nup+7Sb7tvVbU8G+F8R70iqOBJLxMjn62sGZhalRsSqYpTTCwMfJhUV2bhRksNI8bTp07oy0XvrSfuui/EfPBVC/OkvIcUmGuOPnk1UhQtsxCkI97s0d66jNzj2Hc66x2pwPbjEO0UTt1UQWyU0PVG4CuaS7aX8VxtZXl6Xr3P/2gXKNJaXmfTnpO4hWuy9f0j6WpnumlnPQEY3fNZHvoRvayXPl8VrVfyPq6Y1pFMYxT1XCHXdI52Um2xJjAHopLaCBSE=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f05be104-3873-4909-9548-08d700541803
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 07:49:07.5136
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65ff0b80-6cf0-4ccc-9fc4-08d7004d0b5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 06:58:39.7862
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4185
+X-MS-Exchange-CrossTenant-userprincipalname: je.yen.tam@ni.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5904
+Subject: RE: Re: [PATCH V2 2/2] PCI: Add NI-Serial PXI/PXIe+485 device IDs
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> Assign highest OPP as suspend OPP to reduce suspend/resume=0A=
-> latency on i.MX8MM.=0A=
-> =0A=
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
-> ---=0A=
->   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +=0A=
->   1 file changed, 1 insertion(+)=0A=
-> =0A=
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mm.dtsi=0A=
-> index b11fc5e..3a62407 100644=0A=
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi=0A=
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi=0A=
-> @@ -136,6 +136,7 @@=0A=
->   			opp-microvolt =3D <1000000>;=0A=
->   			opp-supported-hw =3D <0x8>, <0x3>;=0A=
->   			clock-latency-ns =3D <150000>;=0A=
-> +			opp-suspend;=0A=
->   		};=0A=
->   	};=0A=
-=0A=
-What if the highest OPP is unavailable due to speed grading? Ideally we =0A=
-should find a way to suspend at the highest *supported* OPP.=0A=
-=0A=
-Maybe the opp-suspend marking could be assigned from imx-cpufreq-dt =0A=
-driver code?=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
-=0A=
+> On Wed, Jul 03, 2019 at 12:25:16AM -0700, jeyentam wrote:
+> > Add NI PXIe-RS232, PXI-RS485 and PXIe-RS485 device IDs.
+> >
+> > Signed-off-by: jeyentam <je.yen.tam@ni.com>
+> > ---
+> >  include/linux/pci_ids.h | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+>=20
+> You have read the comment at the top of this file, right?  If so, why=20
+> are you adding these entries?
+
+Yes, but I think these entries should be added in because the NI-Serial PXI=
+=20
+(RS232) device IDs already been defined in this file originally, so now I'm=
+=20
+adding the newly supported NI-Serial PXI (RS485), PXIe (RS232) and PXIe=20
+(RS485) device IDs into here as they are the same product.
+
+>=20
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h index=20
+> > 70e86148cb1e..7fad4794789f 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -1027,7 +1027,9 @@
+> >  #define PCI_DEVICE_ID_SUN_TOMATILLO	0xa801
+> >  #define PCI_DEVICE_ID_SUN_CASSINI	0xabba
+> >
+> > +/* NI-Serial Device IDs */
+> >  #define PCI_VENDOR_ID_NI		0x1093
+>=20
+> That's a vendor id, not a serial device id.
+
+Yes, will change it to vendor id.
+
+>=20
+> thanks,
+>=20
+> greg k-h
+
+
+Thank you.
+Regards,
+Je Yen Tam
+Staff Software Engineer
+National Instruments=A0
+o=A0=A0 604-3776397
+e=A0=A0 je.yen.tam@ni.com
+
+
