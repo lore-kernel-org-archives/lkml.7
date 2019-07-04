@@ -2,177 +2,110 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46849C46484
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9370C46486
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDA221852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6E32085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSMe3KUn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nf1/g8o8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGDN5O (ORCPT
+        id S1727365AbfGDN6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:57:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39855 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfGDN5O (ORCPT
+        Thu, 4 Jul 2019 09:58:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40750 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfGDN6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:57:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m10so5512247edv.6;
-        Thu, 04 Jul 2019 06:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FFyR56GUnLHy2geI3ziIJleBntP257KjNAIucLrVbto=;
-        b=sSMe3KUnCE/9cEqVz610EGJodOlNiM7nWzbx1zZ79RtpzxbcLa33M2jDifYqiexG0+
-         vAZ5VR8pdueSNKBYIlI9C2zj7yyaHLKqycY6QbNU5Caqk1xm0PFg28WJr+StMyTPC2tG
-         KtltdHgdepdP1B+TgssB4nk3tZIaXH2SZtfn173dD5iaP5NJLzhrd8Y/YGXG0g1FhGt6
-         mmmiJ7M+4sNbgyTNadHtLZz3XXN23H5PQ1+aHa635fHwO6L802KYN4412D7UeT43pOuF
-         /o+CMaU/9P57X0KNIgp9sJcaBMYHt/QfKjNSuIFP5slziNmx+Ia3Z3AwMwFXVhaMZETS
-         g5Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FFyR56GUnLHy2geI3ziIJleBntP257KjNAIucLrVbto=;
-        b=kqjg/KspZwa8h9gdpBoEboYVkwfpWz8EjDfKStPUxOSHCA5oEJd7utwPPp2gDwnAUl
-         7ft1Tx3QaZTy7ndLCCWKsXKS/5P0qkV6zxZlB11dASjaj+jLkURMooTnH3QcHdk7S0/b
-         CEM80+v2tjnC2o1iHtckHCvUFa6XSBI2/D8eGU+pqYEbKhiu+JPEyFwsA2MrK0IAd2Kq
-         pBkn4pW13BMnJA5ZbW/SPvzzNLb969iR7eYn2pexj7c/hMbDnXnI6OfUJKK3+9Jm3f8H
-         A/YjVVDipvhKvM8muTwPxGZBE2Rvv6awx1yWuop2pYDNhWF/8LgAbDMn7rzxSmOYyvIe
-         L2yA==
-X-Gm-Message-State: APjAAAVPAxDndF25/A3jnPACjBHe2VRnbJNRFnR0go1X6ogJ/S2yckrc
-        UFwyZeK6+pMglN17TnIYU8ibt5EoECUCVqS5vmg=
-X-Google-Smtp-Source: APXvYqxCy5T2qYf8AtD/5du5tJyhwcoh7sEdY75fT+3dvw6D36Axv5jy7pbWYHuZwdh4ciPM2RDUPV1BkT6JF3v8oSI=
-X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr39043190ejb.265.1562248632457;
- Thu, 04 Jul 2019 06:57:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702154419.20812-1-robdclark@gmail.com> <CGME20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03@epcas2p2.samsung.com>
- <20190702154419.20812-3-robdclark@gmail.com> <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
- <20190704123511.GG6569@pendragon.ideasonboard.com>
-In-Reply-To: <20190704123511.GG6569@pendragon.ideasonboard.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 4 Jul 2019 06:56:56 -0700
-Message-ID: <CAF6AEGvYJ6iA5B+thJuBC=pFStuhsn87xrrcWAZyroWj5xKMZA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 4 Jul 2019 09:58:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/RLAY7zRxS6FP4wLWk1a+mxOsYYdecRt8hhGgB9GW4M=; b=nf1/g8o8E65eZqwz1hsFwCPcU
+        MBhwLZirPk/vxTpaggeMfdAROG8JpB00Rj6iiyRqEOQApcd1+J/mLDVIXT4EV/PuEYg2phrQHywIQ
+        9bztNfHZywQ2ABH4jnMjnJ8vuukFS0jb4MSlY0QCLjMraK2KjUDTM7z0J5ilmg8poMPmJ9SXKwzmh
+        iQKIP77O6i2PNUBBSwUR7QvppXdrJTr4lRMqEVBgd/OaM7fy/QdHnSAcGafKBFvF1TOK9I+R0vvId
+        b2s9evEN1sD+tCOKAqNbdSzQHl+EVFwGBqM6BgNQzCRhbVR0Zu9hKIPbPsCXsgrGUNKfGuwBO7sEe
+        xNz/Er2kQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hj2FQ-0002ZJ-Vt; Thu, 04 Jul 2019 13:58:04 +0000
+Date:   Thu, 4 Jul 2019 06:58:04 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Boaz Harrosh <openosd@gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] dax: Fix missed PMD wakeups
+Message-ID: <20190704135804.GL1729@bombadil.infradead.org>
+References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190703121743.GH1729@bombadil.infradead.org>
+ <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
+ <20190703195302.GJ1729@bombadil.infradead.org>
+ <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
+ <20190704032728.GK1729@bombadil.infradead.org>
+ <f23a1c71-d1b1-b279-c922-ce0f48cb4448@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f23a1c71-d1b1-b279-c922-ce0f48cb4448@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 5:35 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hello,
->
-> On Thu, Jul 04, 2019 at 02:31:20PM +0200, Andrzej Hajda wrote:
-> > On 02.07.2019 17:44, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > Add a debugfs file to show status registers.
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
-> > >  1 file changed, 42 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > index f1a2493b86d9..a6f27648c015 100644
-> > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > @@ -5,6 +5,7 @@
-> > >   */
-> > >
-> > >  #include <linux/clk.h>
-> > > +#include <linux/debugfs.h>
-> > >  #include <linux/gpio/consumer.h>
-> > >  #include <linux/i2c.h>
-> > >  #include <linux/iopoll.h>
-> > > @@ -109,6 +110,7 @@ struct ti_sn_bridge {
-> > >     struct drm_dp_aux               aux;
-> > >     struct drm_bridge               bridge;
-> > >     struct drm_connector            connector;
-> > > +   struct dentry                   *debugfs;
-> > >     struct device_node              *host_node;
-> > >     struct mipi_dsi_device          *dsi;
-> > >     struct clk                      *refclk;
-> > > @@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
-> > >     SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
-> > >  };
-> > >
-> > > +static int status_show(struct seq_file *s, void *data)
-> > > +{
-> > > +   struct ti_sn_bridge *pdata = s->private;
-> > > +   unsigned int reg, val;
-> > > +
-> > > +   seq_puts(s, "STATUS REGISTERS:\n");
->
-> NO NEED TO SHOUT :-)
->
-> > > +
-> > > +   pm_runtime_get_sync(pdata->dev);
-> > > +
-> > > +   /* IRQ Status Registers, see Table 31 in datasheet */
-> > > +   for (reg = 0xf0; reg <= 0xf8; reg++) {
-> > > +           regmap_read(pdata->regmap, reg, &val);
-> > > +           seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
-> > > +   }
-> > > +
-> > > +   pm_runtime_put(pdata->dev);
-> > > +
-> > > +   return 0;
-> > > +}
-> > > +
-> > > +DEFINE_SHOW_ATTRIBUTE(status);
-> > > +
-> > > +static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
-> > > +{
-> > > +   pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
-> >
-> > If some day we will have board with two such bridges there will be a
-> > problem.
->
-> Could we use the platform device name for this ?
+On Thu, Jul 04, 2019 at 04:00:00PM +0300, Boaz Harrosh wrote:
+> On 04/07/2019 06:27, Matthew Wilcox wrote:
+> > On Wed, Jul 03, 2019 at 02:28:41PM -0700, Dan Williams wrote:
+> >>> +#ifdef CONFIG_XARRAY_MULTI
+> >>> +       unsigned int sibs = xas->xa_sibs;
+> >>> +
+> >>> +       while (sibs) {
+> >>> +               order++;
+> >>> +               sibs /= 2;
+> >>> +       }
+> >>
+> >> Use ilog2() here?
+> > 
+> > Thought about it.  sibs is never going to be more than 31, so I don't
+> > know that it's worth eliminating 5 add/shift pairs in favour of whatever
+> > the ilog2 instruction is on a given CPU.  In practice, on x86, sibs is
+> > going to be either 0 (PTEs) or 7 (PMDs).  We could also avoid even having
+> > this function by passing PMD_ORDER or PTE_ORDER into get_unlocked_entry().
+> > 
+> > It's probably never going to be noticable in this scenario because it's
+> > the very last thing checked before we put ourselves on a waitqueue and
+> > go to sleep.
+> 
+> Matthew you must be kidding an ilog2 in binary is zero clocks
+> (Return the highest bit or something like that)
 
-hmm, yeah, that would solve the 2x bridges issue
+You might want to actually check the documentation instead of just
+making shit up.
 
-> > Anyway:
-> >
-> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> >
-> > > +
-> > > +   debugfs_create_file("status", 0600, pdata->debugfs, pdata,
-> > > +                   &status_fops);
-> > > +}
-> > > +
-> > > +static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
-> > > +{
-> > > +   debugfs_remove_recursive(pdata->debugfs);
-> > > +   pdata->debugfs = NULL;
-> > > +}
-> > > +
->
-> You need to conditionally-compile this based on CONFIG_DEBUG_FS.
+https://www.agner.org/optimize/instruction_tables.pdf
 
-Hmm, is that really true?  Debugfs appears to be sufficently stub'd w/
-inline no-ops in the !CONFIG_DEBUG_FS case
+I think in this instance what we want is BSR (aka ffz) since the input is
+going to be one of 0, 1, 3, 7, 15 or 31 (and we want 0, 1, 2, 3, 4, 5 as
+results).
 
-BR,
--R
+> In any way. It took me 5 minutes to understand what you are doing
+> here. And I only fully got it when Dan gave his comment. So please for
+> the sake of stupid guys like me could you please make it ilog2() so
+> to make it easier to understand?
+> (And please don't do the compiler's job. If in some arch the loop
+>  is the fastest let the compiler decide?)
+
+The compiler doesn't know the range of 'sibs'.  Unless we do the
+profile-feedback thing.
