@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BC8C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC45C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707E12189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FFC218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562243117;
-	bh=J0y1KF8a1CCwG2vIA9oktmvD1j6ra3+5J/zGCihLgT8=;
+	s=default; t=1562243124;
+	bh=1CUK3irh/73Kz2Z4/gjX6kWZ9RET22dA24YyyRYKa8c=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=p0ii9ATPLAzc5S+iGYOELfGfnHNXe9Aqgq6mgEgDIu5BTRkwMiHSZAuArHd5KzEoA
-	 5JYpIoY3mYVXMnbyc/GkCknCyYd5KpViUB0RSqR2+SGeKfG/er2yxVV8JvwsdCm9O2
-	 enmD708OZ7Xct2qUEneBb6ZJ40ZwAWh/eQnRcS74=
+	b=K5jIOeEUwWVhbJ1MqZ5Snd6fx/TEW2HeH4ReFkEDxbgvarh6h8wCwxuT+GnjDR5yQ
+	 AvBaB4O10L/HYdYY2qHkOhA1cvsF1/wwv5k4g//gvL7xssjoRB0YUBpCOxSq3D97t8
+	 3hzQXeW5X1NP2sbMKkU9aQT7M9CUQ9jh85kbdH5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfGDMZQ (ORCPT
+        id S1727891AbfGDMZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:25:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35710 "EHLO
+        Thu, 4 Jul 2019 08:25:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35562 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbfGDMZO (ORCPT
+        with ESMTP id S1727787AbfGDMZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:25:14 -0400
+        Thu, 4 Jul 2019 08:25:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=SDyZBgVgpBivHCPF+m1x0S7wJ18YA/zEjKyDZhRXAu0=; b=tUY6QW89WxBv
-        crMBIl0VnT5UzMboWJVQGLGTzokl+Ex5oJFmVgkojHpOmUOjj5ypKN9vYKwwksHbr82fM72wz8tKC
-        dGQeo2KVgV574zsDKNBIJnhdkaNEUfiqbwK3oqWPfxxc/PfplVHvqQVBYtahogPM4221Y894i89Qr
-        nKKPs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=Y/uabhd3emfe7XPsaHIK1+FGOSTXpQE94AD/6SuEfgE=; b=ezkYFefEQmYe
+        rGWCMpdXPmuNyXgIK0V7tI0X0lIFxDRzeovtryDyWogcRzPyGuDo0ycyik4wXYWn2J9/ydRDgn5bc
+        RzJIH5sV6Mx3xtnOPQ7p9zgBEZjSGXwaZyNHhE6YQf6qfYc0ijCh2+/BSSjbaT2PK7lAETMI3INkQ
+        F5gU4=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hj0nM-0000jI-9w; Thu, 04 Jul 2019 12:25:00 +0000
+        id 1hj0nS-0000jZ-EO; Thu, 04 Jul 2019 12:25:06 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CC975274388A; Thu,  4 Jul 2019 13:24:59 +0100 (BST)
+        id D03D92743897; Thu,  4 Jul 2019 13:25:05 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     akinobu.mita@gmail.com, broonie@kernel.org,
-        gregkh@linuxfoundation.org, Hulk Robot <hulkci@huawei.com>,
-        jacopo@jmondi.org, khoroshilov@ispras.ru,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mchehab+samsung@kernel.org,
-        rafael@kernel.org, sakari.ailus@linux.intel.com,
-        wsa+renesas@sang-engineering.com
-Subject: Applied "regmap: select CONFIG_REGMAP while REGMAP_SCCB is set" to the regmap tree
-In-Reply-To: <20190704093553.49904-1-yuehaibing@huawei.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: max77620: remove redundant assignment to variable ret" to the regulator tree
+In-Reply-To: <20190703082009.18779-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190704122459.CC975274388A@ypsilon.sirena.org.uk>
-Date:   Thu,  4 Jul 2019 13:24:59 +0100 (BST)
+Message-Id: <20190704122505.D03D92743897@ypsilon.sirena.org.uk>
+Date:   Thu,  4 Jul 2019 13:25:05 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
+   regulator: max77620: remove redundant assignment to variable ret
 
-has been applied to the regmap tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,42 +87,37 @@ to this mail.
 Thanks,
 Mark
 
-From eff5a850017193ae879948944be05cc814c29621 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 4 Jul 2019 17:35:53 +0800
-Subject: [PATCH] regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
+From a3c7c029c3da01645f2db1bf7737668d17c2c78a Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Wed, 3 Jul 2019 09:20:09 +0100
+Subject: [PATCH] regulator: max77620: remove redundant assignment to variable
+ ret
 
-REGMAP_SCCB is selected by ov772x and ov9650 drivers,
-but CONFIG_REGMAP may not, so building will fails:
+The variable ret is being initialized with a value that is never
+read and it is being updated later with a new value. The
+initialization is redundant and can be removed.
 
-rivers/media/i2c/ov772x.c: In function ov772x_probe:
-drivers/media/i2c/ov772x.c:1360:22: error: variable ov772x_regmap_config has initializer but incomplete type
-  static const struct regmap_config ov772x_regmap_config = {
-                      ^~~~~~~~~~~~~
-drivers/media/i2c/ov772x.c:1361:4: error: const struct regmap_config has no member named reg_bits
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 5bbf32217bf9 ("media: ov772x: use SCCB regmap")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190704093553.49904-1-yuehaibing@huawei.com
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190703082009.18779-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/base/regmap/Kconfig | 2 +-
+ drivers/regulator/max77620-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-index c8bbf5322720..a4984136c19d 100644
---- a/drivers/base/regmap/Kconfig
-+++ b/drivers/base/regmap/Kconfig
-@@ -4,7 +4,7 @@
- # subsystems should select the appropriate symbols.
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 2ae2d319321b..8d9731e4052b 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -467,7 +467,7 @@ static int max77620_regulator_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
+ 	int id = rdev_get_id(rdev);
+-	int ret = 1;
++	int ret;
  
- config REGMAP
--	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
-+	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SCCB || REGMAP_I3C)
- 	select IRQ_DOMAIN if REGMAP_IRQ
- 	bool
- 
+ 	if (pmic->active_fps_src[id] != MAX77620_FPS_SRC_NONE)
+ 		return 1;
 -- 
 2.20.1
 
