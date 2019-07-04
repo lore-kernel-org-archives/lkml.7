@@ -2,157 +2,173 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F21CC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E1C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AA420881
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA42421721
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ex6kfypx"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Jbehj5O5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfGDQnX (ORCPT
+        id S1727113AbfGDQqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:43:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41894 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfGDQnX (ORCPT
+        Thu, 4 Jul 2019 12:46:33 -0400
+Received: from sonic308-55.consmr.mail.gq1.yahoo.com ([98.137.68.31]:38088
+        "EHLO sonic308-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbfGDQqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:43:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d17so7154056qtj.8;
-        Thu, 04 Jul 2019 09:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IS/wJFcvJJc/obs4u52ESPK6iZNHDaKuJQrwIU9Br5M=;
-        b=Ex6kfypx3IqkZHIv1Ib6WARx4LDKQYudillIowR7AmhNuQNU9Aj0W8SszQ4nwNcEHC
-         sDxVtU0reCVq3UOMNrS15qW1r55uYNZZ0WFpttUkG3CUQGxWOgtrMuF51KVR6JlXkbnu
-         ftlBimI3h5vnm/A79jHjAWhpadB5AvxDBR/gPcnjuaEbqHnmn5nv6wuRv+Lzs6d7pcyp
-         Y6vSsAyY2qYdEB/mYWESl76qxz1bLpn6rRuqLq5LrD6OVJsbNTCjxfOmczeCPEStbliW
-         tZ1YDaJwAcNdDgZCayBZiM3CHFV1Tj+tBGbWoKq0HBYLWIHNyCxXcsE8yONlGOlrDKHW
-         m6sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IS/wJFcvJJc/obs4u52ESPK6iZNHDaKuJQrwIU9Br5M=;
-        b=C+3g45VmGh3XcBLy/FkJFqb9HgsY6p4if46z/XoDhB/HSUJj7t+ewYgthy33WhI1g0
-         WGG/K5bhC33zdCnoI23UcIyFZ/hY/Ig5U16ETR65FtyrrMvRzHMo3IUYzXTMkLrDEY0+
-         YMpCdtYRZdu4Kd1p0/E/snyddprDwuuZ9q0Ff0H7zMLXIrGxSGpY9WfYNgyJOVHcsLWA
-         SKraYZu4KdL0JECh+UM6gMNW5C1vwHLGfar0oPOdeMJBv9dCI1gjop+w7Ky6IK3St8p0
-         fYPnWuYXR0cfUMvzhxMQxDZwPmzE/uhddsP2UtSNgUQJDK13PvsmUzO+g2rNhxxc4CA8
-         yNSg==
-X-Gm-Message-State: APjAAAVUEceRoouX1z+3sDqVJQHWBASta8hvBrRuyoOLkU+ZYRZ1HkER
-        9k7G45vvoeiSGvt+ssSw7Ps=
-X-Google-Smtp-Source: APXvYqz4tSpAKSrmRROymk/C8WtPEk8CZ8fOFGr+Wac4NjN8D1fkinwqhPQJl8pmcq2aFUmDiSZi2Q==
-X-Received: by 2002:ac8:689a:: with SMTP id m26mr36117104qtq.192.1562258601813;
-        Thu, 04 Jul 2019 09:43:21 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11c1::109b? ([2620:10d:c091:480::f2b4])
-        by smtp.gmail.com with ESMTPSA id l6sm2591529qkf.83.2019.07.04.09.43.20
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 09:43:20 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of
- RTL8723BU
-To:     Chris Chiu <chiu@endlessm.com>, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-References: <20190704105528.74028-1-chiu@endlessm.com>
-Message-ID: <8f1454ca-4610-03d0-82c4-06174083d463@gmail.com>
-Date:   Thu, 4 Jul 2019 12:43:18 -0400
+        Thu, 4 Jul 2019 12:46:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1562258792; bh=EZlfHG9qy5wQ4KEgN887WZYPerk7S+APpyCQOSbTFhE=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=Jbehj5O5hYjpjpSt0vPgVq1bE4rRkfL7AKxTplLtKnht8ThCsd/unenKgrfEdAjP/s4qNDS+0fhpgQtVCnuaOgFGopVaGRjm/zQ9d89poWon+QTZyDFCNAqzjVoUVnA0Q+6el1kTs/VvTw5WsWx3yS5Zo8iz3tlHR0oiik3U0iVD97p7nThjY1yMRjq3c8rnp8s6bnu8pbS3kZ19TgK6P2WXISg+D7LTVQu7eDuxB6J3ZX7ZuJKk27Cq5Rat6NxhM3ySYQODDGHzgcgWFh7eeiX1NlNETtRIIYvt0tzbS+fXrhEquw1ElW7nAUnkh71FzXaPEEAh0CIe6Qgh8sCHMw==
+X-YMail-OSG: nPFdYIUVM1kSQ4ZioqeMyLSU.xw55DWLV66joC42IIiyjLduv75Diy8YoEierQM
+ Yc.hHL6EcutscZzSr77xrgQQwkDvyzAQFYMAGboOrpn5rixShHSwguwA4rUNvtHm8z6IdbOwXIhj
+ 4KVxw5FD4qmD87NKoqTzly7EM5itiBbxp74urrXas_cvO03PKc4N2wI1NEgrR31x1L3Zc8yRUVEj
+ .VfvxWAlEBLAvkvFc38uzotiTSZX_T4qYWDCpmlkZduIi_ceDX0Rz4xzmI74Hs79.6zN3GDUmMs2
+ NLq.cMnRHw2nf.5D2DpFfw0Kq8Y3gvCc5WXP6GIm8WpiDQspAgUJwADw.JJ0ritziJovjRbcOrYD
+ LLWr2dS974NJJfQoKQPoiGy7B669i1gTT1NaaZgTY.guGVIXa5hh93nJ6v8dYx56PpvWLoRV4J6z
+ HAhPGnznrFgs5i2oKuZSoWyGAJ3eSHDXyguEBVgMqNrByjzjnrWTve46tUd6gmLCeuKvltiRaU04
+ 2Pn5I4s_B8cN_xnSU7gPKTapeTf.P5l3frPzHri4I4RcB3IXVNt07PPFJj870A3EHJROqC2Ejvbf
+ kBvhb_AJHvByQ0qv0ITCvBRqMmvopMLtWxFEdFmqohohIkFMfS57DhU6D.MPkaICH9rdkffuaopD
+ nn6ZO0U82MuHK.E7hd.n_C9YQBO5qUZG2xB0t.H5.2Zm_bFHtV3XOFQYe4_jQ9LYLLvYQpBU3KUX
+ 78hIdamLTGIcz.tB24ZrF0mMXXvHOMsQJuCpUrebMOmZHnHvJSdQHpPuDksDr1lo4AcNBZjbKbkN
+ kZlZG9bXtX0npmjO3f8qqCa3e5XXzmtml4GfkE_oRnCZsMwq5d_7MzjAC2fQ4LsTr2M1I28EkMHg
+ MRBp0Q.PvYeswI9V9SDd.GgE0ikY1KP.j.ySUv18VcKgp1eB_eNuZnYeszDckRd4i2E91hIeWW7z
+ X5NPC_PVLbAqt6Ao4UtAoM1vEwlnJOHypeyGtDxW9CSGX_Td0c2bespvdR4PBcCg1nlgiLQy5Vse
+ poml85TXXliq73dtWRl2AAizzXnsyFXG8Pz8OK1jOyg1_9nqcHBu.yY91T.d59eHRqndZ7NRQHOL
+ GOopaFofG7EpdTrFURuXB1tTqDMNgy8wT.E0IpOo9O4EU5tiCv32JhzU86ovLzWgUPoTOMzhf42e
+ sQbqOBRJHHrvvZWfvbUpb7v448eAJf7svif5ZksCHjQYR.8pQqWxjqcxQoOE-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 4 Jul 2019 16:46:32 +0000
+Received: by smtp410.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1631fc8e5a9a266c18b69f8870d578a3;
+          Thu, 04 Jul 2019 16:46:28 +0000 (UTC)
+Subject: Re: [PATCH] erofs: promote erofs from staging
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Cc:     devel@driverdev.osuosl.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miao Xie <miaoxie@huawei.com>
+References: <20190704133413.43012-1-gaoxiang25@huawei.com>
+ <20190704135002.GB13609@kroah.com>
+ <29e713d5-8146-80cf-8ffd-138b15349489@huawei.com>
+ <20190704141819.GA5782@kroah.com>
+From:   Gao Xiang <hsiangkao@aol.com>
+Message-ID: <56db548b-a285-7862-dc84-2cd15d948431@aol.com>
+Date:   Fri, 5 Jul 2019 00:46:15 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190704105528.74028-1-chiu@endlessm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190704141819.GA5782@kroah.com>
+Content-Type: text/plain; charset=gbk
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/19 6:55 AM, Chris Chiu wrote:
-> The WiFi tx power of RTL8723BU is extremely low after booting. So
-> the WiFi scan gives very limited AP list and it always fails to
-> connect to the selected AP. This module only supports 1x1 antenna
-> and the antenna is switched to bluetooth due to some incorrect
-> register settings.
-> 
-> Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
-> we realized that the 8723bu's enable_rf() does the same thing as
-> rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
-> sets the antenna path to BTC_ANT_PATH_BT which we verified it's
-> the cause of the wifi weak tx power. The vendor driver will set
-> the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
-> mechanism, by the function halbtc8723b1ant_PsTdma.
-> 
-> This commit hand over the antenna control to PTA(Packet Traffic
-> Arbitration), which compares the weight of bluetooth/wifi traffic
-> then determine whether to continue current wifi traffic or not.
-> After PTA take control, The wifi signal will be back to normal and
-> the bluetooth scan can also work at the same time. However, the
-> btcoexist still needs to be handled under different circumstances.
-> If there's a BT connection established, the wifi still fails to
-> connect until BT disconnected.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> ---
-> 
-> 
-> Note:
->  v2:
->   - Replace BIT(11) with the descriptive definition
->   - Meaningful comment for the REG_S0S1_PATH_SWITCH setting
-> 
-> 
->  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 11 ++++++++---
->  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  3 ++-
->  2 files changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> index 3adb1d3d47ac..ceffe05bd65b 100644
-> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
->  	/*
->  	 * WLAN action by PTA
->  	 */
-> -	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
-> +	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
->  
->  	/*
->  	 * BT select S0/S1 controlled by WiFi
-> @@ -1568,9 +1568,14 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
->  	rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
->  
->  	/*
-> -	 * 0x280, 0x00, 0x200, 0x80 - not clear
-> +	 * Different settings per different antenna position.
-> +	 *      Antenna Position:   | Normal   Inverse
-> +	 * --------------------------------------------------
-> +	 * Antenna switch to BT:    |  0x280,   0x00
-> +	 * Antenna switch to WiFi:  |  0x0,     0x280
-> +	 * Antenna switch to PTA:   |  0x200,   0x80
->  	 */
-> -	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-> +	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
 
-Per the documentation, shouldn't this be set to 0x200 then rather than 0x80?
 
-We may need to put in place some code to detect whether we have normal
-or inverse configuration of the dongle otherwise?
+On 2019/7/4 ????10:18, Greg Kroah-Hartman wrote:
+> On Thu, Jul 04, 2019 at 10:00:53PM +0800, Gao Xiang wrote:
+>> Hi Greg,
+>>
+>> On 2019/7/4 21:50, Greg Kroah-Hartman wrote:
+>>> On Thu, Jul 04, 2019 at 09:34:13PM +0800, Gao Xiang wrote:
+>>>> EROFS file system has been in Linux-staging for about a year.
+>>>> It has been proved to be stable enough to move out of staging
+>>>> by 10+ millions of HUAWEI Android mobile phones on the market
+>>>> from EMUI 9.0.1, and it was promoted as one of the key features
+>>>> of EMUI 9.1 [1], including P30(pro).
+>>>>
+>>>> EROFS is a read-only file system designed to save extra storage
+>>>> space with guaranteed end-to-end performance by applying
+>>>> fixed-size output compression, inplace I/O and decompression
+>>>> inplace technologies [2] to Linux filesystem.
+>>>>
+>>>> In our observation, EROFS is one of the fastest Linux compression
+>>>> filesystem using buffered I/O in the world. It will support
+>>>> direct I/O in the future if needed. EROFS even has better read
+>>>> performance in a large CR range compared with generic uncompressed
+>>>> file systems with proper CPU-storage combination, which is
+>>>> a reason why erofs can be landed to speed up mobile phone
+>>>> performance, and which can be probably used for other use cases
+>>>> such as LiveCD and Docker image as well.
+>>>>
+>>>> Currently erofs supports 4k LZ4 fixed-size output compression
+>>>> since LZ4 is the fastest widely-used decompression solution in
+>>>> the world and 4k leads to unnoticable read amplification for
+>>>> the worst case. More compression algorithms and cluster sizes
+>>>> could be added later, which depends on the real requirement.
+>>>>
+>>>> More informations about erofs itself are available at:
+>>>>  Documentation/filesystems/erofs.txt
+>>>>  https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
+>>>>
+>>>> erofs-utils (mainly mkfs.erofs now) is available at
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+>>>>
+>>>> Preliminary iomap support has been pending in erofs mailing
+>>>> list by Chao Yu. The key issue is that current iomap doesn't
+>>>> support tail-end packing inline data yet, it should be
+>>>> resolved later.
+>>>>
+>>>> Thanks to many contributors in the last year, the code is more
+>>>> clean and improved. We hope erofs can be used in wider use cases
+>>>> so let's promote erofs out of staging and enhance it more actively.
+>>>>
+>>>> Share comments about erofs! We think erofs is useful to
+>>>> community as a part of Linux upstream :)
+>>>
+>>> I don't know if this format is easy for the linux-fsdevel people to
+>>> review, it forces them to look at the in-kernel code, which makes it
+>>> hard to quote.
+>>>
+>>> Perhaps just make a patch that adds the filesystem to the tree and after
+>>> it makes it through review, I can delete the staging version?  We've
+>>> been doing that for wifi drivers that move out of staging as it seems to
+>>> be a bit easier.
+>>
+>> OK, I will resend the whole patchset later as you suggested, but it will
+>> lack of information about some original authors and I'd like to know who
+>> is responsible to merge this kind of request to Linux upstream... maybe Linus?
+> 
+> I don't know who adds new filesystems to the tree these days.  Usually
+> you need to get some acks from the fsdevel developers first, and then it
+> can go directly to Linus in one of the merge windows.
 
-I really appreciate you're digging into this!
+Hope that fs guys could eventually take some glances / time on erofs
+since it's more useful than romfs/cramfs/squashfs for read-only
+performance scenario since storage space is not tight and slow than 10
+years before, even for some embedded devices such as mobile phones/pads.
+and compression file system could not be designed for saving storage
+space only like these...
 
-Cheers,
-Jes
+I think except for unzip_vle.c (which works fine, but not very cleaned
+as other files), erofs is clean enough for reviewing...
+
+> 
+>> And it could be more consistent to leave staging version for linux-5.3
+>> because we still use it, but anyway, I will do it now.
+> 
+> Yeah, it's too late for 5.3-rc1, so don't worry.  I'll not delete
+> anything until it's actually in someone else's tree on its way to Linus.
+
+Sound great, I will tidy the whole patchset up and hope it eventually be
+ok...
+
+Thanks,
+Gao Xiang
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
