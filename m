@@ -2,301 +2,172 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B77C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979C8C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BE62189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D16C218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="E9savyrj"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kVdjzg7N";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="aPsJJBA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfGDKhF (ORCPT
+        id S1727579AbfGDKh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:37:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56923 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfGDKhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:37:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fZCw6Dtpz9s8m;
-        Thu,  4 Jul 2019 20:37:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562236621;
-        bh=whC3mB0E8R6xCRLqcYTosbnTYER6oX7bS7Yn/9Co2Es=;
-        h=Date:From:To:Cc:Subject:From;
-        b=E9savyrjQ51/6cKIpM0OyaoiG6EaOqeL9jkuqgaPCm/BMBEdPkQs1sfTSB6p7Ujfz
-         /JQUHP49xRgBpdeTYLTvanPooxrIvMAFpfmY94FrOpcrPyCdXlodCjoSpvenv/XEWm
-         /A98qWE9bhV3KzvCVa9by6oGtHgj+KdQqhOs8eI56lmgk2RbTZ9o4v9Ix3rzBFLlb6
-         tgS0T2pwobjFnBZNymwxhsbH/C2bU6sQ8TNwEMUad1CkaMGazFEerTvGE1esKad0n6
-         HSZk07FV8sG4U2oPPfFBhdPknHl2ICwWuhKkR5uEu1gcP7x4wbqjhqVx1oK2lE/JK9
-         4KpmZ0A6AFJrw==
-Date:   Thu, 4 Jul 2019 20:36:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the akpm-current tree with the hmm tree
-Message-ID: <20190704203658.1d26d182@canb.auug.org.au>
+        Thu, 4 Jul 2019 06:37:26 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:27396 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727385AbfGDKhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:37:25 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64AZ41P026705;
+        Thu, 4 Jul 2019 03:37:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=xCvCGwtX95qFHWhkAdmeugVBg4xpRyAdODhU5SpQ5wk=;
+ b=kVdjzg7NiZP6ZKCxhaFd9FrvI5zypYyHsPG/jMicf3HVpt0YlrB1RKO8mEy/fAUkf4Xl
+ p4IMkSfGceH13nyFldAWwiNjgLFqW2UkbEhye81eDPe/xEeXObs6+EgLUmhA/LB+lSgK
+ vOe1sTmwHlznc2IKMbpdk8LfKFATxU6FJoGr1jfh+SbGEWMlBdKyvWJQsK6uwSstfP9z
+ NbukgTZ/s7e0Q9b7cKgMwj5vxUg8fbeIIOTb6AhRMPYj9/JF/1hEFwuIjPdzUd9HZU7P
+ i0EQ9nK/3pOW8qUk/mLfn0jFfjXNN6tqn/ZntOMaV214BHx/uJeIOWX7K04HyvTGRecX Qw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2th9481k0y-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jul 2019 03:37:04 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 4 Jul
+ 2019 03:37:02 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.57) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 4 Jul 2019 03:37:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xCvCGwtX95qFHWhkAdmeugVBg4xpRyAdODhU5SpQ5wk=;
+ b=aPsJJBA97RwUllSG6ahDJ12vTpJg3lz/8O3OQBUu1S4enSmPfJ8yPLVErPtUFzNII94admA2F9vzfs/kKzvfU9AzhR13CO9lURkFgZAJJY6ua+riI5Y2sV05nzds1wwY8XmRdYSVRkuyrsODnxGgK7rgDjqDKpVTtIWh6TyVwRQ=
+Received: from MN2PR18MB3055.namprd18.prod.outlook.com (20.178.255.209) by
+ MN2PR18MB2384.namprd18.prod.outlook.com (20.179.80.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Thu, 4 Jul 2019 10:36:58 +0000
+Received: from MN2PR18MB3055.namprd18.prod.outlook.com
+ ([fe80::9574:8e34:cd99:788f]) by MN2PR18MB3055.namprd18.prod.outlook.com
+ ([fe80::9574:8e34:cd99:788f%4]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
+ 10:36:58 +0000
+From:   Shijith Thotton <sthotton@marvell.com>
+To:     Julien Thierry <julien.thierry@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Jayachandran Chandrasekharan Nair" <jnair@marvell.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH] genirq: update irq stats from NMI handlers
+Thread-Topic: [PATCH] genirq: update irq stats from NMI handlers
+Thread-Index: AQHVMiAiVz/XkkYfRk2+vKGjBsT7x6a6C8+AgAA4f4A=
+Date:   Thu, 4 Jul 2019 10:36:57 +0000
+Message-ID: <a4ce3800-22f4-72dc-6ff8-75dfed1c377b@marvell.com>
+References: <1562214115-14022-1-git-send-email-sthotton@marvell.com>
+ <6adfb296-50f1-9efb-0840-cc8732b8ebf9@arm.com>
+In-Reply-To: <6adfb296-50f1-9efb-0840-cc8732b8ebf9@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR13CA0005.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::18) To MN2PR18MB3055.namprd18.prod.outlook.com
+ (2603:10b6:208:ff::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0fb5dc59-67b0-4a88-3526-08d7006b8a42
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2384;
+x-ms-traffictypediagnostic: MN2PR18MB2384:
+x-microsoft-antispam-prvs: <MN2PR18MB2384FAB468FF124168143408D9FA0@MN2PR18MB2384.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(346002)(376002)(366004)(136003)(199004)(189003)(3846002)(4326008)(256004)(6116002)(6512007)(31686004)(486006)(11346002)(68736007)(66556008)(66476007)(66946007)(73956011)(64756008)(66446008)(6246003)(76176011)(186003)(478600001)(99286004)(229853002)(14444005)(25786009)(386003)(6506007)(53546011)(6486002)(14454004)(86362001)(31696002)(6436002)(2906002)(446003)(7736002)(305945005)(71200400001)(66066001)(71190400001)(81156014)(81166006)(8936002)(107886003)(8676002)(36756003)(102836004)(2616005)(476003)(316002)(5660300002)(54906003)(52116002)(26005)(110136005)(53936002)(15650500001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2384;H:MN2PR18MB3055.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5ps7b0H6YW2eH3AS7qvZ2ypdGEuHYqzxFdU72yt15p6G21gmcmTLDLTpUx9JByRVc7WVNPya1HKy8k9eN15Ei56HiKQlsX1RuRM9uAeyH7ZXeNxKC9tm3+Dgi6SSqx1GQiNqFXorQccdIe1Rny+5bF25ifz4vhSbtvyWLh+AWNpItGe6qYuDpbeNVI+tRtT5qfg714Bdvi2H2H7L7d0XB3/cCzP/U3B0kkvUJ9uRoyA0WjyggT0t9XgHktPCxFgaC6FpWNRCjjpid3JsCnSYGKd3s9Nk5q7ZdtJRgHsGSUcWnr5gXPR8Fi9OVP74gz0un4cDRxCxGEmyCXQlw39mlq75LBzVdBXZkgQ7mecxQHb47arItOnlbx2vJ7rTSI7JrG11zYtGT7Hrs3ZhVFupyQOFa8iPYv4A7v+T98IGEfU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <725FCB043436864D9D650E1D4405B889@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/oAm8jCFy=m18mDYbv_b1D/6"; protocol="application/pgp-signature"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fb5dc59-67b0-4a88-3526-08d7006b8a42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 10:36:58.0468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sthotton@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2384
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oAm8jCFy=m18mDYbv_b1D/6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Today's linux-next merge of the akpm-current tree got a conflict in:
-
-  kernel/memremap.c
-
-between commit:
-
-  514caf23a70f ("memremap: replace the altmap_valid field with a PGMAP_ALTM=
-AP_VALID flag")
-
-from the hmm tree and commit:
-
-  a10a0f39cae6 ("mm/devm_memremap_pages: enable sub-section remap")
-
-from the akpm-current tree.
-
-I fixed it up (I think - see below) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc kernel/memremap.c
-index bea6f887adad,a0e5f6b91b04..000000000000
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@@ -11,39 -11,39 +11,37 @@@
-  #include <linux/types.h>
-  #include <linux/wait_bit.h>
-  #include <linux/xarray.h>
- -#include <linux/hmm.h>
- =20
-  static DEFINE_XARRAY(pgmap_array);
-- #define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
-- #define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
- =20
- -#if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
- -vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
- -		       unsigned long addr,
- -		       swp_entry_t entry,
- -		       unsigned int flags,
- -		       pmd_t *pmdp)
- +#ifdef CONFIG_DEV_PAGEMAP_OPS
- +DEFINE_STATIC_KEY_FALSE(devmap_managed_key);
- +EXPORT_SYMBOL(devmap_managed_key);
- +static atomic_t devmap_managed_enable;
- +
- +static void devmap_managed_enable_put(void *data)
-  {
- -	struct page *page =3D device_private_entry_to_page(entry);
- -	struct hmm_devmem *devmem;
- +	if (atomic_dec_and_test(&devmap_managed_enable))
- +		static_branch_disable(&devmap_managed_key);
- +}
- =20
- -	devmem =3D container_of(page->pgmap, typeof(*devmem), pagemap);
- +static int devmap_managed_enable_get(struct device *dev, struct dev_pagem=
-ap *pgmap)
- +{
- +	if (!pgmap->ops || !pgmap->ops->page_free) {
- +		WARN(1, "Missing page_free method\n");
- +		return -EINVAL;
- +	}
- =20
- -	/*
- -	 * The page_fault() callback must migrate page back to system memory
- -	 * so that CPU can access it. This might fail for various reasons
- -	 * (device issue, device was unsafely unplugged, ...). When such
- -	 * error conditions happen, the callback must return VM_FAULT_SIGBUS.
- -	 *
- -	 * Note that because memory cgroup charges are accounted to the device
- -	 * memory, this should never fail because of memory restrictions (but
- -	 * allocation of regular system page might still fail because we are
- -	 * out of memory).
- -	 *
- -	 * There is a more in-depth description of what that callback can and
- -	 * cannot do, in include/linux/memremap.h
- -	 */
- -	return devmem->page_fault(vma, addr, page, flags, pmdp);
- +	if (atomic_inc_return(&devmap_managed_enable) =3D=3D 1)
- +		static_branch_enable(&devmap_managed_key);
- +	return devm_add_action_or_reset(dev, devmap_managed_enable_put, NULL);
-  }
- -#endif /* CONFIG_DEVICE_PRIVATE */
- +#else
- +static int devmap_managed_enable_get(struct device *dev, struct dev_pagem=
-ap *pgmap)
- +{
- +	return -EINVAL;
- +}
- +#endif /* CONFIG_DEV_PAGEMAP_OPS */
- =20
-  static void pgmap_array_delete(struct resource *res)
-  {
-@@@ -54,8 -54,14 +52,8 @@@
- =20
-  static unsigned long pfn_first(struct dev_pagemap *pgmap)
-  {
-- 	return (pgmap->res.start >> PAGE_SHIFT) +
- -	const struct resource *res =3D &pgmap->res;
- -	struct vmem_altmap *altmap =3D &pgmap->altmap;
- -	unsigned long pfn;
- -
- -	pfn =3D PHYS_PFN(res->start);
- -	if (pgmap->altmap_valid)
- -		pfn +=3D vmem_altmap_offset(altmap);
- -	return pfn;
-++	return (PHYS_PFN(pgmap->res.start)) +
- +		vmem_altmap_offset(pgmap_altmap(pgmap));
-  }
- =20
-  static unsigned long pfn_end(struct dev_pagemap *pgmap)
-@@@ -101,28 -89,23 +99,23 @@@ static void devm_memremap_pages_release
-  	unsigned long pfn;
-  	int nid;
- =20
- -	pgmap->kill(pgmap->ref);
- +	dev_pagemap_kill(pgmap);
-  	for_each_device_pfn(pfn, pgmap)
-  		put_page(pfn_to_page(pfn));
- -	pgmap->cleanup(pgmap->ref);
- +	dev_pagemap_cleanup(pgmap);
- =20
-  	/* pages are dead and unused, undo the arch mapping */
-- 	align_start =3D res->start & ~(SECTION_SIZE - 1);
-- 	align_size =3D ALIGN(res->start + resource_size(res), SECTION_SIZE)
-- 		- align_start;
--=20
-- 	nid =3D page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
-+ 	nid =3D page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
- =20
-  	mem_hotplug_begin();
-  	if (pgmap->type =3D=3D MEMORY_DEVICE_PRIVATE) {
-- 		pfn =3D align_start >> PAGE_SHIFT;
-+ 		pfn =3D PHYS_PFN(res->start);
-  		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
-- 				align_size >> PAGE_SHIFT, NULL);
-+ 				PHYS_PFN(resource_size(res)), NULL);
-  	} else {
-- 		arch_remove_memory(nid, align_start, align_size,
-+ 		arch_remove_memory(nid, res->start, resource_size(res),
- -				pgmap->altmap_valid ? &pgmap->altmap : NULL);
- +				pgmap_altmap(pgmap));
-- 		kasan_remove_zero_shadow(__va(align_start), align_size);
-+ 		kasan_remove_zero_shadow(__va(res->start), resource_size(res));
-  	}
-  	mem_hotplug_done();
- =20
-@@@ -173,64 -146,13 +165,59 @@@ void *devm_memremap_pages(struct devic
-  	};
-  	pgprot_t pgprot =3D PAGE_KERNEL;
-  	int error, nid, is_ram;
- +	bool need_devmap_managed =3D true;
- +
- +	switch (pgmap->type) {
- +	case MEMORY_DEVICE_PRIVATE:
- +		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
- +			WARN(1, "Device private memory not supported\n");
- +			return ERR_PTR(-EINVAL);
- +		}
- +		if (!pgmap->ops || !pgmap->ops->migrate_to_ram) {
- +			WARN(1, "Missing migrate_to_ram method\n");
- +			return ERR_PTR(-EINVAL);
- +		}
- +		break;
- +	case MEMORY_DEVICE_FS_DAX:
- +		if (!IS_ENABLED(CONFIG_ZONE_DEVICE) ||
- +		    IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
- +			WARN(1, "File system DAX not supported\n");
- +			return ERR_PTR(-EINVAL);
- +		}
- +		break;
- +	case MEMORY_DEVICE_DEVDAX:
- +	case MEMORY_DEVICE_PCI_P2PDMA:
- +		need_devmap_managed =3D false;
- +		break;
- +	default:
- +		WARN(1, "Invalid pgmap type %d\n", pgmap->type);
- +		break;
- +	}
- +
- +	if (!pgmap->ref) {
- +		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
- +			return ERR_PTR(-EINVAL);
- +
- +		init_completion(&pgmap->done);
- +		error =3D percpu_ref_init(&pgmap->internal_ref,
- +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
- +		if (error)
- +			return ERR_PTR(error);
- +		pgmap->ref =3D &pgmap->internal_ref;
- +	} else {
- +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
- +			WARN(1, "Missing reference count teardown definition\n");
- +			return ERR_PTR(-EINVAL);
- +		}
- +	}
- =20
- -	if (!pgmap->ref || !pgmap->kill || !pgmap->cleanup) {
- -		WARN(1, "Missing reference count teardown definition\n");
- -		return ERR_PTR(-EINVAL);
- +	if (need_devmap_managed) {
- +		error =3D devmap_managed_enable_get(dev, pgmap);
- +		if (error)
- +			return ERR_PTR(error);
-  	}
- =20
-- 	align_start =3D res->start & ~(SECTION_SIZE - 1);
-- 	align_size =3D ALIGN(res->start + resource_size(res), SECTION_SIZE)
-- 		- align_start;
-- 	align_end =3D align_start + align_size - 1;
--=20
-- 	conflict_pgmap =3D get_dev_pagemap(PHYS_PFN(align_start), NULL);
-+ 	conflict_pgmap =3D get_dev_pagemap(PHYS_PFN(res->start), NULL);
-  	if (conflict_pgmap) {
-  		dev_WARN(dev, "Conflicting mapping in same section\n");
-  		put_dev_pagemap(conflict_pgmap);
-
---Sig_/oAm8jCFy=m18mDYbv_b1D/6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0d1soACgkQAVBC80lX
-0Gyxjgf+LBFAMMUjS+UNbtw3lUuoI4DnEVhgDHevjPiJPmrYuuQYMSQlsC5iBuAH
-8/iPWCxOdHhTQZq4QZmx303bPEAevCxLtGFYF2Q7Xb8/Kj0NeOzGYcUBL1DVLMRM
-YDa7ERRMt9hjPqeE/ujwDufvUyUtdmMcCUFs82tPK2aXgcfRD307isgriJWERSjH
-XHrEjZl/0yqBs5r/vehkCUpCJt8Nx572kHTkowFHCoOJwjdiAPWFmS+die86GapM
-5bEGmPp9eFp+YBrCttkPBOesPSh9q37jk0hQ8rdsifF9lA1sw4BGTKG+l4voYGWd
-diuYSaG1jRv/o48+dutgo7A84xuEpA==
-=9DM8
------END PGP SIGNATURE-----
-
---Sig_/oAm8jCFy=m18mDYbv_b1D/6--
+DQpIaSBKdWxpZW4sDQoNCk9uIDcvNC8xOSAxMjoxMyBBTSwgSnVsaWVuIFRoaWVycnkgd3JvdGU6
+DQo+IE9uIDA0LzA3LzIwMTkgMDU6MjIsIFNoaWppdGggVGhvdHRvbiB3cm90ZToNCj4+IFRoZSBO
+TUkgaGFuZGxlcnMgaGFuZGxlX3BlcmNwdV9kZXZpZF9mYXN0ZW9pX25taSgpIGFuZA0KPj4gaGFu
+ZGxlX2Zhc3Rlb2lfbm1pKCkgYWRkZWQgYnkgY29tbWl0IDJkY2YxZmJjYWQzNSAoImdlbmlycTog
+UHJvdmlkZSBOTUkNCj4+IGhhbmRsZXJzIikgZG8gbm90IHVwZGF0ZSB0aGUgaW50ZXJydXB0IGNv
+dW50cy4gRHVlIHRvIHRoYXQgdGhlIE5NSQ0KPj4gaW50ZXJydXB0IGNvdW50IGRvZXMgbm90IHNo
+b3cgdXAgY29ycmVjdGx5IGluIC9wcm9jL2ludGVycnVwdHMuDQo+Pg0KPj4gVXBkYXRlIHRoZSBm
+dW5jdGlvbnMgdG8gZml4IHRoaXMuIFdpdGggdGhpcyBjaGFuZ2UsIHdlIGNhbiBzZWUgc3RhdHMg
+b2YNCj4+IHRoZSBwZXJmIE5NSSBpbnRlcnJ1cHRzIG9uIGFybTY0Lg0KPj4NCj4+IEZpeGVzOiAy
+ZGNmMWZiY2FkMzUgKCJnZW5pcnE6IFByb3ZpZGUgTk1JIGhhbmRsZXJzIikNCj4+DQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBTaGlqaXRoIFRob3R0b24gPHN0aG90dG9uQG1hcnZlbGwuY29tPg0KPj4gLS0t
+DQo+PiAgIGtlcm5lbC9pcnEvY2hpcC5jIHwgNCArKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0
+IGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEva2VybmVsL2lycS9jaGlwLmMgYi9r
+ZXJuZWwvaXJxL2NoaXAuYw0KPj4gaW5kZXggMjlkNmM3ZDA3MGI0Li44OGQxZTA1NGM2ZWEgMTAw
+NjQ0DQo+PiAtLS0gYS9rZXJuZWwvaXJxL2NoaXAuYw0KPj4gKysrIGIva2VybmVsL2lycS9jaGlw
+LmMNCj4+IEBAIC03NDgsNiArNzQ4LDggQEAgdm9pZCBoYW5kbGVfZmFzdGVvaV9ubWkoc3RydWN0
+IGlycV9kZXNjICpkZXNjKQ0KPj4gICAJdW5zaWduZWQgaW50IGlycSA9IGlycV9kZXNjX2dldF9p
+cnEoZGVzYyk7DQo+PiAgIAlpcnFyZXR1cm5fdCByZXM7DQo+PiAgIA0KPj4gKwlrc3RhdF9pbmNy
+X2lycXNfdGhpc19jcHUoZGVzYyk7DQo+PiArDQo+IA0KPiBUaGlzIG5lZWRzIHRvIGJlIGNhbGxl
+ZCB3aXRoIHRoZSBkZXNjIGxvY2sgdGFrZW4sIG90aGVyd2lzZSB3ZSdyZSBsaWtlbHkNCj4gdG8g
+Y29ycnVwdCBkZXNjLT50b3RfY291bnQuDQo+IEJ1dCB0YWtpbmcgdGhlIGRlc2MgbG9jayBpcyBz
+b21ldGhpbmcgd2UgY2FuJ3QgZG8gaW4gTk1JIGNvbnRleHQgKA0KPiAqc3Bpbl9sb2NrX2lycSoo
+KSB3b24ndCBwcmV2ZW50IGFuIE5NSSBmcm9tIGhhcHBlbmluZykuDQo+IA0KPj4gICAJdHJhY2Vf
+aXJxX2hhbmRsZXJfZW50cnkoaXJxLCBhY3Rpb24pOw0KPj4gICAJLyoNCj4+ICAgCSAqIE5NSXMg
+Y2Fubm90IGJlIHNoYXJlZCwgdGhlcmUgaXMgb25seSBvbmUgYWN0aW9uLg0KPj4gQEAgLTk2Miw2
+ICs5NjQsOCBAQCB2b2lkIGhhbmRsZV9wZXJjcHVfZGV2aWRfZmFzdGVvaV9ubWkoc3RydWN0IGly
+cV9kZXNjICpkZXNjKQ0KPj4gICAJdW5zaWduZWQgaW50IGlycSA9IGlycV9kZXNjX2dldF9pcnEo
+ZGVzYyk7DQo+PiAgIAlpcnFyZXR1cm5fdCByZXM7DQo+PiAgIA0KPj4gKwlfX2tzdGF0X2luY3Jf
+aXJxc190aGlzX2NwdShkZXNjKTsNCj4+ICsNCj4gDQo+IExvb2tpbmcgYXQgaGFuZGxlX3BlcmNw
+dV9pcnEoKSwgSSB0aGluayB0aGlzIG1pZ2h0IGJlIGFjY2VwdGFibGUuIEJ1dA0KPiBkb2VzIGl0
+IG1ha2Ugc2Vuc2UgdG8gb25seSBoYXZlIGtzdGF0cyBmb3IgcGVyY3B1IE5NSXM/DQo+IA0KDQpJ
+dCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSBzdGF0cyBmb3IgYm90aC4NCg0KaGFuZGxlX2Zhc3Rl
+b2lfbm1pKCkgY2FuIHVzZSBfX2tzdGF0X2luY3JfaXJxc190aGlzX2NwdSgpIGlmIGJlbG93IA0K
+Y2hhbmdlIGNhbiBiZSBhZGRlZCB0byBrc3RhdF9pcnFzX2NwdSgpLg0KDQpkaWZmIC0tZ2l0IGEv
+a2VybmVsL2lycS9pcnFkZXNjLmMgYi9rZXJuZWwvaXJxL2lycWRlc2MuYw0KaW5kZXggYTkyYjMz
+NTkzYjhkLi45NDg0ZTg4ZGFiYzIgMTAwNjQ0DQotLS0gYS9rZXJuZWwvaXJxL2lycWRlc2MuYw0K
+KysrIGIva2VybmVsL2lycS9pcnFkZXNjLmMNCkBAIC05NTAsNiArOTUwLDExIEBAIHVuc2lnbmVk
+IGludCBrc3RhdF9pcnFzX2NwdSh1bnNpZ25lZCBpbnQgaXJxLCBpbnQgY3B1KQ0KICAgICAgICAg
+ICAgICAgICAgICAgICAgICpwZXJfY3B1X3B0cihkZXNjLT5rc3RhdF9pcnFzLCBjcHUpIDogMDsN
+CiAgfQ0KDQorc3RhdGljIGJvb2wgaXJxX2lzX25taShzdHJ1Y3QgaXJxX2Rlc2MgKmRlc2MpDQor
+ew0KKyAgICAgICByZXR1cm4gZGVzYy0+aXN0YXRlICYgSVJRU19OTUk7DQorfQ0KKw0KICAvKioN
+CiAgICoga3N0YXRfaXJxcyAtIEdldCB0aGUgc3RhdGlzdGljcyBmb3IgYW4gaW50ZXJydXB0DQog
+ICAqIEBpcnE6ICAgICAgIFRoZSBpbnRlcnJ1cHQgbnVtYmVyDQpAQCAtOTY3LDcgKzk3Miw4IEBA
+IHVuc2lnbmVkIGludCBrc3RhdF9pcnFzKHVuc2lnbmVkIGludCBpcnEpDQogICAgICAgICBpZiAo
+IWRlc2MgfHwgIWRlc2MtPmtzdGF0X2lycXMpDQogICAgICAgICAgICAgICAgIHJldHVybiAwOw0K
+ICAgICAgICAgaWYgKCFpcnFfc2V0dGluZ3NfaXNfcGVyX2NwdV9kZXZpZChkZXNjKSAmJg0KLSAg
+ICAgICAgICAgIWlycV9zZXR0aW5nc19pc19wZXJfY3B1KGRlc2MpKQ0KKyAgICAgICAgICAgIWly
+cV9zZXR0aW5nc19pc19wZXJfY3B1KGRlc2MpICYmDQorICAgICAgICAgICAhaXJxX2lzX25taShk
+ZXNjKSkNCiAgICAgICAgICAgICByZXR1cm4gZGVzYy0+dG90X2NvdW50Ow0KDQogICAgICAgICBm
+b3JfZWFjaF9wb3NzaWJsZV9jcHUoY3B1KQ0KDQoNClRob21hcywNClBsZWFzZSBzdWdnZXN0IGEg
+YmV0dGVyIHdheSBpZiBhbnkuDQoNClRoYW5rcywNClNoaWppdGgNCg==
