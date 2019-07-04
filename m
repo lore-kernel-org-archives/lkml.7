@@ -2,78 +2,173 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBDC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC567C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBC7218A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FE0218A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="lDQiYQGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfGDIFv (ORCPT
+        id S1727091AbfGDIGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:05:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8695 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725882AbfGDIFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:05:50 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E2ABDFE2A8D148F6F5BB;
-        Thu,  4 Jul 2019 16:05:46 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
- 16:05:38 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <gregkh@linuxfoundation.org>, <linux@zary.sk>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] scsi: fdomain: Fix PCMCIA_FDOMAIN Kconfig warning
-Date:   Thu, 4 Jul 2019 16:01:56 +0800
-Message-ID: <20190704080156.52044-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 4 Jul 2019 04:06:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50712 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfGDIGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:06:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n9so4756114wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 01:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7U8PUS9qeOEnu5XyHEv9AyKWyWyvdTGDvMPE5z/vTV4=;
+        b=lDQiYQGTJywYz1M49aN4htdUio8wJiZoNk0UFRG2Qp89ahNYYFRAIFKNngGvPx30ZJ
+         68rb6xm9N2tPRwjlQGo35YR4zNIbwMD3X/hMwxDrenqh/bLUW9CWk58jIYR4GOMyH47l
+         UVIoKb5MrhOfcsFtkxkICTuYQI7N1E2Jjz5DNvxWUPNOmY2+aC+C+kdelbY0nK2iA5Xy
+         qRYJexEvscpdMjx1QxF0bfQ3PdBp1xAttUY6YDp46b6sYnCsknOwQzMIVOI4LpePH/Ei
+         j6x09CrtLH3Oq68T6+FKRItmkfjgS8lnCPrt0EmWUNJ91BtNUcgjwPxexRez2jzEU8ky
+         93fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7U8PUS9qeOEnu5XyHEv9AyKWyWyvdTGDvMPE5z/vTV4=;
+        b=LVtur39GB5346GFUXLPlsTKdOEN+q0wF24xmSfPBUJxgn58qK0ol8zc4D6vtrGn2es
+         5gu79O55k7eefeqTA7avvw6B8F/V8uAX3rdfCDJc948JHWsnBMVxTy1maW+J/KOnPDQe
+         Pi1W7ZDSdv0lYPIZ9sHmyGVIFVhU34qXhgMzLCH6NkeryGbyzk4NJX7O29t3X/beXEXO
+         ykQj02kyBgMyL8BiNqV/Yo8Fs1f+zt0TidUwUmHPLyoAZRQDgtDynaN+bZPO4jBl/PF5
+         irt2kMRk2eGuGqpQ63Q490z9HAtwGpuwBRfU3q2ne26Jwz5D401cdu65eTktc0MCPPOs
+         pQWw==
+X-Gm-Message-State: APjAAAWn4ceUZUTwtMUHCuHSk57vKN0VulB0Aeiu5kPgXvtHmh2dbxWJ
+        0hojqPq1uvhDeq7wudCkoBQYfQ==
+X-Google-Smtp-Source: APXvYqxYyYoFFR6L6fhUUqkc+y4k/H17KErTfxui37ASNX5vZmb3mmQo+bdo6f4Frl1E5L4aN9xK1A==
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr11398628wml.84.1562227560803;
+        Thu, 04 Jul 2019 01:06:00 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id w24sm3387938wmc.30.2019.07.04.01.06.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 01:06:00 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 10:06:00 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 07/15] ethtool: support for netlink
+ notifications
+Message-ID: <20190704080600.GG2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <4dcac81783de8686edefa262a1db75f9e961b123.1562067622.git.mkubecek@suse.cz>
+ <20190703133352.GY2250@nanopsycho>
+ <20190703141614.GL20101@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703141614.GL20101@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Kconfig warning for PCMCIA_FDOMAIN symbol:
+Wed, Jul 03, 2019 at 04:16:14PM CEST, mkubecek@suse.cz wrote:
+>On Wed, Jul 03, 2019 at 03:33:52PM +0200, Jiri Pirko wrote:
+>> >+/* notifications */
+>> >+
+>> >+typedef void (*ethnl_notify_handler_t)(struct net_device *dev,
+>> >+				       struct netlink_ext_ack *extack,
+>> >+				       unsigned int cmd, u32 req_mask,
+>> >+				       const void *data);
+>> >+
+>> >+static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
+>> >+};
+>> >+
+>> >+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
+>> >+		    unsigned int cmd, u32 req_mask, const void *data)
+>> 
+>> What's "req_mask" ?
+>
+>It's infomask to interpret the same way as if it came from request
+>header (the notification triggered by a SET request or its ioctl
+>equivalent uses the same format as corresponding GET_REPLY message and
+>is created by the same code). But it could be called infomask, I have no
+>strong opinion about that.
 
-WARNING: unmet direct dependencies detected for SCSI_FDOMAIN
-  Depends on [n]: SCSI_LOWLEVEL [=n] && SCSI [=y]
-  Selected by [m]:
-  - PCMCIA_FDOMAIN [=m] && SCSI_LOWLEVEL_PCMCIA [=y] && SCSI [=y] && PCMCIA [=m] && m && MODULES [=y]
-
-Add SCSI_FDOMAIN and SCSI_LOWLEVEL dependency.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 8674a8aa2c39 ("scsi: fdomain: Add PCMCIA support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/pcmcia/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
-index 2368f34..f23a572 100644
---- a/drivers/scsi/pcmcia/Kconfig
-+++ b/drivers/scsi/pcmcia/Kconfig
-@@ -22,7 +22,7 @@ config PCMCIA_AHA152X
- 
- config PCMCIA_FDOMAIN
- 	tristate "Future Domain PCMCIA support"
--	select SCSI_FDOMAIN
-+	depends on SCSI_FDOMAIN && SCSI_LOWLEVEL
- 	help
- 	  Say Y here if you intend to attach this type of PCMCIA SCSI host
- 	  adapter to your computer.
--- 
-2.7.4
+The name should be same all along the code so the reader can track it.
 
 
+>
+>> >+{
+>> >+	if (unlikely(!ethnl_ok))
+>> >+		return;
+>> >+	ASSERT_RTNL();
+>> >+
+>> >+	if (likely(cmd < ARRAY_SIZE(ethnl_notify_handlers) &&
+>> >+		   ethnl_notify_handlers[cmd]))
+>> 
+>> How it could be null?
+>
+>Notification message types share the enum with other kernel messages:
+>
+>/* message types - kernel to userspace */
+>enum {
+>	ETHTOOL_MSG_KERNEL_NONE,
+>	ETHTOOL_MSG_STRSET_GET_REPLY,
+>	ETHTOOL_MSG_SETTINGS_GET_REPLY,
+>	ETHTOOL_MSG_SETTINGS_NTF,
+>	ETHTOOL_MSG_SETTINGS_SET_REPLY,
+>	ETHTOOL_MSG_INFO_GET_REPLY,
+>	ETHTOOL_MSG_PARAMS_GET_REPLY,
+>	ETHTOOL_MSG_PARAMS_NTF,
+>	ETHTOOL_MSG_NWAYRST_NTF,
+>	ETHTOOL_MSG_PHYSID_NTF,
+>	ETHTOOL_MSG_RESET_NTF,
+>	ETHTOOL_MSG_RESET_ACT_REPLY,
+>	ETHTOOL_MSG_RXFLOW_GET_REPLY,
+>	ETHTOOL_MSG_RXFLOW_NTF,
+>	ETHTOOL_MSG_RXFLOW_SET_REPLY,
+>
+>	/* add new constants above here */
+>	__ETHTOOL_MSG_KERNEL_CNT,
+>	ETHTOOL_MSG_KERNEL_MAX = (__ETHTOOL_MSG_KERNEL_CNT - 1)
+>};
+>
+>Only entries for *_NTF types are non-null in ethnl_notify_handlers[]:
+>
+>static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
+>	[ETHTOOL_MSG_SETTINGS_NTF]	= ethnl_std_notify,
+>	[ETHTOOL_MSG_PARAMS_NTF]	= ethnl_std_notify,
+>	[ETHTOOL_MSG_NWAYRST_NTF]	= ethnl_nwayrst_notify,
+>	[ETHTOOL_MSG_PHYSID_NTF]	= ethnl_physid_notify,
+>	[ETHTOOL_MSG_RESET_NTF]		= ethnl_reset_notify,
+>	[ETHTOOL_MSG_RXFLOW_NTF]	= ethnl_rxflow_notify,
+>};
+>
+>If the check above fails, it means that kernel code tried to send
+>a notification with type which does not exist or is not a notification,
+>i.e. a bug in kernel; that's why the WARN_ONCE.
+
+Got it, thanks!
+
+
+>
+>Michal
+>
+>> >+		ethnl_notify_handlers[cmd](dev, extack, cmd, req_mask, data);
+>> >+	else
+>> >+		WARN_ONCE(1, "notification %u not implemented (dev=%s, req_mask=0x%x)\n",
+>> >+			  cmd, netdev_name(dev), req_mask);
+>> >+}
+>> >+EXPORT_SYMBOL(ethtool_notify);
