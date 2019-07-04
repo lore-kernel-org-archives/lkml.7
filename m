@@ -2,111 +2,117 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5E5C06514
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F16C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1033B216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TDFiiZlH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KRGgTCsi"
+	by mail.kernel.org (Postfix) with ESMTP id 62EFE216E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfGDGnt (ORCPT
+        id S1727232AbfGDGp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:43:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46584 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfGDGns (ORCPT
+        Thu, 4 Jul 2019 02:45:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbfGDGp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:43:48 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F59E60746; Thu,  4 Jul 2019 06:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562222627;
-        bh=1X/a5esYpZeGW1CmQBkAPcwko0xcLOWRgFpb3G9ejjY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TDFiiZlHMxnN57/LFYoPv6c+Gkc63IWQfUlT6IhwzsASpgTfmtLCao62YhK6daOLU
-         Cmmrwb7tfyu6OIPj8RHTGHlVqyATWtcbQr3kXjQHpE/UKVzp26tYJTP0zC5po6UKxi
-         RPfK7QlzC7zUxLBtt8hfuxZiRa+rIQ7oHo3HbR/g=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 212DE60746;
-        Thu,  4 Jul 2019 06:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562222625;
-        bh=1X/a5esYpZeGW1CmQBkAPcwko0xcLOWRgFpb3G9ejjY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KRGgTCsifDpZLY9tI3ska6jievMGw/EIJcJ3lv8kwsvKdb8mNaCfow6cAz8g0jBQk
-         Q1OkSLf/uqSZF9CB0U48cddTgbY27CgikhpDPRFvQ5e17G0fFEUzOf1TmSrNI/D/IZ
-         RzcPCf65cH7d8K0vBQKF1EcOko4byceHgddG2LPo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 212DE60746
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv5 1/2] dt-bindings: coresight: Change CPU phandle to
- required property
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org>
- <2afedb941294af7ba0658496b4aca3759a4e43ff.1561659046.git.saiprakash.ranjan@codeaurora.org>
- <CANLsYkxvh+qUDvqG45o7qh61Noq=a=BJ4-p68ipdzxYt6n5bNA@mail.gmail.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <8fb5947e-acf8-faff-5594-2a32151ebee7@codeaurora.org>
-Date:   Thu, 4 Jul 2019 12:13:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 02:45:26 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x646gQDt063667
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 02:45:26 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tha4dmgf8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:45:25 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 4 Jul 2019 07:45:24 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Jul 2019 07:45:19 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x646jIW138338826
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jul 2019 06:45:18 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3404AC06B;
+        Thu,  4 Jul 2019 06:45:17 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4321AAC05B;
+        Thu,  4 Jul 2019 06:45:11 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.146.222])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu,  4 Jul 2019 06:45:10 +0000 (GMT)
+References: <20190628021934.4260-1-bauerman@linux.ibm.com> <1561991934.4067.17.camel@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
+In-reply-to: <1561991934.4067.17.camel@linux.ibm.com>
+Date:   Thu, 04 Jul 2019 03:45:07 -0300
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkxvh+qUDvqG45o7qh61Noq=a=BJ4-p68ipdzxYt6n5bNA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19070406-0064-0000-0000-000003F7088F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011376; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01227188; UDB=6.00646128; IPR=6.01008425;
+ MB=3.00027580; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-04 06:45:23
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070406-0065-0000-0000-00003E225467
+Message-Id: <87k1cyl2mk.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=995 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/2019 1:32 AM, Mathieu Poirier wrote:
-> Hi Greg,
-> 
-> On Thu, 27 Jun 2019 at 12:15, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->>
->> Do not assume the affinity to CPU0 if cpu phandle is omitted.
->> Update the DT binding rules to reflect the same by changing it
->> to a required property.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> I'm all good with this patch - can you pick this up for the coming
-> merge window?  If not I'll simply keep it in my tree for 5.4.
-> 
-> Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
 
-I think you missed adding Greg, adding him now ;)
+Mimi Zohar <zohar@linux.ibm.com> writes:
 
--Sai
+> On Thu, 2019-06-27 at 23:19 -0300, Thiago Jung Bauermann wrote:
+>> Hello,
+>> 
+>> This version is essentially identical to the last one.
+>> 
+>> It is only a rebase on top of today's linux-integrity/next-queued-testing,
+>> prompted by conflicts with Prakhar Srivastava's patches to measure the
+>> kernel command line. It also drops two patches that are already present in
+>> that branch.
+>
+> Thanks, Thiago.  These patches are now in next-queued-testing waiting
+> for some additional reviews/acks.
+
+Thank you very much, Mimi! Now I think I'm only missing acks for the
+PKCS#7 changes in patches 2 and 3, and an ack for the s390 changes in
+patch 1.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
