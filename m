@@ -2,125 +2,148 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0FC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF83C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86929218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="svb8eN7z"
+	by mail.kernel.org (Postfix) with ESMTP id 521B1218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562236997;
+	bh=GO5rZwACuqGJZLDo2ucr74UTZmdv8Bqm4fA6Yt770mw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cqShvhYqXxd5BvSSS7Lncc7vI2xatjlkygjwoW0UfyqRJ+y2myrFJtoFzfi4/4abD
+	 0Sqx6/zQnHgpIIekiFVqR6oxnaEFl61Ih5BySnqzqbYyqRFqhI0hjkjCMANdv6HqqW
+	 SXx/Oi5+VTvg7Z5F8qTO/uOPnKGO3idMR7QVF2Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfGDKkj (ORCPT
+        id S1727556AbfGDKnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:40:39 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35770 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfGDKkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:40:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d23so7553015qto.2;
-        Thu, 04 Jul 2019 03:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J75O2ZYm/AIRp38Aj0T7xtVwqkjaGCkxGvM6r7neVEo=;
-        b=svb8eN7znP/WGdtT3CrWT/7VclWevgOLXH+ZMAI+DC5wM3BXGnt/u6lc/RE+8iDWfw
-         liiW9ZYL607XBo6qnD1lpUXoPDUdioXWw/QKbHmoNOlVMnjHgEf/OR6/CNQFnchp65cI
-         JFhf5SKwp/K1XSyb+i76xI+4IWvnfjFE41buuQVjjfCguncDCNHAvrkZzQpLGiJT0kgb
-         JoK7NVI67JRxQFX3fxfRan0bcYG0bOy7TqDV+5zuDFAuy2AeT/9MXv9mR4K7iAxBp8kn
-         b3wSRfUEgsQlsZoVJ7Fsfno3dfay2OdhPT3OkFpDa9U+3h+PoPnKO2Q7RJPE3CTqI7Q4
-         Mpdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J75O2ZYm/AIRp38Aj0T7xtVwqkjaGCkxGvM6r7neVEo=;
-        b=kB8Okg9geItCbpuDjE2ubpSUWnboA5Uk4fWU6OyQ/Qer94kWLp2S4vbXp4ypKrf34e
-         3h9YvbgFT/Cr+3NZ/5D9GROHwbizyXpPht618QWVsZGSDb2U0Yjkua9X2x3LNTqHfwmk
-         a3uwKZETgUjXOs1nvLhdP7iBgWjf44IIo1XzoCmJGJ1IsJo+AGj1ycZkBVwuc6jSEyd4
-         r6Kxxe/vBUBxyZ4UgfftFiDUkhqWQWoxIMaNl0gBRaJ2O8olPn5havmezPGWHur6akbb
-         ldTmnMpoGQlBEmpOmjmPZKG0lhbqL9+S9ft0HBCHMjK2A9oE5z9pr75WMGDku1IUuoXQ
-         Mngg==
-X-Gm-Message-State: APjAAAXwdh1AqRLjM+wSjesbzEYDFM1a9W7gfsZ3J5iqktuYXPddW3jU
-        1s8SR9b/8nnUfJpWAouXCLtatHOW
-X-Google-Smtp-Source: APXvYqz+yPk+2MUL4Psf0OlCLMqisNELh1oDhrrNJ46MfRnYY8Jr2unJvbo1n+PNfKtsECoRc7/Sdg==
-X-Received: by 2002:a0c:d1f0:: with SMTP id k45mr37041274qvh.69.1562236836520;
-        Thu, 04 Jul 2019 03:40:36 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id s7sm980077qtq.8.2019.07.04.03.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 03:40:35 -0700 (PDT)
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com,
-        linux-tegra@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com>
- <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
- <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <66b5e81b-d468-e2aa-7336-3d4854c234ab@gmail.com>
-Date:   Thu, 4 Jul 2019 13:40:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 06:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727385AbfGDKnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:43:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA4F218A3;
+        Thu,  4 Jul 2019 10:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562236995;
+        bh=GO5rZwACuqGJZLDo2ucr74UTZmdv8Bqm4fA6Yt770mw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0nvDXObCXpiy0YByYsTXgPkhBa2nJpAojxuoTqc8YKs7Tdb/KfqWxTSN9JWEPZkC2
+         JGSqqe7Tv+BGBQZVVpCgXVzG9SOu6HVSNR7qFDFNMuaNRlOJKN9SurghIVPofkSuu0
+         lfx6V1CG0YWaOybnG88fHy3OqtKCti8nWzOKX5rM=
+Date:   Thu, 4 Jul 2019 12:43:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Romain Izard <romain.izard.pro@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 01/11] Platform: add a dev_groups pointer to struct
+ platform_driver
+Message-ID: <20190704104311.GA16681@kroah.com>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+ <20190704084617.3602-2-gregkh@linuxfoundation.org>
+ <20190704093200.GM13424@localhost>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704093200.GM13424@localhost>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.07.2019 10:31, Linus Walleij пишет:
-> On Sat, Jun 29, 2019 at 5:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+On Thu, Jul 04, 2019 at 11:32:00AM +0200, Johan Hovold wrote:
+> On Thu, Jul 04, 2019 at 10:46:07AM +0200, Greg Kroah-Hartman wrote:
+> > Platform drivers like to add sysfs groups to their device, but right now
+> > they have to do it "by hand".  The driver core should handle this for
+> > them, but there is no way to get to the bus-default attribute groups as
+> > all platform devices are "special and unique" one-off drivers/devices.
+> > 
+> > To combat this, add a dev_groups pointer to platform_driver which allows
+> > a platform driver to set up a list of default attributes that will be
+> > properly created and removed by the platform driver core when a probe()
+> > function is successful and removed right before the device is unbound.
+> > 
+> > Cc: Richard Gong <richard.gong@linux.intel.com>
+> > Cc: Romain Izard <romain.izard.pro@gmail.com>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mans Rullgard <mans@mansr.com>
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/base/platform.c         | 40 +++++++++++++++++++++------------
+> >  include/linux/platform_device.h |  1 +
+> >  2 files changed, 27 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 713903290385..d81fcd435b52 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -598,6 +598,21 @@ struct platform_device *platform_device_register_full(
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_device_register_full);
+> >  
+> > +static int platform_drv_remove(struct device *_dev)
+> > +{
+> > +	struct platform_driver *drv = to_platform_driver(_dev->driver);
+> > +	struct platform_device *dev = to_platform_device(_dev);
+> > +	int ret = 0;
+> > +
+> > +	if (drv->remove)
+> > +		ret = drv->remove(dev);
+> > +	if (drv->dev_groups)
+> > +		device_remove_groups(_dev, drv->dev_groups);
 > 
->> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
->> will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
+> Shouldn't you remove the groups before calling driver remove(), which
+> could be releasing resources used by the attribute implementations?
 > 
-> Thierry sent some initial patches about this I think. We need to use
-> device links for this to work properly so he adds support for
-> linking the pinctrl and GPIO devices through the ranges.
-> 
-> For links between pin control handles and their consumers, see also:
-> 036f394dd77f pinctrl: Enable device link creation for pin control
-> c6045b4e3cad pinctrl: stmfx: enable links creations
-> 489b64d66325 pinctrl: stm32: Add links to consumers
-> 
-> I am using STM32 as guinea pig for this, consider adding links also
-> from the Tegra pinctrl. I might simply make these pinctrl consumer
-> to producer links default because I think it makes a lot sense.
+> This would also be the reverse of how what you do at probe.
 
-IIUC, currently the plan is to resume pinctrl *after* GPIO for Tegra210 [1]. But this
-contradicts to what was traditionally done for older Tegras where pinctrl was always
-resumed first and apparently it won't work well for the GPIO ranges as well. I think this
-and the other patchsets related to suspend-resume still need some more thought.
+Good point, probably doesn't really matter, but I'll reverse it.
 
-[1] https://patchwork.kernel.org/patch/11012077/
+> > +	dev_pm_domain_detach(_dev, true);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static int platform_drv_probe(struct device *_dev)
+> >  {
+> >  	struct platform_driver *drv = to_platform_driver(_dev->driver);
+> > @@ -614,8 +629,18 @@ static int platform_drv_probe(struct device *_dev)
+> >  
+> >  	if (drv->probe) {
+> >  		ret = drv->probe(dev);
+> > -		if (ret)
+> > +		if (ret) {
+> >  			dev_pm_domain_detach(_dev, true);
+> > +			goto out;
+> > +		}
+> > +	}
+> > +	if (drv->dev_groups) {
+> > +		ret = device_add_groups(_dev, drv->dev_groups);
+> > +		if (ret) {
+> > +			platform_drv_remove(_dev);
+> 
+> This would lead to device_remove_groups() being called for the never
+> added attribute groups. Looks like that may trigger a warning in the
+> sysfs code judging from a quick look.
+
+Hm, let me look at this some more...
+
