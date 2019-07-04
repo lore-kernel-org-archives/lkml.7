@@ -2,158 +2,137 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F83FC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF9DC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8211B218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E59B218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfGDIRp (ORCPT
+        id S1727012AbfGDITR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:17:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40374 "EHLO huawei.com"
+        Thu, 4 Jul 2019 04:19:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8696 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727012AbfGDIRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:17:43 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 29C5538450216D996387;
-        Thu,  4 Jul 2019 16:17:41 +0800 (CST)
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 16:17:34 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>, Chen Gong <gongchen4@huawei.com>
-Subject: [PATCH] f2fs: allocate memory in batch in build_sit_info()
-Date:   Thu, 4 Jul 2019 16:17:30 +0800
-Message-ID: <20190704081730.46414-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        id S1726679AbfGDITR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:19:17 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 51232D64E59BC7EDB020;
+        Thu,  4 Jul 2019 16:19:14 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
+ 16:19:08 +0800
+Subject: Re: [RFC PATCH v2 2/3] arm64: mark all the GICC nodes in MADT as
+ possible cpu
+To:     Jia He <jiakernel2@gmail.com>, <rjw@rjwysocki.net>,
+        <catalin.marinas@arm.com>, <james.morse@arm.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>
+References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1561776155-38975-3-git-send-email-wangxiongfeng2@huawei.com>
+ <762be90e-7629-ab5e-4c2d-6566b100f2e5@gmail.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <e3bcc250-240e-e2b0-c0d4-d882cf43d255@huawei.com>
+Date:   Thu, 4 Jul 2019 16:18:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
+In-Reply-To: <762be90e-7629-ab5e-4c2d-6566b100f2e5@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.52.56]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-build_sit_info() allocate all bitmaps for each segment one by one,
-it's quite low efficiency, this pach changes to allocate large
-continuous memory at a time, and divide it and assign for each bitmaps
-of segment. For large size image, it can expect improving its mount
-speed.
 
-Signed-off-by: Chen Gong <gongchen4@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
- fs/f2fs/segment.h |  1 +
- 2 files changed, 24 insertions(+), 28 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 402fbbbb2d7c..73c803af1f31 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3929,7 +3929,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
- 	struct sit_info *sit_i;
- 	unsigned int sit_segs, start;
--	char *src_bitmap;
-+	char *src_bitmap, *bitmap;
- 	unsigned int bitmap_size;
- 
- 	/* allocate memory for SIT information */
-@@ -3950,27 +3950,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 	if (!sit_i->dirty_sentries_bitmap)
- 		return -ENOMEM;
- 
-+#ifdef CONFIG_F2FS_CHECK_FS
-+	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
-+#else
-+	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
-+#endif
-+	sit_i->bitmap = f2fs_kzalloc(sbi, bitmap_size, GFP_KERNEL);
-+	if (!sit_i->bitmap)
-+		return -ENOMEM;
-+
-+	bitmap = sit_i->bitmap;
-+
- 	for (start = 0; start < MAIN_SEGS(sbi); start++) {
--		sit_i->sentries[start].cur_valid_map
--			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
--		sit_i->sentries[start].ckpt_valid_map
--			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
--		if (!sit_i->sentries[start].cur_valid_map ||
--				!sit_i->sentries[start].ckpt_valid_map)
--			return -ENOMEM;
-+		sit_i->sentries[start].cur_valid_map = bitmap;
-+		bitmap += SIT_VBLOCK_MAP_SIZE;
-+
-+		sit_i->sentries[start].ckpt_valid_map = bitmap;
-+		bitmap += SIT_VBLOCK_MAP_SIZE;
- 
- #ifdef CONFIG_F2FS_CHECK_FS
--		sit_i->sentries[start].cur_valid_map_mir
--			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
--		if (!sit_i->sentries[start].cur_valid_map_mir)
--			return -ENOMEM;
-+		sit_i->sentries[start].cur_valid_map_mir = bitmap;
-+		bitmap += SIT_VBLOCK_MAP_SIZE;
- #endif
- 
--		sit_i->sentries[start].discard_map
--			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
--							GFP_KERNEL);
--		if (!sit_i->sentries[start].discard_map)
--			return -ENOMEM;
-+		sit_i->sentries[start].discard_map = bitmap;
-+		bitmap += SIT_VBLOCK_MAP_SIZE;
- 	}
- 
- 	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
-@@ -4440,21 +4444,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
- static void destroy_sit_info(struct f2fs_sb_info *sbi)
- {
- 	struct sit_info *sit_i = SIT_I(sbi);
--	unsigned int start;
- 
- 	if (!sit_i)
- 		return;
- 
--	if (sit_i->sentries) {
--		for (start = 0; start < MAIN_SEGS(sbi); start++) {
--			kvfree(sit_i->sentries[start].cur_valid_map);
--#ifdef CONFIG_F2FS_CHECK_FS
--			kvfree(sit_i->sentries[start].cur_valid_map_mir);
--#endif
--			kvfree(sit_i->sentries[start].ckpt_valid_map);
--			kvfree(sit_i->sentries[start].discard_map);
--		}
--	}
-+	if (sit_i->sentries)
-+		kvfree(sit_i->bitmap);
- 	kvfree(sit_i->tmp_map);
- 
- 	kvfree(sit_i->sentries);
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 2fd53462fa27..4d171b489130 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -226,6 +226,7 @@ struct sit_info {
- 	block_t sit_base_addr;		/* start block address of SIT area */
- 	block_t sit_blocks;		/* # of blocks used by SIT area */
- 	block_t written_valid_blocks;	/* # of valid blocks in main area */
-+	char *bitmap;			/* all bitmaps pointer */
- 	char *sit_bitmap;		/* SIT bitmap pointer */
- #ifdef CONFIG_F2FS_CHECK_FS
- 	char *sit_bitmap_mir;		/* SIT bitmap mirror */
--- 
-2.18.0.rc1
+On 2019/7/4 14:46, Jia He wrote:
+> 
+> On 2019/6/29 10:42, Xiongfeng Wang wrote:
+>> We set 'cpu_possible_mask' based on the enabled GICC node in MADT. If
+>> the GICC node is disabled, we will skip initializing the kernel data
+>> structure for that CPU.
+>>
+>> To support CPU hotplug, we need to initialize some CPU related data
+>> structure in advance. This patch mark all the GICC nodes as possible CPU
+>> and only these enabled GICC nodes as present CPU.
+>>
+>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>> ---
+>>   arch/arm64/kernel/setup.c |  2 +-
+>>   arch/arm64/kernel/smp.c   | 11 +++++------
+>>   2 files changed, 6 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>> index 7e541f9..7f4d12a 100644
+>> --- a/arch/arm64/kernel/setup.c
+>> +++ b/arch/arm64/kernel/setup.c
+>> @@ -359,7 +359,7 @@ static int __init topology_init(void)
+>>       for_each_online_node(i)
+>>           register_one_node(i);
+>>   -    for_each_possible_cpu(i) {
+>> +    for_each_online_cpu(i) {
+> 
+> Have you considered the case in non-acpi mode? and setting "maxcpus=n" in host kernel boot
+> 
+> parameters?
+
+Thanks for your mention. I haven't considered non-acpi mode. I should add ACPI check in
+'smp_prepare_cpus()'.
+'maxcpus' is check when we actually online the CPU, so I think it is not influenced.
+
+Thanks,
+Xiongfeng
+
+> 
+> ---
+> Cheers,
+> Justin (Jia He)
+> 
+> 
+>>           struct cpu *cpu = &per_cpu(cpu_data.cpu, i);
+>>           cpu->hotpluggable = 1;
+>>           register_cpu(cpu, i);
+>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+>> index 6dcf960..6d9983c 100644
+>> --- a/arch/arm64/kernel/smp.c
+>> +++ b/arch/arm64/kernel/smp.c
+>> @@ -525,16 +525,14 @@ struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu)
+>>   {
+>>       u64 hwid = processor->arm_mpidr;
+>>   -    if (!(processor->flags & ACPI_MADT_ENABLED)) {
+>> -        pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
+>> -        return;
+>> -    }
+>> -
+>>       if (hwid & ~MPIDR_HWID_BITMASK || hwid == INVALID_HWID) {
+>>           pr_err("skipping CPU entry with invalid MPIDR 0x%llx\n", hwid);
+>>           return;
+>>       }
+>>   +    if (!(processor->flags & ACPI_MADT_ENABLED))
+>> +        pr_debug("disabled CPU entry with 0x%llx MPIDR\n", hwid);
+>> +
+>>       if (is_mpidr_duplicate(cpu_count, hwid)) {
+>>           pr_err("duplicate CPU MPIDR 0x%llx in MADT\n", hwid);
+>>           return;
+>> @@ -755,7 +753,8 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>>           if (err)
+>>               continue;
+>>   -        set_cpu_present(cpu, true);
+>> +        if ((cpu_madt_gicc[cpu].flags & ACPI_MADT_ENABLED))
+>> +            set_cpu_present(cpu, true);
+>>           numa_store_cpu_info(cpu);
+>>       }
+>>   }
+> 
 
