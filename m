@@ -2,125 +2,123 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A988EC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E177DC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858EB2184C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF16521852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfGDU2r (ORCPT
+        id S1727276AbfGDUmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 16:28:47 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:62709 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfGDU2q (ORCPT
+        Thu, 4 Jul 2019 16:42:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60105 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfGDUmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 16:28:46 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hj8LT-0004wr-Tl from Cedric_Hombourger@mentor.com ; Thu, 04 Jul 2019 13:28:43 -0700
-Received: from [172.30.65.44] (137.202.0.90) by svr-ies-mbx-02.mgc.mentorg.com
- (139.181.222.2) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 4 Jul
- 2019 21:28:39 +0100
-Subject: Re: [PATCH v2] builddeb: generate multi-arch friendly linux-libc-dev
- package
-To:     Ben Hutchings <ben@decadent.org.uk>
-CC:     <yamada.masahiro@socionext.com>, <isar-users@googlegroups.com>,
-        <michal.lkml@markovi.net>, <linux-kbuild@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <riku.voipio@linaro.org>
-References: <0ff3202ced2b501d6045157f1c7b50810c0571e5.camel@decadent.org.uk>
- <1562269332-132-1-git-send-email-Cedric_Hombourger@mentor.com>
- <432e997617a0669886cd9ea5ceac7c1a2173044b.camel@decadent.org.uk>
-From:   Cedric Hombourger <cedric_hombourger@mentor.com>
-Message-ID: <e0df3b8d-0e8f-2bf6-2e43-633f40fb5f55@mentor.com>
-Date:   Thu, 4 Jul 2019 22:28:36 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 16:42:21 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hj8Yb-0008Dh-Q3; Thu, 04 Jul 2019 22:42:17 +0200
+Date:   Thu, 4 Jul 2019 22:42:17 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] cpu/hotplug: Cache number of online CPUs
+Message-ID: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <432e997617a0669886cd9ea5ceac7c1a2173044b.camel@decadent.org.uk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-09.mgc.mentorg.com (139.181.222.9) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greetings,
+Revaluating the bitmap wheight of the online cpus bitmap in every
+invocation of num_online_cpus() over and over is a pretty useless
+exercise. Especially when num_online_cpus() is used in code pathes like the
+IPI delivery of x86 or the membarrier code.
 
-On 7/4/2019 9:49 PM, Ben Hutchings wrote:
-> On Thu, 2019-07-04 at 21:42 +0200, Cedric Hombourger wrote:
->> Debian-based distributions place libc header files in a machine
->> specific directory (/usr/include/<libc-machine>) instead of
->> /usr/include/asm to support installation of the linux-libc-dev
->> package from multiple architectures. Move headers installed by
->> "make headers_install" accordingly using Debian's tuple from
->> dpkg-architecture.
->>
->> Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
->> Reviewed-by: Henning Schild <henning.schild@siemens.com>
->> Reviewed-by: Ben Hutchings <ben@decadent.org.uk>
-> I haven't reviewed this version of the patch.
+Cache the number of online CPUs in the core and just return the cached
+variable.
 
-Sorry about that. it was just an awkward way to note your contribution 
-to this changeset (for the avoidance of doubt, your feedback is greatly 
-appreciated). I'll remove this line for v3
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/cpumask.h |   16 +++++++---------
+ kernel/cpu.c            |   16 ++++++++++++++++
+ 2 files changed, 23 insertions(+), 9 deletions(-)
 
-> And this doesn't make a multi-arch package; you will have to add a
-> field to the package's control file too.
-
-Will do. Thanks!
-
-Cedric
-
-> Ben.
->
->> ---
->>   scripts/package/builddeb | 8 ++++++++
->>   scripts/package/mkdebian | 4 ++--
->>   2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
->> index b03dd56a4782..15a034e18c37 100755
->> --- a/scripts/package/builddeb
->> +++ b/scripts/package/builddeb
->> @@ -132,6 +132,14 @@ fi
->>   if [ "$ARCH" != "um" ]; then
->>   	$MAKE -f $srctree/Makefile headers_check
->>   	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
->> +	if [ -n "$debarch" ]; then
->> +		# move asm headers to /usr/include/<libc-machine>/asm to match the structure
->> +		# used by Debian-based distros (to support multi-arch) but only if ARCH was
->> +		# translated to Debian's (debarch) - this is done by mkdebian
->> +		host_arch=$(dpkg-architecture -a$debarch -qDEB_HOST_MULTIARCH)
->> +		mkdir $libc_headers_dir/usr/include/$host_arch
->> +		mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$host_arch/
->> +	fi
->>   fi
->>   
->>   # Install the maintainer scripts
->> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
->> index 8351584cb24e..8ebcb7d67fd2 100755
->> --- a/scripts/package/mkdebian
->> +++ b/scripts/package/mkdebian
->> @@ -212,11 +212,11 @@ cat <<EOF > debian/rules
->>   srctree ?= .
->>   
->>   build:
->> -	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
->> +	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
->>   	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile
->>   
->>   binary-arch:
->> -	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
->> +	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
->>   	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
->>   
->>   clean:
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -95,8 +95,13 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+ 
++extern unsigned int __num_online_cpus;
++
+ #if NR_CPUS > 1
+-#define num_online_cpus()	cpumask_weight(cpu_online_mask)
++static inline unsigned int num_online_cpus(void)
++{
++	return __num_online_cpus;
++}
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+@@ -821,14 +826,7 @@ set_cpu_present(unsigned int cpu, bool p
+ 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
+ }
+ 
+-static inline void
+-set_cpu_online(unsigned int cpu, bool online)
+-{
+-	if (online)
+-		cpumask_set_cpu(cpu, &__cpu_online_mask);
+-	else
+-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
+-}
++void set_cpu_online(unsigned int cpu, bool online);
+ 
+ static inline void
+ set_cpu_active(unsigned int cpu, bool active)
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2291,6 +2291,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
+ 
++unsigned int __num_online_cpus __read_mostly;
++EXPORT_SYMBOL(__num_online_cpus);
++
+ void init_cpu_present(const struct cpumask *src)
+ {
+ 	cpumask_copy(&__cpu_present_mask, src);
+@@ -2306,6 +2309,19 @@ void init_cpu_online(const struct cpumas
+ 	cpumask_copy(&__cpu_online_mask, src);
+ }
+ 
++void set_cpu_online(unsigned int cpu, bool online)
++{
++	lockdep_assert_cpus_held();
++
++	if (online) {
++		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
++			__num_online_cpus++;
++	} else {
++		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
++			__num_online_cpus--;
++	}
++}
++
+ /*
+  * Activate the first processor.
+  */
