@@ -2,121 +2,134 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7373EC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B482DC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458B82085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PU3reFti"
+	by mail.kernel.org (Postfix) with ESMTP id 8A4D32085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfGDNya (ORCPT
+        id S1727398AbfGDNyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:54:30 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53950 "EHLO vps0.lunn.ch"
+        Thu, 4 Jul 2019 09:54:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:9871 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfGDNy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:54:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=/tUWj9SXbNEAufZYyZPkHISvXvHqdA3KX4p3SCB6+58=; b=PU3reFtiNuWI7IaG6QoE7LdN69
-        tfCwrCFaqPLIHZTbPs9+tvqBpLUEv2+ykv2SULBo4xRbvcjgUB4VKjLvKlHQ8RpfEv4N5LaGyNqVR
-        h/K8/fJikTii5KftGAd/tTorJ1efBQWbqLdS687ei8lB7Xq+MzDBXirmiHWY7bi//Zg0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hj2Bo-0003zo-Lm; Thu, 04 Jul 2019 15:54:20 +0200
-Date:   Thu, 4 Jul 2019 15:54:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: Re: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Message-ID: <20190704135420.GD13859@lunn.ch>
-References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
- <20190703140520.GA18473@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
- <20190704033038.GA6276@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
+        id S1727044AbfGDNyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:54:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 06:54:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,451,1557212400"; 
+   d="scan'208";a="247944715"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga001.jf.intel.com with ESMTP; 04 Jul 2019 06:54:45 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hj2CC-0006dy-GA; Thu, 04 Jul 2019 16:54:44 +0300
+Date:   Thu, 4 Jul 2019 16:54:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mfd: Add support for Merrifield Basin Cove PMIC
+Message-ID: <20190704135444.GA9224@smile.fi.intel.com>
+References: <20190612101945.55065-1-andriy.shevchenko@linux.intel.com>
+ <20190624161348.GB21119@dell>
+ <20190626092601.GH9224@smile.fi.intel.com>
+ <20190626101727.GN21119@dell>
+ <20190626111043.GJ9224@smile.fi.intel.com>
+ <20190627134446.GD2000@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190627134446.GD2000@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 06:05:23AM +0000, Voon, Weifeng wrote:
-> > > > > @@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus
-> > > > > *bus,
-> > > > int phyaddr, int phyreg)
-> > > > >  	struct stmmac_priv *priv = netdev_priv(ndev);
-> > > > >  	unsigned int mii_address = priv->hw->mii.addr;
-> > > > >  	unsigned int mii_data = priv->hw->mii.data;
-> > > > > -	u32 v;
-> > > > > -	int data;
-> > > > >  	u32 value = MII_BUSY;
-> > > > > +	int data = 0;
-> > > > > +	u32 v;
-> > > > >
-> > > > >  	value |= (phyaddr << priv->hw->mii.addr_shift)
-> > > > >  		& priv->hw->mii.addr_mask;
-> > > > >  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw-
-> > > > >mii.reg_mask;
-> > > > >  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
-> > > > >  		& priv->hw->mii.clk_csr_mask;
-> > > > > -	if (priv->plat->has_gmac4)
-> > > > > +	if (priv->plat->has_gmac4) {
-> > > > >  		value |= MII_GMAC4_READ;
-> > > > > +		if (phyreg & MII_ADDR_C45)
-> > > > > +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
-> > > > > +	}
-> > > > >
-> > > > >  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
-> > > > MII_BUSY),
-> > > > >  			       100, 10000))
-> > > > >  		return -EBUSY;
-> > > > >
-> > > > > +	writel(data, priv->ioaddr + mii_data);
-> > > >
-> > > > That looks odd. Could you explain why it is needed.
-> > > >
-> > > > Thanks
-> > > > 	Andrew
-> > >
-> > > Hi Andrew,
-> > > This mdio c45 support needed to access DWC xPCS which is a Clause-45
-> > 
-> > I mean it looks odd doing a write to the data register in the middle of
-> > stmmac_mdio_read().
+On Thu, Jun 27, 2019 at 02:44:46PM +0100, Lee Jones wrote:
+> On Wed, 26 Jun 2019, Andy Shevchenko wrote:
 > 
-> MAC is using an indirect access to access mdio devices. In order to read,
-> the driver needs to write into both mii_data and mii_address to select 
-> c45, read/write command, phy address, address to read, and etc. 
+> > On Wed, Jun 26, 2019 at 11:17:27AM +0100, Lee Jones wrote:
+> > > On Wed, 26 Jun 2019, Andy Shevchenko wrote:
+> > > > On Mon, Jun 24, 2019 at 05:13:48PM +0100, Lee Jones wrote:
+> > > > > On Wed, 12 Jun 2019, Andy Shevchenko wrote:
+> > 
+> > > > > > Add an MFD driver for Intel Merrifield Basin Cove PMIC.
+> > 
+> > > > > > +	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
+> > > > > > +		ret = platform_get_irq(pdev, i);
+> > > > > 
+> > > > > If you already know the order, define the children's device IDs in the
+> > > > > parent's shared header ('intel_soc_pmic_mrfld.h'?) and retreive them
+> > > > > like:
+> > > > > 
+> > > > >   platform_get_irq(pdev->parent, <SUITABLE_DEFINED_ID>);
+> > > > > 
+> > > > > Then you can skip all of this platform device -> platform device hoop
+> > > > > jumping.
+> > > > 
+> > > > The idea of MFD is to get children to be parent agnostic
+> > > > (at least to some extent). What you are proposing here
+> > > > seems like disadvantage from MFD philosophy. No?
+> > > 
+> > > Not at all.  The idea of MFD is to split up support for monolithic h/w
+> > > such that they can be handled properly by their appropriate
+> > > subsystems, and by extension, maintained by the associated subject
+> > > matter experts.
+> > > 
+> > > Children are often aware of their parents (some siblings are even
+> > > aware of each other!), and many expect and depend on the data-sets
+> > > provided by their parents.
+> > 
+> > Yes, that's true and that's why I put wording "to some extent" above.
+> > 
+> > > For instance (this example may come to bite me in the behind, but),
+> > > taken from this very patch, where is this consumed?
+> > > 
+> > >  platform_set_drvdata(pdev, pmic);
+> > 
+> > Yes. It's used in children. BUT. This structure covers several PMIC chips and
+> > the children driver doesn't know which generation / version of PMIC is serving.
+> > 
+> > What you are proposing with the change is to strictly link the children driver
+> > to PMIC gen X ver Y, while above example doesn't do that.
+> 
+> Well that is a different argument. :)
 
-Yes, that is all clear. The stmmac_mdio_c45_setup() does part of this
-setup. There is also a write to mii_address which i snipped out when
-replying. But why do you need to write to the data registers during a
-read? C22 does not need this write. Are there some bits in the top of
-the data register which are relevant to C45?
+> I still don't really like the idea of sucking one set of platform data
+> just to place in another.  The implementation even looks hacky.
 
-Thanks
-    Andrew
+To me it looks straight forward. We get a description of MFD and split it
+accordingly. Look at the rest of Intel PMIC drivers, they are built on the
+same principles.
+
+"Thanks" to firmware here, that does more, than on other PMICs, that's why we
+have several IRQ resources, but from hardware point of view it's still an MFD.
+
+> What if you were to provide the child driver with its IRQ index?
+> Perhaps via platform data?
+
+It seems some people would like to bring up Shady Cove PMIC support in the
+future, which seems to behave in a similar way, while the (most of the) drivers
+can be re-used.
+
+So, for me it will look like a hack in each of PMIC driver to have additional
+platform data for whatever can be passed using well-established facilities,
+like device resources.
+
+> > So, I'm not convinced it's a good change to have.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
