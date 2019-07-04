@@ -2,224 +2,205 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C283C0651D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE28C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE9020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:31:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pgGHgcl/"
+	by mail.kernel.org (Postfix) with ESMTP id 7F0812189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfGDMb2 (ORCPT
+        id S1727740AbfGDMcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:31:28 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38073 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfGDMb2 (ORCPT
+        Thu, 4 Jul 2019 08:32:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50918 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbfGDMcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:31:28 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190704123126euoutp02ec4de606a7d982bafe7804fc12a0e6a7~uNCyN1bAF1449014490euoutp02f
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2019 12:31:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190704123126euoutp02ec4de606a7d982bafe7804fc12a0e6a7~uNCyN1bAF1449014490euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562243486;
-        bh=2UbtQD8qfJhaojQj3snazROYVj3M0EWBwEnOMikNX2U=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pgGHgcl/kvQcsglLc0Gio74zo4CYkFU+NLSZgE1+NRF/SIwpor71PvyGudhDxJazn
-         hipOsu4FqAClVIFawMBC3kEnnOXqF7r/Yy27k/tdlxc+EgaHb9LXXxHdBtL3P9/Ofv
-         NLIvU/c9I2MRkOCdDFliPzKoVXU9DOtSWlgQBGEM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190704123126eucas1p2f3d92d64a5de5ae76968af4d6b880232~uNCx0eZ351668316683eucas1p2U;
-        Thu,  4 Jul 2019 12:31:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E6.AE.04377.D91FD1D5; Thu,  4
-        Jul 2019 13:31:26 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190704123125eucas1p2a54dc6e43044794ff7f4a5800e89f90c~uNCxBT1Os1685416854eucas1p2V;
-        Thu,  4 Jul 2019 12:31:25 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190704123125eusmtrp1ab013178c6ac82143443d39cfc197edf~uNCwzOR4A1291112911eusmtrp1p;
-        Thu,  4 Jul 2019 12:31:25 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-d0-5d1df19d169a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id D1.E7.04146.D91FD1D5; Thu,  4
-        Jul 2019 13:31:25 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190704123124eusmtip2e4dd94386d783826831f38fafa3ff19a~uNCwPgulL1170711707eusmtip2S;
-        Thu,  4 Jul 2019 12:31:24 +0000 (GMT)
-Subject: Re: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
-Date:   Thu, 4 Jul 2019 14:31:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Thu, 4 Jul 2019 08:32:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8568C28AA35
+Message-ID: <6d8569803312768ca7b60c7b33688e466a6d0fcc.camel@collabora.com>
+Subject: Re: [PATCH v2 2/2] media: hantro: Add support for VP8 decoding on
+ rk3288
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        ZhiChao Yu <zhichao.yu@rock-chips.com>
+Date:   Thu, 04 Jul 2019 09:32:13 -0300
+In-Reply-To: <20190704091934.3524f019@collabora.com>
+References: <20190702170016.5210-1-ezequiel@collabora.com>
+         <20190702170016.5210-3-ezequiel@collabora.com>
+         <1562164006.4604.7.camel@pengutronix.de>
+         <20190704091934.3524f019@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20190702154419.20812-3-robdclark@gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFKsWRmVeSWpSXmKPExsWy7djP87rzPsrGGnw/wGjRe+4kk8X/bROZ
-        La58fc9m0TlxCbvFxP1n2S0u75rDZnHt52Nmi+cLfzBb3N1wltGB02N2w0UWj73fFrB47Jx1
-        l91jdsdMVo/t3x6wetzvPs7k8XmTXAB7FJdNSmpOZllqkb5dAlfGthvTmQvmilU0LrzK2sD4
-        WbCLkYNDQsBE4m07RxcjJ4eQwApGiclbAiDsL4wSxxvSuhi5gOzPjBIrG+6wgSRA6nd92cwM
-        kVjOKHF70xdGiI63jBLz7muA2MICdhLtlz+zgtgiAi4SJy79BrOZBVqYJDZurQWx2QQ0Jf5u
-        vgk2lBeofv+LU+wgNouAisTOD6/A6kUFIiQub9nFCFEjKHFy5hMWEJtTwFKi/d8/NoiZ8hLN
-        W2czQ9jiEreezGcCOU5C4By7xNZTs9kgvnSROHPZEeIBYYlXx7ewQ9gyEqcn97BA2PUS91e0
-        MEP0djBKbN2wkxkiYS1x+PhFVpA5zEBHr9+lDxF2lDj2eR0rxHg+iRtvBSFO4JOYtG06M0SY
-        V6KjTQiiWlHi/tmtUAPFJZZe+Mo2gVFpFpLHZiF5ZhaSZ2Yh7F3AyLKKUTy1tDg3PbXYKC+1
-        XK84Mbe4NC9dLzk/dxMjMEWd/nf8yw7GXX+SDjEKcDAq8fA+2CITK8SaWFZcmXuIUYKDWUmE
-        9/tvoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQZGNtbs
-        /ppjvh78yZm/o2smb6mrt/Py598Q0WLp5LPg0JMfN2unb84xDzkf+HmxQkyo9eFMAbfUnOtf
-        brdMDt3VyppbPdlb2/HcvUTf/R18nZq+W5kiRA7y/N5809DzZGXdiSplOV/nKcr2J/t3ue9b
-        zJofWNu8YluTL1eB3v+jveX/ProK71FiKc5INNRiLipOBAD3PibKTQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsVy+t/xe7pzP8rGGuz8zGnRe+4kk8X/bROZ
-        La58fc9m0TlxCbvFxP1n2S0u75rDZnHt52Nmi+cLfzBb3N1wltGB02N2w0UWj73fFrB47Jx1
-        l91jdsdMVo/t3x6wetzvPs7k8XmTXAB7lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGx
-        eayVkamSvp1NSmpOZllqkb5dgl7GthvTmQvmilU0LrzK2sD4WbCLkZNDQsBEYteXzcxdjFwc
-        QgJLGSX2nvzNBJEQl9g9/y0zhC0s8edaFxtE0WtGiaZjl8GKhAXsJNovf2YFsUUEXCROXPrN
-        ClLELNDGJHFxbxsrRMduoI6d81hAqtgENCX+br7JBmLzAnXvf3GKHcRmEVCR2PnhFdgkUYEI
-        ib622VA1ghInZz4B6+UUsJRo//cPLM4soC7xZ94lZghbXqJ562woW1zi1pP5TBMYhWYhaZ+F
-        pGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzQbcd+bt7BeGlj8CFGAQ5G
-        JR7eB1tkYoVYE8uKK3MPMUpwMCuJ8H7/DRTiTUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGDy
-        yCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwGh1y/N55p8Ah9x5
-        2+uPlbxKztp04PDU2Yce8QZ99PA78uzm3ucrZOUr+z9JXWjpYeSt2HvoTL7Je0Ot6btnnZru
-        F6OZoaLJmXrOcDqj97TZ66UPZh57ljJdQV1B9bnE67eGqQ69GbzGy171n2flD43QuHGlbEmo
-        u+Z/20PHnBLqFpQeCPN6ukmJpTgj0VCLuag4EQDMShTl5gIAAA==
-X-CMS-MailID: 20190704123125eucas1p2a54dc6e43044794ff7f4a5800e89f90c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03
-References: <20190702154419.20812-1-robdclark@gmail.com>
-        <CGME20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03@epcas2p2.samsung.com>
-        <20190702154419.20812-3-robdclark@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.2019 17:44, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
->
-> Add a debugfs file to show status registers.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index f1a2493b86d9..a6f27648c015 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <linux/clk.h>
-> +#include <linux/debugfs.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/iopoll.h>
-> @@ -109,6 +110,7 @@ struct ti_sn_bridge {
->  	struct drm_dp_aux		aux;
->  	struct drm_bridge		bridge;
->  	struct drm_connector		connector;
-> +	struct dentry			*debugfs;
->  	struct device_node		*host_node;
->  	struct mipi_dsi_device		*dsi;
->  	struct clk			*refclk;
-> @@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
->  	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
->  };
->  
-> +static int status_show(struct seq_file *s, void *data)
-> +{
-> +	struct ti_sn_bridge *pdata = s->private;
-> +	unsigned int reg, val;
-> +
-> +	seq_puts(s, "STATUS REGISTERS:\n");
-> +
-> +	pm_runtime_get_sync(pdata->dev);
-> +
-> +	/* IRQ Status Registers, see Table 31 in datasheet */
-> +	for (reg = 0xf0; reg <= 0xf8; reg++) {
-> +		regmap_read(pdata->regmap, reg, &val);
-> +		seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
-> +	}
-> +
-> +	pm_runtime_put(pdata->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SHOW_ATTRIBUTE(status);
-> +
-> +static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
-> +{
-> +	pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
+On Thu, 2019-07-04 at 09:19 +0200, Boris Brezillon wrote:
+> +Kees for the safe-array-iteratio question.
+> 
+> On Wed, 03 Jul 2019 16:26:46 +0200
+> Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> 
+> > Hi Ezequiel
+> > 
+> > On Tue, 2019-07-02 at 14:00 -0300, Ezequiel Garcia wrote:
+> > > From: ZhiChao Yu <zhichao.yu@rock-chips.com>
+> > > 
+> > > Introduce VP8 decoding support in RK3288.
+> > > 
+> > > Signed-off-by: ZhiChao Yu <zhichao.yu@rock-chips.com>
+> > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>  
+> > 
+> > I have just tried this (with broken userspace) and got a crash in
+> > cfg_parts, see below for details:
+> > 
+> > [  114.308757] Unable to handle kernel paging request at virtual address ffff0000112b0002
+> > [  114.316691] Mem abort info:
+> > [  114.319503]   ESR = 0x96000021
+> > [  114.322576]   Exception class = DABT (current EL), IL = 32 bits
+> > [  114.328513]   SET = 0, FnV = 0
+> > [  114.331586]   EA = 0, S1PTW = 0
+> > [  114.334744] Data abort info:
+> > [  114.337626]   ISV = 0, ISS = 0x00000021
+> > [  114.341479]   CM = 0, WnR = 0
+> > [  114.344466] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000040d61000
+> > [  114.351185] [ffff0000112b0002] pgd=00000000dffff003, pud=00000000dfffe003, pmd=00000000dbf36003, pte=00e8000038300707
+> > [  114.361822] Internal error: Oops: 96000021 [#1] PREEMPT SMP
+> > [  114.367394] Modules linked in: crct10dif_ce hantro_vpu(C) videobuf2_dma_contig v4l2_mem2mem
+> > [  114.375749] Process ffmpeg (pid: 1871, stack limit = 0x0000000059d846e4)
+> > [  114.382450] CPU: 1 PID: 1871 Comm: ffmpeg Tainted: G         C        5.1.16-20190703-1 #2
+> > [  114.390710] Hardware name: NXP i.MX8MQ EVK (DT)
+> > [  114.395240] pstate: 40000005 (nZcv daif -PAN -UAO)
+> > [  114.400042] pc : hantro_g1_vp8_dec_run+0x1178/0x18a0 [hantro_vpu]
+> > [  114.406139] lr : hantro_g1_vp8_dec_run+0x1160/0x18a0 [hantro_vpu]
+> > [  114.412229] sp : ffff000011ae3c10
+> > [  114.415541] x29: ffff000011ae3c10 x28: ffff000008a154c8 
+> > [  114.420853] x27: 000000007033b039 x26: ffff000008a130f0 
+> > [  114.426164] x25: 000000000000000c x24: ffff000008a153f0 
+> > [  114.431474] x23: ffff800099a0d880 x22: ffff000008a13150 
+> > [  114.436785] x21: 000000000c5b88d0 x20: ffff80009b7d65a0 
+> > [  114.442096] x19: ffff800099bd3800 x18: 0000000000000010 
+> > [  114.447407] x17: 0000000000000001 x16: 0000000000000007 
+> > [  114.452717] x15: ffffffffffffffff x14: ffff000010e8c5c8 
+> > [  114.458028] x13: ffff000091ae3987 x12: ffff0000112b0002 
+> > [  114.463339] x11: ffff000010ea4000 x10: ffff000011ae3910 
+> > [  114.468649] x9 : 00000000ffffffd0 x8 : 00000000edcb88d0 
+> > [  114.473960] x7 : 0000000000000125 x6 : ffff000010e8cd60 
+> > [  114.479270] x5 : ffff000010e8c000 x4 : 0000000000000000 
+> > [  114.484580] x3 : 0000000000000002 x2 : 8127d140a3196d00 
+> > [  114.489891] x1 : 0000000000000000 x0 : 00000000e1700000 
+> > [  114.495201] Call trace:
+> > [  114.497652]  hantro_g1_vp8_dec_run+0x1178/0x18a0 [hantro_vpu]
+> > [  114.503401]  device_run+0xac/0xc0 [hantro_vpu]
+> > [  114.507849]  v4l2_m2m_try_run+0x9c/0x110 [v4l2_mem2mem]
+> > [  114.513077]  v4l2_m2m_request_queue+0xd4/0x130 [v4l2_mem2mem]
+> > [  114.518826]  media_request_ioctl+0x1e8/0x2d0
+> > [  114.523097]  do_vfs_ioctl+0xc4/0x870
+> > [  114.526671]  ksys_ioctl+0x84/0xc0
+> > [  114.529985]  __arm64_sys_ioctl+0x28/0x40
+> > [  114.533908]  el0_svc_common.constprop.0+0x98/0x170
+> > [  114.538698]  el0_svc_handler+0x2c/0x40
+> > [  114.542447]  el0_svc+0x8/0xc
+> > [  114.545328] Code: 0b150008 b94002c3 121d7108 8b23418c (b940018c) 
+> > [  114.551421] ---[ end trace b9ad6b0f72902ba5 ]---
+> > 
+> > > ---
+> > > Changes from v1:
+> > > * Place operators at the end of each line.
+> > > * Update to uAPI changes.
+> > > ---
+> > >  drivers/staging/media/hantro/Makefile         |   4 +-
+> > >  drivers/staging/media/hantro/hantro.h         |   5 +
+> > >  drivers/staging/media/hantro/hantro_drv.c     |   6 +
+> > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  | 552 ++++++++++++++++++
+> > >  drivers/staging/media/hantro/hantro_hw.h      |  17 +
+> > >  drivers/staging/media/hantro/hantro_v4l2.c    |   1 +
+> > >  drivers/staging/media/hantro/hantro_vp8.c     | 188 ++++++
+> > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  22 +-
+> > >  8 files changed, 793 insertions(+), 2 deletions(-)
+> > >  create mode 100644 drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > >  create mode 100644 drivers/staging/media/hantro/hantro_vp8.c
+> > >   
+> > [...]
+> > > diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > > new file mode 100644
+> > > index 000000000000..31d31faae4aa
+> > > --- /dev/null
+> > > +++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
+> > > @@ -0,0 +1,552 @@  
+> > [...]
+> > > +/* dct partition base address regs */
+> > > +static const struct vp8_dec_reg vp8_dec_dct_base[8] = {  
+> > [...]
+> > > +/* dct partition start bits regs */
+> > > +static const struct vp8_dec_reg vp8_dec_dct_start_bits[8] = {  
+> > 
+> > So these arrays can be directly indexed with values smaller than 8 ...
+> > 
+> > [...]
+> > > +static void cfg_parts(struct hantro_ctx *ctx,
+> > > +		      const struct v4l2_ctrl_vp8_frame_header *hdr)
+> > > +{  
+> > [...]
+> > > +	/* dct partitions base address */
+> > > +	for (i = 0; i < hdr->num_dct_parts; i++) {
+> > > +		u32 byte_offset = dct_part_offset + dct_size_part_size + count;
+> > > +		u32 base_addr = byte_offset + src_dma;
+> > > +
+> > > +		vp8_dec_reg_write(vpu, &vp8_dec_dct_base[i],
+> > > +				  base_addr & (~DEC_8190_ALIGN_MASK));
+> > > +
+> > > +		vp8_dec_reg_write(vpu, &vp8_dec_dct_start_bits[i],
+> > > +				  (byte_offset & DEC_8190_ALIGN_MASK) * 8);  
+> > 
+> > ... and here they are indexed with i, which is only guaranteed to be
+> > smaller than hdr->num_dct_parts. num_dct_parts is passed from userspace
+> > via v4l2-ctrl, it can be as large as 255.
+> 
+> Hm, I fear we have the same problem in other places (including the
+> patch series adding support for H264). Kees, I wonder if there's some
+> kind of safe array iterator macro, something like
+> 
+> #define for_each_static_array_entry_safe(_array, _iter, _max_user) 		\
+> 	_max_user = min_t(typeof(_max_user), _max_user,	ARRAY_SIZE(_array));	\
+> 	for (_iter = 0; _iter < _max_user; _iter++)
+> 
+> The problem with this approach is that it's papering over the real
+> issue, which is that hdr->num_dct_parts should be checked and the
+> driver/core should return an error when it's > 7 instead of silently
+> iterating over the 8 entries of the dct[] arrays. Static code analysis
+> tools can probably detect such issues too.
+> 
 
+It seems to me that drivers/media/v4l2-core/v4l2-ctrls.c:std_validate
+is the right place for these sanity checks.
 
-If some day we will have board with two such bridges there will be a
-problem.
+And so drivers can then assume safe values on the controls.
 
-Anyway:
-
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
-
-
-
-> +
-> +	debugfs_create_file("status", 0600, pdata->debugfs, pdata,
-> +			&status_fops);
-> +}
-> +
-> +static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
-> +{
-> +	debugfs_remove_recursive(pdata->debugfs);
-> +	pdata->debugfs = NULL;
-> +}
-> +
->  /* Connector funcs */
->  static struct ti_sn_bridge *
->  connector_to_ti_sn_bridge(struct drm_connector *connector)
-> @@ -869,6 +907,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
->  
->  	drm_bridge_add(&pdata->bridge);
->  
-> +	ti_sn_debugfs_init(pdata);
-> +
->  	return 0;
->  }
->  
-> @@ -879,6 +919,8 @@ static int ti_sn_bridge_remove(struct i2c_client *client)
->  	if (!pdata)
->  		return -EINVAL;
->  
-> +	ti_sn_debugfs_remove(pdata);
-> +
->  	of_node_put(pdata->host_node);
->  
->  	pm_runtime_disable(pdata->dev);
-
+Regards,
+Ezequiel
 
