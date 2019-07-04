@@ -2,115 +2,100 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1380CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F37BC5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE7FE2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="oHFzw8no";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bJ2K1ryW"
+	by mail.kernel.org (Postfix) with ESMTP id 0A7F12187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 00:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfGDA2w (ORCPT
+        id S1727519AbfGDAcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 20:28:52 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50307 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727326AbfGDA2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 20:28:52 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A7BC91BC6;
-        Wed,  3 Jul 2019 20:28:50 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 03 Jul 2019 20:28:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=OWn2mLh7/XUi0TJMekxt7yvjPNcgULS
-        BCoi83C82YNo=; b=oHFzw8noCMYk24pCj0ny/IlupuxDjd+p4ys/R9Ec8OJoqgX
-        b3W4LGtgKvAEv8CvF0/syCO2IACosaB667bLAIzW1fCsT4+tekeXDMyl3zEFaOMC
-        X3wfdHDxlVZ2cTvRtREUMNFakBGD3FdqJwxIFMPo9D5x+SRmJWwsmgZea8ZIokzx
-        qFrQHBEN70Np0VbSVFiJ/FMG6m7Jvf/TSMEiuAnbFyR2Tj5P/2x3ep6feeqpCRUM
-        /XQM4H5W+qvlFlPR14RfVf+2+cx9GET41XeY7GI/7STl9Yln4aJ0ywSKGl7l0hKk
-        d7EGxMsXHkwxl3k9BOZNgrK3iFSDGCjK9ibJrrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OWn2mL
-        h7/XUi0TJMekxt7yvjPNcgULSBCoi83C82YNo=; b=bJ2K1ryWC7mcx8ZrhtqG4p
-        bjjDnClvZrJYisIta3ipWFXcHpUGkV/rnES74wiSO7RXuYiJVFVOG11bOPSZakuq
-        efd8A+CAL9GVQaAiVrOlVZjqmdNj6hfv4JF8muUrXYaOdM8DJysv26hKoV9mgYrz
-        UmJmWhxbXsIqSIS52KU/Kh/OU1wznmLyrn8+0mVHz4Uo7fXM75evRKb0Mh9Q6Py0
-        mm3IwOJuNDTEtwNCEiqGvlLZwKQP4wClYP0BP01Ts2j/ix14AKaVBexjLqKcAlyA
-        fZP4j3Z40fb+1wberXaFsYGNdkKBfKdRRVRg836sXTQlOB5kkMZIg5joW6eXgqSQ
-        ==
-X-ME-Sender: <xms:QEgdXaQCmhwW6lVppTwfGyVi11eyWy8KVOPmoh1yLSlVp3N1IFZpbA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrfedugdefhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:QEgdXddXftyY9CXDkmK4PtChKPg5uBek0H_VhgWsl11Dtv6_rfcivA>
-    <xmx:QEgdXf53eT9-j9HP3nKzzEA7iAzI-6jSOkqbwtDVfPRDkMbXPLzIJw>
-    <xmx:QEgdXeYtH0YWySTHIsemK5URyZ09CZlpVSlM3hwA-MMUfvxqQKc5Iw>
-    <xmx:QkgdXeWYmYs6ZpjvMHl1vd32N4O17eliMjdtMYZk0YDJLRSaiEL4ig>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id BCEECE00A2; Wed,  3 Jul 2019 20:28:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <022b6528-7ab3-449f-807d-d711b6d2db51@www.fastmail.com>
-In-Reply-To: <CACRpkdaxiFR3ezt4FzhRxpqc4DYYjsbBeysPUaaQH+_QgYjudw@mail.gmail.com>
-References: <20190628023838.15426-1-andrew@aj.id.au>
- <CACRpkdaxiFR3ezt4FzhRxpqc4DYYjsbBeysPUaaQH+_QgYjudw@mail.gmail.com>
-Date:   Thu, 04 Jul 2019 10:28:45 +1000
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Ryan Chen" <ryan_chen@aspeedtech.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/8] pinctrl: aspeed: Preparation for AST2600
-Content-Type: text/plain
+        Wed, 3 Jul 2019 20:32:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17261 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfGDAcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 20:32:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 17:32:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
+   d="scan'208";a="164499846"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2019 17:32:07 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>, <jhladky@redhat.com>,
+        <lvenanci@redhat.com>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH -mm] autonuma: Fix scan period updating
+References: <20190624025604.30896-1-ying.huang@intel.com>
+        <20190624140950.GF2947@suse.de>
+        <CAC=cRTNYUxGUcSUvXa-g9hia49TgrjkzE-b06JbBtwSn2zWYsw@mail.gmail.com>
+        <20190703091747.GA13484@suse.de>
+Date:   Thu, 04 Jul 2019 08:32:06 +0800
+In-Reply-To: <20190703091747.GA13484@suse.de> (Mel Gorman's message of "Wed, 3
+        Jul 2019 10:17:47 +0100")
+Message-ID: <87ef3663nd.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mel Gorman <mgorman@suse.de> writes:
 
+> On Tue, Jun 25, 2019 at 09:23:22PM +0800, huang ying wrote:
+>> On Mon, Jun 24, 2019 at 10:25 PM Mel Gorman <mgorman@suse.de> wrote:
+>> >
+>> > On Mon, Jun 24, 2019 at 10:56:04AM +0800, Huang Ying wrote:
+>> > > The autonuma scan period should be increased (scanning is slowed down)
+>> > > if the majority of the page accesses are shared with other processes.
+>> > > But in current code, the scan period will be decreased (scanning is
+>> > > speeded up) in that situation.
+>> > >
+>> > > This patch fixes the code.  And this has been tested via tracing the
+>> > > scan period changing and /proc/vmstat numa_pte_updates counter when
+>> > > running a multi-threaded memory accessing program (most memory
+>> > > areas are accessed by multiple threads).
+>> > >
+>> >
+>> > The patch somewhat flips the logic on whether shared or private is
+>> > considered and it's not immediately obvious why that was required. That
+>> > aside, other than the impact on numa_pte_updates, what actual
+>> > performance difference was measured and on on what workloads?
+>> 
+>> The original scanning period updating logic doesn't match the original
+>> patch description and comments.  I think the original patch
+>> description and comments make more sense.  So I fix the code logic to
+>> make it match the original patch description and comments.
+>> 
+>> If my understanding to the original code logic and the original patch
+>> description and comments were correct, do you think the original patch
+>> description and comments are wrong so we need to fix the comments
+>> instead?  Or you think we should prove whether the original patch
+>> description and comments are correct?
+>> 
+>
+> I'm about to get knocked offline so cannot answer properly. The code may
+> indeed be wrong and I have observed higher than expected NUMA scanning
+> behaviour than expected although not enough to cause problems. A comment
+> fix is fine but if you're changing the scanning behaviour, it should be
+> backed up with data justifying that the change both reduces the observed
+> scanning and that it has no adverse performance implications.
 
-On Wed, 3 Jul 2019, at 18:40, Linus Walleij wrote:
-> Hi Andrew,
-> 
-> On Fri, Jun 28, 2019 at 4:39 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Hello!
-> >
-> > The ASPEED AST2600 is in the pipeline, and we have enough information to start
-> > preparing to upstream support for it. This series lays some ground work;
-> > splitting the bindings and dicing the implementation up a little further to
-> > facilitate differences between the 2600 and previous SoC generations.
-> >
-> > v2 addresses Rob's comments on the bindings conversion patches. v1 can be found
-> > here:
-> 
-> I have applied this series, I had to strip some changes of the header
-> because it was based on some SPDX cleanups upstream but no
-> big deal I think. Check the result please.
+Got it!  Thanks for comments!  As for performance testing, do you have
+some candidate workloads?
 
-Thanks. Have you pushed the branch yet? I just fetched your pinctrl tree
-and can't see the patches.
-
-Andrew
+Best Regards,
+Huang, Ying
