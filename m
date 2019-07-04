@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FBBC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2615C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5FD2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DEB2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfGDOGZ (ORCPT
+        id S1727482AbfGDOGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:06:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47472 "EHLO huawei.com"
+        Thu, 4 Jul 2019 10:06:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8703 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726817AbfGDOGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:06:24 -0400
+        id S1727363AbfGDOG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:06:29 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DC89B1B48A6223FCA715;
-        Thu,  4 Jul 2019 22:06:21 +0800 (CST)
+        by Forcepoint Email with ESMTP id 035B7F141CD314A737D5;
+        Thu,  4 Jul 2019 22:06:27 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 22:06:15 +0800
+ 14.3.439.0; Thu, 4 Jul 2019 22:06:18 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 1/9] net: hns3: enable broadcast promisc mode when initializing VF
-Date:   Thu, 4 Jul 2019 22:04:20 +0800
-Message-ID: <1562249068-40176-2-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 9/9] net: hns3: set maximum length to resp_data_len for exceptional case
+Date:   Thu, 4 Jul 2019 22:04:28 +0800
+Message-ID: <1562249068-40176-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
 References: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,55 +47,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Peng Li <lipeng321@huawei.com>
 
-For revision 0x20, the broadcast promisc is enabled by firmware,
-it's unnecessary to enable it when initializing VF.
+If HCLGE_MBX_MAX_RESP_DATA_SIZE > HCLGE_MBX_MAX_RESP_DATA_SIZE,
+the memcpy will cause out of memory. So this patch just set
+resp_data_len to the maximum length for this case.
 
-For revision 0x21, it's necessary to enable broadcast promisc mode
-when initializing or re-initializing VF, otherwise, it will be
-unable to send and receive promisc packets.
-
-Fixes: f01f5559cac8 ("net: hns3: don't allow vf to enable promisc mode")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 42006cc..ff7e8cb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2589,6 +2589,12 @@ static int hclgevf_reset_hdev(struct hclgevf_dev *hdev)
- 		return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index 9adeba9..a38ac7c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -29,6 +29,10 @@ static int hclge_gen_resp_to_vf(struct hclge_vport *vport,
+ 			"PF fail to gen resp to VF len %d exceeds max len %d\n",
+ 			resp_data_len,
+ 			HCLGE_MBX_MAX_RESP_DATA_SIZE);
++		/* If resp_data_len is too long, set the value to max length
++		 * and return the msg to VF
++		 */
++		resp_data_len = HCLGE_MBX_MAX_RESP_DATA_SIZE;
  	}
  
-+	if (pdev->revision >= 0x21) {
-+		ret = hclgevf_set_promisc_mode(hdev, true);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	dev_info(&hdev->pdev->dev, "Reset done\n");
- 
- 	return 0;
-@@ -2668,9 +2674,11 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
- 	 * firmware makes sure broadcast packets can be accepted.
- 	 * For revision 0x21, default to enable broadcast promisc mode.
- 	 */
--	ret = hclgevf_set_promisc_mode(hdev, true);
--	if (ret)
--		goto err_config;
-+	if (pdev->revision >= 0x21) {
-+		ret = hclgevf_set_promisc_mode(hdev, true);
-+		if (ret)
-+			goto err_config;
-+	}
- 
- 	/* Initialize RSS for this VF */
- 	ret = hclgevf_rss_init_hw(hdev);
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGEVF_OPC_MBX_PF_TO_VF, false);
 -- 
 2.7.4
 
