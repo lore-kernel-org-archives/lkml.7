@@ -3,181 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CF6C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635D5C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87A3218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35476218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfGDJVb (ORCPT
+        id S1727338AbfGDJWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:21:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56158 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727201AbfGDJVa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:21:30 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x649HhEC112932
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 05:21:29 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thbfgy6up-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:20:59 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Thu, 4 Jul 2019 10:20:47 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 10:20:44 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x649KhYw55705634
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 09:20:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D6B14C044;
-        Thu,  4 Jul 2019 09:20:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81BE44C04E;
-        Thu,  4 Jul 2019 09:20:41 +0000 (GMT)
-Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 09:20:41 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org
-Cc:     npiggin@gmail.com, rjw@rjwysocki.net, daniel.lezcano@linaro.org,
-        mpe@ellerman.id.au, ego@linux.vnet.ibm.com, dja@axtens.net,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [PATCH v3 0/3] Forced-wakeup for stop states on Powernv
-Date:   Thu,  4 Jul 2019 04:18:24 -0500
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19070409-0016-0000-0000-0000028F26FB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070409-0017-0000-0000-000032ECC4ED
-Message-Id: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=946 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040122
+        Thu, 4 Jul 2019 05:22:36 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47832 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727147AbfGDJWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:22:35 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0AAB51A0562;
+        Thu,  4 Jul 2019 11:22:34 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6B9511A0021;
+        Thu,  4 Jul 2019 11:22:19 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 10A2D402DF;
+        Thu,  4 Jul 2019 17:22:05 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        ping.bai@nxp.com, olof@lixom.net, maxime.ripard@bootlin.com,
+        jagan@amarulasolutions.com, bjorn.andersson@linaro.org,
+        dinguyen@kernel.org, enric.balletbo@collabora.com,
+        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 0/4] Add support for i.MX8MM thermal sensor driver
+Date:   Thu,  4 Jul 2019 17:13:09 +0800
+Message-Id: <20190704091313.9516-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the cpuidle governors determine what idle state a idling CPU
-should enter into based on heuristics that depend on the idle history on
-that CPU. Given that no predictive heuristic is perfect, there are cases
-where the governor predicts a shallow idle state, hoping that the CPU will
-be busy soon. However, if no new workload is scheduled on that CPU in the
-near future, the CPU will end up in the shallow state.
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Motivation
-----------
-In case of POWER, this is problematic, when the predicted state in the
-aforementioned scenario is a shallow stop state on a tickless system. As
-we might get stuck into shallow states even for hours, in absence of ticks
-or interrupts.
+i.MX8MM has a thermal monitor unit (TMU) inside, it ONLY has one sensor
+for CPU, add support for temperature reading for CPU, cpu cooling is
+also added.
 
-To address this, We forcefully wakeup the cpu by setting the decrementer.
-The decrementer is set to a value that corresponds with the residency of
-the next available state. Thus firing up a timer that will forcefully
-wakeup the cpu. Few such iterations will essentially train the governor to
-select a deeper state for that cpu, as the timer here corresponds to the
-next available cpuidle state residency. Thus, cpu will eventually end up
-in the deepest possible state and we won't get stuck in a shallow state
-for long duration.
+This patch series is based on below i.MX SCU thermal patch series:
+https://patchwork.kernel.org/patch/11000821/
 
-Experiment
-----------
-For earlier versions when this feature was meat to be only for shallow lite
-states, I performed experiments for three scenarios to collect some data.
+Anson Huang (4):
+  dt-bindings: thermal: imx8mm-thermal: Add binding doc for i.MX8MM
+  thermal: imx8mm: Add support for i.MX8MM thermal monitoring unit
+  arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module
+  arm64: dts: imx8mm: Add thermal zone support
 
-case 1 :
-Without this patch and without tick retained, i.e. in a upstream kernel,
-It would spend more than even a second to get out of stop0_lite.
-
-case 2 : With tick retained in a upstream kernel -
-
-Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
-it to take 8 sched tick to get out of stop0_lite. Experimentally,
-observation was
-
-=========================================================
-sample          min            max           99percentile
-20              4ms            12ms          4ms
-=========================================================
-
-It would take atleast one sched tick to get out of stop0_lite.
-
-case 2 :  With this patch (not stopping tick, but explicitly queuing a
-          timer)
-
-============================================================
-sample          min             max             99percentile
-============================================================
-20              144us           192us           144us
-============================================================
-
-
-Description of current implementation
--------------------------------------
-
-We calculate timeout for the current idle state as the residency value
-of the next available idle state. If the decrementer is set to be
-greater than this timeout, we update the decrementer value with the
-residency of next available idle state. Thus, essentially training the
-governor to select the next available deeper state until we reach the
-deepest state. Hence, we won't get stuck unnecessarily in shallow states
-for longer duration.
-
---------------------------------
-v1 of auto-promotion : https://lkml.org/lkml/2019/3/22/58 This patch was
-implemented only for shallow lite state in generic cpuidle driver.
-
-v2 : Removed timeout_needed and rebased to current
-upstream kernel
-
-Then,
-v1 of forced-wakeup : Moved the code to cpuidle powernv driver and started
-as forced wakeup instead of auto-promotion
-
-v2 : Extended the forced wakeup logic for all states.
-Setting the decrementer instead of queuing up a hrtimer to implement the
-logic.
-
-v3 : 1) Cleanly handle setting the decrementer after exiting out of stop
-       states.
-     2) Added a disable_callback feature to compute timeout whenever a
-        state is enbaled or disabled instead of computing everytime in fast
-        idle path.
-     3) Use disable callback to recompute timeout whenever state usage
-        is changed for a state. Also, cleaned up the get_snooze_timeout
-        function.
-
-
-Abhishek Goel (3):
-  cpuidle-powernv : forced wakeup for stop states
-  cpuidle : Add callback whenever a state usage is enabled/disabled
-  cpuidle-powernv : Recompute the idle-state timeouts when state usage
-    is enabled/disabled
-
- arch/powerpc/include/asm/time.h   |  2 ++
- arch/powerpc/kernel/time.c        | 40 ++++++++++++++++++++++++++
- drivers/cpuidle/cpuidle-powernv.c | 47 ++++++++++++++++++++++---------
- drivers/cpuidle/sysfs.c           | 15 +++++++++-
- include/linux/cpuidle.h           |  5 ++++
- 5 files changed, 95 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/thermal/imx8mm-thermal.txt |  15 +++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi          |  43 +++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  10 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx8mm_thermal.c                   | 134 +++++++++++++++++++++
+ 6 files changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+ create mode 100644 drivers/thermal/imx8mm_thermal.c
 
 -- 
-2.17.1
+2.7.4
 
