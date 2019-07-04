@@ -2,129 +2,99 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0991EC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F7DC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6BF2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D0021850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfGDLzh (ORCPT
+        id S1727627AbfGDL71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:55:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64535 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfGDLzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:55:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:55:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="315845577"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 04 Jul 2019 04:55:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C473447; Thu,  4 Jul 2019 14:55:33 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 2/2] auxdisplay: charlcd: Deduplicate simple_strtoul()
-Date:   Thu,  4 Jul 2019 14:55:32 +0300
-Message-Id: <20190704115532.15679-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
-References: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 4 Jul 2019 07:59:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727604AbfGDL71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:59:27 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64BvvKQ046210
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 07:59:26 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2thf08vu40-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 07:59:25 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 4 Jul 2019 12:59:24 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Jul 2019 12:59:21 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64Bx8LP37683492
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jul 2019 11:59:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DCE452051;
+        Thu,  4 Jul 2019 11:59:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.72])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5EC895204E;
+        Thu,  4 Jul 2019 11:59:18 +0000 (GMT)
+Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
+ driver
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>
+Date:   Thu, 04 Jul 2019 07:59:07 -0400
+In-Reply-To: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
+References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070411-0020-0000-0000-00000350382D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070411-0021-0000-0000-000021A3D4D8
+Message-Id: <1562241547.6165.81.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=857 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like in the commit
-  8b2303de399f ("serial: core: Fix handling of options after MMIO address")
-we may use simple_strtoul() which in comparison to kstrtoul() can do conversion
-in-place without additional and unnecessary code to be written.
+On Wed, 2019-07-03 at 23:32 -0400, Nayna Jain wrote:
+> The nr_allocated_banks and allocated banks are initialized as part of
+> tpm_chip_register. Currently, this is done as part of auto startup
+> function. However, some drivers, like the ibm vtpm driver, do not run
+> auto startup during initialization. This results in uninitialized memory
+> issue and causes a kernel panic during boot.
+> 
+> This patch moves the pcr allocation outside the auto startup function
+> into tpm_chip_register. This ensures that allocated banks are initialized
+> in any case.
+> 
+> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+> PCR read")
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- no change since v2
- drivers/auxdisplay/charlcd.c | 34 +++++++---------------------------
- 1 file changed, 7 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-index 92745efefb54..3858dc7a4154 100644
---- a/drivers/auxdisplay/charlcd.c
-+++ b/drivers/auxdisplay/charlcd.c
-@@ -287,31 +287,6 @@ static int charlcd_init_display(struct charlcd *lcd)
- 	return 0;
- }
- 
--/*
-- * Parses an unsigned integer from a string, until a non-digit character
-- * is found. The empty string is not accepted. No overflow checks are done.
-- *
-- * Returns whether the parsing was successful. Only in that case
-- * the output parameters are written to.
-- *
-- * TODO: If the kernel adds an inplace version of kstrtoul(), this function
-- * could be easily replaced by that.
-- */
--static bool parse_n(const char *s, unsigned long *res, const char **next_s)
--{
--	if (!isdigit(*s))
--		return false;
--
--	*res = 0;
--	while (isdigit(*s)) {
--		*res = *res * 10 + (*s - '0');
--		++s;
--	}
--
--	*next_s = s;
--	return true;
--}
--
- /*
-  * Parses a movement command of the form "(.*);", where the group can be
-  * any number of subcommands of the form "(x|y)[0-9]+".
-@@ -336,6 +311,7 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
- {
- 	unsigned long new_x = *x;
- 	unsigned long new_y = *y;
-+	char *p;
- 
- 	for (;;) {
- 		if (!*s)
-@@ -345,11 +321,15 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
- 			break;
- 
- 		if (*s == 'x') {
--			if (!parse_n(s + 1, &new_x, &s))
-+			new_x = simple_strtoul(s + 1, &p, 10);
-+			if (p == s + 1)
- 				return false;
-+			s = p;
- 		} else if (*s == 'y') {
--			if (!parse_n(s + 1, &new_y, &s))
-+			new_y = simple_strtoul(s + 1, &p, 10);
-+			if (p == s + 1)
- 				return false;
-+			s = p;
- 		} else {
- 			return false;
- 		}
--- 
-2.20.1
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
