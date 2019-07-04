@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DDCC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8A4C46486
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56872085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15032085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfGDOGb (ORCPT
+        id S1727722AbfGDOHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:06:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47474 "EHLO huawei.com"
+        Thu, 4 Jul 2019 10:07:01 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8702 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727207AbfGDOG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:06:29 -0400
+        id S1726794AbfGDOGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:06:31 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D8497951752DBEBBD4F7;
-        Thu,  4 Jul 2019 22:06:21 +0800 (CST)
+        by Forcepoint Email with ESMTP id 071282E3EF254570DEE0;
+        Thu,  4 Jul 2019 22:06:27 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 22:06:15 +0800
+ 14.3.439.0; Thu, 4 Jul 2019 22:06:17 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 2/9] net: hns3: fix flow control configure issue for fibre port
-Date:   Thu, 4 Jul 2019 22:04:21 +0800
-Message-ID: <1562249068-40176-3-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 7/9] net: hns3: add default value for tc_size and tc_offset
+Date:   Thu, 4 Jul 2019 22:04:26 +0800
+Message-ID: <1562249068-40176-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
 References: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,73 +47,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Peng Li <lipeng321@huawei.com>
 
-Flow control autoneg is unsupported for fibre port. It takes no
-effect for flow control when restart autoneg. This patch fixes
-it, return -EOPNOTSUPP when user tries to enable flow control
-autoneg.
+This patch adds default value for tc_size and tc_offset, or it may
+get random value and used later.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 62c6263..2ecc10a 100644
+index 94c94e1..2abd5f5 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -8179,8 +8179,9 @@ static void hclge_get_pauseparam(struct hnae3_handle *handle, u32 *auto_neg,
+@@ -4092,11 +4092,11 @@ int hclge_rss_init_hw(struct hclge_dev *hdev)
+ 	struct hclge_vport *vport = hdev->vport;
+ 	u8 *rss_indir = vport[0].rss_indirection_tbl;
+ 	u16 rss_size = vport[0].alloc_rss_size;
++	u16 tc_offset[HCLGE_MAX_TC_NUM] = {0};
++	u16 tc_size[HCLGE_MAX_TC_NUM] = {0};
+ 	u8 *key = vport[0].rss_hash_key;
+ 	u8 hfunc = vport[0].rss_algo;
+-	u16 tc_offset[HCLGE_MAX_TC_NUM];
+ 	u16 tc_valid[HCLGE_MAX_TC_NUM];
+-	u16 tc_size[HCLGE_MAX_TC_NUM];
+ 	u16 roundup_size;
+ 	unsigned int i;
+ 	int ret;
+@@ -9036,12 +9036,12 @@ static int hclge_set_channels(struct hnae3_handle *handle, u32 new_tqps_num,
  {
  	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	struct hnae3_knic_private_info *kinfo = &vport->nic.kinfo;
++	u16 tc_offset[HCLGE_MAX_TC_NUM] = {0};
  	struct hclge_dev *hdev = vport->back;
-+	struct phy_device *phydev = hdev->hw.mac.phydev;
- 
--	*auto_neg = hclge_get_autoneg(handle);
-+	*auto_neg = phydev ? hclge_get_autoneg(handle) : 0;
- 
- 	if (hdev->tm_info.fc_mode == HCLGE_FC_PFC) {
- 		*rx_en = 0;
-@@ -8211,11 +8212,13 @@ static int hclge_set_pauseparam(struct hnae3_handle *handle, u32 auto_neg,
- 	struct phy_device *phydev = hdev->hw.mac.phydev;
- 	u32 fc_autoneg;
- 
--	fc_autoneg = hclge_get_autoneg(handle);
--	if (auto_neg != fc_autoneg) {
--		dev_info(&hdev->pdev->dev,
--			 "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
--		return -EOPNOTSUPP;
-+	if (phydev) {
-+		fc_autoneg = hclge_get_autoneg(handle);
-+		if (auto_neg != fc_autoneg) {
-+			dev_info(&hdev->pdev->dev,
-+				 "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
-+			return -EOPNOTSUPP;
-+		}
- 	}
- 
- 	if (hdev->tm_info.fc_mode == HCLGE_FC_PFC) {
-@@ -8226,16 +8229,13 @@ static int hclge_set_pauseparam(struct hnae3_handle *handle, u32 auto_neg,
- 
- 	hclge_set_flowctrl_adv(hdev, rx_en, tx_en);
- 
--	if (!fc_autoneg)
-+	if (!auto_neg)
- 		return hclge_cfg_pauseparam(hdev, rx_en, tx_en);
- 
- 	if (phydev)
- 		return phy_start_aneg(phydev);
- 
--	if (hdev->pdev->revision == 0x20)
--		return -EOPNOTSUPP;
--
--	return hclge_restart_autoneg(handle);
-+	return -EOPNOTSUPP;
- }
- 
- static void hclge_get_ksettings_an_result(struct hnae3_handle *handle,
++	u16 tc_size[HCLGE_MAX_TC_NUM] = {0};
+ 	int cur_rss_size = kinfo->rss_size;
+ 	int cur_tqps = kinfo->num_tqps;
+-	u16 tc_offset[HCLGE_MAX_TC_NUM];
+ 	u16 tc_valid[HCLGE_MAX_TC_NUM];
+-	u16 tc_size[HCLGE_MAX_TC_NUM];
+ 	u16 roundup_size;
+ 	u32 *rss_indir;
+ 	unsigned int i;
 -- 
 2.7.4
 
