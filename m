@@ -2,82 +2,121 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FDCC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7373EC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF002189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562248413;
-	bh=mecZjwh3Y89aOPTjx4iFFL4wJwUA+rb6dpnDwYt/0/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r3GP3IznyDnodIETSDniihaXqEFYYzzQ2b2jB5POhbAxMbYxfcGWzNQQCyPuE1QFZ
-	 PvN1YHEyR/ct0dCaPIH3cRsT1HP2OTckMo9NBghfvmH7Vglh7/EFS/YVdRDkgh7WZz
-	 WVN4s6vmcfzpjILf0HIbkZoNrx7jAJwPh1tGg+RM=
+	by mail.kernel.org (Postfix) with ESMTP id 458B82085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PU3reFti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfGDNxc (ORCPT
+        id S1727378AbfGDNya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 09:54:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53950 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbfGDNxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:53:32 -0400
-Received: from localhost (unknown [89.205.128.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285AE21852;
-        Thu,  4 Jul 2019 13:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562248411;
-        bh=mecZjwh3Y89aOPTjx4iFFL4wJwUA+rb6dpnDwYt/0/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XK9LOPv1ZgpIW+3zZD6azf/8CzfDRdzGsySHQiqFXxWVUcx8EuZwDW1mlf1+ywByb
-         IfiE5HJmHTFOoWc6Xmhr8z5J+Kz0OEsDRvfloTGhpZt/tB03zSnsrR48QKCtDooowc
-         gYxudayXSvGCXB6kWDP1PFoLEMmeWOTm3iwgYBxs=
-Date:   Thu, 4 Jul 2019 15:53:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     fugang.duan@nxp.com
-Cc:     linux-serial@vger.kernel.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, u.kleine-koenig@pengutronix.de,
-        daniel.baluta@nxp.com
-Subject: Re: [PATCH RESEND tty/serial 1/1] tty: serial: fsl_lpuart: add
- imx8qxp support
-Message-ID: <20190704135327.GA27565@kroah.com>
-References: <20190704134007.2316-1-fugang.duan@nxp.com>
+        id S1727044AbfGDNy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:54:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/tUWj9SXbNEAufZYyZPkHISvXvHqdA3KX4p3SCB6+58=; b=PU3reFtiNuWI7IaG6QoE7LdN69
+        tfCwrCFaqPLIHZTbPs9+tvqBpLUEv2+ykv2SULBo4xRbvcjgUB4VKjLvKlHQ8RpfEv4N5LaGyNqVR
+        h/K8/fJikTii5KftGAd/tTorJ1efBQWbqLdS687ei8lB7Xq+MzDBXirmiHWY7bi//Zg0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hj2Bo-0003zo-Lm; Thu, 04 Jul 2019 15:54:20 +0200
+Date:   Thu, 4 Jul 2019 15:54:20 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Subject: Re: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Message-ID: <20190704135420.GD13859@lunn.ch>
+References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
+ <20190703140520.GA18473@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
+ <20190704033038.GA6276@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704134007.2316-1-fugang.duan@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 09:40:07PM +0800, fugang.duan@nxp.com wrote:
-> From: Fugang Duan <fugang.duan@nxp.com>
+On Thu, Jul 04, 2019 at 06:05:23AM +0000, Voon, Weifeng wrote:
+> > > > > @@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus
+> > > > > *bus,
+> > > > int phyaddr, int phyreg)
+> > > > >  	struct stmmac_priv *priv = netdev_priv(ndev);
+> > > > >  	unsigned int mii_address = priv->hw->mii.addr;
+> > > > >  	unsigned int mii_data = priv->hw->mii.data;
+> > > > > -	u32 v;
+> > > > > -	int data;
+> > > > >  	u32 value = MII_BUSY;
+> > > > > +	int data = 0;
+> > > > > +	u32 v;
+> > > > >
+> > > > >  	value |= (phyaddr << priv->hw->mii.addr_shift)
+> > > > >  		& priv->hw->mii.addr_mask;
+> > > > >  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw-
+> > > > >mii.reg_mask;
+> > > > >  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+> > > > >  		& priv->hw->mii.clk_csr_mask;
+> > > > > -	if (priv->plat->has_gmac4)
+> > > > > +	if (priv->plat->has_gmac4) {
+> > > > >  		value |= MII_GMAC4_READ;
+> > > > > +		if (phyreg & MII_ADDR_C45)
+> > > > > +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
+> > > > > +	}
+> > > > >
+> > > > >  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
+> > > > MII_BUSY),
+> > > > >  			       100, 10000))
+> > > > >  		return -EBUSY;
+> > > > >
+> > > > > +	writel(data, priv->ioaddr + mii_data);
+> > > >
+> > > > That looks odd. Could you explain why it is needed.
+> > > >
+> > > > Thanks
+> > > > 	Andrew
+> > >
+> > > Hi Andrew,
+> > > This mdio c45 support needed to access DWC xPCS which is a Clause-45
+> > 
+> > I mean it looks odd doing a write to the data register in the middle of
+> > stmmac_mdio_read().
 > 
-> The lpuart of imx8ulp is basically the same as imx7ulp, but it
-> has new feature support based on imx7ulp, like it can assert a
-> DMA request on EOP(end-of-packet). imx8ulp lpuart use two clocks,
-> one is ipg bus clock that is used to access registers, the other
-> is baud clock that is used to transmit-receive data.
-> 
-> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-> ---
->  drivers/tty/serial/fsl_lpuart.c | 106 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 86 insertions(+), 20 deletions(-)
+> MAC is using an indirect access to access mdio devices. In order to read,
+> the driver needs to write into both mii_data and mii_address to select 
+> c45, read/write command, phy address, address to read, and etc. 
 
-You need to list what changed from the last version below the --- line.
+Yes, that is all clear. The stmmac_mdio_c45_setup() does part of this
+setup. There is also a write to mii_address which i snipped out when
+replying. But why do you need to write to the data registers during a
+read? C22 does not need this write. Are there some bits in the top of
+the data register which are relevant to C45?
 
-Anyway, I'll take this as-is, next time :)
-
-thanks,
-
-greg k-h
+Thanks
+    Andrew
