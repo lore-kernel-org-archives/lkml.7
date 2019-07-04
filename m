@@ -2,190 +2,120 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C86C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA22FC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC852189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="cHlScxn9"
+	by mail.kernel.org (Postfix) with ESMTP id 8DF85218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562229993;
+	bh=tC7+gI4m6/FmoXDFgw+iYQurMimFbVLSYsLJZsEwswo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yiNiu/aH/Ilk0EnTjSFAcBa/G6/S3AvrSwp+0/aTuS5qB72BbFBCS6vQT54TvWO/k
+	 p0JZRFSOyJz/dxDdhRfqjjeHLFr05whDTy6qyCuvaTERhRxqYlVbmx8dOfFGLXQ03i
+	 lxLKI8jdmP2trPve4MWiKfZw/IlgUCVXTXj5Z868=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfGDIpf (ORCPT
+        id S1727229AbfGDIqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:45:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37148 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfGDIpf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:45:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so5177066wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 01:45:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5X2/EIqHVF+0PEgAYfjC329Hb9K8g9a0oFQzNItKqKs=;
-        b=cHlScxn9I09lFjoRAx/10wWowfZEF9RQRauFN8qffuv65CpuX9WVMtMVNoMuKo8Yik
-         3BgFwOZiUQhkzuOI9imDtRkxy6lKLbUG8lAkWKrCqH1BAXS4mABZPoL03YpxzOWQoA0+
-         C4cvNgtErHvf26kwvbsHnbh2FXwB0WiPiYUG8Qk2urpUMIP8ZJULNctDAoFaqpbJWyZK
-         XOIrVAS1Y5ma4VslySDKoGBYyGuzbIBLXerm24tPIef2+gOIFU+6wiig5HUd7yznqaqX
-         N+RHx+4a/Pn5cckgMtwuX9kXv9vW5gQFJl+xiOi05bRSC9xxL/oS9lFRfUmjbYLLT1UF
-         +o/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5X2/EIqHVF+0PEgAYfjC329Hb9K8g9a0oFQzNItKqKs=;
-        b=GvnALBUcnv6C2fOrUxe55fB2RlVr0me47ibGi8IqTOY/TtCk5YXFBB96qo7MfJJ+sM
-         fwaEov46Tw6kIKGbxi5LbniN+f4jBL2pVuQhGbImYCo0GASVMTR/N5q+78cWtFE2l7Kt
-         X8sI5pYBZQzzOOsLwi+6GJN2P8L5QDd+eSVw5+1Gu+RGaKwXK6JGw0I2bEsEEeC0Fman
-         Llh/EHZY5nhvS+vaA6Uwqju6YNXXm6qhMPEiExe3x2p8s9oYUxrzIM+E6EZs/VM5xD59
-         RIqycOuc3c5au2r1Xu4pxjMnlAqP1uNrxCsjvsk8PyMF4rA/AOR6b7BP8YXKD56vYIMj
-         erAw==
-X-Gm-Message-State: APjAAAVWxdW9k2BP7mUf1OoiUpHiUg6CybD/pwBU4sl31bQdAvTnKh03
-        uYRKQJWdKmdOE+b5CDvZ239VpA==
-X-Google-Smtp-Source: APXvYqxouxfcOkVdfjlCFfOuUsXX1rEYhNf0xFbLLPyVqMiekPTRB71RQ87P0/PFyi1g/uP0cBz+MQ==
-X-Received: by 2002:a7b:cb94:: with SMTP id m20mr11062116wmi.144.1562229932470;
-        Thu, 04 Jul 2019 01:45:32 -0700 (PDT)
-Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
-        by smtp.gmail.com with ESMTPSA id a2sm6032047wmj.9.2019.07.04.01.45.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 04 Jul 2019 01:45:32 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 10:45:31 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        Thu, 4 Jul 2019 04:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727046AbfGDIqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE44B2189E;
+        Thu,  4 Jul 2019 08:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562229990;
+        bh=tC7+gI4m6/FmoXDFgw+iYQurMimFbVLSYsLJZsEwswo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k1z/iZmhkgL1+r5CK+JywKsx41uolSAz0o6l9oruBRWsCwsK3uP7NC8yhwHmkRfmT
+         uYnpWBIafyLG3LbrauXyApoKrbN+r0LhrfsET7Ma07/BKj/2HPxh7h3pjP8QOCjSuk
+         V1ZrAdjygpzHO7Js27pZu/f0TdYw+0Cvmc/N3ge8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 09/15] ethtool: generic handlers for GET
- requests
-Message-ID: <20190704084531.GJ2250@nanopsycho>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <4faa0ce52dfe02c9cde5a46012b16c9af6764c5e.1562067622.git.mkubecek@suse.cz>
- <20190703142510.GA2250@nanopsycho>
- <20190703175339.GO20101@unicorn.suse.cz>
+        Ingo Molnar <mingo@redhat.com>, Jiri Slaby <jslaby@suse.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Romain Izard <romain.izard.pro@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-serial@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH 00/11] Platform drivers, provide a way to add sysfs groups easily
+Date:   Thu,  4 Jul 2019 10:46:06 +0200
+Message-Id: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703175339.GO20101@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Jul 03, 2019 at 07:53:39PM CEST, mkubecek@suse.cz wrote:
->On Wed, Jul 03, 2019 at 04:25:10PM +0200, Jiri Pirko wrote:
->> Tue, Jul 02, 2019 at 01:50:24PM CEST, mkubecek@suse.cz wrote:
->> 
->> [...]	
->> 	
->> >+/* generic ->doit() handler for GET type requests */
->> >+static int ethnl_get_doit(struct sk_buff *skb, struct genl_info *info)
->> 
->> It is very unfortunate for review to introduce function in a patch and
->> don't use it. In general, this approach is frowned upon. You should use
->> whatever you introduce in the same patch. I understand it is sometimes
->> hard.
->
->It's not as if I introduced something and didn't show how to use it.
->First use is in the very next patch so if you insist on reading each
->patch separately without context, just combine 09/15 and 10/15 together;
->the overlap is minimal (10/15 adds an entry into get_requests[]
->introduced in 09/15).
->
->I could have done that myself but the resulting patch would add over
->1000 lines (also something frown upon in general) and if someone asked
->if it could be split, the only honest answer I could give would be:
->"Of course it should be split, it consists of two completely logically
->separated parts (which are also 99% separated in code)."
->
->> IIUC, you have one ethnl_get_doit for all possible commands, and you
->
->Not all of them, only GET requests (and related notifications) and out
->of them, only those which fit the common pattern. There will be e.g. Rx
->rules and stats (maybe others) where dump request won't be iterating
->through devices so that they will need at least their own dumpit
->handler.
->
->> have this ops to do cmd-specific tasks. That is quite unusual. Plus if
->> you consider the complicated datastructures connected with this, 
->> I'm lost from the beginning :( Any particular reason form this indirection?
->> I don't think any other generic netlink code does that (correct me if
->> I'm wrong). The nice thing about generic netlink is the fact that
->> you have separate handlers per cmd.
->> 
->> I don't think you need these ops and indirections. For the common parts,
->> just have a set of common helpers, as the other generic netlink users
->> are doing. The code would be much easier to read and follow then.
->
->As I said last time, what you suggest is going back to what I already
->had in the early versions; so I have pretty good idea what the result
->would look like.
->
->I could go that way, having a separate main handler for each request
->type and call common helpers from it. But as there would always be
->a doit() handler, a dumpit() handler and mostly also a notification
->handler, I would have to factor out the functions which are now
->callbacks in struct get_request_ops anyway. To avoid too many
->parameters, I would end up with structures very similar to what I have
->now.  (Not really "I would", the structures were already there, the only
->difference was that the "request" and "data" parts were two structures
->rather than one.)
->
->So at the moment, I would have 5 functions looking almost the same as
->ethnl_get_doit(), 5 functions looking almost as ethnl_get_dumpit() and
->2 functions looking like ethnl_std_notify(), with the prospect of more
->to be added. Any change in the logic would need to be repeated for all
->of them. Moreover, you also proposed (or rather requested) to drop the
->infomask concept and split the message types into multiple separate
->ones. With that change, the number of almost copies would be 21 doit(),
->21 dumpit() and 13 notification handlers (for now, that is).
+If a platform driver wants to add a sysfs group, it has to do so in a
+racy way, adding it after the driver is bound.  To resolve this issue,
+have the platform driver core do this for the driver, making the
+individual drivers logic smaller and simpler, and solving the race at
+the same time.
 
-I understand. It's a tradeoff. The code as you introduce is hard for
-me to follow, so I thought that the other way would help readability.
+All of these patches depend on the first patch.  I'll take the first one
+through my driver-core tree, and any subsystem maintainer can either ack
+their individul patch and I will be glad to also merge it, or they can
+wait until after 5.3-rc1 when the core patch hits Linus's tree and then
+take it, it's up to them.
 
-Also it seems to be that you replicate a lot of generic netlink API
-(per-cmd-doit/dumpit ops and privileged/GENL_ADMIN_PERM) in your code.
-Seems more natural to use the API as others are doing.
+Thank to Richard Gong for the idea and the testing of the platform
+driver patch.
 
+Greg Kroah-Hartman (11):
+  Platform: add a dev_groups pointer to struct platform_driver
+  uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
+  serial: sh-sci: use driver core functions, not sysfs ones.
+  firmware: arm_scpi: convert platform driver to use dev_groups
+  olpc: x01: convert platform driver to use dev_groups
+  platform: x86: hp-wmi: convert platform driver to use dev_groups
+  video: fbdev: wm8505fb: convert platform driver to use dev_groups
+  video: fbdev: w100fb: convert platform driver to use dev_groups
+  video: fbdev: sm501fb: convert platform driver to use dev_groups
+  input: keyboard: gpio_keys: convert platform driver to use dev_groups
+  input: axp20x-pek: convert platform driver to use dev_groups
 
->
->I'm also not happy about the way typical GET and SET request processing
->looks now. But I would much rather go in the opposite direction: define
->relationship between message attributes and data structure members so
->that most of the size estimate, data prepare, message fill and data
->update functions which are all repeating the same pattern could be
->replaced by universal functions doing these actions according to the
->description. The direction you suggest is the direction I came from.
->
->Seriously, I don't know what to think. Anywhere I look, return code is
->checked with "if (ret < 0)" (sure, some use "if (ret)" but it's
->certainly not prevalent or universally preferred, more like 1:1), now
->you tell me it's wrong. Networking stack is full of simple helpers and
->wrappers, yet you keep telling me simple wrappers are wrong. Networking
->stack is full of abstractions and ops, you tell me it's wrong. It's
->really confusing...
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 17 ++++------
+ drivers/base/platform.c               | 40 +++++++++++++++--------
+ drivers/firmware/arm_scpi.c           |  5 +--
+ drivers/input/keyboard/gpio_keys.c    | 13 ++------
+ drivers/input/misc/axp20x-pek.c       | 15 ++-------
+ drivers/platform/x86/hp-wmi.c         | 47 +++++++--------------------
+ drivers/tty/serial/sh-sci.c           | 22 +++++--------
+ drivers/uio/uio_fsl_elbc_gpcm.c       | 23 +++++--------
+ drivers/video/fbdev/sm501fb.c         | 37 +++++----------------
+ drivers/video/fbdev/w100fb.c          | 23 ++++++-------
+ drivers/video/fbdev/wm8505fb.c        | 13 ++++----
+ include/linux/platform_device.h       |  1 +
+ 12 files changed, 94 insertions(+), 162 deletions(-)
 
-It is all just a matter of readability I believe.
-For example when I see "if (ret < 0) goto err" I assume that there
-might be positive non-error value returned. There are many places where
-the code is not in optimal shape. But for new code, I believe we have to
-be careful.
-
-Simple helpers are fine as far as they don't cover simple things going
-under the hood. Typical example is "myown_lock() myown_unlock()" which
-just call mutex_lock/unlock. Another nice example is macro putting
-netlink attributes having goto nla_failure inside - this was removed
-couple years ago. The code still have many things like this. Again, for
-new code, I believe we have to be careful.
+-- 
+2.22.0
 
