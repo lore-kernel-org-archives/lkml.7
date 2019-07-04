@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBC6C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91C1C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDA1218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD492218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4pPML7b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vCN1JcMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfGDFxA (ORCPT
+        id S1727400AbfGDFxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 01:53:00 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44480 "EHLO
+        Thu, 4 Jul 2019 01:53:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38372 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfGDFw4 (ORCPT
+        with ESMTP id S1727389AbfGDFxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 01:52:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so4211373edr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 22:52:55 -0700 (PDT)
+        Thu, 4 Jul 2019 01:53:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so4240539edo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 22:52:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jmo/DU9O/dE2Ko7+mstCaxZb9Z4EJlYbcBOkNgkpK1k=;
-        b=h4pPML7bpwzuyJMgCJJPLfaCa1fcpe2uwIemczJvh0g5BTf8HA7EEUrIOPplYLMn2s
-         5GcqKLwtmMJfn4TrJEAtylyNk/mCSNS+eeR1bCXKwQUrjlheeZFdAnAT+GDa8ixxcVht
-         qAa8Hn5WmQWS5V2oEz7Yac6nj/+qu0ik70lcyRS3fieiHAJO0g53xPtRb9bNgsAfTCrZ
-         08rntxyq37gI3RE4TzGKUuP7X8gWfSIh8jKVyb9PMVOCVX03T1/SBkgN+VvSb+sTxso3
-         5HZaTwoSos6OVm14j4fNu6+Dz219kOPNpvSBM6QZTNzPQQeDrKwtWUWR/KCVbjifQ8u3
-         gZnw==
+        bh=zFilk8inpqvXAk/7VOioDwq9okahAA+X1lVqweKxXoM=;
+        b=vCN1JcMzPAY7/Tw39bVm1VyNdiPyea2R/hAHBGg6shiqhSTCl0vi3Fl/k0P9ZPWtcD
+         fN844ICxUa05ilb7O1NX/2dcpDqQL/jQ0gQfQllMkkIfELHz0yoH7vMgqdu5Wku6NOqC
+         jf0Aa0bV61JmAVZywNGeLDvFspJm3OCxmk4cU+Cvv5Wx5H8F0nMiEWqrN3eRTdPaA+gT
+         Pf1ZLivIL5jjW+ZwA0LAjBQW6Ck4+zb7miSThxstmVBFe3dDr6kNEoN6LAsmF7OTbEll
+         79ujDc0k9FWhs9XDHg6DgYsXkvTrF49NWoNduURhAkLkzNhyFtLfpU0QTbrqWMuOLcxC
+         OjtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jmo/DU9O/dE2Ko7+mstCaxZb9Z4EJlYbcBOkNgkpK1k=;
-        b=ecwnj53iWdDl4Txbc2D2swIiuVla9pGjyErHYUuCOQlyyUmnchcFdHCqA0MnKfZqoM
-         DDqmE2OsMiJS3Nyo6s8+8RMP4ebeXvFBwWB1moFB8hP8QRxicwDi4vvY2HJdBNINjfFE
-         DOeSj/0X0FFgFaG2QulzKcfJr26uBFbvkewKqfPNNaX99u/sgNEJxwh5wvT98K/83Rlv
-         R+aK4jKpb5JpQPIna5+yd4WmatbhxK/KIo3NyZY2xoHk2hVoIZUiWCYtiaKQ/cOknmBP
-         BCdx54j1Y9Lity97KQcWxZGNmmIIYJ9eUI6NFM8UoRPI2i3SCxn/03z3CzyuF+Zicx48
-         C3Yg==
-X-Gm-Message-State: APjAAAUmd20/oMEXHeLKLkZqkWgjz52VDoChIdgeMboDS5oTP4T3AuuK
-        8t+ISWC49nVkT0dmHJgSRIg=
-X-Google-Smtp-Source: APXvYqwLymzXqhyTyIpMejt6YiRteUU5daBG+29a56wz496qKMJIhAQ/F0d1eJQEct7PYQ3sWdYE9Q==
-X-Received: by 2002:a05:6402:12d2:: with SMTP id k18mr46093602edx.197.1562219574837;
-        Wed, 03 Jul 2019 22:52:54 -0700 (PDT)
+        bh=zFilk8inpqvXAk/7VOioDwq9okahAA+X1lVqweKxXoM=;
+        b=NixpfT6TCslryuCJdiTNX2giHYX2MmZS54jVBMPsWJMPQzLawKjhErqvhytnfuq45t
+         5icb1DtBpF9tPVEWH6jvYj0yGSoKcEAKAzRHFdv7Flg1Zo0hOkWoMKTeLNlHzlwLfTXj
+         qS4AnU2vsKfXm5qJ3XBwFtWtXXUfiNpdTr6htXyk4wm8AZY2EGDVtlHXj4PQ/dgqGyFp
+         4Btb4lf/QSCaUzDlGo5FFNg1s4hOftJEK9CfMuTIZ7Y3S/AxwQyPQAcfPTmBse5y0Xly
+         gd4gHmUaIWP2peuPzF2oKuGYx8YH2Jm5Dg/JwMvDYaajvP/xe1Ks6YseICWtCVkNhUuv
+         BleQ==
+X-Gm-Message-State: APjAAAUujn5TXGYBKxUcnE38zULuptZ3OFfO/+u4Mr/vMlGJEQTkYKgk
+        Tj3IwcmcD9ekBVMhvglfep8=
+X-Google-Smtp-Source: APXvYqxrxXJqrMJF2LmfwiNUZ/GEweI6LA1cX8k67/CpoxPX7tAyR0f2GpL/tEM3wB3rH5vK7MV5Yw==
+X-Received: by 2002:a17:906:7c8d:: with SMTP id w13mr37316234ejo.264.1562219578844;
+        Wed, 03 Jul 2019 22:52:58 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id j30sm1343532edb.8.2019.07.03.22.52.53
+        by smtp.gmail.com with ESMTPSA id j30sm1343532edb.8.2019.07.03.22.52.57
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Jul 2019 22:52:54 -0700 (PDT)
+        Wed, 03 Jul 2019 22:52:58 -0700 (PDT)
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -68,9 +68,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
         Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 5/7] drm/amd/display: Use proper enum conversion functions
-Date:   Wed,  3 Jul 2019 22:52:16 -0700
-Message-Id: <20190704055217.45860-6-natechancellor@gmail.com>
+Subject: [PATCH 7/7] drm/amd/powerplay: Zero initialize current_rpm in vega20_get_fan_speed_percent
+Date:   Wed,  3 Jul 2019 22:52:18 -0700
+Message-Id: <20190704055217.45860-8-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704055217.45860-1-natechancellor@gmail.com>
 References: <20190704055217.45860-1-natechancellor@gmail.com>
@@ -81,54 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns:
+clang warns (trimmed for brevity):
 
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_pp_smu.c:336:8:
-warning: implicit conversion from enumeration type 'enum smu_clk_type'
-to different enumeration type 'enum amd_pp_clock_type'
-[-Wenum-conversion]
-                                        dc_to_smu_clock_type(clk_type),
-                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_pp_smu.c:421:14:
-warning: implicit conversion from enumeration type 'enum
-amd_pp_clock_type' to different enumeration type 'enum smu_clk_type'
-[-Wenum-conversion]
-                                        dc_to_pp_clock_type(clk_type),
-                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:3023:8: warning:
+variable 'current_rpm' is used uninitialized whenever '?:' condition is
+false [-Wsometimes-uninitialized]
+        ret = smu_get_current_rpm(smu, &current_rpm);
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are functions to properly convert between all of these types, use
-them so there are no longer any warnings.
+smu_get_current_rpm expands to a ternary operator conditional on
+smu->funcs->get_current_rpm being not NULL. When this is false,
+current_rpm will be uninitialized. Zero initialize current_rpm to
+avoid using random stack values if that ever happens.
 
-Fixes: a43913ea50a5 ("drm/amd/powerplay: add function get_clock_by_type_with_latency for navi10")
-Fixes: e5e4e22391c2 ("drm/amd/powerplay: add interface to get clock by type with latency for display (v2)")
-Link: https://github.com/ClangBuiltLinux/linux/issues/586
+Fixes: ee0db82027ee ("drm/amd/powerplay: move PPTable_t uses into asic level")
+Link: https://github.com/ClangBuiltLinux/linux/issues/588
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-index eac09bfe3be2..0f76cfff9d9b 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_pp_smu.c
-@@ -333,7 +333,7 @@ bool dm_pp_get_clock_levels_by_type(
- 		}
- 	} else if (adev->smu.funcs && adev->smu.funcs->get_clock_by_type) {
- 		if (smu_get_clock_by_type(&adev->smu,
--					  dc_to_smu_clock_type(clk_type),
-+					  dc_to_pp_clock_type(clk_type),
- 					  &pp_clks)) {
- 			get_default_clock_levels(clk_type, dc_clks);
- 			return true;
-@@ -418,7 +418,7 @@ bool dm_pp_get_clock_levels_by_type_with_latency(
- 			return false;
- 	} else if (adev->smu.ppt_funcs && adev->smu.ppt_funcs->get_clock_by_type_with_latency) {
- 		if (smu_get_clock_by_type_with_latency(&adev->smu,
--						       dc_to_pp_clock_type(clk_type),
-+						       dc_to_smu_clock_type(clk_type),
- 						       &pp_clks))
- 			return false;
- 	}
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index e62dd6919b24..e37b39987587 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -3016,8 +3016,7 @@ static int vega20_get_fan_speed_percent(struct smu_context *smu,
+ 					uint32_t *speed)
+ {
+ 	int ret = 0;
+-	uint32_t percent = 0;
+-	uint32_t current_rpm;
++	uint32_t current_rpm = 0, percent = 0;
+ 	PPTable_t *pptable = smu->smu_table.driver_pptable;
+ 
+ 	ret = smu_get_current_rpm(smu, &current_rpm);
 -- 
 2.22.0
 
