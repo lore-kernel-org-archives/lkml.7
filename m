@@ -2,60 +2,61 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD070C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F7FC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDDC218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2CD2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfGDTd1 (ORCPT
+        id S1727279AbfGDTeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 15:33:27 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52568 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfGDTd1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 15:33:27 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 684F8143B8010;
-        Thu,  4 Jul 2019 12:33:26 -0700 (PDT)
-Date:   Thu, 04 Jul 2019 12:33:25 -0700 (PDT)
-Message-Id: <20190704.123325.601746500276980665.davem@davemloft.net>
-To:     weifeng.voon@intel.com
-Cc:     mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joabreu@synopsys.com,
-        peppe.cavallaro@st.com, andrew@lunn.ch, alexandre.torgue@st.com,
-        boon.leong.ong@intel.com
-Subject: Re: [PATCH v1 net-next] net: stmmac: Enable dwmac4 jumbo frame
- more than 8KiB
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1562173150-808-1-git-send-email-weifeng.voon@intel.com>
-References: <1562173150-808-1-git-send-email-weifeng.voon@intel.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 04 Jul 2019 12:33:26 -0700 (PDT)
+        Thu, 4 Jul 2019 15:34:01 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:40758 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726844AbfGDTeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 15:34:00 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 40CC81538A; Thu,  4 Jul 2019 20:33:59 +0100 (BST)
+From:   Mans Rullgard <mans@mansr.com>
+To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] auxdisplay: charlcd: add help text for backlight initial state
+Date:   Thu,  4 Jul 2019 20:33:54 +0100
+Message-Id: <20190704193354.31617-1-mans@mansr.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Voon Weifeng <weifeng.voon@intel.com>
-Date: Thu,  4 Jul 2019 00:59:10 +0800
+While the individual CHARLCD_BL_xxx options have help texts, the
+menu itself does not.  Fix this.
 
-> From: Weifeng Voon <weifeng.voon@intel.com>
-> 
-> Enable GMAC v4.xx and beyond to support 16KiB buffer.
-> 
-> Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
-> Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+---
+ drivers/auxdisplay/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied.
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index c52c738e554a..62bf0ef6ede8 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -448,6 +448,8 @@ config PANEL_BOOT_MESSAGE
+ choice
+ 	prompt "Backlight initial state"
+ 	default CHARLCD_BL_FLASH
++	---help---
++	  Select the initial backlight state on boot or module load.
+ 
+ 	config CHARLCD_BL_OFF
+ 		bool "Off"
+-- 
+2.22.0
+
