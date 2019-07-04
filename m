@@ -2,80 +2,132 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E129C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2234C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540D2218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562218891;
-	bh=LCMwwVt5TusTWgMbSW4gSBduWo/IwMHqLUGooJtnrHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wY7Ve+q72c0m2F2o3QOVox3qEJXSSlUiN6PIZ1946ETr90aKCxNZ3QHvLIJFeQvwx
-	 tJ0W7fqI2Y78vRAA1MdZOxcqGKPpVZnQ3bAepXkiA94IM/6o9E5QTG6CPReFMmFXpV
-	 HDuCVOINcH3LZjdzomG3ZE/2gLiDU8Hj+ggzVehA=
+	by mail.kernel.org (Postfix) with ESMTP id A993D21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfGDFla (ORCPT
+        id S1726199AbfGDFs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 01:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfGDFl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 01:41:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB3921882;
-        Thu,  4 Jul 2019 05:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562218889;
-        bh=LCMwwVt5TusTWgMbSW4gSBduWo/IwMHqLUGooJtnrHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ePyYw0uwGLbqVdD6/W7t1bHpdnMcTSunged9BFGXSYDFT/1ZFmhLMvO3QkOd9ktAW
-         fUkwu0WAd8NqFzejnGYWhVwqscNDfX6hqFBg5wCcNF+1NNtGT2vkp7XkT16W7RoBX+
-         9YJZkddWn9Id+k5afFYLyVgbfY3PhPvwKcp/SpVc=
-Date:   Thu, 4 Jul 2019 07:41:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Muchun Song <smuchun@gmail.com>, rafael@kernel.org,
-        prsood@codeaurora.org, mojha@codeaurora.org, gkohli@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 OPT1] driver core: Fix use-after-free and double free
- on glue directory
-Message-ID: <20190704054126.GD347@kroah.com>
-References: <20190626143823.7048-1-smuchun@gmail.com>
- <20190703193717.GB8452@kroah.com>
- <01ca95431a642133293534502975765dba993ada.camel@kernel.crashing.org>
+        Thu, 4 Jul 2019 01:48:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16614 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725861AbfGDFs1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 01:48:27 -0400
+X-UUID: 86e90e4136a24fdc803c254df76da0ab-20190704
+X-UUID: 86e90e4136a24fdc803c254df76da0ab-20190704
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 531091066; Thu, 04 Jul 2019 13:48:04 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 4 Jul 2019 13:48:03 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 4 Jul 2019 13:48:03 +0800
+Message-ID: <1562219283.6549.2.camel@mtkswgap22>
+Subject: Re: [PATCH] checkpatch: avoid default n
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Joe Perches <joe@perches.com>
+CC:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Thu, 4 Jul 2019 13:48:03 +0800
+In-Reply-To: <c8d5cc6171d2cff131e8600ac57e2eb441812617.camel@perches.com>
+References: <20190703083031.2950-1-miles.chen@mediatek.com>
+         <be8a97c15249ff8a613910db5792c5bcdc75333c.camel@perches.com>
+         <1562144624.3550.1.camel@mtksdaap41>
+         <c8d5cc6171d2cff131e8600ac57e2eb441812617.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01ca95431a642133293534502975765dba993ada.camel@kernel.crashing.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 08:57:53AM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2019-07-03 at 21:37 +0200, Greg KH wrote:
-> > Ok, I guess I have to take this patch, as the other one is so bad :)
+On Wed, 2019-07-03 at 08:37 -0700, Joe Perches wrote:
+> On Wed, 2019-07-03 at 17:03 +0800, Yingjoe Chen wrote:
+> > On Wed, 2019-07-03 at 01:42 -0700, Joe Perches wrote:
+> > > On Wed, 2019-07-03 at 16:30 +0800, Miles Chen wrote:
+> > > > This change reports a warning when "default n" is used.
+> > > > 
+> > > > I have seen several "remove default n" patches, so I think
+> > > > it might be helpful to add this test in checkpatch.
+> > > > DEFAULT_VALUE_STYLE
+> > > > tested:
+> > > > WARNING: 'default n' is the default value, no need to write it explicitly.
+> > > > +       default n
+> > > 
+> > > I don't think this is reasonable as there are
+> > > several uses like:
+> > > 
+> > > 		default y
+> > > 		default n if <foo>
+> > > 
+> > > For instance:
+> > > 
+> > > arch/alpha/Kconfig-config ALPHA_WTINT
+> > > arch/alpha/Kconfig-     bool "Use WTINT" if ALPHA_SRM || ALPHA_GENERIC
+> > > arch/alpha/Kconfig-     default y if ALPHA_QEMU
+> > > arch/alpha/Kconfig:     default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+> > > arch/alpha/Kconfig:     default n if !ALPHA_SRM && !ALPHA_GENERIC
 > > 
-> > But, I need a very large comment here saying why we are poking around in
-> > a kref and why we need to do this, at the expense of anything else.
+> > Hi,
 > > 
-> > So can you respin this patch with a comment here to help explain it so
-> > we have a chance to understand it when we run across this line in 10
-> > years?
+> > 
+> > I've sent similar patch in 2016, my version won't complain about these.
+> > 
+> > https://lkml.org/lkml/2016/4/22/580
 > 
-> Also are we confident that an open dir on the glue dir from userspace
-> won't keep the kref up ?
+> Hi again.
+> 
+> https://lore.kernel.org/lkml/1461259011.1918.23.camel@perches.com/
+> 
+> I would prefer a generic solution that also handles the
+> quoted use.
+> 
+> $ git grep -P 'default\s*\"[ynm]"' -- '*/Kconfig*'
+> arch/mips/Kconfig:      default "y"
+> arch/mips/Kconfig:      default "y"
+> arch/mips/Kconfig:      default "y"
+> arch/mips/Kconfig:      default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "n"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/mips/cavium-octeon/Kconfig:        default "y"
+> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+> arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+> arch/powerpc/Kconfig:   default "n"
+> drivers/auxdisplay/Kconfig:     default "n"
+> drivers/crypto/Kconfig: default "m"
+> drivers/rapidio/devices/Kconfig:        default "n"
+> 
+> or maybe 2 separate patches.
+> 
+> And the "default y" case and probably the
+> "default \!?EXPERT" is or should be generally
+> discouraged.  Especially for drivers.
+> 
+> https://lore.kernel.org/lkml/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com/
+> 
+> 
+Thanks for your comment, I'll send another patch for these cases:
+1. default "[ynm]"
+2. default \!?EXPERT
+3. default n$
 
-How do you "open" a directory which raises the kref?
 
-thanks,
-
-greg k-h
