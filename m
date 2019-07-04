@@ -2,231 +2,121 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F2DC06514
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F10C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3280A21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hdpGHill"
+	by mail.kernel.org (Postfix) with ESMTP id 5E77B21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfGDHKP (ORCPT
+        id S1727297AbfGDHLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:10:15 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8082 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfGDHKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:10:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1da6530000>; Thu, 04 Jul 2019 00:10:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 04 Jul 2019 00:10:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 04 Jul 2019 00:10:12 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jul
- 2019 07:10:10 +0000
-Subject: Re: [PATCH v4] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Thu, 4 Jul 2019 03:11:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49892 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbfGDHLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:11:37 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4BE55896A52E89EC3414;
+        Thu,  4 Jul 2019 15:11:33 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Jul 2019
+ 15:11:28 +0800
+Subject: Re: [PATCH v2] f2fs: avoid out-of-range memory access
+To:     Ocean Chen <oceanchen@google.com>, <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>
-References: <20190703012836.16568-1-digetx@gmail.com>
- <b0a0b110-61c8-ae8b-22a0-3311f70b428a@nvidia.com>
- <b1f4d7c3-636e-947f-ac76-fc639ac7fee4@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <55d402ad-6cb9-9e91-a8a4-b89d37674f4d@nvidia.com>
-Date:   Thu, 4 Jul 2019 08:10:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+References: <20190702080503.175149-1-oceanchen@google.com>
+ <cfcd3737-3b03-87fe-39e8-566e545cab3a@huawei.com>
+ <20190703150355.GA182283@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <65e4ad7b-ffbc-d5c9-9a0f-0532f4c4f5a9@huawei.com>
+Date:   Thu, 4 Jul 2019 15:11:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <b1f4d7c3-636e-947f-ac76-fc639ac7fee4@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190703150355.GA182283@google.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562224211; bh=HFvEppzQiuf+Rpk94O6Fz5EJJgEXcRKXyHp2FnphP64=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=hdpGHilltHnCm5394tMblEnGAxo0kfVO4SdPbbMTTGJRkzmDSB4Ch0l9AVjvW4Ijg
-         zz0pI5l24pC/TgIYE9GzHRger/ObTf6wHSCL6T7m/7q7terFcYSs8W6nuIUP13Tcwe
-         mUr+VgFARpPJkZ4YCFdaXUv9w09KUQZoLQgyceo3u98CusRQaCdfkRK8U5V9ZpRXrf
-         WwJqq31mzeaKl7T0DD28eH0GOXoI/0KiYzkma79ncoqEKBds28dkW3Lc/KKxqYXQQH
-         3loJQJzlraY4H7116nB/zoyW2LZ03YgChWgycN4U1OEUGxMHTktCL3Fb7asRZP/Zx5
-         nHtSQA4izfMZA==
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ocean,
 
-On 03/07/2019 18:00, Dmitry Osipenko wrote:
-> 03.07.2019 19:37, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On 2019/7/3 23:03, Ocean Chen wrote:
+> Hi Yu Chao,
+> 
+> The cur_data_segno only was checked in mount process. In terms of
+> security concern, it's better to check value before using it. I know the
+
+Could you explain more about security concern.. Do you get any report from user
+or tools that complaining f2fs issue/codes?
+
+I'm not against sanity check for basic core data of filesystem in run-time, but,
+in order to troubleshoot root cause of this issue we can trigger panic directly
+to dump more info under F2FS_CHECK_FS macro.
+
+So, maybe we can change as below?
+
+blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
++if (blk_off > ENTRIES_IN_SUM) {
++	f2fs_bug_on(1);
++	f2fs_put_page(page, 1);
++	return -EFAULT;
++}
+
+Thanks,
+
+> risk is low. IMHO, it can be safer.
+> BTW, I found we can only check blk_off before for loop instead of
+> checking 'j' in each iteratoin.
+> 
+> On Wed, Jul 03, 2019 at 10:07:11AM +0800, Chao Yu wrote:
+>> Hi Ocean,
 >>
->> On 03/07/2019 02:28, Dmitry Osipenko wrote:
->>> Tegra's APB DMA engine updates words counter after each transferred bur=
-st
->>> of data, hence it can report transfer's residual with more fidelity whi=
-ch
->>> may be required in cases like audio playback. In particular this fixes
->>> audio stuttering during playback in a chromium web browser. The patch i=
-s
->>> based on the original work that was made by Ben Dooks and a patch from
->>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>> If filesystem is corrupted, it should fail mount due to below check in
+>> f2fs_sanity_check_ckpt(), so we are safe in read_compacted_summaries() to access
+>> entries[0,blk_off], right?
+>>
+>> 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+>> 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+>> 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+>> 			return 1;
+>>
+>> Thanks,
+>>
+>> On 2019/7/2 16:05, Ocean Chen wrote:
+>>> blk_off might over 512 due to fs corrupt.
+>>> Use ENTRIES_IN_SUM to protect invalid memory access.
 >>>
->>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@cod=
-ethink.co.uk/
->>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommit;=
-h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> v2:
+>>> - fix typo
+>>> Signed-off-by: Ocean Chen <oceanchen@google.com>
 >>> ---
+>>>  fs/f2fs/segment.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
 >>>
->>> Changelog:
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index 8dee063c833f..a5e8af0bd62e 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -3403,6 +3403,8 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+>>>  
+>>>  		for (j = 0; j < blk_off; j++) {
+>>>  			struct f2fs_summary *s;
+>>> +			if (j >= ENTRIES_IN_SUM)
+>>> +				return -EFAULT;
+>>>  			s = (struct f2fs_summary *)(kaddr + offset);
+>>>  			seg_i->sum_blk->entries[j] = *s;
+>>>  			offset += SUMMARY_SIZE;
 >>>
->>> v4: The words_xferred is now also reset on a new iteration of a cyclic
->>>     transfer by ISR, so that dmaengine_tx_status() won't produce a
->>>     misleading warning splat on TX status re-checking after a cycle
->>>     completion when cyclic transfer consists of a single SG.
->>>
->>> v3: Added workaround for a hardware design shortcoming that results
->>>     in a words counter wraparound before end-of-transfer bit is set
->>>     in a cyclic mode.
->>>
->>> v2: Addressed review comments made by Jon Hunter to v1. We won't try
->>>     to get words count if dma_desc is on free list as it will result
->>>     in a NULL dereference because this case wasn't handled properly.
->>>
->>>     The residual value is now updated properly, avoiding potential
->>>     integer overflow by adding the "bytes" to the "bytes_transferred"
->>>     instead of the subtraction.
->>>
->>>  drivers/dma/tegra20-apb-dma.c | 72 +++++++++++++++++++++++++++++++----
->>>  1 file changed, 65 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
-a.c
->>> index 79e9593815f1..148d136191d7 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->>>  	bool				last_sg;
->>>  	struct list_head		node;
->>>  	struct tegra_dma_desc		*dma_desc;
->>> +	unsigned int			words_xferred;
->>>  };
->>> =20
->>>  /*
->>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct teg=
-ra_dma_channel *tdc,
->>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->>>  	nsg_req->configured =3D true;
->>> +	nsg_req->words_xferred =3D 0;
->>> =20
->>>  	tegra_dma_resume(tdc);
->>>  }
->>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_cha=
-nnel *tdc)
->>>  					typeof(*sg_req), node);
->>>  	tegra_dma_start(tdc, sg_req);
->>>  	sg_req->configured =3D true;
->>> +	sg_req->words_xferred =3D 0;
->>>  	tdc->busy =3D true;
->>>  }
->>> =20
->>> @@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct =
-tegra_dma_channel *tdc,
->>>  		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
->>>  	dma_desc->cb_count++;
->>> =20
->>> +	sgreq->words_xferred =3D 0;
->>> +
->>>  	/* If not last req then put at end of pending list */
->>>  	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
->>>  		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
->>> @@ -797,6 +802,62 @@ static int tegra_dma_terminate_all(struct dma_chan=
- *dc)
->>>  	return 0;
->>>  }
->>> =20
->>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channe=
-l *tdc,
->>> +					       struct tegra_dma_sg_req *sg_req)
->>> +{
->>> +	unsigned long status, wcount =3D 0;
->>> +
->>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>> +		return 0;
->>> +
->>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>> +
->>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>> +
->>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount =3D status;
->>> +
->>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>> +		return sg_req->req_len;
->>> +
->>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
->>> +
->>> +	if (!wcount) {
->>> +		/*
->>> +		 * If wcount wasn't ever polled for this SG before, then
->>> +		 * simply assume that transfer hasn't started yet.
->>> +		 *
->>> +		 * Otherwise it's the end of the transfer.
->>> +		 *
->>> +		 * The alternative would be to poll the status register
->>> +		 * until EOC bit is set or wcount goes UP. That's so
->>> +		 * because EOC bit is getting set only after the last
->>> +		 * burst's completion and counter is less than the actual
->>> +		 * transfer size by 4 bytes. The counter value wraps around
->>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
->>> +		 * distinguish start of transfer from its end.
->>> +		 */
->>> +		if (sg_req->words_xferred)
->>> +			wcount =3D sg_req->req_len - 4;
->>> +
->>> +	} else if (wcount < sg_req->words_xferred) {
->>> +		/*
->>> +		 * This case shall not ever happen because EOC bit
->>> +		 * must be set once next cyclic transfer is started.
->>
->> Should this still be cyclic here?
->=20
-> Do you mean the "comment" by "here"?
->=20
-> It will be absolutely terrible if this case happens for oneshot transfer,=
- assume
-> kernel/hardware is on fire.
-
-Or more likely a SW bug :-)
-
-Yes should never happen for either sg or cyclic, but there is no mention
-of sg transfers. Maybe the sg case is more obvious but in general this
-case should never happen for any transfer.
-
-Jon
-
---=20
-nvpublic
+> .
+> 
