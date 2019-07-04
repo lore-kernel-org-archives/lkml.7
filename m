@@ -2,100 +2,97 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B929FC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE08C06516
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3EF218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="I8myp0XA"
+	by mail.kernel.org (Postfix) with ESMTP id 430C820828
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfGDLg5 (ORCPT
+        id S1727627AbfGDLip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:36:57 -0400
-Received: from smtp2.infineon.com ([217.10.52.18]:2767 "EHLO
-        smtp2.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfGDLg5 (ORCPT
+        Thu, 4 Jul 2019 07:38:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37417 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfGDLio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:36:57 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jul 2019 07:36:55 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1562240216; x=1593776216;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=jj7pE5xyI7GKLRZzLxvYqwwU70BVQrx76pcVRLKA4RI=;
-  b=I8myp0XAPwFYWUjtFKYtEWt3h4jGAVEHi+wgjypm5QiARvRvk7TzZTan
-   W3ni6evVIN8maG4nq2whKh7mcSvndPa/tRRJVGi1qWQ7yeyBRkmnSPOhY
-   hlafMmkea33Ogg0cAXvo+p4AspLJ3chtSvyj+mPPSkVkacVhjfTS8EVck
-   Y=;
-IronPort-SDR: IXo7G6x+FN7DENZq6DX7nJou9qS2eXOrvYbwJ9vgXAStjiOzFMQzGFiCywqbwRFxbyoO4qxlD3
- Ly1phjuUTNTw==
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9307"; a="5415994"
-X-IronPort-AV: E=Sophos;i="5.63,450,1557180000"; 
-   d="scan'208";a="5415994"
-Received: from unknown (HELO mucxv002.muc.infineon.com) ([172.23.11.17])
-  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 13:29:46 +0200
-Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
-        by mucxv002.muc.infineon.com (Postfix) with ESMTPS;
-        Thu,  4 Jul 2019 13:29:45 +0200 (CEST)
-Received: from [10.154.32.88] (172.23.8.247) by MUCSE708.infineon.com
- (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1591.10; Thu, 4
- Jul 2019 13:29:45 +0200
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Oshri Alkoby <oshrialkoby85@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <peterhuewe@gmx.de>, <jgg@ziepe.ca>,
-        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <oshri.alkoby@nuvoton.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <gcwilson@us.ibm.com>,
-        <kgoldman@us.ibm.com>, <nayna@linux.vnet.ibm.com>,
-        <dan.morav@nuvoton.com>, <tomer.maimon@nuvoton.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
-From:   Alexander Steffen <Alexander.Steffen@infineon.com>
-Message-ID: <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
-Date:   Thu, 4 Jul 2019 13:29:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 4 Jul 2019 07:38:44 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MMGAg-1hzyic1MGM-00JKWZ; Thu, 04 Jul 2019 13:38:08 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Marek Vasut <marek.vasut@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: adc: gyroadc: fix uninitialized return code
+Date:   Thu,  4 Jul 2019 13:37:47 +0200
+Message-Id: <20190704113800.3299636-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.8.247]
-X-ClientProxiedBy: MUCSE716.infineon.com (172.23.7.67) To
- MUCSE708.infineon.com (172.23.7.82)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:h9aKGiMAS6Xlil+2UxkJhJCnUoDDgR+JZ2AvN4jHsrCx8ckyZuS
+ yTEZldLJ/UP6OFu9DOsy4VetZ/N0GFIf9RT57cxc+NW20LzRCQC2iRf4QEYCBTQtaQBnhZs
+ Qej58IDikUem+RSWapqZYEEPHFnIdfcBlPm6CdrxZCiXwsHI9nhtiidJFXsoxZ9sssiflqh
+ O+kzS9bxP3uF49LI2VnMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CrZfIuHva64=:k5xMOa0IWCAKm3yNcyNVYf
+ dL5/tWOzmLrqTaBpZz3j4i+7oSpo/kGE+TRdCrBIy+mRYkOoR66SojF8+bHRg4tJmlIfTB4bu
+ /LJUeYEPmBC3TzvvYEgGQM1F/aYhqm5l3wIzgrv8mrZB5DVaM0wZZMVlPR+vDO7cUXoaH6/VZ
+ LbFl4Lm+dMElV2jR36wM/iCSk5x6yf/BD+6XB14vBrcwjcPVSsIVlAg5wKr0CHKYOz9Q9OKZj
+ JVd4WiEXAsjI6a69+zqa/CiiaC62QObwPoTbMP1SopA9WfgeAF0BroPsPwspNF4U3vNABxXLj
+ 1/lR+ZDvw459rku6B4R1FWzmwbJPJekjIZI5kpmHS4A73dfsSGEUfi0Hh8fzCC6L7h714Tgui
+ 3r4gZDBtTkTnyA8TqQiLuHChbrCwxN6tHWWzg4SsRY+kM4f/nTV2Pm+gPijhs0iyT56qjyAkw
+ W5KecNpVD7qDDFm1tGLhbIpwko9PXKHQJelmmwNFPyaQyUCWCQbt3voWVUVELVT5OGSN7GSdX
+ Ynb7N2FBnyhCOu5U1TFVMFu2XT26DQSA+t84FLiVWnGQftDxeQO3P2wEtATD0rOYnviddIQ5r
+ Lyv5E1qOtJUtPG/cDAQNbCZGyftkfo8NkGD4cgLH5Yv9Wnb3rXplqvvNLsQgypquy1CSXBewI
+ kuYBADE90oIOKvH/zTSckq/DIM+erVVlYoXIjcSI5TDQwNiCq66CIQg0AOJITqJ2vbVH/yRMN
+ g7aB2O8660O6uSLOGvd7Rh67ds0fc0ijiMBmHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.07.2019 10:43, Jarkko Sakkinen wrote:
-> Check out tpm_tis_core.c and tpm_tis_spi.c. TPM TIS driver implements
-> that spec so you should only implement a new physical layer.
+gcc-9 complains about a blatant uninitialized variable use that
+all earlier compiler versions missed:
 
-I had the same thought. Unfortunately, the I2C-TIS specification 
-introduces two relevant changes compared to tpm_tis/tpm_tis_spi:
+drivers/iio/adc/rcar-gyroadc.c:510:5: warning: 'ret' may be used uninitialized in this function [-Wmaybe-uninitialized]
 
-1. Locality is not encoded into register addresses anymore, but stored 
-in a separate register.
-2. Several register addresses have changed (but still contain compatible 
-contents).
+Return -EINVAL instead here.
 
-I'd still prefer not to duplicate all the high-level logic from 
-tpm_tis_core. But this will probably mean to introduce some new 
-interfaces between tpm_tis_core and the physical layers.
+Cc: stable@vger.kernel.org
+Fixes: 059c53b32329 ("iio: adc: Add Renesas GyroADC driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/iio/adc/rcar-gyroadc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also, shouldn't the new driver be called tpm_tis_i2c, to group it with 
-all the other (TIS) drivers, that implement a vendor-independent 
-protocol? With tpm_i2c_ptp users might assume that ptp is just another 
-vendor.
+diff --git a/drivers/iio/adc/rcar-gyroadc.c b/drivers/iio/adc/rcar-gyroadc.c
+index 2d685730f867..aec73cc43e23 100644
+--- a/drivers/iio/adc/rcar-gyroadc.c
++++ b/drivers/iio/adc/rcar-gyroadc.c
+@@ -391,7 +391,7 @@ static int rcar_gyroadc_parse_subdevs(struct iio_dev *indio_dev)
+ 			dev_err(dev,
+ 				"Channel %i uses different ADC mode than the rest.\n",
+ 				reg);
+-			return ret;
++			return -EINVAL;
+ 		}
+ 
+ 		/* Channel is valid, grab the regulator. */
+-- 
+2.20.0
 
-Alexander
