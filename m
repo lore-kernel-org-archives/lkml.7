@@ -2,123 +2,118 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A872AC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D47C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F2721882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BEE218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfGDGF2 convert rfc822-to-8bit (ORCPT
+        id S1727160AbfGDGHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:05:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3779 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfGDGF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:05:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 23:05:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="169357260"
-Received: from kmsmsx157.gar.corp.intel.com ([172.21.138.134])
-  by orsmga006.jf.intel.com with ESMTP; 03 Jul 2019 23:05:24 -0700
-Received: from pgsmsx110.gar.corp.intel.com (10.221.44.111) by
- kmsmsx157.gar.corp.intel.com (172.21.138.134) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 4 Jul 2019 14:05:23 +0800
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.4]) by
- PGSMSX110.gar.corp.intel.com ([169.254.13.19]) with mapi id 14.03.0439.000;
- Thu, 4 Jul 2019 14:05:23 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Topic: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Index: AQHVMUGmUw8CyhUBakCg51utnm9b/6a4aBMAgAFBlaD//59qAIAArWRQ
-Date:   Thu, 4 Jul 2019 06:05:23 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
-References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
- <20190703140520.GA18473@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
- <20190704033038.GA6276@lunn.ch>
-In-Reply-To: <20190704033038.GA6276@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 4 Jul 2019 02:07:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57905 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfGDGHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:07:48 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hiuuG-0003Il-27; Thu, 04 Jul 2019 08:07:44 +0200
+Date:   Thu, 4 Jul 2019 08:07:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [PATCH] x86/fpu: Inline fpu__xstate_clear_all_cpu_caps()
+Message-ID: <20190704060743.rvew4yrjd6n33uzx@linutronix.de>
+References: <20190702213958.33291-1-andi@firstfloor.org>
+ <alpine.DEB.2.21.1907030013130.1802@nanos.tec.linutronix.de>
+ <20190703083247.57kjrmlxkai3vpw3@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190703083247.57kjrmlxkai3vpw3@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > @@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus
-> > > > *bus,
-> > > int phyaddr, int phyreg)
-> > > >  	struct stmmac_priv *priv = netdev_priv(ndev);
-> > > >  	unsigned int mii_address = priv->hw->mii.addr;
-> > > >  	unsigned int mii_data = priv->hw->mii.data;
-> > > > -	u32 v;
-> > > > -	int data;
-> > > >  	u32 value = MII_BUSY;
-> > > > +	int data = 0;
-> > > > +	u32 v;
-> > > >
-> > > >  	value |= (phyaddr << priv->hw->mii.addr_shift)
-> > > >  		& priv->hw->mii.addr_mask;
-> > > >  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw-
-> > > >mii.reg_mask;
-> > > >  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
-> > > >  		& priv->hw->mii.clk_csr_mask;
-> > > > -	if (priv->plat->has_gmac4)
-> > > > +	if (priv->plat->has_gmac4) {
-> > > >  		value |= MII_GMAC4_READ;
-> > > > +		if (phyreg & MII_ADDR_C45)
-> > > > +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
-> > > > +	}
-> > > >
-> > > >  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
-> > > MII_BUSY),
-> > > >  			       100, 10000))
-> > > >  		return -EBUSY;
-> > > >
-> > > > +	writel(data, priv->ioaddr + mii_data);
-> > >
-> > > That looks odd. Could you explain why it is needed.
-> > >
-> > > Thanks
-> > > 	Andrew
-> >
-> > Hi Andrew,
-> > This mdio c45 support needed to access DWC xPCS which is a Clause-45
-> 
-> I mean it looks odd doing a write to the data register in the middle of
-> stmmac_mdio_read().
+All fpu__xstate_clear_all_cpu_caps() does is to invoke one simple
+function since commit
 
-MAC is using an indirect access to access mdio devices. In order to read,
-the driver needs to write into both mii_data and mii_address to select 
-c45, read/write command, phy address, address to read, and etc. 
+  73e3a7d2a7c3b ("x86/fpu: Remove the explicit clearing of XSAVE dependent features")
 
-Weifeng
+so it will be better to simply invoke that function directly.
+
+Inline fpu__xstate_clear_all_cpu_caps().
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/x86/include/asm/fpu/xstate.h |  1 -
+ arch/x86/kernel/fpu/init.c        |  2 +-
+ arch/x86/kernel/fpu/xstate.c      | 11 +----------
+ 3 files changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 7e42b285c8562..c6136d79f8c07 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -47,7 +47,6 @@ extern u64 xstate_fx_sw_bytes[USER_XSTATE_FX_SW_WORDS];
+ extern void __init update_regset_xstate_info(unsigned int size,
+ 					     u64 xstate_mask);
+ 
+-void fpu__xstate_clear_all_cpu_caps(void);
+ void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
+ const void *get_xsave_field_ptr(int xfeature_nr);
+ int using_compacted_format(void);
+diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+index 5baae74af4f91..6ce7e0a23268f 100644
+--- a/arch/x86/kernel/fpu/init.c
++++ b/arch/x86/kernel/fpu/init.c
+@@ -259,7 +259,7 @@ static void __init fpu__init_parse_early_param(void)
+ #endif
+ 
+ 	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
+-		fpu__xstate_clear_all_cpu_caps();
++		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
+ 
+ 	if (cmdline_find_option_bool(boot_command_line, "noxsaveopt"))
+ 		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 3c36dd1784db6..7b4c52aa929fb 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -67,15 +67,6 @@ static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask)*8];
+  */
+ unsigned int fpu_user_xstate_size;
+ 
+-/*
+- * Clear all of the X86_FEATURE_* bits that are unavailable
+- * when the CPU has no XSAVE support.
+- */
+-void fpu__xstate_clear_all_cpu_caps(void)
+-{
+-	setup_clear_cpu_cap(X86_FEATURE_XSAVE);
+-}
+-
+ /*
+  * Return whether the system supports a given xfeature.
+  *
+@@ -709,7 +700,7 @@ static void fpu__init_disable_system_xstate(void)
+ {
+ 	xfeatures_mask = 0;
+ 	cr4_clear_bits(X86_CR4_OSXSAVE);
+-	fpu__xstate_clear_all_cpu_caps();
++	setup_clear_cpu_cap(X86_FEATURE_XSAVE);
+ }
+ 
+ /*
+-- 
+2.20.1
 
