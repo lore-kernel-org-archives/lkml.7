@@ -2,101 +2,133 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65557C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C94C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437622189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D68218A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562219798;
+	bh=ev00zY18elXA5ijjKl+ZTkplSz07vBXTc3V/9aX7YTs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OAkgp5ktVYWdxauQD/KK/lRdPc88fPnRAXpZpF7MwPejgPVA4h6wZ0Qajh1Xafeyc
+	 UU2Vh0LEJQ7LLPSSA8jJ+L9B58nniTDtsmfhuzH2OnNjWpEplCQGQ34dUrpYIiaTaf
+	 OzatvuDHs3a9P1kIJI40JeIyGJT5KcAO0CG7QSgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfGDFzw (ORCPT
+        id S1727297AbfGDF4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 01:55:52 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17596 "EHLO mga05.intel.com"
+        Thu, 4 Jul 2019 01:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfGDFzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 01:55:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 22:55:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="164547665"
-Received: from pedapalapati-ip.iind.intel.com ([10.106.124.123])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Jul 2019 22:55:48 -0700
-From:   Nitin Gote <nitin.r.gote@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     corbet@lwn.net, apw@canonical.com, joe@perches.com,
-        keescook@chromium.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Nitin Gote <nitin.r.gote@intel.com>
-Subject: [PATCH] checkpatch: Added warnings in favor of strscpy().
-Date:   Thu,  4 Jul 2019 11:24:43 +0530
-Message-Id: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725879AbfGDF4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 01:56:36 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3561D21882;
+        Thu,  4 Jul 2019 05:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562219795;
+        bh=ev00zY18elXA5ijjKl+ZTkplSz07vBXTc3V/9aX7YTs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o7bd8laRAY2IHaVCAXtydSA7UYY9V5mOGs3Q70qpbPxifJwPGp8pRVbr4JbfQD1at
+         7lJhN0R0SL3582a/6WsjK6Mj643bVchmFVMK4mPLOdsuRqnrQ29/HP7OWZBXYcvh/p
+         BCsyUY5IgzvSX1GXvWNR8NsYW5PGe4mEQ13fdAbg=
+Date:   Thu, 4 Jul 2019 14:56:31 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] ftrace/selftest: Test if set_event/ftrace_pid
+ exists before writing
+Message-Id: <20190704145631.58e78ce0add30b3987ea8845@kernel.org>
+In-Reply-To: <20190703220105.5a5db301@gandalf.local.home>
+References: <20190703194959.596805445@goodmis.org>
+        <20190703195300.408302485@goodmis.org>
+        <20190703160009.31ef5cb7@gandalf.local.home>
+        <20190704105126.355b476f13795cab16727fbc@kernel.org>
+        <20190703220105.5a5db301@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added warnings in checkpatch.pl script to :
+On Wed, 3 Jul 2019 22:01:05 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-1. Deprecate strcpy() in favor of strscpy().
-2. Deprecate strlcpy() in favor of strscpy().
-3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+> On Thu, 4 Jul 2019 10:51:26 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > > > diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> > > > index 779ec11f61bd..a7b06291e32c 100644
+> > > > --- a/tools/testing/selftests/ftrace/test.d/functions
+> > > > +++ b/tools/testing/selftests/ftrace/test.d/functions
+> > > > @@ -91,8 +91,8 @@ initialize_ftrace() { # Reset ftrace to initial-state
+> > > >      reset_events_filter
+> > > >      reset_ftrace_filter
+> > > >      disable_events
+> > > > -    echo > set_event_pid	# event tracer is always on
+> > > > -    echo > set_ftrace_pid
+> > > > +    [ -f set_event_pid ] && echo > set_event_pid  # event tracer is always on  
+> > > 
+> > > I probably should remove that comment, because I believe that was why
+> > > it wasn't tested :-/  
+> > 
+> > Hmm, OK. I think this comment means "the event tracer is always on if clearing
+> > set_event_pid filter". Would this need to be removed?
+> 
+> When this was added in commit 131f840d5b7 ("selftests: ftrace:
+> Initialize ftrace before each test"), we had this:
+> 
+> +    echo > set_event_pid       # event tracer is always on
+> +    [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
+> +    [ -f set_graph_function ] && echo | tee set_graph_*
+> +    [ -f stack_trace_filter ] && echo > stack_trace_filter
+> +    [ -f kprobe_events ] && echo > kprobe_events
+> +    [ -f uprobe_events ] && echo > uprobe_events
+> 
+> Where set_event_pid is the only file not tested for existence. I
+> figured that comment was the reason for not testing it. If that was the
+> case, then adding a test, I would think we should remove the comment.
 
-Updated strncpy() section in Documentation/process/deprecated.rst
-to cover strscpy_pad() case.
+Ah, I see.
 
-Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
----
- This patch is already reviewed by mailing list
- kernel-hardening@lists.openwall.com. Refer below link
- <https://www.openwall.com/lists/kernel-hardening/2019/07/03/4>
-Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> Do you agree?
 
- Documentation/process/deprecated.rst | 6 +++---
- scripts/checkpatch.pl                | 5 +++++
- 2 files changed, 8 insertions(+), 3 deletions(-)
+Yes, I agree with removing it.
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 49e0f64..f564de3 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
- and other misbehavior due to the missing termination. It also NUL-pads the
- destination buffer if the source contents are shorter than the destination
- buffer size, which may be a needless performance penalty for callers using
--only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
--(Users of :c:func:`strscpy` still needing NUL-padding will need an
--explicit :c:func:`memset` added.)
-+only NUL-terminated strings. In this case, the safe replacement is
-+:c:func:`strscpy`. If, however, the destination buffer still needs
-+NUL-padding, the safe replacement is :c:func:`strscpy_pad`.
- 
- If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
- still be used, but destinations should be marked with the `__nonstring
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 342c7c7..3d80967 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -595,6 +595,11 @@ our %deprecated_apis = (
- 	"rcu_barrier_sched"			=> "rcu_barrier",
- 	"get_state_synchronize_sched"		=> "get_state_synchronize_rcu",
- 	"cond_synchronize_sched"		=> "cond_synchronize_rcu",
-+	"strcpy"				=> "strscpy",
-+	"strlcpy"				=> "strscpy",
-+	"strncpy"				=> "strscpy, strscpy_pad or for
-+	non-NUL-terminated strings, strncpy() can still be used, but
-+	destinations should be marked with the __nonstring",
- );
- 
- #Create a search pattern for all these strings to speed up a loop below
+Thank you!
+
+> 
+> -- Steve
+> 
+> 
+> > 
+> > Thank you,
+> > 
+> > > 
+> > > -- Steve
+> > > 
+> > >   
+> > > > +    [ -f set_ftrace_pid ] && echo > set_ftrace_pid
+> > > >      [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
+> > > >      [ -f set_graph_function ] && echo | tee set_graph_*
+> > > >      [ -f stack_trace_filter ] && echo > stack_trace_filter  
+> > >   
+> > 
+> > 
+> 
+
+
 -- 
-2.7.4
-
+Masami Hiramatsu <mhiramat@kernel.org>
