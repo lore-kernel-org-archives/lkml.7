@@ -2,128 +2,94 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981B5C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67473C46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D7F218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCA0218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X6NiXeAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfGDREw (ORCPT
+        id S1727314AbfGDRHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 13:04:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53626 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbfGDREv (ORCPT
+        Thu, 4 Jul 2019 13:07:54 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37527 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfGDRHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 13:04:51 -0400
-Received: from [IPv6:2804:431:c7f5:f63c:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:c7f5:f63c:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B79B728B0E7;
-        Thu,  4 Jul 2019 18:04:43 +0100 (BST)
-Subject: Re: [PATCH v7 11/14] dt-bindings: Document the Rockchip MIPI RX D-PHY
- bindings
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20190703190910.32633-1-helen.koike@collabora.com>
- <20190703190910.32633-12-helen.koike@collabora.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <e9102ab5-3e79-bda5-fefc-0541958c215f@collabora.com>
-Date:   Thu, 4 Jul 2019 14:04:00 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 13:07:54 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y57so6434762qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XqfKYWKGSYLgbJr6fPQ+lFHdBqt7mzzp7w7+/NgGtDk=;
+        b=X6NiXeAMF1OwtlTW4QqugOJ53ZeaHYD/sLo9k8HcbCwSQByg/XZqvCY4YZ+NYEl7+p
+         iNzSMGDWZ5tSIXvWCBaZgIICKztGnisde/lW/EA7/5qeHQu+15yWvVUsJRLIZmnz8wha
+         FFQqyPZ2lh/7vbQ1YNZqInN11zwc/aPBlJbKnEheIYIs5DRlEPuNf2j32b7lU2Cr/rcQ
+         96vKhTR4yz256EpG20zwOf0ABEaIZ5Hm7+BC+Ly7ve2P51vGNgxR6r8d9luBnVSDGfnC
+         hecuC40wXSVrpqNgLK4oewKcZuEQsgqJRuOyJclwZzjzgTs41CxzCm22YgsyxzVDu9Bi
+         dJSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XqfKYWKGSYLgbJr6fPQ+lFHdBqt7mzzp7w7+/NgGtDk=;
+        b=cmObNpR9s5WY2Jv2niZdR7ZHTY+QWD9Ofi2AMsQivyNmRlgjzCMz+VuAZ+2KgfsPJw
+         XsEKlL3T0Kc+pkXC25CZ36wP2kvUZpLn6TNMisDJG6QZBcIoTHwMvaKikvQAtzrY75/A
+         aBD92sBZ2kzeVZFIbHQfepMrDHQW3PY/cPrryu4sJkQHjb3F1kolKbhC17EP3UYLzK+b
+         unVj3jK7bXn/oatyEfEcu1/VYoJj2KvY4VpSMUicJAX9L9gdoJt5+oYr7hNRP48vYB2n
+         kHIHBAQRe9nZXakNkQ8nSYggzSkf1zMALMqNfb3ZOsGYsI5Z+/yvMChE0wKga8a6e/n/
+         m7PQ==
+X-Gm-Message-State: APjAAAV8YhNwVnt6b9V9ooazt2unvg8yikQfWk+zQOjkpjga3dgqczNk
+        CvanaVChs5X4u8BYVHck1TUzuShMYIBMyA==
+X-Google-Smtp-Source: APXvYqxtr+v0L2/2WEquOomQKVdBZ8+LLKmCnbiOU43dpww5W7vo+SURvHo2eSQslH/YdnPX0elgpQ==
+X-Received: by 2002:aed:36c5:: with SMTP id f63mr36872490qtb.239.1562260073519;
+        Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id b67sm2660401qkd.82.2019.07.04.10.07.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hj5D6-000348-Ib; Thu, 04 Jul 2019 14:07:52 -0300
+Date:   Thu, 4 Jul 2019 14:07:52 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/uverbs: remove redundant assignment to variable ret
+Message-ID: <20190704170752.GA11760@ziepe.ca>
+References: <20190704125027.4514-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190703190910.32633-12-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704125027.4514-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Helen,
-
-On 7/3/19 4:09 PM, Helen Koike wrote:
-> From: Jacob Chen <jacob2.chen@rock-chips.com>
->
-> Add DT bindings documentation for Rockchip MIPI D-PHY RX
->
-> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> [update for upstream]
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->
+On Thu, Jul 04, 2019 at 01:50:27PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being initialized with a value that is never
+> read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->
-> Changes in v7:
-> - updated doc with new design and tested example
->
->  .../bindings/media/rockchip-mipi-dphy.txt     | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-> new file mode 100644
-> index 000000000000..2305d44d92db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-> @@ -0,0 +1,38 @@
-> +Rockchip SoC MIPI RX D-PHY
-> +-------------------------------------------------------------
-Here I would also remove those extra `---`.
+>  drivers/infiniband/core/uverbs_cmd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-    André
-> +
-> +Required properties:
-> +- compatible: value should be one of the following
-> +	"rockchip,rk3288-mipi-dphy"
-> +	"rockchip,rk3399-mipi-dphy"
-> +- clocks : list of clock specifiers, corresponding to entries in
-> +	clock-names property;
-> +- clock-names: required clock name.
-> +- #phy-cells: Number of cells in a PHY specifier; Should be 0.
-> +
-> +MIPI RX D-PHY use registers in "general register files", it
-> +should be a child of the GRF.
-> +
-> +Optional properties:
-> +- reg: offset and length of the register set for the device.
-> +- rockchip,grf: MIPI TX1RX1 D-PHY not only has its own register but also
-> +		the GRF, so it is only necessary for MIPI TX1RX1 D-PHY.
-> +
-> +Device node example
-> +-------------------
-> +
-> +grf: syscon@ff770000 {
-> +	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +
-> +...
-> +
-> +	dphy: mipi-dphy {
-> +		compatible = "rockchip,rk3399-mipi-dphy";
-> +		clocks = <&cru SCLK_MIPIDPHY_REF>,
-> +			<&cru SCLK_DPHY_RX0_CFG>,
-> +			<&cru PCLK_VIO_GRF>;
-> +		clock-names = "dphy-ref", "dphy-cfg", "grf";
-> +		power-domains = <&power RK3399_PD_VIO>;
-> +		#phy-cells = <0>;
-> +	};
-> +};
+Applied to for-next, thanks
+
+Jason
