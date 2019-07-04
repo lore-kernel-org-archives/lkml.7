@@ -2,199 +2,129 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE32DC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2170C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8C22189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD49E2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxl1wTXi"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="eaggBhFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfGDXcY (ORCPT
+        id S1727644AbfGDXe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 19:32:24 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39874 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfGDXcX (ORCPT
+        Thu, 4 Jul 2019 19:34:57 -0400
+Received: from mail.efficios.com ([167.114.142.138]:33292 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDXe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 19:32:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m10so6657091edv.6;
-        Thu, 04 Jul 2019 16:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cX6nHtTKELS0nlqmaRfVAhra97bpjvwlsmKbwJvPrso=;
-        b=rxl1wTXi046K+QqtyHJvHyAJgrlScrICo4IcfjX78f7TBSCH6gB+2yKRSQChPuc0x2
-         6so96zGpdM1L5QmCnq3tQqZZJHTtqc6z5VtiaKA/xM14WOkTv7KfSp+9GE6j+n4k/gLb
-         FH/XIN6SSU/8GfvtL57cO4NYTDiZHE+roDOuZng/6OcVdu7/UVItQzAIYDL100fB3TGl
-         MHBbmZRYz+I7LW0kIVIK77oU7leOx9DDqh8VXyJEWysbfH3g0V9BirA/CZAqdCAp/JD6
-         exjODXOaliCajA2UgpL95TJlvOy2kfpVZaIDFnfTHWio87wMdnxWdnanWXzv2TQ1toXk
-         3gPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cX6nHtTKELS0nlqmaRfVAhra97bpjvwlsmKbwJvPrso=;
-        b=PgY9Bf8Kk87KuGC6Igy1OugcD/xKh5uSX9jlF6lahaZmtgPPUahi+WbpJkOC6nMmJR
-         ZwqrSuTxjvNcpJ0vmLA/vZpI7C0Vf2fxVH2gonsSHsAZt5st2cI0pZ5wgSUMcwSLXEGZ
-         E/Zgb/IKt8Ge3kvXxbX0jKBDsnL1z66Xh214lvELN+OP3GCKnW+ybn7raHXTpcZ58Nkq
-         EQUE663K4V+VpbZHriXcnMQprWJGOHq4hpjft9T0lJ0hh+rx7I4he5cETnLETXwJPawR
-         4oRcyh80HroNdPXRdikPREDiPLy1dxHn2MIMOBMnTdby4DPoGLOlxS2OEcMv2mMHfLVE
-         9qOQ==
-X-Gm-Message-State: APjAAAWjgqH/gEGX+x4Fk/iTeZ2bNI15+2RTwQ5rBjLwo9+fNCOenkST
-        ExvUwGO6ZUN3rscbpVaOUBybvogBXkq3KibcUzw=
-X-Google-Smtp-Source: APXvYqwubu8GnrljQuP6hpQyT0Bj/7SRpfGpd1V8szw8gCaTzMPhkSeoUuAvBgEbpax9UIQXw7I/eJvRRVTgRPDSEf8=
-X-Received: by 2002:a50:aa14:: with SMTP id o20mr1159284edc.165.1562283141133;
- Thu, 04 Jul 2019 16:32:21 -0700 (PDT)
+        Thu, 4 Jul 2019 19:34:56 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 592AA267EEC;
+        Thu,  4 Jul 2019 19:34:55 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 5oFTznazSfaV; Thu,  4 Jul 2019 19:34:54 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id DACA2267EE2;
+        Thu,  4 Jul 2019 19:34:54 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DACA2267EE2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1562283294;
+        bh=CDSR8widGI+xOpyyUk+TWjKxOAyh0/F4/sA39bSn4U0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=eaggBhFjI8B7SYUBopZeVcRzToFU+56rI3hH3CfUiJBBdJmtWoMHXHw/XBILxxxnf
+         geFmcD0OBJCu5s7FRbI9oy2Loxnp7G/ybSC6eG2AjCzrJq0XVlZFqj6h31nJfIfiCU
+         wJ53F0BxYK47cpq5nK+X1F+ZDgQ/3eTnr1IxH4IxtbOrwjnIauRSVDJkn+ZMKUbSqL
+         tvll67wyTF5AvVeu1AH09wlhEP49ueGEp/Wr0bDqjabv4B0XIQKyWKHCO2ES+qoitW
+         xjZJa0/uASa/XVO7q1Ia/usm/n6vv2kpn8P7qLUcJqexSg3aqwNPBjral8soFOjJdh
+         zkHe7RQ8UtfCw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id Kc9nv4UKOwVf; Thu,  4 Jul 2019 19:34:54 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id C43E0267EDB;
+        Thu,  4 Jul 2019 19:34:54 -0400 (EDT)
+Date:   Thu, 4 Jul 2019 19:34:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Message-ID: <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de> <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de> <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de>
+Subject: Re: [PATCH] cpu/hotplug: Cache number of online CPUs
 MIME-Version: 1.0
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
-In-Reply-To: <20190624182614.GC5690@piout.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 5 Jul 2019 02:32:09 +0300
-Message-ID: <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3809)
+Thread-Topic: cpu/hotplug: Cache number of online CPUs
+Thread-Index: X6m4RuO1d7NTukM4aWABu4LGgX0TIQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 at 00:23, Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 24/06/2019 18:24:31+0200, Andrew Lunn wrote:
-> > On Mon, Jun 24, 2019 at 05:23:45PM +0200, Allan W. Nielsen wrote:
-> > > Hi Andrew,
-> > >
-> > > The 06/24/2019 16:26, Andrew Lunn wrote:
-> > > > > > Yeah, there are 2 ethernet controller ports (managed by the enetc driver)
-> > > > > > connected inside the SoC via SGMII links to 2 of the switch ports, one of
-> > > > > > these switch ports can be configured as CPU port (with follow-up patches).
-> > > > > >
-> > > > > > This configuration may look prettier on DSA, but the main restriction here
-> > > > > > is that the entire functionality is provided by the ocelot driver which is a
-> > > > > > switchdev driver.  I don't think it would be a good idea to copy-paste code
-> > > > > > from ocelot to a separate dsa driver.
-> > > > > >
-> > > > >
-> > > > > We should probably make the ocelot driver a DSA driver then...
-> > > > An important part of DSA is being able to direct frames out specific
-> > > > ports when they ingress via the CPU port. Does the silicon support
-> > > > this? At the moment, i think it is using polled IO.
-> > >
-> > > That is supported, it requires a bit of initial configuration of the Chip, but
-> > > nothing big (I believe this configuration is part of Claudiu's change-set).
-> > >
-> > > But how do you envision this done?
-> > >
-> > > - Let the existing SwitchDev driver and the DSA driver use a set of common
-> > >   functions.
-> > > - Convert the existing Ocelot driver from SwitchDev to DSA
-> > > - Fork (copy) the existing driver of Ocelot, and modify it as needed for the
-> > >   Felix driver
-> > >
-> > > My guess is the first one, but I would like to understand what you have in mind.
-> >
-> > I don't know the various architectures the switch is used in. But it
-> > does seem like a core library, and then a switchdev wrapper for Ocelot
-> > and a DSA wrapper for Felix would make sense.
->
-> Ocelot could also be used in a DSA setting where one port can be
-> connected to an external MAC and be used to inject/extract frames
-> to/from any other ports. In that case, the IFH would serve as the DSA
-> tag.
->
->
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+----- On Jul 4, 2019, at 6:33 PM, Thomas Gleixner tglx@linutronix.de wrote:
 
-Hi everyone,
+> On Thu, 4 Jul 2019, Mathieu Desnoyers wrote:
+>> ----- On Jul 4, 2019, at 5:10 PM, Thomas Gleixner tglx@linutronix.de wrote:
+>> >
+>> > num_online_cpus() is racy today vs. CPU hotplug operations as
+>> > long as you don't hold the hotplug lock.
+>> 
+>> Fair point, AFAIU none of the loads performed within num_online_cpus()
+>> seem to rely on atomic nor volatile accesses. So not using a volatile
+>> access to load the cached value should not introduce any regression.
+>> 
+>> I'm concerned that some code may rely on re-fetching of the cached
+>> value between iterations of a loop. The lack of READ_ONCE() would
+>> let the compiler keep a lifted load within a register and never
+>> re-fetch, unless there is a cpu_relax() or a barrier() within the
+>> loop.
+> 
+> If someone really wants to write code which can handle concurrent CPU
+> hotplug operations and rely on that information, then it's probably better
+> to write out:
+> 
+>     ncpus = READ_ONCE(__num_online_cpus);
+> 
+> explicitely along with a big fat comment.
+> 
+> I can't figure out why one wants to do that and how it is supposed to work,
+> but my brain is in shutdown mode already :)
+> 
+> I'd rather write a proper kernel doc comment for num_online_cpus() which
+> explains what the constraints are instead of pretending that the READ_ONCE
+> in the inline has any meaning.
 
-Thank you for the nice discussion.
-I've been talking off-list to Claudiu and Alexandru about switchdev vs
-DSA for the Felix/Ocelot switches.
-My initial reaction was the same as Andrew's - there's a CPU-facing
-Ethernet MAC with some vendor-defined injection and extraction
-headers? Sounds like DSA.
-But then we discussed about what DSA for Felix/Ocelot would look like.
-Here are some points to consider:
-- DSA is typically used for discrete switches, switchdev is typically
-used for embedded ones. As far as I understand from Allan's message,
-Ocelot is really an entire switching SoC that's running Linux inside
-(on the MIPS CPU) with a switchdev driver. There is no (mainline?)
-driver that would control the Ocelot SoC from a higher-level Linux
-system. The latter would (maybe) fit DSA more.
-- The D in DSA is for cascaded switches. Apart from the absence of
-such a "Ocelot SoC" driver (which maybe can be written, I don't know),
-I think the switching core itself has some fundamental limitations
-that make a DSA implementation questionable:
-    1. The switch has a single port which can apply these vendor tags.
-Also the injection header is different than the extraction header. See
-more at #4.
-    2. The switch will tag all frames that go upstream on this port
-towards the CPU, no matter what source port they came from. It can't
-be told "hey, don't add a tag for frames coming from this
-downstream-facing port, because it's a DSA port and not front-panel,
-so there's another switch underneath you who already added a tag to
-the frame". So frames that arrive at the CPU through an array of N
-cascaded Felix/Ocelot switches will need to be peeled off, one by one,
-by N vendor tags.
-    3. The extraction header does not contain a field for the "switch
-id", only for the "source port". This means that if you want to figure
-out the switch id, you really *need* to make a topology out of those
-stacked vendor tags and figure out which switch it was by counting the
-tags. It also means that you can only have Felix/Ocelot in a linear
-topology.
-    4. The switch cannot parse its own vendor tags. This is a big one,
-because it means that for an autonomously forwarded frame which
-transits two cascaded switches but doesn't reach the CPU, there is no
-one in the path who's going to consume the vendor tag. So the frame
-will exit the other front-panel port with extra bytes in it.
+The other aspect I am concerned about is freedom given to the compiler
+to perform the store to __num_online_cpus non-atomically, or the load
+non-atomically due to memory pressure. Is that something we should be
+concerned about ?
 
-Ok, let's say that all of the above limitations have one thing in
-common - the vendor tags aren't really thought out with DSA-like
-setups in mind. In theory it's possible to not use the native tags and
-instead implement a dsa_8021q tagger for it. But then, RX timestamps
-for PTP are also transmitted to the CPU through this vendor header,
-and losing PTP is a big no-no.
+I thought we had WRITE_ONCE and READ_ONCE to take care of that kind of
+situation.
 
-So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
-sense if the whole purpose is to hide the CPU-facing netdev.
-In a cascaded setup, these switches could only sit at the top of tree,
-and ironically, they'd be better modeled as a switchdev DSA master
-port than part of the DSA tree itself. Put these switches anywhere
-else in the tree and they're just troublemakers.
-As for the LS1028A, I think that connecting this embedded switch via
-two Ethernet MACs is just poorly thought out design, but that doesn't
-mean DSA is going to help it in any way other than perhaps cosmetic.
+The semantic I am looking for here is C11's relaxed atomics.
 
-Regards,
--Vladimir
+Thanks,
+
+Mathieu
+
+
+> 
+> Thanks,
+> 
+> 	tglx
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
