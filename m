@@ -2,99 +2,120 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D24C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDB0C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD9F21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1228021882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfGDKAd (ORCPT
+        id S1727529AbfGDKAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:00:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39094 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727470AbfGDKAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:00:32 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 4 Jul 2019 06:00:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49784 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfGDKAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:00:35 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D6434C0586C4;
-        Thu,  4 Jul 2019 10:00:28 +0000 (UTC)
-Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 879E2379C;
-        Thu,  4 Jul 2019 10:00:19 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 12:00:18 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     brouer@redhat.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Message-ID: <20190704120018.4523a119@carbon>
-In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
-        <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 087ED28A379;
+        Thu,  4 Jul 2019 11:00:33 +0100 (BST)
+Date:   Thu, 4 Jul 2019 12:00:29 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     <bbrezillon@kernel.org>, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
+        gregkh@linuxfoundation.org, xinping.qian@mediatek.com,
+        linux-kernel@vger.kernel.org, liguo.zhang@mediatek.com,
+        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+        linux-i3c@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Message-ID: <20190704120029.4cc6d151@collabora.com>
+In-Reply-To: <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+References: <1561527388-4829-1-git-send-email-qii.wang@mediatek.com>
+        <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 04 Jul 2019 10:00:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  3 Jul 2019 12:37:50 +0200
-Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+On Wed, 26 Jun 2019 13:36:27 +0800
+Qii Wang <qii.wang@mediatek.com> wrote:
 
-> @@ -3547,6 +3456,9 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
->  
->  			napi_gro_receive(&ch->rx_napi, skb);
->  
-> +			page_pool_recycle_direct(rx_q->page_pool, buf->page);
+> Document MediaTek I3C master DT bindings.
+> 
 
-This doesn't look correct.
+You forgot to Cc the DT maintainers/ML.
 
-The page_pool DMA mapping cannot be "kept" when page traveling into the
-network stack attached to an SKB.  (Ilias and I have a long term plan[1]
-to allow this, but you cannot do it ATM).
-
-You will have to call:
-  page_pool_release_page(rx_q->page_pool, buf->page);
-
-This will do a DMA-unmap, and you will likely loose your performance
-gain :-(
-
-
-> +			buf->page = NULL;
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   47 ++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> new file mode 100644
+> index 0000000..3fd4f17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> @@ -0,0 +1,47 @@
+> +Bindings for MediaTek I3C master block
+> +=====================================
 > +
->  			priv->dev->stats.rx_packets++;
->  			priv->dev->stats.rx_bytes += frame_len;
->  		}
+> +Required properties:
+> +--------------------
+> +- compatible: shall be "mediatek,i3c-master"
+> +- reg: physical base address of the controller and apdma base, length of
+> +  memory mapped region.
+> +- reg-names: should be "main" for controller and "dma" for apdma.
+> +- interrupts: interrupt number to the cpu.
+> +- clocks: clock name from clock manager.
+> +- clock-names: must include "main" and "dma".
+> +
+> +Mandatory properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- #address-cells: shall be set to 3
+> +- #size-cells: shall be set to 0
+> +
+> +Optional properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- i2c-scl-hz
+> +- i3c-scl-hz
+> +
+> +I3C device connected on the bus follow the generic description (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> +
+> +Example:
+> +
+> +	i3c0: i3c@1100d000 {
+> +		compatible = "mediatek,i3c-master";
+> +		reg = <0x1100d000 0x100>,
+> +		      <0x11000300 0x80>;
+> +		reg-names = "main", "dma";
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&i3c0_ck>, <&ap_dma_ck>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-scl-hz = <100000>;
+> +
+> +		nunchuk: nunchuk@52 {
+> +			compatible = "nintendo,nunchuk";
+> +			reg = <0x52 0x80000010 0>;
+> +		};
+> +	};
 
-Also remember that the page_pool requires you driver to do the DMA-sync
-operation.  I see a dma_sync_single_for_cpu(), but I didn't see a
-dma_sync_single_for_device() (well, I noticed one getting removed).
-(For some HW Ilias tells me that the dma_sync_single_for_device can be
-elided, so maybe this can still be correct for you).
-
-
-[1] https://github.com/xdp-project/xdp-project/blob/master/areas/mem/page_pool02_SKB_return_callback.org
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
