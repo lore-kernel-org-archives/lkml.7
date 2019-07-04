@@ -2,179 +2,132 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A01C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB5C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1148E2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D80A2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WANhg2Kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfGDPbC (ORCPT
+        id S1727811AbfGDPbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:31:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3318 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbfGDPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:31:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 08:31:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,451,1557212400"; 
-   d="scan'208";a="172450290"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Jul 2019 08:30:58 -0700
-Date:   Thu, 4 Jul 2019 23:14:17 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
-Message-ID: <20190704151416.GA1423@hao-dev>
-References: <20190704055645.GA15471@kroah.com>
+        Thu, 4 Jul 2019 11:31:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53420 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfGDPbq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:31:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so6139222wmj.3;
+        Thu, 04 Jul 2019 08:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=0Xzci8CUbNvBihcDS7Q9xsEhF5+lWnqF471ghR2ZAAM=;
+        b=WANhg2KffhIxcHzBZjyQzNGYdvFl+2SSagDh2j/02zvsNp2peZbUbfqc4qS21kj9C8
+         VMFE0EQDX2kkO0+qI5ed7PvzZLN+3jzrSnomrGXtq5CRkR/cXdw8gv+4PR22jiUFAf9o
+         vDCuzgrqLNLxKWdxO5fP0iT75jJ/8Vuj2yXIhA3rn1lXmZTt1AspV3Txo+SUqMFwLAwt
+         olPDG+0YofaP3WwVgBAh/lDjG3t1C8uA9fEe5vkEgeK9/S7OStVSsYkp0q2dE7u3N3se
+         IysNLa+zTKtdwCThIs6Cg8bY1OihYtov0umvPzIcslA6JdmsX2zGX1/KQewtbVBFEM6K
+         0KZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0Xzci8CUbNvBihcDS7Q9xsEhF5+lWnqF471ghR2ZAAM=;
+        b=RNWrl67FylJ7u1Md6IpBjEwQKRylYP3YRAVZ/KKZx5B/9SHBOyJgBef7Dnyfp9nMgP
+         LIDAx6jJ+FGfem3RV7xlZIbSujFV6fzZmP7xdo73EW7g134PUNc2J58wuKZnlBYZfF9x
+         lLF7V/p77yAH5HZUjv93etXWnv+5Hln43CUGGefwXvCqh8yN4EvQ+jfs3k27h46D5NkC
+         3nEa8+HWp6xwSwdC1+RHA/DE41x5Ub0jP3cL/IRgd+QN447sPxmj05VUJrIBIlwchdqO
+         abAhXil6KlOo9yp4nPba0F8SJTUTSZM0bRcwDbdH61O5f6rsSjXwZPZjicH+Sp94gNkC
+         PtmA==
+X-Gm-Message-State: APjAAAWh6Puvl4KAZ0xJuZdGRTkxYv7WH4ks0C1ZG4/67PCQKfmyUr8j
+        UacDKK3+RB7Z0649i7bB2Sc=
+X-Google-Smtp-Source: APXvYqwKPOB3FIvd6N6wGs1Vemf1h6LmBM+18pTf7PrTeGPbG5S2dAolDTJCU+JsvJT2k3EIvYAizg==
+X-Received: by 2002:a7b:c04f:: with SMTP id u15mr119524wmc.106.1562254303618;
+        Thu, 04 Jul 2019 08:31:43 -0700 (PDT)
+Received: from [192.168.2.202] (pD9E5A1AA.dip0.t-ipconnect.de. [217.229.161.170])
+        by smtp.gmail.com with ESMTPSA id o6sm10324355wra.27.2019.07.04.08.31.42
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 08:31:42 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-3-luzmaximilian@gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <1d384979-38e8-ccb3-6462-0a8a5380f50d@gmail.com>
+Date:   Thu, 4 Jul 2019 17:31:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704055645.GA15471@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190702003740.75970-3-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 07:56:45AM +0200, Greg Kroah-Hartman wrote:
-> This is a driver, do not call "raw" sysfs functions, instead call driver
-> core ones.  Specifically convert the use of sysfs_create_files() and
-> sysfs_remove_files() to use device_add_groups() and
-> device_remove_groups()
+On 7/2/19 2:37 AM, Maximilian Luz wrote:
+> +static int soc_device_check_MSHW0040(struct device *dev)
+> +{
+> +	acpi_handle handle = ACPI_HANDLE(dev);
+> +	union acpi_object *result;
+> +	u64 oem_platform_rev = 0;
+> +	int gpios;
+> +
+> +	// get OEM platform revision
+> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +					 MSHW0040_DSM_REVISION,
+> +					 MSHW0040_DSM_GET_OMPR, NULL,
+> +					 ACPI_TYPE_INTEGER);
+> +
+> +	if (result) {
+> +		oem_platform_rev = result->integer.value;
+> +		ACPI_FREE(result);
+> +	}
+> +
+> +	if (oem_platform_rev == 0)
+> +		return -ENODEV;
+> +
+> +	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+> +
+> +	/*
+> +	 * We are _really_ expecting GPIOs here. If we do not get any, this
+> +	 * means the GPIO driver has not been loaded yet (which can happen).
+> +	 * Try again later.
+> +	 */
+> +	gpios = gpiod_count(dev, NULL);
+> +	if (gpios < 0)
+> +		return -EAGAIN;
+> +
+> +	return 0;
+> +}
 
-Hi Greg,
+Just had another look at this: Shouldn't the EAGAIN here be
+EPROBE_DEFER?
 
-Thanks for this patch. It looks good, and works well in my side.
+The reasoning is that we would want to defer probing of the driver if we
+can't get any GPIO pins, since we know that MSHW0040 should have some.
+It has in the past been reported that the driver didn't load properly
+(without this check), since it could happen that the GPIO subsystem
+wasn't quite ready yet when probing.
 
-I will follow the same (replace sysfs_create/remove_* with
-device_add/remove_group) to rework my patchset too. Thanks.
-
-Hao
-
-> 
-> Cc: Wu Hao <hao.wu@intel.com>
-> Cc: Alan Tull <atull@kernel.org>
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: linux-fpga@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/fpga/dfl-afu-main.c | 14 ++++++++------
->  drivers/fpga/dfl-fme-main.c |  7 ++++---
->  2 files changed, 12 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index 02baa6a227c0..68b4d0874b93 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -141,10 +141,11 @@ id_show(struct device *dev, struct device_attribute *attr, char *buf)
->  }
->  static DEVICE_ATTR_RO(id);
->  
-> -static const struct attribute *port_hdr_attrs[] = {
-> +static struct attribute *port_hdr_attrs[] = {
->  	&dev_attr_id.attr,
->  	NULL,
->  };
-> +ATTRIBUTE_GROUPS(port_hdr);
->  
->  static int port_hdr_init(struct platform_device *pdev,
->  			 struct dfl_feature *feature)
-> @@ -153,7 +154,7 @@ static int port_hdr_init(struct platform_device *pdev,
->  
->  	port_reset(pdev);
->  
-> -	return sysfs_create_files(&pdev->dev.kobj, port_hdr_attrs);
-> +	return device_add_groups(&pdev->dev, port_hdr_groups);
->  }
->  
->  static void port_hdr_uinit(struct platform_device *pdev,
-> @@ -161,7 +162,7 @@ static void port_hdr_uinit(struct platform_device *pdev,
->  {
->  	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
->  
-> -	sysfs_remove_files(&pdev->dev.kobj, port_hdr_attrs);
-> +	device_remove_groups(&pdev->dev, port_hdr_groups);
->  }
->  
->  static long
-> @@ -214,10 +215,11 @@ afu_id_show(struct device *dev, struct device_attribute *attr, char *buf)
->  }
->  static DEVICE_ATTR_RO(afu_id);
->  
-> -static const struct attribute *port_afu_attrs[] = {
-> +static struct attribute *port_afu_attrs[] = {
->  	&dev_attr_afu_id.attr,
->  	NULL
->  };
-> +ATTRIBUTE_GROUPS(port_afu);
->  
->  static int port_afu_init(struct platform_device *pdev,
->  			 struct dfl_feature *feature)
-> @@ -234,7 +236,7 @@ static int port_afu_init(struct platform_device *pdev,
->  	if (ret)
->  		return ret;
->  
-> -	return sysfs_create_files(&pdev->dev.kobj, port_afu_attrs);
-> +	return device_add_groups(&pdev->dev, port_afu_groups);
->  }
->  
->  static void port_afu_uinit(struct platform_device *pdev,
-> @@ -242,7 +244,7 @@ static void port_afu_uinit(struct platform_device *pdev,
->  {
->  	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
->  
-> -	sysfs_remove_files(&pdev->dev.kobj, port_afu_attrs);
-> +	device_remove_groups(&pdev->dev, port_afu_groups);
->  }
->  
->  static const struct dfl_feature_ops port_afu_ops = {
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 086ad2420ade..0be4635583d5 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -72,12 +72,13 @@ static ssize_t bitstream_metadata_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(bitstream_metadata);
->  
-> -static const struct attribute *fme_hdr_attrs[] = {
-> +static struct attribute *fme_hdr_attrs[] = {
->  	&dev_attr_ports_num.attr,
->  	&dev_attr_bitstream_id.attr,
->  	&dev_attr_bitstream_metadata.attr,
->  	NULL,
->  };
-> +ATTRIBUTE_GROUPS(fme_hdr);
->  
->  static int fme_hdr_init(struct platform_device *pdev,
->  			struct dfl_feature *feature)
-> @@ -89,7 +90,7 @@ static int fme_hdr_init(struct platform_device *pdev,
->  	dev_dbg(&pdev->dev, "FME cap %llx.\n",
->  		(unsigned long long)readq(base + FME_HDR_CAP));
->  
-> -	ret = sysfs_create_files(&pdev->dev.kobj, fme_hdr_attrs);
-> +	ret = device_add_groups(&pdev->dev, fme_hdr_groups);
->  	if (ret)
->  		return ret;
->  
-> @@ -100,7 +101,7 @@ static void fme_hdr_uinit(struct platform_device *pdev,
->  			  struct dfl_feature *feature)
->  {
->  	dev_dbg(&pdev->dev, "FME HDR UInit.\n");
-> -	sysfs_remove_files(&pdev->dev.kobj, fme_hdr_attrs);
-> +	device_remove_groups(&pdev->dev, fme_hdr_groups);
->  }
->  
->  static const struct dfl_feature_ops fme_hdr_ops = {
-> -- 
-> 2.22.0
+Best,
+Maximilian
