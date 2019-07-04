@@ -2,161 +2,190 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90511C06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C86C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AB82189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562229917;
-	bh=HrlKZKP5l8Vhyw+yoPKEguar342FbH5jYvnfFzBqyio=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=l2usQyN51qJ3RFIX+HDyY/mCUtaHv1oWCMvoJuP59kn1XHuDfmaoS61OQUqNoUeP/
-	 0CpqgmZ1Cc6bfTKVrtpkUglHO/eq2Gz3gHVm4ENMqZjqhefU/tD6xSspRtT5U3Dos5
-	 T3GmIvYuWZSTZEOmfuPE/fRpaae8fUGaSvU1ykfA=
+	by mail.kernel.org (Postfix) with ESMTP id 0AC852189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="cHlScxn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfGDIpQ (ORCPT
+        id S1727208AbfGDIpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:45:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27819 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfGDIpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:45:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 01:45:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="164585008"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Jul 2019 01:45:13 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Pawel Laszczak <pawell@cadence.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>
-Subject: Re: linux-next: build failure after merge of the usb and usb-gadget trees
-In-Reply-To: <20190704083233.GH6438@kroah.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au> <20190704065949.GA32707@kroah.com> <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com> <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com> <87imsiyzo3.fsf@linux.intel.com> <20190704083233.GH6438@kroah.com>
-Date:   Thu, 04 Jul 2019 11:45:11 +0300
-Message-ID: <87ftnmyyqw.fsf@linux.intel.com>
+        Thu, 4 Jul 2019 04:45:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37148 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbfGDIpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:45:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so5177066wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 01:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5X2/EIqHVF+0PEgAYfjC329Hb9K8g9a0oFQzNItKqKs=;
+        b=cHlScxn9I09lFjoRAx/10wWowfZEF9RQRauFN8qffuv65CpuX9WVMtMVNoMuKo8Yik
+         3BgFwOZiUQhkzuOI9imDtRkxy6lKLbUG8lAkWKrCqH1BAXS4mABZPoL03YpxzOWQoA0+
+         C4cvNgtErHvf26kwvbsHnbh2FXwB0WiPiYUG8Qk2urpUMIP8ZJULNctDAoFaqpbJWyZK
+         XOIrVAS1Y5ma4VslySDKoGBYyGuzbIBLXerm24tPIef2+gOIFU+6wiig5HUd7yznqaqX
+         N+RHx+4a/Pn5cckgMtwuX9kXv9vW5gQFJl+xiOi05bRSC9xxL/oS9lFRfUmjbYLLT1UF
+         +o/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5X2/EIqHVF+0PEgAYfjC329Hb9K8g9a0oFQzNItKqKs=;
+        b=GvnALBUcnv6C2fOrUxe55fB2RlVr0me47ibGi8IqTOY/TtCk5YXFBB96qo7MfJJ+sM
+         fwaEov46Tw6kIKGbxi5LbniN+f4jBL2pVuQhGbImYCo0GASVMTR/N5q+78cWtFE2l7Kt
+         X8sI5pYBZQzzOOsLwi+6GJN2P8L5QDd+eSVw5+1Gu+RGaKwXK6JGw0I2bEsEEeC0Fman
+         Llh/EHZY5nhvS+vaA6Uwqju6YNXXm6qhMPEiExe3x2p8s9oYUxrzIM+E6EZs/VM5xD59
+         RIqycOuc3c5au2r1Xu4pxjMnlAqP1uNrxCsjvsk8PyMF4rA/AOR6b7BP8YXKD56vYIMj
+         erAw==
+X-Gm-Message-State: APjAAAVWxdW9k2BP7mUf1OoiUpHiUg6CybD/pwBU4sl31bQdAvTnKh03
+        uYRKQJWdKmdOE+b5CDvZ239VpA==
+X-Google-Smtp-Source: APXvYqxouxfcOkVdfjlCFfOuUsXX1rEYhNf0xFbLLPyVqMiekPTRB71RQ87P0/PFyi1g/uP0cBz+MQ==
+X-Received: by 2002:a7b:cb94:: with SMTP id m20mr11062116wmi.144.1562229932470;
+        Thu, 04 Jul 2019 01:45:32 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id a2sm6032047wmj.9.2019.07.04.01.45.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 01:45:32 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 10:45:31 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 09/15] ethtool: generic handlers for GET
+ requests
+Message-ID: <20190704084531.GJ2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <4faa0ce52dfe02c9cde5a46012b16c9af6764c5e.1562067622.git.mkubecek@suse.cz>
+ <20190703142510.GA2250@nanopsycho>
+ <20190703175339.GO20101@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703175339.GO20101@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-Greg KH <greg@kroah.com> writes:
-
-> On Thu, Jul 04, 2019 at 11:25:16AM +0300, Felipe Balbi wrote:
+Wed, Jul 03, 2019 at 07:53:39PM CEST, mkubecek@suse.cz wrote:
+>On Wed, Jul 03, 2019 at 04:25:10PM +0200, Jiri Pirko wrote:
+>> Tue, Jul 02, 2019 at 01:50:24PM CEST, mkubecek@suse.cz wrote:
 >> 
->> Hi,
+>> [...]	
+>> 	
+>> >+/* generic ->doit() handler for GET type requests */
+>> >+static int ethnl_get_doit(struct sk_buff *skb, struct genl_info *info)
 >> 
->> Pawel Laszczak <pawell@cadence.com> writes:
->> 
->> >>
->> >>Hi,
->> >>
->> >>On Thu, Jul 4, 2019 at 9:59 AM Greg KH <greg@kroah.com> wrote:
->> >>>
->> >>> On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
->> >>> > Hi all,
->> >>> >
->> >>> > After merging the usb tree, today's linux-next build (arm
->> >>> > multi_v7_defconfig) failed like this:
->> >>> >
->> >>> > arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_output_dwc3_log_ctrl':
->> >>> > trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
->> >>> >
->> >>> > Caused by commit
->> >>> >
->> >>> >   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
->> >>> >
->> >>> > I have used the usb tree from next-20190703 for today.
->> >>> >
->> >>> > This also occurs in the usb-gadget tree so I have used the version of
->> >>> > that from next-20190703 as well.
->> >>>
->> >>> Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can you
->> >>> take a look at this to see if I messed something up?
->> >>
->> >>This looks like it was caused by Pawel's patches.
->> >>
->> >>I'll try to reproduce here and see what's causing it.
->> >
->> > Problem is in my Patch. I reproduced it, but I don't understand why compiler 
->> > complains about usb_decode_ctrl. It's compiled into libcomposite.ko and
->> > declaration is in drivers/usb/gadget.h. 
->> 
->> That's because in multi_v7_defconfig dwc3 is built-in while libcomposite
->> is a module:
->> 
->> CONFIG_USB_DWC3=y
->> CONFIG_USB_LIBCOMPOSITE=m
->> 
->> 
->> I remember that when you were doing this work, I asked you to move
->> functions to usb/common. Why did you deviate from that suggestion? It's
->> clear that decoding a ctrl request can be used by peripheral and host
->> and we wouldn't have to deal with this problem if you had just followed
->> the suggestion.
->> 
->> Now we have to come up with a way to fix this that doesn't involve
->> reverting my part2 tag in its entirety because there are other important
->> things there.
->> 
->> This is what I get for trusting people to do their part. I couldn't even
->> compile test this since I don't have ARM compilers anymore (actually,
->> just installed to test). Your customer, however, uses ARM cores so I
->> would expect you to have at least compile tested this on ARM. How come
->> this wasn't verified by anybody at TI?
->> 
->> TI used to have automated testing for many of the important defconfigs,
->> is that completely gone? Are you guys relying entirely on linux-next?
->> 
->> Greg, if you prefer, please revert my part2 tag. If you do so, please
->> let me know so I can drop the tag and commits from my tree as well.
+>> It is very unfortunate for review to introduce function in a patch and
+>> don't use it. In general, this approach is frowned upon. You should use
+>> whatever you introduce in the same patch. I understand it is sometimes
+>> hard.
 >
-> How do I revert a tag?  How about I just revert individual commits,
-> which ones should I revert?
+>It's not as if I introduced something and didn't show how to use it.
+>First use is in the very next patch so if you insist on reading each
+>patch separately without context, just combine 09/15 and 10/15 together;
+>the overlap is minimal (10/15 adds an entry into get_requests[]
+>introduced in 09/15).
+>
+>I could have done that myself but the resulting patch would add over
+>1000 lines (also something frown upon in general) and if someone asked
+>if it could be split, the only honest answer I could give would be:
+>"Of course it should be split, it consists of two completely logically
+>separated parts (which are also 99% separated in code)."
+>
+>> IIUC, you have one ethnl_get_doit for all possible commands, and you
+>
+>Not all of them, only GET requests (and related notifications) and out
+>of them, only those which fit the common pattern. There will be e.g. Rx
+>rules and stats (maybe others) where dump request won't be iterating
+>through devices so that they will need at least their own dumpit
+>handler.
+>
+>> have this ops to do cmd-specific tasks. That is quite unusual. Plus if
+>> you consider the complicated datastructures connected with this, 
+>> I'm lost from the beginning :( Any particular reason form this indirection?
+>> I don't think any other generic netlink code does that (correct me if
+>> I'm wrong). The nice thing about generic netlink is the fact that
+>> you have separate handlers per cmd.
+>> 
+>> I don't think you need these ops and indirections. For the common parts,
+>> just have a set of common helpers, as the other generic netlink users
+>> are doing. The code would be much easier to read and follow then.
+>
+>As I said last time, what you suggest is going back to what I already
+>had in the early versions; so I have pretty good idea what the result
+>would look like.
+>
+>I could go that way, having a separate main handler for each request
+>type and call common helpers from it. But as there would always be
+>a doit() handler, a dumpit() handler and mostly also a notification
+>handler, I would have to factor out the functions which are now
+>callbacks in struct get_request_ops anyway. To avoid too many
+>parameters, I would end up with structures very similar to what I have
+>now.  (Not really "I would", the structures were already there, the only
+>difference was that the "request" and "data" parts were two structures
+>rather than one.)
+>
+>So at the moment, I would have 5 functions looking almost the same as
+>ethnl_get_doit(), 5 functions looking almost as ethnl_get_dumpit() and
+>2 functions looking like ethnl_std_notify(), with the prospect of more
+>to be added. Any change in the logic would need to be repeated for all
+>of them. Moreover, you also proposed (or rather requested) to drop the
+>infomask concept and split the message types into multiple separate
+>ones. With that change, the number of almost copies would be 21 doit(),
+>21 dumpit() and 13 notification handlers (for now, that is).
 
-Anything from Pawel. Here's the full list:
+I understand. It's a tradeoff. The code as you introduce is hard for
+me to follow, so I thought that the other way would help readability.
 
-573aff747ee3 usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
-8bc1901ca7b0 usb:cdns3 Add Cadence USB3 DRD Driver
-c2af6b07803e usb:gadget Simplify usb_decode_get_set_descriptor function.
-ca888ce7495e usb:gadget Patch simplify usb_decode_set_clear_feature function.
-3db1b636c07e usb:gadget Separated decoding functions from dwc3 driver.
-e8a8b40cc892 dt-bindings: add binding for USBSS-DRD controller.
+Also it seems to be that you replicate a lot of generic netlink API
+(per-cmd-doit/dumpit ops and privileged/GENL_ADMIN_PERM) in your code.
+Seems more natural to use the API as others are doing.
 
-I just tested a branch without these patches and it builds fine:
 
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- multi_v7_defconfig
-  HOSTCC  scripts/kconfig/conf.o
-  HOSTCC  scripts/kconfig/confdata.o
-  HOSTCC  scripts/kconfig/expr.o
-  HOSTCC  scripts/kconfig/lexer.lex.o
-  HOSTCC  scripts/kconfig/parser.tab.o
-  HOSTCC  scripts/kconfig/preprocess.o
-  HOSTCC  scripts/kconfig/symbol.o
-  HOSTLD  scripts/kconfig/conf
-#
-# configuration written to .config
-#
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j32 -s
-$
+>
+>I'm also not happy about the way typical GET and SET request processing
+>looks now. But I would much rather go in the opposite direction: define
+>relationship between message attributes and data structure members so
+>that most of the size estimate, data prepare, message fill and data
+>update functions which are all repeating the same pattern could be
+>replaced by universal functions doing these actions according to the
+>description. The direction you suggest is the direction I came from.
+>
+>Seriously, I don't know what to think. Anywhere I look, return code is
+>checked with "if (ret < 0)" (sure, some use "if (ret)" but it's
+>certainly not prevalent or universally preferred, more like 1:1), now
+>you tell me it's wrong. Networking stack is full of simple helpers and
+>wrappers, yet you keep telling me simple wrappers are wrong. Networking
+>stack is full of abstractions and ops, you tell me it's wrong. It's
+>really confusing...
 
--- 
-balbi
+It is all just a matter of readability I believe.
+For example when I see "if (ret < 0) goto err" I assume that there
+might be positive non-error value returned. There are many places where
+the code is not in optimal shape. But for new code, I believe we have to
+be careful.
+
+Simple helpers are fine as far as they don't cover simple things going
+under the hood. Typical example is "myown_lock() myown_unlock()" which
+just call mutex_lock/unlock. Another nice example is macro putting
+netlink attributes having goto nla_failure inside - this was removed
+couple years ago. The code still have many things like this. Again, for
+new code, I believe we have to be careful.
+
