@@ -2,222 +2,327 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899EFC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B502C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5980C21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5B521882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="fCWjOqVr";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="pLCBEvJX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up7Bnca1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfGDJIa (ORCPT
+        id S1727242AbfGDJIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:08:30 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:51794 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727092AbfGDJI3 (ORCPT
+        Thu, 4 Jul 2019 05:08:51 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37534 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfGDJIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:08:29 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64949Nj019166;
-        Thu, 4 Jul 2019 02:08:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=Uulk9jfDKVY+nDPJVMCTg42Zt8+2QqHBezJ5UVkOWUs=;
- b=fCWjOqVrDCm4sPTC/jEDOyujEuMSBCOlO+bQvLtixY6MDq87Oy/qeXwCv+4Yf3V5n0Bz
- 0BntlsE2+B5nTaYcvh9O8I2fcURIiGt8XxAkylaKdocazS+Z5TzERVjkqR0HgBkde77F
- Fh+ryciGP4Wj4GJjjAJCR1Hes6J1v9WdtABGVp/2EpwNX10D4uW53nwW3j3kfcedwlbc
- P1j8EQUWSTBlnGpXUkL7IVUSuyLYQgfWXKmbwj5Sg5BuMfHDiBA2Ph1QFVmU9qvh2l/R
- EDNw/1cmi9b2hNNqC6bYUM5WtO3JjRf4hDvLf3e6vCFdakTqiSvm++z6gdse6+yRvj8y KQ== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pawell@cadence.com
-Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2053.outbound.protection.outlook.com [104.47.33.53])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2tgwvj3qn4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 02:08:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=NSvEVeVaQqRZZ9/+v3el4YjtxBCmYAUUwCeGHNNVR3ptVnPGJnJAfWqWtDzMctx6pAL0tQl57p1VBJGM8WmYIOf7YF0W8PTU/yWDyTNPy4CnhDMJzLVZs1krXVRNK2cg9hSPsk1a9MoycHzDvP1zGqh644pPIkD0x8vt7TJu3eI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uulk9jfDKVY+nDPJVMCTg42Zt8+2QqHBezJ5UVkOWUs=;
- b=Rj/xEhasfCj0Lfv+g0oar8ZPLaMKXNI1q72RwHwl4sGIrQeu+bun46HM54U02717nvXA3nO0RUqMHgl7tDYC34FCz/En27xE4Iie0ZrW2QZgoyesBBZ3iqhuhuhv55RXGEv3Jqse+p+BpVIhUg5UXSnTOecL2SEsJTAh2f/VaSw=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uulk9jfDKVY+nDPJVMCTg42Zt8+2QqHBezJ5UVkOWUs=;
- b=pLCBEvJXM9veSiVhm6M3euYxB80Hk94GOQmmQz6k+i3zVd7aqwXoBJiNKnZEdmGXVpZcNB7Nn5ljhFY1BYg4hlEjib2LoZlXp9qwrRCYKkhnRowkmCfPexJvyQ9bYkgW6uyJ7mL5UsTmdiW9kxZz2raIRKADz0+vGBFrO7i5F6I=
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
- BYAPR07MB4488.namprd07.prod.outlook.com (52.135.225.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.17; Thu, 4 Jul 2019 09:08:07 +0000
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::fd8c:399c:929b:33e2]) by BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::fd8c:399c:929b:33e2%6]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 09:08:06 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Felipe Balbi <balbi@kernel.org>, Greg KH <greg@kroah.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>
-Subject: RE: linux-next: build failure after merge of the usb and usb-gadget
- trees
-Thread-Topic: linux-next: build failure after merge of the usb and usb-gadget
- trees
-Thread-Index: AQHVMjKg7+jonhPbpUSjvye7Qm/1waa6B76AgAAICQCAAAlA8IAABpcAgAAIkzA=
-Date:   Thu, 4 Jul 2019 09:08:06 +0000
-Message-ID: <BYAPR07MB4709076903F55352193FC78FDDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au>
- <20190704065949.GA32707@kroah.com>
- <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com>
- <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87imsiyzo3.fsf@linux.intel.com>
-In-Reply-To: <87imsiyzo3.fsf@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctM2E1MDZlODYtOWUzYi0xMWU5LTg3NDItMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDNhNTA2ZTg4LTllM2ItMTFlOS04NzQyLTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMzIwOSIgdD0iMTMyMDY3MDQ4ODQwMzQ5MjE5IiBoPSJjaHBudVl6VHM3NkJrZGFWV2hJOTVYTlljT0E9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 58550bc8-4866-4215-501e-08d7005f20e1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR07MB4488;
-x-ms-traffictypediagnostic: BYAPR07MB4488:
-x-microsoft-antispam-prvs: <BYAPR07MB4488940415EB8822147EFB19DDFA0@BYAPR07MB4488.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(36092001)(199004)(189003)(53754006)(9686003)(102836004)(2906002)(6506007)(71200400001)(3846002)(73956011)(66946007)(6436002)(71190400001)(14444005)(8936002)(66066001)(6116002)(110136005)(5660300002)(54906003)(52536014)(76116006)(55016002)(68736007)(86362001)(316002)(256004)(66446008)(66556008)(64756008)(66476007)(11346002)(486006)(8676002)(446003)(478600001)(14454004)(33656002)(26005)(305945005)(229853002)(81156014)(81166006)(74316002)(7736002)(6246003)(25786009)(76176011)(7696005)(4326008)(476003)(186003)(53936002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4488;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MONgNTC6O7ifF9Puv8/1jUQmrSPnmVQOh6KzjNzNnaQjRXSuYAXre1AOH2q6HAyoBRVAxAhjB3+zASGqbo4m/DQz6kyRiv9oedlOTSzznmzNHnjj6I+0bCcfsFgfO5BRJ2MAcGA8ijtmKOm3jbDChvZLWas8Dej2m4YjAC4WhAn4wWKm/FGIfD48s5SaeyWfGsCyRtmrQfAbKsrAZwbCgMaeijuX7s5D7eNvuXFMTY2ZAiKDiDqh02mXl5f1EH8fy6wq7y4ScCdfG2DZyZTSjXD3VPVQHfTJkz1LsOCE70U1aj4VMFTmut5R4O+jYU/Up3EkNvuxnXrXHAVtsMRE2BbDoeb2Vh/yoIyRnes1RUn7zY8M/eKSOMAwlqzHs7JXAR/PlV2wDPbPr/sCdq77JRtiIXgAYbQYvtT2QJq8gk0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 4 Jul 2019 05:08:51 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w13so4743039eds.4;
+        Thu, 04 Jul 2019 02:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8q8DkGNrfD4Xi3IczgdLormMM6nLc6XqC3dSoMzfAWk=;
+        b=up7Bnca1rT3o22OHI2C2t52VCOIojXdPdRI219jXAZV4DaHZm1HeyrZB3WkGYjBJxl
+         U65+8Iw/occqMJ/27O6cZnsmKbajBt7bMZPbA3tx/GsJNzaLddo4OVStCRRpPJH0x5NJ
+         NUDqKHLCbRsqIce0PnKKiI9J7fhBiKP90N8cf7+3Vj+jC+FtqdWZUqx5ubu+Rg6od0g/
+         UuzRRTZN9ZUp3rWcyKs0UWiAVEf48pgc2Rp0tIR7ALFlOXEUaqjGrdYZfn48i7VOTsjD
+         eKHBDcJPAPSes7SIA8oAdR1Kned7LCdlI9QzR3l9r4XAcdTsMPdlGKkBlD2oFAMXdQxP
+         CK2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8q8DkGNrfD4Xi3IczgdLormMM6nLc6XqC3dSoMzfAWk=;
+        b=RfdiZQYsnB3OOyeN5EA7hkXZAvErLZbzlfsOSVsrgO3A4Ysw3kd5lwcG7DUKNCyYYj
+         Siy6rHIavc0G1x60AzrG7JMiyvGnCLoblxQUPqGzvsNz47ESol9mgUm5kZ1i/Dq7ADQ3
+         nm6+gdL06dYTc0rKx2sVYGXBmXg6KAcXVSjcI0J1ICQNEBSCxIq5EoDmOGbkBE5qW3wf
+         7qiM/95WaToJlpKBhOlXZiUdojB5kO7Ave4xEl9PJzwBfpfgAJv2fWlgdtHZrVIl7/YQ
+         EjqQNwdmyh8SxahMXORG9BZB/MFGjL6SghbLt4A9EnHaS0I/vYwWlRUB1i4Nfijpohbx
+         gc6A==
+X-Gm-Message-State: APjAAAUQsOxmvuufbeAohTdroj5Lt3/GxIMeo0wMbM656hmSH0Z3OGoK
+        kobjrTtwOP5/ga7/Sqp4aZU=
+X-Google-Smtp-Source: APXvYqw4GdkNSDA1K7C3X7bNZpgbd35nz1D+f/GWGJssYEK1POlniMr0ebfij+JXK78rmDJCmyQMnw==
+X-Received: by 2002:a17:906:6557:: with SMTP id u23mr22844136ejn.186.1562231328597;
+        Thu, 04 Jul 2019 02:08:48 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.54])
+        by smtp.gmail.com with ESMTPSA id e43sm1497090ede.62.2019.07.04.02.08.46
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 02:08:48 -0700 (PDT)
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
+ mmsys clocks
+To:     CK Hu <ck.hu@mediatek.com>, Matthias Brugger <mbrugger@suse.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "matthias.bgg@kernel.org" <matthias.bgg@kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-9-matthias.bgg@kernel.org>
+ <20181116231522.GA18006@bogus>
+ <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+ <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+ <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+ <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+ <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
+ <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
+ <1561953318.25914.9.camel@mtksdaap41>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <84d1c444-d6cb-9537-1bf5-b4e736443239@gmail.com>
+Date:   Thu, 4 Jul 2019 11:08:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58550bc8-4866-4215-501e-08d7005f20e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 09:08:06.8565
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pawell@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4488
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040119
+In-Reply-To: <1561953318.25914.9.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
->
->Hi,
->
->Pawel Laszczak <pawell@cadence.com> writes:
->
->>>
->>>Hi,
->>>
->>>On Thu, Jul 4, 2019 at 9:59 AM Greg KH <greg@kroah.com> wrote:
->>>>
->>>> On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
->>>> > Hi all,
->>>> >
->>>> > After merging the usb tree, today's linux-next build (arm
->>>> > multi_v7_defconfig) failed like this:
->>>> >
->>>> > arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_r=
-aw_output_dwc3_log_ctrl':
->>>> > trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
->>>> >
->>>> > Caused by commit
->>>> >
->>>> >   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 d=
-river.")
->>>> >
->>>> > I have used the usb tree from next-20190703 for today.
->>>> >
->>>> > This also occurs in the usb-gadget tree so I have used the version o=
-f
->>>> > that from next-20190703 as well.
->>>>
->>>> Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can yo=
-u
->>>> take a look at this to see if I messed something up?
->>>
->>>This looks like it was caused by Pawel's patches.
->>>
->>>I'll try to reproduce here and see what's causing it.
+Hi CK-Hu,
+
+On 01/07/2019 05:55, CK Hu wrote:
+> Hi, Matthias:
+> 
+> On Fri, 2018-11-30 at 16:59 +0800, Matthias Brugger wrote:
 >>
->> Problem is in my Patch. I reproduced it, but I don't understand why comp=
-iler
->> complains about usb_decode_ctrl. It's compiled into libcomposite.ko and
->> declaration is in drivers/usb/gadget.h.
->
->That's because in multi_v7_defconfig dwc3 is built-in while libcomposite
->is a module:
->
->CONFIG_USB_DWC3=3Dy
->CONFIG_USB_LIBCOMPOSITE=3Dm
->
->
->I remember that when you were doing this work, I asked you to move
->functions to usb/common. Why did you deviate from that suggestion? It's
->clear that decoding a ctrl request can be used by peripheral and host
->and we wouldn't have to deal with this problem if you had just followed
->the suggestion.
+>> On 30/11/2018 07:43, Stephen Boyd wrote:
+>>> Quoting Matthias Brugger (2018-11-21 09:09:52)
+>>>>
+>>>>
+>>>> On 21/11/2018 17:46, Stephen Boyd wrote:
+>>>>> Quoting Rob Herring (2018-11-19 11:15:16)
+>>>>>> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
+>>>>>> <matthias.bgg@gmail.com> wrote:
+>>>>>>> On 11/17/18 12:15 AM, Rob Herring wrote:
+>>>>>>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
+>>>>>>>>> -    #clock-cells = <1>;
+>>>>>>>>> +
+>>>>>>>>> +    mmsys_clk: clock-controller@14000000 {
+>>>>>>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
+>>>>>>>>> +            #clock-cells = <1>;
+>>>>>>>>
+>>>>>>>> This goes against the general direction of not defining separate nodes
+>>>>>>>> for providers with no resources.
+>>>>>>>>
+>>>>>>>> Why do you need this and what does it buy if you have to continue to
+>>>>>>>> support the existing chips?
+>>>>>>>>
+>>>>>>>
+>>>>>>> It would show explicitly that the mmsys block is used to probe two
+>>>>>>> drivers, one for the gpu and one for the clocks. Otherwise that is
+>>>>>>> hidden in the drm driver code. I think it is cleaner to describe that in
+>>>>>>> the device tree.
+>>>>>>
+>>>>>> No, that's maybe cleaner for the driver implementation in the Linux
+>>>>>> kernel. What about other OS's or when Linux drivers and subsystems
+>>>>>> needs change? Cleaner for DT is design bindings that reflect the h/w.
+>>>>>> Hardware is sometimes just messy.
+>>>>>>
+>>>>>
+>>>>> I agree. I fail to see what this patch series is doing besides changing
+>>>>> driver probe and device creation methods and making a backwards
+>>>>> incompatible change to DT. Is there any other benefit here?
+>>>>>
+>>>>
+>>>> You are referring whole series?
+>>>> Citing the cover letter:
+>>>> "MMSYS in Mediatek SoCs has some registers to control clock gates (which is
+>>>> used in the clk driver) and some registers to set the routing and enable
+>>>> the differnet (sic!) blocks of the display subsystem.
+>>>>
+>>>> Up to now both drivers, clock and drm are probed with the same device tree
+>>>> compatible. But only the first driver get probed, which in effect breaks
+>>>> graphics on mt8173 and mt2701.
+>>>
+>>> Ouch!
+>>>
+>>
+>> Yes :)
+>>
+>>>>
+>>>> This patch uses a platform device registration in the DRM driver, which
+>>>> will trigger the probe of the corresponding clock driver. It was tested on the
+>>>> bananapi-r2 and the Acer R13 Chromebook."
+>>>
+>>> Alright, please don't add nodes in DT just to make device drivers probe.
+>>> Instead, register clks from the drm driver or create a child platform
+>>> device for the clk bits purely in the drm driver and have that probe the
+>>> associated clk driver from there.
+>>>
+>>
+>> I'll make the other SoCs probe via a child platform device from the drm driver,
+>> as already done in 2/12 and 3/12.
+> 
+> This series have been pending for half an year, would you keep going on
+> this series? If you're busy, I could complete this series, but I need to
+> know what you have plan to do.
+> 
 
-Some time ago Greg wrote:=20
-" It's nice to have these in a common place, but you just bloated all of
-the USB-enabled systems in the world for the use of 2 odd-ball system
-controllers that almost no one has :) "
+You are right, it took far too long for me to respond with a new version of the
+series. The problem I face is, that I use my mt8173 based chromebook for
+testing. It needs some downstream patches and broke somewhere between my last
+email and a few month ago. I wasn't able to get serial console to work, which
+made things even more complicated. Anyway, long story short, I got sidetracked
+with other stuff and didn't send a new version.
 
-So I moved these functions to gadget directory.=20
+If you have time to work on this, I'd happy to see things being pushed forward
+by you :)
 
-It was mistake that I added debug.c file to libcomposite.ko.
+> I guess that 1/12 ~ 5/12 is for MT2701/MT8173 and that patches meet this
+> discussion. 6/12 ~ 12/12 is for MT2712/MT6797 but that patches does not
+> meet this discussion. So the unfinished work is to make MT2712/MT6797 to
+> align MT2701/MT8173, is this right?
 
->
->Now we have to come up with a way to fix this that doesn't involve
->reverting my part2 tag in its entirety because there are other important
->things there.
->
->This is what I get for trusting people to do their part. I couldn't even
->compile test this since I don't have ARM compilers anymore (actually,
->just installed to test). Your customer, however, uses ARM cores so I
->would expect you to have at least compile tested this on ARM. How come
->this wasn't verified by anybody at TI?
->
->TI used to have automated testing for many of the important defconfigs,
->is that completely gone? Are you guys relying entirely on linux-next?
->
->Greg, if you prefer, please revert my part2 tag. If you do so, please
->let me know so I can drop the tag and commits from my tree as well.
->
->Pawel, please make sure this never happens again. It's pretty simple to
->avoid this sort of thing. I'll keep ARM compiler installed for
->build-testing as well.
->
->--
->balbi
+After re-reading the emails I think the missing part is, to probe the clocks
+from the DRM driver instead of adding a new devicetree binding for them.
+
+Regards,
+Matthias
+
+> 
+> Regards,
+> CK
+> 
+>>
+>> Regards,
+>> Matthias
+>>
+>>>>
+>>>> DT is broken right now, because two drivers rely on the same node, which gets
+>>>> consumed just once. The new DT introduced does not break anything because it is
+>>>> only used for boards that: "[..] are not available to the general public
+>>>> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
+>>>
+>>> Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
+>>>
+>>>
+>>
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> 
