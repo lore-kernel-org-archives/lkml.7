@@ -2,94 +2,140 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E56C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511DDC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C67B218BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EEC21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="AyQi7k2F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBgZfVY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfGDGDc (ORCPT
+        id S1727209AbfGDGEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:03:32 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39042 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfGDGDc (ORCPT
+        Thu, 4 Jul 2019 02:04:52 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39629 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfGDGEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:03:32 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i125so4733466qkd.6;
-        Wed, 03 Jul 2019 23:03:31 -0700 (PDT)
+        Thu, 4 Jul 2019 02:04:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so2410648pfe.6;
+        Wed, 03 Jul 2019 23:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zG2Of7qq6RulfRoGA24ViJMIHN/A2MnjJcuk8GFFPiU=;
-        b=AyQi7k2FK19mqnfZWe8DFRAlQoaJ5OBq0zRpGB3BojaSjcjlF4pojGyZmhsQkjnrZ5
-         tBQ50ZL9x+GFTFIYmdOeTBPYzTV07VWfxEBKpMsN9PXMFYTchK854G1xljgKUna8ShVz
-         +Zt7MFZGBkqlpVTxU8VsMwxOvQ3jb5XPwNikE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=IYNDMwEAAumzRZivDc5Bsr2LbGFMlienhp8YivPF7m8=;
+        b=BBgZfVY7Yvqs01AOHbN9gnMwKmmlegENWbG/bQy8SAOFjEN0jWMh553QE4Vb4b8/zx
+         fc7H4jq19IUIYrfl/1hWM9Jb5Ga0jrYCnFHdtT62VVbG/bTzqYHkLv8HYb9Facm5DRUw
+         K6MdQazi/b4I1q4ansuOBXgG7Ba6PH0BXU/N/K7I5Eaj7m4m4sVSWsYM4QMVY+XxVFsN
+         7xYNbEsYmX8QJbxkrh+HtKrWFXKM+acx63XccFk4CvXq59kh+08xdxgmzP/UGwdexZiF
+         tqVGYtNPIaoE1woxWwdvEf1YvFDaDPV+WWYLcf/27yoa55VUyP5i6itJz9GPUdGSG4IL
+         2MIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zG2Of7qq6RulfRoGA24ViJMIHN/A2MnjJcuk8GFFPiU=;
-        b=SmhXfmQwgnXi47C+X+3ntdldEYfk/ClqfdYIaPJXHA0X8IEoa/5n7mqUNd1sy2duJt
-         vc0GaKrJQ2YV0hItHPRhZJYqlKbkJr02+VYjh9lVQschfhfMNjpfSWU28x4fbRqQtgbF
-         fyY5qZAw+8Xx+Kb56N7uGlzeMeGAT0J8UgQ+aRu0akOP6LQm9OvEw+My011bCIx8Q6fA
-         M6kdJcyDDiDwc00bgzPQWP3+XXckwHWQ5LFpPDpvz3BMm2zR+LII75HyeuQCV2YKyXu8
-         6dSgnC0rnZS6RnSccAOyspk76V5s2ljg65NFccmI+yXPepLP1WiijUOVBfiUfZKsqzz/
-         n7+g==
-X-Gm-Message-State: APjAAAWpWcGJWuPTsrUAQIqLFmWgfPLO8FMrOV9BzPtRRRt295vaTe3j
-        WygRINxWNg++el6vk8cDGDk/Q2IzxG59qfgcaDs=
-X-Google-Smtp-Source: APXvYqw+Amd7bjbM6pwFDC0KhTxwoLjTDilYHLUZ6jAkmLyi1Ph6j3gRhhpup2bzVUpZApwWaDIHSZsE2Bir5EmK3D8=
-X-Received: by 2002:a37:a1d6:: with SMTP id k205mr33772264qke.171.1562220210922;
- Wed, 03 Jul 2019 23:03:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=IYNDMwEAAumzRZivDc5Bsr2LbGFMlienhp8YivPF7m8=;
+        b=oNMFFu3r6BQc18xIv9aQTuMJWqo5J9/nm+B8bhk8uyDKM0cupiU3ey89riypQg/zYh
+         xU2/oDp/F7eYScEQ66Gk2HcFhefuqGhJZnDLdO4n9gphsK1qzA4pZ3ychnNXlNUnOXBm
+         I62kbBs6vr50qdibLGwRG7jXlXoS0yjRA2W1I7z3GCm9Ue2rl2U5zbrLiIW8fYPHlsRh
+         Sp26r1eVcdfJZ3TWuQuD3lCq3a3bsJwxfxqiqOyjKuNiSI9dpzjjRwe50K1nSPfZQnnX
+         7u99nwCEg1ZTdClpdwErAzIoFM7EFZAhIq8JyM84ruYGEKGbi0ZVxpoNz7vaFS0Fokni
+         f6MQ==
+X-Gm-Message-State: APjAAAXUVFGGkHUTsXyXi8SJUZj3r2+LMYQ7m0l55gmsPIMG4xMwt1A1
+        qTNO5g1fLcGZF+0bHymDXVk=
+X-Google-Smtp-Source: APXvYqwrpuHzxiXd2Uf2RAlh3u6kWiRxybILi9WncqhlipHt+FeUMIKk8gwQMibe2uLYysEmaK0rxw==
+X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr17799640pjc.63.1562220290787;
+        Wed, 03 Jul 2019 23:04:50 -0700 (PDT)
+Received: from [0.0.0.0] ([80.240.31.150])
+        by smtp.gmail.com with ESMTPSA id v12sm3289916pjk.13.2019.07.03.23.04.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 23:04:50 -0700 (PDT)
+Subject: Re: [PATCH RFC 0/3] Support CPU hotplug for ARM64
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, james.morse@arm.com
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com,
+        xiexiuqi@huawei.com, huawei.libin@huawei.com,
+        john.garry@huawei.com, jonathan.cameron@huawei.com
+References: <1561720392-45907-1-git-send-email-wangxiongfeng2@huawei.com>
+ <2b22cf4d-9646-9f20-41ae-cceb83d9791b@gmail.com>
+ <135ee490-a5a6-46c9-208e-81849b20d6b6@huawei.com>
+From:   Jia He <hejianet@gmail.com>
+Organization: ARM
+Message-ID: <7898e483-a8e4-39a2-358f-8fcf838c242f@gmail.com>
+Date:   Thu, 4 Jul 2019 14:04:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <CACPK8XfCpgjAwMeoyhcZqgqtXO=-wtpuB2kwsogvBnd1VzynDg@mail.gmail.com>
- <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
-In-Reply-To: <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 4 Jul 2019 06:03:18 +0000
-Message-ID: <CACPK8XdGC4V5xs5S=JHk=tUayLGHQkF5eH0pvFnyffpDaUuqQQ@mail.gmail.com>
-Subject: Re: [GIT PULL] FSI changes for 5.3
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistair Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-fsi@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <135ee490-a5a6-46c9-208e-81849b20d6b6@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jul 2019 at 05:32, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Wed, 2019-07-03 at 03:39 +0000, Joel Stanley wrote:
-> > Hello Greg,
-> >
-> > We've not had a MAINAINERS entry for drivers/fsi, so this fixes that. It names
-> > Jeremy and I as maintainers, so if it works for you we will send pull requests
-> > to you each cycle.
->
-> Ack. I no longer work for IBM and thus cannot handle that subsystem
-> anymore.
+Hi Xiongfeng
 
-Stephen, can you swap out ben's fsi tree in linux-next for this one:
+Sorry, I missed your latter mail, you used a emulated SCI interrupt
 
-git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git
-
-Branch is 'next'.
-
+---
 Cheers,
+Justin (Jia He)
 
-Joel
+On 2019/7/4 11:26, Xiongfeng Wang wrote:
+> Hi Justin,
+>
+> On 2019/7/4 11:00, Jia He wrote:
+>> Hi Xiongfeng
+>>
+>> It is a little bit awkful that I am also  investigating acpi based cpu hotplug issue silimar with
+>>
+>> your idea. My question is your purpose to implement the vcpu hotplug in arm64 qemu?
+> Yes, my purpose is to implement the vcpu hotplug in arm64 qemu. So that I can add or remove vcpu
+> without shutting down the Guest OS.
+>
+> Thanks,
+> Xiongfeng
+>
+>> Thanks for the ellaboration
+>>
+>> ---
+>> Cheers,
+>> Justin (Jia He)
+>>
+>> On 2019/6/28 19:13, Xiongfeng Wang wrote:
+>>> This patchset mark all the GICC node in MADT as possible CPUs even though it
+>>> is disabled. But only those enabled GICC node are marked as present CPUs.
+>>> So that kernel will initialize some CPU related data structure in advance before
+>>> the CPU is actually hot added into the system. This patchset also implement
+>>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
+>>> needed to enable CPU hotplug.
+>>>
+>>> To support CPU hotplug, we need to add all the possible GICC node in MADT
+>>> including those CPUs that are not present but may be hot added later. Those
+>>> CPUs are marked as disabled in GICC nodes.
+>>>
+>>> Xiongfeng Wang (3):
+>>>     ACPI / scan: evaluate _STA for processors declared via ASL Device
+>>>       statement
+>>>     arm64: mark all the GICC nodes in MADT as possible cpu
+>>>     arm64: Add CPU hotplug support
+>>>
+>>>    arch/arm64/kernel/acpi.c  | 22 ++++++++++++++++++++++
+>>>    arch/arm64/kernel/setup.c | 19 ++++++++++++++++++-
+>>>    arch/arm64/kernel/smp.c   | 11 +++++------
+>>>    drivers/acpi/scan.c       | 12 ++++++++++++
+>>>    4 files changed, 57 insertions(+), 7 deletions(-)
+>>>
+>> .
+>>
+-- 
+
