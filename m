@@ -2,711 +2,427 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C69C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE3CC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB27218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0FD3218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="pRJ+BuOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfGDK4v (ORCPT
+        id S1727635AbfGDK5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:56:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:39074 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfGDK4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:56:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C7842B;
-        Thu,  4 Jul 2019 03:56:49 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F62B3F703;
-        Thu,  4 Jul 2019 03:56:47 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 11:56:42 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thu, 4 Jul 2019 06:57:07 -0400
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:19652
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727403AbfGDK5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:57:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UOalziR2iRck34YtVsj/pi/J/YeYBvGCJoxbZLNn73c=;
+ b=pRJ+BuOplcxSZX+5CeqBzKQpZJDMcar9PXwP91OaJkoZAW1/zc4DZN8ufl4KBrn3uTxCeVPAo+nGNDYTEZdnJHMzMQcUCn3YAY73Qx44s0o4vJ5NRtpaYM6BRnxw7L0nPSU5dhCbHTNaUHxl3jctTBvGgndKYu6eA1CIfoCTSsQ=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5072.eurprd08.prod.outlook.com (20.179.29.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Thu, 4 Jul 2019 10:57:00 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::4062:a380:35ba:11d1]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::4062:a380:35ba:11d1%3]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
+ 10:57:00 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 02/20] PCI: mobiveil: Format the code without
- functionality change
-Message-ID: <20190704105642.GA11693@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-3-Zhiqiang.Hou@nxp.com>
- <20190703151905.GD26804@e121166-lin.cambridge.arm.com>
- <DB8PR04MB6747C634DDA37032FE29843084FA0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds VRR support
+Thread-Topic: [PATCH] drm/komeda: Adds VRR support
+Thread-Index: AQHVMXCZgYg0h2S+S0iZ8YXT6sjbY6a4qceAgAGhuIA=
+Date:   Thu, 4 Jul 2019 10:57:00 +0000
+Message-ID: <20190704105653.GB9747@jamwan02-TSP300>
+References: <1562138723-29546-1-git-send-email-lowry.li@arm.com>
+ <20190703100149.GF15868@phenom.ffwll.local>
+In-Reply-To: <20190703100149.GF15868@phenom.ffwll.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR03CA0066.apcprd03.prod.outlook.com
+ (2603:1096:202:17::36) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 164d6562-9e40-4f9a-03c7-08d7006e56f7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5072;
+x-ms-traffictypediagnostic: VE1PR08MB5072:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VE1PR08MB5072F5DA544E07E32EA00AA8B3FA0@VE1PR08MB5072.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(39860400002)(396003)(366004)(346002)(136003)(189003)(199004)(40434004)(305945005)(110136005)(58126008)(2906002)(6246003)(64756008)(53386004)(81156014)(316002)(8936002)(6636002)(33716001)(53936002)(81166006)(8676002)(2201001)(86362001)(7736002)(478600001)(6306002)(5024004)(256004)(486006)(14454004)(11346002)(33656002)(446003)(68736007)(66446008)(386003)(476003)(102836004)(6506007)(25786009)(14444005)(186003)(6512007)(6116002)(6436002)(26005)(6486002)(99286004)(5660300002)(9686003)(1076003)(3846002)(76176011)(66556008)(52116002)(66946007)(30864003)(966005)(229853002)(73956011)(66066001)(55236004)(587094005)(71190400001)(66476007)(71200400001)(2501003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5072;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: u7GW0pXQKefB8zcUgXcLgJEo8vhrIkulDJRlxnamHY8ea8KfAjF6OLXbGoJSux9+Vsjd0lh3dBu0avtw3yt/Txq8A2Q/nlA6mGWt26SKq/TwWiggGlaozkO5QDwxAQ/5v58lrOnreqkMyjnRe3KHL6xI1MKebS27OXgOXlKcY+iK8KHN8HIG2eIFp6JrradL8XHnxPOjr6DjNg3gV94SDhLqybu+JHXS4A53ZgAbZ9VCULeZZGPfntg94ZvCyJnmTLB0o49BefsFI+GlHL2fpjySXOFOand1Rd0sM/ftv22NKjSxiiyPp4BpMNerV9jFcRXtQFDpGNOlpAdhCRFec0BI8IoKwuDBq3y9jnPxlrkWK709GFlRVktDBQVnF1K9Kf+zhH6yXzifBbHkYe6YI7Sm00goZ+T/4PVjeEjvmiU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F0FC6E6D3B4D824C9D0E1BBB20007239@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB8PR04MB6747C634DDA37032FE29843084FA0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 164d6562-9e40-4f9a-03c7-08d7006e56f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 10:57:00.6793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 03:00:37AM +0000, Z.q. Hou wrote:
-
-[...]
-
-> > If you can manage to rebase patches on pci/mobiveil on top of v5.2-rc1,
-> > send them separately so that I can merge them as a base for the subsequent
-> > patches to be applied.
-> 
-> You meant send the patches one by one, which you requested to split, and
-> other patches without any changes can be send together, right?
-
-First step, rebase my branch above against v5.2-rc1 *without* this
-patch. Then apply all the patches I requested to split (inclusive of
-this one) on top of it and send the whole patch series in one go.
-
-Please let me know if that's still unclear.
-
-Thanks,
-Lorenzo
-
-> > If you have any questions please ask, do not post patches if there is
-> > something that is not clear.
-> 
-> Yes, I'll, thanks for your guide again!
-> 
-> B.R,
-> Zhiqiang
-> 
-> > 
-> > Lorenzo
-> > 
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index d55c7e780c6e..b87471f08a40 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -31,38 +31,40 @@
-> > >   * translation tables are grouped into windows, each window registers
-> > are
-> > >   * grouped into blocks of 4 or 16 registers each
-> > >   */
-> > > -#define PAB_REG_BLOCK_SIZE	16
-> > > -#define PAB_EXT_REG_BLOCK_SIZE	4
-> > > +#define PAB_REG_BLOCK_SIZE		16
-> > > +#define PAB_EXT_REG_BLOCK_SIZE		4
-> > >
-> > > -#define PAB_REG_ADDR(offset, win) (offset + (win *
-> > > PAB_REG_BLOCK_SIZE)) -#define PAB_EXT_REG_ADDR(offset, win) (offset
+On Wed, Jul 03, 2019 at 12:01:49PM +0200, Daniel Vetter wrote:
+> On Wed, Jul 03, 2019 at 07:26:16AM +0000, Lowry Li (Arm Technology China)=
+ wrote:
+> > Adds a new drm property "vrr" and "vrr_enable" and implemented
+> > the set/get functions, through which userspace could set vfp
+> > data to komeda.
+> >
+> > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > ---
+> >  .../gpu/drm/arm/display/komeda/d71/d71_component.c |  6 +++
+> >  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   | 62 ++++++++++++++=
+++++++++
+> >  drivers/gpu/drm/arm/display/komeda/komeda_kms.h    | 12 +++++
+> >  .../gpu/drm/arm/display/komeda/komeda_pipeline.h   |  4 +-
+> >  4 files changed, 83 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/d=
+rivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > index ed3f273..c1355f5 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> > @@ -1065,6 +1065,7 @@ static void d71_timing_ctrlr_update(struct komeda=
+_component *c,
+> >      struct komeda_component_state *state)
+> >  {
+> >  struct drm_crtc_state *crtc_st =3D state->crtc->state;
+> > +struct komeda_crtc_state *kcrtc_st =3D to_kcrtc_st(crtc_st);
+> >  struct drm_display_mode *mode =3D &crtc_st->adjusted_mode;
+> >  u32 __iomem *reg =3D c->reg;
+> >  u32 hactive, hfront_porch, hback_porch, hsync_len;
+> > @@ -1102,6 +1103,9 @@ static void d71_timing_ctrlr_update(struct komeda=
+_component *c,
+> >  value |=3D BS_CTRL_DL;
+> >  }
+> >
+> > +if (kcrtc_st->en_vrr)
+> > +malidp_write32_mask(reg, BS_VINTERVALS, 0x3FFF, kcrtc_st->vfp);
 > > +
-> > > (win * PAB_EXT_REG_BLOCK_SIZE))
-> > > +#define PAB_REG_ADDR(offset, win)	\
-> > > +	(offset + (win * PAB_REG_BLOCK_SIZE))
-> > > +#define PAB_EXT_REG_ADDR(offset, win)	\
-> > > +	(offset + (win * PAB_EXT_REG_BLOCK_SIZE))
-> > >
-> > > -#define LTSSM_STATUS		0x0404
-> > > -#define  LTSSM_STATUS_L0_MASK	0x3f
-> > > -#define  LTSSM_STATUS_L0	0x2d
-> > > +#define LTSSM_STATUS			0x0404
-> > > +#define  LTSSM_STATUS_L0_MASK		0x3f
-> > > +#define  LTSSM_STATUS_L0		0x2d
-> > >
-> > > -#define PAB_CTRL		0x0808
-> > > -#define  AMBA_PIO_ENABLE_SHIFT	0
-> > > -#define  PEX_PIO_ENABLE_SHIFT	1
-> > > -#define  PAGE_SEL_SHIFT	13
-> > > -#define  PAGE_SEL_MASK		0x3f
-> > > -#define  PAGE_LO_MASK		0x3ff
-> > > -#define  PAGE_SEL_OFFSET_SHIFT	10
-> > > +#define PAB_CTRL			0x0808
-> > > +#define  AMBA_PIO_ENABLE_SHIFT		0
-> > > +#define  PEX_PIO_ENABLE_SHIFT		1
-> > > +#define  PAGE_SEL_SHIFT			13
-> > > +#define  PAGE_SEL_MASK			0x3f
-> > > +#define  PAGE_LO_MASK			0x3ff
-> > > +#define  PAGE_SEL_OFFSET_SHIFT		10
-> > >
-> > > -#define PAB_AXI_PIO_CTRL	0x0840
-> > > -#define  APIO_EN_MASK		0xf
-> > > +#define PAB_AXI_PIO_CTRL		0x0840
-> > > +#define  APIO_EN_MASK			0xf
-> > >
-> > > -#define PAB_PEX_PIO_CTRL	0x08c0
-> > > -#define  PIO_ENABLE_SHIFT	0
-> > > +#define PAB_PEX_PIO_CTRL		0x08c0
-> > > +#define  PIO_ENABLE_SHIFT		0
-> > >
-> > >  #define PAB_INTP_AMBA_MISC_ENB		0x0b0c
-> > > -#define PAB_INTP_AMBA_MISC_STAT	0x0b1c
-> > > +#define PAB_INTP_AMBA_MISC_STAT		0x0b1c
-> > >  #define  PAB_INTP_INTX_MASK		0x01e0
-> > >  #define  PAB_INTP_MSI_MASK		0x8
-> > >
-> > > -#define PAB_AXI_AMAP_CTRL(win)	PAB_REG_ADDR(0x0ba0, win)
-> > > -#define  WIN_ENABLE_SHIFT	0
-> > > -#define  WIN_TYPE_SHIFT	1
-> > > +#define PAB_AXI_AMAP_CTRL(win)		PAB_REG_ADDR(0x0ba0, win)
-> > > +#define  WIN_ENABLE_SHIFT		0
-> > > +#define  WIN_TYPE_SHIFT			1
-> > >
-> > >  #define PAB_EXT_AXI_AMAP_SIZE(win)	PAB_EXT_REG_ADDR(0xbaf0,
-> > win)
-> > >
-> > > @@ -70,16 +72,16 @@
-> > >  #define  AXI_WINDOW_ALIGN_MASK		3
-> > >
-> > >  #define PAB_AXI_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x0ba8,
-> > win)
-> > > -#define  PAB_BUS_SHIFT		24
-> > > -#define  PAB_DEVICE_SHIFT	19
-> > > -#define  PAB_FUNCTION_SHIFT	16
-> > > +#define  PAB_BUS_SHIFT			24
-> > > +#define  PAB_DEVICE_SHIFT		19
-> > > +#define  PAB_FUNCTION_SHIFT		16
-> > >
-> > >  #define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x0bac,
-> > win)
-> > >  #define PAB_INTP_AXI_PIO_CLASS		0x474
-> > >
-> > > -#define PAB_PEX_AMAP_CTRL(win)	PAB_REG_ADDR(0x4ba0, win)
-> > > -#define  AMAP_CTRL_EN_SHIFT	0
-> > > -#define  AMAP_CTRL_TYPE_SHIFT	1
-> > > +#define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0,
-> > win)
-> > > +#define  AMAP_CTRL_EN_SHIFT		0
-> > > +#define  AMAP_CTRL_TYPE_SHIFT		1
-> > >
-> > >  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0,
-> > win)
-> > >  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4,
-> > win)
-> > > @@ -87,39 +89,39 @@
-> > >  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac,
-> > win)
-> > >
-> > >  /* starting offset of INTX bits in status register */
-> > > -#define PAB_INTX_START	5
-> > > +#define PAB_INTX_START			5
-> > >
-> > >  /* supported number of MSI interrupts */
-> > > -#define PCI_NUM_MSI	16
-> > > +#define PCI_NUM_MSI			16
-> > >
-> > >  /* MSI registers */
-> > > -#define MSI_BASE_LO_OFFSET	0x04
-> > > -#define MSI_BASE_HI_OFFSET	0x08
-> > > -#define MSI_SIZE_OFFSET	0x0c
-> > > -#define MSI_ENABLE_OFFSET	0x14
-> > > -#define MSI_STATUS_OFFSET	0x18
-> > > -#define MSI_DATA_OFFSET	0x20
-> > > -#define MSI_ADDR_L_OFFSET	0x24
-> > > -#define MSI_ADDR_H_OFFSET	0x28
-> > > +#define MSI_BASE_LO_OFFSET		0x04
-> > > +#define MSI_BASE_HI_OFFSET		0x08
-> > > +#define MSI_SIZE_OFFSET			0x0c
-> > > +#define MSI_ENABLE_OFFSET		0x14
-> > > +#define MSI_STATUS_OFFSET		0x18
-> > > +#define MSI_DATA_OFFSET			0x20
-> > > +#define MSI_ADDR_L_OFFSET		0x24
-> > > +#define MSI_ADDR_H_OFFSET		0x28
-> > >
-> > >  /* outbound and inbound window definitions */
-> > > -#define WIN_NUM_0		0
-> > > -#define WIN_NUM_1		1
-> > > -#define CFG_WINDOW_TYPE	0
-> > > -#define IO_WINDOW_TYPE		1
-> > > -#define MEM_WINDOW_TYPE	2
-> > > -#define IB_WIN_SIZE		((u64)256 * 1024 * 1024 * 1024)
-> > > -#define MAX_PIO_WINDOWS	8
-> > > +#define WIN_NUM_0			0
-> > > +#define WIN_NUM_1			1
-> > > +#define CFG_WINDOW_TYPE			0
-> > > +#define IO_WINDOW_TYPE			1
-> > > +#define MEM_WINDOW_TYPE			2
-> > > +#define IB_WIN_SIZE			((u64)256 * 1024 * 1024 * 1024)
-> > > +#define MAX_PIO_WINDOWS			8
-> > >
-> > >  /* Parameters for the waiting for link up routine */
-> > > -#define LINK_WAIT_MAX_RETRIES	10
-> > > -#define LINK_WAIT_MIN	90000
-> > > -#define LINK_WAIT_MAX	100000
-> > > +#define LINK_WAIT_MAX_RETRIES		10
-> > > +#define LINK_WAIT_MIN			90000
-> > > +#define LINK_WAIT_MAX			100000
-> > >
-> > > -#define PAGED_ADDR_BNDRY			0xc00
-> > > -#define OFFSET_TO_PAGE_ADDR(off)		\
-> > > +#define PAGED_ADDR_BNDRY		0xc00
-> > > +#define OFFSET_TO_PAGE_ADDR(off)	\
-> > >  	((off & PAGE_LO_MASK) | PAGED_ADDR_BNDRY)
-> > > -#define OFFSET_TO_PAGE_IDX(off)			\
-> > > +#define OFFSET_TO_PAGE_IDX(off)		\
-> > >  	((off >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK)
-> > >
-> > >  struct mobiveil_msi {			/* MSI information */
-> > > @@ -297,14 +299,14 @@ static void __iomem
-> > *mobiveil_pcie_map_bus(struct pci_bus *bus,
-> > >  					unsigned int devfn, int where)
-> > >  {
-> > >  	struct mobiveil_pcie *pcie = bus->sysdata;
-> > > +	u32 value;
-> > >
-> > >  	if (!mobiveil_pcie_valid_device(bus, devfn))
-> > >  		return NULL;
-> > >
-> > > -	if (bus->number == pcie->root_bus_nr) {
-> > > -		/* RC config access */
-> > > +	/* RC config access */
-> > > +	if (bus->number == pcie->root_bus_nr)
-> > >  		return pcie->csr_axi_slave_base + where;
-> > > -	}
-> > >
-> > >  	/*
-> > >  	 * EP config access (in Config/APIO space) @@ -312,10 +314,12 @@
-> > > static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
-> > >  	 * (BDF) in PAB_AXI_AMAP_PEX_WIN_L0 Register.
-> > >  	 * Relies on pci_lock serialization
-> > >  	 */
-> > > -	csr_writel(pcie, bus->number << PAB_BUS_SHIFT |
-> > > -			PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
-> > > -			PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT,
-> > > -			PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-> > > +	value = bus->number << PAB_BUS_SHIFT |
-> > > +		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
-> > > +		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
-> > > +
-> > > +	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-> > > +
-> > >  	return pcie->config_axi_slave_base + where;  }
-> > >
-> > > @@ -350,22 +354,22 @@ static void mobiveil_pcie_isr(struct irq_desc
-> > > *desc)
-> > >
-> > >  	/* Handle INTx */
-> > >  	if (intr_status & PAB_INTP_INTX_MASK) {
-> > > -		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT) >>
-> > > -			PAB_INTX_START;
-> > > +		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> > > +		shifted_status >>= PAB_INTX_START;
-> > >  		do {
-> > >  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > >  				virq = irq_find_mapping(pcie->intx_domain,
-> > > -						bit + 1);
-> > > +							bit + 1);
-> > >  				if (virq)
-> > >  					generic_handle_irq(virq);
-> > >  				else
-> > > -					dev_err_ratelimited(dev,
-> > > -						"unexpected IRQ, INT%d\n", bit);
-> > > +					dev_err_ratelimited(dev, "unexpected IRQ,
-> > INT%d\n",
-> > > +							    bit);
-> > >
-> > >  				/* clear interrupt */
-> > >  				csr_writel(pcie,
-> > > -					shifted_status << PAB_INTX_START,
-> > > -					PAB_INTP_AMBA_MISC_STAT);
-> > > +					   shifted_status << PAB_INTX_START,
-> > > +					   PAB_INTP_AMBA_MISC_STAT);
-> > >  			}
-> > >  		} while ((shifted_status >> PAB_INTX_START) != 0);
-> > >  	}
-> > > @@ -375,8 +379,7 @@ static void mobiveil_pcie_isr(struct irq_desc
-> > > *desc)
-> > >
-> > >  	/* handle MSI interrupts */
-> > >  	while (msi_status & 1) {
-> > > -		msi_data = readl_relaxed(pcie->apb_csr_base
-> > > -				+ MSI_DATA_OFFSET);
-> > > +		msi_data = readl_relaxed(pcie->apb_csr_base +
-> > MSI_DATA_OFFSET);
-> > >
-> > >  		/*
-> > >  		 * MSI_STATUS_OFFSET register gets updated to zero @@ -385,18
-> > > +388,18 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >  		 * two dummy reads.
-> > >  		 */
-> > >  		msi_addr_lo = readl_relaxed(pcie->apb_csr_base +
-> > > -				MSI_ADDR_L_OFFSET);
-> > > +					    MSI_ADDR_L_OFFSET);
-> > >  		msi_addr_hi = readl_relaxed(pcie->apb_csr_base +
-> > > -				MSI_ADDR_H_OFFSET);
-> > > +					    MSI_ADDR_H_OFFSET);
-> > >  		dev_dbg(dev, "MSI registers, data: %08x, addr: %08x:%08x\n",
-> > > -				msi_data, msi_addr_hi, msi_addr_lo);
-> > > +			msi_data, msi_addr_hi, msi_addr_lo);
-> > >
-> > >  		virq = irq_find_mapping(msi->dev_domain, msi_data);
-> > >  		if (virq)
-> > >  			generic_handle_irq(virq);
-> > >
-> > >  		msi_status = readl_relaxed(pcie->apb_csr_base +
-> > > -				MSI_STATUS_OFFSET);
-> > > +					   MSI_STATUS_OFFSET);
-> > >  	}
-> > >
-> > >  	/* Clear the interrupt status */
-> > > @@ -413,7 +416,7 @@ static int mobiveil_pcie_parse_dt(struct
-> > > mobiveil_pcie *pcie)
-> > >
-> > >  	/* map config resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > -			"config_axi_slave");
-> > > +					   "config_axi_slave");
-> > >  	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev,
-> > res);
-> > >  	if (IS_ERR(pcie->config_axi_slave_base))
-> > >  		return PTR_ERR(pcie->config_axi_slave_base);
-> > > @@ -421,7 +424,7 @@ static int mobiveil_pcie_parse_dt(struct
-> > > mobiveil_pcie *pcie)
-> > >
-> > >  	/* map csr resource */
-> > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > -			"csr_axi_slave");
-> > > +					   "csr_axi_slave");
-> > >  	pcie->csr_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> > >  	if (IS_ERR(pcie->csr_axi_slave_base))
-> > >  		return PTR_ERR(pcie->csr_axi_slave_base);
-> > > @@ -452,7 +455,7 @@ static int mobiveil_pcie_parse_dt(struct
-> > > mobiveil_pcie *pcie)  }
-> > >
-> > >  static void program_ib_windows(struct mobiveil_pcie *pcie, int
-> > win_num,
-> > > -		int pci_addr, u32 type, u64 size)
-> > > +			       int pci_addr, u32 type, u64 size)
-> > >  {
-> > >  	int pio_ctrl_val;
-> > >  	int amap_ctrl_dw;
-> > > @@ -465,19 +468,20 @@ static void program_ib_windows(struct
-> > mobiveil_pcie *pcie, int win_num,
-> > >  	}
-> > >
-> > >  	pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-> > > -	csr_writel(pcie,
-> > > -		pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
-> > > -	amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> > > -	amap_ctrl_dw = (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
-> > > -	amap_ctrl_dw = (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
-> > > +	pio_ctrl_val |= 1 << PIO_ENABLE_SHIFT;
-> > > +	csr_writel(pcie, pio_ctrl_val, PAB_PEX_PIO_CTRL);
-> > >
-> > > -	csr_writel(pcie, amap_ctrl_dw | lower_32_bits(size64),
-> > > -		   PAB_PEX_AMAP_CTRL(win_num));
-> > > +	amap_ctrl_dw = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-> > > +	amap_ctrl_dw |= (type << AMAP_CTRL_TYPE_SHIFT) |
-> > > +			(1 << AMAP_CTRL_EN_SHIFT) |
-> > > +			lower_32_bits(size64);
-> > > +	csr_writel(pcie, amap_ctrl_dw, PAB_PEX_AMAP_CTRL(win_num));
-> > >
-> > >  	csr_writel(pcie, upper_32_bits(size64),
-> > >  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
-> > >
-> > >  	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> > > +
-> > >  	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> > >  	csr_writel(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));  } @@
-> > -486,7
-> > > +490,8 @@ static void program_ib_windows(struct mobiveil_pcie *pcie,
-> > int win_num,
-> > >   * routine to program the outbound windows
-> > >   */
-> > >  static void program_ob_windows(struct mobiveil_pcie *pcie, int
-> > win_num,
-> > > -		u64 cpu_addr, u64 pci_addr, u32 config_io_bit, u64 size)
-> > > +			       u64 cpu_addr, u64 pci_addr,
-> > > +			       u32 config_io_bit, u64 size)
-> > >  {
-> > >
-> > >  	u32 value, type;
-> > > @@ -505,7 +510,7 @@ static void program_ob_windows(struct
-> > mobiveil_pcie *pcie, int win_num,
-> > >  	type = config_io_bit;
-> > >  	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
-> > >  	csr_writel(pcie, 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
-> > > -			lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
-> > > +		   lower_32_bits(size64), PAB_AXI_AMAP_CTRL(win_num));
-> > >
-> > >  	csr_writel(pcie, upper_32_bits(size64),
-> > > PAB_EXT_AXI_AMAP_SIZE(win_num));
-> > >
-> > > @@ -515,14 +520,14 @@ static void program_ob_windows(struct
-> > mobiveil_pcie *pcie, int win_num,
-> > >  	 */
-> > >  	value = csr_readl(pcie, PAB_AXI_AMAP_AXI_WIN(win_num));
-> > >  	csr_writel(pcie, cpu_addr & (~AXI_WINDOW_ALIGN_MASK),
-> > > -			PAB_AXI_AMAP_AXI_WIN(win_num));
-> > > +		   PAB_AXI_AMAP_AXI_WIN(win_num));
-> > >
-> > >  	value = csr_readl(pcie, PAB_AXI_AMAP_PEX_WIN_H(win_num));
-> > >
-> > >  	csr_writel(pcie, lower_32_bits(pci_addr),
-> > > -			PAB_AXI_AMAP_PEX_WIN_L(win_num));
-> > > +		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
-> > >  	csr_writel(pcie, upper_32_bits(pci_addr),
-> > > -			PAB_AXI_AMAP_PEX_WIN_H(win_num));
-> > > +		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
-> > >
-> > >  	pcie->ob_wins_configured++;
-> > >  }
-> > > @@ -538,7 +543,9 @@ static int mobiveil_bringup_link(struct
-> > > mobiveil_pcie *pcie)
-> > >
-> > >  		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
-> > >  	}
-> > > +
-> > >  	dev_err(&pcie->pdev->dev, "link never came up\n");
-> > > +
-> > >  	return -ETIMEDOUT;
-> > >  }
-> > >
-> > > @@ -551,16 +558,16 @@ static void mobiveil_pcie_enable_msi(struct
-> > mobiveil_pcie *pcie)
-> > >  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
-> > >
-> > >  	writel_relaxed(lower_32_bits(msg_addr),
-> > > -		pcie->apb_csr_base + MSI_BASE_LO_OFFSET);
-> > > +		       pcie->apb_csr_base + MSI_BASE_LO_OFFSET);
-> > >  	writel_relaxed(upper_32_bits(msg_addr),
-> > > -		pcie->apb_csr_base + MSI_BASE_HI_OFFSET);
-> > > +		       pcie->apb_csr_base + MSI_BASE_HI_OFFSET);
-> > >  	writel_relaxed(4096, pcie->apb_csr_base + MSI_SIZE_OFFSET);
-> > >  	writel_relaxed(1, pcie->apb_csr_base + MSI_ENABLE_OFFSET);  }
-> > >
-> > >  static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
-> > > -	u32 value, pab_ctrl, type = 0;
-> > > +	u32 value, pab_ctrl, type;
-> > >  	int err;
-> > >  	struct resource_entry *win, *tmp;
-> > >
-> > > @@ -575,26 +582,27 @@ static int mobiveil_host_init(struct
-> > mobiveil_pcie *pcie)
-> > >  	 * Space
-> > >  	 */
-> > >  	value = csr_readl(pcie, PCI_COMMAND);
-> > > -	csr_writel(pcie, value | PCI_COMMAND_IO |
-> > PCI_COMMAND_MEMORY |
-> > > -		PCI_COMMAND_MASTER, PCI_COMMAND);
-> > > +	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> > PCI_COMMAND_MASTER;
-> > > +	csr_writel(pcie, value, PCI_COMMAND);
-> > >
-> > >  	/*
-> > >  	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
-> > >  	 * register
-> > >  	 */
-> > >  	pab_ctrl = csr_readl(pcie, PAB_CTRL);
-> > > -	csr_writel(pcie, pab_ctrl | (1 << AMBA_PIO_ENABLE_SHIFT) |
-> > > -		(1 << PEX_PIO_ENABLE_SHIFT), PAB_CTRL);
-> > > +	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 <<
-> > PEX_PIO_ENABLE_SHIFT);
-> > > +	csr_writel(pcie, pab_ctrl, PAB_CTRL);
-> > >
-> > >  	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-> > > -		PAB_INTP_AMBA_MISC_ENB);
-> > > +		   PAB_INTP_AMBA_MISC_ENB);
-> > >
-> > >  	/*
-> > >  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
-> > >  	 * PAB_AXI_PIO_CTRL Register
-> > >  	 */
-> > >  	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
-> > > -	csr_writel(pcie, value | APIO_EN_MASK, PAB_AXI_PIO_CTRL);
-> > > +	value |= APIO_EN_MASK;
-> > > +	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
-> > >
-> > >  	/*
-> > >  	 * we'll program one outbound window for config reads and @@
-> > -605,25
-> > > +613,25 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
-> > >
-> > >  	/* config outbound translation window */
-> > >  	program_ob_windows(pcie, pcie->ob_wins_configured,
-> > > -			pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
-> > > -			resource_size(pcie->ob_io_res));
-> > > +			   pcie->ob_io_res->start, 0, CFG_WINDOW_TYPE,
-> > > +			   resource_size(pcie->ob_io_res));
-> > >
-> > >  	/* memory inbound translation window */
-> > >  	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE,
-> > > IB_WIN_SIZE);
-> > >
-> > >  	/* Get the I/O and memory ranges from DT */
-> > >  	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
-> > > -		type = 0;
-> > >  		if (resource_type(win->res) == IORESOURCE_MEM)
-> > >  			type = MEM_WINDOW_TYPE;
-> > > -		if (resource_type(win->res) == IORESOURCE_IO)
-> > > +		else if (resource_type(win->res) == IORESOURCE_IO)
-> > >  			type = IO_WINDOW_TYPE;
-> > > -		if (type) {
-> > > -			/* configure outbound translation window */
-> > > -			program_ob_windows(pcie, pcie->ob_wins_configured,
-> > > -				win->res->start, 0, type,
-> > > -				resource_size(win->res));
-> > > -		}
-> > > +		else
-> > > +			continue;
-> > > +
-> > > +		/* configure outbound translation window */
-> > > +		program_ob_windows(pcie, pcie->ob_wins_configured,
-> > > +				   win->res->start, 0, type,
-> > > +				   resource_size(win->res));
-> > >  	}
-> > >
-> > >  	/* setup MSI hardware registers */
-> > > @@ -643,7 +651,8 @@ static void mobiveil_mask_intx_irq(struct irq_data
-> > *data)
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > >  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > >  	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > > -	csr_writel(pcie, (shifted_val & (~mask)), PAB_INTP_AMBA_MISC_ENB);
-> > > +	shifted_val &= ~mask;
-> > > +	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > >  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);  }
-> > >
-> > > @@ -658,7 +667,8 @@ static void mobiveil_unmask_intx_irq(struct
-> > irq_data *data)
-> > >  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> > >  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> > >  	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-> > > -	csr_writel(pcie, (shifted_val | mask), PAB_INTP_AMBA_MISC_ENB);
-> > > +	shifted_val |= mask;
-> > > +	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> > >  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);  }
-> > >
-> > > @@ -672,10 +682,11 @@ static struct irq_chip intx_irq_chip = {
-> > >
-> > >  /* routine to setup the INTx related data */  static int
-> > > mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> > > -		irq_hw_number_t hwirq)
-> > > +				  irq_hw_number_t hwirq)
-> > >  {
-> > >  	irq_set_chip_and_handler(irq, &intx_irq_chip, handle_level_irq);
-> > >  	irq_set_chip_data(irq, domain->host_data);
-> > > +
-> > >  	return 0;
-> > >  }
-> > >
-> > > @@ -692,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
-> > >
-> > >  static struct msi_domain_info mobiveil_msi_domain_info = {
-> > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
-> > MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > -		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > > +		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > >  	.chip	= &mobiveil_msi_irq_chip,
-> > >  };
-> > >
-> > > @@ -710,7 +721,7 @@ static void mobiveil_compose_msi_msg(struct
-> > > irq_data *data, struct msi_msg *msg)  }
-> > >
-> > >  static int mobiveil_msi_set_affinity(struct irq_data *irq_data,
-> > > -		const struct cpumask *mask, bool force)
-> > > +				     const struct cpumask *mask, bool force)
-> > >  {
-> > >  	return -EINVAL;
-> > >  }
-> > > @@ -722,7 +733,8 @@ static struct irq_chip
-> > > mobiveil_msi_bottom_irq_chip = {  };
-> > >
-> > >  static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
-> > > -		unsigned int virq, unsigned int nr_irqs, void *args)
-> > > +					 unsigned int virq,
-> > > +					 unsigned int nr_irqs, void *args)
-> > >  {
-> > >  	struct mobiveil_pcie *pcie = domain->host_data;
-> > >  	struct mobiveil_msi *msi = &pcie->msi; @@ -742,13 +754,13 @@ static
-> > > int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
-> > >  	mutex_unlock(&msi->lock);
-> > >
-> > >  	irq_domain_set_info(domain, virq, bit,
-> > &mobiveil_msi_bottom_irq_chip,
-> > > -				domain->host_data, handle_level_irq,
-> > > -				NULL, NULL);
-> > > +			    domain->host_data, handle_level_irq, NULL, NULL);
-> > >  	return 0;
-> > >  }
-> > >
-> > >  static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
-> > > -		unsigned int virq, unsigned int nr_irqs)
-> > > +					 unsigned int virq,
-> > > +					 unsigned int nr_irqs)
-> > >  {
-> > >  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> > >  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d); @@
-> > > -756,12 +768,11 @@ static void mobiveil_irq_msi_domain_free(struct
-> > > irq_domain *domain,
-> > >
-> > >  	mutex_lock(&msi->lock);
-> > >
-> > > -	if (!test_bit(d->hwirq, msi->msi_irq_in_use)) {
-> > > +	if (!test_bit(d->hwirq, msi->msi_irq_in_use))
-> > >  		dev_err(&pcie->pdev->dev, "trying to free unused MSI#%lu\n",
-> > >  			d->hwirq);
-> > > -	} else {
-> > > +	else
-> > >  		__clear_bit(d->hwirq, msi->msi_irq_in_use);
-> > > -	}
-> > >
-> > >  	mutex_unlock(&msi->lock);
-> > >  }
-> > > @@ -785,12 +796,14 @@ static int mobiveil_allocate_msi_domains(struct
-> > mobiveil_pcie *pcie)
-> > >  	}
-> > >
-> > >  	msi->msi_domain = pci_msi_create_irq_domain(fwnode,
-> > > -				&mobiveil_msi_domain_info, msi->dev_domain);
-> > > +						    &mobiveil_msi_domain_info,
-> > > +						    msi->dev_domain);
-> > >  	if (!msi->msi_domain) {
-> > >  		dev_err(dev, "failed to create MSI domain\n");
-> > >  		irq_domain_remove(msi->dev_domain);
-> > >  		return -ENOMEM;
-> > >  	}
-> > > +
-> > >  	return 0;
-> > >  }
-> > >
-> > > @@ -801,8 +814,8 @@ static int mobiveil_pcie_init_irq_domain(struct
-> > mobiveil_pcie *pcie)
-> > >  	int ret;
-> > >
-> > >  	/* setup INTx */
-> > > -	pcie->intx_domain = irq_domain_add_linear(node,
-> > > -				PCI_NUM_INTX, &intx_domain_ops, pcie);
-> > > +	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> > > +						  &intx_domain_ops, pcie);
-> > >
-> > >  	if (!pcie->intx_domain) {
-> > >  		dev_err(dev, "Failed to get a INTx IRQ domain\n"); @@ -917,10
-> > > +930,10 @@ MODULE_DEVICE_TABLE(of, mobiveil_pcie_of_match);
-> > static
-> > > struct platform_driver mobiveil_pcie_driver = {
-> > >  	.probe = mobiveil_pcie_probe,
-> > >  	.driver = {
-> > > -			.name = "mobiveil-pcie",
-> > > -			.of_match_table = mobiveil_pcie_of_match,
-> > > -			.suppress_bind_attrs = true,
-> > > -		},
-> > > +		.name = "mobiveil-pcie",
-> > > +		.of_match_table = mobiveil_pcie_of_match,
-> > > +		.suppress_bind_attrs = true,
-> > > +	},
-> > >  };
-> > >
-> > >  builtin_platform_driver(mobiveil_pcie_driver);
-> > > --
-> > > 2.17.1
-> > >
+> >  malidp_write32(reg, BLK_CONTROL, value);
+> >  }
+> >
+> > @@ -1171,6 +1175,8 @@ static int d71_timing_ctrlr_init(struct d71_dev *=
+d71,
+> >  ctrlr =3D to_ctrlr(c);
+> >
+> >  ctrlr->supports_dual_link =3D true;
+> > +ctrlr->supports_vrr =3D true;
+> > +set_range(&ctrlr->vfp_range, 0, 0x3FF);
+> >
+> >  return 0;
+> >  }
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers=
+/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > index 4f580b0..3744e6d 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> > @@ -467,6 +467,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc=
+)
+> >
+> >  state =3D kzalloc(sizeof(*state), GFP_KERNEL);
+> >  if (state) {
+> > +state->vfp =3D 0;
+> > +state->en_vrr =3D 0;
+> >  crtc->state =3D &state->base;
+> >  crtc->state->crtc =3D crtc;
+> >  }
+> > @@ -487,6 +489,8 @@ static void komeda_crtc_reset(struct drm_crtc *crtc=
+)
+> >  new->affected_pipes =3D old->active_pipes;
+> >  new->clock_ratio =3D old->clock_ratio;
+> >  new->max_slave_zorder =3D old->max_slave_zorder;
+> > +new->vfp =3D old->vfp;
+> > +new->en_vrr =3D old->en_vrr;
+> >
+> >  return &new->base;
+> >  }
+> > @@ -525,6 +529,30 @@ static void komeda_crtc_vblank_disable(struct drm_=
+crtc *crtc)
+> >
+> >  if (property =3D=3D kcrtc->clock_ratio_property) {
+> >  *val =3D kcrtc_st->clock_ratio;
+> > +} else if (property =3D=3D kcrtc->vrr_property) {
+> > +*val =3D kcrtc_st->vfp;
+> > +} else if (property =3D=3D kcrtc->vrr_enable_property) {
+> > +*val =3D kcrtc_st->en_vrr;
+> > +} else {
+> > +DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
+> > +return -EINVAL;
+> > +}
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int komeda_crtc_atomic_set_property(struct drm_crtc *crtc,
+> > +   struct drm_crtc_state *state,
+> > +   struct drm_property *property,
+> > +   uint64_t val)
+> > +{
+> > +struct komeda_crtc *kcrtc =3D to_kcrtc(crtc);
+> > +struct komeda_crtc_state *kcrtc_st =3D to_kcrtc_st(state);
+> > +
+> > +if (property =3D=3D kcrtc->vrr_property) {
+> > +kcrtc_st->vfp =3D val;
+> > +} else if (property =3D=3D kcrtc->vrr_enable_property) {
+> > +kcrtc_st->en_vrr =3D val;
+> >  } else {
+> >  DRM_DEBUG_DRIVER("Unknown property %s\n", property->name);
+> >  return -EINVAL;
+> > @@ -544,6 +572,7 @@ static void komeda_crtc_vblank_disable(struct drm_c=
+rtc *crtc)
+> >  .enable_vblank=3D komeda_crtc_vblank_enable,
+> >  .disable_vblank=3D komeda_crtc_vblank_disable,
+> >  .atomic_get_property=3D komeda_crtc_atomic_get_property,
+> > +.atomic_set_property=3D komeda_crtc_atomic_set_property,
+> >  };
+> >
+> >  int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms,
+> > @@ -613,6 +642,35 @@ static int komeda_crtc_create_slave_planes_propert=
+y(struct komeda_crtc *kcrtc)
+> >  return 0;
+> >  }
+> >
+> > +static int komeda_crtc_create_vrr_property(struct komeda_crtc *kcrtc)
+> > +{
+> > +struct drm_crtc *crtc =3D &kcrtc->base;
+> > +struct drm_property *prop;
+> > +struct komeda_timing_ctrlr *ctrlr =3D kcrtc->master->ctrlr;
+> > +
+> > +if (!ctrlr->supports_vrr)
+> > +return 0;
+> > +
+> > +prop =3D drm_property_create_range(crtc->dev, DRM_MODE_PROP_ATOMIC, "v=
+rr",
+> > + ctrlr->vfp_range.start,
+> > + ctrlr->vfp_range.end);
+> > +if (!prop)
+> > +return -ENOMEM;
+> > +
+> > +drm_object_attach_property(&crtc->base, prop, 0);
+> > +kcrtc->vrr_property =3D prop;
+> > +
+> > +prop =3D drm_property_create_bool(crtc->dev, DRM_MODE_PROP_ATOMIC,
+> > +"enable_vrr");
+>
+> Uh, what exactly are you doing reinventing uapi properties that we alread=
+y
+> standardized?
+>
+
+Sorry, Will use the mode_config->VRR_ENABLED
+
+we use this private property because we're switching to in-tree, before
+finish the switch, we still need to maintain our out-of-tree driver which
+depend on a older and doesn't have the VRR_ENABLED property. for avoid
+diverging the two branch. my old plan is first switch to in-tree, then drop
+the out-of-tree driver and then unify the usage.
+
+> > +if (!prop)
+> > +return -ENOMEM;
+> > +
+> > +drm_object_attach_property(&crtc->base, prop, 0);
+> > +kcrtc->vrr_enable_property =3D prop;
+> > +
+> > +return 0;
+> > +}
+> > +
+> >  static struct drm_plane *
+> >  get_crtc_primary(struct komeda_kms_dev *kms, struct komeda_crtc *crtc)
+> >  {
+> > @@ -659,6 +717,10 @@ static int komeda_crtc_add(struct komeda_kms_dev *=
+kms,
+> >  if (err)
+> >  return err;
+> >
+> > +err =3D komeda_crtc_create_vrr_property(kcrtc);
+> > +if (err)
+> > +return err;
+> > +
+> >  return err;
+> >  }
+> >
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/=
+gpu/drm/arm/display/komeda/komeda_kms.h
+> > index dc1d436..d0cf838 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+> > @@ -98,6 +98,12 @@ struct komeda_crtc {
+> >
+> >  /** @slave_planes_property: property for slaves of the planes */
+> >  struct drm_property *slave_planes_property;
+>
+> And this seems to not be the first time this happened. Looking at komeda
+> with a quick git grep on properties you've actually accumulated quite a
+> pile of such driver properties already. Where's the userspace for this?
+> Where's the uapi discussions for this stuff? Where's the igt tests for
+> this (yes a bunch are after we agreed to have testcases for this).
+>
+> I know that in the past we've been somewhat sloppy properties, but that
+> was a mistake and we've cranked down on this hard. Probably need to fix
+> this with a pile of reverts and start over.
+> -Daniel
+
+Sorry again.
+
+First I'll send some patches to remove these private properties.
+
+and then discuss for how to impelement them.
+
+The current komeda privates are:
+
+crtc:
+   clock_ratio
+   slave_planes
+
+plane:
+   img_enhancement
+   layer_split
+
+Layer_split: it can be deleted and computed in kernel.
+
+img_enhancement:
+  it is for image enhancement, can be removed and computed in kernel.
+  but I'd like to have it, since it's a seperated function (NOT only
+  for scaling or YUV format), I think only user can real know if need
+  to enable it.
+
+
+img_enhancement:
+  it is for image enhancement, can be removed and computed in kernel.
+  but I'd like to have it, since it's a seperated function (NOT only
+  for scaling or YUV format), I think only user can real know if need
+  to enable it.
+  I think maybe we can add it CORE as an optional drm_plane property.
+
+clock_ratio:
+  It's the clock ratio of (main engine lock/output pixel clk) for
+  komeda HW's downscaling restriction, as below:
+
+  D71 downscaling must satisfy the following equation
+
+  MCLK                   h_in * v_in
+ ------- >=3D ---------------------------------------------
+ PXLCLK     (h_total - (1 + 2 * v_in / v_out)) * v_out
+
+ In only horizontal downscaling situation, the right side should be
+ multiplied by (h_total - 3) / (h_active - 3), then equation becomes
+
+  MCLK          h_in
+ ------- >=3D ----------------
+  PXLCLK     (h_active - 3)
+
+slave_planes:
+  it's not only for the zpos, but most importantly for notify the user
+  to group the planes to two resource sets (pipeline-0 resources and pipeli=
+ne1).
+  Per our HW design the two pipelines can be dynamic assigned to CRTC
+  according to the usage.
+  - like user only enable one CRTC which can use all two pipelines
+    (two resource resource sets)
+  - but if enabled two CRTCs, only one resource set available for
+    each CRTC.
+
+komeda user need to known the clock_ratio and slave_planes, but how
+to expose them: private_property, sysfs or other ways, seems we need
+to disscuss. :)
+
+Thanks
+James
+
+> > +
+> > +/** @vrr_property: property for variable refresh rate */
+> > +struct drm_property *vrr_property;
+> > +
+> > +/** @vrr_enable_property: property for enable/disable the vrr */
+> > +struct drm_property *vrr_enable_property;
+> >  };
+> >
+> >  /**
+> > @@ -126,6 +132,12 @@ struct komeda_crtc_state {
+> >
+> >  /** @max_slave_zorder: the maximum of slave zorder */
+> >  u32 max_slave_zorder;
+> > +
+> > +/** @vfp: the value of vertical front porch */
+> > +u32 vfp;
+> > +
+> > +/** @en_vrr: enable status of variable refresh rate */
+> > +u8 en_vrr : 1;
+> >  };
+> >
+> >  /** struct komeda_kms_dev - for gather KMS related things */
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/dri=
+vers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > index 00e8083..66d7664 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> > @@ -336,7 +336,9 @@ struct komeda_improc_state {
+> >  /* display timing controller */
+> >  struct komeda_timing_ctrlr {
+> >  struct komeda_component base;
+> > -u8 supports_dual_link : 1;
+> > +u8 supports_dual_link : 1,
+> > +   supports_vrr : 1;
+> > +struct malidp_range vfp_range;
+> >  };
+> >
+> >  struct komeda_timing_ctrlr_state {
+> > --
+> > 1.9.1
+> >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
