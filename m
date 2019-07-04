@@ -2,181 +2,96 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECBDC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF403C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEF62133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0AB2133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwDSVwsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGDHEJ (ORCPT
+        id S1727351AbfGDHFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:04:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:57426 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfGDHEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:04:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 00:04:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="339529062"
-Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.151])
-  by orsmga005.jf.intel.com with ESMTP; 04 Jul 2019 00:04:06 -0700
-Date:   Thu, 4 Jul 2019 15:02:42 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-Message-ID: <20190704070242.GA27369@___>
-References: <20190703091339.1847-1-tiwei.bie@intel.com>
- <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
- <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
- <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___>
- <c67f628f-e0c1-9a41-6c5d-b6bbda31467d@redhat.com>
+        Thu, 4 Jul 2019 03:05:17 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44230 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfGDHFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:05:16 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so3468486lfm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2/jhMVFWL9zAP6DASgDxWvKe4pRoCVY+Bzzlbxt4Sws=;
+        b=qwDSVwsECgzZhe2WwlG1p8BOPlPHnzsNTaQt1KS8uYPGmdPXJqoI8dUKZa4N9BH/bQ
+         O7QOMjn0trVW6NJLJAgx1IQA8mYmF2lT6hZqFMtVdWO5d7EKSxWkwVQeA51/LKFBQFeR
+         JfWOVSjVV3Af/VORKOstlu0LPLSn+zx1e+VbFF6GbnJnmvY/KumjMcv+KeAbxHIJFwHg
+         47dCJgb1rCk/k6pxP9MR2KHQI7uoBai+qnkxbSrfGXVxvqclUX3PzMMxApCEHCY2xU6N
+         vWNlOxTyomJ9DxPxQU4YiQJgFKC/tJkybV4VdVUcFXD85U/wq+refUau9H/AEzpPCUtB
+         39AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2/jhMVFWL9zAP6DASgDxWvKe4pRoCVY+Bzzlbxt4Sws=;
+        b=njtJVYEN9Lk73Gsnlx9acsp6ZOkaibWd12ZCUtGefCdAM2yDq1enVSsV2EN6v7824v
+         7JsPntH00BXSI3gD/XjnF1c/n3Q9RQ6E+Y+bdI3d6KYx308DC2IQKsq9RvXH4C+p18gL
+         tqOkSvHN493vB9oI01wKZsVpSqwlDtmW4pP2VPcrd5TEChZXhAj/CIg9qZqMp2CkiqJA
+         DqNPp0TSgVE1b8Pd2+tu6lXmkC62jubfRYJzgKfi4uDqnAtjgWNnQXHK0D3W8vdC+osk
+         s+mGfX7BhKSHFthcm2JgKrMFEm9TxXW4kQJfVrGqSsOFWT73XXV4RzJpLZPkWQ8ZNOwd
+         lwNw==
+X-Gm-Message-State: APjAAAXq29xSFynPXJbM+b6HfmuS8xB/c32hVVNaQoonWScaoqeLu513
+        mBG1P7+0dOq17GZqSk7hJEgwC39/uwP2y8kQU5g1Dw==
+X-Google-Smtp-Source: APXvYqxQCD23eaeoAJhpEZfOc2Of9fwPsf/stmR5iwxoFFdrgqdv4D53+o/uLeap0VPJozhN950Mm7ck5RTeeImezjQ=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr4161503lfp.61.1562223914898;
+ Thu, 04 Jul 2019 00:05:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c67f628f-e0c1-9a41-6c5d-b6bbda31467d@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190703171924.31801-1-paweldembicki@gmail.com> <20190703171924.31801-2-paweldembicki@gmail.com>
+In-Reply-To: <20190703171924.31801-2-paweldembicki@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Jul 2019 09:05:03 +0200
+Message-ID: <CACRpkdb5LonYLpbOHj=Oo8Z7XjVUWoO0CuhOokxfSoY_fRinPw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] net: dsa: Change DT bindings for Vitesse VSC73xx switches
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 02:35:20PM +0800, Jason Wang wrote:
-> On 2019/7/4 下午2:21, Tiwei Bie wrote:
-> > On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
-> > > On 2019/7/3 下午9:08, Tiwei Bie wrote:
-> > > > On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
-> > > > > On 2019/7/3 下午7:52, Tiwei Bie wrote:
-> > > > > > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
-> > > > > > > On 2019/7/3 下午5:13, Tiwei Bie wrote:
-> > > > > > > > Details about this can be found here:
-> > > > > > > > 
-> > > > > > > > https://lwn.net/Articles/750770/
-> > > > > > > > 
-> > > > > > > > What's new in this version
-> > > > > > > > ==========================
-> > > > > > > > 
-> > > > > > > > A new VFIO device type is introduced - vfio-vhost. This addressed
-> > > > > > > > some comments from here:https://patchwork.ozlabs.org/cover/984763/
-> > > > > > > > 
-> > > > > > > > Below is the updated device interface:
-> > > > > > > > 
-> > > > > > > > Currently, there are two regions of this device: 1) CONFIG_REGION
-> > > > > > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
-> > > > > > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
-> > > > > > > > can be used to notify the device.
-> > > > > > > > 
-> > > > > > > > 1. CONFIG_REGION
-> > > > > > > > 
-> > > > > > > > The region described by CONFIG_REGION is the main control interface.
-> > > > > > > > Messages will be written to or read from this region.
-> > > > > > > > 
-> > > > > > > > The message type is determined by the `request` field in message
-> > > > > > > > header. The message size is encoded in the message header too.
-> > > > > > > > The message format looks like this:
-> > > > > > > > 
-> > > > > > > > struct vhost_vfio_op {
-> > > > > > > > 	__u64 request;
-> > > > > > > > 	__u32 flags;
-> > > > > > > > 	/* Flag values: */
-> > > > > > > >      #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
-> > > > > > > > 	__u32 size;
-> > > > > > > > 	union {
-> > > > > > > > 		__u64 u64;
-> > > > > > > > 		struct vhost_vring_state state;
-> > > > > > > > 		struct vhost_vring_addr addr;
-> > > > > > > > 	} payload;
-> > > > > > > > };
-> > > > > > > > 
-> > > > > > > > The existing vhost-kernel ioctl cmds are reused as the message
-> > > > > > > > requests in above structure.
-> > > > > > > Still a comments like V1. What's the advantage of inventing a new protocol?
-> > > > > > I'm trying to make it work in VFIO's way..
-> > > > > > 
-> > > > > > > I believe either of the following should be better:
-> > > > > > > 
-> > > > > > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
-> > > > > > > extend it with e.g notify region. The advantages is that all exist userspace
-> > > > > > > program could be reused without modification (or minimal modification). And
-> > > > > > > vhost API hides lots of details that is not necessary to be understood by
-> > > > > > > application (e.g in the case of container).
-> > > > > > Do you mean reusing vhost's ioctl on VFIO device fd directly,
-> > > > > > or introducing another mdev driver (i.e. vhost_mdev instead of
-> > > > > > using the existing vfio_mdev) for mdev device?
-> > > > > Can we simply add them into ioctl of mdev_parent_ops?
-> > > > Right, either way, these ioctls have to be and just need to be
-> > > > added in the ioctl of the mdev_parent_ops. But another thing we
-> > > > also need to consider is that which file descriptor the userspace
-> > > > will do the ioctl() on. So I'm wondering do you mean let the
-> > > > userspace do the ioctl() on the VFIO device fd of the mdev
-> > > > device?
-> > > > 
-> > > Yes.
-> > Got it! I'm not sure what's Alex opinion on this. If we all
-> > agree with this, I can do it in this way.
-> > 
-> > > Is there any other way btw?
-> > Just a quick thought.. Maybe totally a bad idea.
-> 
-> 
-> It's not for sure :)
+On Wed, Jul 3, 2019 at 7:21 PM Pawel Dembicki <paweldembicki@gmail.com> wrote:
 
-Thanks!
+> This commit introduce how to use vsc73xx platform driver.
+>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-> 
-> 
-> >   I was thinking
-> > whether it would be odd to do non-VFIO's ioctls on VFIO's device
-> > fd. So I was wondering whether it's possible to allow binding
-> > another mdev driver (e.g. vhost_mdev) to the supported mdev
-> > devices. The new mdev driver, vhost_mdev, can provide similar
-> > ways to let userspace open the mdev device and do the vhost ioctls
-> > on it. To distinguish with the vfio_mdev compatible mdev devices,
-> > the device API of the new vhost_mdev compatible mdev devices
-> > might be e.g. "vhost-net" for net?
-> > 
-> > So in VFIO case, the device will be for passthru directly. And
-> > in VHOST case, the device can be used to accelerate the existing
-> > virtualized devices.
-> > 
-> > How do you think?
-> 
-> 
-> If my understanding is correct, there will be no VFIO ioctl if we go for
-> vhost_mdev?
+Nice!
 
-Yeah, exactly. If we go for vhost_mdev, we may have some vhost nodes
-in /dev similar to what /dev/vfio/* does to handle the $UUID and open
-the device (e.g. similar to VFIO_GROUP_GET_DEVICE_FD in VFIO). And
-to setup the device, we can try to reuse the ioctls of the existing
-kernel vhost as much as possible.
+> +If Platform driver is used, the device tree node is an platform device so it
+> +must reside inside a platform bus device tree node.
 
-Thanks,
-Tiwei
+I would write something like "when connected to a memory bus, and
+used in memory-mapped I/O mode, a platform device is used to represent
+the vsc73xx" so it is clear what is going on.
 
-> 
-> Thanks
-> 
-> 
-> > 
-> > Thanks,
-> > Tiwei
-> > > Thanks
-> > > 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
