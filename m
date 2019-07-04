@@ -2,82 +2,166 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD6DC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D74C46487
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F18F218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562250313;
-	bh=YNYw30ZVRlvSXlhha1iaUul82x3IIo+1lrXf//2abOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q2sBsxGNLlhWI+8umETnel18G+5CtNYpb46PG7SEmFVj9ry2rPsx3uDlkmzcLlumq
-	 1PxrpFQ2uIkB716ycsbXcPLUbwXIdeMBgj4Do9TuDlFnBUJCV/YNjoRQ/PJVk5qV0h
-	 FCsp5xjEu0yxF3i9nHTYywktsi1fdsE6nEtF3OoA=
+	by mail.kernel.org (Postfix) with ESMTP id 8B4F7218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sYlNM2pL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfGDOZL (ORCPT
+        id S1727668AbfGDOZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbfGDOZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:25:11 -0400
-Received: from localhost (unknown [89.205.128.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4967E218A3;
-        Thu,  4 Jul 2019 14:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562250311;
-        bh=YNYw30ZVRlvSXlhha1iaUul82x3IIo+1lrXf//2abOQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oo/jkE8+dnGJi+YGHcijQbUniSloC9wglBX3jzYh2paIAa9EoZkw3Gj/OIaBcWY+M
-         fXD1BRDIyfGHjlxpDtiKlEr0qiOTxCZ1G2iNkxYeVlbPDU3MOonERZbZUvQECt5TNN
-         B/xS/olzhTPXzCvr/2GjMjVKvfcIg4xt4tH/jca0=
-Date:   Thu, 4 Jul 2019 16:25:07 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 07/11] video: fbdev: wm8505fb: convert platform driver to
- use dev_groups
-Message-ID: <20190704142507.GA6281@kroah.com>
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
- <20190704084617.3602-8-gregkh@linuxfoundation.org>
- <CAHp75Vd7+Kg0paJ-eMNR2_AViW3mYgOCUqqPXS=eT8eY_J6xZA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd7+Kg0paJ-eMNR2_AViW3mYgOCUqqPXS=eT8eY_J6xZA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 4 Jul 2019 10:25:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:35354 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbfGDOZN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:25:13 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190704142511euoutp01c27a2ec1c204afff1038a0bf4af29616~uOmGO92PM1948519485euoutp01j
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2019 14:25:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190704142511euoutp01c27a2ec1c204afff1038a0bf4af29616~uOmGO92PM1948519485euoutp01j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562250311;
+        bh=nDTQvMV2GmtMsbQlwO3htPXTdx4GYhmbGKKFfHVI23s=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=sYlNM2pLc06yhX4J6R+wYpLvvxtwDi8XUPJR8xeNqRVxyhb0P8pSWuxOmV6YAU9NR
+         avQM52l3jlCqIr/HfhHeJIkGLF2ICeAL640pfRnWtbkabgYKMSKwgmrPFq7d7pvhQ3
+         D2mkM/Y1ePil3BZLjJ0cgVxvHETqleUoI9eYH6kc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190704142510eucas1p27fcc968426a7dd34b0efc6160ebb1735~uOmFhsDX_2603626036eucas1p28;
+        Thu,  4 Jul 2019 14:25:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0F.84.04325.64C0E1D5; Thu,  4
+        Jul 2019 15:25:10 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642~uOmEt01Ot1504615046eucas1p2b;
+        Thu,  4 Jul 2019 14:25:09 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190704142509eusmtrp2a4468529258676ae900bdac389d2dafb~uOmEfOG0p0491504915eusmtrp2Y;
+        Thu,  4 Jul 2019 14:25:09 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-5f-5d1e0c4642f7
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7D.77.04146.54C0E1D5; Thu,  4
+        Jul 2019 15:25:09 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190704142508eusmtip25289fa98246e93382b2ca1d5375d1111~uOmDvNU--1740317403eusmtip2Q;
+        Thu,  4 Jul 2019 14:25:08 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf] xdp: fix possible cq entry leak
+Date:   Thu,  4 Jul 2019 17:25:03 +0300
+Message-Id: <20190704142503.23501-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSbUhTYRjt3b279zqc3Kboi8mCUZSWWtSPC1oZVFwowb8ZI69520Q3dVPT
+        gjK/m2UWljqGGRbqZn6Moc5MdOpmGlbLbNPCkj7U6HOWLUVz3kn/znPOc855fjwEIrrFDyaS
+        lZmsSsmkSjAB2mF1j4Uf8xVL95iag6gF9xROLRe3Aco1aMOo+ru/EUr3tBClxkvcOGWdLcSo
+        7pYahHrRrcOoRsvwGlcXSHVe7wUxvrSpycmjzdo3OF3fM8ejNQ47Qhv1VzC6quwdQpeb9IB2
+        GcVxRLwgOolNTc5mVZEHEwTy29+N/PRp35wPulaQB6oFGuBDQHI/dOWZMQ0QECKyEcBFhxXn
+        hgUASzSjXsUFYEX+R2TD0tTjQDmhAUDz5DyfG/4AaP17FfNsYeRuOGIYBB4cQAbDH12d67kI
+        2YfAh7ba9Sj/tagJgxn3YJTcDi9fu8/TAIIQklGwvQjl2rZCQ1sf4vFCsgyHz5wPvGccgZ8q
+        R/kc9ofzNhPO4RC4ar7D4/AlOF04BzhzKYBVlhWvcAiaPo/hnjKEDIWt3ZEcfRjW3NMhHhqS
+        ftDxZbOHRtbgzY4qLy2EpcUibnsbXOpv8F4TDJ1fXd4LaFjXbFxfF5FSWFAUXgHE2v9VdQDo
+        QRCbpVbIWPU+JXsuQs0o1FlKWcSZNIURrD3L6IrtVxfoXU60AJIAEl9hAiaWivhMtjpXYQGQ
+        QCQBwsWlEKlImMTknmdVaadVWams2gK2EKgkSHhh09tTIlLGZLIpLJvOqjZUHuETnAd2jU/F
+        xscPMMacjAp72NLjFpt/iLNcqsBrZ8pTEhcLywxT7cflm4ZrXsov5j36JtO+dmvTXuFt1IGz
+        2h3o85hY5ueN5mirc+K9X9zQQLijeqG2Mtxnhg3cOTsJTlQtL9lDHb1Ddnff4HD96jjvSWnG
+        0f7YsZEifYGTiTuZHyVB1XJmbxiiUjP/AGAkir0oAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsVy+t/xe7quPHKxBtsuyFp8+Xmb3eJP2wZG
+        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
+        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4ovRsivJLS1IVMvKL
+        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQypn3YxFpwn6fi6Zz1jA2M
+        M7i6GDk5JARMJFbuucHSxcjFISSwlFFi8a+LbBAJKYkfvy6wQtjCEn+udbFBFH1jlGjfdZAd
+        JMEmoCNxavURRhBbBKjh447t7CBFzAInmCW+z/rMBJIQBlpxbfVOsAYWAVWJxt6lQHEODl4B
+        a4mNrSwQC+QlVm84wDyBkWcBI8MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwJDeduzn5h2M
+        lzYGH2IU4GBU4uFNYJOLFWJNLCuuzD3EKMHBrCTC+/23TKwQb0piZVVqUX58UWlOavEhRlOg
+        3ROZpUST84HxllcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVFq
+        s1l8dbKpgeHCl8mvvxT2Nmq7Lz+916b4mrRv9GXPfx4zXcoajz5pTUoOLzOb4vjka6xFgl1w
+        A++NC4w93sIli24stlrSxe+uclN0B1PNUqG0b4mtud+vFBYXHLkwzXnqx91r5S1FKstO5ByN
+        W/JsqXxIvWvhfPMJRrGWEkrfpIL53k1QUmIpzkg01GIuKk4EAHfN9OJ/AgAA
+X-CMS-MailID: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
+References: <CGME20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 04:29:40PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 4, 2019 at 11:47 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > Platform drivers now have the option to have the platform core create
-> > and remove any needed sysfs attribute files.  So take advantage of that
-> > and do not register "by hand" a sysfs file.
-> >
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> > Cc: platform-driver-x86@vger.kernel.org
-> 
-> Is it correct Cc list? Looks like a typo to me.
+Completion queue address reservation could not be undone.
+In case of bad 'queue_id' or skb allocation failure, reserved entry
+will be leaked reducing the total capacity of completion queue.
 
-Ugh, wrong mapping of patch to maintainers, my scripts failed me :(
+Fix that by moving reservation to the point where failure is not
+possible. Additionally, 'queue_id' checking moved out from the loop
+since there is no point to check it there.
 
-I'll resend this with the proper one, thanks.
+Fixes: 35fcde7f8deb ("xsk: support for Tx")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+---
+ net/xdp/xsk.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-greg k-h
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index f53a6ef7c155..703cf5ea448b 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -226,6 +226,9 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 
+ 	mutex_lock(&xs->mutex);
+ 
++	if (xs->queue_id >= xs->dev->real_num_tx_queues)
++		goto out;
++
+ 	while (xskq_peek_desc(xs->tx, &desc)) {
+ 		char *buffer;
+ 		u64 addr;
+@@ -236,12 +239,6 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 			goto out;
+ 		}
+ 
+-		if (xskq_reserve_addr(xs->umem->cq))
+-			goto out;
+-
+-		if (xs->queue_id >= xs->dev->real_num_tx_queues)
+-			goto out;
+-
+ 		len = desc.len;
+ 		skb = sock_alloc_send_skb(sk, len, 1, &err);
+ 		if (unlikely(!skb)) {
+@@ -253,7 +250,7 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 		addr = desc.addr;
+ 		buffer = xdp_umem_get_data(xs->umem, addr);
+ 		err = skb_store_bits(skb, 0, buffer, len);
+-		if (unlikely(err)) {
++		if (unlikely(err) || xskq_reserve_addr(xs->umem->cq)) {
+ 			kfree_skb(skb);
+ 			goto out;
+ 		}
+-- 
+2.17.1
+
