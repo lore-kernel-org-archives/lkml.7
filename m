@@ -2,132 +2,83 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB5C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D664C46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D80A2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WANhg2Kf"
+	by mail.kernel.org (Postfix) with ESMTP id 779462184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfGDPbq (ORCPT
+        id S1727816AbfGDPce convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:31:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53420 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727510AbfGDPbq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:31:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x15so6139222wmj.3;
-        Thu, 04 Jul 2019 08:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0Xzci8CUbNvBihcDS7Q9xsEhF5+lWnqF471ghR2ZAAM=;
-        b=WANhg2KffhIxcHzBZjyQzNGYdvFl+2SSagDh2j/02zvsNp2peZbUbfqc4qS21kj9C8
-         VMFE0EQDX2kkO0+qI5ed7PvzZLN+3jzrSnomrGXtq5CRkR/cXdw8gv+4PR22jiUFAf9o
-         vDCuzgrqLNLxKWdxO5fP0iT75jJ/8Vuj2yXIhA3rn1lXmZTt1AspV3Txo+SUqMFwLAwt
-         olPDG+0YofaP3WwVgBAh/lDjG3t1C8uA9fEe5vkEgeK9/S7OStVSsYkp0q2dE7u3N3se
-         IysNLa+zTKtdwCThIs6Cg8bY1OihYtov0umvPzIcslA6JdmsX2zGX1/KQewtbVBFEM6K
-         0KZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Xzci8CUbNvBihcDS7Q9xsEhF5+lWnqF471ghR2ZAAM=;
-        b=RNWrl67FylJ7u1Md6IpBjEwQKRylYP3YRAVZ/KKZx5B/9SHBOyJgBef7Dnyfp9nMgP
-         LIDAx6jJ+FGfem3RV7xlZIbSujFV6fzZmP7xdo73EW7g134PUNc2J58wuKZnlBYZfF9x
-         lLF7V/p77yAH5HZUjv93etXWnv+5Hln43CUGGefwXvCqh8yN4EvQ+jfs3k27h46D5NkC
-         3nEa8+HWp6xwSwdC1+RHA/DE41x5Ub0jP3cL/IRgd+QN447sPxmj05VUJrIBIlwchdqO
-         abAhXil6KlOo9yp4nPba0F8SJTUTSZM0bRcwDbdH61O5f6rsSjXwZPZjicH+Sp94gNkC
-         PtmA==
-X-Gm-Message-State: APjAAAWh6Puvl4KAZ0xJuZdGRTkxYv7WH4ks0C1ZG4/67PCQKfmyUr8j
-        UacDKK3+RB7Z0649i7bB2Sc=
-X-Google-Smtp-Source: APXvYqwKPOB3FIvd6N6wGs1Vemf1h6LmBM+18pTf7PrTeGPbG5S2dAolDTJCU+JsvJT2k3EIvYAizg==
-X-Received: by 2002:a7b:c04f:: with SMTP id u15mr119524wmc.106.1562254303618;
-        Thu, 04 Jul 2019 08:31:43 -0700 (PDT)
-Received: from [192.168.2.202] (pD9E5A1AA.dip0.t-ipconnect.de. [217.229.161.170])
-        by smtp.gmail.com with ESMTPSA id o6sm10324355wra.27.2019.07.04.08.31.42
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 08:31:42 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <20190702003740.75970-3-luzmaximilian@gmail.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <1d384979-38e8-ccb3-6462-0a8a5380f50d@gmail.com>
-Date:   Thu, 4 Jul 2019 17:31:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 11:32:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57420 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727462AbfGDPcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:32:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 66563AF81;
+        Thu,  4 Jul 2019 15:32:32 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 17:32:31 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Sachin Sant <sachinp@linux.vnet.ibm.com>
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        George Wilson <gcwilson@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>
+Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
+ driver
+Message-ID: <20190704173231.27365b51@kitsune.suse.cz>
+In-Reply-To: <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
+References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
+        <1562241547.6165.81.camel@linux.ibm.com>
+        <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190702003740.75970-3-luzmaximilian@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 2:37 AM, Maximilian Luz wrote:
-> +static int soc_device_check_MSHW0040(struct device *dev)
-> +{
-> +	acpi_handle handle = ACPI_HANDLE(dev);
-> +	union acpi_object *result;
-> +	u64 oem_platform_rev = 0;
-> +	int gpios;
-> +
-> +	// get OEM platform revision
-> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> +					 MSHW0040_DSM_REVISION,
-> +					 MSHW0040_DSM_GET_OMPR, NULL,
-> +					 ACPI_TYPE_INTEGER);
-> +
-> +	if (result) {
-> +		oem_platform_rev = result->integer.value;
-> +		ACPI_FREE(result);
-> +	}
-> +
-> +	if (oem_platform_rev == 0)
-> +		return -ENODEV;
-> +
-> +	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> +
-> +	/*
-> +	 * We are _really_ expecting GPIOs here. If we do not get any, this
-> +	 * means the GPIO driver has not been loaded yet (which can happen).
-> +	 * Try again later.
-> +	 */
-> +	gpios = gpiod_count(dev, NULL);
-> +	if (gpios < 0)
-> +		return -EAGAIN;
-> +
-> +	return 0;
-> +}
+On Thu, 4 Jul 2019 19:26:36 +0530
+Sachin Sant <sachinp@linux.vnet.ibm.com> wrote:
 
-Just had another look at this: Shouldn't the EAGAIN here be
-EPROBE_DEFER?
+> > On 04-Jul-2019, at 5:29 PM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> > On Wed, 2019-07-03 at 23:32 -0400, Nayna Jain wrote:  
+> >> The nr_allocated_banks and allocated banks are initialized as part of
+> >> tpm_chip_register. Currently, this is done as part of auto startup
+> >> function. However, some drivers, like the ibm vtpm driver, do not run
+> >> auto startup during initialization. This results in uninitialized memory
+> >> issue and causes a kernel panic during boot.
+> >> 
+> >> This patch moves the pcr allocation outside the auto startup function
+> >> into tpm_chip_register. This ensures that allocated banks are initialized
+> >> in any case.
+> >> 
+> >> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+> >> PCR read")
+> >> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>  
+> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>  
+> 
+> Thanks for the fix. Kernel boots fine with this fix.
+> 
+> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> 
 
-The reasoning is that we would want to defer probing of the driver if we
-can't get any GPIO pins, since we know that MSHW0040 should have some.
-It has in the past been reported that the driver didn't load properly
-(without this check), since it could happen that the GPIO subsystem
-wasn't quite ready yet when probing.
+Tested-by: Michal Suchánek <msuchanek@suse.de>
 
-Best,
-Maximilian
+Thanks
+
+Michal
