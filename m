@@ -2,309 +2,152 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3321AC06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9423BC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013F7218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D727218BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="mHQvHY69"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="I/Limrpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfGDIH7 (ORCPT
+        id S1727054AbfGDIJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:07:59 -0400
-Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:11728 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726679AbfGDIH6 (ORCPT
+        Thu, 4 Jul 2019 04:09:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36775 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfGDIJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:07:58 -0400
-X-Greylist: delayed 740 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jul 2019 04:07:56 EDT
-Received: from pps.filterd (m0098778.ppops.net [127.0.0.1])
-        by mx0b-00010702.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x647pTNW031251;
-        Thu, 4 Jul 2019 02:55:35 -0500
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2052.outbound.protection.outlook.com [104.47.44.52])
-        by mx0b-00010702.pphosted.com with ESMTP id 2tg8maen38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 02:55:35 -0500
+        Thu, 4 Jul 2019 04:09:57 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so5583133wrs.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 01:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector1-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PTScymKrbZuyQJKBBmmZcGw8tVtId9VZiPFd4x3NYto=;
- b=mHQvHY69drauef6Z9OGz6wj1s636oqj9GfVl0JFvdDv3ZML2n8in6rg5ma+4Tb2iXJ7PtxGhHb91XL21RY6TTXidZKdZwOEGEFuxAHJ6pGdAJKnq0/rfJYYc0CKGzP+FlRR7g5m3eUZ/vPzh1YUj6SIIPkHo9WIJr37Co7fwbrk=
-Received: from MN2PR04MB5920.namprd04.prod.outlook.com (20.179.21.161) by
- MN2PR04MB6334.namprd04.prod.outlook.com (52.132.168.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.16; Thu, 4 Jul 2019 07:55:34 +0000
-Received: from MN2PR04MB5920.namprd04.prod.outlook.com
- ([fe80::7ca2:1dbc:355d:64c7]) by MN2PR04MB5920.namprd04.prod.outlook.com
- ([fe80::7ca2:1dbc:355d:64c7%5]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
- 07:55:33 +0000
-From:   Je Yen Tam <je.yen.tam@ni.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Thread-Topic: [EXTERNAL] Re: [PATCH V2 1/2] serial/8250: Add support for
- NI-Serial PXI/PXIe+485 devices
-Thread-Index: AQHVMXBj7eo/fZvhYE2S6PzURXggyqa4k5MAgAFlzOA=
-Date:   Thu, 4 Jul 2019 07:55:33 +0000
-Message-ID: <MN2PR04MB59207BEC9DBAB5E69656DD42B7FA0@MN2PR04MB5920.namprd04.prod.outlook.com>
-References: <20190703072435.34152-1-je.yen.tam@ni.com>
- <20190703084220.GD8996@kroah.com>
-In-Reply-To: <20190703084220.GD8996@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [130.164.75.17]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f34922a8-ac03-4326-0146-08d70054fe4e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6334;
-x-ms-traffictypediagnostic: MN2PR04MB6334:
-x-microsoft-antispam-prvs: <MN2PR04MB63349A2D527C1FC5395462F0B7FA0@MN2PR04MB6334.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(33656002)(25786009)(4326008)(6916009)(316002)(6116002)(71200400001)(71190400001)(73956011)(66946007)(76116006)(66556008)(64756008)(66446008)(66066001)(66476007)(3846002)(7736002)(86362001)(305945005)(74316002)(2906002)(81156014)(446003)(11346002)(5660300002)(8676002)(76176011)(99286004)(256004)(68736007)(14444005)(54906003)(478600001)(486006)(8936002)(52536014)(476003)(81166006)(55016002)(229853002)(102836004)(186003)(26005)(9686003)(6506007)(7696005)(53936002)(6436002)(14454004)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6334;H:MN2PR04MB5920.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ni.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +R7cjd0SjsPBXSqwAi7HxXOnSmeUA1QT0sJ8NYE04m7SC/WuR3kwJTAPHzLp9Xa9vtRp+TXSAQToXseNisYRxd2oqtjgbSR6Dfhgr5uJVjZzFKHst0p4iuqLD9p2W7Qzy50hM0qe9ZqOI4Nydl5Ug4d9RLVaSTyaO17AQbOo0BerIsEusZAZjUqcMHGUWcMc6bx6dAoksSIIHb0oDsgMTI50Vk40a2MOtTJPXF8CyJxQCNp3KavpU2SP/n3fdzvd/yagi5or6atVzxo+HjOksBRkjvjx1Dsaquk68yIKCeEH8bAWt/ikimlfKtwGXMZWiZpuZG5OFQ6G68kj8oMibSFFt/17Cy/67XmZy99QjXpYCqm03gvzUa0ZXQKNUt2+8gBlzsO/nrCwFe0sFfNsnc4SgaYFz4xlnA+nK9KbZ2I=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ikIOKBV36H/Xx1iuFIPI2qkuopRb0oqwGFKJA2jzmY4=;
+        b=I/LimrpioiWUl+TQIxDzRUuF3Atd37fYhfeZDCXfS3Ifza1QV3qL8hlvjJ/vGuk8Yz
+         2UY8Fd26nxylwrUL52R1hDOuoT0hPmJYMLXXLavrZAeWDIyuIFJvxMRrerEhw+ecH9HY
+         6MX+olxNieSfywey7Cw8GkZ3JOaYzvSXAaT6SLHt6pbdfOIIU7vG86ffZJCUM+L2Jtkr
+         QbJ42HuXTdTckIw4vuToyYxZ0rY6jmRgzM6dVveKzM3OZA42KZ3Zx+aLz9ZAg2L/O816
+         HODt2JTXwQzDhEQpB7Rkl/r7tN3LUYg/l3R/D/jLTQ98VrZIHEYzqT3bt20m8h/aC+SQ
+         hOig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ikIOKBV36H/Xx1iuFIPI2qkuopRb0oqwGFKJA2jzmY4=;
+        b=THWjLmVOixQ4EBvYZM0QXkYOLlAgpG8q3yFsrQzNyXrAR5tilYMq7rvHfSbfRtUDpP
+         aeyi8K3EbqyC6h1ixdpa/dHK/OhQiI2Vxu6CojclXpRFvR5zg5w8sWASDeYJxWncJY8J
+         tj+3GMqJuB7RHEZ/ktXNTdF0umO0VJskx4tfRADDNEMepo43KFOIwGyd/OCs3E4dTJer
+         WUInCMrTUsHyk/3Fpdhlz10qBRKT12nLjfufKJUFJxhEwoN7kLwjZb3AdlMAOcYKKZo6
+         zmK2fckRstk4s2Kib1XdovhzioNAK1EktXBlILo5VUf8hIdwxq2RkulOK3qJjN70iFcI
+         vp3g==
+X-Gm-Message-State: APjAAAU/c3aGAZfYVo4mhIV89sS02m23+3DeR78+gdtqTGf9uCeuj7HS
+        M9ga5huTvvZJT49szCp/Jf+0+g==
+X-Google-Smtp-Source: APXvYqxtJJPyG4RX207axr0ToNgMTD3BFhUKT7pEJfs8Zwuc3CesCIlqz0qlHQjj96AAD8AbNBdIGw==
+X-Received: by 2002:a5d:6182:: with SMTP id j2mr21751875wru.275.1562227795632;
+        Thu, 04 Jul 2019 01:09:55 -0700 (PDT)
+Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
+        by smtp.gmail.com with ESMTPSA id a2sm5896823wmj.9.2019.07.04.01.09.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 01:09:55 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 10:09:54 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 08/15] ethtool: move string arrays into
+ common file
+Message-ID: <20190704080954.GH2250@nanopsycho>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <0647ac484dac2c655d0e4260d81e86405688ff5b.1562067622.git.mkubecek@suse.cz>
+ <20190703134452.GZ2250@nanopsycho>
+ <20190703143722.GN20101@unicorn.suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f34922a8-ac03-4326-0146-08d70054fe4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 07:55:33.7453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: je.yen.tam@ni.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6334
-Subject: RE: Re: [PATCH V2 1/2] serial/8250: Add support for NI-Serial PXI/PXIe+485
- devices
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=30 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703143722.GN20101@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, Jul 03, 2019 at 12:24:35AM -0700, jeyentam wrote:
-> > Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
-> >
-> > Signed-off-by: jeyentam <je.yen.tam@ni.com>
->=20
-> I need a "full" name here please.
+Wed, Jul 03, 2019 at 04:37:22PM CEST, mkubecek@suse.cz wrote:
+>On Wed, Jul 03, 2019 at 03:44:52PM +0200, Jiri Pirko wrote:
+>> Tue, Jul 02, 2019 at 01:50:19PM CEST, mkubecek@suse.cz wrote:
+>> >Introduce file net/ethtool/common.c for code shared by ioctl and netlink
+>> >ethtool interface. Move name tables of features, RSS hash functions,
+>> >tunables and PHY tunables into this file.
+>> >
+>> >Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>> >---
+>> > net/ethtool/Makefile |  2 +-
+>> > net/ethtool/common.c | 84 ++++++++++++++++++++++++++++++++++++++++++++
+>> > net/ethtool/common.h | 17 +++++++++
+>> > net/ethtool/ioctl.c  | 83 ++-----------------------------------------
+>> > 4 files changed, 104 insertions(+), 82 deletions(-)
+>> > create mode 100644 net/ethtool/common.c
+>> > create mode 100644 net/ethtool/common.h
+>> >
+>> >diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+>> >index 482fdb9380fa..11782306593b 100644
+>> >--- a/net/ethtool/Makefile
+>> >+++ b/net/ethtool/Makefile
+>> >@@ -1,6 +1,6 @@
+>> > # SPDX-License-Identifier: GPL-2.0
+>> > 
+>> >-obj-y				+= ioctl.o
+>> >+obj-y				+= ioctl.o common.o
+>> > 
+>> > obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+>> > 
+>> >diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+>> >new file mode 100644
+>> >index 000000000000..b0ce420e994e
+>> >--- /dev/null
+>> >+++ b/net/ethtool/common.c
+>> >@@ -0,0 +1,84 @@
+>> >+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>> >+
+>> >+#include "common.h"
+>> >+
+>> >+const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
+>> 
+>> const char *netdev_features_strings[NETDEV_FEATURE_COUNT] = {
+>> ?
+>> 
+>> Same with the other arrays.
+>
+>These are not new tables, this patch only moves existing tables from
+>ioctl.c (originally net/core/ethtool.c) into common.c so that they can
+>be used by both ioctl and netlink code.
+>
+>This fixed size string array format is used by ETHTOOL_GSTRINGS ioctl
+>command. So if we switch these into simple const char *table[], we can
+>get rid of some complexity in strset.c and bitset.c (the "simple" vs.
+>"legacy" string set mess) but we would have to convert them into the
+>fixed size string array in ioctl ETHTOOL_GSTRINGS handler. And then we
+>would also have to convert (or rather "index") string sets retrieved
+>from NIC driver (e.g. private flags, stats, tests) - which also means an
+>extra kmalloc() (or rather kmalloc_array()).
+>
+>It an option I'm certainly open to if we agree on it but it's not for
+>free.
 
-Ok, will do so.
+Got it. I don't think we need to do this now. But it would be certainly
+nice to fix this later on.
 
->=20
-> Also, this patch breaks the build, which is not allowed, and makes me won=
-der how
-> you tested it :(
-
-I've tested my changes with the steps as follows, it did not break.
-
-1. Clone the Linux repo, check out the source and work on my project.
-2. Compile the kernel source with "make j4".
-3. Build the kernel modules with "make modules_install".
-4. Install the kernel with "make install".
-5. Reboot into the newly built kernel.
-6. The kernel worked well and able to fit my needs.
-
-Noted that my source is checked out from the latest Linux kernel 5.2.0-rc6.
-
-Also, I checked my patch using checkpatch.pl, it did not show any errors an=
-d=20
-warnings too.
-
-May I know what do you mean by breaking the build?
-
->=20
-> Please fix up properly and resend.
->=20
-> Also, some comments below:
->=20
-> > ---
-> >  drivers/tty/serial/8250/8250_pci.c | 293
-> > ++++++++++++++++++++++++++++-
-> >  1 file changed, 289 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/tty/serial/8250/8250_pci.c
-> > b/drivers/tty/serial/8250/8250_pci.c
-> > index df41397de478..ac8138adea9c 100644
-> > --- a/drivers/tty/serial/8250/8250_pci.c
-> > +++ b/drivers/tty/serial/8250/8250_pci.c
-> > @@ -730,8 +730,16 @@ static int pci_ni8430_init(struct pci_dev *dev)
-> > }
-> >
-> >  /* UART Port Control Register */
-> > -#define NI8430_PORTCON	0x0f
-> > -#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
->=20
-> Why are you renaming these #defines?
-
-NI8430 device is using standard 16550 UART chip so I standardize all the 16=
-550=20
-UART related #defines to UART chip specific name rather than device specifi=
-c.
-
->=20
-> > +#define NI16550_PCR_OFFSET	0x0f
-> > +#define NI16550_PCR_RS422	0x00
-> > +#define NI16550_PCR_ECHO_RS485	0x01
-> > +#define NI16550_PCR_DTR_RS485	0x02
-> > +#define NI16550_PCR_AUTO_RS485	0x03
-> > +#define NI16550_PCR_WIRE_MODE_MASK	0x03
-> > +#define NI16550_PCR_TXVR_ENABLE_BIT	(1 << 3)
->=20
-> BIT(3)?
-
-Ok, will change to this style.
-
->=20
-> > +#define NI16550_PCR_RS485_TERMINATION_BIT	(1 << 6)
->=20
-> BIT(6)?
-
-Also, will change this.
-
->=20
-> > +#define NI16550_ACR_DTR_AUTO_DTR	(0x2 << 3)
-> > +#define NI16550_ACR_DTR_MANUAL_DTR	(0x0 << 3)
-> >
-> >  static int
-> >  pci_ni8430_setup(struct serial_private *priv, @@ -753,14 +761,127 @@
-> > pci_ni8430_setup(struct serial_private *priv,
-> >  		return -ENOMEM;
-> >
-> >  	/* enable the transceiver */
-> > -	writeb(readb(p + offset + NI8430_PORTCON) |
-> NI8430_PORTCON_TXVR_ENABLE,
-> > -	       p + offset + NI8430_PORTCON);
-> > +	writeb(readb(p + offset + NI16550_PCR_OFFSET) |
-> > +			NI16550_PCR_TXVR_ENABLE_BIT,
-> > +			p + offset + NI16550_PCR_OFFSET);
->=20
-> Why indent like this?  Please follow the indentation that used to be ther=
-e.
-
-I moved the indentation because it complained this line exceeded 80 charact=
-ers=20
-when I check the patch. I will change back to original indentation.
-
->=20
-> >
-> >  	iounmap(p);
-> >
-> >  	return setup_port(priv, port, bar, offset, board->reg_shift);  }
-> >
-> > +static int pci_ni8431_config_rs485(struct uart_port *port,
-> > +	struct serial_rs485 *rs485)
-> > +{
-> > +	u8 pcr, acr;
-> > +
-> > +	struct uart_8250_port *up;
-> > +
-> > +	up =3D container_of(port, struct uart_8250_port, port);
-> > +
-> > +	acr =3D up->acr;
-> > +
-> > +	dev_dbg(port->dev, "ni16550_config_rs485\n");
->=20
-> No need for debugging lines like this, use ftrace please.
-
-Ok, will update this.
-
->=20
-> > +
-> > +	/* "rs485" should be given to us non-NULL. */
-> > +	WARN_ON(rs485 =3D=3D NULL);
->=20
-> Don't crash people's machines, if this can never happen, then no need for=
- this line.  If
-> it can happen, test and properly return an error.
-
-This is more like a fail safe approach, it should never happen, will remove=
- this line.
-
->=20
-> > +
-> > +	pcr =3D port->serial_in(port, NI16550_PCR_OFFSET);
-> > +	pcr &=3D ~NI16550_PCR_WIRE_MODE_MASK;
-> > +
-> > +	if (rs485->flags & SER_RS485_ENABLED) {
-> > +		/* RS-485 */
-> > +		if ((rs485->flags & SER_RS485_RX_DURING_TX) &&
-> > +			(rs485->flags & SER_RS485_RTS_ON_SEND)) {
-> > +			dev_dbg(port->dev, "Invalid 2-wire mode\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		if (rs485->flags & SER_RS485_RX_DURING_TX) {
-> > +			/* Echo */
-> > +			dev_vdbg(port->dev, "2-wire DTR with echo\n");
-> > +			pcr |=3D NI16550_PCR_ECHO_RS485;
-> > +			acr |=3D NI16550_ACR_DTR_MANUAL_DTR;
-> > +		} else {
-> > +			/* Auto or DTR */
-> > +			if (rs485->flags & SER_RS485_RTS_ON_SEND) {
-> > +				/* Auto */
-> > +				dev_vdbg(port->dev, "2-wire Auto\n");
-> > +				pcr |=3D NI16550_PCR_AUTO_RS485;
-> > +				acr |=3D NI16550_ACR_DTR_AUTO_DTR;
-> > +			} else {
-> > +				/* DTR-controlled */
-> > +				/* No Echo */
-> > +				dev_vdbg(port->dev, "2-wire DTR no echo\n");
-> > +				pcr |=3D NI16550_PCR_DTR_RS485;
-> > +				acr |=3D NI16550_ACR_DTR_MANUAL_DTR;
-> > +			}
-> > +		}
-> > +	} else {
-> > +		/* RS-422 */
-> > +		dev_vdbg(port->dev, "4-wire\n");
-> > +		pcr |=3D NI16550_PCR_RS422;
-> > +		acr |=3D NI16550_ACR_DTR_MANUAL_DTR;
-> > +	}
-> > +
-> > +	dev_dbg(port->dev, "write pcr: 0x%08x\n", pcr);
-> > +	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
-> > +
-> > +	up->acr =3D acr;
-> > +	port->serial_out(port, UART_SCR, UART_ACR);
-> > +	port->serial_out(port, UART_ICR, up->acr);
-> > +
-> > +	/* Update the cache. */
-> > +	port->rs485 =3D *rs485;
-> > +
-> > +	dev_dbg(port->dev, "ni16550_config_rs485\n");
->=20
-> Again, use ftrace, not dev_dbg() for stuff like this.
-
-Will do so.
-
->=20
-> thanks,
->=20
-> greg k-h
-
-
-Thank you.
-Regards,
-Je Yen Tam
-Staff Software Engineer
-National Instruments=A0
-o=A0=A0 604-3776397
-e=A0=A0 je.yen.tam@ni.com
-
+>
+>Michal
