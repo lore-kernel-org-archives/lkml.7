@@ -2,191 +2,178 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D4CC06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24533C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8032218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=acronis.com header.i=@acronis.com header.b="KP6WW9YU"
+	by mail.kernel.org (Postfix) with ESMTP id 00A77218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfGDL1U (ORCPT
+        id S1727626AbfGDL2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:27:20 -0400
-Received: from us-edge-1.acronis.com ([69.20.59.99]:54032 "EHLO
-        us-edge-1.acronis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbfGDL1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:27:20 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jul 2019 07:27:18 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=acronis.com
-        ; s=exim; h=MIME-Version:Content-Transfer-Encoding:Content-Type:Message-ID:
-        Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ebLt+rgN7+eRdUOrhQJKd9HTr215QAx3NpL4JVnj+J8=; b=KP6WW9YUufMfCC1ywYXDnLOq3q
-        fgNT8E2lfEOrE/LW2ounRUZwyldYFc+S8LIhlVsQEeZk63EEvq+1dr4ueTA6M6FNBP8T8YaRXnzkX
-        1rYSUkfgcktdNKXfhLp9x2Y4FL8vkGNdqiPq5bM0nkVp3EI5PxQSZuJ//AStH7K5IgIY=;
-Received: from [91.195.22.121] (helo=ru-ex-2.corp.acronis.com)
-        by us-edge-1.acronis.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <Filipp.Mikoian@acronis.com>)
-        id 1hizoO-0001FI-SQ; Thu, 04 Jul 2019 07:22:00 -0400
-Received: from ru-ex-2.corp.acronis.com (10.250.32.21) by
- ru-ex-2.corp.acronis.com (10.250.32.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1591.10; Thu, 4 Jul 2019 14:21:57 +0300
-Received: from ru-ex-2.corp.acronis.com ([fe80::3163:6934:fc33:4bd3]) by
- ru-ex-2.corp.acronis.com ([fe80::3163:6934:fc33:4bd3%4]) with mapi id
- 15.01.1591.011; Thu, 4 Jul 2019 14:21:57 +0300
-From:   Filipp Mikoian <Filipp.Mikoian@acronis.com>
-To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "jmoyer@redhat.com" <jmoyer@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-Subject: io_uring question
-Thread-Topic: io_uring question
-Thread-Index: AQHVMlktc6wBW1EANEu5MaqUCERTlQ==
-Date:   Thu, 4 Jul 2019 11:21:57 +0000
-Message-ID: <76524892f9c048ea88c7d87295ec85ae@acronis.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.250.3.5]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 4 Jul 2019 07:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbfGDL2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:28:37 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51968218A0;
+        Thu,  4 Jul 2019 11:28:35 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 07:28:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 00/12] tracing/probe: Add multi-probes per event
+ support
+Message-ID: <20190704072833.4bc17d3c@gandalf.local.home>
+In-Reply-To: <20190704153958.16a97c881aebbc5898b1264e@kernel.org>
+References: <156095682948.28024.14190188071338900568.stgit@devnote2>
+        <20190704153958.16a97c881aebbc5898b1264e@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MessageID-Signature: 294ead3f9692afd3605e2efd4a21308e2b740685
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi dear io_uring developers,
+On Thu, 4 Jul 2019 15:39:58 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Recently I started playing with io_uring, and the main difference I expecte=
-d
-to see with old AIO(io_submit(), etc.) was submission syscall(io_uring_ente=
-r())
-not blocking in case submission might take long time, e.g. if waiting for a=
- slot
-in block device request queue is required. AFAIU, 'workers' machinery is us=
-ed
-solely to be able to submit requests in async context, thus not forcing cal=
-ling
-thread to block for a significant time. At worst EAGAIN is expected.
+> Hi Steve,
+> 
+> Would you have any comment on this?
+> 
 
-However, when I installed fresh 5.2.0-rc7 kernel on the machine with HDD wi=
-th
-64-requests-deep queue, I noticed significant increase in time spent in
-io_uring_enter() once request queue became full. Below you can find output
-of the program that submits random(in 1GB range) 4K read requests in batche=
-s
-of 32. Though O_DIRECT is used, the same phenomenon is observed when using
-page cache. Source code can be found here:
-https://github.com/Phikimon/io_uring_question
+Hi Masami,
 
-While analyzing stack dump, I found out that IOCB_NOWAIT flag being set
-does not prevent generic_file_read_iter() from calling blkdev_direct_IO(),
-so thread gets stuck for hundreds of milliseconds. However, I am not a
-Linux kernel expert, so I can not be sure this is actually related to the
-mentioned issue.
+It's on my todo list. As today is a US holiday, I'll look at this on
+Monday.
 
-Is it actually expected that io_uring would sleep in case there is no slot
-in block device's request queue, or is this a bug of current implementation=
-?
+Thanks for the reminder!
 
-root@localhost:~/io_uring# uname -msr
-Linux 5.2.0-rc7 x86_64
-root@localhost:~/io_uring# hdparm -I /dev/sda | grep Model
-Model Number:       Hitachi HTS541075A9E680
-root@localhost:~/io_uring# cat /sys/block/sda/queue/nr_requests
-64
-root@localhost:~/io_uring# ./io_uring_read_blkdev /dev/sda8
-submitted_already =3D   0, submitted_now =3D  32, submit_time =3D     246 u=
-s
-submitted_already =3D  32, submitted_now =3D  32, submit_time =3D     130 u=
-s
-submitted_already =3D  64, submitted_now =3D  32, submit_time =3D  189548 u=
-s
-submitted_already =3D  96, submitted_now =3D  32, submit_time =3D  121542 u=
-s
-submitted_already =3D 128, submitted_now =3D  32, submit_time =3D  128314 u=
-s
-submitted_already =3D 160, submitted_now =3D  32, submit_time =3D  136345 u=
-s
-submitted_already =3D 192, submitted_now =3D  32, submit_time =3D  162320 u=
-s
-root@localhost:~/io_uring# cat pstack_output # This is where process slept
-[<0>] io_schedule+0x16/0x40
-[<0>] blk_mq_get_tag+0x166/0x280
-[<0>] blk_mq_get_request+0xde/0x380
-[<0>] blk_mq_make_request+0x11e/0x5b0
-[<0>] generic_make_request+0x191/0x3c0
-[<0>] submit_bio+0x75/0x140
-[<0>] blkdev_direct_IO+0x3f8/0x4a0
-[<0>] generic_file_read_iter+0xbf/0xdc0
-[<0>] blkdev_read_iter+0x37/0x40
-[<0>] io_read+0xf6/0x180
-[<0>] __io_submit_sqe+0x1cd/0x6a0
-[<0>] io_submit_sqe+0xea/0x4b0
-[<0>] io_ring_submit+0x86/0x120
-[<0>] __x64_sys_io_uring_enter+0x241/0x2d0
-[<0>] do_syscall_64+0x60/0x1a0
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[<0>] 0xffffffffffffffff
+-- Steve
 
-P.S. There are also several suspicious places in liburing and io_uring's ke=
-rnel
-     part. I'm not sure if these are really bugs, so please point out if an=
-y of
-     them needs a fixing patch. Among them:
-1. Inaccurate handling of errors in liburing/__io_uring_submit(). Because
-   liburing currently does not care about queue head that kernel sets, it c=
-annot
-   know how many entries have been actually consumed. In case e.g.
-   io_uring_enter() returns EAGAIN, and consumes none of the sqes, sq->sqe_=
-head
-   still advances in __io_uring_submit(), this can eventually cause both
-   io_uring_submit() and io_uring_sqe() return 0 forever.
-2. There is also a related issue -- when using IORING_SETUP_SQPOLL, in case
-   polling kernel thread already went to sleep(IORING_SQ_NEED_WAKEUP is set=
-),
-   io_uring_enter() just wakes it up and immediately reports all @to_submit
-   requests are consumed, while this is not true until awaken thread will m=
-anage
-   to handle them. At least this contradicts with man page, which states:
-   > When the system call returns that a certain amount of SQEs have been
-   > consumed and submitted, it's safe to reuse SQE entries in the ring.
-   It is easy to reproduce this bug -- just change e.g. ->offset field in t=
-he
-   SQE immediately after io_uring_enter() successfully returns and you will=
- see
-   that IO happened on new offset.
-3. Again due to lack of synchronization between io_sq_thread() and
-   io_uring_enter(), in case the ring is full and IORING_SETUP_SQPOLL is us=
-ed,
-   it seems there is no other way for application to wait for slots in SQ t=
-o
-   become available but busy waiting for *sq->khead to advance. Thus from o=
-ne
-   busy waiting thread we get two. Is this the expected behavior? Should th=
-e
-   user of IORING_SETUP_SQPOLL busy wait for slots in SQ?
-4. Minor one: in case sq_thread_idle is set to ridiculously big value(e.g. =
-100
-   sec), kernel watchdog starts reporting this as a bug.
-   > Message from syslogd@centos-linux at Jun 21 20:00:04 ...
-   >  kernel:watchdog: BUG: soft lockup - CPU#0 stuck for 21s! [io_uring-sq=
-:10691]
 
-Looking forward to your reply and thank you in advance.=
+> Thank you,
+> 
+> On Thu, 20 Jun 2019 00:07:09 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Hello,
+> > 
+> > This is the 2nd version of multi-probes per event support on ftrace
+> > and perf-tools.
+> > 
+> > Previous version is here;
+> > https://lkml.org/lkml/2019/5/31/573
+> >   
+> > >From this version, I omitted first 9 patches which has been picked  
+> > to Steve's tree.
+> > In this version, I've fixed some bugs and hardened some unexpected
+> > error cases according to Steve's comment.
+> > Here are changes in this version:
+> > 
+> >  - [1/12] This have below changes. 
+> >     - Warn if the primary trace_probe does not exist.
+> >     - Fix enable_trace_kprobe() to not return error if the any probes
+> >       are "gone" state. If all probes have gone or any other error
+> >       reason, the event can not be enabled and return error.
+> >     - Fix trace_probe_enable() to roll back all enabled uprobe if
+> >       any one of uprobe is failed to enable.
+> >  - [7/12] Swap the checking order of filename for avoiding unexpected
+> >      memory access.
+> > 
+> > 
+> > ====
+> > For trace-event, we can insert same trace-event on several places
+> > on the code, and those can record similar information as a same event
+> > with same format.
+> > 
+> > This series implements similar feature on probe-event. Since the probe
+> > event is based on the compiled binary, sometimes we find that the target
+> > source line is complied into several different addresses, e.g. inlined
+> > function, unrolled loop, etc. In those cases, it is useful to put a
+> > same probe-event on different addresses.
+> > 
+> > With this series, we can append multi probes on one event as below
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
+> >   # kprobe_events
+> >   p:kprobes/testevent _do_fork r1=%ax r2=%dx
+> >   p:kprobes/testevent fork_idle r1=%ax r2=%cx
+> > 
+> > This means testevent is hit on both of _do_fork and fork_idle.
+> > As you can see, the appended event must have same number of arguments
+> > and those must have same 'type' and 'name' as original one. This is like
+> > a function signature, it checks whether the appending event has the same
+> > type and name of event arguments and same probe type, but doesn't care
+> > about the assignment.
+> > 
+> > So, below appending commands will be rejected.
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax >> kprobe_events
+> >   (No 2nd argument)
+> >   # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
+> >   (The type of 2nd argument is different)
+> > 
+> > If one inlined code has an argument on a register, but another
+> > inlined code has fixed value (as a result of optimization),
+> > you can also specify the fixed immediate value, e.g.
+> > 
+> >   # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
+> >   # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
+> > 
+> > 
+> > Thank you,
+> > 
+> > ---
+> > 
+> > Masami Hiramatsu (12):
+> >       tracing/probe: Split trace_event related data from trace_probe
+> >       tracing/dynevent: Delete all matched events
+> >       tracing/dynevent: Pass extra arguments to match operation
+> >       tracing/kprobe: Add multi-probe per event support
+> >       tracing/uprobe: Add multi-probe per uprobe event support
+> >       tracing/kprobe: Add per-probe delete from event
+> >       tracing/uprobe: Add per-probe delete from event
+> >       tracing/probe: Add immediate parameter support
+> >       tracing/probe: Add immediate string parameter support
+> >       selftests/ftrace: Add a testcase for kprobe multiprobe event
+> >       selftests/ftrace: Add syntax error test for immediates
+> >       selftests/ftrace: Add syntax error test for multiprobe
+> > 
+> > 
+> >  Documentation/trace/kprobetrace.rst                |    1 
+> >  Documentation/trace/uprobetracer.rst               |    1 
+> >  kernel/trace/trace.c                               |    8 -
+> >  kernel/trace/trace_dynevent.c                      |   10 +
+> >  kernel/trace/trace_dynevent.h                      |    7 -
+> >  kernel/trace/trace_events_hist.c                   |    4 
+> >  kernel/trace/trace_kprobe.c                        |  241 ++++++++++++++----
+> >  kernel/trace/trace_probe.c                         |  176 +++++++++++--
+> >  kernel/trace/trace_probe.h                         |   67 ++++-
+> >  kernel/trace/trace_uprobe.c                        |  263 +++++++++++++++-----
+> >  tools/testing/selftests/ftrace/test.d/functions    |    2 
+> >  .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |   35 +++
+> >  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   15 +
+> >  13 files changed, 665 insertions(+), 165 deletions(-)
+> >  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
+> > 
+> > --
+> > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>  
+> 
+> 
+
