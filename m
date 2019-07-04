@@ -2,166 +2,146 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66723C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF2C4646D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC0C218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1qAD8fv"
+	by mail.kernel.org (Postfix) with ESMTP id 24E86218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfGDJeE (ORCPT
+        id S1727479AbfGDJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:34:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42389 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfGDJeD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:34:03 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s19so3055586lfb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bbnl/1QRNnrJXWes6iiR1igoTLtbX1SM4SwlahpOBOQ=;
-        b=V1qAD8fvU9ZlAjdcnAyNCm3heZtBMMaC4+JhDzVY0LxmxrMP+jmTTBkghymnvXaodZ
-         5YqZlX4AHhwZlO1tKnYgWILWu6RBqIftA3kjbAVcfqFlTfue20zQu3qAA76fPohWNNlf
-         MT0iyHjPFwsl3AjcQqxQa/KBpvowBNgIp7fbrZtx2nN/02dQXnI4cQOPLvKg9uvnAoUM
-         e3Eg6vuVnLuiB+lQJMbfi01O2XKaCpSLXI3GPFlyDMh6ppogu2m4E32hRZ0Zqn6+qPep
-         5f7qbG0ZnOnWHimnVvgCuUyfckHUAe0jyw0OQTBchwPg+nvL2rSDtgsfetCdFfFdDZw3
-         5Ozw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bbnl/1QRNnrJXWes6iiR1igoTLtbX1SM4SwlahpOBOQ=;
-        b=NT1nlApXdiCi0AIrUb/p+Qagpiw9IDiodw2xI0sWI/i0p81uU3lel3mUqPL/FtVwA7
-         1/9PE2IPsHRBXoIAJUqzDEYMUUD86nqeOGrz4H39wCa+ceHbD3lqlsIxLsHP+92sLBZE
-         MyT+aZPxF+yImaWQC9EdLKJNKlo5ovq/kF5dOwEGXInnc/0I3zdFNZNrQeGCKiY1xJcm
-         UT6gaUCOw3YJ0WihdrN532HbGUUoTVcv99Pm3TVQuSlGCzMStFW3IypB2zSSrn6+USlt
-         O+5QzLG/Aq/ANjqL3eZZ5MsRzcyy0OXTmpc79GeOSBVzKDMnBQnyWX7/XV29Nsc+w6TP
-         haEQ==
-X-Gm-Message-State: APjAAAVW7Z9AHnPjSNOhQVEk4rPlt/Ph8UOaez63hG2PkOlgh2smJevS
-        +v+4LxD+qPTCXcnu3vniGWQ7K2vaWI+yEfi8CwHXMg==
-X-Google-Smtp-Source: APXvYqyVHgB/XdPi+PhglaImDqJX2XrddFQFBQD9AnFh7Ea76Xr7PezvCVQknkOgvBk14iGgIZ9G5OBzJ3hvQcHrGvo=
-X-Received: by 2002:a19:ec15:: with SMTP id b21mr22141110lfa.32.1562232841324;
- Thu, 04 Jul 2019 02:34:01 -0700 (PDT)
+        Thu, 4 Jul 2019 05:34:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:37780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727242AbfGDJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:34:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87C59344;
+        Thu,  4 Jul 2019 02:34:28 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158643F703;
+        Thu,  4 Jul 2019 02:34:26 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
+To:     Will Deacon <will@kernel.org>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        jacob.jun.pan@linux.intel.com, joro@8bytes.org,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        eric.auger@redhat.com, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-5-jean-philippe.brucker@arm.com>
+ <20190626180025.g4clm6qnbbna65de@willie-the-truck>
+Message-ID: <104a20b7-ebb1-1569-3f6b-94438b9dbf76@arm.com>
+Date:   Thu, 4 Jul 2019 10:33:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190628204913.10287-1-riel@surriel.com> <20190628204913.10287-6-riel@surriel.com>
-In-Reply-To: <20190628204913.10287-6-riel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 4 Jul 2019 11:33:50 +0200
-Message-ID: <CAKfTPtBOWeEH1T77Cm92R3BfM85ii6mbocidtAPyWN4Vq0q7SA@mail.gmail.com>
-Subject: Re: [PATCH 05/10] sched,fair: remove cfs rqs from leaf_cfs_rq_list
- bottom up
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190626180025.g4clm6qnbbna65de@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Jun 2019 at 22:49, Rik van Riel <riel@surriel.com> wrote:
->
-> Reducing the overhead of the CPU controller is achieved by not walking
-> all the sched_entities every time a task is enqueued or dequeued.
->
-> One of the things being checked every single time is whether the cfs_rq
-> is on the rq->leaf_cfs_rq_list.
->
-> By only removing a cfs_rq from the list once it no longer has children
-> on the list, we can avoid walking the sched_entity hierarchy if the bottom
-> cfs_rq is on the list, once the runqueues have been flattened.
->
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> ---
->  kernel/sched/fair.c  | 17 +++++++++++++++++
->  kernel/sched/sched.h |  1 +
->  2 files changed, 18 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 63cb40253b26..e41feacc45d9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -286,6 +286,13 @@ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
->
->         cfs_rq->on_list = 1;
->
-> +       /*
-> +        * If the tmp_alone_branch cursor was moved, it means a child cfs_rq
-> +        * is already on the list ahead of us.
-> +        */
-> +       if (rq->tmp_alone_branch != &rq->leaf_cfs_rq_list)
-> +               cfs_rq->children_on_list++;
-> +
->         /*
->          * Ensure we either appear before our parent (if already
->          * enqueued) or force our parent to appear after us when it is
-> @@ -311,6 +318,7 @@ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
->                  * list.
->                  */
->                 rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
-> +               cfs_rq->tg->parent->cfs_rq[cpu]->children_on_list++;
->                 return true;
->         }
->
-> @@ -359,6 +367,11 @@ static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
->                 if (rq->tmp_alone_branch == &cfs_rq->leaf_cfs_rq_list)
->                         rq->tmp_alone_branch = cfs_rq->leaf_cfs_rq_list.prev;
->
-> +               if (cfs_rq->tg->parent) {
-> +                       int cpu = cpu_of(rq);
-> +                       cfs_rq->tg->parent->cfs_rq[cpu]->children_on_list--;
-> +               }
-> +
->                 list_del_rcu(&cfs_rq->leaf_cfs_rq_list);
->                 cfs_rq->on_list = 0;
->         }
-> @@ -7687,6 +7700,10 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
->         if (cfs_rq->avg.util_sum)
->                 return false;
->
-> +       /* Remove decayed parents once their decayed children are gone. */
-> +       if (cfs_rq->children_on_list)
+On 26/06/2019 19:00, Will Deacon wrote:
+> On Mon, Jun 10, 2019 at 07:47:10PM +0100, Jean-Philippe Brucker wrote:
+>> At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
+>> page directory per device. However SMMUv3 allows more than one address
+>> space for some devices, by providing multiple stage-1 page directories. In
+>> addition to the Stream ID (SID), that identifies a device, we can now have
+>> Substream IDs (SSID) identifying an address space. In PCIe, SID is called
+>> Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
+>>
+>> Prepare the driver for SSID support, by adding context descriptor tables
+>> in STEs (previously a single static context descriptor). A complete
+>> stage-1 walk is now performed like this by the SMMU:
+>>
+>>       Stream tables          Ctx. tables          Page tables
+>>         +--------+   ,------->+-------+   ,------->+-------+
+>>         :        :   |        :       :   |        :       :
+>>         +--------+   |        +-------+   |        +-------+
+>>    SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
+>>         +--------+            +-------+            +-------+
+>>         :        :            :       :            :       :
+>>         +--------+            +-------+            +-------+
+>>
+>> Implement a single level of context descriptor table for now, but as with
+>> stream and page tables, an SSID can be split to index multiple levels of
+>> tables.
+>>
+>> In all stream table entries, we set S1DSS=SSID0 mode, making translations
+>> without an SSID use context descriptor 0. Although it would be possible by
+>> setting S1DSS=BYPASS, we don't currently support SSID when user selects
+>> iommu.passthrough.
+> 
+> I don't understand your comment here: iommu.passthrough works just as it did
+> before, right, since we set bypass in the STE config field so S1DSS is not
+> relevant?
 
-I'm not sure that you really need to count whether childrens are on the list.
-Instead you can take advantage of the list ordering and you only have
-to test if the previous cfs_rq in the list is a child. If it's not
-then there is no more child
+Yes the comment is wrong, or at least unclear. It isn't well defined how
+SSID is supposed to work with iommu.passthrough, but I guess keeping the
+same behavior as non-PASID DMA is what we want (any PASID-tagged DMA
+also bypasses the SMMU.)
 
-and you can remove the new field children_on_list and inc/dec it
+In the comment I was referring to another possibility, supporting SVA
+and auxiliary domains even when iommu.passthrough is set. That would
+require allocating context tables and setting S1DSS=BYPASS. But I don't
+think it's a feature anyone needs at the moment.
 
-> +               return false;
-> +
->         return true;
->  }
->
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 32978a8de8ce..4f8acbab0fb2 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -557,6 +557,7 @@ struct cfs_rq {
->          * This list is used during load balance.
->          */
->         int                     on_list;
-> +       int                     children_on_list;
->         struct list_head        leaf_cfs_rq_list;
->         struct task_group       *tg;    /* group that "owns" this runqueue */
->
-> --
-> 2.20.1
->
+> I also notice that SSID0 causes transactions with SSID==0 to
+> abort. Is a PASID of 0 reserved, so this doesn't matter?
+
+Yes, PASID 0 is reserved, we start allocation at 1
+
+> 
+>> @@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+>>  	return val;
+>>  }
+>>  
+>> -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
+>> -				    struct arm_smmu_s1_cfg *cfg)
+>> +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>> +				   int ssid, struct arm_smmu_ctx_desc *cd)
+>>  {
+>>  	u64 val;
+>> +	bool cd_live;
+>> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>> +	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
+>>  
+>>  	/*
+>> -	 * We don't need to issue any invalidation here, as we'll invalidate
+>> -	 * the STE when installing the new entry anyway.
+>> +	 * This function handles the following cases:
+>> +	 *
+>> +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
+>> +	 * (2) Install a secondary CD, for SID+SSID traffic.
+>> +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
+>> +	 *     CD, then invalidate the old entry and mappings.
+>> +	 * (4) Remove a secondary CD.
+>>  	 */
+>> -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
+>> +
+>> +	if (!cdptr)
+>> +		return -ENOMEM;
+>> +
+>> +	val = le64_to_cpu(cdptr[0]);
+>> +	cd_live = !!(val & CTXDESC_CD_0_V);
+>> +
+>> +	if (!cd) { /* (4) */
+>> +		cdptr[0] = 0;
+> 
+> Should we be using WRITE_ONCE here? (although I notice we don't seem to
+> bother for STEs either...)
+
+Sure, that's safer
+
+Thanks,
+Jean
