@@ -2,245 +2,193 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBE3C06510
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 04:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4997FC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 04:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9BB218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 04:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211C1218A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 04:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Zvr2tXb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbfGDEA3 (ORCPT
+        id S1726139AbfGDECd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 00:00:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36080 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfGDEA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 00:00:29 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4CD4E3082B4D;
-        Thu,  4 Jul 2019 04:00:23 +0000 (UTC)
-Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68C371001B3F;
-        Thu,  4 Jul 2019 04:00:13 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] vsock/virtio: stop workers during the .remove()
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <20190628123659.139576-1-sgarzare@redhat.com>
- <20190628123659.139576-3-sgarzare@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <04b93975-1cce-1e7e-61ad-246601d4216c@redhat.com>
-Date:   Thu, 4 Jul 2019 12:00:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 00:02:33 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:16860 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfGDECd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 00:02:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1562212953; x=1593748953;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4PG5+NwavyTTLqZLy5KLGEK7dNykDbZQkLP4AGMCXRg=;
+  b=Zvr2tXb0GqECIjbTA2j4UR3fyv00jGmYX0Pp/E3bbpwOk1Y2xGwMo+0J
+   +5kqhSe4YaOME3JOtcAa+kohAG0dTFROfWsv0xrRBcHqrAtQZ8gF3QLjt
+   NduToeugD2wfugxqSu6IUPhOluiNckBLo/zq7tcgc17U3eA4Y07fvD/xk
+   GaiowwQgNosuOiuyh1IJWvPFmNCUlSViwaaFQ4eAtSjpNTrtJBeQXK22Y
+   C8Rn6vRZ/xLTIs54PcbwnDpCt5xFhdkHvXEUiYTWjhrDeD3FmA1LVSmDI
+   0o00ucdy1BkD/rgcK1aISTYSPsr7vC7y38rTnNeRQp5f3bSo7wO664KXH
+   A==;
+IronPort-SDR: 0N3KtKmTdGP0f6pR4O9bo9G8PqULg51/DyxZANEcDOOlS72duQjQxEv8kgkDRc8RAbv1mCalOo
+ fTQMmIgBcs2taFu1BQoOPBgAJOyI0n/mpz3hD4suERsaGgT/9tN436x0YS2sC1GPRl5pIVvqDK
+ sguzli1vprty5B/zKmCA0EUn53SEomAqEXM7oiGAran+GJtcChCaSHlo5vYf8k8XlBGD25nbwa
+ yasc9WxBceb7u6ybNtvf6C+upRdo7SCUXNKFliCFqekm38QkxcebdC7P1ofByZdQgKNXvMc8oe
+ PPU=
+X-IronPort-AV: E=Sophos;i="5.63,449,1557158400"; 
+   d="scan'208";a="112201882"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Jul 2019 12:02:33 +0800
+IronPort-SDR: nZBVDTYTYcAahXR53W2j4qpgjI4apH0slr+qVwdICx3MRcABq9gn1z4yYHVhWm7KyaiQXz2s8I
+ 6EDillys2qPe6mU3pPhSFiqFXjf99foNuyS2Gft7QaHs38Z8qwDBo5FV2SxX/p0017R5PlZgcO
+ WSnggyfq+78YQJdpXp3DpyDZUwt3bLdFOh8GmHcNF4afIvaScXNxuNM5a4jfl1PuA7RoBdMTa0
+ 4IHG3PH7xBj8OuvuEf/2jJIC+FBFGO+CPIU5ifpIBlL0gRutJa/4h6bwNy2xXgVw81zsKQApoa
+ kYirIQ3qL5MI1YToTGs/F3nI
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP; 03 Jul 2019 21:01:32 -0700
+IronPort-SDR: qP4T9eKyvNuPdJnNSuED0gXpNJoIsnakbyYNmokt2S2cYhWVs/FMSEZz8vrBcaaf8gQKS5GZtL
+ HWlrDBVnWCzetkR+3UZrrcXoC4Be84w6jeBo4mhA75QSdbO6w1hwXiGTnp6AhXQHaOHl/guFgQ
+ 1Apq/elIxeykykiKfCKc+GaqZGZOqkIVpAldBEcjHIjnQ8j0YVghy8tGxD2jn3uyNbm/8Tf3mV
+ ovbjn8W7eEpz8t3vaBFBf8SFwl6H4JH9YHRhkdIK8xhkw2pLme6Fq18+rq1bBR0wxq30Z6sSj3
+ 3vo=
+Received: from ajay-ubuntu-18-10.sdcorp.global.sandisk.com ([10.206.7.28])
+  by uls-op-cesaip01.wdc.com with ESMTP; 03 Jul 2019 21:02:30 -0700
+From:   Ajay Joshi <ajay.joshi@wdc.com>
+To:     axboe@fb.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        damien.lemoal@wdc.com, matias.bjorling@wdc.com,
+        Ajay Joshi <ajay.joshi@wdc.com>
+Subject: [PATCH] null_blk: return fixed data for reads greater than zone write pointer
+Date:   Thu,  4 Jul 2019 09:32:27 +0530
+Message-Id: <20190704040227.23467-1-ajay.joshi@wdc.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190628123659.139576-3-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 04 Jul 2019 04:00:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A zoned block device maintains a write pointer within a zone, and
+reads beyond the write pointer are undefined.
 
-On 2019/6/28 下午8:36, Stefano Garzarella wrote:
-> Before to call vdev->config->reset(vdev) we need to be sure that
-> no one is accessing the device, for this reason, we add new variables
-> in the struct virtio_vsock to stop the workers during the .remove().
->
-> This patch also add few comments before vdev->config->reset(vdev)
-> and vdev->config->del_vqs(vdev).
->
-> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->   net/vmw_vsock/virtio_transport.c | 51 +++++++++++++++++++++++++++++++-
->   1 file changed, 50 insertions(+), 1 deletion(-)
+Fill data buffer returned above the write pointer with 0xFF.
 
+Signed-off-by: Ajay Joshi <ajay.joshi@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Matias Bjørling <matias.bjorling@wdc.com>
+---
+ drivers/block/null_blk.h       |  7 +++++++
+ drivers/block/null_blk_main.c  | 26 +++++++++++++++++++++++++-
+ drivers/block/null_blk_zoned.c | 18 ++++++++++++++++++
+ 3 files changed, 50 insertions(+), 1 deletion(-)
 
-This should work. But we may consider to convert the_virtio_vosck to 
-socket object and use socket refcnt and destructor in the future instead 
-of inventing something new by ourselves.
+diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h
+index 34b22d6523ba..fa82c4d96c8a 100644
+--- a/drivers/block/null_blk.h
++++ b/drivers/block/null_blk.h
+@@ -94,6 +94,8 @@ int null_zone_report(struct gendisk *disk, sector_t sector,
+ void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 			unsigned int nr_sectors);
+ void null_zone_reset(struct nullb_cmd *cmd, sector_t sector);
++size_t null_zone_valid_read_len(struct nullb *nullb,
++		     sector_t sector, unsigned int len);
+ #else
+ static inline int null_zone_init(struct nullb_device *dev)
+ {
+@@ -112,5 +114,10 @@ static inline void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ {
+ }
+ static inline void null_zone_reset(struct nullb_cmd *cmd, sector_t sector) {}
++static inline size_t null_zone_valid_read_len(struct nullb *nullb,
++		     sector_t sector, unsigned int len)
++{
++	return len;
++}
+ #endif /* CONFIG_BLK_DEV_ZONED */
+ #endif /* __NULL_BLK_H */
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 99328ded60d1..ce66f4e6268a 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -996,6 +996,16 @@ static int copy_from_nullb(struct nullb *nullb, struct page *dest,
+ 	return 0;
+ }
+ 
++static void nullb_fill_pattern(struct nullb *nullb,
++	struct page *page, unsigned int len, unsigned int off)
++{
++	void *dst;
++
++	dst = kmap_atomic(page);
++	memset(dst + off, 0xFF, len);
++	kunmap_atomic(dst);
++}
++
+ static void null_handle_discard(struct nullb *nullb, sector_t sector, size_t n)
+ {
+ 	size_t temp;
+@@ -1037,9 +1047,23 @@ static int null_transfer(struct nullb *nullb, struct page *page,
+ 	bool is_fua)
+ {
+ 	int err = 0;
++	struct nullb_device *dev = nullb->dev;
++	unsigned int valid_len = len;
+ 
+ 	if (!is_write) {
+-		err = copy_from_nullb(nullb, page, off, sector, len);
++		if (dev->zoned)
++			valid_len = null_zone_valid_read_len(nullb,
++				sector, len);
++
++		if (valid_len) {
++			err = copy_from_nullb(nullb, page, off,
++				sector, valid_len);
++			off += valid_len;
++			len -= valid_len;
++		}
++
++		if (len)
++			nullb_fill_pattern(nullb, page, len, off);
+ 		flush_dcache_page(page);
+ 	} else {
+ 		flush_dcache_page(page);
+diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
+index fca0c97ff1aa..20a3c08e628c 100644
+--- a/drivers/block/null_blk_zoned.c
++++ b/drivers/block/null_blk_zoned.c
+@@ -85,6 +85,24 @@ int null_zone_report(struct gendisk *disk, sector_t sector,
+ 	return 0;
+ }
+ 
++size_t null_zone_valid_read_len(struct nullb *nullb,
++		     sector_t sector, unsigned int len)
++{
++	struct nullb_device *dev = nullb->dev;
++	struct blk_zone *zone = &dev->zones[null_zone_no(dev, sector)];
++	unsigned int nr_sectors = len >> SECTOR_SHIFT;
++
++	/* Read must be below the write pointer position */
++	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL ||
++	    sector + nr_sectors <= zone->wp)
++		return len;
++
++	if (sector > zone->wp)
++		return 0;
++
++	return (zone->wp - sector) << SECTOR_SHIFT;
++}
++
+ void null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 		     unsigned int nr_sectors)
+ {
+-- 
+2.19.1
 
-Thanks
-
-
->
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index 7ad510ec12e0..1b44ec6f3f6c 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -38,6 +38,7 @@ struct virtio_vsock {
->   	 * must be accessed with tx_lock held.
->   	 */
->   	struct mutex tx_lock;
-> +	bool tx_run;
->   
->   	struct work_struct send_pkt_work;
->   	spinlock_t send_pkt_list_lock;
-> @@ -53,6 +54,7 @@ struct virtio_vsock {
->   	 * must be accessed with rx_lock held.
->   	 */
->   	struct mutex rx_lock;
-> +	bool rx_run;
->   	int rx_buf_nr;
->   	int rx_buf_max_nr;
->   
-> @@ -60,6 +62,7 @@ struct virtio_vsock {
->   	 * vqs[VSOCK_VQ_EVENT] must be accessed with event_lock held.
->   	 */
->   	struct mutex event_lock;
-> +	bool event_run;
->   	struct virtio_vsock_event event_list[8];
->   
->   	u32 guest_cid;
-> @@ -94,6 +97,10 @@ static void virtio_transport_loopback_work(struct work_struct *work)
->   	spin_unlock_bh(&vsock->loopback_list_lock);
->   
->   	mutex_lock(&vsock->rx_lock);
-> +
-> +	if (!vsock->rx_run)
-> +		goto out;
-> +
->   	while (!list_empty(&pkts)) {
->   		struct virtio_vsock_pkt *pkt;
->   
-> @@ -102,6 +109,7 @@ static void virtio_transport_loopback_work(struct work_struct *work)
->   
->   		virtio_transport_recv_pkt(pkt);
->   	}
-> +out:
->   	mutex_unlock(&vsock->rx_lock);
->   }
->   
-> @@ -130,6 +138,9 @@ virtio_transport_send_pkt_work(struct work_struct *work)
->   
->   	mutex_lock(&vsock->tx_lock);
->   
-> +	if (!vsock->tx_run)
-> +		goto out;
-> +
->   	vq = vsock->vqs[VSOCK_VQ_TX];
->   
->   	for (;;) {
-> @@ -188,6 +199,7 @@ virtio_transport_send_pkt_work(struct work_struct *work)
->   	if (added)
->   		virtqueue_kick(vq);
->   
-> +out:
->   	mutex_unlock(&vsock->tx_lock);
->   
->   	if (restart_rx)
-> @@ -323,6 +335,10 @@ static void virtio_transport_tx_work(struct work_struct *work)
->   
->   	vq = vsock->vqs[VSOCK_VQ_TX];
->   	mutex_lock(&vsock->tx_lock);
-> +
-> +	if (!vsock->tx_run)
-> +		goto out;
-> +
->   	do {
->   		struct virtio_vsock_pkt *pkt;
->   		unsigned int len;
-> @@ -333,6 +349,8 @@ static void virtio_transport_tx_work(struct work_struct *work)
->   			added = true;
->   		}
->   	} while (!virtqueue_enable_cb(vq));
-> +
-> +out:
->   	mutex_unlock(&vsock->tx_lock);
->   
->   	if (added)
-> @@ -361,6 +379,9 @@ static void virtio_transport_rx_work(struct work_struct *work)
->   
->   	mutex_lock(&vsock->rx_lock);
->   
-> +	if (!vsock->rx_run)
-> +		goto out;
-> +
->   	do {
->   		virtqueue_disable_cb(vq);
->   		for (;;) {
-> @@ -470,6 +491,9 @@ static void virtio_transport_event_work(struct work_struct *work)
->   
->   	mutex_lock(&vsock->event_lock);
->   
-> +	if (!vsock->event_run)
-> +		goto out;
-> +
->   	do {
->   		struct virtio_vsock_event *event;
->   		unsigned int len;
-> @@ -484,7 +508,7 @@ static void virtio_transport_event_work(struct work_struct *work)
->   	} while (!virtqueue_enable_cb(vq));
->   
->   	virtqueue_kick(vsock->vqs[VSOCK_VQ_EVENT]);
-> -
-> +out:
->   	mutex_unlock(&vsock->event_lock);
->   }
->   
-> @@ -619,12 +643,18 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->   	INIT_WORK(&vsock->send_pkt_work, virtio_transport_send_pkt_work);
->   	INIT_WORK(&vsock->loopback_work, virtio_transport_loopback_work);
->   
-> +	mutex_lock(&vsock->tx_lock);
-> +	vsock->tx_run = true;
-> +	mutex_unlock(&vsock->tx_lock);
-> +
->   	mutex_lock(&vsock->rx_lock);
->   	virtio_vsock_rx_fill(vsock);
-> +	vsock->rx_run = true;
->   	mutex_unlock(&vsock->rx_lock);
->   
->   	mutex_lock(&vsock->event_lock);
->   	virtio_vsock_event_fill(vsock);
-> +	vsock->event_run = true;
->   	mutex_unlock(&vsock->event_lock);
->   
->   	vdev->priv = vsock;
-> @@ -659,6 +689,24 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->   	/* Reset all connected sockets when the device disappear */
->   	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
->   
-> +	/* Stop all work handlers to make sure no one is accessing the device,
-> +	 * so we can safely call vdev->config->reset().
-> +	 */
-> +	mutex_lock(&vsock->rx_lock);
-> +	vsock->rx_run = false;
-> +	mutex_unlock(&vsock->rx_lock);
-> +
-> +	mutex_lock(&vsock->tx_lock);
-> +	vsock->tx_run = false;
-> +	mutex_unlock(&vsock->tx_lock);
-> +
-> +	mutex_lock(&vsock->event_lock);
-> +	vsock->event_run = false;
-> +	mutex_unlock(&vsock->event_lock);
-> +
-> +	/* Flush all device writes and interrupts, device will not use any
-> +	 * more buffers.
-> +	 */
->   	vdev->config->reset(vdev);
->   
->   	mutex_lock(&vsock->rx_lock);
-> @@ -689,6 +737,7 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->   	}
->   	spin_unlock_bh(&vsock->loopback_list_lock);
->   
-> +	/* Delete virtqueues and flush outstanding callbacks if any */
->   	vdev->config->del_vqs(vdev);
->   
->   	mutex_unlock(&the_virtio_vsock_mutex);
