@@ -2,170 +2,89 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8ADC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E33C06516
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBBE21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="reCYBa/H"
+	by mail.kernel.org (Postfix) with ESMTP id D30662189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfGDMEs (ORCPT
+        id S1727698AbfGDMF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:04:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38267 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfGDMEs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:04:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so5893569wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=amr/MLN9cI5Ec8HWgSABL9rUXzQlcR+yO98qbl8sqQQ=;
-        b=reCYBa/HDiyEd6CU/NQNeECZ0TGiSTj8f8SEw4WFvGQo59bH5871qj/oJ9PYzgM4GP
-         zA95ZBUcbKacoYmCK12EVNylEKYfkwbrorMv9FA5F0SvbjQHxdo8QpW1OmqvBTDGYNak
-         zkF4lXTMeJnHNJRfmUlhCwG7yFK7GzrKEx2gRXlMS6sgu712/cFTieIviLBBe/2wP+x6
-         oBfEeXDD9MTQs5r9JnNseOOa9Q4u0PoebNFFoi4vfhDYpljevyDegYuh1dD1kWAYAmsL
-         8tQjrV6Klmf/TwqngR513k5F/mMIIr1dUgGU4aw0KWGD5w7OQcLph+aEc3Tt0DgWYslh
-         mZ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=amr/MLN9cI5Ec8HWgSABL9rUXzQlcR+yO98qbl8sqQQ=;
-        b=b5T+xP3boEtEtxxAT7zRN+0g1PnB+pYnW9z/Xy88aFU5fiJ51vfz7bdVjfM//eDjp1
-         tPfNKB0KCvrPKvqZ7RV0ZoFWtwdSQNO3Bi57LcCxLC6ukRXQU6SqUaskirm90wWrQbt0
-         gT+a7LjgweoE/KGvU2B8QBKSaDhgHDUd/TUKOYtw/wG1/iJmqzuf3rY2Sqil/ULvYRsK
-         XKjVRojDHi6IsZGXFcy1YHh+iPj0D/tGJBe97+JBfPTmzWl++FTM++vWn9lpefAkBR7X
-         OIPv+2yWi/OLYdXUx2rHQ31I18GG86BtEaFOwoi6+HmlapO/QXHFaPcH8IMnPOHiQdHZ
-         yWLg==
-X-Gm-Message-State: APjAAAWxFvRefS7bQNQZiXiRtmADmOotxohaKw9LSkW+PRvA9Q8s0Hu9
-        R6+SBQ4v4HioKNCQmrcJFGouig==
-X-Google-Smtp-Source: APXvYqyT6y+9T+/VeJfNymSjJVbJMJkxGcTutUA49l/YNxwHZmt9KNlRem6wZWge7DDaiLLPkOPVCA==
-X-Received: by 2002:a7b:ce95:: with SMTP id q21mr12611948wmj.65.1562241885365;
-        Thu, 04 Jul 2019 05:04:45 -0700 (PDT)
-Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
-        by smtp.gmail.com with ESMTPSA id z9sm7475960wrs.14.2019.07.04.05.04.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 05:04:44 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 15:04:41 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Message-ID: <20190704120441.GA6866@apalos>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <20190704120018.4523a119@carbon>
- <BN8PR12MB3266BC5322AADFAC49D9BAFAD3FA0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190704135414.0dd5df76@carbon>
+        Thu, 4 Jul 2019 08:05:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:39914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727618AbfGDMF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:05:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8570D28;
+        Thu,  4 Jul 2019 05:05:26 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDFA43F718;
+        Thu,  4 Jul 2019 05:05:23 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
+To:     Luca Abeni <luca.abeni@santannapisa.it>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+ <20190506044836.2914-3-luca.abeni@santannapisa.it>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <b920d85b-4228-52fd-22db-3a0c26cf8ebd@arm.com>
+Date:   Thu, 4 Jul 2019 14:05:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704135414.0dd5df76@carbon>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190506044836.2914-3-luca.abeni@santannapisa.it>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jesper,
+On 5/6/19 6:48 AM, Luca Abeni wrote:
 
-> On Thu, 4 Jul 2019 10:13:37 +0000
-> Jose Abreu <Jose.Abreu@synopsys.com> wrote:
-> > > The page_pool DMA mapping cannot be "kept" when page traveling into the
-> > > network stack attached to an SKB.  (Ilias and I have a long term plan[1]
-> > > to allow this, but you cannot do it ATM).  
-> > 
-> > The reason I recycle the page is this previous call to:
-> > 
-> > 	skb_copy_to_linear_data()
-> > 
-> > So, technically, I'm syncing to CPU the page(s) and then memcpy to a 
-> > previously allocated SKB ... So it's safe to just recycle the mapping I 
-> > think.
-> 
-> I didn't notice the skb_copy_to_linear_data(), will copy the entire
-> frame, thus leaving the page unused and avail for recycle.
+[...]
 
-Yea this is essentially a 'copybreak' without the byte limitation that other
-drivers usually impose (remember mvneta was doing this for all packets < 256b)
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 5b981eeeb944..3436f3d8fa8f 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1584,6 +1584,9 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  	if (sd_flag != SD_BALANCE_WAKE)
+>  		goto out;
+>  
+> +	if (dl_entity_is_special(&p->dl))
+> +		goto out;
 
-That's why i was concerned on what will happen on > 1000b frames and what the
-memory pressure is going to be. 
-The trade off here is copying vs mapping/unmapping.
+I wonder if this is really required. The if condition
 
-> 
-> Then it looks like you are doing the correct thing.  I will appreciate
-> if you could add a comment above the call like:
-> 
->    /* Data payload copied into SKB, page ready for recycle */
->    page_pool_recycle_direct(rx_q->page_pool, buf->page);
-> 
-> 
-> > Its kind of using bounce buffers and I do see performance gain in this 
-> > (I think the reason is because my setup uses swiotlb for DMA mapping).
-> > 
-> > Anyway, I'm open to some suggestions on how to improve this ...
-> 
-> I was surprised to see page_pool being used outside the surrounding XDP
-> APIs (included/net/xdp.h).  For you use-case, where you "just" use
-> page_pool as a driver-local fast recycle-allocator for RX-ring that
-> keeps pages DMA mapped, it does make a lot of sense.  It simplifies the
-> driver a fair amount:
-> 
->   3 files changed, 63 insertions(+), 144 deletions(-)
-> 
-> Thanks for demonstrating a use-case for page_pool besides XDP, and for
-> simplifying a driver with this.
+1591         if (unlikely(dl_task(curr)) &&
+1592             (curr->nr_cpus_allowed < 2 ||
+1593              !dl_entity_preempt(&p->dl, &curr->dl)) &&
+1594             (p->nr_cpus_allowed > 1)) {
 
-Same here thanks Jose,
+further below uses '!dl_entity_preempt(&p->dl, &curr->dl))' which
+returns 'dl_entity_is_special(a) || ...'
 
-> 
-> 
-> > > Also remember that the page_pool requires you driver to do the
-> > > DMA-sync operation.  I see a dma_sync_single_for_cpu(), but I
-> > > didn't see a dma_sync_single_for_device() (well, I noticed one
-> > > getting removed). (For some HW Ilias tells me that the
-> > > dma_sync_single_for_device can be elided, so maybe this can still
-> > > be correct for you).  
-> > 
-> > My HW just needs descriptors refilled which are in different coherent 
-> > region so I don't see any reason for dma_sync_single_for_device() ...
-> 
-> For you use-case, given you are copying out the data, and not writing
-> into it, then I don't think you need to do sync for device (before
-> giving the device the page again for another RX-ring cycle).
-> 
-> The way I understand the danger: if writing to the DMA memory region,
-> and not doing the DMA-sync for-device, then the HW/coherency-system can
-> write-back the memory later.  Which creates a race with the DMA-device,
-> if it is receiving a packet and is doing a write into same DMA memory
-> region.  Someone correct me if I misunderstood this...
+A BUG_ON(dl_entity_is_special(&p->dl)) in this if condition hasn't
+triggered on my platform yet.
 
-Similar understanding here
-
-Cheers
-/Ilias
+[...]
