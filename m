@@ -2,69 +2,68 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25AAC5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201E9C4646D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6DD2187F
+	by mail.kernel.org (Postfix) with ESMTP id E39C2218A3
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxhQ1cdU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQs2b90e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfGDCf4 (ORCPT
+        id S1727285AbfGDCgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 22:35:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38589 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfGDCfz (ORCPT
+        Wed, 3 Jul 2019 22:36:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41720 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGDCgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:35:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y15so2186169pfn.5;
-        Wed, 03 Jul 2019 19:35:54 -0700 (PDT)
+        Wed, 3 Jul 2019 22:36:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id q4so2146692pgj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 19:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=ojn+49ftq+z8784/6AsfYPnFGWstJKNc22LY9JyUdlw=;
-        b=FxhQ1cdUpPS8yct2DSlYrMBDcU04+80klCz0EsXxr2SJy/bXip/j5g5YW3RezoBXiH
-         6weMuHwDmJ52nHplt/mTdbYvqdzAtFr8UVX8bhRDlc+DZ+j5dxSEkzD/VdbatURStpcW
-         fF6Jv3Ef+/zuYJZyDBuSBB+jKdMSVsTrhAL5eHpHbcvpmi9BVJiy0XVUBA/UXnUpS6rm
-         /m2yW00jiu9cNGogxOeMKsoYRrUhCG6A8oU9KhZvlRwsBhrjo6oWeQx1LJUZjYVTZTeo
-         oePhEQ9aOM4uVrR5VQXdi5B8biVyS7yB+hnKD5UkmpltXWz2Z23SL6IO9agQmQ9mIXsN
-         bCwQ==
+        bh=calKg31YDJ74yDzQJN7XSSUBsHnK7/+Pchjehhl+BSk=;
+        b=iQs2b90eTP+P2KlFVEZCLVMHWJNammzNFcmzkyKAhLlut/Ybw8o8K0xGKutmmk6NK9
+         stKiMAYKREnsQ8jRQEsfNUpzFokHBOXHXckaEiZwyHVuu5OEGIR74xy8dZ22lPy2+oTO
+         pqiR9Mt9yZbPg5INQQxUGYJrGxnD9oHO083RdgSoN36ZzQuIE09TTvIROkhWwOZEk3Tn
+         aePttRcpNdP/IxDSZFticngv4IEZ0Csdlj9BJEHg4wVF7mO80l/H9U6rhwV4cl4W4+mA
+         qyVP8deBLAhdCKvsgMMiddfHfssxZZ51wc+liQp2HOJvB6KTVEBT8NijJ/caa6NS8riB
+         Sr2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ojn+49ftq+z8784/6AsfYPnFGWstJKNc22LY9JyUdlw=;
-        b=iJ1rzeTYSj8DY5UxaVHV/tDZ9iw/JSdVn2bUKUd/hAvjgNT0I/F6vVD5OH5xevcT+b
-         03DgFTErR3UgG+GBBqV9aHiTDkiz/AOZnaYv2W3gi0+GUK4mdHEksAVab4f9Vlpx5Uc3
-         UCPIVBQcyhX/iWkzCi9dsxfc0R19H+NXqvrcXEWOElqqeU0X5OYZdjEOt90bM1GLBfp+
-         nZqEiRxTj15G0eE9fR3G9GmAq/UeA3E0Kst/HQcHOoqpxcnSNMQTLZXNcKWOiQ/oKV2R
-         TDSXOAHnU8WfuyIofm8uuMIEfWbKHTIxIUniE+sElN93XuBkDN9YadAfR/ZDDrQ7cxR4
-         N4yw==
-X-Gm-Message-State: APjAAAWIZ5z+j/TbdSiUgJ9cj9l/HNJtsHhZyOZKxG9VwwnvO9A3VMNV
-        Zzlq5WKp0LGC/oCZG9g1P74=
-X-Google-Smtp-Source: APXvYqzqvMWWHQM4sVeiCp9PcZJA0Ws8ePP+f3aZv97bhjphSnssU+dDzXMDMfH8Jnk46WlMAOTb4A==
-X-Received: by 2002:a65:5689:: with SMTP id v9mr37803658pgs.293.1562207754394;
-        Wed, 03 Jul 2019 19:35:54 -0700 (PDT)
+        bh=calKg31YDJ74yDzQJN7XSSUBsHnK7/+Pchjehhl+BSk=;
+        b=nPzbHtEuv5tn6tskLSg1NrFWLYf1fjXE1vrvRGo3NMBq/MryV7vlttiywEEtyfbMuZ
+         Q+QuwYd/1m7IWnSrHRmG5wKv5e4rRecVZ7FdpyPqQcMwKqZeTSE/S+dqgV0ELHD32iHH
+         qa6y3uUHHQlucqWrY9gO4U27FU/TGkKl3Rp7pZiElueLJUAtwC2zD9D9QuyX3PE9x73t
+         pTWfXEjbvnBGxuTqYJAZ03CIK3W1ii2iPhYtI50OIb/zljxsZCeYSeNaSMl0tiskhTHl
+         F5Z2rHdrIviFgoWMmNcuXZxcWeB2XlLrLwKnbrf08pW0knJLp3pYe5jTZ6k0F+2pY4Qn
+         vvjw==
+X-Gm-Message-State: APjAAAUABe+XLdv1W2kW3Yyh1Svd6T2/GMi0pXBkVd26NXrlUe3WIiDD
+        Nv+0zrQzPaE60ru9A5iVL4U=
+X-Google-Smtp-Source: APXvYqysTT1dJ+qo2p+TuEhYNUmmNz27UgpVXslH1JJ0TzquvDJbtGeKR1AwuVM/ccNZGP4PjGgeuA==
+X-Received: by 2002:a17:90a:9a83:: with SMTP id e3mr16236570pjp.105.1562207764004;
+        Wed, 03 Jul 2019 19:36:04 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id s66sm5290767pgs.39.2019.07.03.19.35.51
+        by smtp.googlemail.com with ESMTPSA id e10sm3921153pfi.173.2019.07.03.19.36.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 19:35:54 -0700 (PDT)
+        Wed, 03 Jul 2019 19:36:03 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [Patch v2 02/10] drm/msm: using dev_get_drvdata directly
-Date:   Thu,  4 Jul 2019 10:35:46 +0800
-Message-Id: <20190704023546.4503-1-huangfq.daxian@gmail.com>
+Subject: [Patch v2 03/10] drm/omapdrm: using dev_get_drvdata directly
+Date:   Thu,  4 Jul 2019 10:35:57 +0800
+Message-Id: <20190704023557.4551-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,174 +81,63 @@ Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 Changes in v2:
   - Make the commit message more clearly.
 
- drivers/gpu/drm/msm/adreno/adreno_device.c |  6 ++----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c    | 13 +++++--------
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c   |  6 ++----
- drivers/gpu/drm/msm/dsi/dsi_host.c         |  6 ++----
- drivers/gpu/drm/msm/msm_drv.c              |  3 +--
- drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
- 6 files changed, 15 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index b3deb346a42b..fafd00d2574a 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -403,16 +403,14 @@ static const struct of_device_id dt_match[] = {
- #ifdef CONFIG_PM
- static int adreno_resume(struct device *dev)
+diff --git a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+index 8edef8ef23b0..53240da139b1 100644
+--- a/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
++++ b/drivers/gpu/drm/omapdrm/displays/panel-dsi-cm.c
+@@ -407,8 +407,7 @@ static const struct backlight_ops dsicm_bl_ops = {
+ static ssize_t dsicm_num_errors_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
  {
 -	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-+	struct msm_gpu *gpu = dev_get_drvdata(dev);
- 
- 	return gpu->funcs->pm_resume(gpu);
- }
- 
- static int adreno_suspend(struct device *dev)
+-	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+ 	struct omap_dss_device *src = ddata->src;
+ 	u8 errors = 0;
+ 	int r;
+@@ -439,8 +438,7 @@ static ssize_t dsicm_num_errors_show(struct device *dev,
+ static ssize_t dsicm_hw_revision_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
  {
 -	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-+	struct msm_gpu *gpu = dev_get_drvdata(dev);
- 
- 	return gpu->funcs->pm_suspend(gpu);
- }
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ae885e5dd07d..6c6f8ca9380f 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1025,16 +1025,15 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
- 
- static void dpu_unbind(struct device *dev, struct device *master, void *data)
+-	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+ 	struct omap_dss_device *src = ddata->src;
+ 	u8 id1, id2, id3;
+ 	int r;
+@@ -506,8 +504,7 @@ static ssize_t dsicm_show_ulps(struct device *dev,
+ 		struct device_attribute *attr,
+ 		char *buf)
  {
 -	struct platform_device *pdev = to_platform_device(dev);
--	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-+	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
- 	struct dss_module_power *mp = &dpu_kms->mp;
+-	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+ 	unsigned int t;
  
- 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
--	devm_kfree(&pdev->dev, mp->clk_config);
-+	devm_kfree(dev, mp->clk_config);
- 	mp->num_clk = 0;
- 
- 	if (dpu_kms->rpm_enabled)
--		pm_runtime_disable(&pdev->dev);
-+		pm_runtime_disable(dev);
- }
- 
- static const struct component_ops dpu_ops = {
-@@ -1056,8 +1055,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
- static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- {
- 	int rc = -1;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-+	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
- 	struct drm_device *ddev;
- 	struct dss_module_power *mp = &dpu_kms->mp;
- 
-@@ -1077,8 +1075,7 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- static int __maybe_unused dpu_runtime_resume(struct device *dev)
- {
- 	int rc = -1;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
-+	struct dpu_kms *dpu_kms = dev_get_drvdata(dev);
- 	struct drm_encoder *encoder;
- 	struct drm_device *ddev;
- 	struct dss_module_power *mp = &dpu_kms->mp;
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 901009e1f219..25d1ebb32e73 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -1052,8 +1052,7 @@ static int mdp5_dev_remove(struct platform_device *pdev)
- 
- static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
+ 	mutex_lock(&ddata->lock);
+@@ -521,8 +518,7 @@ static ssize_t dsicm_store_ulps_timeout(struct device *dev,
+ 		struct device_attribute *attr,
+ 		const char *buf, size_t count)
  {
 -	struct platform_device *pdev = to_platform_device(dev);
--	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
-+	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
- 
- 	DBG("");
- 
-@@ -1062,8 +1061,7 @@ static __maybe_unused int mdp5_runtime_suspend(struct device *dev)
- 
- static __maybe_unused int mdp5_runtime_resume(struct device *dev)
+-	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+ 	struct omap_dss_device *src = ddata->src;
+ 	unsigned long t;
+ 	int r;
+@@ -553,8 +549,7 @@ static ssize_t dsicm_show_ulps_timeout(struct device *dev,
+ 		struct device_attribute *attr,
+ 		char *buf)
  {
 -	struct platform_device *pdev = to_platform_device(dev);
--	struct mdp5_kms *mdp5_kms = platform_get_drvdata(pdev);
-+	struct mdp5_kms *mdp5_kms = dev_get_drvdata(dev);
+-	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct panel_drv_data *ddata = dev_get_drvdata(dev);
+ 	unsigned int t;
  
- 	DBG("");
- 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index dbf490176c2c..882f13725819 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -477,8 +477,7 @@ static void dsi_bus_clk_disable(struct msm_dsi_host *msm_host)
- 
- int msm_dsi_runtime_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
-+	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
- 
-@@ -492,8 +491,7 @@ int msm_dsi_runtime_suspend(struct device *dev)
- 
- int msm_dsi_runtime_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_dsi *msm_dsi = platform_get_drvdata(pdev);
-+	struct msm_dsi *msm_dsi = dev_get_drvdata(dev);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
- 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index f38d7367bd3b..0d9e46561609 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -241,8 +241,7 @@ static int vblank_ctrl_queue_work(struct msm_drm_private *priv,
- 
- static int msm_drm_uninit(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct drm_device *ddev = platform_get_drvdata(pdev);
-+	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
- 	struct msm_kms *kms = priv->kms;
- 	struct msm_mdss *mdss = priv->mdss;
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index b2a8411c2d84..ebbc6dff2cde 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -24,7 +24,7 @@
- static int msm_devfreq_target(struct device *dev, unsigned long *freq,
- 		u32 flags)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_get_drvdata(dev);
- 	struct dev_pm_opp *opp;
- 
- 	opp = devfreq_recommended_opp(dev, freq, flags);
-@@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
- static int msm_devfreq_get_dev_status(struct device *dev,
- 		struct devfreq_dev_status *status)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_get_drvdata(dev);
- 	ktime_t time;
- 
- 	if (gpu->funcs->gpu_get_freq)
-@@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
- 
- static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_get_drvdata(dev);
- 
- 	if (gpu->funcs->gpu_get_freq)
- 		*freq = gpu->funcs->gpu_get_freq(gpu);
+ 	mutex_lock(&ddata->lock);
 -- 
 2.11.0
 
