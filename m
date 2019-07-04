@@ -2,173 +2,94 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0279C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96DBC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C43218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CFF218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfGDNKN (ORCPT
+        id S1727251AbfGDNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:10:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60892 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbfGDNKM (ORCPT
+        Thu, 4 Jul 2019 09:10:20 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:34078 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfGDNKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:10:12 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hj1V1-0006UL-4P; Thu, 04 Jul 2019 14:10:07 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hj1V0-000833-U3; Thu, 04 Jul 2019 14:10:06 +0100
-Message-ID: <0ff3202ced2b501d6045157f1c7b50810c0571e5.camel@decadent.org.uk>
-Subject: Re: [PATCH] builddeb: generate multi-arch friendly linux-libc-dev
- package
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Cc:     isar-users@googlegroups.com,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Riku Voipio <riku.voipio@linaro.org>
-Date:   Thu, 04 Jul 2019 14:10:02 +0100
-In-Reply-To: <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-References: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
-         <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-BZKpguClIp8ilfm1QdtD"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+        Thu, 4 Jul 2019 09:10:20 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hj1V6-0007UI-Gl; Thu, 04 Jul 2019 15:10:12 +0200
+Message-ID: <a6fbee05df0efd2528a06922bcb514d321b1a8bc.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 04 Jul 2019 15:10:11 +0200
+In-Reply-To: <20190704125315.GT20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+         <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+         <20190703114933.GW2250@nanopsycho> <20190703181851.GP20101@unicorn.suse.cz>
+         <20190704080435.GF2250@nanopsycho> <20190704115236.GR20101@unicorn.suse.cz>
+         <6c070d62ffe342f5bc70556ef0f85740d04ae4a3.camel@sipsolutions.net>
+         <20190704121718.GS20101@unicorn.suse.cz>
+         <2f1a8edb0b000b4eb7adcaca0d1fb05fdd73a587.camel@sipsolutions.net>
+         <20190704125315.GT20101@unicorn.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-07-04 at 14:53 +0200, Michal Kubecek wrote:
+> 
+> >  value: 0b00000000'000000xx'xxxxxxxx'xxxxxxxx
+> >  mask:  0b00000000'00000011'11111111'11111111
+> 
+> One scenario that I can see from the top of my head would be user
+> running
+> 
+>   ethtool -s <dev> advertise 0x...
 
---=-BZKpguClIp8ilfm1QdtD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The "0x..." here would be the *value* in the NLA_BITFIELD32 parlance,
+right?
 
-On Thu, 2019-07-04 at 09:43 +0900, Masahiro Yamada wrote:
-> CCed a couple of people.
->=20
-> On Mon, Jun 17, 2019 at 3:15 PM Cedric Hombourger
-> <Cedric_Hombourger@mentor.com> wrote:
-> > Debian-based distributions place libc header files in a machine
-> > specific directory (/usr/include/<libc-machine>) instead of
-> > /usr/include/asm to support installation of the linux-libc-dev
-> > package from multiple architectures. Move headers installed by
-> > "make headers_install" accordingly.
-> >=20
-> > Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-> > Reviewed-by: Henning Schild <henning.schild@siemens.com>
-> > ---
-> >  scripts/package/builddeb | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >=20
-> > diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> > index b03dd56a4782..8f7afb3a84e9 100755
-> > --- a/scripts/package/builddeb
-> > +++ b/scripts/package/builddeb
-> > @@ -132,6 +132,11 @@ fi
-> >  if [ "$ARCH" !=3D "um" ]; then
-> >         $MAKE -f $srctree/Makefile headers_check
-> >         $MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH=3D"=
-$libc_headers_dir/usr"
-> > +       # move asm headers to /usr/include/<libc-machine>/asm to match =
-the structure
-> > +       # used by Debian-based distros (to support multi-arch)
-> > +       libc_mach=3D$($CC -dumpmachine)
-> > +       mkdir $libc_headers_dir/usr/include/$libc_mach
-> > +       mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/incl=
-ude/$libc_mach/
+What would the "selector" be? I assume the selector would be "whatever
+ethtool knows about"?
 
-This is wrong; the multiarch architecture tuple used in directory names
-does not necessarily match the compiler's architecture tuple.  Firstly,
-if you use a biarch compiler the compiler is only going to tell you the
-default architecture.  Secondly, on i386 the minimum processor is i586
-or i686 but the multiarch architecture tuple is still "i386-linux-gnu"
-(and there might be other cases like this).
+> with hex value representing some subset of link modes. Now if ethtool
+> version is behind kernel and recognizes fewer link modes than kernel
+> but in a way that the number rounded up to bytes or words would be the
+> same, kernel has no way to recognize of those zero bits on top of the
+> mask are zero on purpose or just because userspace doesn't know about
+> them. In general, I believe the absence of bit length information is
+> something protocols would have to work around sometimes.
+> 
+> The submitted implementation doesn't have this problem as it can tell
+> kernel "this is a list" (i.e. I'm not sending a value/mask pair, I want
+> exactly these bits to be set).
 
-So, the correct command is:
+OK, here I guess I see what you mean. You're saying if ethtool were to
+send a value/mask of "0..0100/0..0111" you wouldn't know what to do with
+BIT(4) as long as the kernel knows about that bit?
 
-    dpkg-architecture -a$debarch -qDEB_HOST_MULTIARCH
+I guess the difference now is depending on the operation. NLA_BITFIELD32
+is sort of built on the assumption of having a "toggle" operation. If
+you want to have a "set to" operation, then you don't really need the
+selector/mask at all, just the value.
 
-> >  fi
-> >=20
-> >  # Install the maintainer scripts
->=20
-> I am not sure but,
-> I just worried about the backward compatibility...
-> Was this previously broken?
+johannes
 
-Debian has had multiarch support since Debian 7 "wheezy", and older
-versions are no longer supported.  So I think this change is fine to
-make unconditionally.
-
-The current linux-libc-dev packages build by "make deb-pkg" are
-"broken" in that multiple architectures can't be co-installed with each
-other, whereas this genrally can be done with the linux-libc-dev
-packages provided by Debian-based distributions.  However, co-
-installation is only allowed if the version strings and contents of
-common files in the packages are identical, and I don't know whether
-that's going to be true for those generated by "make deb-pkg".
-
-> I guess debian is using own control file
-> instead of the one in upstream kernel.
-
-We maintain multiple configurations, a meaningful changelog, tools
-packages, etc.  So "make deb-pkg" is not used for official kernel
-packages but we recommend it for custom kernels.
-
-> So, this is almost a matter for developers, I think.
->=20
-> How did debian-base distros managed this before,
-> and will this introduce no breakage?
-
-On the Debian side a similar change was made in Debian 7 "wheezy".  In
-Ubuntu I believe it was done earlier as they modified dpkg to support
-multiarch before us.
-
-> Ben,
-> Could you comment on this?
-
-Ben.
-
---=20
-Ben Hutchings
-Quantity is no substitute for quality, but it's the only one we've got.
-
---=-BZKpguClIp8ilfm1QdtD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0d+qoACgkQ57/I7JWG
-EQlj5w/6A7Dpm2f0EbQF+Zdnfmf9gTCl8GGkRIuZ5I6YNr4t4SwUAptrZs8R34Zj
-RHemXnL7F/H1Baw3nAtbO9GE+76vatgwtdkhRC6B7fwNxPhUOgkGnbN8sZ+67qmu
-yuJ4Ap2IGagPh6D21APIF4s4XzEA7rD0B1kJUO0H7VKeztM58zuUnPiDmmXg4/YZ
-whgnLfJyUDDyny6HUdFJ2lvTeVOFYN0MWSKwqyR8mEDoAoCzcKX+OyFbs+Fu3Lys
-CgGjip3wpIshqibwUxVUzqq+qLTmfCuTsT7Vd/s/aBf3bD/8qNphL8zO2AsLrHdP
-RlwXzRZ9Sq+GajvHGcJqwdz+azF/oJfOCse138+HrK5lmt2RSxr9f1Zgqf9P/Pve
-eJy51IWmIKvEBiIx3bAATfwu8g61LlOepHZZooOT0zSQ5RZmoyj/WOPQRAyO6kyq
-tu/CVG0sbrOl0kEUEdfTFnCJKPGyK9KlTYdF6oXVXsaojIBsqM8IT6KrYQ7s08M2
-di8T9P/2+a1Q/d7it0ngt5itBJ3ZBos3yG7oYl+HKxPXP1ITj0h71jUyIC8nCFjb
-gDzEPHr+0Pp6GNsVG6lfBO9aLJ9QHHj8v28QNSWjuhq2GtF1rEfwefADbtJuZnag
-bA/So3i8ExEK4yxZ/PJqwKiMJoP0M/3Qs0jyd4uA7rLGuBv8HDM=
-=xBtL
------END PGP SIGNATURE-----
-
---=-BZKpguClIp8ilfm1QdtD--
