@@ -2,91 +2,62 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5A6C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5164C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CA2218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7616F218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfGDQ0W (ORCPT
+        id S1727209AbfGDQbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:26:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47587 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfGDQ0W (ORCPT
+        Thu, 4 Jul 2019 12:31:34 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43975 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfGDQbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:26:22 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hj4Yu-0007NM-KA; Thu, 04 Jul 2019 16:26:20 +0000
-Subject: Re: [PATCH][next] drm/amdgpu/psp: fix incorrect logic when checking
- asic_type
-To:     wharms@bfs.de
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190704142329.22983-1-colin.king@canonical.com>
- <5D1E27B4.9000003@bfs.de>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8f3385e9-4e53-b4b4-11ac-f77ec88bfc64@canonical.com>
-Date:   Thu, 4 Jul 2019 17:26:20 +0100
+        Thu, 4 Jul 2019 12:31:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e3so5889743edr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 09:31:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n8kTCu25pTvc0Y2/fueBvYl5zxx1RQ2B+7nWqH2z7y8=;
+        b=kqdNs4NPrkQZq2OYpfG4yGuxedc0gaUiLwXa58tTZQsXPeM7rXuvwsQYAae1/UMfmV
+         D2dXclmOK0VGpnu+vbABUWlHYYbzKz3UG2nbZnA/g0Ql4t2/2o7nEIFPnNQs32CwXQW+
+         tuOSH/C2zF3R1NhtIVU9NfG2WYqlVzV/LkpguM1C0MVim+9hsnuO7rWIy9/S50ma+JTw
+         kxH3Gvuxa0fnOyk1zTQ5X5zVmLxOsi3DRrf/V1jvZfda/8JSPeDJ7LbymLcaA6/8sLzt
+         M1IIOY8KfPLC8/g2rFs3wWsT37V1Oz2JRtGUEKRvkX8HpEI/d6a0k+3lORlftaLu3XF6
+         SWJA==
+X-Gm-Message-State: APjAAAXi5MyahtenZNk/eSPnsH5YQ/Ykj0HApkDoGfnWk6E7cXOdZKAN
+        gkrstwr1qc0+0rLcAUDhNoVYICpP
+X-Google-Smtp-Source: APXvYqw5vrckgTsSLFHHFv8WQnOVuCrCrmbp8zL3LEAjsFdeezIsagW27b8YRIBS2j0URbgzhDiCEA==
+X-Received: by 2002:a50:ad0c:: with SMTP id y12mr48995203edc.25.1562257892139;
+        Thu, 04 Jul 2019 09:31:32 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id k51sm1822865edb.7.2019.07.04.09.31.31
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 09:31:31 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] drm/client: remove the exporting of drm_client_close
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+References: <20190703170150.32548-1-efremov@linux.com>
+ <CACvgo52N5v07qA_afJfw7vo1X6_Gt4cGqBZn3eBzQtokndjWxA@mail.gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <86ae7f09-bd79-b621-706c-0a7bff304aba@linux.com>
+Date:   Thu, 4 Jul 2019 19:31:30 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <5D1E27B4.9000003@bfs.de>
+In-Reply-To: <CACvgo52N5v07qA_afJfw7vo1X6_Gt4cGqBZn3eBzQtokndjWxA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,61 +66,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/2019 17:22, walter harms wrote:
 > 
-> 
-> Am 04.07.2019 16:23, schrieb Colin King:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently the check of the asic_type is always returning true because
->> of the use of ||.  Fix this by using && instead.  Also break overly
->> wide line.
->>
->> Addresses-Coverity: ("Constant expression result")
->> Fixes: dab70ff24db6 ("drm/amdgpu/psp: add psp support for navi14")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
->> index 527dc371598d..e4afd34e3034 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
->> @@ -540,7 +540,8 @@ psp_v11_0_sram_map(struct amdgpu_device *adev,
->>  
->>  	case AMDGPU_UCODE_ID_RLC_G:
->>  		*sram_offset = 0x2000;
->> -		if (adev->asic_type != CHIP_NAVI10 || adev->asic_type != CHIP_NAVI14) {
->> +		if (adev->asic_type != CHIP_NAVI10 &&
->> +		    adev->asic_type != CHIP_NAVI14) {
->>  			*sram_addr_reg_offset = SOC15_REG_OFFSET(GC, 0, mmRLC_GPM_UCODE_ADDR);
->>  			*sram_data_reg_offset = SOC15_REG_OFFSET(GC, 0, mmRLC_GPM_UCODE_DATA);
->>  		} else {
->> @@ -551,7 +552,8 @@ psp_v11_0_sram_map(struct amdgpu_device *adev,
->>  
->>  	case AMDGPU_UCODE_ID_SDMA0:
->>  		*sram_offset = 0x0;
->> -		if (adev->asic_type != CHIP_NAVI10 || adev->asic_type != CHIP_NAVI14) {
->> +		if (adev->asic_type != CHIP_NAVI10 &&
->> +		    adev->asic_type != CHIP_NAVI14) {
->>  			*sram_addr_reg_offset = SOC15_REG_OFFSET(SDMA0, 0, mmSDMA0_UCODE_ADDR);
->>  			*sram_data_reg_offset = SOC15_REG_OFFSET(SDMA0, 0, mmSDMA0_UCODE_DATA);
->>  		} else {
-> 
-> 
-> maybe it is better to use
-> 		if (adev->asic_type == CHIP_NAVI10 ||
-> 		    adev->asic_type == CHIP_NAVI14) {
-> 
-> i guess tha was intended here and it is more easy to read.
-> ppl are bad in non-non reading.
-
-I'm not sure what the original intent was now.  Lets see what the folk
-at AMD say about this.
-
-> 
-> re,
->  wh
+> Out of curiosity: Did you use some tool to spot this?
 > 
 
+Just regular expressions:
+https://github.com/evdenis/export_checking
+
+But it's not very reliable because of false positives. I think I can try
+to implement this kind of check as a part of modpost in addition to
+CONFIG_DEBUG_SECTION_MISMATCH.
+
+Denis
