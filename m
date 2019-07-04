@@ -2,107 +2,280 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00DCC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35DAC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DABA2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:39:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2lqLfPA"
+	by mail.kernel.org (Postfix) with ESMTP id BEF9E2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfGDNj6 (ORCPT
+        id S1727238AbfGDNtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:39:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36296 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfGDNj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:39:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so3117523plt.3;
-        Thu, 04 Jul 2019 06:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=URhowmNUr4Kh2B0vB2kJm0rLx/vyPLQnOZnEOZDhgXI=;
-        b=b2lqLfPAiSwP0Lrk35yjIUdYB6nsgMTvkCnnXtGbZuTKQQzOJYXyy7O6PSjwCHXfCE
-         LYKvuPJNYiPEdCWcaFdAKWyhIFcDPy+cbS5QC4njHFS378Uqpm3Di4aC6ynFkg5lqgcU
-         Jdi3fOhoKmgcpCqwx5xJ+hv4e35joyxO3CvHOEaEYGn0uCpfDIC5sRlBzHvTwjrOuTpO
-         aDXA/5Qozut2888R1FcU7eoBQmu2st47MmmPoWT07kZoZD7n+lyy4r65yqvyszExdsYD
-         Y61rU7MP2GRu2gAiXVa+0mVjzAOm8dHgBxbi83O8W0CBfz1wB5Z7HdOBTtembE8d2g0S
-         996g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=URhowmNUr4Kh2B0vB2kJm0rLx/vyPLQnOZnEOZDhgXI=;
-        b=IgTk6BWsL1ebNYsY8Amx34i1sreqv3F9/2RvIPM0Tk4BpN+hovigxmuchDm6J0gnMV
-         oWRzETJqp65odlcu69huIxcr8g422ps+c1585zhsISuSWV20bBi8TuaZU2UzkkMfCSEe
-         fXOXtTW3SufGHMfl0ljss9CZVfMLHMFwWGz34NtETHk/Q2xIVgIMXR49Xkp8BE6XHPwB
-         HmZL5waeVDRN8BU+jgZRJyTlEaS2K22crd3xzXWYY969aJ8g5STvLRi4/j70o0H4sgLT
-         pzXYubAzjsbbWQsgSD1STe/1FcP//gyOn0rMpe3txopAs7IWo/iK5srlEXeTay3d35BX
-         OeTQ==
-X-Gm-Message-State: APjAAAVY8DoAGoOdCyfFBBbx1FxcbQILow0f5zvBFLgCJH8omix5C3BV
-        j1xhFO0/mas+mJvJqdJoSFu68utJ36fIkth+NiY=
-X-Google-Smtp-Source: APXvYqyLsef5jKivGIbYcHNmbstAFiod+vmSMApgvd2zY8eLE2lQRgLKYKc0vyukE46x7f8V8eDY9YTaLQQOuv/uNM0=
-X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr48513603plr.262.1562247597639;
- Thu, 04 Jul 2019 06:39:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190704090205.19400-1-fe@dev.tdt.de>
-In-Reply-To: <20190704090205.19400-1-fe@dev.tdt.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 4 Jul 2019 16:39:46 +0300
-Message-ID: <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
-To:     Florian Eckert <fe@dev.tdt.de>
-Cc:     Eckert.Florian@googlemail.com,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 4 Jul 2019 09:49:19 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57016 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727026AbfGDNtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:49:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 92FE31A05D5;
+        Thu,  4 Jul 2019 15:49:15 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 87B0F1A05EF;
+        Thu,  4 Jul 2019 15:49:10 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 61348402C3;
+        Thu,  4 Jul 2019 21:49:04 +0800 (SGT)
+From:   fugang.duan@nxp.com
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, jslaby@suse.com, fugang.duan@nxp.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, u.kleine-koenig@pengutronix.de,
+        daniel.baluta@nxp.com
+Subject: [PATCH RESEND tty/serial 1/1] tty: serial: fsl_lpuart: add imx8qxp support
+Date:   Thu,  4 Jul 2019 21:40:07 +0800
+Message-Id: <20190704134007.2316-1-fugang.duan@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
->
-> This patchset adds the following changes to this pcengines-apuv2
-> platform device.
->
+From: Fugang Duan <fugang.duan@nxp.com>
 
-Before doing anything to this driver, what is the plan for previously
-upstreamed:
+The lpuart of imx8ulp is basically the same as imx7ulp, but it
+has new feature support based on imx7ulp, like it can assert a
+DMA request on EOP(end-of-packet). imx8ulp lpuart use two clocks,
+one is ipg bus clock that is used to access registers, the other
+is baud clock that is used to transmit-receive data.
 
-drivers/leds/leds-apu.c
-arch/x86/platform/geode/alix.c
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+---
+ drivers/tty/serial/fsl_lpuart.c | 106 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 86 insertions(+), 20 deletions(-)
 
-?
-
-> * Add mpcie reset gpio export
-> * Add legacy leds gpio definitions
-> * Update gpio buttion definitions
->
-> Florian Eckert (3):
->   platform/x86/pcengines-apuv2: add mpcie reset gpio export
->   platform/x86/pcengines-apuv2: add legacy leds gpio definitions
->   platform//x86/pcengines-apuv2: update gpio button definition
->
->  drivers/platform/x86/pcengines-apuv2.c | 32 ++++++++++++++++++++++++++++----
->  1 file changed, 28 insertions(+), 4 deletions(-)
->
-> --
-> 2.11.0
->
-
-
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 2f24d97..92dad2b 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -234,9 +234,18 @@
+ 
+ static DEFINE_IDA(fsl_lpuart_ida);
+ 
++enum lpuart_type {
++	VF610_LPUART,
++	LS1021A_LPUART,
++	IMX7ULP_LPUART,
++	IMX8QXP_LPUART,
++};
++
+ struct lpuart_port {
+ 	struct uart_port	port;
+-	struct clk		*clk;
++	enum lpuart_type	devtype;
++	struct clk		*ipg_clk;
++	struct clk		*baud_clk;
+ 	unsigned int		txfifo_size;
+ 	unsigned int		rxfifo_size;
+ 
+@@ -261,19 +270,29 @@ struct lpuart_port {
+ };
+ 
+ struct lpuart_soc_data {
+-	char	iotype;
+-	u8	reg_off;
++	enum lpuart_type devtype;
++	char iotype;
++	u8 reg_off;
+ };
+ 
+ static const struct lpuart_soc_data vf_data = {
++	.devtype = VF610_LPUART,
+ 	.iotype = UPIO_MEM,
+ };
+ 
+ static const struct lpuart_soc_data ls_data = {
++	.devtype = LS1021A_LPUART,
+ 	.iotype = UPIO_MEM32BE,
+ };
+ 
+-static struct lpuart_soc_data imx_data = {
++static struct lpuart_soc_data imx7ulp_data = {
++	.devtype = IMX7ULP_LPUART,
++	.iotype = UPIO_MEM32,
++	.reg_off = IMX_REG_OFF,
++};
++
++static struct lpuart_soc_data imx8qxp_data = {
++	.devtype = IMX8QXP_LPUART,
+ 	.iotype = UPIO_MEM32,
+ 	.reg_off = IMX_REG_OFF,
+ };
+@@ -281,7 +300,8 @@ static struct lpuart_soc_data imx_data = {
+ static const struct of_device_id lpuart_dt_ids[] = {
+ 	{ .compatible = "fsl,vf610-lpuart",	.data = &vf_data, },
+ 	{ .compatible = "fsl,ls1021a-lpuart",	.data = &ls_data, },
+-	{ .compatible = "fsl,imx7ulp-lpuart",	.data = &imx_data, },
++	{ .compatible = "fsl,imx7ulp-lpuart",	.data = &imx7ulp_data, },
++	{ .compatible = "fsl,imx8qxp-lpuart",	.data = &imx8qxp_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, lpuart_dt_ids);
+@@ -289,6 +309,11 @@ MODULE_DEVICE_TABLE(of, lpuart_dt_ids);
+ /* Forward declare this for the dma callbacks*/
+ static void lpuart_dma_tx_complete(void *arg);
+ 
++static inline bool is_imx8qxp_lpuart(struct lpuart_port *sport)
++{
++	return sport->devtype == IMX8QXP_LPUART;
++}
++
+ static inline u32 lpuart32_read(struct uart_port *port, u32 off)
+ {
+ 	switch (port->iotype) {
+@@ -314,6 +339,39 @@ static inline void lpuart32_write(struct uart_port *port, u32 val,
+ 	}
+ }
+ 
++static int __lpuart_enable_clks(struct lpuart_port *sport, bool is_en)
++{
++	int ret = 0;
++
++	if (is_en) {
++		ret = clk_prepare_enable(sport->ipg_clk);
++		if (ret)
++			return ret;
++
++		ret = clk_prepare_enable(sport->baud_clk);
++		if (ret) {
++			clk_disable_unprepare(sport->ipg_clk);
++			return ret;
++		}
++	} else {
++		clk_disable_unprepare(sport->baud_clk);
++		clk_disable_unprepare(sport->ipg_clk);
++	}
++
++	return 0;
++}
++
++static unsigned int lpuart_get_baud_clk_rate(struct lpuart_port *sport)
++{
++	if (is_imx8qxp_lpuart(sport))
++		return clk_get_rate(sport->baud_clk);
++
++	return clk_get_rate(sport->ipg_clk);
++}
++
++#define lpuart_enable_clks(x)	__lpuart_enable_clks(x, true)
++#define lpuart_disable_clks(x)	__lpuart_enable_clks(x, false)
++
+ static void lpuart_stop_tx(struct uart_port *port)
+ {
+ 	unsigned char temp;
+@@ -2069,7 +2127,7 @@ lpuart_console_get_options(struct lpuart_port *sport, int *baud,
+ 	brfa = readb(sport->port.membase + UARTCR4);
+ 	brfa &= UARTCR4_BRFA_MASK;
+ 
+-	uartclk = clk_get_rate(sport->clk);
++	uartclk = lpuart_get_baud_clk_rate(sport);
+ 	/*
+ 	 * baud = mod_clk/(16*(sbr[13]+(brfa)/32)
+ 	 */
+@@ -2112,7 +2170,7 @@ lpuart32_console_get_options(struct lpuart_port *sport, int *baud,
+ 	bd = lpuart32_read(&sport->port, UARTBAUD);
+ 	bd &= UARTBAUD_SBR_MASK;
+ 	sbr = bd;
+-	uartclk = clk_get_rate(sport->clk);
++	uartclk = lpuart_get_baud_clk_rate(sport);
+ 	/*
+ 	 * baud = mod_clk/(16*(sbr[13]+(brfa)/32)
+ 	 */
+@@ -2286,6 +2344,7 @@ static int lpuart_probe(struct platform_device *pdev)
+ 	sport->port.mapbase = res->start;
+ 	sport->port.dev = &pdev->dev;
+ 	sport->port.type = PORT_LPUART;
++	sport->devtype = sdata->devtype;
+ 	ret = platform_get_irq(pdev, 0);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "cannot obtain irq\n");
+@@ -2301,20 +2360,27 @@ static int lpuart_probe(struct platform_device *pdev)
+ 
+ 	sport->port.rs485_config = lpuart_config_rs485;
+ 
+-	sport->clk = devm_clk_get(&pdev->dev, "ipg");
+-	if (IS_ERR(sport->clk)) {
+-		ret = PTR_ERR(sport->clk);
+-		dev_err(&pdev->dev, "failed to get uart clk: %d\n", ret);
++	sport->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
++	if (IS_ERR(sport->ipg_clk)) {
++		ret = PTR_ERR(sport->ipg_clk);
++		dev_err(&pdev->dev, "failed to get uart ipg clk: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	ret = clk_prepare_enable(sport->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to enable uart clk: %d\n", ret);
+-		return ret;
++	sport->baud_clk = NULL;
++	if (is_imx8qxp_lpuart(sport)) {
++		sport->baud_clk = devm_clk_get(&pdev->dev, "baud");
++		if (IS_ERR(sport->baud_clk)) {
++			ret = PTR_ERR(sport->baud_clk);
++			dev_err(&pdev->dev, "failed to get uart baud clk: %d\n", ret);
++			return ret;
++		}
+ 	}
+ 
+-	sport->port.uartclk = clk_get_rate(sport->clk);
++	ret = lpuart_enable_clks(sport);
++	if (ret)
++		return ret;
++	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
+ 
+ 	lpuart_ports[sport->port.line] = sport;
+ 
+@@ -2362,7 +2428,7 @@ static int lpuart_probe(struct platform_device *pdev)
+ 
+ failed_attach_port:
+ failed_irq_request:
+-	clk_disable_unprepare(sport->clk);
++	lpuart_disable_clks(sport);
+ 	return ret;
+ }
+ 
+@@ -2374,7 +2440,7 @@ static int lpuart_remove(struct platform_device *pdev)
+ 
+ 	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
+ 
+-	clk_disable_unprepare(sport->clk);
++	lpuart_disable_clks(sport);
+ 
+ 	if (sport->dma_tx_chan)
+ 		dma_release_channel(sport->dma_tx_chan);
+@@ -2439,7 +2505,7 @@ static int lpuart_suspend(struct device *dev)
+ 	}
+ 
+ 	if (sport->port.suspended && !irq_wake)
+-		clk_disable_unprepare(sport->clk);
++		lpuart_disable_clks(sport);
+ 
+ 	return 0;
+ }
+@@ -2451,7 +2517,7 @@ static int lpuart_resume(struct device *dev)
+ 	unsigned long temp;
+ 
+ 	if (sport->port.suspended && !irq_wake)
+-		clk_prepare_enable(sport->clk);
++		lpuart_enable_clks(sport);
+ 
+ 	if (lpuart_is_32(sport)) {
+ 		lpuart32_setup_watermark(sport);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
