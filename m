@@ -2,115 +2,125 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2619AC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A988EC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0362184C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:27:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9dovZ+o"
+	by mail.kernel.org (Postfix) with ESMTP id 858EB2184C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 20:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfGDU1W (ORCPT
+        id S1727276AbfGDU2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 16:27:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46593 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfGDU1V (ORCPT
+        Thu, 4 Jul 2019 16:28:47 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:62709 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfGDU2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 16:27:21 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i8so3279133pgm.13;
-        Thu, 04 Jul 2019 13:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z3QWNnk+axnLxPGdoA7WpikkuAhqTqR0RwQrRe4B/Wk=;
-        b=s9dovZ+oW6ntyg1lm5hJ6Nk2xoYGOl64SrEAsXpdbNDGuVwcLrCtY/34UArIzNyPTb
-         NbbIHp3YANyRBhz8VPgzLDx1nl+OXBheyFrlfba3tZBbh13e1vj8VuZ8OOJYCpooYf1+
-         2im6s2YBsdS393cactvL3d1JhNHX4j8+zZX9i+me6hfbhH7tz5NdfKBq4k3DwTbv10NT
-         3f+dKJm8NSNguh1cwwGczXwvIyhQxa6/QZXhX4K/3guYDDX5TJsw6fP3qoN3iz+kAbXB
-         JVi2H25+uI0M38miL7Fo4wtfYG2WIAbK1ZBip/fWATMJ4lCv0Id9yE79KMGaHkijJUCu
-         LZzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z3QWNnk+axnLxPGdoA7WpikkuAhqTqR0RwQrRe4B/Wk=;
-        b=pXGrQ5hbYDmMxQq4eu4e8M+q+9gAe1XpRV8cH6gSu3uFRmLoBjcbRmdpfP0vxvJ5y1
-         JBtunYsSftYRRB3T3+ummhYKX/yHNB8gzVb8Mj9usptVcYcelCXkjTJ6QobKh8WoT+hx
-         F2O8kZacQ5LTeQwwSv2N+YcgzspVBJq6B0lt342G0bTD9jsKeTvpIrVm3O9NyUW6knW0
-         SANrEKrVwNkeXStSp8gJU5XP50X7HrGtwSWaks9FoI5Rtuo9oY3Z+8jQLoSxqPist/J6
-         DkiqZXyZ1RJ6V/VQb1WQDlCXIG7jRFmv8b4K04t8fneCkoGqaIhR2BEWwr9riQnKxanm
-         5xSw==
-X-Gm-Message-State: APjAAAV0C+IO+PVE2MtJYpl3Z2eRNE9Ab3yKHQoRX6bJ3SFwqeNBTO9Z
-        wj5G52CQ33WykLhJLqO23bOg01uL
-X-Google-Smtp-Source: APXvYqz9djmZ2omIHJpjj99HnQ5Vv8j+h5oSzcS3wKrJtqBiAeDG19S4J+sCo21Qq46QEny2r8mELw==
-X-Received: by 2002:a65:5901:: with SMTP id f1mr369746pgu.84.1562272040171;
-        Thu, 04 Jul 2019 13:27:20 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id e124sm5300505pfh.181.2019.07.04.13.27.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 13:27:19 -0700 (PDT)
-Subject: Re: [PATCH v2 4/4] net: dsa: vsc73xx: Assert reset if iCPU is enabled
-To:     Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190703171924.31801-1-paweldembicki@gmail.com>
- <20190703171924.31801-5-paweldembicki@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <bee690ca-64c2-c974-1658-92b986bb1b04@gmail.com>
-Date:   Thu, 4 Jul 2019 13:27:18 -0700
+        Thu, 4 Jul 2019 16:28:46 -0400
+Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hj8LT-0004wr-Tl from Cedric_Hombourger@mentor.com ; Thu, 04 Jul 2019 13:28:43 -0700
+Received: from [172.30.65.44] (137.202.0.90) by svr-ies-mbx-02.mgc.mentorg.com
+ (139.181.222.2) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 4 Jul
+ 2019 21:28:39 +0100
+Subject: Re: [PATCH v2] builddeb: generate multi-arch friendly linux-libc-dev
+ package
+To:     Ben Hutchings <ben@decadent.org.uk>
+CC:     <yamada.masahiro@socionext.com>, <isar-users@googlegroups.com>,
+        <michal.lkml@markovi.net>, <linux-kbuild@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <riku.voipio@linaro.org>
+References: <0ff3202ced2b501d6045157f1c7b50810c0571e5.camel@decadent.org.uk>
+ <1562269332-132-1-git-send-email-Cedric_Hombourger@mentor.com>
+ <432e997617a0669886cd9ea5ceac7c1a2173044b.camel@decadent.org.uk>
+From:   Cedric Hombourger <cedric_hombourger@mentor.com>
+Message-ID: <e0df3b8d-0e8f-2bf6-2e43-633f40fb5f55@mentor.com>
+Date:   Thu, 4 Jul 2019 22:28:36 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190703171924.31801-5-paweldembicki@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <432e997617a0669886cd9ea5ceac7c1a2173044b.camel@decadent.org.uk>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-09.mgc.mentorg.com (139.181.222.9) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Greetings,
 
+On 7/4/2019 9:49 PM, Ben Hutchings wrote:
+> On Thu, 2019-07-04 at 21:42 +0200, Cedric Hombourger wrote:
+>> Debian-based distributions place libc header files in a machine
+>> specific directory (/usr/include/<libc-machine>) instead of
+>> /usr/include/asm to support installation of the linux-libc-dev
+>> package from multiple architectures. Move headers installed by
+>> "make headers_install" accordingly using Debian's tuple from
+>> dpkg-architecture.
+>>
+>> Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+>> Reviewed-by: Henning Schild <henning.schild@siemens.com>
+>> Reviewed-by: Ben Hutchings <ben@decadent.org.uk>
+> I haven't reviewed this version of the patch.
 
-On 7/3/2019 10:19 AM, Pawel Dembicki wrote:
-> Driver allow to use devices with disabled iCPU only.
-> 
-> Some devices have pre-initialised iCPU by bootloader.
-> That state make switch unmanaged. This patch force reset
-> if device is in unmanaged state. In the result chip lost
-> internal firmware from RAM and it can be managed.
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
+Sorry about that. it was just an awkward way to note your contribution 
+to this changeset (for the avoidance of doubt, your feedback is greatly 
+appreciated). I'll remove this line for v3
 
-[snip]
+> And this doesn't make a multi-arch package; you will have to add a
+> field to the package's control file too.
 
-> @@ -1158,6 +1143,19 @@ int vsc73xx_probe(struct vsc73xx *vsc)
->  		msleep(20);
->  
->  	ret = vsc73xx_detect(vsc);
-> +	if (ret == -EAGAIN) {
-> +		dev_err(vsc->dev,
-> +			"Chip seams to be out of control. Assert reset and try again.\n");
-> +		gpiod_set_value_cansleep(vsc->reset, 1);
+Will do. Thanks!
 
-s/seams/seems/
+Cedric
 
-With that fixed:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> Ben.
+>
+>> ---
+>>   scripts/package/builddeb | 8 ++++++++
+>>   scripts/package/mkdebian | 4 ++--
+>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+>> index b03dd56a4782..15a034e18c37 100755
+>> --- a/scripts/package/builddeb
+>> +++ b/scripts/package/builddeb
+>> @@ -132,6 +132,14 @@ fi
+>>   if [ "$ARCH" != "um" ]; then
+>>   	$MAKE -f $srctree/Makefile headers_check
+>>   	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
+>> +	if [ -n "$debarch" ]; then
+>> +		# move asm headers to /usr/include/<libc-machine>/asm to match the structure
+>> +		# used by Debian-based distros (to support multi-arch) but only if ARCH was
+>> +		# translated to Debian's (debarch) - this is done by mkdebian
+>> +		host_arch=$(dpkg-architecture -a$debarch -qDEB_HOST_MULTIARCH)
+>> +		mkdir $libc_headers_dir/usr/include/$host_arch
+>> +		mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$host_arch/
+>> +	fi
+>>   fi
+>>   
+>>   # Install the maintainer scripts
+>> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+>> index 8351584cb24e..8ebcb7d67fd2 100755
+>> --- a/scripts/package/mkdebian
+>> +++ b/scripts/package/mkdebian
+>> @@ -212,11 +212,11 @@ cat <<EOF > debian/rules
+>>   srctree ?= .
+>>   
+>>   build:
+>> -	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
+>> +	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
+>>   	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile
+>>   
+>>   binary-arch:
+>> -	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} \
+>> +	\$(MAKE) KERNELRELEASE=${version} ARCH=${ARCH} debarch=${debarch} \
+>>   	KBUILD_BUILD_VERSION=${revision} -f \$(srctree)/Makefile intdeb-pkg
+>>   
+>>   clean:
