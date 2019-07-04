@@ -2,127 +2,104 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF7AC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA78C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9054A218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1302085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cViTZ/CF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfGDPrE (ORCPT
+        id S1727883AbfGDPwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:47:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2546 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727394AbfGDPrD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:47:03 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64FkjNb001279
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 11:47:02 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2thhn3e8gx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 11:47:02 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 4 Jul 2019 16:47:00 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 16:46:55 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64FksMH33947800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 15:46:54 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 615D1AE04D;
-        Thu,  4 Jul 2019 15:46:54 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB93BAE051;
-        Thu,  4 Jul 2019 15:46:51 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.72])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 15:46:51 +0000 (GMT)
-Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
- structures to tpm_pcr_extend()"
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        linux-integrity@vger.kernel.org
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Thu, 04 Jul 2019 11:46:41 -0400
-In-Reply-To: <1562240882.6165.78.camel@linux.ibm.com>
-References: <20190701131505.17759-1-msuchanek@suse.de>
-         <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
-         <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
-         <1562240882.6165.78.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070415-0008-0000-0000-000002F9E80F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070415-0009-0000-0000-000022673ADE
-Message-Id: <1562255201.6165.143.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=876 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040200
+        Thu, 4 Jul 2019 11:52:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54300 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727816AbfGDPwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:52:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=svphATbkFOoAAltJuUblfqvoklVJ2Q5WVSnZRTgzpDw=; b=cViTZ/CF344FGf1dtxH/n9m/Ke
+        59YKl369FU2WptLb8GxVK+48MONjUA7ok4zrdOu2D8uxSz/hy8dVytG0l990Hslraf33EI44o331e
+        JB0i7shiAC7PEC9SmVI4eCccso1cymQV/IuV0WOfu/VyxZOKhQWetiQAXhlypz0rI1XU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hj41x-0004lI-Eh; Thu, 04 Jul 2019 17:52:17 +0200
+Date:   Thu, 4 Jul 2019 17:52:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Subject: Re: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Message-ID: <20190704155217.GI18473@lunn.ch>
+References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
+ <20190703140520.GA18473@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
+ <20190704033038.GA6276@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
+ <20190704135420.GD13859@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jarkko,
+> Yes, the top 16 bit of the data register only valid when C45 is enable.
+> It contains the Register address which MDIO c45 frame intended for.
 
-On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
-> On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
-> > On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
-> > > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
-> > >> This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
-> > >> following crash:
-> > > 
-> > > Thank you. I think this the right choice for the moment. I fixed
-> > > a trivial checkpatch.pl error and added the mandatory tags. Can
-> > > you check quickly v2 (just posted)?
-> > > 
-> > > I already made it available in my master and next.
-> > 
-> > Could you please wait few days? I would prefer to fix this issue instead
-> > of reverting the whole patch.
-> 
-> Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
-> allocated banks for IBM vtpm driver", which addresses this bug.
+I think there is too much passing variables around by reference than
+by value, to make this code easy to understand.
 
-Now with my review, and with Sachin Sant's and Michal Suchánek
-testing, instead of reverting this patch could you pick up Nayna's
-patch instead?
+Maybe a better structure would be
 
-thanks!
+static int stmmac_mdion_c45_read(struct stmmac_priv *priv, int phyaddr, int phyreg)
+{
 
-Mimi
+	unsigned int reg_shift = priv->hw->mii.reg_shift;
+	unsigned int reg_mask = priv->hw->mii.reg_mask;
+	u32 mii_addr_val, mii_data_val;
 
+	mii_addr_val = MII_GMAC4_C45E |
+                       ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
+        mii_data_val = (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
+
+	writel(mii_data_val, priv->ioaddr + priv->hw->mii_data);
+	writel(mii_addr_val, priv->ioaddr + priv->hw->mii_addrress);
+
+	return (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+}		   
+
+static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+{
+
+...
+	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+ 	   		      100, 10000))
+ 		return -EBUSY;
+
+      if (priv->plat->has_gmac4 && phyreg & MII_ADDR_C45)
+      	return stmmac_mdio_c45_read(priv, phyaddr, phyreg);
+
+	Andrew
