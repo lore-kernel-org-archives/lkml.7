@@ -2,120 +2,247 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D8AC06510
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BEC4646D
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DF821882
+	by mail.kernel.org (Postfix) with ESMTP id A63EB21882
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N5dBp5nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfGDD6J (ORCPT
+        id S1727340AbfGDD6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 23:58:09 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39937 "EHLO ozlabs.org"
+        Wed, 3 Jul 2019 23:58:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60184 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfGDD6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 23:58:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726696AbfGDD6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 23:58:13 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fPMf0p9qz9s8m;
-        Thu,  4 Jul 2019 13:58:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562212686;
-        bh=+JknrCbseCBQVVRqI76JmSRNZa6J5xmyEX8iMAFeHfM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N5dBp5nqYSDA4MFmyr0AMB1aw9XGTa45iaGkX408/FbF/bQ1JGBO5Y/P2wNAQnq6h
-         Cpokx6VHcnbaCsKbEEOK4+oxMhB9SvCsStKvwe2aZpSuEgk5VFVIEsHyOiVtMBrdY4
-         tQDjsn4EtCdQPzeB4u/EIE1vkedIM7jlz8c5pduviOpAlI0qi5m6LorhDskVjhyTEz
-         wAEBIq7mH9MQeGXo6qTTDjr9dK8N9tBx4G4vfsOqt77ddl5O/c9PdLoYwkYkFL6+tH
-         DWJDtj1h9qy/pBIM+QVNjwUAvkx10gtTrutLaP/eqBM/aXkHFjVAHN/DsB7RdeQzWl
-         45WzRWrYbodnQ==
-Date:   Thu, 4 Jul 2019 13:58:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alasdair G Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: linux-next: manual merge of the device-mapper tree with the jc_docs
- tree
-Message-ID: <20190704135805.6b077b57@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B9DD30C5827;
+        Thu,  4 Jul 2019 03:58:13 +0000 (UTC)
+Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D39D42B07C;
+        Thu,  4 Jul 2019 03:58:02 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on
+ the_virtio_vsock
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+ <20190628123659.139576-2-sgarzare@redhat.com>
+ <05311244-ed23-d061-a620-7b83d83c11f5@redhat.com>
+ <20190703104135.wg34dobv64k7u4jo@steredhat>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <07e5bc00-ebde-4dac-d38c-f008fa230b5f@redhat.com>
+Date:   Thu, 4 Jul 2019 11:58:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//GxNH+=keHIH0Nb1xPUa7XL"; protocol="application/pgp-signature"
+In-Reply-To: <20190703104135.wg34dobv64k7u4jo@steredhat>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 04 Jul 2019 03:58:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//GxNH+=keHIH0Nb1xPUa7XL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2019/7/3 下午6:41, Stefano Garzarella wrote:
+> On Wed, Jul 03, 2019 at 05:53:58PM +0800, Jason Wang wrote:
+>> On 2019/6/28 下午8:36, Stefano Garzarella wrote:
+>>> Some callbacks used by the upper layers can run while we are in the
+>>> .remove(). A potential use-after-free can happen, because we free
+>>> the_virtio_vsock without knowing if the callbacks are over or not.
+>>>
+>>> To solve this issue we move the assignment of the_virtio_vsock at the
+>>> end of .probe(), when we finished all the initialization, and at the
+>>> beginning of .remove(), before to release resources.
+>>> For the same reason, we do the same also for the vdev->priv.
+>>>
+>>> We use RCU to be sure that all callbacks that use the_virtio_vsock
+>>> ended before freeing it. This is not required for callbacks that
+>>> use vdev->priv, because after the vdev->config->del_vqs() we are sure
+>>> that they are ended and will no longer be invoked.
+>>>
+>>> We also take the mutex during the .remove() to avoid that .probe() can
+>>> run while we are resetting the device.
+>>>
+>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>> ---
+>>>    net/vmw_vsock/virtio_transport.c | 67 +++++++++++++++++++++-----------
+>>>    1 file changed, 44 insertions(+), 23 deletions(-)
+>>>
+>>> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>>> index 9c287e3e393c..7ad510ec12e0 100644
+>>> --- a/net/vmw_vsock/virtio_transport.c
+>>> +++ b/net/vmw_vsock/virtio_transport.c
+>>> @@ -65,19 +65,22 @@ struct virtio_vsock {
+>>>    	u32 guest_cid;
+>>>    };
+>>> -static struct virtio_vsock *virtio_vsock_get(void)
+>>> -{
+>>> -	return the_virtio_vsock;
+>>> -}
+>>> -
+>>>    static u32 virtio_transport_get_local_cid(void)
+>>>    {
+>>> -	struct virtio_vsock *vsock = virtio_vsock_get();
+>>> +	struct virtio_vsock *vsock;
+>>> +	u32 ret;
+>>> -	if (!vsock)
+>>> -		return VMADDR_CID_ANY;
+>>> +	rcu_read_lock();
+>>> +	vsock = rcu_dereference(the_virtio_vsock);
+>>> +	if (!vsock) {
+>>> +		ret = VMADDR_CID_ANY;
+>>> +		goto out_rcu;
+>>> +	}
+>>> -	return vsock->guest_cid;
+>>> +	ret = vsock->guest_cid;
+>>> +out_rcu:
+>>> +	rcu_read_unlock();
+>>> +	return ret;
+>>>    }
+>>>    static void virtio_transport_loopback_work(struct work_struct *work)
+>>> @@ -197,14 +200,18 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>>>    	struct virtio_vsock *vsock;
+>>>    	int len = pkt->len;
+>>> -	vsock = virtio_vsock_get();
+>>> +	rcu_read_lock();
+>>> +	vsock = rcu_dereference(the_virtio_vsock);
+>>>    	if (!vsock) {
+>>>    		virtio_transport_free_pkt(pkt);
+>>> -		return -ENODEV;
+>>> +		len = -ENODEV;
+>>> +		goto out_rcu;
+>>>    	}
+>>> -	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid)
+>>> -		return virtio_transport_send_pkt_loopback(vsock, pkt);
+>>> +	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid) {
+>>> +		len = virtio_transport_send_pkt_loopback(vsock, pkt);
+>>> +		goto out_rcu;
+>>> +	}
+>>>    	if (pkt->reply)
+>>>    		atomic_inc(&vsock->queued_replies);
+>>> @@ -214,6 +221,9 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>>>    	spin_unlock_bh(&vsock->send_pkt_list_lock);
+>>>    	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
+>>> +
+>>> +out_rcu:
+>>> +	rcu_read_unlock();
+>>>    	return len;
+>>>    }
+>>> @@ -222,12 +232,14 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>>>    {
+>>>    	struct virtio_vsock *vsock;
+>>>    	struct virtio_vsock_pkt *pkt, *n;
+>>> -	int cnt = 0;
+>>> +	int cnt = 0, ret;
+>>>    	LIST_HEAD(freeme);
+>>> -	vsock = virtio_vsock_get();
+>>> +	rcu_read_lock();
+>>> +	vsock = rcu_dereference(the_virtio_vsock);
+>>>    	if (!vsock) {
+>>> -		return -ENODEV;
+>>> +		ret = -ENODEV;
+>>> +		goto out_rcu;
+>>>    	}
+>>>    	spin_lock_bh(&vsock->send_pkt_list_lock);
+>>> @@ -255,7 +267,11 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>>>    			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+>>>    	}
+>>> -	return 0;
+>>> +	ret = 0;
+>>> +
+>>> +out_rcu:
+>>> +	rcu_read_unlock();
+>>> +	return ret;
+>>>    }
+>>>    static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+>>> @@ -590,8 +606,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>>>    	vsock->rx_buf_max_nr = 0;
+>>>    	atomic_set(&vsock->queued_replies, 0);
+>>> -	vdev->priv = vsock;
+>>> -	the_virtio_vsock = vsock;
+>>>    	mutex_init(&vsock->tx_lock);
+>>>    	mutex_init(&vsock->rx_lock);
+>>>    	mutex_init(&vsock->event_lock);
+>>> @@ -613,6 +627,9 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>>>    	virtio_vsock_event_fill(vsock);
+>>>    	mutex_unlock(&vsock->event_lock);
+>>> +	vdev->priv = vsock;
+>>> +	rcu_assign_pointer(the_virtio_vsock, vsock);
+>>
+>> You probably need to use rcu_dereference_protected() to access
+>> the_virtio_vsock in the function in order to survive from sparse.
+>>
+> Ooo, thanks!
+>
+> Do you mean when we check if the_virtio_vsock is not null at the beginning of
+> virtio_vsock_probe()?
 
-Today's linux-next merge of the device-mapper tree got a conflict in:
 
-  Documentation/device-mapper/snapshot.rst
+I mean instead of:
 
-between commit:
+     /* Only one virtio-vsock device per guest is supported */
+     if (the_virtio_vsock) {
+         ret = -EBUSY;
+         goto out;
+     }
 
-  f0ba43774cea ("docs: convert docs to ReST and rename to *.rst")
+you should use:
 
-from the jc_docs tree and commit:
+if (rcu_dereference_protected(the_virtio_vosck, 
+lock_dep_is_held(&the_virtio_vsock_mutex))
 
-  a8a9f1434a86 ("dm snapshot: add optional discard support features")
+...
 
-from the device-mapper tree.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+>
+>>> +
+>>>    	mutex_unlock(&the_virtio_vsock_mutex);
+>>>    	return 0;
+>>> @@ -627,6 +644,12 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>    	struct virtio_vsock *vsock = vdev->priv;
+>>>    	struct virtio_vsock_pkt *pkt;
+>>> +	mutex_lock(&the_virtio_vsock_mutex);
+>>> +
+>>> +	vdev->priv = NULL;
+>>> +	rcu_assign_pointer(the_virtio_vsock, NULL);
+>>
+>> This is still suspicious, can we access the_virtio_vsock through vdev->priv?
+>> If yes, we may still get use-after-free since it was not protected by RCU.
+> We will free the object only after calling the del_vqs(), so we are sure
+> that the vq_callbacks ended and will no longer be invoked.
+> So, IIUC it shouldn't happen.
 
---=20
-Cheers,
-Stephen Rothwell
 
-diff --cc Documentation/device-mapper/snapshot.rst
-index 4c53304e72f1,1810833f6dc6..000000000000
---- a/Documentation/device-mapper/snapshot.rst
-+++ b/Documentation/device-mapper/snapshot.rst
-@@@ -31,7 -30,8 +31,8 @@@ original data will be saved in the <CO
-  its visible content unchanged, at least until the <COW device> fills up.
- =20
- =20
- -*) snapshot <origin> <COW device> <persistent?> <chunksize>
- +-  snapshot <origin> <COW device> <persistent?> <chunksize>
-+    [<# feature args> [<arg>]*]
- =20
-  A snapshot of the <origin> block device is created. Changed chunks of
-  <chunksize> sectors will be stored on the <COW device>.  Writes will
+Yes, but any dereference that is not done in vq_callbacks will be very 
+dangerous in the future.
 
---Sig_//GxNH+=keHIH0Nb1xPUa7XL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0deU0ACgkQAVBC80lX
-0Gwbnwf+JKjJyQTyNdobCshf+gPms6olS7MsyBnnxAbB50DUwdAI6BGLQ3PcOHwg
-Y25IilS6hPkXWL77CjEYPXDofU+Lm5/HXOL7fI5kxaKI2ape7ExU6sPX88HQ8nsn
-vN8VtW4yg9c2vcwhvJp3k+L4k76dbcejQkm7mzG5Q0HWuf9f1xhzwBjXRAKbGV11
-2LRZAkhPapVdKw4+uF/McK53LgNCScNDAcdFSdSuWvkpO/bAA+3oGo+ATD4/VTAb
-XAkKPUUDwTvp7V50EAmMvR6eEkncj+bqET5s85rXr0mXloNinRIGswmmP2L6vNCt
-Xl4OX2InjQ+nvT9/6UyeR5w98+TzAQ==
-=a2G7
------END PGP SIGNATURE-----
-
---Sig_//GxNH+=keHIH0Nb1xPUa7XL--
+>
+>> Another more interesting question, I believe we will do singleton for
+>> virtio_vsock structure. Then what's the point of using vdev->priv to access
+>> the_virtio_vsock? It looks to me we can it brings extra troubles for doing
+>> synchronization.
+> I thought about it when I tried to use RCU to stop the worker and I
+> think make sense. Maybe can be another series after this will be merged.
+>
+> @Stefan, what do you think about that?
+>
+> Thanks,
+> Stefano
