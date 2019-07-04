@@ -2,72 +2,116 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADB9C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2BCC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F26D206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D796218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:29:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5/ZEBdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfGDW2M (ORCPT
+        id S1727548AbfGDW33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 18:28:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52307 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfGDW2M (ORCPT
+        Thu, 4 Jul 2019 18:29:29 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44560 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727410AbfGDW33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 18:28:12 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hjACx-00019h-NJ; Thu, 04 Jul 2019 22:28:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ubifs: remove redundant assignment to pointer fname
-Date:   Thu,  4 Jul 2019 23:28:03 +0100
-Message-Id: <20190704222803.4328-1-colin.king@canonical.com>
+        Thu, 4 Jul 2019 18:29:29 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so5047696lfm.11;
+        Thu, 04 Jul 2019 15:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NyIdC58y2Ub2Y306XyljmYe4qE2X3Y8o+U7JgB/DDQc=;
+        b=F5/ZEBdHLOxVJsQ9+bKnbkInjEdYaGIz+yaiNaiAv5QmMVJBD851G5G1Fevvs8znzP
+         QthYpnw9sSilbWFRu5heyHg53ECaToYeiJaDKRWvFMgLTprIck1otmreLMDnYPjgBZRN
+         ntcpgrWan0ltoIeFcDXPHcJuJalqnMKxFhXKQxYaH0FGIeMcLGefDfy1i4k8vzBK7DAa
+         YgdbjQJMy/dxfdPYvqREvQEiIZvoV1gZlVafOL8EDuMRlYxUqp1W78WHJzNiZp/tObaX
+         af0aQD6DCyBVGq97juiiGeO2wg0ty69sPTHk5C2uCqPGy8J7PS1xtvZq/Vzey96VnIw/
+         q0Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NyIdC58y2Ub2Y306XyljmYe4qE2X3Y8o+U7JgB/DDQc=;
+        b=UVeQHYayKYwH8phdu9sbNAFBtuE2dgsYnDh3UTAIa4sYOuRxKFi/RGRu6ivM0nyLbu
+         cYqeJTZSRgW2goz6/c9gQ84Rgh2h/5qQWIMgolxFkTaCp326RgXWZGro1F1z+3jy3+1W
+         2qa/Eh35mCCjDfagGSukpwi8Ghxkb2KWL9SYr8zXkmvMioUUDH0ipyv+AqJ2NxNVtHXn
+         DuwsRBNJXBBGgzKre9yuwUJvPFE/TcDxMfsIh1HVD0u10brUA3XJAJ6Z8C61waIsaUtI
+         +1+ncnRY4fxRZM/Nq2MeFqlA/oS7MjixsML3OggPEE+jyXG0y3BJHEonezJAMC7ytNHW
+         0kFQ==
+X-Gm-Message-State: APjAAAXg02jOmahF1xCBFKW4DQv5YDrLEhP/hWmjTC5xXo7FufYyIijq
+        kx2+brzIiaThvVSbMOpzbBo=
+X-Google-Smtp-Source: APXvYqx4gOrcGT8qluv7NzLG7j6naZ3cNwx7UVq6FHjKPQiPLQyJvvqgat9DKhDmwO44EuJgUA6u1A==
+X-Received: by 2002:ac2:514f:: with SMTP id q15mr357516lfd.145.1562279366617;
+        Thu, 04 Jul 2019 15:29:26 -0700 (PDT)
+Received: from krolik-desktop.lan ([91.238.216.6])
+        by smtp.gmail.com with ESMTPSA id t25sm403645lfg.7.2019.07.04.15.29.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 15:29:25 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>, linus.walleij@linaro.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] net: dsa: Add Vitesse VSC73xx parallel mode
+Date:   Fri,  5 Jul 2019 00:29:03 +0200
+Message-Id: <20190704222907.2888-1-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Main goal of this patch series is to add support for CPU attached parallel
+bus in Vitesse VSC73xx switches. Existing driver supports only SPI mode.
 
-The pointer fname rc is being assigned with a value that is never
-read because the function returns after the assignment. The assignment
-is redundant and can be removed.
+Second change is needed for devices in unmanaged state.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/ubifs/debug.c | 1 -
- 1 file changed, 1 deletion(-)
+V3:
+- fix commit messages and descriptions about memory-mapped I/O mode
 
-diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
-index 92fe5c5ed78a..95da71e13fc8 100644
---- a/fs/ubifs/debug.c
-+++ b/fs/ubifs/debug.c
-@@ -2817,7 +2817,6 @@ void dbg_debugfs_init_fs(struct ubifs_info *c)
- 		     c->vi.ubi_num, c->vi.vol_id);
- 	if (n == UBIFS_DFS_DIR_LEN) {
- 		/* The array size is too small */
--		fname = UBIFS_DFS_DIR_NAME;
- 		return;
- 	}
- 
+V2:
+- drop changes in compatible strings
+- make changes less invasive
+- drop mutex in platform part and move mutex from core to spi part
+- fix indentation 
+- fix devm_ioremap_resource result check
+- add cover letter 
+
+Pawel Dembicki (4):
+  net: dsa: Change DT bindings for Vitesse VSC73xx switches
+  net: dsa: vsc73xx: Split vsc73xx driver
+  net: dsa: vsc73xx: add support for parallel mode
+  net: dsa: vsc73xx: Assert reset if iCPU is enabled
+
+ .../bindings/net/dsa/vitesse,vsc73xx.txt      |  58 ++++-
+ drivers/net/dsa/Kconfig                       |  20 +-
+ drivers/net/dsa/Makefile                      |   4 +-
+ ...tesse-vsc73xx.c => vitesse-vsc73xx-core.c} | 206 +++---------------
+ drivers/net/dsa/vitesse-vsc73xx-platform.c    | 164 ++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx-spi.c         | 203 +++++++++++++++++
+ drivers/net/dsa/vitesse-vsc73xx.h             |  29 +++
+ 7 files changed, 499 insertions(+), 185 deletions(-)
+ rename drivers/net/dsa/{vitesse-vsc73xx.c => vitesse-vsc73xx-core.c} (90%)
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-platform.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx-spi.c
+ create mode 100644 drivers/net/dsa/vitesse-vsc73xx.h
+
 -- 
 2.20.1
 
