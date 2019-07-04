@@ -2,94 +2,205 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE00C46478
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEDEC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8307E218A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F8A218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562228421;
+	bh=UTANfPW0H0vK9i/aOEFmdXUp/DUIlOmzQga/+vP38Fg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dv9NUaZR52JBkXXqsPpm/yc7fWl39f7OLrbEp+qopS3t0Ag53Z6X8hIUpi2PdNNKC
+	 /PV6hLs8oW/+o/NqUOtXJE1KPpeblM4QJXgX2IXzqlnQ1TnDg3KwKA2+Xl9Itc5umn
+	 L4cwdIrll33BiTDiMe4bejHkOo+htCPdrxev9bvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfGDIUE (ORCPT
+        id S1727109AbfGDIUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:20:04 -0400
-Received: from 8bytes.org ([81.169.241.247]:34084 "EHLO theia.8bytes.org"
+        Thu, 4 Jul 2019 04:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfGDIUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:20:04 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 49E032FB; Thu,  4 Jul 2019 10:20:03 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 10:20:01 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org,
-        aarch64-laptops@lists.linaro.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joe Perches <joe@perches.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] iommu: add support for drivers that manage iommu
- explicitly
-Message-ID: <20190704082001.GD6546@8bytes.org>
-References: <20190702202631.32148-1-robdclark@gmail.com>
- <20190702202631.32148-2-robdclark@gmail.com>
+        id S1725957AbfGDIUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:20:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2C0218A3;
+        Thu,  4 Jul 2019 08:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562228418;
+        bh=UTANfPW0H0vK9i/aOEFmdXUp/DUIlOmzQga/+vP38Fg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tFCheLGXhblMWhic9wvLdzVRcXrHIuayErzBBXEcG4tXDYsmFzL9EcWzqSXTtBrDD
+         ORGM3r70MMspN4JonGfKcUGi7TXJuRjF6EU9O7hdG3ZuQ3Y9JNjxts3GlMVnrNKSD9
+         5l9ZDpOhWdzJeQKVYdvot+bUOO+z+Uq/w9mbyMCk=
+Date:   Thu, 4 Jul 2019 10:20:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
+ DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+Message-ID: <20190704082013.GE6438@kroah.com>
+References: <20190628004951.6202-1-mdf@kernel.org>
+ <20190628004951.6202-7-mdf@kernel.org>
+ <20190703180753.GA24723@kroah.com>
+ <20190703233058.GA15825@hao-dev>
+ <20190704053927.GB347@kroah.com>
+ <20190704063106.GA24777@hao-dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190702202631.32148-2-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190704063106.GA24777@hao-dev>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Thu, Jul 04, 2019 at 02:31:06PM +0800, Wu Hao wrote:
+> On Thu, Jul 04, 2019 at 07:39:27AM +0200, Greg KH wrote:
+> > On Thu, Jul 04, 2019 at 07:30:58AM +0800, Wu Hao wrote:
+> > > On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
+> > > > On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
+> > > > > From: Wu Hao <hao.wu@intel.com>
+> > > > > 
+> > > > > In order to support virtualization usage via PCIe SRIOV, this patch
+> > > > > adds two ioctls under FPGA Management Engine (FME) to release and
+> > > > > assign back the port device. In order to safely turn Port from PF
+> > > > > into VF and enable PCIe SRIOV, it requires user to invoke this
+> > > > > PORT_RELEASE ioctl to release port firstly to remove userspace
+> > > > > interfaces, and then configure the PF/VF access register in FME.
+> > > > > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
+> > > > > ioctl to attach the port back to PF.
+> > > > > 
+> > > > >  Ioctl interfaces:
+> > > > >  * DFL_FPGA_FME_PORT_RELEASE
+> > > > >    Release platform device of given port, it deletes port platform
+> > > > >    device to remove related userspace interfaces on PF, then
+> > > > >    configures PF/VF access mode to VF.
+> > > > > 
+> > > > >  * DFL_FPGA_FME_PORT_ASSIGN
+> > > > >    Assign platform device of given port back to PF, it configures
+> > > > >    PF/VF access mode to PF, then adds port platform device back to
+> > > > >    re-enable related userspace interfaces on PF.
+> > > > 
+> > > > Why are you not using the "generic" bind/unbind facility that userspace
+> > > > already has for this with binding drivers to devices?  Why a special
+> > > > ioctl?
+> > > 
+> > > Hi Greg,
+> > > 
+> > > Actually we think it should be safer that making the device invisble than
+> > > just unbinding its driver. Looks like user can try to rebind it at any
+> > > time and we don't have any method to stop them.
+> > 
+> > Why do you want to "stop" the user from doing something?  They asked to
+> > do it, why prevent it?  If they ask to do something foolish, well, they
+> > get to keep the pieces :)
+> 
+> Actually this is for SRIOV support, as we are moving FPGA accelerator from
+> PF to VF, so we don't want users to see the FPGA accelerator from PF any
+> more. We can't allow user to touch same FPGA accelerator from both PF and
+> VF side (it leads to hardware erros).
 
-On Tue, Jul 02, 2019 at 01:26:18PM -0700, Rob Clark wrote:
-> 1) In some cases the bootloader takes the iommu out of bypass and
->    enables the display.  This is in particular a problem on the aarch64
->    laptops that exist these days, and modern snapdragon android devices.
->    (Older devices also enabled the display in bootloader but did not
->    take the iommu out of bypass.)  Attaching a DMA or IDENTITY domain
->    while scanout is active, before the driver has a chance to intervene,
->    makes things go *boom*
+Ick, ok, this needs to be documented really well then.
 
-Just to make sure I get this right: The bootloader inializes the SMMU
-and creates non-identity mappings for the GPU? And when the SMMU driver
-in Linux takes over this breaks display output.
+> > > > > --- a/include/uapi/linux/fpga-dfl.h
+> > > > > +++ b/include/uapi/linux/fpga-dfl.h
+> > > > > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
+> > > > >  
+> > > > >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
+> > > > >  
+> > > > > +/**
+> > > > > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
+> > > > > + *					struct dfl_fpga_fme_port_release)
+> > > > > + *
+> > > > > + * Driver releases the port per Port ID provided by caller.
+> > > > > + * Return: 0 on success, -errno on failure.
+> > > > > + */
+> > > > > +struct dfl_fpga_fme_port_release {
+> > > > > +	/* Input */
+> > > > > +	__u32 argsz;		/* Structure length */
+> > > > > +	__u32 flags;		/* Zero for now */
+> > > > > +	__u32 port_id;
+> > > > > +};
+> > > > 
+> > > > meta-comment, why do all of your structures for ioctls have argsz?  You
+> > > > "know" the size of the structure already, it's part of the ioctl
+> > > > definition.  You shouldn't need to also set it again, right?  Otherwise
+> > > > ALL Linux ioctls would need something crazy like this.
+> > > 
+> > > Actually we followed the same method as vfio.
+> > 
+> > vfio is a protocol on "the wire", right?  Not an ioctl.
+> > 
+> > > The major purpose should be extendibility, as we really need this to
+> > > be sth long term maintainable.
+> > 
+> > You can't change ioctl structure sizes at any time.
+> > 
+> > > It really helps, if we add some new members for extentions/enhancement
+> > > under the same ioctl.
+> > 
+> > You don't do that.
+> > 
+> > > I don't think everybody needs this, but my consideration here is if
+> > > newer generations of hardware/specs come with some extentions, I still
+> > > hope we can resue these IOCTLs as much as we could, instead of
+> > > creating more new ones.
+> > 
+> > You create new ones, like everyone else does, as you can not change old
+> > code.  By trying to "version" structures like this, it's just going to
+> > be a nightmare.
+> 
+> Actually i learned this from vfio code here, it's not trying to "version"
+> structures, let me copy the comments from vfio header file. It should be
+> more clear than above short description from me.
+> 
+>  "include/uapi/linux/vfio.h"
+> 
+>  /*
+>   * The IOCTL interface is designed for extensibility by embedding the
+>   * structure length (argsz) and flags into structures passed between
+>   * kernel and userspace.  We therefore use the _IO() macro for these
+>   * defines to avoid implicitly embedding a size into the ioctl request.
+>   * As structure fields are added, argsz will increase to match and flag
+>   * bits will be defined to indicate additional fields with valid data.
+>   * It's *always* the caller's responsibility to indicate the size of
+>   * the structure passed by setting argsz appropriately.
+>   */
+> 
+>  For example.
+> 
+>  struct vfio_device_info {
+>         __u32   argsz;
+>         __u32   flags;
+>  #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
+>  #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
+>  #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
+>  #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
+>  #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
+>  #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
+>         __u32   num_regions;    /* Max region index + 1 */
+>         __u32   num_irqs;       /* Max IRQ index + 1 */
+> 
+> Hope things could be more clear now. :)
 
-> +	/*
-> +	 * If driver is going to manage iommu directly, then avoid
-> +	 * attaching any non driver managed domain.  There could
-> +	 * be already active dma underway (ie. scanout in case of
-> +	 * bootloader enabled display), and interfering with that
-> +	 * will make things go *boom*
-> +	 */
-> +	if ((domain->type != IOMMU_DOMAIN_UNMANAGED) &&
-> +	    dev->driver && dev->driver->driver_manages_iommu)
-> +		return 0;
-> +
+That's nice for the vfio stuff, but you are just a "normal" driver here.
+You want an ioctl that just does one thing, no arguments, no flags, no
+anything.  No need for a size argument then at all.  These ioctls don't
+even need a structure for them!
 
-When the default domain is attached, there is usually no driver attached
-yet. I think this needs to be communicated by the firmware to Linux and
-the code should check against that.
+Don't try to be fancy, it's not needed, it's not like you are running
+out of ioctl space...
 
-> -	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-> +	bool suppress_bind_attrs:1;	/* disables bind/unbind via sysfs */
-> +	bool driver_manages_iommu:1;	/* driver manages IOMMU explicitly */
+thanks,
 
-How does this field get set?
-
-
-
-	Joerg
+greg k-h
