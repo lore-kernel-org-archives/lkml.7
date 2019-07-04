@@ -2,148 +2,165 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38CEC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64AFC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD125218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F2121738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgKiCrhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfGDRl2 (ORCPT
+        id S1727151AbfGDSL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 13:41:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31160 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726120AbfGDRl1 (ORCPT
+        Thu, 4 Jul 2019 14:11:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35660 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfGDSL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 13:41:27 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64HbXPZ112546;
-        Thu, 4 Jul 2019 13:40:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thku24be1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 13:40:46 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x64HboBk113564;
-        Thu, 4 Jul 2019 13:40:45 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thku24bdr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 13:40:45 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x64HXabT001148;
-        Thu, 4 Jul 2019 17:40:45 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 2tdym7ektc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 17:40:45 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64HeiJr49086918
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 17:40:44 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BB1AB2066;
-        Thu,  4 Jul 2019 17:40:44 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2AE84B205F;
-        Thu,  4 Jul 2019 17:40:44 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.224])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 17:40:44 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D9D3B16C8EB0; Thu,  4 Jul 2019 10:40:44 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 10:40:44 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH] rcuperf: Make rcuperf kernel test more robust for
- !expedited mode
-Message-ID: <20190704174044.GK26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190704043431.208689-1-joel@joelfernandes.org>
+        Thu, 4 Jul 2019 14:11:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c27so7505834wrb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 11:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EeY1//zgHjHvZL8PlJS76RO/TPLoiFY9/zkEu270Qfs=;
+        b=SgKiCrhYnxaQpOWryEwRE0jUNEKFhFz3Iw6QyUsme9ZyaVqDNoXUooFMnA9vLDiVP7
+         nDCBoZ9A80UD5z1G3VQD8CFzjxv1gj4kZfqNLxR1Zggc2VAX4N3/+gOBFNCAY2gxuw+7
+         H2pmvBR0LaFZT07eB3T7R1Y+sXr6XU3udnIPQ9T0D+ULJpDhKybLGnxrq4OBUbr8YTq6
+         iaoVk1x+JEIbZ5//8L00zQqNoEWsUB56O+t81vS12tlef8yb3zrkg5NHgLA8aZQXsTfU
+         cSFGAcip1OWVtzXCumPbhhUl7zPMoDq0Vt5/rfzG2HoM7Xc9+VLgoV2PBisnbK/CIbsP
+         IlUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EeY1//zgHjHvZL8PlJS76RO/TPLoiFY9/zkEu270Qfs=;
+        b=P5CuPUmdimci8cReLHro4B4v//wZVkIaBxvaLQ2ps/JHF1Qb1dyKzW55yaHeGXKbIJ
+         Ui5Od9nvuJO8ZorJzZQum48xtXQ28mWE0IpZxCU+9HAtE6oRWwRuOq3ED5xcT6MK37D1
+         jJgDDaFcJl1lCwbDWr/K+GSaIiwcbQX8/Jen6jShaAX8SLY0O+DvCi3R6g26N+DEsnuY
+         dWFGlt8nAnUeyfoKbhfkOv2nsFVc+IzyBDKZpC1nNYuscWdyAIPdKGvXB3XD1MOMFl6h
+         OhU9TmwITS6xTY8BXMlSowCU18Oa+iyP/yGK2bcOcON3s/ClgqHYfEcrzeccm4ihuemQ
+         SEFA==
+X-Gm-Message-State: APjAAAXw2kjwvIEAdI/o1G2VDM+BYMLP9wyO96pHkTLo9UL9BYGfVzcd
+        JMI/nbXrzDqRRSYCVTuqVjwPMXhwwn3mzQ==
+X-Google-Smtp-Source: APXvYqyG/pol3jM2+TZsOqHSuN2Z8zVhvdIGUGLFjgj1lkzu8Hii2SD1es3NYfFmFBlXgWjxuCr5Vg==
+X-Received: by 2002:adf:aacf:: with SMTP id i15mr24167399wrc.124.1562263884453;
+        Thu, 04 Jul 2019 11:11:24 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id o4sm6313945wmh.35.2019.07.04.11.11.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 11:11:23 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 21:11:20 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        "tee-dev@lists.linaro.org" <tee-dev@lists.linaro.org>,
+        "sumit.garg@linaro.org" <sumit.garg@linaro.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        Joakim Bech <joakim.bech@linaro.org>
+Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190704181120.GA21445@apalos>
+References: <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
+ <20190626235653.GL7898@sasha-vm>
+ <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
+ <20190627133004.GA3757@apalos>
+ <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
+ <20190702142109.GA32069@apalos>
+ <CY4PR21MB0279B99FB0097309ADE83809BCF80@CY4PR21MB0279.namprd21.prod.outlook.com>
+ <20190703065813.GA12724@apalos>
+ <CAC_iWjK2F13QxjuvqzqNLx00SiGz_FQ5X=MQxJyDev57bo3=LQ@mail.gmail.com>
+ <CY4PR21MB02791B5EF653514DC0223694BCFA0@CY4PR21MB0279.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704043431.208689-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040225
+In-Reply-To: <CY4PR21MB02791B5EF653514DC0223694BCFA0@CY4PR21MB0279.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 12:34:30AM -0400, Joel Fernandes (Google) wrote:
-> It is possible that the rcuperf kernel test runs concurrently with init
-> starting up.  During this time, the system is running all grace periods
-> as expedited.  However, rcuperf can also be run for normal GP tests.
-> Right now, it depends on a holdoff time before starting the test to
-> ensure grace periods start later. This works fine with the default
-> holdoff time however it is not robust in situations where init takes
-> greater than the holdoff time to finish running. Or, as in my case:
+Hi Thirupathaiah,
+[...]
+> > > > > I managed to do some quick testing in QEMU.
+> > > > > Everything works fine when i build this as a module (using IBM's TPM 2.0
+> > > > > TSS)
+> > > > >
+> > > > > - As module
+> > > > > # insmod /lib/modules/5.2.0-rc1/kernel/drivers/char/tpm/tpm_ftpm_tee.ko
+> > > > > # getrandom -by 8
+> > > > > randomBytes length 8
+> > > > > 23 b9 3d c3 90 13 d9 6b
+> > > > >
+> > > > > - Built-in
+> > > > > # dmesg | grep optee
+> > > > > ftpm-tee firmware:optee: ftpm_tee_probe:tee_client_open_session failed,
+> > > > > err=ffff0008
+> > > > This (0xffff0008) translates to TEE_ERROR_ITEM_NOT_FOUND.
+> > > >
+> > > > Where is fTPM TA located in the your test setup?
+> > > > Is it stitched into TEE binary as an EARLY_TA or
+> > > > Is it expected to be loaded during run-time with the help of user mode OP-
+> > TEE supplicant?
+> > > >
+> > > > My guess is that you are trying to load fTPM TA through user mode OP-TEE
+> > supplicant.
+> > > > Can you confirm?
+> > > I tried both
+> > >
+> > 
+> > Ok apparently there was a failure with my built-in binary which i
+> > didn't notice. I did a full rebuilt and checked the elf this time :)
+> > 
+> > Built as an earlyTA my error now is:
+> > ftpm-tee firmware:optee: ftpm_tee_probe:tee_client_open_session
+> > failed, err=ffff3024 (translates to TEE_ERROR_TARGET_DEAD)
+> > Since you tested it on real hardware i guess you tried both
+> > module/built-in. Which TEE version are you using?
 > 
-> I modified the rcuperf test locally to also run a thread that did
-> preempt disable/enable in a loop. This had the effect of slowing down
-> init. The end result was that the "batches:" counter in rcuperf was 0
-> causing a division by 0 error in the results. This counter was 0 because
-> only expedited GPs seem to happen, not normal ones which led to the
-> rcu_state.gp_seq counter remaining constant across grace periods which
-> unexpectedly happen to be expedited. The system was running expedited
-> RCU all the time because rcu_unexpedited_gp() would not have run yet
-> from init.  In other words, the test would concurrently with init
-> booting in expedited GP mode.
+> I am glad that the first issue (TEE_ERROR_ITEM_NOT_FOUND) is resolved after stitching
+> fTPM TA as an EARLY_TA. 
 > 
-> To fix this properly, let us check if system_state if SYSTEM_RUNNING
-> is set before starting the test. The system_state approximately aligns
-> with when rcu_unexpedited_gp() is called and works well in practice.
-> 
-> I also tried late_initcall however it is still too early to be
-> meaningful for this case.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Regarding TEE_ERROR_TARGET_DEAD error, may I know which HW platform you are using to test? 
 
-Good catch, queued, thank you!
+QEMU, on armv7
 
-							Thanx, Paul
+> What is the preboot environment (UEFI or U-boot)? 
+> Where is the secure storage in that HW platform? 
+> I could think of two classes of secure storage. 
+> 1. UFS/eMMC RPMB : If Supplicant in U-boot/UEFI initializes the 
+> fTPM TA NV Storage, there should be no issue. 
+> If fTPM TA NV storage is not initialized in pre-boot environment and you are using
+> built-in fTPM Linux driver, you can run into this issue as TA will try to initialize
+> NV store and fail. 
+> 
+> 2. other storage devices like QSPI accessible to only secure mode after
+> EBS/ReadyToBoot mile posts during boot. In this case, there should be no issue at all
+> as there is no dependency on non-secure side services provided by supplicant. 
+> 
 
-> ---
->  kernel/rcu/rcuperf.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Please check the previous mail from Sumit. It explains exaclty what's going on.
+The tl;dr version is that the storage is up only when the supplicant is running.
+
+> If you let me know the HW platform details, I am happy to work with you to enable/integrate
+> fTPM TA on that HW platform. 
 > 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index 4513807cd4c4..5a879d073c1c 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -375,6 +375,14 @@ rcu_perf_writer(void *arg)
->  	if (holdoff)
->  		schedule_timeout_uninterruptible(holdoff * HZ);
->  
-> +	/*
-> +	 * Wait until rcu_end_inkernel_boot() is called for normal GP tests
-> +	 * so that RCU is not always expedited for normal GP tests.
-> +	 * The system_state test is approximate, but works well in practice.
-> +	 */
-> +	while (!gp_exp && system_state != SYSTEM_RUNNING)
-> +		schedule_timeout_uninterruptible(1);
-> +
->  	t = ktime_get_mono_fast_ns();
->  	if (atomic_inc_return(&n_rcu_perf_writer_started) >= nrealwriters) {
->  		t_rcu_perf_writer_started = t;
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+Thanks, 
+The hardware i am waiting for for has an eMMC RPMB. In theory the U-Boot
+supplicant support will be there so i'll be able to test it.
+
+Thanks
+/Ilias
