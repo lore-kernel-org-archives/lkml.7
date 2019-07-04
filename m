@@ -3,96 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7639C46495
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8131EC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B81921852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650C021852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGDT4C (ORCPT
+        id S1727271AbfGDT7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 15:56:02 -0400
-Received: from sauhun.de ([88.99.104.3]:40170 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfGDT4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 15:56:01 -0400
-Received: from localhost (p5DCB43A6.dip0.t-ipconnect.de [93.203.67.166])
-        by pokefinder.org (Postfix) with ESMTPSA id C1E012C290E;
-        Thu,  4 Jul 2019 21:55:58 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 21:55:58 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: gyroadc: fix uninitialized return code
-Message-ID: <20190704195557.GA1338@kunai>
-References: <20190704113800.3299636-1-arnd@arndb.de>
- <20190704120756.GA1582@kunai>
- <CAMuHMdXDN60WWFerok1h05COdNNPZTMDCgKXejmQZMj9B6y5Cw@mail.gmail.com>
- <fc3b8b4e-fe0e-9573-124d-4b41efa409e4@gmail.com>
+        Thu, 4 Jul 2019 15:59:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50461 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDT7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 15:59:15 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hj7sn-00065o-5y; Thu, 04 Jul 2019 19:59:05 +0000
+Date:   Thu, 4 Jul 2019 14:58:58 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
+ structures to tpm_pcr_extend()"
+Message-ID: <20190704195857.GB6105@elm>
+References: <20190701131505.17759-1-msuchanek@suse.de>
+ <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
+ <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
+ <1562240882.6165.78.camel@linux.ibm.com>
+ <1562255201.6165.143.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <fc3b8b4e-fe0e-9573-124d-4b41efa409e4@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1562255201.6165.143.camel@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Mimi!
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019-07-04 11:46:41, Mimi Zohar wrote:
+> Hi Jarkko,
+> 
+> On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
+> > On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
+> > > On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
+> > > > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
+> > > >> This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
+> > > >> following crash:
+> > > > 
+> > > > Thank you. I think this the right choice for the moment. I fixed
+> > > > a trivial checkpatch.pl error and added the mandatory tags. Can
+> > > > you check quickly v2 (just posted)?
+> > > > 
+> > > > I already made it available in my master and next.
+> > > 
+> > > Could you please wait few days? I would prefer to fix this issue instead
+> > > of reverting the whole patch.
+> > 
+> > Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
+> > allocated banks for IBM vtpm driver", which addresses this bug.
+> 
+> Now with my review, and with Sachin Sant's and Michal Suchánek
+> testing, instead of reverting this patch could you pick up Nayna's
+> patch instead?
 
+It looks to me like the revert would also fix a bug that is keeping the
+eCryptfs module from loading when the TPM is in an "inactive" state:
 
-> >> This is correct but missing that the above 'return ret' is broken, too.
-> >> ret is initialized but 0 in that case.
-> >=20
-> > Nice catch! Oh well, given enough eyeballs, ...
->=20
-> I don't think ret is initialized, reg is, not ret .
+  https://bugzilla.kernel.org/show_bug.cgi?id=203953
 
-It is initialized for the broken 'return ret' *above* the one which gets
-rightfully fixed in this patch.
+I just noticed that it was recently discussed here, too:
 
+  https://lore.kernel.org/linux-integrity/1562244125.6165.95.camel@linux.ibm.com/T/#t
 
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
+I believe that the revert would fix it because the call to
+init_digests()/tpm_get_random() would no longer be in the path of
+loading ecryptfs.ko (which depends on encrypted-keys.ko, which depends
+on trusted.ko).
 
------BEGIN PGP SIGNATURE-----
+If the revert isn't used, we'll need a different fix for bug 203953. It
+should be an easy fix but I don't want it to be forgotten.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0eWckACgkQFA3kzBSg
-Kbb/Aw/+JS8QiD+5YFD08Aece1AYJ2md7n6gHKlrgxsleiM3hY40m90l6ayrIq8Q
-YW6n4kloAs8QtzaPv7zjHAhs2n/bs8RubGDv+N+M3fkJnbxUijW1iw15r8DtPsDH
-m5a8BW9khGfbGpZdRBD7LXfKNryoCymGxx/izJS6ZfQFnTrlEXzrTtHXv78Ynsv9
-hvp2jkywnNZRK27pzzKRG/B3adb1Xq3yz+uHMhQRLvJSQPKLXsS4wyGqmDBONjgC
-sX681ZgKl632cIbxkvUUApF3UMShkVZzXi05lMo2V+9dFa8P+T+RAX3/7kH2roAR
-dOfo92O9ZR7q6J2t3H00pL3bpPJKPZ14Dxk39fO6xx2zB4av9EVHzRRgdlzPwvfI
-K+XTGFjLTAcPiteVVeaueiLhjANJNkGYq4ayZvkf+tZhuglkWjZadUv+oYVVUWcW
-dD8bzYwhok8l3ChtB5Kd8455aM9uPvMbjv++UbDAHP73L1IEuU3I4pvGEt3+mhmG
-HMKdFKboVp1auLUlgnNjylt1lb4jG7OJfs0TjJA/v8HoaJPWq6guaD5v+vIoVgCB
-PXTjIiLo9GpaXJiAGnlZLPisQlt9Y0pvyj8dLAeiS/k8ZtXsIEehZs4pIUhIdDzV
-h8pzF3R/Zh0WEcFte0RVbbhSaGyDFrJK5uc0eNqCC+a4OTYhVi0=
-=qqM5
------END PGP SIGNATURE-----
+Tyler
 
---ibTvN161/egqYuK8--
+> 
+> thanks!
+> 
+> Mimi
+> 
