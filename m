@@ -2,153 +2,178 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEAFC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE5DC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D884D218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LtQddHxO"
+	by mail.kernel.org (Postfix) with ESMTP id 40566218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfGDLfZ (ORCPT
+        id S1727609AbfGDLgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:35:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38092 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfGDLfZ (ORCPT
+        Thu, 4 Jul 2019 07:36:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34136 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727548AbfGDLgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:35:25 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so12209307ioa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 04:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=3Jp4ssk/tg2iD8nW0ro2U7UKtJbPzstlWX8tfroZV5Q=;
-        b=LtQddHxOwEM7iJpSljY6j4pPGJF2FOg4bbny538Cm89igIF6rP1CaCJh0lw9pagf4z
-         r9PhETn5XbnST8Pd2jVKIJN++Q7a0Ioqbp0zLw/2RUXVMw2NWZxsVTt5LuQ9QjGiM8te
-         Hci78N0siChPeIwHb2rGX7jWup+bvLk5qhM7TBcLViacr4HP+Qi6jNc97GHTfq+qDyuB
-         xQBg5K1UOk9L0N9SnpUm0nEo2KBOiDqO8Cr7TBx3TiKpCWV6BeYD2D85rfFtMvHuvtNZ
-         db2nO8Oc/CaDMG9I06sfJHT2fAaYlITMARosY1goa4ozJAG2/sizqb/XVAW9mOlxNui2
-         POQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=3Jp4ssk/tg2iD8nW0ro2U7UKtJbPzstlWX8tfroZV5Q=;
-        b=FZZNkfTGxMsK6/2FVAwPj4utkDge84o3xaIcG8P8gCqId3hOMiYkDjB9d87hcdgS6x
-         ywgYb9pU91ykYIKjKsJ3c8goIUMUj7414KsoxzbgrEeYxy8V8wwlb44un5GymomHo/Kt
-         5nuE2Gn6IIpTdVXbCnumED/nZ588c9h0YecEm0B9zyAmsH37riMp5qZZNtorp8q//A2m
-         13zSfCtKRrEdM3M4as/2IDU78PEdKUfdBx4oC5MhiM+lZr+zrSkDofVIZzdB+3+82YNz
-         oFcHdtsm2TyiLADOUjXX7sciWyavITqxbNkx0Wlad/SrZODcqMr76bsiMw8VTfq4nYuc
-         d6ew==
-X-Gm-Message-State: APjAAAWEAPkZegffGK6snui7IXv4B897b1dO6IZvPnwhYYywat7VPxOQ
-        z9wOxTlAvqeg4uygoPJ7Y5IpIw==
-X-Google-Smtp-Source: APXvYqynvovPh8WYFyY8sEb0/88FT+bBN0Il6kgEz6q0BL4v6jisjzQGkuUtgxSYQzDmiQeF+0rmbg==
-X-Received: by 2002:a6b:dd17:: with SMTP id f23mr4103381ioc.213.1562240124009;
-        Thu, 04 Jul 2019 04:35:24 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id i3sm3931703ion.9.2019.07.04.04.35.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 04 Jul 2019 04:35:23 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 04:35:23 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alexandre Ghiti <alex@ghiti.fr>
-cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3 0/2] Hugetlbfs support for riscv
-In-Reply-To: <c06441fd-0022-8fb9-36b0-2f5d956c3ed5@ghiti.fr>
-Message-ID: <alpine.DEB.2.21.9999.1907040429170.24872@viisi.sifive.com>
-References: <20190701175900.4034-1-alex@ghiti.fr> <alpine.DEB.2.21.9999.1907031344330.10620@viisi.sifive.com> <c06441fd-0022-8fb9-36b0-2f5d956c3ed5@ghiti.fr>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 4 Jul 2019 07:36:11 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64BRWBs094304
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 07:36:10 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2thfss2b9m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 07:36:10 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 4 Jul 2019 12:36:07 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Jul 2019 12:36:03 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64Ba2KX48955544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jul 2019 11:36:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6595AE051;
+        Thu,  4 Jul 2019 11:36:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A835BAE04D;
+        Thu,  4 Jul 2019 11:35:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.61.157])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Jul 2019 11:35:56 +0000 (GMT)
+Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
+To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, Paul Turner <pjt@google.com>,
+        riel@surriel.com, morten.rasmussen@arm.com
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
+ <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
+ <81b2288a-579d-8dd1-f179-d672cf1edd68@oracle.com>
+ <20190702085437.gzu7ilubbi5jx6sp@e110439-lin>
+ <384db1d1-e2e3-9a5c-568c-c7441706700f@oracle.com>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Thu, 4 Jul 2019 17:05:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <384db1d1-e2e3-9a5c-568c-c7441706700f@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070411-0012-0000-0000-0000032F395D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070411-0013-0000-0000-000021688FC9
+Message-Id: <95bf6b30-f28f-33a0-229f-3fd2da262aa2@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019, Alexandre Ghiti wrote:
+Hi,
 
-> On 7/4/19 12:57 AM, Paul Walmsley wrote:
-> > On Mon, 1 Jul 2019, Alexandre Ghiti wrote:
-> > 
-> > > - libhugetlbfs testsuite on riscv64/2M:
-> > >    - brk_near_huge triggers an assert in malloc.c, does not on x86.
-> > I was able to reproduce the 2MB megapages test results on rv64 QEMU.  On a
-> > HiFive Unleashed, though, a few more tests fail:
-
-[ ... ]
-
-> > - One of the heapshrink tests fails ("Heap did not shrink")
-> > 
-> >    # LD_PRELOAD="obj64/libhugetlbfs_privutils.so obj64/libhugetlbfs.so
-> > tests/obj64/libheapshrink.so" HUGETLB_MORECORE_SHRINK=yes
-> > HUGETLB_MORECORE=yes tests/obj64/heapshrink
-> >    Starting testcase "tests/obj64/heapshrink", pid 753
-> >    FAIL    Heap did not shrink
-> >    #
-> > 
-> > Some of these may be related to the top-down mmap work, but there might be
-> > more work to do on actual hardware.
+On 7/3/19 9:22 AM, Subhra Mazumdar wrote:
 > 
+> On 7/2/19 1:54 AM, Patrick Bellasi wrote:
+>> Wondering if searching and preempting needs will ever be conflicting?
+>> I guess the winning point is that we don't commit behaviors to
+>> userspace, but just abstract concepts which are turned into biases.
+>>
+>> I don't see conflicts right now: if you are latency tolerant that
+>> means you can spend more time to try finding a better CPU (e.g. we can
+>> use the energy model to compare multiple CPUs) _and/or_ give the
+>> current task a better chance to complete by delaying its preemption.
+> OK
+>>
+>>> Otherwise sounds like a good direction to me. For the searching aspect, can
+>>> we map latency nice values to the % of cores we search in select_idle_cpu?
+>>> Thus the search cost can be controlled by latency nice value.
+>> I guess that's worth a try, only caveat I see is that it's turning the
+>> bias into something very platform specific. Meaning, the same
+>> latency-nice value on different machines can have very different
+>> results.
+>>
+>> Would not be better to try finding a more platform independent mapping?
+>>
+>> Maybe something time bounded, e.g. the higher the latency-nice the more
+>> time we can spend looking for CPUs?
+> The issue I see is suppose we have a range of latency-nice values, then it
+> should cover the entire range of search (one core to all cores). As Peter
+> said some workloads will want to search the LLC fully. If we have absolute
+> time, the map of latency-nice values range to them will be arbitrary. If
+> you have something in mind let me know, may be I am thinking differently.
+>>
+>>> But the issue is if more latency tolerant workloads set to less
+>>> search, we still need some mechanism to achieve good spread of
+>>> threads.
+>> I don't get this example: why more latency tolerant workloads should
+>> require less search?
+> I guess I got the definition of "latency tolerant" backwards.
+>>
+>>> Can we keep the sliding window mechanism in that case?
+>> Which one? Sorry did not went through the patches, can you briefly
+>> resume the idea?
+> If a workload has set it to low latency tolerant, then the search will be
+> less. That can lead to localization of threads on a few CPUs as we are not
+> searching the entire LLC even if there are idle CPUs available. For this
+> I had introduced a per-CPU variable (for the target CPU) to track the
+> boundary of search so that every time it will start from the boundary, thus
+> sliding the window. So even if we are searching very little the search
+> window keeps shifting and gives us a good spread. This is orthogonal to the
+> latency-nice thing.
+
+Can it be done something like turning off searching for an idle core if the wakee
+task is latency tolerant(more latency-nice)? We search for idle core to get faster
+resource allocation, thus such tasks don't need to find idle core and can
+directly jump to finding idle CPUs.
+This can include sliding windows mechanism along, but as I commented previously, it
+imposes task ping-pong problem as sliding window gets away from target_cpu. So maybe
+we can first search the core with target_cpu and if no idle CPUs found then bail
+to this sliding window mechanism.
+Just an thought.
+
+Best,
+Parth
+
+
+>>
+>>> Also will latency nice do anything for select_idle_core and
+>>> select_idle_smt?
+>> I guess principle the same bias can be used at different levels, maybe
+>> with different mappings.
+> Doing it for select_idle_core will have the issue that the dynamic flag
+> (whether an idle core is present or not) can only be updated by threads
+> which are doing the full search.
 > 
-> I don't think this is related to top-down mmap layout, this test only 
-> mmaps a huge page. It might be interesting to see more verbose messages 
-> adding HUGETLB_VERBOSE=99 when launching the test.
+> Thanks,
+> Subhra
+> 
+>> In the mobile world use-case we will likely use it only to switch from
+>> select_idle_sibling to the energy aware slow path. And perhaps to see
+>> if we can bias the wakeup preemption granularity.
+>>
+>> Best,
+>> Patrick
+>>
+> 
 
-Here is the HUGETLB_VERBOSE=99 output from the above heapshrink test on an 
-FU540:
-
-libhugetlbfs [(none):86]: INFO: Found pagesize 2048 kB
-libhugetlbfs [(none):86]: INFO: Parsed kernel version: [5] . [2] . [0]  [pre-release: 6]
-libhugetlbfs [(none):86]: INFO: Feature private_reservations is present in this kernel
-libhugetlbfs [(none):86]: INFO: Feature noreserve_safe is present in this kernel
-libhugetlbfs [(none):86]: INFO: Feature map_hugetlb is present in this kernel
-libhugetlbfs [(none):86]: INFO: Kernel has MAP_PRIVATE reservations.  Disabling heap prefaulting.
-libhugetlbfs [(none):86]: INFO: Kernel supports MAP_HUGETLB
-libhugetlbfs [(none):86]: INFO: HUGETLB_SHARE=0, sharing disabled
-libhugetlbfs [(none):86]: INFO: HUGETLB_NO_RESERVE=no, reservations enabled
-libhugetlbfs [(none):86]: INFO: No segments were appropriate for remapping
-libhugetlbfs [(none):86]: INFO: setup_morecore(): heapaddr = 0x2aaac00000
-libhugetlbfs [(none):86]: INFO: hugetlbfs_morecore(1052672) = ...
-libhugetlbfs [(none):86]: INFO: heapbase = 0x2aaac00000, heaptop = 0x2aaac00000, mapsize = 0, delta=1052672
-libhugetlbfs [(none):86]: INFO: Attempting to map 2097152 bytes
-libhugetlbfs [(none):86]: INFO: ... = 0x2aaac00000
-libhugetlbfs [(none):86]: INFO: hugetlbfs_morecore(0) = ...
-libhugetlbfs [(none):86]: INFO: heapbase = 0x2aaac00000, heaptop = 0x2aaad01000, mapsize = 200000, delta=-1044480
-libhugetlbfs [(none):86]: INFO: ... = 0x2aaad01000
-Starting testcase "tests/obj64/heapshrink", pid 86
-libhugetlbfs [(none):86]: INFO: hugetlbfs_morecore(33558528) = ...
-libhugetlbfs [(none):86]: INFO: heapbase = 0x2aaac00000, heaptop = 0x2aaad01000, mapsize = 200000, delta=32514048
-libhugetlbfs [(none):86]: INFO: Attempting to map 33554432 bytes
-libhugetlbfs [(none):86]: INFO: ... = 0x2aaad01000
-FAIL    Heap did not shrink
-
-
-This is with this hugepage configuration:
-
-# /usr/local/bin/hugeadm --pool-list
-      Size  Minimum  Current  Maximum  Default
-   2097152       64       64       64        *
-#
-
-
-- Paul
