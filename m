@@ -2,151 +2,167 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADEC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86924C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DED21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCA921852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gsi9+IiX"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="k14i41lK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGDVRf (ORCPT
+        id S1727310AbfGDV26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 17:17:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35925 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfGDVRf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 17:17:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so15125700ioh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 14:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J5dPnDAPBmP/tM3oNFl3Flqbnxl9DAbnY6d65OzlCvo=;
-        b=Gsi9+IiXPXqbpEbRKWtBGjqiJl9m0d/8ymXKcotU8ncCURfv40xEbz2dquZFw4or66
-         eIf/FYjcWJ/OdLG8r0pYQ6ol+nJ8onV7P+isl3lNeKOoJK+koxGBAfhUodRaCD15DV72
-         UDkaiZj6DeW8QLkJ9ELFAj1pDGsER3j6m7qCIQwUu/wBGznuarnpo8dX0UbaxEJ6XYfG
-         nKVki5CAbgWkAHqs8Jow0JR+eeeQvoIuudtcafCdIFeEfK5P1FGVJADh2roLiMHnij8s
-         iP+0csz198iwegCn04NbD+j+VcmFCDpDQ7Jauvcjc/rx+Q59DzgxwesL2oOL33n8CfXX
-         aIEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J5dPnDAPBmP/tM3oNFl3Flqbnxl9DAbnY6d65OzlCvo=;
-        b=sH1aAZ7MTYaBSKu1b9l8LG9edHbXwJsxUoZeqUpSFGp09Tsn1yQv+tQ7W30HS9Lqd4
-         BJu4/jJpvcGn85mYt3Kl3Uh1Kkur8FhHNxwNPl8JFCRyfQQ1DE42/DaN6/Yil1FD294Y
-         vL/h+CReQcP6Sjm8IMjcn1CNq11ZKU42qRYLgr2qzmJGtIoF7cWNRnRDaQtH6527alSJ
-         7/mZO+mPGPjbC7BjMAOhlF6/kHAMa5GldPoUGLuQgGVaBGYNGglAyWjr/ucfuAzqeSiN
-         FGIEP4MgE0v2w8s8Btv3AWx9p7SWb6mv6IV9SfMzrNIZQ61a10r6OJ6g49zzvI9Rte6b
-         6dyg==
-X-Gm-Message-State: APjAAAWGdRWMnkNXuYQxfHjG32l3SNrf7QfoGR7+zBy9+wPLoqz2DcR3
-        V0uORDHrzyOnFPuZQEm8q9kIsOYtImjojhsVU1M=
-X-Google-Smtp-Source: APXvYqyXgphH1YInaQ3tW6Xa+Qf2b6hYKckv2K14fRTjEcmfsoUfC1Yzd0/dQ3hSXONkj3etn9g7KzbHckLCR0oBTqM=
-X-Received: by 2002:a5e:8508:: with SMTP id i8mr444389ioj.108.1562275054349;
- Thu, 04 Jul 2019 14:17:34 -0700 (PDT)
+        Thu, 4 Jul 2019 17:28:58 -0400
+Received: from mail-eopbgr20041.outbound.protection.outlook.com ([40.107.2.41]:59969
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726038AbfGDV26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 17:28:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FzrIxZPRXFQpJbkXBZfe9b+ex1RCZ3jZqSg6FVANuEg=;
+ b=k14i41lKIR7K3YX4vICpwjjL8lxmU5cY2GWO7zYln0REMVAjOvxSzdt8QSBIxl6a0MD9iLQ2QNOsVGBZ+/8Css1cHoBSPsMyutusm6HgIauANlw7V+cke7T80UzaJ3XUwIKIRi8rfLtxqg4QLTn+se4uzoptMWKD5V2ifoV7wsI=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6014.eurprd05.prod.outlook.com (20.178.127.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Thu, 4 Jul 2019 21:28:54 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
+ 21:28:54 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Thread-Topic: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Thread-Index: AQHVK/HAM2r3dJ5EjUuvQfApLyHQmKat3lEAgAA0MoCAAAH5AIAAxnaAgAwArgCAABJ8AIAADxQAgAAJ3QA=
+Date:   Thu, 4 Jul 2019 21:28:54 +0000
+Message-ID: <20190704212850.GB23542@mellanox.com>
+References: <cover.1558547956.git.robin.murphy@arm.com>
+ <20190626073533.GA24199@infradead.org>
+ <20190626123139.GB20635@lakrids.cambridge.arm.com>
+ <20190626153829.GA22138@infradead.org> <20190626154532.GA3088@mellanox.com>
+ <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
+ <20190704115324.c9780d01ef6938ab41403bf9@linux-foundation.org>
+ <20190704195934.GA23542@mellanox.com>
+ <20190704135332.234891ac6ce641bf29913d06@linux-foundation.org>
+In-Reply-To: <20190704135332.234891ac6ce641bf29913d06@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR04CA0006.namprd04.prod.outlook.com
+ (2603:10b6:208:d4::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d5ea08e7-e074-4157-6e83-08d700c69d65
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6014;
+x-ms-traffictypediagnostic: VI1PR05MB6014:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR05MB601420B2E47CBEC22759ECACCFFA0@VI1PR05MB6014.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(189003)(199004)(6306002)(8676002)(81166006)(36756003)(6512007)(53936002)(81156014)(6436002)(2906002)(102836004)(26005)(6916009)(99286004)(52116002)(76176011)(14444005)(256004)(186003)(6506007)(386003)(68736007)(66066001)(8936002)(6486002)(1076003)(229853002)(6116002)(7416002)(11346002)(305945005)(2616005)(476003)(316002)(6246003)(54906003)(14454004)(86362001)(478600001)(446003)(66476007)(71200400001)(33656002)(73956011)(71190400001)(66446008)(66556008)(66946007)(64756008)(966005)(4326008)(486006)(25786009)(5660300002)(3846002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6014;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GZhpXph8JQTGJITEs1uAnNGeBubFnAoQYzEo901XU5xi1gvsUfc2XUrlN9pMi+ZO6mQX/YsukdIcAoDfJq7YWux0bFz2RHa7DKPr8JVkYm0pu7+qsrV2LVCupYivVRjdUnPkwFCB1ZFZrGhh9aU6lBeWzr5MGsfHaY9GD+VbKELzIldDZB/61wVeOd88ade/tPRAUFpeOTkKjlOwM0fuA9iKsewiXCsvddPMRnTY2k3YMqAS4tl4h6ED5DiOfUXkwM7MzlTzMUOnQwRYDLmK3E7XrTKr6+bmIZqa6zkiYbjZ5bKGoirb3zVYAhhfPlp1bV6uA2orjwL+mNNs7tn+EbJxk70PTMtPLqy/VKWJCK5wUC8SQSN/U485oOOwGAC7sXW5GnD6W82hKBOu7f6sDa8vbiD939d7ZmnTp5fWDTA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9DE2EFC78892704782174E84794C9CF6@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
- <20190704084617.3602-2-gregkh@linuxfoundation.org> <20190704093200.GM13424@localhost>
- <20190704104311.GA16681@kroah.com> <20190704121143.GA5007@kroah.com>
-In-Reply-To: <20190704121143.GA5007@kroah.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Thu, 4 Jul 2019 14:17:22 -0700
-Message-ID: <CAKdAkRQ4W7wjYjZcBn4_s+PD26pv_8mrjUt-ne24GkimGEXoiA@mail.gmail.com>
-Subject: Re: [PATCH 01/12 v2] Platform: add a dev_groups pointer to struct platform_driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Romain Izard <romain.izard.pro@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5ea08e7-e074-4157-6e83-08d700c69d65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 21:28:54.2548
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Thu, Jul 4, 2019 at 5:15 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Thu, Jul 04, 2019 at 01:53:32PM -0700, Andrew Morton wrote:
+> On Thu, 4 Jul 2019 19:59:38 +0000 Jason Gunthorpe <jgg@mellanox.com> wrot=
+e:
+>=20
+> > On Thu, Jul 04, 2019 at 11:53:24AM -0700, Andrew Morton wrote:
+> > > On Wed, 26 Jun 2019 20:35:51 -0700 Andrew Morton <akpm@linux-foundati=
+on.org> wrote:
+> > >=20
+> > > > > Let me know and I can help orchestate this.
+> > > >=20
+> > > > Well.  Whatever works.  In this situation I'd stage the patches aft=
+er
+> > > > linux-next and would merge them up after the prereq patches have be=
+en
+> > > > merged into mainline.  Easy.
+> > >=20
+> > > All right, what the hell just happened?=20
+> >=20
+> > Christoph's patch series for the devmap & hmm rework finally made it
+> > into linux-next
+>=20
+> We're talking about "dev_pagemap related cleanups v4", yes?
 >
-> Platform drivers like to add sysfs groups to their device, but right now
-> they have to do it "by hand".  The driver core should handle this for
-> them, but there is no way to get to the bus-default attribute groups as
-> all platform devices are "special and unique" one-off drivers/devices.
->
-> To combat this, add a dev_groups pointer to platform_driver which allows
-> a platform driver to set up a list of default attributes that will be
-> properly created and removed by the platform driver core when a probe()
-> function is successful and removed right before the device is unbound.
+> I note that linux-next contains "mm: remove the HMM config option"
+> which was present in Christoph's v3 series but wasn't present in v4.=20
+> Perhaps something has gone wrong here.
 
-Why is this limited to platform bus? Drivers for other buses also
-often want to augment list of their attributes during probe(). I'd
-move it to generic probe handling.
+When CH sent v4 to the list it was corrupted, v3 is the one to
+reference for content.
 
->
-> Cc: Richard Gong <richard.gong@linux.intel.com>
-> Cc: Romain Izard <romain.izard.pro@gmail.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mans Rullgard <mans@mansr.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v2: addressed Johan's comments by reordering when we remove the files
->     from the device, and clean up on an error in a nicer way.  Ended up
->     making the patch smaller overall, always nice.
->
->  drivers/base/platform.c         | 16 +++++++++++++++-
->  include/linux/platform_device.h |  1 +
->  2 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 713903290385..74428a1e03f3 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -614,8 +614,20 @@ static int platform_drv_probe(struct device *_dev)
->
->         if (drv->probe) {
->                 ret = drv->probe(dev);
-> -               if (ret)
-> +               if (ret) {
-> +                       dev_pm_domain_detach(_dev, true);
-> +                       goto out;
-> +               }
-> +       }
-> +       if (drv->dev_groups) {
-> +               ret = device_add_groups(_dev, drv->dev_groups);
-> +               if (ret) {
-> +                       if (drv->remove)
-> +                               drv->remove(dev);
->                         dev_pm_domain_detach(_dev, true);
-> +                       return ret;
-> +               }
-> +               kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
+Here is the mailing thread discussing this:
 
-We already emit KOBJ_BIND when we finish binding device to a driver,
-regardless of the bus. I know we still need to teach systemd to handle
-it properly, but I think it is better than sprinkling KOBJ_CHANGE
-around.
+https://lore.kernel.org/linux-mm/20190702184201.GO31718@mellanox.com/
 
-Thanks.
+> > sorry, it took quite a few iterations on the list to
+> > get all the reviews and tests, and figure out how to resolve some
+> > other conflicting things. So it just made it this week.
+> >=20
+> > Recall, this is the patch series I asked you about routing a few weeks
+> > ago, as it really exceeded the small area that hmm.git was supposed to
+> > cover. I think we are both caught off guard how big the conflict is!
+>=20
+> I guess I was distracted - I should have taken a look to see how
+> mergable it all was.
 
--- 
-Dmitry
+Okay, fair enough. I also could have also done more checks myself with
+linux-next
+
+> It's a large patchset and it appears to be mainly (entirely?) code
+> cleanups.  I don't think such material would be appropriate for a late
+> -rc7 merge even if it didn't conflict with lots of other higher
+> priority pending functional changes and fixes!
+
+I see your other email you resolved the conflicts - so please let me
+know if you want to proceed with dropping CH's series or not, I'll
+make a special effort to get that change into tomorrows linux-next if
+you want (it is already 6pm here)
+
+Regards,
+Jason
