@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36578C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C15AC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0762A218B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B272189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230034;
-	bh=9kr+WquUsx/ezUvWIT9JMoBqrRGzTuebO01ejx6/NRw=;
+	s=default; t=1562230038;
+	bh=aSvVJ02/2CcBklukQx53uahOuAOs8f6uCq9kl4Vuvuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R1ZrXM49mGjfmDp90fTcsru6ZPa3RnWBJN2uS4gpmIkjjo1EJdN1AKYoBPmHShZN6
-	 SEqxFGHwOg4pNHKALlfWgPKfPtBPhio0Qh1nGLx/u/nasaeMaqZTyQJ5uG1KCf61iE
-	 jphiBCT9y/mUB5diUujTBxLa3nwpQSouD9tuOLiY=
+	b=NsjsT/Uh584VYPXKJkqBsk6fxAN4+rU3qK9OK+fHtUzJm/f+gdZwwND0BmIeCzzCB
+	 MpGyvehSzkOEUJncgcT0T7BiG5PWtlbdyELPVtAN+ugHBcWaNFFxHICeFmBsDxCeXq
+	 YtH+bNxuGch8PzjoaDzJDuvs8AK0VTUslgN4SpxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfGDIrM (ORCPT
+        id S1727387AbfGDIrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfGDIrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:47:08 -0400
+        id S1727358AbfGDIrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:47:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A113F218A6;
-        Thu,  4 Jul 2019 08:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6FD82189E;
+        Thu,  4 Jul 2019 08:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230027;
-        bh=9kr+WquUsx/ezUvWIT9JMoBqrRGzTuebO01ejx6/NRw=;
+        s=default; t=1562230019;
+        bh=aSvVJ02/2CcBklukQx53uahOuAOs8f6uCq9kl4Vuvuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TR1gRN+oqWdeQDSWJvCKh7HzTKLd6dE8gajijp4mu1AYkPuXfIlFWNHNkf3Fk426
-         XcZJ74dIURrNuzD004fFCALLfWCZSt8ElpRqi2KKTRbXuYF/9pufzkJtKve9vg8odo
-         +w5WYKJKuOX7MVh4ZmcbYP+gZkbz3XTG2rLVlNeY=
+        b=QxitbYS9D91ZJIbwxL+IFG4k08ORdkA3zlDmzAB/S5j///Zmqo1gzRPbRSpV8uGOY
+         4CWoN/ry/+cqO+k5wTpwZziHfnkdSgg3sD+lS6I2zeILFyMkJ4RiP1pPo1zgd53MWY
+         SraCSuisotND0qbKYt9DrVnh9I8T67l6wtzWf/lY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 09/11] video: fbdev: sm501fb: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:15 +0200
-Message-Id: <20190704084617.3602-10-gregkh@linuxfoundation.org>
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 06/11] platform: x86: hp-wmi: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:12 +0200
+Message-Id: <20190704084617.3602-7-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -61,86 +65,111 @@ Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
 and do not register "by hand" a bunch of sysfs files.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: platform-driver-x86@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/video/fbdev/sm501fb.c | 37 +++++++++--------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 47 +++++++++--------------------------
+ 1 file changed, 12 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm501fb.c b/drivers/video/fbdev/sm501fb.c
-index dde52d027416..c633ee76a73d 100644
---- a/drivers/video/fbdev/sm501fb.c
-+++ b/drivers/video/fbdev/sm501fb.c
-@@ -1274,6 +1274,14 @@ static ssize_t sm501fb_debug_show_pnl(struct device *dev,
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 2521e45280b8..b4ed5902737a 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -502,6 +502,17 @@ static DEVICE_ATTR_RO(dock);
+ static DEVICE_ATTR_RO(tablet);
+ static DEVICE_ATTR_RW(postcode);
  
- static DEVICE_ATTR(fbregs_pnl, 0444, sm501fb_debug_show_pnl, NULL);
- 
-+static struct attribute *sm501fb_attrs[] = {
-+	&dev_attr_crt_src.attr,
-+	&dev_attr_fbregs_pnl.attr,
-+	&dev_attr_fbregs_crt.attr,
++static struct attribute *hp_wmi_attrs[] = {
++	&dev_attr_display.attr,
++	&dev_attr_hddtemp.attr,
++	&dev_attr_als.attr,
++	&dev_attr_dock.attr,
++	&dev_attr_tablet.attr,
++	&dev_attr_postcode.attr,
 +	NULL,
 +};
-+ATTRIBUTE_GROUPS(sm501fb);
++ATTRIBUTE_GROUPS(hp_wmi);
 +
- /* acceleration operations */
- static int sm501fb_sync(struct fb_info *info)
+ static void hp_wmi_notify(u32 value, void *context)
  {
-@@ -2016,33 +2024,9 @@ static int sm501fb_probe(struct platform_device *pdev)
- 		goto err_started_crt;
- 	}
+ 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -678,16 +689,6 @@ static void hp_wmi_input_destroy(void)
+ 	input_unregister_device(hp_wmi_input_dev);
+ }
  
--	/* create device files */
+-static void cleanup_sysfs(struct platform_device *device)
+-{
+-	device_remove_file(&device->dev, &dev_attr_display);
+-	device_remove_file(&device->dev, &dev_attr_hddtemp);
+-	device_remove_file(&device->dev, &dev_attr_als);
+-	device_remove_file(&device->dev, &dev_attr_dock);
+-	device_remove_file(&device->dev, &dev_attr_tablet);
+-	device_remove_file(&device->dev, &dev_attr_postcode);
+-}
 -
--	ret = device_create_file(dev, &dev_attr_crt_src);
--	if (ret)
--		goto err_started_panel;
+ static int __init hp_wmi_rfkill_setup(struct platform_device *device)
+ {
+ 	int err, wireless;
+@@ -858,8 +859,6 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 
+ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ {
+-	int err;
 -
--	ret = device_create_file(dev, &dev_attr_fbregs_pnl);
--	if (ret)
--		goto err_attached_crtsrc_file;
--
--	ret = device_create_file(dev, &dev_attr_fbregs_crt);
--	if (ret)
--		goto err_attached_pnlregs_file;
--
- 	/* we registered, return ok */
+ 	/* clear detected rfkill devices */
+ 	wifi_rfkill = NULL;
+ 	bluetooth_rfkill = NULL;
+@@ -869,35 +868,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	if (hp_wmi_rfkill_setup(device))
+ 		hp_wmi_rfkill2_setup(device);
+ 
+-	err = device_create_file(&device->dev, &dev_attr_display);
+-	if (err)
+-		goto add_sysfs_error;
+-	err = device_create_file(&device->dev, &dev_attr_hddtemp);
+-	if (err)
+-		goto add_sysfs_error;
+-	err = device_create_file(&device->dev, &dev_attr_als);
+-	if (err)
+-		goto add_sysfs_error;
+-	err = device_create_file(&device->dev, &dev_attr_dock);
+-	if (err)
+-		goto add_sysfs_error;
+-	err = device_create_file(&device->dev, &dev_attr_tablet);
+-	if (err)
+-		goto add_sysfs_error;
+-	err = device_create_file(&device->dev, &dev_attr_postcode);
+-	if (err)
+-		goto add_sysfs_error;
  	return 0;
- 
--err_attached_pnlregs_file:
--	device_remove_file(dev, &dev_attr_fbregs_pnl);
 -
--err_attached_crtsrc_file:
--	device_remove_file(dev, &dev_attr_crt_src);
--
--err_started_panel:
--	unregister_framebuffer(info->fb[HEAD_PANEL]);
--	sm501_free_init_fb(info, HEAD_PANEL);
--
- err_started_crt:
- 	unregister_framebuffer(info->fb[HEAD_CRT]);
- 	sm501_free_init_fb(info, HEAD_CRT);
-@@ -2072,10 +2056,6 @@ static int sm501fb_remove(struct platform_device *pdev)
- 	struct fb_info	   *fbinfo_crt = info->fb[0];
- 	struct fb_info	   *fbinfo_pnl = info->fb[1];
+-add_sysfs_error:
+-	cleanup_sysfs(device);
+-	return err;
+ }
  
--	device_remove_file(&pdev->dev, &dev_attr_fbregs_crt);
--	device_remove_file(&pdev->dev, &dev_attr_fbregs_pnl);
--	device_remove_file(&pdev->dev, &dev_attr_crt_src);
--
- 	sm501_free_init_fb(info, HEAD_CRT);
- 	sm501_free_init_fb(info, HEAD_PANEL);
+ static int __exit hp_wmi_bios_remove(struct platform_device *device)
+ {
+ 	int i;
+-	cleanup_sysfs(device);
  
-@@ -2233,6 +2213,7 @@ static int sm501fb_resume(struct platform_device *pdev)
- #endif
+ 	for (i = 0; i < rfkill2_count; i++) {
+ 		rfkill_unregister(rfkill2[i].rfkill);
+@@ -968,6 +944,7 @@ static struct platform_driver hp_wmi_driver = {
+ 		.pm = &hp_wmi_pm_ops,
+ 	},
+ 	.remove = __exit_p(hp_wmi_bios_remove),
++	.dev_groups = hp_wmi_groups,
+ };
  
- static struct platform_driver sm501fb_driver = {
-+	.dev_groups	= sm501fb_groups,
- 	.probe		= sm501fb_probe,
- 	.remove		= sm501fb_remove,
- 	.suspend	= sm501fb_suspend,
+ static int __init hp_wmi_init(void)
 -- 
 2.22.0
 
