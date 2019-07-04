@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E8EC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0BCC46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD4E218BC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F932218C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfGDQd7 (ORCPT
+        id S1727729AbfGDQfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:33:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59607 "EHLO
+        Thu, 4 Jul 2019 12:35:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59611 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfGDQd7 (ORCPT
+        with ESMTP id S1727200AbfGDQd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jul 2019 12:33:59 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hj4gH-0005ee-GQ; Thu, 04 Jul 2019 18:33:57 +0200
-Message-Id: <20190704155608.454698039@linutronix.de>
+        id 1hj4gH-0005eh-UD; Thu, 04 Jul 2019 18:33:58 +0200
+Message-Id: <20190704155608.544562614@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 04 Jul 2019 17:51:47 +0200
+Date:   Thu, 04 Jul 2019 17:51:48 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch V2 02/25] x86/apic: Invoke perf_events_lapic_init() after
- enabling APIC
+Subject: [patch V2 03/25] x86/apic: Soft disable APIC before initializing it
 References: <20190704155145.617706117@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,43 +42,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the APIC is soft disabled then unmasking an LVT entry does not work and
-the write is ignored. perf_events_lapic_init() tries to do so.
+If the APIC was already enabled on entry of setup_local_APIC() then
+disabling it soft via the SPIV register makes a lot of sense.
 
-Move the invocation after the point where the APIC has been enabled.
+That masks all LVT entries and brings it into a well defined state.
+
+Otherwise previously enabled LVTs which are not touched in the setup
+function stay unmasked and might surprise the just booting kernel.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/apic/apic.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kernel/apic/apic.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 --- a/arch/x86/kernel/apic/apic.c
 +++ b/arch/x86/kernel/apic/apic.c
-@@ -1488,7 +1488,6 @@ static void setup_local_APIC(void)
- 	int logical_apicid, ldr_apicid;
- #endif
- 
--
- 	if (disable_apic) {
- 		disable_ioapic_support();
+@@ -1493,6 +1493,14 @@ static void setup_local_APIC(void)
  		return;
-@@ -1503,8 +1502,6 @@ static void setup_local_APIC(void)
- 		apic_write(APIC_ESR, 0);
  	}
- #endif
--	perf_events_lapic_init();
--
- 	/*
- 	 * Double-check whether this APIC is really registered.
- 	 * This is meaningless in clustered apic mode, so we skip it.
-@@ -1585,6 +1582,8 @@ static void setup_local_APIC(void)
- 	value |= SPURIOUS_APIC_VECTOR;
- 	apic_write(APIC_SPIV, value);
  
-+	perf_events_lapic_init();
++	/*
++	 * If this comes from kexec/kcrash the APIC might be enabled in
++	 * SPIV. Soft disable it before doing further initialization.
++	 */
++	value = apic_read(APIC_SPIV);
++	value &= ~APIC_SPIV_APIC_ENABLED;
++	apic_write(APIC_SPIV, value);
 +
- 	/*
- 	 * Set up LVT0, LVT1:
- 	 *
+ #ifdef CONFIG_X86_32
+ 	/* Pound the ESR really hard over the head with a big hammer - mbligh */
+ 	if (lapic_is_integrated() && apic->disable_esr) {
 
 
