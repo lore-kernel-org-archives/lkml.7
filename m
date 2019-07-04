@@ -2,222 +2,129 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB9C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E09C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A192085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="By1AtMX5"
+	by mail.kernel.org (Postfix) with ESMTP id 2443F21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfGDOAh (ORCPT
+        id S1727392AbfGDOBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:00:37 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35585 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfGDOAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:00:37 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w20so5542713edd.2;
-        Thu, 04 Jul 2019 07:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HMTl4ePFhkH/NYoGcX+X5eP1rO1yNge0+/aoWl+3Kxc=;
-        b=By1AtMX5jEZPJ4J24SQyPaKTsYJ2JtL1Y0VZb/VDK2/3CrPleHUSdY2QElWAXtMNxi
-         k7Sb0CmFoCdLCGhArhTOHz5aLfafjqLS9dsxVpGvpF8ZodStmt6qLJ0uC1UMjxHXL/i/
-         C0d319P/ztxBHeB3kTRoOnJRddbG9Bqg6+D6cytnVG/lHqBqktMG+TfWLqu2EXySXpdB
-         WGmDLg5jwOxrCWrTOxgJnZKTtFfzB6V/vQVAThp4Q6dEIET/jeq1ele2FG8kFfSqp2pq
-         AApQx8YFNMPJZUig2WjBXBDEcahQRBmZReUru5bqOU+s4I5E0fKW53HkHkPPArMDDP/W
-         hqDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HMTl4ePFhkH/NYoGcX+X5eP1rO1yNge0+/aoWl+3Kxc=;
-        b=srL5CfhWmu2xynW1eQf2gHz0f1o89CzBxoYlKiOeguT1CbMOobbQGpUHLOQOaK28Yf
-         uoc2h/CC2Z0xf4KCuFx5/A7VKHxPJzz3+EM0akDhbHUdRN9xmY+K7OYlrWPyJz1Wys3P
-         iKiCrQzX8QohqGr/bqf4Jn/ddfWZs+i/ZntQmSYdwPJM+n1w68JXsxk0z0imUgkC3ZNW
-         1xxpoRBUETKtcquhbqe+oOJJK641VBNroYhzf75K8Atn/fPfwAWw+fMnfmBSLM52hVO/
-         SmnW2lpP+3K3PudP7Def5WzeE2t0EVsxa8oW2p2R0Gi8llwTBwOSnloPFzG3p7WDB8xs
-         MR5g==
-X-Gm-Message-State: APjAAAXvl2Ii92UHQOQJopXAuyieo7T90igLE5mURNp0sep4hYU3549W
-        oRuhGPvCiqT7qzEIzQfxOYki+F/diMjQTPDBcfU=
-X-Google-Smtp-Source: APXvYqzt53qJ6zbCj1CHOqsKdMrnqupwCudH0gFOg52VQqIxQGj4vvfOJvh9gAgbdIhPO7ETsnkN6Wn04FcbqusBGnI=
-X-Received: by 2002:a17:906:85d4:: with SMTP id i20mr40872552ejy.256.1562248834738;
- Thu, 04 Jul 2019 07:00:34 -0700 (PDT)
+        Thu, 4 Jul 2019 10:01:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8699 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726794AbfGDOBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:01:10 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 808E05FCF004B354299B;
+        Thu,  4 Jul 2019 22:01:04 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Jul 2019
+ 22:00:55 +0800
+Subject: Re: [PATCH] erofs: promote erofs from staging
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        <devel@driverdev.osuosl.org>, Miao Xie <miaoxie@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>
+References: <20190704133413.43012-1-gaoxiang25@huawei.com>
+ <20190704135002.GB13609@kroah.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <29e713d5-8146-80cf-8ffd-138b15349489@huawei.com>
+Date:   Thu, 4 Jul 2019 22:00:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190630131445.25712-1-robdclark@gmail.com> <CGME20190630131612epcas1p22f241f3e6edc3976f7abedcb74f86e3a@epcas1p2.samsung.com>
- <20190630131445.25712-4-robdclark@gmail.com> <8a88e865-68a1-37e2-93a1-efd50a778c47@samsung.com>
-In-Reply-To: <8a88e865-68a1-37e2-93a1-efd50a778c47@samsung.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 4 Jul 2019 07:00:18 -0700
-Message-ID: <CAF6AEGuRFb1y4rXY5kqgPpZ=timF4rBcUsfxSKtv0ZqOopc03Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] drm/msm/dsi: make sure we have panel or bridge earlier
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190704135002.GB13609@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 11:39 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> On 30.06.2019 15:14, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > If we are going to -EPROBE_DEFER due to panel/bridge not probed yet, we
-> > want to do it before we start touching hardware.
->
->
-> As the evidence shows, if the driver create bus (mipi-dsi), then it
-> should not defer probing due to lack of sink (panel/bridge), because the
-> sink will not appear without the bus.
->
-> Instead of defer probing you can defer component binding, or if you like
-> challenges you can implement dynamic sink binding :)
->
+Hi Greg,
 
-I have something working that doesn't require this patch.. although it
-does require CCF to export a function to check if clks are enabled so
-the driver can detect if the display is already enabled.  (Well, there
-kind of is, __clk_is_enabled().. but currently in clk-provider.h)
+On 2019/7/4 21:50, Greg Kroah-Hartman wrote:
+> On Thu, Jul 04, 2019 at 09:34:13PM +0800, Gao Xiang wrote:
+>> EROFS file system has been in Linux-staging for about a year.
+>> It has been proved to be stable enough to move out of staging
+>> by 10+ millions of HUAWEI Android mobile phones on the market
+>> from EMUI 9.0.1, and it was promoted as one of the key features
+>> of EMUI 9.1 [1], including P30(pro).
+>>
+>> EROFS is a read-only file system designed to save extra storage
+>> space with guaranteed end-to-end performance by applying
+>> fixed-size output compression, inplace I/O and decompression
+>> inplace technologies [2] to Linux filesystem.
+>>
+>> In our observation, EROFS is one of the fastest Linux compression
+>> filesystem using buffered I/O in the world. It will support
+>> direct I/O in the future if needed. EROFS even has better read
+>> performance in a large CR range compared with generic uncompressed
+>> file systems with proper CPU-storage combination, which is
+>> a reason why erofs can be landed to speed up mobile phone
+>> performance, and which can be probably used for other use cases
+>> such as LiveCD and Docker image as well.
+>>
+>> Currently erofs supports 4k LZ4 fixed-size output compression
+>> since LZ4 is the fastest widely-used decompression solution in
+>> the world and 4k leads to unnoticable read amplification for
+>> the worst case. More compression algorithms and cluster sizes
+>> could be added later, which depends on the real requirement.
+>>
+>> More informations about erofs itself are available at:
+>>  Documentation/filesystems/erofs.txt
+>>  https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
+>>
+>> erofs-utils (mainly mkfs.erofs now) is available at
+>> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+>>
+>> Preliminary iomap support has been pending in erofs mailing
+>> list by Chao Yu. The key issue is that current iomap doesn't
+>> support tail-end packing inline data yet, it should be
+>> resolved later.
+>>
+>> Thanks to many contributors in the last year, the code is more
+>> clean and improved. We hope erofs can be used in wider use cases
+>> so let's promote erofs out of staging and enhance it more actively.
+>>
+>> Share comments about erofs! We think erofs is useful to
+>> community as a part of Linux upstream :)
+> 
+> I don't know if this format is easy for the linux-fsdevel people to
+> review, it forces them to look at the in-kernel code, which makes it
+> hard to quote.
+> 
+> Perhaps just make a patch that adds the filesystem to the tree and after
+> it makes it through review, I can delete the staging version?  We've
+> been doing that for wifi drivers that move out of staging as it seems to
+> be a bit easier.
 
-So we can drop this patch.
+OK, I will resend the whole patchset later as you suggested, but it will
+lack of information about some original authors and I'd like to know who
+is responsible to merge this kind of request to Linux upstream... maybe Linus?
 
-BR,
--R
+And it could be more consistent to leave staging version for linux-5.3
+because we still use it, but anyway, I will do it now.
 
->
-> Regards
->
-> Andrzej
->
->
->
->
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/dsi/dsi.h         |  2 +-
-> >  drivers/gpu/drm/msm/dsi/dsi_host.c    | 30 +++++++++++++--------------
-> >  drivers/gpu/drm/msm/dsi/dsi_manager.c |  9 +++-----
-> >  3 files changed, 19 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
-> > index 53bb124e8259..e15e7534ccd9 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi.h
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi.h
-> > @@ -171,7 +171,7 @@ int msm_dsi_host_set_display_mode(struct mipi_dsi_host *host,
-> >  struct drm_panel *msm_dsi_host_get_panel(struct mipi_dsi_host *host);
-> >  unsigned long msm_dsi_host_get_mode_flags(struct mipi_dsi_host *host);
-> >  struct drm_bridge *msm_dsi_host_get_bridge(struct mipi_dsi_host *host);
-> > -int msm_dsi_host_register(struct mipi_dsi_host *host, bool check_defer);
-> > +int msm_dsi_host_register(struct mipi_dsi_host *host);
-> >  void msm_dsi_host_unregister(struct mipi_dsi_host *host);
-> >  int msm_dsi_host_set_src_pll(struct mipi_dsi_host *host,
-> >                       struct msm_dsi_pll *src_pll);
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > index 1ae2f5522979..8e5b0ba9431e 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > @@ -1824,6 +1824,20 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
-> >               goto fail;
-> >       }
-> >
-> > +     /*
-> > +      * Make sure we have panel or bridge early, before we start
-> > +      * touching the hw.  If bootloader enabled the display, we
-> > +      * want to be sure to keep it running until the bridge/panel
-> > +      * is probed and we are all ready to go.  Otherwise we'll
-> > +      * kill the display and then -EPROBE_DEFER
-> > +      */
-> > +     if (IS_ERR(of_drm_find_panel(msm_host->device_node)) &&
-> > +                     !of_drm_find_bridge(msm_host->device_node)) {
-> > +             pr_err("%s: no panel or bridge yet\n", __func__);
-> > +             return -EPROBE_DEFER;
-> > +     }
-> > +
-> > +
-> >       msm_host->ctrl_base = msm_ioremap(pdev, "dsi_ctrl", "DSI CTRL");
-> >       if (IS_ERR(msm_host->ctrl_base)) {
-> >               pr_err("%s: unable to map Dsi ctrl base\n", __func__);
-> > @@ -1941,7 +1955,7 @@ int msm_dsi_host_modeset_init(struct mipi_dsi_host *host,
-> >       return 0;
-> >  }
-> >
-> > -int msm_dsi_host_register(struct mipi_dsi_host *host, bool check_defer)
-> > +int msm_dsi_host_register(struct mipi_dsi_host *host)
-> >  {
-> >       struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
-> >       int ret;
-> > @@ -1955,20 +1969,6 @@ int msm_dsi_host_register(struct mipi_dsi_host *host, bool check_defer)
-> >                       return ret;
-> >
-> >               msm_host->registered = true;
-> > -
-> > -             /* If the panel driver has not been probed after host register,
-> > -              * we should defer the host's probe.
-> > -              * It makes sure panel is connected when fbcon detects
-> > -              * connector status and gets the proper display mode to
-> > -              * create framebuffer.
-> > -              * Don't try to defer if there is nothing connected to the dsi
-> > -              * output
-> > -              */
-> > -             if (check_defer && msm_host->device_node) {
-> > -                     if (IS_ERR(of_drm_find_panel(msm_host->device_node)))
-> > -                             if (!of_drm_find_bridge(msm_host->device_node))
-> > -                                     return -EPROBE_DEFER;
-> > -             }
-> >       }
-> >
-> >       return 0;
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> > index ff39ce6150ad..cd3450dc3481 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> > @@ -82,7 +82,7 @@ static int dsi_mgr_setup_components(int id)
-> >       int ret;
-> >
-> >       if (!IS_DUAL_DSI()) {
-> > -             ret = msm_dsi_host_register(msm_dsi->host, true);
-> > +             ret = msm_dsi_host_register(msm_dsi->host);
-> >               if (ret)
-> >                       return ret;
-> >
-> > @@ -101,14 +101,11 @@ static int dsi_mgr_setup_components(int id)
-> >               /* Register slave host first, so that slave DSI device
-> >                * has a chance to probe, and do not block the master
-> >                * DSI device's probe.
-> > -              * Also, do not check defer for the slave host,
-> > -              * because only master DSI device adds the panel to global
-> > -              * panel list. The panel's device is the master DSI device.
-> >                */
-> > -             ret = msm_dsi_host_register(slave_link_dsi->host, false);
-> > +             ret = msm_dsi_host_register(slave_link_dsi->host);
-> >               if (ret)
-> >                       return ret;
-> > -             ret = msm_dsi_host_register(master_link_dsi->host, true);
-> > +             ret = msm_dsi_host_register(master_link_dsi->host);
-> >               if (ret)
-> >                       return ret;
-> >
->
->
+Thanks,
+Gao Xiang
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
