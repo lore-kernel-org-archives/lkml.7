@@ -2,220 +2,167 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F682C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AA6C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D350121882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fCjDrfXN"
+	by mail.kernel.org (Postfix) with ESMTP id E9E2E218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfGDJTa (ORCPT
+        id S1727291AbfGDJTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:19:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726993AbfGDJTa (ORCPT
+        Thu, 4 Jul 2019 05:19:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33614 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfGDJTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jul 2019 05:19:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=m/cJ+Oyjh+AqX5ae94L9uwUZUYLQVb7NP1Gac/yL2bc=; b=fCjDrfXN5aH1L05IEQk87tV3h
-        Ua9WNfdAyclmsjUyUNyC5O1JOEND/cfwPELZo1wbg1nCh0Q6YfosjklPjej7wln4oTnT6pn50jciA
-        NiHC59Ng3dpDlPPUsUJant2aZZYhoUfiQZAc7vP+ESvM4VsaG1gsySkPkJf86nyjAP62avUU72ils
-        03g1TUk3rAXMEyfChlQ9rpeqLKgqTwVSlQpBXa55HAJWcR3yfEYf4IgNbf6en5B618EXrkMK+zOfR
-        7PImb/TcyI4+sI63ZLtyCCMRUy+R3/aalfqUo4MMGRglVoQ1mxX4+RxhMcoWXHBBJpCH6/G2ssT09
-        p514XcA+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hixte-0005tF-61; Thu, 04 Jul 2019 09:19:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8BB7020215B9E; Thu,  4 Jul 2019 11:19:16 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 11:19:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Subject: Re: [PATCH 3/3] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190704091916.GI3463@hirez.programming.kicks-ass.net>
-References: <20190703102731.236024951@infradead.org>
- <20190703102807.588906400@infradead.org>
- <CALCETrVR2_5-=FcJdB3OaKjif9EEzoq+YDhNfPjahVM3JUUrUQ@mail.gmail.com>
- <20190703164701.54ef979a@gandalf.local.home>
- <20190703220522.GK3402@hirez.programming.kicks-ass.net>
+Received: by mail-qt1-f194.google.com with SMTP id h24so7378782qto.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:19:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UU1LRzgJ9KtlIamPG1rpTOdBbiRt377kXD3IRu4KTEc=;
+        b=WgiZHTN9qZ6nFhuCUpG2LVjkyW3WX5VDZn4TPjBad3pSSXROgjqBp1RCASoCNesZKM
+         uKmDqEW+/vZyuouz5O1CbpKmDHpq7hwd6G9I6i2VnFgXheNpwr9VuM67k6yFhqS0Nxda
+         t2kkB3GVbtz+tlKxd6aKOBM6sI/DHcRznSwyXPHaPQNeW+V20ZId5LiEchdeyP4HD4G1
+         InWh36VgRRFtPKRVPfxoBRTv+5IP97KvQb05+UqZAbKjaFQNWzavpl17tDkOP69sL4N+
+         bvPgwVWmrywkbqOZJytsNfl27XaLTd+7vrR23siorcjR2VjOb8K5CZfzRiBxsakmIHY7
+         y7UA==
+X-Gm-Message-State: APjAAAWwpLPfQQ9zlqsA41v6erOc3/EE5CD3kwd9KJJf2ylWTgpDDKxg
+        suJPIJdFEdA4dl8tboiStjZYPys6Dx/MghUj62wk8IhE34o=
+X-Google-Smtp-Source: APXvYqz9HnBRmgYL+EgQde6QoC+3TNiwekg2y+kqVusM0V3Keg/hNYgvdDkMLVnEv4+p3P8DAILsb6JwSzdx30DpREE=
+X-Received: by 2002:aed:3363:: with SMTP id u90mr2705494qtd.7.1562231969777;
+ Thu, 04 Jul 2019 02:19:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703220522.GK3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703005202.7578-1-alistair.francis@wdc.com>
+ <mvmk1czh9y6.fsf@suse.de> <CAKmqyKPn9GBg=n1j-ZpEdCN4Qfi5qfNtEVgpgF8rYRpof4eNDA@mail.gmail.com>
+ <mvmpnmqfepx.fsf@suse.de>
+In-Reply-To: <mvmpnmqfepx.fsf@suse.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 4 Jul 2019 11:19:13 +0200
+Message-ID: <CAK8P3a2NmdoHzFGKrzw4CBYDOBtZHDQCGsWE_L0UbG+w0bGWkA@mail.gmail.com>
+Subject: Re: [PATCH RESEND 0/2] RISC-V: Handle the siginfo_t offset problem
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     Alistair Francis <alistair23@gmail.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 12:05:22AM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 03, 2019 at 04:47:01PM -0400, Steven Rostedt wrote:
+On Thu, Jul 4, 2019 at 9:20 AM Andreas Schwab <schwab@suse.de> wrote:
+>
+> On Jul 03 2019, Alistair Francis <alistair23@gmail.com> wrote:
+>
+> > On Wed, Jul 3, 2019 at 12:08 AM Andreas Schwab <schwab@suse.de> wrote:
+> >>
+> >> On Jul 02 2019, Alistair Francis <alistair.francis@wdc.com> wrote:
+> >>
+> >> > In the RISC-V 32-bit glibc port [1] the siginfo_t struct in the kernel
+> >> > doesn't line up with the struct in glibc. In glibc world the _sifields
+> >> > union is 8 byte alligned (although I can't figure out why)
+> >>
+> >> Try ptype/o in gdb.
+> >
+> > That's a useful tip, I'll be sure to use that next time.
+>
+> It was a serious note.  If the structs don't line up then there is a
+> mismatch in types that cannot be solved by adding spurious padding.  You
+> need to fix the types instead.
 
-> > Yeah, looks like we might be missing a TRACE_IRQS_OFF from the
-> > from_usermode_stack_switch path.
-> 
-> Oh bugger, there's a second error_entry call.
+Would it be an option to align all the basic typedefs (off_t, time_t,
+clock_t, ...)
+between glibc and kernel then, and just use the existing
+sysdeps/unix/sysv/linux/generic/bits/typesizes.h after all to avoid
+surprises like this?
 
----
-Subject: x86/entry/64: Simplify idtentry a little
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Jul 4 10:55:11 CEST 2019
+As of v2 the functional difference is
 
-There's a bunch of duplication in idtentry, namely the
-.Lfrom_usermode_switch_stack is an explicit paranoid=0 copy of the
-normal flow.
+-#define __INO_T_TYPE        __ULONGWORD_TYPE
++#define __INO_T_TYPE    __UQUAD_TYPE
+ #define __INO64_T_TYPE        __UQUAD_TYPE
+ #define __MODE_T_TYPE        __U32_TYPE
+-#define __NLINK_T_TYPE        __U32_TYPE
+-#define __OFF_T_TYPE        __SLONGWORD_TYPE
++#define __NLINK_T_TYPE    __UQUAD_TYPE
++#define __OFF_T_TYPE    __SQUAD_TYPE
+ #define __OFF64_T_TYPE        __SQUAD_TYPE
+-#define __RLIM_T_TYPE        __ULONGWORD_TYPE
++#define __RLIM_T_TYPE      __UQUAD_TYPE
+ #define __RLIM64_T_TYPE        __UQUAD_TYPE
+-#define    __BLKCNT_T_TYPE        __SLONGWORD_TYPE
++#define __BLKCNT_T_TYPE    __SQUAD_TYPE
+ #define    __BLKCNT64_T_TYPE    __SQUAD_TYPE
+-#define    __FSBLKCNT_T_TYPE    __ULONGWORD_TYPE
++#define __FSBLKCNT_T_TYPE  __UQUAD_TYPE
+ #define    __FSBLKCNT64_T_TYPE    __UQUAD_TYPE
+-#define    __FSFILCNT_T_TYPE    __ULONGWORD_TYPE
++#define __FSFILCNT_T_TYPE  __UQUAD_TYPE
+ #define    __FSFILCNT64_T_TYPE    __UQUAD_TYPE
+-#define    __FSWORD_T_TYPE        __SWORD_TYPE
++#define __FSWORD_T_TYPE   __SQUAD_TYPE
+-#define __CLOCK_T_TYPE        __SLONGWORD_TYPE
+-#define __TIME_T_TYPE        __SLONGWORD_TYPE
++#define __CLOCK_T_TYPE     __SQUAD_TYPE
++#define __TIME_T_TYPE      __SQUAD_TYPE
+ #define __USECONDS_T_TYPE    __U32_TYPE
+-#define __SUSECONDS_T_TYPE    __SLONGWORD_TYPE
++#define __SUSECONDS_T_TYPE __SQUAD_TYPE
+-#define __BLKSIZE_T_TYPE    __S32_TYPE
++#define __BLKSIZE_T_TYPE   __SQUAD_TYPE
+ #define __FSID_T_TYPE        struct { int __val[2]; }
+ #define __SSIZE_T_TYPE        __SWORD_TYPE
+-#define __SYSCALL_SLONG_TYPE    __SLONGWORD_TYPE
+-#define __SYSCALL_ULONG_TYPE    __ULONGWORD_TYPE
+-#define __CPU_MASK_TYPE     __ULONGWORD_TYPE
++#define __SYSCALL_SLONG_TYPE __SQUAD_TYPE
++#define __SYSCALL_ULONG_TYPE __UQUAD_TYPE
++#define __CPU_MASK_TYPE    __UQUAD_TYPE
 
-Make this explicit by creating a (idtentry_part) helper macro.
+-#ifdef __LP64__
+ # define __RLIM_T_MATCHES_RLIM64_T    1
+-#else
+-# define __RLIM_T_MATCHES_RLIM64_T    0
+-#endif
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/entry/entry_64.S |  100 +++++++++++++++++++++-------------------------
- 1 file changed, 47 insertions(+), 53 deletions(-)
++#define __ASSUME_TIME64_SYSCALLS 1
++#define __ASSUME_RLIM64_SYSCALLS 1
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -865,6 +865,51 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  */
- #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
- 
-+.macro idtentry_part has_error_code:req paranoid:req shift_ist:-1 ist_offset=0
-+
-+	.if \paranoid
-+	call	paranoid_entry
-+	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
-+	.else
-+	call	error_entry
-+	.endif
-+	UNWIND_HINT_REGS
-+
-+	.if \paranoid
-+	.if \shift_ist != -1
-+	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
-+	.else
-+	TRACE_IRQS_OFF
-+	.endif
-+	.endif
-+
-+	movq	%rsp, %rdi			/* pt_regs pointer */
-+
-+	.if \has_error_code
-+	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
-+	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
-+	.else
-+	xorl	%esi, %esi			/* no error code */
-+	.endif
-+
-+	.if \shift_ist != -1
-+	subq	$\ist_offset, CPU_TSS_IST(\shift_ist)
-+	.endif
-+
-+	call	\do_sym
-+
-+	.if \shift_ist != -1
-+	addq	$\ist_offset, CPU_TSS_IST(\shift_ist)
-+	.endif
-+
-+	.if \paranoid
-+	jmp	paranoid_exit
-+	.else
-+	jmp	error_exit
-+	.endif
-+
-+.endm
-+
- /**
-  * idtentry - Generate an IDT entry stub
-  * @sym:		Name of the generated entry point
-@@ -935,46 +980,7 @@ ENTRY(\sym)
- .Lfrom_usermode_no_gap_\@:
- 	.endif
- 
--	.if \paranoid
--	call	paranoid_entry
--	.else
--	call	error_entry
--	.endif
--	UNWIND_HINT_REGS
--	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
--
--	.if \paranoid
--	.if \shift_ist != -1
--	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
--	.else
--	TRACE_IRQS_OFF
--	.endif
--	.endif
--
--	movq	%rsp, %rdi			/* pt_regs pointer */
--
--	.if \has_error_code
--	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
--	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
--	.else
--	xorl	%esi, %esi			/* no error code */
--	.endif
--
--	.if \shift_ist != -1
--	subq	$\ist_offset, CPU_TSS_IST(\shift_ist)
--	.endif
--
--	call	\do_sym
--
--	.if \shift_ist != -1
--	addq	$\ist_offset, CPU_TSS_IST(\shift_ist)
--	.endif
--
--	.if \paranoid
--	jmp	paranoid_exit
--	.else
--	jmp	error_exit
--	.endif
-+	idtentry_part has_error_code=\has_error_code paranoid=\paranoid shift_ist=\shift_ist ist_offset=\ist_offset
- 
- 	.if \paranoid == 1
- 	/*
-@@ -983,21 +989,9 @@ ENTRY(\sym)
- 	 * run in real process context if user_mode(regs).
- 	 */
- .Lfrom_usermode_switch_stack_\@:
--	call	error_entry
--
--	movq	%rsp, %rdi			/* pt_regs pointer */
--
--	.if \has_error_code
--	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
--	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
--	.else
--	xorl	%esi, %esi			/* no error code */
-+	idtentry_part has_error_code=\has_error_code paranoid=0
- 	.endif
- 
--	call	\do_sym
--
--	jmp	error_exit
--	.endif
- _ASM_NOKPROBE(\sym)
- END(\sym)
- .endm
+Since the sysdeps/unix/sysv/linux/generic/bits/typesizes.h definitions
+generally match the kernel, anything diverging from that has the potential
+of breaking it, so the difference should probably be kept to the absolute
+minimum.
+
+I think these ones are wrong and will cause bugs similar to the clock_t
+issue if they are used with kernel interfaces:
+__NLINK_T_TYPE, __FSWORD_T_TYPE, __CLOCK_T_TYPE,
+__BLKSIZE_T_TYPE, __SYSCALL_ULONG_TYPE,
+__SYSCALL_SLONG_TYPE, __CPU_MASK_TYPE
+
+These are fine as long as they are only used in user space and to
+wrap kernel syscalls, but I think most of them can end up being
+passed to the kernel, so it seems safer not to have rv32 diverge
+without a good reason.
+
+The remaining ones (__INO_T_TYPE, __OFF_T_TYPE, __BLKCNT_T_TYPE,
+__FSBLKCNT_T_TYPE, __FSFILCNT_T_TYPE, __TIME_T_TYPE) all
+follow the pattern where the kernel has an old 32-bit type and a new
+64-bit type, but the kernel tries not to expose the 32-bit interfaces
+to user space on new architectures and only provide the 64-bit
+replacements, but there are a couple of interfaces that never got
+replaced, typically in driver and file system ioctls.
+
+Since glibc already has code to deal with the 64-bit types and that
+is well tested, it would seem safer to me to just #undef the old
+types completely rather than defining them to 64-bit, which would
+make them incompatible with the kernel's types.
+
+       Arnd
