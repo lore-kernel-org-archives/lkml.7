@@ -2,133 +2,108 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1784BC5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B80C5B578
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04602189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15712187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WL2uping"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="pnCXRsvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGDCVN (ORCPT
+        id S1727236AbfGDCXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 22:21:13 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41052 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfGDCVM (ORCPT
+        Wed, 3 Jul 2019 22:23:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45733 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfGDCXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:21:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x642JrBE165097;
-        Thu, 4 Jul 2019 02:20:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=GxqPkKqiaZWF5TAkcRYXZctmYGfXSTCnWlJ2S2zRDMs=;
- b=WL2upingzcGwz60NTWvpbAb5kvVeh76Dlh4kF1cEZqpFSvCzXDW6ba5ZuTas34O2rytf
- cdLsBAcrUegNcyrWCO173+wzZBQrXBnBtQkheZyNm9zTGTc4PN0MXQNuw7j8ddaFVdYB
- Hneca9KFO6HFELWCOST+DTbr5l9VY5d3ZK5gmbH0eQbesCbBIZ2g/djhyT25gfwVk8P1
- 9KLMqQji/tr/H4GyV2QECDqWoBVKiRUixSSituIg7fv70N/xJmCJEb0qYzofLmpGEdQp
- lEIdsOgtOWE/ozbwodNfQNFLQ1I/aI7hh+fUcQsMaYz6vID9AAg2G/NasexSIB1BZ5dW aw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2te5tbvaxm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 02:20:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x642IGBk084059;
-        Thu, 4 Jul 2019 02:20:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2th5qm1uf2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 02:20:35 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x642KSfg021256;
-        Thu, 4 Jul 2019 02:20:28 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jul 2019 19:20:27 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v3] locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
-Date:   Wed,  3 Jul 2019 10:23:55 +0800
-Message-Id: <1562120635-9806-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907040029
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907040029
+        Wed, 3 Jul 2019 22:23:11 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so3098133lfm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 19:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+J4G3+w2a6rqwsRd6naD6kRP3PZ6p5YJ6mI8owInsUY=;
+        b=pnCXRsvCD/RtzrcOSH9XKM3pNpuZOmeLWIatc8U7JlkVMu98m1tFHyX9W8gckaXPfe
+         b17ruB40N/kd408MIOehV98cOnIGdS2i5T85oAKHFtbQungZe4RQZXnoR3DvdoUOY49T
+         A8Qralpdl860WzVeFgeSpieoUbth90cEXEwDDfG2ufwTCrsWhxFOKEEtU/VdnRP/Ma1P
+         crPt3nVPNZZP45KVGlF3FSxFbEvNPhhYU+4eKXQyZkt8EnoLeDvdkLNiM9WDsGZxLtVf
+         vkQFJrmKD9kDeXJtME/5Hl5v6hn8fG8k5HTT33wk8Phx9tWBoUoQbHDcM06FR4ZmfGpB
+         MiQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+J4G3+w2a6rqwsRd6naD6kRP3PZ6p5YJ6mI8owInsUY=;
+        b=ewxbT6LiPVJCR1wuxFYNFA1tpvtlPbCzd2EQx3wfhwB8sGJIlA3snUHGGVaqqYHg1M
+         6CewarYtlsAMKD7wZhr+DvsTu16TcHu5VKXbiDrDLuuGkHKWf3Rj/mYL7ZNA1ctHjl9a
+         BgVqvFba0A0cbz2zdiHy8+De9prIZnB1gZILPBoog7HXks3ocayKgU06yKmAxLWVmJKf
+         yY7jK9tIKOuwrraZg9v6UQFfFCyeOmtOBX6CDN4BVqRYiu17PP4Ge2TqP5HxNQFVnNsi
+         yDYFHdzxKmUvooJtsFwzU8prLnJChJs5iUoFUgdv3f9rm8JtzQu3C5nEQmhpIi6UJhRC
+         /G4w==
+X-Gm-Message-State: APjAAAUDf/iV9uW3lnQoLAUfDOY1io70T44EUJ/RQ/fgqJNqblhU/f47
+        uvI3W8OyXOemJD46wPslwfxYfA==
+X-Google-Smtp-Source: APXvYqwF1IDr3Zsnm8ndisg8PoI+GaRFZUtCxu7aZqBri2om9izSF5ZXvmOqrvAsLWKwdQBn04FOlA==
+X-Received: by 2002:ac2:4351:: with SMTP id o17mr297792lfl.100.1562206988730;
+        Wed, 03 Jul 2019 19:23:08 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id o11sm635357lfl.15.2019.07.03.19.23.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 19:23:07 -0700 (PDT)
+Date:   Wed, 3 Jul 2019 19:20:43 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Heiko Stuebner <heiko@sntech.de>, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] soc: rockchip: work around clang warning
+Message-ID: <20190704022043.gwcwasi6jni2qctm@localhost>
+References: <20190703153112.2767411-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703153112.2767411-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the boot parameter "hv_nopvspin" specified a Hyperv guest should
-not make use of paravirt spinlocks, but behave as if running on bare
-metal. This is not true, however, as the qspinlock code will fall back
-to a test-and-set scheme when it is detecting a hypervisor.
+On Wed, Jul 03, 2019 at 05:30:59PM +0200, Arnd Bergmann wrote:
+> clang emits a warning about a negative shift count for an
+> unused part of a conditional constant expression:
+> 
+> drivers/soc/rockchip/pm_domains.c:795:21: error: shift count is negative [-Werror,-Wshift-count-negative]
+>         [RK3328_PD_VIO]         = DOMAIN_RK3328(-1, 8, 8, false),
+>                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/soc/rockchip/pm_domains.c:129:2: note: expanded from macro 'DOMAIN_RK3328'
+>         DOMAIN_M(pwr, pwr, req, (req) + 10, req, wakeup)
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/soc/rockchip/pm_domains.c:105:33: note: expanded from macro 'DOMAIN_M'
+>         .status_mask = (status >= 0) ? BIT(status) : 0, \
+>                                        ^~~~~~~~~~~
+> include/linux/bits.h:6:24: note: expanded from macro 'BIT'
+> 
+> This is a bug in clang that will be fixed in the future, but in order
+> to build cleanly with clang-8, it would be helpful to shut up this
+> warning. This file is the only instance reported by kernelci at the
+> moment.
+> 
+> The best solution I could come up with is to move the BIT() usage
+> out of the macro into the instantiation, so we can avoid using
+> BIT(-1).
+> 
+> Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-In order to avoid this disable the virt_spin_lock_key.
+Thanks, queued under arm/drivers now.
 
-Same change for XEN is already in Commit e6fd28eb3522
-("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: linux-hyperv@vger.kernel.org
----
-v3: remove unlikely() as suggested by Sasha
-
- arch/x86/hyperv/hv_spinlock.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index 07f21a0..210495b 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
- 
- void __init hv_init_spinlocks(void)
- {
-+	if (!hv_pvspin)
-+		static_branch_disable(&virt_spin_lock_key);
-+
- 	if (!hv_pvspin || !apic ||
- 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
- 	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
--- 
-1.8.3.1
-
+-Olof
