@@ -2,94 +2,67 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67473C46484
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CDC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCA0218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X6NiXeAM"
+	by mail.kernel.org (Postfix) with ESMTP id 92FCA218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 17:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562260206;
+	bh=wUPuiCtsjKFMCYJwXnPf2S8IohnAIH4M9GvNy802eGE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=2h0mRCgeiMXSNSM2l7b+O6xNo7eHvZIzhhG4pksiTOcnT6X4cETQIeAvmELg74g9R
+	 nVOFejeuWfYqhM7CNYpn3TQVEyxOFCi/7ROTPgnNENYXZcsr0pHRoX3GgkPnNkMLJl
+	 6lVgKMPM9z9pkYdrjEmjVTUGyjl9tpexzwn+Iqz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfGDRHy (ORCPT
+        id S1727349AbfGDRKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 13:07:54 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37527 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfGDRHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 13:07:54 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y57so6434762qtk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XqfKYWKGSYLgbJr6fPQ+lFHdBqt7mzzp7w7+/NgGtDk=;
-        b=X6NiXeAMF1OwtlTW4QqugOJ53ZeaHYD/sLo9k8HcbCwSQByg/XZqvCY4YZ+NYEl7+p
-         iNzSMGDWZ5tSIXvWCBaZgIICKztGnisde/lW/EA7/5qeHQu+15yWvVUsJRLIZmnz8wha
-         FFQqyPZ2lh/7vbQ1YNZqInN11zwc/aPBlJbKnEheIYIs5DRlEPuNf2j32b7lU2Cr/rcQ
-         96vKhTR4yz256EpG20zwOf0ABEaIZ5Hm7+BC+Ly7ve2P51vGNgxR6r8d9luBnVSDGfnC
-         hecuC40wXSVrpqNgLK4oewKcZuEQsgqJRuOyJclwZzjzgTs41CxzCm22YgsyxzVDu9Bi
-         dJSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XqfKYWKGSYLgbJr6fPQ+lFHdBqt7mzzp7w7+/NgGtDk=;
-        b=cmObNpR9s5WY2Jv2niZdR7ZHTY+QWD9Ofi2AMsQivyNmRlgjzCMz+VuAZ+2KgfsPJw
-         XsEKlL3T0Kc+pkXC25CZ36wP2kvUZpLn6TNMisDJG6QZBcIoTHwMvaKikvQAtzrY75/A
-         aBD92sBZ2kzeVZFIbHQfepMrDHQW3PY/cPrryu4sJkQHjb3F1kolKbhC17EP3UYLzK+b
-         unVj3jK7bXn/oatyEfEcu1/VYoJj2KvY4VpSMUicJAX9L9gdoJt5+oYr7hNRP48vYB2n
-         kHIHBAQRe9nZXakNkQ8nSYggzSkf1zMALMqNfb3ZOsGYsI5Z+/yvMChE0wKga8a6e/n/
-         m7PQ==
-X-Gm-Message-State: APjAAAV8YhNwVnt6b9V9ooazt2unvg8yikQfWk+zQOjkpjga3dgqczNk
-        CvanaVChs5X4u8BYVHck1TUzuShMYIBMyA==
-X-Google-Smtp-Source: APXvYqxtr+v0L2/2WEquOomQKVdBZ8+LLKmCnbiOU43dpww5W7vo+SURvHo2eSQslH/YdnPX0elgpQ==
-X-Received: by 2002:aed:36c5:: with SMTP id f63mr36872490qtb.239.1562260073519;
-        Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id b67sm2660401qkd.82.2019.07.04.10.07.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jul 2019 10:07:53 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hj5D6-000348-Ib; Thu, 04 Jul 2019 14:07:52 -0300
-Date:   Thu, 4 Jul 2019 14:07:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/uverbs: remove redundant assignment to variable ret
-Message-ID: <20190704170752.GA11760@ziepe.ca>
-References: <20190704125027.4514-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704125027.4514-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 4 Jul 2019 13:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726696AbfGDRKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 13:10:04 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562260204;
+        bh=wUPuiCtsjKFMCYJwXnPf2S8IohnAIH4M9GvNy802eGE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=peCfyuGT1OBXfWgwjeYY+MMupoOFhIrCFvqS5ylBKRre+Yjtt8HmLPOIRuXScHdeE
+         eMLLoTwCrPY5C7chTTEtyj0iOQcZXV0oSlFrMJPIa1W+hHl37cAnq6sXBDZPM9e7Rl
+         1wL0Hf5dlWXdahdiLJDOMI5aAHCNI2CgWKmcSMXo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <s5h8ste2kn4.wl-tiwai@suse.de>
+References: <s5h8ste2kn4.wl-tiwai@suse.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <s5h8ste2kn4.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.2
+X-PR-Tracked-Commit-Id: 3450121997ce872eb7f1248417225827ea249710
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c212ddaee2fd21e8d756dbc3c6119e3259b38fd0
+Message-Id: <156226020401.21087.4911880582513267664.pr-tracker-bot@kernel.org>
+Date:   Thu, 04 Jul 2019 17:10:04 +0000
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 01:50:27PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable ret is being initialized with a value that is never
-> read and it is being updated later with a new value. The
-> initialization is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/infiniband/core/uverbs_cmd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+The pull request you sent on Thu, 04 Jul 2019 11:50:55 +0200:
 
-Applied to for-next, thanks
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.2
 
-Jason
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c212ddaee2fd21e8d756dbc3c6119e3259b38fd0
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
