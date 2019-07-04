@@ -2,132 +2,179 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC642C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A01C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965C72184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1148E2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfGDP3u convert rfc822-to-8bit (ORCPT
+        id S1727800AbfGDPbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:29:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:4001 "EHLO mga09.intel.com"
+        Thu, 4 Jul 2019 11:31:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3318 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfGDP3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:29:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1727474AbfGDPbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:31:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 08:29:49 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 08:31:01 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,451,1557212400"; 
-   d="scan'208";a="166286219"
-Received: from pgsmsx113.gar.corp.intel.com ([10.108.55.202])
-  by fmsmga007.fm.intel.com with ESMTP; 04 Jul 2019 08:29:47 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.4]) by
- pgsmsx113.gar.corp.intel.com ([169.254.6.230]) with mapi id 14.03.0439.000;
- Thu, 4 Jul 2019 23:29:46 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Topic: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Index: AQHVMUGmUw8CyhUBakCg51utnm9b/6a4aBMAgAFBlaD//59qAIAArWRQgAAA3wCAAJ+BsA==
-Date:   Thu, 4 Jul 2019 15:29:46 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
-References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
- <20190703140520.GA18473@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
- <20190704033038.GA6276@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
- <20190704135420.GD13859@lunn.ch>
-In-Reply-To: <20190704135420.GD13859@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="scan'208";a="172450290"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jul 2019 08:30:58 -0700
+Date:   Thu, 4 Jul 2019 23:14:17 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
+Message-ID: <20190704151416.GA1423@hao-dev>
+References: <20190704055645.GA15471@kroah.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704055645.GA15471@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > > > @@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct
-> > > > > > mii_bus *bus,
-> > > > > int phyaddr, int phyreg)
-> > > > > >  	struct stmmac_priv *priv = netdev_priv(ndev);
-> > > > > >  	unsigned int mii_address = priv->hw->mii.addr;
-> > > > > >  	unsigned int mii_data = priv->hw->mii.data;
-> > > > > > -	u32 v;
-> > > > > > -	int data;
-> > > > > >  	u32 value = MII_BUSY;
-> > > > > > +	int data = 0;
-> > > > > > +	u32 v;
-> > > > > >
-> > > > > >  	value |= (phyaddr << priv->hw->mii.addr_shift)
-> > > > > >  		& priv->hw->mii.addr_mask;
-> > > > > >  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw-
-> > > > > >mii.reg_mask;
-> > > > > >  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
-> > > > > >  		& priv->hw->mii.clk_csr_mask;
-> > > > > > -	if (priv->plat->has_gmac4)
-> > > > > > +	if (priv->plat->has_gmac4) {
-> > > > > >  		value |= MII_GMAC4_READ;
-> > > > > > +		if (phyreg & MII_ADDR_C45)
-> > > > > > +			stmmac_mdio_c45_setup(priv, phyreg, &value,
-> &data);
-> > > > > > +	}
-> > > > > >
-> > > > > >  	if (readl_poll_timeout(priv->ioaddr + mii_address,
-> v, !(v &
-> > > > > MII_BUSY),
-> > > > > >  			       100, 10000))
-> > > > > >  		return -EBUSY;
-> > > > > >
-> > > > > > +	writel(data, priv->ioaddr + mii_data);
-> > > > >
-> > > > > That looks odd. Could you explain why it is needed.
-> > > > >
-> > > > > Thanks
-> > > > > 	Andrew
-> > > >
-> > > > Hi Andrew,
-> > > > This mdio c45 support needed to access DWC xPCS which is a
-> > > > Clause-45
-> > >
-> > > I mean it looks odd doing a write to the data register in the middle
-> > > of stmmac_mdio_read().
-> >
-> > MAC is using an indirect access to access mdio devices. In order to
-> > read, the driver needs to write into both mii_data and mii_address to
-> > select c45, read/write command, phy address, address to read, and etc.
-> 
-> Yes, that is all clear. The stmmac_mdio_c45_setup() does part of this
-> setup. There is also a write to mii_address which i snipped out when
-> replying. But why do you need to write to the data registers during a
-> read? C22 does not need this write. Are there some bits in the top of
-> the data register which are relevant to C45?
-> 
+On Thu, Jul 04, 2019 at 07:56:45AM +0200, Greg Kroah-Hartman wrote:
+> This is a driver, do not call "raw" sysfs functions, instead call driver
+> core ones.  Specifically convert the use of sysfs_create_files() and
+> sysfs_remove_files() to use device_add_groups() and
+> device_remove_groups()
 
-Yes, the top 16 bit of the data register only valid when C45 is enable.
-It contains the Register address which MDIO c45 frame intended for.
+Hi Greg,
+
+Thanks for this patch. It looks good, and works well in my side.
+
+I will follow the same (replace sysfs_create/remove_* with
+device_add/remove_group) to rework my patchset too. Thanks.
+
+Hao
+
+> 
+> Cc: Wu Hao <hao.wu@intel.com>
+> Cc: Alan Tull <atull@kernel.org>
+> Cc: Moritz Fischer <mdf@kernel.org>
+> Cc: linux-fpga@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/fpga/dfl-afu-main.c | 14 ++++++++------
+>  drivers/fpga/dfl-fme-main.c |  7 ++++---
+>  2 files changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index 02baa6a227c0..68b4d0874b93 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -141,10 +141,11 @@ id_show(struct device *dev, struct device_attribute *attr, char *buf)
+>  }
+>  static DEVICE_ATTR_RO(id);
+>  
+> -static const struct attribute *port_hdr_attrs[] = {
+> +static struct attribute *port_hdr_attrs[] = {
+>  	&dev_attr_id.attr,
+>  	NULL,
+>  };
+> +ATTRIBUTE_GROUPS(port_hdr);
+>  
+>  static int port_hdr_init(struct platform_device *pdev,
+>  			 struct dfl_feature *feature)
+> @@ -153,7 +154,7 @@ static int port_hdr_init(struct platform_device *pdev,
+>  
+>  	port_reset(pdev);
+>  
+> -	return sysfs_create_files(&pdev->dev.kobj, port_hdr_attrs);
+> +	return device_add_groups(&pdev->dev, port_hdr_groups);
+>  }
+>  
+>  static void port_hdr_uinit(struct platform_device *pdev,
+> @@ -161,7 +162,7 @@ static void port_hdr_uinit(struct platform_device *pdev,
+>  {
+>  	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
+>  
+> -	sysfs_remove_files(&pdev->dev.kobj, port_hdr_attrs);
+> +	device_remove_groups(&pdev->dev, port_hdr_groups);
+>  }
+>  
+>  static long
+> @@ -214,10 +215,11 @@ afu_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+>  }
+>  static DEVICE_ATTR_RO(afu_id);
+>  
+> -static const struct attribute *port_afu_attrs[] = {
+> +static struct attribute *port_afu_attrs[] = {
+>  	&dev_attr_afu_id.attr,
+>  	NULL
+>  };
+> +ATTRIBUTE_GROUPS(port_afu);
+>  
+>  static int port_afu_init(struct platform_device *pdev,
+>  			 struct dfl_feature *feature)
+> @@ -234,7 +236,7 @@ static int port_afu_init(struct platform_device *pdev,
+>  	if (ret)
+>  		return ret;
+>  
+> -	return sysfs_create_files(&pdev->dev.kobj, port_afu_attrs);
+> +	return device_add_groups(&pdev->dev, port_afu_groups);
+>  }
+>  
+>  static void port_afu_uinit(struct platform_device *pdev,
+> @@ -242,7 +244,7 @@ static void port_afu_uinit(struct platform_device *pdev,
+>  {
+>  	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
+>  
+> -	sysfs_remove_files(&pdev->dev.kobj, port_afu_attrs);
+> +	device_remove_groups(&pdev->dev, port_afu_groups);
+>  }
+>  
+>  static const struct dfl_feature_ops port_afu_ops = {
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 086ad2420ade..0be4635583d5 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -72,12 +72,13 @@ static ssize_t bitstream_metadata_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(bitstream_metadata);
+>  
+> -static const struct attribute *fme_hdr_attrs[] = {
+> +static struct attribute *fme_hdr_attrs[] = {
+>  	&dev_attr_ports_num.attr,
+>  	&dev_attr_bitstream_id.attr,
+>  	&dev_attr_bitstream_metadata.attr,
+>  	NULL,
+>  };
+> +ATTRIBUTE_GROUPS(fme_hdr);
+>  
+>  static int fme_hdr_init(struct platform_device *pdev,
+>  			struct dfl_feature *feature)
+> @@ -89,7 +90,7 @@ static int fme_hdr_init(struct platform_device *pdev,
+>  	dev_dbg(&pdev->dev, "FME cap %llx.\n",
+>  		(unsigned long long)readq(base + FME_HDR_CAP));
+>  
+> -	ret = sysfs_create_files(&pdev->dev.kobj, fme_hdr_attrs);
+> +	ret = device_add_groups(&pdev->dev, fme_hdr_groups);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -100,7 +101,7 @@ static void fme_hdr_uinit(struct platform_device *pdev,
+>  			  struct dfl_feature *feature)
+>  {
+>  	dev_dbg(&pdev->dev, "FME HDR UInit.\n");
+> -	sysfs_remove_files(&pdev->dev.kobj, fme_hdr_attrs);
+> +	device_remove_groups(&pdev->dev, fme_hdr_groups);
+>  }
+>  
+>  static const struct dfl_feature_ops fme_hdr_ops = {
+> -- 
+> 2.22.0
