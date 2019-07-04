@@ -2,136 +2,419 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E769BC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38513C06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C2A2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077302189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfGDKbs (ORCPT
+        id S1727546AbfGDKdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:31:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55818 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727303AbfGDKbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:31:48 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F1DF11997EE06086CD30;
-        Thu,  4 Jul 2019 18:31:45 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 4 Jul 2019
- 18:31:38 +0800
-Subject: Re: [PATCH RESEND v3] staging: erofs: remove unsupported ->datamode
- check in fill_inline_data()
-To:     Yue Hu <zbestahu@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <huyue2@yulong.com>,
-        <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190702025601.7976-1-zbestahu@gmail.com>
- <20190703162038.GA31307@kroah.com>
- <20190704095903.0000565e.zbestahu@gmail.com>
- <20190704052649.GA7454@kroah.com>
- <20190704180207.0000374e.zbestahu@gmail.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <fd781a85-10f9-9cbb-9e14-1757153bb9ff@huawei.com>
-Date:   Thu, 4 Jul 2019 18:31:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 4 Jul 2019 06:33:25 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:45444 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbfGDKdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:33:25 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 2D38320554;
+        Thu,  4 Jul 2019 12:33:23 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 14946201B0;
+        Thu,  4 Jul 2019 12:33:23 +0200 (CEST)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v3] media: si2168: Refactor command setup code
+To:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Brad Love <brad@nextdimension.cc>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Message-ID: <544859b5-108a-1909-d612-64f67a02aeec@free.fr>
+Date:   Thu, 4 Jul 2019 12:33:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190704180207.0000374e.zbestahu@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jul  4 12:33:23 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Refactor the command setup code, and let the compiler determine
+the size of each command.
 
+Reviewed-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+Changes from v1:
+- Use a real function to populate struct si2168_cmd *cmd, and a trivial
+macro wrapping it (macro because sizeof).
+Changes from v2:
+- Fix header mess
+- Add Jonathan's tag
+---
+ drivers/media/dvb-frontends/si2168.c | 146 +++++++++------------------
+ 1 file changed, 45 insertions(+), 101 deletions(-)
 
-On 2019/7/4 18:02, Yue Hu wrote:
-> On Thu, 4 Jul 2019 07:26:49 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
->> On Thu, Jul 04, 2019 at 09:59:03AM +0800, Yue Hu wrote:
->>> On Wed, 3 Jul 2019 18:20:38 +0200
->>> Greg KH <gregkh@linuxfoundation.org> wrote:
->>>   
->>>> On Tue, Jul 02, 2019 at 10:56:01AM +0800, Yue Hu wrote:  
->>>>> From: Yue Hu <huyue2@yulong.com>
->>>>>
->>>>> Already check if ->datamode is supported in read_inode(), no need to check
->>>>> again in the next fill_inline_data() only called by fill_inode().
->>>>>
->>>>> Signed-off-by: Yue Hu <huyue2@yulong.com>
->>>>> Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
->>>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->>>>> ---
->>>>> no change
->>>>>
->>>>>  drivers/staging/erofs/inode.c | 2 --
->>>>>  1 file changed, 2 deletions(-)    
->>>>
->>>> This is already in my tree, right?  
->>>
->>> Seems not, i have received notes about other 2 patches below mergerd:
->>>
->>> ```note1
->>> This is a note to let you know that I've just added the patch titled
->>>
->>>     staging: erofs: don't check special inode layout
->>>
->>> to my staging git tree which can be found at
->>>     git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
->>> in the staging-next branch.
->>> ```
->>>
->>> ```note2
->>> This is a note to let you know that I've just added the patch titled
->>>
->>>     staging: erofs: return the error value if fill_inline_data() fails
->>>
->>> to my staging git tree which can be found at
->>>     git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
->>> in the staging-next branch.
->>> ```
->>>
->>> No this patch in below link checked:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/log/drivers/staging/erofs?h=staging-testing  
->>
->> Then if it is not present, it needs to be rebased as it does not apply.
->>
->> Please do so and resend it.
-> 
-> Hm, no need to resend since it's included in another patch below.
-> 
-> ec8c244 staging: erofs: add compacted ondisk compression indexes.
-
-Yes, it seems it was modified by the following patch occasionally months ago.
-https://lore.kernel.org/lkml/20190614181619.64905-2-gaoxiang25@huawei.com/
-
-Anyway, thanks for your patch. :)
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks.
-> 
->>
->> thanks,
->>
->> greg k-h
-> 
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-> 
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index c64b360ce6b5..5e81e076369c 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -12,6 +12,16 @@
+ 
+ static const struct dvb_frontend_ops si2168_ops;
+ 
++static void cmd_setup(struct si2168_cmd *cmd, char *args, int wlen, int rlen)
++{
++	memcpy(cmd->args, args, wlen);
++	cmd->wlen = wlen;
++	cmd->rlen = rlen;
++}
++
++#define CMD_SETUP(cmd, args, rlen) \
++	cmd_setup(cmd, args, sizeof(args) - 1, rlen)
++
+ /* execute firmware command */
+ static int si2168_cmd_execute(struct i2c_client *client, struct si2168_cmd *cmd)
+ {
+@@ -84,15 +94,13 @@ static int si2168_ts_bus_ctrl(struct dvb_frontend *fe, int acquire)
+ 	dev_dbg(&client->dev, "%s acquire: %d\n", __func__, acquire);
+ 
+ 	/* set TS_MODE property */
+-	memcpy(cmd.args, "\x14\x00\x01\x10\x10\x00", 6);
++	CMD_SETUP(&cmd, "\x14\x00\x01\x10\x10\x00", 4);
+ 	if (acquire)
+ 		cmd.args[4] |= dev->ts_mode;
+ 	else
+ 		cmd.args[4] |= SI2168_TS_TRISTATE;
+ 	if (dev->ts_clock_gapped)
+ 		cmd.args[4] |= 0x40;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 
+ 	return ret;
+@@ -116,19 +124,13 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	switch (c->delivery_system) {
+ 	case SYS_DVBT:
+-		memcpy(cmd.args, "\xa0\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 13;
++		CMD_SETUP(&cmd, "\xa0\x01", 13);
+ 		break;
+ 	case SYS_DVBC_ANNEX_A:
+-		memcpy(cmd.args, "\x90\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 9;
++		CMD_SETUP(&cmd, "\x90\x01", 9);
+ 		break;
+ 	case SYS_DVBT2:
+-		memcpy(cmd.args, "\x50\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 14;
++		CMD_SETUP(&cmd, "\x50\x01", 14);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -165,9 +167,7 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	/* BER */
+ 	if (*status & FE_HAS_VITERBI) {
+-		memcpy(cmd.args, "\x82\x00", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 3;
++		CMD_SETUP(&cmd, "\x82\x00", 3);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -198,9 +198,7 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	/* UCB */
+ 	if (*status & FE_HAS_SYNC) {
+-		memcpy(cmd.args, "\x84\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 3;
++		CMD_SETUP(&cmd, "\x84\x01", 3);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -286,22 +284,18 @@ static int si2168_set_frontend(struct dvb_frontend *fe)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x88\x02\x02\x02\x02", 5);
+-	cmd.wlen = 5;
+-	cmd.rlen = 5;
++	CMD_SETUP(&cmd, "\x88\x02\x02\x02\x02", 5);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* that has no big effect */
+ 	if (c->delivery_system == SYS_DVBT)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\xff\x98", 6);
++		CMD_SETUP(&cmd, "\x89\x21\x06\x11\xff\x98", 3);
+ 	else if (c->delivery_system == SYS_DVBC_ANNEX_A)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\x89\xf0", 6);
++		CMD_SETUP(&cmd, "\x89\x21\x06\x11\x89\xf0", 3);
+ 	else if (c->delivery_system == SYS_DVBT2)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\x89\x20", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 3;
++		CMD_SETUP(&cmd, "\x89\x21\x06\x11\x89\x20", 3);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -318,103 +312,77 @@ static int si2168_set_frontend(struct dvb_frontend *fe)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x51\x03", 2);
+-	cmd.wlen = 2;
+-	cmd.rlen = 12;
++	CMD_SETUP(&cmd, "\x51\x03", 12);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x12\x08\x04", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 3;
++	CMD_SETUP(&cmd, "\x12\x08\x04", 3);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x0c\x10\x12\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x0c\x10\x12\x00", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x06\x10\x24\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x06\x10\x24\x00", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x07\x10\x00\x24", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x07\x10\x00\x24", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x0a\x10\x00\x00", 6);
++	CMD_SETUP(&cmd, "\x14\x00\x0a\x10\x00\x00", 4);
+ 	cmd.args[4] = delivery_system | bandwidth;
+ 	if (dev->spectral_inversion)
+ 		cmd.args[5] |= 1;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* set DVB-C symbol rate */
+ 	if (c->delivery_system == SYS_DVBC_ANNEX_A) {
+-		memcpy(cmd.args, "\x14\x00\x02\x11", 4);
++		CMD_SETUP(&cmd, "\x14\x00\x02\x11\x00\x00", 4);
+ 		cmd.args[4] = ((c->symbol_rate / 1000) >> 0) & 0xff;
+ 		cmd.args[5] = ((c->symbol_rate / 1000) >> 8) & 0xff;
+-		cmd.wlen = 6;
+-		cmd.rlen = 4;
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x14\x00\x0f\x10\x10\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x0f\x10\x10\x00", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x09\x10\xe3\x08", 6);
++	CMD_SETUP(&cmd, "\x14\x00\x09\x10\xe3\x08", 4);
+ 	cmd.args[5] |= dev->ts_clock_inv ? 0x00 : 0x10;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x08\x10\xd7\x05", 6);
++	CMD_SETUP(&cmd, "\x14\x00\x08\x10\xd7\x05", 4);
+ 	cmd.args[5] |= dev->ts_clock_inv ? 0x00 : 0x10;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x01\x12\x00\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x01\x12\x00\x00", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x01\x03\x0c\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	CMD_SETUP(&cmd, "\x14\x00\x01\x03\x0c\x00", 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x85", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 1;
++	CMD_SETUP(&cmd, "\x85", 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -444,26 +412,20 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	dev_dbg(&client->dev, "\n");
+ 
+ 	/* initialize */
+-	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13);
+-	cmd.wlen = 13;
+-	cmd.rlen = 0;
++	CMD_SETUP(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	if (dev->warm) {
+ 		/* resume */
+-		memcpy(cmd.args, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 8);
+-		cmd.wlen = 8;
+-		cmd.rlen = 1;
++		CMD_SETUP(&cmd, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 1);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+ 
+ 		udelay(100);
+-		memcpy(cmd.args, "\x85", 1);
+-		cmd.wlen = 1;
+-		cmd.rlen = 1;
++		CMD_SETUP(&cmd, "\x85", 1);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -472,9 +434,7 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	}
+ 
+ 	/* power up */
+-	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
+-	cmd.wlen = 8;
+-	cmd.rlen = 1;
++	CMD_SETUP(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -542,17 +502,13 @@ static int si2168_init(struct dvb_frontend *fe)
+ 
+ 	release_firmware(fw);
+ 
+-	memcpy(cmd.args, "\x01\x01", 2);
+-	cmd.wlen = 2;
+-	cmd.rlen = 1;
++	CMD_SETUP(&cmd, "\x01\x01", 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* query firmware version */
+-	memcpy(cmd.args, "\x11", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 10;
++	CMD_SETUP(&cmd, "\x11", 10);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -610,9 +566,7 @@ static int si2168_sleep(struct dvb_frontend *fe)
+ 	if (dev->version > ('B' << 24 | 4 << 16 | 0 << 8 | 11 << 0))
+ 		dev->warm = false;
+ 
+-	memcpy(cmd.args, "\x13", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 0;
++	CMD_SETUP(&cmd, "\x13", 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -638,9 +592,7 @@ static int si2168_select(struct i2c_mux_core *muxc, u32 chan)
+ 	struct si2168_cmd cmd;
+ 
+ 	/* open I2C gate */
+-	memcpy(cmd.args, "\xc0\x0d\x01", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 0;
++	CMD_SETUP(&cmd, "\xc0\x0d\x01", 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -658,9 +610,7 @@ static int si2168_deselect(struct i2c_mux_core *muxc, u32 chan)
+ 	struct si2168_cmd cmd;
+ 
+ 	/* close I2C gate */
+-	memcpy(cmd.args, "\xc0\x0d\x00", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 0;
++	CMD_SETUP(&cmd, "\xc0\x0d\x00", 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -753,25 +703,19 @@ static int si2168_probe(struct i2c_client *client,
+ 	mutex_init(&dev->i2c_mutex);
+ 
+ 	/* Initialize */
+-	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13);
+-	cmd.wlen = 13;
+-	cmd.rlen = 0;
++	CMD_SETUP(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+ 
+ 	/* Power up */
+-	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
+-	cmd.wlen = 8;
+-	cmd.rlen = 1;
++	CMD_SETUP(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+ 
+ 	/* Query chip revision */
+-	memcpy(cmd.args, "\x02", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 13;
++	CMD_SETUP(&cmd, "\x02", 13);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+-- 
+2.17.1
