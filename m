@@ -2,125 +2,93 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE6C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688CDC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257DB218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kRtRCk1N"
+	by mail.kernel.org (Postfix) with ESMTP id 34DDA218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGDKOY (ORCPT
+        id S1727523AbfGDKQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:14:24 -0400
-Received: from mout.gmx.net ([212.227.17.21]:38011 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727249AbfGDKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:14:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562235242;
-        bh=QkCJpGFSgUNuFdvdF9lwK624srSCvigRjgWwmebE/P4=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=kRtRCk1NCtawiZKymneKJ1kr1gNqM/POpzAp1+WiyYsvkHS4ZVdXvgrSJE3Pmzvp7
-         Eds2d3AqppDTIvPO6CgXTL/jorARVApABLf9OalSK/oCCFV3m457vG/6D+hrp9Zxwe
-         sULfo90vdoATnobydHtTfVlvJlqoYtwNMNbGTtms=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LiIgB-1iMjTm4Ai3-00nUMT; Thu, 04
- Jul 2019 12:14:02 +0200
-Date:   Thu, 4 Jul 2019 12:14:01 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Brad Love <brad@nextdimension.cc>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] media: si2168: Refactor command setup code
-Message-ID: <20190704101401.GG22408@latitude>
-References: <c28a0da0-7264-4d23-94f1-3bd614383843@free.fr>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
-Content-Disposition: inline
-In-Reply-To: <c28a0da0-7264-4d23-94f1-3bd614383843@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:wD0VADbn4aMPuFxFWljJEsbuN/IC/v2ewNlb0Sp1w9t1uRtQKl3
- cvhxKK4wBETkDdq6Y8ZgRS/fa0scWKAqD2sPPrUK4q+Xv9x0obPXwNOVm2YIzX9p+K9eyuT
- Q91UvOBKWoPckMerhMat7c6wV3ZyfmXnZFtckijopeHHXgprXs6EjcyGcfqO1aB07okex1f
- k5WxyBlnR4owuDpxwCB+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OuPds79/bws=:HUsAkxiPEFy5oWxjUPaiyL
- Hg9RPnHZ0wpMLcuAcnhl4A2SJkU8S76p+j5m+QbMYj3+yZOg/tC8/5uMg4GxVQC2BahOrLb9m
- sytMd5Hz84/vGHEzlCV422MYwgpI/G3v3mmMEImfkPZ7mgi9bBgvl6QLe3GDEPuSUTdzfKmIF
- iD3X9lDgQBO+7wE4OMxpww3fY9k9QB1k74Rrm9hhECyWVZ9a8VpbrDuStPgLnHdjjvu/Pn4aX
- 3a1GHbvLstOg35ZVAY/ZK2mKv7t0i1ZLQAG7VhsTTFZgaABugllIRCldHUactswXzTHrgVgRJ
- O6cnk0h9w48Qw8LdhpWXO6p1TFCggF3fuMh4gO+rrLO3+FCl6I37Ked1bu+X5AKqHpeO43gam
- lLlg3TRySGS+9VUVGuv+b2s3ZENVHxRihfdN5KI/Knd7A8h94e+P2ldiTLD5eYHwM5udHwpA8
- GxfWaNr0Ezji3ziZXCZKQEJjfcu9IVXdRIEQCD/zm9a1OKsiPQpgUNYzYWJt5uUIiP4fnonSY
- 1Iw42q8Fd+vesHFNnWZhFou/J/SC4eAp6NqqmrgZjkywM4WR4Q1AY8g/qXXY3oxM9t/DROV6W
- kc0nsF+HSIcCbzdAKc+atBKQyU55wNr8UdNDUxErtG6rm/Kn9/kraNDKf8fnW4lDTELl+Fa94
- wVSO/aoMrfYo4km71Y68YacQy1gkrVi9dKJZ3Ymdw1o4u8pk35zuTLRPpHakWzZRNSQY2Pdde
- p7Cuc7fylRnNdiezaWTZ5wunvqOoR65Z4FYX2jt2pe7qNQdgN0zc5MgOXwGBCiQhdeKDPTveL
- P0JCHnueUtsEHTEqVx2A/QEiBNj9v2BZQv3ODqofoZ9WTj4uXpsTRzvsGZF0jaYpdhQIE7ODn
- DhM6r8bIMRm6+ZI0ZUKuqC0n1VpAhTZzxARETEVrG2fme71K1ENW7aXruuiSpR5VONbZzsXIt
- 69L//JqR4ZD1B/xhlToHe7I++kpm9S31BOGaYtZlJb8S9wYenV5MUQuYoddaSP8E9lLk2Akwg
- +uB+WpDPiJw8/UE0iE3szXJ4JnsszrH9EPy16p3e6v3ntYOQH7uYv4okRg6xMGU3iJSVt3whw
- WgVZ9OjnRkWXKk=
+        Thu, 4 Jul 2019 06:16:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49843 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfGDKQN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:16:13 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hiyma-0006Og-Vt; Thu, 04 Jul 2019 12:16:04 +0200
+Message-ID: <1562235363.6641.10.camel@pengutronix.de>
+Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com,
+        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Date:   Thu, 04 Jul 2019 12:16:03 +0200
+In-Reply-To: <20190704094416.4757-1-Anson.Huang@nxp.com>
+References: <20190704094416.4757-1-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Anson,
 
---tVmo9FyGdCe4F4YN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
+> property and related info to support i.MX8MM.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- Add separate line for i.MX8MM in case anything different later for i.MX8MM.
+> ---
+>  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> index 13e0951..c2489e4 100644
+> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - compatible:
+>  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+>  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+> +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+>  - reg: should be register base and length as documented in the
+>    datasheet
+>  - interrupts: Should contain SRC interrupt
+> @@ -46,5 +47,6 @@ Example:
+>  
+>  
+>  For list of all valid reset indices see
+> -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
+> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
+> +<dt-bindings/reset/imx7-reset.h> for i.MX7,
+> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
 
-On Thu, Jul 04, 2019 at 11:58:45AM +0200, Marc Gonzalez wrote:
-> >From ceb5f687f3f7dab2fb9d5b34408d9cf83a0be228 Mon Sep 17 00:00:00 2001
-> From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Date: Mon, 1 Jul 2019 12:58:31 +0200
-> Subject: [PATCH v2] media: si2168: Refactor command setup code
->=20
-> Refactor the command setup code, and let the compiler determine
-> the size of each command.
->=20
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+The last line is misleading, as that file contains reset indices that
+are invalid for i.MX8MM.
 
-Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---tVmo9FyGdCe4F4YN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0d0UUACgkQCDBEmo7z
-X9u1Uw//VzQPr9Ez7Z8bLgzo9u7ElCsmMWEjQhAL05Zvk3O5fxZbwlQYuH4cI2Vl
-rfSwXqOyHoL+6IElX20nPNl4wx+QXMPNAVojH/swSbd2ImO36O/WyUB0DLJ3cdE5
-bUhDCIO/egGGQIlgZx5eqhYeFyhTCvcswMBJr5v3bDLyirf9/E+7EzrdR94c9WMW
-ggjlDcU9qh38wIUGS2kX+lZ6TZsP0O9YUV6Ya/K5lyJVJf/beFUSwD3czFFSdqt9
-agjdUJESv6v93VFodIl5TF2Ql8wFy1SwTzCBA4neZKRuCCZk2PdzXtAe1Nxuc0z/
-Id4U17o7bBuHz21MwNkE7E7C9TdEcZfbGUBdKkmlqpLl8vehD6tWVkbQj5EKWcxl
-ZPwKyEiNvPSfgkOQ/VS8TkcRGpjulMw3eglZchnHnkQR0ERON9R7L7eBqYhZm9g+
-USGrySA+1CA9hZ2B6nnZaYRahXshOCn577fHRXH87bGxOHgjaVDrNrIMJrUkDFJw
-IQfyaZk8GDkpf5LF+OBWKXrxg2vYGmzSu8lleY9cFWM1PTBp1M1CfqpiFbcWkDHl
-7SpK5kDRMWdkECunnE/nb3lQ5JlGbA9Tznqzwfna19bxKplc6k0WXtLGlqfAiHqu
-C6puCwGkaUP+i/YLbaWIG90WL8Ja/dQHRLxBgsOYxdTfERTYMKE=
-=0Q/E
------END PGP SIGNATURE-----
-
---tVmo9FyGdCe4F4YN--
+regards
+Philipp
