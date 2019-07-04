@@ -2,140 +2,123 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511DDC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A872AC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EEC21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBgZfVY7"
+	by mail.kernel.org (Postfix) with ESMTP id 85F2721882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfGDGEw (ORCPT
+        id S1727252AbfGDGF2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:04:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39629 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfGDGEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:04:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so2410648pfe.6;
-        Wed, 03 Jul 2019 23:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=IYNDMwEAAumzRZivDc5Bsr2LbGFMlienhp8YivPF7m8=;
-        b=BBgZfVY7Yvqs01AOHbN9gnMwKmmlegENWbG/bQy8SAOFjEN0jWMh553QE4Vb4b8/zx
-         fc7H4jq19IUIYrfl/1hWM9Jb5Ga0jrYCnFHdtT62VVbG/bTzqYHkLv8HYb9Facm5DRUw
-         K6MdQazi/b4I1q4ansuOBXgG7Ba6PH0BXU/N/K7I5Eaj7m4m4sVSWsYM4QMVY+XxVFsN
-         7xYNbEsYmX8QJbxkrh+HtKrWFXKM+acx63XccFk4CvXq59kh+08xdxgmzP/UGwdexZiF
-         tqVGYtNPIaoE1woxWwdvEf1YvFDaDPV+WWYLcf/27yoa55VUyP5i6itJz9GPUdGSG4IL
-         2MIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=IYNDMwEAAumzRZivDc5Bsr2LbGFMlienhp8YivPF7m8=;
-        b=oNMFFu3r6BQc18xIv9aQTuMJWqo5J9/nm+B8bhk8uyDKM0cupiU3ey89riypQg/zYh
-         xU2/oDp/F7eYScEQ66Gk2HcFhefuqGhJZnDLdO4n9gphsK1qzA4pZ3ychnNXlNUnOXBm
-         I62kbBs6vr50qdibLGwRG7jXlXoS0yjRA2W1I7z3GCm9Ue2rl2U5zbrLiIW8fYPHlsRh
-         Sp26r1eVcdfJZ3TWuQuD3lCq3a3bsJwxfxqiqOyjKuNiSI9dpzjjRwe50K1nSPfZQnnX
-         7u99nwCEg1ZTdClpdwErAzIoFM7EFZAhIq8JyM84ruYGEKGbi0ZVxpoNz7vaFS0Fokni
-         f6MQ==
-X-Gm-Message-State: APjAAAXUVFGGkHUTsXyXi8SJUZj3r2+LMYQ7m0l55gmsPIMG4xMwt1A1
-        qTNO5g1fLcGZF+0bHymDXVk=
-X-Google-Smtp-Source: APXvYqwrpuHzxiXd2Uf2RAlh3u6kWiRxybILi9WncqhlipHt+FeUMIKk8gwQMibe2uLYysEmaK0rxw==
-X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr17799640pjc.63.1562220290787;
-        Wed, 03 Jul 2019 23:04:50 -0700 (PDT)
-Received: from [0.0.0.0] ([80.240.31.150])
-        by smtp.gmail.com with ESMTPSA id v12sm3289916pjk.13.2019.07.03.23.04.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 23:04:50 -0700 (PDT)
-Subject: Re: [PATCH RFC 0/3] Support CPU hotplug for ARM64
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, james.morse@arm.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com,
-        john.garry@huawei.com, jonathan.cameron@huawei.com
-References: <1561720392-45907-1-git-send-email-wangxiongfeng2@huawei.com>
- <2b22cf4d-9646-9f20-41ae-cceb83d9791b@gmail.com>
- <135ee490-a5a6-46c9-208e-81849b20d6b6@huawei.com>
-From:   Jia He <hejianet@gmail.com>
-Organization: ARM
-Message-ID: <7898e483-a8e4-39a2-358f-8fcf838c242f@gmail.com>
-Date:   Thu, 4 Jul 2019 14:04:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 02:05:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3779 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbfGDGF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:05:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 23:05:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
+   d="scan'208";a="169357260"
+Received: from kmsmsx157.gar.corp.intel.com ([172.21.138.134])
+  by orsmga006.jf.intel.com with ESMTP; 03 Jul 2019 23:05:24 -0700
+Received: from pgsmsx110.gar.corp.intel.com (10.221.44.111) by
+ kmsmsx157.gar.corp.intel.com (172.21.138.134) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Thu, 4 Jul 2019 14:05:23 +0800
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.4]) by
+ PGSMSX110.gar.corp.intel.com ([169.254.13.19]) with mapi id 14.03.0439.000;
+ Thu, 4 Jul 2019 14:05:23 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Subject: RE: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Thread-Topic: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Thread-Index: AQHVMUGmUw8CyhUBakCg51utnm9b/6a4aBMAgAFBlaD//59qAIAArWRQ
+Date:   Thu, 4 Jul 2019 06:05:23 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
+References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
+ <20190703140520.GA18473@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
+ <20190704033038.GA6276@lunn.ch>
+In-Reply-To: <20190704033038.GA6276@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <135ee490-a5a6-46c9-208e-81849b20d6b6@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xiongfeng
+> > > > @@ -155,22 +171,26 @@ static int stmmac_mdio_read(struct mii_bus
+> > > > *bus,
+> > > int phyaddr, int phyreg)
+> > > >  	struct stmmac_priv *priv = netdev_priv(ndev);
+> > > >  	unsigned int mii_address = priv->hw->mii.addr;
+> > > >  	unsigned int mii_data = priv->hw->mii.data;
+> > > > -	u32 v;
+> > > > -	int data;
+> > > >  	u32 value = MII_BUSY;
+> > > > +	int data = 0;
+> > > > +	u32 v;
+> > > >
+> > > >  	value |= (phyaddr << priv->hw->mii.addr_shift)
+> > > >  		& priv->hw->mii.addr_mask;
+> > > >  	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw-
+> > > >mii.reg_mask;
+> > > >  	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+> > > >  		& priv->hw->mii.clk_csr_mask;
+> > > > -	if (priv->plat->has_gmac4)
+> > > > +	if (priv->plat->has_gmac4) {
+> > > >  		value |= MII_GMAC4_READ;
+> > > > +		if (phyreg & MII_ADDR_C45)
+> > > > +			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
+> > > > +	}
+> > > >
+> > > >  	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
+> > > MII_BUSY),
+> > > >  			       100, 10000))
+> > > >  		return -EBUSY;
+> > > >
+> > > > +	writel(data, priv->ioaddr + mii_data);
+> > >
+> > > That looks odd. Could you explain why it is needed.
+> > >
+> > > Thanks
+> > > 	Andrew
+> >
+> > Hi Andrew,
+> > This mdio c45 support needed to access DWC xPCS which is a Clause-45
+> 
+> I mean it looks odd doing a write to the data register in the middle of
+> stmmac_mdio_read().
 
-Sorry, I missed your latter mail, you used a emulated SCI interrupt
+MAC is using an indirect access to access mdio devices. In order to read,
+the driver needs to write into both mii_data and mii_address to select 
+c45, read/write command, phy address, address to read, and etc. 
 
----
-Cheers,
-Justin (Jia He)
-
-On 2019/7/4 11:26, Xiongfeng Wang wrote:
-> Hi Justin,
->
-> On 2019/7/4 11:00, Jia He wrote:
->> Hi Xiongfeng
->>
->> It is a little bit awkful that I am also  investigating acpi based cpu hotplug issue silimar with
->>
->> your idea. My question is your purpose to implement the vcpu hotplug in arm64 qemu?
-> Yes, my purpose is to implement the vcpu hotplug in arm64 qemu. So that I can add or remove vcpu
-> without shutting down the Guest OS.
->
-> Thanks,
-> Xiongfeng
->
->> Thanks for the ellaboration
->>
->> ---
->> Cheers,
->> Justin (Jia He)
->>
->> On 2019/6/28 19:13, Xiongfeng Wang wrote:
->>> This patchset mark all the GICC node in MADT as possible CPUs even though it
->>> is disabled. But only those enabled GICC node are marked as present CPUs.
->>> So that kernel will initialize some CPU related data structure in advance before
->>> the CPU is actually hot added into the system. This patchset also implement
->>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
->>> needed to enable CPU hotplug.
->>>
->>> To support CPU hotplug, we need to add all the possible GICC node in MADT
->>> including those CPUs that are not present but may be hot added later. Those
->>> CPUs are marked as disabled in GICC nodes.
->>>
->>> Xiongfeng Wang (3):
->>>     ACPI / scan: evaluate _STA for processors declared via ASL Device
->>>       statement
->>>     arm64: mark all the GICC nodes in MADT as possible cpu
->>>     arm64: Add CPU hotplug support
->>>
->>>    arch/arm64/kernel/acpi.c  | 22 ++++++++++++++++++++++
->>>    arch/arm64/kernel/setup.c | 19 ++++++++++++++++++-
->>>    arch/arm64/kernel/smp.c   | 11 +++++------
->>>    drivers/acpi/scan.c       | 12 ++++++++++++
->>>    4 files changed, 57 insertions(+), 7 deletions(-)
->>>
->> .
->>
--- 
+Weifeng
 
