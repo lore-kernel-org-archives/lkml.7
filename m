@@ -2,100 +2,108 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08899C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F1AC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA64821852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C7521852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfGDJsB (ORCPT
+        id S1727532AbfGDJsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:48:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52915 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfGDJsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:48:01 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hiyLH-0002sf-TQ; Thu, 04 Jul 2019 11:47:51 +0200
-Message-ID: <1562233671.6641.9.camel@pengutronix.de>
-Subject: Re: [PATCH V2 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-Date:   Thu, 04 Jul 2019 11:47:51 +0200
-In-Reply-To: <DB3PR0402MB39167FBAA2A3867148063F83F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190704092600.38015-1-Anson.Huang@nxp.com>
-         <1562233305.6641.8.camel@pengutronix.de>
-         <DB3PR0402MB39167FBAA2A3867148063F83F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
+        Thu, 4 Jul 2019 05:48:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53950 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727367AbfGDJsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:48:32 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3064A859FB;
+        Thu,  4 Jul 2019 09:48:17 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3643E1001DC8;
+        Thu,  4 Jul 2019 09:48:05 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 11:48:04 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     brouer@redhat.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+Message-ID: <20190704114804.10c38b42@carbon>
+In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+        <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 04 Jul 2019 09:48:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-04 at 09:46 +0000, Anson Huang wrote:
-> Hi, Philipp
-> 
-> > On Thu, 2019-07-04 at 17:25 +0800, Anson.Huang@nxp.com wrote:
-> > > From: Anson Huang <Anson.Huang@nxp.com>
-> > > 
-> > > i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> > > property and related info to support i.MX8MM.
-> > > 
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > New patch.
-> > > ---
-> > >  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > index 13e0951..bc24c45 100644
-> > > --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > @@ -7,7 +7,7 @@ controller binding usage.
-> > >  Required properties:
-> > >  - compatible:
-> > >  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
-> > > -	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-> > > +	- For i.MX8MQ/i.MX8MM SoCs should be "fsl,imx8mq-src", "syscon"
-> > 
-> > Please still add the "fsl,imx8mm-src" for i.MX8MM, just in case a significant
-> > difference is discovered later.
-> 
-> OK, then I will add a new line as below:
-> 
-> For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+On Wed,  3 Jul 2019 12:37:50 +0200
+Jose Abreu <Jose.Abreu@synopsys.com> wrote:
 
-Yes, that looks good, thanks.
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -1197,26 +1197,14 @@ static int stmmac_init_rx_buffers(struct stmmac_priv *priv, struct dma_desc *p,
+>  				  int i, gfp_t flags, u32 queue)
+>  {
+>  	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+> -	struct sk_buff *skb;
+> +	struct stmmac_rx_buffer *buf = &rx_q->buf_pool[i];
+>  
+> -	skb = __netdev_alloc_skb_ip_align(priv->dev, priv->dma_buf_sz, flags);
+> -	if (!skb) {
+> -		netdev_err(priv->dev,
+> -			   "%s: Rx init fails; skb is NULL\n", __func__);
+> +	buf->page = page_pool_dev_alloc_pages(rx_q->page_pool);
+> +	if (!buf->page)
+>  		return -ENOMEM;
+> -	}
+> -	rx_q->rx_skbuff[i] = skb;
+> -	rx_q->rx_skbuff_dma[i] = dma_map_single(priv->device, skb->data,
+> -						priv->dma_buf_sz,
+> -						DMA_FROM_DEVICE);
+> -	if (dma_mapping_error(priv->device, rx_q->rx_skbuff_dma[i])) {
+> -		netdev_err(priv->dev, "%s: DMA mapping error\n", __func__);
+> -		dev_kfree_skb_any(skb);
+> -		return -EINVAL;
+> -	}
+> -
+> -	stmmac_set_desc_addr(priv, p, rx_q->rx_skbuff_dma[i]);
+>  
+> +	buf->addr = buf->page->dma_addr;
 
-regards
-Philipp
+We/Ilias added a wrapper/helper function for accessing dma_addr, as it
+will help us later identifying users.
+
+ page_pool_get_dma_addr(page)
+
+> +	stmmac_set_desc_addr(priv, p, buf->addr);
+>  	if (priv->dma_buf_sz == BUF_SIZE_16KiB)
+>  		stmmac_init_desc3(priv, p);
+>  
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
