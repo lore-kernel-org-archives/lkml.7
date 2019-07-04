@@ -2,93 +2,100 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB2C46495
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F269C46495
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E897218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562274842;
-	bh=L5uTJJm8cS0jNeSEyq9UQDrpRWA/RzoGfVSTvhzwtI0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MtHl4DjCibE1n4BtytX1p1bCoB65thK6qnpoGINKtLDD6d6br4MvbSbeWxMXKKP7Y
-	 Grh2xO0CRDR9w6bjylQ5jL3ekMW1mPYEKjlKseb7iS4fcbeD8RID+B27Rddp6Dzz9H
-	 sxH9yBSiJe8Obr9sTykAaKsnyvde2UWN/6GR5fcE=
+	by mail.kernel.org (Postfix) with ESMTP id D70D5218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2h82MMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfGDVOB (ORCPT
+        id S1727518AbfGDVPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 17:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfGDVOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 17:14:00 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C3021850;
-        Thu,  4 Jul 2019 21:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562274839;
-        bh=L5uTJJm8cS0jNeSEyq9UQDrpRWA/RzoGfVSTvhzwtI0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=L+QKnk1QjgZhVbE+BLtQhirvztvvdNVrrXLB8pJs5cNBFXmtAcyrr2FU/Gr6TYhFG
-         a4RrGuNX9zgnsXHc3yAQk9TvTV7v0/u6KWK1iH3Hr8SvUC+EhKoU6ibelBN/fTzBCf
-         3Yyp+elIXhTbmdvHshxgTH40BD/iCrymubuF9R5g=
-Date:   Thu, 4 Jul 2019 14:13:58 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
-Message-Id: <20190704141358.495791a385f7dd762cb749c2@linux-foundation.org>
-In-Reply-To: <de2286d9-6f5c-a79c-dcee-de4225aca58a@arm.com>
-References: <cover.1558547956.git.robin.murphy@arm.com>
-        <20190626073533.GA24199@infradead.org>
-        <20190626123139.GB20635@lakrids.cambridge.arm.com>
-        <20190626153829.GA22138@infradead.org>
-        <20190626154532.GA3088@mellanox.com>
-        <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
-        <20190704115324.c9780d01ef6938ab41403bf9@linux-foundation.org>
-        <20190704195934.GA23542@mellanox.com>
-        <de2286d9-6f5c-a79c-dcee-de4225aca58a@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Jul 2019 17:15:54 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44214 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDVPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 17:15:54 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so7038754otl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 14:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=MQQ07rB52HYdqZ61pXH1qpFuHoSeCNE8eQWm5DgwWXQ=;
+        b=e2h82MMxM5QusbuIi3nIbhQZEHtR5kFU/nUkkFZx5sWrINuwT/dfST5LGTGrdk0of0
+         Rxutpk8embd/ZBpeCuB4tF2xstGtmG3VhwWYmzEgblCfleeE1WJyQbpvzU7CTc7azKiH
+         1clDKRW77SjF7lLqXyEQlgH0LF6A0i58ndW2LtlPMyT7Gcvf2aWACIGJwAHPGNDiTi3O
+         HcvqV6iu+Eb9yIOndD22y66tjf2hG9i5gjODvkaLAnLrKf2cw3bavtwQRgwfAlGyRNTm
+         qmiBMYH8jFIXRWcRMnYUovXZ6h6iAIuC/vlo4Vz+Euk37hR4t8wr1fIG7e/o6Cq8AMm3
+         Eh8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=MQQ07rB52HYdqZ61pXH1qpFuHoSeCNE8eQWm5DgwWXQ=;
+        b=to+zm20BuRnz0Jfl+UwGT0GeVUASsyaAgSmIvi8ml9IY2iGkU7zBysi53+0SzgHzwS
+         TFzRX4CkzNltAUV6zDmvd9ZRgPGiuhIYcet37fChpojrBcAVJ8Jad7xu/yp06prtVCGw
+         l7z4kECOKU3tiOylI9SJPGTbowDgAyDvMpiVOOI1oQxiS7NNiIvNu+ZDynx9kwuuYVic
+         25l1PitEuAirJCZa6LCTcVXwbKaah/GhBaSHvsCllJeErE+95dVliGCAN4ddmzszgwMR
+         IluImZlcEbEW/35wqorK78i0aJLHe9L6rOrOJf3pc2U9WMCh4+8ADhc5WdDOFmE7Nsmw
+         2W2Q==
+X-Gm-Message-State: APjAAAUXLKUE0cZ7uYVnD2O0flPv4jdmWiUNMV/rao+JG1pkTDpqaXa6
+        J5+5y3hDVfYp+ViHYQWywhUi6g==
+X-Google-Smtp-Source: APXvYqxsMa7vLQ93NSh84aEkmHW8QFIZWysP4vFr0NJkhQd2Eo1hNKRNG91e9aM9VDX4aae3UBAGAg==
+X-Received: by 2002:a9d:bcc:: with SMTP id 70mr62005oth.210.1562274952935;
+        Thu, 04 Jul 2019 14:15:52 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id r25sm2277692otp.22.2019.07.04.14.15.50
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Jul 2019 14:15:51 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 14:15:33 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Oleg Nesterov <oleg@redhat.com>, Qian Cai <cai@lca.pw>,
+        axboe@kernel.dk, hch@lst.de, peterz@infradead.org,
+        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] swap_readpage: avoid blk_wake_io_task() if
+ !synchronous
+In-Reply-To: <20190704123218.87a763f771efad158e1b0a89@linux-foundation.org>
+Message-ID: <alpine.LSU.2.11.1907041408040.1762@eggly.anvils>
+References: <1559161526-618-1-git-send-email-cai@lca.pw> <20190704160301.GA5956@redhat.com> <20190704123218.87a763f771efad158e1b0a89@linux-foundation.org>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 21:54:36 +0100 Robin Murphy <robin.murphy@arm.com> wrote:
-
-> >> mm-clean-up-is_device__page-definitions.patch
-> >> mm-introduce-arch_has_pte_devmap.patch
-> >> arm64-mm-implement-pte_devmap-support.patch
-> >> arm64-mm-implement-pte_devmap-support-fix.patch
-> > 
-> > This one we discussed, and I thought we agreed would go to your 'stage
-> > after linux-next' flow (see above). I think the conflict was minor
-> > here.
+On Thu, 4 Jul 2019, Andrew Morton wrote:
+> On Thu, 4 Jul 2019 18:03:01 +0200 Oleg Nesterov <oleg@redhat.com> wrote:
 > 
-> I can rebase and resend tomorrow if there's an agreement on what exactly 
-> to base it on - I'd really like to get this ticked off for 5.3 if at all 
-> possible.
+> > swap_readpage() sets waiter = bio->bi_private even if synchronous = F,
+> > this means that the caller can get the spurious wakeup after return. This
+> > can be fatal if blk_wake_io_task() does set_current_state(TASK_RUNNING)
+> > after the caller does set_special_state(), in the worst case the kernel
+> > can crash in do_task_dead().
+> 
+> I think we need a Fixes: and a cc:stable here?
+> 
+> IIRC, we're fixing 0619317ff8baa2 ("block: add polled wakeup task helper").
 
-I took another look.  Yes, it looks like the repairs were simple.
+Yes, you are right.
 
-Let me now try to compile all this...
+But catch me by surprise: I had been thinking this was a 5.2 regression.
+I guess something in 5.2 (doesn't matter what) has made it significantly
+easier to hit: but now I look at old records, see that I hit it once on
+5.0-rc1, then never again until 5.2.
+
+Thanks, and to Oleg,
+Hugh
