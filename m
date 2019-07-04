@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74607C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B36C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2F7218BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BC8218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfGDQeR (ORCPT
+        id S1727473AbfGDQeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:34:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59672 "EHLO
+        Thu, 4 Jul 2019 12:34:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59631 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbfGDQeG (ORCPT
+        with ESMTP id S1727330AbfGDQeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:34:06 -0400
+        Thu, 4 Jul 2019 12:34:03 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hj4gN-0005g8-AL; Thu, 04 Jul 2019 18:34:03 +0200
-Message-Id: <20190704155609.543745186@linutronix.de>
+        id 1hj4gK-0005fH-1I; Thu, 04 Jul 2019 18:34:00 +0200
+Message-Id: <20190704155608.942106985@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 04 Jul 2019 17:51:58 +0200
+Date:   Thu, 04 Jul 2019 17:51:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch V2 13/25] x86/hotplug: Silence APIC and NMI when CPU is dead
+Subject: [patch V2 07/25] x86/apic: Move ipi header into apic directory
 References: <20190704155145.617706117@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -42,166 +42,302 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support IPI/NMI broadcasting via the shorthand mechanism side
-effects of shorthands need to be mitigated:
-
- Shorthand IPIs and NMIs hit all CPUs including unplugged CPUs
-
-Neither of those can be handled on unplugged CPUs for obvious reasons.
-
-It would be trivial to just fully disable the APIC via the enable bit in
-MSR_APICBASE. But that's not possible because clearing that bit on systems
-based on the 3 wire APIC bus would require a hardware reset to bring it
-back as the APIC would lose track of bus arbitration. On systems with FSB
-delivery APICBASE could be disabled, but it has to be guaranteed that no
-interrupt is sent to the APIC while in that state and it's not clear from
-the SDM whether it still responds to INIT/SIPI messages.
-
-Therefore stay on the safe side and switch the APIC into soft disabled mode
-so it won't deliver any regular vector to the CPU.
-
-NMIs are still propagated to the 'dead' CPUs. To mitigate that add a per
-cpu variable which tells the NMI handler to ignore NMIs. Note, this cannot
-use the stop/restart_nmi() magic which is used in the alternatives code. A
-dead CPU cannot invoke nmi_enter() or anything else due to RCU and other
-reasons.
+Only used locally.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/apic.h      |    1 +
- arch/x86/include/asm/processor.h |    2 ++
- arch/x86/kernel/apic/apic.c      |   35 ++++++++++++++++++++++++-----------
- arch/x86/kernel/nmi.c            |    3 +++
- arch/x86/kernel/smpboot.c        |   13 ++++++++++++-
- 5 files changed, 42 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/ipi.h           |   90 -----------------------------------
+ arch/x86/kernel/apic/apic_flat_64.c  |    3 -
+ arch/x86/kernel/apic/apic_numachip.c |    3 -
+ arch/x86/kernel/apic/bigsmp_32.c     |    9 ---
+ arch/x86/kernel/apic/ipi.c           |    3 -
+ arch/x86/kernel/apic/ipi.h           |   90 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/apic/probe_32.c      |    3 -
+ arch/x86/kernel/apic/probe_64.c      |    3 -
+ arch/x86/kernel/apic/x2apic_phys.c   |    3 -
+ 9 files changed, 103 insertions(+), 104 deletions(-)
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -136,6 +136,7 @@ extern int lapic_get_maxlvt(void);
- extern void clear_local_APIC(void);
- extern void disconnect_bsp_APIC(int virt_wire_setup);
- extern void disable_local_APIC(void);
-+extern void apic_soft_disable(void);
- extern void lapic_shutdown(void);
- extern void sync_Arb_IDs(void);
- extern void init_bsp_APIC(void);
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -425,6 +425,8 @@ DECLARE_PER_CPU_ALIGNED(struct stack_can
- DECLARE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- #endif	/* X86_64 */
- 
-+DECLARE_PER_CPU(bool, cpu_ignore_nmi);
-+
- extern unsigned int fpu_kernel_xstate_size;
- extern unsigned int fpu_user_xstate_size;
- 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1155,25 +1155,38 @@ void clear_local_APIC(void)
- }
- 
- /**
-- * disable_local_APIC - clear and disable the local APIC
-+ * apic_soft_disable - Clears and software disables the local APIC on hotplug
-+ *
-+ * Contrary to disable_local_APIC() this does not touch the enable bit in
-+ * MSR_IA32_APICBASE. Clearing that bit on systems based on the 3 wire APIC
-+ * bus would require a hardware reset as the APIC would lose track of bus
-+ * arbitration. On systems with FSB delivery APICBASE could be disabled,
-+ * but it has to be guaranteed that no interrupt is sent to the APIC while
-+ * in that state and it's not clear from the SDM whether it still responds
-+ * to INIT/SIPI messages. Stay on the safe side and use software disable.
-  */
--void disable_local_APIC(void)
-+void apic_soft_disable(void)
- {
--	unsigned int value;
+--- a/arch/x86/include/asm/ipi.h
++++ /dev/null
+@@ -1,90 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-#ifndef _ASM_X86_IPI_H
+-#define _ASM_X86_IPI_H
 -
--	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
--		return;
-+	u32 value;
+-#ifdef CONFIG_X86_LOCAL_APIC
+-
+-/*
+- * Copyright 2004 James Cleverdon, IBM.
+- *
+- * Generic APIC InterProcessor Interrupt code.
+- *
+- * Moved to include file by James Cleverdon from
+- * arch/x86-64/kernel/smp.c
+- *
+- * Copyrights from kernel/smp.c:
+- *
+- * (c) 1995 Alan Cox, Building #3 <alan@redhat.com>
+- * (c) 1998-99, 2000 Ingo Molnar <mingo@redhat.com>
+- * (c) 2002,2003 Andi Kleen, SuSE Labs.
+- */
+-
+-#include <asm/hw_irq.h>
+-#include <asm/apic.h>
+-#include <asm/smp.h>
+-
+-/*
+- * the following functions deal with sending IPIs between CPUs.
+- *
+- * We use 'broadcast', CPU->CPU IPIs and self-IPIs too.
+- */
+-
+-static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
+-					 unsigned int dest)
+-{
+-	unsigned int icr = shortcut | dest;
+-
+-	switch (vector) {
+-	default:
+-		icr |= APIC_DM_FIXED | vector;
+-		break;
+-	case NMI_VECTOR:
+-		icr |= APIC_DM_NMI;
+-		break;
+-	}
+-	return icr;
+-}
+-
+-static inline int __prepare_ICR2(unsigned int mask)
+-{
+-	return SET_APIC_DEST_FIELD(mask);
+-}
+-
+-static inline void __xapic_wait_icr_idle(void)
+-{
+-	while (native_apic_mem_read(APIC_ICR) & APIC_ICR_BUSY)
+-		cpu_relax();
+-}
+-
+-void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest);
+-
+-/*
+- * This is used to send an IPI with no shorthand notation (the destination is
+- * specified in bits 56 to 63 of the ICR).
+- */
+-void __default_send_IPI_dest_field(unsigned int mask, int vector, unsigned int dest);
+-
+-extern void default_send_IPI_single(int cpu, int vector);
+-extern void default_send_IPI_single_phys(int cpu, int vector);
+-extern void default_send_IPI_mask_sequence_phys(const struct cpumask *mask,
+-						 int vector);
+-extern void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask,
+-							 int vector);
+-
+-extern int no_broadcast;
+-
+-#ifdef CONFIG_X86_32
+-extern void default_send_IPI_mask_sequence_logical(const struct cpumask *mask,
+-							 int vector);
+-extern void default_send_IPI_mask_allbutself_logical(const struct cpumask *mask,
+-							 int vector);
+-extern void default_send_IPI_mask_logical(const struct cpumask *mask,
+-						 int vector);
+-extern void default_send_IPI_allbutself(int vector);
+-extern void default_send_IPI_all(int vector);
+-extern void default_send_IPI_self(int vector);
+-#endif
+-
+-#endif
+-
+-#endif /* _ASM_X86_IPI_H */
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -15,7 +15,8 @@
+ #include <asm/jailhouse_para.h>
+ #include <asm/apic_flat_64.h>
+ #include <asm/apic.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
  
- 	clear_local_APIC();
+ static struct apic apic_physflat;
+ static struct apic apic_flat;
+--- a/arch/x86/kernel/apic/apic_numachip.c
++++ b/arch/x86/kernel/apic/apic_numachip.c
+@@ -18,7 +18,8 @@
  
--	/*
--	 * Disable APIC (implies clearing of registers
--	 * for 82489DX!).
--	 */
-+	/* Soft disable APIC (implies clearing of registers for 82489DX!). */
- 	value = apic_read(APIC_SPIV);
- 	value &= ~APIC_SPIV_APIC_ENABLED;
- 	apic_write(APIC_SPIV, value);
+ #include <asm/apic_flat_64.h>
+ #include <asm/pgtable.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
+ 
+ u8 numachip_system __read_mostly;
+ static const struct apic apic_numachip1;
+--- a/arch/x86/kernel/apic/bigsmp_32.c
++++ b/arch/x86/kernel/apic/bigsmp_32.c
+@@ -4,18 +4,13 @@
+  *
+  * Drives the local APIC in "clustered mode".
+  */
+-#include <linux/threads.h>
+ #include <linux/cpumask.h>
+-#include <linux/kernel.h>
+-#include <linux/init.h>
+ #include <linux/dmi.h>
+ #include <linux/smp.h>
+ 
+-#include <asm/apicdef.h>
+-#include <asm/fixmap.h>
+-#include <asm/mpspec.h>
+ #include <asm/apic.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
+ 
+ static unsigned bigsmp_get_apic_id(unsigned long x)
+ {
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -3,7 +3,8 @@
+ #include <linux/cpumask.h>
+ 
+ #include <asm/apic.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
+ 
+ void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest)
+ {
+--- /dev/null
++++ b/arch/x86/kernel/apic/ipi.h
+@@ -0,0 +1,90 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _ASM_X86_IPI_H
++#define _ASM_X86_IPI_H
++
++#ifdef CONFIG_X86_LOCAL_APIC
++
++/*
++ * Copyright 2004 James Cleverdon, IBM.
++ *
++ * Generic APIC InterProcessor Interrupt code.
++ *
++ * Moved to include file by James Cleverdon from
++ * arch/x86-64/kernel/smp.c
++ *
++ * Copyrights from kernel/smp.c:
++ *
++ * (c) 1995 Alan Cox, Building #3 <alan@redhat.com>
++ * (c) 1998-99, 2000 Ingo Molnar <mingo@redhat.com>
++ * (c) 2002,2003 Andi Kleen, SuSE Labs.
++ */
++
++#include <asm/hw_irq.h>
++#include <asm/apic.h>
++#include <asm/smp.h>
++
++/*
++ * the following functions deal with sending IPIs between CPUs.
++ *
++ * We use 'broadcast', CPU->CPU IPIs and self-IPIs too.
++ */
++
++static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
++					 unsigned int dest)
++{
++	unsigned int icr = shortcut | dest;
++
++	switch (vector) {
++	default:
++		icr |= APIC_DM_FIXED | vector;
++		break;
++	case NMI_VECTOR:
++		icr |= APIC_DM_NMI;
++		break;
++	}
++	return icr;
 +}
 +
-+/**
-+ * disable_local_APIC - clear and disable the local APIC
-+ */
-+void disable_local_APIC(void)
++static inline int __prepare_ICR2(unsigned int mask)
 +{
-+	/* APIC hasn't been mapped yet */
-+	if (!x2apic_mode && !apic_phys)
-+		return;
++	return SET_APIC_DEST_FIELD(mask);
++}
 +
-+	apic_soft_disable();
- 
- #ifdef CONFIG_X86_32
- 	/*
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -512,6 +512,9 @@ NOKPROBE_SYMBOL(is_debug_stack);
- dotraplinkage notrace void
- do_nmi(struct pt_regs *regs, long error_code)
- {
-+	if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_ignore_nmi))
-+		return;
++static inline void __xapic_wait_icr_idle(void)
++{
++	while (native_apic_mem_read(APIC_ICR) & APIC_ICR_BUSY)
++		cpu_relax();
++}
 +
- 	if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
- 		this_cpu_write(nmi_state, NMI_LATCHED);
- 		return;
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -81,6 +81,9 @@
- #include <asm/spec-ctrl.h>
- #include <asm/hw_irq.h>
- 
-+/* Flag for the NMI path telling it to ignore the NMI */
-+DEFINE_PER_CPU(bool, cpu_ignore_nmi);
++void __default_send_IPI_shortcut(unsigned int shortcut, int vector, unsigned int dest);
 +
- /* representing HT siblings of each logical CPU */
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
- EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
-@@ -252,6 +255,8 @@ static void notrace start_secondary(void
- 	unlock_vector_lock();
- 	cpu_set_state_online(smp_processor_id());
- 	x86_platform.nmi_init();
-+	/* Reenable NMI handling */
-+	this_cpu_write(cpu_ignore_nmi, false);
++/*
++ * This is used to send an IPI with no shorthand notation (the destination is
++ * specified in bits 56 to 63 of the ICR).
++ */
++void __default_send_IPI_dest_field(unsigned int mask, int vector, unsigned int dest);
++
++extern void default_send_IPI_single(int cpu, int vector);
++extern void default_send_IPI_single_phys(int cpu, int vector);
++extern void default_send_IPI_mask_sequence_phys(const struct cpumask *mask,
++						 int vector);
++extern void default_send_IPI_mask_allbutself_phys(const struct cpumask *mask,
++							 int vector);
++
++extern int no_broadcast;
++
++#ifdef CONFIG_X86_32
++extern void default_send_IPI_mask_sequence_logical(const struct cpumask *mask,
++							 int vector);
++extern void default_send_IPI_mask_allbutself_logical(const struct cpumask *mask,
++							 int vector);
++extern void default_send_IPI_mask_logical(const struct cpumask *mask,
++						 int vector);
++extern void default_send_IPI_allbutself(int vector);
++extern void default_send_IPI_all(int vector);
++extern void default_send_IPI_self(int vector);
++#endif
++
++#endif
++
++#endif /* _ASM_X86_IPI_H */
+--- a/arch/x86/kernel/apic/probe_32.c
++++ b/arch/x86/kernel/apic/probe_32.c
+@@ -11,7 +11,8 @@
  
- 	/* enable local interrupts */
- 	local_irq_enable();
-@@ -1524,6 +1529,7 @@ void cpu_disable_common(void)
- 	unlock_vector_lock();
- 	fixup_irqs();
- 	lapic_offline();
-+	this_cpu_write(cpu_ignore_nmi, true);
- }
+ #include <asm/apic.h>
+ #include <asm/acpi.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
  
- int native_cpu_disable(void)
-@@ -1534,7 +1540,12 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
+ #ifdef CONFIG_HOTPLUG_CPU
+ #define DEFAULT_SEND_IPI	(1)
+--- a/arch/x86/kernel/apic/probe_64.c
++++ b/arch/x86/kernel/apic/probe_64.c
+@@ -9,7 +9,8 @@
+  * James Cleverdon.
+  */
+ #include <asm/apic.h>
+-#include <asm/ipi.h>
++
++#include "ipi.h"
  
--	clear_local_APIC();
-+	/*
-+	 * Disable the local APIC. Otherwise IPI broadcasts will reach
-+	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-+	 * messages.
-+	 */
-+	apic_soft_disable();
- 	cpu_disable_common();
+ /*
+  * Check the APIC IDs in bios_cpu_apicid and choose the APIC mode.
+--- a/arch/x86/kernel/apic/x2apic_phys.c
++++ b/arch/x86/kernel/apic/x2apic_phys.c
+@@ -3,9 +3,8 @@
+ #include <linux/cpumask.h>
+ #include <linux/acpi.h>
  
- 	return 0;
+-#include <asm/ipi.h>
+-
+ #include "x2apic.h"
++#include "ipi.h"
+ 
+ int x2apic_phys;
+ 
 
 
