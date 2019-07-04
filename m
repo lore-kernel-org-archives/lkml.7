@@ -2,133 +2,125 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52B7C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900ABC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6DE21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562244517;
-	bh=m4Bzxun6iFX7F5+1oR9HThwiI9+XrkJHo5Tvtp5pArQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZII5Jy7ctR3yrcDO3bKThCUbhIcu3Ngzy+3Zc+zwPgsoK3lZtAwpTFiNwNH2a/XrD
-	 gRDlyNzmt8SQr9rSpFsBlvjFLjXOJomsXlBli5r1SdTOPV8fTDzpYHMcEIwNRdeM9n
-	 fINoBHl1UFG9mdtRIRRgrdYX4Lzan/4xX1RJ+/5M=
+	by mail.kernel.org (Postfix) with ESMTP id 5FE6221850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pW28AYFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfGDMse (ORCPT
+        id S1727151AbfGDMtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:48:34 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34750 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfGDMse (ORCPT
+        Thu, 4 Jul 2019 08:49:47 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37351 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfGDMtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:48:34 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so6084561ljg.1;
-        Thu, 04 Jul 2019 05:48:32 -0700 (PDT)
+        Thu, 4 Jul 2019 08:49:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f17so6041342wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NGIpyvEtEXEdDEsWs3lSyzCAiq7xG0Rb+r1M3Ty+FsY=;
-        b=pDpFgsi+MRZvsLbFOTZirUCzaMgToeUcdKHFWL3XJYy8ALaLEYw+QKonY3vgjjPEpU
-         kotOLWqILgWdgwngvGZC+zSdI5k8unTWHjCgVDhLACdiMe6T30sVobNtoIresjTbRLnU
-         iyhq5JhhwyTw86gmG7N3kzz6XGwVHVkrKNWFhlxizIvxP7Uvu/638Qgz+IR1V/eMCoWY
-         uJnHxwZAuy1ysmCo4ZmMDtva3YmCjLPjOh72aPrWm1+bnzgB1fZesQmgiZaK9F57CkuX
-         MpFB+zBauMqdY7PhUTAC2d/mmWg0SDw+qY22XpkZFNY12CBTPUxo0ULJ6x/tYhjc1noT
-         Dy7Q==
+        bh=pJR9Nbd+EOvZUGtVQfqXOkJPh6MJRl4K59V5gxu19nc=;
+        b=pW28AYFsfz6lnQajSXfkgm0Hxur+z4zyo2+Mn98yniclwqQG8ecE+mzYQficvwPFQX
+         CwaUtZA2yFftv6MUGI+P39gNRBhdcckVT6Z0SvAtY1DX2pnwSaoHEly7RoIVzrucF8G6
+         QkNbFnvmuH8BK7WWkIuBgCbD3BytI6VZUw6ERP+uTPion1cNRcbhgGFAWdYp0RPt4EtJ
+         M6uwQDJR9jYJanmQM8MXRDn0xqlApbLdnoCFWaJYCctFnhciK/AIsqBU+gRA1PhQpR1C
+         M+emjXF3OofspwDRs4fsa/6DEY898+4AgcxTrYHV6MOPqtDDritljBieEejXK1CY6+2f
+         kIRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NGIpyvEtEXEdDEsWs3lSyzCAiq7xG0Rb+r1M3Ty+FsY=;
-        b=NcNb+Z0W4hTrtbVHw3p7iZXnHMYczRSyGoQ5BBYCRFd1gTwABu/V6CfAHtMF28XSoa
-         oCuhRj5meKCY9Eocak0THjPIqRIBaO4D99atbro1mWfdA0AguqWvJnkNVO/0+1lKCLfv
-         fhxjYBIz5ky/VVOQt4dL1JdeI2Qt+pJB1hyILj96YwB0sTRhQ3nzTbfhH1AhqR91Cz4t
-         j7lYgFnH53R/GLkaZxy4kw83wzrRIdU2c+RwbRjQ17JgTv1znClHjV8mfFa1vhMKUy/n
-         jmKpShhEtML8L9DsX3inf7JFYktwX1PWbTOHk/u3DKLuNhT7RxDDrFPeFFvjGnu9pKih
-         c/eg==
-X-Gm-Message-State: APjAAAVl5DfLbx/cd/FyPuBXX7M8M5vG12IuebnXqdtvsEATbuSlw66X
-        luCIr6cnGadmcmXvGGCmpcM=
-X-Google-Smtp-Source: APXvYqwjHC1uKAdinYH43yQIrLge10HErloqumUI+ywI0nseKWZP7Ywk5EoVemKvNYgjVhjXCjYNfQ==
-X-Received: by 2002:a2e:9950:: with SMTP id r16mr25211593ljj.173.1562244512214;
-        Thu, 04 Jul 2019 05:48:32 -0700 (PDT)
-Received: from rric.localdomain (83-233-147-164.cust.bredband2.com. [83.233.147.164])
-        by smtp.gmail.com with ESMTPSA id 89sm1126324ljs.48.2019.07.04.05.48.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jul 2019 05:48:31 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 14:48:27 +0200
-From:   Robert Richter <rric@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, jikos@kernel.org,
-        mbenes@suse.cz, Petr Mladek <pmladek@suse.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        paulmck <paulmck@linux.ibm.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        oprofile-list@lists.sf.net, netdev <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 2/3] module: Fix up module_notifier return values.
-Message-ID: <20190704124827.hsuse5g3x5bgdgb3@rric.localdomain>
-References: <20190624091843.859714294@infradead.org>
- <20190624092109.805742823@infradead.org>
- <320564860.243.1561384864186.JavaMail.zimbra@efficios.com>
- <20190624205810.GD26422@redhat.com>
- <20190625074214.GR3436@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pJR9Nbd+EOvZUGtVQfqXOkJPh6MJRl4K59V5gxu19nc=;
+        b=piT3A/oF30w2Orr63Qh2/Z4v0uZxh1n4EYQaIh0u+1Gvcj+V1v0BHYwu9qnH94+TeT
+         w7p1B4E1JOl6XRFpUGTM6OQRLhLOPg0NKB6rRw72KmWJqPYhwNnG3R7eZ9ENzJkxkt8p
+         HuWjF3QXIG8M7QJ4JdGml43WDdqPy36igvFtiJK2Ap/GN4hBw5kd1RCEBoSyMh71aGEz
+         juNRDroqW/YKJ7lpnT9BIilTtllaaGYydDxKpWvOW9++jr/jH7vWPymYfTqEkVDUy9aR
+         tKkE61xYENUZw+OWgHjPh7085Yi5Q8ew3WRC1qc6b5mmWJy9k21qrzgBHy7IOkv3tUg6
+         QMYw==
+X-Gm-Message-State: APjAAAXhVSeNj/PUG5o6PTUY9baQJROToXC5Pf4TXLtxUvcWSHJ0SvZv
+        OaOTlSlS0lh28CQrmdlHadlZgg==
+X-Google-Smtp-Source: APXvYqxkaYPEcpkgDFk9Q6mfIv5r2R6ZColj0lHQ9LOI2sMRzVJDlcVu4dSz0xDEM7lLB6xOpEFGdQ==
+X-Received: by 2002:a1c:18d:: with SMTP id 135mr12614483wmb.171.1562244584926;
+        Thu, 04 Jul 2019 05:49:44 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id s11sm2387689wrr.59.2019.07.04.05.49.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 05:49:44 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 15:49:41 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+Message-ID: <20190704124941.GA9617@apalos>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <20190704120018.4523a119@carbon>
+ <20190704103057.GA29734@apalos>
+ <CAK8P3a3GC6f-xHG7MqZRLhY66Ui4HQVi=4WXR703wqfMNY6A5A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625074214.GR3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAK8P3a3GC6f-xHG7MqZRLhY66Ui4HQVi=4WXR703wqfMNY6A5A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.19 09:42:14, Peter Zijlstra wrote:
-> On Mon, Jun 24, 2019 at 04:58:10PM -0400, Frank Ch. Eigler wrote:
-
-> > From peterz's comments, the patches, it's not obvious to me how one is
-> > to choose between 0 (NOTIFY_DONE) and 1 (NOTIFY_OK) in the case of a
-> > routine success.
+On Thu, Jul 04, 2019 at 02:14:28PM +0200, Arnd Bergmann wrote:
+> On Thu, Jul 4, 2019 at 12:31 PM Ilias Apalodimas
+> <ilias.apalodimas@linaro.org> wrote:
+> > > On Wed,  3 Jul 2019 12:37:50 +0200
+> > > Jose Abreu <Jose.Abreu@synopsys.com> wrote:
 > 
-> I'm not sure either; what I think I choice was:
+> > 1. page pool allocs packet. The API doesn't sync but i *think* you don't have to
+> > explicitly since the CPU won't touch that buffer until the NAPI handler kicks
+> > in. On the napi handler you need to dma_sync_single_for_cpu() and process the
+> > packet.
 > 
->  - if I want to completely ignore the callback, use DONE (per the
->    "Don't care" comment).
+> > So bvottom line i *think* we can skip the dma_sync_single_for_device() on the
+> > initial allocation *only*. If am terribly wrong please let me know :)
 > 
->  - if we finished the notifier without error, use OK or
->    notifier_from_errno(0).
+> I think you have to do a sync_single_for_device /somewhere/ before the
+> buffer is given to the device. On a non-cache-coherent machine with
+> a write-back cache, there may be dirty cache lines that get written back
+> after the device DMA's data into it (e.g. from a previous memset
+> from before the buffer got freed), so you absolutely need to flush any
+> dirty cache lines on it first.
+Ok my bad here i forgot to add "when coherency is there", since the driver
+i had in mind runs on such a device (i think this is configurable though so i'll
+add the sync explicitly to make sure we won't break any configurations).
+
+In general you are right, thanks for the explanation!
+> You may also need to invalidate the cache lines in the following
+> sync_single_for_cpu() to eliminate clean cache lines with stale data
+> that got there when speculatively reading between the cache-invalidate
+> and the DMA.
 > 
-> But yes, its a bit of a shit interface.
+>        Arnd
 
-It looks like it was rarely used in earlier kernels as some sort of
-error detection for the notifier calls, e.g.:
 
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-int profile_handoff_task(struct task_struct * task)
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-{
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-      int ret;
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-      read_lock(&handoff_lock);
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-      ret = notifier_call_chain(&task_free_notifier, 0, task);
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-      read_unlock(&handoff_lock);
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c:      return (ret == NOTIFY_OK) ? 1 : 0;
-1da177e4c3f41524e886b7f1b8a0c1fc7321cac2:kernel/profile.c-}
-
-So NOTIFY_OK was used to state there is no error, while NOTIFY_DONE
-says the notifier was executed and there might have been errors. The
-caller may distinguish the results then.
-
--Robert
+Thanks!
+/Ilias
