@@ -2,247 +2,261 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1BEC4646D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528C8C06510
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63EB21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FEE218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKzoQBSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfGDD6O (ORCPT
+        id S1727372AbfGDD6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 23:58:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60184 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfGDD6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 23:58:13 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B9DD30C5827;
-        Thu,  4 Jul 2019 03:58:13 +0000 (UTC)
-Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D39D42B07C;
-        Thu,  4 Jul 2019 03:58:02 +0000 (UTC)
-Subject: Re: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on
- the_virtio_vsock
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <20190628123659.139576-1-sgarzare@redhat.com>
- <20190628123659.139576-2-sgarzare@redhat.com>
- <05311244-ed23-d061-a620-7b83d83c11f5@redhat.com>
- <20190703104135.wg34dobv64k7u4jo@steredhat>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <07e5bc00-ebde-4dac-d38c-f008fa230b5f@redhat.com>
-Date:   Thu, 4 Jul 2019 11:58:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 3 Jul 2019 23:58:53 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:43832 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfGDD6x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jul 2019 23:58:53 -0400
+Received: by mail-yw1-f66.google.com with SMTP id t2so872684ywe.10;
+        Wed, 03 Jul 2019 20:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CK0G9OZ8DCWe3vF1wOzHFZ3dAxdvPZiD2n1DgHZeubU=;
+        b=vKzoQBSt1weaqDTHZcbDVvitZexnoIlkvDDWG6UQ04h+M0e5OoP234Dh369tQKvHcf
+         XHRZIyelz/ANC0Li3Q972vi72DVlKknC3sUFUiMLi9d0Mu3x5mneBQHWGWadysS9YrVZ
+         /6ylPeatZ3wSgUsPom//wCrSvPGEFehhoXwoDXYNngcza3vhUiiCQAe9QD/A55odu+wW
+         GszrEhx2R9m19iPh0akwZE/RRerJ5QOjybmoFeiMPAokkGae15S9q1/yBkkxE9HnnTUN
+         Ph/kHJRIDYDeTdhagRZdQLOv7zaS4NHmPzwfqUMdKBtQFrE7rzlW37gSR39Kger7yMR0
+         wcAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CK0G9OZ8DCWe3vF1wOzHFZ3dAxdvPZiD2n1DgHZeubU=;
+        b=APWE68hDc4Ld5qVT+Gh/Gm2wHuXylIQbpBfDWelzEr+xOKAcJAQZSFPtFKyuQOgDpT
+         H093G3SlsXqkwx8YKK8u1m84lAM0T3uD+a4sIJgMw7qWUT4ucKpXvx6+2SCCCT8GaBm9
+         CJX6/iAmgrzmJerM0zsWx/AZKkTcWg+zSryClqc//WsmSyWOAruLe6l865+8pX5avFnR
+         +26dlP6IaPtCECvNlSYW0BenmZFxSsOtI9BHJ73imdS1ztPYTn5zwi5pvYKGXYW/pJHT
+         /PPVMfwu3eGArMXuDFzfyOwC7UWm2//xn6P41PipimCFSdu/0pfq3gQ4kfU8GPOao66Z
+         z0Uw==
+X-Gm-Message-State: APjAAAUMMn24zNkilD5ohW8ygf025p/N+ozEgH7OJzdoXXCN9129Xsir
+        RpCV5+DRElFpKuahGIJyTg8Hf2E8s77NM0aGyts=
+X-Google-Smtp-Source: APXvYqyY3GI0IPQwU5ZZloMHbZqaSJqEZ3fz6zE8Z3sh+orn2QGkQewP7GJkUz9eaMTDfDwA/0utBMnIc42E3PVkx5w=
+X-Received: by 2002:a0d:d853:: with SMTP id a80mr25949702ywe.426.1562212731962;
+ Wed, 03 Jul 2019 20:58:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703104135.wg34dobv64k7u4jo@steredhat>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 04 Jul 2019 03:58:13 +0000 (UTC)
+References: <000000000000665152058c0d7ed9@google.com> <20190702060030.GD27702@sol.localdomain>
+In-Reply-To: <20190702060030.GD27702@sol.localdomain>
+From:   JackieLiu <jackieliu2113@gmail.com>
+Date:   Thu, 4 Jul 2019 11:58:40 +0800
+Message-ID: <CAPV7t-2jOgUs-LxiQYxqp_h8RH7X-CxxMcLL2SzOk1kEyc55Ug@mail.gmail.com>
+Subject: Re: INFO: task hung in io_uring_release
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        syzbot <syzbot+94324416c485d422fe15@syzkaller.appspotmail.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Eric Biggers
 
-On 2019/7/3 下午6:41, Stefano Garzarella wrote:
-> On Wed, Jul 03, 2019 at 05:53:58PM +0800, Jason Wang wrote:
->> On 2019/6/28 下午8:36, Stefano Garzarella wrote:
->>> Some callbacks used by the upper layers can run while we are in the
->>> .remove(). A potential use-after-free can happen, because we free
->>> the_virtio_vsock without knowing if the callbacks are over or not.
->>>
->>> To solve this issue we move the assignment of the_virtio_vsock at the
->>> end of .probe(), when we finished all the initialization, and at the
->>> beginning of .remove(), before to release resources.
->>> For the same reason, we do the same also for the vdev->priv.
->>>
->>> We use RCU to be sure that all callbacks that use the_virtio_vsock
->>> ended before freeing it. This is not required for callbacks that
->>> use vdev->priv, because after the vdev->config->del_vqs() we are sure
->>> that they are ended and will no longer be invoked.
->>>
->>> We also take the mutex during the .remove() to avoid that .probe() can
->>> run while we are resetting the device.
->>>
->>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->>> ---
->>>    net/vmw_vsock/virtio_transport.c | 67 +++++++++++++++++++++-----------
->>>    1 file changed, 44 insertions(+), 23 deletions(-)
->>>
->>> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->>> index 9c287e3e393c..7ad510ec12e0 100644
->>> --- a/net/vmw_vsock/virtio_transport.c
->>> +++ b/net/vmw_vsock/virtio_transport.c
->>> @@ -65,19 +65,22 @@ struct virtio_vsock {
->>>    	u32 guest_cid;
->>>    };
->>> -static struct virtio_vsock *virtio_vsock_get(void)
->>> -{
->>> -	return the_virtio_vsock;
->>> -}
->>> -
->>>    static u32 virtio_transport_get_local_cid(void)
->>>    {
->>> -	struct virtio_vsock *vsock = virtio_vsock_get();
->>> +	struct virtio_vsock *vsock;
->>> +	u32 ret;
->>> -	if (!vsock)
->>> -		return VMADDR_CID_ANY;
->>> +	rcu_read_lock();
->>> +	vsock = rcu_dereference(the_virtio_vsock);
->>> +	if (!vsock) {
->>> +		ret = VMADDR_CID_ANY;
->>> +		goto out_rcu;
->>> +	}
->>> -	return vsock->guest_cid;
->>> +	ret = vsock->guest_cid;
->>> +out_rcu:
->>> +	rcu_read_unlock();
->>> +	return ret;
->>>    }
->>>    static void virtio_transport_loopback_work(struct work_struct *work)
->>> @@ -197,14 +200,18 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
->>>    	struct virtio_vsock *vsock;
->>>    	int len = pkt->len;
->>> -	vsock = virtio_vsock_get();
->>> +	rcu_read_lock();
->>> +	vsock = rcu_dereference(the_virtio_vsock);
->>>    	if (!vsock) {
->>>    		virtio_transport_free_pkt(pkt);
->>> -		return -ENODEV;
->>> +		len = -ENODEV;
->>> +		goto out_rcu;
->>>    	}
->>> -	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid)
->>> -		return virtio_transport_send_pkt_loopback(vsock, pkt);
->>> +	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid) {
->>> +		len = virtio_transport_send_pkt_loopback(vsock, pkt);
->>> +		goto out_rcu;
->>> +	}
->>>    	if (pkt->reply)
->>>    		atomic_inc(&vsock->queued_replies);
->>> @@ -214,6 +221,9 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
->>>    	spin_unlock_bh(&vsock->send_pkt_list_lock);
->>>    	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
->>> +
->>> +out_rcu:
->>> +	rcu_read_unlock();
->>>    	return len;
->>>    }
->>> @@ -222,12 +232,14 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
->>>    {
->>>    	struct virtio_vsock *vsock;
->>>    	struct virtio_vsock_pkt *pkt, *n;
->>> -	int cnt = 0;
->>> +	int cnt = 0, ret;
->>>    	LIST_HEAD(freeme);
->>> -	vsock = virtio_vsock_get();
->>> +	rcu_read_lock();
->>> +	vsock = rcu_dereference(the_virtio_vsock);
->>>    	if (!vsock) {
->>> -		return -ENODEV;
->>> +		ret = -ENODEV;
->>> +		goto out_rcu;
->>>    	}
->>>    	spin_lock_bh(&vsock->send_pkt_list_lock);
->>> @@ -255,7 +267,11 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
->>>    			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
->>>    	}
->>> -	return 0;
->>> +	ret = 0;
->>> +
->>> +out_rcu:
->>> +	rcu_read_unlock();
->>> +	return ret;
->>>    }
->>>    static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
->>> @@ -590,8 +606,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->>>    	vsock->rx_buf_max_nr = 0;
->>>    	atomic_set(&vsock->queued_replies, 0);
->>> -	vdev->priv = vsock;
->>> -	the_virtio_vsock = vsock;
->>>    	mutex_init(&vsock->tx_lock);
->>>    	mutex_init(&vsock->rx_lock);
->>>    	mutex_init(&vsock->event_lock);
->>> @@ -613,6 +627,9 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->>>    	virtio_vsock_event_fill(vsock);
->>>    	mutex_unlock(&vsock->event_lock);
->>> +	vdev->priv = vsock;
->>> +	rcu_assign_pointer(the_virtio_vsock, vsock);
->>
->> You probably need to use rcu_dereference_protected() to access
->> the_virtio_vsock in the function in order to survive from sparse.
->>
-> Ooo, thanks!
+I have reproduced this problem and are looking for a solution. maybe
+just use kthread_unpark to replace kthread_stop in io_uring_release
+function.
+
+---
+Jackie Liu
+
+Eric Biggers <ebiggers@kernel.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=882=E6=97=
+=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=882:01=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Do you mean when we check if the_virtio_vsock is not null at the beginning of
-> virtio_vsock_probe()?
-
-
-I mean instead of:
-
-     /* Only one virtio-vsock device per guest is supported */
-     if (the_virtio_vsock) {
-         ret = -EBUSY;
-         goto out;
-     }
-
-you should use:
-
-if (rcu_dereference_protected(the_virtio_vosck, 
-lock_dep_is_held(&the_virtio_vsock_mutex))
-
-...
-
-
+> Jens, any idea about this?
 >
->>> +
->>>    	mutex_unlock(&the_virtio_vsock_mutex);
->>>    	return 0;
->>> @@ -627,6 +644,12 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->>>    	struct virtio_vsock *vsock = vdev->priv;
->>>    	struct virtio_vsock_pkt *pkt;
->>> +	mutex_lock(&the_virtio_vsock_mutex);
->>> +
->>> +	vdev->priv = NULL;
->>> +	rcu_assign_pointer(the_virtio_vsock, NULL);
->>
->> This is still suspicious, can we access the_virtio_vsock through vdev->priv?
->> If yes, we may still get use-after-free since it was not protected by RCU.
-> We will free the object only after calling the del_vqs(), so we are sure
-> that the vq_callbacks ended and will no longer be invoked.
-> So, IIUC it shouldn't happen.
-
-
-Yes, but any dereference that is not done in vq_callbacks will be very 
-dangerous in the future.
-
-Thanks
-
-
->
->> Another more interesting question, I believe we will do singleton for
->> virtio_vsock structure. Then what's the point of using vdev->priv to access
->> the_virtio_vsock? It looks to me we can it brings extra troubles for doing
->> synchronization.
-> I thought about it when I tried to use RCU to stop the worker and I
-> think make sense. Maybe can be another series after this will be merged.
->
-> @Stefan, what do you think about that?
->
-> Thanks,
-> Stefano
+> On Mon, Jun 24, 2019 at 01:21:06AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kerne=
+l.o..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1418bf0aa00=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D28ec3437a53=
+94ee0
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D94324416c485d=
+422fe15
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
+it:
+> > Reported-by: syzbot+94324416c485d422fe15@syzkaller.appspotmail.com
+> >
+> > INFO: task syz-executor.5:8634 blocked for more than 143 seconds.
+> >       Not tainted 5.2.0-rc5+ #3
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this messag=
+e.
+> > syz-executor.5  D25632  8634   8224 0x00004004
+> > Call Trace:
+> >  context_switch kernel/sched/core.c:2818 [inline]
+> >  __schedule+0x658/0x9e0 kernel/sched/core.c:3445
+> >  schedule+0x131/0x1d0 kernel/sched/core.c:3509
+> >  schedule_timeout+0x9a/0x2b0 kernel/time/timer.c:1783
+> >  do_wait_for_common+0x35e/0x5a0 kernel/sched/completion.c:83
+> >  __wait_for_common kernel/sched/completion.c:104 [inline]
+> >  wait_for_common kernel/sched/completion.c:115 [inline]
+> >  wait_for_completion+0x47/0x60 kernel/sched/completion.c:136
+> >  kthread_stop+0xb4/0x150 kernel/kthread.c:559
+> >  io_sq_thread_stop fs/io_uring.c:2252 [inline]
+> >  io_finish_async fs/io_uring.c:2259 [inline]
+> >  io_ring_ctx_free fs/io_uring.c:2770 [inline]
+> >  io_ring_ctx_wait_and_kill+0x268/0x880 fs/io_uring.c:2834
+> >  io_uring_release+0x5d/0x70 fs/io_uring.c:2842
+> >  __fput+0x2e4/0x740 fs/file_table.c:280
+> >  ____fput+0x15/0x20 fs/file_table.c:313
+> >  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+> >  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+> >  exit_to_usermode_loop arch/x86/entry/common.c:168 [inline]
+> >  prepare_exit_to_usermode+0x402/0x4f0 arch/x86/entry/common.c:199
+> >  syscall_return_slowpath+0x110/0x440 arch/x86/entry/common.c:279
+> >  do_syscall_64+0x126/0x140 arch/x86/entry/common.c:304
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x412fb1
+> > Code: 80 3b 7c 0f 84 c7 02 00 00 c7 85 d0 00 00 00 00 00 00 00 48 8b 05=
+ cf
+> > a6 24 00 49 8b 14 24 41 b9 cb 2a 44 00 48 89 ee 48 89 df <48> 85 c0 4c =
+0f 45
+> > c8 45 31 c0 31 c9 e8 0e 5b 00 00 85 c0 41 89 c7
+> > RSP: 002b:00007ffe7ee6a180 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> > RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000412fb1
+> > RDX: 0000001b2d920000 RSI: 0000000000000000 RDI: 0000000000000003
+> > RBP: 0000000000000001 R08: 00000000f3a3e1f8 R09: 00000000f3a3e1fc
+> > R10: 00007ffe7ee6a260 R11: 0000000000000293 R12: 000000000075c9a0
+> > R13: 000000000075c9a0 R14: 0000000000024c00 R15: 000000000075bf2c
+> >
+> > Showing all locks held in the system:
+> > 1 lock held by khungtaskd/1043:
+> >  #0: 00000000ec789630 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0=
+x30
+> > include/linux/rcupdate.h:207
+> > 1 lock held by rsyslogd/8054:
+> >  #0: 00000000a1730567 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2=
+e0
+> > fs/file.c:801
+> > 2 locks held by getty/8167:
+> >  #0: 000000000d85b796 (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 000000006ecd2335 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8168:
+> >  #0: 000000005c58bd1f (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 00000000158ead38 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8169:
+> >  #0: 000000003d373884 (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 0000000026014169 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8170:
+> >  #0: 00000000ba3eabbd (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 0000000003284ce2 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8171:
+> >  #0: 000000009fcb2c0e (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 00000000ac5d0da7 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8172:
+> >  #0: 000000003f4e772c (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 000000000c930b31 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> > 2 locks held by getty/8173:
+> >  #0: 000000002a3615cf (&tty->ldisc_sem){++++}, at:
+> > tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+> >  #1: 00000000dd5c3618 (&ldata->atomic_read_lock){+.+.}, at:
+> > n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > NMI backtrace for cpu 0
+> > CPU: 0 PID: 1043 Comm: khungtaskd Not tainted 5.2.0-rc5+ #3
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+> >  nmi_cpu_backtrace+0x89/0x160 lib/nmi_backtrace.c:101
+> >  nmi_trigger_cpumask_backtrace+0x125/0x230 lib/nmi_backtrace.c:62
+> >  arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c=
+:38
+> >  trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
+> >  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+> >  watchdog+0xbb9/0xbd0 kernel/hung_task.c:289
+> >  kthread+0x325/0x350 kernel/kthread.c:255
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Sending NMI from CPU 0 to CPUs 1:
+> > NMI backtrace for cpu 1
+> > CPU: 1 PID: 2546 Comm: kworker/u4:4 Not tainted 5.2.0-rc5+ #3
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: bat_events batadv_nc_worker
+> > RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
+> > RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:31 [inline]
+> > RIP: 0010:atomic_read include/asm-generic/atomic-instrumented.h:27 [inl=
+ine]
+> > RIP: 0010:rcu_dynticks_curr_cpu_in_eqs kernel/rcu/tree.c:292 [inline]
+> > RIP: 0010:rcu_is_watching+0x62/0xa0 kernel/rcu/tree.c:872
+> > Code: 4c 89 f7 e8 70 50 4c 00 48 c7 c3 b8 5f 03 00 49 03 1e 48 89 df be=
+ 04
+> > 00 00 00 e8 89 25 4c 00 48 89 d8 48 c1 e8 03 42 8a 04 38 <84> c0 75 1e =
+8b 03
+> > 65 ff 0d 5d 72 9f 7e 74 0c 83 e0 02 d1 e8 5b 41
+> > RSP: 0018:ffff8880a10ffbe8 EFLAGS: 00000a02
+> > RAX: 1ffff11015d66b00 RBX: ffff8880aeb35fb8 RCX: ffffffff81628ad7
+> > RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880aeb35fb8
+> > RBP: ffff8880a10ffc00 R08: dffffc0000000000 R09: ffffed1015d66bf8
+> > R10: ffffed1015d66bf8 R11: 1ffff11015d66bf7 R12: dffffc0000000000
+> > R13: ffff8880a93c9b00 R14: ffffffff8881f258 R15: dffffc0000000000
+> > FS:  0000000000000000(0000) GS:ffff8880aeb00000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 000000c434bbb720 CR3: 000000008e6fa000 CR4: 00000000001406e0
+> > Call Trace:
+> >  rcu_read_lock include/linux/rcupdate.h:594 [inline]
+> >  batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:407 [inline]
+> >  batadv_nc_worker+0x115/0x600 net/batman-adv/network-coding.c:718
+> >  process_one_work+0x814/0x1130 kernel/workqueue.c:2269
+> >  worker_thread+0xc01/0x1640 kernel/workqueue.c:2415
+> >  kthread+0x325/0x350 kernel/kthread.c:255
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
