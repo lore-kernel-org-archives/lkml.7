@@ -2,109 +2,97 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C0C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E962AC06514
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA2A21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:00:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ItChtcYj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ofOwDzQ5"
+	by mail.kernel.org (Postfix) with ESMTP id B7F5A21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562223763;
+	bh=0oIb/xCT3XLGQm//gpuwzJhTfVxSSNj2HGbdu4q2mfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aSqVaGIkXZnugOBUcX5XQ9vhFk4sxZzxhEmJO2PyY3jCGheKRgNVMCpxEwLCBwVs0
+	 8VE9scgiUKdPs5Xa9dnTRfzEkF9smbN0bUVcYvPT4INf+SIX0BKfDQQYwdhYAcMd/S
+	 vn+Kg1tq4PZqL9+6WPQhTzR/2fSz5V7OVOFjrQRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfGDG7y (ORCPT
+        id S1727205AbfGDHCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:59:54 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:40357 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725920AbfGDG7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:59:54 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id F302621B34;
-        Thu,  4 Jul 2019 02:59:52 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 04 Jul 2019 02:59:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=G7SayW4S/aV3JUo1cLGnykNspda
-        yDsjsUFvSmkGU34E=; b=ItChtcYjFQ8z/59e58hzqb+Y4S4LwWxLstgxcDOd7qA
-        eydiMbxP7GfkHMFKt2HyfGu4y5IJeIg/U0efAUi+uP3CRRyYivYvkGoGIe4xRSC5
-        8PBkM7VKCvRri52y4jN2rFaAeRU/fGsT85P31zaLqxgggZHhrqqpbbvS2VfN/QMr
-        GdRuzk1Dusj9sNhVnqtHo5jSUg8pAHDEP7IqrkiOj9aBjMlnax3Qe0bB5eUqGYUB
-        kpEfq4tM6Sx2DD6ISeT0gteW6jY2IPo1NcuzqgSr2noDvo9TxicAhR5ve4hPnAYn
-        478PChhblcZbB0RvR/YYhQKAmN331uCDF+gXj0ew8fA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=G7SayW
-        4S/aV3JUo1cLGnykNspdayDsjsUFvSmkGU34E=; b=ofOwDzQ5Th1gipKBkSq0ZU
-        6bU3U3aP3OjJH8KynrgdStVZJa/xpOGgHJCCg+dsGet3wkASWykMBHj2Oki9dc+5
-        7DFUEIYfgwz283RGyerxJXJ7Q1TcO1VIhIpeh7QkhbPo74fJvUdlgklSRlSS7K8S
-        bo+hfqioTx8gjXQ0u16FhlgDSxTCSk4ssmIV89dxtdTFXBebsn/XMQySML8zcU/4
-        CnbloIXiRkly2P/dHlpZSsXV2ZVVxPoXH9l4QrUhWceSt1LYXU+FW9D8A08cEPgY
-        UWfyOtWL8PwWkMCvM7akBQDdnxgj1CzqL0UoK7xPCAdyRQuVGlf4yh3UlFfHS5kg
-        ==
-X-ME-Sender: <xms:56MdXcwIbrPJH6op_gsEorIp4RXoRzsh9f4eQSoTA08OQdDladUK8w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrfedugdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:56MdXSLkJS70dqcI3VafeSVXIyQeTQ2ijuXoUBXKuoTCiIinhl53oA>
-    <xmx:56MdXXu0lds92EqDSQ7spxBruZbTQbOQ16QTqFumByBmZsc60rjhig>
-    <xmx:56MdXUAy5dJWfsfwsgs0V0U5oOCUupfKDt1g09E5Ces9GxCD28OQcA>
-    <xmx:6KMdXS_Uupu6CdNsVX48NAuitjnxYOXK7GEBv-Gt6yWbN5t9XRklQQ>
+        Thu, 4 Jul 2019 03:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfGDHCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 848A2380084;
-        Thu,  4 Jul 2019 02:59:51 -0400 (EDT)
-Date:   Thu, 4 Jul 2019 08:59:49 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9F8A2133F;
+        Thu,  4 Jul 2019 07:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562223761;
+        bh=0oIb/xCT3XLGQm//gpuwzJhTfVxSSNj2HGbdu4q2mfo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kjkmVNUHh0i1R1QHDk14Ed8hJdp8t230pxRxwJn6cLt81ivp639YfvpxGTRi7tn0h
+         /J/az8RDFGBthzhsjX6ZC/A/W8fGVcfRvEDa35V/zj0ML+uR/v7GTNksOtZd+31Wkp
+         L//KiTeWpyM1eP0YTr9N/I570G2ubODK7xbbowhI=
+Date:   Thu, 4 Jul 2019 09:02:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pawel Laszczak <pawell@cadence.com>
-Subject: Re: linux-next: build failure after merge of the usb and usb-gadget
- trees
-Message-ID: <20190704065949.GA32707@kroah.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCHv5 1/2] dt-bindings: coresight: Change CPU phandle to
+ required property
+Message-ID: <20190704070239.GB32707@kroah.com>
+References: <cover.1561659046.git.saiprakash.ranjan@codeaurora.org>
+ <2afedb941294af7ba0658496b4aca3759a4e43ff.1561659046.git.saiprakash.ranjan@codeaurora.org>
+ <CANLsYkxvh+qUDvqG45o7qh61Noq=a=BJ4-p68ipdzxYt6n5bNA@mail.gmail.com>
+ <8fb5947e-acf8-faff-5594-2a32151ebee7@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704163458.63ed69d2@canb.auug.org.au>
+In-Reply-To: <8fb5947e-acf8-faff-5594-2a32151ebee7@codeaurora.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Thu, Jul 04, 2019 at 12:13:40PM +0530, Sai Prakash Ranjan wrote:
+> On 7/4/2019 1:32 AM, Mathieu Poirier wrote:
+> > Hi Greg,
+> > 
+> > On Thu, 27 Jun 2019 at 12:15, Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > 
+> > > Do not assume the affinity to CPU0 if cpu phandle is omitted.
+> > > Update the DT binding rules to reflect the same by changing it
+> > > to a required property.
+> > > 
+> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > 
+> > I'm all good with this patch - can you pick this up for the coming
+> > merge window?  If not I'll simply keep it in my tree for 5.4.
+> > 
+> > Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > 
 > 
-> After merging the usb tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_output_dwc3_log_ctrl':
-> trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
-> 
-> Caused by commit
-> 
->   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
-> 
-> I have used the usb tree from next-20190703 for today.
-> 
-> This also occurs in the usb-gadget tree so I have used the version of
-> that from next-20190703 as well.
+> I think you missed adding Greg, adding him now ;)
 
-Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can you
-take a look at this to see if I messed something up?
-
-thanks,
-
-greg k-h
+I don't see any patch here for me to actually take :(
