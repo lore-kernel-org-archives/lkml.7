@@ -2,107 +2,99 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1641DC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2992FC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3EF2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562245047;
-	bh=2hR0pY5iMZ0Mzal+gCP9kE9xa8QstyB6RpnG93AvzHs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CD3X+jox2PHOJYUY6yrPfy9hWzov0nU+p8k/bEl570m7WPHjqO1pFdIL+h0n9x8Pw
-	 sJqR37KA+QUr4yKBT+vUznkG7gf/Z1udJf/8XCiGydXzQnR5esuhBA9ftH0KENz2ug
-	 8h+ZqKUI9KaVQKWvJnYm1ZNv8ItydmhUfq5mdPuk=
+	by mail.kernel.org (Postfix) with ESMTP id 0A09E2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfGDM50 (ORCPT
+        id S1727160AbfGDM53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 4 Jul 2019 08:57:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45889 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfGDM50 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jul 2019 08:57:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbfGDM5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:57:25 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD5A2189E;
-        Thu,  4 Jul 2019 12:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562245045;
-        bh=2hR0pY5iMZ0Mzal+gCP9kE9xa8QstyB6RpnG93AvzHs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qcAuhQT1PHD9pQKa/lHgF03Ldk6XALhEeSyrHW5bffmiBE++WtH6fMbLo4QYi/GOv
-         5kWfA0q69x+rOAudE46fTUW1sIDe1ZcpCqCNRI3XMFwpIYfyHDtSXjRf58d6tWTClv
-         7Zh4YprLD3emUcuAp8jtaju6FNfqcUxz02tWIQUM=
-Received: by mail-lj1-f180.google.com with SMTP id k18so6061650ljc.11;
+Received: by mail-wr1-f67.google.com with SMTP id f9so6519434wre.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:57:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kZ8O9igfNu2jDct8fmpQWqIo3ibbuDI4N9jrgAm5kO0=;
+        b=CxY0Y5JWPQHNIcxIAWi/VNOXRSsPZxOxZfFdflFrErMrJJsNCsN+WJqlhdB2CtbWOA
+         gzQdPn8e6dsNWc59EFzJUcLiPDbR3C1AZ2pMaqBZHM5odLC0Ev2C3+fovL+4MyMhzw3g
+         bpsO0g81fywBy3QD6ittzPOCzeE1AUlYghO0QRsSpYbTWgxO/fHgTdubpXg6Wqyq+IrU
+         KUrpfwG9QHqg5iBMOlPxFoj6mgW+HmZhkIhyVm+A4v88vxFKEvQNgJr2bHz7xMl6yvdp
+         gCZrajaD4AvDDeqtffTNLf4qGHvrUqnXe67Fnltz4P8KkiFPX6A/3MLGEb/E4VX1B9A2
+         MSVw==
+X-Gm-Message-State: APjAAAXL5CxTl8ox/SGDICApivN4fpxpzOJ5yCgnGxe2YaAWXHo+U5hu
+        OqKmjgTPUeNbfsl48yNKER666p5x
+X-Google-Smtp-Source: APXvYqwpJnzCn5prCMUYIhFMheW8aSnygRt0kL5A7Ld7D82m8n+d7HK+a1iZfW4aQbOf2Jcg3o7zLw==
+X-Received: by 2002:adf:d4c1:: with SMTP id w1mr27864346wrk.229.1562245044728;
         Thu, 04 Jul 2019 05:57:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAX/3DQuFApZUyR9a5dL3+ZSR+ajoKfmzfq9fmN0yQQnGi05yRZU
-        YvgGMwPlnHZRkI/KdybsK4rjc9g84CHLJCqhgj8=
-X-Google-Smtp-Source: APXvYqz7Yne2c4j0yOEnBWVsz0GsuIQwXj2ZqjRNKVMgq/yoVqwQylgQcqjaP2XNuRfBeGt5nYb/NmZMgx/hoZ+2Ot4=
-X-Received: by 2002:a2e:50e:: with SMTP id 14mr25223510ljf.5.1562245043093;
- Thu, 04 Jul 2019 05:57:23 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id a64sm9819712wmf.1.2019.07.04.05.57.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 05:57:24 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] torture: remove exporting of internal functions
+Date:   Thu,  4 Jul 2019 15:57:19 +0300
+Message-Id: <20190704125719.31290-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
- <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 4 Jul 2019 14:57:11 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdYJKe019CKT=hPRXLejMdZ1KNzxpFh60ruToKOqnAorQ@mail.gmail.com>
-Message-ID: <CAJKOXPdYJKe019CKT=hPRXLejMdZ1KNzxpFh60ruToKOqnAorQ@mail.gmail.com>
-Subject: Re: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
- fsl-edma: support little endian for edma driver"
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Andy Tang <andy.tang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 at 04:10, Peng Ma <peng.ma@nxp.com> wrote:
->
-> Hi Krzysztof,
->
-> I am sorry, It is my mistake to forget about VF50 used EDMA IP with little endian.
-> The Register(CHCFG0 - CHCFG15) of our platform designed as follows:
-> *-------------------------------------------------------------------------------*
-> |     Offset   | Big endian Register| Little endian Register|
-> |---------------------|--------------------------|-----------------------------|
-> |     0x0     |     CHCFG0    |     CHCFG3      |
-> |---------------------|--------------------------|-----------------------------|
-> |     0x1     |     CHCFG1    |     CHCFG2      |
-> |---------------------|--------------------------|-----------------------------|
-> |     0x2     |     CHCFG2    |     CHCFG1      |
-> |---------------------|--------------------------|-----------------------------|
-> |     0x3     |     CHCFG3    |     CHCFG0      |
-> |---------------------|--------------------------|-----------------------------|
-> |     ...      |        ......     |         ......      |
-> |---------------------|--------------------------|-----------------------------|
-> |     0xC     |     CHCFG12   |     CHCFG15     |
-> |---------------------|--------------------------|-----------------------------|
-> |     0xD     |     CHCFG13   |     CHCFG14     |
-> |---------------------|--------------------------|-----------------------------|
-> |     0xE     |     CHCFG14   |     CHCFG13     |
-> |---------------------|--------------------------|-----------------------------|
-> |     0xF     |     CHCFG15   |     CHCFG12     |
-> *-------------------------------------------------------------------------------*
->
-> So we need this patch, I make some changes,Please help me to test attatchment on VF50 board,
-> Thanks.
+The functions torture_onoff_cleanup, torture_shuffle_cleanup are declared
+as static and marked as EXPORT_SYMBOL. It's a bit confusing for an
+internal function to be exported. The area of visibility for such function
+is its .c file and all other modules. Other *.c files of the same module
+can't use it, despite all other modules can. Relying on the fact that these
+are the internal functions and they are not a crucial part of the API, the
+patch removes the EXPORT_SYMBOL marking of the torture_onoff_cleanup and
+torture_shuffle_cleanup. The patch complements commit cc47ae083026
+("rcutorture: Abstract torture-test cleanup").
 
-With the patch VF50 boots fine.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ kernel/torture.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-BTW, Colibri VF50 nicely boots from network almost out of the box so
-it is easy to add it to automated tests for simple boot tests. This
-way you do not have to manually test it on such platform...
+diff --git a/kernel/torture.c b/kernel/torture.c
+index 17b2be9bde12..fbbcc4abe426 100644
+--- a/kernel/torture.c
++++ b/kernel/torture.c
+@@ -263,7 +263,6 @@ static void torture_onoff_cleanup(void)
+ 	onoff_task = NULL;
+ #endif /* #ifdef CONFIG_HOTPLUG_CPU */
+ }
+-EXPORT_SYMBOL_GPL(torture_onoff_cleanup);
+ 
+ /*
+  * Print online/offline testing statistics.
+@@ -449,7 +448,6 @@ static void torture_shuffle_cleanup(void)
+ 	}
+ 	shuffler_task = NULL;
+ }
+-EXPORT_SYMBOL_GPL(torture_shuffle_cleanup);
+ 
+ /*
+  * Variables for auto-shutdown.  This allows "lights out" torture runs
+-- 
+2.21.0
 
-Best regards,
-Krzysztof
