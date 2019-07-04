@@ -2,116 +2,116 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA2AC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7864CC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B9921738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5718821670
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EKoirI07"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxZiuhbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfGDSSk (ORCPT
+        id S1726911AbfGDSWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 14:18:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52824 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfGDSSk (ORCPT
+        Thu, 4 Jul 2019 14:22:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34270 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfGDSWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 14:18:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so6538792wms.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 11:18:38 -0700 (PDT)
+        Thu, 4 Jul 2019 14:22:09 -0400
+Received: by mail-pl1-f194.google.com with SMTP id i2so3429386plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 11:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cOccgZnQy5hIx+UTygBn7LoMMwKQq9FVum5dh+JbdE8=;
-        b=EKoirI072GmHOj8HB2RBKVdYqs6cEH8BvDM8nILLOYG6hI6Q5wx0RzDGU41F5KsaJw
-         VRagy77A4oOqDf2TRo55AadtWGQOWjn7dYnWAdb1ILyYfenI2nU73ko+QdJcFCVYNfzS
-         2VBLDCPqzGp3biOoNKKraK2ZFqKfNZD6+kKNEKydAligwngxauAfriDhNWu5Dpkx2/ra
-         YDNtcuvI1MkExGCsNZmC0emsWLve/oxd16kl1Co723s9cdqXisypx2+eQ7du50Wsggw1
-         77mzJn3LlDhEAKAtTV8kx2ruV/qzMBVGt9XHCyhJqIQYQB2hoeKZ9YB+2NqFbghyhGZZ
-         rmMg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=49RKdZb8IIkI3+0BX8wWpyu8JU1kt+cg0DgkZkLzmHQ=;
+        b=bxZiuhbvu7gj8r66QOfCt00uKvIwZGfRFI7lp3ObZkA0J8E7LZqzN7oVsp5hGVxHIr
+         bxdHg4b6TP7BtDl2ZBoQdNlax8PghFlFmcysYTK/ju8LcoZ8m8m19UdonvTku9pWkgs2
+         Iaa7US2TJ0WtgNgnBtbWdL7QZIQlg9jRN0LWoQpguW7/DBPGYG9j2k0bVSK0cP5tQLBI
+         UP+ztfnbWV/kS18DUDIIq1Bw/ji+CYnftI3Au1MpqhLMEpThBe0N4ryRHnJNTKf76fWa
+         GDndeDIp2DhbEYehzut1mQQ7WwnsyCVsOsv74wErEsiQz/r7a6hQ6kQLAwY6+kHfR3AD
+         pXdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cOccgZnQy5hIx+UTygBn7LoMMwKQq9FVum5dh+JbdE8=;
-        b=QYLmw7ue/nQ81BISM8rqts7EcWRRgLUfqgirTDJb4EDYnmRHhrG2mFhDU5F+uworMA
-         t4xdqkyizSjWm2fip1HAcm+zMnBE0h6Ag9rzsCxyRaWoJd5HtmGP4IX92XNhW7YPKZg/
-         CU6a+VLaEPFu63GBNmmf8a6fPNgJIMTDy+MGi27S1Ju1SdBdkS1pQ2kun6qKyRZgRy9N
-         rA3EQ01AKv1M05AeXRAeE9O1uzHKAAz0bWL13UnkPbOC1R6o2dWV6RN0FBROghiSmj4X
-         C45fcJEBw7zXEZscLOl91vmo/wMnrzCMstcOehsi1rXrEj5DVB/4AWwogeExEQrUf1Pm
-         QM6Q==
-X-Gm-Message-State: APjAAAUUq9MGB8suoqLq48nz7sA6Ca2jZKeY02TIP4zRAynM1AbYseFZ
-        P7JIA6Qlr7yL16mDZ5/SZRfUcysnrHlmw1EF0kzHVA==
-X-Google-Smtp-Source: APXvYqxNfP87ju03Meqbw78KhYgfN2HcOA7izel91RqJkpCs3L9lcKwwZwtsYdlkaI0Dy54Q1M0YBpXHku0YgKavgh8=
-X-Received: by 2002:a7b:c0d0:: with SMTP id s16mr487196wmh.136.1562264317799;
- Thu, 04 Jul 2019 11:18:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=49RKdZb8IIkI3+0BX8wWpyu8JU1kt+cg0DgkZkLzmHQ=;
+        b=gMilEY+R5GyGLCsazwKWKL8Tag5neLlaJoFUtL/W/50Se/on3ulrgFq+j5zuHzmS01
+         GPbyjFKFclDlfv7zvrbDf4zkNzsKFyNq9bcMiohBKUhIDD38w+fpoo/Eowdq+1A7RNB1
+         mKfxi1T9fu3ymkIREkqXjRaqulrmsM8TCWTtXCB7SmxfB2QL6PJY1uodQIGBMcMZ7Nk3
+         SzrbP7W9NROrElqAHnGyJXVUCtRY2x19VeB4Ucbr8qJQmOHQ35fhbKbyt8tiuY25QdfG
+         iHgL2ccgZUgAYzraXBqPAZACF6mvZs45uuSc0Vi0PasXxEsATw3ZgCD4zcWcE7ElYHp0
+         KPow==
+X-Gm-Message-State: APjAAAXmsNOEq7M7KmI2IbfR2tHYx7VHx0ZsptzMpe3JQWFMNcSyKl1N
+        HQfaYSLsW3MrE1DflqkHsonEqg==
+X-Google-Smtp-Source: APXvYqwEPNKxrXbrR8Sdnw3wDwHG5QxDj+xW59knWJIH0vuARI+MCJ+AEmaVAbAb7mYceyZZ81YJ5A==
+X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr51796069plj.121.1562264528372;
+        Thu, 04 Jul 2019 11:22:08 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k16sm6647443pfa.87.2019.07.04.11.22.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 11:22:07 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 11:22:05 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     ohad@wizery.com, jeffrey.l.hugo@gmail.com, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom: q6v5-mss: Fix build error without
+ QCOM_MDT_LOADER
+Message-ID: <20190704182205.GH1263@builder>
+References: <20190704064649.51748-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
- <CACRpkdboWWKfaTu=TKqnZgjy4HNWr+fjmQXLBBmePsaDihkbSA@mail.gmail.com>
- <be57afd0-5a81-4d79-3ee4-1fb23644f424@arm.com> <CACRpkdbgyWmMM+3L6rjpWr4Z=qu4w6cri3cv0DG51JpFd9Ej4g@mail.gmail.com>
-In-Reply-To: <CACRpkdbgyWmMM+3L6rjpWr4Z=qu4w6cri3cv0DG51JpFd9Ej4g@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 4 Jul 2019 20:18:21 +0200
-Message-ID: <CAKv+Gu_=4P=caK4mFiAf+sqnKSZciCH0w8wUp19ef4xDVLH9-w@mail.gmail.com>
-Subject: Re: [tip:irq/core] gpio: mb86s7x: Enable ACPI support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-tip-commits@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704064649.51748-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 at 09:52, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Jul 3, 2019 at 3:50 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > On 03/07/2019 13:26, Linus Walleij wrote:
-> > > On Wed, Jul 3, 2019 at 11:24 AM tip-bot for Ard Biesheuvel
-> > > <tipbot@zytor.com> wrote:
-> > >
-> > >> Committer:  Marc Zyngier <marc.zyngier@arm.com>
-> > >> CommitDate: Wed, 29 May 2019 10:42:19 +0100
-> > >>
-> > >> gpio: mb86s7x: Enable ACPI support
-> > >>
-> > >> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
-> > >> support for ACPI GPIO interrupts routed via platform interrupts, by
-> > >> wiring the two together via the to_irq() gpiochip callback.
-> > >>
-> > >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > >> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > >> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> > >
-> > > OK!
-> > >
-> > >> +#include "gpiolib.h"
-> > >> +
-> > >
-> > > But this isn't needed anymore, is it?
-> >
-> > You tell me! ;-)
-> >
-> > > I can try to remember to remove it later though.
-> >
-> > Yeah, please send a separate patch. tip is stable, and we can't roll
-> > this back.
->
-> I'll just fix it in the GPIO tree after -rc1.
-> Made a personal TODO note!
->
+On Wed 03 Jul 23:46 PDT 2019, YueHaibing wrote:
 
-Why wouldn't it be needed anymore?
+> If QCOM_Q6V5_MSS is set but QCOM_MDT_LOADER is not,
+> building will fails:
+> 
+> drivers/remoteproc/qcom_q6v5_mss.o: In function `q6v5_start':
+> qcom_q6v5_mss.c:(.text+0x3260): undefined reference to `qcom_mdt_read_metadata'
+> 
+> Add QCOM_MDT_LOADER dependency for QCOM_Q6V5_MSS.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: f04b91383456 ("remoteproc: qcom: q6v5-mss: Support loading non-split images")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Thanks for catching this, Applied.
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/remoteproc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 9b0f0cb..28ed306 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -116,6 +116,7 @@ config QCOM_Q6V5_MSS
+>  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>  	depends on QCOM_SYSMON || QCOM_SYSMON=n
+>  	select MFD_SYSCON
+> +	select QCOM_MDT_LOADER
+>  	select QCOM_Q6V5_COMMON
+>  	select QCOM_RPROC_COMMON
+>  	select QCOM_SCM
+> -- 
+> 2.7.4
+> 
+> 
