@@ -2,93 +2,97 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688CDC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E2C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DDA218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C58218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfGDKQO (ORCPT
+        id S1727558AbfGDKRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:16:14 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49843 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfGDKQN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:16:13 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hiyma-0006Og-Vt; Thu, 04 Jul 2019 12:16:04 +0200
-Message-ID: <1562235363.6641.10.camel@pengutronix.de>
-Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Anson.Huang@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com,
-        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Date:   Thu, 04 Jul 2019 12:16:03 +0200
-In-Reply-To: <20190704094416.4757-1-Anson.Huang@nxp.com>
-References: <20190704094416.4757-1-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 4 Jul 2019 06:17:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49152 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727249AbfGDKRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:17:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 824E930001E2;
+        Thu,  4 Jul 2019 10:17:05 +0000 (UTC)
+Received: from localhost (ovpn-117-206.ams2.redhat.com [10.36.117.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6416118B93;
+        Thu,  4 Jul 2019 10:17:02 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 11:17:01 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, netdev@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on
+ the_virtio_vsock
+Message-ID: <20190704101701.GD1609@stefanha-x1.localdomain>
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+ <20190628123659.139576-2-sgarzare@redhat.com>
+ <05311244-ed23-d061-a620-7b83d83c11f5@redhat.com>
+ <20190703104135.wg34dobv64k7u4jo@steredhat>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
+Content-Disposition: inline
+In-Reply-To: <20190703104135.wg34dobv64k7u4jo@steredhat>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 04 Jul 2019 10:17:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
 
-On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> property and related info to support i.MX8MM.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- Add separate line for i.MX8MM in case anything different later for i.MX8MM.
-> ---
->  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> index 13e0951..c2489e4 100644
-> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  - compatible:
->  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
->  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-> +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
->  - reg: should be register base and length as documented in the
->    datasheet
->  - interrupts: Should contain SRC interrupt
-> @@ -46,5 +47,6 @@ Example:
->  
->  
->  For list of all valid reset indices see
-> -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
-> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
-> +<dt-bindings/reset/imx7-reset.h> for i.MX7,
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
+--tEFtbjk+mNEviIIX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The last line is misleading, as that file contains reset indices that
-are invalid for i.MX8MM.
+On Wed, Jul 03, 2019 at 12:41:35PM +0200, Stefano Garzarella wrote:
+> On Wed, Jul 03, 2019 at 05:53:58PM +0800, Jason Wang wrote:
+> > On 2019/6/28 =E4=B8=8B=E5=8D=888:36, Stefano Garzarella wrote:
+> > Another more interesting question, I believe we will do singleton for
+> > virtio_vsock structure. Then what's the point of using vdev->priv to ac=
+cess
+> > the_virtio_vsock? It looks to me we can it brings extra troubles for do=
+ing
+> > synchronization.
+>=20
+> I thought about it when I tried to use RCU to stop the worker and I
+> think make sense. Maybe can be another series after this will be merged.
+>=20
+> @Stefan, what do you think about that?
 
-regards
-Philipp
+Yes, let's make it a singleton and keep no other references to it.
+
+Stefan
+
+--tEFtbjk+mNEviIIX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl0d0h0ACgkQnKSrs4Gr
+c8i7uAf/QXuDj1LvILBy4mvMHIq38SqbW5mFIsodkTbGDB7yc/P8sUakOgHd3iqg
+B7T4t6bHfBmin86sSvgINZoQ2Ce0Cl5gfAUArX22oxCNNwo5U0rb6uLLj0aIi66M
+JgXi44ww1uhDIqrgJAVltxIQCV6jjLNNR0Qz19oTEV1qNl4UkY4+iew3ebbt/sid
+lBqxCSTTuA6dhA2R74j7mNtahfRXHiKqfz/fvnMIt6eayMHvx9cIpGJn+ZcJ5wNr
+n55WOBLvBc+xom4siTtiE+R5ZOATuxyfbvCncpj5a6p3wfMDtYIWTh/UeAEyDesp
+lL1CmfZat5mLZ1F0gxgjgE5alpkjuw==
+=02pH
+-----END PGP SIGNATURE-----
+
+--tEFtbjk+mNEviIIX--
