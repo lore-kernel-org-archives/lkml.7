@@ -2,129 +2,76 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F30EC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEE1C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE98216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsSZbNRQ"
+	by mail.kernel.org (Postfix) with ESMTP id 62754216E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGDGrF (ORCPT
+        id S1727326AbfGDGrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:47:05 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:43073 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfGDGrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:47:05 -0400
-Received: by mail-ua1-f66.google.com with SMTP id o2so770123uae.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 23:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9EIsGKDaQdkWTOCLMwtT5nbvh2nfzllYtIpcBeJLo8I=;
-        b=dsSZbNRQikjO5dvARv+F6IsHCaRxaj+anwxfONnL6yiccZpZXDbaYmZaJRq3AfPJOP
-         c+dFt4kHtFrT9c7Hpofp4uOLf1qoSS7pqB0nXY/94C61wa/YyyDWtWiky0TH/q6bYCTi
-         5MYoP7Eypksiy2LEU5j/xmAmzKk8VD1a7okAwvG+amFKo54yyDDdW4VHAhtmyNGdLVag
-         /kQWYS+CKpcZZgXq4MUKykVLuh/a0uie97vQaVn28y9YeW5SbW2O+shYLcj5UIZjAIId
-         a05qP11JWACaFHDJkskh80vN2PRK2AIhTaLs8Kk/NXawJM7pcNWA+mv7hP8KfKs6ujBV
-         rdeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9EIsGKDaQdkWTOCLMwtT5nbvh2nfzllYtIpcBeJLo8I=;
-        b=emrQUXS8THjAPQbCVdxd3NsV+bcmE65OkIVYMBNHpwspT4P81+YMD5AHE7NFfxByog
-         Nn1IhoO+xSACADgfbh+QdFsSp0eK3SwDLa87dmn39QkkVTzhluOsclv+eW+rj2KoTxyE
-         /UD6UtBTY6KUYRI8vAzReJWvFrw1jR2w5kJqW5sGGy0ishVfz8GspVmT2oXDrGaGscV6
-         svo+qf3ZnQo28mcSF6hWPvriY/J1HWlu6dmAOtQtIepvR4whheFyLHz0+DTb716quDJu
-         69pT6byYvwqgR257lx9eKY5z92iGhi5PbwiMvvfVlPbgUf9pw3ecjct5hLZ0daV41aP5
-         oiJg==
-X-Gm-Message-State: APjAAAURl+N0OcYfCHuoXtZAxMrP4LFpxPh1A7QpNGRTSIgoXqvcJ+np
-        bDrlSzHNqDQOSJLmTqPibYf/6kehmdtpxXVojF+6hYCH
-X-Google-Smtp-Source: APXvYqyoAX8ANpr6fIMUHUQqfVeCMDkbeHsbDlWuisGJKPGZrBsQTSF3Iq8C6cF3qY2MAstlWz/uMNpba/qNhxcVHlE=
-X-Received: by 2002:ab0:2c05:: with SMTP id l5mr19280726uar.43.1562222824324;
- Wed, 03 Jul 2019 23:47:04 -0700 (PDT)
+        Thu, 4 Jul 2019 02:47:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8694 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725879AbfGDGrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:47:46 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6DEB7E0C4A215B01883D;
+        Thu,  4 Jul 2019 14:47:42 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
+ 14:47:31 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ohad@wizery.com>, <bjorn.andersson@linaro.org>,
+        <jeffrey.l.hugo@gmail.com>, <agross@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] remoteproc: qcom: q6v5-mss: Fix build error without QCOM_MDT_LOADER
+Date:   Thu, 4 Jul 2019 14:46:49 +0800
+Message-ID: <20190704064649.51748-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190704062259.GA1094@ogabbay-VM> <20190704064010.GA11575@kroah.com>
- <20190704064141.GA1289@kroah.com>
-In-Reply-To: <20190704064141.GA1289@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 4 Jul 2019 09:46:38 +0300
-Message-ID: <CAFCwf12mahTh+rsRSe6OV1CtL4FkE7h3KEN_Gt8BKMoAS2Z7yQ@mail.gmail.com>
-Subject: Re: [git pull] habanalabs pull request for kernel 5.3
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 9:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 04, 2019 at 08:40:10AM +0200, Greg KH wrote:
-> > On Thu, Jul 04, 2019 at 09:22:59AM +0300, Oded Gabbay wrote:
-> > > Hello Greg,
-> > >
-> > > This is the pull request for habanalabs driver for kernel 5.3.
-> > >
-> > > It mostly contains improvements to the existing code base. Nothing too
-> > > exciting this time.
-> > >
-> > > Please see the tag message for details on what this pull request contains.
-> > >
-> > > Thanks,
-> > > Oded
-> > >
-> > > The following changes since commit 60e8523e2ea18dc0c0cea69d6c1d69a065019062:
-> > >
-> > >   ocxl: Allow contexts to be attached with a NULL mm (2019-07-03 21:29:47 +0200)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-07-04
-> >
-> > Pulled and pushed out, thanks.
->
-> Oops, no, I got the following errors from my scripts when trying to
-> push:
->
-> Commit a8330ecebaee2703042b95b5437511c5b2876819
->         committer SOB missing
->         dbenzoor@habana.ai oded.gabbay@gmail.com
->         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
-> Commit 5a0b645318fd96d2d9c65f9b39ef07562c83a494
->         committer SOB missing
->         dbenzoor@habana.ai oded.gabbay@gmail.com
->         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
-> Commit 4a0fedfc20422d83edd874040a6a965cd55d27d5
->         committer SOB missing
->         dbenzoor@habana.ai oded.gabbay@gmail.com
->         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
->
-> You "reviewed" these, but as you committed the patch, you also need to
-> sign off on them.
->
-> Can you fix up the tree and resend?
->
-> thanks,
->
-> greg k-h
+If QCOM_Q6V5_MSS is set but QCOM_MDT_LOADER is not,
+building will fails:
 
-Sure, np, 10 minutes.
-I was never really 100% sure about whether I must put sign-off if I
-reviewed it, but now I know :)
+drivers/remoteproc/qcom_q6v5_mss.o: In function `q6v5_start':
+qcom_q6v5_mss.c:(.text+0x3260): undefined reference to `qcom_mdt_read_metadata'
 
-Sorry for the trouble.
+Add QCOM_MDT_LOADER dependency for QCOM_Q6V5_MSS.
 
-Thanks,
-Oded
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f04b91383456 ("remoteproc: qcom: q6v5-mss: Support loading non-split images")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/remoteproc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 9b0f0cb..28ed306 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -116,6 +116,7 @@ config QCOM_Q6V5_MSS
+ 	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+ 	depends on QCOM_SYSMON || QCOM_SYSMON=n
+ 	select MFD_SYSCON
++	select QCOM_MDT_LOADER
+ 	select QCOM_Q6V5_COMMON
+ 	select QCOM_RPROC_COMMON
+ 	select QCOM_SCM
+-- 
+2.7.4
+
+
