@@ -2,236 +2,170 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E6CC06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C591DC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45B1218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:50:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r3HGrjnE"
+	by mail.kernel.org (Postfix) with ESMTP id 99042218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfGDKuB (ORCPT
+        id S1727566AbfGDKyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:50:01 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33375 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfGDKuB (ORCPT
+        Thu, 4 Jul 2019 06:54:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5502 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727403AbfGDKyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:50:01 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r6so5236482qkc.0;
-        Thu, 04 Jul 2019 03:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZpEm0qbYV2AOo6mYpK2DWfLknfBvYxL9zIA4zwMNziY=;
-        b=r3HGrjnE9Q9FvvzzC0UPykUCtL1UGrm9Knuvsvy5V0elmtwtxUTD3hH6yFZOWmBPCV
-         g5cRQzrE+fs+zfS7nh/0GXJgfQI0gqesPfrObWslpWMFKP2LjZ9BO8leWvM0uFdToWs/
-         4u7m/5otx9KLmBPcJS5GQHdHBi8SdExi868QPEHnEo9COGdtHFOtwfrbqmHYLsw99B1+
-         nO05Jov0TRsn7rEQ/E3HJVc0+YWXscX4du995SpBNGTZx/O1VXGReqkbNEpc4YSi/1v6
-         +2qghIRbN0fLXKgvqX1itMOmax85xbz7pN3HeINX3qdg7ZWEPoHc6d30xMj8itvX53nq
-         lLFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZpEm0qbYV2AOo6mYpK2DWfLknfBvYxL9zIA4zwMNziY=;
-        b=T+LxYRlmwjUBDZ2iYixtolSBXH0UfibF0qHmt74l+6fl9Na9a7gqjtaa8KQtpfX5aU
-         2H0FVVrKa8IrBAAEMwgsSvSMe9YKpaB3MI2MSxA4xktUbIzX4/0zK/o86yWl+ONXsQz0
-         566Mxu0ayhwso17OTBQHLFibRR+gzGfc3aVhFiHLP9CHM/9Nv9HnN/n6JHVf/jcBhzx8
-         8X/os6E7Z8apJmtR3kpeDhfDdSwhC50aoBoeBgRhiXoaHaghP65+yxMSnTka4TfWKrOk
-         Su1AMFZyUFqaegC7hEjVKSymdS6zUnp4wMJ05NMF4rXeodNR63l7PL2JaRX+uoXINuKt
-         gTEA==
-X-Gm-Message-State: APjAAAUe0bIqPdAd+cXYgpx9KxqHP309LBg3UgqcoxNGRHDc2SFfnLS6
-        Vp5ZJAD7ABXv2UTwJznxkmIbi+6H
-X-Google-Smtp-Source: APXvYqxBROn75GpAf/0WcDoaJ/874C8/GHpcSFFhkDXK6dT5Zh72jGJ3MJiNQSruJE1iHqCmPEqs+A==
-X-Received: by 2002:a37:2c46:: with SMTP id s67mr35667468qkh.396.1562237399657;
-        Thu, 04 Jul 2019 03:49:59 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id y9sm1837259qki.116.2019.07.04.03.49.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 03:49:58 -0700 (PDT)
-Subject: Re: [PATCH v4] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190703012836.16568-1-digetx@gmail.com>
- <b0a0b110-61c8-ae8b-22a0-3311f70b428a@nvidia.com>
- <b1f4d7c3-636e-947f-ac76-fc639ac7fee4@gmail.com>
- <55d402ad-6cb9-9e91-a8a4-b89d37674f4d@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a0168814-09e2-6dfe-5c5c-e053911cede6@gmail.com>
-Date:   Thu, 4 Jul 2019 13:49:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 06:54:38 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64Ar5qq037100
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 06:54:37 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2thdcfxdda-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 06:54:36 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
+        Thu, 4 Jul 2019 11:54:35 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Jul 2019 11:54:30 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64AsSpq35455354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jul 2019 10:54:28 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9AC8AE045;
+        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33C7FAE053;
+        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
+Received: from laptop-ibm (unknown [9.152.212.73])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
+Date:   Thu, 4 Jul 2019 12:54:27 +0200
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
+In-Reply-To: <87lfxel2q6.fsf@morokweng.localdomain>
+References: <20190628021934.4260-1-bauerman@linux.ibm.com>
+        <20190628021934.4260-2-bauerman@linux.ibm.com>
+        <20190701144752.GC25484@linux-8ccs>
+        <87lfxel2q6.fsf@morokweng.localdomain>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <55d402ad-6cb9-9e91-a8a4-b89d37674f4d@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070410-0008-0000-0000-000002F9D612
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070410-0009-0000-0000-000022672778
+Message-Id: <20190704125427.31146026@laptop-ibm>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.07.2019 10:10, Jon Hunter пишет:
+Hi Thiago,
+
+
+On Thu, 04 Jul 2019 03:42:57 -0300
+Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
+
+> Jessica Yu <jeyu@kernel.org> writes:
 > 
-> On 03/07/2019 18:00, Dmitry Osipenko wrote:
->> 03.07.2019 19:37, Jon Hunter пишет:
->>>
->>> On 03/07/2019 02:28, Dmitry Osipenko wrote:
->>>> Tegra's APB DMA engine updates words counter after each transferred burst
->>>> of data, hence it can report transfer's residual with more fidelity which
->>>> may be required in cases like audio playback. In particular this fixes
->>>> audio stuttering during playback in a chromium web browser. The patch is
->>>> based on the original work that was made by Ben Dooks and a patch from
->>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
->>>>
->>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>
->>>> Changelog:
->>>>
->>>> v4: The words_xferred is now also reset on a new iteration of a cyclic
->>>>     transfer by ISR, so that dmaengine_tx_status() won't produce a
->>>>     misleading warning splat on TX status re-checking after a cycle
->>>>     completion when cyclic transfer consists of a single SG.
->>>>
->>>> v3: Added workaround for a hardware design shortcoming that results
->>>>     in a words counter wraparound before end-of-transfer bit is set
->>>>     in a cyclic mode.
->>>>
->>>> v2: Addressed review comments made by Jon Hunter to v1. We won't try
->>>>     to get words count if dma_desc is on free list as it will result
->>>>     in a NULL dereference because this case wasn't handled properly.
->>>>
->>>>     The residual value is now updated properly, avoiding potential
->>>>     integer overflow by adding the "bytes" to the "bytes_transferred"
->>>>     instead of the subtraction.
->>>>
->>>>  drivers/dma/tegra20-apb-dma.c | 72 +++++++++++++++++++++++++++++++----
->>>>  1 file changed, 65 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>> index 79e9593815f1..148d136191d7 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
->>>>  	bool				last_sg;
->>>>  	struct list_head		node;
->>>>  	struct tegra_dma_desc		*dma_desc;
->>>> +	unsigned int			words_xferred;
->>>>  };
->>>>  
->>>>  /*
->>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
->>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
->>>>  	nsg_req->configured = true;
->>>> +	nsg_req->words_xferred = 0;
->>>>  
->>>>  	tegra_dma_resume(tdc);
->>>>  }
->>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->>>>  					typeof(*sg_req), node);
->>>>  	tegra_dma_start(tdc, sg_req);
->>>>  	sg_req->configured = true;
->>>> +	sg_req->words_xferred = 0;
->>>>  	tdc->busy = true;
->>>>  }
->>>>  
->>>> @@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
->>>>  		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
->>>>  	dma_desc->cb_count++;
->>>>  
->>>> +	sgreq->words_xferred = 0;
->>>> +
->>>>  	/* If not last req then put at end of pending list */
->>>>  	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
->>>>  		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
->>>> @@ -797,6 +802,62 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>  	return 0;
->>>>  }
->>>>  
->>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
->>>> +					       struct tegra_dma_sg_req *sg_req)
->>>> +{
->>>> +	unsigned long status, wcount = 0;
->>>> +
->>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>> +		return 0;
->>>> +
->>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>> +
->>>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>> +
->>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +		wcount = status;
->>>> +
->>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>> +		return sg_req->req_len;
->>>> +
->>>> +	wcount = get_current_xferred_count(tdc, sg_req, wcount);
->>>> +
->>>> +	if (!wcount) {
->>>> +		/*
->>>> +		 * If wcount wasn't ever polled for this SG before, then
->>>> +		 * simply assume that transfer hasn't started yet.
->>>> +		 *
->>>> +		 * Otherwise it's the end of the transfer.
->>>> +		 *
->>>> +		 * The alternative would be to poll the status register
->>>> +		 * until EOC bit is set or wcount goes UP. That's so
->>>> +		 * because EOC bit is getting set only after the last
->>>> +		 * burst's completion and counter is less than the actual
->>>> +		 * transfer size by 4 bytes. The counter value wraps around
->>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
->>>> +		 * distinguish start of transfer from its end.
->>>> +		 */
->>>> +		if (sg_req->words_xferred)
->>>> +			wcount = sg_req->req_len - 4;
->>>> +
->>>> +	} else if (wcount < sg_req->words_xferred) {
->>>> +		/*
->>>> +		 * This case shall not ever happen because EOC bit
->>>> +		 * must be set once next cyclic transfer is started.
->>>
->>> Should this still be cyclic here?
->>
->> Do you mean the "comment" by "here"?
->>
->> It will be absolutely terrible if this case happens for oneshot transfer, assume
->> kernel/hardware is on fire.
+> > +++ Thiago Jung Bauermann [27/06/19 23:19 -0300]:  
+> >>IMA will use the module_signature format for append signatures, so export
+> >>the relevant definitions and factor out the code which verifies that the
+> >>appended signature trailer is valid.
+> >>
+> >>Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
+> >>and be able to use mod_check_sig() without having to depend on either
+> >>CONFIG_MODULE_SIG or CONFIG_MODULES.
+> >>
+> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> >>Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> >>Cc: Jessica Yu <jeyu@kernel.org>
+> >>---
+> >> include/linux/module.h           |  3 --
+> >> include/linux/module_signature.h | 44 +++++++++++++++++++++++++
+> >> init/Kconfig                     |  6 +++-
+> >> kernel/Makefile                  |  1 +
+> >> kernel/module.c                  |  1 +
+> >> kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
+> >> kernel/module_signing.c          | 56 +++++---------------------------
+> >> scripts/Makefile                 |  2 +-
+> >> 8 files changed, 106 insertions(+), 53 deletions(-)
+> >>
+> >>diff --git a/include/linux/module.h b/include/linux/module.h
+> >>index 188998d3dca9..aa56f531cf1e 100644
+> >>--- a/include/linux/module.h
+> >>+++ b/include/linux/module.h
+> >>@@ -25,9 +25,6 @@
+> >> #include <linux/percpu.h>
+> >> #include <asm/module.h>
+> >>
+> >>-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
+> >>-#define MODULE_SIG_STRING "~Module signature appended~\n"
+> >>-  
+> >
+> > Hi Thiago, apologies for the delay.  
 > 
-> Or more likely a SW bug :-)
+> Hello Jessica, thanks for reviewing the patch!
 > 
-> Yes should never happen for either sg or cyclic, but there is no mention
-> of sg transfers. Maybe the sg case is more obvious but in general this
-> case should never happen for any transfer.
+> > It looks like arch/s390/kernel/machine_kexec_file.c also relies on
+> > MODULE_SIG_STRING being defined, so module_signature.h will need to be
+> > included there too, otherwise we'll run into a compilation error.  
+> 
+> Indeed. Thanks for spotting that. The patch below fixes it. It's
+> identical to the previous version except for the changes in 
+> arch/s390/kernel/machine_kexec_file.c and their description in the
+> commit message. I'm also copying some s390 people in this email.
 
-Alright, so what the change you are proposing? Or is it fine now?
+to me the s390 part looks good but for one minor nit.
 
-I can certainly change the comment's wording, just please tell me what you want it to be.
+In arch/s390/Kconfig KEXEC_VERIFY_SIG currently depends on
+SYSTEM_DATA_VERIFICATION. I'd prefer when you update this to the new
+MODULE_SIG_FORMAT. It shouldn't make any difference right now, as we don't
+use mod_check_sig in our code path. But it could cause problems in the future,
+when more code might be shared.
 
-/*
- * This case shall not ever happen because EOC bit
- * must be set once transfer is actually finished.
+Thanks
+Philipp
 
-Does this sound better?
+> > Other than that, the module-related changes look good to me:
+> >
+> > Acked-by: Jessica Yu <jeyu@kernel.org>  
+> 
+> Thank you very much!
+> 
+
