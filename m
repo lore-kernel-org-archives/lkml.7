@@ -2,205 +2,173 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F8CC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1196DC0651D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A955B2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0534218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D1iCIfxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfGDMfE (ORCPT
+        id S1727807AbfGDMfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:35:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727632AbfGDMfE (ORCPT
+        Thu, 4 Jul 2019 08:35:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53630 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbfGDMfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:35:04 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64CHk9q027494
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 08:35:02 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thgacjy2c-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 08:35:02 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 4 Jul 2019 13:35:00 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 13:34:55 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64CYsgI50528482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 12:34:54 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B566DAE053;
-        Thu,  4 Jul 2019 12:34:54 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C6CDAE05A;
-        Thu,  4 Jul 2019 12:34:50 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.61.157])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 12:34:50 +0000 (GMT)
-Subject: Re: [PATCH v3 5/7] sched: SIS_CORE to disable idle core search
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net
-References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
- <20190627012919.4341-6-subhra.mazumdar@oracle.com>
- <0e0f3347-c262-2917-76d7-88dddf4e9122@linux.ibm.com>
- <59ab08d5-8b7c-00b9-230b-7c0b307a675f@oracle.com>
- <be91602a-0243-e094-8c8f-ceed314d10ce@linux.ibm.com>
- <12402fea-7b87-8c4d-9485-53f973c38654@oracle.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Thu, 4 Jul 2019 18:04:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Thu, 4 Jul 2019 08:35:34 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 69B8E24B;
+        Thu,  4 Jul 2019 14:35:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1562243731;
+        bh=Qy9c/09MoK7SKFzpRxhQz3bdVH0WPLajOMka0caqEwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D1iCIfxwE6MEBVnRGgssAZK9cHdcIL5jUXXBTcisAWjBswdN3fLX6KsiirANkTaja
+         R10vuXCMHzidW0cyVoFyl+0k8hqBHIvvox06FKf5bA3w6MvEIEE/RahqHQWVmxSLuk
+         QN6R33ivSnFPkHRMLENdMKrpT/hmLxucTNhb3NC0=
+Date:   Thu, 4 Jul 2019 15:35:11 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
+Message-ID: <20190704123511.GG6569@pendragon.ideasonboard.com>
+References: <20190702154419.20812-1-robdclark@gmail.com>
+ <CGME20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03@epcas2p2.samsung.com>
+ <20190702154419.20812-3-robdclark@gmail.com>
+ <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <12402fea-7b87-8c4d-9485-53f973c38654@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070412-0020-0000-0000-000003503AA4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070412-0021-0000-0000-000021A3D776
-Message-Id: <aac9f826-ab73-2754-4a7b-7d948f1edf92@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040157
+Content-Disposition: inline
+In-Reply-To: <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+On Thu, Jul 04, 2019 at 02:31:20PM +0200, Andrzej Hajda wrote:
+> On 02.07.2019 17:44, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Add a debugfs file to show status registers.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > index f1a2493b86d9..a6f27648c015 100644
+> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > @@ -5,6 +5,7 @@
+> >   */
+> >  
+> >  #include <linux/clk.h>
+> > +#include <linux/debugfs.h>
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/iopoll.h>
+> > @@ -109,6 +110,7 @@ struct ti_sn_bridge {
+> >  	struct drm_dp_aux		aux;
+> >  	struct drm_bridge		bridge;
+> >  	struct drm_connector		connector;
+> > +	struct dentry			*debugfs;
+> >  	struct device_node		*host_node;
+> >  	struct mipi_dsi_device		*dsi;
+> >  	struct clk			*refclk;
+> > @@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+> >  	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
+> >  };
+> >  
+> > +static int status_show(struct seq_file *s, void *data)
+> > +{
+> > +	struct ti_sn_bridge *pdata = s->private;
+> > +	unsigned int reg, val;
+> > +
+> > +	seq_puts(s, "STATUS REGISTERS:\n");
 
-On 7/2/19 2:07 AM, Subhra Mazumdar wrote:
+NO NEED TO SHOUT :-)
+
+> > +
+> > +	pm_runtime_get_sync(pdata->dev);
+> > +
+> > +	/* IRQ Status Registers, see Table 31 in datasheet */
+> > +	for (reg = 0xf0; reg <= 0xf8; reg++) {
+> > +		regmap_read(pdata->regmap, reg, &val);
+> > +		seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
+> > +	}
+> > +
+> > +	pm_runtime_put(pdata->dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +DEFINE_SHOW_ATTRIBUTE(status);
+> > +
+> > +static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
+> > +{
+> > +	pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
 > 
->>>> Also, systems like POWER9 has sd_llc as a pair of core only. So it
->>>> won't benefit from the limits and hence also hiding your code in select_idle_cpu
->>>> behind static keys will be much preferred.
->>> If it doesn't hurt then I don't see the point.
->>>
->> So these is the result from POWER9 system with your patches:
->> System configuration: 2 Socket, 44 cores, 176 CPUs
->>
->> Experiment setup:
->> ===========
->> => Setup 1:
->> - 44 tasks doing just while(1), this is to make select_idle_core return -1 most times
->> - perf bench sched messaging -g 1 -l 1000000
->> +-----------+--------+--------------+--------+
->> | Baseline  | stddev |    Patch     | stddev |
->> +-----------+--------+--------------+--------+
->> |       135 |   3.21 | 158(-17.03%) |   4.69 |
->> +-----------+--------+--------------+--------+
->>
->> => Setup 2:
->> - schbench -m44 -t 1
->> +=======+==========+=========+=========+==========+
->> | %ile  | Baseline | stddev  |  patch  |  stddev  |
->> +=======+==========+=========+=========+==========+
->> |    50 |       10 |    3.49 |      10 |     2.29 |
->> +-------+----------+---------+---------+----------+
->> |    95 |      467 |    4.47 |     469 |     0.81 |
->> +-------+----------+---------+---------+----------+
->> |    99 |      571 |   21.32 |     584 |    18.69 |
->> +-------+----------+---------+---------+----------+
->> |  99.5 |      629 |   30.05 |     641 |    20.95 |
->> +-------+----------+---------+---------+----------+
->> |  99.9 |      780 |   40.38 |     773 |     44.2 |
->> +-------+----------+---------+---------+----------+
->>
->> I guess it doesn't make much difference in schbench results but hackbench (perf bench)
->> seems to have an observable regression.
->>
->>
->> Best,
->> Parth
->>
-> If POWER9 sd_llc has only 2 cores, the behavior shouldn't change much with
-> the select_idle_cpu changes as the limits are 1 and 2 core. Previously the
-> lower bound was 4 cpus and upper bound calculated by the prop. Now it is
-> 1 core (4 cpus on SMT4) and upper bound 2 cores. Could it be the extra
-> computation of cpumask_weight causing the regression rather than the
-> sliding window itself (one way to check this would be hardcode 4 in place
-> of topology_sibling_weight)? Or is it the L1 cache coherency? I am a bit
-> suprised because SPARC SMT8 which has more cores in sd_llc and L1 cache per
-> core showed improvement with Hackbench.
+> If some day we will have board with two such bridges there will be a
+> problem.
+
+Could we use the platform device name for this ?
+
+> Anyway:
 > 
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> 
+> > +
+> > +	debugfs_create_file("status", 0600, pdata->debugfs, pdata,
+> > +			&status_fops);
+> > +}
+> > +
+> > +static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
+> > +{
+> > +	debugfs_remove_recursive(pdata->debugfs);
+> > +	pdata->debugfs = NULL;
+> > +}
+> > +
 
-Same experiment with hackbench and with perf analysis shows increase in L1
-cache miss rate with these patches
-(Lower is better)
-                          Baseline(%)   Patch(%)   
- ----------------------- ------------- ----------- 
-  Total Cache miss rate         17.01   19(-11%)   
-  L1 icache miss rate            5.45   6.7(-22%) 
+You need to conditionally-compile this based on CONFIG_DEBUG_FS.
 
+> >  /* Connector funcs */
+> >  static struct ti_sn_bridge *
+> >  connector_to_ti_sn_bridge(struct drm_connector *connector)
+> > @@ -869,6 +907,8 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
+> >  
+> >  	drm_bridge_add(&pdata->bridge);
+> >  
+> > +	ti_sn_debugfs_init(pdata);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -879,6 +919,8 @@ static int ti_sn_bridge_remove(struct i2c_client *client)
+> >  	if (!pdata)
+> >  		return -EINVAL;
+> >  
+> > +	ti_sn_debugfs_remove(pdata);
+> > +
+> >  	of_node_put(pdata->host_node);
+> >  
+> >  	pm_runtime_disable(pdata->dev);
 
+-- 
+Regards,
 
-So is is possible for idle_cpu search to try checking target_cpu first and
-then goto sliding window if not found.
-Below diff works as expected in IBM POWER9 system and resolves the problem
-of far wakeup upto large extent.
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ff2e9b5c3ac5..fae035ce1162 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6161,6 +6161,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
-        u64 time, cost;
-        s64 delta;
-        int cpu, limit, floor, target_tmp, nr = INT_MAX;
-+       struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
- 
-        this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
-        if (!this_sd)
-@@ -6198,16 +6199,22 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
-        time = local_clock();
- 
--       for_each_cpu_wrap(cpu, sched_domain_span(sd), target_tmp) {
-+       cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
-+       for_each_cpu_wrap(cpu, cpu_smt_mask(target), target) {
-+               __cpumask_clear_cpu(cpu, cpus);
-+               if (available_idle_cpu(cpu))
-+                       goto idle_cpu_exit;
-+       }
-+
-+       for_each_cpu_wrap(cpu, cpus, target_tmp) {
-                per_cpu(next_cpu, target) = cpu;
-                if (!--nr)
-                        return -1;
--               if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
--                       continue;
-                if (available_idle_cpu(cpu))
-                        break;
-        }
- 
-+idle_cpu_exit:
-        time = local_clock() - time;
-        cost = this_sd->avg_scan_cost;
-        delta = (s64)(time - cost) / 8;
-
-
-
-Best,
-Parth
-
+Laurent Pinchart
