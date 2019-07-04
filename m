@@ -2,144 +2,91 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984ABC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55ECC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E4D2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778EF21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="hY0qIf3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfGDWGc convert rfc822-to-8bit (ORCPT
+        id S1727473AbfGDWNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 18:06:32 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33054 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbfGDWGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 18:06:32 -0400
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 053BABD501BBC6932294;
-        Thu,  4 Jul 2019 23:06:30 +0100 (IST)
-Received: from LHREML524-MBS.china.huawei.com ([169.254.2.154]) by
- lhreml706-cah.china.huawei.com ([10.201.108.47]) with mapi id 14.03.0415.000;
- Thu, 4 Jul 2019 23:06:23 +0100
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "John Garry" <john.garry@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>
-Subject: RE: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
- update iova list
-Thread-Topic: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
- update iova list
-Thread-Index: AQHVLDHlfv32Tq6P8k2BSud+nbtQFqa5VEOAgAEf3kCAAJvsIA==
-Date:   Thu, 4 Jul 2019 22:06:23 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F2DDED5@lhreml524-mbs.china.huawei.com>
-References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
-        <20190626151248.11776-3-shameerali.kolothum.thodi@huawei.com>
- <20190703143427.2d63c15f@x1.home> 
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.45.141.232]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 4 Jul 2019 18:13:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43847 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDWNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 18:13:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so3596791plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 15:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=o5jK/lFAS+ONU/+opdeRt9/P3YNw9XJ8quHkOsC4h10=;
+        b=hY0qIf3z6Ni/z4so7IV/FjBUGr0c8/glvUMwOm2RZJTLLBaV+yZiRYCr6U63l4gu8H
+         8QOUaKoopVyo+MopFT9hBHjXUceCZvbyiPee97v3fiMqbVkvcQIdpgV9r7VysqQK0NCE
+         uUdb7DOJcVYZbbg5DPL2ERoD7wXaZbYtDShQ9QBHP1yiIBvG4yYxbLkiDFwUHdyrUP4Z
+         HtU+1XuvefrysiLbdF7P8065+4Smk29cK1fyalRGE0m6/MlosYH9KoMWygg/b+88EM9X
+         byYqfHK6+AgTZP5jx7ZJz6fQwKPZhfQkEwNsQ7N73K1NIcsPSL5OtO0h3UO41NF9BQRm
+         PKxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=o5jK/lFAS+ONU/+opdeRt9/P3YNw9XJ8quHkOsC4h10=;
+        b=XZOrUpuhngOL95CRv4/Wvx5WK3r6SR6Y4uJ/n1eNb1T9fcIWe+myQsRc/9ELpzQC3p
+         j1haMRbNUiaVqGZsr3oVw77auGff8Jhy6mUZlcYJ+gLn7jekwtjNty2dg075MYMUeqpZ
+         FfQQpLgsi3VuQJnpJUzcVHxAazbfr6sNvq/YrQWnr76IYU6jlKly0dQijtWQqNIFeYWo
+         WFjazU7e5gdNqezbwKT1t7LTZ05UKK8BdBXtFPP8id51WbbTQ4Tq6ZJWm1sKYTXPsG0f
+         pqzs+7PXfczxbU5O5n+Zk4jBxxo9Ag00IgM9g9/6OvfE21v819uJiDu1j4CW7RMNtelj
+         HEAQ==
+X-Gm-Message-State: APjAAAVvvmAtcANKdjuCZBM5yypMogYwGvCK20BcZbSYNrR5SetWSqRv
+        cD585HzHR1QtjCwMfg/DhgxnRA==
+X-Google-Smtp-Source: APXvYqxJjAHRCHXIsBiM2KCzNk8ZSgGLbZJho8RZHhx69atxriuGhqlS3aQPFTgXT0dBm6QEEKXWKw==
+X-Received: by 2002:a17:902:654f:: with SMTP id d15mr475786pln.253.1562278395092;
+        Thu, 04 Jul 2019 15:13:15 -0700 (PDT)
+Received: from cakuba.netronome.com ([2601:646:8e00:e50::3])
+        by smtp.gmail.com with ESMTPSA id p65sm6455400pfp.58.2019.07.04.15.13.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 15:13:14 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 15:13:11 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH net-next 0/9] net: hns3: some cleanups & bugfixes
+Message-ID: <20190704151311.21025194@cakuba.netronome.com>
+In-Reply-To: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
+References: <1562249068-40176-1-git-send-email-tanhuazhong@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Shameerali Kolothum Thodi
-> Sent: 04 July 2019 13:51
-> To: 'Alex Williamson' <alex.williamson@redhat.com>
-> Cc: eric.auger@redhat.com; kvm@vger.kernel.org;
-> linux-kernel@vger.kernel.org; iommu@lists.linux-foundation.org; Linuxarm
-> <linuxarm@huawei.com>; John Garry <john.garry@huawei.com>; xuwei (O)
-> <xuwei5@huawei.com>; kevin.tian@intel.com
-> Subject: RE: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
-> update iova list
+On Thu, 4 Jul 2019 22:04:19 +0800, Huazhong Tan wrote:
+> This patch-set includes cleanups and bugfixes for
+> the HNS3 ethernet controller driver.
 > 
+> [patch 1/9] fixes VF's broadcast promisc mode not enabled after
+> initializing.
 > 
+> [patch 2/9] adds hints for fibre port not support flow control.
 > 
-> > -----Original Message-----
-> > From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On
-> > Behalf Of Alex Williamson
-> > Sent: 03 July 2019 21:34
-> > To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> > Cc: eric.auger@redhat.com; pmorel@linux.vnet.ibm.com;
-> > kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
-> > Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
-> > kevin.tian@intel.com
-> > Subject: Re: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
-> > update iova list
-> >
-> > On Wed, 26 Jun 2019 16:12:44 +0100
-> > Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
-> >
-> > > This retrieves the reserved regions associated with dev group and
-> > > checks for conflicts with any existing dma mappings. Also update
-> > > the iova list excluding the reserved regions.
-> > >
-> > > Reserved regions with type IOMMU_RESV_DIRECT_RELAXABLE are
-> > > excluded from above checks as they are considered as directly
-> > > mapped regions which are known to be relaxable.
-> > >
-> > > Signed-off-by: Shameer Kolothum
-> <shameerali.kolothum.thodi@huawei.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 96
-> > +++++++++++++++++++++++++++++++++
-> > >  1 file changed, 96 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c
-> > > index 970d1ec06aed..b6bfdfa16c33 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -1559,6 +1641,7 @@ static int vfio_iommu_type1_attach_group(void
-> > *iommu_data,
-> > >  	phys_addr_t resv_msi_base;
-> > >  	struct iommu_domain_geometry geo;
-> > >  	LIST_HEAD(iova_copy);
-> > > +	LIST_HEAD(group_resv_regions);
-> > >
-> > >  	mutex_lock(&iommu->lock);
-> > >
-> > > @@ -1644,6 +1727,13 @@ static int vfio_iommu_type1_attach_group(void
-> > *iommu_data,
-> > >  		goto out_detach;
-> > >  	}
-> > >
-> > > +	iommu_get_group_resv_regions(iommu_group,
-> &group_resv_regions);
-> >
-> > This can fail and should have an error case.  I assume we'd fail the
-> > group attach on failure.  Thanks,
+> [patch 3/9] fixes a port capbility updating issue.
 > 
-> Right. I will add the check. Do you think we should do the same in
-> vfio_iommu_has_sw_msi()
-> as well? (In fact, it looks like iommu_get_group_resv_regions() ret is not
-> checked anywhere in
-> kernel).
+> [patch 4/9 - 9/9] adds some cleanups for HNS3 driver.
 
-Ah..forgot the fact that patch 6/6 should take care of vfio_iommu_has_sw_msi() 
-case as we are removing the duplicate iommu_get_group_resv_regions() there. 
-
-Thanks,
-Shameer
-
-
+For the unsigned "fixes" it seems it may have been easier to fix the
+macroes than the users, but perhaps that's hard.  Series looks
+unobjectionable :)
