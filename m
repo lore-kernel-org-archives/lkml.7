@@ -2,134 +2,137 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C52CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D09C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4E62133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536662133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nCN7FX9Y";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="NUZhtBm+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MNlvGOO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfGDHrk (ORCPT
+        id S1726085AbfGDHtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:47:40 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:24916 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfGDHrk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:47:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1562226459; x=1593762459;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=GHJ0KDUKPpKmudHJ1R6fXfGfOnD9MDCx3n80VozxZkc=;
-  b=nCN7FX9Y30DCTA7lcG2zcCUf2baTQKGZlqG0W2VP4jsDGS0JQRTA2yCb
-   OMSK0TgJOW9gzNddafyJv4zbhcOnWM8z386YX1Fm3YI9mlF38XRps6dnu
-   nI2ac/oaGMXYHT3gyyjP7QZnt0j/P2xJpjPfifSs99xn52yBn4M6AiNQG
-   cjyE8irBAfQqBEfAyxzkCB3ygFNAk+2g3uwkSwDL2Ff1Ubc7rtMz3Y6Ok
-   JXIPCRAOSQtr5SGjfqpEF/R1qCcl28W8v7hiwEcK572ElJoSw4UuPFV+Z
-   4ReGYXNNp+QKznV/Ur9j8sTaHnQ2OR5pZZmrs/FboJuLlgdXokB3r/ikw
-   w==;
-IronPort-SDR: PILL87nLDIqKdsCBX3eoxwoLK+WGqVAgL1NxyMT0GpQi2M6iUS6PmFksZzJbDJqzrLji0J/cfU
- pZf71bs+ypstSzqYSk+vk1/OLQ3PlRmcaQSgSXAGOatj3VlnozBHOryaFBh2uR9waWi5OrjgFG
- Q+A1vOyAKF99JxPr7QRcDY+dYm3K7Zh/hy7Dl7L8795xh40ESSY9KdJXaE7sQInRNyX+t005ss
- hMIg7szG+n5yFymdZme+OIscQhkbzjmEobACdjwkPVyzFLfYMXWZdou4tLH2/MtHdwf+hl+hBv
- JCA=
-X-IronPort-AV: E=Sophos;i="5.63,449,1557158400"; 
-   d="scan'208";a="113406057"
-Received: from mail-bl2nam02lp2058.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.58])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Jul 2019 15:47:38 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+        Thu, 4 Jul 2019 03:49:12 -0400
+Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:45390
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbfGDHtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wJU4zL1vwbjl6BVjVf23ywhF12yR0dYXibUkejsCdDo=;
- b=NUZhtBm+3xpVnZ2Ap5Zfg4fU2QORe64o3f5Dmi4O3UvZjGD8edftop27C98ZIcmmIl079Ie2tFE7bzq+n2rNL99WFwZ4EVy9MS101nU2JH4BRvAMeDU2/yF+hEu1ZUxhs9PAKeLSClXJEjMtE1rXGjSFYuetm4hb08z+n/bJH2M=
-Received: from DM6PR04MB4923.namprd04.prod.outlook.com (20.176.109.84) by
- DM6PR04MB6009.namprd04.prod.outlook.com (20.178.225.206) with Microsoft SMTP
+ bh=bg3YVZyZix9ibFcYWOAmR1P6Nh6H6haGJXEGrezCKN0=;
+ b=MNlvGOO1bE3gwqoiyFfMX5odP8T+TWf78MbA83x0OAD/GJt9aK4yiMkabyBGFRCZ1Wtv4OHc0r4HwAg6lsU+phZs4bX5n99clwnjuGwiMzfMaoQboWr9WzKV0rsyRHrFoy/bzsEU0+ModE6TGHFKOzC1r7FX4uiD3tYO2ipyPfU=
+Received: from DB7PR04MB5051.eurprd04.prod.outlook.com (20.176.234.223) by
+ DB7PR04MB4185.eurprd04.prod.outlook.com (52.134.111.27) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 4 Jul 2019 07:47:37 +0000
-Received: from DM6PR04MB4923.namprd04.prod.outlook.com
- ([fe80::4443:24aa:16cb:ec73]) by DM6PR04MB4923.namprd04.prod.outlook.com
- ([fe80::4443:24aa:16cb:ec73%7]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
- 07:47:36 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Pedro Sousa <PedroM.Sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ 15.20.2052.16; Thu, 4 Jul 2019 07:49:07 +0000
+Received: from DB7PR04MB5051.eurprd04.prod.outlook.com
+ ([fe80::6c98:1416:8221:bdfc]) by DB7PR04MB5051.eurprd04.prod.outlook.com
+ ([fe80::6c98:1416:8221:bdfc%4]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
+ 07:49:07 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-CC:     Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Alex Lemberg <Alex.Lemberg@wdc.com>
-Subject: RE: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
-Thread-Topic: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
-Thread-Index: AQHVISOkIGq/TXYo40K7pkiAfhMabKaxBgUAgAkw5cA=
-Date:   Thu, 4 Jul 2019 07:47:36 +0000
-Message-ID: <DM6PR04MB49232962D82A0A4F5424014FFCFA0@DM6PR04MB4923.namprd04.prod.outlook.com>
-References: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
- <MN2PR12MB3167D6E742D06055FDCFB17ACCFC0@MN2PR12MB3167.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB3167D6E742D06055FDCFB17ACCFC0@MN2PR12MB3167.namprd12.prod.outlook.com>
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend
+ opp
+Thread-Index: AQHVMjEDVn995bhE70i5OsdReRFRhA==
+Date:   Thu, 4 Jul 2019 07:49:07 +0000
+Message-ID: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [82.144.34.2]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1b1164f-7e54-49c2-6c17-08d70053e1f5
+x-ms-office365-filtering-correlation-id: f05be104-3873-4909-9548-08d700541803
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR04MB6009;
-x-ms-traffictypediagnostic: DM6PR04MB6009:
-x-microsoft-antispam-prvs: <DM6PR04MB6009671C77D2AF4B695406C5FCFA0@DM6PR04MB6009.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4185;
+x-ms-traffictypediagnostic: DB7PR04MB4185:
+x-microsoft-antispam-prvs: <DB7PR04MB41851512C4255B5A3548A931EEFA0@DB7PR04MB4185.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
 x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(66066001)(6436002)(55016002)(4744005)(6246003)(5660300002)(52536014)(25786009)(86362001)(229853002)(54906003)(68736007)(76116006)(110136005)(2201001)(9686003)(66946007)(73956011)(64756008)(66476007)(66556008)(66446008)(2501003)(316002)(7696005)(14444005)(478600001)(305945005)(33656002)(53936002)(14454004)(71190400001)(6506007)(102836004)(71200400001)(486006)(76176011)(4326008)(256004)(72206003)(99286004)(2906002)(26005)(476003)(74316002)(8936002)(446003)(8676002)(81156014)(81166006)(11346002)(186003)(7736002)(6116002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR04MB6009;H:DM6PR04MB4923.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(376002)(366004)(396003)(199004)(189003)(33656002)(9686003)(71190400001)(81156014)(81166006)(102836004)(26005)(229853002)(446003)(55016002)(53936002)(6116002)(8936002)(316002)(54906003)(71200400001)(186003)(110136005)(476003)(44832011)(486006)(3846002)(91956017)(6436002)(7416002)(478600001)(68736007)(76116006)(73956011)(6506007)(15650500001)(6246003)(4744005)(7736002)(66946007)(305945005)(64756008)(66446008)(66556008)(66476007)(86362001)(14444005)(256004)(5660300002)(4326008)(2501003)(99286004)(53546011)(52536014)(76176011)(66066001)(74316002)(25786009)(7696005)(14454004)(8676002)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4185;H:DB7PR04MB5051.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: znESxxZaZVYaa9Vp6qy8i1sIQHQT7EOcyp7i1HNIMcYI/lwRQKEGK0FlUgGEeDLvyzOfEgHa8XDhXhMqqxd5wnMETYZxnKX3zjim2n6COOAUtPE0/dxdCrS/k4W9KRLAwUZ4LakqYitp5stZUjI1QK0lxGRBljiBcYAlEWfgn4tckST0WCOan8/b7BocgCt6DJp53tWqd2uwLM+ejwxhOIqLlrqG0MzRNIX8JOZPVvXIAlvoaY0SbDgLW+pWk7XLgdvv5Yli2NjQ9x+CevGjwAd3UbWeS1koqJ/5hkxaNNoY4Ru5WSsjryecISaW+WV5RGRag8UwSSBd4eDDb2oxfu+YZw3f8v8F4h9bG+xxhDy11iODdBYBNVNwE8QxmrqFU0bQbzZ2v1CcStwqY5zy41kETLOYnKG4snlr1CalbB0=
+x-microsoft-antispam-message-info: PRJDAL7OvTH5whHzKkeF/40C9fZaeEpPHcI9fzXDbyWGVTmzg8YmFbx9mWBlwatAcZFEn9dpR6rdKRucH83HyO0+3kgnGgKWgdA8UThJaaPeLQC46dIcAAxA5wmYxgS/Y7N4sMlXg1h2avH58VK0EA91JNC5ZVIarVFqwCR84jep+WVFoEdU5x+1+9iKgih0U6rpSYtyPRA9SSH2A1H8kwjvGqFDrSgdx81wCfqWUGKbQO4DdR+h5/ngmOMgqQ/AW7k8+pMxXc1sC5LVg5XyjTtrZKTJ9pNVh8M3M6B8980hKuu9HcE93utaqZvKIoy9hCpHEf3tbc6S4sg28Rx1F3ktv6e4ukziKdAHWxjFpU/X2XzjdikA6H9sc8pJyhyOUeBpnxS/2oDiNvdyVXQzuvxq8eUgOIElCuqHotIz4jk=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1b1164f-7e54-49c2-6c17-08d70053e1f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 07:47:36.8058
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f05be104-3873-4909-9548-08d700541803
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 07:49:07.5136
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6009
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin - a kind reminder.
-
-Thanks,
-Avri
-
-> Subject: RE: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
->=20
-> From: Avri Altman <avri.altman@wdc.com>
-> Date: Wed, Jun 12, 2019 at 14:34:37
->=20
-> > added 'WITH Linux-syscall-note' exception, which is the officially
-> > assigned exception identifier for the kernel syscall exception.
-> > This exception makes it possible to include GPL headers into non GPL
-> > code, without confusing license compliance tools.
-> >
-> > fixes: a851b2bd3632 (scsi: uapi: ufs: Make utp_upiu_req visible to user
-> > 		     space)
-> >
-> > Signed-off-by: Avri Altman <avri.altman@wdc.com>
-> Reviewed-by: Pedro Sousa <pedrom.sousa@synopsys.com>
-
+On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:=0A=
+> From: Anson Huang <Anson.Huang@nxp.com>=0A=
+> =0A=
+> Assign highest OPP as suspend OPP to reduce suspend/resume=0A=
+> latency on i.MX8MM.=0A=
+> =0A=
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
+> ---=0A=
+>   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +=0A=
+>   1 file changed, 1 insertion(+)=0A=
+> =0A=
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mm.dtsi=0A=
+> index b11fc5e..3a62407 100644=0A=
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi=0A=
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi=0A=
+> @@ -136,6 +136,7 @@=0A=
+>   			opp-microvolt =3D <1000000>;=0A=
+>   			opp-supported-hw =3D <0x8>, <0x3>;=0A=
+>   			clock-latency-ns =3D <150000>;=0A=
+> +			opp-suspend;=0A=
+>   		};=0A=
+>   	};=0A=
+=0A=
+What if the highest OPP is unavailable due to speed grading? Ideally we =0A=
+should find a way to suspend at the highest *supported* OPP.=0A=
+=0A=
+Maybe the opp-suspend marking could be assigned from imx-cpufreq-dt =0A=
+driver code?=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
+=0A=
