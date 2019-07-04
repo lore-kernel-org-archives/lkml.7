@@ -2,177 +2,94 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4C7C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E56C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81164218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562219810;
-	bh=HFV2mCfkWS/Ahm4inF+o0+Y8ICuqHjX4WG6iRHtx6X0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=LfPFrQm5WI+ZwQARQUDY6dwjd5ullrCrBSOPTA1b+4MmCBz8NHQkfqDAt6EXk5PMO
-	 XvbxXZKtccDolHSVAQtaaA5onWDWgOZ/Qo3ker+3qVlgYJZlF3fkJHQUB3o6W6HowH
-	 xOufQx/SKPzT8PKijDUtENknymkRNYlyFnX6+WEg=
+	by mail.kernel.org (Postfix) with ESMTP id 1C67B218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="AyQi7k2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfGDF4t (ORCPT
+        id S1726273AbfGDGDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 01:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfGDF4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 01:56:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD8E2189E;
-        Thu,  4 Jul 2019 05:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562219807;
-        bh=HFV2mCfkWS/Ahm4inF+o0+Y8ICuqHjX4WG6iRHtx6X0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=e62tZtsgi/AsTU/EfOWH/TT0/zZvvbNqpvSezFtIg05NjNZoZbUZAILIa8wyxCB3o
-         +nT523hZHLWEHBTP+BxWOK0zR73qKwK2gAxx0qTELNTrfhVu6ob0quNmHUuuHCa02D
-         r9chEwlwo02KG8ve7PHzjZ1rjO7D3OJnvkhdTW98=
-Date:   Thu, 4 Jul 2019 07:56:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Wu Hao <hao.wu@intel.com>, Alan Tull <atull@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
-Message-ID: <20190704055645.GA15471@kroah.com>
+        Thu, 4 Jul 2019 02:03:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39042 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfGDGDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:03:32 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i125so4733466qkd.6;
+        Wed, 03 Jul 2019 23:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zG2Of7qq6RulfRoGA24ViJMIHN/A2MnjJcuk8GFFPiU=;
+        b=AyQi7k2FK19mqnfZWe8DFRAlQoaJ5OBq0zRpGB3BojaSjcjlF4pojGyZmhsQkjnrZ5
+         tBQ50ZL9x+GFTFIYmdOeTBPYzTV07VWfxEBKpMsN9PXMFYTchK854G1xljgKUna8ShVz
+         +Zt7MFZGBkqlpVTxU8VsMwxOvQ3jb5XPwNikE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zG2Of7qq6RulfRoGA24ViJMIHN/A2MnjJcuk8GFFPiU=;
+        b=SmhXfmQwgnXi47C+X+3ntdldEYfk/ClqfdYIaPJXHA0X8IEoa/5n7mqUNd1sy2duJt
+         vc0GaKrJQ2YV0hItHPRhZJYqlKbkJr02+VYjh9lVQschfhfMNjpfSWU28x4fbRqQtgbF
+         fyY5qZAw+8Xx+Kb56N7uGlzeMeGAT0J8UgQ+aRu0akOP6LQm9OvEw+My011bCIx8Q6fA
+         M6kdJcyDDiDwc00bgzPQWP3+XXckwHWQ5LFpPDpvz3BMm2zR+LII75HyeuQCV2YKyXu8
+         6dSgnC0rnZS6RnSccAOyspk76V5s2ljg65NFccmI+yXPepLP1WiijUOVBfiUfZKsqzz/
+         n7+g==
+X-Gm-Message-State: APjAAAWpWcGJWuPTsrUAQIqLFmWgfPLO8FMrOV9BzPtRRRt295vaTe3j
+        WygRINxWNg++el6vk8cDGDk/Q2IzxG59qfgcaDs=
+X-Google-Smtp-Source: APXvYqw+Amd7bjbM6pwFDC0KhTxwoLjTDilYHLUZ6jAkmLyi1Ph6j3gRhhpup2bzVUpZApwWaDIHSZsE2Bir5EmK3D8=
+X-Received: by 2002:a37:a1d6:: with SMTP id k205mr33772264qke.171.1562220210922;
+ Wed, 03 Jul 2019 23:03:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CACPK8XfCpgjAwMeoyhcZqgqtXO=-wtpuB2kwsogvBnd1VzynDg@mail.gmail.com>
+ <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
+In-Reply-To: <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 4 Jul 2019 06:03:18 +0000
+Message-ID: <CACPK8XdGC4V5xs5S=JHk=tUayLGHQkF5eH0pvFnyffpDaUuqQQ@mail.gmail.com>
+Subject: Re: [GIT PULL] FSI changes for 5.3
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Alistair Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-fsi@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a driver, do not call "raw" sysfs functions, instead call driver
-core ones.  Specifically convert the use of sysfs_create_files() and
-sysfs_remove_files() to use device_add_groups() and
-device_remove_groups()
+On Wed, 3 Jul 2019 at 05:32, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Wed, 2019-07-03 at 03:39 +0000, Joel Stanley wrote:
+> > Hello Greg,
+> >
+> > We've not had a MAINAINERS entry for drivers/fsi, so this fixes that. It names
+> > Jeremy and I as maintainers, so if it works for you we will send pull requests
+> > to you each cycle.
+>
+> Ack. I no longer work for IBM and thus cannot handle that subsystem
+> anymore.
 
-Cc: Wu Hao <hao.wu@intel.com>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: linux-fpga@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/fpga/dfl-afu-main.c | 14 ++++++++------
- drivers/fpga/dfl-fme-main.c |  7 ++++---
- 2 files changed, 12 insertions(+), 9 deletions(-)
+Stephen, can you swap out ben's fsi tree in linux-next for this one:
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index 02baa6a227c0..68b4d0874b93 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -141,10 +141,11 @@ id_show(struct device *dev, struct device_attribute *attr, char *buf)
- }
- static DEVICE_ATTR_RO(id);
- 
--static const struct attribute *port_hdr_attrs[] = {
-+static struct attribute *port_hdr_attrs[] = {
- 	&dev_attr_id.attr,
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(port_hdr);
- 
- static int port_hdr_init(struct platform_device *pdev,
- 			 struct dfl_feature *feature)
-@@ -153,7 +154,7 @@ static int port_hdr_init(struct platform_device *pdev,
- 
- 	port_reset(pdev);
- 
--	return sysfs_create_files(&pdev->dev.kobj, port_hdr_attrs);
-+	return device_add_groups(&pdev->dev, port_hdr_groups);
- }
- 
- static void port_hdr_uinit(struct platform_device *pdev,
-@@ -161,7 +162,7 @@ static void port_hdr_uinit(struct platform_device *pdev,
- {
- 	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
- 
--	sysfs_remove_files(&pdev->dev.kobj, port_hdr_attrs);
-+	device_remove_groups(&pdev->dev, port_hdr_groups);
- }
- 
- static long
-@@ -214,10 +215,11 @@ afu_id_show(struct device *dev, struct device_attribute *attr, char *buf)
- }
- static DEVICE_ATTR_RO(afu_id);
- 
--static const struct attribute *port_afu_attrs[] = {
-+static struct attribute *port_afu_attrs[] = {
- 	&dev_attr_afu_id.attr,
- 	NULL
- };
-+ATTRIBUTE_GROUPS(port_afu);
- 
- static int port_afu_init(struct platform_device *pdev,
- 			 struct dfl_feature *feature)
-@@ -234,7 +236,7 @@ static int port_afu_init(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
--	return sysfs_create_files(&pdev->dev.kobj, port_afu_attrs);
-+	return device_add_groups(&pdev->dev, port_afu_groups);
- }
- 
- static void port_afu_uinit(struct platform_device *pdev,
-@@ -242,7 +244,7 @@ static void port_afu_uinit(struct platform_device *pdev,
- {
- 	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
- 
--	sysfs_remove_files(&pdev->dev.kobj, port_afu_attrs);
-+	device_remove_groups(&pdev->dev, port_afu_groups);
- }
- 
- static const struct dfl_feature_ops port_afu_ops = {
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 086ad2420ade..0be4635583d5 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -72,12 +72,13 @@ static ssize_t bitstream_metadata_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(bitstream_metadata);
- 
--static const struct attribute *fme_hdr_attrs[] = {
-+static struct attribute *fme_hdr_attrs[] = {
- 	&dev_attr_ports_num.attr,
- 	&dev_attr_bitstream_id.attr,
- 	&dev_attr_bitstream_metadata.attr,
- 	NULL,
- };
-+ATTRIBUTE_GROUPS(fme_hdr);
- 
- static int fme_hdr_init(struct platform_device *pdev,
- 			struct dfl_feature *feature)
-@@ -89,7 +90,7 @@ static int fme_hdr_init(struct platform_device *pdev,
- 	dev_dbg(&pdev->dev, "FME cap %llx.\n",
- 		(unsigned long long)readq(base + FME_HDR_CAP));
- 
--	ret = sysfs_create_files(&pdev->dev.kobj, fme_hdr_attrs);
-+	ret = device_add_groups(&pdev->dev, fme_hdr_groups);
- 	if (ret)
- 		return ret;
- 
-@@ -100,7 +101,7 @@ static void fme_hdr_uinit(struct platform_device *pdev,
- 			  struct dfl_feature *feature)
- {
- 	dev_dbg(&pdev->dev, "FME HDR UInit.\n");
--	sysfs_remove_files(&pdev->dev.kobj, fme_hdr_attrs);
-+	device_remove_groups(&pdev->dev, fme_hdr_groups);
- }
- 
- static const struct dfl_feature_ops fme_hdr_ops = {
--- 
-2.22.0
+git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git
 
+Branch is 'next'.
+
+Cheers,
+
+Joel
