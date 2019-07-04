@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F6DC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B69C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BFB218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7ACB218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfGDQfW (ORCPT
+        id S1727685AbfGDQfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 4 Jul 2019 12:35:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59664 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:59656 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfGDQeE (ORCPT
+        with ESMTP id S1727353AbfGDQeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jul 2019 12:34:04 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hj4gM-0005ft-La; Thu, 04 Jul 2019 18:34:02 +0200
-Message-Id: <20190704155609.436940785@linutronix.de>
+        id 1hj4gM-0005fm-65; Thu, 04 Jul 2019 18:34:02 +0200
+Message-Id: <20190704155609.339941432@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 04 Jul 2019 17:51:57 +0200
+Date:   Thu, 04 Jul 2019 17:51:56 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
         Stephane Eranian <eranian@google.com>,
         Feng Tang <feng.tang@intel.com>
-Subject: [patch V2 12/25] x86/cpu: Move arch_smt_update() to a neutral place
+Subject: [patch V2 11/25] smp/hotplug: Track booted once CPUs in a cpumask
 References: <20190704155145.617706117@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -42,55 +42,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch_smt_update() will be used to control IPI/NMI broadcasting via the
-shorthand mechanism. Keeping it in the bugs file and calling the apic
-function from there is possible, but not really intuitive.
+The booted once information which is required to deal with the MCE
+broadcast issue on X86 correctly is stored in the per cpu hotplug state,
+which is perfectly fine for the intended purpose.
 
-Move it to a neutral place and invoke the bugs function from there.
+X86 needs that information for supporting NMI broadcasting via shortcuts,
+but retrieving it from per cpu data is cumbersome.
 
-No functional change.
+Move it to a cpumask so the information can be checked against the
+cpu_present_mask quickly.
+
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/bugs.h  |    2 ++
- arch/x86/kernel/cpu/bugs.c   |    2 +-
- arch/x86/kernel/cpu/common.c |    9 +++++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ include/linux/cpumask.h |    2 ++
+ kernel/cpu.c            |   11 +++++++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
---- a/arch/x86/include/asm/bugs.h
-+++ b/arch/x86/include/asm/bugs.h
-@@ -18,4 +18,6 @@ int ppro_with_ram_bug(void);
- static inline int ppro_with_ram_bug(void) { return 0; }
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -115,6 +115,8 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_active(cpu)		((cpu) == 0)
  #endif
  
-+extern void cpu_bugs_smt_update(void);
++extern cpumask_t cpus_booted_once_mask;
 +
- #endif /* _ASM_X86_BUGS_H */
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -700,7 +700,7 @@ static void update_mds_branch_idle(void)
- 
- #define MDS_MSG_SMT "MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more details.\n"
- 
--void arch_smt_update(void)
-+void cpu_bugs_smt_update(void)
+ static inline void cpu_max_bits_warn(unsigned int cpu, unsigned int bits)
  {
- 	/* Enhanced IBRS implies STIBP. No update required. */
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1880,3 +1880,12 @@ void microcode_check(void)
- 	pr_warn("x86/CPU: CPU features have changed after loading microcode, but might not take effect.\n");
- 	pr_warn("x86/CPU: Please consider either early loading through initrd/built-in or a potential BIOS update.\n");
- }
+ #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -62,7 +62,6 @@ struct cpuhp_cpu_state {
+ 	bool			rollback;
+ 	bool			single;
+ 	bool			bringup;
+-	bool			booted_once;
+ 	struct hlist_node	*node;
+ 	struct hlist_node	*last;
+ 	enum cpuhp_state	cb_state;
+@@ -76,6 +75,10 @@ static DEFINE_PER_CPU(struct cpuhp_cpu_s
+ 	.fail = CPUHP_INVALID,
+ };
+ 
++#ifdef CONFIG_SMP
++cpumask_t cpus_booted_once_mask;
++#endif
 +
-+/*
-+ * Invoked from core CPU hotplug code after hotplug operations
-+ */
-+void arch_smt_update(void)
-+{
-+	/* Handle the speculative execution misfeatures */
-+	cpu_bugs_smt_update();
-+}
+ #if defined(CONFIG_LOCKDEP) && defined(CONFIG_SMP)
+ static struct lockdep_map cpuhp_state_up_map =
+ 	STATIC_LOCKDEP_MAP_INIT("cpuhp_state-up", &cpuhp_state_up_map);
+@@ -433,7 +436,7 @@ static inline bool cpu_smt_allowed(unsig
+ 	 * CPU. Otherwise, a broadacasted MCE observing CR4.MCE=0b on any
+ 	 * core will shutdown the machine.
+ 	 */
+-	return !per_cpu(cpuhp_state, cpu).booted_once;
++	return !cpumask_test_cpu(cpu, &cpus_booted_once_mask);
+ }
+ #else
+ static inline bool cpu_smt_allowed(unsigned int cpu) { return true; }
+@@ -1066,7 +1069,7 @@ void notify_cpu_starting(unsigned int cp
+ 	int ret;
+ 
+ 	rcu_cpu_starting(cpu);	/* Enables RCU usage on this CPU. */
+-	st->booted_once = true;
++	cpumask_set_cpu(cpu, &cpus_booted_once_mask);
+ 	while (st->state < target) {
+ 		st->state++;
+ 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
+@@ -2327,7 +2330,7 @@ void __init boot_cpu_init(void)
+ void __init boot_cpu_hotplug_init(void)
+ {
+ #ifdef CONFIG_SMP
+-	this_cpu_write(cpuhp_state.booted_once, true);
++	cpumask_set_cpu(smp_processor_id(), &cpus_booted_once_mask);
+ #endif
+ 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
+ }
 
 
