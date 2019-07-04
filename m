@@ -2,99 +2,166 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC9CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCCCC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78EA216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4147216E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+iUzkBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfGDHYn (ORCPT
+        id S1727351AbfGDH0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:24:43 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33045 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfGDHYn (ORCPT
+        Thu, 4 Jul 2019 03:26:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33250 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfGDH0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:24:43 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r6so4893010qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:24:42 -0700 (PDT)
+        Thu, 4 Jul 2019 03:26:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so5446801wru.0;
+        Thu, 04 Jul 2019 00:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=acx589NG1jiLdMklxVwLi+wOV3q1fLOPyM7fTcUpo3I=;
+        b=m+iUzkBtjYaLgESnRPV9+Z/nVko0OyGzmiwqgN8BW9oDY1jcJTkJ8ylTuoYrAQAoc8
+         FiPG3Mph8IKFK8/i5V4n1VMoQq6jytVBIPcCHrCrC0nWsIEF31I3GECxsdQWI7HjPsgX
+         rnpLB5K/HQJS04oXWr+VfisP+kBIdYXR+YcWlqBrA6HNVEe8tTURbnw6WWOOlQY0HAGz
+         qeu/3XAcDNdkbXkq+UB+uDcqEmdBAM5BQ6qHqY2+3F83qoesCqGUnHtj/siW1F0YSfqH
+         kWYWy35GgNqjXkF1A3ftoROfz04W00OL6E+p95a6etLTuNgPD1LblDGRjT/AH2lrANys
+         EZoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDiJLmK4lsRv09/RWmHspT7s3JNRwYIRRTfdV0/KcPk=;
-        b=gJsMi6U2llYn7n+ocKBEioqzM4MOMoZa7aZGmMNAJGkIR4DOYezB8CYvGo6H36bRUC
-         Wo3HsdTZDHB8ZDw059Xm3Bm1f3aXG2zPlUHWSdVUDaWeiggJpg6GQ3I/wWZ7dfYl3JD5
-         lkzYOd0hr32+hHpmbIBAMcE5TXTfoLT9kkhzg3U1P1+/jDHtq6gf7HIIaHu4h/lUpOnX
-         ThK3zGP/SGu6dmfBSEnECV46OfoXL/iJkhp2OsLl7DGUabTc9QeQvDFTX7nc5KKL5RA0
-         Q4ALeuX6vByKNOFxfIKODedU9a8Z1PVFS3M+pL+YRFRKSb60UYSC58nmyb/NSpnhKcBz
-         V5qA==
-X-Gm-Message-State: APjAAAXizAlpQfHm6A3qg4af7I4zNK8ipOEG0AaNms/7Jp34xl/oYq0/
-        ODxtlnqXlmuf0iaRbbMXc51gDlt9NkHvvbaaylAV75dTcxo=
-X-Google-Smtp-Source: APXvYqwxlD/P4CCDKjMVGdG8xPJcet52JK9nvRYqifka3GsmjS95OecKwRPDaEtQSxIxvevA4hsIaxG54zrpthr+8r8=
-X-Received: by 2002:a37:ad12:: with SMTP id f18mr33567291qkm.3.1562225082093;
- Thu, 04 Jul 2019 00:24:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=acx589NG1jiLdMklxVwLi+wOV3q1fLOPyM7fTcUpo3I=;
+        b=ofiVXlvp8r6+fe1K3YOxlTNELOc2QLbLvWJ62OQkueSWBX2Tfu6msVScx/MI680+Go
+         YAoWPzE/lfmJPL1QCWZjAN/WzgG4YMmxKFRaGCOr0KjJaphq9m7PsMCJmF8nl0yGwFay
+         P13u1UfSxCTPxpPA7NvzxAZCoqMbNemCuEjFc2qwW5Kn3RPPpj3AP+Azyfo93NpyMOif
+         rMqUXyyWGfe3fRfkZF46rZqMAuk4Fw9w2boz+NAt4L+qW28ARxtsvb/QsZ5R5h+LPyLE
+         LbA4ZqWKsQ+92SJKM7oLuR446lJCRxD3J+JJYyN4qr1r9km24KpFuSruGUvWS16Vv+VW
+         PLew==
+X-Gm-Message-State: APjAAAUDPDyOogdh8QTIQOCJ2QRdgickCO4GlsvU1BjerR7Ba0O05vfO
+        YHMgom8anakOzxM7MnYhpPo=
+X-Google-Smtp-Source: APXvYqxMOnY0H5x2seVGKnaSEPGyBJd2lKzLEa8n4+9QTNHnN3GtySgKLzsYZyLUJeTU+jvLOMAuOg==
+X-Received: by 2002:a5d:43c9:: with SMTP id v9mr31873353wrr.70.1562225201923;
+        Thu, 04 Jul 2019 00:26:41 -0700 (PDT)
+Received: from merlot.mazyland.net (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.googlemail.com with ESMTPSA id p11sm5163388wrm.53.2019.07.04.00.26.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 00:26:41 -0700 (PDT)
+From:   Milan Broz <gmazyland@gmail.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] tpm: Fix null pointer dereference on chip register error path
+Date:   Thu,  4 Jul 2019 09:26:15 +0200
+Message-Id: <20190704072615.31143-1-gmazyland@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190703230125.aynx4ianvqqjt5d7@linux.intel.com>
+References: <20190703230125.aynx4ianvqqjt5d7@linux.intel.com>
 MIME-Version: 1.0
-References: <20190625210441.199514-1-ndesaulniers@google.com>
-In-Reply-To: <20190625210441.199514-1-ndesaulniers@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 4 Jul 2019 09:24:24 +0200
-Message-ID: <CAK8P3a2uW+a_=siusLTt=rq-erw1tyJfU8PDGaXuVcJoKHjpRw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Kconfig: default to AEABI w/ Clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:04 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
-> arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
-> is not selected (such as when OABI_COMPAT is selected).
->
-> While this means that OABI userspaces wont be able to upgraded to
-> kernels built with Clang, it means that boards that don't enable AEABI
-> like s3c2410_defconfig will stop failing to link in KernelCI when built
-> with Clang.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/482
-> Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+If clk_enable is not defined and chip initialization
+is canceled code hits null dereference.
 
-Looks good to me,
+Easily reproducible with vTPM init fail:
+  swtpm chardev --tpmstate dir=nonexistent_dir --tpm2 --vtpm-proxy
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+BUG: kernel NULL pointer dereference, address: 00000000
+...
+Call Trace:
+ tpm_chip_start+0x9d/0xa0 [tpm]
+ tpm_chip_register+0x10/0x1a0 [tpm]
+ vtpm_proxy_work+0x11/0x30 [tpm_vtpm_proxy]
+ process_one_work+0x214/0x5a0
+ worker_thread+0x134/0x3e0
+ ? process_one_work+0x5a0/0x5a0
+ kthread+0xd4/0x100
+ ? process_one_work+0x5a0/0x5a0
+ ? kthread_park+0x90/0x90
+ ret_from_fork+0x19/0x24
 
-Please add it to Russell's patch tracker if you haven't already.
+Fixes: 719b7d81f204 ("tpm: introduce tpm_chip_start() and tpm_chip_stop()")
+Cc: stable@vger.kernel.org # v5.1+
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
+---
+ drivers/char/tpm/tpm-chip.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-Most of the .config files that don't set AEABI (and a lot of the others
-as well) have likely never been booted on real hardware with a modern
-kernel in a long time. There have not been any distros using OABI in
-a long time (Debian Lenny was released in 2009), and gcc dropped
-support for it a few years later.
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 90325e1749fb..db6ac6f83948 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -77,6 +77,18 @@ static int tpm_go_idle(struct tpm_chip *chip)
+ 	return chip->ops->go_idle(chip);
+ }
+ 
++static void tpm_clk_enable(struct tpm_chip *chip)
++{
++	if (chip->ops->clk_enable)
++		chip->ops->clk_enable(chip, true);
++}
++
++static void tpm_clk_disable(struct tpm_chip *chip)
++{
++	if (chip->ops->clk_enable)
++		chip->ops->clk_enable(chip, false);
++}
++
+ /**
+  * tpm_chip_start() - power on the TPM
+  * @chip:	a TPM chip to use
+@@ -89,13 +101,12 @@ int tpm_chip_start(struct tpm_chip *chip)
+ {
+ 	int ret;
+ 
+-	if (chip->ops->clk_enable)
+-		chip->ops->clk_enable(chip, true);
++	tpm_clk_enable(chip);
+ 
+ 	if (chip->locality == -1) {
+ 		ret = tpm_request_locality(chip);
+ 		if (ret) {
+-			chip->ops->clk_enable(chip, false);
++			tpm_clk_disable(chip);
+ 			return ret;
+ 		}
+ 	}
+@@ -103,8 +114,7 @@ int tpm_chip_start(struct tpm_chip *chip)
+ 	ret = tpm_cmd_ready(chip);
+ 	if (ret) {
+ 		tpm_relinquish_locality(chip);
+-		if (chip->ops->clk_enable)
+-			chip->ops->clk_enable(chip, false);
++		tpm_clk_disable(chip);
+ 		return ret;
+ 	}
+ 
+@@ -124,8 +134,7 @@ void tpm_chip_stop(struct tpm_chip *chip)
+ {
+ 	tpm_go_idle(chip);
+ 	tpm_relinquish_locality(chip);
+-	if (chip->ops->clk_enable)
+-		chip->ops->clk_enable(chip, false);
++	tpm_clk_disable(chip);
+ }
+ EXPORT_SYMBOL_GPL(tpm_chip_stop);
+ 
+-- 
+2.20.1
 
-We could probably change most of these to use OABI_COMPAT
-instead, aside from any ones that Russell wants to keep building as
-OABI for his own machines.
-
-       Arnd
