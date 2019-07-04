@@ -2,71 +2,59 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA22FC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65482C06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF85218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0A0218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562229993;
-	bh=tC7+gI4m6/FmoXDFgw+iYQurMimFbVLSYsLJZsEwswo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yiNiu/aH/Ilk0EnTjSFAcBa/G6/S3AvrSwp+0/aTuS5qB72BbFBCS6vQT54TvWO/k
-	 p0JZRFSOyJz/dxDdhRfqjjeHLFr05whDTy6qyCuvaTERhRxqYlVbmx8dOfFGLXQ03i
-	 lxLKI8jdmP2trPve4MWiKfZw/IlgUCVXTXj5Z868=
+	s=default; t=1562230002;
+	bh=1gMIyrG8zz1L+WGLjYc1vTwxG3KfgSDuIVw1K4VZDhs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mGsxt3hECPqsUtz6+blza50xmly7xUvJZ1sRnRmq+blsxc7EPdZCAbLp3PSgLDLXb
+	 3anLqydAbp5iAlg6mtqQIFJgE0NQq9Lb3zanJe+xVmntU7Rb6iF++MvhofaJ2XwlPK
+	 92p6wE2cK+UtmvvE9uh5A8GGK0vtsAoKD3rfMckw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfGDIqc (ORCPT
+        id S1727244AbfGDIqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfGDIqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:46:31 -0400
+        id S1727046AbfGDIqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE44B2189E;
-        Thu,  4 Jul 2019 08:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABCE8218A0;
+        Thu,  4 Jul 2019 08:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562229990;
-        bh=tC7+gI4m6/FmoXDFgw+iYQurMimFbVLSYsLJZsEwswo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=k1z/iZmhkgL1+r5CK+JywKsx41uolSAz0o6l9oruBRWsCwsK3uP7NC8yhwHmkRfmT
-         uYnpWBIafyLG3LbrauXyApoKrbN+r0LhrfsET7Ma07/BKj/2HPxh7h3pjP8QOCjSuk
-         V1ZrAdjygpzHO7Js27pZu/f0TdYw+0Cvmc/N3ge8=
+        s=default; t=1562229999;
+        bh=1gMIyrG8zz1L+WGLjYc1vTwxG3KfgSDuIVw1K4VZDhs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ey4q4tyK5k8N8IQJP5Ft1BVL9Bqo2dA69gHM4fSA1UTtJMRgysawqsaiCACK7GkBd
+         t2z6cFLXdKm/D/tkoa9QzPt+EDnCvhSYEXJKb3GsG8jiSw6ShRHV/p3vByNNDAl5Rq
+         BoJQpokuB7u+hZphY3a5sgR0q2SdB00LNQd6CIQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Slaby <jslaby@suse.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
         Richard Gong <richard.gong@linux.intel.com>,
         Romain Izard <romain.izard.pro@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-serial@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: [PATCH 00/11] Platform drivers, provide a way to add sysfs groups easily
-Date:   Thu,  4 Jul 2019 10:46:06 +0200
-Message-Id: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH 01/11] Platform: add a dev_groups pointer to struct platform_driver
+Date:   Thu,  4 Jul 2019 10:46:07 +0200
+Message-Id: <20190704084617.3602-2-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,48 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a platform driver wants to add a sysfs group, it has to do so in a
-racy way, adding it after the driver is bound.  To resolve this issue,
-have the platform driver core do this for the driver, making the
-individual drivers logic smaller and simpler, and solving the race at
-the same time.
+Platform drivers like to add sysfs groups to their device, but right now
+they have to do it "by hand".  The driver core should handle this for
+them, but there is no way to get to the bus-default attribute groups as
+all platform devices are "special and unique" one-off drivers/devices.
 
-All of these patches depend on the first patch.  I'll take the first one
-through my driver-core tree, and any subsystem maintainer can either ack
-their individul patch and I will be glad to also merge it, or they can
-wait until after 5.3-rc1 when the core patch hits Linus's tree and then
-take it, it's up to them.
+To combat this, add a dev_groups pointer to platform_driver which allows
+a platform driver to set up a list of default attributes that will be
+properly created and removed by the platform driver core when a probe()
+function is successful and removed right before the device is unbound.
 
-Thank to Richard Gong for the idea and the testing of the platform
-driver patch.
+Cc: Richard Gong <richard.gong@linux.intel.com>
+Cc: Romain Izard <romain.izard.pro@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mans Rullgard <mans@mansr.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/base/platform.c         | 40 +++++++++++++++++++++------------
+ include/linux/platform_device.h |  1 +
+ 2 files changed, 27 insertions(+), 14 deletions(-)
 
-Greg Kroah-Hartman (11):
-  Platform: add a dev_groups pointer to struct platform_driver
-  uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
-  serial: sh-sci: use driver core functions, not sysfs ones.
-  firmware: arm_scpi: convert platform driver to use dev_groups
-  olpc: x01: convert platform driver to use dev_groups
-  platform: x86: hp-wmi: convert platform driver to use dev_groups
-  video: fbdev: wm8505fb: convert platform driver to use dev_groups
-  video: fbdev: w100fb: convert platform driver to use dev_groups
-  video: fbdev: sm501fb: convert platform driver to use dev_groups
-  input: keyboard: gpio_keys: convert platform driver to use dev_groups
-  input: axp20x-pek: convert platform driver to use dev_groups
-
- arch/x86/platform/olpc/olpc-xo1-sci.c | 17 ++++------
- drivers/base/platform.c               | 40 +++++++++++++++--------
- drivers/firmware/arm_scpi.c           |  5 +--
- drivers/input/keyboard/gpio_keys.c    | 13 ++------
- drivers/input/misc/axp20x-pek.c       | 15 ++-------
- drivers/platform/x86/hp-wmi.c         | 47 +++++++--------------------
- drivers/tty/serial/sh-sci.c           | 22 +++++--------
- drivers/uio/uio_fsl_elbc_gpcm.c       | 23 +++++--------
- drivers/video/fbdev/sm501fb.c         | 37 +++++----------------
- drivers/video/fbdev/w100fb.c          | 23 ++++++-------
- drivers/video/fbdev/wm8505fb.c        | 13 ++++----
- include/linux/platform_device.h       |  1 +
- 12 files changed, 94 insertions(+), 162 deletions(-)
-
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 713903290385..d81fcd435b52 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -598,6 +598,21 @@ struct platform_device *platform_device_register_full(
+ }
+ EXPORT_SYMBOL_GPL(platform_device_register_full);
+ 
++static int platform_drv_remove(struct device *_dev)
++{
++	struct platform_driver *drv = to_platform_driver(_dev->driver);
++	struct platform_device *dev = to_platform_device(_dev);
++	int ret = 0;
++
++	if (drv->remove)
++		ret = drv->remove(dev);
++	if (drv->dev_groups)
++		device_remove_groups(_dev, drv->dev_groups);
++	dev_pm_domain_detach(_dev, true);
++
++	return ret;
++}
++
+ static int platform_drv_probe(struct device *_dev)
+ {
+ 	struct platform_driver *drv = to_platform_driver(_dev->driver);
+@@ -614,8 +629,18 @@ static int platform_drv_probe(struct device *_dev)
+ 
+ 	if (drv->probe) {
+ 		ret = drv->probe(dev);
+-		if (ret)
++		if (ret) {
+ 			dev_pm_domain_detach(_dev, true);
++			goto out;
++		}
++	}
++	if (drv->dev_groups) {
++		ret = device_add_groups(_dev, drv->dev_groups);
++		if (ret) {
++			platform_drv_remove(_dev);
++			return ret;
++		}
++		kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
+ 	}
+ 
+ out:
+@@ -632,19 +657,6 @@ static int platform_drv_probe_fail(struct device *_dev)
+ 	return -ENXIO;
+ }
+ 
+-static int platform_drv_remove(struct device *_dev)
+-{
+-	struct platform_driver *drv = to_platform_driver(_dev->driver);
+-	struct platform_device *dev = to_platform_device(_dev);
+-	int ret = 0;
+-
+-	if (drv->remove)
+-		ret = drv->remove(dev);
+-	dev_pm_domain_detach(_dev, true);
+-
+-	return ret;
+-}
+-
+ static void platform_drv_shutdown(struct device *_dev)
+ {
+ 	struct platform_driver *drv = to_platform_driver(_dev->driver);
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index cc464850b71e..027f1e1d7af8 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -190,6 +190,7 @@ struct platform_driver {
+ 	int (*resume)(struct platform_device *);
+ 	struct device_driver driver;
+ 	const struct platform_device_id *id_table;
++	const struct attribute_group **dev_groups;
+ 	bool prevent_deferred_probe;
+ };
+ 
 -- 
 2.22.0
 
