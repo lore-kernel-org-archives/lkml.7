@@ -2,153 +2,351 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9050CC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AB9C4646D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5345F218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EtFVhVhP";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="DfiQkeB9"
+	by mail.kernel.org (Postfix) with ESMTP id E2803218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfGDKNm (ORCPT
+        id S1727529AbfGDKOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:13:42 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:32774 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727249AbfGDKNm (ORCPT
+        Thu, 4 Jul 2019 06:14:07 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59358 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfGDKOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:13:42 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E5519C0AC0;
-        Thu,  4 Jul 2019 10:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562235221; bh=MiV6q5HB26oAfh7p67P73WEZBvVfjK2jDRsddh7VuhY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=EtFVhVhPmkdl0Zfx27sC/0zwpgahRGE0u/Glbx4n3JjHSUQ5dmQpTWOsODJSeTL+0
-         /qz0XbKhCGd0v8JgyF8Y33fTM/cYnV1Ean5MvOzzL72wlemMgWGl3MIF2MbpzDf4O4
-         VcxR60mlsLo2Y+IrFTjMJI+dYvPkVgjgCqQPCfUdiIrb0y/KZFU2PhjZ6/Ydr9WN0B
-         CMoQu7ntfR+wL+bOtmappodqipizDV07p/jWW/kmcQohZpc1NCwi7ZKmzwQk1PS/CY
-         BSRXnS9QxM1w/LSrbaSSzCypLqXOXXvSycJCJa0U28elHrFUuF5ZB9btsNQeU6puyy
-         8o9s6FcM/9jGA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 80C68A0067;
-        Thu,  4 Jul 2019 10:13:39 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 4 Jul 2019 03:13:39 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 4 Jul 2019 03:13:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=roDmDJe5s5LZPlGJ7kdtWOYs0a+MGkoenVZKnCqIN48=;
- b=DfiQkeB91zKV7m6ndi0CrYK2fXIrVxasWwIsoTAt4RgjsoQY9+y5mC9ItdVBKdk/RBLbBlcYLau41bXN3uHpbeEiYf9OJ3v8l8n4P0jCNaCytcifKcoGb+BBfi9+4L76AC2lC1Gg/YcGzbgIV/Gpjwb1YvzgpRuBULGsugPdF8Y=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB3572.namprd12.prod.outlook.com (20.178.212.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 4 Jul 2019 10:13:37 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 10:13:37 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/aa6O3oAgAABAmA=
-Date:   Thu, 4 Jul 2019 10:13:37 +0000
-Message-ID: <BN8PR12MB3266BC5322AADFAC49D9BAFAD3FA0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
-        <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <20190704120018.4523a119@carbon>
-In-Reply-To: <20190704120018.4523a119@carbon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 76af8e59-5f8f-4d6d-432d-08d7006847a6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3572;
-x-ms-traffictypediagnostic: BN8PR12MB3572:
-x-microsoft-antispam-prvs: <BN8PR12MB3572E3E7377D836F6AE4D01AD3FA0@BN8PR12MB3572.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(346002)(39860400002)(376002)(52314003)(199004)(189003)(99286004)(7696005)(33656002)(5660300002)(6246003)(2906002)(486006)(55016002)(6506007)(53936002)(76176011)(305945005)(54906003)(11346002)(6436002)(7736002)(446003)(476003)(66556008)(66066001)(66446008)(64756008)(52536014)(14454004)(74316002)(76116006)(9686003)(478600001)(316002)(66946007)(66476007)(73956011)(110136005)(102836004)(81166006)(4326008)(86362001)(8676002)(71200400001)(7416002)(229853002)(8936002)(25786009)(81156014)(186003)(26005)(256004)(6116002)(3846002)(71190400001)(5024004)(68736007)(6636002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3572;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: D1S33XVp7Xxgc3lxTHi3Y3kDAmFleeh9xoTeI2j2dVvdeyJMyl16RpiUSXGDeJHdr5uEs4CWsCL+VRCrR2j0kB4mGfFNE7VE85MyJyinX4dkGxB4IYZh9m+VSj/r3RqTMVjLYetenMk+n4COCMLFwNh6W6Tax2v+xSgoqmoyryTZvts7aeB+F563yicDsWWAI/aVFvfaTEH9UGYwuOVVdnkWNqbD7LS3eRP4FoPSXxZtFx6cwvezLwdB+dVaf3JOtTuThIx2C2Nb7ZuDAVoMCAhBMl+ygUwQDudRHEUVBaznyHMCexYwm4PBFA6OMdwVCck4Ha7UsWdjjGR6X/xh8Kija2K1fYdld2bGsM1f8Ci7Lh4ekzz1Xra8tCbwDMN8wMRvb3KIOxAZzU6SD30aJbwrzZtbB0o8fhU3HBDarJc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 4 Jul 2019 06:14:07 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id daa413db94795919; Thu, 4 Jul 2019 12:14:05 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] cpuidle/drivers/mobile: Add new governor for mobile/embedded systems
+Date:   Thu, 04 Jul 2019 12:14:05 +0200
+Message-ID: <8334994.XHaO1tGd4f@kreacher>
+In-Reply-To: <20190620115826.4897-1-daniel.lezcano@linaro.org>
+References: <20190620115826.4897-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76af8e59-5f8f-4d6d-432d-08d7006847a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 10:13:37.2413
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3572
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+On Thursday, June 20, 2019 1:58:08 PM CEST Daniel Lezcano wrote:
+> The objective is the same for all the governors: save energy, but at
+> the end the governors menu, ladder and teo aim to improve the
+> performances with an acceptable energy drop for some workloads which
+> are identified for servers and desktops (with the help of a firmware).
+> 
+> The ladder governor is designed for server with a periodic tick
+> configuration.
+> 
+> The menu governor does not behave nicely with the mobile platform and
+> the energy saving for the multimedia workloads is worst than picking
+> up randomly an idle state.
+> 
+> The teo governor acts efficiently, it promotes shallower state for
+> performances which is perfect for the servers / desktop but inadequate
+> for mobile because the energy consumed is too high.
+> 
+> It is very difficult to do changes in these governors for embedded
+> systems without impacting performances on servers/desktops or ruin the
+> optimizations for the workloads on these platforms.
+> 
+> The mobile governor is a new governor targeting embedded systems
+> running on battery where the energy saving has a higher priority than
+> servers or desktops. This governor aims to save energy as much as
+> possible but with a performance degradation tolerance.
+> 
+> In this way, we can optimize the governor for specific mobile workload
+> and more generally embedded systems without impacting other platforms.
+> 
+> The mobile governor is built on top of the paradigm 'separate the wake
+> up sources signals and analyze them'. Three categories of wake up
+> signals are identified:
+>  - deterministic : timers
+>  - predictable : most of the devices interrupt
+>  - unpredictable : IPI rescheduling, random signals
+> 
+> The latter needs an iterative approach and the help of the scheduler
+> to give more input to the governor.
+> 
+> The governor uses the irq timings where we predict the next interrupt
+> occurrences on the current CPU and the next timer. It is well suited
+> for mobile and more generally embedded systems where the interrupts
+> are usually pinned on one CPU and where the power is more important
+> than the performances.
+> 
+> The multimedia applications on the embedded system spawn multiple
+> threads which are migrated across the different CPUs and waking
+> between them up. In order to catch this situation we have also to
+> track the idle task rescheduling duration with a relative degree of
+> confidence as the scheduler is involved in the task migrations. The
+> resched information is in the scope of the governor via the reflect
+> callback.
+> 
+> The governor begins with a clean foundation basing the prediction on
+> the irq behavior returned by the irq timings, the timers and the idle
+> task rescheduling. The advantage of the approach is we have a full
+> view of the wakeup sources as we identify them separately and then we
+> can control the situation without relying on biased heuristics.
+> 
+> This first iteration provides a basic prediction but improves on some
+> mobile platforms better energy for better performance for multimedia
+> workloads.
+> 
+> The scheduling aspect will be optimized iteratively with non
+> regression testing for previous identified workloads on an Android
+> reference platform.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-> The page_pool DMA mapping cannot be "kept" when page traveling into the
-> network stack attached to an SKB.  (Ilias and I have a long term plan[1]
-> to allow this, but you cannot do it ATM).
+Note that there are build issues reported by 0-day that need to be fixed.
 
-The reason I recycle the page is this previous call to:
+Also, IMO this really should be documented better in the tree, not just in the changelog.
+At least the use case to be covered by this governor should be clearly documented and
+it would be good to describe the algorithm.
 
-	skb_copy_to_linear_data()
+> ---
+>  drivers/cpuidle/Kconfig            |  11 ++-
+>  drivers/cpuidle/governors/Makefile |   1 +
+>  drivers/cpuidle/governors/mobile.c | 151 +++++++++++++++++++++++++++++
+>  3 files changed, 162 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/cpuidle/governors/mobile.c
+> 
+> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
+> index a4ac31e4a58c..e2376d85e288 100644
+> --- a/drivers/cpuidle/Kconfig
+> +++ b/drivers/cpuidle/Kconfig
+> @@ -5,7 +5,7 @@ config CPU_IDLE
+>  	bool "CPU idle PM support"
+>  	default y if ACPI || PPC_PSERIES
+>  	select CPU_IDLE_GOV_LADDER if (!NO_HZ && !NO_HZ_IDLE)
+> -	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO
+> +	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO && !CPU_IDLE_GOV_MOBILE
+>  	help
+>  	  CPU idle is a generic framework for supporting software-controlled
+>  	  idle processor power management.  It includes modular cross-platform
+> @@ -33,6 +33,15 @@ config CPU_IDLE_GOV_TEO
+>  	  Some workloads benefit from using it and it generally should be safe
+>  	  to use.  Say Y here if you are not happy with the alternatives.
+>  
+> +config CPU_IDLE_GOV_MOBILE
+> +	bool "Mobile governor"
+> +	select IRQ_TIMINGS
+> +	help
+> +	  The mobile governor is based on irq timings measurements and
+> +	  pattern research combined with the next timer. This governor
+> +	  suits very well on embedded systems where the interrupts are
+> +	  grouped on a single core and the power is the priority.
+> +
+>  config DT_IDLE_STATES
+>  	bool
+>  
+> diff --git a/drivers/cpuidle/governors/Makefile b/drivers/cpuidle/governors/Makefile
+> index 42f44cc610dd..f09da7178670 100644
+> --- a/drivers/cpuidle/governors/Makefile
+> +++ b/drivers/cpuidle/governors/Makefile
+> @@ -6,3 +6,4 @@
+>  obj-$(CONFIG_CPU_IDLE_GOV_LADDER) += ladder.o
+>  obj-$(CONFIG_CPU_IDLE_GOV_MENU) += menu.o
+>  obj-$(CONFIG_CPU_IDLE_GOV_TEO) += teo.o
+> +obj-$(CONFIG_CPU_IDLE_GOV_MOBILE) += mobile.o
+> diff --git a/drivers/cpuidle/governors/mobile.c b/drivers/cpuidle/governors/mobile.c
+> new file mode 100644
+> index 000000000000..8fda0f9b960b
+> --- /dev/null
+> +++ b/drivers/cpuidle/governors/mobile.c
+> @@ -0,0 +1,151 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019, Linaro Ltd
+> + * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
+> + */
+> +#include <linux/cpuidle.h>
+> +#include <linux/kernel.h>
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/tick.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/sched/clock.h>
+> +
+> +struct mobile_device {
+> +	u64 idle_ema_avg;
+> +	u64 idle_total;
+> +	unsigned long last_jiffies;
+> +};
+> +
+> +#define EMA_ALPHA_VAL		64
+> +#define EMA_ALPHA_SHIFT		7
+> +#define MAX_RESCHED_INTERVAL_MS	100
+> +
+> +static DEFINE_PER_CPU(struct mobile_device, mobile_devices);
+> +
+> +static int mobile_ema_new(s64 value, s64 ema_old)
+> +{
+> +	if (likely(ema_old))
+> +		return ema_old + (((value - ema_old) * EMA_ALPHA_VAL) >>
+> +				  EMA_ALPHA_SHIFT);
+> +	return value;
+> +}
+> +
+> +static void mobile_reflect(struct cpuidle_device *dev, int index)
+> +{
+> +        struct mobile_device *mobile_dev = this_cpu_ptr(&mobile_devices);
+> +	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
+> +	struct cpuidle_state *s = &drv->states[index];
+> +	int residency;
+> +
+> +	/*
+> +	 * The idle task was not rescheduled since
+> +	 * MAX_RESCHED_INTERVAL_MS, let's consider the duration is
+> +	 * long enough to clear our stats.
+> +	 */
+> +	if (time_after(jiffies, mobile_dev->last_jiffies +
+> +		       msecs_to_jiffies(MAX_RESCHED_INTERVAL_MS)))
+> +		mobile_dev->idle_ema_avg = 0;
 
-So, technically, I'm syncing to CPU the page(s) and then memcpy to a=20
-previously allocated SKB ... So it's safe to just recycle the mapping I=20
-think.
+Why jiffies?  Any particular reason?
 
-Its kind of using bounce buffers and I do see performance gain in this=20
-(I think the reason is because my setup uses swiotlb for DMA mapping).
+> +
+> +	/*
+> +	 * Sum all the residencies in order to compute the total
+> +	 * duration of the idle task.
+> +	 */
+> +	residency = dev->last_residency - s->exit_latency;
+> +	if (residency > 0)
+> +		mobile_dev->idle_total += residency;
+> +
+> +	/*
+> +	 * We exited the idle state with the need_resched() flag, the
+> +	 * idle task will be rescheduled, so store the duration the
+> +	 * idle task was scheduled in an exponential moving average and
+> +	 * reset the total of the idle duration.
+> +	 */
+> +	if (need_resched()) {
+> +		mobile_dev->idle_ema_avg = mobile_ema_new(mobile_dev->idle_total,
+> +						      mobile_dev->idle_ema_avg);
+> +		mobile_dev->idle_total = 0;
+> +		mobile_dev->last_jiffies = jiffies;
+> +	}
+> +}
+> +
+> +static int mobile_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+> +		       bool *stop_tick)
+> +{
+> +	struct mobile_device *mobile_dev = this_cpu_ptr(&mobile_devices);
+> +	int latency_req = cpuidle_governor_latency_req(dev->cpu);
+> +	int i, index = 0;
+> +	ktime_t delta_next;
+> +	u64 now, irq_length, timer_length;
+> +	u64 idle_duration_us;
+> +
+> +	/*
+> +	 * Get the present time as reference for the next steps
+> +	 */
+> +	now = local_clock();
+> +
+> +	/*
+> +	 * Get the next interrupt event giving the 'now' as a
+> +	 * reference, if the next event appears to have already
+> +	 * expired then we get the 'now' returned which ends up with a
+> +	 * zero duration.
+> +	 */
+> +	irq_length = irq_timings_next_event(now) - now;
+> +
+> +	/*
+> +	 * Get the timer duration before expiration.
+> +	 */
 
-Anyway, I'm open to some suggestions on how to improve this ...
+This comment is rather redundant and the one below too. :-)
 
-> Also remember that the page_pool requires you driver to do the DMA-sync
-> operation.  I see a dma_sync_single_for_cpu(), but I didn't see a
-> dma_sync_single_for_device() (well, I noticed one getting removed).
-> (For some HW Ilias tells me that the dma_sync_single_for_device can be
-> elided, so maybe this can still be correct for you).
+> +	timer_length = ktime_to_ns(tick_nohz_get_sleep_length(&delta_next));
+> +
+> +	/*
+> +	 * Get the smallest duration between the timer and the irq next event.
+> +	 */
+> +	idle_duration_us = min_t(u64, irq_length, timer_length) / NSEC_PER_USEC;
+> +
+> +	/*
+> +	 * Get the idle task duration average if the information is
+> +	 * available.
 
-My HW just needs descriptors refilled which are in different coherent=20
-region so I don't see any reason for dma_sync_single_for_device() ...
+IMO it would be good to explain this step in more detail, especially the purpose of it.
+
+> +	 */
+> +	if (mobile_dev->idle_ema_avg)
+> +		idle_duration_us = min_t(u64, idle_duration_us,
+> +					 mobile_dev->idle_ema_avg);
+> +
+> +	for (i = 0; i < drv->state_count; i++) {
+> +		struct cpuidle_state *s = &drv->states[i];
+> +		struct cpuidle_state_usage *su = &dev->states_usage[i];
+> +
+> +		if (s->disabled || su->disable)
+> +			continue;
+> +
+> +		if (s->exit_latency > latency_req)
+> +			break;
+> +
+> +		if (idle_duration_us > s->exit_latency)
+> +			idle_duration_us = idle_duration_us - s->exit_latency;
+
+Why do you want this?
+
+It only causes you to miss an opportunity to select a deeper state sometimes,
+so what's the reason?
+
+Moreover, I don't think you should update idle_duration_us here, as the updated
+value will go to the next step if the check below doesn't trigger.
+
+> +
+> +		if (s->target_residency > idle_duration_us)
+> +			break;
+> +
+> +		index = i;
+> +	}
+> +
+> +	if (!index)
+> +		*stop_tick = false;
+
+Well, this means that the tick is stopped for all idle states deeper than state 0.
+
+If there are any states between state 0 and the deepest one and they are below
+the tick boundary, you may very well suffer the "powernightmares" problem
+because of this.
+
+> +
+> +	return index;
+> +}
+> +
+> +static struct cpuidle_governor mobile_governor = {
+> +	.name =		"mobile",
+> +	.rating =	20,
+> +	.select =	mobile_select,
+> +	.reflect =	mobile_reflect,
+> +};
+> +
+> +static int __init init_governor(void)
+> +{
+> +	irq_timings_enable();
+> +	return cpuidle_register_governor(&mobile_governor);
+> +}
+> +
+> +postcore_initcall(init_governor);
+> 
+
+
+
+
