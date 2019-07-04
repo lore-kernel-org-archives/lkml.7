@@ -2,199 +2,182 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D50C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CF6C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB82218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87A3218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfGDJVK (ORCPT
+        id S1727483AbfGDJVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:21:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9982 "EHLO
+        Thu, 4 Jul 2019 05:21:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56158 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727222AbfGDJVK (ORCPT
+        by vger.kernel.org with ESMTP id S1727201AbfGDJVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:21:10 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x649IEdk023439
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 05:21:09 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thc8d5rvd-1
+        Thu, 4 Jul 2019 05:21:30 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x649HhEC112932
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 05:21:29 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2thbfgy6up-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:21:08 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 05:20:59 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Thu, 4 Jul 2019 10:21:06 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 4 Jul 2019 10:20:47 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 10:21:02 +0100
+        Thu, 4 Jul 2019 10:20:44 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x649L19l46792912
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x649KhYw55705634
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 09:21:01 GMT
+        Thu, 4 Jul 2019 09:20:43 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 456094C04E;
-        Thu,  4 Jul 2019 09:21:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0D6B14C044;
+        Thu,  4 Jul 2019 09:20:43 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B86F14C052;
-        Thu,  4 Jul 2019 09:20:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 81BE44C04E;
+        Thu,  4 Jul 2019 09:20:41 +0000 (GMT)
 Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 09:20:59 +0000 (GMT)
+        Thu,  4 Jul 2019 09:20:41 +0000 (GMT)
 From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
 To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-pm@vger.kernel.org
 Cc:     npiggin@gmail.com, rjw@rjwysocki.net, daniel.lezcano@linaro.org,
         mpe@ellerman.id.au, ego@linux.vnet.ibm.com, dja@axtens.net,
         Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC v3 3/3] cpuidle-powernv : Recompute the idle-state timeouts when state usage is enabled/disabled
-Date:   Thu,  4 Jul 2019 04:18:27 -0500
+Subject: [PATCH v3 0/3] Forced-wakeup for stop states on Powernv
+Date:   Thu,  4 Jul 2019 04:18:24 -0500
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
-References: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19070409-0008-0000-0000-000002F9CFF9
+x-cbid: 19070409-0016-0000-0000-0000028F26FB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070409-0009-0000-0000-000022672115
-Message-Id: <20190704091827.19555-4-huntbag@linux.vnet.ibm.com>
+x-cbparentid: 19070409-0017-0000-0000-000032ECC4ED
+Message-Id: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=946 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1907040122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The disable callback can be used to compute timeout for other states
-whenever a state is enabled or disabled. We store the computed timeout
-in "timeout" defined in cpuidle state strucure. So, we compute timeout
-only when some state is enabled or disabled and not every time in the
-fast idle path.
-We also use the computed timeout to get timeout for snooze, thus getting
-rid of get_snooze_timeout for snooze loop.
+Currently, the cpuidle governors determine what idle state a idling CPU
+should enter into based on heuristics that depend on the idle history on
+that CPU. Given that no predictive heuristic is perfect, there are cases
+where the governor predicts a shallow idle state, hoping that the CPU will
+be busy soon. However, if no new workload is scheduled on that CPU in the
+near future, the CPU will end up in the shallow state.
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
----
- drivers/cpuidle/cpuidle-powernv.c | 35 +++++++++++--------------------
- include/linux/cpuidle.h           |  1 +
- 2 files changed, 13 insertions(+), 23 deletions(-)
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a shallow stop state on a tickless system. As
+we might get stuck into shallow states even for hours, in absence of ticks
+or interrupts.
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index f51478460..7350f404a 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -45,7 +45,6 @@ struct stop_psscr_table {
- static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly;
- 
- static u64 default_snooze_timeout __read_mostly;
--static bool snooze_timeout_en __read_mostly;
- 
- static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
- 				 struct cpuidle_driver *drv,
-@@ -67,26 +66,13 @@ static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
- 	return 0;
- }
- 
--static u64 get_snooze_timeout(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv,
--			      int index)
-+static void pnv_disable_callback(struct cpuidle_device *dev,
-+				 struct cpuidle_driver *drv)
- {
- 	int i;
- 
--	if (unlikely(!snooze_timeout_en))
--		return default_snooze_timeout;
--
--	for (i = index + 1; i < drv->state_count; i++) {
--		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
--
--		if (s->disabled || su->disable)
--			continue;
--
--		return s->target_residency * tb_ticks_per_usec;
--	}
--
--	return default_snooze_timeout;
-+	for (i = 0; i < drv->state_count; i++)
-+		drv->states[i].timeout = forced_wakeup_timeout(dev, drv, i);
- }
- 
- static int snooze_loop(struct cpuidle_device *dev,
-@@ -94,16 +80,20 @@ static int snooze_loop(struct cpuidle_device *dev,
- 			int index)
- {
- 	u64 snooze_exit_time;
-+	u64 snooze_timeout = drv->states[index].timeout;
-+
-+	if (!snooze_timeout)
-+		snooze_timeout = default_snooze_timeout;
- 
- 	set_thread_flag(TIF_POLLING_NRFLAG);
- 
- 	local_irq_enable();
- 
--	snooze_exit_time = get_tb() + get_snooze_timeout(dev, drv, index);
-+	snooze_exit_time = get_tb() + snooze_timeout;
- 	ppc64_runlatch_off();
- 	HMT_very_low();
- 	while (!need_resched()) {
--		if (likely(snooze_timeout_en) && get_tb() > snooze_exit_time) {
-+		if (get_tb() > snooze_exit_time) {
- 			/*
- 			 * Task has not woken up but we are exiting the polling
- 			 * loop anyway. Require a barrier after polling is
-@@ -168,7 +158,7 @@ static int stop_loop(struct cpuidle_device *dev,
- 	u64 timeout_tb;
- 	int forced_wakeup = 0;
- 
--	timeout_tb = forced_wakeup_timeout(dev, drv, index);
-+	timeout_tb = drv->states[index].timeout;
- 	if (timeout_tb)
- 		forced_wakeup = set_dec_before_idle(timeout_tb);
- 
-@@ -255,6 +245,7 @@ static int powernv_cpuidle_driver_init(void)
- 	 */
- 
- 	drv->cpumask = (struct cpumask *)cpu_present_mask;
-+	drv->disable_callback = pnv_disable_callback;
- 
- 	return 0;
- }
-@@ -414,8 +405,6 @@ static int powernv_idle_probe(void)
- 		/* Device tree can indicate more idle states */
- 		max_idle_state = powernv_add_idle_states();
- 		default_snooze_timeout = TICK_USEC * tb_ticks_per_usec;
--		if (max_idle_state > 1)
--			snooze_timeout_en = true;
-  	} else
-  		return -ENODEV;
- 
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 8a0e54bd0..31662b657 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -50,6 +50,7 @@ struct cpuidle_state {
- 	int		power_usage; /* in mW */
- 	unsigned int	target_residency; /* in US */
- 	bool		disabled; /* disabled on all CPUs */
-+	unsigned long long timeout; /* timeout for exiting out of a state */
- 
- 	int (*enter)	(struct cpuidle_device *dev,
- 			struct cpuidle_driver *drv,
+To address this, We forcefully wakeup the cpu by setting the decrementer.
+The decrementer is set to a value that corresponds with the residency of
+the next available state. Thus firing up a timer that will forcefully
+wakeup the cpu. Few such iterations will essentially train the governor to
+select a deeper state for that cpu, as the timer here corresponds to the
+next available cpuidle state residency. Thus, cpu will eventually end up
+in the deepest possible state and we won't get stuck in a shallow state
+for long duration.
+
+Experiment
+----------
+For earlier versions when this feature was meat to be only for shallow lite
+states, I performed experiments for three scenarios to collect some data.
+
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
+
+case 2 : With tick retained in a upstream kernel -
+
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally,
+observation was
+
+=========================================================
+sample          min            max           99percentile
+20              4ms            12ms          4ms
+=========================================================
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a
+          timer)
+
+============================================================
+sample          min             max             99percentile
+============================================================
+20              144us           192us           144us
+============================================================
+
+
+Description of current implementation
+-------------------------------------
+
+We calculate timeout for the current idle state as the residency value
+of the next available idle state. If the decrementer is set to be
+greater than this timeout, we update the decrementer value with the
+residency of next available idle state. Thus, essentially training the
+governor to select the next available deeper state until we reach the
+deepest state. Hence, we won't get stuck unnecessarily in shallow states
+for longer duration.
+
+--------------------------------
+v1 of auto-promotion : https://lkml.org/lkml/2019/3/22/58 This patch was
+implemented only for shallow lite state in generic cpuidle driver.
+
+v2 : Removed timeout_needed and rebased to current
+upstream kernel
+
+Then,
+v1 of forced-wakeup : Moved the code to cpuidle powernv driver and started
+as forced wakeup instead of auto-promotion
+
+v2 : Extended the forced wakeup logic for all states.
+Setting the decrementer instead of queuing up a hrtimer to implement the
+logic.
+
+v3 : 1) Cleanly handle setting the decrementer after exiting out of stop
+       states.
+     2) Added a disable_callback feature to compute timeout whenever a
+        state is enbaled or disabled instead of computing everytime in fast
+        idle path.
+     3) Use disable callback to recompute timeout whenever state usage
+        is changed for a state. Also, cleaned up the get_snooze_timeout
+        function.
+
+
+Abhishek Goel (3):
+  cpuidle-powernv : forced wakeup for stop states
+  cpuidle : Add callback whenever a state usage is enabled/disabled
+  cpuidle-powernv : Recompute the idle-state timeouts when state usage
+    is enabled/disabled
+
+ arch/powerpc/include/asm/time.h   |  2 ++
+ arch/powerpc/kernel/time.c        | 40 ++++++++++++++++++++++++++
+ drivers/cpuidle/cpuidle-powernv.c | 47 ++++++++++++++++++++++---------
+ drivers/cpuidle/sysfs.c           | 15 +++++++++-
+ include/linux/cpuidle.h           |  5 ++++
+ 5 files changed, 95 insertions(+), 14 deletions(-)
+
 -- 
 2.17.1
 
