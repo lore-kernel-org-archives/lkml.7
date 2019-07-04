@@ -2,87 +2,45 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F903C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1223CC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E12621852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B0E21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfGDPiH (ORCPT
+        id S1727868AbfGDPiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:38:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60066 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfGDPiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:38:07 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CC44300DA2B;
-        Thu,  4 Jul 2019 15:38:07 +0000 (UTC)
-Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 59BBC968DD;
-        Thu,  4 Jul 2019 15:38:00 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 17:37:58 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, brouer@redhat.com
-Subject: Re: [PATCH net-next v2 3/3] net: stmmac: Introducing support for
- Page Pool
-Message-ID: <20190704173758.6d985aa3@carbon>
-In-Reply-To: <fd2b12e6fc99f6064b0c04e1baae24328d16289f.1562252534.git.joabreu@synopsys.com>
-References: <cover.1562252534.git.joabreu@synopsys.com>
-        <fd2b12e6fc99f6064b0c04e1baae24328d16289f.1562252534.git.joabreu@synopsys.com>
+        Thu, 4 Jul 2019 11:38:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59345 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfGDPiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:38:08 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hj3oF-0004wg-9U; Thu, 04 Jul 2019 17:38:07 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/7] Use spinlock_t instead of struct spinlock
+Date:   Thu,  4 Jul 2019 17:37:56 +0200
+Message-Id: <20190704153803.12739-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 04 Jul 2019 15:38:07 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  4 Jul 2019 17:04:14 +0200
-Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+Just a small series to clean up various "struct spinlock" user and make
+them use "spinlock_t" instead.
 
-> @@ -1498,8 +1480,9 @@ static void free_dma_rx_desc_resources(struct stmmac_priv *priv)
->  					  sizeof(struct dma_extended_desc),
->  					  rx_q->dma_erx, rx_q->dma_rx_phy);
->  
-> -		kfree(rx_q->rx_skbuff_dma);
-> -		kfree(rx_q->rx_skbuff);
-> +		kfree(rx_q->buf_pool);
-> +		if (rx_q->page_pool && page_pool_request_shutdown(rx_q->page_pool))
-> +			page_pool_free(rx_q->page_pool);
->  	}
->  }
+Sebastian
 
-This code is okay, but I would likely write it as:
 
-  if (rx_q->page_pool) {
-	page_pool_request_shutdown(rx_q->page_pool));
-	page_pool_free(rx_q->page_pool);
-  }
-
-Because (as you noticed) page_pool_free() have some API misuse checks,
-that will get triggered, and thus provide a warning of you forget to
-update this when driver evolves.
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
