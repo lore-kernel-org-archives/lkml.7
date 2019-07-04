@@ -2,95 +2,118 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ABAC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA22C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B7D218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD58218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3v1Lt8NF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XA9XKA4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfGDOcE (ORCPT
+        id S1727760AbfGDOc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:32:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54110 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfGDOcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:32:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WqfUMJML9WSOHiE+CrfUgXW6vEXB3qi3LNfexS8xML0=; b=3v1Lt8NFOhvJOPPSJPTOPzt1RV
-        3f3ZhkET4aT3VtARntPcv8Hwo5Sub5yXo3h8bAQNmIy9vrEvC/lKF4yfV0MUSz+VyTcV4Tcu3Vpag
-        0432dP8eFpEt9Q9BdBKhutojaDf0VW/bi4DfmQAAAsx9gfaPbUVJTKxVrb6igSVph8zc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hj2mB-0004Ep-66; Thu, 04 Jul 2019 16:31:55 +0200
-Date:   Thu, 4 Jul 2019 16:31:55 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
-Message-ID: <20190704143155.GE13859@lunn.ch>
-References: <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
- <20190703114933.GW2250@nanopsycho>
- <20190703181851.GP20101@unicorn.suse.cz>
- <20190704080435.GF2250@nanopsycho>
- <20190704115236.GR20101@unicorn.suse.cz>
- <6c070d62ffe342f5bc70556ef0f85740d04ae4a3.camel@sipsolutions.net>
- <20190704121718.GS20101@unicorn.suse.cz>
- <2f1a8edb0b000b4eb7adcaca0d1fb05fdd73a587.camel@sipsolutions.net>
- <20190704125315.GT20101@unicorn.suse.cz>
- <a6fbee05df0efd2528a06922bcb514d321b1a8bc.camel@sipsolutions.net>
+        Thu, 4 Jul 2019 10:32:29 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34038 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727246AbfGDOc2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 10:32:28 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so5643016edb.1;
+        Thu, 04 Jul 2019 07:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hG94lb2mfNpipyjyuBXQyz3ZoROecI4LdyTS4Vj1aUM=;
+        b=XA9XKA4yi6IQLxDBOZSLzJDJ1P24RGWiALToGJfWjOvu6I+Lke7v4PE6vpt4zTO45f
+         KiGPVmx1c1YtAzr2WZyJp0525y0uUiM0nG9LLRg6mxDNCw6Xjp57vDWhre5xVltjNySp
+         f8Kfe+ewF1z6ILjMGeW6+dSFXbKC6OMpbRdbLLXxVMTBh5vM6N1C3hDZs5renLsWJYFu
+         9ZITRK7Bq4lRDxMwAHxLE18gAr8rESKdd5uHipVnCKM2I/iaZ66fShyrSwZuIKR2f0G4
+         eoPyMPB/TzopgZTTNzImjgnkfQ6OHld219zrdZGZLVZ0mATlt7Ix7UlE54yZgAgYouJV
+         SU+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hG94lb2mfNpipyjyuBXQyz3ZoROecI4LdyTS4Vj1aUM=;
+        b=B9yyrZbSuQ1ZVpOKBvXQCNTuG0TCNtLR6ykh7Hyx/EdwPc9E5rwbyEF8SrxWvWfS92
+         G8hNWhJITHoSvhnwMgR/hQOnotAgQCaSxVv8ViVpOsIXunj4Kqqwm07flLd8dxM71xeg
+         5OMsnQ9JtpJAqIAr9dkR2Xmfa6OwImL2rYYLXm7QlwQ7cKWWYVuy6U69Emv6H3ZkA6BH
+         XQ8DCdtTrnPJD6kEmYIgdMBBiG5piHKeMD9Rgt5DcXfxaBRGBUQELw45Nt70FeyrWe+h
+         h0/2HMKWYWgUXYFYaflOP9Rsup65E9N0tt8qybYQWvPGN3xe7XwwpPGOR1eHb7qmhAoW
+         m5JQ==
+X-Gm-Message-State: APjAAAUpS5EqjbE+AXH71UjJZ0uIh6mLZFF1Y/G/19zokNwJRKAt72dY
+        sy9BZ+duRdIpxaNw8aqQuFk+GeOu
+X-Google-Smtp-Source: APXvYqzT2XlfYr+uxPrC/zJOphkRAdeGPMcKImu0CzVFB9O9lFTTq1YMhHbw65sOeQXrNnJ2ydEjqA==
+X-Received: by 2002:a17:906:1f43:: with SMTP id d3mr29380618ejk.169.1562250745941;
+        Thu, 04 Jul 2019 07:32:25 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.211.18])
+        by smtp.gmail.com with ESMTPSA id x10sm1708831edd.73.2019.07.04.07.32.24
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 07:32:25 -0700 (PDT)
+Subject: Re: [PATCH] dax: Fix missed PMD wakeups
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190703121743.GH1729@bombadil.infradead.org>
+ <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
+ <20190703195302.GJ1729@bombadil.infradead.org>
+ <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
+ <20190704032728.GK1729@bombadil.infradead.org>
+ <f23a1c71-d1b1-b279-c922-ce0f48cb4448@gmail.com>
+ <20190704135804.GL1729@bombadil.infradead.org>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <bfe7c33d-7c3c-dcc0-5408-e23ea8223ef0@gmail.com>
+Date:   Thu, 4 Jul 2019 17:32:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6fbee05df0efd2528a06922bcb514d321b1a8bc.camel@sipsolutions.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190704135804.GL1729@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> OK, here I guess I see what you mean. You're saying if ethtool were to
-> send a value/mask of "0..0100/0..0111" you wouldn't know what to do with
-> BIT(4) as long as the kernel knows about that bit?
+On 04/07/2019 16:58, Matthew Wilcox wrote:
+> On Thu, Jul 04, 2019 at 04:00:00PM +0300, Boaz Harrosh wrote:
+<>
+>> Matthew you must be kidding an ilog2 in binary is zero clocks
+>> (Return the highest bit or something like that)
 > 
-> I guess the difference now is depending on the operation. NLA_BITFIELD32
-> is sort of built on the assumption of having a "toggle" operation. If
-> you want to have a "set to" operation, then you don't really need the
-> selector/mask at all, just the value.
+> You might want to actually check the documentation instead of just
+> making shit up.
+> 
 
-I don't think it is as simple as this. User space has a few different
-things it wants to pass to the kernel:
+Yes you are right I stand corrected. Must be smoking ;-)
 
-I want to set this bit to 0
-I want to set this bit to 1
-I don't want to change this bit
-In my world view, this bit is unused
+> https://www.agner.org/optimize/instruction_tables.pdf
+> 
+> I think in this instance what we want is BSR (aka ffz) since the input is
+> going to be one of 0, 1, 3, 7, 15 or 31 (and we want 0, 1, 2, 3, 4, 5 as
+> results).
+> 
+<>
+> The compiler doesn't know the range of 'sibs'.  Unless we do the
+> profile-feedback thing.
+> 
 
-The kernel has had a long history of trouble with flag bits in system
-calls. It has not validated that unused bits are clear. Meaning when
-you actually want to make use of the unused bits you cannot because
-userspace has been passing random values in them since day 1.
+Would you please consider the use of get_order() macro from #include <getorder.h>
+Just for the sake of understanding? (Or at least a comment)
 
-We need a design which is clear to everybody which bits are unused and
-should be validated as being unused and an error returned if an unused
-bit is actually used. A value and a mask is not sufficient for
-this. We need the length in bits.
-
-      Andrew
+Thanks
+Boaz
