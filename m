@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE17C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F38EC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A472189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F57F21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PSFRAPWp"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="E/xouiEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGDGa6 (ORCPT
+        id S1727483AbfGDGbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:30:58 -0400
-Received: from mail-eopbgr50070.outbound.protection.outlook.com ([40.107.5.70]:4198
+        Thu, 4 Jul 2019 02:31:05 -0400
+Received: from mail-eopbgr50077.outbound.protection.outlook.com ([40.107.5.77]:13542
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725879AbfGDGa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:30:58 -0400
+        id S1725879AbfGDGbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:31:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SVyNLvfisJfPXATCCp6wvOxKpnqE6PgX1ACMpSaAYxY=;
- b=PSFRAPWpdvimdQGKr2Ulw0DXH+I+E5StfeF1qUevSZYPNeEbCf0Jq95MJVw5QBGr9vWb89G4BsPTudsEKj8J+04rpk2IFPI7ASwN7hvs81YPzJ9DH9tVNg51sIHgaOaF7LHV9Jfjz3z74Lz/OAhYuQLBREc7yAwxXry1t3rLN5o=
+ bh=eVJmM650iZrJXShIkidsXZ6RIhGHrmzctzH2PLmRtrY=;
+ b=E/xouiEKyNU9TBg/w0Z2jgEfu6BkkTA2zYse4J58QrnrAL7bV3yctzgv+pK/JIxYRuxTq66fJ5xBtSho4IaZtNYz5LZwRhaOkxh3MlJDAO1wGQUgkyEhRYja66xrQSEijyunSuf4oO+36lhDt5Hs/LRs/wNjLVKV9Y+UT4yY/YI=
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
  VE1PR08MB5229.eurprd08.prod.outlook.com (10.255.27.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Thu, 4 Jul 2019 06:30:53 +0000
+ 15.20.2032.20; Thu, 4 Jul 2019 06:30:59 +0000
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1]) by VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1%3]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 06:30:53 +0000
+ 06:30:59 +0000
 From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 To:     Liviu Dudau <Liviu.Dudau@arm.com>,
         "airlied@linux.ie" <airlied@linux.ie>,
@@ -57,11 +57,11 @@ CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
         "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
         "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH 1/6] drm/komeda: Add side by side assembling
-Thread-Topic: [PATCH 1/6] drm/komeda: Add side by side assembling
-Thread-Index: AQHVMjIHiQqcXatIJ0mfrkxe1DUmhw==
-Date:   Thu, 4 Jul 2019 06:30:53 +0000
-Message-ID: <20190704063011.7431-2-james.qian.wang@arm.com>
+Subject: [PATCH 2/6] drm/komeda: Add side by side plane_state split
+Thread-Topic: [PATCH 2/6] drm/komeda: Add side by side plane_state split
+Thread-Index: AQHVMjILVxnNgDqtCU+ikD0xeBTFCg==
+Date:   Thu, 4 Jul 2019 06:30:59 +0000
+Message-ID: <20190704063011.7431-3-james.qian.wang@arm.com>
 References: <20190704063011.7431-1-james.qian.wang@arm.com>
 In-Reply-To: <20190704063011.7431-1-james.qian.wang@arm.com>
 Accept-Language: en-US
@@ -77,25 +77,25 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2440661c-7c6d-429f-4dd5-08d700492948
+x-ms-office365-filtering-correlation-id: 137dd5a0-e497-4ea8-1ac6-08d700492d74
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5229;
 x-ms-traffictypediagnostic: VE1PR08MB5229:
-x-microsoft-antispam-prvs: <VE1PR08MB52292EC696EF175B26FCABA7B3FA0@VE1PR08MB5229.eurprd08.prod.outlook.com>
+x-microsoft-antispam-prvs: <VE1PR08MB5229F5EB6D711953414E9969B3FA0@VE1PR08MB5229.eurprd08.prod.outlook.com>
 nodisclaimer: True
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
 x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(76176011)(6506007)(66066001)(110136005)(386003)(54906003)(103116003)(2906002)(316002)(186003)(86362001)(2201001)(52116002)(55236004)(99286004)(26005)(102836004)(6486002)(50226002)(25786009)(478600001)(71200400001)(71190400001)(6512007)(6436002)(4326008)(68736007)(53936002)(14454004)(2616005)(476003)(486006)(36756003)(446003)(11346002)(81166006)(8676002)(256004)(14444005)(81156014)(8936002)(305945005)(7736002)(66946007)(6116002)(73956011)(66476007)(66556008)(64756008)(66446008)(3846002)(2501003)(5660300002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5229;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(76176011)(6506007)(66066001)(110136005)(386003)(54906003)(103116003)(2906002)(316002)(186003)(86362001)(2201001)(52116002)(55236004)(99286004)(26005)(102836004)(6486002)(50226002)(25786009)(478600001)(71200400001)(71190400001)(6512007)(6436002)(4326008)(68736007)(53936002)(14454004)(2616005)(476003)(486006)(36756003)(30864003)(446003)(11346002)(81166006)(8676002)(256004)(81156014)(8936002)(305945005)(7736002)(66946007)(6116002)(73956011)(66476007)(66556008)(64756008)(66446008)(3846002)(2501003)(5660300002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5229;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wC+GUNGESRI6YiBgBAXmSk9kpAUNaaxFY6ZvlKqY7K2ESj79WnRrZWPhPWUs46KhXzblOdeuZOiFcWN8p8uSmtRCXsvYIJMVWcK2GS1MWofLerrm73uMvO79NgUWtPKsng6tD03cq2OAepUZBtduVnp7zUzPlLqWtm4Cp5031X8MNPk0qqeMzp0UmZmBpSODiR7BSVpQdfP9wnj+Nq4ZfKrelTTYQT4ggAXaChPGc290GPTVgS8OSzHrLXWj5neNyYd3l2qSFDjQOeWClNRSA3PcqtyHNLXTuCkyDPhNXzrD/d+igbo1dLRWbVNKZLH8edBBkPFKkXprWlkNQNg8/uuJElUi1mDMej9PRBMGH1vnJGkjqQenSPWhuf8cOtwqGuQvFDbfB2LsdQ+Pc+GJ0EqoI0SZw1lYtxwQ2q7S9+c=
+x-microsoft-antispam-message-info: 6VyUWhQwc3AuSaaMugNy7pdGBTxGxEs52amLcDxEhWzX+KBD6L4HkGFDxFFxKAz+waSe5dz7ZhfVC6xmmZyjVV7p3koRkPXF+hZtHM2OeFklKakRL66nO5xWizAgjDAJv4d9k6y/DfoVEcbwsFEpz5MVVVeURyBsGHmfs8Su3PSBSjBm4ZeN+YXYbnlTj9J19VU6Sv0M3yjn0MRdw0bxWrXL20DPG+UZo9kRr7QoJeAbzph1Z9hZUBKC5HksEf5f6FIlrssiaGJ9w1XtdJAwMsYbwYgc1ijAdn4pmtYFURrwTta3mGFCaV7EHURVxGdTIPSoeTL416nHUzsxaWK2s1wwA+5qBg+HKGVgggYipmtB4POzGU6YxE7/7MAKe9t33mszBtfVX/iHIMDp9kS1gpQ23b14+DfaKiFSdioQ6Jk=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2440661c-7c6d-429f-4dd5-08d700492948
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 06:30:53.2065
+X-MS-Exchange-CrossTenant-Network-Message-Id: 137dd5a0-e497-4ea8-1ac6-08d700492d74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 06:30:59.6467
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
@@ -107,193 +107,342 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Komeda HW can support side by side, which splits the internal display
-processing to two single halves (LEFT/RIGHT) and handle them by two
-pipelines separately.
-komeda "side by side" is enabled by DT property: "side_by_side_master",
-once DT configured side by side, komeda need to verify it with HW's
-configuration, and assemble it for the further usage.
+On side by side mode, The full display frame will be split into two parts
+(Left/Right), and each part will be handled by a single pipeline separately
+master pipeline for left part, slave for right.
+
+To simplify the usage and implementation, komeda use the following scheme
+to do the side by side split
+1. The planes also have been grouped into two classes:
+   master-planes and slave-planes.
+2. The master plane can display its image on any location of the final/full
+   display frame, komeda will help to split the plane configuration to two
+   parts and fed them into master and slave pipelines.
+3. The slave plane only can put its display rect on the right part of the
+   final display frame, and its data is only can be fed into the slave
+   pipeline.
+
+From the perspective of resource usage and assignment:
+The master plane can use the resources from the master pipeline and slave
+pipeline both, but slave plane only can use the slave pipeline resources.
+
+With such scheme, the usage of master planes are same as the none
+side_by_side mode. user can easily skip the slave planes and no need to
+consider side_by_side for them.
 
 Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
 com>
 ---
- .../gpu/drm/arm/display/komeda/komeda_crtc.c  |  9 +++-
- .../gpu/drm/arm/display/komeda/komeda_dev.c   |  3 ++
- .../gpu/drm/arm/display/komeda/komeda_dev.h   |  9 ++++
- .../gpu/drm/arm/display/komeda/komeda_kms.h   |  3 ++
- .../drm/arm/display/komeda/komeda_pipeline.c  | 50 +++++++++++++++++--
- .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
- 6 files changed, 69 insertions(+), 6 deletions(-)
+ .../drm/arm/display/komeda/komeda_pipeline.h  |  33 ++-
+ .../display/komeda/komeda_pipeline_state.c    | 188 ++++++++++++++++++
+ .../gpu/drm/arm/display/komeda/komeda_plane.c |   7 +-
+ 3 files changed, 220 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
-/drm/arm/display/komeda/komeda_crtc.c
-index 3744e6d1ba96..c3bb111c454c 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-@@ -591,16 +591,21 @@ int komeda_kms_setup_crtcs(struct komeda_kms_dev *kms=
-,
-
- 		crtc->master =3D master;
- 		crtc->slave  =3D komeda_pipeline_get_slave(master);
-+		crtc->side_by_side =3D mdev->side_by_side;
-
- 		if (crtc->slave)
- 			sprintf(str, "pipe-%d", crtc->slave->id);
- 		else
- 			sprintf(str, "None");
-
--		DRM_INFO("CRTC-%d: master(pipe-%d) slave(%s).\n",
--			 kms->n_crtcs, master->id, str);
-+		DRM_INFO("CRTC-%d: master(pipe-%d) slave(%s) sbs(%s).\n",
-+			 kms->n_crtcs, master->id, str,
-+			 crtc->side_by_side ? "On" : "Off");
-
- 		kms->n_crtcs++;
-+
-+		if (mdev->side_by_side)
-+			break;
- 	}
-
- 	return 0;
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.c
-index bb72642cfd67..2aee735a683f 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-@@ -191,6 +191,9 @@ static int komeda_parse_dt(struct device *dev, struct k=
-omeda_dev *mdev)
- 		}
- 	}
-
-+	mdev->side_by_side =3D !of_property_read_u32(np, "side_by_side_master",
-+					&mdev->side_by_side_master);
-+
- 	return ret;
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers=
+/gpu/drm/arm/display/komeda/komeda_pipeline.h
+index 6d3745bb8c1d..aa7c0fefa47e 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+@@ -511,6 +511,20 @@ komeda_component_pickup_output(struct komeda_component=
+ *c, u32 avail_comps)
+ 	return komeda_pipeline_get_first_component(c->pipeline, avail_inputs);
  }
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.h
-index e863ec327790..c70cc25d246f 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-@@ -176,6 +176,15 @@ struct komeda_dev {
-
- 	/** @irq: irq number */
- 	int irq;
-+	/**
-+	 * @side_by_side:
-+	 *
-+	 * on sbs the whole display frame will be split to two halves (1:2),
-+	 * master pipeline handles the left part, slave for the right part
-+	 */
-+	bool side_by_side;
-+	/** @side_by_side_master: master pipe id for side by side */
-+	int side_by_side_master;
-
- 	/** @lock: used to protect dpmode */
- 	struct mutex lock;
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/=
-drm/arm/display/komeda/komeda_kms.h
-index d0cf8381d2ab..0dbfd7ad7805 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
-@@ -84,6 +84,9 @@ struct komeda_crtc {
- 	 */
- 	struct komeda_pipeline *slave;
-
-+	/** @side_by_side: if the master and slave works on side by side mode */
-+	bool side_by_side;
-+
- 	/** @slave_planes: komeda slave planes mask */
- 	u32 slave_planes;
-
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c b/drivers=
-/gpu/drm/arm/display/komeda/komeda_pipeline.c
-index 452e505a1fd3..104e27cc1dc3 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.c
-@@ -326,14 +326,56 @@ static void komeda_pipeline_assemble(struct komeda_pi=
-peline *pipe)
- struct komeda_pipeline *
- komeda_pipeline_get_slave(struct komeda_pipeline *master)
- {
--	struct komeda_component *slave;
-+	struct komeda_dev *mdev =3D master->mdev;
-+	struct komeda_component *comp, *slave;
-+	u32 avail_inputs;
-+
-+	/* on SBS, slave pipeline merge to master via image processor */
-+	if (mdev->side_by_side) {
-+		comp =3D &master->improc->base;
-+		avail_inputs =3D KOMEDA_PIPELINE_IMPROCS;
-+	} else {
-+		comp =3D &master->compiz->base;
-+		avail_inputs =3D KOMEDA_PIPELINE_COMPIZS;
-+	}
-
--	slave =3D komeda_component_pickup_input(&master->compiz->base,
--					      KOMEDA_PIPELINE_COMPIZS);
-+	slave =3D komeda_component_pickup_input(comp, avail_inputs);
-
- 	return slave ? slave->pipeline : NULL;
- }
-
-+static int komeda_assemble_side_by_side(struct komeda_dev *mdev)
++static inline const char *
++komeda_data_flow_msg(struct komeda_data_flow_cfg *config)
 +{
-+	struct komeda_pipeline *master, *slave;
-+	int i;
++	static char str[128];
 +
-+	if (!mdev->side_by_side)
-+		return 0;
++	snprintf(str, sizeof(str),
++		 "rot: %x src[x/y:%d/%d, w/h:%d/%d] disp[x/y:%d/%d, w/h:%d/%d]",
++		 config->rot,
++		 config->in_x, config->in_y, config->in_w, config->in_h,
++		 config->out_x, config->out_y, config->out_w, config->out_h);
 +
-+	if (mdev->side_by_side_master >=3D mdev->n_pipelines) {
-+		DRM_ERROR("DT configured side by side master-%d is invalid.\n",
-+			  mdev->side_by_side_master);
-+		return -EINVAL;
++	return str;
++}
++
+ struct komeda_plane_state;
+ struct komeda_crtc_state;
+ struct komeda_crtc;
+@@ -522,22 +536,27 @@ int komeda_build_layer_data_flow(struct komeda_layer =
+*layer,
+ 				 struct komeda_plane_state *kplane_st,
+ 				 struct komeda_crtc_state *kcrtc_st,
+ 				 struct komeda_data_flow_cfg *dflow);
+-int komeda_build_wb_data_flow(struct komeda_layer *wb_layer,
+-			      struct drm_connector_state *conn_st,
+-			      struct komeda_crtc_state *kcrtc_st,
+-			      struct komeda_data_flow_cfg *dflow);
+-int komeda_build_display_data_flow(struct komeda_crtc *kcrtc,
+-				   struct komeda_crtc_state *kcrtc_st);
+-
+ int komeda_build_layer_split_data_flow(struct komeda_layer *left,
+ 				       struct komeda_plane_state *kplane_st,
+ 				       struct komeda_crtc_state *kcrtc_st,
+ 				       struct komeda_data_flow_cfg *dflow);
++int komeda_build_layer_sbs_data_flow(struct komeda_layer *layer,
++				     struct komeda_plane_state *kplane_st,
++				     struct komeda_crtc_state *kcrtc_st,
++				     struct komeda_data_flow_cfg *dflow);
++
++int komeda_build_wb_data_flow(struct komeda_layer *wb_layer,
++			      struct drm_connector_state *conn_st,
++			      struct komeda_crtc_state *kcrtc_st,
++			      struct komeda_data_flow_cfg *dflow);
+ int komeda_build_wb_split_data_flow(struct komeda_layer *wb_layer,
+ 				    struct drm_connector_state *conn_st,
+ 				    struct komeda_crtc_state *kcrtc_st,
+ 				    struct komeda_data_flow_cfg *dflow);
+
++int komeda_build_display_data_flow(struct komeda_crtc *kcrtc,
++				   struct komeda_crtc_state *kcrtc_st);
++
+ int komeda_release_unclaimed_resources(struct komeda_pipeline *pipe,
+ 				       struct komeda_crtc_state *kcrtc_st);
+
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/d=
+rivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+index 9123284c98a1..c08d59ae7090 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+@@ -1102,6 +1102,194 @@ int komeda_build_layer_split_data_flow(struct komed=
+a_layer *left,
+ 	return err;
+ }
+
++/* split func will split configuration of master plane to two layer data
++ * flows, which will be fed into master and slave pipeline then.
++ * NOTE: @m_dflow is first used as input argument to pass the configuratio=
+n of
++ *	 master_plane. when the split is done, @*m_dflow @*s_dflow are the
++ *	 output data flow for pipeline.
++ */
++static int
++komeda_split_sbs_master_data_flow(struct komeda_crtc_state *kcrtc_st,
++				  struct komeda_data_flow_cfg **m_dflow,
++				  struct komeda_data_flow_cfg **s_dflow)
++{
++	struct komeda_data_flow_cfg *master =3D *m_dflow;
++	struct komeda_data_flow_cfg *slave =3D *s_dflow;
++	u32 disp_end =3D master->out_x + master->out_w;
++	u16 boundary;
++
++	pipeline_composition_size(kcrtc_st, &boundary, NULL);
++
++	if (disp_end <=3D boundary) {
++		/* the master viewport only located in master side, no need
++		 * slave anymore
++		 */
++		*s_dflow =3D NULL;
++	} else if ((master->out_x < boundary) && (disp_end > boundary)) {
++		/* the master viewport across two pipelines, split it */
++		bool flip_h =3D has_flip_h(master->rot);
++		bool r90  =3D drm_rotation_90_or_270(master->rot);
++		u32 src_x =3D master->in_x;
++		u32 src_y =3D master->in_y;
++		u32 src_w =3D master->in_w;
++		u32 src_h =3D master->in_h;
++
++		if (master->en_scaling || master->en_img_enhancement) {
++			DRM_DEBUG_ATOMIC("sbs doesn't support to split a scaling image.\n");
++			return -EINVAL;
++		}
++
++		memcpy(slave, master, sizeof(*master));
++
++		/* master for left part of display, slave for the right part */
++		/* split the disp_rect */
++		master->out_w =3D boundary - master->out_x;
++		slave->out_w  =3D disp_end - boundary;
++		slave->out_x  =3D 0;
++
++		if (r90) {
++			master->in_h =3D master->out_w;
++			slave->in_h =3D slave->out_w;
++
++			if (flip_h)
++				master->in_y =3D src_y + src_h - master->in_h;
++			else
++				slave->in_y =3D src_y + src_h - slave->in_h;
++		} else {
++			master->in_w =3D master->out_w;
++			slave->in_w =3D slave->out_w;
++
++			/* on flip_h, the left display content from the right-source */
++			if (flip_h)
++				master->in_x =3D src_w + src_x - master->in_w;
++			else
++				slave->in_x =3D src_w + src_x - slave->in_w;
++		}
++	} else if (master->out_x >=3D boundary) {
++		/* disp_rect only locate in right part, move the dflow to slave */
++		master->out_x -=3D boundary;
++		*s_dflow =3D master;
++		*m_dflow =3D NULL;
 +	}
-+
-+	master =3D mdev->pipelines[mdev->side_by_side_master];
-+	slave =3D komeda_pipeline_get_slave(master);
-+	if (!slave || slave->n_layers !=3D master->n_layers) {
-+		DRM_ERROR("Current HW doesn't support side by side.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!master->dual_link) {
-+		DRM_DEBUG_ATOMIC("SBS can not work without dual link.\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i =3D 0; i < master->n_layers; i++)
-+		master->layers[i]->sbs_slave =3D slave->layers[i];
 +
 +	return 0;
 +}
 +
- int komeda_assemble_pipelines(struct komeda_dev *mdev)
- {
- 	struct komeda_pipeline *pipe;
-@@ -346,7 +388,7 @@ int komeda_assemble_pipelines(struct komeda_dev *mdev)
- 		komeda_pipeline_dump(pipe);
- 	}
++static int
++komeda_split_sbs_slave_data_flow(struct komeda_crtc_state *kcrtc_st,
++				 struct komeda_data_flow_cfg *slave)
++{
++	u16 boundary;
++
++	pipeline_composition_size(kcrtc_st, &boundary, NULL);
++
++	if (slave->out_x < boundary) {
++		DRM_DEBUG_ATOMIC("SBS Slave plane is only allowed to configure the right=
+ part frame.\n");
++		return -EINVAL;
++	}
++
++	/* slave->disp_rect locate in the right part */
++	slave->out_x -=3D boundary;
++
++	return 0;
++}
++
++/* On side by side mode, The full display frame will be split to two parts
++ * (Left/Right), and each part will be handled by a single pipeline separa=
+tely,
++ * master pipeline for left part, slave for right.
++ *
++ * To simplify the usage and implementation, komeda use the following sche=
+me
++ * to do the side by side split
++ * 1. The planes also have been grouped into two classes:
++ *    master-planes and slave-planes.
++ * 2. The master plane can display its image on any location of the final/=
+full
++ *    display frame, komeda will help to split the plane configuration to =
+two
++ *    parts and fed them into master and slave pipelines.
++ * 3. The slave plane only can put its display rect on the right part of t=
+he
++ *    final display frame, and its data is only can be fed into the slave
++ *    pipeline.
++ *
++ * From the perspective of resource usage and assignment:
++ * The master plane can use the resources from the master pipeline and sla=
+ve
++ * pipeline both, but slave plane only can use the slave pipeline resource=
+s.
++ *
++ * With such scheme, the usage of master planes are same as the none
++ * side_by_side mode. user can easily skip the slave planes and no need to
++ * consider side_by_side for them.
++ *
++ * NOTE: side_by_side split is occurred on pipeline level which split the =
+plane
++ *	 data flow into pipelines, but the layer split is a pipeline
++ *	 internal split which splits the data flow into pipeline layers.
++ *	 So komeda still supports to apply a further layer split to the sbs
++ *	 split data flow.
++ */
++int komeda_build_layer_sbs_data_flow(struct komeda_layer *layer,
++				     struct komeda_plane_state *kplane_st,
++				     struct komeda_crtc_state *kcrtc_st,
++				     struct komeda_data_flow_cfg *dflow)
++{
++	struct komeda_crtc *kcrtc =3D to_kcrtc(kcrtc_st->base.crtc);
++	struct drm_plane *plane =3D kplane_st->base.plane;
++	struct komeda_data_flow_cfg temp, *master_dflow, *slave_dflow;
++	struct komeda_layer *master, *slave;
++	bool master_plane =3D layer->base.pipeline =3D=3D kcrtc->master;
++	int err;
++
++	DRM_DEBUG_ATOMIC("SBS prepare %s-[PLANE:%d:%s]: %s.\n",
++			 master_plane ? "Master" : "Slave",
++			 plane->base.id, plane->name,
++			 komeda_data_flow_msg(dflow));
++
++	if (master_plane) {
++		master =3D layer;
++		slave =3D layer->sbs_slave;
++		master_dflow =3D dflow;
++		slave_dflow  =3D &temp;
++		err =3D komeda_split_sbs_master_data_flow(kcrtc_st,
++				&master_dflow, &slave_dflow);
++	} else {
++		master =3D NULL;
++		slave =3D layer;
++		master_dflow =3D NULL;
++		slave_dflow =3D dflow;
++		err =3D komeda_split_sbs_slave_data_flow(kcrtc_st, slave_dflow);
++	}
++
++	if (err)
++		return err;
++
++	if (master_dflow) {
++		DRM_DEBUG_ATOMIC("SBS Master-%s assigned: %s\n",
++			master->base.name, komeda_data_flow_msg(master_dflow));
++
++		if (master_dflow->en_split)
++			err =3D komeda_build_layer_split_data_flow(master,
++					kplane_st, kcrtc_st, master_dflow);
++		else
++			err =3D komeda_build_layer_data_flow(master,
++					kplane_st, kcrtc_st, master_dflow);
++
++		if (err)
++			return err;
++	}
++
++	if (slave_dflow) {
++		DRM_DEBUG_ATOMIC("SBS Slave-%s assigned: %s\n",
++			slave->base.name, komeda_data_flow_msg(slave_dflow));
++
++		if (slave_dflow->en_split)
++			err =3D komeda_build_layer_split_data_flow(slave,
++					kplane_st, kcrtc_st, slave_dflow);
++		else
++			err =3D komeda_build_layer_data_flow(slave,
++					kplane_st, kcrtc_st, slave_dflow);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
+ /* writeback data path: compiz -> scaler -> wb_layer -> memory */
+ int komeda_build_wb_data_flow(struct komeda_layer *wb_layer,
+ 			      struct drm_connector_state *conn_st,
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gp=
+u/drm/arm/display/komeda/komeda_plane.c
+index a5625f46120f..436dda1ca6dd 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+@@ -81,6 +81,7 @@ komeda_plane_atomic_check(struct drm_plane *plane,
+ 	struct komeda_plane_state *kplane_st =3D to_kplane_st(state);
+ 	struct komeda_layer *layer =3D kplane->layer;
+ 	struct drm_crtc_state *crtc_st;
++	struct komeda_crtc *kcrtc;
+ 	struct komeda_crtc_state *kcrtc_st;
+ 	struct komeda_data_flow_cfg dflow;
+ 	int err;
+@@ -98,13 +99,17 @@ komeda_plane_atomic_check(struct drm_plane *plane,
+ 	if (!crtc_st->active)
+ 		return 0;
 
--	return 0;
-+	return komeda_assemble_side_by_side(mdev);
- }
++	kcrtc =3D to_kcrtc(crtc_st->crtc);
+ 	kcrtc_st =3D to_kcrtc_st(crtc_st);
 
- void komeda_pipeline_dump_register(struct komeda_pipeline *pipe,
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers=
-/gpu/drm/arm/display/komeda/komeda_pipeline.h
-index 66d76642bc5b..6d3745bb8c1d 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-@@ -236,6 +236,7 @@ struct komeda_layer {
- 	 * not the source buffer.
- 	 */
- 	struct komeda_layer *right;
-+	struct komeda_layer *sbs_slave;
- };
+ 	err =3D komeda_plane_init_data_flow(state, kcrtc_st, &dflow);
+ 	if (err)
+ 		return err;
 
- struct komeda_layer_state {
+-	if (dflow.en_split)
++	if (kcrtc->side_by_side)
++		err =3D komeda_build_layer_sbs_data_flow(layer,
++				kplane_st, kcrtc_st, &dflow);
++	else if (dflow.en_split)
+ 		err =3D komeda_build_layer_split_data_flow(layer,
+ 				kplane_st, kcrtc_st, &dflow);
+ 	else
 --
 2.20.1
