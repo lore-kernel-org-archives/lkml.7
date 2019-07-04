@@ -2,122 +2,150 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC45C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6D2C0651B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FFC218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562243124;
-	bh=1CUK3irh/73Kz2Z4/gjX6kWZ9RET22dA24YyyRYKa8c=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=K5jIOeEUwWVhbJ1MqZ5Snd6fx/TEW2HeH4ReFkEDxbgvarh6h8wCwxuT+GnjDR5yQ
-	 AvBaB4O10L/HYdYY2qHkOhA1cvsF1/wwv5k4g//gvL7xssjoRB0YUBpCOxSq3D97t8
-	 3hzQXeW5X1NP2sbMKkU9aQT7M9CUQ9jh85kbdH5A=
+	by mail.kernel.org (Postfix) with ESMTP id D3A512064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iMSGc6py"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfGDMZX (ORCPT
+        id S1727731AbfGDM0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:25:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35562 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfGDMZJ (ORCPT
+        Thu, 4 Jul 2019 08:26:35 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35987 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfGDM0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:25:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Y/uabhd3emfe7XPsaHIK1+FGOSTXpQE94AD/6SuEfgE=; b=ezkYFefEQmYe
-        rGWCMpdXPmuNyXgIK0V7tI0X0lIFxDRzeovtryDyWogcRzPyGuDo0ycyik4wXYWn2J9/ydRDgn5bc
-        RzJIH5sV6Mx3xtnOPQ7p9zgBEZjSGXwaZyNHhE6YQf6qfYc0ijCh2+/BSSjbaT2PK7lAETMI3INkQ
-        F5gU4=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hj0nS-0000jZ-EO; Thu, 04 Jul 2019 12:25:06 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D03D92743897; Thu,  4 Jul 2019 13:25:05 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max77620: remove redundant assignment to variable ret" to the regulator tree
-In-Reply-To: <20190703082009.18779-1-colin.king@canonical.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190704122505.D03D92743897@ypsilon.sirena.org.uk>
-Date:   Thu,  4 Jul 2019 13:25:05 +0100 (BST)
+        Thu, 4 Jul 2019 08:26:35 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190704122633euoutp02567d6c043e55bcc80d92b5f9ac9446bb~uM_hZqEsb1232812328euoutp02o
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jul 2019 12:26:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190704122633euoutp02567d6c043e55bcc80d92b5f9ac9446bb~uM_hZqEsb1232812328euoutp02o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562243193;
+        bh=3MtEWWvx6gqwDixQ5dHpVZg1D4dhpVO9nckP3J732x0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=iMSGc6pyR3y9zEdc6Mh5Bj1w+702dF1gurD3Ox8+0V09j+tK8EwV3l2gBFrzTRBCa
+         sFgRhSB/7dAeihBWLSvZH5077BxWfuXSLqbOgDzgB66u0yTrHZcKJFl1hDprMer2pj
+         Q04WiQ63oKhqCnXgKRSDSGFRF+AdwSvmoUJJtp2k=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190704122632eucas1p2e95de9aba9a91739d1e0a83558669ded~uM_gkg6F91869518695eucas1p2a;
+        Thu,  4 Jul 2019 12:26:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 2B.E2.04325.870FD1D5; Thu,  4
+        Jul 2019 13:26:32 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190704122631eucas1p1ba141e3585757f1a5804ebf941f439a8~uM_fsCbJJ3031230312eucas1p1y;
+        Thu,  4 Jul 2019 12:26:31 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190704122631eusmtrp1326547f44e3ec4d8a7d7a822a9b9ef48~uM_fd8RNs0872508725eusmtrp1_;
+        Thu,  4 Jul 2019 12:26:31 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-8e-5d1df078fbb6
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B8.FF.04140.770FD1D5; Thu,  4
+        Jul 2019 13:26:31 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190704122631eusmtip2586506a3e54d779106da6aa7f906f1dd~uM_fDY3xu0709207092eusmtip2w;
+        Thu,  4 Jul 2019 12:26:31 +0000 (GMT)
+Subject: Re: [PATCH 1/3] drm/bridge: ti-sn65dsi86: add link to datasheet
+To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <2089b5bc-44bf-1dad-3e3d-08eff409335f@samsung.com>
+Date:   Thu, 4 Jul 2019 14:26:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190702154419.20812-2-robdclark@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNKsWRmVeSWpSXmKPExsWy7djPc7oVH2RjDR4+U7ToPXeSyeL/tonM
+        Fle+vmez6Jy4hN1i4v6z7BaXd81hs7j28zGzxfOFP5gt7m44y+jA6TG74SKLx95vC1g8ds66
+        y+4xu2Mmq8f2bw9YPe53H2fy+LxJLoA9issmJTUnsyy1SN8ugSvjxmq7gvdsFZOPH2ZsYLzE
+        2sXIwSEhYCJx/XdZFyMXh5DACkaJhTdmsUE4Xxglvp6bxdLFyAnkfGaUWLu3FMQGadh49ChU
+        fDmjRP/BQoiGt4wSJ2YvZQNJCAt4SPy4sx3MFhFwkThx6TcriM0s0MIksXFrLYjNJqAp8Xfz
+        TbAaXgE7ieUbvoDVsAioSGxYcBLMFhWIkLi8ZRcjRI2gxMmZT8AWcwpYSnx5uRBqprxE89bZ
+        zBC2uMStJ/OZQA6SEDjFLjF/0QpmiKtdJOZPe84OYQtLvDq+BcqWkTg9uYcFwq6XuL+ihRmi
+        uYNRYuuGnVDN1hKHj18Ehxcz0NXrd+lDhB0lvq2dzQQJRj6JG28FIW7gk5i0bTozRJhXoqNN
+        CKJaUeL+2a1QA8Ulll74yjaBUWkWks9mIflmFpJvZiHsXcDIsopRPLW0ODc9tdg4L7Vcrzgx
+        t7g0L10vOT93EyMwSZ3+d/zrDsZ9f5IOMQpwMCrx8D7YIhMrxJpYVlyZe4hRgoNZSYT3+2+g
+        EG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6pBkYT7d5P7WrW
+        CutZzM60ezLt3BH401b8Qt5zR8mVCq8t6p5Erikx1pgh0WTJGDar8/6bzBX2XdY3uWOby45p
+        RDo2pPEV3djzev3sWTZLz7j9F5uhLXMr7YG244Oarg7NCN2D1bqmm7iKz7+LS0/dYNYVeuKA
+        1Mri6edv362Uynx3aI2gSmXgViWW4oxEQy3mouJEAMreMVROAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xe7rlH2RjDeY8UrfoPXeSyeL/tonM
+        Fle+vmez6Jy4hN1i4v6z7BaXd81hs7j28zGzxfOFP5gt7m44y+jA6TG74SKLx95vC1g8ds66
+        y+4xu2Mmq8f2bw9YPe53H2fy+LxJLoA9Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DY
+        PNbKyFRJ384mJTUnsyy1SN8uQS/jxmq7gvdsFZOPH2ZsYLzE2sXIySEhYCKx8ehRFhBbSGAp
+        o8TkS+YQcXGJ3fPfMkPYwhJ/rnWxdTFyAdW8ZpT48OkFWIOwgIfEjzvb2UBsEQEXiROXfrOC
+        FDELtDFJXNzbxgrRsZtRYm7jVSaQKjYBTYm/m2+CdfAK2Eks3/AF7AwWARWJDQtOgtmiAhES
+        fW2zoWoEJU7OfAK2jVPAUuLLy4VgNcwC6hJ/5l1ihrDlJZq3zoayxSVuPZnPNIFRaBaS9llI
+        WmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwOjcduznlh2MXe+CDzEKcDAq
+        8fA+2CITK8SaWFZcmXuIUYKDWUmE9/tvoBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnAxNH
+        Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRo8tnu3CVdpT1k/e
+        9Wayde/sg+aXDATKLf/2qR+8o1L87d06q2leQSEM6/T2tjOJe7md89m+y6c8yFq9J9P7+Jn/
+        755/Fbp5/k4ek8LBMzsqQrky/UwnpF527ylp0lvGEvlg96rt1Zeb+S8eMhBX5rC+4HKg2ULs
+        EUfz4Z431/h7Eyb++r+lRYmlOCPRUIu5qDgRAHLmH1fkAgAA
+X-CMS-MailID: 20190704122631eucas1p1ba141e3585757f1a5804ebf941f439a8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190702154438epcas1p2493f1bde0f16a5bdd63f884826e2071c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190702154438epcas1p2493f1bde0f16a5bdd63f884826e2071c
+References: <20190702154419.20812-1-robdclark@gmail.com>
+        <CGME20190702154438epcas1p2493f1bde0f16a5bdd63f884826e2071c@epcas1p2.samsung.com>
+        <20190702154419.20812-2-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 02.07.2019 17:44, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+>
+> The bridge has pretty good docs, lets add a link to make them easier to
+> find.
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-   regulator: max77620: remove redundant assignment to variable ret
 
-has been applied to the regulator tree at
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+ --
+Regards
+Andrzej
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index bcca9173c72a..f1a2493b86d9 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + * datasheet: http://www.ti.com/lit/ds/symlink/sn65dsi86.pdf
+>   */
+>  
+>  #include <linux/clk.h>
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a3c7c029c3da01645f2db1bf7737668d17c2c78a Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Wed, 3 Jul 2019 09:20:09 +0100
-Subject: [PATCH] regulator: max77620: remove redundant assignment to variable
- ret
-
-The variable ret is being initialized with a value that is never
-read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190703082009.18779-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/max77620-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 2ae2d319321b..8d9731e4052b 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -467,7 +467,7 @@ static int max77620_regulator_is_enabled(struct regulator_dev *rdev)
- {
- 	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
- 	int id = rdev_get_id(rdev);
--	int ret = 1;
-+	int ret;
- 
- 	if (pmic->active_fps_src[id] != MAX77620_FPS_SRC_NONE)
- 		return 1;
--- 
-2.20.1
 
