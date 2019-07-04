@@ -2,161 +2,129 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33BBC06514
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F30EC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791CA21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE98216E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/u6QSi/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsSZbNRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfGDGqW (ORCPT
+        id S1727287AbfGDGrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:46:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41059 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfGDGqV (ORCPT
+        Thu, 4 Jul 2019 02:47:05 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:43073 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfGDGrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:46:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so2457042pff.8;
-        Wed, 03 Jul 2019 23:46:21 -0700 (PDT)
+        Thu, 4 Jul 2019 02:47:05 -0400
+Received: by mail-ua1-f66.google.com with SMTP id o2so770123uae.10
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 23:47:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=7u3j/qlpuiMl7q0crcwHK5qvOp5dbyAVCcaxQlei5BY=;
-        b=d/u6QSi/W+Hep7xnLOkGy1zQzus/xm9kmEi9zJteGC+By7PW4KjgQWcSHcyR+Ga6ql
-         I8H3C5il13o4RAUqeRGoK6OzmIU63054kYPrcXXtpL7MbrWqdhKClhb5jCqiwIXAnKay
-         XKaHDrWkk/bpKY3G54zKktlypLL1MgPOfQyFt93BtOdisfS31RODJIyEVHuTDiyPKhlZ
-         xsrvAiVLNtXgqk767s8NWPBwfZxUgYq5fI0z+FEn+0ZyDskl7UbQM5AROxEpw+KH5Wc9
-         AjMtSRwBN+MCLdDP9DONVwz54+Sjj5YB5NJZh3//3UFZ7/ViVX8/BcYA4v54LWpZat3j
-         ZlPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9EIsGKDaQdkWTOCLMwtT5nbvh2nfzllYtIpcBeJLo8I=;
+        b=dsSZbNRQikjO5dvARv+F6IsHCaRxaj+anwxfONnL6yiccZpZXDbaYmZaJRq3AfPJOP
+         c+dFt4kHtFrT9c7Hpofp4uOLf1qoSS7pqB0nXY/94C61wa/YyyDWtWiky0TH/q6bYCTi
+         5MYoP7Eypksiy2LEU5j/xmAmzKk8VD1a7okAwvG+amFKo54yyDDdW4VHAhtmyNGdLVag
+         /kQWYS+CKpcZZgXq4MUKykVLuh/a0uie97vQaVn28y9YeW5SbW2O+shYLcj5UIZjAIId
+         a05qP11JWACaFHDJkskh80vN2PRK2AIhTaLs8Kk/NXawJM7pcNWA+mv7hP8KfKs6ujBV
+         rdeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=7u3j/qlpuiMl7q0crcwHK5qvOp5dbyAVCcaxQlei5BY=;
-        b=JjAOsTuy6i9iPhyFOYrEjufTHVwfr6Kn9hy3NImUnXngTVAvTIdCMFrqXTP/MGRlHJ
-         Xb9BtnrAesMI6l5WKEukPsGX+d7B1dadug/TeoxVzYXoLYeyG4wXg2ToDWKO8yU0kLly
-         Tn/3ZemZZ3DVOdG/EMAeChCIkPvafsLTznC4RjIkDVappS5vsVdsW6WFkbl9dlaazR78
-         uEokP6CDLtRuG/Fb1XR5R+S9bPhlpJqcjLEx9mjfLVdDhZ4xjn9CtVC2MVM+xll0BmPt
-         OJCKnPChdWOQMJdADbO4igYGSDaLZ7MHNCjT0Ql8G9c9qOd7cMrkd0nQ47Q0gxvKWnRB
-         wxpg==
-X-Gm-Message-State: APjAAAX5eDuH+7KAHbD7iwAhI0/pumb1uNUZSkPlg/erai10bpI1mQVn
-        mN2ByIDjCOm1WxdJRJoaU8A=
-X-Google-Smtp-Source: APXvYqy/s0Ljvqpnt4JWFhbvPuiQt4Q13IXhAAOtCo9uJyfuMIBmYhhpcuhs0o6/ztVpgX4DicG89w==
-X-Received: by 2002:a63:2b8e:: with SMTP id r136mr13258143pgr.216.1562222781277;
-        Wed, 03 Jul 2019 23:46:21 -0700 (PDT)
-Received: from [0.0.0.0] ([80.240.31.150])
-        by smtp.gmail.com with ESMTPSA id z20sm8169915pfk.72.2019.07.03.23.46.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 23:46:20 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 2/3] arm64: mark all the GICC nodes in MADT as
- possible cpu
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, james.morse@arm.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com,
-        john.garry@huawei.com, jonathan.cameron@huawei.com
-References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
- <1561776155-38975-3-git-send-email-wangxiongfeng2@huawei.com>
-From:   Jia He <jiakernel2@gmail.com>
-Organization: ARM
-Message-ID: <762be90e-7629-ab5e-4c2d-6566b100f2e5@gmail.com>
-Date:   Thu, 4 Jul 2019 14:46:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9EIsGKDaQdkWTOCLMwtT5nbvh2nfzllYtIpcBeJLo8I=;
+        b=emrQUXS8THjAPQbCVdxd3NsV+bcmE65OkIVYMBNHpwspT4P81+YMD5AHE7NFfxByog
+         Nn1IhoO+xSACADgfbh+QdFsSp0eK3SwDLa87dmn39QkkVTzhluOsclv+eW+rj2KoTxyE
+         /UD6UtBTY6KUYRI8vAzReJWvFrw1jR2w5kJqW5sGGy0ishVfz8GspVmT2oXDrGaGscV6
+         svo+qf3ZnQo28mcSF6hWPvriY/J1HWlu6dmAOtQtIepvR4whheFyLHz0+DTb716quDJu
+         69pT6byYvwqgR257lx9eKY5z92iGhi5PbwiMvvfVlPbgUf9pw3ecjct5hLZ0daV41aP5
+         oiJg==
+X-Gm-Message-State: APjAAAURl+N0OcYfCHuoXtZAxMrP4LFpxPh1A7QpNGRTSIgoXqvcJ+np
+        bDrlSzHNqDQOSJLmTqPibYf/6kehmdtpxXVojF+6hYCH
+X-Google-Smtp-Source: APXvYqyoAX8ANpr6fIMUHUQqfVeCMDkbeHsbDlWuisGJKPGZrBsQTSF3Iq8C6cF3qY2MAstlWz/uMNpba/qNhxcVHlE=
+X-Received: by 2002:ab0:2c05:: with SMTP id l5mr19280726uar.43.1562222824324;
+ Wed, 03 Jul 2019 23:47:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1561776155-38975-3-git-send-email-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20190704062259.GA1094@ogabbay-VM> <20190704064010.GA11575@kroah.com>
+ <20190704064141.GA1289@kroah.com>
+In-Reply-To: <20190704064141.GA1289@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 4 Jul 2019 09:46:38 +0300
+Message-ID: <CAFCwf12mahTh+rsRSe6OV1CtL4FkE7h3KEN_Gt8BKMoAS2Z7yQ@mail.gmail.com>
+Subject: Re: [git pull] habanalabs pull request for kernel 5.3
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/6/29 10:42, Xiongfeng Wang wrote:
-> We set 'cpu_possible_mask' based on the enabled GICC node in MADT. If
-> the GICC node is disabled, we will skip initializing the kernel data
-> structure for that CPU.
+On Thu, Jul 4, 2019 at 9:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> To support CPU hotplug, we need to initialize some CPU related data
-> structure in advance. This patch mark all the GICC nodes as possible CPU
-> and only these enabled GICC nodes as present CPU.
+> On Thu, Jul 04, 2019 at 08:40:10AM +0200, Greg KH wrote:
+> > On Thu, Jul 04, 2019 at 09:22:59AM +0300, Oded Gabbay wrote:
+> > > Hello Greg,
+> > >
+> > > This is the pull request for habanalabs driver for kernel 5.3.
+> > >
+> > > It mostly contains improvements to the existing code base. Nothing too
+> > > exciting this time.
+> > >
+> > > Please see the tag message for details on what this pull request contains.
+> > >
+> > > Thanks,
+> > > Oded
+> > >
+> > > The following changes since commit 60e8523e2ea18dc0c0cea69d6c1d69a065019062:
+> > >
+> > >   ocxl: Allow contexts to be attached with a NULL mm (2019-07-03 21:29:47 +0200)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-07-04
+> >
+> > Pulled and pushed out, thanks.
 >
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->   arch/arm64/kernel/setup.c |  2 +-
->   arch/arm64/kernel/smp.c   | 11 +++++------
->   2 files changed, 6 insertions(+), 7 deletions(-)
+> Oops, no, I got the following errors from my scripts when trying to
+> push:
 >
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 7e541f9..7f4d12a 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -359,7 +359,7 @@ static int __init topology_init(void)
->   	for_each_online_node(i)
->   		register_one_node(i);
->   
-> -	for_each_possible_cpu(i) {
-> +	for_each_online_cpu(i) {
+> Commit a8330ecebaee2703042b95b5437511c5b2876819
+>         committer SOB missing
+>         dbenzoor@habana.ai oded.gabbay@gmail.com
+>         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
+> Commit 5a0b645318fd96d2d9c65f9b39ef07562c83a494
+>         committer SOB missing
+>         dbenzoor@habana.ai oded.gabbay@gmail.com
+>         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
+> Commit 4a0fedfc20422d83edd874040a6a965cd55d27d5
+>         committer SOB missing
+>         dbenzoor@habana.ai oded.gabbay@gmail.com
+>         Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
+>
+> You "reviewed" these, but as you committed the patch, you also need to
+> sign off on them.
+>
+> Can you fix up the tree and resend?
+>
+> thanks,
+>
+> greg k-h
 
-Have you considered the case in non-acpi mode? and setting "maxcpus=n" in host 
-kernel boot
+Sure, np, 10 minutes.
+I was never really 100% sure about whether I must put sign-off if I
+reviewed it, but now I know :)
 
-parameters?
+Sorry for the trouble.
 
----
-Cheers,
-Justin (Jia He)
-
-
->   		struct cpu *cpu = &per_cpu(cpu_data.cpu, i);
->   		cpu->hotpluggable = 1;
->   		register_cpu(cpu, i);
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 6dcf960..6d9983c 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -525,16 +525,14 @@ struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu)
->   {
->   	u64 hwid = processor->arm_mpidr;
->   
-> -	if (!(processor->flags & ACPI_MADT_ENABLED)) {
-> -		pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
-> -		return;
-> -	}
-> -
->   	if (hwid & ~MPIDR_HWID_BITMASK || hwid == INVALID_HWID) {
->   		pr_err("skipping CPU entry with invalid MPIDR 0x%llx\n", hwid);
->   		return;
->   	}
->   
-> +	if (!(processor->flags & ACPI_MADT_ENABLED))
-> +		pr_debug("disabled CPU entry with 0x%llx MPIDR\n", hwid);
-> +
->   	if (is_mpidr_duplicate(cpu_count, hwid)) {
->   		pr_err("duplicate CPU MPIDR 0x%llx in MADT\n", hwid);
->   		return;
-> @@ -755,7 +753,8 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
->   		if (err)
->   			continue;
->   
-> -		set_cpu_present(cpu, true);
-> +		if ((cpu_madt_gicc[cpu].flags & ACPI_MADT_ENABLED))
-> +			set_cpu_present(cpu, true);
->   		numa_store_cpu_info(cpu);
->   	}
->   }
-
--- 
-
+Thanks,
+Oded
