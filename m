@@ -2,152 +2,129 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9423BC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5ADC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D727218BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8411218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="I/Limrpi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="bmgH12mW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGDIJ6 (ORCPT
+        id S1726969AbfGDIME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:09:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36775 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfGDIJ5 (ORCPT
+        Thu, 4 Jul 2019 04:12:04 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:2842 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725882AbfGDIME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:09:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so5583133wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 01:09:56 -0700 (PDT)
+        Thu, 4 Jul 2019 04:12:04 -0400
+Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x648BGat020295;
+        Thu, 4 Jul 2019 03:12:02 -0500
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2052.outbound.protection.outlook.com [104.47.46.52])
+        by mx0a-00010702.pphosted.com with ESMTP id 2thcnk8716-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jul 2019 03:12:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ikIOKBV36H/Xx1iuFIPI2qkuopRb0oqwGFKJA2jzmY4=;
-        b=I/LimrpioiWUl+TQIxDzRUuF3Atd37fYhfeZDCXfS3Ifza1QV3qL8hlvjJ/vGuk8Yz
-         2UY8Fd26nxylwrUL52R1hDOuoT0hPmJYMLXXLavrZAeWDIyuIFJvxMRrerEhw+ecH9HY
-         6MX+olxNieSfywey7Cw8GkZ3JOaYzvSXAaT6SLHt6pbdfOIIU7vG86ffZJCUM+L2Jtkr
-         QbJ42HuXTdTckIw4vuToyYxZ0rY6jmRgzM6dVveKzM3OZA42KZ3Zx+aLz9ZAg2L/O816
-         HODt2JTXwQzDhEQpB7Rkl/r7tN3LUYg/l3R/D/jLTQ98VrZIHEYzqT3bt20m8h/aC+SQ
-         hOig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ikIOKBV36H/Xx1iuFIPI2qkuopRb0oqwGFKJA2jzmY4=;
-        b=THWjLmVOixQ4EBvYZM0QXkYOLlAgpG8q3yFsrQzNyXrAR5tilYMq7rvHfSbfRtUDpP
-         aeyi8K3EbqyC6h1ixdpa/dHK/OhQiI2Vxu6CojclXpRFvR5zg5w8sWASDeYJxWncJY8J
-         tj+3GMqJuB7RHEZ/ktXNTdF0umO0VJskx4tfRADDNEMepo43KFOIwGyd/OCs3E4dTJer
-         WUInCMrTUsHyk/3Fpdhlz10qBRKT12nLjfufKJUFJxhEwoN7kLwjZb3AdlMAOcYKKZo6
-         zmK2fckRstk4s2Kib1XdovhzioNAK1EktXBlILo5VUf8hIdwxq2RkulOK3qJjN70iFcI
-         vp3g==
-X-Gm-Message-State: APjAAAU/c3aGAZfYVo4mhIV89sS02m23+3DeR78+gdtqTGf9uCeuj7HS
-        M9ga5huTvvZJT49szCp/Jf+0+g==
-X-Google-Smtp-Source: APXvYqxtJJPyG4RX207axr0ToNgMTD3BFhUKT7pEJfs8Zwuc3CesCIlqz0qlHQjj96AAD8AbNBdIGw==
-X-Received: by 2002:a5d:6182:: with SMTP id j2mr21751875wru.275.1562227795632;
-        Thu, 04 Jul 2019 01:09:55 -0700 (PDT)
-Received: from localhost (ip-213-220-235-213.net.upcbroadband.cz. [213.220.235.213])
-        by smtp.gmail.com with ESMTPSA id a2sm5896823wmj.9.2019.07.04.01.09.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 04 Jul 2019 01:09:55 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 10:09:54 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 08/15] ethtool: move string arrays into
- common file
-Message-ID: <20190704080954.GH2250@nanopsycho>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <0647ac484dac2c655d0e4260d81e86405688ff5b.1562067622.git.mkubecek@suse.cz>
- <20190703134452.GZ2250@nanopsycho>
- <20190703143722.GN20101@unicorn.suse.cz>
+ d=nio365.onmicrosoft.com; s=selector1-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yxFMZN5yUSeBdmrJ6vGJsSqs3zPafx1S+efLq4WuXD8=;
+ b=bmgH12mWi87udvnojBWenUHNOB806XBv9TZK5kGrBSubQ+z7VneBN1OjuHjyfMK+gXXVwgcGNfTD4V8uWldjY8uDkHWxY1XuzX6RKV7I7Vy8xcWbdl9MbgJ7p2AkystQFMs1/lZJmVsaymsSX6LiCWV19Bd6xlQU9msyxDpRkq4=
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com (20.179.21.161) by
+ MN2PR04MB6238.namprd04.prod.outlook.com (20.178.249.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.17; Thu, 4 Jul 2019 08:12:00 +0000
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7]) by MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7%5]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
+ 08:12:00 +0000
+From:   Je Yen Tam <je.yen.tam@ni.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Thread-Topic: [EXTERNAL] Re: [PATCH 1/2] serial/8250: Add support for
+ NI-Serial PXI/PXIe+485 devices.
+Thread-Index: AQHVMIWbCP+HEZ5Oukas+L+0Z4rj1qa5J7EAgAD27MA=
+Date:   Thu, 4 Jul 2019 08:12:00 +0000
+Message-ID: <MN2PR04MB592081EEAF8F663E445C5D36B7FA0@MN2PR04MB5920.namprd04.prod.outlook.com>
+References: <20190702032323.28967-1-je.yen.tam@ni.com>
+ <20190703172554.GA27719@kroah.com>
+In-Reply-To: <20190703172554.GA27719@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [130.164.75.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 15cbd5ff-c2df-44bc-7af8-08d700574a64
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6238;
+x-ms-traffictypediagnostic: MN2PR04MB6238:
+x-microsoft-antispam-prvs: <MN2PR04MB62384123A6F28416FCDF610CB7FA0@MN2PR04MB6238.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(39860400002)(366004)(346002)(189003)(199004)(486006)(6436002)(186003)(76176011)(71190400001)(71200400001)(33656002)(99286004)(53936002)(6916009)(25786009)(6506007)(476003)(8936002)(14454004)(6246003)(478600001)(68736007)(256004)(11346002)(2906002)(446003)(6116002)(3846002)(102836004)(66556008)(229853002)(66946007)(66066001)(5660300002)(66476007)(66446008)(64756008)(7696005)(74316002)(54906003)(52536014)(4326008)(81166006)(86362001)(26005)(8676002)(55016002)(81156014)(305945005)(76116006)(73956011)(9686003)(316002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6238;H:MN2PR04MB5920.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UIRu5pTmsJ3ameg0HwaEkeAtBhTkfNP5BqEYqSUtyPFxZPIdnkFCVoCqUVdweCqsylvlkUFfpnijaSjjSehZDAGtEoUCMCDlGhFY38jJIosRfP0PvXcJg75LfRve0SmXP+pt2+WLSbYNAzRWWc/LUExtzLP5ITCivql+tBV5CsotTFs/0WlZPJygnlaMEvCLhBp90wQp0atC+u1Islf+zqzAL6YQ5HH9+GgT+L5MXP80ot+tNXPE0g8xdycJ4aqz6ewfoQ5BwgVWTnJE5DiBTeJIj5zvWkGVATEKoLuRaKZMyg6Rf+eSBDcOobq+VtdmkT4ZCJnCfMm+TBavgrFLnkmVH03uHyTWO/Jpz6ah7aePapRJabr7RC0tWPv/nvMWuAw3LUcOWm75h3fUau7MloXBoPv6ib6NLdnpn6mvtjY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703143722.GN20101@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15cbd5ff-c2df-44bc-7af8-08d700574a64
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 08:12:00.5558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: je.yen.tam@ni.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6238
+Subject: RE: Re: [PATCH 1/2] serial/8250: Add support for NI-Serial PXI/PXIe+485
+ devices.
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907040107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Jul 03, 2019 at 04:37:22PM CEST, mkubecek@suse.cz wrote:
->On Wed, Jul 03, 2019 at 03:44:52PM +0200, Jiri Pirko wrote:
->> Tue, Jul 02, 2019 at 01:50:19PM CEST, mkubecek@suse.cz wrote:
->> >Introduce file net/ethtool/common.c for code shared by ioctl and netlink
->> >ethtool interface. Move name tables of features, RSS hash functions,
->> >tunables and PHY tunables into this file.
->> >
->> >Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->> >---
->> > net/ethtool/Makefile |  2 +-
->> > net/ethtool/common.c | 84 ++++++++++++++++++++++++++++++++++++++++++++
->> > net/ethtool/common.h | 17 +++++++++
->> > net/ethtool/ioctl.c  | 83 ++-----------------------------------------
->> > 4 files changed, 104 insertions(+), 82 deletions(-)
->> > create mode 100644 net/ethtool/common.c
->> > create mode 100644 net/ethtool/common.h
->> >
->> >diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
->> >index 482fdb9380fa..11782306593b 100644
->> >--- a/net/ethtool/Makefile
->> >+++ b/net/ethtool/Makefile
->> >@@ -1,6 +1,6 @@
->> > # SPDX-License-Identifier: GPL-2.0
->> > 
->> >-obj-y				+= ioctl.o
->> >+obj-y				+= ioctl.o common.o
->> > 
->> > obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
->> > 
->> >diff --git a/net/ethtool/common.c b/net/ethtool/common.c
->> >new file mode 100644
->> >index 000000000000..b0ce420e994e
->> >--- /dev/null
->> >+++ b/net/ethtool/common.c
->> >@@ -0,0 +1,84 @@
->> >+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
->> >+
->> >+#include "common.h"
->> >+
->> >+const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
->> 
->> const char *netdev_features_strings[NETDEV_FEATURE_COUNT] = {
->> ?
->> 
->> Same with the other arrays.
->
->These are not new tables, this patch only moves existing tables from
->ioctl.c (originally net/core/ethtool.c) into common.c so that they can
->be used by both ioctl and netlink code.
->
->This fixed size string array format is used by ETHTOOL_GSTRINGS ioctl
->command. So if we switch these into simple const char *table[], we can
->get rid of some complexity in strset.c and bitset.c (the "simple" vs.
->"legacy" string set mess) but we would have to convert them into the
->fixed size string array in ioctl ETHTOOL_GSTRINGS handler. And then we
->would also have to convert (or rather "index") string sets retrieved
->from NIC driver (e.g. private flags, stats, tests) - which also means an
->extra kmalloc() (or rather kmalloc_array()).
->
->It an option I'm certainly open to if we agree on it but it's not for
->free.
+> On Mon, Jul 01, 2019 at 08:23:23PM -0700, jeyentam wrote:
+> > Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
+> >
+> > Signed-off-by: jeyentam <je.yen.tam@ni.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_pci.c | 879 +++++++++++++++++++----------
+> >  1 file changed, 582 insertions(+), 297 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/82=
+50/8250_pci.c
+> > index df41397de478..0a711b895b33 100644
+> > --- a/drivers/tty/serial/8250/8250_pci.c
+> > +++ b/drivers/tty/serial/8250/8250_pci.c
+> > @@ -1,10 +1,10 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /*
+> > - *  Probe module for 8250/16550-type PCI serial ports.
+> > + *	Probe module for 8250/16550-type PCI serial ports.
+> >   *
+> > - *  Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
+> > + *	Based on drivers/char/serial.c, by Linus Torvalds, Theodore Ts'o.
+> >   *
+> > - *  Copyright (C) 2001 Russell King, All Rights Reserved.
+> > + *	Copyright (C) 2001 Russell King, All Rights Reserved.
+> >   */
+>=20
+> Why are you changing comments for no reason?
 
-Got it. I don't think we need to do this now. But it would be certainly
-nice to fix this later on.
-
->
->Michal
+These changes are not intended, I believe the editor I used messed up the
+spacing, will remove it and resubmit the patch.
