@@ -2,83 +2,87 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D664C46484
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06ECC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779462184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF98218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfGDPce convert rfc822-to-8bit (ORCPT
+        id S1727817AbfGDPdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:32:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727462AbfGDPcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:32:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 66563AF81;
-        Thu,  4 Jul 2019 15:32:32 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 17:32:31 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>
-Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
- driver
-Message-ID: <20190704173231.27365b51@kitsune.suse.cz>
-In-Reply-To: <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
-References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
-        <1562241547.6165.81.camel@linux.ibm.com>
-        <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+        Thu, 4 Jul 2019 11:33:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42078 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbfGDPdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:33:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D50423091799;
+        Thu,  4 Jul 2019 15:33:36 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1B4A84290;
+        Thu,  4 Jul 2019 15:33:26 +0000 (UTC)
+Date:   Thu, 4 Jul 2019 17:33:25 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, brouer@redhat.com
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+Message-ID: <20190704173325.2e21cc93@carbon>
+In-Reply-To: <BYAPR12MB32692AA2F18A530D56383739D3FA0@BYAPR12MB3269.namprd12.prod.outlook.com>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+        <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+        <20190704113916.665de2ec@carbon>
+        <BYAPR12MB326902688C3F40BB3DA6EEEBD3FA0@BYAPR12MB3269.namprd12.prod.outlook.com>
+        <20190704170920.1e81ed6e@carbon>
+        <BYAPR12MB32692AA2F18A530D56383739D3FA0@BYAPR12MB3269.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 04 Jul 2019 15:33:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 19:26:36 +0530
-Sachin Sant <sachinp@linux.vnet.ibm.com> wrote:
+On Thu, 4 Jul 2019 15:18:19 +0000
+Jose Abreu <Jose.Abreu@synopsys.com> wrote:
 
-> > On 04-Jul-2019, at 5:29 PM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > 
-> > On Wed, 2019-07-03 at 23:32 -0400, Nayna Jain wrote:  
-> >> The nr_allocated_banks and allocated banks are initialized as part of
-> >> tpm_chip_register. Currently, this is done as part of auto startup
-> >> function. However, some drivers, like the ibm vtpm driver, do not run
-> >> auto startup during initialization. This results in uninitialized memory
-> >> issue and causes a kernel panic during boot.
-> >> 
-> >> This patch moves the pcr allocation outside the auto startup function
-> >> into tpm_chip_register. This ensures that allocated banks are initialized
-> >> in any case.
-> >> 
-> >> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
-> >> PCR read")
-> >> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>  
-> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>  
+> From: Jesper Dangaard Brouer <brouer@redhat.com>
 > 
-> Thanks for the fix. Kernel boots fine with this fix.
+> > You can just use page_pool_free() (p.s I'm working on reintroducing
+> > page_pool_destroy wrapper).  As you say, you will not have in-flight
+> > frames/pages in this driver use-case.  
 > 
-> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> Well, if I remove the request_shutdown() it will trigger the "API usage 
+> violation" WARN ...
 > 
+> I think this is due to alloc cache only be freed in request_shutdown(), 
+> or I'm having some leak :D
 
-Tested-by: Michal Suchánek <msuchanek@suse.de>
+Sorry, for not being clear.  You of-cause first have to call
+page_pool_request_shutdown() and then call page_pool_free().
 
-Thanks
-
-Michal
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
