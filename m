@@ -2,83 +2,98 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C828C06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DD8C06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D929D218AD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562238546;
-	bh=g5ycTf7PkumM7Zijrp1lGqgFT6mSvlMA9pnh97KNkd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QYnOdNKxlMUvVs52wONkKk/rpN3U3yIrTRgcCeanMIqw+OW5PACgOFIh+DP4D8fEK
-	 n/0t8g/oxDVPgoM+KrHy8Mm82qcrrS63vjOjCYHRyORLgBp1roAtjL9TpunLd3LtI0
-	 VmW5bIPqOUX7LBuAozvEjdLtp3Y8u4j29JiV4nOM=
+	by mail.kernel.org (Postfix) with ESMTP id 111C02189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="F5ztQ6oL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfGDLJF (ORCPT
+        id S1727658AbfGDLJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:09:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36494 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:09:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1B698AEAF;
-        Thu,  4 Jul 2019 11:09:04 +0000 (UTC)
-Date:   Thu, 4 Jul 2019 13:09:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [Question] Should direct reclaim time be bounded?
-Message-ID: <20190704110903.GE5620@dhcp22.suse.cz>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
- <20190423071953.GC25106@dhcp22.suse.cz>
- <eac582cf-2f76-4da1-1127-6bb5c8c959e4@oracle.com>
- <04329fea-cd34-4107-d1d4-b2098ebab0ec@suse.cz>
- <dede2f84-90bf-347a-2a17-fb6b521bf573@oracle.com>
- <20190701085920.GB2812@suse.de>
- <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
- <20190703094325.GB2737@techsingularity.net>
- <571d5557-2153-59ea-334b-8636cc1a49c9@oracle.com>
+        Thu, 4 Jul 2019 07:09:47 -0400
+Received: from mout.gmx.net ([212.227.17.22]:51253 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727436AbfGDLJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:09:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562238524;
+        bh=xewwvH1K14MpwmyPyoSVm3soCqhRG4coEguzC5XFyRU=;
+        h=X-UI-Sender-Class:From:Cc:Subject:Date:In-Reply-To:References;
+        b=F5ztQ6oLQDxWBeKJRudGw4uO/Od6NHcZR42iKjQZwFNvXMU1LDkJcz++vnGjhGhkT
+         rhKPJAk0CjVGVx6E4KYrz4r/6zYDVOF8Z62oh4MlWCmTeJdmMyWg6nyBRNPHdnNkk6
+         4qALyoONjlAPb/+iANBotiT6pDWpFqR33aTqbqDk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.145.121] ([217.61.145.121]) by web-mail.gmx.net
+ (3c-app-gmx-bs27.server.lan [172.19.170.79]) (via HTTP); Thu, 4 Jul 2019
+ 13:08:44 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <571d5557-2153-59ea-334b-8636cc1a49c9@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <trinity-bad65b37-f133-4f92-9513-965ecc0e0a0b-1562238524435@3c-app-gmx-bs27>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+Cc:     "Lee Jones" <lee.jones@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Allison Randal" <allison@lohutok.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rob Herring" <robh@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        "Josef Friedl" <josef.friedl@speed.at>
+Subject: Aw: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 4 Jul 2019 13:08:44 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <24975910-cb06-7faf-998f-def23ca0891f@gmail.com>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-4-frank-w@public-files.de>
+ <24975910-cb06-7faf-998f-def23ca0891f@gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:jnRruknwXBDel+OIwmAlBlpZCo1GUcWSFiGCMCvsYCxnT6gNPN47MfQ8d+npte2+5ba3C
+ pK6nsUiE1pbreDN5g7uwxCqoVPtzGFjzwnicn7H2HiakjJVH++0nWUZcvMTNbDw41XYyfHz1rvP5
+ tyG636rnPhcTQmqemF8FuioIckboC/V+PRYo5xPNkhqnJzTMPGV8c9mOlJm7mL9gNnKhsJ51sgaA
+ F2utj5iZ0sWUH8hx4axdegf1shPw2ITfHHB8OiUIm42I/vflDVjo4pyNj0d7P0Z8P9Qmr9ogiFQj
+ I8=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5dO1uuC4GHI=:HuT9N7g5VLRtNrhu9OZLWM
+ s4oHLi+F4JnZ1iuiGNv5fWp6Cawu+ZAFh+3ySZ/XyVDWcO/IoLj6PmevaQtIHibcXyMfldhFr
+ H774L3+0s3jPi4KGidGirvKsHonDduG2z+L3Hn5rHCEArBIdknXuOxWNhrmImQjNPngJJeLcN
+ AJAbSiX3wEcJQeshB2wsEWtNRopMrBOxtJZbIFBfnOPeRwwo8DEuVkaCYlpp4hz+0/zfIXXQi
+ C97yBiCjPLdCIHjsXZ5FIKvjW49IX0pBxKczAEpkfnS2I9CRZNj/n/cISuJ58TiX3s4IcsraE
+ +cxkjIKRljQ8Hva6SIjS3R6dPeEXAgsIsIxHYoGiSLg7IjKggeCViPlkbocioMjnsimIFQC1V
+ DuNLmHO4HtIuuMWPuDlM7liEmbM9toxtmxxrq02GY+5zxJjdg/CN0JjoKEMogwcNSvPSUJSQ8
+ FAKuYh05I68HWtL6BpvPtIfRieUKWEh7fVgNqET3U5VGelkjd5RuHrVWi6gF+quRLHFZdKXzx
+ dRRAViLmvut6WTLCuFMLnYaIMCg7WkcaJkU0Ca+zAJNai39ND4MXdE2mvPGhy5qugJUijobm8
+ 0iieYHmAd1P9kqyoWbTqNZhVd2cK0Kh6doCKz0cYxypBjEwSttY0c7BBcptAgDVtFMz7wJlco
+ CaQE=
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 03-07-19 16:54:35, Mike Kravetz wrote:
-> On 7/3/19 2:43 AM, Mel Gorman wrote:
-> > Indeed. I'm getting knocked offline shortly so I didn't give this the
-> > time it deserves but it appears that part of this problem is
-> > hugetlb-specific when one node is full and can enter into this continual
-> > loop due to __GFP_RETRY_MAYFAIL requiring both nr_reclaimed and
-> > nr_scanned to be zero.
-> 
-> Yes, I am not aware of any other large order allocations consistently made
-> with __GFP_RETRY_MAYFAIL.  But, I did not look too closely.  Michal believes
-> that hugetlb pages allocations should use __GFP_RETRY_MAYFAIL.
+> Gesendet: Donnerstag, 04. Juli 2019 um 11:13 Uhr
+> Von: "Matthias Brugger" <matthias.bgg@gmail.com>
 
-Yes. The argument is that this is controlable by an admin and failures
-should be prevented as much as possible. I didn't get to understand
-should_continue_reclaim part of the problem but I have a strong feeling
-that __GFP_RETRY_MAYFAIL handling at that layer is not correct. What
-happens if it is simply removed and we rely only on the retry mechanism
-from the page allocator instead? Does the success rate is reduced
-considerably?
--- 
-Michal Hocko
-SUSE Labs
+> It's up to the maintainer but I don't like patches doing clean-ups together with
+> adding support for new HW, although it's a trivial one here.
+
+i can split again to have clean-up and new functions separated
