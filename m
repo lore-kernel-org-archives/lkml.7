@@ -2,110 +2,177 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB54C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46849C46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2656D2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDA221852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:57:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSMe3KUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfGDN4r (ORCPT
+        id S1727335AbfGDN5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:56:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726817AbfGDN4r (ORCPT
+        Thu, 4 Jul 2019 09:57:14 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39855 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfGDN5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:56:47 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64DmBf8058669
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 09:56:45 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thjncg7u2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 09:56:45 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
-        Thu, 4 Jul 2019 14:56:43 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 14:56:41 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64DudPB50593958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 13:56:39 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1C035204E;
-        Thu,  4 Jul 2019 13:56:39 +0000 (GMT)
-Received: from [9.102.27.58] (unknown [9.102.27.58])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C821B52052;
-        Thu,  4 Jul 2019 13:56:37 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
- driver
-From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
-In-Reply-To: <1562241547.6165.81.camel@linux.ibm.com>
-Date:   Thu, 4 Jul 2019 19:26:36 +0530
-Cc:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Content-Transfer-Encoding: 7bit
-References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
- <1562241547.6165.81.camel@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-TM-AS-GCONF: 00
-x-cbid: 19070413-0016-0000-0000-0000028F398A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070413-0017-0000-0000-000032ECD8C2
-Message-Id: <0EDE02C7-3716-47A2-B7B0-007025F28567@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=919 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040171
+        Thu, 4 Jul 2019 09:57:14 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m10so5512247edv.6;
+        Thu, 04 Jul 2019 06:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FFyR56GUnLHy2geI3ziIJleBntP257KjNAIucLrVbto=;
+        b=sSMe3KUnCE/9cEqVz610EGJodOlNiM7nWzbx1zZ79RtpzxbcLa33M2jDifYqiexG0+
+         vAZ5VR8pdueSNKBYIlI9C2zj7yyaHLKqycY6QbNU5Caqk1xm0PFg28WJr+StMyTPC2tG
+         KtltdHgdepdP1B+TgssB4nk3tZIaXH2SZtfn173dD5iaP5NJLzhrd8Y/YGXG0g1FhGt6
+         mmmiJ7M+4sNbgyTNadHtLZz3XXN23H5PQ1+aHa635fHwO6L802KYN4412D7UeT43pOuF
+         /o+CMaU/9P57X0KNIgp9sJcaBMYHt/QfKjNSuIFP5slziNmx+Ia3Z3AwMwFXVhaMZETS
+         g5Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FFyR56GUnLHy2geI3ziIJleBntP257KjNAIucLrVbto=;
+        b=kqjg/KspZwa8h9gdpBoEboYVkwfpWz8EjDfKStPUxOSHCA5oEJd7utwPPp2gDwnAUl
+         7ft1Tx3QaZTy7ndLCCWKsXKS/5P0qkV6zxZlB11dASjaj+jLkURMooTnH3QcHdk7S0/b
+         CEM80+v2tjnC2o1iHtckHCvUFa6XSBI2/D8eGU+pqYEbKhiu+JPEyFwsA2MrK0IAd2Kq
+         pBkn4pW13BMnJA5ZbW/SPvzzNLb969iR7eYn2pexj7c/hMbDnXnI6OfUJKK3+9Jm3f8H
+         A/YjVVDipvhKvM8muTwPxGZBE2Rvv6awx1yWuop2pYDNhWF/8LgAbDMn7rzxSmOYyvIe
+         L2yA==
+X-Gm-Message-State: APjAAAVPAxDndF25/A3jnPACjBHe2VRnbJNRFnR0go1X6ogJ/S2yckrc
+        UFwyZeK6+pMglN17TnIYU8ibt5EoECUCVqS5vmg=
+X-Google-Smtp-Source: APXvYqxCy5T2qYf8AtD/5du5tJyhwcoh7sEdY75fT+3dvw6D36Axv5jy7pbWYHuZwdh4ciPM2RDUPV1BkT6JF3v8oSI=
+X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr39043190ejb.265.1562248632457;
+ Thu, 04 Jul 2019 06:57:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190702154419.20812-1-robdclark@gmail.com> <CGME20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03@epcas2p2.samsung.com>
+ <20190702154419.20812-3-robdclark@gmail.com> <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
+ <20190704123511.GG6569@pendragon.ideasonboard.com>
+In-Reply-To: <20190704123511.GG6569@pendragon.ideasonboard.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 4 Jul 2019 06:56:56 -0700
+Message-ID: <CAF6AEGvYJ6iA5B+thJuBC=pFStuhsn87xrrcWAZyroWj5xKMZA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 4, 2019 at 5:35 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hello,
+>
+> On Thu, Jul 04, 2019 at 02:31:20PM +0200, Andrzej Hajda wrote:
+> > On 02.07.2019 17:44, Rob Clark wrote:
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > Add a debugfs file to show status registers.
+> > >
+> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
+> > >  1 file changed, 42 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > index f1a2493b86d9..a6f27648c015 100644
+> > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > @@ -5,6 +5,7 @@
+> > >   */
+> > >
+> > >  #include <linux/clk.h>
+> > > +#include <linux/debugfs.h>
+> > >  #include <linux/gpio/consumer.h>
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/iopoll.h>
+> > > @@ -109,6 +110,7 @@ struct ti_sn_bridge {
+> > >     struct drm_dp_aux               aux;
+> > >     struct drm_bridge               bridge;
+> > >     struct drm_connector            connector;
+> > > +   struct dentry                   *debugfs;
+> > >     struct device_node              *host_node;
+> > >     struct mipi_dsi_device          *dsi;
+> > >     struct clk                      *refclk;
+> > > @@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+> > >     SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
+> > >  };
+> > >
+> > > +static int status_show(struct seq_file *s, void *data)
+> > > +{
+> > > +   struct ti_sn_bridge *pdata = s->private;
+> > > +   unsigned int reg, val;
+> > > +
+> > > +   seq_puts(s, "STATUS REGISTERS:\n");
+>
+> NO NEED TO SHOUT :-)
+>
+> > > +
+> > > +   pm_runtime_get_sync(pdata->dev);
+> > > +
+> > > +   /* IRQ Status Registers, see Table 31 in datasheet */
+> > > +   for (reg = 0xf0; reg <= 0xf8; reg++) {
+> > > +           regmap_read(pdata->regmap, reg, &val);
+> > > +           seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
+> > > +   }
+> > > +
+> > > +   pm_runtime_put(pdata->dev);
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > > +DEFINE_SHOW_ATTRIBUTE(status);
+> > > +
+> > > +static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
+> > > +{
+> > > +   pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
+> >
+> > If some day we will have board with two such bridges there will be a
+> > problem.
+>
+> Could we use the platform device name for this ?
 
-> On 04-Jul-2019, at 5:29 PM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> 
-> On Wed, 2019-07-03 at 23:32 -0400, Nayna Jain wrote:
->> The nr_allocated_banks and allocated banks are initialized as part of
->> tpm_chip_register. Currently, this is done as part of auto startup
->> function. However, some drivers, like the ibm vtpm driver, do not run
->> auto startup during initialization. This results in uninitialized memory
->> issue and causes a kernel panic during boot.
->> 
->> This patch moves the pcr allocation outside the auto startup function
->> into tpm_chip_register. This ensures that allocated banks are initialized
->> in any case.
->> 
->> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
->> PCR read")
->> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+hmm, yeah, that would solve the 2x bridges issue
 
-Thanks for the fix. Kernel boots fine with this fix.
+> > Anyway:
+> >
+> > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> >
+> > > +
+> > > +   debugfs_create_file("status", 0600, pdata->debugfs, pdata,
+> > > +                   &status_fops);
+> > > +}
+> > > +
+> > > +static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
+> > > +{
+> > > +   debugfs_remove_recursive(pdata->debugfs);
+> > > +   pdata->debugfs = NULL;
+> > > +}
+> > > +
+>
+> You need to conditionally-compile this based on CONFIG_DEBUG_FS.
 
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Hmm, is that really true?  Debugfs appears to be sufficently stub'd w/
+inline no-ops in the !CONFIG_DEBUG_FS case
 
-Thanks
--Sachin
-
+BR,
+-R
