@@ -2,88 +2,250 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A6EC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853F4C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE6C21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51211218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1zYiDtk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFu6zdf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727760AbfGDOHQ (ORCPT
+        id S1727816AbfGDOHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:07:16 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43054 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfGDOHO (ORCPT
+        Thu, 4 Jul 2019 10:07:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44782 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727765AbfGDOHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:07:14 -0400
-Received: by mail-vs1-f67.google.com with SMTP id j26so2026076vsn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 07:07:14 -0700 (PDT)
+        Thu, 4 Jul 2019 10:07:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b2so5551385wrx.11;
+        Thu, 04 Jul 2019 07:07:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P90kgH7q9sXvK86t1MZ4NbDsLn806eYSQE5PzlGAARc=;
-        b=j1zYiDtki+YMl3ZvtZfvAuXTVlnDEStPBOtdkF9p0fPM6M7w/NBp1I1IRhHkSlnwyV
-         GNTq9Em5g0gy+EkPxBhdvgbjqiI8YanKTJQqDEHlcKzUkIAUIiHyFJmSJNhES7QrQRX1
-         j+5NDsgt/HY91cb34ryr7d1jgY3YDBZ+d1HElKoIikbOhI4KXWXVdlgP718Ig/4ROk9t
-         iK/9AZib5cCpism8EIWqxizf4z6obLgGkbMtipU8ltVCVXU++1jDeGcvTBBAd7vNF9xm
-         yQGRZsX2IXTLUilJe40E2WELAq4UufVd32hJH5tlAkMWNJGRuS3qM2Xg8ZaRCxL9PYIL
-         oiqg==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TXWY3JXqY8YM2j7DiQgC7j1tlV3rV7fwMb9fAwdKWCE=;
+        b=KFu6zdf5PgZ33BpjDy3Jk4WM/6Lhgosg6L7NlXWDTTdDXKGaDfIPyOBR4Ddm2Zt4xT
+         OmJImSIwcXPQefb5NVdpo+SYJ2QV7091XW+8GX2mMlUVajWdvPFa1Jwdoaqcdx/UqPSY
+         hIfhN1mTvoBmGW6SXu10g84FKxv/gC3r3+/ntE6fCam7K6ZjZ8JiyeMfTmaI1+SWTiML
+         cIyz+v5fy+2hIgQYhOlVn4Dbjqa1Dg2jeJTui2WbFrGAD1B0NGGBSJu6VNO0sHjrMqnx
+         uKClSx5frsnFgNQEAyRTv0BmBQkoOrncQRw1TgFBVCiyjG/OXO2QlAJDLRzUEzsZM19W
+         OTSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P90kgH7q9sXvK86t1MZ4NbDsLn806eYSQE5PzlGAARc=;
-        b=Cs8dm8fysttLGb7bRBsDoLYvq7sMx3nAQAR+Oz7c30sHOYCb23UVDskpf6YJdINAPo
-         15dg0/JtIXkj/rdbVS2l4sQqFA013BfpYlK45qBMZO/wwE8STcTgfxCItpsHjgm5bIB2
-         biiNCZxpBYCNH2CnWBWL/P5I9VbGigHbwuEtp3l7lg1fLNA2ZFXUM/IJVLfeIvUZ42a4
-         CbfOdaoOyp7Jzg1/2465HOi2MevRtAjDJm0R6CM30hrN0nxef3Q9mZfeb1fovuIIvcYS
-         tBWGf5D6Gjea+orKiNP6AFaIMQzR5dBqn0LQJbcKwsRikGiOcgXDzRTjlzqVKE4FG7iO
-         OEkw==
-X-Gm-Message-State: APjAAAXHToMoHiku3eZWKq3uXEBsGmMWDts0EaQjf7JUXYPofDGvZc2w
-        VbmcAk/NCaCJokj3UT/N/2deVpLo5ighdI00AxiUmQ==
-X-Google-Smtp-Source: APXvYqxEoMd69cp5VHkgPtoEdfoRftzObUi4NGy1EBTWFUhvcqSK1+G87cS5PjbAiMBLFILHt22+c+yDiA4fc0F9Iao=
-X-Received: by 2002:a67:7fd8:: with SMTP id a207mr21712067vsd.85.1562249233840;
- Thu, 04 Jul 2019 07:07:13 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=TXWY3JXqY8YM2j7DiQgC7j1tlV3rV7fwMb9fAwdKWCE=;
+        b=ixwzs6dm8Y6iazjUFovHlI2BPaQ71g0wgyUkdhICpuhKySRZfJgWyyz08NUkHUUhIa
+         stP9qqYN/E2ERFLDNlEkmiEQCA/EBqQoHPoW3ZwrWclWCA7PNbtVICBmPX74BJILO1yN
+         3BWPGXdVdX5lqCQ7Jy6I6TbNG6tpxTAAex/HSkWGJX7p60A4ChvWQxgog3b79LcVwu3p
+         D7WYLkZNufWPT6c9QPmMKtIjUqakSKgM13tdpd5rYliiCneFl/IwK+rlSeHxtFyG9zb2
+         u2LQUj22h6I9zbpbF71K7Cw3oRGEG5PbZzJoCaeu/ZGqAXUlHJQlOg4II/dqoxm7LBbe
+         uIlA==
+X-Gm-Message-State: APjAAAUZdMoOwjdY+i5o4YsYjCT8CmRthAIbIq7y0MgVfjPGsyWaWNYk
+        jJn6rWyIxKqbK0S+HKd3yg2BzI+9zzU=
+X-Google-Smtp-Source: APXvYqwvlou9bVWGPndoOXIbWeHQNGZgSOWH07MHueG5zvuIPAv298a9fJNhbGbz64+8lLgfR1q0rw==
+X-Received: by 2002:a5d:43d0:: with SMTP id v16mr32643596wrr.252.1562249238125;
+        Thu, 04 Jul 2019 07:07:18 -0700 (PDT)
+Received: from donizetti.redhat.com (nat-pool-mxp-u.redhat.com. [149.6.153.187])
+        by smtp.gmail.com with ESMTPSA id n5sm4458060wmi.21.2019.07.04.07.07.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 07:07:17 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     jing2.liu@linux.intel.com
+Subject: [PATCH 1/5] KVM: cpuid: do_cpuid_ent works on a whole CPUID function
+Date:   Thu,  4 Jul 2019 16:07:11 +0200
+Message-Id: <20190704140715.31181-2-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190704140715.31181-1-pbonzini@redhat.com>
+References: <20190704140715.31181-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20190703170150.32548-1-efremov@linux.com>
-In-Reply-To: <20190703170150.32548-1-efremov@linux.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Thu, 4 Jul 2019 15:07:22 +0100
-Message-ID: <CACvgo52N5v07qA_afJfw7vo1X6_Gt4cGqBZn3eBzQtokndjWxA@mail.gmail.com>
-Subject: Re: [PATCH] drm/client: remove the exporting of drm_client_close
-To:     Denis Efremov <efremov@linux.com>
-Cc:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 at 08:27, Denis Efremov <efremov@linux.com> wrote:
->
-> The function drm_client_close is declared as static and marked as
-> EXPORT_SYMBOL. It's a bit confusing for an internal function to be
-> exported. The area of visibility for such function is its .c file
-> and all other modules. Other *.c files of the same module can't use it,
-> despite all other modules can. Relying on the fact that this is the
-> internal function and it's not a crucial part of the API, the patch
-> removes the EXPORT_SYMBOL marking of drm_client_close.
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+Rename it as well as __do_cpuid_ent and __do_cpuid_ent_emulated to have
+"func" in its name, and drop the index parameter which is always 0.
 
-Nice one:
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/cpuid.c | 89 +++++++++++++++++++++-----------------------
+ 1 file changed, 42 insertions(+), 47 deletions(-)
 
-Out of curiosity: Did you use some tool to spot this?
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 004cbd84c351..ddffc56c39b4 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -294,14 +294,19 @@ static void do_cpuid_1_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ {
+ 	entry->function = function;
+ 	entry->index = index;
++	entry->flags = 0;
++
+ 	cpuid_count(entry->function, entry->index,
+ 		    &entry->eax, &entry->ebx, &entry->ecx, &entry->edx);
+-	entry->flags = 0;
+ }
+ 
+-static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+-				   u32 func, u32 index, int *nent, int maxnent)
++static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
++				    u32 func, int *nent, int maxnent)
+ {
++	entry->function = func;
++	entry->index = 0;
++	entry->flags = 0;
++
+ 	switch (func) {
+ 	case 0:
+ 		entry->eax = 7;
+@@ -313,21 +318,18 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+ 		break;
+ 	case 7:
+ 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+-		if (index == 0)
+-			entry->ecx = F(RDPID);
++		entry->eax = 0;
++		entry->ecx = F(RDPID);
+ 		++*nent;
+ 	default:
+ 		break;
+ 	}
+ 
+-	entry->function = func;
+-	entry->index = index;
+-
+ 	return 0;
+ }
+ 
+-static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+-				 u32 index, int *nent, int maxnent)
++static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
++				  int *nent, int maxnent)
+ {
+ 	int r;
+ 	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+@@ -431,7 +433,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	if (*nent >= maxnent)
+ 		goto out;
+ 
+-	do_cpuid_1_ent(entry, function, index);
++	do_cpuid_1_ent(entry, function, 0);
+ 	++*nent;
+ 
+ 	switch (function) {
+@@ -496,34 +498,28 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		break;
+ 	case 7: {
+ 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+-		/* Mask ebx against host capability word 9 */
+-		if (index == 0) {
+-			entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+-			cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
+-			// TSC_ADJUST is emulated
+-			entry->ebx |= F(TSC_ADJUST);
+-			entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+-			f_la57 = entry->ecx & F(LA57);
+-			cpuid_mask(&entry->ecx, CPUID_7_ECX);
+-			/* Set LA57 based on hardware capability. */
+-			entry->ecx |= f_la57;
+-			entry->ecx |= f_umip;
+-			/* PKU is not yet implemented for shadow paging. */
+-			if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+-				entry->ecx &= ~F(PKU);
+-			entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+-			cpuid_mask(&entry->edx, CPUID_7_EDX);
+-			/*
+-			 * We emulate ARCH_CAPABILITIES in software even
+-			 * if the host doesn't support it.
+-			 */
+-			entry->edx |= F(ARCH_CAPABILITIES);
+-		} else {
+-			entry->ebx = 0;
+-			entry->ecx = 0;
+-			entry->edx = 0;
+-		}
+ 		entry->eax = 0;
++		/* Mask ebx against host capability word 9 */
++		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
++		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
++		// TSC_ADJUST is emulated
++		entry->ebx |= F(TSC_ADJUST);
++		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
++		f_la57 = entry->ecx & F(LA57);
++		cpuid_mask(&entry->ecx, CPUID_7_ECX);
++		/* Set LA57 based on hardware capability. */
++		entry->ecx |= f_la57;
++		entry->ecx |= f_umip;
++		/* PKU is not yet implemented for shadow paging. */
++		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
++			entry->ecx &= ~F(PKU);
++		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
++		cpuid_mask(&entry->edx, CPUID_7_EDX);
++		/*
++		 * We emulate ARCH_CAPABILITIES in software even
++		 * if the host doesn't support it.
++		 */
++		entry->edx |= F(ARCH_CAPABILITIES);
+ 		break;
+ 	}
+ 	case 9:
+@@ -750,20 +746,19 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	return r;
+ }
+ 
+-static int do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 func,
+-			u32 idx, int *nent, int maxnent, unsigned int type)
++static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
++			 int *nent, int maxnent, unsigned int type)
+ {
+ 	if (type == KVM_GET_EMULATED_CPUID)
+-		return __do_cpuid_ent_emulated(entry, func, idx, nent, maxnent);
++		return __do_cpuid_func_emulated(entry, func, nent, maxnent);
+ 
+-	return __do_cpuid_ent(entry, func, idx, nent, maxnent);
++	return __do_cpuid_func(entry, func, nent, maxnent);
+ }
+ 
+ #undef F
+ 
+ struct kvm_cpuid_param {
+ 	u32 func;
+-	u32 idx;
+ 	bool has_leaf_count;
+ 	bool (*qualifier)(const struct kvm_cpuid_param *param);
+ };
+@@ -836,8 +831,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 		if (ent->qualifier && !ent->qualifier(ent))
+ 			continue;
+ 
+-		r = do_cpuid_ent(&cpuid_entries[nent], ent->func, ent->idx,
+-				&nent, cpuid->nent, type);
++		r = do_cpuid_func(&cpuid_entries[nent], ent->func,
++				  &nent, cpuid->nent, type);
+ 
+ 		if (r)
+ 			goto out_free;
+@@ -847,8 +842,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 
+ 		limit = cpuid_entries[nent - 1].eax;
+ 		for (func = ent->func + 1; func <= limit && nent < cpuid->nent && r == 0; ++func)
+-			r = do_cpuid_ent(&cpuid_entries[nent], func, ent->idx,
+-				     &nent, cpuid->nent, type);
++			r = do_cpuid_func(&cpuid_entries[nent], func,
++				          &nent, cpuid->nent, type);
+ 
+ 		if (r)
+ 			goto out_free;
+-- 
+2.21.0
 
--Emil
+
