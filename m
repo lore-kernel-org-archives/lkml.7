@@ -2,71 +2,110 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E695CC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46073C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21632189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7452189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xPh6pbcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfGDX1Q (ORCPT
+        id S1727464AbfGDX10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 19:27:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52984 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfGDX1Q (ORCPT
+        Thu, 4 Jul 2019 19:27:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40987 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfGDX10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 19:27:16 -0400
-Received: from [114.252.212.168] (helo=[192.168.1.106])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1hjB89-00053a-18; Thu, 04 Jul 2019 23:27:09 +0000
-Subject: Re: audio lost from speaker after reboot from windows on the device
- ALC295
-To:     "He, Bo" <bo.he@intel.com>,
-        "kailang@realtek.com" <kailang@realtek.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "jian-hong@endlessm.com" <jian-hong@endlessm.com>,
-        "drake@endlessm.com" <drake@endlessm.com>,
-        "chiu@endlessm.com" <chiu@endlessm.com>
-References: <CD6925E8781EFD4D8E11882D20FC406D52AB58B6@SHSMSX104.ccr.corp.intel.com>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <c37fa9bd-071c-6c10-55a6-933a4937fa87@canonical.com>
-Date:   Fri, 5 Jul 2019 07:27:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 4 Jul 2019 19:27:26 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so7310095ota.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 16:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=29vsGpTjh39zWXsI6Ik43Nv+EdiuWAOV6vxVTajp20k=;
+        b=xPh6pbcmI7ZR83uwzt44/h5WZ1jKG98r+LQaDHsemaTjfAFmLK4NHwQNObxnmJM5M8
+         kiKlk4co3uBSxHYbFY+WMMvf50uquNZyF0w7RVkb+wN9QHaDcveJWANUrWindaZdPjYX
+         fRPefhjZL+h/GTwMBlPyo/7+/fOiU2/TzGWz4bA8jxIM0dAKYaLHEKDaVOkAQSEXS/JJ
+         HntfFU+nDsisSL67tqCRY1E2FW29XVGHkHGY+9yi5XPwwkF8dUbKQwZFovjFinBx4P3H
+         +CX76/THYqM9Ar2u/pO3kfTI759leI2eRYxgBjawd3DUVZuTF7q3s4H/zjBzZl96hbN0
+         jkcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=29vsGpTjh39zWXsI6Ik43Nv+EdiuWAOV6vxVTajp20k=;
+        b=C6OhenMo8FFwhNguBcDerqh6IPADMBxVEf4eMT/3GhzKO3uhODrThfDXd+LzyJSJXG
+         XIIZk//gWc9gYNL06Yo1Lo9MNgw4CkiWvNSp/Z+RxS+jGFU2YOC+gBYdxdeNo1WZsE8Y
+         RNviQiiAiU3QCRkFvN7Ebimva3y/MOdxSWofYrjxcc/37/ESS2FpygB1I127pts15TCU
+         czaaVBBtE6WxR7mHW4j2Ygq/lHRtEM0wqG9QvBEcOeYaJgBKvNv52RfpHS5t8nppmHOw
+         Ss110NCU4aWBet8uUc/y90XXjeM/YBDjYjTakD3e5gX9eR26e3c5SifqFpGZ3nzHQ6Di
+         KLkw==
+X-Gm-Message-State: APjAAAXF2Jo5o1WUxyIDYU4Mx1G4MInxH+TqB+Zbmd3f48QGvZQZ5Xzm
+        adeOJiPU4xYk5SgXhTI0FAbQY9ftGSQuwZSL70RHKw==
+X-Google-Smtp-Source: APXvYqzFfoPnlwPxd7HMRN1iiNSb0TD46BOhSl+i1LNcRaH8pGkExzmOgi5cRwt9v88JBevUo0Jwrlqmbeg2el1s4mY=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr386103otn.71.1562282845133;
+ Thu, 04 Jul 2019 16:27:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CD6925E8781EFD4D8E11882D20FC406D52AB58B6@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190703121743.GH1729@bombadil.infradead.org> <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
+ <20190703195302.GJ1729@bombadil.infradead.org> <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
+ <20190704032728.GK1729@bombadil.infradead.org> <20190704165450.GH31037@quack2.suse.cz>
+ <20190704191407.GM1729@bombadil.infradead.org>
+In-Reply-To: <20190704191407.GM1729@bombadil.infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 4 Jul 2019 16:27:14 -0700
+Message-ID: <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
+Subject: Re: [PATCH] dax: Fix missed PMD wakeups
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Boaz Harrosh <openosd@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maybe your machine has an external amplifier which needs to be set by 
-software before it can work.
+On Thu, Jul 4, 2019 at 12:14 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Jul 04, 2019 at 06:54:50PM +0200, Jan Kara wrote:
+> > On Wed 03-07-19 20:27:28, Matthew Wilcox wrote:
+> > > So I think we're good for all current users.
+> >
+> > Agreed but it is an ugly trap. As I already said, I'd rather pay the
+> > unnecessary cost of waiting for pte entry and have an easy to understand
+> > interface. If we ever have a real world use case that would care for this
+> > optimization, we will need to refactor functions to make this possible and
+> > still keep the interfaces sane. For example get_unlocked_entry() could
+> > return special "error code" indicating that there's no entry with matching
+> > order in xarray but there's a conflict with it. That would be much less
+> > error-prone interface.
+>
+> This is an internal interface.  I think it's already a pretty gnarly
+> interface to use by definition -- it's going to sleep and might return
+> almost anything.  There's not much scope for returning an error indicator
+> either; value entries occupy half of the range (all odd numbers between 1
+> and ULONG_MAX inclusive), plus NULL.  We could use an internal entry, but
+> I don't think that makes the interface any easier to use than returning
+> a locked entry.
+>
+> I think this iteration of the patch makes it a little clearer.  What do you
+> think?
+>
 
-On 2019/7/4 下午8:02, He, Bo wrote:
-> Hi, patch_realtek.c maintainer:
-> 	I see one issue that reboot from windows and boot to ubuntu, the audio lost from speaker, I suspect there are some bugs in patch_realtek.c drivers,  the device is ALC295 and the device id is 0x10ec0295.
->
-> I have done the below experiments:
-> 1. reboot from windows to windows, the audio is persist .
-> 2. reboot from windows to ubuntu, the audio lost from speaker, but can hear if I hotplug one earphone.
-> 3. if the issue reproduce after reboot from windows, reboot the ubuntu can't restore the audio, I suspect it's warm reset.
-> 4. if I write the port 0xcf9 with 0xe to do cold reset, the audio can restore.
-> 5. if I do suspend/resume, the audio can restore, I suspect do cold boot and suspend will trigger the platform reset to reset the ALC295.
-> 6. if I do double function reset (write the verb 0x7ff in alc_init), the audio is still can't restore.
-> snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_CODEC_RESET, 0); /* Function reset */
-> snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_CODEC_RESET, 0); /* double Function reset */
-> 7. the issue is first found on kernel 4.19.50, I still see the issue with the latest kernel 5.2-rc2, is it possible windows change some default registers, but ALC295 don't initialize the register?
->
+Not much clearer to me. get_unlocked_entry() is now misnamed and this
+arrangement allows for mismatches of @order argument vs @xas
+configuration. Can you describe, or even better demonstrate with
+numbers, why it's better to carry this complication than just
+converging the waitqueues between the types?
