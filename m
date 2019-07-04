@@ -2,119 +2,124 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96CEC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59E5C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4782189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:49:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J89GIpdl"
+	by mail.kernel.org (Postfix) with ESMTP id A7D98218AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562248209;
+	bh=4PW5nvqwyM7OR+LkvB9HftlbPSqldTl/coy/yvrWKxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MZBp4ymUUY/WNpaHTW0mMpmmgHEycIQM+z7LfywBlaAEdrheX2bCAJBd2kDp6urtt
+	 p/X1FBI1qCSuCe7/2aIcHlQUbx491ygmWmXq93gKJOMNc+Rg1c60Zr+02AtvpE0wNT
+	 H1XPwjpirjpGaqqDXFQANSgC47SXE/KUgbNAQoRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfGDNtq (ORCPT
+        id S1727312AbfGDNuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:49:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33434 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfGDNtp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:49:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x15so2999066pfq.0;
-        Thu, 04 Jul 2019 06:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=q57G3q5Jt82bTMu8+pXuQ4swwABbsqmtrU7b+V+udHQ=;
-        b=J89GIpdl9vKHz3FgttcdMCi4jN9+xe07Evf04UK3O7nzrBkjOVT5a5bO+/QHxY5qvj
-         cE4Qx8h49JdeORrNZx6evR57H8CrPJ08znX/iaN3hbAxJU6VJIInZrPk0wc+WSprOtAZ
-         jNdKQW56ZQvrAwCbVsPfzkc6rW+ZALqDAggA/FeOVcibuT7jHHePBaQ3Fb79+hny+VGT
-         adVgjqJUuiFxEV3be6nndLxV14iCNZUTtlPNxJL886YUS58gSCIITapMlKd5ABmlvxRf
-         1CrcdhQEhWDKemXCcl7xnaAIAX72rvW9fAWY599oFxRq+86HJTi0vV8jT74XCOrLjlV7
-         MGBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q57G3q5Jt82bTMu8+pXuQ4swwABbsqmtrU7b+V+udHQ=;
-        b=fghlAxvvXu2hylvH96Eg7YXxUBSS4MOQaRZDOUUxTCSB8iOaRNV39BYEd4nHm/XwTL
-         0lhCsSQW0OMGgrt3N/quqFd4bqeD36VXOdYd105l6yRLd0A8hkOWW8FLsW4cdWe65njL
-         ewuew88h86lUVdQjxmzmGvOdV7vAb+604erc4UU4zhWAfdI/df98qaDgPMV9jUFAlkpq
-         v3bR0uOAHHerqoIhKMhN4vQifeuSyn5xV0vSDuCZly8frkjs9rBTNUNNKLodVaPqBYTc
-         0ajr3LCv2ri0z4aZukS4lMT4N7MbPRgsprd3aYJv22hXedG7Is1gJ54p+/8CHM+bM3cR
-         Z4aA==
-X-Gm-Message-State: APjAAAVpR7ctCckCFvWbwXnFC1nO6yTHlHUzxvNWMZrdmt6jdnQFcI/R
-        KmoF5gaZUxyOYLlYxXqph9RYCbNFmTHt5vJzh7BisjNO
-X-Google-Smtp-Source: APXvYqwvGhLTYCzCEeb37MdSjdnT4A0T7iNNbizQi4/kAir/H2MzjkbUVVzl5BbHHDxIQUGSP+Je4vUBg/AJBxE1f2w=
-X-Received: by 2002:a17:90a:d681:: with SMTP id x1mr19501121pju.13.1562248184725;
- Thu, 04 Jul 2019 06:49:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190704093553.49904-1-yuehaibing@huawei.com>
-In-Reply-To: <20190704093553.49904-1-yuehaibing@huawei.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Thu, 4 Jul 2019 22:49:33 +0900
-Message-ID: <CAC5umyi6S0eV2AOwpxmYh-HhNaMHEKZzgnG9PteVRR0i35rV4w@mail.gmail.com>
-Subject: Re: [PATCH] regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael@kernel.org, wsa+renesas@sang-engineering.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jacopo Mondi <jacopo@jmondi.org>, khoroshilov@ispras.ru,
+        Thu, 4 Jul 2019 09:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727026AbfGDNuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:50:08 -0400
+Received: from localhost (unknown [89.205.128.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B59A2189E;
+        Thu,  4 Jul 2019 13:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562248207;
+        bh=4PW5nvqwyM7OR+LkvB9HftlbPSqldTl/coy/yvrWKxU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucoXT08wHmr8LEIrhMwCPFo2B2CESRhk4c1QaPyOMSVIVfwKpp2wK4u2CWjB9E6jK
+         IjY5K1wr3jyZvhQWV6j0EzxOjN4gNXVcLQJ7RE6r7BOeVog2NHJ8erjRCxGhtuB9AY
+         W0BjsmE4xg0UCS9jTo+EmWl7a90CBqzFPDPzQlwM=
+Date:   Thu, 4 Jul 2019 15:50:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH] erofs: promote erofs from staging
+Message-ID: <20190704135002.GB13609@kroah.com>
+References: <20190704133413.43012-1-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704133413.43012-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B47=E6=9C=884=E6=97=A5(=E6=9C=A8) 18:36 YueHaibing <yuehaibing@h=
-uawei.com>:
->
-> REGMAP_SCCB is selected by ov772x and ov9650 drivers,
-> but CONFIG_REGMAP may not, so building will fails:
->
-> rivers/media/i2c/ov772x.c: In function ov772x_probe:
-> drivers/media/i2c/ov772x.c:1360:22: error: variable ov772x_regmap_config =
-has initializer but incomplete type
->   static const struct regmap_config ov772x_regmap_config =3D {
->                       ^~~~~~~~~~~~~
-> drivers/media/i2c/ov772x.c:1361:4: error: const struct regmap_config has =
-no member named reg_bits
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 5bbf32217bf9 ("media: ov772x: use SCCB regmap")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/base/regmap/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-> index c8bbf53..a498413 100644
-> --- a/drivers/base/regmap/Kconfig
-> +++ b/drivers/base/regmap/Kconfig
-> @@ -4,7 +4,7 @@
->  # subsystems should select the appropriate symbols.
->
->  config REGMAP
-> -       default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W=
-1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
-> +       default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W=
-1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SCCB || REGMAP_I3C)
->         select IRQ_DOMAIN if REGMAP_IRQ
->         bool
+On Thu, Jul 04, 2019 at 09:34:13PM +0800, Gao Xiang wrote:
+> EROFS file system has been in Linux-staging for about a year.
+> It has been proved to be stable enough to move out of staging
+> by 10+ millions of HUAWEI Android mobile phones on the market
+> from EMUI 9.0.1, and it was promoted as one of the key features
+> of EMUI 9.1 [1], including P30(pro).
+> 
+> EROFS is a read-only file system designed to save extra storage
+> space with guaranteed end-to-end performance by applying
+> fixed-size output compression, inplace I/O and decompression
+> inplace technologies [2] to Linux filesystem.
+> 
+> In our observation, EROFS is one of the fastest Linux compression
+> filesystem using buffered I/O in the world. It will support
+> direct I/O in the future if needed. EROFS even has better read
+> performance in a large CR range compared with generic uncompressed
+> file systems with proper CPU-storage combination, which is
+> a reason why erofs can be landed to speed up mobile phone
+> performance, and which can be probably used for other use cases
+> such as LiveCD and Docker image as well.
+> 
+> Currently erofs supports 4k LZ4 fixed-size output compression
+> since LZ4 is the fastest widely-used decompression solution in
+> the world and 4k leads to unnoticable read amplification for
+> the worst case. More compression algorithms and cluster sizes
+> could be added later, which depends on the real requirement.
+> 
+> More informations about erofs itself are available at:
+>  Documentation/filesystems/erofs.txt
+>  https://kccncosschn19eng.sched.com/event/Nru2/erofs-an-introduction-and-our-smartphone-practice-xiang-gao-huawei
+> 
+> erofs-utils (mainly mkfs.erofs now) is available at
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git
+> 
+> Preliminary iomap support has been pending in erofs mailing
+> list by Chao Yu. The key issue is that current iomap doesn't
+> support tail-end packing inline data yet, it should be
+> resolved later.
+> 
+> Thanks to many contributors in the last year, the code is more
+> clean and improved. We hope erofs can be used in wider use cases
+> so let's promote erofs out of staging and enhance it more actively.
+> 
+> Share comments about erofs! We think erofs is useful to
+> community as a part of Linux upstream :)
 
-Looks good.
+I don't know if this format is easy for the linux-fsdevel people to
+review, it forces them to look at the in-kernel code, which makes it
+hard to quote.
 
-Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
+Perhaps just make a patch that adds the filesystem to the tree and after
+it makes it through review, I can delete the staging version?  We've
+been doing that for wifi drivers that move out of staging as it seems to
+be a bit easier.
 
-A similar problem exists for REGMAP_SOUNDWIRE. But I can't find any users
-of regmap_init_sdw (i.e. REGMAP_SOUNDWIRE).
+thanks,
+
+greg k-h
