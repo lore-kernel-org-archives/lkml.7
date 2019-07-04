@@ -2,93 +2,99 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF846C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1316EC06516
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC57520693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96C920693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfGDMHY (ORCPT
+        id S1727727AbfGDMH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:07:24 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:33182 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfGDMHX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:07:23 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hj0WD-0005Xr-0v; Thu, 04 Jul 2019 14:07:17 +0200
-Message-ID: <51ab673812121794b021a09073a74fca33b81210.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 04 Jul 2019 14:07:16 +0200
-In-Reply-To: <20190703143724.GD2250@nanopsycho> (sfid-20190703_163726_852714_F806A186)
-References: <cover.1562067622.git.mkubecek@suse.cz>
-         <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
-         <20190703114933.GW2250@nanopsycho>
-         <b3cd61506080143f571d6286223ae33c8bd02c3a.camel@sipsolutions.net>
-         <20190703143724.GD2250@nanopsycho> (sfid-20190703_163726_852714_F806A186)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Jul 2019 08:07:59 -0400
+Received: from sauhun.de ([88.99.104.3]:36230 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbfGDMH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:07:59 -0400
+Received: from localhost (p2E56AA43.dip0.t-ipconnect.de [46.86.170.67])
+        by pokefinder.org (Postfix) with ESMTPSA id C8ED32C290E;
+        Thu,  4 Jul 2019 14:07:56 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 14:07:56 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>, stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        linux-renesas-soc@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: gyroadc: fix uninitialized return code
+Message-ID: <20190704120756.GA1582@kunai>
+References: <20190704113800.3299636-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+In-Reply-To: <20190704113800.3299636-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 16:37 +0200, Jiri Pirko wrote:
-> Wed, Jul 03, 2019 at 03:44:57PM CEST, johannes@sipsolutions.net wrote:
-> > On Wed, 2019-07-03 at 13:49 +0200, Jiri Pirko wrote:
-> > > 
-> > > > +Value and mask must have length at least ETHTOOL_A_BITSET_SIZE bits rounded up
-> > > > +to a multiple of 32 bits. They consist of 32-bit words in host byte order,
-> > > 
-> > > Looks like the blocks are similar to NLA_BITFIELD32. Why don't you user
-> > > nested array of NLA_BITFIELD32 instead?
-> > 
-> > That would seem kind of awkward to use, IMHO.
-> > 
-> > Perhaps better to make some kind of generic "arbitrary size bitfield"
-> > attribute type?
-> 
-> Yep, I believe I was trying to make this point during bitfield32
-> discussion, failed apparently. So if we have "NLA_BITFIELD" with
-> arbitrary size, that sounds good to me.
 
-I guess it could be the same way - just have the content be
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-u32 value[N];
-u32 select[N];
+On Thu, Jul 04, 2019 at 01:37:47PM +0200, Arnd Bergmann wrote:
+> gcc-9 complains about a blatant uninitialized variable use that
+> all earlier compiler versions missed:
+>=20
+> drivers/iio/adc/rcar-gyroadc.c:510:5: warning: 'ret' may be used uninitia=
+lized in this function [-Wmaybe-uninitialized]
+>=20
+> Return -EINVAL instead here.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 059c53b32329 ("iio: adc: Add Renesas GyroADC driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-where N = nla_len(attr) / 8
+This is correct but missing that the above 'return ret' is broken, too.
+ret is initialized but 0 in that case.
 
-That'd be compatible with NLA_BITFIELD32, and we could basically change
-all occurrences of NLA_BITFIELD32 to NLA_BITFIELD, and have NLA_BITFIELD
-take something like a "max_bit" for the .len field or something like
-that? And an entry in the validation union to point to a "u32 *mask"
-instead of the current validation_data that just points to a single u32
-mask...
+And maybe we can use something else than -EINVAL for this case? I am on
+the go right now, I will look for a suggestion later.
 
-So overall seems like a pretty simple extension to NLA_BITFIELD32 that
-handles NLA_BITFIELD32 as a special case with simply .len=32.
 
-(len is a 16-bit field, but a 64k bitmap should be sufficient I hope?)
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
 
-johannes
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0d7BgACgkQFA3kzBSg
+KbY6MA/+MZnJI+HpdsYYnacUJPbBKtq73+/XNntSU3b6UPF1W0sqz6J4Dq0oWfJt
+XCvyZIvynLXmakJvKtOo6DVmfw4UUkouolEknvrmC68Ng+G1ONH5ktqPR7zr0gAF
+P2/Lz8lCjI4cnYt4A7Km3s52DzJSyG33H7IsdEgw6nunrOw1WlB8jyy+vTOGofW+
+soPn6WfInVRq/2YTAbthPYPZEn45k2F/T1I6psP6+59Zp3gW8Dtk/FCisvukxOa1
+2+X945XtosWVF5hfjgXzH/s9VyrjMVXAVDDc97lIUbnasCgmLMVEEVHf9wQFY6B9
+CVNVWd99XRordyDACvCSSdbjLmajDfBDKk2D1atOEqMeVfW2dcBa3SrXQGJodBgj
+M+6A2W3L4WvwllX9w4vZZaGVlaSmSUYbM5Cd1x5tzbUGhxIzvT0Q91gNT/Gy3YND
+PqFUfQwh8gHnMIouYEHezAQJvjOqsCs4ie6mg587k3bJAcD8u+YJ7/Ah/Kvdevb2
+JuuzHLJx+V5qwEOkoyvxzOwpyg6kHBmBUAkCtPT3BGz4fj+TvNDL1Q7U7l9JdQhB
+qNgskuZMpZCYbjeCGV3eA4pGHfi8NGeJqbgz6iVG9FTnPfEQXEH3IVmvjqQF3QoW
+VZWoK5vF+gpt3ui7FwIW1HZahQD5wjaPyCNrjqgu2TCRvotoJhg=
+=WY5/
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
