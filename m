@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C122AC06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C34C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99ED3218B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F11C218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230026;
-	bh=CR2vMXW7Pwdca3g4SWWNzk3XVKoCD2UKviwCYhPM3pQ=;
+	s=default; t=1562230030;
+	bh=zxScwFkLjiixqdeZRh7a5dXv8jDdQ8T3PHXavOyUF88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPWcxRbmordAIX03rHGe7zjYwu4xcf9gD01tVDqJuNUsBx3N4gFCPvjMcW7qAEeoK
-	 4UTMKVOXxnmv7pHR0YjFiC3zbvAoF1KlewJaL8BkLogHXTT9jydahHT5OhyjvddUv3
-	 GwVzNWu7RDnDNWulH9dTDIIL/u3c1Czvsc6R4BjU=
+	b=QEH7svUuCMB3sDEjP/X8EOUSVnZaC6YVlw86XHDAY23VEfKpCWPVcqgp8wVk/aJms
+	 17NVuOqO9YAA9KoSkKt5uQncfR9tJYPOXPQXbg02YVChs/REoNxPDlo5+tqIkyJsUq
+	 0yQ1/eujth6BU9BIPXHhZcYmAgLNqpU2+56BmNqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfGDIrF (ORCPT
+        id S1727430AbfGDIrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727370AbfGDIrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:47:02 -0400
+        id S1727395AbfGDIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:47:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE9C218C3;
-        Thu,  4 Jul 2019 08:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090A3218BC;
+        Thu,  4 Jul 2019 08:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230021;
-        bh=CR2vMXW7Pwdca3g4SWWNzk3XVKoCD2UKviwCYhPM3pQ=;
+        s=default; t=1562230024;
+        bh=zxScwFkLjiixqdeZRh7a5dXv8jDdQ8T3PHXavOyUF88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1Et82JrF9NP/tVpQVBWUdlnxY/nEflYh8K7hW5NykztfVTuEbhersXWUsYWodVon
-         vnMnzeEMLhcn6EhibjrKRf/JDsTamYBSpSKVnCDPzhmeDEKgZ2ClGEZ+zyQVw0edes
-         UJphVtL2mOrE5FsgbQWM98EiBp5NXG4sUhwalrLE=
+        b=Dv6zzAeEQOLrSruoBnVNVkmd1VvWZ2P/o3R8uv4G3LheVuxIeaLnayVa+Wg0bHN40
+         Vzq//RNvbEZmNAWyoAv35LneKIUggwAXGlWL5w34unYMha2SjdH34WS2Vg6+MY6SYz
+         NJzaOTuLMWTPi+zxqcoS2IylbU2vM4unYytSg4X0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 07/11] video: fbdev: wm8505fb: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:13 +0200
-Message-Id: <20190704084617.3602-8-gregkh@linuxfoundation.org>
+        Tony Prisk <linux@prisktech.co.nz>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH 08/11] video: fbdev: w100fb: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:14 +0200
+Message-Id: <20190704084617.3602-9-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -60,61 +61,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a sysfs file.
+and do not register "by hand" a bunch of sysfs files.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Tony Prisk <linux@prisktech.co.nz>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/video/fbdev/wm8505fb.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/w100fb.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/video/fbdev/wm8505fb.c b/drivers/video/fbdev/wm8505fb.c
-index 8f0d5379861d..3b826da97035 100644
---- a/drivers/video/fbdev/wm8505fb.c
-+++ b/drivers/video/fbdev/wm8505fb.c
-@@ -184,6 +184,12 @@ static ssize_t contrast_store(struct device *dev,
+diff --git a/drivers/video/fbdev/w100fb.c b/drivers/video/fbdev/w100fb.c
+index 696106ecdff0..4be3afcc1c93 100644
+--- a/drivers/video/fbdev/w100fb.c
++++ b/drivers/video/fbdev/w100fb.c
+@@ -168,6 +168,15 @@ static ssize_t fastpllclk_store(struct device *dev, struct device_attribute *att
  
- static DEVICE_ATTR_RW(contrast);
+ static DEVICE_ATTR_RW(fastpllclk);
  
-+static struct attribute *wm8505fb_attrs[] = {
-+	&dev_attr_contrast.attr,
++static struct attribute *w100fb_attrs[] = {
++	&dev_attr_fastpllclk.attr,
++	&dev_attr_reg_read.attr,
++	&dev_attr_reg_write.attr,
++	&dev_attr_flip.attr,
 +	NULL,
 +};
-+ATTRIBUTE_GROUPS(wm8505fb);
++ATTRIBUTE_GROUPS(w100fb);
 +
- static inline u_int chan_to_field(u_int chan, struct fb_bitfield *bf)
- {
- 	chan &= 0xffff;
-@@ -369,10 +375,6 @@ static int wm8505fb_probe(struct platform_device *pdev)
- 		return ret;
+ /*
+  * Some touchscreens need hsync information from the video driver to
+  * function correctly. We export it here.
+@@ -756,14 +765,6 @@ int w100fb_probe(struct platform_device *pdev)
+ 		goto out;
  	}
  
--	ret = device_create_file(&pdev->dev, &dev_attr_contrast);
--	if (ret < 0)
--		fb_warn(&fbi->fb, "failed to register attributes (%d)\n", ret);
+-	err = device_create_file(&pdev->dev, &dev_attr_fastpllclk);
+-	err |= device_create_file(&pdev->dev, &dev_attr_reg_read);
+-	err |= device_create_file(&pdev->dev, &dev_attr_reg_write);
+-	err |= device_create_file(&pdev->dev, &dev_attr_flip);
 -
- 	fb_info(&fbi->fb, "%s frame buffer at 0x%lx-0x%lx\n",
- 		fbi->fb.fix.id, fbi->fb.fix.smem_start,
- 		fbi->fb.fix.smem_start + fbi->fb.fix.smem_len - 1);
-@@ -384,8 +386,6 @@ static int wm8505fb_remove(struct platform_device *pdev)
- {
- 	struct wm8505fb_info *fbi = platform_get_drvdata(pdev);
- 
--	device_remove_file(&pdev->dev, &dev_attr_contrast);
+-	if (err != 0)
+-		fb_warn(info, "failed to register attributes (%d)\n", err);
 -
- 	unregister_framebuffer(&fbi->fb);
+ 	fb_info(info, "%s frame buffer device\n", info->fix.id);
+ 	return 0;
+ out:
+@@ -788,11 +789,6 @@ static int w100fb_remove(struct platform_device *pdev)
+ 	struct fb_info *info = platform_get_drvdata(pdev);
+ 	struct w100fb_par *par=info->par;
  
- 	writel(0, fbi->regbase);
-@@ -402,6 +402,7 @@ static const struct of_device_id wmt_dt_ids[] = {
+-	device_remove_file(&pdev->dev, &dev_attr_fastpllclk);
+-	device_remove_file(&pdev->dev, &dev_attr_reg_read);
+-	device_remove_file(&pdev->dev, &dev_attr_reg_write);
+-	device_remove_file(&pdev->dev, &dev_attr_flip);
+-
+ 	unregister_framebuffer(info);
+ 
+ 	vfree(par->saved_intmem);
+@@ -1630,6 +1626,7 @@ static struct platform_driver w100fb_driver = {
+ 	.driver		= {
+ 		.name	= "w100fb",
+ 	},
++	.dev_groups	= w100fb_groups,
  };
  
- static struct platform_driver wm8505fb_driver = {
-+	.dev_groups	= wm8505fb_groups,
- 	.probe		= wm8505fb_probe,
- 	.remove		= wm8505fb_remove,
- 	.driver		= {
+ module_platform_driver(w100fb_driver);
 -- 
 2.22.0
 
