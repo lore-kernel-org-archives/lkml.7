@@ -2,212 +2,116 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C93C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AB7C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595772082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2404A2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfGDMg0 (ORCPT
+        id S1727824AbfGDMge convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:36:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50968 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfGDMg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:36:26 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C302A28AA35;
-        Thu,  4 Jul 2019 13:36:23 +0100 (BST)
-Date:   Thu, 4 Jul 2019 14:36:20 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
-        Hans Verkuil <hans.verkuil@cisco.com>, kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        ZhiChao Yu <zhichao.yu@rock-chips.com>
-Subject: Re: [PATCH v2 2/2] media: hantro: Add support for VP8 decoding on
- rk3288
-Message-ID: <20190704143620.092e8b3d@collabora.com>
-In-Reply-To: <6d8569803312768ca7b60c7b33688e466a6d0fcc.camel@collabora.com>
-References: <20190702170016.5210-1-ezequiel@collabora.com>
-        <20190702170016.5210-3-ezequiel@collabora.com>
-        <1562164006.4604.7.camel@pengutronix.de>
-        <20190704091934.3524f019@collabora.com>
-        <6d8569803312768ca7b60c7b33688e466a6d0fcc.camel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 4 Jul 2019 08:36:34 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33050 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727686AbfGDMgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:36:33 -0400
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E916422570C208935E2E;
+        Thu,  4 Jul 2019 13:36:31 +0100 (IST)
+Received: from LHREML524-MBS.china.huawei.com ([169.254.2.154]) by
+ lhreml709-cah.china.huawei.com ([10.201.108.32]) with mapi id 14.03.0415.000;
+ Thu, 4 Jul 2019 13:36:24 +0100
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "pmorel@linux.vnet.ibm.com" <pmorel@linux.vnet.ibm.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "John Garry" <john.garry@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>
+Subject: RE: [PATCH v7 1/6] vfio/type1: Introduce iova list and add iommu
+ aperture validity check
+Thread-Topic: [PATCH v7 1/6] vfio/type1: Introduce iova list and add iommu
+ aperture validity check
+Thread-Index: AQHVLDHPKQQdUzHkf0S0a1+iQm67I6a5VDgAgAEdS/A=
+Date:   Thu, 4 Jul 2019 12:36:24 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F2DDB26@lhreml524-mbs.china.huawei.com>
+References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
+        <20190626151248.11776-2-shameerali.kolothum.thodi@huawei.com>
+ <20190703143418.34a0f1c6@x1.home>
+In-Reply-To: <20190703143418.34a0f1c6@x1.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.206.221]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jul 2019 09:32:13 -0300
-Ezequiel Garcia <ezequiel@collabora.com> wrote:
 
-> On Thu, 2019-07-04 at 09:19 +0200, Boris Brezillon wrote:
-> > +Kees for the safe-array-iteratio question.
-> > 
-> > On Wed, 03 Jul 2019 16:26:46 +0200
-> > Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> >   
-> > > Hi Ezequiel
-> > > 
-> > > On Tue, 2019-07-02 at 14:00 -0300, Ezequiel Garcia wrote:  
-> > > > From: ZhiChao Yu <zhichao.yu@rock-chips.com>
-> > > > 
-> > > > Introduce VP8 decoding support in RK3288.
-> > > > 
-> > > > Signed-off-by: ZhiChao Yu <zhichao.yu@rock-chips.com>
-> > > > Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>    
-> > > 
-> > > I have just tried this (with broken userspace) and got a crash in
-> > > cfg_parts, see below for details:
-> > > 
-> > > [  114.308757] Unable to handle kernel paging request at virtual address ffff0000112b0002
-> > > [  114.316691] Mem abort info:
-> > > [  114.319503]   ESR = 0x96000021
-> > > [  114.322576]   Exception class = DABT (current EL), IL = 32 bits
-> > > [  114.328513]   SET = 0, FnV = 0
-> > > [  114.331586]   EA = 0, S1PTW = 0
-> > > [  114.334744] Data abort info:
-> > > [  114.337626]   ISV = 0, ISS = 0x00000021
-> > > [  114.341479]   CM = 0, WnR = 0
-> > > [  114.344466] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000040d61000
-> > > [  114.351185] [ffff0000112b0002] pgd=00000000dffff003, pud=00000000dfffe003, pmd=00000000dbf36003, pte=00e8000038300707
-> > > [  114.361822] Internal error: Oops: 96000021 [#1] PREEMPT SMP
-> > > [  114.367394] Modules linked in: crct10dif_ce hantro_vpu(C) videobuf2_dma_contig v4l2_mem2mem
-> > > [  114.375749] Process ffmpeg (pid: 1871, stack limit = 0x0000000059d846e4)
-> > > [  114.382450] CPU: 1 PID: 1871 Comm: ffmpeg Tainted: G         C        5.1.16-20190703-1 #2
-> > > [  114.390710] Hardware name: NXP i.MX8MQ EVK (DT)
-> > > [  114.395240] pstate: 40000005 (nZcv daif -PAN -UAO)
-> > > [  114.400042] pc : hantro_g1_vp8_dec_run+0x1178/0x18a0 [hantro_vpu]
-> > > [  114.406139] lr : hantro_g1_vp8_dec_run+0x1160/0x18a0 [hantro_vpu]
-> > > [  114.412229] sp : ffff000011ae3c10
-> > > [  114.415541] x29: ffff000011ae3c10 x28: ffff000008a154c8 
-> > > [  114.420853] x27: 000000007033b039 x26: ffff000008a130f0 
-> > > [  114.426164] x25: 000000000000000c x24: ffff000008a153f0 
-> > > [  114.431474] x23: ffff800099a0d880 x22: ffff000008a13150 
-> > > [  114.436785] x21: 000000000c5b88d0 x20: ffff80009b7d65a0 
-> > > [  114.442096] x19: ffff800099bd3800 x18: 0000000000000010 
-> > > [  114.447407] x17: 0000000000000001 x16: 0000000000000007 
-> > > [  114.452717] x15: ffffffffffffffff x14: ffff000010e8c5c8 
-> > > [  114.458028] x13: ffff000091ae3987 x12: ffff0000112b0002 
-> > > [  114.463339] x11: ffff000010ea4000 x10: ffff000011ae3910 
-> > > [  114.468649] x9 : 00000000ffffffd0 x8 : 00000000edcb88d0 
-> > > [  114.473960] x7 : 0000000000000125 x6 : ffff000010e8cd60 
-> > > [  114.479270] x5 : ffff000010e8c000 x4 : 0000000000000000 
-> > > [  114.484580] x3 : 0000000000000002 x2 : 8127d140a3196d00 
-> > > [  114.489891] x1 : 0000000000000000 x0 : 00000000e1700000 
-> > > [  114.495201] Call trace:
-> > > [  114.497652]  hantro_g1_vp8_dec_run+0x1178/0x18a0 [hantro_vpu]
-> > > [  114.503401]  device_run+0xac/0xc0 [hantro_vpu]
-> > > [  114.507849]  v4l2_m2m_try_run+0x9c/0x110 [v4l2_mem2mem]
-> > > [  114.513077]  v4l2_m2m_request_queue+0xd4/0x130 [v4l2_mem2mem]
-> > > [  114.518826]  media_request_ioctl+0x1e8/0x2d0
-> > > [  114.523097]  do_vfs_ioctl+0xc4/0x870
-> > > [  114.526671]  ksys_ioctl+0x84/0xc0
-> > > [  114.529985]  __arm64_sys_ioctl+0x28/0x40
-> > > [  114.533908]  el0_svc_common.constprop.0+0x98/0x170
-> > > [  114.538698]  el0_svc_handler+0x2c/0x40
-> > > [  114.542447]  el0_svc+0x8/0xc
-> > > [  114.545328] Code: 0b150008 b94002c3 121d7108 8b23418c (b940018c) 
-> > > [  114.551421] ---[ end trace b9ad6b0f72902ba5 ]---
-> > >   
-> > > > ---
-> > > > Changes from v1:
-> > > > * Place operators at the end of each line.
-> > > > * Update to uAPI changes.
-> > > > ---
-> > > >  drivers/staging/media/hantro/Makefile         |   4 +-
-> > > >  drivers/staging/media/hantro/hantro.h         |   5 +
-> > > >  drivers/staging/media/hantro/hantro_drv.c     |   6 +
-> > > >  .../staging/media/hantro/hantro_g1_vp8_dec.c  | 552 ++++++++++++++++++
-> > > >  drivers/staging/media/hantro/hantro_hw.h      |  17 +
-> > > >  drivers/staging/media/hantro/hantro_v4l2.c    |   1 +
-> > > >  drivers/staging/media/hantro/hantro_vp8.c     | 188 ++++++
-> > > >  drivers/staging/media/hantro/rk3288_vpu_hw.c  |  22 +-
-> > > >  8 files changed, 793 insertions(+), 2 deletions(-)
-> > > >  create mode 100644 drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > >  create mode 100644 drivers/staging/media/hantro/hantro_vp8.c
-> > > >     
-> > > [...]  
-> > > > diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > > new file mode 100644
-> > > > index 000000000000..31d31faae4aa
-> > > > --- /dev/null
-> > > > +++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-> > > > @@ -0,0 +1,552 @@    
-> > > [...]  
-> > > > +/* dct partition base address regs */
-> > > > +static const struct vp8_dec_reg vp8_dec_dct_base[8] = {    
-> > > [...]  
-> > > > +/* dct partition start bits regs */
-> > > > +static const struct vp8_dec_reg vp8_dec_dct_start_bits[8] = {    
-> > > 
-> > > So these arrays can be directly indexed with values smaller than 8 ...
-> > > 
-> > > [...]  
-> > > > +static void cfg_parts(struct hantro_ctx *ctx,
-> > > > +		      const struct v4l2_ctrl_vp8_frame_header *hdr)
-> > > > +{    
-> > > [...]  
-> > > > +	/* dct partitions base address */
-> > > > +	for (i = 0; i < hdr->num_dct_parts; i++) {
-> > > > +		u32 byte_offset = dct_part_offset + dct_size_part_size + count;
-> > > > +		u32 base_addr = byte_offset + src_dma;
-> > > > +
-> > > > +		vp8_dec_reg_write(vpu, &vp8_dec_dct_base[i],
-> > > > +				  base_addr & (~DEC_8190_ALIGN_MASK));
-> > > > +
-> > > > +		vp8_dec_reg_write(vpu, &vp8_dec_dct_start_bits[i],
-> > > > +				  (byte_offset & DEC_8190_ALIGN_MASK) * 8);    
-> > > 
-> > > ... and here they are indexed with i, which is only guaranteed to be
-> > > smaller than hdr->num_dct_parts. num_dct_parts is passed from userspace
-> > > via v4l2-ctrl, it can be as large as 255.  
-> > 
-> > Hm, I fear we have the same problem in other places (including the
-> > patch series adding support for H264). Kees, I wonder if there's some
-> > kind of safe array iterator macro, something like
-> > 
-> > #define for_each_static_array_entry_safe(_array, _iter, _max_user) 		\
-> > 	_max_user = min_t(typeof(_max_user), _max_user,	ARRAY_SIZE(_array));	\
-> > 	for (_iter = 0; _iter < _max_user; _iter++)
-> > 
-> > The problem with this approach is that it's papering over the real
-> > issue, which is that hdr->num_dct_parts should be checked and the
-> > driver/core should return an error when it's > 7 instead of silently
-> > iterating over the 8 entries of the dct[] arrays. Static code analysis
-> > tools can probably detect such issues too.
-> >   
-> 
-> It seems to me that drivers/media/v4l2-core/v4l2-ctrls.c:std_validate
-> is the right place for these sanity checks.
-> 
-> And so drivers can then assume safe values on the controls.
 
-Yes, definitely. Actually, my question was more about having a way to
-automatically detect such mistakes (this one has been found by chance
-because the userspace app had a ctrl definition that was not matching
-the kernel one).
+> -----Original Message-----
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: 03 July 2019 21:34
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: eric.auger@redhat.com; pmorel@linux.vnet.ibm.com;
+> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
+> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
+> kevin.tian@intel.com
+> Subject: Re: [PATCH v7 1/6] vfio/type1: Introduce iova list and add iommu
+> aperture validity check
+> 
+> 
+> Welcome back Shameer ;)
+
+Thanks Alex :)
+
+> 
+> On Wed, 26 Jun 2019 16:12:43 +0100
+> Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
+> 
+> > This introduces an iova list that is valid for dma mappings. Make sure
+> > the new iommu aperture window doesn't conflict with the current one or
+> > with any existing dma mappings during attach.
+> >
+> > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 181
+> > +++++++++++++++++++++++++++++++-
+> >  1 file changed, 177 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index add34adfadc7..970d1ec06aed
+> > 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -1,4 +1,3 @@
+> > -// SPDX-License-Identifier: GPL-2.0-only
+> >  /*
+> >   * VFIO: IOMMU DMA mapping support for Type1 IOMMU
+> >   *
+> 
+> Accidental merge deletion?  Thanks,
+>
+
+Yes it is. I will fix it.
+
+Thanks,
+Shameer
+
+ 
+> Alex
