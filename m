@@ -2,71 +2,125 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B66C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B74C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD8021850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A931121850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfGDMua (ORCPT
+        id S1727182AbfGDMvZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:50:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42388 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfGDMua (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:50:30 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hj1Bz-0005US-L7; Thu, 04 Jul 2019 12:50:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] RDMA/uverbs: remove redundant assignment to variable ret
-Date:   Thu,  4 Jul 2019 13:50:27 +0100
-Message-Id: <20190704125027.4514-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 4 Jul 2019 08:51:25 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33051 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbfGDMvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:51:24 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 345369A46D9813235B39;
+        Thu,  4 Jul 2019 13:51:23 +0100 (IST)
+Received: from LHREML524-MBS.china.huawei.com ([169.254.2.154]) by
+ LHREML714-CAH.china.huawei.com ([10.201.108.37]) with mapi id 14.03.0415.000;
+ Thu, 4 Jul 2019 13:51:14 +0100
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "John Garry" <john.garry@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>
+Subject: RE: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
+ update iova list
+Thread-Topic: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
+ update iova list
+Thread-Index: AQHVLDHlfv32Tq6P8k2BSud+nbtQFqa5VEOAgAEf3kA=
+Date:   Thu, 4 Jul 2019 12:51:13 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83F2DDB68@lhreml524-mbs.china.huawei.com>
+References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
+        <20190626151248.11776-3-shameerali.kolothum.thodi@huawei.com>
+ <20190703143427.2d63c15f@x1.home>
+In-Reply-To: <20190703143427.2d63c15f@x1.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.206.221]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-The variable ret is being initialized with a value that is never
-read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/infiniband/core/uverbs_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> -----Original Message-----
+> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On
+> Behalf Of Alex Williamson
+> Sent: 03 July 2019 21:34
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: eric.auger@redhat.com; pmorel@linux.vnet.ibm.com;
+> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
+> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
+> kevin.tian@intel.com
+> Subject: Re: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
+> update iova list
+> 
+> On Wed, 26 Jun 2019 16:12:44 +0100
+> Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
+> 
+> > This retrieves the reserved regions associated with dev group and
+> > checks for conflicts with any existing dma mappings. Also update
+> > the iova list excluding the reserved regions.
+> >
+> > Reserved regions with type IOMMU_RESV_DIRECT_RELAXABLE are
+> > excluded from above checks as they are considered as directly
+> > mapped regions which are known to be relaxable.
+> >
+> > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 96
+> +++++++++++++++++++++++++++++++++
+> >  1 file changed, 96 insertions(+)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> b/drivers/vfio/vfio_iommu_type1.c
+> > index 970d1ec06aed..b6bfdfa16c33 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -1559,6 +1641,7 @@ static int vfio_iommu_type1_attach_group(void
+> *iommu_data,
+> >  	phys_addr_t resv_msi_base;
+> >  	struct iommu_domain_geometry geo;
+> >  	LIST_HEAD(iova_copy);
+> > +	LIST_HEAD(group_resv_regions);
+> >
+> >  	mutex_lock(&iommu->lock);
+> >
+> > @@ -1644,6 +1727,13 @@ static int vfio_iommu_type1_attach_group(void
+> *iommu_data,
+> >  		goto out_detach;
+> >  	}
+> >
+> > +	iommu_get_group_resv_regions(iommu_group, &group_resv_regions);
+> 
+> This can fail and should have an error case.  I assume we'd fail the
+> group attach on failure.  Thanks,
 
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index 750c4d484329..7ddd0e5bc6b3 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -2548,7 +2548,7 @@ static int ib_uverbs_detach_mcast(struct uverbs_attr_bundle *attrs)
- 	struct ib_uqp_object         *obj;
- 	struct ib_qp                 *qp;
- 	struct ib_uverbs_mcast_entry *mcast;
--	int                           ret = -EINVAL;
-+	int                           ret;
- 	bool                          found = false;
- 
- 	ret = uverbs_request(attrs, &cmd, sizeof(cmd));
--- 
-2.20.1
+Right. I will add the check. Do you think we should do the same in vfio_iommu_has_sw_msi()
+as well? (In fact, it looks like iommu_get_group_resv_regions() ret is not checked anywhere in
+kernel). 
+
+Thanks,
+Shameer
+
 
