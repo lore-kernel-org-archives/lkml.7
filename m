@@ -2,78 +2,85 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16F2C46495
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E989FC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8493B218A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 22:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562281188;
-	bh=BXPrCFxq02vSsfBfH8WAmzJQ4oJR2Lfz5tox7f/El94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CTVAZJ0EhzMPqgFzTUfG6AeOK4boJqJZ+c2SPFXri0pKw+ZohZdPTHF+01yQYkOQ0
-	 iJJN8Uv1DnMsvrr8WyHTZI4j01eibgcdsNjSP76SiBEtROcooPDUMsGH0WYoSGpJbc
-	 y3BRrmD4Sk6gWK0JxmFonOxgLZLeBczbXA7PLfKI=
+	by mail.kernel.org (Postfix) with ESMTP id C47AA21852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfGDW7r (ORCPT
+        id S1727563AbfGDXDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 18:59:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41623 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfGDW7r (ORCPT
+        Thu, 4 Jul 2019 19:03:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52638 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDXDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 18:59:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so7263742ota.8;
-        Thu, 04 Jul 2019 15:59:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rnfMXaG+XzQAsgJcmPp9Bhtt71ddIs1XOoLY8p4aiPI=;
-        b=otMiGVL3Zh9VWOB8aHxeuOVqLsNZ7Y5gWRcl6k+1zrygRVVKdGpKD3chgWlis8v9/h
-         lD1gt4W/tBT8G1Uwxom6vQ0cCW0iIYWQgjP5N27Oiln2NeWkAoNxvgGeAbEknaFtb3JH
-         BrPjePJ9FDGWk+p70OT3CuPK42BqO2hjl5Nh6xM0eZZTLMcmhX+jLL8EoGm/t+ul5zlC
-         tht3lhMoZiesPk0knEiJ/IDMphtX2BfQIK0xtoC2RzmaGs/t0+ZOuVqdguitil4yBa3G
-         i66bDLNU6a6TMZee/upL1Zll6VFbesIXrysjXJKPaRSR8bn4O7L+9Rip6wjjh+K8HtaF
-         9LGA==
-X-Gm-Message-State: APjAAAW2mdsh8DFOVE/5qm8WktoqvfPH51NeNw2/gJ0aOOtoHs2Y09he
-        gEEgA5sJr+/tLNft/mFLQul4MINsG1Mn88Gj1zM=
-X-Google-Smtp-Source: APXvYqxF9ZMGY45AnEiuieibPhYW7Lb7YHSMpxnTlyzTCj1qfMcp7W7Pdu3P7pIJQ+5CELATGfZqlOmbGuvYbQMUavo=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr349262oto.118.1562281186444;
- Thu, 04 Jul 2019 15:59:46 -0700 (PDT)
+        Thu, 4 Jul 2019 19:03:09 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hjAkp-0003Ev-LC; Thu, 04 Jul 2019 23:03:03 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] btrfs: fix memory leak of path on error return path
+Date:   Fri,  5 Jul 2019 00:03:03 +0100
+Message-Id: <20190704230303.5583-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190704192020.GA3771@amd>
-In-Reply-To: <20190704192020.GA3771@amd>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jul 2019 00:59:35 +0200
-Message-ID: <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
-Subject: Re: suspend broken in next-20190704 on Thinkpad X60
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 9:20 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> Suspend is broken in next-20190704 on Thinkpad X60.
+From: Colin Ian King <colin.king@canonical.com>
 
-Broken in what way?  Any details?
+Currently if the allocation of roots or tmp_ulist fails the error handling
+does not free up the allocation of path causing a memory leak. Fix this and
+other similar leaks by moving the call of btrfs_free_path from label out
+to label out_free_ulist.
 
-> It very very probably worked ok in 20190701.
+Kudos to David Sterba for spotting the issue in my original fix and
+providing the correct way to fix the leak.
 
-Well, please try the linux-next branch from linux-pm.git
-(git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git)
-alone and see if that fails.
+Addresses-Coverity: ("Resource leak")
+Fixes: 5911c8fe05c5 ("btrfs: fiemap: preallocate ulists for btrfs_check_shared")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+
+V2: move the btrfs_free_path to the out_free_ulist label as suggested by
+    David Sterba as the correct fix.
+
+---
+ fs/btrfs/extent_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 1eb671c16ff1..31127f6d2971 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4766,11 +4766,11 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 		ret = emit_last_fiemap_cache(fieinfo, &cache);
+ 	free_extent_map(em);
+ out:
+-	btrfs_free_path(path);
+ 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, start, start + len - 1,
+ 			     &cached_state);
+ 
+ out_free_ulist:
++	btrfs_free_path(path);
+ 	ulist_free(roots);
+ 	ulist_free(tmp_ulist);
+ 	return ret;
+-- 
+2.20.1
+
