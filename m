@@ -2,148 +2,105 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C9EC06517
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5143C46478
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB71205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562238377;
-	bh=uVQltvsAQAfu7iba97jWCMUf7baHCPIvRaNEenuUtRM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=gxUprQN3+4hDZB/BwoEULSa1O283C7YVpDIOdyrplObGdu8/Opf1DGqdLZeVpvSzU
-	 HxUmUp0G8GYrh/f18ZUYQB+xD2jgCaRyb3wcPZudPM4PmLu2x9Jp8WmCdfclAfAlhp
-	 5dXFAsDnwSPAkEHZIhUQoCrYz4rIDG5rTYqiu2B8=
+	by mail.kernel.org (Postfix) with ESMTP id 7A5822189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:07:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hF7KV0b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfGDLGQ (ORCPT
+        id S1727608AbfGDLH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:06:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48415 "EHLO mga05.intel.com"
+        Thu, 4 Jul 2019 07:07:56 -0400
+Received: from mout.gmx.net ([212.227.17.20]:34095 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:06:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:06:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="339576906"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga005.jf.intel.com with ESMTP; 04 Jul 2019 04:06:12 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Pawel Laszczak <pawell@cadence.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>
-Subject: Re: linux-next: build failure after merge of the usb and usb-gadget trees
-In-Reply-To: <20190704110333.GB1404@kroah.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au> <20190704065949.GA32707@kroah.com> <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com> <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com> <87imsiyzo3.fsf@linux.intel.com> <BYAPR07MB4709076903F55352193FC78FDDFA0@BYAPR07MB4709.namprd07.prod.outlook.com> <877e8y6snr.fsf@linux.intel.com> <20190704110333.GB1404@kroah.com>
-Date:   Thu, 04 Jul 2019 14:06:11 +0300
-Message-ID: <87sgrm9hzw.fsf@linux.intel.com>
+        id S1727436AbfGDLH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:07:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562238391;
+        bh=3Q3Rn9eFMwtoWE9WbsG5M7mh69YDe97bVxTE0e3XikI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=hF7KV0b0k9MO0eCa11hhB84VgY38o1UgfP9XoXh9W0FL20Pofm4zFCT+ZBNzePkav
+         14Wt3RXb6wCMRiuMJ24xQlcrCZVQDz+mjRj8Ls1W25xaUORUNpEHb2tJE65L+DPPpf
+         gCK+VbLSQCBQKt73QByyxit3P0OMtOjDVZfn1nW0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.145.121] ([217.61.145.121]) by web-mail.gmx.net
+ (3c-app-gmx-bs27.server.lan [172.19.170.79]) (via HTTP); Thu, 4 Jul 2019
+ 13:06:31 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <trinity-03acdbbe-a94a-439c-a65c-88c9e23a0ae7-1562238391586@3c-app-gmx-bs27>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Ran Bi" <ran.bi@mediatek.com>
+Cc:     "Lee Jones" <lee.jones@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Allison Randal" <allison@lohutok.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rob Herring" <robh@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        "Josef Friedl" <josef.friedl@speed.at>,
+        "Yingjoe Chen" <yingjoe.chen@mediatek.com>,
+        "Ran Bi" <ran.bi@mediatek.com>
+Subject: Aw: Re: [PATCH v2 5/7] power: reset: add driver for mt6323 poweroff
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 4 Jul 2019 13:06:31 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <1562234589.19751.16.camel@mhfsdcap03>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-6-frank-w@public-files.de>
+ <1562234589.19751.16.camel@mhfsdcap03>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:vPbFhCphLzdAJgG78YBNH1wPbJh7oFoo8LA+oV36bAGkph3x/3EaLOXvOGXWjLu6ZuoCY
+ 1t9EybQy+LCu4aSmT+yUJo5gl8Ju4T8aDhD1DRZWAGO5rrBCojV17nj8QNVUS3FgBZoOB/x6EwMk
+ drLnkkrdyxKyi0C5iFsbPEHAByrho90e2xWkGlSORq0gv/lot3Er0z+JFebfzw+jvTVy58qZ59vU
+ OFGS3kjwGbj7yDISAqTouFNs/1tWYdh6AP0tfHE4RmZGo+FyPEmVTEt2HM39l5xlJ28M1vX2l6/i
+ L8=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Gra07zN8xw8=:anb8VcMZFxuoE4PI1k2EsZ
+ 6A2Z2hjgSFeZ7jGOE6KrcZK9v+yo52ZoN0tlYxZOOKbHINVzp3poRWA+Y0klQCe/MtWS5Sz2t
+ FFrWeA4bTFLT8Zh6YLDzz5McFFj06uC+BEhCk6+POvVdM+A1ivnLXs/zM9fEMzSu2Z1lOZFfP
+ 1g62Mmp+NcWh0pvZ3D1UHVuzeuIv2xmoaa6L5ycCXevI0/qtt9O4xdnayCMKVBGAV8XG/1/AP
+ BSlGo6q9rPqvrLx9k8amtNjnzy+pULHb1guitUl/L36xWlRE6Mp/ONToGDNeLdisQoBlaPZhf
+ EuJYuDwHhvZLwTEM17u5zqCuS4QUsUNyMHpjUqvel0YjuIKOA0iig4JPhQtaaxQdWn9gmTYWH
+ zA5ssDqM8LoXMhR+PNKPCJshNNESr4i8h/kiMhApmBrrHRXKWAUwGcQ/A45734/Xq+dgU4RNP
+ x3nB/e/z0rFDHVtQ9sfqqjpdC7aJ5VM6bGwJorkB+GmVpDHUuVpYot3U/ea9UBjQ6Y6WDb2dX
+ doR+ISW3W5uQOZAvSnp4+1LbLmot8XyCaz8SSZj6/DgUIbT4Uhnu+i08F7zytFRlChd3TnWX1
+ I3xq2GFqJbKREe56K8fPrPB2wqLCee/USnbdDcbyd6yAiWSR/DF3DlCZOKebkqIICZ4wF8Tv6
+ YxN8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Gesendet: Donnerstag, 04. Juli 2019 um 12:03 Uhr
+> Von: "Ran Bi" <ran.bi@mediatek.com>
 
-Hi,
+> We had implement MT8173 poweroff function in arm-trusted-firmware's PSCI
+> plat_system_off() function. MT8173 SoC is using PMIC MT6397. (Ref:
+> https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8173/plat_pm.c and https://github.com/ARM-software/arm-trusted-firmware/blob/master/plat/mediatek/mt8173/drivers/rtc) Do you think it's better to implement poweroff function into arm-trusted-firmware compared to hijack pm_poweroff() function in Kernel? Right now, we are doing the upstream of other PMIC chip like MT6358's poweroff function in arm-trusted-firmware too.
 
-Greg KH <greg@kroah.com> writes:
+ATF imho only used for arm64, my board is 32bit armv7 and i (currently) do not boot up with ATF
 
-> On Thu, Jul 04, 2019 at 12:44:08PM +0300, Felipe Balbi wrote:
->> 
->> Hi,
->> 
->> Pawel Laszczak <pawell@cadence.com> writes:
->> 
->> >>
->> >>
->> >>Hi,
->> >>
->> >>Pawel Laszczak <pawell@cadence.com> writes:
->> >>
->> >>>>
->> >>>>Hi,
->> >>>>
->> >>>>On Thu, Jul 4, 2019 at 9:59 AM Greg KH <greg@kroah.com> wrote:
->> >>>>>
->> >>>>> On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
->> >>>>> > Hi all,
->> >>>>> >
->> >>>>> > After merging the usb tree, today's linux-next build (arm
->> >>>>> > multi_v7_defconfig) failed like this:
->> >>>>> >
->> >>>>> > arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_output_dwc3_log_ctrl':
->> >>>>> > trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
->> >>>>> >
->> >>>>> > Caused by commit
->> >>>>> >
->> >>>>> >   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
->> >>>>> >
->> >>>>> > I have used the usb tree from next-20190703 for today.
->> >>>>> >
->> >>>>> > This also occurs in the usb-gadget tree so I have used the version of
->> >>>>> > that from next-20190703 as well.
->> >>>>>
->> >>>>> Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can you
->> >>>>> take a look at this to see if I messed something up?
->> >>>>
->> >>>>This looks like it was caused by Pawel's patches.
->> >>>>
->> >>>>I'll try to reproduce here and see what's causing it.
->> >>>
->> >>> Problem is in my Patch. I reproduced it, but I don't understand why compiler
->> >>> complains about usb_decode_ctrl. It's compiled into libcomposite.ko and
->> >>> declaration is in drivers/usb/gadget.h.
->> >>
->> >>That's because in multi_v7_defconfig dwc3 is built-in while libcomposite
->> >>is a module:
->> >>
->> >>CONFIG_USB_DWC3=y
->> >>CONFIG_USB_LIBCOMPOSITE=m
->> >>
->> >>
->> >>I remember that when you were doing this work, I asked you to move
->> >>functions to usb/common. Why did you deviate from that suggestion? It's
->> >>clear that decoding a ctrl request can be used by peripheral and host
->> >>and we wouldn't have to deal with this problem if you had just followed
->> >>the suggestion.
->> >
->> > Some time ago Greg wrote: 
->> > " It's nice to have these in a common place, but you just bloated all of
->> > the USB-enabled systems in the world for the use of 2 odd-ball system
->> > controllers that almost no one has :) "
->> >
->> > So I moved these functions to gadget directory. 
->> >
->> > It was mistake that I added debug.c file to libcomposite.ko.
->> 
->> The plan is to use this decoding function for xHCI as well. Other host
->> controllers can use it as well.
->> 
->> The biggest mistake was to put this under gadget. What you should have
->> done was create a file under usb/common that only gets compile in if
->> tracing is enabled.
->> 
->> Then there's no bloating unless you have a kernel purposefuly built for
->> debugging and tracing.
->> 
->> Greg, does that work for you?
->
-> I guess, but I'd like to see patches before answering that :)
-
-Sure, understandable. I should've done a better job at filtering that
-out. Sorry about htat
-
--- 
-balbi
+regards Frank
