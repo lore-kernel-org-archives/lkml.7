@@ -2,113 +2,135 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB6C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACCCC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00562189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:52:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rarry6Eh"
+	by mail.kernel.org (Postfix) with ESMTP id 1D8FE218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfGDHwf (ORCPT
+        id S1727460AbfGDHxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:52:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45846 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfGDHwf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:52:35 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so5158188lje.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fvNPF1w0C/lHt8cFlDsYMq1Agd3shTDcWVlw29qHYe0=;
-        b=rarry6Eh+UGj2wtvqX7oBKlZLPOcek9CfKHmrRswMwJrPekFEbUAwF+dI7CTil+TAf
-         BHtbCgAy2Wztu9556XAZH2zLF7NEJniBGSFk9fassdSMWA3x0iRssBkc2mvkJiXt0+bH
-         k2A85JXlG+XC/NISE4qqmjjMXmqcRAS8BF51PghO+hF8mcc9NKTr0ixkq8dxcKO5lpQT
-         MYwRjqAgrLPL1IZSls+AlDlI9lOqhAqZsnvsenLoCLiW2HjI+N7vwt5VPOEK/Wclabe9
-         Na8wWHj6YfandgmrjNSavtNmjCSHAYRPRGM+3KPobGStaLcYNXs/KkY0+kD32mbjter5
-         8KKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fvNPF1w0C/lHt8cFlDsYMq1Agd3shTDcWVlw29qHYe0=;
-        b=HNIvs52qYHU14u2+h4Fto6VUbg30ocOriDlkmKS7SZFVYErlT/EmUoTxSRBzi7sC8F
-         14SRoU21GR0vJ+RASh0C/EH310rQmDf2/gJM5bNAQJ5dlB2Jg4eATyOQH5I8YWZA3TD7
-         YU4NsDA1Nfmhrc+GdNwXobqEC4VwsXRvVTkqOYVZdP3qUralGK68zYsyglXP1j0900fK
-         ZNUgOC3I25b0lVtikSj6JiI3OJd86heM8xMyTwvX087XUgYnKwDX7fzMRMkmaiyNJaOS
-         5zHvC+wCN8DX+4xS/3oUj9UeWRAIhujZPVgWTvXpe6p8rcLssoJLH+SXarOYbgfFBWVH
-         Do4A==
-X-Gm-Message-State: APjAAAXhOZ/a6WEB57BFRuxDkyHiwxbAvSPwBzRsHaGi62KBS8E7g91O
-        UApw35PFEMXStb76TMoPpmToeDXm50fqxLLl04DBxA==
-X-Google-Smtp-Source: APXvYqztiwxXkmmBstrAOqmsCjqAoPSovj8wAWrgmZZ6/7LRVsvTidj759pkddpLOpbhm07zZh/DJ8wwGe1EuNLxNqg=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr2103514ljs.54.1562226753487;
- Thu, 04 Jul 2019 00:52:33 -0700 (PDT)
+        Thu, 4 Jul 2019 03:53:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727180AbfGDHxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:53:00 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EF7DE4A3A00B8D6F92BC;
+        Thu,  4 Jul 2019 15:52:57 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 4 Jul 2019 15:52:49 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>, <lukas@wunner.de>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yaohongbo@huawei.com>, <guohanjun@huawei.com>,
+        <huawei.libin@huawei.com>, <wangxiongfeng2@huawei.com>
+Subject: [RFC PATCH] pciehp: use completion to wait irq_thread 'pciehp_ist'
+Date:   Thu, 4 Jul 2019 15:50:38 +0800
+Message-ID: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-References: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
- <CACRpkdboWWKfaTu=TKqnZgjy4HNWr+fjmQXLBBmePsaDihkbSA@mail.gmail.com> <be57afd0-5a81-4d79-3ee4-1fb23644f424@arm.com>
-In-Reply-To: <be57afd0-5a81-4d79-3ee4-1fb23644f424@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jul 2019 09:52:21 +0200
-Message-ID: <CACRpkdbgyWmMM+3L6rjpWr4Z=qu4w6cri3cv0DG51JpFd9Ej4g@mail.gmail.com>
-Subject: Re: [tip:irq/core] gpio: mb86s7x: Enable ACPI support
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-tip-commits@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 3:50 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 03/07/2019 13:26, Linus Walleij wrote:
-> > On Wed, Jul 3, 2019 at 11:24 AM tip-bot for Ard Biesheuvel
-> > <tipbot@zytor.com> wrote:
-> >
-> >> Committer:  Marc Zyngier <marc.zyngier@arm.com>
-> >> CommitDate: Wed, 29 May 2019 10:42:19 +0100
-> >>
-> >> gpio: mb86s7x: Enable ACPI support
-> >>
-> >> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
-> >> support for ACPI GPIO interrupts routed via platform interrupts, by
-> >> wiring the two together via the to_irq() gpiochip callback.
-> >>
-> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> >
-> > OK!
-> >
-> >> +#include "gpiolib.h"
-> >> +
-> >
-> > But this isn't needed anymore, is it?
->
-> You tell me! ;-)
->
-> > I can try to remember to remove it later though.
->
-> Yeah, please send a separate patch. tip is stable, and we can't roll
-> this back.
+When I use the following command to power on a slot which has been
+powered off already.
+echo 1 > /sys/bus/pci/slots/22/power
+It prints the following error:
+-bash: echo: write error: No such device
+But the slot is actually powered on and the devices is probed.
 
-I'll just fix it in the GPIO tree after -rc1.
-Made a personal TODO note!
+In function 'pciehp_sysfs_enable_slot()', we use 'wait_event()' to wait
+until 'ctrl->pending_events' is cleared in 'pciehp_ist()'. But in some
+situation, when 'pciehp_ist()' is woken up on a nearby CPU after
+'pciehp_request' is called, 'ctrl->pending_events' is cleared before we
+go into sleep state. 'wait_event()' will check the condition before
+going into sleep. So we return immediately and '-ENODEV' is return.
 
-Yours,
-Linus Walleij
+This patch use struct completion to wait until irq_thread 'pciehp_ist'
+is completed.
+
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/pci/hotplug/pciehp.h      | 2 +-
+ drivers/pci/hotplug/pciehp_ctrl.c | 8 ++++----
+ drivers/pci/hotplug/pciehp_hpc.c  | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 8c51a04..f8c3826 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -102,7 +102,7 @@ struct controller {
+ 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
+ 	struct rw_semaphore reset_lock;
+ 	int request_result;
+-	wait_queue_head_t requester;
++	struct completion requester;
+ };
+ 
+ /**
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 631ced0..2237793 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -366,9 +366,9 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
+ 		 * card before the thread wakes up, so initialize to -ENODEV.
+ 		 */
+ 		ctrl->request_result = -ENODEV;
++		reinit_completion(&ctrl->requester);
+ 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+-		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++		wait_for_completion(&ctrl->requester);
+ 		return ctrl->request_result;
+ 	case POWERON_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+@@ -399,9 +399,9 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
+ 	case BLINKINGOFF_STATE:
+ 	case ON_STATE:
+ 		mutex_unlock(&ctrl->state_lock);
++		reinit_completion(&ctrl->requester);
+ 		pciehp_request(ctrl, DISABLE_SLOT);
+-		wait_event(ctrl->requester,
+-			   !atomic_read(&ctrl->pending_events));
++		wait_for_completion(&ctrl->requester);
+ 		return ctrl->request_result;
+ 	case POWEROFF_STATE:
+ 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index bd990e3..0a74b48 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -654,7 +654,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	up_read(&ctrl->reset_lock);
+ 
+ 	pci_config_pm_runtime_put(pdev);
+-	wake_up(&ctrl->requester);
++	complete(&ctrl->requester);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -862,7 +862,7 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 	mutex_init(&ctrl->ctrl_lock);
+ 	mutex_init(&ctrl->state_lock);
+ 	init_rwsem(&ctrl->reset_lock);
+-	init_waitqueue_head(&ctrl->requester);
++	init_completion(&ctrl->requester);
+ 	init_waitqueue_head(&ctrl->queue);
+ 	INIT_DELAYED_WORK(&ctrl->button_work, pciehp_queue_pushbutton_work);
+ 	dbg_ctrl(ctrl);
+-- 
+1.7.12.4
+
