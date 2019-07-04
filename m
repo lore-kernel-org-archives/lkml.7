@@ -2,111 +2,133 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C547C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E47C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AB02189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814CE2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mgtpmyOC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UfCRovyU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XV/qNoVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfGDHxL (ORCPT
+        id S1727101AbfGDIA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:53:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58372 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfGDHxL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:53:11 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5C24B609CD; Thu,  4 Jul 2019 07:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562226790;
-        bh=QP02RX+s+abAv40zJSQKeAupeAwqDfByWtGOQhkpzYI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mgtpmyOCaZE5ynciK0snZPPCz1ArNV+E02B+bRVW/LCdgQ4tqPBQKZU7zkL3aodZC
-         LUpAe+PB/ow+UklBfYWCISNBeK34lhkuvrDOl2LBt7I12RPR3BoaLsNK5ioK5hBuPD
-         0y7Joh9oJPChhWSPCT68nIxuIQXLjMdIWDdn6jYs=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 90B1860746;
-        Thu,  4 Jul 2019 07:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562226789;
-        bh=QP02RX+s+abAv40zJSQKeAupeAwqDfByWtGOQhkpzYI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UfCRovyUB63eQs0AYtn62PvDY3v8N9wUpC0m4wLEAXeMNRTa8O1clQTw3MHeyFFNQ
-         06dhZprHqkzdJMJC0h3pvtmVQ0z6Z8Stb0dqrvFiyUpXl6qiHctfy+gjIqq+wV50pT
-         UsEKj7RyePFA8cjBG50TZKVu10QAaHJ+ANSUZwT8=
+        Thu, 4 Jul 2019 04:00:29 -0400
+Received: from mail-eopbgr00078.outbound.protection.outlook.com ([40.107.0.78]:54063
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725920AbfGDIA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:00:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Os2M1u4hQFlUUZir5WG6cu5oF/YNz5e4IzKf5ru3hA=;
+ b=XV/qNoVv0eEDPHrJ7os5NpML4t7YVkZz1DfCFCrOOEj6Cdh+i31ww8sV4yV2/bbiyo7vTC7pN4e3VClSjDJYjObLoxHr8ML8/Bs7r/kk2GTtMKzeMkSAFz5LV+r3bhHstTlDzpP43aSKlRDhZdbluJrONRUOMNf2PZ/3N00rpJ8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3738.eurprd04.prod.outlook.com (52.134.70.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Thu, 4 Jul 2019 08:00:25 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
+ 08:00:25 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend
+ opp
+Thread-Index: AQHVMjD62bccyXxndUyDszIpSDkBnaa6F2SA
+Date:   Thu, 4 Jul 2019 08:00:24 +0000
+Message-ID: <DB3PR0402MB39165D27F23501EE358DE607F5FA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
+ <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f97e96a1-60ef-4b23-f80b-08d70055abce
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3738;
+x-ms-traffictypediagnostic: DB3PR0402MB3738:
+x-microsoft-antispam-prvs: <DB3PR0402MB37385D5D32BA1619C0B548E9F5FA0@DB3PR0402MB3738.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0088C92887
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(366004)(199004)(189003)(8676002)(99286004)(229853002)(102836004)(66066001)(76176011)(7696005)(53546011)(25786009)(54906003)(6506007)(110136005)(3846002)(6116002)(33656002)(14454004)(7416002)(7736002)(305945005)(186003)(4326008)(8936002)(316002)(15650500001)(2906002)(81166006)(81156014)(478600001)(74316002)(26005)(68736007)(2501003)(71200400001)(71190400001)(53936002)(6246003)(66556008)(66946007)(76116006)(66446008)(66476007)(64756008)(73956011)(5660300002)(55016002)(486006)(44832011)(86362001)(52536014)(9686003)(6436002)(256004)(14444005)(446003)(11346002)(476003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3738;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sSACyW0V1pdegfYmDUfMLyW7K29iXC8f2vzGlbt4SxRekcCRm34M++/kyxkisjUtYV3nSkV2cTkXHDDiYoWSBzTxdG9rCyLJACd/2aa66quUtNbaqDZ+VyBomXf5/eq+U7SEvYlxBhW9s5T0D6svscgCdYZY+jlUujDAIcBvLjw3AC2E12Av8Xc7cIFtzocUFmkrNJIGYXt1MSd+K3v/4B3Fq1gBplOET9ClPaPxCP1rsNLjbSHY+sLRFdSraqptJgjTtnXIJNKHH9qgr2Z5AyiSpn2Vp0+YqsJjxcSlnLZhalspzcRwZRuwZvr+XhE6TrseeoG+t3VoGlC6Ub0M8/K8PtIJQXHZMG3SLMvYxKApyqCJ2CkGwi8fls9o1lrF/+J35IbFcomVPGds/MJijDYENvTG7Lm6c7w9TfcS6Bs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 04 Jul 2019 10:53:09 +0300
-From:   merez@codeaurora.org
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] wil6210: fix wil_cid_valid with negative cid values
-In-Reply-To: <20190702144026.13013-1-colin.king@canonical.com>
-References: <20190702144026.13013-1-colin.king@canonical.com>
-Message-ID: <787a6680930c6895d8ede457ec543fb7@codeaurora.org>
-X-Sender: merez@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f97e96a1-60ef-4b23-f80b-08d70055abce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 08:00:24.9793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3738
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-02 17:40, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There are several occasions where a negative cid value is passed
-> into wil_cid_valid and this is converted into a u8 causing the
-> range check of cid >= 0 to always succeed.  Fix this by making
-> the cid argument an int to handle any -ve error value of cid.
-> 
-> An example of this behaviour is in wil_cfg80211_dump_station,
-> where cid is assigned -ENOENT if the call to wil_find_cid_by_idx
-> fails, and this -ve value is passed to wil_cid_valid.  I believe
-> that the conversion of -ENOENT to the u8 value 254 which is
-> greater than wil->max_assoc_sta causes wil_find_cid_by_idx to
-> currently work fine, but I think is by luck and not the
-> intended behaviour.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/wireless/ath/wil6210/wil6210.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/wil6210/wil6210.h
-> b/drivers/net/wireless/ath/wil6210/wil6210.h
-> index 6f456b311a39..25a1adcb38eb 100644
-> --- a/drivers/net/wireless/ath/wil6210/wil6210.h
-> +++ b/drivers/net/wireless/ath/wil6210/wil6210.h
-> @@ -1144,7 +1144,7 @@ static inline void wil_c(struct wil6210_priv
-> *wil, u32 reg, u32 val)
->  /**
->   * wil_cid_valid - check cid is valid
->   */
-> -static inline bool wil_cid_valid(struct wil6210_priv *wil, u8 cid)
-> +static inline bool wil_cid_valid(struct wil6210_priv *wil, int cid)
->  {
->  	return (cid >= 0 && cid < wil->max_assoc_sta);
->  }
-
-Reviewed-by: Maya Erez <merez@codeaurora.org>
-
--- 
-Maya Erez
-Qualcomm Israel, Inc. on behalf of Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+SGksIExlb25hcmQNCg0KPiBPbiA3LzQvMjAxOSA5OjIzIEFNLCBBbnNvbi5IdWFuZ0BueHAuY29t
+IHdyb3RlOg0KPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+
+DQo+ID4gQXNzaWduIGhpZ2hlc3QgT1BQIGFzIHN1c3BlbmQgT1BQIHRvIHJlZHVjZSBzdXNwZW5k
+L3Jlc3VtZSBsYXRlbmN5IG9uDQo+ID4gaS5NWDhNTS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kgfCAxICsNCj4gPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPiA+IGluZGV4IGIxMWZjNWUuLjNhNjI0MDcgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4g
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPiA+IEBA
+IC0xMzYsNiArMTM2LDcgQEANCj4gPiAgIAkJCW9wcC1taWNyb3ZvbHQgPSA8MTAwMDAwMD47DQo+
+ID4gICAJCQlvcHAtc3VwcG9ydGVkLWh3ID0gPDB4OD4sIDwweDM+Ow0KPiA+ICAgCQkJY2xvY2st
+bGF0ZW5jeS1ucyA9IDwxNTAwMDA+Ow0KPiA+ICsJCQlvcHAtc3VzcGVuZDsNCj4gPiAgIAkJfTsN
+Cj4gPiAgIAl9Ow0KPiANCj4gV2hhdCBpZiB0aGUgaGlnaGVzdCBPUFAgaXMgdW5hdmFpbGFibGUg
+ZHVlIHRvIHNwZWVkIGdyYWRpbmc/IElkZWFsbHkgd2UNCj4gc2hvdWxkIGZpbmQgYSB3YXkgdG8g
+c3VzcGVuZCBhdCB0aGUgaGlnaGVzdCAqc3VwcG9ydGVkKiBPUFAuDQo+IA0KPiBNYXliZSB0aGUg
+b3BwLXN1c3BlbmQgbWFya2luZyBjb3VsZCBiZSBhc3NpZ25lZCBmcm9tIGlteC1jcHVmcmVxLWR0
+DQo+IGRyaXZlciBjb2RlPw0KDQpZZXMsIHRoaXMgaXMgYWxzbyBteSBjb25jZXJuLCB0aGUgY3Vy
+cmVudCBPUFAgZHJpdmVyIGRvZXMgTk9UIGhhbmRsZSBpdCB3ZWxsLCBhbmQNCkkgd2FzIHRoaW5r
+aW5nIHRvIGFzc2lnbmUgaXQgZnJvbSBpbXgtY3B1ZnJlcS1kdCBkcml2ZXIsIDEgb3B0aW9uIGlz
+IHRvIHJ1bnRpbWUgYWRkDQoic3VzcGVuZC1vcHAiIHByb3BlcnR5IGludG8gRFQgT1BQIG5vZGUg
+YWZ0ZXIgcGFyc2luZyB0aGUgc3BlZWQgZ3JhZGluZyBmdXNlIGFuZA0KT1BQIHRhYmxlLCBidXQg
+SSBkbyBOT1QgbGlrZSB0aGF0IHZlcnkgbXVjaCwgYXMgd2UgbmVlZCB0byBtYW51YWxseSBjcmVh
+dGUgYSBwcm9wZXJ0eSwNCnRoZSBvdGhlciBvcHRpb24gaXMgdG8gY2hhbmdlIGNwdSBmcmVxIHBv
+bGljeSBpbnNpZGUgaW14LWNwdWZyZXEtZHQgZHJpdmVyIGluIHN1c3BlbmQvcmVzdW1lDQpjYWxs
+YmFjaz8gV2hpY2ggb25lIGRvIHlvdSBwcmVmZXI/DQoNClRoYW5rcywNCkFuc29uDQoNCj4gDQo+
+IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg0K
