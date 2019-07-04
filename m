@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C34C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36578C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F11C218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0762A218B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230030;
-	bh=zxScwFkLjiixqdeZRh7a5dXv8jDdQ8T3PHXavOyUF88=;
+	s=default; t=1562230034;
+	bh=9kr+WquUsx/ezUvWIT9JMoBqrRGzTuebO01ejx6/NRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEH7svUuCMB3sDEjP/X8EOUSVnZaC6YVlw86XHDAY23VEfKpCWPVcqgp8wVk/aJms
-	 17NVuOqO9YAA9KoSkKt5uQncfR9tJYPOXPQXbg02YVChs/REoNxPDlo5+tqIkyJsUq
-	 0yQ1/eujth6BU9BIPXHhZcYmAgLNqpU2+56BmNqc=
+	b=R1ZrXM49mGjfmDp90fTcsru6ZPa3RnWBJN2uS4gpmIkjjo1EJdN1AKYoBPmHShZN6
+	 SEqxFGHwOg4pNHKALlfWgPKfPtBPhio0Qh1nGLx/u/nasaeMaqZTyQJ5uG1KCf61iE
+	 jphiBCT9y/mUB5diUujTBxLa3nwpQSouD9tuOLiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfGDIrJ (ORCPT
+        id S1727452AbfGDIrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfGDIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:47:05 -0400
+        id S1727413AbfGDIrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:47:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 090A3218BC;
-        Thu,  4 Jul 2019 08:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A113F218A6;
+        Thu,  4 Jul 2019 08:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230024;
-        bh=zxScwFkLjiixqdeZRh7a5dXv8jDdQ8T3PHXavOyUF88=;
+        s=default; t=1562230027;
+        bh=9kr+WquUsx/ezUvWIT9JMoBqrRGzTuebO01ejx6/NRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dv6zzAeEQOLrSruoBnVNVkmd1VvWZ2P/o3R8uv4G3LheVuxIeaLnayVa+Wg0bHN40
-         Vzq//RNvbEZmNAWyoAv35LneKIUggwAXGlWL5w34unYMha2SjdH34WS2Vg6+MY6SYz
-         NJzaOTuLMWTPi+zxqcoS2IylbU2vM4unYytSg4X0=
+        b=2TR1gRN+oqWdeQDSWJvCKh7HzTKLd6dE8gajijp4mu1AYkPuXfIlFWNHNkf3Fk426
+         XcZJ74dIURrNuzD004fFCALLfWCZSt8ElpRqi2KKTRbXuYF/9pufzkJtKve9vg8odo
+         +w5WYKJKuOX7MVh4ZmcbYP+gZkbz3XTG2rLVlNeY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 08/11] video: fbdev: w100fb: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:14 +0200
-Message-Id: <20190704084617.3602-9-gregkh@linuxfoundation.org>
+Subject: [PATCH 09/11] video: fbdev: sm501fb: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:15 +0200
+Message-Id: <20190704084617.3602-10-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -63,71 +61,86 @@ Platform drivers now have the option to have the platform core create
 and remove any needed sysfs attribute files.  So take advantage of that
 and do not register "by hand" a bunch of sysfs files.
 
-Cc: Tony Prisk <linux@prisktech.co.nz>
 Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-fbdev@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/video/fbdev/w100fb.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/video/fbdev/sm501fb.c | 37 +++++++++--------------------------
+ 1 file changed, 9 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/video/fbdev/w100fb.c b/drivers/video/fbdev/w100fb.c
-index 696106ecdff0..4be3afcc1c93 100644
---- a/drivers/video/fbdev/w100fb.c
-+++ b/drivers/video/fbdev/w100fb.c
-@@ -168,6 +168,15 @@ static ssize_t fastpllclk_store(struct device *dev, struct device_attribute *att
+diff --git a/drivers/video/fbdev/sm501fb.c b/drivers/video/fbdev/sm501fb.c
+index dde52d027416..c633ee76a73d 100644
+--- a/drivers/video/fbdev/sm501fb.c
++++ b/drivers/video/fbdev/sm501fb.c
+@@ -1274,6 +1274,14 @@ static ssize_t sm501fb_debug_show_pnl(struct device *dev,
  
- static DEVICE_ATTR_RW(fastpllclk);
+ static DEVICE_ATTR(fbregs_pnl, 0444, sm501fb_debug_show_pnl, NULL);
  
-+static struct attribute *w100fb_attrs[] = {
-+	&dev_attr_fastpllclk.attr,
-+	&dev_attr_reg_read.attr,
-+	&dev_attr_reg_write.attr,
-+	&dev_attr_flip.attr,
++static struct attribute *sm501fb_attrs[] = {
++	&dev_attr_crt_src.attr,
++	&dev_attr_fbregs_pnl.attr,
++	&dev_attr_fbregs_crt.attr,
 +	NULL,
 +};
-+ATTRIBUTE_GROUPS(w100fb);
++ATTRIBUTE_GROUPS(sm501fb);
 +
- /*
-  * Some touchscreens need hsync information from the video driver to
-  * function correctly. We export it here.
-@@ -756,14 +765,6 @@ int w100fb_probe(struct platform_device *pdev)
- 		goto out;
+ /* acceleration operations */
+ static int sm501fb_sync(struct fb_info *info)
+ {
+@@ -2016,33 +2024,9 @@ static int sm501fb_probe(struct platform_device *pdev)
+ 		goto err_started_crt;
  	}
  
--	err = device_create_file(&pdev->dev, &dev_attr_fastpllclk);
--	err |= device_create_file(&pdev->dev, &dev_attr_reg_read);
--	err |= device_create_file(&pdev->dev, &dev_attr_reg_write);
--	err |= device_create_file(&pdev->dev, &dev_attr_flip);
+-	/* create device files */
 -
--	if (err != 0)
--		fb_warn(info, "failed to register attributes (%d)\n", err);
+-	ret = device_create_file(dev, &dev_attr_crt_src);
+-	if (ret)
+-		goto err_started_panel;
 -
- 	fb_info(info, "%s frame buffer device\n", info->fix.id);
+-	ret = device_create_file(dev, &dev_attr_fbregs_pnl);
+-	if (ret)
+-		goto err_attached_crtsrc_file;
+-
+-	ret = device_create_file(dev, &dev_attr_fbregs_crt);
+-	if (ret)
+-		goto err_attached_pnlregs_file;
+-
+ 	/* we registered, return ok */
  	return 0;
- out:
-@@ -788,11 +789,6 @@ static int w100fb_remove(struct platform_device *pdev)
- 	struct fb_info *info = platform_get_drvdata(pdev);
- 	struct w100fb_par *par=info->par;
  
--	device_remove_file(&pdev->dev, &dev_attr_fastpllclk);
--	device_remove_file(&pdev->dev, &dev_attr_reg_read);
--	device_remove_file(&pdev->dev, &dev_attr_reg_write);
--	device_remove_file(&pdev->dev, &dev_attr_flip);
+-err_attached_pnlregs_file:
+-	device_remove_file(dev, &dev_attr_fbregs_pnl);
 -
- 	unregister_framebuffer(info);
+-err_attached_crtsrc_file:
+-	device_remove_file(dev, &dev_attr_crt_src);
+-
+-err_started_panel:
+-	unregister_framebuffer(info->fb[HEAD_PANEL]);
+-	sm501_free_init_fb(info, HEAD_PANEL);
+-
+ err_started_crt:
+ 	unregister_framebuffer(info->fb[HEAD_CRT]);
+ 	sm501_free_init_fb(info, HEAD_CRT);
+@@ -2072,10 +2056,6 @@ static int sm501fb_remove(struct platform_device *pdev)
+ 	struct fb_info	   *fbinfo_crt = info->fb[0];
+ 	struct fb_info	   *fbinfo_pnl = info->fb[1];
  
- 	vfree(par->saved_intmem);
-@@ -1630,6 +1626,7 @@ static struct platform_driver w100fb_driver = {
- 	.driver		= {
- 		.name	= "w100fb",
- 	},
-+	.dev_groups	= w100fb_groups,
- };
+-	device_remove_file(&pdev->dev, &dev_attr_fbregs_crt);
+-	device_remove_file(&pdev->dev, &dev_attr_fbregs_pnl);
+-	device_remove_file(&pdev->dev, &dev_attr_crt_src);
+-
+ 	sm501_free_init_fb(info, HEAD_CRT);
+ 	sm501_free_init_fb(info, HEAD_PANEL);
  
- module_platform_driver(w100fb_driver);
+@@ -2233,6 +2213,7 @@ static int sm501fb_resume(struct platform_device *pdev)
+ #endif
+ 
+ static struct platform_driver sm501fb_driver = {
++	.dev_groups	= sm501fb_groups,
+ 	.probe		= sm501fb_probe,
+ 	.remove		= sm501fb_remove,
+ 	.suspend	= sm501fb_suspend,
 -- 
 2.22.0
 
