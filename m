@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE0FC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97291C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8033218BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2DB218BC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230017;
-	bh=xGwKWc+XzsSOGlAWoFhYB9Bq0hOeFBHzsB5P7i22CiM=;
+	s=default; t=1562230021;
+	bh=+ThnAsF1ex2q6upxPj81qdHFANvTESX3zSvvx0uAZlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SBd55EADOJgDGWDjqNyKCpL0hn3jtdZB5PRTQuLF4hGXU0T0a0qIBqvVbEWI0V6H5
-	 cQ+uBXbWdpqcO9ApiCzbqG2eMza40w9NypLVQFnKkRUI/vZvjYDqSss++qvO5mPTAe
-	 pl4jMnZZIs2NujEaNwRyqgwtBY2UAESTFKnkPW4s=
+	b=h0dgRMQzgzU4jwT2SyDL22QoNpmX+jwNZnl2x5yMFPgUPsxJ8L19aEFZeOosf+o8p
+	 qMl6gbI5gWRHxykf62ajQ7x1CTWbBi6wDFFmcMfJvQICCAbeapNkwZR8nP4vsDNFn7
+	 i2NH/ywGPej6kDwWO6pVXqWQdXdD10Gr5bDS9DPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfGDIq4 (ORCPT
+        id S1727365AbfGDIrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbfGDIqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:46:52 -0400
+        id S1727342AbfGDIq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5BB5218A0;
-        Thu,  4 Jul 2019 08:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2FF218A0;
+        Thu,  4 Jul 2019 08:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230011;
-        bh=xGwKWc+XzsSOGlAWoFhYB9Bq0hOeFBHzsB5P7i22CiM=;
+        s=default; t=1562230016;
+        bh=+ThnAsF1ex2q6upxPj81qdHFANvTESX3zSvvx0uAZlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pazu0ayU9DFIcP8846lWW/76SH0dMrV4RFmh8jxinTqQuSgvkwyZSNFNkAkwHgiI
-         aoRTCdMWpULf+Eu5QzLXkLs8GMeEpeRuqgaGy1NCLup+uMMODqf6wkw50x+pGPX1V5
-         8IcQTPEqYBX3+bbox83v/RvcMumYHysQJDDCzT4M=
+        b=LwlHS41Wnso0LpBSRqAayCTAAQSxRzIJ9aMS+u3QBBCyugWEGNiwA2WGounbLF8yP
+         1sY1LVa18SZC9AibsijFgDl54NygJ3Wb2Cp7V+5v5Uiq+Ot0HI4RypTj704katZ97O
+         dFBBU9LI8cCbvbGydtqMUHPRC1Hm7jFbcIemDefU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: [PATCH 03/11] serial: sh-sci: use driver core functions, not sysfs ones.
-Date:   Thu,  4 Jul 2019 10:46:09 +0200
-Message-Id: <20190704084617.3602-4-gregkh@linuxfoundation.org>
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 05/11] olpc: x01: convert platform driver to use dev_groups
+Date:   Thu,  4 Jul 2019 10:46:11 +0200
+Message-Id: <20190704084617.3602-6-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -56,65 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a driver, do not call "raw" sysfs functions, instead call driver
-core ones.  Specifically convert the use of sysfs_create_file() and
-sysfs_remove_file() to use device_create_file() and device_remove_file()
+Platform drivers now have the option to have the platform core create
+and remove any needed sysfs attribute files.  So take advantage of that
+and do not register "by hand" a lid sysfs file.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: platform-driver-x86@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/tty/serial/sh-sci.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index abc705716aa0..69f9072505f7 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -3137,14 +3137,10 @@ static int sci_remove(struct platform_device *dev)
+diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+index 25ce1b3b0732..ce1948918dd2 100644
+--- a/arch/x86/platform/olpc/olpc-xo1-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+@@ -157,6 +157,12 @@ static ssize_t lid_wake_mode_set(struct device *dev,
+ static DEVICE_ATTR(lid_wake_mode, S_IWUSR | S_IRUGO, lid_wake_mode_show,
+ 		   lid_wake_mode_set);
  
- 	sci_cleanup_single(port);
- 
--	if (port->port.fifosize > 1) {
--		sysfs_remove_file(&dev->dev.kobj,
--				  &dev_attr_rx_fifo_trigger.attr);
--	}
--	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF) {
--		sysfs_remove_file(&dev->dev.kobj,
--				  &dev_attr_rx_fifo_timeout.attr);
--	}
-+	if (port->port.fifosize > 1)
-+		device_remove_file(&dev->dev, &dev_attr_rx_fifo_trigger);
-+	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF)
-+		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
- 
- 	return 0;
- }
-@@ -3332,19 +3328,17 @@ static int sci_probe(struct platform_device *dev)
- 		return ret;
- 
- 	if (sp->port.fifosize > 1) {
--		ret = sysfs_create_file(&dev->dev.kobj,
--				&dev_attr_rx_fifo_trigger.attr);
-+		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_trigger);
- 		if (ret)
- 			return ret;
++static struct attribute *lid_attrs[] = {
++	&dev_attr_lid_wake_mode.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(lid);
++
+ /*
+  * Process all items in the EC's SCI queue.
+  *
+@@ -510,17 +516,8 @@ static int setup_lid_switch(struct platform_device *pdev)
+ 		goto err_register;
  	}
- 	if (sp->port.type == PORT_SCIFA || sp->port.type == PORT_SCIFB ||
- 	    sp->port.type == PORT_HSCIF) {
--		ret = sysfs_create_file(&dev->dev.kobj,
--				&dev_attr_rx_fifo_timeout.attr);
-+		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_timeout);
- 		if (ret) {
- 			if (sp->port.fifosize > 1) {
--				sysfs_remove_file(&dev->dev.kobj,
--					&dev_attr_rx_fifo_trigger.attr);
-+				device_remove_file(&dev->dev,
-+						   &dev_attr_rx_fifo_trigger);
- 			}
- 			return ret;
- 		}
+ 
+-	r = device_create_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+-	if (r) {
+-		dev_err(&pdev->dev, "failed to create wake mode attr: %d\n", r);
+-		goto err_create_attr;
+-	}
+-
+ 	return 0;
+ 
+-err_create_attr:
+-	input_unregister_device(lid_switch_idev);
+-	lid_switch_idev = NULL;
+ err_register:
+ 	input_free_device(lid_switch_idev);
+ 	return r;
+@@ -528,7 +525,6 @@ static int setup_lid_switch(struct platform_device *pdev)
+ 
+ static void free_lid_switch(void)
+ {
+-	device_remove_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+ 	input_unregister_device(lid_switch_idev);
+ }
+ 
+@@ -629,6 +625,7 @@ static struct platform_driver xo1_sci_driver = {
+ 	.remove = xo1_sci_remove,
+ 	.suspend = xo1_sci_suspend,
+ 	.resume = xo1_sci_resume,
++	.dev_groups = lid_groups,
+ };
+ 
+ static int __init xo1_sci_init(void)
 -- 
 2.22.0
 
