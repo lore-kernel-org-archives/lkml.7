@@ -6,117 +6,93 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A00C46497
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7639C46495
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7656C21738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B81921852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfGDTu2 (ORCPT
+        id S1727240AbfGDT4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 15:50:28 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50150 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfGDTu2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 15:50:28 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 67D7A8067F; Thu,  4 Jul 2019 21:50:14 +0200 (CEST)
-Date:   Thu, 4 Jul 2019 21:50:25 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jann Horn <jannh@google.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
+        Thu, 4 Jul 2019 15:56:02 -0400
+Received: from sauhun.de ([88.99.104.3]:40170 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfGDT4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 15:56:01 -0400
+Received: from localhost (p5DCB43A6.dip0.t-ipconnect.de [93.203.67.166])
+        by pokefinder.org (Postfix) with ESMTPSA id C1E012C290E;
+        Thu,  4 Jul 2019 21:55:58 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 21:55:58 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [RFC PATCH] binfmt_elf: Extract .note.gnu.property from an ELF
- file
-Message-ID: <20190704195024.GA4013@amd>
-References: <20190628172203.797-1-yu-cheng.yu@intel.com>
- <CAG48ez0rHHfcRgiVZf5FP0YOzxsXigvpg6ci790cmiN6PBwkhQ@mail.gmail.com>
+        Jonathan Cameron <jic23@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: gyroadc: fix uninitialized return code
+Message-ID: <20190704195557.GA1338@kunai>
+References: <20190704113800.3299636-1-arnd@arndb.de>
+ <20190704120756.GA1582@kunai>
+ <CAMuHMdXDN60WWFerok1h05COdNNPZTMDCgKXejmQZMj9B6y5Cw@mail.gmail.com>
+ <fc3b8b4e-fe0e-9573-124d-4b41efa409e4@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
 Content-Disposition: inline
-In-Reply-To: <CAG48ez0rHHfcRgiVZf5FP0YOzxsXigvpg6ci790cmiN6PBwkhQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <fc3b8b4e-fe0e-9573-124d-4b41efa409e4@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---xHFwDpU9dbj6ez1V
+--ibTvN161/egqYuK8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
 
-
-> > +static int scan(u8 *buf, u32 buf_size, int item_size, test_item_fn tes=
-t_item,
-> > +               next_item_fn next_item, u32 *arg, u32 type, u32 *pos)
-> > +{
-> > +       int found =3D 0;
-> > +       u8 *p, *max;
-> > +
-> > +       max =3D buf + buf_size;
-> > +       if (max < buf)
-> > +               return 0;
+> >> This is correct but missing that the above 'return ret' is broken, too.
+> >> ret is initialized but 0 in that case.
+> >=20
+> > Nice catch! Oh well, given enough eyeballs, ...
 >=20
-> How can this ever legitimately happen? If it can't, perhaps you meant
-> to put a WARN_ON_ONCE() or something like that here?
-> Also, computing out-of-bounds pointers is UB (section 6.5.6 of C99:
-> "If both the pointer operand and the result point to elements of the
-> same array object, or one past the last element of the array object,
-> the evaluation shall not produce an overflow; otherwise, the behavior
-> is undefined."), and if the addition makes the pointer wrap, that's
-> certainly out of bounds; so I don't think this condition can trigger
-> without UB.
+> I don't think ret is initialized, reg is, not ret .
 
-Kernel assumes sane compiler. We pass flags to get it... C99 does not
-quite apply here.
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+It is initialized for the broken 'return ret' *above* the one which gets
+rightfully fixed in this patch.
 
---xHFwDpU9dbj6ez1V
+
+--ibTvN161/egqYuK8
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAl0eWIAACgkQMOfwapXb+vLSMgCcC98TTx9pMIkokJGKGUu3i6ME
-o+AAn3TIA7Pjz5wBcK19BycwV2+shMN6
-=83sj
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0eWckACgkQFA3kzBSg
+Kbb/Aw/+JS8QiD+5YFD08Aece1AYJ2md7n6gHKlrgxsleiM3hY40m90l6ayrIq8Q
+YW6n4kloAs8QtzaPv7zjHAhs2n/bs8RubGDv+N+M3fkJnbxUijW1iw15r8DtPsDH
+m5a8BW9khGfbGpZdRBD7LXfKNryoCymGxx/izJS6ZfQFnTrlEXzrTtHXv78Ynsv9
+hvp2jkywnNZRK27pzzKRG/B3adb1Xq3yz+uHMhQRLvJSQPKLXsS4wyGqmDBONjgC
+sX681ZgKl632cIbxkvUUApF3UMShkVZzXi05lMo2V+9dFa8P+T+RAX3/7kH2roAR
+dOfo92O9ZR7q6J2t3H00pL3bpPJKPZ14Dxk39fO6xx2zB4av9EVHzRRgdlzPwvfI
+K+XTGFjLTAcPiteVVeaueiLhjANJNkGYq4ayZvkf+tZhuglkWjZadUv+oYVVUWcW
+dD8bzYwhok8l3ChtB5Kd8455aM9uPvMbjv++UbDAHP73L1IEuU3I4pvGEt3+mhmG
+HMKdFKboVp1auLUlgnNjylt1lb4jG7OJfs0TjJA/v8HoaJPWq6guaD5v+vIoVgCB
+PXTjIiLo9GpaXJiAGnlZLPisQlt9Y0pvyj8dLAeiS/k8ZtXsIEehZs4pIUhIdDzV
+h8pzF3R/Zh0WEcFte0RVbbhSaGyDFrJK5uc0eNqCC+a4OTYhVi0=
+=qqM5
 -----END PGP SIGNATURE-----
 
---xHFwDpU9dbj6ez1V--
+--ibTvN161/egqYuK8--
