@@ -2,117 +2,161 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F16C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33BBC06514
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EFE216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791CA21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/u6QSi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfGDGp1 (ORCPT
+        id S1727247AbfGDGqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:45:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23206 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726267AbfGDGp0 (ORCPT
+        Thu, 4 Jul 2019 02:46:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41059 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfGDGqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:45:26 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x646gQDt063667
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 02:45:26 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tha4dmgf8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:45:25 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Thu, 4 Jul 2019 07:45:24 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 07:45:19 +0100
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x646jIW138338826
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 06:45:18 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3404AC06B;
-        Thu,  4 Jul 2019 06:45:17 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4321AAC05B;
-        Thu,  4 Jul 2019 06:45:11 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.146.222])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu,  4 Jul 2019 06:45:10 +0000 (GMT)
-References: <20190628021934.4260-1-bauerman@linux.ibm.com> <1561991934.4067.17.camel@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v12 00/11] Appended signatures support for IMA appraisal
-In-reply-to: <1561991934.4067.17.camel@linux.ibm.com>
-Date:   Thu, 04 Jul 2019 03:45:07 -0300
+        Thu, 4 Jul 2019 02:46:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so2457042pff.8;
+        Wed, 03 Jul 2019 23:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=7u3j/qlpuiMl7q0crcwHK5qvOp5dbyAVCcaxQlei5BY=;
+        b=d/u6QSi/W+Hep7xnLOkGy1zQzus/xm9kmEi9zJteGC+By7PW4KjgQWcSHcyR+Ga6ql
+         I8H3C5il13o4RAUqeRGoK6OzmIU63054kYPrcXXtpL7MbrWqdhKClhb5jCqiwIXAnKay
+         XKaHDrWkk/bpKY3G54zKktlypLL1MgPOfQyFt93BtOdisfS31RODJIyEVHuTDiyPKhlZ
+         xsrvAiVLNtXgqk767s8NWPBwfZxUgYq5fI0z+FEn+0ZyDskl7UbQM5AROxEpw+KH5Wc9
+         AjMtSRwBN+MCLdDP9DONVwz54+Sjj5YB5NJZh3//3UFZ7/ViVX8/BcYA4v54LWpZat3j
+         ZlPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=7u3j/qlpuiMl7q0crcwHK5qvOp5dbyAVCcaxQlei5BY=;
+        b=JjAOsTuy6i9iPhyFOYrEjufTHVwfr6Kn9hy3NImUnXngTVAvTIdCMFrqXTP/MGRlHJ
+         Xb9BtnrAesMI6l5WKEukPsGX+d7B1dadug/TeoxVzYXoLYeyG4wXg2ToDWKO8yU0kLly
+         Tn/3ZemZZ3DVOdG/EMAeChCIkPvafsLTznC4RjIkDVappS5vsVdsW6WFkbl9dlaazR78
+         uEokP6CDLtRuG/Fb1XR5R+S9bPhlpJqcjLEx9mjfLVdDhZ4xjn9CtVC2MVM+xll0BmPt
+         OJCKnPChdWOQMJdADbO4igYGSDaLZ7MHNCjT0Ql8G9c9qOd7cMrkd0nQ47Q0gxvKWnRB
+         wxpg==
+X-Gm-Message-State: APjAAAX5eDuH+7KAHbD7iwAhI0/pumb1uNUZSkPlg/erai10bpI1mQVn
+        mN2ByIDjCOm1WxdJRJoaU8A=
+X-Google-Smtp-Source: APXvYqy/s0Ljvqpnt4JWFhbvPuiQt4Q13IXhAAOtCo9uJyfuMIBmYhhpcuhs0o6/ztVpgX4DicG89w==
+X-Received: by 2002:a63:2b8e:: with SMTP id r136mr13258143pgr.216.1562222781277;
+        Wed, 03 Jul 2019 23:46:21 -0700 (PDT)
+Received: from [0.0.0.0] ([80.240.31.150])
+        by smtp.gmail.com with ESMTPSA id z20sm8169915pfk.72.2019.07.03.23.46.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jul 2019 23:46:20 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 2/3] arm64: mark all the GICC nodes in MADT as
+ possible cpu
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, james.morse@arm.com
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com,
+        xiexiuqi@huawei.com, huawei.libin@huawei.com,
+        john.garry@huawei.com, jonathan.cameron@huawei.com
+References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1561776155-38975-3-git-send-email-wangxiongfeng2@huawei.com>
+From:   Jia He <jiakernel2@gmail.com>
+Organization: ARM
+Message-ID: <762be90e-7629-ab5e-4c2d-6566b100f2e5@gmail.com>
+Date:   Thu, 4 Jul 2019 14:46:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19070406-0064-0000-0000-000003F7088F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011376; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01227188; UDB=6.00646128; IPR=6.01008425;
- MB=3.00027580; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-04 06:45:23
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070406-0065-0000-0000-00003E225467
-Message-Id: <87k1cyl2mk.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=995 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040087
+In-Reply-To: <1561776155-38975-3-git-send-email-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Mimi Zohar <zohar@linux.ibm.com> writes:
-
-> On Thu, 2019-06-27 at 23:19 -0300, Thiago Jung Bauermann wrote:
->> Hello,
->> 
->> This version is essentially identical to the last one.
->> 
->> It is only a rebase on top of today's linux-integrity/next-queued-testing,
->> prompted by conflicts with Prakhar Srivastava's patches to measure the
->> kernel command line. It also drops two patches that are already present in
->> that branch.
+On 2019/6/29 10:42, Xiongfeng Wang wrote:
+> We set 'cpu_possible_mask' based on the enabled GICC node in MADT. If
+> the GICC node is disabled, we will skip initializing the kernel data
+> structure for that CPU.
 >
-> Thanks, Thiago.  These patches are now in next-queued-testing waiting
-> for some additional reviews/acks.
+> To support CPU hotplug, we need to initialize some CPU related data
+> structure in advance. This patch mark all the GICC nodes as possible CPU
+> and only these enabled GICC nodes as present CPU.
+>
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>   arch/arm64/kernel/setup.c |  2 +-
+>   arch/arm64/kernel/smp.c   | 11 +++++------
+>   2 files changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 7e541f9..7f4d12a 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -359,7 +359,7 @@ static int __init topology_init(void)
+>   	for_each_online_node(i)
+>   		register_one_node(i);
+>   
+> -	for_each_possible_cpu(i) {
+> +	for_each_online_cpu(i) {
 
-Thank you very much, Mimi! Now I think I'm only missing acks for the
-PKCS#7 changes in patches 2 and 3, and an ack for the s390 changes in
-patch 1.
+Have you considered the case in non-acpi mode? and setting "maxcpus=n" in host 
+kernel boot
+
+parameters?
+
+---
+Cheers,
+Justin (Jia He)
+
+
+>   		struct cpu *cpu = &per_cpu(cpu_data.cpu, i);
+>   		cpu->hotpluggable = 1;
+>   		register_cpu(cpu, i);
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 6dcf960..6d9983c 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -525,16 +525,14 @@ struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu)
+>   {
+>   	u64 hwid = processor->arm_mpidr;
+>   
+> -	if (!(processor->flags & ACPI_MADT_ENABLED)) {
+> -		pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
+> -		return;
+> -	}
+> -
+>   	if (hwid & ~MPIDR_HWID_BITMASK || hwid == INVALID_HWID) {
+>   		pr_err("skipping CPU entry with invalid MPIDR 0x%llx\n", hwid);
+>   		return;
+>   	}
+>   
+> +	if (!(processor->flags & ACPI_MADT_ENABLED))
+> +		pr_debug("disabled CPU entry with 0x%llx MPIDR\n", hwid);
+> +
+>   	if (is_mpidr_duplicate(cpu_count, hwid)) {
+>   		pr_err("duplicate CPU MPIDR 0x%llx in MADT\n", hwid);
+>   		return;
+> @@ -755,7 +753,8 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>   		if (err)
+>   			continue;
+>   
+> -		set_cpu_present(cpu, true);
+> +		if ((cpu_madt_gicc[cpu].flags & ACPI_MADT_ENABLED))
+> +			set_cpu_present(cpu, true);
+>   		numa_store_cpu_info(cpu);
+>   	}
+>   }
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
 
