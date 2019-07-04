@@ -6,109 +6,136 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BD1C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1CC06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEFE21852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDD821852
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBtS+Uj8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iYkf0pBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfGDJsj (ORCPT
+        id S1727516AbfGDJtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:48:39 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38763 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727536AbfGDJsi (ORCPT
+        Thu, 4 Jul 2019 05:49:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39383 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbfGDJto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:48:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y15so2701816pfn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:48:37 -0700 (PDT)
+        Thu, 4 Jul 2019 05:49:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so5893644wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=2UH5tf6umNqbdP3ijV0rfOnwSncCADAiCEkGZp99PCQ=;
-        b=GBtS+Uj8Hlp0uUy+wKTCbJgr2FSZRMznVubXFu1V8nEptW7531bQA/wGb8lvEi9OH0
-         Pn+xCtWBAtS0Ex73eTusZH/Zc/HjWpDeqoZtqnBW1CaZ2JYRNrnZW7KIJ54F1I8ia3H9
-         eYcGDweTwkAu3HORZ5om6jY1qlBZjBj2h9yyPHWRkSn7rbQSH3RUTgs2mTezjhMMvVjh
-         ZbvENwM8/O3fxJkPs4HXRdHmt+TafkVThlZNRAMZWcjp0n8a44QN2w/SqW/B/IGz+BmU
-         yeR6ToQrIOowdxRMM2lNeGsFM8+CAw907XrhbIpeF4JAmvzDDM2ytzc2oie86ZdRCMIu
-         qplA==
+        bh=1MIoOEOe3L5d36m+qCZDoY0pkUg2eAP10ETnUDXURVc=;
+        b=iYkf0pBbjyD/sMU9ZtotVTX8Nj3cxIR2B5uXK1I26edqdDIxfXtqMM59ghJg2dKRJf
+         5aUq/96A4mUDW94U1nSMqrDgpoVn6wHpHG4JeDahR0ZMZaUrHDM60OfM2ag/mOjBUISZ
+         +SBU3xRW4w5b3mqiRLbRkDPrnnb76hXhE6Ws0ji6YEGq03He/KDmekfES9DVyOOanIY6
+         uj0sXT+pBLWaO1l+JNM6YUPPc2/h2BEv8sS1W55F0ApXfa/KjiWU2f9pW3TC1OrPA2do
+         Zv63DV6YqCF6lsGu2AOSHyYrxEMWGL/jgNvxIng+3iToCFCjiJxumk5HCrkaF3w1Iksw
+         WhNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2UH5tf6umNqbdP3ijV0rfOnwSncCADAiCEkGZp99PCQ=;
-        b=DrQyGahi/VUQpuG8BWftTuBqUVBlGod9B5wTIZkjGdEso52botnCFn+Hpc1ViQrQtL
-         i60cs2udrmamjBuVTDskyNRVQk+qko5hEZMuOiD5SeXj0qIHzmadHUHIbPhztu4ysHF1
-         H+tofm+vLRAW/tff/Ip+4DRIprgpHyKwqrQ9dawdLh6iW0eOdnp1kl3u+thh3p54fVFZ
-         nTsZN66UthG0ptzQQxc667oW9Y0FpDIfyJJ9PjnlDxlMo7OStHoxxjCFNlBESup8bkVr
-         RSdq+JKxoQVEZxoHvQYWK1W2rM6yj1MNDp0KmSBzFIrpT7bvl8E0jznfR3aoNWIaZTYi
-         EyaQ==
-X-Gm-Message-State: APjAAAWfghpmZIx/D5bktWmd/E4lUG7HvGNEYAdfKz3lq4+YIu/yfCRi
-        Jdu7nfEMIw0xA0TeoR0pzKhgWGzJQEc=
-X-Google-Smtp-Source: APXvYqxFAAuQJcoa7vbQx68PaSBO5/fAqpVUsa5FLCOaDp29oElUH+Z7Fp975zsUXBWgRrcfoBh7Hw==
-X-Received: by 2002:a17:90a:22aa:: with SMTP id s39mr18578430pjc.39.1562233717450;
-        Thu, 04 Jul 2019 02:48:37 -0700 (PDT)
-Received: from localhost ([122.172.21.205])
-        by smtp.gmail.com with ESMTPSA id b1sm5188127pfi.91.2019.07.04.02.48.36
+        bh=1MIoOEOe3L5d36m+qCZDoY0pkUg2eAP10ETnUDXURVc=;
+        b=o5K2x8UgsfE0LT2MEcCDABuBUruIldzwDMbZJFEywJvKJ2q6dfeIxuv1AL6FXtRk3F
+         BITtKxUkIhvjkEPwvomH+Pbn+/X+Li3+QLH05ogyGKVj5kz5VtAYctdmtTJmxd1gMyWX
+         GupB+LUHM0S+0abY3VON2E1Dvw85Lhblu4TO9FW7a4+/zoWngEDTbNsAWyMfImEjq/kW
+         MBb6EsmxWqAd2xthfIDbsVZys/GR+NS0hZGKzqa67mgts12UZiN7kmp0YsgxBK9rhiyC
+         VlOuSt3ZACpPik4pOkQiNBP3+siUS+8BBbcQ+Jaz1dcoF+5kdGFy4Bd7VKVcVSWtETGR
+         OmtQ==
+X-Gm-Message-State: APjAAAUOfiyObUfctVqxRhRcdUg70lGb+R8BQT6Za+v4RK9L+B7lmqaS
+        ukJzY1EwC2wFkckXnLW+3CN73Q==
+X-Google-Smtp-Source: APXvYqxcLaXdXgLAL6JPh0AW/8TU+NXoREQxcAVjjr+ZeZjYaPbS9BIb6pMHKdkLw2iT6OLr+lLjIA==
+X-Received: by 2002:adf:db12:: with SMTP id s18mr32305455wri.335.1562233782623;
+        Thu, 04 Jul 2019 02:49:42 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id y16sm4796099wru.28.2019.07.04.02.49.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 02:48:36 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 15:18:34 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: linux-next: build failure after merge of the pm tree
-Message-ID: <20190704094834.xbfjvdmly6maw75b@vireshk-i7>
-References: <20190704194114.086d6a17@canb.auug.org.au>
+        Thu, 04 Jul 2019 02:49:41 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 12:49:38 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v6 net-next 5/5] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190704094938.GA27382@apalos>
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+ <20190703101903.8411-6-ivan.khoronzhuk@linaro.org>
+ <20190704111939.5d845071@carbon>
+ <20190704093902.GA26927@apalos>
+ <20190704094329.GA19839@khorivan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704194114.086d6a17@canb.auug.org.au>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190704094329.GA19839@khorivan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-07-19, 19:41, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the pm tree, today's linux-next build (x86_64 allnoconfig)
-> failed like this:
-> 
-> In file included from kernel/power/qos.c:33:
-> include/linux/pm_qos.h: In function 'dev_pm_qos_read_value':
-> include/linux/pm_qos.h:205:9: error: expected '(' before 'type'
->   switch type {
->          ^~~~
->          (
-> include/linux/pm_qos.h:205:9: warning: statement with no effect [-Wunused-value]
->   switch type {
->          ^~~~
-> include/linux/pm_qos.h:216:1: warning: no return statement in function returning non-void [-Wreturn-type]
->  }
->  ^
-> include/linux/pm_qos.h: At top level:
-> include/linux/pm_qos.h:231:4: error: expected identifier or '(' before '{' token
->     { return 0; }
->     ^
-> In file included from kernel/power/qos.c:33:
-> include/linux/pm_qos.h:228:19: warning: 'dev_pm_qos_add_notifier' declared 'static' but never defined [-Wunused-function]
->  static inline int dev_pm_qos_add_notifier(struct device *dev,
->                    ^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Caused by commits
-> 
->   024a47a2732d ("PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()")
->   57fa6137402b ("PM / QOS: Pass request type to dev_pm_qos_read_value()")
+On Thu, Jul 04, 2019 at 12:43:30PM +0300, Ivan Khoronzhuk wrote:
+> On Thu, Jul 04, 2019 at 12:39:02PM +0300, Ilias Apalodimas wrote:
+> >On Thu, Jul 04, 2019 at 11:19:39AM +0200, Jesper Dangaard Brouer wrote:
+> >>On Wed,  3 Jul 2019 13:19:03 +0300
+> >>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+> >>
+> >>> Add XDP support based on rx page_pool allocator, one frame per page.
+> >>> Page pool allocator is used with assumption that only one rx_handler
+> >>> is running simultaneously. DMA map/unmap is reused from page pool
+> >>> despite there is no need to map whole page.
+> >>>
+> >>> Due to specific of cpsw, the same TX/RX handler can be used by 2
+> >>> network devices, so special fields in buffer are added to identify
+> >>> an interface the frame is destined to. Thus XDP works for both
+> >>> interfaces, that allows to test xdp redirect between two interfaces
+> >>> easily. Aslo, each rx queue have own page pools, but common for both
+> >>> netdevs.
+> >>>
+> >>> XDP prog is common for all channels till appropriate changes are added
+> >>> in XDP infrastructure. Also, once page_pool recycling becomes part of
+> >>> skb netstack some simplifications can be added, like removing
+> >>> page_pool_release_page() before skb receive.
+> >>>
+> >>> In order to keep rx_dev while redirect, that can be somehow used in
+> >>> future, do flush in rx_handler, that allows to keep rx dev the same
+> >>> while reidrect. It allows to conform with tracing rx_dev pointed
+> >>> by Jesper.
+> >>
+> >>So, you simply call xdp_do_flush_map() after each xdp_do_redirect().
+> >>It will kill RX-bulk and performance, but I guess it will work.
+> >>
+> >>I guess, we can optimized it later, by e.g. in function calling
+> >>cpsw_run_xdp() have a variable that detect if net_device changed
+> >>(priv->ndev) and then call xdp_do_flush_map() when needed.
+> >I tried something similar on the netsec driver on my initial development.
+> >On the 1gbit speed NICs i saw no difference between flushing per packet vs
+> >flushing on the end of the NAPI handler.
+> >The latter is obviously better but since the performance impact is negligible on
+> >this particular NIC, i don't think this should be a blocker.
+> >Please add a clear comment on this and why you do that on this driver,
+> >so people won't go ahead and copy/paste this approach
+> Sry, but I did this already, is it not enouph?
+The flush *must* happen there to avoid messing the following layers. The comment
+says something like 'just to be sure'. It's not something that might break, it's
+something that *will* break the code and i don't think that's clear with the
+current comment.
 
-Yeah, I have already sent the replacement patchset to Rafael.
+So i'd prefer something like 
+'We must flush here, per packet, instead of doing it in bulk at the end of
+the napi handler.The RX devices on this particular hardware is sharing a
+common queue, so the incoming device might change per packet'
 
--- 
-viresh
+
+Thanks
+/Ilias
+> 
+> -- 
+> Regards,
+> Ivan Khoronzhuk
