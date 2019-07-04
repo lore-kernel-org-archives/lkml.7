@@ -2,150 +2,254 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D0FC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48470C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002C2218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:31:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OL1OYGMI";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="WX+XOIAI"
+	by mail.kernel.org (Postfix) with ESMTP id 11575218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562257980;
+	bh=1VSPrCG5g+SemXBbZN2ZTL/fb0YLG30gRoIbYrAEUN0=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=sO5gFqzfkUZff/wZBSWlEUee6o1NCRxrwxLMkLmRzdtO141hF+1ukd3KifBuWgMKm
+	 AS3eN6oXrOyKsYz9NCFogkuRKQHomkNcoUObWfTnuetNttiFtHUb6ffJfenrUPFbz4
+	 C+EyGCDKVXQJYO0FzoMq08/g4E5MMOOrWYLsNv/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfGDQbz (ORCPT
+        id S1727276AbfGDQc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:31:55 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:61778 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbfGDQbz (ORCPT
+        Thu, 4 Jul 2019 12:32:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56582 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfGDQc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:31:55 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64GTrqE023703;
-        Thu, 4 Jul 2019 09:31:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=0K7zhy1hDxTeusOs2cxysOrqSKi6DuMYXg0c8E42mqQ=;
- b=OL1OYGMIQ33UROVcwQPzd/8wuyOzO47K6qV0Eae7NyTUzeGfcMJtk778HF3MaIUCgis/
- +OAj1jHk9eIm2W6qUl08mH9l/49DpzQWu5o5PssFnstY6yizwWWJzvtvoJ1DDYDjgNkC
- gRTgfFqHDqAEVONdcJAFbwHBKosgbwLZu5sdHCIGrw5jIcSuXYed7m3QnsunW6d7+kRY
- evmbODs+7vzHylYqO93JfaDykcZ0E5hbaDSnh4rp8/RTiUIddXUoA9vhh1NKW0hxtMpT
- JB3xkZ0eKIq5LsVf6LMn8BO6EcatAXHWi6OYn8G2aG0xaXYYRX6c1k+nq8kZq6/8AS62 Kw== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2thjyr8dy3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 09:31:41 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 4 Jul
- 2019 09:31:40 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.55) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 4 Jul 2019 09:31:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0K7zhy1hDxTeusOs2cxysOrqSKi6DuMYXg0c8E42mqQ=;
- b=WX+XOIAIqsfgP8Ifo2jsK1cOK4gA/TRt84xxoInNPYCFBVGQbhmN7ImxqIXPLe3/JI+4d3Z6b+ZA17WF7lnsjKom5iDAI3ZLRBmKzwBI2TOacIG+wS1McgJ0MVV6T+aSZfpOwtRcZ8KXKnWCXS0zR4DLVL3yKI0Aiv2YC6O9C+I=
-Received: from DM6PR18MB3051.namprd18.prod.outlook.com (20.179.48.144) by
- DM6PR18MB2521.namprd18.prod.outlook.com (20.179.105.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 4 Jul 2019 16:31:35 +0000
-Received: from DM6PR18MB3051.namprd18.prod.outlook.com
- ([fe80::9ce3:7d0a:4f56:fdcc]) by DM6PR18MB3051.namprd18.prod.outlook.com
- ([fe80::9ce3:7d0a:4f56:fdcc%7]) with mapi id 15.20.2052.010; Thu, 4 Jul 2019
- 16:31:34 +0000
-From:   Shijith Thotton <sthotton@marvell.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Julien Thierry <julien.thierry@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Jayachandran Chandrasekharan Nair" <jnair@marvell.com>,
-        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: Re: [PATCH] genirq: update irq stats from NMI handlers
-Thread-Topic: [PATCH] genirq: update irq stats from NMI handlers
-Thread-Index: AQHVMiAiVz/XkkYfRk2+vKGjBsT7x6a6C8+AgAA4f4CAAF/nAIAAA1oA
-Date:   Thu, 4 Jul 2019 16:31:34 +0000
-Message-ID: <47489142-b040-ec54-a1ac-46f0a8799ed9@marvell.com>
-References: <1562214115-14022-1-git-send-email-sthotton@marvell.com>
- <6adfb296-50f1-9efb-0840-cc8732b8ebf9@arm.com>
- <a4ce3800-22f4-72dc-6ff8-75dfed1c377b@marvell.com>
- <alpine.DEB.2.21.1907041818360.1802@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907041818360.1802@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR16CA0007.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::20) To DM6PR18MB3051.namprd18.prod.outlook.com
- (2603:10b6:5:162::16)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [199.233.59.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e0932164-297c-426b-2b16-08d7009d1418
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR18MB2521;
-x-ms-traffictypediagnostic: DM6PR18MB2521:
-x-microsoft-antispam-prvs: <DM6PR18MB252125BCE7C38C9FCEA6B0FFD9FA0@DM6PR18MB2521.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(6512007)(6116002)(3846002)(54906003)(76176011)(478600001)(52116002)(5660300002)(107886003)(31696002)(316002)(71190400001)(71200400001)(66066001)(68736007)(256004)(86362001)(6916009)(6506007)(186003)(53546011)(66556008)(6486002)(8936002)(14454004)(31686004)(102836004)(26005)(25786009)(2616005)(476003)(11346002)(6436002)(386003)(4326008)(486006)(2906002)(53936002)(81156014)(81166006)(66946007)(73956011)(99286004)(229853002)(66446008)(305945005)(7736002)(8676002)(64756008)(66476007)(36756003)(446003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR18MB2521;H:DM6PR18MB3051.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yXo/dwHyipo9yJUn5lD7eZqP5+Dk7a/E5Ti4rxDw81lLejNjDgohXcZhcDkh6df6rRvQztAWBTqso3/AGvQZ5PFWDneC9GTYq78qTQ2WmBYe4HASQmOuXEkt9yY7dK3TZ+OhK506s+brVZnWPtFxHIWGgvzpAZjWo154xsa+KtWi+OJWGPONShxLZszRq9OjxFOoyTcVdoLxdf6Cfndv3JYZ0/gI4kp1h1YYoUruJixQvDwEy4EvlBtRBW+XroJ4C1IOU7KUdIlfGNVqb2iyP0v5UBCTxawHwN+IY2f8suV6hJrhuQDu/QC7O4fm4hOYAQz99d4DF5MiZ5Vm1gLE1agqyoEarn/DeO60MqAulp1OZ1ZL0z36ukDBw1uWBYFc0PEgMq/ZC3RtllLGnrQR/rJrMnxAtwXUrsVUvXgq62A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FA60FF3073271D4E8421B16481D26CB5@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0932164-297c-426b-2b16-08d7009d1418
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 16:31:34.7185
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sthotton@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB2521
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_07:,,
- signatures=0
+        Thu, 4 Jul 2019 12:32:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=1AIFQaA/yGya6PgQ4uo+dPDqJJntVtbtF2QXpwMlyKI=; b=LmPDO7LwQOJE
+        INd866FxaGz7Lpe+YKfQBO/smqq+XHtYHkcos3TIKdo81n9gjrT0Y9SXsu/fVPLixJggtfRmCVq/J
+        5d0qZU7RVrgTtAizsQezpJ9UXJcrnOHSWML3e8UEEUXYn267gq+oZzUNZbMOdlKbqjrd4qnNF3YP/
+        SPcv0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hj4fH-0001Hb-S2; Thu, 04 Jul 2019 16:32:55 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id EDDB027430B0; Thu,  4 Jul 2019 17:32:54 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: max77650: use vsel_step" to the regulator tree
+In-Reply-To: <20190703161035.31808-3-brgl@bgdev.pl>
+X-Patchwork-Hint: ignore
+Message-Id: <20190704163254.EDDB027430B0@ypsilon.sirena.org.uk>
+Date:   Thu,  4 Jul 2019 17:32:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDcvNC8xOSA5OjE5IEFNLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6DQo+IE9uIFRodSwg
-NCBKdWwgMjAxOSwgU2hpaml0aCBUaG90dG9uIHdyb3RlOg0KPj4gT24gNy80LzE5IDEyOjEzIEFN
-LCBKdWxpZW4gVGhpZXJyeSB3cm90ZToNCj4+PiBMb29raW5nIGF0IGhhbmRsZV9wZXJjcHVfaXJx
-KCksIEkgdGhpbmsgdGhpcyBtaWdodCBiZSBhY2NlcHRhYmxlLiBCdXQNCj4+PiBkb2VzIGl0IG1h
-a2Ugc2Vuc2UgdG8gb25seSBoYXZlIGtzdGF0cyBmb3IgcGVyY3B1IE5NSXM/DQo+Pj4NCj4+DQo+
-PiBJdCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSBzdGF0cyBmb3IgYm90aC4NCj4+DQo+PiBoYW5k
-bGVfZmFzdGVvaV9ubWkoKSBjYW4gdXNlIF9fa3N0YXRfaW5jcl9pcnFzX3RoaXNfY3B1KCkgaWYg
-YmVsb3cNCj4+IGNoYW5nZSBjYW4gYmUgYWRkZWQgdG8ga3N0YXRfaXJxc19jcHUoKS4NCj4+DQo+
-PiBkaWZmIC0tZ2l0IGEva2VybmVsL2lycS9pcnFkZXNjLmMgYi9rZXJuZWwvaXJxL2lycWRlc2Mu
-Yw0KPj4gaW5kZXggYTkyYjMzNTkzYjhkLi45NDg0ZTg4ZGFiYzIgMTAwNjQ0DQo+PiAtLS0gYS9r
-ZXJuZWwvaXJxL2lycWRlc2MuYw0KPj4gKysrIGIva2VybmVsL2lycS9pcnFkZXNjLmMNCj4+IEBA
-IC05NTAsNiArOTUwLDExIEBAIHVuc2lnbmVkIGludCBrc3RhdF9pcnFzX2NwdSh1bnNpZ25lZCBp
-bnQgaXJxLCBpbnQgY3B1KQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAqcGVyX2NwdV9w
-dHIoZGVzYy0+a3N0YXRfaXJxcywgY3B1KSA6IDA7DQo+PiAgICB9DQo+Pg0KPj4gK3N0YXRpYyBi
-b29sIGlycV9pc19ubWkoc3RydWN0IGlycV9kZXNjICpkZXNjKQ0KPj4gK3sNCj4+ICsgICAgICAg
-cmV0dXJuIGRlc2MtPmlzdGF0ZSAmIElSUVNfTk1JOw0KPj4gK30NCj4+ICsNCj4+ICAgIC8qKg0K
-Pj4gICAgICoga3N0YXRfaXJxcyAtIEdldCB0aGUgc3RhdGlzdGljcyBmb3IgYW4gaW50ZXJydXB0
-DQo+PiAgICAgKiBAaXJxOiAgICAgICBUaGUgaW50ZXJydXB0IG51bWJlcg0KPj4gQEAgLTk2Nyw3
-ICs5NzIsOCBAQCB1bnNpZ25lZCBpbnQga3N0YXRfaXJxcyh1bnNpZ25lZCBpbnQgaXJxKQ0KPj4g
-ICAgICAgICAgIGlmICghZGVzYyB8fCAhZGVzYy0+a3N0YXRfaXJxcykNCj4+ICAgICAgICAgICAg
-ICAgICAgIHJldHVybiAwOw0KPj4gICAgICAgICAgIGlmICghaXJxX3NldHRpbmdzX2lzX3Blcl9j
-cHVfZGV2aWQoZGVzYykgJiYNCj4+IC0gICAgICAgICAgICFpcnFfc2V0dGluZ3NfaXNfcGVyX2Nw
-dShkZXNjKSkNCj4+ICsgICAgICAgICAgICFpcnFfc2V0dGluZ3NfaXNfcGVyX2NwdShkZXNjKSAm
-Jg0KPj4gKyAgICAgICAgICAgIWlycV9pc19ubWkoZGVzYykpDQo+PiAgICAgICAgICAgICAgIHJl
-dHVybiBkZXNjLT50b3RfY291bnQ7DQo+Pg0KPj4gICAgICAgICAgIGZvcl9lYWNoX3Bvc3NpYmxl
-X2NwdShjcHUpDQo+Pg0KPj4NCj4+IFRob21hcywNCj4+IFBsZWFzZSBzdWdnZXN0IGEgYmV0dGVy
-IHdheSBpZiBhbnkuDQo+IA0KPiBMb29rcyBnb29kLg0KPiANCg0KVGhhbmtzIFRob21hcy4gV2ls
-bCBzaGFyZSB2MiB3aXRoIHRoZSBjaGFuZ2VzLg0KDQpUaGFua3MsDQpTaGlqaXRoDQo=
+The patch
+
+   regulator: max77650: use vsel_step
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 3c7577d442a76c2015dd765497395fb394b78051 Mon Sep 17 00:00:00 2001
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date: Wed, 3 Jul 2019 18:10:35 +0200
+Subject: [PATCH] regulator: max77650: use vsel_step
+
+Use the new vsel_step field in the regulator description to instruct
+the regulator API on the required voltage ramping. Switch to using the
+generic regmap helpers for voltage setting and remove the old set_voltage
+callback that handcoded the selector stepping.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Link: https://lore.kernel.org/r/20190703161035.31808-3-brgl@bgdev.pl
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/max77650-regulator.c | 73 ++++----------------------
+ 1 file changed, 9 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/regulator/max77650-regulator.c b/drivers/regulator/max77650-regulator.c
+index b79fe93c8edb..e57fc9197d62 100644
+--- a/drivers/regulator/max77650-regulator.c
++++ b/drivers/regulator/max77650-regulator.c
+@@ -108,67 +108,6 @@ static int max77650_regulator_disable(struct regulator_dev *rdev)
+ 				  MAX77650_REGULATOR_DISABLED);
+ }
+ 
+-static int max77650_regulator_set_voltage_sel(struct regulator_dev *rdev,
+-					      unsigned int sel)
+-{
+-	struct max77650_regulator_desc *rdesc = rdev_get_drvdata(rdev);
+-	int rv = 0, curr, diff;
+-	bool ascending;
+-
+-	/*
+-	 * If the regulator is disabled, we can program the desired
+-	 * voltage right away.
+-	 */
+-	if (!max77650_regulator_is_enabled(rdev)) {
+-		if (rdesc == &max77651_SBB1_desc)
+-			return regulator_set_voltage_sel_pickable_regmap(rdev,
+-									 sel);
+-		else
+-			return regulator_set_voltage_sel_regmap(rdev, sel);
+-	}
+-
+-	/*
+-	 * Otherwise we need to manually ramp the output voltage up/down
+-	 * one step at a time.
+-	 */
+-
+-	if (rdesc == &max77651_SBB1_desc)
+-		curr = regulator_get_voltage_sel_pickable_regmap(rdev);
+-	else
+-		curr = regulator_get_voltage_sel_regmap(rdev);
+-
+-	if (curr < 0)
+-		return curr;
+-
+-	diff = curr - sel;
+-	if (diff == 0)
+-		return 0; /* Already there. */
+-	else if (diff > 0)
+-		ascending = false;
+-	else
+-		ascending = true;
+-
+-	/*
+-	 * Make sure we'll get to the right voltage and break the loop even if
+-	 * the selector equals 0.
+-	 */
+-	for (ascending ? curr++ : curr--;; ascending ? curr++ : curr--) {
+-		if (rdesc == &max77651_SBB1_desc)
+-			rv = regulator_set_voltage_sel_pickable_regmap(rdev,
+-								       curr);
+-		else
+-			rv = regulator_set_voltage_sel_regmap(rdev, curr);
+-
+-		if (rv)
+-			return rv;
+-
+-		if (curr == sel)
+-			break;
+-	}
+-
+-	return 0;
+-}
+-
+ static const struct regulator_ops max77650_regulator_LDO_ops = {
+ 	.is_enabled		= max77650_regulator_is_enabled,
+ 	.enable			= max77650_regulator_enable,
+@@ -176,7 +115,7 @@ static const struct regulator_ops max77650_regulator_LDO_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+-	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.set_active_discharge	= regulator_set_active_discharge_regmap,
+ };
+ 
+@@ -187,7 +126,7 @@ static const struct regulator_ops max77650_regulator_SBB_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear,
+ 	.map_voltage		= regulator_map_voltage_linear,
+ 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+-	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.get_current_limit	= regulator_get_current_limit_regmap,
+ 	.set_current_limit	= regulator_set_current_limit_regmap,
+ 	.set_active_discharge	= regulator_set_active_discharge_regmap,
+@@ -200,7 +139,7 @@ static const struct regulator_ops max77651_SBB1_regulator_ops = {
+ 	.disable		= max77650_regulator_disable,
+ 	.list_voltage		= regulator_list_voltage_pickable_linear_range,
+ 	.get_voltage_sel	= regulator_get_voltage_sel_pickable_regmap,
+-	.set_voltage_sel	= max77650_regulator_set_voltage_sel,
++	.set_voltage_sel	= regulator_set_voltage_sel_pickable_regmap,
+ 	.get_current_limit	= regulator_get_current_limit_regmap,
+ 	.set_current_limit	= regulator_set_current_limit_regmap,
+ 	.set_active_discharge	= regulator_set_active_discharge_regmap,
+@@ -217,6 +156,7 @@ static struct max77650_regulator_desc max77650_LDO_desc = {
+ 		.min_uV			= 1350000,
+ 		.uV_step		= 12500,
+ 		.n_voltages		= 128,
++		.vsel_step		= 1,
+ 		.vsel_mask		= MAX77650_REGULATOR_V_LDO_MASK,
+ 		.vsel_reg		= MAX77650_REG_CNFG_LDO_A,
+ 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
+@@ -242,6 +182,7 @@ static struct max77650_regulator_desc max77650_SBB0_desc = {
+ 		.min_uV			= 800000,
+ 		.uV_step		= 25000,
+ 		.n_voltages		= 64,
++		.vsel_step		= 1,
+ 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
+ 		.vsel_reg		= MAX77650_REG_CNFG_SBB0_A,
+ 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
+@@ -271,6 +212,7 @@ static struct max77650_regulator_desc max77650_SBB1_desc = {
+ 		.min_uV			= 800000,
+ 		.uV_step		= 12500,
+ 		.n_voltages		= 64,
++		.vsel_step		= 1,
+ 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
+ 		.vsel_reg		= MAX77650_REG_CNFG_SBB1_A,
+ 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
+@@ -301,6 +243,7 @@ static struct max77650_regulator_desc max77651_SBB1_desc = {
+ 		.linear_ranges		= max77651_sbb1_volt_ranges,
+ 		.n_linear_ranges	= ARRAY_SIZE(max77651_sbb1_volt_ranges),
+ 		.n_voltages		= 58,
++		.vsel_step		= 1,
+ 		.vsel_range_mask	= MAX77651_REGULATOR_V_SBB1_RANGE_MASK,
+ 		.vsel_range_reg		= MAX77650_REG_CNFG_SBB1_A,
+ 		.vsel_mask		= MAX77651_REGULATOR_V_SBB1_MASK,
+@@ -332,6 +275,7 @@ static struct max77650_regulator_desc max77650_SBB2_desc = {
+ 		.min_uV			= 800000,
+ 		.uV_step		= 50000,
+ 		.n_voltages		= 64,
++		.vsel_step		= 1,
+ 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
+ 		.vsel_reg		= MAX77650_REG_CNFG_SBB2_A,
+ 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
+@@ -361,6 +305,7 @@ static struct max77650_regulator_desc max77651_SBB2_desc = {
+ 		.min_uV			= 2400000,
+ 		.uV_step		= 50000,
+ 		.n_voltages		= 64,
++		.vsel_step		= 1,
+ 		.vsel_mask		= MAX77650_REGULATOR_V_SBB_MASK,
+ 		.vsel_reg		= MAX77650_REG_CNFG_SBB2_A,
+ 		.active_discharge_off	= MAX77650_REGULATOR_AD_DISABLED,
+-- 
+2.20.1
+
