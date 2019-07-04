@@ -2,102 +2,118 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195E1C5B578
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A020C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CB62189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 02:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F92A2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 03:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl9EX14h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsYC2ozC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfGDC7O (ORCPT
+        id S1727253AbfGDDAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jul 2019 22:59:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36251 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGDC7N (ORCPT
+        Wed, 3 Jul 2019 23:00:30 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41273 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfGDDA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:59:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c13so2182388pgg.3;
-        Wed, 03 Jul 2019 19:59:13 -0700 (PDT)
+        Wed, 3 Jul 2019 23:00:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q4so2172421pgj.8;
+        Wed, 03 Jul 2019 20:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=cdGNxnCG0dRMJ1+NSl9LIvswxDirWPGLvHhxjBvgLBg=;
-        b=Bl9EX14hsyMh1TbRFVAEiPY0YsMGwRNJWb2jOLCWtq7VYUpc+Ql3X+vnTdwsTE1Mjj
-         Xw9R1qbJpqWcPybC7B/4RG5+d59sPyJCOZzCCxjhSDSApD/n6IPglHdt/fcT9ydtbEVg
-         ffSFi0Jj5aV7aIMjHpL1sAI1iE84I/CbvJSfZpn6rDAaWruQmzghG4LzCpXVd3PORL2Z
-         pNF0Sczh2Zjp5O8TRn+d/rAsHF/+bfpymK9A0HdTgKJoYO/lm5t/iebFplNiir/Rx5g9
-         7Z2JrMpPys+PhYLJ2Kky+19jH1ijK+GvCEP5DXD35+lJDXF/M2G6/4p2QTqoI09W2hXb
-         9AkQ==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=ulgkacOC9MVQoeI7C3VdBpGEpxQUJnlA06nqtcm87I8=;
+        b=DsYC2ozCdkMop+Za96eslk9BJsSKBWurQHezKCWW6geGoOfVIeuhxl4Sp5lHF39jBT
+         9jgWopa5+cFAjZU5L9ZpZVUj8FUFZQtcURCTsffBbsSNQzvDgi5kcMTLPuJZ8REmXb5D
+         r7/jyERNtwW5tfiNJA+QAlS3h0I0RVFUpeEBxJ57+MiQQZ69Di60oDmw2/e8H6IVntQK
+         ijkqibXJn6OXEIuqNhVn67kGhBLKwB1xJqUxmOkmGjwq63eDwaGHpSPR2vXOwWKGEU1d
+         wIc+Cx7ljseODdcbgFRO0t7bqtYTHfj7kz3Glp4peMDNx+oeX262DOzZLrPM1j8XIfoC
+         M73A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=cdGNxnCG0dRMJ1+NSl9LIvswxDirWPGLvHhxjBvgLBg=;
-        b=IKZuZeCvr39NJOK62Bu748wVj6nlM9BXRf5IDzbhzcZImxheDjiLBOy+Dt1iXcFU0f
-         VlVo9JXfnfg2XhulwyAGqVOBHLqKAr6nyEFQcy0sF1RIZak9+YMnENsY6b0w5yTr0AQf
-         l47vE/vNFa+2JrGI3JMIPHfe83GpbqkJqrAm/zDOtc8JN6SsDN0GGYaNp8sSrLM7xDZY
-         rxJIqx9Jb+js101TxEicU7aXzJ+AewevhS7KfG8nTtq6mVTOAe3zDOlkHPvUM2ZKgcsw
-         m95flLL+xQKEkNk2mR37px6oebq3OmV0f4CyGM4IzctbL1h+T3b71ulj0R71BaOFtO5b
-         fYog==
-X-Gm-Message-State: APjAAAXLxKGTIj5miWSKjwUBEM7yQbaJA6eCT88fHKWFrPOTy0L413yE
-        Mp6wwfoVo8aUkJWIe0nSRCo=
-X-Google-Smtp-Source: APXvYqwY4iu+EFJOXIvAaE4uZFsF5WtzhQD09WQtvm68YZFKudL5xQwT7dxwcZl7ElVVmQ6BOF4glQ==
-X-Received: by 2002:a17:90b:d82:: with SMTP id bg2mr16831319pjb.87.1562209153111;
-        Wed, 03 Jul 2019 19:59:13 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id i36sm3472199pgl.70.2019.07.03.19.59.09
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=ulgkacOC9MVQoeI7C3VdBpGEpxQUJnlA06nqtcm87I8=;
+        b=LT3GislaB48qPiWylvQQAxvSd5j4spZThCZ8/JWRD7BaHjIdPUsD7zYL5V9FOvrg5n
+         VPZiICGfUln5FlKZJKRSwSjsJ0uAPeuwdWvv6thp8Yb/GwMKpVhrxkpFC0N2nUZhey9o
+         AM5dAhfRctmfsmpH29cBtJlYMXNbJWfbAAe466TznIPsysoWLrQANNArykfN2IADawj0
+         VdjqIvCzdMlf0KP1j5Sd6LlK5p8gv2SzhjMLw0y9vj4pAp76ymcav2q2kYu8d+8+/WlR
+         iKIzKg3EbLRCvwtC0f6KfZl3XTxd+Tw87nNLyQW0O9yJxJX6aXVB/1AvHKmTervUGLmb
+         /LtQ==
+X-Gm-Message-State: APjAAAXF3zxHSSMrlhc+bCSW1Th0J+4bqWzR0u8XyYrlThlF9HK1cjW0
+        BeVDJpKOM4SNOFs+oyK/MBo=
+X-Google-Smtp-Source: APXvYqwFIuhyG5fIhnFFFWROZCNEDtg0pyhsJMvdB6pyvQ5FrQPtPEQhiWU5qPE4sfConRMZZRdUMg==
+X-Received: by 2002:a63:6986:: with SMTP id e128mr42386432pgc.220.1562209228925;
+        Wed, 03 Jul 2019 20:00:28 -0700 (PDT)
+Received: from [0.0.0.0] ([80.240.31.150])
+        by smtp.gmail.com with ESMTPSA id z13sm3247183pjn.32.2019.07.03.20.00.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jul 2019 19:59:12 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 08:29:06 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ethernet: allwinner: Remove unneeded memset
-Message-ID: <20190704025906.GA20005@hari-Inspiron-1545>
+        Wed, 03 Jul 2019 20:00:27 -0700 (PDT)
+Subject: Re: [PATCH RFC 0/3] Support CPU hotplug for ARM64
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, james.morse@arm.com
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com,
+        xiexiuqi@huawei.com, huawei.libin@huawei.com,
+        john.garry@huawei.com, jonathan.cameron@huawei.com
+References: <1561720392-45907-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   Jia He <hejianet@gmail.com>
+Organization: ARM
+Message-ID: <2b22cf4d-9646-9f20-41ae-cceb83d9791b@gmail.com>
+Date:   Thu, 4 Jul 2019 11:00:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1561720392-45907-1-git-send-email-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded memset as alloc_etherdev is using kvzalloc which uses
-__GFP_ZERO flag
+Hi Xiongfeng
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+It is a little bit awkful that I am also  investigating acpi based cpu hotplug 
+issue silimar with
+
+your idea. My question is your purpose to implement the vcpu hotplug in arm64 qemu?
+
+Thanks for the ellaboration
+
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 1 -
- 1 file changed, 1 deletion(-)
+Cheers,
+Justin (Jia He)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 9e06dff..6253e5e 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -818,7 +818,6 @@ static int emac_probe(struct platform_device *pdev)
- 	SET_NETDEV_DEV(ndev, &pdev->dev);
- 
- 	db = netdev_priv(ndev);
--	memset(db, 0, sizeof(*db));
- 
- 	db->dev = &pdev->dev;
- 	db->ndev = ndev;
--- 
-2.7.4
-
+On 2019/6/28 19:13, Xiongfeng Wang wrote:
+> This patchset mark all the GICC node in MADT as possible CPUs even though it
+> is disabled. But only those enabled GICC node are marked as present CPUs.
+> So that kernel will initialize some CPU related data structure in advance before
+> the CPU is actually hot added into the system. This patchset also implement
+> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
+> needed to enable CPU hotplug.
+>
+> To support CPU hotplug, we need to add all the possible GICC node in MADT
+> including those CPUs that are not present but may be hot added later. Those
+> CPUs are marked as disabled in GICC nodes.
+>
+> Xiongfeng Wang (3):
+>    ACPI / scan: evaluate _STA for processors declared via ASL Device
+>      statement
+>    arm64: mark all the GICC nodes in MADT as possible cpu
+>    arm64: Add CPU hotplug support
+>
+>   arch/arm64/kernel/acpi.c  | 22 ++++++++++++++++++++++
+>   arch/arm64/kernel/setup.c | 19 ++++++++++++++++++-
+>   arch/arm64/kernel/smp.c   | 11 +++++------
+>   drivers/acpi/scan.c       | 12 ++++++++++++
+>   4 files changed, 57 insertions(+), 7 deletions(-)
+>
