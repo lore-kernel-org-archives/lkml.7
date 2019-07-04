@@ -2,138 +2,109 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425D0C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CBC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D07D21670
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E05218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 18:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMNxVsXi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koAL6oSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGDSa7 (ORCPT
+        id S1727159AbfGDSef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 14:30:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41184 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGDSa6 (ORCPT
+        Thu, 4 Jul 2019 14:34:35 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45689 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDSef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 14:30:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so3243101pff.8;
-        Thu, 04 Jul 2019 11:30:58 -0700 (PDT)
+        Thu, 4 Jul 2019 14:34:35 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m206so5484699oib.12;
+        Thu, 04 Jul 2019 11:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=paC7XP+MGJ6PoJ3R2NPttyVKxGnJcIpnnAdo5a1VLqY=;
-        b=qMNxVsXijxwND/UqXJfqS/oBGWHUropl/OwukheuI3W9d4410d+JFkE8WJWOs+4Ypw
-         xToWI/ux1Jb2V+a2NKnXh57QNIfY8/QpRGuM63hustZvo/zhiRLvrFKRLFll9WPIz2en
-         KOTmUDz2BYdkXZ3S58VzcJSwk6le1uXydU/P5/0Px3RAnKTZQc55Ak2dms5A5eXQ/OZJ
-         Z1Q0px6hbTX/meC+0yivTVX1MqkahnVgtBsDreWxS6NfVIUz4QxnOWWKH5mTmaa6NC7P
-         1Exx1xj82bJu2lAccKgoz9bYazeEQj0u5UTHx2/rSmM1p5sLOaYFQVgb3Kv0XsMDcfMJ
-         zTOg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fwqlPWLgtWbam3S8PbEk2DL4IkYoPJjyq8Eby5PvYJs=;
+        b=koAL6oSvGwR8rO0HfCPdKDRa7eF6Kb7VQRlYLZnMUXFD1qEKJmLQREJVGrb/3GN5DF
+         Wr9RCs68zdQN6/UteMzhYEBV1F+qKF48gORJPlqqSZ+A+YS++U7R2T6pKHmrx7ZyCy46
+         AyKqpsRWL3B6zYiwxRHMyTc6PEJq1KrQtiDbzcJvubVXP8LQzn01bYk+Mjat0my+C8Vl
+         Q/Du1iaCJPiMsulRD+K09oqdZNF86E3eSVc/NFaDyThrzTOsXtgUoCRVsrkq/z1vdmKh
+         DclroLpyvSCbbN28DD5f62lDziuxYwsTtWsv8iB7kQTKQ4GHsNQnaKT7R+KzaX/KDmEZ
+         fSbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=paC7XP+MGJ6PoJ3R2NPttyVKxGnJcIpnnAdo5a1VLqY=;
-        b=bd92EonqJX9JL1CxDi7aTBqApjJ4RNF5PYFsG9Ts6GwFIC/s24q6B0LqjvQE+gtf62
-         rORoxGp3vHHNySQ3wP482YlqWqchLrJR6Jdq3EfNy+eK/SwwBdXLd80APCqF5+HOOIUk
-         03Fo9gYkkFIlKON0uII2C1k0pOlMy77EhFH76bkKoH91q2twpDd7t5x1kVZsf2RJX92W
-         9NIToZQhKBDhsjolobZYPycPQyfRHUfZFFwkQT1hu9/WNonUSkv6LBBEFIIeGPMuMtGI
-         RkaS7Pz7sxD+YnxTsqMfpvGjoa46LcZ38S2JO0KZ07PFuTL+3183fPbHBgvoxxa741XW
-         DtQQ==
-X-Gm-Message-State: APjAAAUBiLSUaXpHcyI0aHyaUMLbVNRZ12kbEepSaGxVrsSS8v7cgjf9
-        HTTS9+3GuaOen+DBQ989pKgD3Da0DDU=
-X-Google-Smtp-Source: APXvYqzVAjljoOwjzQAoXjFrqhRotkklVdawn+tvLn6IgOmDmtN1NGbAymDCZf2NgbJ2BgCEuNkHFg==
-X-Received: by 2002:a63:724f:: with SMTP id c15mr16567263pgn.257.1562265057796;
-        Thu, 04 Jul 2019 11:30:57 -0700 (PDT)
-Received: from localhost.localdomain ([49.34.169.150])
-        by smtp.gmail.com with ESMTPSA id f10sm6699177pfd.151.2019.07.04.11.30.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 11:30:57 -0700 (PDT)
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     skhan@linuxfoundation.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fwqlPWLgtWbam3S8PbEk2DL4IkYoPJjyq8Eby5PvYJs=;
+        b=JI4BDP8vceoA/tybjKDlEGO8dZr/fc+pS3BLcg5QJiFPREoBFHp3f1ohzV21twbKwE
+         o97hhDdca11po6S+hCupce5+i4YRkffiyp7Gb8FUXPJ5Fl9t54udnvZHId8jvSQFzcve
+         g2VOKt7sec/PlzjO6x+mvZM68+4VarDAKhVaHWA5LgKUBXzQ8w5XviQYB8nAMGmhrhj1
+         ZSnXLjyXXkgrZ/z6iacjCdL7JOd+v8JBcU3SiVr2E86jzsAxnbEkHOgjtC6ASn6rERm1
+         wgcgvWk4rlB8c9SYtvT7Q0PavRdYR6Yx1HbyMSVIp5bSthIIoVmksgsQ2wjy5DOLy8Zd
+         +ORQ==
+X-Gm-Message-State: APjAAAXIQQEVlI2f77o5fyXkCQT46/pXCnzOtvDrvyRiOtQKK6Ur6aVD
+        Hzwq4c10Ohu3t8OAU4tO6oQdyoMSgeA=
+X-Google-Smtp-Source: APXvYqzhe2miRwma3M2OJqqQShuQRsy1E1uZjK0GrouEWgWluPmRhMcGqh9HlMj6OOB5nv5PmVuCYg==
+X-Received: by 2002:aca:3809:: with SMTP id f9mr533032oia.119.1562265274455;
+        Thu, 04 Jul 2019 11:34:34 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::48])
+        by smtp.gmail.com with ESMTPSA id 103sm2029850otu.33.2019.07.04.11.34.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 11:34:34 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 13:34:33 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
         linux-kernel-mentees@lists.linuxfoundation.org,
-        dmitry.torokhov@gmail.com, corbet@lwn.net,
-        gregkh@linuxfoundation.org, linux-input@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH] Documentation: input: Add HID gadget driver's docs to Input subsystem
-Date:   Fri,  5 Jul 2019 00:00:48 +0530
-Message-Id: <20190704183048.32360-1-shreeya.patel23498@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees][PATCH v2] nl80211: Fix undefined behavior
+ in bit shift
+Message-ID: <20190704183432.av37fjd5s3zcho6m@rYz3n>
+References: <20190627010137.5612-4-c0d1n61at3@gmail.com>
+ <20190627032532.18374-4-c0d1n61at3@gmail.com>
+ <c20a0a94-ab50-bb85-7c78-e02a465c5a40@linuxfoundation.org>
+ <8b8c44c3ecb8626d9bb5a8f786b1d2b7488df86b.camel@sipsolutions.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b8c44c3ecb8626d9bb5a8f786b1d2b7488df86b.camel@sipsolutions.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert gadget_hid file to ReST format, in order to allow it to
-be parsed by Sphinx.
-Also move the file in the Input subsystem documentation so as to
-put it in the right place.
+On Fri, Jun 28, 2019 at 03:57:05PM +0200, Johannes Berg wrote:
+> On Wed, 2019-06-26 at 21:34 -0600, Shuah Khan wrote:
+> > On 6/26/19 9:25 PM, Jiunn Chang wrote:
+> > > Shifting signed 32-bit value by 31 bits is undefined.  Changing most
+> > > significant bit to unsigned.
+> > > 
+> > > Changes included in v2:
+> > >    - use subsystem specific subject lines
+> > >    - CC required mailing lists
+> > > 
+> > > Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
+> > > ---
+> > 
+> > Move version change lines here. They don't belong in the commit log.
+> 
+> FWIW, in many cases people (maintainers) now *do* want them in the
+> commit log. Here, they're just editorial, so agree, but if real
+> technical changes were made due to reviews, they can indeed be useful.
+> 
+> johannes
+> 
 
-Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
----
- .../devices/gadget_hid.rst}                        | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
- rename Documentation/{usb/gadget_hid.txt => input/devices/gadget_hid.rst} (96%)
+Hello Johannes,
 
-diff --git a/Documentation/usb/gadget_hid.txt b/Documentation/input/devices/gadget_hid.rst
-similarity index 96%
-rename from Documentation/usb/gadget_hid.txt
-rename to Documentation/input/devices/gadget_hid.rst
-index 098d563040cc..132a8d6719f0 100644
---- a/Documentation/usb/gadget_hid.txt
-+++ b/Documentation/input/devices/gadget_hid.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
- ===========================
- Linux USB HID gadget driver
- ===========================
-@@ -8,15 +10,15 @@ Introduction
- The HID Gadget driver provides emulation of USB Human Interface
- Devices (HID). The basic HID handling is done in the kernel,
- and HID reports can be sent/received through I/O on the
--/dev/hidgX character devices.
-+:file:`/dev/hidgX` character devices.
- 
- For more details about HID, see the developer page on
--http://www.usb.org/developers/hidpage/
-+`<http://www.usb.org/developers/hidpage/>`_
- 
- Configuration
- =============
- 
--g_hid is a platform driver, so to use it you need to add
-+*g_hid* is a platform driver, so to use it you need to add
- struct platform_device(s) to your platform code defining the
- HID function descriptors you want to use - E.G. something
- like::
-@@ -89,16 +91,16 @@ Send and receive HID reports
- ============================
- 
- HID reports can be sent/received using read/write on the
--/dev/hidgX character devices. See below for an example program
-+:file:`/dev/hidgX` character devices. See below for an example program
- to do this.
- 
--hid_gadget_test is a small interactive program to test the HID
-+*hid_gadget_test* is a small interactive program to test the HID
- gadget driver. To use, point it at a hidg device and set the
- device type (keyboard / mouse / joystick) - E.G.::
- 
- 	# hid_gadget_test /dev/hidg0 keyboard
- 
--You are now in the prompt of hid_gadget_test. You can type any
-+You are now in the prompt of *hid_gadget_test*. You can type any
- combination of options and values. Available options and
- values are listed at program start. In keyboard mode you can
- send up to six values.
--- 
-2.17.1
+Would you like me to send v3 with the change log in the patch description?
 
+THX,
+
+Jiunn
