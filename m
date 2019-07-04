@@ -2,69 +2,66 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB7DC46486
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A72C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B9F21852
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9748A21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 14:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qsieq6bo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2is8hAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfGDOHj (ORCPT
+        id S1727794AbfGDOHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 10:07:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51912 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfGDOHX (ORCPT
+        Thu, 4 Jul 2019 10:07:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35533 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfGDOHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 10:07:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 207so5897990wma.1;
-        Thu, 04 Jul 2019 07:07:22 -0700 (PDT)
+        Thu, 4 Jul 2019 10:07:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c27so6811450wrb.2;
+        Thu, 04 Jul 2019 07:07:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ECChYGSgqPJWyIb7qwTvg49fGB2JZ3kEyqx7NGS7lF4=;
-        b=Qsieq6booTxze/yJXXGgq8HBRJiBCmV/chqDyZsuIE4TM/4htz/KQzyKRQatL1ioEh
-         nxpa+ZWtK2v60W5W5KRWFFSjpkT2cRyokzUlOlZFbVywBqeBQu+buUOrL0jgSSN/QL1a
-         jaiJq7FQVJ3Iqssy7oXB2xGOu/amsQzktyfRXndX/CSZQVLtuy1Ku6MCOL2UPlZ+CQa5
-         pbPh+W1IMrpXXxC654uMUmUo1dRHFlso8pGG80nTojkHbGeXQn6lLqgIL0F1d/AlwGox
-         zs5acLAv4VLQiiG6xb4T6NTjH+heg8ah9I/ftHFEeN9e18KhktTihfcst0r3qZF5e7MK
-         iwUw==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MvfpCcwP28+TBmBj1O3oyBlPKHN+Je1C3rbxB2DoDSc=;
+        b=A2is8hAeYQZz0wjbz2Th3XTbRIeoNaAluBRG0B2DSDo0JEXXhGAboJ9m7jqJlBLUan
+         xhgtxN0HVVlDwB857d2rVSH7nDSeEBx6eHV5U3K8vavHXgerjwjlXS0fIVSNOcX+UA5J
+         NtJENYskL9ixZbIuwjEURe4wPm71OqgMHri5p+krUpHxw37diSAFzax4s9ebntrWUWdC
+         V+xlObHRnvp9L3xlVAgp1GRvdKCCPDeIgGBp0DBJaQJFWRv8lDzfJYx8uLtKGcYWV379
+         MfrIW65N7rcMCq1P5f+GURCoT79OjPob0zbAdP5ww94+nhTM82BGcQe/C8saiS/CDtzy
+         oJ9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ECChYGSgqPJWyIb7qwTvg49fGB2JZ3kEyqx7NGS7lF4=;
-        b=rCKdpQZZf42FC/bLvP2zCFoe1RLjvL2tjUVdoa7ZBwg1eTynl5H2pgLbs344LNHh/s
-         fNmP8PFMvUJnR7pDRGrMdQdpcL9BtaRS14QVhaYmRdaQ+Qz1ClUPuo6njKEMfzQ+wz9Q
-         Pn+xVO6PTpFxWQ/IugCiibpqKIy4uau17HqiTNaAWRUEZie8zdfCf8ZQDfG2lG3Ge0aA
-         48UgsRHem+xPAbhdaKE9Xplaqde4LLOgPtLhQHaooOoA/AL09CNIuPCaV9DLTxaFp3dW
-         2xleHaIsN5hR1FZjKyPw6xX7vzR+p0XF+V/VToohjY/jvB2p36SUIvb5dTr4Pc0gRHU9
-         fXOQ==
-X-Gm-Message-State: APjAAAWxillH0/vi46lEd2PtsR1GJzyd+zcJWnxQGtThbg2VbXz/mJTd
-        9uFZwURLZymyLWYflw5kdoO/qDLWZeo=
-X-Google-Smtp-Source: APXvYqyT87GQgKhopyeSqmmY/O6fjvFFd98RkF1ZyRUuGVRuCt0weOWYn3s9DSrRVKrcOfGrsjKBWg==
-X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr2147263wmb.160.1562249241150;
-        Thu, 04 Jul 2019 07:07:21 -0700 (PDT)
+         :mime-version:content-transfer-encoding;
+        bh=MvfpCcwP28+TBmBj1O3oyBlPKHN+Je1C3rbxB2DoDSc=;
+        b=H7mxLL6A092I5WmXtVdYuALlEXGWtsrOS1ASicEqwvV4BbKkGnh90iKhHpqYO7NdV/
+         lAn/MJe0pHxKBMFSeEShlN76iHWxmQ/bojY9WFwFhSUftCa4wSW/GqxKPmmfH+9zT2sL
+         CY7RWo2QHrJak1IrKD2l4EfnxobOEIaykeIykzR28wuHAEWQmP9MpcHYvdaMVzCpL3lv
+         JvhE6UrMS9FZy7l7zeRaT2oddGHXY81TzybxOIl6pWK6CJuMj9fSsoUx4J9/jesn2aNq
+         uPjxiND/uaVsdsrKniHoN0jMS9gZgClCypwKZxX5MqSA2uwWYiMer4yzb9bm+ECMbBPa
+         U4AA==
+X-Gm-Message-State: APjAAAW0Z/SgBaZFDmmsakk7M4V4BAvEG4hNi29a2nZa3p2iB7ddRkxg
+        52gLN3fia6lHzYRxlJptL115bfnd0cI=
+X-Google-Smtp-Source: APXvYqxk/4aVoqyEb13bwLt2Cf1DTcN4wHc6o3km4sCHW9KFJH3uv9xMvDiD2XtNYSuVvqcDqgtjmw==
+X-Received: by 2002:a5d:53c1:: with SMTP id a1mr3492555wrw.185.1562249237169;
+        Thu, 04 Jul 2019 07:07:17 -0700 (PDT)
 Received: from donizetti.redhat.com (nat-pool-mxp-u.redhat.com. [149.6.153.187])
-        by smtp.gmail.com with ESMTPSA id n5sm4458060wmi.21.2019.07.04.07.07.20
+        by smtp.gmail.com with ESMTPSA id n5sm4458060wmi.21.2019.07.04.07.07.16
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 04 Jul 2019 07:07:20 -0700 (PDT)
+        Thu, 04 Jul 2019 07:07:16 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     jing2.liu@linux.intel.com
-Subject: [PATCH 4/5] KVM: cpuid: rename do_cpuid_1_ent
-Date:   Thu,  4 Jul 2019 16:07:14 +0200
-Message-Id: <20190704140715.31181-5-pbonzini@redhat.com>
+Subject: [PATCH 0/5] KVM: cpuid: cleanups, simplify multi-index CPUID leaves
+Date:   Thu,  4 Jul 2019 16:07:10 +0200
+Message-Id: <20190704140715.31181-1-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190704140715.31181-1-pbonzini@redhat.com>
-References: <20190704140715.31181-1-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,91 +69,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_cpuid_1_ent does not do the entire processing for a CPUID entry, it
-only retrieves the host's values.  Rename it to match reality.
+While reviewing the AVX512_BF16, Jing Liu and I noted that the handling of
+CPUID leaf 7 is quite messy, and in general the handling of multi-index
+CPUID leaves is confusing.  These patches clean the code to prepare
+for adding CPUID leaf 7 subleaf 1.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/cpuid.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Paolo Bonzini (5):
+  KVM: cpuid: do_cpuid_ent works on a whole CPUID function
+  KVM: cpuid: extract do_cpuid_7_mask and support multiple subleafs
+  KVM: cpuid: set struct kvm_cpuid_entry2 flags in do_cpuid_1_ent
+  KVM: cpuid: rename do_cpuid_1_ent
+  KVM: cpuid: remove has_leaf_count from struct kvm_cpuid_param
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 9ebc5ae7fa0e..d403695f2f3b 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -289,7 +289,7 @@ static void cpuid_mask(u32 *word, int wordnum)
- 	*word &= boot_cpu_data.x86_capability[wordnum];
- }
- 
--static void do_cpuid_1_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-+static void do_host_cpuid(struct kvm_cpuid_entry2 *entry, u32 function,
- 			   u32 index)
- {
- 	entry->function = function;
-@@ -487,7 +487,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 	if (*nent >= maxnent)
- 		goto out;
- 
--	do_cpuid_1_ent(entry, function, 0);
-+	do_host_cpuid(entry, function, 0);
- 	++*nent;
- 
- 	switch (function) {
-@@ -516,7 +516,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			if (*nent >= maxnent)
- 				goto out;
- 
--			do_cpuid_1_ent(&entry[t], function, 0);
-+			do_host_cpuid(&entry[t], function, 0);
- 			++*nent;
- 		}
- 		break;
-@@ -534,7 +534,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			cache_type = entry[i - 1].eax & 0x1f;
- 			if (!cache_type)
- 				break;
--			do_cpuid_1_ent(&entry[i], function, i);
-+			do_host_cpuid(&entry[i], function, i);
- 			++*nent;
- 		}
- 		break;
-@@ -557,7 +557,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 				goto out;
- 
- 			++i;
--			do_cpuid_1_ent(&entry[i], function, i);
-+			do_host_cpuid(&entry[i], function, i);
- 			++*nent;
- 		}
- 		break;
-@@ -609,7 +609,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			level_type = entry[i - 1].ecx & 0xff00;
- 			if (!level_type)
- 				break;
--			do_cpuid_1_ent(&entry[i], function, i);
-+			do_host_cpuid(&entry[i], function, i);
- 			++*nent;
- 		}
- 		break;
-@@ -630,7 +630,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			if (*nent >= maxnent)
- 				goto out;
- 
--			do_cpuid_1_ent(&entry[i], function, idx);
-+			do_host_cpuid(&entry[i], function, idx);
- 			if (idx == 1) {
- 				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
- 				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
-@@ -662,7 +662,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		for (t = 1; t <= times; ++t) {
- 			if (*nent >= maxnent)
- 				goto out;
--			do_cpuid_1_ent(&entry[t], function, t);
-+			do_host_cpuid(&entry[t], function, t);
- 			++*nent;
- 		}
- 		break;
+ arch/x86/kvm/cpuid.c | 222 ++++++++++++++++++++++++-------------------
+ 1 file changed, 122 insertions(+), 100 deletions(-)
+
 -- 
 2.21.0
-
 
