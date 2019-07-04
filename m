@@ -6,106 +6,88 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46073C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C0C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7452189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608972189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:30:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xPh6pbcm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="t46jnHbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfGDX10 (ORCPT
+        id S1727564AbfGDXaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 19:27:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40987 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfGDX10 (ORCPT
+        Thu, 4 Jul 2019 19:30:07 -0400
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:36373 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGDXaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 19:27:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so7310095ota.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 16:27:25 -0700 (PDT)
+        Thu, 4 Jul 2019 19:30:06 -0400
+Received: by mail-oi1-f174.google.com with SMTP id w7so5927860oic.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 16:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=29vsGpTjh39zWXsI6Ik43Nv+EdiuWAOV6vxVTajp20k=;
-        b=xPh6pbcmI7ZR83uwzt44/h5WZ1jKG98r+LQaDHsemaTjfAFmLK4NHwQNObxnmJM5M8
-         kiKlk4co3uBSxHYbFY+WMMvf50uquNZyF0w7RVkb+wN9QHaDcveJWANUrWindaZdPjYX
-         fRPefhjZL+h/GTwMBlPyo/7+/fOiU2/TzGWz4bA8jxIM0dAKYaLHEKDaVOkAQSEXS/JJ
-         HntfFU+nDsisSL67tqCRY1E2FW29XVGHkHGY+9yi5XPwwkF8dUbKQwZFovjFinBx4P3H
-         +CX76/THYqM9Ar2u/pO3kfTI759leI2eRYxgBjawd3DUVZuTF7q3s4H/zjBzZl96hbN0
-         jkcQ==
+        bh=jpJE/bqP4X6jrsYS/SpmQVJwmzBbGwqkBkuMzE86lUY=;
+        b=t46jnHbILyNK0g4ZEs23J3dRvagDLYPDvkj1YjlXpXJi8rS2Bi+gXbhqybTPochshM
+         4mLRunjSElqJvSM9u6VQ8xvDpHfZM0KtnF3sV2iU3eV3N1umokhhHWSOEffb+QBWijdP
+         4TGejdmVfh9/A1S9N4kCjZ7gK2ncfJ5txGjoVnPEEMULYsUW3zUGHYRbpgtkQlDjabCm
+         GdWqTfT/XzNCzbnaObAIDmTfCMfUXrqsiyCcA7Yc5oY6dDIG1eJMNNzkuXEUzCwOli76
+         kJtJXq1fliaNRmLF5+Eol4M90zEMwsidjxOjgAXPGR4Wa8XkETbcYw0Rfqz825FC+8tl
+         WKrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=29vsGpTjh39zWXsI6Ik43Nv+EdiuWAOV6vxVTajp20k=;
-        b=C6OhenMo8FFwhNguBcDerqh6IPADMBxVEf4eMT/3GhzKO3uhODrThfDXd+LzyJSJXG
-         XIIZk//gWc9gYNL06Yo1Lo9MNgw4CkiWvNSp/Z+RxS+jGFU2YOC+gBYdxdeNo1WZsE8Y
-         RNviQiiAiU3QCRkFvN7Ebimva3y/MOdxSWofYrjxcc/37/ESS2FpygB1I127pts15TCU
-         czaaVBBtE6WxR7mHW4j2Ygq/lHRtEM0wqG9QvBEcOeYaJgBKvNv52RfpHS5t8nppmHOw
-         Ss110NCU4aWBet8uUc/y90XXjeM/YBDjYjTakD3e5gX9eR26e3c5SifqFpGZ3nzHQ6Di
-         KLkw==
-X-Gm-Message-State: APjAAAXF2Jo5o1WUxyIDYU4Mx1G4MInxH+TqB+Zbmd3f48QGvZQZ5Xzm
-        adeOJiPU4xYk5SgXhTI0FAbQY9ftGSQuwZSL70RHKw==
-X-Google-Smtp-Source: APXvYqzFfoPnlwPxd7HMRN1iiNSb0TD46BOhSl+i1LNcRaH8pGkExzmOgi5cRwt9v88JBevUo0Jwrlqmbeg2el1s4mY=
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr386103otn.71.1562282845133;
- Thu, 04 Jul 2019 16:27:25 -0700 (PDT)
+        bh=jpJE/bqP4X6jrsYS/SpmQVJwmzBbGwqkBkuMzE86lUY=;
+        b=FB+b8gm4DTyrOsLZlYeAPWxByRb3j47D+0y6VEQ+nCW51nOm3GE6qht048FrXC1v/D
+         rk6XwlEleU+bQRB4hDqDEUXoMxT0LPG4LItwZrjXjhmdlnqILYNO7pFjaOuvnIT8xELJ
+         rhJt78nKpmXrw/RdMiPz27rRcWTXSx5a7HvUIvS58TiVamnm01hWHzExSL8ghn1iC6/K
+         A6IpgkZSqneIYsTas47Rqr/CXlcY62DYf1cMDuZBaUd4/noXwxYb7WZQU2tCKzjONO62
+         H/lF+FJi14WTFXnLTun0G4bg0ZOWndrsaulLjELlH4VIUhDlFxFPH0S6j0p2Pa8qr8QI
+         aJPA==
+X-Gm-Message-State: APjAAAWf7lGZF4TnYB66VkWneeLlBE5woCNe4cenjXhc0hRAdzdLfTQc
+        IUJhK2xjpNb6mIcVvY18vX5n7FfcJ7WoJZPdoIqBpg==
+X-Google-Smtp-Source: APXvYqyUg9zB4UkzwLNPZjhDg6DEZ/CNRZgUWhl5B36J0qzQHr/AyZC9CTcUMNmaPFnBFn1hyTDr97quKbh6HOd8JsU=
+X-Received: by 2002:aca:1304:: with SMTP id e4mr427146oii.149.1562283006306;
+ Thu, 04 Jul 2019 16:30:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190703121743.GH1729@bombadil.infradead.org> <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
- <20190703195302.GJ1729@bombadil.infradead.org> <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org> <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
-In-Reply-To: <20190704191407.GM1729@bombadil.infradead.org>
+References: <20190704205536.32740b34@canb.auug.org.au> <20190704125539.GL3401@mellanox.com>
+ <20190704230133.1fe67031@canb.auug.org.au> <20190704132836.GM3401@mellanox.com>
+ <20190705070810.1e01ea9d@canb.auug.org.au>
+In-Reply-To: <20190705070810.1e01ea9d@canb.auug.org.au>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 4 Jul 2019 16:27:14 -0700
-Message-ID: <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 4 Jul 2019 16:29:55 -0700
+Message-ID: <CAPcyv4hHC3s3nePSSHaKkFFbxuABZE3GLa7Li=0j6Z45ERrPEg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the hmm tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 12:14 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, Jul 04, 2019 at 06:54:50PM +0200, Jan Kara wrote:
-> > On Wed 03-07-19 20:27:28, Matthew Wilcox wrote:
-> > > So I think we're good for all current users.
-> >
-> > Agreed but it is an ugly trap. As I already said, I'd rather pay the
-> > unnecessary cost of waiting for pte entry and have an easy to understand
-> > interface. If we ever have a real world use case that would care for this
-> > optimization, we will need to refactor functions to make this possible and
-> > still keep the interfaces sane. For example get_unlocked_entry() could
-> > return special "error code" indicating that there's no entry with matching
-> > order in xarray but there's a conflict with it. That would be much less
-> > error-prone interface.
->
-> This is an internal interface.  I think it's already a pretty gnarly
-> interface to use by definition -- it's going to sleep and might return
-> almost anything.  There's not much scope for returning an error indicator
-> either; value entries occupy half of the range (all odd numbers between 1
-> and ULONG_MAX inclusive), plus NULL.  We could use an internal entry, but
-> I don't think that makes the interface any easier to use than returning
-> a locked entry.
->
-> I think this iteration of the patch makes it a little clearer.  What do you
-> think?
->
+Guys, Andrew has kicked the subsection patches out of -mm because of
+the merge conflicts. Can we hold off on the hmm cleanups for this
+cycle?
 
-Not much clearer to me. get_unlocked_entry() is now misnamed and this
-arrangement allows for mismatches of @order argument vs @xas
-configuration. Can you describe, or even better demonstrate with
-numbers, why it's better to carry this complication than just
-converging the waitqueues between the types?
+On Thu, Jul 4, 2019 at 2:08 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Jason,
+>
+> On Thu, 4 Jul 2019 13:28:41 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >
+> > BTW, do you use a script to get these conflicting patch commit ID
+> > automatically? It is so helpful to have them.
+>
+> No, I just use gitk and a bit of searching.  Though often there are not
+> many possible commits to search.
+>
+> --
+> Cheers,
+> Stephen Rothwell
