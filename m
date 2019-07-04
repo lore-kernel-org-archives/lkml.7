@@ -2,148 +2,105 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF83C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31FDC06516
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521B1218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562236997;
-	bh=GO5rZwACuqGJZLDo2ucr74UTZmdv8Bqm4fA6Yt770mw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cqShvhYqXxd5BvSSS7Lncc7vI2xatjlkygjwoW0UfyqRJ+y2myrFJtoFzfi4/4abD
-	 0Sqx6/zQnHgpIIekiFVqR6oxnaEFl61Ih5BySnqzqbYyqRFqhI0hjkjCMANdv6HqqW
-	 SXx/Oi5+VTvg7Z5F8qTO/uOPnKGO3idMR7QVF2Uc=
+	by mail.kernel.org (Postfix) with ESMTP id B21DC218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xwxbt6lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfGDKnQ (ORCPT
+        id S1727590AbfGDKoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 06:44:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39987 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfGDKnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:43:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727385AbfGDKoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:44:37 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA4F218A3;
-        Thu,  4 Jul 2019 10:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562236995;
-        bh=GO5rZwACuqGJZLDo2ucr74UTZmdv8Bqm4fA6Yt770mw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0nvDXObCXpiy0YByYsTXgPkhBa2nJpAojxuoTqc8YKs7Tdb/KfqWxTSN9JWEPZkC2
-         JGSqqe7Tv+BGBQZVVpCgXVzG9SOu6HVSNR7qFDFNMuaNRlOJKN9SurghIVPofkSuu0
-         lfx6V1CG0YWaOybnG88fHy3OqtKCti8nWzOKX5rM=
-Date:   Thu, 4 Jul 2019 12:43:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Romain Izard <romain.izard.pro@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 01/11] Platform: add a dev_groups pointer to struct
- platform_driver
-Message-ID: <20190704104311.GA16681@kroah.com>
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
- <20190704084617.3602-2-gregkh@linuxfoundation.org>
- <20190704093200.GM13424@localhost>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fZNf02w6z9s8m;
+        Thu,  4 Jul 2019 20:44:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562237074;
+        bh=zKiyI95dkoai3uIXIayRFOVipQVVsyAGWwhdVmxXez0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Xwxbt6lb+P4e6Tol9JGcIkSVdXo6y7X5KloD1AOr079/NSbt/mPiEBjI8/Go0+AlY
+         kYsXfx+71M//IhZxOG+iUNsr4oiQH7GgLwf6qjjrCXhzc8NyqSAm9vjKjMvQMXlPww
+         Udn2AaH1Vz/k1tKLHEiJiBdxFopzaiKNwi/4SGabp7hVdcDpQrFn40B927/SoM2Qvk
+         a7gY/31lX5tDeEfMcOotlm3xvrQEPakg2ll96AaAMrlm2x85BMyt8TxnSbc/P9RP2g
+         53NP1uDUSD1D6JRPDpZR40UYfby4hTNT2GjhkG67NkaC3uVrEgOnBWP5ALDqAxz5/r
+         tFsc5vIaUVXkA==
+Date:   Thu, 4 Jul 2019 20:44:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the akpm-current tree with the hmm tree
+Message-ID: <20190704204432.5e4a0261@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704093200.GM13424@localhost>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/6=IVp6HPHpVRIbQpflpc.ck"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 11:32:00AM +0200, Johan Hovold wrote:
-> On Thu, Jul 04, 2019 at 10:46:07AM +0200, Greg Kroah-Hartman wrote:
-> > Platform drivers like to add sysfs groups to their device, but right now
-> > they have to do it "by hand".  The driver core should handle this for
-> > them, but there is no way to get to the bus-default attribute groups as
-> > all platform devices are "special and unique" one-off drivers/devices.
-> > 
-> > To combat this, add a dev_groups pointer to platform_driver which allows
-> > a platform driver to set up a list of default attributes that will be
-> > properly created and removed by the platform driver core when a probe()
-> > function is successful and removed right before the device is unbound.
-> > 
-> > Cc: Richard Gong <richard.gong@linux.intel.com>
-> > Cc: Romain Izard <romain.izard.pro@gmail.com>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Mans Rullgard <mans@mansr.com>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  drivers/base/platform.c         | 40 +++++++++++++++++++++------------
-> >  include/linux/platform_device.h |  1 +
-> >  2 files changed, 27 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 713903290385..d81fcd435b52 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -598,6 +598,21 @@ struct platform_device *platform_device_register_full(
-> >  }
-> >  EXPORT_SYMBOL_GPL(platform_device_register_full);
-> >  
-> > +static int platform_drv_remove(struct device *_dev)
-> > +{
-> > +	struct platform_driver *drv = to_platform_driver(_dev->driver);
-> > +	struct platform_device *dev = to_platform_device(_dev);
-> > +	int ret = 0;
-> > +
-> > +	if (drv->remove)
-> > +		ret = drv->remove(dev);
-> > +	if (drv->dev_groups)
-> > +		device_remove_groups(_dev, drv->dev_groups);
-> 
-> Shouldn't you remove the groups before calling driver remove(), which
-> could be releasing resources used by the attribute implementations?
-> 
-> This would also be the reverse of how what you do at probe.
+--Sig_/6=IVp6HPHpVRIbQpflpc.ck
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Good point, probably doesn't really matter, but I'll reverse it.
+Hi all,
 
-> > +	dev_pm_domain_detach(_dev, true);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static int platform_drv_probe(struct device *_dev)
-> >  {
-> >  	struct platform_driver *drv = to_platform_driver(_dev->driver);
-> > @@ -614,8 +629,18 @@ static int platform_drv_probe(struct device *_dev)
-> >  
-> >  	if (drv->probe) {
-> >  		ret = drv->probe(dev);
-> > -		if (ret)
-> > +		if (ret) {
-> >  			dev_pm_domain_detach(_dev, true);
-> > +			goto out;
-> > +		}
-> > +	}
-> > +	if (drv->dev_groups) {
-> > +		ret = device_add_groups(_dev, drv->dev_groups);
-> > +		if (ret) {
-> > +			platform_drv_remove(_dev);
-> 
-> This would lead to device_remove_groups() being called for the never
-> added attribute groups. Looks like that may trigger a warning in the
-> sysfs code judging from a quick look.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Hm, let me look at this some more...
+  mm/hmm.c
 
+between commits:
+
+  0092908d16c6 ("mm: factor out a devm_request_free_mem_region helper")
+  43535b0aefab ("mm: remove the HMM config option")
+
+from the hmm tree and commit:
+
+  4c24b795d8c4 ("mm/memremap: rename and consolidate SECTION_SIZE")
+
+from the akpm-current tree.
+
+I fixed it up (the latter is just part of the first hmm tree commit) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6=IVp6HPHpVRIbQpflpc.ck
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0d2JAACgkQAVBC80lX
+0GxjIwf+Ne3YE2DQzE/HBtlv2qN6nDLZRWjP57zLz4FhUUAbO8dVfiLbyEnw8Rmu
+ENjx+H7hIlWuBcTcV9ACS4+C6l+TexW27V02++wLdhOcgs2yFImUADGb1Pzu967Y
+dWQnib0umlr2qloQ/+DkCJLTBy3jsrrMiqNP9Mh7NZL+gQwNrZHY9GW89TubpVd9
+isBtrX0lutjiLgHwi5qNIdhXSNmpcigVgXcWuUZVizD5uMlKcvaBHDVlyg6IkKS4
+v5sA/LuovDl9FZPkgljaE6dpxcv9Kclg7sOus7H4Ixd7MxXqolJ3oLJbFpHDFnfK
+iYogHWKJ/pv0UPcl400IMxIBO3tPsQ==
+=DZ3u
+-----END PGP SIGNATURE-----
+
+--Sig_/6=IVp6HPHpVRIbQpflpc.ck--
