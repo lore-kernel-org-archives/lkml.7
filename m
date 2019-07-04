@@ -5,75 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A669FC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89929C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88303218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472F4218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfGDJfO (ORCPT
+        id S1727516AbfGDJgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:35:14 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39524 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfGDJfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:35:12 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 56CD01A0021;
-        Thu,  4 Jul 2019 11:35:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E2B21A058C;
-        Thu,  4 Jul 2019 11:35:04 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5DF01402C3;
-        Thu,  4 Jul 2019 17:34:55 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, leonard.crestez@nxp.com, ping.bai@nxp.com,
-        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/2] arm64: dts: imx8mm: Add "fsl,imx8mq-src" as src's fallback compatible
-Date:   Thu,  4 Jul 2019 17:26:00 +0800
-Message-Id: <20190704092600.38015-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190704092600.38015-1-Anson.Huang@nxp.com>
-References: <20190704092600.38015-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 4 Jul 2019 05:36:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8141 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727365AbfGDJgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:36:10 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 496BCF8FADA4AA0FA4AB;
+        Thu,  4 Jul 2019 17:36:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 4 Jul 2019
+ 17:36:01 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <broonie@kernel.org>, <gregkh@linuxfoundation.org>,
+        <rafael@kernel.org>, <akinobu.mita@gmail.com>,
+        <wsa+renesas@sang-engineering.com>, <sakari.ailus@linux.intel.com>,
+        <mchehab+samsung@kernel.org>, <jacopo@jmondi.org>,
+        <khoroshilov@ispras.ru>
+CC:     <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
+Date:   Thu, 4 Jul 2019 17:35:53 +0800
+Message-ID: <20190704093553.49904-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+REGMAP_SCCB is selected by ov772x and ov9650 drivers,
+but CONFIG_REGMAP may not, so building will fails:
 
-i.MX8MM can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
-src's fallback compatible to enable it.
+rivers/media/i2c/ov772x.c: In function ov772x_probe:
+drivers/media/i2c/ov772x.c:1360:22: error: variable ov772x_regmap_config has initializer but incomplete type
+  static const struct regmap_config ov772x_regmap_config = {
+                      ^~~~~~~~~~~~~
+drivers/media/i2c/ov772x.c:1361:4: error: const struct regmap_config has no member named reg_bits
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 5bbf32217bf9 ("media: ov772x: use SCCB regmap")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-No changes.
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 2 +-
+ drivers/base/regmap/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 172bb6f..1870c89 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -520,7 +520,7 @@
- 			};
+diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+index c8bbf53..a498413 100644
+--- a/drivers/base/regmap/Kconfig
++++ b/drivers/base/regmap/Kconfig
+@@ -4,7 +4,7 @@
+ # subsystems should select the appropriate symbols.
  
- 			src: reset-controller@30390000 {
--				compatible = "fsl,imx8mm-src", "syscon";
-+				compatible = "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon";
- 				reg = <0x30390000 0x10000>;
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
+ config REGMAP
+-	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
++	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SCCB || REGMAP_I3C)
+ 	select IRQ_DOMAIN if REGMAP_IRQ
+ 	bool
+ 
 -- 
 2.7.4
+
 
