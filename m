@@ -2,147 +2,92 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96423C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97650C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626DD218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562242476;
-	bh=BS6LHDQQf9/yApkc167DvFPp/dm0Nvl/xbr6rW/uOMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jokq+B599ti6NxhaNQE98vGGMKdlewGoFmqSIdy6RZeM2StGKQZU/0OlhBe/k7zDK
-	 /x5DEM+RAadlq5yQt5Onlp3YpoUSrRCHZ2a/Iqpg84UoqgAviEL8uGoDcaX9hFPCJA
-	 KqSSZ5JCeZrOiW4NoJGDIB+7+tYqyWBhCFELU1gI=
+	by mail.kernel.org (Postfix) with ESMTP id 765AE218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfGDMOf (ORCPT
+        id S1727733AbfGDMOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfGDMOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:14:34 -0400
-Received: from localhost (unknown [89.205.128.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D3CE2189E;
-        Thu,  4 Jul 2019 12:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562242474;
-        bh=BS6LHDQQf9/yApkc167DvFPp/dm0Nvl/xbr6rW/uOMk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T42g+aCDmCVC6bfEvGPCpvXwZ1ofsiUI9KeQsI2FzhxjqAtzdZPhda/+PfapxY9/v
-         JrqQHUgMUJn1YU3r6uLtE7RGyGh5uqLlpy3NkPf6pm2PsjiXG7SvTyE8hAAJntIo6+
-         hlTth0h0LLcT1J8nkxC4ZeRwv4KYeeP7GjPSbnas=
-Date:   Thu, 4 Jul 2019 14:11:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Romain Izard <romain.izard.pro@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 01/12 v2] Platform: add a dev_groups pointer to struct
- platform_driver
-Message-ID: <20190704121143.GA5007@kroah.com>
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
- <20190704084617.3602-2-gregkh@linuxfoundation.org>
- <20190704093200.GM13424@localhost>
- <20190704104311.GA16681@kroah.com>
+        Thu, 4 Jul 2019 08:14:48 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35156 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727615AbfGDMOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:14:47 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r21so5101123qke.2;
+        Thu, 04 Jul 2019 05:14:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9cNGGl+FLilA8PMo/2823HsEW5aV7LEQGtBmo7DnFEc=;
+        b=CM+vpFVspPTYEDMdGio5Ui9f86Lxh9bIBdEOQ40wOW2Cth2CmaKfsJuJNRac3WZesM
+         hIXh1x3Hc15t1IlJ+FiYTYvLUlu7qefK5hkVyodgPF3jpy7ys7sZTt6XVw9CBOBsf8FL
+         Pf/KRHPP7fQPRBFsgVOuDiM6qi2pcXoaKIBNfKdWkXeKVP7ari5H7NwH7xKL64OWllY7
+         C9i/2RpOiDXU7VN11NAfQ8LtnjP0OXVBs34D1aDLhUev28c/4cTprNrfamCbWysB8CFU
+         F4xXJBas7rKl8wljGWN/QsdPzgWim3n9jV28Ri2qMDLfQt28MehKbFfuAnksp476OTBT
+         /l6w==
+X-Gm-Message-State: APjAAAXLkvkchE09EP+Vb6NEaywCKXMdOPHue2ExUFrnAQCfoIpeDWce
+        OgbXxks9gRpOH9uQj/6jTkVo5it/cw5YJrWh01k=
+X-Google-Smtp-Source: APXvYqzvpIz9J26dzCUH95aoNaSNG7JvaLf06oXPM82JIyYSrVI156uv/dpYNT0OS7IMkbIycWc7OMw2LwtS3sy2tBc=
+X-Received: by 2002:a37:76c5:: with SMTP id r188mr34670161qkc.394.1562242486886;
+ Thu, 04 Jul 2019 05:14:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704104311.GA16681@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <cover.1562149883.git.joabreu@synopsys.com> <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <20190704120018.4523a119@carbon> <20190704103057.GA29734@apalos>
+In-Reply-To: <20190704103057.GA29734@apalos>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 4 Jul 2019 14:14:28 +0200
+Message-ID: <CAK8P3a3GC6f-xHG7MqZRLhY66Ui4HQVi=4WXR703wqfMNY6A5A@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page Pool
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Platform drivers like to add sysfs groups to their device, but right now
-they have to do it "by hand".  The driver core should handle this for
-them, but there is no way to get to the bus-default attribute groups as
-all platform devices are "special and unique" one-off drivers/devices.
+On Thu, Jul 4, 2019 at 12:31 PM Ilias Apalodimas
+<ilias.apalodimas@linaro.org> wrote:
+> > On Wed,  3 Jul 2019 12:37:50 +0200
+> > Jose Abreu <Jose.Abreu@synopsys.com> wrote:
 
-To combat this, add a dev_groups pointer to platform_driver which allows
-a platform driver to set up a list of default attributes that will be
-properly created and removed by the platform driver core when a probe()
-function is successful and removed right before the device is unbound.
+> 1. page pool allocs packet. The API doesn't sync but i *think* you don't have to
+> explicitly since the CPU won't touch that buffer until the NAPI handler kicks
+> in. On the napi handler you need to dma_sync_single_for_cpu() and process the
+> packet.
 
-Cc: Richard Gong <richard.gong@linux.intel.com>
-Cc: Romain Izard <romain.izard.pro@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mans Rullgard <mans@mansr.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: addressed Johan's comments by reordering when we remove the files
-    from the device, and clean up on an error in a nicer way.  Ended up
-    making the patch smaller overall, always nice.
+> So bvottom line i *think* we can skip the dma_sync_single_for_device() on the
+> initial allocation *only*. If am terribly wrong please let me know :)
 
- drivers/base/platform.c         | 16 +++++++++++++++-
- include/linux/platform_device.h |  1 +
- 2 files changed, 16 insertions(+), 1 deletion(-)
+I think you have to do a sync_single_for_device /somewhere/ before the
+buffer is given to the device. On a non-cache-coherent machine with
+a write-back cache, there may be dirty cache lines that get written back
+after the device DMA's data into it (e.g. from a previous memset
+from before the buffer got freed), so you absolutely need to flush any
+dirty cache lines on it first.
+You may also need to invalidate the cache lines in the following
+sync_single_for_cpu() to eliminate clean cache lines with stale data
+that got there when speculatively reading between the cache-invalidate
+and the DMA.
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 713903290385..74428a1e03f3 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -614,8 +614,20 @@ static int platform_drv_probe(struct device *_dev)
- 
- 	if (drv->probe) {
- 		ret = drv->probe(dev);
--		if (ret)
-+		if (ret) {
-+			dev_pm_domain_detach(_dev, true);
-+			goto out;
-+		}
-+	}
-+	if (drv->dev_groups) {
-+		ret = device_add_groups(_dev, drv->dev_groups);
-+		if (ret) {
-+			if (drv->remove)
-+				drv->remove(dev);
- 			dev_pm_domain_detach(_dev, true);
-+			return ret;
-+		}
-+		kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
- 	}
- 
- out:
-@@ -638,6 +650,8 @@ static int platform_drv_remove(struct device *_dev)
- 	struct platform_device *dev = to_platform_device(_dev);
- 	int ret = 0;
- 
-+	if (drv->dev_groups)
-+		device_remove_groups(_dev, drv->dev_groups);
- 	if (drv->remove)
- 		ret = drv->remove(dev);
- 	dev_pm_domain_detach(_dev, true);
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index cc464850b71e..027f1e1d7af8 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -190,6 +190,7 @@ struct platform_driver {
- 	int (*resume)(struct platform_device *);
- 	struct device_driver driver;
- 	const struct platform_device_id *id_table;
-+	const struct attribute_group **dev_groups;
- 	bool prevent_deferred_probe;
- };
- 
--- 
-2.22.0
-
+       Arnd
