@@ -2,168 +2,93 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B879CC46497
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB2C46495
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6CF21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FCDjPpeC"
+	by mail.kernel.org (Postfix) with ESMTP id 7E897218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 21:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562274842;
+	bh=L5uTJJm8cS0jNeSEyq9UQDrpRWA/RzoGfVSTvhzwtI0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MtHl4DjCibE1n4BtytX1p1bCoB65thK6qnpoGINKtLDD6d6br4MvbSbeWxMXKKP7Y
+	 Grh2xO0CRDR9w6bjylQ5jL3ekMW1mPYEKjlKseb7iS4fcbeD8RID+B27Rddp6Dzz9H
+	 sxH9yBSiJe8Obr9sTykAaKsnyvde2UWN/6GR5fcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfGDVK1 (ORCPT
+        id S1727352AbfGDVOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 17:10:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35062 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfGDVK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 17:10:27 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C4F3C24B;
-        Thu,  4 Jul 2019 23:10:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1562274624;
-        bh=rH5bR+9lFkKtZCDqwCe8OuU9RTZKTQrIQJBkM0CbF3I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FCDjPpeCNkj1EFXAIg9h/NzwKcGsKZmLD7agdaR1+cVt7JK7zHSn1M4g4HlG/aOvH
-         1qGga4AH5et1WH+DOXF7QSWYGsZibj8vneYOfJZVMVbNpsKkcj4Fumwl4JfHAl8Ude
-         A2HXM0xBa6cY8K0LRFVuMfpl4D0sbHRWItMo/Wqo=
-Date:   Fri, 5 Jul 2019 00:10:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] drm/bridge: ti-sn65dsi86: add debugfs
-Message-ID: <20190704211004.GH5024@pendragon.ideasonboard.com>
-References: <20190702154419.20812-1-robdclark@gmail.com>
- <CGME20190702154441epcas2p2cba89e3a84216d9a8da43438a9648e03@epcas2p2.samsung.com>
- <20190702154419.20812-3-robdclark@gmail.com>
- <1b56a11c-194d-0eca-4dd1-48e91820eafb@samsung.com>
- <20190704123511.GG6569@pendragon.ideasonboard.com>
- <CAF6AEGvYJ6iA5B+thJuBC=pFStuhsn87xrrcWAZyroWj5xKMZA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGvYJ6iA5B+thJuBC=pFStuhsn87xrrcWAZyroWj5xKMZA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 4 Jul 2019 17:14:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfGDVOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 17:14:00 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C3021850;
+        Thu,  4 Jul 2019 21:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562274839;
+        bh=L5uTJJm8cS0jNeSEyq9UQDrpRWA/RzoGfVSTvhzwtI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=L+QKnk1QjgZhVbE+BLtQhirvztvvdNVrrXLB8pJs5cNBFXmtAcyrr2FU/Gr6TYhFG
+         a4RrGuNX9zgnsXHc3yAQk9TvTV7v0/u6KWK1iH3Hr8SvUC+EhKoU6ibelBN/fTzBCf
+         3Yyp+elIXhTbmdvHshxgTH40BD/iCrymubuF9R5g=
+Date:   Thu, 4 Jul 2019 14:13:58 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Message-Id: <20190704141358.495791a385f7dd762cb749c2@linux-foundation.org>
+In-Reply-To: <de2286d9-6f5c-a79c-dcee-de4225aca58a@arm.com>
+References: <cover.1558547956.git.robin.murphy@arm.com>
+        <20190626073533.GA24199@infradead.org>
+        <20190626123139.GB20635@lakrids.cambridge.arm.com>
+        <20190626153829.GA22138@infradead.org>
+        <20190626154532.GA3088@mellanox.com>
+        <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
+        <20190704115324.c9780d01ef6938ab41403bf9@linux-foundation.org>
+        <20190704195934.GA23542@mellanox.com>
+        <de2286d9-6f5c-a79c-dcee-de4225aca58a@arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Thu, 4 Jul 2019 21:54:36 +0100 Robin Murphy <robin.murphy@arm.com> wrote:
 
-On Thu, Jul 04, 2019 at 06:56:56AM -0700, Rob Clark wrote:
-> On Thu, Jul 4, 2019 at 5:35 AM Laurent Pinchartwrote:
-> > On Thu, Jul 04, 2019 at 02:31:20PM +0200, Andrzej Hajda wrote:
-> > > On 02.07.2019 17:44, Rob Clark wrote:
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > Add a debugfs file to show status registers.
-> > > >
-> > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > ---
-> > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 42 +++++++++++++++++++++++++++
-> > > >  1 file changed, 42 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > index f1a2493b86d9..a6f27648c015 100644
-> > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > @@ -5,6 +5,7 @@
-> > > >   */
-> > > >
-> > > >  #include <linux/clk.h>
-> > > > +#include <linux/debugfs.h>
-> > > >  #include <linux/gpio/consumer.h>
-> > > >  #include <linux/i2c.h>
-> > > >  #include <linux/iopoll.h>
-> > > > @@ -109,6 +110,7 @@ struct ti_sn_bridge {
-> > > >     struct drm_dp_aux               aux;
-> > > >     struct drm_bridge               bridge;
-> > > >     struct drm_connector            connector;
-> > > > +   struct dentry                   *debugfs;
-> > > >     struct device_node              *host_node;
-> > > >     struct mipi_dsi_device          *dsi;
-> > > >     struct clk                      *refclk;
-> > > > @@ -178,6 +180,42 @@ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
-> > > >     SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
-> > > >  };
-> > > >
-> > > > +static int status_show(struct seq_file *s, void *data)
-> > > > +{
-> > > > +   struct ti_sn_bridge *pdata = s->private;
-> > > > +   unsigned int reg, val;
-> > > > +
-> > > > +   seq_puts(s, "STATUS REGISTERS:\n");
-> >
-> > NO NEED TO SHOUT :-)
-> >
-> > > > +
-> > > > +   pm_runtime_get_sync(pdata->dev);
-> > > > +
-> > > > +   /* IRQ Status Registers, see Table 31 in datasheet */
-> > > > +   for (reg = 0xf0; reg <= 0xf8; reg++) {
-> > > > +           regmap_read(pdata->regmap, reg, &val);
-> > > > +           seq_printf(s, "[0x%02x] = 0x%08x\n", reg, val);
-> > > > +   }
-> > > > +
-> > > > +   pm_runtime_put(pdata->dev);
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > > +DEFINE_SHOW_ATTRIBUTE(status);
-> > > > +
-> > > > +static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
-> > > > +{
-> > > > +   pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
-> > >
-> > > If some day we will have board with two such bridges there will be a
-> > > problem.
-> >
-> > Could we use the platform device name for this ?
+> >> mm-clean-up-is_device__page-definitions.patch
+> >> mm-introduce-arch_has_pte_devmap.patch
+> >> arm64-mm-implement-pte_devmap-support.patch
+> >> arm64-mm-implement-pte_devmap-support-fix.patch
+> > 
+> > This one we discussed, and I thought we agreed would go to your 'stage
+> > after linux-next' flow (see above). I think the conflict was minor
+> > here.
 > 
-> hmm, yeah, that would solve the 2x bridges issue
-> 
-> > > Anyway:
-> > >
-> > > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> > >
-> > > > +
-> > > > +   debugfs_create_file("status", 0600, pdata->debugfs, pdata,
-> > > > +                   &status_fops);
-> > > > +}
-> > > > +
-> > > > +static void ti_sn_debugfs_remove(struct ti_sn_bridge *pdata)
-> > > > +{
-> > > > +   debugfs_remove_recursive(pdata->debugfs);
-> > > > +   pdata->debugfs = NULL;
-> > > > +}
-> > > > +
-> >
-> > You need to conditionally-compile this based on CONFIG_DEBUG_FS.
-> 
-> Hmm, is that really true?  Debugfs appears to be sufficently stub'd w/
-> inline no-ops in the !CONFIG_DEBUG_FS case
+> I can rebase and resend tomorrow if there's an agreement on what exactly 
+> to base it on - I'd really like to get this ticked off for 5.3 if at all 
+> possible.
 
-You're right, my bad. I wonder if the compiler will optimise the above
-two functions out. It might warrant a CONFIG_DEBUG_FS check here for
-that reason, but that's really bikeshedding. So with the 2x bridges
-issue addressed, I think the patch will be good.
+I took another look.  Yes, it looks like the repairs were simple.
 
--- 
-Regards,
-
-Laurent Pinchart
+Let me now try to compile all this...
