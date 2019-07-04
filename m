@@ -2,128 +2,158 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECE7C46482
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6CFC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451E421850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87139218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gwCHyEMY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0U1d28c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfGDN2p (ORCPT
+        id S1727246AbfGDN2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:28:45 -0400
-Received: from mail-eopbgr10048.outbound.protection.outlook.com ([40.107.1.48]:54181
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727116AbfGDN2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:28:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2sveIOb5v7YWPwLy8dsYWPdpgDk7JWL+plSAuIau1bk=;
- b=gwCHyEMYYQu6MtjbUO+ULoGeEr4TDylVcJ+lpZApX7HMEaTYvMBXfRphO2zQRoIuRkEZpNaMvGYQpwqJ7WFkcw3P5gZOYlCWqDkIuKQRXBz0qgPZh0mkgWootTQzegl7nlRMotGuw250E7BtYIHJZh9QlfuPiRvtUd1N1elqlgM=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5486.eurprd05.prod.outlook.com (20.177.63.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Thu, 4 Jul 2019 13:28:41 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 13:28:41 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the hmm
- tree
-Thread-Topic: linux-next: manual merge of the akpm-current tree with the hmm
- tree
-Thread-Index: AQHVMlcIUr9ppS/jrECG60Qeg/CcSKa6auGAgAABpoCAAAePAA==
-Date:   Thu, 4 Jul 2019 13:28:41 +0000
-Message-ID: <20190704132836.GM3401@mellanox.com>
-References: <20190704205536.32740b34@canb.auug.org.au>
- <20190704125539.GL3401@mellanox.com>
- <20190704230133.1fe67031@canb.auug.org.au>
-In-Reply-To: <20190704230133.1fe67031@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR13CA0025.namprd13.prod.outlook.com
- (2603:10b6:208:160::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f37b1ecc-e391-405f-a7bc-08d700838755
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5486;
-x-ms-traffictypediagnostic: VI1PR05MB5486:
-x-microsoft-antispam-prvs: <VI1PR05MB5486FE3A7F488320C2796B85CFFA0@VI1PR05MB5486.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1107;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(346002)(39860400002)(189003)(199004)(316002)(6512007)(14454004)(71200400001)(71190400001)(33656002)(6916009)(6246003)(6486002)(1076003)(229853002)(53936002)(6436002)(186003)(68736007)(256004)(36756003)(4326008)(25786009)(6506007)(26005)(386003)(102836004)(2906002)(66946007)(86362001)(486006)(66066001)(76176011)(2616005)(8676002)(81156014)(81166006)(476003)(8936002)(478600001)(446003)(305945005)(7736002)(5660300002)(66446008)(11346002)(64756008)(66556008)(66476007)(3846002)(6116002)(54906003)(73956011)(52116002)(4744005)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5486;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DnWroG2zlCahoIC3wMv6mRnwANKvALelje0BA/WVXeugvnWJbx/BCl1RZkO3ZY0XsoSb0EF7CuYKdC7KuMaKWkR+H19tDj+K6xGPNdMVDjTeZmNO9UoEw2kPV1cZZ0JuvM7sSWyr1v6LFcDzIGmnEoOL+sz3QgJVYqbju+RqimDk6q43w1J1dFxe7aVSgMvy2CWKyVE5dLcfOEtOlNEuscq3tkeup3iHO8jNORF+8toAFfUaatJywi42NRLOvMFGmpzrrMamRsHf2IDt8ZsJqnvcWrIdVYJdUM/tyOBGdDg6w5GHj5jNrjx4/JYtdmDxDNYe6Yb8iHp5AY13i8EGEoSjhizzS4RkHE8I8eXJBcvMWl3OaxdsSO8xkDwd97AEvSRw+ddVJiQjmyJuvxcvm9WIwOUuF63gZxNLwhs6KpI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <96CCF74E85EB624594ECE7364C971F97@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 4 Jul 2019 09:28:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39062 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfGDN2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 09:28:51 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so2957666pfe.6;
+        Thu, 04 Jul 2019 06:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C3bHvTquVsi+QkqeP9kBzeld7vh/G3nOdaz58xEHRUw=;
+        b=P0U1d28c4dAUPsJQTBNm+JrpF5GtXpCeRrj4L//7J4ktJUETZQ2XzW2aVDxq9XOqBK
+         xir4QnnNsel45AZhoXchJQvks3gb1U/NuVIIh8cmzbqd0BQYVZ4Aa2pZJD8CArI3Y8iQ
+         5W4SSWnODZsO8tXXulrcjtcyUBYd1SvwrOXQuvGhN17RJNWPmeBPhuJQioiFJFXEtjPH
+         cZIEFOsGG1gyxGfvi5sqhQ1vPQIEOuvGrLRdVVLSiP414lzOMais1uHYfVMEI50LRylj
+         tPenhbu19AANqO+bgUUE/kclvyn42yFMW/53k8wL+GzkcWXrck4sbe5dKlZzCpptP7V9
+         Ca3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C3bHvTquVsi+QkqeP9kBzeld7vh/G3nOdaz58xEHRUw=;
+        b=fvY52GJ5qE2t44coS+ffo6PA0ArgdAejfGzUGeFtJet2mLsrw0FLghBVlyVTR1Tk2n
+         vUrimPxIcfMsX8jfpSjKgB0W0e43+ngEG7kwCzHzbSYs0+hPcZTfKhWvivVXcHyWojHh
+         uXZhRRgGMw2N9c/qpdI8CJCuaCkFscny3Dlpt4RoCVJYGCrvHtbVPrkTOo56+6ISl7N7
+         1tPZAVxVrCr1ls9meldWZGOrfGOndXN5gN49eJAMJxogrpXEcS6UODYe9jnfDZukSjxW
+         x+hdTkcY7t38mcA724gTYVlFvJ66e4tTYFjeBO8K2bE7e5pP9a05GZNnI8bNdDkr+FZx
+         jh3w==
+X-Gm-Message-State: APjAAAV9pMf/SFo1nvhu4srSIT4U9XRpDBrTKjiZiTQKzXfzP5y/wi5p
+        HmHLp7gSe4Tmac47qp5YceSfiMps+COybxYtd7M=
+X-Google-Smtp-Source: APXvYqyBXRj45MJ/uyjUwIBQviIUhrB6XJ4UUA6ceL6TLExCxn0N3MsOp6KC60LDoS0Kb+G97dzRlhqanQVtRTqM4Zg=
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr19948932pjb.20.1562246930294;
+ Thu, 04 Jul 2019 06:28:50 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f37b1ecc-e391-405f-a7bc-08d700838755
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 13:28:41.0606
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5486
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org> <20190704084617.3602-6-gregkh@linuxfoundation.org>
+In-Reply-To: <20190704084617.3602-6-gregkh@linuxfoundation.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 4 Jul 2019 16:28:39 +0300
+Message-ID: <CAHp75VdLZGM3EY3LeorYLgD-8rXUL_jQ9qdTSAfaRnyvwJp+QA@mail.gmail.com>
+Subject: Re: [PATCH 05/11] olpc: x01: convert platform driver to use dev_groups
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 11:01:33PM +1000, Stephen Rothwell wrote:
-> Hi Jason,
->=20
-> On Thu, 4 Jul 2019 12:55:43 +0000 Jason Gunthorpe <jgg@mellanox.com> wrot=
-e:
-> >
-> > On Thu, Jul 04, 2019 at 08:55:36PM +1000, Stephen Rothwell wrote:
-> > >=20
-> > > Today's linux-next merge of the akpm-current tree got a conflict in:
-> > >=20
-> > >   mm/memory_hotplug.c
-> > >=20
-> > > between commit:
-> > >=20
-> > >   514caf23a70f ("memremap: replace the altmap_valid field with a PGMA=
-P_ALTMAP_VALID flag")
-> > >=20
-> > > from the hmm tree and commit:
-> > >=20
-> > >   db30f881e2d7 ("mm/hotplug: kill is_dev_zone() usage in __remove_pag=
-es()") =20
-> >=20
-> > There must be another commit involved for the 'unsigned long nr,
-> > start_sec, end_sec;' lines..
->=20
-> Yeah, there was, but that didn't actually create a conflict.  That hunk
-> is only there because I removed the initialisation of map_offset.
+On Thu, Jul 4, 2019 at 11:47 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> Platform drivers now have the option to have the platform core create
+> and remove any needed sysfs attribute files.  So take advantage of that
+> and do not register "by hand" a lid sysfs file.
+>
 
-BTW, do you use a script to get these conflicting patch commit ID
-automatically? It is so helpful to have them.
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Jason
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  arch/x86/platform/olpc/olpc-xo1-sci.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+> index 25ce1b3b0732..ce1948918dd2 100644
+> --- a/arch/x86/platform/olpc/olpc-xo1-sci.c
+> +++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+> @@ -157,6 +157,12 @@ static ssize_t lid_wake_mode_set(struct device *dev,
+>  static DEVICE_ATTR(lid_wake_mode, S_IWUSR | S_IRUGO, lid_wake_mode_show,
+>                    lid_wake_mode_set);
+>
+> +static struct attribute *lid_attrs[] = {
+> +       &dev_attr_lid_wake_mode.attr,
+> +       NULL,
+> +};
+> +ATTRIBUTE_GROUPS(lid);
+> +
+>  /*
+>   * Process all items in the EC's SCI queue.
+>   *
+> @@ -510,17 +516,8 @@ static int setup_lid_switch(struct platform_device *pdev)
+>                 goto err_register;
+>         }
+>
+> -       r = device_create_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+> -       if (r) {
+> -               dev_err(&pdev->dev, "failed to create wake mode attr: %d\n", r);
+> -               goto err_create_attr;
+> -       }
+> -
+>         return 0;
+>
+> -err_create_attr:
+> -       input_unregister_device(lid_switch_idev);
+> -       lid_switch_idev = NULL;
+>  err_register:
+>         input_free_device(lid_switch_idev);
+>         return r;
+> @@ -528,7 +525,6 @@ static int setup_lid_switch(struct platform_device *pdev)
+>
+>  static void free_lid_switch(void)
+>  {
+> -       device_remove_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+>         input_unregister_device(lid_switch_idev);
+>  }
+>
+> @@ -629,6 +625,7 @@ static struct platform_driver xo1_sci_driver = {
+>         .remove = xo1_sci_remove,
+>         .suspend = xo1_sci_suspend,
+>         .resume = xo1_sci_resume,
+> +       .dev_groups = lid_groups,
+>  };
+>
+>  static int __init xo1_sci_init(void)
+> --
+> 2.22.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
