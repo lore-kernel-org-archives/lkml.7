@@ -4,151 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444E7C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07F9C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C2021882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F7621882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 05:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562218773;
-	bh=l5a03sjl2l+bpYmsMzEJCgF/WiLVKn30HEWoyaM68Gs=;
+	s=default; t=1562218863;
+	bh=e8TNcyelEwd3uBfOzE7u6HsVzn4zKxUqsTBHoLp6L4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=La8UunIreC9yH+h3MP4SU7ks/vjpBxe+o1MeOREB7vmidpjjjFVR+ty3tUWhO8Y6m
-	 z4+zBUi/K8tyLIHYJi39Qxptjswcd+gd/aWpomJc6WpNwDpqZC8nStkbyCG07m26oW
-	 mcAYb0ahaRVpDeiLDht28MK3WPa6WAcYZcFyMDQ4=
+	b=Nmk6rTlemCui3Q58QzlbGEH1AIn1YZaxkTgujAWs9WKBTFfu9M7FkGGU58M3w9dyV
+	 VCLbLXbDlBzbbHku1An3aH6ExtoYzaDexGAxpluSBzXntHXjL4L3RGHXmwnb8HINLK
+	 /o3QpDFeOu+0JjNV8BPiOuGMEP5Ok80Q7abdvTCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfGDFjb (ORCPT
+        id S1727226AbfGDFlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 01:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46356 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 01:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfGDFjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 01:39:31 -0400
+        id S1725879AbfGDFlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 01:41:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64BBC21882;
-        Thu,  4 Jul 2019 05:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9560221882;
+        Thu,  4 Jul 2019 05:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562218769;
-        bh=l5a03sjl2l+bpYmsMzEJCgF/WiLVKn30HEWoyaM68Gs=;
+        s=default; t=1562218861;
+        bh=e8TNcyelEwd3uBfOzE7u6HsVzn4zKxUqsTBHoLp6L4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kx9GCrWZpCqJURDrv6MyxKtWv5zXwNx82aigBZrINlKbl1iT5/ewAvzGSwqbKK7Mv
-         ZUzqlEGkgebmK8z1OHhyP8xRXyAjrpGC1wKAGgb0i6jWW/mqh32Cc9vbA2Ct1iijXd
-         KguDsOmTHYOBrUsg3XicHtiPyWLKsCq4M4oSlv2E=
-Date:   Thu, 4 Jul 2019 07:39:27 +0200
+        b=ku0Y7hpoqBS6APNaFuh3irUgN47JKJr78lnWKhlsZ/VI6RkaVk4gAxP9dRYX+4n5k
+         a80+L+oQbzZGypfwGACLFiIEHBXubXt5nBmKXobQHaZTmIOG4ioBNK4mXYKmYotUcF
+         1Z9Mes4ZtNuHFHgEFGePG5+XzLuNJH0Wd/Ba2onk=
+Date:   Thu, 4 Jul 2019 07:40:58 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190704053927.GB347@kroah.com>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-7-mdf@kernel.org>
- <20190703180753.GA24723@kroah.com>
- <20190703233058.GA15825@hao-dev>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Muchun Song <smuchun@gmail.com>, rafael@kernel.org,
+        prsood@codeaurora.org, mojha@codeaurora.org, gkohli@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 OPT2] driver core: Fix use-after-free and double free
+ on glue directory
+Message-ID: <20190704054058.GC347@kroah.com>
+References: <20190626144021.7249-1-smuchun@gmail.com>
+ <20190703193606.GA8452@kroah.com>
+ <319ae04497cf1982076bf801cfdf565046096fd4.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190703233058.GA15825@hao-dev>
+In-Reply-To: <319ae04497cf1982076bf801cfdf565046096fd4.camel@kernel.crashing.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 07:30:58AM +0800, Wu Hao wrote:
-> On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
-> > On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
-> > > From: Wu Hao <hao.wu@intel.com>
-> > > 
-> > > In order to support virtualization usage via PCIe SRIOV, this patch
-> > > adds two ioctls under FPGA Management Engine (FME) to release and
-> > > assign back the port device. In order to safely turn Port from PF
-> > > into VF and enable PCIe SRIOV, it requires user to invoke this
-> > > PORT_RELEASE ioctl to release port firstly to remove userspace
-> > > interfaces, and then configure the PF/VF access register in FME.
-> > > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
-> > > ioctl to attach the port back to PF.
-> > > 
-> > >  Ioctl interfaces:
-> > >  * DFL_FPGA_FME_PORT_RELEASE
-> > >    Release platform device of given port, it deletes port platform
-> > >    device to remove related userspace interfaces on PF, then
-> > >    configures PF/VF access mode to VF.
-> > > 
-> > >  * DFL_FPGA_FME_PORT_ASSIGN
-> > >    Assign platform device of given port back to PF, it configures
-> > >    PF/VF access mode to PF, then adds port platform device back to
-> > >    re-enable related userspace interfaces on PF.
+On Thu, Jul 04, 2019 at 08:57:13AM +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-07-03 at 21:36 +0200, Greg KH wrote:
 > > 
-> > Why are you not using the "generic" bind/unbind facility that userspace
-> > already has for this with binding drivers to devices?  Why a special
-> > ioctl?
-> 
-> Hi Greg,
-> 
-> Actually we think it should be safer that making the device invisble than
-> just unbinding its driver. Looks like user can try to rebind it at any
-> time and we don't have any method to stop them.
-
-Why do you want to "stop" the user from doing something?  They asked to
-do it, why prevent it?  If they ask to do something foolish, well, they
-get to keep the pieces :)
-
-> > > --- a/include/uapi/linux/fpga-dfl.h
-> > > +++ b/include/uapi/linux/fpga-dfl.h
-> > > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
-> > >  
-> > >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
-> > >  
+> > > -static struct kobject *get_device_parent(struct device *dev,
+> > > -					 struct device *parent)
 > > > +/**
-> > > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
-> > > + *					struct dfl_fpga_fme_port_release)
-> > > + *
-> > > + * Driver releases the port per Port ID provided by caller.
-> > > + * Return: 0 on success, -errno on failure.
-> > > + */
-> > > +struct dfl_fpga_fme_port_release {
-> > > +	/* Input */
-> > > +	__u32 argsz;		/* Structure length */
-> > > +	__u32 flags;		/* Zero for now */
-> > > +	__u32 port_id;
-> > > +};
+> > > + * __get_device_parent() - Get the parent device kobject.
+> > > + * @dev: Pointer to the device structure.
+> > > + * @parent: Pointer to the parent device structure.
+> > > + * @lock: When we live in a glue directory, should we hold the
+> > > + *        gdp_mutex lock when this function returns? If @lock
+> > > + *        is true, this function returns with the gdp_mutex
+> > > + *        holed. Otherwise it will not.
 > > 
-> > meta-comment, why do all of your structures for ioctls have argsz?  You
-> > "know" the size of the structure already, it's part of the ioctl
-> > definition.  You shouldn't need to also set it again, right?  Otherwise
-> > ALL Linux ioctls would need something crazy like this.
+> > Ugh, if you are trying to get me to hate one version of these patches,
+> > this is how you do it :)
+> > 
+> > A function should not "sometimes takes a lock, sometimes does not,
+> > depending on a parameter passed into it"  That way lies madness...
 > 
-> Actually we followed the same method as vfio.
+> Yes, I prefer this approach to the fix but I dont like the patch either
+> for the same reason...
+> 
+>  ...
+> 
+> > Anyway, this is a mess.
+> > 
+> > Ugh I hate glue dirs...
+> 
+> Amen...
 
-vfio is a protocol on "the wire", right?  Not an ioctl.
-
-> The major purpose should be extendibility, as we really need this to
-> be sth long term maintainable.
-
-You can't change ioctl structure sizes at any time.
-
-> It really helps, if we add some new members for extentions/enhancement
-> under the same ioctl.
-
-You don't do that.
-
-> I don't think everybody needs this, but my consideration here is if
-> newer generations of hardware/specs come with some extentions, I still
-> hope we can resue these IOCTLs as much as we could, instead of
-> creating more new ones.
-
-You create new ones, like everyone else does, as you can not change old
-code.  By trying to "version" structures like this, it's just going to
-be a nightmare.
+Well, can we just remove them?  Who relies on them anymore?
 
 thanks,
 
