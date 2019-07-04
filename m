@@ -2,351 +2,125 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AB9C4646D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE6C06517
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2803218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257DB218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kRtRCk1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfGDKOH (ORCPT
+        id S1727551AbfGDKOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:14:07 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59358 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfGDKOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:14:07 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id daa413db94795919; Thu, 4 Jul 2019 12:14:05 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] cpuidle/drivers/mobile: Add new governor for mobile/embedded systems
-Date:   Thu, 04 Jul 2019 12:14:05 +0200
-Message-ID: <8334994.XHaO1tGd4f@kreacher>
-In-Reply-To: <20190620115826.4897-1-daniel.lezcano@linaro.org>
-References: <20190620115826.4897-1-daniel.lezcano@linaro.org>
+        Thu, 4 Jul 2019 06:14:24 -0400
+Received: from mout.gmx.net ([212.227.17.21]:38011 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727249AbfGDKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562235242;
+        bh=QkCJpGFSgUNuFdvdF9lwK624srSCvigRjgWwmebE/P4=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=kRtRCk1NCtawiZKymneKJ1kr1gNqM/POpzAp1+WiyYsvkHS4ZVdXvgrSJE3Pmzvp7
+         Eds2d3AqppDTIvPO6CgXTL/jorARVApABLf9OalSK/oCCFV3m457vG/6D+hrp9Zxwe
+         sULfo90vdoATnobydHtTfVlvJlqoYtwNMNbGTtms=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx102
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0LiIgB-1iMjTm4Ai3-00nUMT; Thu, 04
+ Jul 2019 12:14:02 +0200
+Date:   Thu, 4 Jul 2019 12:14:01 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Brad Love <brad@nextdimension.cc>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2] media: si2168: Refactor command setup code
+Message-ID: <20190704101401.GG22408@latitude>
+References: <c28a0da0-7264-4d23-94f1-3bd614383843@free.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
+Content-Disposition: inline
+In-Reply-To: <c28a0da0-7264-4d23-94f1-3bd614383843@free.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:wD0VADbn4aMPuFxFWljJEsbuN/IC/v2ewNlb0Sp1w9t1uRtQKl3
+ cvhxKK4wBETkDdq6Y8ZgRS/fa0scWKAqD2sPPrUK4q+Xv9x0obPXwNOVm2YIzX9p+K9eyuT
+ Q91UvOBKWoPckMerhMat7c6wV3ZyfmXnZFtckijopeHHXgprXs6EjcyGcfqO1aB07okex1f
+ k5WxyBlnR4owuDpxwCB+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OuPds79/bws=:HUsAkxiPEFy5oWxjUPaiyL
+ Hg9RPnHZ0wpMLcuAcnhl4A2SJkU8S76p+j5m+QbMYj3+yZOg/tC8/5uMg4GxVQC2BahOrLb9m
+ sytMd5Hz84/vGHEzlCV422MYwgpI/G3v3mmMEImfkPZ7mgi9bBgvl6QLe3GDEPuSUTdzfKmIF
+ iD3X9lDgQBO+7wE4OMxpww3fY9k9QB1k74Rrm9hhECyWVZ9a8VpbrDuStPgLnHdjjvu/Pn4aX
+ 3a1GHbvLstOg35ZVAY/ZK2mKv7t0i1ZLQAG7VhsTTFZgaABugllIRCldHUactswXzTHrgVgRJ
+ O6cnk0h9w48Qw8LdhpWXO6p1TFCggF3fuMh4gO+rrLO3+FCl6I37Ked1bu+X5AKqHpeO43gam
+ lLlg3TRySGS+9VUVGuv+b2s3ZENVHxRihfdN5KI/Knd7A8h94e+P2ldiTLD5eYHwM5udHwpA8
+ GxfWaNr0Ezji3ziZXCZKQEJjfcu9IVXdRIEQCD/zm9a1OKsiPQpgUNYzYWJt5uUIiP4fnonSY
+ 1Iw42q8Fd+vesHFNnWZhFou/J/SC4eAp6NqqmrgZjkywM4WR4Q1AY8g/qXXY3oxM9t/DROV6W
+ kc0nsF+HSIcCbzdAKc+atBKQyU55wNr8UdNDUxErtG6rm/Kn9/kraNDKf8fnW4lDTELl+Fa94
+ wVSO/aoMrfYo4km71Y68YacQy1gkrVi9dKJZ3Ymdw1o4u8pk35zuTLRPpHakWzZRNSQY2Pdde
+ p7Cuc7fylRnNdiezaWTZ5wunvqOoR65Z4FYX2jt2pe7qNQdgN0zc5MgOXwGBCiQhdeKDPTveL
+ P0JCHnueUtsEHTEqVx2A/QEiBNj9v2BZQv3ODqofoZ9WTj4uXpsTRzvsGZF0jaYpdhQIE7ODn
+ DhM6r8bIMRm6+ZI0ZUKuqC0n1VpAhTZzxARETEVrG2fme71K1ENW7aXruuiSpR5VONbZzsXIt
+ 69L//JqR4ZD1B/xhlToHe7I++kpm9S31BOGaYtZlJb8S9wYenV5MUQuYoddaSP8E9lLk2Akwg
+ +uB+WpDPiJw8/UE0iE3szXJ4JnsszrH9EPy16p3e6v3ntYOQH7uYv4okRg6xMGU3iJSVt3whw
+ WgVZ9OjnRkWXKk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, June 20, 2019 1:58:08 PM CEST Daniel Lezcano wrote:
-> The objective is the same for all the governors: save energy, but at
-> the end the governors menu, ladder and teo aim to improve the
-> performances with an acceptable energy drop for some workloads which
-> are identified for servers and desktops (with the help of a firmware).
-> 
-> The ladder governor is designed for server with a periodic tick
-> configuration.
-> 
-> The menu governor does not behave nicely with the mobile platform and
-> the energy saving for the multimedia workloads is worst than picking
-> up randomly an idle state.
-> 
-> The teo governor acts efficiently, it promotes shallower state for
-> performances which is perfect for the servers / desktop but inadequate
-> for mobile because the energy consumed is too high.
-> 
-> It is very difficult to do changes in these governors for embedded
-> systems without impacting performances on servers/desktops or ruin the
-> optimizations for the workloads on these platforms.
-> 
-> The mobile governor is a new governor targeting embedded systems
-> running on battery where the energy saving has a higher priority than
-> servers or desktops. This governor aims to save energy as much as
-> possible but with a performance degradation tolerance.
-> 
-> In this way, we can optimize the governor for specific mobile workload
-> and more generally embedded systems without impacting other platforms.
-> 
-> The mobile governor is built on top of the paradigm 'separate the wake
-> up sources signals and analyze them'. Three categories of wake up
-> signals are identified:
->  - deterministic : timers
->  - predictable : most of the devices interrupt
->  - unpredictable : IPI rescheduling, random signals
-> 
-> The latter needs an iterative approach and the help of the scheduler
-> to give more input to the governor.
-> 
-> The governor uses the irq timings where we predict the next interrupt
-> occurrences on the current CPU and the next timer. It is well suited
-> for mobile and more generally embedded systems where the interrupts
-> are usually pinned on one CPU and where the power is more important
-> than the performances.
-> 
-> The multimedia applications on the embedded system spawn multiple
-> threads which are migrated across the different CPUs and waking
-> between them up. In order to catch this situation we have also to
-> track the idle task rescheduling duration with a relative degree of
-> confidence as the scheduler is involved in the task migrations. The
-> resched information is in the scope of the governor via the reflect
-> callback.
-> 
-> The governor begins with a clean foundation basing the prediction on
-> the irq behavior returned by the irq timings, the timers and the idle
-> task rescheduling. The advantage of the approach is we have a full
-> view of the wakeup sources as we identify them separately and then we
-> can control the situation without relying on biased heuristics.
-> 
-> This first iteration provides a basic prediction but improves on some
-> mobile platforms better energy for better performance for multimedia
-> workloads.
-> 
-> The scheduling aspect will be optimized iteratively with non
-> regression testing for previous identified workloads on an Android
-> reference platform.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Note that there are build issues reported by 0-day that need to be fixed.
+--tVmo9FyGdCe4F4YN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, IMO this really should be documented better in the tree, not just in the changelog.
-At least the use case to be covered by this governor should be clearly documented and
-it would be good to describe the algorithm.
+On Thu, Jul 04, 2019 at 11:58:45AM +0200, Marc Gonzalez wrote:
+> >From ceb5f687f3f7dab2fb9d5b34408d9cf83a0be228 Mon Sep 17 00:00:00 2001
+> From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Date: Mon, 1 Jul 2019 12:58:31 +0200
+> Subject: [PATCH v2] media: si2168: Refactor command setup code
+>=20
+> Refactor the command setup code, and let the compiler determine
+> the size of each command.
+>=20
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-> ---
->  drivers/cpuidle/Kconfig            |  11 ++-
->  drivers/cpuidle/governors/Makefile |   1 +
->  drivers/cpuidle/governors/mobile.c | 151 +++++++++++++++++++++++++++++
->  3 files changed, 162 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/cpuidle/governors/mobile.c
-> 
-> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-> index a4ac31e4a58c..e2376d85e288 100644
-> --- a/drivers/cpuidle/Kconfig
-> +++ b/drivers/cpuidle/Kconfig
-> @@ -5,7 +5,7 @@ config CPU_IDLE
->  	bool "CPU idle PM support"
->  	default y if ACPI || PPC_PSERIES
->  	select CPU_IDLE_GOV_LADDER if (!NO_HZ && !NO_HZ_IDLE)
-> -	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO
-> +	select CPU_IDLE_GOV_MENU if (NO_HZ || NO_HZ_IDLE) && !CPU_IDLE_GOV_TEO && !CPU_IDLE_GOV_MOBILE
->  	help
->  	  CPU idle is a generic framework for supporting software-controlled
->  	  idle processor power management.  It includes modular cross-platform
-> @@ -33,6 +33,15 @@ config CPU_IDLE_GOV_TEO
->  	  Some workloads benefit from using it and it generally should be safe
->  	  to use.  Say Y here if you are not happy with the alternatives.
->  
-> +config CPU_IDLE_GOV_MOBILE
-> +	bool "Mobile governor"
-> +	select IRQ_TIMINGS
-> +	help
-> +	  The mobile governor is based on irq timings measurements and
-> +	  pattern research combined with the next timer. This governor
-> +	  suits very well on embedded systems where the interrupts are
-> +	  grouped on a single core and the power is the priority.
-> +
->  config DT_IDLE_STATES
->  	bool
->  
-> diff --git a/drivers/cpuidle/governors/Makefile b/drivers/cpuidle/governors/Makefile
-> index 42f44cc610dd..f09da7178670 100644
-> --- a/drivers/cpuidle/governors/Makefile
-> +++ b/drivers/cpuidle/governors/Makefile
-> @@ -6,3 +6,4 @@
->  obj-$(CONFIG_CPU_IDLE_GOV_LADDER) += ladder.o
->  obj-$(CONFIG_CPU_IDLE_GOV_MENU) += menu.o
->  obj-$(CONFIG_CPU_IDLE_GOV_TEO) += teo.o
-> +obj-$(CONFIG_CPU_IDLE_GOV_MOBILE) += mobile.o
-> diff --git a/drivers/cpuidle/governors/mobile.c b/drivers/cpuidle/governors/mobile.c
-> new file mode 100644
-> index 000000000000..8fda0f9b960b
-> --- /dev/null
-> +++ b/drivers/cpuidle/governors/mobile.c
-> @@ -0,0 +1,151 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019, Linaro Ltd
-> + * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
-> + */
-> +#include <linux/cpuidle.h>
-> +#include <linux/kernel.h>
-> +#include <linux/sched.h>
-> +#include <linux/slab.h>
-> +#include <linux/tick.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/sched/clock.h>
-> +
-> +struct mobile_device {
-> +	u64 idle_ema_avg;
-> +	u64 idle_total;
-> +	unsigned long last_jiffies;
-> +};
-> +
-> +#define EMA_ALPHA_VAL		64
-> +#define EMA_ALPHA_SHIFT		7
-> +#define MAX_RESCHED_INTERVAL_MS	100
-> +
-> +static DEFINE_PER_CPU(struct mobile_device, mobile_devices);
-> +
-> +static int mobile_ema_new(s64 value, s64 ema_old)
-> +{
-> +	if (likely(ema_old))
-> +		return ema_old + (((value - ema_old) * EMA_ALPHA_VAL) >>
-> +				  EMA_ALPHA_SHIFT);
-> +	return value;
-> +}
-> +
-> +static void mobile_reflect(struct cpuidle_device *dev, int index)
-> +{
-> +        struct mobile_device *mobile_dev = this_cpu_ptr(&mobile_devices);
-> +	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-> +	struct cpuidle_state *s = &drv->states[index];
-> +	int residency;
-> +
-> +	/*
-> +	 * The idle task was not rescheduled since
-> +	 * MAX_RESCHED_INTERVAL_MS, let's consider the duration is
-> +	 * long enough to clear our stats.
-> +	 */
-> +	if (time_after(jiffies, mobile_dev->last_jiffies +
-> +		       msecs_to_jiffies(MAX_RESCHED_INTERVAL_MS)))
-> +		mobile_dev->idle_ema_avg = 0;
-
-Why jiffies?  Any particular reason?
-
-> +
-> +	/*
-> +	 * Sum all the residencies in order to compute the total
-> +	 * duration of the idle task.
-> +	 */
-> +	residency = dev->last_residency - s->exit_latency;
-> +	if (residency > 0)
-> +		mobile_dev->idle_total += residency;
-> +
-> +	/*
-> +	 * We exited the idle state with the need_resched() flag, the
-> +	 * idle task will be rescheduled, so store the duration the
-> +	 * idle task was scheduled in an exponential moving average and
-> +	 * reset the total of the idle duration.
-> +	 */
-> +	if (need_resched()) {
-> +		mobile_dev->idle_ema_avg = mobile_ema_new(mobile_dev->idle_total,
-> +						      mobile_dev->idle_ema_avg);
-> +		mobile_dev->idle_total = 0;
-> +		mobile_dev->last_jiffies = jiffies;
-> +	}
-> +}
-> +
-> +static int mobile_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
-> +		       bool *stop_tick)
-> +{
-> +	struct mobile_device *mobile_dev = this_cpu_ptr(&mobile_devices);
-> +	int latency_req = cpuidle_governor_latency_req(dev->cpu);
-> +	int i, index = 0;
-> +	ktime_t delta_next;
-> +	u64 now, irq_length, timer_length;
-> +	u64 idle_duration_us;
-> +
-> +	/*
-> +	 * Get the present time as reference for the next steps
-> +	 */
-> +	now = local_clock();
-> +
-> +	/*
-> +	 * Get the next interrupt event giving the 'now' as a
-> +	 * reference, if the next event appears to have already
-> +	 * expired then we get the 'now' returned which ends up with a
-> +	 * zero duration.
-> +	 */
-> +	irq_length = irq_timings_next_event(now) - now;
-> +
-> +	/*
-> +	 * Get the timer duration before expiration.
-> +	 */
-
-This comment is rather redundant and the one below too. :-)
-
-> +	timer_length = ktime_to_ns(tick_nohz_get_sleep_length(&delta_next));
-> +
-> +	/*
-> +	 * Get the smallest duration between the timer and the irq next event.
-> +	 */
-> +	idle_duration_us = min_t(u64, irq_length, timer_length) / NSEC_PER_USEC;
-> +
-> +	/*
-> +	 * Get the idle task duration average if the information is
-> +	 * available.
-
-IMO it would be good to explain this step in more detail, especially the purpose of it.
-
-> +	 */
-> +	if (mobile_dev->idle_ema_avg)
-> +		idle_duration_us = min_t(u64, idle_duration_us,
-> +					 mobile_dev->idle_ema_avg);
-> +
-> +	for (i = 0; i < drv->state_count; i++) {
-> +		struct cpuidle_state *s = &drv->states[i];
-> +		struct cpuidle_state_usage *su = &dev->states_usage[i];
-> +
-> +		if (s->disabled || su->disable)
-> +			continue;
-> +
-> +		if (s->exit_latency > latency_req)
-> +			break;
-> +
-> +		if (idle_duration_us > s->exit_latency)
-> +			idle_duration_us = idle_duration_us - s->exit_latency;
-
-Why do you want this?
-
-It only causes you to miss an opportunity to select a deeper state sometimes,
-so what's the reason?
-
-Moreover, I don't think you should update idle_duration_us here, as the updated
-value will go to the next step if the check below doesn't trigger.
-
-> +
-> +		if (s->target_residency > idle_duration_us)
-> +			break;
-> +
-> +		index = i;
-> +	}
-> +
-> +	if (!index)
-> +		*stop_tick = false;
-
-Well, this means that the tick is stopped for all idle states deeper than state 0.
-
-If there are any states between state 0 and the deepest one and they are below
-the tick boundary, you may very well suffer the "powernightmares" problem
-because of this.
-
-> +
-> +	return index;
-> +}
-> +
-> +static struct cpuidle_governor mobile_governor = {
-> +	.name =		"mobile",
-> +	.rating =	20,
-> +	.select =	mobile_select,
-> +	.reflect =	mobile_reflect,
-> +};
-> +
-> +static int __init init_governor(void)
-> +{
-> +	irq_timings_enable();
-> +	return cpuidle_register_governor(&mobile_governor);
-> +}
-> +
-> +postcore_initcall(init_governor);
-> 
+Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
 
+Thanks,
+Jonathan Neusch=C3=A4fer
 
+--tVmo9FyGdCe4F4YN
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl0d0UUACgkQCDBEmo7z
+X9u1Uw//VzQPr9Ez7Z8bLgzo9u7ElCsmMWEjQhAL05Zvk3O5fxZbwlQYuH4cI2Vl
+rfSwXqOyHoL+6IElX20nPNl4wx+QXMPNAVojH/swSbd2ImO36O/WyUB0DLJ3cdE5
+bUhDCIO/egGGQIlgZx5eqhYeFyhTCvcswMBJr5v3bDLyirf9/E+7EzrdR94c9WMW
+ggjlDcU9qh38wIUGS2kX+lZ6TZsP0O9YUV6Ya/K5lyJVJf/beFUSwD3czFFSdqt9
+agjdUJESv6v93VFodIl5TF2Ql8wFy1SwTzCBA4neZKRuCCZk2PdzXtAe1Nxuc0z/
+Id4U17o7bBuHz21MwNkE7E7C9TdEcZfbGUBdKkmlqpLl8vehD6tWVkbQj5EKWcxl
+ZPwKyEiNvPSfgkOQ/VS8TkcRGpjulMw3eglZchnHnkQR0ERON9R7L7eBqYhZm9g+
+USGrySA+1CA9hZ2B6nnZaYRahXshOCn577fHRXH87bGxOHgjaVDrNrIMJrUkDFJw
+IQfyaZk8GDkpf5LF+OBWKXrxg2vYGmzSu8lleY9cFWM1PTBp1M1CfqpiFbcWkDHl
+7SpK5kDRMWdkECunnE/nb3lQ5JlGbA9Tznqzwfna19bxKplc6k0WXtLGlqfAiHqu
+C6puCwGkaUP+i/YLbaWIG90WL8Ja/dQHRLxBgsOYxdTfERTYMKE=
+=0Q/E
+-----END PGP SIGNATURE-----
+
+--tVmo9FyGdCe4F4YN--
