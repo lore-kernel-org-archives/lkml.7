@@ -2,90 +2,93 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33E3C06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF846C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74CD2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:06:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPh7nvTw"
+	by mail.kernel.org (Postfix) with ESMTP id BC57520693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfGDMGs (ORCPT
+        id S1727716AbfGDMHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:06:48 -0400
-Received: from mail-lf1-f51.google.com ([209.85.167.51]:40137 "EHLO
-        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbfGDMGr (ORCPT
+        Thu, 4 Jul 2019 08:07:24 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:33182 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbfGDMHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:06:47 -0400
-Received: by mail-lf1-f51.google.com with SMTP id b17so483998lff.7;
-        Thu, 04 Jul 2019 05:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MTkfUI5zLzVNOyUZXexQl1Bggm8zbSH8fyasWshB1Hg=;
-        b=MPh7nvTwj2pkyjfgcekBMNLi5oDPufvo1Ho2+aihzyD6MaxNinLmrjUo3M2kO0XR3S
-         YG+Dl/t9iCaW3Uwdtt01WcTAN75aUe3GbUUF6k+lAin9/wlw9v9PRoCHj5EbknyRvw2r
-         swpIuByfQknbjMSlvzNTZoOFeX0o+nuUC+YmZZbz67gqW/I09oVO6D3v6zbIpSCzbWEq
-         v6N9nxlYEJHj1hK7jzJrdumNz/obyDBsiySBdKj1izeG628zh+NlNUH6a9818r06F1nt
-         CUbTBQ/iR+1kgwutgGwSsU+RypQ0WQHRbP3eBMFZwz4z7UeqfU0a5eVaKzV79LHuO/fL
-         3gQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MTkfUI5zLzVNOyUZXexQl1Bggm8zbSH8fyasWshB1Hg=;
-        b=EW8lLWqasgPCL2fyNnszeV4v26VvirxZDDris3lv5/dgUfjVluZR2Gpm+OSCCpgcPx
-         QzMn2yTn5RQboV7aEh4NQjq/JArvWugDIvAIVEiQzsHhdwH3uDP11BKP2+93X1Jv7UHv
-         lBIkIjRIe4tW6BpxrhbWoyrw1jUuWNYClIQSDQlLAVpadWbc4vsxaKEtQX/9nJpN5g6U
-         HjUQWvdln8jdGYVUNtqh1D5LSGbq/emFu4Fb9CD0xQUdWHMgmlsf4IMKZs1sMDVNJLG6
-         T1ymkTpkJw0cF1RE/tnw06Ucaf8vTsK0TyeUP6A54mG/ZD9Yo4voMroSq6sLwu7xAUAX
-         AbHA==
-X-Gm-Message-State: APjAAAVocJd4B3CJvRBB7I6l+xdTQ/kwzivjDXHhnVvoKHbHEi885gof
-        bSQK2diUmNaDk05bOQyYiUNRxIiqygMD4whCeso=
-X-Google-Smtp-Source: APXvYqwACPiX5jRVWpvpEJPURWsQZiVp9zq9X2m0pRR6Tqlg5IzXTi4R893w3QYwU/YUlMceWKeiRSflY0C6o5MHQLw=
-X-Received: by 2002:a05:6512:146:: with SMTP id m6mr2784221lfo.90.1562242005405;
- Thu, 04 Jul 2019 05:06:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
- <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 4 Jul 2019 09:06:35 -0300
-Message-ID: <CAOMZO5BFim2tWxH3nKV08Y1C2-rB7kr8_9v=Qgj+6AXa30-ExQ@mail.gmail.com>
-Subject: Re: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
- fsl-edma: support little endian for edma driver"
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Andy Tang <andy.tang@nxp.com>
+        Thu, 4 Jul 2019 08:07:23 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hj0WD-0005Xr-0v; Thu, 04 Jul 2019 14:07:17 +0200
+Message-ID: <51ab673812121794b021a09073a74fca33b81210.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 04 Jul 2019 14:07:16 +0200
+In-Reply-To: <20190703143724.GD2250@nanopsycho> (sfid-20190703_163726_852714_F806A186)
+References: <cover.1562067622.git.mkubecek@suse.cz>
+         <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+         <20190703114933.GW2250@nanopsycho>
+         <b3cd61506080143f571d6286223ae33c8bd02c3a.camel@sipsolutions.net>
+         <20190703143724.GD2250@nanopsycho> (sfid-20190703_163726_852714_F806A186)
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
+On Wed, 2019-07-03 at 16:37 +0200, Jiri Pirko wrote:
+> Wed, Jul 03, 2019 at 03:44:57PM CEST, johannes@sipsolutions.net wrote:
+> > On Wed, 2019-07-03 at 13:49 +0200, Jiri Pirko wrote:
+> > > 
+> > > > +Value and mask must have length at least ETHTOOL_A_BITSET_SIZE bits rounded up
+> > > > +to a multiple of 32 bits. They consist of 32-bit words in host byte order,
+> > > 
+> > > Looks like the blocks are similar to NLA_BITFIELD32. Why don't you user
+> > > nested array of NLA_BITFIELD32 instead?
+> > 
+> > That would seem kind of awkward to use, IMHO.
+> > 
+> > Perhaps better to make some kind of generic "arbitrary size bitfield"
+> > attribute type?
+> 
+> Yep, I believe I was trying to make this point during bitfield32
+> discussion, failed apparently. So if we have "NLA_BITFIELD" with
+> arbitrary size, that sounds good to me.
 
-On Wed, Jul 3, 2019 at 11:10 PM Peng Ma <peng.ma@nxp.com> wrote:
+I guess it could be the same way - just have the content be
 
-> So we need this patch, I make some changes,Please help me to test attatchment on VF50 board,
+u32 value[N];
+u32 select[N];
 
-You need to change the Subject to something like:
+where N = nla_len(attr) / 8
 
-Subject: [PATCH] dmaengine: fsl-edma: Add support for LS1028A
+That'd be compatible with NLA_BITFIELD32, and we could basically change
+all occurrences of NLA_BITFIELD32 to NLA_BITFIELD, and have NLA_BITFIELD
+take something like a "max_bit" for the .len field or something like
+that? And an entry in the validation union to point to a "u32 *mask"
+instead of the current validation_data that just points to a single u32
+mask...
 
-Also, in the commit log, please change "Our platforms" to "LS1028A"
+So overall seems like a pretty simple extension to NLA_BITFIELD32 that
+handles NLA_BITFIELD32 as a special case with simply .len=32.
 
-Please remove this part: "Current eDMA driver does not support Little endian"
+(len is a 16-bit field, but a 64k bitmap should be sufficient I hope?)
 
-,which is not correct.
+johannes
+
