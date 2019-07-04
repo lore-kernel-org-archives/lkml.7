@@ -2,104 +2,103 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA78C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FEC0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1302085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1772085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 15:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cViTZ/CF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FBtrqnbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfGDPwZ (ORCPT
+        id S1727532AbfGDPxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 11:52:25 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54300 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfGDPwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 11:52:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=svphATbkFOoAAltJuUblfqvoklVJ2Q5WVSnZRTgzpDw=; b=cViTZ/CF344FGf1dtxH/n9m/Ke
-        59YKl369FU2WptLb8GxVK+48MONjUA7ok4zrdOu2D8uxSz/hy8dVytG0l990Hslraf33EI44o331e
-        JB0i7shiAC7PEC9SmVI4eCccso1cymQV/IuV0WOfu/VyxZOKhQWetiQAXhlypz0rI1XU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hj41x-0004lI-Eh; Thu, 04 Jul 2019 17:52:17 +0200
-Date:   Thu, 4 Jul 2019 17:52:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Voon, Weifeng" <weifeng.voon@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: Re: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Message-ID: <20190704155217.GI18473@lunn.ch>
-References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
- <20190703140520.GA18473@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
- <20190704033038.GA6276@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
- <20190704135420.GD13859@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
+        Thu, 4 Jul 2019 11:53:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41610 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfGDPxu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 11:53:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x64FrZX0020307;
+        Thu, 4 Jul 2019 10:53:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562255615;
+        bh=1aAOg3DUMC85aQ9Mtdo75I0mcP1z9dseQgr2lPYDhZk=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=FBtrqnbKFYQJQvmXJao71IvWQ6Gm+lWocwFUoL2t4AAtfHpjUe5LCyxqEaEW5muCq
+         mp0iMJK4FDvXg/jFlkwX3C2Lp0Ns9O2b1ru2pviiOZQhMidbW908Bb0GZqja3tWNxM
+         LfZ78kN/DnmDEMAi9ckFXZNzIkYQs69MvKODIqTo=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x64FrZuS071648
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jul 2019 10:53:35 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Jul
+ 2019 10:53:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Jul 2019 10:53:35 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x64FrZOf078909;
+        Thu, 4 Jul 2019 10:53:35 -0500
+Date:   Thu, 4 Jul 2019 10:53:26 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Felipe Balbi <balbi@kernel.org>
+CC:     Pawel Laszczak <pawell@cadence.com>, Greg KH <greg@kroah.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: linux-next: build failure after merge of the usb and usb-gadget
+ trees
+Message-ID: <20190704155326.f75xhkpyh5mq4467@kahuna>
+References: <20190704163458.63ed69d2@canb.auug.org.au>
+ <20190704065949.GA32707@kroah.com>
+ <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com>
+ <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87imsiyzo3.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <87imsiyzo3.fsf@linux.intel.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, the top 16 bit of the data register only valid when C45 is enable.
-> It contains the Register address which MDIO c45 frame intended for.
+On 11:25-20190704, Felipe Balbi wrote:
+[...]
 
-I think there is too much passing variables around by reference than
-by value, to make this code easy to understand.
+> This is what I get for trusting people to do their part. I couldn't even
+> compile test this since I don't have ARM compilers anymore (actually,
+> just installed to test). Your customer, however, uses ARM cores so I
+> would expect you to have at least compile tested this on ARM. How come
+> this wasn't verified by anybody at TI?
 
-Maybe a better structure would be
+Sorry about that Felipe/Greg, will try and make sure we put in steps so
+that this does'nt happen again.
 
-static int stmmac_mdion_c45_read(struct stmmac_priv *priv, int phyaddr, int phyreg)
-{
+> 
+> TI used to have automated testing for many of the important defconfigs,
+> is that completely gone? Are you guys relying entirely on linux-next?
 
-	unsigned int reg_shift = priv->hw->mii.reg_shift;
-	unsigned int reg_mask = priv->hw->mii.reg_mask;
-	u32 mii_addr_val, mii_data_val;
+We still do. Kind of a unfortunately co-incidence, there has been for a
+few weeks a downtime given the test infrastructure has been changing and
+the continual automated testing env is down for community kernel. But,
+that said, we also did move to focussing on linux-next, which should be
+revisited.
 
-	mii_addr_val = MII_GMAC4_C45E |
-                       ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
-        mii_data_val = (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
 
-	writel(mii_data_val, priv->ioaddr + priv->hw->mii_data);
-	writel(mii_addr_val, priv->ioaddr + priv->hw->mii_addrress);
-
-	return (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
-}		   
-
-static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
-{
-
-...
-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
- 	   		      100, 10000))
- 		return -EBUSY;
-
-      if (priv->plat->has_gmac4 && phyreg & MII_ADDR_C45)
-      	return stmmac_mdio_c45_read(priv, phyaddr, phyreg);
-
-	Andrew
+-- 
+Regards,
+Nishanth Menon
