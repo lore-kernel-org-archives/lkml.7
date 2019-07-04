@@ -2,113 +2,120 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68AAC0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55065C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E674216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CDA216E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 19:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKiKA2Bj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i89TR/RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfGDTI0 (ORCPT
+        id S1727169AbfGDTKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 15:08:26 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:35451 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGDTI0 (ORCPT
+        Thu, 4 Jul 2019 15:10:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38858 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfGDTKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 15:08:26 -0400
-Received: by mail-io1-f50.google.com with SMTP id m24so5116779ioo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 12:08:25 -0700 (PDT)
+        Thu, 4 Jul 2019 15:10:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y15so3281163pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 12:10:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9btak+fKeivJpFWumZoTjMC0trVA+9MBYmqaPWrOHn0=;
-        b=kKiKA2Bj2KAI7YLiGcXr0lnUd35Z3UyghngWdqXiuA02WwEsXazhsQZ2v/rgyYCWIH
-         QIHGE6M8JPkfdOpDTW3UzfojE/jdlxwLksTRbmJMTtStjpQz8CGWJu/qF7ygua0YZEgx
-         MZAT43VECo5VkmOouhrKOC82DAu+xzsJ9+fYC364Z+Ux3E64M4LkH+0oB4H2QVUGDLuc
-         RT5MGIzK7yMVUmB8K99/ot6LYVjDmM2Mz+qfqYj+PU7GDG5x0Y3gx9YQJiemTx42YtI4
-         MZpCNrpKfIjAWtnU5SUwmQ7+d79p6bmIychFN/kp1I0+ymcIhPYGJS4UOPL1qIcZDu6a
-         K6Rg==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=eoeEYOdEqIZcZNq9pmeZ1c/pJgF9dtMJSkeiYBAiydQ=;
+        b=i89TR/RH7piu7X1G2CDukfVjSPIu/SqpUXrxtK/fbY++fQLTH+s6TUGWfRBi3Szjpb
+         Ldv1rCeo/zE/Kueo63qiqWKBFb9+EFuzV/pC5Zs+hwFh38bOeBYVUSiZZ7mTagYabtnC
+         SFgrzgyqiWfilRgSmuaUxIU6CM8OX81suJz5WaajShPmrQU9zF1aRxPOWvRFyjbt0+TP
+         CGnhVDcxmLQbqj3XOysUoevjX70EP3d8H/SB7lymxT2oUradpMtkrLcfmreQn4PFyUYs
+         SlqhJnrrTu7bk4HEqTdTpY9YGwpW/ZBtmoRlXeke14CHTzRsfLRnH+tXc+GH+wkmDUnN
+         n5AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9btak+fKeivJpFWumZoTjMC0trVA+9MBYmqaPWrOHn0=;
-        b=CtcZ01lnq0iyoWsmudRhymyLH5NSLD9F617fnOsbG7z72Gc7PK3FDxGxXKIT6MzvyK
-         mVgJNrjgOnjUt/lPMeZx30WyrYatM3+0yfDBN5V+NBzG9ve47kZvX2XFr53OYnbSUG+8
-         F2wiWeMJVJet8GYGLHhfoHTtfrsyFGo6iulXvGxx8Jn+IAtQnut9tCsWoW2HyObw9v2I
-         6Q2nwSXMANoDGLVrgbNqkgigvu5frfMLcthFJmkAMlrS7P9bHHYbPyxJ1d+mJuA+6KfM
-         mpA65SVZnUtagscEMozdWieL1Bp70HuKxu+n0su6vmiw9xuVp8iwWuJ7A5V24P6MGO0R
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eoeEYOdEqIZcZNq9pmeZ1c/pJgF9dtMJSkeiYBAiydQ=;
+        b=HOJZJCB29/qoK42+HABv/ja45oOYXZMaFqbQoDOptr1b8NhtP0i6SfDpvHArW7+8P2
+         LmR8TSvYVChLfObeJ/48leRCYck8oG54lf0HxsIjYkmJBAq29X5sIhi93LVnoKHH5yds
+         TFY5EVo6nu2OzzZjpCzAq9XlgUIk1BjHoxtxqmUPvSOhHOzyjr5gAl/CShx4ZEVSQ7Xn
+         WBU71lAH1BkRTyUvm5Ch4R9BSvgv3PJ8Cf3dF6SsP1NqAqxY+PXfteuubl43XUJ7QL5E
+         ZZYaI5tQRxVcyuqqRdMDbg4lJXpHO27quJNjaGY5W2rUPcCiEjcIto390BJ+bo2pcHc4
          jgIg==
-X-Gm-Message-State: APjAAAXbVxbrOjiWIR4ED+Hg9A0AMV1cuIIz+noqlsjmeOMwiCbsyoJu
-        Lle+XAuLIt3IxtgAQhruQnz44EgfMNM0rFC3CVM=
-X-Google-Smtp-Source: APXvYqwVyWfwlxBxJohecI/H5oxgmdJ1n8iHxHi16NUSGnX6AI3z95oR6ILRv45iTfcdHoNfZuLXFs+sMg1SjT1yH1E=
-X-Received: by 2002:a6b:6012:: with SMTP id r18mr5922135iog.241.1562267305070;
- Thu, 04 Jul 2019 12:08:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAXtD29AIHN+0MAyrQPwdS6aCxgFeiDkfmRrdlohNVcMdf7oxvc9
+        z3kfREt9T3SqsrkG4iCIXWUHVsvN
+X-Google-Smtp-Source: APXvYqwrIftnJWSgTXCug1xbFEa+ugyQIaxmZrbO6htXQ9e08mEfTQxBLUkKBrxI+t6c488oVAYUQQ==
+X-Received: by 2002:a17:90a:8a15:: with SMTP id w21mr1147947pjn.134.1562267434822;
+        Thu, 04 Jul 2019 12:10:34 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.81.29])
+        by smtp.gmail.com with ESMTPSA id t2sm6702982pfh.166.2019.07.04.12.10.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 12:10:33 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 00:40:26 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: soc: codecs: wcd9335: add irqflag IRQF_ONESHOT flag
+Message-ID: <20190704191026.GA20732@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190702141903.1131-1-kraxel@redhat.com> <20190702141903.1131-16-kraxel@redhat.com>
- <CAPaKu7S0n=E7g0o2e6fEk1YjP+u=tsoV8upw7J=noSx88PgP+A@mail.gmail.com> <20190704115138.ou77sb3rlrex67tj@sirius.home.kraxel.org>
-In-Reply-To: <20190704115138.ou77sb3rlrex67tj@sirius.home.kraxel.org>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Thu, 4 Jul 2019 12:08:14 -0700
-Message-ID: <CAPaKu7SDwR1TgFQK2XGEbRqSkCO0XZYxGhcjzsAwOH42aOHEEw@mail.gmail.com>
-Subject: Re: [PATCH v6 15/18] drm/virtio: rework virtio_gpu_transfer_to_host_ioctl
- fencing
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 4:51 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
->   Hi,
->
-> > >         convert_to_hw_box(&box, &args->box);
-> > >         if (!vgdev->has_virgl_3d) {
-> > >                 virtio_gpu_cmd_transfer_to_host_2d
-> > > -                       (vgdev, qobj, offset,
-> > > +                       (vgdev, gem_to_virtio_gpu_obj(objs->objs[0]), offset,
-> > >                          box.w, box.h, box.x, box.y, NULL);
-> > > +               virtio_gpu_array_put_free(objs);
-> > Don't we need this in non-3D case as well?
->
-> No, ...
->
-> > >                 virtio_gpu_cmd_transfer_to_host_3d
-> > > -                       (vgdev, qobj,
-> > > +                       (vgdev,
-> > >                          vfpriv ? vfpriv->ctx_id : 0, offset,
-> > > -                        args->level, &box, fence);
-> > > -               reservation_object_add_excl_fence(qobj->base.base.resv,
-> > > -                                                 &fence->f);
-> > > +                        args->level, &box, objs, fence);
->
-> ... 3d case passes the objs list to virtio_gpu_cmd_transfer_to_host_3d,
-> so it gets added to the vbuf and released when the command is finished.
-Why doesn't this apply to virtio_gpu_cmd_transfer_to_host_2d?
+Add IRQF_ONESHOT to ensure "Interrupt is not reenabled after the hardirq
+handler finished".
 
-When object array was introduced, it was said that the object array
-was to keep the objects alive until the vbuf using the objects is
-retired..  That sounded applicable to any vbuf that uses objects.
+fixes below issue reported by coccicheck
 
+sound/soc/codecs/wcd9335.c:4068:8-33: ERROR: Threaded IRQ with no
+primary handler requested without IRQF_ONESHOT
 
->
-> cheers,
->   Gerd
->
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ sound/soc/codecs/wcd9335.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index 85737fe..7ab9bf6f 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -4056,6 +4056,9 @@ static struct wcd9335_irq wcd9335_irqs[] = {
+ static int wcd9335_setup_irqs(struct wcd9335_codec *wcd)
+ {
+ 	int irq, ret, i;
++	unsigned long irqflags;
++
++	irqflags = IRQF_TRIGGER_RISING | IRQF_ONESHOT;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(wcd9335_irqs); i++) {
+ 		irq = regmap_irq_get_virq(wcd->irq_data, wcd9335_irqs[i].irq);
+@@ -4067,7 +4070,7 @@ static int wcd9335_setup_irqs(struct wcd9335_codec *wcd)
+ 
+ 		ret = devm_request_threaded_irq(wcd->dev, irq, NULL,
+ 						wcd9335_irqs[i].handler,
+-						IRQF_TRIGGER_RISING,
++						irqflags,
+ 						wcd9335_irqs[i].name, wcd);
+ 		if (ret) {
+ 			dev_err(wcd->dev, "Failed to request %s\n",
+-- 
+2.7.4
+
