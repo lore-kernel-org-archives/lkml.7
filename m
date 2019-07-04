@@ -2,191 +2,190 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2807C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB68AC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8952C216E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9092133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjTtkcA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfGDGrx (ORCPT
+        id S1727123AbfGDG6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:47:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20588 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfGDGrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:47:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jul 2019 23:47:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,449,1557212400"; 
-   d="scan'208";a="339525582"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2019 23:47:49 -0700
-Date:   Thu, 4 Jul 2019 14:31:06 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 06/15] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190704063106.GA24777@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-7-mdf@kernel.org>
- <20190703180753.GA24723@kroah.com>
- <20190703233058.GA15825@hao-dev>
- <20190704053927.GB347@kroah.com>
+        Thu, 4 Jul 2019 02:58:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34247 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfGDG6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:58:48 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w9so4547357wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jul 2019 23:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=wmbWXidqkuvBIedLHQDdrW1iUlOaCMExfvS6Z0yx96c=;
+        b=PjTtkcA0Tm98JXR/1gLChgQpgCNDQn9ty/SQwOQjrwFcHvR5w4J5GMZ7u5dII4ODJj
+         e9nPkpUAiMDdjreuCnIrMH35rom3OgyTGnpDH+UJDO2gQ9eurAhpEFIYJXpHckZtc+uK
+         R+c/RPrQprBUnxS9KRtgwWaxlebGBtOhqr24WL8HzPkx13FZBehpSG/M3z5b21MF0qgI
+         N/TZzfxbGXXxDc9X5bV8um+0Uk5cGH7VcLJp2QxXGqxKNjMgqXFSApnGgZ4DWF3TaZUF
+         tJqzxkbeg3Zj7bIfmH/VYGZy2V+trpx+7qx3HGFLi22cOYwaya24BEDS/Ejy6yNQwoSu
+         3ksg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wmbWXidqkuvBIedLHQDdrW1iUlOaCMExfvS6Z0yx96c=;
+        b=MIatUlJizhRg0N7DiwGxQyNvtWF0CLgBGyk37G0XzMu0TwsRKpmZjRtNjaa0J77Jrn
+         4q69I9F15nIDd9Ai7lbi3jrGlINPE4zY2CrhV6mQWCxM3a4SxlRg7E/li3Wh/N8WuDl3
+         CSbDBcvlOS5raHp2hr/60WE/Rp407r5mc3hD2t+GNn3nNJdCoz+u9DSbo0jAjBBKOqt+
+         /bk2+PrmHynFcactlbuX6xLe/pVlgoPKyPqdpM+nxY5gLHov4RaQ/eNtVLlj2zXy9hPA
+         z8TyNA2AEOhym6zz5XOLoMQQ+SjU7YKvcTPlyQhJTPfnqDShHmplYWTqHTqsyImiWesE
+         M6Vw==
+X-Gm-Message-State: APjAAAV9MNa77YfEiz4uLflOo9h6+numn4IOJ7U+DfNwr5mAYtDP7+DI
+        94m3GjtiHWZ5hxSTwClwcVY=
+X-Google-Smtp-Source: APXvYqyVIUJqYCwSX2DmikwA8mw510FldQRJsgJuxubH5FuzLi9hR5+ZLhygyCDAeL6uEXIfemythA==
+X-Received: by 2002:a1c:7d08:: with SMTP id y8mr11797994wmc.50.1562223525591;
+        Wed, 03 Jul 2019 23:58:45 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id t6sm5205517wmb.29.2019.07.03.23.58.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jul 2019 23:58:45 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 09:58:43 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull v2] habanalabs pull request for kernel 5.3
+Message-ID: <20190704065843.GA21559@ogabbay-VM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190704053927.GB347@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 07:39:27AM +0200, Greg KH wrote:
-> On Thu, Jul 04, 2019 at 07:30:58AM +0800, Wu Hao wrote:
-> > On Wed, Jul 03, 2019 at 08:07:53PM +0200, Greg KH wrote:
-> > > On Thu, Jun 27, 2019 at 05:49:42PM -0700, Moritz Fischer wrote:
-> > > > From: Wu Hao <hao.wu@intel.com>
-> > > > 
-> > > > In order to support virtualization usage via PCIe SRIOV, this patch
-> > > > adds two ioctls under FPGA Management Engine (FME) to release and
-> > > > assign back the port device. In order to safely turn Port from PF
-> > > > into VF and enable PCIe SRIOV, it requires user to invoke this
-> > > > PORT_RELEASE ioctl to release port firstly to remove userspace
-> > > > interfaces, and then configure the PF/VF access register in FME.
-> > > > After disable SRIOV, it requires user to invoke this PORT_ASSIGN
-> > > > ioctl to attach the port back to PF.
-> > > > 
-> > > >  Ioctl interfaces:
-> > > >  * DFL_FPGA_FME_PORT_RELEASE
-> > > >    Release platform device of given port, it deletes port platform
-> > > >    device to remove related userspace interfaces on PF, then
-> > > >    configures PF/VF access mode to VF.
-> > > > 
-> > > >  * DFL_FPGA_FME_PORT_ASSIGN
-> > > >    Assign platform device of given port back to PF, it configures
-> > > >    PF/VF access mode to PF, then adds port platform device back to
-> > > >    re-enable related userspace interfaces on PF.
-> > > 
-> > > Why are you not using the "generic" bind/unbind facility that userspace
-> > > already has for this with binding drivers to devices?  Why a special
-> > > ioctl?
-> > 
-> > Hi Greg,
-> > 
-> > Actually we think it should be safer that making the device invisble than
-> > just unbinding its driver. Looks like user can try to rebind it at any
-> > time and we don't have any method to stop them.
-> 
-> Why do you want to "stop" the user from doing something?  They asked to
-> do it, why prevent it?  If they ask to do something foolish, well, they
-> get to keep the pieces :)
+Hello Greg,
 
-Actually this is for SRIOV support, as we are moving FPGA accelerator from
-PF to VF, so we don't want users to see the FPGA accelerator from PF any
-more. We can't allow user to touch same FPGA accelerator from both PF and
-VF side (it leads to hardware erros).
+This is v2 of the pull request for habanalabs driver for kernel 5.3.
 
-> 
-> > > > --- a/include/uapi/linux/fpga-dfl.h
-> > > > +++ b/include/uapi/linux/fpga-dfl.h
-> > > > @@ -176,4 +176,36 @@ struct dfl_fpga_fme_port_pr {
-> > > >  
-> > > >  #define DFL_FPGA_FME_PORT_PR	_IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
-> > > >  
-> > > > +/**
-> > > > + * DFL_FPGA_FME_PORT_RELEASE - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1,
-> > > > + *					struct dfl_fpga_fme_port_release)
-> > > > + *
-> > > > + * Driver releases the port per Port ID provided by caller.
-> > > > + * Return: 0 on success, -errno on failure.
-> > > > + */
-> > > > +struct dfl_fpga_fme_port_release {
-> > > > +	/* Input */
-> > > > +	__u32 argsz;		/* Structure length */
-> > > > +	__u32 flags;		/* Zero for now */
-> > > > +	__u32 port_id;
-> > > > +};
-> > > 
-> > > meta-comment, why do all of your structures for ioctls have argsz?  You
-> > > "know" the size of the structure already, it's part of the ioctl
-> > > definition.  You shouldn't need to also set it again, right?  Otherwise
-> > > ALL Linux ioctls would need something crazy like this.
-> > 
-> > Actually we followed the same method as vfio.
-> 
-> vfio is a protocol on "the wire", right?  Not an ioctl.
-> 
-> > The major purpose should be extendibility, as we really need this to
-> > be sth long term maintainable.
-> 
-> You can't change ioctl structure sizes at any time.
-> 
-> > It really helps, if we add some new members for extentions/enhancement
-> > under the same ioctl.
-> 
-> You don't do that.
-> 
-> > I don't think everybody needs this, but my consideration here is if
-> > newer generations of hardware/specs come with some extentions, I still
-> > hope we can resue these IOCTLs as much as we could, instead of
-> > creating more new ones.
-> 
-> You create new ones, like everyone else does, as you can not change old
-> code.  By trying to "version" structures like this, it's just going to
-> be a nightmare.
+v2 contains the missing sign-off-by tags for the relevant commits.
 
-Actually i learned this from vfio code here, it's not trying to "version"
-structures, let me copy the comments from vfio header file. It should be
-more clear than above short description from me.
+The commits mostly contains improvements to the existing code base.
+Nothing too exciting this time.
 
- "include/uapi/linux/vfio.h"
+Please see the tag message for details on what this pull request contains.
 
- /*
-  * The IOCTL interface is designed for extensibility by embedding the
-  * structure length (argsz) and flags into structures passed between
-  * kernel and userspace.  We therefore use the _IO() macro for these
-  * defines to avoid implicitly embedding a size into the ioctl request.
-  * As structure fields are added, argsz will increase to match and flag
-  * bits will be defined to indicate additional fields with valid data.
-  * It's *always* the caller's responsibility to indicate the size of
-  * the structure passed by setting argsz appropriately.
-  */
+Thanks,
+Oded
 
- For example.
+The following changes since commit 60e8523e2ea18dc0c0cea69d6c1d69a065019062:
 
- struct vfio_device_info {
-        __u32   argsz;
-        __u32   flags;
- #define VFIO_DEVICE_FLAGS_RESET (1 << 0)        /* Device supports reset */
- #define VFIO_DEVICE_FLAGS_PCI   (1 << 1)        /* vfio-pci device */
- #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)     /* vfio-platform device */
- #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)        /* vfio-amba device */
- #define VFIO_DEVICE_FLAGS_CCW   (1 << 4)        /* vfio-ccw device */
- #define VFIO_DEVICE_FLAGS_AP    (1 << 5)        /* vfio-ap device */
-        __u32   num_regions;    /* Max region index + 1 */
-        __u32   num_irqs;       /* Max IRQ index + 1 */
+  ocxl: Allow contexts to be attached with a NULL mm (2019-07-03 21:29:47 +0200)
 
-Hope things could be more clear now. :)
+are available in the Git repository at:
 
-Thanks
-Hao
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-07-04
 
-};
+for you to fetch changes up to e8960ca06bb22d0d84edf246b0bf395e8322e127:
 
-> 
-> thanks,
-> 
-> greg k-h
+  habanalabs: Add busy engines bitmask to HW idle IOCTL (2019-07-01 13:59:45 +0000)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.3:
+
+- Change the way the device's CPU access the host memory. This allows the
+  driver to use the kernel API of setting DMA mask in a standard way (call
+  it once).
+
+- Add a new debugfs entry to show the status of the internal DMA and
+  compute engines. This is very helpful for debugging in case a command
+  submission get stuck.
+
+- Return to the user a mask of the internal engines indicating their busy
+  state.
+
+- Make sure to restore registers that can be modified by the user to their
+  default values. Only applies to registers that are initialized by the
+  driver.
+
+- Elimination of redundant and dead-code.
+
+- Support memset of the device's memory with size larger then 4GB
+
+- Force the user to set the device to debug mode before configuring the
+  device's coresight infrastructure
+
+- Improve error printing in case of interrupts from the device
+
+----------------------------------------------------------------
+Dalit Ben Zoor (3):
+      habanalabs: make tpc registers secured
+      habanalabs: clear sobs and monitors in context switch
+      habanalabs: restore unsecured registers default values
+
+Oded Gabbay (20):
+      habanalabs: improve a couple of error messages
+      habanalabs: force user to set device debug mode
+      habanalabs: remove dead code in habanalabs_drv.c
+      habanalabs: check to load F/W before boot status
+      habanalabs: remove redundant CB size adjustment
+      habanalabs: remove redundant memory clear
+      habanalabs: change polling functions to macros
+      habanalabs: pass device pointer to asic-specific function
+      habanalabs: support device memory memset > 4GB
+      habanalabs: don't limit packet size for device CPU
+      habanalabs: remove simulator dedicated code
+      habanalabs: add rate-limit to an error message
+      docs/habanalabs: update text for some entries in sysfs
+      habanalabs: initialize device CPU queues after MMU init
+      habanalabs: de-couple MMU and VM module initialization
+      habanalabs: initialize MMU context for driver
+      habanalabs: add MMU mappings for Goya CPU
+      habanalabs: set Goya CPU to use ASIC MMU
+      habanalabs: remove DMA mask hack for Goya
+      habanalabs: add WARN in case of bad MMU mapping
+
+Omer Shpigelman (4):
+      habanalabs: remove redundant CPU checks
+      habanalabs: minor documentation and prints fixes
+      habanalabs: increase PCI ELBI timeout for Palladium
+      habanalabs: print event name for fatal and non-RAZWI events
+
+Tomer Tayar (4):
+      habanalabs: Allow accessing host mapped addresses via debugfs
+      habanalabs: Update the device idle check
+      habanalabs: Add debugfs node for engines status
+      habanalabs: Add busy engines bitmask to HW idle IOCTL
+
+ .../ABI/testing/debugfs-driver-habanalabs          |  18 +-
+ Documentation/ABI/testing/sysfs-driver-habanalabs  |  42 +-
+ drivers/misc/habanalabs/asid.c                     |   2 +-
+ drivers/misc/habanalabs/command_submission.c       |  10 +-
+ drivers/misc/habanalabs/context.c                  |  11 +-
+ drivers/misc/habanalabs/debugfs.c                  |  54 +-
+ drivers/misc/habanalabs/device.c                   | 189 +++---
+ drivers/misc/habanalabs/firmware_if.c              |  51 +-
+ drivers/misc/habanalabs/goya/goya.c                | 635 +++++++++++++++------
+ drivers/misc/habanalabs/goya/goyaP.h               |  16 +-
+ drivers/misc/habanalabs/goya/goya_security.c       |  16 +
+ drivers/misc/habanalabs/habanalabs.h               |  93 ++-
+ drivers/misc/habanalabs/habanalabs_drv.c           |  66 ++-
+ drivers/misc/habanalabs/habanalabs_ioctl.c         |  11 +-
+ drivers/misc/habanalabs/hw_queue.c                 |   2 +-
+ .../include/goya/asic_reg/dma_ch_0_masks.h         | 418 ++++++++++++++
+ .../habanalabs/include/goya/asic_reg/goya_regs.h   |   1 +
+ drivers/misc/habanalabs/memory.c                   |  13 +-
+ drivers/misc/habanalabs/mmu.c                      |  20 +-
+ drivers/misc/habanalabs/pci.c                      |  10 +-
+ drivers/misc/habanalabs/sysfs.c                    |   4 -
+ include/uapi/misc/habanalabs.h                     |  30 +-
+ 22 files changed, 1249 insertions(+), 463 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/include/goya/asic_reg/dma_ch_0_masks.h
