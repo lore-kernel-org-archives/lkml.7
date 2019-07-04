@@ -2,108 +2,94 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FB1C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B66C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F1B218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFF1218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wo5q52rD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2TsbIwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGDHbt (ORCPT
+        id S1727482AbfGDHcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:31:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33468 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfGDHbs (ORCPT
+        Thu, 4 Jul 2019 03:32:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36579 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbfGDHcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:31:48 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so5162211ljg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 00:31:46 -0700 (PDT)
+        Thu, 4 Jul 2019 03:32:05 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u8so4933303wmm.1;
+        Thu, 04 Jul 2019 00:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sBCczz2TEmo+42ANoao+p6OevVGaZXx51PkYr0uqT5Q=;
-        b=wo5q52rDJSW4xleBd8ezZ/XLTvEhFmnf742yDq/2AZrmXHBfLzr/ezU6hUVrSuKYrw
-         mv8ShEFqAu9AtbVWRqw+s99s5i294hfo1P1LN1WBv1SEVwuBGX5wmTHdpK8KBm1VPjcM
-         qYJl7wFntpoZM3K6L95ilcaOpD6QPSEVu9bHs1dGV55O4G0qITISnNnCkmFbVncTk+iJ
-         sVu6RqYrtczbkI0GCambdoH7YljDxSqtICNesUv6LfOpHWrcZmLrm83zeMctin5SmP/F
-         zTTf1omIgvaKdvpHCz8xvaPoWVq0ST0N/6KeZS+FIOXcs7H4aKmd+nomCqmGLRMR3ldo
-         bB+g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LIycO9Bp5HsEisueoexKc7Ktz+dHZjKCymeUJisu9LE=;
+        b=h2TsbIwrEdlwAo+FjRKB5ttID/9BlvxXUuFWQyMBoCiaN+2ndtSyxVEO8h2ERRK2vp
+         8XuW0A7vvjn+OVmfdjyDLto+fwJ/3Y/4r6xqNYMPu3RAZCZxg+TxDInw9uytzWIoGQ/3
+         BkIHpivNSr7DCUeYvRuZ6MNTK9mYhTooC7UYuo17d/qxwS8N6cejllrf28/8ivTUdyJs
+         AwTTm8LYy9PQ1sLO4b9GQZlLIZsYW1H/qVYhcC7Vl0aX05StNIsqNIaOZpHTe818Fdpa
+         xjmuEyXI1vna90PmyBvQyhHVfEaG+YIsGUNtW97WracAYjGHZSJRC93Pj8UxiBfqccO7
+         oI1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sBCczz2TEmo+42ANoao+p6OevVGaZXx51PkYr0uqT5Q=;
-        b=DN+HtxNkq7pCzretbn3WU9zHVa9Lwp1AC88QUJ6u23Zke61QDqklGwkjysBzc7lYIs
-         Y3PQj7q2ijyMDFNMgUy895GjXRsPDIPuWvG/GE8Z/pGxNdeAhWe4oiHDNezaH44L8kQj
-         6pPqGzBA7F+FY8JJEpD7OqyHsFNPOPEBS6qBMJOnNlNjNjEWVh+pw68svCMWs6w3lhpv
-         a2zsrVpEVib2XSx1FWZ9eJXPCLP0fpL5FsH8K+V1KXKqX2vzlSw/NOCi/UoJ2VxMqdNu
-         tUZLDkIiLi9WCNXMAclF09UgyFJJriTUojfesX+SfxTdMDwhzyoFc5NJVmQChDxLcpR+
-         FsBA==
-X-Gm-Message-State: APjAAAUAY4reUqk7jyUen4FRR9AYQdvzhn7j94uvM6Q8g9E6blU7hCbV
-        1g6Jn28OiqlwXew45YdJOj7etrfVvsP5PsJmYpW6jQ==
-X-Google-Smtp-Source: APXvYqwjGa/X/sbL44UMhFPDPuDhLdTW7S9Db0bH7XmORR5lfPWfHij3VnDkco4rLP3xxo/0LhSZtxYw+XJa7UKbpiQ=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr2048012ljs.54.1562225505566;
- Thu, 04 Jul 2019 00:31:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
- <1561687972-19319-3-git-send-email-skomatineni@nvidia.com>
- <a262cbb3-845c-3ad1-16cc-375a24b9f7e9@gmail.com> <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
-In-Reply-To: <822867d6-4a4d-5f68-9b21-84a20d73c589@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jul 2019 09:31:34 +0200
-Message-ID: <CACRpkdYdCmT0ErTuewYbv7bPkjoFLrK9KSVuKVMkAXNQYAGV7g@mail.gmail.com>
-Subject: Re: [PATCH V5 02/18] pinctrl: tegra: Add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com,
-        linux-tegra@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LIycO9Bp5HsEisueoexKc7Ktz+dHZjKCymeUJisu9LE=;
+        b=F8UQ2SsmyJuFEYtDaGzIV72Ol5/bg2oBHYcAz7A8mJk+JAe0dQLrZ+r1wDh/XevbIT
+         F1az86XNFLdLhA3ckUNCqgt/MgEQ1YIGQSduVw+6w+HZLolbUnDWyEi8OXkS2tvkET4D
+         1ltgF1AbFFSOmy2V6GlwtyDiOger4/UuON1Jjl8aTBF9Q4vQicl+1R5OUuuibfo+QVnu
+         E7qkCOvWmpn5MJ2/kWRBSKQZoWfOC49psIGP0HWKzidJYcOS05DEgfZV35wEzuV0lo7F
+         geTsZIcJyCjicC/Eod4YeZmDxZvxndprl4rXrLv+z8IxvDbJD+G/fCyfQ+1Z+d4lcDXZ
+         Jcww==
+X-Gm-Message-State: APjAAAUrJSnsJ2dsEznY1s8lBiWeo6bS/JX3s5lP02XjovyPBTJ9MzoL
+        PlFQVECUrC6rP+RiJAHH7PJeA88=
+X-Google-Smtp-Source: APXvYqwS5YuPl+0VZZboG78UNwuk9JWUSV1WNe6aLEYZS6fci6B/aMjrNqbya1Qn+HaL8D6z/nX2UQ==
+X-Received: by 2002:a1c:448b:: with SMTP id r133mr11651230wma.114.1562225523452;
+        Thu, 04 Jul 2019 00:32:03 -0700 (PDT)
+Received: from avx2 ([46.53.251.222])
+        by smtp.gmail.com with ESMTPSA id r2sm5571394wme.30.2019.07.04.00.32.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jul 2019 00:32:02 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 10:32:00 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     "Hallsmark, Per" <Per.Hallsmark@windriver.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] let proc net directory inodes reflect to active net
+ namespace
+Message-ID: <20190704073200.GA2165@avx2>
+References: <B7B4BB465792624BAF51F33077E99065DC5D8E5D@ALA-MBD.corp.ad.wrs.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <B7B4BB465792624BAF51F33077E99065DC5D8E5D@ALA-MBD.corp.ad.wrs.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 5:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+On Mon, Jul 01, 2019 at 11:06:34AM +0000, Hallsmark, Per wrote:
 
-> Oh, also what about GPIO-pinctrl suspend resume ordering .. is it okay that pinctrl
-> will be resumed after GPIO? Shouldn't a proper pin-muxing be selected at first?
+> +struct proc_dir_entry *proc_net_mkdir(struct net *net, const char *name,
+> +				      struct proc_dir_entry *parent)
+> +{
+> +	struct proc_dir_entry *pde;
+> +
+> +	pde = proc_mkdir_data(name, 0, parent, net);
+> +	if (!pde)
+> +		return NULL;
+> +	pde->proc_dops = &proc_net_dentry_ops;
 
-Thierry sent some initial patches about this I think. We need to use
-device links for this to work properly so he adds support for
-linking the pinctrl and GPIO devices through the ranges.
+OK, this is buggy in a different way:
+once proc_mkdir_data() returns, proc entry is live and should be fully
+ready, so dentry operations should be glued before that.
 
-For links between pin control handles and their consumers, see also:
-036f394dd77f pinctrl: Enable device link creation for pin control
-c6045b4e3cad pinctrl: stmfx: enable links creations
-489b64d66325 pinctrl: stm32: Add links to consumers
-
-I am using STM32 as guinea pig for this, consider adding links also
-from the Tegra pinctrl. I might simply make these pinctrl consumer
-to producer links default because I think it makes a lot sense.
-
-Yours,
-Linus Walleij
+I'll send proper patch.
