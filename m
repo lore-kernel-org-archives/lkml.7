@@ -2,106 +2,101 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CABC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF1C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C61218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0C52189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfGDIgR (ORCPT
+        id S1727083AbfGDIlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:36:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37197 "EHLO mga09.intel.com"
+        Thu, 4 Jul 2019 04:41:45 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:38346 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfGDIgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:36:16 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 01:36:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="362891372"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Jul 2019 01:36:14 -0700
-Date:   Thu, 4 Jul 2019 16:19:31 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Xu Yilun <yilun.xu@intel.com>, Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 05/15] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-Message-ID: <20190704081931.GA7391@hao-dev>
-References: <20190628004951.6202-1-mdf@kernel.org>
- <20190628004951.6202-6-mdf@kernel.org>
- <20190703175926.GA14649@kroah.com>
- <20190703233822.GB15825@hao-dev>
- <20190704053719.GA347@kroah.com>
- <20190704064208.GA2722@hao-dev>
- <20190704081713.GC6438@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704081713.GC6438@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726038AbfGDIlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:41:45 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 61BF4188D688A99E751A;
+        Thu,  4 Jul 2019 16:41:41 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x648eZ70068213;
+        Thu, 4 Jul 2019 16:40:35 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070416410469-2082440 ;
+          Thu, 4 Jul 2019 16:41:04 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH] ASoC: audio-graph-card: fix use-after-free in graph_for_each_link
+Date:   Thu, 4 Jul 2019 16:38:50 +0800
+Message-Id: <1562229530-8121-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-04 16:41:04,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-04 16:40:40,
+        Serialize complete at 2019-07-04 16:40:40
+X-MAIL: mse-fl1.zte.com.cn x648eZ70068213
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 10:17:13AM +0200, Greg KH wrote:
-> On Thu, Jul 04, 2019 at 02:42:08PM +0800, Wu Hao wrote:
-> > On Thu, Jul 04, 2019 at 07:37:19AM +0200, Greg KH wrote:
-> > > On Thu, Jul 04, 2019 at 07:38:22AM +0800, Wu Hao wrote:
-> > > > On Wed, Jul 03, 2019 at 07:59:26PM +0200, Greg KH wrote:
-> > > > > On Thu, Jun 27, 2019 at 05:49:41PM -0700, Moritz Fischer wrote:
-> > > > > > From: Wu Hao <hao.wu@intel.com>
-> > > > > > 
-> > > > > > This patch adds virtualization support description for DFL based
-> > > > > > FPGA devices (based on PCIe SRIOV), and introductions to new
-> > > > > > interfaces added by new dfl private feature drivers.
-> > > > > > 
-> > > > > > [mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
-> > > > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > > > Acked-by: Alan Tull <atull@kernel.org>
-> > > > > > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > > > > > ---
-> > > > > >  Documentation/fpga/dfl.rst | 100 +++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 100 insertions(+)
-> > > > > 
-> > > > > This doesn't apply to my tree, where is this file created?
-> > > > 
-> > > > Hi Greg,
-> > > > 
-> > > > >From the cover-letter, Moritz mentioned, dfl.txt has been converted to .rst
-> > > > in linux-next. I think this patch is created on top of that by Moritz.
-> > > > 
-> > > > "Note: I've seen that Mauro touched Documentation/fpga/dfl.rst in linux-next
-> > > > commit c220a1fae6c5d ("docs: fpga: convert docs to ReST and rename to *.rst")"
-> > > 
-> > > Ok, but I can't take this patch just because the file is converted in
-> > > someone else's tree :(
-> > 
-> > Oh.. if that patch is merged from fpga tree, then we wont have this problem. :(
-> 
-> You better not be basing your tree on linux-next :)
-> 
-> > So do you have any suggestions on what should i do now?
-> > wait that patch goes to offical release, and then resubmit this patch?
-> 
-> Wait until the change hits Linus's tree and then resend it to me.
+After calling of_node_put() on the codec_ep and codec_port variables,
+they are still being used, which may result in use-after-free.
+We fix this issue by calling of_node_put() after the last usage.
 
-OK, get it! Thanks!
+Fixes: fce9b90c1ab7 ("ASoC: audio-graph-card: cleanup DAI link loop method - step2")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+---
+ sound/soc/generic/audio-graph-card.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hao
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index e438011..30a4e83 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -421,9 +421,6 @@ static int graph_for_each_link(struct asoc_simple_priv *priv,
+ 			codec_ep = of_graph_get_remote_endpoint(cpu_ep);
+ 			codec_port = of_get_parent(codec_ep);
+ 
+-			of_node_put(codec_ep);
+-			of_node_put(codec_port);
+-
+ 			/* get convert-xxx property */
+ 			memset(&adata, 0, sizeof(adata));
+ 			graph_parse_convert(dev, codec_ep, &adata);
+@@ -443,6 +440,9 @@ static int graph_for_each_link(struct asoc_simple_priv *priv,
+ 			else
+ 				ret = func_noml(priv, cpu_ep, codec_ep, li);
+ 
++			of_node_put(codec_ep);
++			of_node_put(codec_port);
++
+ 			if (ret < 0)
+ 				return ret;
+ 
+-- 
+2.9.5
 
-> 
-> thanks,
-> 
-> greg k-h
