@@ -2,170 +2,161 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C591DC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADDDC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99042218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEA3218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="QjuddBdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfGDKyj (ORCPT
+        id S1727603AbfGDKzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:54:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727403AbfGDKyi (ORCPT
+        Thu, 4 Jul 2019 06:55:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35902 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfGDKzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:54:38 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64Ar5qq037100
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Jul 2019 06:54:37 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2thdcfxdda-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 06:54:36 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Thu, 4 Jul 2019 11:54:35 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Jul 2019 11:54:30 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64AsSpq35455354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 10:54:28 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9AC8AE045;
-        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33C7FAE053;
-        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
-Received: from laptop-ibm (unknown [9.152.212.73])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jul 2019 10:54:28 +0000 (GMT)
-Date:   Thu, 4 Jul 2019 12:54:27 +0200
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
-In-Reply-To: <87lfxel2q6.fsf@morokweng.localdomain>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-        <20190628021934.4260-2-bauerman@linux.ibm.com>
-        <20190701144752.GC25484@linux-8ccs>
-        <87lfxel2q6.fsf@morokweng.localdomain>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 4 Jul 2019 06:55:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c13so2757602pgg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 03:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fFkhCc619vRd94uoe7aHJSBMFEl+zNjNnFnyvCKwJS0=;
+        b=QjuddBdT3mG9W3uWDvKTXBPIOLTcSFsfepx1jK2sznc1aG6YJkBmHbP+BsddK1cqr1
+         lfAS53bpdUpcra2w7BKad2vDOuh/obpSEYT4QwKuKbXr+XwQRj5DejtAClEcHInc7bJ5
+         wDhMvcZj2LuRhZViyKpcs4Y+eTTOw89Bo6VKmTjlMvKmsrh8N9yE+bzGpz8e+nW2TUaL
+         9sPBD+us9WHl3Y6g+GydcriY2ya1U0KWpXbTTn3MVPjn1x1LiXAlmzzK6vc7bFUhrJx7
+         u666QJY8Ppoyaj3tQSJzarTiql3uQng0hs5n/o4X5EZWazShxbTgeDz+ZCKNE1H0ffMd
+         OVNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fFkhCc619vRd94uoe7aHJSBMFEl+zNjNnFnyvCKwJS0=;
+        b=J9K+E343G8NCvw58Z80QzBT2hUl9ihUPh/CPXAppf2n0k3j2qN7aoLxX2qne7z6KSd
+         1EKBgYhStvvgNbUrdB6TNSpM86mHrcEzO3iqw2bRN7csLtNZn7j9qquuJftnWTy5M4JX
+         2MhUsmW3eOs+EPlW2MWatlSPTqHVVdhMUpz0CHp/tHCTJzHU/55IENDFa+L3vPlubIrr
+         iPgcghvBzLbO6OjNvENkQrwNV0RRCgDOles3Dk6nwdcz2oygrKP1hGJ/PmPae5AFnzVj
+         umT7CGYGqJo2z7GG1dbLvAcU1p2cIQR6BcEvsdaiPBJbrhCZgtcURqoRwyjX2MQDGNjB
+         TXDw==
+X-Gm-Message-State: APjAAAWAvzEULSh6Gbh56iqZPAQnoit3NR2PNQVeNy8jdcoEw5tiq+9n
+        ejpl4gKKgVwcg/zQrQZGmdFMqw==
+X-Google-Smtp-Source: APXvYqz5o52E88f0jIRgzlTBYcftTP9a6vzhxvfuOSWu42Tgt4yPhyIirW2xi948NDsJcJHMStf+3A==
+X-Received: by 2002:a17:90a:a407:: with SMTP id y7mr18979498pjp.97.1562237738664;
+        Thu, 04 Jul 2019 03:55:38 -0700 (PDT)
+Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
+        by smtp.gmail.com with ESMTPSA id k22sm5562533pfk.157.2019.07.04.03.55.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Jul 2019 03:55:38 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     jes.sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+Date:   Thu,  4 Jul 2019 18:55:28 +0800
+Message-Id: <20190704105528.74028-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070410-0008-0000-0000-000002F9D612
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070410-0009-0000-0000-000022672778
-Message-Id: <20190704125427.31146026@laptop-ibm>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040141
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thiago,
+The WiFi tx power of RTL8723BU is extremely low after booting. So
+the WiFi scan gives very limited AP list and it always fails to
+connect to the selected AP. This module only supports 1x1 antenna
+and the antenna is switched to bluetooth due to some incorrect
+register settings.
+
+Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
+we realized that the 8723bu's enable_rf() does the same thing as
+rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
+sets the antenna path to BTC_ANT_PATH_BT which we verified it's
+the cause of the wifi weak tx power. The vendor driver will set
+the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
+mechanism, by the function halbtc8723b1ant_PsTdma.
+
+This commit hand over the antenna control to PTA(Packet Traffic
+Arbitration), which compares the weight of bluetooth/wifi traffic
+then determine whether to continue current wifi traffic or not.
+After PTA take control, The wifi signal will be back to normal and
+the bluetooth scan can also work at the same time. However, the
+btcoexist still needs to be handled under different circumstances.
+If there's a BT connection established, the wifi still fails to
+connect until BT disconnected.
+
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
 
 
-On Thu, 04 Jul 2019 03:42:57 -0300
-Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
+Note:
+ v2:
+  - Replace BIT(11) with the descriptive definition
+  - Meaningful comment for the REG_S0S1_PATH_SWITCH setting
 
-> Jessica Yu <jeyu@kernel.org> writes:
-> 
-> > +++ Thiago Jung Bauermann [27/06/19 23:19 -0300]:  
-> >>IMA will use the module_signature format for append signatures, so export
-> >>the relevant definitions and factor out the code which verifies that the
-> >>appended signature trailer is valid.
-> >>
-> >>Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
-> >>and be able to use mod_check_sig() without having to depend on either
-> >>CONFIG_MODULE_SIG or CONFIG_MODULES.
-> >>
-> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> >>Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> >>Cc: Jessica Yu <jeyu@kernel.org>
-> >>---
-> >> include/linux/module.h           |  3 --
-> >> include/linux/module_signature.h | 44 +++++++++++++++++++++++++
-> >> init/Kconfig                     |  6 +++-
-> >> kernel/Makefile                  |  1 +
-> >> kernel/module.c                  |  1 +
-> >> kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
-> >> kernel/module_signing.c          | 56 +++++---------------------------
-> >> scripts/Makefile                 |  2 +-
-> >> 8 files changed, 106 insertions(+), 53 deletions(-)
-> >>
-> >>diff --git a/include/linux/module.h b/include/linux/module.h
-> >>index 188998d3dca9..aa56f531cf1e 100644
-> >>--- a/include/linux/module.h
-> >>+++ b/include/linux/module.h
-> >>@@ -25,9 +25,6 @@
-> >> #include <linux/percpu.h>
-> >> #include <asm/module.h>
-> >>
-> >>-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
-> >>-#define MODULE_SIG_STRING "~Module signature appended~\n"
-> >>-  
-> >
-> > Hi Thiago, apologies for the delay.  
-> 
-> Hello Jessica, thanks for reviewing the patch!
-> 
-> > It looks like arch/s390/kernel/machine_kexec_file.c also relies on
-> > MODULE_SIG_STRING being defined, so module_signature.h will need to be
-> > included there too, otherwise we'll run into a compilation error.  
-> 
-> Indeed. Thanks for spotting that. The patch below fixes it. It's
-> identical to the previous version except for the changes in 
-> arch/s390/kernel/machine_kexec_file.c and their description in the
-> commit message. I'm also copying some s390 people in this email.
 
-to me the s390 part looks good but for one minor nit.
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 11 ++++++++---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  3 ++-
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-In arch/s390/Kconfig KEXEC_VERIFY_SIG currently depends on
-SYSTEM_DATA_VERIFICATION. I'd prefer when you update this to the new
-MODULE_SIG_FORMAT. It shouldn't make any difference right now, as we don't
-use mod_check_sig in our code path. But it could cause problems in the future,
-when more code might be shared.
-
-Thanks
-Philipp
-
-> > Other than that, the module-related changes look good to me:
-> >
-> > Acked-by: Jessica Yu <jeyu@kernel.org>  
-> 
-> Thank you very much!
-> 
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 3adb1d3d47ac..ceffe05bd65b 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+ 	/*
+ 	 * WLAN action by PTA
+ 	 */
+-	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
++	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+ 
+ 	/*
+ 	 * BT select S0/S1 controlled by WiFi
+@@ -1568,9 +1568,14 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+ 	rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+ 
+ 	/*
+-	 * 0x280, 0x00, 0x200, 0x80 - not clear
++	 * Different settings per different antenna position.
++	 *      Antenna Position:   | Normal   Inverse
++	 * --------------------------------------------------
++	 * Antenna switch to BT:    |  0x280,   0x00
++	 * Antenna switch to WiFi:  |  0x0,     0x280
++	 * Antenna switch to PTA:   |  0x200,   0x80
+ 	 */
+-	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
++	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+ 
+ 	/*
+ 	 * Software control, antenna at WiFi side
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 8136e268b4e6..c6c41fb962ff 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 
+ 	/* Check if MAC is already powered on */
+ 	val8 = rtl8xxxu_read8(priv, REG_CR);
++	val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
+ 
+ 	/*
+ 	 * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
+ 	 * initialized. First MAC returns 0xea, second MAC returns 0x00
+ 	 */
+-	if (val8 == 0xea)
++	if (val8 == 0xea || !(val16 & SYS_CLK_MAC_CLK_ENABLE))
+ 		macpower = false;
+ 	else
+ 		macpower = true;
+-- 
+2.11.0
 
