@@ -2,86 +2,87 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661CBC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50E4C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4792189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FAE20881
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 12:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfGDMCV convert rfc822-to-8bit (ORCPT
+        id S1727677AbfGDMDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 08:02:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51504 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfGDMCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 08:02:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 05:02:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,451,1557212400"; 
-   d="scan'208";a="187560152"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Jul 2019 05:02:20 -0700
-Received: from fmsmsx155.amr.corp.intel.com (10.18.116.71) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 4 Jul 2019 05:02:20 -0700
-Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
- FMSMSX155.amr.corp.intel.com (10.18.116.71) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 4 Jul 2019 05:02:20 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.110]) by
- SHSMSX154.ccr.corp.intel.com ([169.254.7.240]) with mapi id 14.03.0439.000;
- Thu, 4 Jul 2019 20:02:18 +0800
-From:   "He, Bo" <bo.he@intel.com>
-To:     "kailang@realtek.com" <kailang@realtek.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "jian-hong@endlessm.com" <jian-hong@endlessm.com>,
-        "drake@endlessm.com" <drake@endlessm.com>,
-        "chiu@endlessm.com" <chiu@endlessm.com>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>
-Subject: audio lost from speaker after reboot from windows on the device
- ALC295
-Thread-Topic: audio lost from speaker after reboot from windows on the
- device ALC295
-Thread-Index: AdUyX8fMiuN0r83nQWCeaW0Sd+ObdQ==
-Date:   Thu, 4 Jul 2019 12:02:17 +0000
-Message-ID: <CD6925E8781EFD4D8E11882D20FC406D52AB58B6@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzE4ZTNhZGMtYjQ0NS00OGRmLWJhYjQtZjA5YTdmZDhiMTc2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidFF2MmlOcjU3NmY3VG9Fb3BuMkJnK25uK3VPYWlCa3RcL08xamVKU2o4aEpqUnBlSVNDTlwvbkVWNHAxTUVxOHdEIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Thu, 4 Jul 2019 08:03:15 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:33118 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbfGDMDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 08:03:14 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hj0S8-0005T8-3A; Thu, 04 Jul 2019 14:03:04 +0200
+Message-ID: <6c070d62ffe342f5bc70556ef0f85740d04ae4a3.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 04 Jul 2019 14:03:02 +0200
+In-Reply-To: <20190704115236.GR20101@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+         <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+         <20190703114933.GW2250@nanopsycho> <20190703181851.GP20101@unicorn.suse.cz>
+         <20190704080435.GF2250@nanopsycho> <20190704115236.GR20101@unicorn.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, patch_realtek.c maintainer:
-	I see one issue that reboot from windows and boot to ubuntu, the audio lost from speaker, I suspect there are some bugs in patch_realtek.c drivers,  the device is ALC295 and the device id is 0x10ec0295.
+On Thu, 2019-07-04 at 13:52 +0200, Michal Kubecek wrote:
+> 
+> There is still the question if it it should be implemented as a nested
+> attribute which could look like the current compact form without the
+> "list" flag (if there is no mask, it's a list). Or an unstructured data
+> block consisting of u32 bit length 
 
-I have done the below experiments:
-1. reboot from windows to windows, the audio is persist .
-2. reboot from windows to ubuntu, the audio lost from speaker, but can hear if I hotplug one earphone.
-3. if the issue reproduce after reboot from windows, reboot the ubuntu can't restore the audio, I suspect it's warm reset.
-4. if I write the port 0xcf9 with 0xe to do cold reset, the audio can restore.
-5. if I do suspend/resume, the audio can restore, I suspect do cold boot and suspend will trigger the platform reset to reset the ALC295.
-6. if I do double function reset (write the verb 0x7ff in alc_init), the audio is still can't restore.
-snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_CODEC_RESET, 0); /* Function reset */
-snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_CODEC_RESET, 0); /* double Function reset */
-7. the issue is first found on kernel 4.19.50, I still see the issue with the latest kernel 5.2-rc2, is it possible windows change some default registers, but ALC295 don't initialize the register?
+You wouldn't really need the length, since the attribute has a length
+already :-)
+
+And then, if you just concatenate the value and mask, the existing
+NLA_BITFIELD32 becomes a special case.
+
+> and one or two bitmaps of
+> corresponding length. I would prefer the nested attribute, netlink was
+> designed to represent structured data, passing structures as binary goes
+> against the design (just looked at VFINFO in rtnetlink few days ago,
+> it's awful, IMHO).
+
+Yeah, I dunno. On the one hand I completely agree, on the other hand
+NLA_BITFIELD32 already goes the other way, and is there now...
+
+> Either way, I would still prefer to have bitmaps represented as an array
+> of 32-bit blocks in host byte order. This would be easy to handle in
+> kernel both in places where we have u32 based bitmaps and unsigned long
+> based ones. Other options seem less appealing:
+> 
+>   - u8 based: only complicates processing
+>   - u64 based: have to care about alignment
+>   - unsigned long based: alignment and also problems with 64-bit kernel
+>     vs. 32-bit userspace
+
+Agree with this.
+
+johannes
+
