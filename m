@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80B0C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE0FC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CA2218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8033218BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 08:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562230014;
-	bh=qtIWUlZhhHDXDpXDtHcNJNcCL7CfAeK4osJtqxlinjE=;
+	s=default; t=1562230017;
+	bh=xGwKWc+XzsSOGlAWoFhYB9Bq0hOeFBHzsB5P7i22CiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKNC/FaCxV+13tBw2tOGoZRjjmpuWc9944vbVSCWUEe2sQR31m4LGjKQbSpuc3ove
-	 QRSM3UjaXRqa8ZPUHGVtUdkDm37l8qtaIBssbqWEz0WI/73S5Epqy3pz+noopEWYxC
-	 /3rikIwhyeoBtWN15g12ipDTthVCW3vPk2Zb9SNs=
+	b=SBd55EADOJgDGWDjqNyKCpL0hn3jtdZB5PRTQuLF4hGXU0T0a0qIBqvVbEWI0V6H5
+	 cQ+uBXbWdpqcO9ApiCzbqG2eMza40w9NypLVQFnKkRUI/vZvjYDqSss++qvO5mPTAe
+	 pl4jMnZZIs2NujEaNwRyqgwtBY2UAESTFKnkPW4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfGDIqx (ORCPT
+        id S1727341AbfGDIq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 04:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
+        Thu, 4 Jul 2019 04:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfGDIqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 04:46:48 -0400
+        id S1727119AbfGDIqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 04:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2062189E;
-        Thu,  4 Jul 2019 08:46:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5BB5218A0;
+        Thu,  4 Jul 2019 08:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562230007;
-        bh=qtIWUlZhhHDXDpXDtHcNJNcCL7CfAeK4osJtqxlinjE=;
+        s=default; t=1562230011;
+        bh=xGwKWc+XzsSOGlAWoFhYB9Bq0hOeFBHzsB5P7i22CiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG//GIHoNqgkq2z+t6Bjz6KO7Rh5y3z+iamhj72CD8u7+VgFbEQ0q/odyajknog48
-         5LqbvsICZnRrZH4ycDqs2euu9VEXB5phKT1n+K01idiwxvzU188LYcyLAPivSys+/P
-         L1ZTROUNhaCzIfst0WBd3CalPy+wyjiKvH7HqzxA=
+        b=1pazu0ayU9DFIcP8846lWW/76SH0dMrV4RFmh8jxinTqQuSgvkwyZSNFNkAkwHgiI
+         aoRTCdMWpULf+Eu5QzLXkLs8GMeEpeRuqgaGy1NCLup+uMMODqf6wkw50x+pGPX1V5
+         8IcQTPEqYBX3+bbox83v/RvcMumYHysQJDDCzT4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 02/11] uio: uio_fsl_elbc_gpcm: convert platform driver to use dev_groups
-Date:   Thu,  4 Jul 2019 10:46:08 +0200
-Message-Id: <20190704084617.3602-3-gregkh@linuxfoundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+Subject: [PATCH 03/11] serial: sh-sci: use driver core functions, not sysfs ones.
+Date:   Thu,  4 Jul 2019 10:46:09 +0200
+Message-Id: <20190704084617.3602-4-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
 References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
@@ -55,76 +56,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Platform drivers now have the option to have the platform core create
-and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a sysfs group of attributes.
+This is a driver, do not call "raw" sysfs functions, instead call driver
+core ones.  Specifically convert the use of sysfs_create_file() and
+sysfs_remove_file() to use device_create_file() and device_remove_file()
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-serial@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/uio/uio_fsl_elbc_gpcm.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ drivers/tty/serial/sh-sci.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
-index 450e2f5c9b43..05a9cb10a419 100644
---- a/drivers/uio/uio_fsl_elbc_gpcm.c
-+++ b/drivers/uio/uio_fsl_elbc_gpcm.c
-@@ -71,6 +71,13 @@ static ssize_t reg_store(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR(reg_br, 0664, reg_show, reg_store);
- static DEVICE_ATTR(reg_or, 0664, reg_show, reg_store);
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index abc705716aa0..69f9072505f7 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -3137,14 +3137,10 @@ static int sci_remove(struct platform_device *dev)
  
-+static struct attribute *uio_fsl_elbc_gpcm_attrs[] = {
-+	&dev_attr_reg_br.attr,
-+	&dev_attr_reg_or.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(uio_fsl_elbc_gpcm);
-+
- static ssize_t reg_show(struct device *dev, struct device_attribute *attr,
- 			char *buf)
- {
-@@ -411,25 +418,12 @@ static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
- 	/* store private data */
- 	platform_set_drvdata(pdev, info);
+ 	sci_cleanup_single(port);
  
--	/* create sysfs files */
--	ret = device_create_file(priv->dev, &dev_attr_reg_br);
--	if (ret)
--		goto out_err3;
--	ret = device_create_file(priv->dev, &dev_attr_reg_or);
--	if (ret)
--		goto out_err4;
--
- 	dev_info(priv->dev,
- 		 "eLBC/GPCM device (%s) at 0x%llx, bank %d, irq=%d\n",
- 		 priv->name, (unsigned long long)res.start, priv->bank,
- 		 irq != NO_IRQ ? irq : -1);
+-	if (port->port.fifosize > 1) {
+-		sysfs_remove_file(&dev->dev.kobj,
+-				  &dev_attr_rx_fifo_trigger.attr);
+-	}
+-	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF) {
+-		sysfs_remove_file(&dev->dev.kobj,
+-				  &dev_attr_rx_fifo_timeout.attr);
+-	}
++	if (port->port.fifosize > 1)
++		device_remove_file(&dev->dev, &dev_attr_rx_fifo_trigger);
++	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF)
++		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
  
  	return 0;
--out_err4:
--	device_remove_file(priv->dev, &dev_attr_reg_br);
--out_err3:
--	platform_set_drvdata(pdev, NULL);
--	uio_unregister_device(info);
- out_err2:
- 	if (priv->shutdown)
- 		priv->shutdown(info, true);
-@@ -448,8 +442,6 @@ static int uio_fsl_elbc_gpcm_remove(struct platform_device *pdev)
- 	struct uio_info *info = platform_get_drvdata(pdev);
- 	struct fsl_elbc_gpcm *priv = info->priv;
+ }
+@@ -3332,19 +3328,17 @@ static int sci_probe(struct platform_device *dev)
+ 		return ret;
  
--	device_remove_file(priv->dev, &dev_attr_reg_or);
--	device_remove_file(priv->dev, &dev_attr_reg_br);
- 	platform_set_drvdata(pdev, NULL);
- 	uio_unregister_device(info);
- 	if (priv->shutdown)
-@@ -477,6 +469,7 @@ static struct platform_driver uio_fsl_elbc_gpcm_driver = {
- 	},
- 	.probe = uio_fsl_elbc_gpcm_probe,
- 	.remove = uio_fsl_elbc_gpcm_remove,
-+	.dev_groups = uio_fsl_elbc_gpcm_groups,
- };
- module_platform_driver(uio_fsl_elbc_gpcm_driver);
- 
+ 	if (sp->port.fifosize > 1) {
+-		ret = sysfs_create_file(&dev->dev.kobj,
+-				&dev_attr_rx_fifo_trigger.attr);
++		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_trigger);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 	if (sp->port.type == PORT_SCIFA || sp->port.type == PORT_SCIFB ||
+ 	    sp->port.type == PORT_HSCIF) {
+-		ret = sysfs_create_file(&dev->dev.kobj,
+-				&dev_attr_rx_fifo_timeout.attr);
++		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_timeout);
+ 		if (ret) {
+ 			if (sp->port.fifosize > 1) {
+-				sysfs_remove_file(&dev->dev.kobj,
+-					&dev_attr_rx_fifo_trigger.attr);
++				device_remove_file(&dev->dev,
++						   &dev_attr_rx_fifo_trigger);
+ 			}
+ 			return ret;
+ 		}
 -- 
 2.22.0
 
