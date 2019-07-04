@@ -2,40 +2,40 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58144C0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5A0C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F6121850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0721A21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MHVOYwAo"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="CTyWgzdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfGDGbO (ORCPT
+        id S1727514AbfGDGbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:31:14 -0400
-Received: from mail-eopbgr50051.outbound.protection.outlook.com ([40.107.5.51]:26919
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Thu, 4 Jul 2019 02:31:19 -0400
+Received: from mail-eopbgr140051.outbound.protection.outlook.com ([40.107.14.51]:46404
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725879AbfGDGbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:31:14 -0400
+        id S1725879AbfGDGbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:31:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mVRM3cE3gTYSYV1gfI1lyaN8EdenOI0Ejgkx7GicXUM=;
- b=MHVOYwAoYR2m0R81jQlyL+csbPybzQAa9M1ZCrDRfbXKdMIbTSizHEUZlnu/mWlLzk7i/9d+iB6iNyI3dcAxYGtfK3GyouM2YCA/F4/67eIIt3KF7n4UtSOxDKQGeguWB+8+IS2VyVVm7DLXA6df19l79ibnDTIzABrnC4Kfz7E=
+ bh=ywYIGffmJVJTuipwozQ7D/vOtWbzSjF3LL/JViTvy1o=;
+ b=CTyWgzdcJAKFE8hjeTeHyI2i12ZO8GAQOOa9V/Y2UisXXulL2xZ0IeDZW586Ri9SoSvEbGP3Lcf9I/wmVabKciYjQrykdpaZ3eDo6jpkGE82dDtstlFd+LFj8KcGyF3S9bQKITMzxGrenyWu1/nB9yKUaRgjYt66RmJ6bL88EzE=
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5229.eurprd08.prod.outlook.com (10.255.27.17) with Microsoft SMTP
+ VE1PR08MB4799.eurprd08.prod.outlook.com (10.255.112.203) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Thu, 4 Jul 2019 06:31:06 +0000
+ 15.20.2032.20; Thu, 4 Jul 2019 06:31:12 +0000
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1]) by VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1%3]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 06:31:06 +0000
+ 06:31:12 +0000
 From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 To:     Liviu Dudau <Liviu.Dudau@arm.com>,
         "airlied@linux.ie" <airlied@linux.ie>,
@@ -57,12 +57,11 @@ CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
         "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
         "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH 3/6] drm/komeda: Build side by side display output pipeline
-Thread-Topic: [PATCH 3/6] drm/komeda: Build side by side display output
- pipeline
-Thread-Index: AQHVMjIOXxgMi3Y4jUq86Y5LP37WRQ==
-Date:   Thu, 4 Jul 2019 06:31:05 +0000
-Message-ID: <20190704063011.7431-4-james.qian.wang@arm.com>
+Subject: [PATCH 4/6] drm/komeda: Add side by side support for writeback
+Thread-Topic: [PATCH 4/6] drm/komeda: Add side by side support for writeback
+Thread-Index: AQHVMjISfm5NC72300KwQchECXz2IQ==
+Date:   Thu, 4 Jul 2019 06:31:12 +0000
+Message-ID: <20190704063011.7431-5-james.qian.wang@arm.com>
 References: <20190704063011.7431-1-james.qian.wang@arm.com>
 In-Reply-To: <20190704063011.7431-1-james.qian.wang@arm.com>
 Accept-Language: en-US
@@ -78,297 +77,148 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a49622fa-1361-4f74-e551-08d700493149
+x-ms-office365-filtering-correlation-id: adcb0a9f-c3ab-4507-459b-08d70049353d
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5229;
-x-ms-traffictypediagnostic: VE1PR08MB5229:
-x-microsoft-antispam-prvs: <VE1PR08MB5229BE5708A4CE6DA8DC60EDB3FA0@VE1PR08MB5229.eurprd08.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4799;
+x-ms-traffictypediagnostic: VE1PR08MB4799:
+x-microsoft-antispam-prvs: <VE1PR08MB4799EBA1DC8248BDC4EBF7C0B3FA0@VE1PR08MB4799.eurprd08.prod.outlook.com>
 nodisclaimer: True
-x-ms-oob-tlc-oobclassifiers: OLM:285;
+x-ms-oob-tlc-oobclassifiers: OLM:785;
 x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(76176011)(6506007)(66066001)(110136005)(386003)(54906003)(103116003)(2906002)(316002)(186003)(86362001)(2201001)(52116002)(55236004)(99286004)(26005)(102836004)(6486002)(50226002)(25786009)(478600001)(71200400001)(71190400001)(6512007)(6436002)(4326008)(68736007)(53936002)(14454004)(2616005)(476003)(486006)(36756003)(446003)(11346002)(81166006)(8676002)(256004)(14444005)(81156014)(8936002)(305945005)(7736002)(66946007)(6116002)(73956011)(66476007)(66556008)(64756008)(66446008)(3846002)(2501003)(5660300002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5229;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(199004)(189003)(14444005)(256004)(305945005)(8936002)(4326008)(99286004)(36756003)(110136005)(2616005)(486006)(2501003)(5660300002)(2906002)(316002)(3846002)(50226002)(1076003)(102836004)(26005)(55236004)(6116002)(66066001)(446003)(11346002)(52116002)(476003)(7736002)(66946007)(76176011)(66446008)(54906003)(66476007)(73956011)(386003)(64756008)(68736007)(66556008)(6506007)(6486002)(103116003)(186003)(53936002)(478600001)(25786009)(86362001)(6436002)(2201001)(6512007)(14454004)(81156014)(81166006)(8676002)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4799;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oFqP+2WQ2eeyZ29dDddWQJ60K3iN+Zt60rLimY6yWyqwKr6JSTeviWShEtWId/9+njR1mUPHwiN5stCwrm9AT2yauS9E4mcYja/m5520KJDDtCpx87Ns54Te7d3YqYe1+LXcUmgNYZOLgiWrEpl6NwyQPyZjBdVlnaVe6cqWTJCKzlDMPRs6DaHVqlrGPzHtlR5+w0YRUO1dSJI8GObJ61mbWWKlPNh6cdTb3NxbggX3T8rt3e1ceJZ+EAFcztjrUCYnfrpiE2ly5g5MJtxT2NMCe2XQxji8HxgtDWgIt7sUZ7i1wKqoOoZRqVS+ei8pb3MSEcpusLLxJmEBXLTyROBA6tcbw/WbEy0e+RB5Fhr4c9DhB6hQPf/GuryxueIRZYqbl5EBTG5Qe0upj5SysvJiFMlFcBm5XeklM0eKF7M=
+x-microsoft-antispam-message-info: hdjKWvaLDRBCSjexCc5iPHlGDROr0Iuf/NvM2fJiZ320j/r6Eop5a5Tw0r+4cY/hoUhEg5w8Q2Tx/uFt+paCxnhpCQhsgXSoYjLVMqgEgVzxPLIwuChYiNOwWe/9zzGw1cM95jWOWSoqy5fDT4beVkEdOWZs13ym9QgznFAszl/7SLF6ssrGU/lrzpoBZNNbejIt9NRwiyM/Yte8SOUU0fux9Non9w34gKemFA7iQl051osWn13BwtpaDrmeWygTPLbw/3N/lSzF1xPcANf0JoCE/Wr+3TSkSThHYYmFTCLQZu2LpOSEjtINWr9CNT+6EaFS3TtWdhhV5kI50wH1Pd2etK3EaFHG8pKPJXNLwIsn6zcl0UQw7IKOin2b1Bi3SSV3DPOPdgidsuDtswVf8WeeKefD+mTCxck/I5kD+Kc=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a49622fa-1361-4f74-e551-08d700493149
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 06:31:05.8501
+X-MS-Exchange-CrossTenant-Network-Message-Id: adcb0a9f-c3ab-4507-459b-08d70049353d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 06:31:12.5213
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
 X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5229
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For side by side, the slave pipeline merges to master via image processor
+In side by side mode, the master pipeline writeback the left frame and the
+slave writeback the right part, the data flow as below:
 
- slave-layers -> slave-compiz-> slave-improc-
-                                             \
- master-layers -> master-compiz -------------> master-improc ->
+  slave.compiz -> slave.wb_layer -> fb (right-part)
+  master.compiz -> master.wb_layer -> fb (left-part)
 
 Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
 com>
 ---
- .../arm/display/komeda/d71/d71_component.c    |  4 ++
- .../gpu/drm/arm/display/komeda/komeda_crtc.c  | 19 ++++---
- .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
- .../display/komeda/komeda_pipeline_state.c    | 51 ++++++++++++++-----
- .../arm/display/komeda/komeda_wb_connector.c  |  2 +-
- 5 files changed, 56 insertions(+), 21 deletions(-)
+ .../drm/arm/display/komeda/komeda_pipeline.h  |  4 ++
+ .../display/komeda/komeda_pipeline_state.c    | 42 +++++++++++++++++++
+ .../arm/display/komeda/komeda_wb_connector.c  |  6 ++-
+ 3 files changed, 51 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drive=
-rs/gpu/drm/arm/display/komeda/d71/d71_component.c
-index c1355f5cb47d..a68954bb594a 100644
---- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-+++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-@@ -985,6 +985,10 @@ static void d71_improc_update(struct komeda_component =
-*c,
- 	else if (st->color_format =3D=3D DRM_COLOR_FORMAT_YCRCB444)
- 		ctrl |=3D IPS_CTRL_YUV;
-
-+	/* slave input has been enabled, means side by side */
-+	if (has_bit(1, state->active_inputs))
-+		ctrl |=3D IPS_CTRL_SBS;
-+
- 	malidp_write32_mask(reg, BLK_CONTROL, mask, ctrl);
- }
-
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu=
-/drm/arm/display/komeda/komeda_crtc.c
-index c3bb111c454c..133ea4728149 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-@@ -361,19 +361,26 @@ komeda_crtc_atomic_flush(struct drm_crtc *crtc,
- 	komeda_crtc_do_flush(crtc, old);
- }
-
--/* Returns the minimum frequency of the aclk rate (main engine clock) in H=
-z */
-+/*
-+ * Returns the minimum frequency of the aclk rate (main engine clock) in H=
-z.
-+ *
-+ * The DPU output can be split into two halves, to stay within the bandwid=
-th
-+ * capabilities of the external link (dual-link mode).
-+ * In these cases, each output link runs at half the pixel clock rate of t=
-he
-+ * combined display, and has half the number of pixels.
-+ * Beside split the output, the DPU internal pixel processing also can be =
-split
-+ * into two halves (LEFT/RIGHT) and handles by two pipelines simultaneousl=
-y.
-+ * So if side by side, the pipeline (main engine clock) also can run at ha=
-lf
-+ * the clock rate of the combined display.
-+ */
- static unsigned long
- komeda_calc_min_aclk_rate(struct komeda_crtc *kcrtc,
- 			  unsigned long pxlclk)
- {
--	/* Once dual-link one display pipeline drives two display outputs,
--	 * the aclk needs run on the double rate of pxlclk
--	 */
--	if (kcrtc->master->dual_link)
-+	if (kcrtc->master->dual_link && !kcrtc->side_by_side)
- 		return pxlclk * 2;
- 	else
- 		return pxlclk;
--
- }
-
- /* Get current aclk rate that specified by state */
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers=
 /gpu/drm/arm/display/komeda/komeda_pipeline.h
-index aa7c0fefa47e..3358bcea8f7d 100644
+index 3358bcea8f7d..9145af3355f4 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-@@ -530,6 +530,7 @@ struct komeda_crtc_state;
- struct komeda_crtc;
+@@ -554,6 +554,10 @@ int komeda_build_wb_split_data_flow(struct komeda_laye=
+r *wb_layer,
+ 				    struct drm_connector_state *conn_st,
+ 				    struct komeda_crtc_state *kcrtc_st,
+ 				    struct komeda_data_flow_cfg *dflow);
++int komeda_build_wb_sbs_data_flow(struct komeda_crtc *kcrtc,
++				  struct drm_connector_state *conn_st,
++				  struct komeda_crtc_state *kcrtc_st,
++				  struct komeda_data_flow_cfg *wb_dflow);
 
- void pipeline_composition_size(struct komeda_crtc_state *kcrtc_st,
-+			       bool side_by_side,
- 			       u16 *hsize, u16 *vsize);
-
- int komeda_build_layer_data_flow(struct komeda_layer *layer,
+ int komeda_build_display_data_flow(struct komeda_crtc *kcrtc,
+ 				   struct komeda_crtc_state *kcrtc_st);
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/d=
 rivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-index c08d59ae7090..4e5c891fbbd4 100644
+index 4e5c891fbbd4..9fcd3d7cabe5 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-@@ -637,12 +637,13 @@ komeda_merger_validate(struct komeda_merger *merger,
+@@ -1349,6 +1349,48 @@ int komeda_build_wb_split_data_flow(struct komeda_la=
+yer *wb_layer,
+ 	return komeda_wb_layer_validate(wb_layer, conn_st, dflow);
  }
 
- void pipeline_composition_size(struct komeda_crtc_state *kcrtc_st,
-+			       bool side_by_side,
- 			       u16 *hsize, u16 *vsize)
- {
- 	struct drm_display_mode *m =3D &kcrtc_st->base.adjusted_mode;
-
- 	if (hsize)
--		*hsize =3D m->hdisplay;
-+		*hsize =3D side_by_side ? m->hdisplay / 2 : m->hdisplay;
- 	if (vsize)
- 		*vsize =3D m->vdisplay;
- }
-@@ -653,12 +654,14 @@ komeda_compiz_set_input(struct komeda_compiz *compiz,
- 			struct komeda_data_flow_cfg *dflow)
- {
- 	struct drm_atomic_state *drm_st =3D kcrtc_st->base.state;
-+	struct drm_crtc *crtc =3D kcrtc_st->base.crtc;
- 	struct komeda_component_state *c_st, *old_st;
- 	struct komeda_compiz_input_cfg *cin;
- 	u16 compiz_w, compiz_h;
- 	int idx =3D dflow->blending_zorder;
-
--	pipeline_composition_size(kcrtc_st, &compiz_w, &compiz_h);
-+	pipeline_composition_size(kcrtc_st, to_kcrtc(crtc)->side_by_side,
-+				  &compiz_w, &compiz_h);
- 	/* check display rect */
- 	if ((dflow->out_x + dflow->out_w > compiz_w) ||
- 	    (dflow->out_y + dflow->out_h > compiz_h) ||
-@@ -670,7 +673,7 @@ komeda_compiz_set_input(struct komeda_compiz *compiz,
- 	}
-
- 	c_st =3D komeda_component_get_state_and_set_user(&compiz->base, drm_st,
--			kcrtc_st->base.crtc, kcrtc_st->base.crtc);
-+			crtc, crtc);
- 	if (IS_ERR(c_st))
- 		return PTR_ERR(c_st);
-
-@@ -704,17 +707,19 @@ komeda_compiz_validate(struct komeda_compiz *compiz,
- 		       struct komeda_crtc_state *state,
- 		       struct komeda_data_flow_cfg *dflow)
- {
-+	struct drm_crtc *crtc =3D state->base.crtc;
- 	struct komeda_component_state *c_st;
- 	struct komeda_compiz_state *st;
-
- 	c_st =3D komeda_component_get_state_and_set_user(&compiz->base,
--			state->base.state, state->base.crtc, state->base.crtc);
-+			state->base.state, crtc, crtc);
- 	if (IS_ERR(c_st))
- 		return PTR_ERR(c_st);
-
- 	st =3D to_compiz_st(c_st);
-
--	pipeline_composition_size(state, &st->hsize, &st->vsize);
-+	pipeline_composition_size(state, to_kcrtc(crtc)->side_by_side,
-+				  &st->hsize, &st->vsize);
-
- 	komeda_component_set_output(&dflow->input, &compiz->base, 0);
-
-@@ -740,7 +745,8 @@ komeda_compiz_validate(struct komeda_compiz *compiz,
- static int
- komeda_improc_validate(struct komeda_improc *improc,
- 		       struct komeda_crtc_state *kcrtc_st,
--		       struct komeda_data_flow_cfg *dflow)
-+		       struct komeda_data_flow_cfg *m_dflow,
-+		       struct komeda_data_flow_cfg *s_dflow)
- {
- 	struct drm_crtc *crtc =3D kcrtc_st->base.crtc;
- 	struct drm_crtc_state *crtc_st =3D &kcrtc_st->base;
-@@ -754,8 +760,8 @@ komeda_improc_validate(struct komeda_improc *improc,
-
- 	st =3D to_improc_st(c_st);
-
--	st->hsize =3D dflow->in_w;
--	st->vsize =3D dflow->in_h;
-+	st->hsize =3D m_dflow->in_w;
-+	st->vsize =3D m_dflow->in_h;
-
- 	if (drm_atomic_crtc_needs_modeset(crtc_st)) {
- 		u32 output_depths, output_formats;
-@@ -793,8 +799,10 @@ komeda_improc_validate(struct komeda_improc *improc,
- 		drm_ctm_to_coeffs(kcrtc_st->base.ctm, st->ctm_coeffs);
- 	}
-
--	komeda_component_add_input(&st->base, &dflow->input, 0);
--	komeda_component_set_output(&dflow->input, &improc->base, 0);
-+	komeda_component_add_input(&st->base, &m_dflow->input, 0);
-+	if (s_dflow)
-+		komeda_component_add_input(&st->base, &s_dflow->input, 1);
-+	komeda_component_set_output(&m_dflow->input, &improc->base, 0);
-
- 	return 0;
- }
-@@ -1118,7 +1126,7 @@ komeda_split_sbs_master_data_flow(struct komeda_crtc_=
-state *kcrtc_st,
- 	u32 disp_end =3D master->out_x + master->out_w;
- 	u16 boundary;
-
--	pipeline_composition_size(kcrtc_st, &boundary, NULL);
-+	pipeline_composition_size(kcrtc_st, true, &boundary, NULL);
-
- 	if (disp_end <=3D boundary) {
- 		/* the master viewport only located in master side, no need
-@@ -1181,7 +1189,7 @@ komeda_split_sbs_slave_data_flow(struct komeda_crtc_s=
-tate *kcrtc_st,
- {
- 	u16 boundary;
-
--	pipeline_composition_size(kcrtc_st, &boundary, NULL);
-+	pipeline_composition_size(kcrtc_st, true, &boundary, NULL);
-
- 	if (slave->out_x < boundary) {
- 		DRM_DEBUG_ATOMIC("SBS Slave plane is only allowed to configure the right=
- part frame.\n");
-@@ -1356,7 +1364,20 @@ int komeda_build_display_data_flow(struct komeda_crt=
-c *kcrtc,
- 	memset(&m_dflow, 0, sizeof(m_dflow));
- 	memset(&s_dflow, 0, sizeof(s_dflow));
-
--	if (slave && has_bit(slave->id, kcrtc_st->active_pipes)) {
-+	/* build slave output data flow */
-+	if (kcrtc->side_by_side) {
-+		/* on side by side, the slave data flows into the improc of
-+		 * itself first, and then merge it into master's image processor
-+		 */
-+		err =3D komeda_compiz_validate(slave->compiz, kcrtc_st, &s_dflow);
-+		if (err)
-+			return err;
++/* writeback side by side split data path:
++ *
++ * slave.compiz -> slave.wb_layer - > fb (right-part)
++ * master.compiz -> master.wb_layer -> fb (left-part)
++ */
++int komeda_build_wb_sbs_data_flow(struct komeda_crtc *kcrtc,
++				  struct drm_connector_state *conn_st,
++				  struct komeda_crtc_state *kcrtc_st,
++				  struct komeda_data_flow_cfg *wb_dflow)
++{
++	struct komeda_pipeline *master =3D kcrtc->master;
++	struct komeda_pipeline *slave =3D kcrtc->slave;
++	struct komeda_data_flow_cfg m_dflow, s_dflow;
++	int err;
 +
-+		err =3D komeda_improc_validate(slave->improc, kcrtc_st,
-+					     &s_dflow, NULL);
-+		if (err)
-+			return err;
-+	} else if (slave && has_bit(slave->id, kcrtc_st->active_pipes)) {
- 		err =3D komeda_compiz_validate(slave->compiz, kcrtc_st, &s_dflow);
- 		if (err)
- 			return err;
-@@ -1372,7 +1393,9 @@ int komeda_build_display_data_flow(struct komeda_crtc=
- *kcrtc,
- 	if (err)
- 		return err;
-
--	err =3D komeda_improc_validate(master->improc, kcrtc_st, &m_dflow);
-+	/* on side by side, merge the slave dflow into master */
-+	err =3D komeda_improc_validate(master->improc, kcrtc_st, &m_dflow,
-+				     kcrtc->side_by_side ? &s_dflow : NULL);
- 	if (err)
- 		return err;
-
++	if (wb_dflow->en_scaling || wb_dflow->en_img_enhancement) {
++		DRM_DEBUG_ATOMIC("sbs doesn't support WB_scaling\n");
++		return -EINVAL;
++	}
++
++	memcpy(&m_dflow, wb_dflow, sizeof(*wb_dflow));
++	memcpy(&s_dflow, wb_dflow, sizeof(*wb_dflow));
++
++	/* master writeout the left part */
++	m_dflow.in_w >>=3D 1;
++	m_dflow.out_w >>=3D 1;
++	m_dflow.input.component =3D &master->compiz->base;
++
++	/* slave writeout the right part */
++	s_dflow.in_w >>=3D 1;
++	s_dflow.out_w >>=3D 1;
++	s_dflow.in_x +=3D m_dflow.in_w;
++	s_dflow.out_x +=3D m_dflow.out_w;
++	s_dflow.input.component =3D &slave->compiz->base;
++
++	err =3D komeda_wb_layer_validate(master->wb_layer, conn_st, &m_dflow);
++	if (err)
++		return err;
++
++	return komeda_wb_layer_validate(slave->wb_layer, conn_st, &s_dflow);
++}
++
+ /* build display output data flow, the data path is:
+  * compiz -> improc -> timing_ctrlr
+  */
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/dri=
 vers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-index e6f66922843c..c1b0ad22422e 100644
+index c1b0ad22422e..ea584b1e5bd2 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-@@ -22,7 +22,7 @@ komeda_wb_init_data_flow(struct komeda_layer *wb_layer,
- 	dflow->out_h =3D fb->height;
+@@ -45,6 +45,7 @@ komeda_wb_encoder_atomic_check(struct drm_encoder *encode=
+r,
+ 			       struct drm_crtc_state *crtc_st,
+ 			       struct drm_connector_state *conn_st)
+ {
++	struct komeda_crtc *kcrtc =3D to_kcrtc(crtc_st->crtc);
+ 	struct komeda_crtc_state *kcrtc_st =3D to_kcrtc_st(crtc_st);
+ 	struct drm_writeback_job *writeback_job =3D conn_st->writeback_job;
+ 	struct komeda_layer *wb_layer;
+@@ -73,7 +74,10 @@ komeda_wb_encoder_atomic_check(struct drm_encoder *encod=
+er,
+ 	if (err)
+ 		return err;
 
- 	/* the write back data comes from the compiz */
--	pipeline_composition_size(kcrtc_st, &dflow->in_w, &dflow->in_h);
-+	pipeline_composition_size(kcrtc_st, false, &dflow->in_w, &dflow->in_h);
- 	dflow->input.component =3D &wb_layer->base.pipeline->compiz->base;
- 	/* compiz doesn't output alpha */
- 	dflow->pixel_blend_mode =3D DRM_MODE_BLEND_PIXEL_NONE;
+-	if (dflow.en_split)
++	if (kcrtc->side_by_side)
++		err =3D komeda_build_wb_sbs_data_flow(kcrtc,
++				conn_st, kcrtc_st, &dflow);
++	else if (dflow.en_split)
+ 		err =3D komeda_build_wb_split_data_flow(wb_layer,
+ 				conn_st, kcrtc_st, &dflow);
+ 	else
 --
 2.20.1
