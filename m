@@ -2,74 +2,70 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EBEC0650E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F0CC0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B53120881
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5384E20881
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 23:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfGDX5z (ORCPT
+        id S1727769AbfGDX55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 19:57:55 -0400
-Received: from smtprelay0069.hostedemail.com ([216.40.44.69]:57118 "EHLO
+        Thu, 4 Jul 2019 19:57:57 -0400
+Received: from smtprelay0161.hostedemail.com ([216.40.44.161]:38060 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727313AbfGDX5y (ORCPT
+        by vger.kernel.org with ESMTP id S1727644AbfGDX5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 19:57:54 -0400
+        Thu, 4 Jul 2019 19:57:55 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1896C100E86C0;
-        Thu,  4 Jul 2019 23:57:53 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 61FAD181D33FB;
+        Thu,  4 Jul 2019 23:57:54 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: girl52_61bbf4fecba19
-X-Filterd-Recvd-Size: 1739
+X-HE-Tag: wood81_6207feb2edb1e
+X-Filterd-Recvd-Size: 1558
 Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
         (Authenticated sender: joe@perches.com)
         by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jul 2019 23:57:51 +0000 (UTC)
+        Thu,  4 Jul 2019 23:57:53 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-nfs@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 0/8] treewide: correct misuses of strscpy/strlcpy
-Date:   Thu,  4 Jul 2019 16:57:40 -0700
-Message-Id: <cover.1562283944.git.joe@perches.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: [PATCH 1/8] Input: synaptics: Fix misuse of strlcpy
+Date:   Thu,  4 Jul 2019 16:57:41 -0700
+Message-Id: <070330472a7314a21d85c42dd66cdd43222559c3.1562283944.git.joe@perches.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <cover.1562283944.git.joe@perches.com>
+References: <cover.1562283944.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are all likely copy/paste defects where the field size of the
-'copied to' array is incorrect.
+Probable cut&paste typo - use the correct field size.
 
-Each patch in this series is independent.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/input/mouse/synaptics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Joe Perches (8):
-  Input: synaptics: Fix misuse of strlcpy
-  leds: as3645a: Fix misuse of strlcpy
-  media: m2m-deinterlace: Fix misuse of strscpy
-  media: go7007: Fix misuse of strscpy
-  net: ethernet: sun4i-emac: Fix misuse of strlcpy
-  net: nixge: Fix misuse of strlcpy
-  tty: hvcs: Fix odd use of strlcpy
-  nfsd: Fix misuse of strlcpy
-
- drivers/input/mouse/synaptics.c             | 2 +-
- drivers/leds/leds-as3645a.c                 | 2 +-
- drivers/media/platform/m2m-deinterlace.c    | 2 +-
- drivers/media/usb/go7007/snd-go7007.c       | 2 +-
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- drivers/net/ethernet/ni/nixge.c             | 2 +-
- drivers/tty/hvc/hvcs.c                      | 4 ++--
- fs/nfsd/nfs4idmap.c                         | 2 +-
- 8 files changed, 10 insertions(+), 10 deletions(-)
-
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 1080c0c49815..00a0cf14f27f 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -705,7 +705,7 @@ static void synaptics_pt_create(struct psmouse *psmouse)
+ 
+ 	serio->id.type = SERIO_PS_PSTHRU;
+ 	strlcpy(serio->name, "Synaptics pass-through", sizeof(serio->name));
+-	strlcpy(serio->phys, "synaptics-pt/serio0", sizeof(serio->name));
++	strlcpy(serio->phys, "synaptics-pt/serio0", sizeof(serio->phys));
+ 	serio->write = synaptics_pt_write;
+ 	serio->start = synaptics_pt_start;
+ 	serio->stop = synaptics_pt_stop;
 -- 
 2.15.0
 
