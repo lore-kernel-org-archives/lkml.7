@@ -2,98 +2,167 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF418C06514
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FE6C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8E021850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G2SxVzEx"
+	by mail.kernel.org (Postfix) with ESMTP id 442E82189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 06:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfGDGfC (ORCPT
+        id S1727413AbfGDGfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 02:35:02 -0400
-Received: from ozlabs.org ([203.11.71.1]:41119 "EHLO ozlabs.org"
+        Thu, 4 Jul 2019 02:35:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46426 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfGDGfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 02:35:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725945AbfGDGfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 02:35:40 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fSrg16dYz9s8m;
-        Thu,  4 Jul 2019 16:34:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562222099;
-        bh=ZhILHJks9MQB0NyhT3uC36WO3l9Mlwo+X2CQWNwE2XY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G2SxVzExl2xzEr/OYCKSZEEtz7pWr8uadUDPwuVke6erIPSk3ybT8W6UN9lYysP92
-         cNDMK7GRErbo8ZXhz8bunjlz3lRfFis977v71QsUwVwsRoGvNoX9eaLaWSRoCaPYxy
-         XJMqyeIFjJbUwlaM9bmsH+sp/4IHU7FacYsAsQVaI1ysLyzVNCPdUglBL390HoJ0E4
-         2zb2JqdaGscHF/kS+ZDOdrr1Mp0mmtCBlXjEabaQ9AU+Ud0S3PIdcT2fCtFAlcCtf8
-         a96n49nAG2fYuEyKGMPfNUjGxQfoLlJBBao/j5e89b14Cv9JwhxFryk7aWil9U9BZC
-         R8AluNIFBWyqg==
-Date:   Thu, 4 Jul 2019 16:34:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Felipe Balbi <balbi@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pawel Laszczak <pawell@cadence.com>
-Subject: linux-next: build failure after merge of the usb and usb-gadget
- trees
-Message-ID: <20190704163458.63ed69d2@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 83BE830917AC;
+        Thu,  4 Jul 2019 06:35:37 +0000 (UTC)
+Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4247B17CCB;
+        Thu,  4 Jul 2019 06:35:22 +0000 (UTC)
+Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com
+References: <20190703091339.1847-1-tiwei.bie@intel.com>
+ <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
+ <20190703115245.GA22374@___>
+ <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com> <20190703130817.GA1978@___>
+ <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
+ <20190704062134.GA21116@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <c67f628f-e0c1-9a41-6c5d-b6bbda31467d@redhat.com>
+Date:   Thu, 4 Jul 2019 14:35:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ZGNpIaApbwsvyg5i+/dSMxt"; protocol="application/pgp-signature"
+In-Reply-To: <20190704062134.GA21116@___>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 04 Jul 2019 06:35:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZGNpIaApbwsvyg5i+/dSMxt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 2019/7/4 下午2:21, Tiwei Bie wrote:
+> On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
+>> On 2019/7/3 下午9:08, Tiwei Bie wrote:
+>>> On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
+>>>> On 2019/7/3 下午7:52, Tiwei Bie wrote:
+>>>>> On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
+>>>>>> On 2019/7/3 下午5:13, Tiwei Bie wrote:
+>>>>>>> Details about this can be found here:
+>>>>>>>
+>>>>>>> https://lwn.net/Articles/750770/
+>>>>>>>
+>>>>>>> What's new in this version
+>>>>>>> ==========================
+>>>>>>>
+>>>>>>> A new VFIO device type is introduced - vfio-vhost. This addressed
+>>>>>>> some comments from here:https://patchwork.ozlabs.org/cover/984763/
+>>>>>>>
+>>>>>>> Below is the updated device interface:
+>>>>>>>
+>>>>>>> Currently, there are two regions of this device: 1) CONFIG_REGION
+>>>>>>> (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
+>>>>>>> device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
+>>>>>>> can be used to notify the device.
+>>>>>>>
+>>>>>>> 1. CONFIG_REGION
+>>>>>>>
+>>>>>>> The region described by CONFIG_REGION is the main control interface.
+>>>>>>> Messages will be written to or read from this region.
+>>>>>>>
+>>>>>>> The message type is determined by the `request` field in message
+>>>>>>> header. The message size is encoded in the message header too.
+>>>>>>> The message format looks like this:
+>>>>>>>
+>>>>>>> struct vhost_vfio_op {
+>>>>>>> 	__u64 request;
+>>>>>>> 	__u32 flags;
+>>>>>>> 	/* Flag values: */
+>>>>>>>      #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
+>>>>>>> 	__u32 size;
+>>>>>>> 	union {
+>>>>>>> 		__u64 u64;
+>>>>>>> 		struct vhost_vring_state state;
+>>>>>>> 		struct vhost_vring_addr addr;
+>>>>>>> 	} payload;
+>>>>>>> };
+>>>>>>>
+>>>>>>> The existing vhost-kernel ioctl cmds are reused as the message
+>>>>>>> requests in above structure.
+>>>>>> Still a comments like V1. What's the advantage of inventing a new protocol?
+>>>>> I'm trying to make it work in VFIO's way..
+>>>>>
+>>>>>> I believe either of the following should be better:
+>>>>>>
+>>>>>> - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
+>>>>>> extend it with e.g notify region. The advantages is that all exist userspace
+>>>>>> program could be reused without modification (or minimal modification). And
+>>>>>> vhost API hides lots of details that is not necessary to be understood by
+>>>>>> application (e.g in the case of container).
+>>>>> Do you mean reusing vhost's ioctl on VFIO device fd directly,
+>>>>> or introducing another mdev driver (i.e. vhost_mdev instead of
+>>>>> using the existing vfio_mdev) for mdev device?
+>>>> Can we simply add them into ioctl of mdev_parent_ops?
+>>> Right, either way, these ioctls have to be and just need to be
+>>> added in the ioctl of the mdev_parent_ops. But another thing we
+>>> also need to consider is that which file descriptor the userspace
+>>> will do the ioctl() on. So I'm wondering do you mean let the
+>>> userspace do the ioctl() on the VFIO device fd of the mdev
+>>> device?
+>>>
+>> Yes.
+> Got it! I'm not sure what's Alex opinion on this. If we all
+> agree with this, I can do it in this way.
+>
+>> Is there any other way btw?
+> Just a quick thought.. Maybe totally a bad idea.
 
-After merging the usb tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
 
-arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_outp=
-ut_dwc3_log_ctrl':
-trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
+It's not for sure :)
 
-Caused by commit
 
-  3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
+>   I was thinking
+> whether it would be odd to do non-VFIO's ioctls on VFIO's device
+> fd. So I was wondering whether it's possible to allow binding
+> another mdev driver (e.g. vhost_mdev) to the supported mdev
+> devices. The new mdev driver, vhost_mdev, can provide similar
+> ways to let userspace open the mdev device and do the vhost ioctls
+> on it. To distinguish with the vfio_mdev compatible mdev devices,
+> the device API of the new vhost_mdev compatible mdev devices
+> might be e.g. "vhost-net" for net?
+>
+> So in VFIO case, the device will be for passthru directly. And
+> in VHOST case, the device can be used to accelerate the existing
+> virtualized devices.
+>
+> How do you think?
 
-I have used the usb tree from next-20190703 for today.
 
-This also occurs in the usb-gadget tree so I have used the version of
-that from next-20190703 as well.
+If my understanding is correct, there will be no VFIO ioctl if we go for 
+vhost_mdev?
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks
 
---Sig_/ZGNpIaApbwsvyg5i+/dSMxt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0dnhIACgkQAVBC80lX
-0GwyUAf/RuqQ3Lf3xDl/jpmN4r8g23YHHWfwmND8C5Td3xjXL3Wa338Dfbb2DEDw
-xIiXletr03+udvJgiSJiLA61pkzIj6QJDmQVjlUiI+6YMGCjX3Yw/FQQuWp+5tLF
-CglouxPj7I9y/TtQjVit3FIEjg5eEKOEEyEWZe6l7xu5wneR6Pyu1tJa5Cvl3bjc
-Bp+4aO2n+uF0EnyTzsgyeoL924FAIA89vmxoLGw/sZsnCweSA0mmh5urpsIyUYdu
-geALFU9PxhvlW0Z1h/ELz9/2LkYRsrILMR9IfZWTDg3R04zoWqMQJM4qWWxPtUKj
-YH4cSY71xtwiiTgRjcLBYExP+hzopg==
-=fD2v
------END PGP SIGNATURE-----
-
---Sig_/ZGNpIaApbwsvyg5i+/dSMxt--
+>
+> Thanks,
+> Tiwei
+>> Thanks
+>>
