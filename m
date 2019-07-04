@@ -2,97 +2,257 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB42C06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAE7C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0DF21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05A521882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 09:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfGDJUj (ORCPT
+        id S1727423AbfGDJUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 05:20:39 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65358 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727169AbfGDJUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 05:20:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 02:20:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="158237252"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by orsmga008.jf.intel.com with ESMTP; 04 Jul 2019 02:20:31 -0700
-Message-ID: <497a8afaa41cd26d3069acb5532075207512889c.camel@linux.intel.com>
-Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Date:   Thu, 04 Jul 2019 12:20:30 +0300
-In-Reply-To: <20190629150145.GL11506@sasha-vm>
-References: <20190625201341.15865-1-sashal@kernel.org>
-         <20190625201341.15865-2-sashal@kernel.org>
-         <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
-         <20190629150145.GL11506@sasha-vm>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 4 Jul 2019 05:20:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35763 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfGDJUu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 05:20:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c27so5834890wrb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 02:20:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=f1r99RR7Q+xI/HzT6VXzcxAxrKbEaF2CKUPs7/mZplQ=;
+        b=gxG9fcZa9Fwab/H/Yngz/uSf4duIhGmREcYWhqBOH5aK1UEP2Sm9ZvQG9pYG7EcdHJ
+         saOhI/wISp/DtErNKDa/hUw1LDsICVdmNJbP8gm9ceLogJFDP4CsMngFo+UBIaxd25zW
+         slxiNJTZofyIL1tgrv9k75+z+B6s9igq/1rrI3+fy87fLlembD7860vqovZa4Xv57T9i
+         6cTKOpNN2oF5TfbVJFeVgYGmOwY+XokEw6PTBDkEDyD+nhakQNtqRV3O7Fr1mG8h18Ab
+         3okZxruIb8CfzHa0I1k6Cmnlf9a5pmU6wl9JVt1l7KPtaN3MZO1NUAD/iJYlSumk4m1a
+         06mQ==
+X-Gm-Message-State: APjAAAXqHGXIFf+jl7xYhBsnGg/dLfTr1NGpEecpE595WhX5FGg5s3zC
+        xPXOuGuiCyMgNXV2rqYLSwQsKQ==
+X-Google-Smtp-Source: APXvYqzoACtOvMPdg2pePxgdM0+1il13ShO5vkXimvj9VVxQkaROxCTCtnUfc8x4OnP7UGJOttUN6w==
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr33084792wre.205.1562232047694;
+        Thu, 04 Jul 2019 02:20:47 -0700 (PDT)
+Received: from steredhat.homenet.telecomitalia.it (host21-207-dynamic.52-79-r.retail.telecomitalia.it. [79.52.207.21])
+        by smtp.gmail.com with ESMTPSA id z25sm4919093wmf.38.2019.07.04.02.20.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 04 Jul 2019 02:20:47 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 11:20:44 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>, netdev@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] vsock/virtio: use RCU to avoid use-after-free on
+ the_virtio_vsock
+Message-ID: <20190704092044.23gd5o2rhqarisgg@steredhat.homenet.telecomitalia.it>
+References: <20190628123659.139576-1-sgarzare@redhat.com>
+ <20190628123659.139576-2-sgarzare@redhat.com>
+ <05311244-ed23-d061-a620-7b83d83c11f5@redhat.com>
+ <20190703104135.wg34dobv64k7u4jo@steredhat>
+ <07e5bc00-ebde-4dac-d38c-f008fa230b5f@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07e5bc00-ebde-4dac-d38c-f008fa230b5f@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-29 at 11:01 -0400, Sasha Levin wrote:
-> On Thu, Jun 27, 2019 at 02:31:35AM +0300, Jarkko Sakkinen wrote:
-> > On Tue, 2019-06-25 at 16:13 -0400, Sasha Levin wrote:
-> > > +static const uuid_t ftpm_ta_uuid =
-> > > +	UUID_INIT(0xBC50D971, 0xD4C9, 0x42C4,
-> > > +		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
-> > > +
-> > > +/**
-> > > + * ftpm_tee_tpm_op_recv - retrieve fTPM response.
-> > > + *
-> > 
-> > Should not have an empty line here.
-> > 
-> > > + * @chip: the tpm_chip description as specified in driver/char/tpm/tpm.h.
-> > > + * @buf: the buffer to store data.
-> > > + * @count: the number of bytes to read.
+On Thu, Jul 04, 2019 at 11:58:00AM +0800, Jason Wang wrote:
 > 
-> Jarkko, w.r.t your comment above, there is an empty line between the
-> function name and variables in drivers/char/tpm, and in particular
-> tpm_crb.c which you authored and I used as reference. Do you want us to
-> diverge here?
+> On 2019/7/3 下午6:41, Stefano Garzarella wrote:
+> > On Wed, Jul 03, 2019 at 05:53:58PM +0800, Jason Wang wrote:
+> > > On 2019/6/28 下午8:36, Stefano Garzarella wrote:
+> > > > Some callbacks used by the upper layers can run while we are in the
+> > > > .remove(). A potential use-after-free can happen, because we free
+> > > > the_virtio_vsock without knowing if the callbacks are over or not.
+> > > > 
+> > > > To solve this issue we move the assignment of the_virtio_vsock at the
+> > > > end of .probe(), when we finished all the initialization, and at the
+> > > > beginning of .remove(), before to release resources.
+> > > > For the same reason, we do the same also for the vdev->priv.
+> > > > 
+> > > > We use RCU to be sure that all callbacks that use the_virtio_vsock
+> > > > ended before freeing it. This is not required for callbacks that
+> > > > use vdev->priv, because after the vdev->config->del_vqs() we are sure
+> > > > that they are ended and will no longer be invoked.
+> > > > 
+> > > > We also take the mutex during the .remove() to avoid that .probe() can
+> > > > run while we are resetting the device.
+> > > > 
+> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > > ---
+> > > >    net/vmw_vsock/virtio_transport.c | 67 +++++++++++++++++++++-----------
+> > > >    1 file changed, 44 insertions(+), 23 deletions(-)
+> > > > 
+> > > > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> > > > index 9c287e3e393c..7ad510ec12e0 100644
+> > > > --- a/net/vmw_vsock/virtio_transport.c
+> > > > +++ b/net/vmw_vsock/virtio_transport.c
+> > > > @@ -65,19 +65,22 @@ struct virtio_vsock {
+> > > >    	u32 guest_cid;
+> > > >    };
+> > > > -static struct virtio_vsock *virtio_vsock_get(void)
+> > > > -{
+> > > > -	return the_virtio_vsock;
+> > > > -}
+> > > > -
+> > > >    static u32 virtio_transport_get_local_cid(void)
+> > > >    {
+> > > > -	struct virtio_vsock *vsock = virtio_vsock_get();
+> > > > +	struct virtio_vsock *vsock;
+> > > > +	u32 ret;
+> > > > -	if (!vsock)
+> > > > -		return VMADDR_CID_ANY;
+> > > > +	rcu_read_lock();
+> > > > +	vsock = rcu_dereference(the_virtio_vsock);
+> > > > +	if (!vsock) {
+> > > > +		ret = VMADDR_CID_ANY;
+> > > > +		goto out_rcu;
+> > > > +	}
+> > > > -	return vsock->guest_cid;
+> > > > +	ret = vsock->guest_cid;
+> > > > +out_rcu:
+> > > > +	rcu_read_unlock();
+> > > > +	return ret;
+> > > >    }
+> > > >    static void virtio_transport_loopback_work(struct work_struct *work)
+> > > > @@ -197,14 +200,18 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+> > > >    	struct virtio_vsock *vsock;
+> > > >    	int len = pkt->len;
+> > > > -	vsock = virtio_vsock_get();
+> > > > +	rcu_read_lock();
+> > > > +	vsock = rcu_dereference(the_virtio_vsock);
+> > > >    	if (!vsock) {
+> > > >    		virtio_transport_free_pkt(pkt);
+> > > > -		return -ENODEV;
+> > > > +		len = -ENODEV;
+> > > > +		goto out_rcu;
+> > > >    	}
+> > > > -	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid)
+> > > > -		return virtio_transport_send_pkt_loopback(vsock, pkt);
+> > > > +	if (le64_to_cpu(pkt->hdr.dst_cid) == vsock->guest_cid) {
+> > > > +		len = virtio_transport_send_pkt_loopback(vsock, pkt);
+> > > > +		goto out_rcu;
+> > > > +	}
+> > > >    	if (pkt->reply)
+> > > >    		atomic_inc(&vsock->queued_replies);
+> > > > @@ -214,6 +221,9 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+> > > >    	spin_unlock_bh(&vsock->send_pkt_list_lock);
+> > > >    	queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
+> > > > +
+> > > > +out_rcu:
+> > > > +	rcu_read_unlock();
+> > > >    	return len;
+> > > >    }
+> > > > @@ -222,12 +232,14 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+> > > >    {
+> > > >    	struct virtio_vsock *vsock;
+> > > >    	struct virtio_vsock_pkt *pkt, *n;
+> > > > -	int cnt = 0;
+> > > > +	int cnt = 0, ret;
+> > > >    	LIST_HEAD(freeme);
+> > > > -	vsock = virtio_vsock_get();
+> > > > +	rcu_read_lock();
+> > > > +	vsock = rcu_dereference(the_virtio_vsock);
+> > > >    	if (!vsock) {
+> > > > -		return -ENODEV;
+> > > > +		ret = -ENODEV;
+> > > > +		goto out_rcu;
+> > > >    	}
+> > > >    	spin_lock_bh(&vsock->send_pkt_list_lock);
+> > > > @@ -255,7 +267,11 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+> > > >    			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
+> > > >    	}
+> > > > -	return 0;
+> > > > +	ret = 0;
+> > > > +
+> > > > +out_rcu:
+> > > > +	rcu_read_unlock();
+> > > > +	return ret;
+> > > >    }
+> > > >    static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+> > > > @@ -590,8 +606,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+> > > >    	vsock->rx_buf_max_nr = 0;
+> > > >    	atomic_set(&vsock->queued_replies, 0);
+> > > > -	vdev->priv = vsock;
+> > > > -	the_virtio_vsock = vsock;
+> > > >    	mutex_init(&vsock->tx_lock);
+> > > >    	mutex_init(&vsock->rx_lock);
+> > > >    	mutex_init(&vsock->event_lock);
+> > > > @@ -613,6 +627,9 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+> > > >    	virtio_vsock_event_fill(vsock);
+> > > >    	mutex_unlock(&vsock->event_lock);
+> > > > +	vdev->priv = vsock;
+> > > > +	rcu_assign_pointer(the_virtio_vsock, vsock);
+> > > 
+> > > You probably need to use rcu_dereference_protected() to access
+> > > the_virtio_vsock in the function in order to survive from sparse.
+> > > 
+> > Ooo, thanks!
+> > 
+> > Do you mean when we check if the_virtio_vsock is not null at the beginning of
+> > virtio_vsock_probe()?
+> 
+> 
+> I mean instead of:
+> 
+>     /* Only one virtio-vsock device per guest is supported */
+>     if (the_virtio_vsock) {
+>         ret = -EBUSY;
+>         goto out;
+>     }
+> 
+> you should use:
+> 
+> if (rcu_dereference_protected(the_virtio_vosck,
+> lock_dep_is_held(&the_virtio_vsock_mutex))
+> 
+> ...
 
-There is divergence and that was the first thing I've contributed to
-the TPM driver. I use this as the reference for formatting function
-descriptions these days:
+Okay, thanks for confirming! I'll send a v3 to fix this!
 
-https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
+> 
+> 
+> > 
+> > > > +
+> > > >    	mutex_unlock(&the_virtio_vsock_mutex);
+> > > >    	return 0;
+> > > > @@ -627,6 +644,12 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+> > > >    	struct virtio_vsock *vsock = vdev->priv;
+> > > >    	struct virtio_vsock_pkt *pkt;
+> > > > +	mutex_lock(&the_virtio_vsock_mutex);
+> > > > +
+> > > > +	vdev->priv = NULL;
+> > > > +	rcu_assign_pointer(the_virtio_vsock, NULL);
+> > > 
+> > > This is still suspicious, can we access the_virtio_vsock through vdev->priv?
+> > > If yes, we may still get use-after-free since it was not protected by RCU.
+> > We will free the object only after calling the del_vqs(), so we are sure
+> > that the vq_callbacks ended and will no longer be invoked.
+> > So, IIUC it shouldn't happen.
+> 
+> 
+> Yes, but any dereference that is not done in vq_callbacks will be very
+> dangerous in the future.
 
-According to that the legit way to format would be:
+Right.
 
-* ftpm_tee_tpm_op_recv() - retrieve fTPM response.
-* @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
-* @buf:		the buffer to store data.
-* @count:	the number of bytes to read.
+Do you think make sense to continue with this series in order to fix the
+hot-unplug issue, then I'll work to refactor the driver code to use the refcnt
+(as you suggested in patch 2) and singleton for the_virtio_vsock?
 
-Since it is both a callback to an interface defined elsewhere
-and a static function and it does not document anything useful,
-I would just remove this comment. I'd do it for all callbacks
-that are part of tpm_call_ops.
-
-/Jarkko
-
+Thanks,
+Stefano
