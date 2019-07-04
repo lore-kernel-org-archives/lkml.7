@@ -2,214 +2,129 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B25C06516
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4BC06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2884E20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A74420828
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 11:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="eXkaECc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfGDLqh (ORCPT
+        id S1727620AbfGDLry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 07:46:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2313 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfGDLqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 07:46:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 04:46:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,450,1557212400"; 
-   d="scan'208";a="363334703"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Jul 2019 04:46:33 -0700
-Message-ID: <f0d67f0dc48ca8162c666c988da5147cb92b623b.camel@linux.intel.com>
-Subject: Re: [PATCH v3] tpm: Get TCG log from TPM2 ACPI table for tpm2
- systems
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jordan Hand <jordanhand22@gmail.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 04 Jul 2019 14:46:32 +0300
-In-Reply-To: <20190624174643.21746-1-jorhand@microsoft.com>
-References: <20190624174643.21746-1-jorhand@microsoft.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 4 Jul 2019 07:47:54 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:39060 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727436AbfGDLrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 07:47:53 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64Bihlp001158;
+        Thu, 4 Jul 2019 06:47:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=PODMain02222019;
+ bh=UBe5gEYsgoVbt9kCQpdyaOqDwTf0IJKa5gW28ba3xE8=;
+ b=eXkaECc6iWCAHvLklGh40apXQVkI0QlN6Zc7c6JhlXWZHRzkZ34NOWwnsuuBXImXW/B5
+ TXaJZXxYXnGJdf11vB/Rev7Wk1rZlv7Nvgw1sOZg37uD2KmkBr7csdL5kaUAlNFzdqrm
+ +iZFisMqrTvxroHQ2AwPwYA32q4TUZQRC4T5qR7BieHGWILAwcO0U/j9LzGSYqFhA6Ej
+ XFjIk45QovU1y7K/3qZSpJUl2r5KiMBqpm+OoeQqatZZ0aI2Ui6vEWKnwdqI/xYQ8jg1
+ YKPPGU80xEyJxNvJrqqXuzD6n3bS/dl/5gNOuN92UXVpahv/Mp4RWIQxQEMxCyxeNRPc 6w== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=rf@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2te5d4gqcp-1;
+        Thu, 04 Jul 2019 06:47:31 -0500
+Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
+        by mail1.cirrus.com (Postfix) with ESMTP id 67043611C8C1;
+        Thu,  4 Jul 2019 06:47:30 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 4 Jul
+ 2019 12:47:29 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 4 Jul 2019 12:47:29 +0100
+Received: from [198.90.251.101] (edi-sw-dsktp006.ad.cirrus.com [198.90.251.101])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B261A45;
+        Thu,  4 Jul 2019 12:47:29 +0100 (BST)
+Subject: Re: [PATCH v2 34/35] sound/soc/codecs: Use kmemdup rather than
+ duplicating its implementation
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <patches@opensource.cirrus.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20190703163224.1029-1-huangfq.daxian@gmail.com>
+From:   Richard Fitzgerald <rf@opensource.cirrus.com>
+Message-ID: <52ee7351-19fc-4fd3-33f8-9392a4ad9526@opensource.cirrus.com>
+Date:   Thu, 4 Jul 2019 12:47:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190703163224.1029-1-huangfq.daxian@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907040152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 10:46 -0700, Jordan Hand wrote:
-> From: Jordan Hand <jordanhand22@gmail.com>
->
-> For TPM2-based systems, retrieve the TCG log from the TPM2 ACPI table.
-> The TPM2 ACPI table is defined in section 7.3 of the TCG ACPI
-> Specification (see link).
+Commit message title prefix should be "ASoC: wm0010:" not "sound/soc
+/codecs:". Take a look at other patches to the same files.
 
-You are claiming here that this applies to all systems I've never used
-even a single one that uses it. How can you possibly back this up?  I've
-been aware that SeaBIOS does use it but only now became aware that it
-has been also updated to the standard. This kind of change is welcome
-but lets scope things properly.
-
-Unfortunately, also the short summary looks like pure nonsense at the
-moment. What are "TCG log", "tpm2 systems" and why is TPM2 not
-capitalized there?
-
-For short summary I'd just put "tpm: Parse event log from TPM2 table"
-
-> The TPM2 table is used primarily by legacy BIOS in place of the TCPA table
-> when the system's TPM is version 2.0 to denote (among other metadata) the
-
-"for TPM2 systems"
-
-Stick with a single notation. If count correctly you use in total three
-different notations for the same thing in the commit message.
-
-> location of the crypto-agile TCG log. In particluar, the SeaBios firmware
-> used by default by QEMU makes use of this table for crypto-agile logs.
-
-crypto-agile log should be enough given the context.
-
-> Link:
+> kmemdup is introduced to duplicate a region of memory in a neat way.
+> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
+> write the size twice (sometimes lead to mistakes), kmemdup improves
+> readability, leads to smaller code and also reduce the chances of mistakes.
+> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
 > 
-https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
-
-Should be in the same line. You should also separate them with a single
-space character, not with a new line character.
-
-This is a more sane URL for the resource to use:
-
-https://trustedcomputinggroup.org/resource/tcg-acpi-specification/
-
->
-
-Remove this extra new line character.
-
-> Signed-off-by: Jordan Hand <jordanhand22@gmail.com>
+> Acked-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 > ---
->
-> Same as v2 with more descriptive commit message
->
->  drivers/char/tpm/eventlog/acpi.c | 67 +++++++++++++++++++++++---------
->  1 file changed, 48 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/char/tpm/eventlog/acpi.c
-> b/drivers/char/tpm/eventlog/acpi.c
-> index 63ada5e53f13..b945c4ff3af6 100644
-> --- a/drivers/char/tpm/eventlog/acpi.c
-> +++ b/drivers/char/tpm/eventlog/acpi.c
-> @@ -41,17 +41,31 @@ struct acpi_tcpa {
->  	};
->  };
->
-> +struct acpi_tpm2 {
-> +	struct acpi_table_header hdr;
-> +	u16 platform_class;
-> +	u16 reserved;
-> +	u64 control_area_addr;
-> +	u32 start_method;
-> +	u8 start_method_params[12];
-> +	u32 log_max_len;
-> +	u64 log_start_addr;
-> +} __packed;
-
-This is a duplicate definition to struct acpi_table_tpm2 located in
-include/acpi/actbl3.h. If you need to update that file, please do it
-as a separate commit.
-
-Other examples of use can be found from tpm_crb.c and tpm_tis.c.
-Please skim them through.
-
-> +
->  /* read binary bios log */
->  int tpm_read_log_acpi(struct tpm_chip *chip)
->  {
-> -	struct acpi_tcpa *buff;
-> +	struct acpi_table_header *buff;
-> +	struct acpi_tcpa *tcpa;
-> +	struct acpi_tpm2 *tpm2;
-> +
-
-A trailing new line.
-
->  	acpi_status status;
->  	void __iomem *virt;
->  	u64 len, start;
-> +	int log_type;
->  	struct tpm_bios_log *log;
+> Changes in v2:
+>    - Fix a typo in commit message (memset -> memcpy)
+>    - Split into two patches
+> 
+>   sound/soc/codecs/wm0010.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/wm0010.c b/sound/soc/codecs/wm0010.c
+> index 727d6703c905..807826f30f58 100644
+> --- a/sound/soc/codecs/wm0010.c
+> +++ b/sound/soc/codecs/wm0010.c
+> @@ -515,7 +515,7 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
+>   	dev_dbg(component->dev, "Downloading %zu byte stage 2 loader\n", fw->size);
+>   
+>   	/* Copy to local buffer first as vmalloc causes problems for dma */
+> -	img = kzalloc(fw->size, GFP_KERNEL | GFP_DMA);
+> +	img = kmemdup(&fw->data[0], fw->size, GFP_KERNEL | GFP_DMA);
+>   	if (!img) {
+>   		ret = -ENOMEM;
+>   		goto abort2;
+> @@ -527,8 +527,6 @@ static int wm0010_stage2_load(struct snd_soc_component *component)
+>   		goto abort1;
+>   	}
+>   
+> -	memcpy(img, &fw->data[0], fw->size);
 > -
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> -		return -ENODEV;
-> +	bool is_tpm2 = chip->flags & TPM_CHIP_FLAG_TPM2;
-> +	acpi_string table_sig;
->
->  	log = &chip->log;
->
-> @@ -61,26 +75,41 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	if (!chip->acpi_dev_handle)
->  		return -ENODEV;
->
-> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> -				(struct acpi_table_header **)&buff);
-> +	/* Find TCPA or TPM2 entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> +	table_sig = is_tpm2 ? ACPI_SIG_TPM2 : ACPI_SIG_TCPA;
-> +	status = acpi_get_table(table_sig, 1, &buff);
->
->  	if (ACPI_FAILURE(status))
->  		return -ENODEV;
->
-> -	switch(buff->platform_class) {
-> -	case BIOS_SERVER:
-> -		len = buff->server.log_max_len;
-> -		start = buff->server.log_start_addr;
-> -		break;
-> -	case BIOS_CLIENT:
-> -	default:
-> -		len = buff->client.log_max_len;
-> -		start = buff->client.log_start_addr;
-> -		break;
-> +	/* If log_max_len and log_start_addr are set, start_method_params will
-> +	 * be 12 bytes, according to TCG ACPI spec. If start_method_params is
-> +	 * fewer than 12 bytes, the TCG log is not available
-> +	 */
-
-What is start_method_params? I don't understand this comment. Please
-remove and instead implement validation to all branches.
-
-> +	if (is_tpm2 && (buff->length == sizeof(struct acpi_tpm2))) {
-> +		tpm2 = (struct acpi_tpm2 *)buff;
-> +		len = tpm2->log_max_len;
-> +		start = tpm2->log_start_addr;
-> +		log_type = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-> +	} else {
-
-Instead "else if (buff->length == sizeof(struct acpi_tcpa)" and return
--EINVAL if neither matches.
-
-Logically that is a distinct change so you need to turn this into
-a patch set where the first patch contains only the change that
-validates that the length for TCPA and return -EINVAL if not.
-
-> +		tcpa = (struct acpi_tcpa *)buff;
-
-Did not look everything in the detail because there is still so much
-groundwork to do but this will branch to use TCPA table with a TPM2
-chip when the length differs from sizeof(struct acpi_tpm2).
-
-/Jarkko
+>   	spi_message_init(&m);
+>   	memset(&t, 0, sizeof(t));
+>   	t.rx_buf = out;
+> 
 
