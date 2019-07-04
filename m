@@ -2,104 +2,104 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECB2C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073B5C46484
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE7C21721
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K+/LnDb4"
+	by mail.kernel.org (Postfix) with ESMTP id DA68721721
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 16:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfGDQjT (ORCPT
+        id S1727313AbfGDQkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 12:39:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54846 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfGDQjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 12:39:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x64GXtXs024868;
-        Thu, 4 Jul 2019 16:38:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=5+6c9J5hsLXAS3y9QhZ2laqXZP49w96VU6nbreUKrFg=;
- b=K+/LnDb4B4jkTz2kamodwT13+Opqq+Rwvb16SM+8S9GMvS7u/+iv5YPIPiYnTlzyZn+p
- lVTUEj9bY2ebxWc5IgAGNXcXekJ38PxBCsCfnEYuaOeWso8qK3Dp3VUVipqVaBrprN0w
- kmDtB8bPVqs9UDPJDv7m4f6Ftiw+fPqiZlU/hevAFQIxwamdn0Q1YSAZ53sorO/38oqL
- kiB7VgYSbnI3jpZJWax/5NrI3HGevLDETME80cjx7LgiuHziv2zmCmPPZePS+KDVk9nR
- IgRX4YKnBXUWlsjATsnTzgGBqjCjOYR4HHP+AaNRR9XPb7ETh2mw9I91oKxbUgZauZb3 Vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2te5tbymx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 16:38:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x64GX9gl098425;
-        Thu, 4 Jul 2019 16:36:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2th5qm49at-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jul 2019 16:36:44 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x64GaZkL023461;
-        Thu, 4 Jul 2019 16:36:35 GMT
-Received: from tomti.i.net-space.pl (/10.175.209.195)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jul 2019 09:36:35 -0700
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     bp@alien8.de, corbet@lwn.net, dpsmith@apertussolutions.com,
-        eric.snowberg@oracle.com, hpa@zytor.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, mingo@redhat.com,
-        ross.philipson@oracle.com, tglx@linutronix.de
-Subject: [PATCH v2 0/3] x86/boot: Introduce the kernel_info et consortes
-Date:   Thu,  4 Jul 2019 18:36:09 +0200
-Message-Id: <20190704163612.14311-1-daniel.kiper@oracle.com>
-X-Mailer: git-send-email 2.11.0
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=677
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907040210
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9307 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=721 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907040210
+        Thu, 4 Jul 2019 12:40:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40190 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726880AbfGDQki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 12:40:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F0586AEF5;
+        Thu,  4 Jul 2019 16:40:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 936671E3F56; Thu,  4 Jul 2019 18:40:36 +0200 (CEST)
+Date:   Thu, 4 Jul 2019 18:40:36 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+Message-ID: <20190704164036.GG31037@quack2.suse.cz>
+References: <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+ <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+ <20190627195948.GB4286@bombadil.infradead.org>
+ <CAPcyv4iB3f1hDdCsw=Cy234dP-RXpxGyXDoTwEU8nt5qUDEVQg@mail.gmail.com>
+ <20190629160336.GB1180@bombadil.infradead.org>
+ <CAPcyv4ge3Ht1k_v=tSoVA6hCzKg1N3imhs_rTL3oTB+5_KC8_Q@mail.gmail.com>
+ <CAA9_cmcb-Prn6CnOx-mJfb9CRdf0uG9u4M1Vq1B1rKVemCD-Vw@mail.gmail.com>
+ <20190630152324.GA15900@bombadil.infradead.org>
+ <20190701121119.GE31621@quack2.suse.cz>
+ <20190703154700.GI1729@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190703154700.GI1729@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed 03-07-19 08:47:00, Matthew Wilcox wrote:
+> On Mon, Jul 01, 2019 at 02:11:19PM +0200, Jan Kara wrote:
+> > BTW, looking into the xarray code, I think I found another difference
+> > between the old radix tree code and the new xarray code that could cause
+> > issues. In the old radix tree code if we tried to insert PMD entry but
+> > there was some PTE entry in the covered range, we'd get EEXIST error back
+> > and the DAX fault code relies on this. I don't see how similar behavior is
+> > achieved by xas_store()...
+> 
+> Are you referring to this?
+> 
+> -               entry = dax_make_locked(0, size_flag | DAX_EMPTY);
+> -
+> -               err = __radix_tree_insert(&mapping->i_pages, index,
+> -                               dax_entry_order(entry), entry);
+> -               radix_tree_preload_end();
+> -               if (err) {
+> -                       xa_unlock_irq(&mapping->i_pages);
+> -                       /*
+> -                        * Our insertion of a DAX entry failed, most likely
+> -                        * because we were inserting a PMD entry and it
+> -                        * collided with a PTE sized entry at a different
+> -                        * index in the PMD range.  We haven't inserted
+> -                        * anything into the radix tree and have no waiters to
+> -                        * wake.
+> -                        */
+> -                       return ERR_PTR(err);
+> -               }
 
-Due to very limited space in the setup_header this patch series introduces new
-kernel_info struct which will be used to convey information from the kernel to
-the bootloader. This way the boot protocol can be extended regardless of the
-setup_header limitations. Additionally, the patch series introduces some
-convenience features like the setup_indirect struct and the
-kernel_info.setup_type_max field.
+Mostly yes.
 
-Daniel
+> If so, that can't happen any more because we no longer drop the i_pages
+> lock while the entry is NULL, so the entry is always locked while the
+> i_pages lock is dropped.
 
- Documentation/x86/boot.rst             | 133 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/boot/Makefile                 |   2 +-
- arch/x86/boot/compressed/Makefile      |   4 +--
- arch/x86/boot/compressed/kernel_info.S |  16 ++++++++++
- arch/x86/boot/header.S                 |   3 +-
- arch/x86/boot/tools/build.c            |   5 +++
- arch/x86/include/uapi/asm/bootparam.h  |  15 ++++++++-
- 7 files changed, 173 insertions(+), 5 deletions(-)
+Ah, I have misinterpretted what xas_find_conflict() does. I'm sorry for the
+noise. I find it somewhat unfortunate that xas_find_conflict() will not
+return in any way the index where it has found the conflicting entry. We
+could then use it for the wait logic as well and won't have to resort to
+some masking tricks...
 
-Daniel Kiper (3):
-      x86/boot: Introduce the kernel_info
-      x86/boot: Introduce the setup_indirect
-      x86/boot: Introduce the kernel_info.setup_type_max
+								Honza
 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
