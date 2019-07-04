@@ -2,161 +2,132 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADDDC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2890C06513
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEA3218A0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F50218A0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 10:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="QjuddBdT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TxvAdR24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfGDKzk (ORCPT
+        id S1727621AbfGDKzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 06:55:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35902 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfGDKzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 06:55:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so2757602pgg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 03:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFkhCc619vRd94uoe7aHJSBMFEl+zNjNnFnyvCKwJS0=;
-        b=QjuddBdT3mG9W3uWDvKTXBPIOLTcSFsfepx1jK2sznc1aG6YJkBmHbP+BsddK1cqr1
-         lfAS53bpdUpcra2w7BKad2vDOuh/obpSEYT4QwKuKbXr+XwQRj5DejtAClEcHInc7bJ5
-         wDhMvcZj2LuRhZViyKpcs4Y+eTTOw89Bo6VKmTjlMvKmsrh8N9yE+bzGpz8e+nW2TUaL
-         9sPBD+us9WHl3Y6g+GydcriY2ya1U0KWpXbTTn3MVPjn1x1LiXAlmzzK6vc7bFUhrJx7
-         u666QJY8Ppoyaj3tQSJzarTiql3uQng0hs5n/o4X5EZWazShxbTgeDz+ZCKNE1H0ffMd
-         OVNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fFkhCc619vRd94uoe7aHJSBMFEl+zNjNnFnyvCKwJS0=;
-        b=J9K+E343G8NCvw58Z80QzBT2hUl9ihUPh/CPXAppf2n0k3j2qN7aoLxX2qne7z6KSd
-         1EKBgYhStvvgNbUrdB6TNSpM86mHrcEzO3iqw2bRN7csLtNZn7j9qquuJftnWTy5M4JX
-         2MhUsmW3eOs+EPlW2MWatlSPTqHVVdhMUpz0CHp/tHCTJzHU/55IENDFa+L3vPlubIrr
-         iPgcghvBzLbO6OjNvENkQrwNV0RRCgDOles3Dk6nwdcz2oygrKP1hGJ/PmPae5AFnzVj
-         umT7CGYGqJo2z7GG1dbLvAcU1p2cIQR6BcEvsdaiPBJbrhCZgtcURqoRwyjX2MQDGNjB
-         TXDw==
-X-Gm-Message-State: APjAAAWAvzEULSh6Gbh56iqZPAQnoit3NR2PNQVeNy8jdcoEw5tiq+9n
-        ejpl4gKKgVwcg/zQrQZGmdFMqw==
-X-Google-Smtp-Source: APXvYqz5o52E88f0jIRgzlTBYcftTP9a6vzhxvfuOSWu42Tgt4yPhyIirW2xi948NDsJcJHMStf+3A==
-X-Received: by 2002:a17:90a:a407:: with SMTP id y7mr18979498pjp.97.1562237738664;
-        Thu, 04 Jul 2019 03:55:38 -0700 (PDT)
-Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
-        by smtp.gmail.com with ESMTPSA id k22sm5562533pfk.157.2019.07.04.03.55.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Jul 2019 03:55:38 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     jes.sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-Subject: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-Date:   Thu,  4 Jul 2019 18:55:28 +0800
-Message-Id: <20190704105528.74028-1-chiu@endlessm.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Thu, 4 Jul 2019 06:55:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57779 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbfGDKzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 06:55:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fZdR68Drz9sPB;
+        Thu,  4 Jul 2019 20:55:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562237740;
+        bh=VX3OP2vOB4lxDG7NJNe8Z2zhCL88AkDSoq84IfXmnZo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TxvAdR24teojejG9+j487oUI+lWGfVicS0n/o2HyJ5CfckYYEnWpgE51BhaLxo2Na
+         orxK386/D6o9AgBAMPY4fgQo6z4ne1tMOQQFZYr2PmjqmXcIu7Yfa/MZPA2uv5YCdl
+         Gvenu3mCBB0sBffW/T9FIffYlgf4vv9wq426cyWS3qtluKSnFjkc1slXtaVgieks6x
+         yn+mnJcWUgv78fj3O67cCEhyGhlFp+SWFUO47mAXDjpDn6RkHmnuMDHmSUZqrsZNj+
+         KZ4XQ/Fedy03xZ8SfjtKntD2kX6xZr1t+S0Kt4bba/KKVJt10wtuhAQ8Q7XIc++bDZ
+         +matFqSMgXXAg==
+Date:   Thu, 4 Jul 2019 20:55:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: linux-next: manual merge of the akpm-current tree with the hmm tree
+Message-ID: <20190704205536.32740b34@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YpLR1nSqk3gkTNQK6MF/bnY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WiFi tx power of RTL8723BU is extremely low after booting. So
-the WiFi scan gives very limited AP list and it always fails to
-connect to the selected AP. This module only supports 1x1 antenna
-and the antenna is switched to bluetooth due to some incorrect
-register settings.
+--Sig_/YpLR1nSqk3gkTNQK6MF/bnY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
-we realized that the 8723bu's enable_rf() does the same thing as
-rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
-sets the antenna path to BTC_ANT_PATH_BT which we verified it's
-the cause of the wifi weak tx power. The vendor driver will set
-the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
-mechanism, by the function halbtc8723b1ant_PsTdma.
+Hi all,
 
-This commit hand over the antenna control to PTA(Packet Traffic
-Arbitration), which compares the weight of bluetooth/wifi traffic
-then determine whether to continue current wifi traffic or not.
-After PTA take control, The wifi signal will be back to normal and
-the bluetooth scan can also work at the same time. However, the
-btcoexist still needs to be handled under different circumstances.
-If there's a BT connection established, the wifi still fails to
-connect until BT disconnected.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
+  mm/memory_hotplug.c
 
+between commit:
 
-Note:
- v2:
-  - Replace BIT(11) with the descriptive definition
-  - Meaningful comment for the REG_S0S1_PATH_SWITCH setting
+  514caf23a70f ("memremap: replace the altmap_valid field with a PGMAP_ALTM=
+AP_VALID flag")
 
+from the hmm tree and commit:
 
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 11 ++++++++---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  3 ++-
- 2 files changed, 10 insertions(+), 4 deletions(-)
+  db30f881e2d7 ("mm/hotplug: kill is_dev_zone() usage in __remove_pages()")
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-index 3adb1d3d47ac..ceffe05bd65b 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-@@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
- 	/*
- 	 * WLAN action by PTA
- 	 */
--	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
-+	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
- 
- 	/*
- 	 * BT select S0/S1 controlled by WiFi
-@@ -1568,9 +1568,14 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
- 	rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
- 
- 	/*
--	 * 0x280, 0x00, 0x200, 0x80 - not clear
-+	 * Different settings per different antenna position.
-+	 *      Antenna Position:   | Normal   Inverse
-+	 * --------------------------------------------------
-+	 * Antenna switch to BT:    |  0x280,   0x00
-+	 * Antenna switch to WiFi:  |  0x0,     0x280
-+	 * Antenna switch to PTA:   |  0x200,   0x80
- 	 */
--	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-+	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
- 
- 	/*
- 	 * Software control, antenna at WiFi side
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 8136e268b4e6..c6c41fb962ff 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 
- 	/* Check if MAC is already powered on */
- 	val8 = rtl8xxxu_read8(priv, REG_CR);
-+	val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
- 
- 	/*
- 	 * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
- 	 * initialized. First MAC returns 0xea, second MAC returns 0x00
- 	 */
--	if (val8 == 0xea)
-+	if (val8 == 0xea || !(val16 & SYS_CLK_MAC_CLK_ENABLE))
- 		macpower = false;
- 	else
- 		macpower = true;
--- 
-2.11.0
+from the akpm-current tree.
 
+I fixed it up (I think - see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc mm/memory_hotplug.c
+index 6166ba5a15f3,dfab21dc33dc..000000000000
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@@ -549,16 -537,14 +537,13 @@@ static void __remove_section(struct zon
+   * sure that pages are marked reserved and zones are adjust properly by
+   * calling offline_pages().
+   */
+- void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
++ void __remove_pages(struct zone *zone, unsigned long pfn,
+  		    unsigned long nr_pages, struct vmem_altmap *altmap)
+  {
+- 	unsigned long i;
+--	unsigned long map_offset =3D 0;
+- 	int sections_to_remove;
+++	unsigned long map_offset;
++ 	unsigned long nr, start_sec, end_sec;
+ =20
+- 	/* In the ZONE_DEVICE case device driver owns the memory region */
+- 	if (is_dev_zone(zone))
+ -	if (altmap)
+--		map_offset =3D vmem_altmap_offset(altmap);
+++	map_offset =3D vmem_altmap_offset(altmap);
+ =20
+  	clear_zone_contiguous(zone);
+ =20
+
+--Sig_/YpLR1nSqk3gkTNQK6MF/bnY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0d2ygACgkQAVBC80lX
+0GwxCAf+PSCBsgWB9aTWBqRcLPQNCYvEwLATf/jbUEYQ+sxBADk5vQqnGH/u2JQS
+fFB0keGn9s7V8D0zbSGalbFF9h7hsm9ICJYh7KxBoH7Fil5AmKKAXCSXVcsRMn4Z
+yPekK9f0ZLwDoUJIlBJS+CAhyVZnTJZpTADXuSHptdHa3kcgF96bfKmtoKidXjEb
+SDIEptAgh0ZSL5oYann4FJb1OuolzXO8pZ0c8SzCdQqsYpjBO15US7llmpZ1v8xi
++bBaNuZiPzl+ta7HJPEo5big0JplgloBGs8n27HIzG52+YEDCogXewa4OLillkLC
+9x/BxOKgC5UGeYnoXwSfiUlcKjXi3w==
+=VWyx
+-----END PGP SIGNATURE-----
+
+--Sig_/YpLR1nSqk3gkTNQK6MF/bnY--
