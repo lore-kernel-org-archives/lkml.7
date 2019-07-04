@@ -2,135 +2,111 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACCCC06513
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C547C0650E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8FE218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AB02189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 07:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mgtpmyOC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UfCRovyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfGDHxA (ORCPT
+        id S1727492AbfGDHxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 03:53:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8140 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727180AbfGDHxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 03:53:00 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EF7DE4A3A00B8D6F92BC;
-        Thu,  4 Jul 2019 15:52:57 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 4 Jul 2019 15:52:49 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <bhelgaas@google.com>, <lukas@wunner.de>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yaohongbo@huawei.com>, <guohanjun@huawei.com>,
-        <huawei.libin@huawei.com>, <wangxiongfeng2@huawei.com>
-Subject: [RFC PATCH] pciehp: use completion to wait irq_thread 'pciehp_ist'
-Date:   Thu, 4 Jul 2019 15:50:38 +0800
-Message-ID: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Thu, 4 Jul 2019 03:53:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58372 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfGDHxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 03:53:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5C24B609CD; Thu,  4 Jul 2019 07:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562226790;
+        bh=QP02RX+s+abAv40zJSQKeAupeAwqDfByWtGOQhkpzYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mgtpmyOCaZE5ynciK0snZPPCz1ArNV+E02B+bRVW/LCdgQ4tqPBQKZU7zkL3aodZC
+         LUpAe+PB/ow+UklBfYWCISNBeK34lhkuvrDOl2LBt7I12RPR3BoaLsNK5ioK5hBuPD
+         0y7Joh9oJPChhWSPCT68nIxuIQXLjMdIWDdn6jYs=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 90B1860746;
+        Thu,  4 Jul 2019 07:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562226789;
+        bh=QP02RX+s+abAv40zJSQKeAupeAwqDfByWtGOQhkpzYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UfCRovyUB63eQs0AYtn62PvDY3v8N9wUpC0m4wLEAXeMNRTa8O1clQTw3MHeyFFNQ
+         06dhZprHqkzdJMJC0h3pvtmVQ0z6Z8Stb0dqrvFiyUpXl6qiHctfy+gjIqq+wV50pT
+         UsEKj7RyePFA8cjBG50TZKVu10QAaHJ+ANSUZwT8=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 04 Jul 2019 10:53:09 +0300
+From:   merez@codeaurora.org
+To:     Colin King <colin.king@canonical.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] wil6210: fix wil_cid_valid with negative cid values
+In-Reply-To: <20190702144026.13013-1-colin.king@canonical.com>
+References: <20190702144026.13013-1-colin.king@canonical.com>
+Message-ID: <787a6680930c6895d8ede457ec543fb7@codeaurora.org>
+X-Sender: merez@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I use the following command to power on a slot which has been
-powered off already.
-echo 1 > /sys/bus/pci/slots/22/power
-It prints the following error:
--bash: echo: write error: No such device
-But the slot is actually powered on and the devices is probed.
+On 2019-07-02 17:40, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are several occasions where a negative cid value is passed
+> into wil_cid_valid and this is converted into a u8 causing the
+> range check of cid >= 0 to always succeed.  Fix this by making
+> the cid argument an int to handle any -ve error value of cid.
+> 
+> An example of this behaviour is in wil_cfg80211_dump_station,
+> where cid is assigned -ENOENT if the call to wil_find_cid_by_idx
+> fails, and this -ve value is passed to wil_cid_valid.  I believe
+> that the conversion of -ENOENT to the u8 value 254 which is
+> greater than wil->max_assoc_sta causes wil_find_cid_by_idx to
+> currently work fine, but I think is by luck and not the
+> intended behaviour.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/wireless/ath/wil6210/wil6210.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/wil6210/wil6210.h
+> b/drivers/net/wireless/ath/wil6210/wil6210.h
+> index 6f456b311a39..25a1adcb38eb 100644
+> --- a/drivers/net/wireless/ath/wil6210/wil6210.h
+> +++ b/drivers/net/wireless/ath/wil6210/wil6210.h
+> @@ -1144,7 +1144,7 @@ static inline void wil_c(struct wil6210_priv
+> *wil, u32 reg, u32 val)
+>  /**
+>   * wil_cid_valid - check cid is valid
+>   */
+> -static inline bool wil_cid_valid(struct wil6210_priv *wil, u8 cid)
+> +static inline bool wil_cid_valid(struct wil6210_priv *wil, int cid)
+>  {
+>  	return (cid >= 0 && cid < wil->max_assoc_sta);
+>  }
 
-In function 'pciehp_sysfs_enable_slot()', we use 'wait_event()' to wait
-until 'ctrl->pending_events' is cleared in 'pciehp_ist()'. But in some
-situation, when 'pciehp_ist()' is woken up on a nearby CPU after
-'pciehp_request' is called, 'ctrl->pending_events' is cleared before we
-go into sleep state. 'wait_event()' will check the condition before
-going into sleep. So we return immediately and '-ENODEV' is return.
+Reviewed-by: Maya Erez <merez@codeaurora.org>
 
-This patch use struct completion to wait until irq_thread 'pciehp_ist'
-is completed.
-
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/pci/hotplug/pciehp.h      | 2 +-
- drivers/pci/hotplug/pciehp_ctrl.c | 8 ++++----
- drivers/pci/hotplug/pciehp_hpc.c  | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 8c51a04..f8c3826 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -102,7 +102,7 @@ struct controller {
- 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
- 	struct rw_semaphore reset_lock;
- 	int request_result;
--	wait_queue_head_t requester;
-+	struct completion requester;
- };
- 
- /**
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 631ced0..2237793 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -366,9 +366,9 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
- 		 * card before the thread wakes up, so initialize to -ENODEV.
- 		 */
- 		ctrl->request_result = -ENODEV;
-+		reinit_completion(&ctrl->requester);
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
--		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+		wait_for_completion(&ctrl->requester);
- 		return ctrl->request_result;
- 	case POWERON_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
-@@ -399,9 +399,9 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
- 	case BLINKINGOFF_STATE:
- 	case ON_STATE:
- 		mutex_unlock(&ctrl->state_lock);
-+		reinit_completion(&ctrl->requester);
- 		pciehp_request(ctrl, DISABLE_SLOT);
--		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+		wait_for_completion(&ctrl->requester);
- 		return ctrl->request_result;
- 	case POWEROFF_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bd990e3..0a74b48 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -654,7 +654,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	up_read(&ctrl->reset_lock);
- 
- 	pci_config_pm_runtime_put(pdev);
--	wake_up(&ctrl->requester);
-+	complete(&ctrl->requester);
- 	return IRQ_HANDLED;
- }
- 
-@@ -862,7 +862,7 @@ struct controller *pcie_init(struct pcie_device *dev)
- 	mutex_init(&ctrl->ctrl_lock);
- 	mutex_init(&ctrl->state_lock);
- 	init_rwsem(&ctrl->reset_lock);
--	init_waitqueue_head(&ctrl->requester);
-+	init_completion(&ctrl->requester);
- 	init_waitqueue_head(&ctrl->queue);
- 	INIT_DELAYED_WORK(&ctrl->button_work, pciehp_queue_pushbutton_work);
- 	dbg_ctrl(ctrl);
 -- 
-1.7.12.4
-
+Maya Erez
+Qualcomm Israel, Inc. on behalf of Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
