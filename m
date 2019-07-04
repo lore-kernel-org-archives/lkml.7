@@ -2,121 +2,173 @@ Return-Path: <SRS0=IBEs=VB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB320C0651F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0279C0651F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FD0218A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:06:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhGHCbNx"
+	by mail.kernel.org (Postfix) with ESMTP id 86C43218A6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jul 2019 13:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfGDNGl (ORCPT
+        id S1727171AbfGDNKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 09:06:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36752 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfGDNGl (ORCPT
+        Thu, 4 Jul 2019 09:10:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60892 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726791AbfGDNKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 09:06:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u8so6114108wmm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 06:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C0G7rBJyorAv/Go9XW+5KlxgxsrwAo4Lw8h4E0AK/9g=;
-        b=MhGHCbNxmBGEX9gNxaF9U5CCJT+qFuz/qiepbdulPX4tk3cpmHk4Nr1cvq+wO4v/6O
-         +ybPFIWjxCRzO1VplawtIKym3JIWT6EL6KCC/kXweTg1xEDf6xWNuutL6xnTVP49ECPa
-         2IkTuBaIC5U5cDvAdCksqgV+emWw2anAu4XaajfBHQH+ALVYgz1c6h+ms+nDnaWgQOva
-         rqS7dM0i2zAeunc7L6TMtRFiWjbF3j2AT0T4kRNj/OsD5XYRsUZqdy268I4EZYTBHRYU
-         uIRnNbFdGgRz8D3Ch5iqC9sB+WrvfT8Jn9Q1LiX+atRzygQnXvRv4EHdOsgMgxoxXFdA
-         tX1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C0G7rBJyorAv/Go9XW+5KlxgxsrwAo4Lw8h4E0AK/9g=;
-        b=MLwkvX3BYr/+D6as1aRWgc7rG5ZzbDuQWe8WVCOleHSlvl/bfQCl2mBjuFEWefDLfi
-         s7D4dxndsEIUxy4CyeXzoF6DQ5Bbh9cVLGBdhkUriaen6Fq5kTo8/XCZHg+GqvXHUYuW
-         gmqa/neysG+tV+YkUN722xcLO6ef2BY/Qa3wZ0CkrNpXJ8VpZMoGZsMXfAAyA0D5CNV9
-         SS+y+Mp4YSnR62KNzccQKJmiIWWKF9Ndo4WAcz9y6OeonRkg6Q3smbr7+1feUj3pyb4E
-         NKtGWc0746BlvW1DBlhbAXElbK4OQhN9tWBmODJde8sK9RkpG6cErho8ZgRrrOzgh4Ew
-         wrew==
-X-Gm-Message-State: APjAAAUw4ztYZAYK20ul0uxLS50gNEzLAhjd05r59UpkQOLHZVkfHcx/
-        RHvt+VgIdG6kDRgzifo18P/LPA==
-X-Google-Smtp-Source: APXvYqwpVkbCltdiX25gOjc+VVQOWtlzTko4TXdJA9hHxN3MnWxEKL9t/rTxGIvJpQMJWxILKQIjYA==
-X-Received: by 2002:a1c:7c11:: with SMTP id x17mr11648016wmc.22.1562245599046;
-        Thu, 04 Jul 2019 06:06:39 -0700 (PDT)
-Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
-        by smtp.gmail.com with ESMTPSA id p4sm4889734wrs.35.2019.07.04.06.06.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 06:06:38 -0700 (PDT)
-Date:   Thu, 4 Jul 2019 16:06:35 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Message-ID: <20190704130635.GA10412@apalos>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <20190704120018.4523a119@carbon>
- <BN8PR12MB3266BC5322AADFAC49D9BAFAD3FA0@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190704135414.0dd5df76@carbon>
- <20190704120441.GA6866@apalos>
- <BYAPR12MB3269D4FAAC5307A224D60A08D3FA0@BYAPR12MB3269.namprd12.prod.outlook.com>
+        Thu, 4 Jul 2019 09:10:12 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hj1V1-0006UL-4P; Thu, 04 Jul 2019 14:10:07 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hj1V0-000833-U3; Thu, 04 Jul 2019 14:10:06 +0100
+Message-ID: <0ff3202ced2b501d6045157f1c7b50810c0571e5.camel@decadent.org.uk>
+Subject: Re: [PATCH] builddeb: generate multi-arch friendly linux-libc-dev
+ package
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Cc:     isar-users@googlegroups.com,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Riku Voipio <riku.voipio@linaro.org>
+Date:   Thu, 04 Jul 2019 14:10:02 +0100
+In-Reply-To: <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
+References: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
+         <CAK7LNASCmZyS11WkUWXLXVWgk-WU5JV=MMw=S6pXAzMhkVJ40Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-BZKpguClIp8ilfm1QdtD"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR12MB3269D4FAAC5307A224D60A08D3FA0@BYAPR12MB3269.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jose, 
 
-> Thank you all for your review comments !
-> 
-> From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> 
-> > That's why i was concerned on what will happen on > 1000b frames and what the
-> > memory pressure is going to be. 
-> > The trade off here is copying vs mapping/unmapping.
-> 
-> Well, the performance numbers I mentioned are for TSO with default MTU 
-> (1500) and using iperf3 with zero-copy. Here follows netperf:
-> 
+--=-BZKpguClIp8ilfm1QdtD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ok i guess this should be fine. Here's why.
-You'll allocate an extra memory from page pool API which equals
-the number of descriptors * 1 page.
-You also allocate SKB's to copy the data and recycle the page pool buffers.
-So page_pool won't add any significant memory pressure since we expect *all*
-it's buffers to be recycled. 
-The SKBs are allocated anyway in the current driver so bottom line you trade off
-some memory (the page_pool buffers) + a memcpy per packet and skip the dma
-map/unmap which is the bottleneck in your hardware. 
-I think it's fine
+On Thu, 2019-07-04 at 09:43 +0900, Masahiro Yamada wrote:
+> CCed a couple of people.
+>=20
+> On Mon, Jun 17, 2019 at 3:15 PM Cedric Hombourger
+> <Cedric_Hombourger@mentor.com> wrote:
+> > Debian-based distributions place libc header files in a machine
+> > specific directory (/usr/include/<libc-machine>) instead of
+> > /usr/include/asm to support installation of the linux-libc-dev
+> > package from multiple architectures. Move headers installed by
+> > "make headers_install" accordingly.
+> >=20
+> > Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+> > Reviewed-by: Henning Schild <henning.schild@siemens.com>
+> > ---
+> >  scripts/package/builddeb | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+> > index b03dd56a4782..8f7afb3a84e9 100755
+> > --- a/scripts/package/builddeb
+> > +++ b/scripts/package/builddeb
+> > @@ -132,6 +132,11 @@ fi
+> >  if [ "$ARCH" !=3D "um" ]; then
+> >         $MAKE -f $srctree/Makefile headers_check
+> >         $MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH=3D"=
+$libc_headers_dir/usr"
+> > +       # move asm headers to /usr/include/<libc-machine>/asm to match =
+the structure
+> > +       # used by Debian-based distros (to support multi-arch)
+> > +       libc_mach=3D$($CC -dumpmachine)
+> > +       mkdir $libc_headers_dir/usr/include/$libc_mach
+> > +       mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/incl=
+ude/$libc_mach/
 
-Cheers
-/Ilias
+This is wrong; the multiarch architecture tuple used in directory names
+does not necessarily match the compiler's architecture tuple.  Firstly,
+if you use a biarch compiler the compiler is only going to tell you the
+default architecture.  Secondly, on i386 the minimum processor is i586
+or i686 but the multiarch architecture tuple is still "i386-linux-gnu"
+(and there might be other cases like this).
+
+So, the correct command is:
+
+    dpkg-architecture -a$debarch -qDEB_HOST_MULTIARCH
+
+> >  fi
+> >=20
+> >  # Install the maintainer scripts
+>=20
+> I am not sure but,
+> I just worried about the backward compatibility...
+> Was this previously broken?
+
+Debian has had multiarch support since Debian 7 "wheezy", and older
+versions are no longer supported.  So I think this change is fine to
+make unconditionally.
+
+The current linux-libc-dev packages build by "make deb-pkg" are
+"broken" in that multiple architectures can't be co-installed with each
+other, whereas this genrally can be done with the linux-libc-dev
+packages provided by Debian-based distributions.  However, co-
+installation is only allowed if the version strings and contents of
+common files in the packages are identical, and I don't know whether
+that's going to be true for those generated by "make deb-pkg".
+
+> I guess debian is using own control file
+> instead of the one in upstream kernel.
+
+We maintain multiple configurations, a meaningful changelog, tools
+packages, etc.  So "make deb-pkg" is not used for official kernel
+packages but we recommend it for custom kernels.
+
+> So, this is almost a matter for developers, I think.
+>=20
+> How did debian-base distros managed this before,
+> and will this introduce no breakage?
+
+On the Debian side a similar change was made in Debian 7 "wheezy".  In
+Ubuntu I believe it was done earlier as they modified dpkg to support
+multiarch before us.
+
+> Ben,
+> Could you comment on this?
+
+Ben.
+
+--=20
+Ben Hutchings
+Quantity is no substitute for quality, but it's the only one we've got.
+
+--=-BZKpguClIp8ilfm1QdtD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0d+qoACgkQ57/I7JWG
+EQlj5w/6A7Dpm2f0EbQF+Zdnfmf9gTCl8GGkRIuZ5I6YNr4t4SwUAptrZs8R34Zj
+RHemXnL7F/H1Baw3nAtbO9GE+76vatgwtdkhRC6B7fwNxPhUOgkGnbN8sZ+67qmu
+yuJ4Ap2IGagPh6D21APIF4s4XzEA7rD0B1kJUO0H7VKeztM58zuUnPiDmmXg4/YZ
+whgnLfJyUDDyny6HUdFJ2lvTeVOFYN0MWSKwqyR8mEDoAoCzcKX+OyFbs+Fu3Lys
+CgGjip3wpIshqibwUxVUzqq+qLTmfCuTsT7Vd/s/aBf3bD/8qNphL8zO2AsLrHdP
+RlwXzRZ9Sq+GajvHGcJqwdz+azF/oJfOCse138+HrK5lmt2RSxr9f1Zgqf9P/Pve
+eJy51IWmIKvEBiIx3bAATfwu8g61LlOepHZZooOT0zSQ5RZmoyj/WOPQRAyO6kyq
+tu/CVG0sbrOl0kEUEdfTFnCJKPGyK9KlTYdF6oXVXsaojIBsqM8IT6KrYQ7s08M2
+di8T9P/2+a1Q/d7it0ngt5itBJ3ZBos3yG7oYl+HKxPXP1ITj0h71jUyIC8nCFjb
+gDzEPHr+0Pp6GNsVG6lfBO9aLJ9QHHj8v28QNSWjuhq2GtF1rEfwefADbtJuZnag
+bA/So3i8ExEK4yxZ/PJqwKiMJoP0M/3Qs0jyd4uA7rLGuBv8HDM=
+=xBtL
+-----END PGP SIGNATURE-----
+
+--=-BZKpguClIp8ilfm1QdtD--
