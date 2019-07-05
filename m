@@ -2,52 +2,76 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F88C4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6846CC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CDB216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A28218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yF9Y4TXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbfGEJ6G (ORCPT
+        id S1728233AbfGEJ7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:58:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42516 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfGEJ6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:59:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39595 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728226AbfGEJ6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jul 2019 05:58:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:58:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="169637165"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 05 Jul 2019 02:58:01 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E780A370; Fri,  5 Jul 2019 12:58:00 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring producer/consumer
-Date:   Fri,  5 Jul 2019 12:57:55 +0300
-Message-Id: <20190705095800.43534-4-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+Received: by mail-lj1-f196.google.com with SMTP id v18so8673502ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VUCWK2MsD9fKCW5H56U5T5vRzO2k7QDz1z157zPKgz4=;
+        b=yF9Y4TXdbukUm95Tym+SSRRKXOgy30rcUTY/I/w2ob/pI2Xk6mM2EFws9z/z9Jy5cn
+         5yH51ejAX7BSHtxlej6Sietfapi0cefT59q9jJN1ifMQjBqWA/apLst7ul9igPrQzDk2
+         drpnxdar+aTtUDEWi3y8Cvaxy3V5c8w9TqANXQggoaL7EEGMCiDWenolNKnmfMlIz6hF
+         LA7dy1MeKgwm/taneDq3mE/Cww1ynKWrGI+PksCPx8K3tIZOtjsxbHUhCVxP0us659eW
+         TmBrcMnTRQnSIVFZY+/4qysi0crgRy02/xmt3FLPdAsn0bXiaXQyjMv1jXGLbzNsj4go
+         eyAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VUCWK2MsD9fKCW5H56U5T5vRzO2k7QDz1z157zPKgz4=;
+        b=QGPDMyYtZThJf5mQI5UC3IaFxMe5Yvu3iwJf7bt6s/wJrUgtswkYRpKU3BOfvPryzg
+         5HA0ARpQo7UMvpnV+35egqz33CQMXwn+RO8ldWepohjcj32ROtlMIPkrJo6SRbSpFS5v
+         zH1OsA2NvADMh3kExqPjaaN0ppxgBTmYE1X7jBQrRO1XxwV5xUcZaqdZ6JZogZMleBmc
+         Yjaw2UtRE5jBrSqpF6wsSVWTNFZvNSZgEanygGx3Nd2wWTAjT5KUkJ+d9cOZeI4oHRCi
+         YBriTFvU/WZ/iqCul1Xk7NFAQBWuJC1/DeMAKHS+hMEBBqxN/PgnJhF0Ulx4Q4z4c2LQ
+         YcMA==
+X-Gm-Message-State: APjAAAVwJ7HHvjYuEJUnBashl3/lvSG8l/fm4gyg2XF5U7nynodAHgkb
+        KOXd8QJRSPKNUZ2MgpFf/lI4aQ==
+X-Google-Smtp-Source: APXvYqx0ZiI7NUTcCSAcDJg+m43On7JBoo/yMllTvC1H2ViTfIYfM/r31p51tmof/TzmGg/DplB8aw==
+X-Received: by 2002:a2e:9758:: with SMTP id f24mr1723330ljj.58.1562320683615;
+        Fri, 05 Jul 2019 02:58:03 -0700 (PDT)
+Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
+        by smtp.gmail.com with ESMTPSA id 25sm1692704ljn.62.2019.07.05.02.58.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 02:58:02 -0700 (PDT)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/13] dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties optional
+Date:   Fri,  5 Jul 2019 11:57:14 +0200
+Message-Id: <20190705095726.21433-4-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,68 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The register access should be using 32-bit reads/writes according to the
-datasheet. With the previous generation hardware 16-bit writes have been
-working but starting with ICL this is not the case anymore so fix
-producer/consumer register update to use correct width register address.
+Not all Qualcomm platforms need to care about the speedbin efuse,
+nor the value blown into the speedbin efuse.
+Therefore, make the nvmem-cells and opp-supported-hw properties
+optional.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- drivers/thunderbolt/nhi.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-index 27fbe62c7ddd..09242653da67 100644
---- a/drivers/thunderbolt/nhi.c
-+++ b/drivers/thunderbolt/nhi.c
-@@ -143,9 +143,24 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
- 	return io;
- }
- 
--static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
-+static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
- {
--	iowrite16(value, ring_desc_base(ring) + offset);
-+	u32 val;
+diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+index 198441e80ba8..c5ea8b90e35d 100644
+--- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
++++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+@@ -20,6 +20,10 @@ In 'cpus' nodes:
+ In 'operating-points-v2' table:
+ - compatible: Should be
+ 	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
 +
-+	val = ioread32(ring_desc_base(ring) + 8);
-+	val &= 0x0000ffff;
-+	val |= prod << 16;
-+	iowrite32(val, ring_desc_base(ring) + 8);
-+}
-+
-+static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
-+{
-+	u32 val;
-+
-+	val = ioread32(ring_desc_base(ring) + 8);
-+	val &= 0xffff0000;
-+	val |= cons;
-+	iowrite32(val, ring_desc_base(ring) + 8);
- }
- 
- static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
-@@ -197,7 +212,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
- 			descriptor->sof = frame->sof;
- 		}
- 		ring->head = (ring->head + 1) % ring->size;
--		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
-+		if (ring->is_tx)
-+			ring_iowrite_prod(ring, ring->head);
-+		else
-+			ring_iowrite_cons(ring, ring->head);
- 	}
- }
- 
-@@ -662,7 +680,7 @@ void tb_ring_stop(struct tb_ring *ring)
- 
- 	ring_iowrite32options(ring, 0, 0);
- 	ring_iowrite64desc(ring, 0, 0);
--	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
-+	ring_iowrite32desc(ring, 0, 8);
- 	ring_iowrite32desc(ring, 0, 12);
- 	ring->head = 0;
- 	ring->tail = 0;
++Optional properties:
++--------------------
++In 'operating-points-v2' table:
+ - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+ 		efuse registers that has information about the
+ 		speedbin that is used to select the right frequency/voltage
 -- 
-2.20.1
+2.21.0
 
