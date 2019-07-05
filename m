@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992F9C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C3AC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7740820663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C40120663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfGEKIG (ORCPT
+        id S1728398AbfGEKHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:08:06 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:33314 "EHLO inva020.nxp.com"
+        Fri, 5 Jul 2019 06:07:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33230 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727372AbfGEKHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:07:45 -0400
+        id S1728281AbfGEKHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:07:39 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 07ABA1A0EA4;
-        Fri,  5 Jul 2019 12:07:43 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A1A11A0EAC;
+        Fri,  5 Jul 2019 12:07:38 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 787331A0779;
-        Fri,  5 Jul 2019 12:07:34 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A14B21A0EB9;
+        Fri,  5 Jul 2019 12:07:29 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6D1E840297;
-        Fri,  5 Jul 2019 18:07:24 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D0B54032A;
+        Fri,  5 Jul 2019 18:07:19 +0800 (SGT)
 From:   Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         catalin.marinas@arm.com, will.deacon@arm.com
 Cc:     Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 25/28] PCI: mobiveil: Fix the CPU base address setup in inbound window
-Date:   Fri,  5 Jul 2019 17:56:53 +0800
-Message-Id: <20190705095656.19191-26-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv6 22/28] PCI: mobiveil: Mask out the lower 10-bit hardcode window size
+Date:   Fri,  5 Jul 2019 17:56:50 +0800
+Message-Id: <20190705095656.19191-23-Zhiqiang.Hou@nxp.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
 References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
@@ -50,14 +50,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function program_ib_windows(), currently it use the parameter
-'pci_addr' to initialize both CPU base address and PCI base address
-of the inbound window, it is not correct, and another problem is
-the upper 32-bit CPU address is not initialized. So, this patch
-adds an new parameter 'u64 cpu_addr' for the CPU base address
-setup and adds upper 32-bit CPU base address initialization.
+The lower 10-bit of window size field is hardcode to zero,
+and then the lower 10-bit of PAB_AXI_AMAP_CTRL register are
+used to control fields, so mask out the lower 10-bit of
+window size in case override the control bits.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
@@ -65,51 +62,31 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V6:
  - Splited from #9 of v5 patches, no functional change.
 
- drivers/pci/controller/pcie-mobiveil.c |   10 +++++++---
- 1 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 75494f0..aeba37c 100644
+index 7d18e59..4f50fe6 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -88,6 +88,7 @@
- #define  AMAP_CTRL_TYPE_MASK		3
+@@ -474,7 +474,7 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+-		 lower_32_bits(size64);
++		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+ 	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
  
- #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-+#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
- #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
- #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
- #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-@@ -457,7 +458,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
- }
- 
- static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
--			       u64 pci_addr, u32 type, u64 size)
-+			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
- {
- 	u32 value;
- 	u64 size64 = ~(size - 1);
-@@ -481,7 +482,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
  	csr_writel(pcie, upper_32_bits(size64),
- 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+@@ -509,7 +509,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+ 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+-		 lower_32_bits(size64);
++		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+ 	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
  
--	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, lower_32_bits(cpu_addr),
-+		   PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, upper_32_bits(cpu_addr),
-+		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
- 
- 	csr_writel(pcie, lower_32_bits(pci_addr),
- 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-@@ -618,7 +622,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
- 
- 	/* memory inbound translation window */
--	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-+	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
- 
- 	/* Get the I/O and memory ranges from DT */
- 	resource_list_for_each_entry(win, &pcie->resources) {
+ 	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
 -- 
 1.7.1
 
