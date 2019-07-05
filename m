@@ -2,94 +2,89 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBAAC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE32FC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34F320693
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D85216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562360353;
+	bh=blb3ParGsikEh+pFK9nY3PgBtuvBfyUvOjCyCqbNYME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DLK0Lob6ph5k8Og1bf7l0i8tsDnI0+WJPgPMEqteYhJfuLo2qJFY/MpVEp0zuFdxw
+	 LvURh/N26O7AQhy190NJ/nXppK/RCYc+RZyxOckUJC/a5uqmLaCIwT5RKXFwX7nDr3
+	 9vyfeytHzw97pQMmsBOgVPE7LiDQ9xNFWy/ICN7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfGEUx3 (ORCPT
+        id S1727541AbfGEU7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:53:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36105 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEUx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:53:29 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hjVCw-0007dG-Al; Fri, 05 Jul 2019 22:53:26 +0200
-Date:   Fri, 5 Jul 2019 22:53:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-cc:     Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
-        paulmck <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] cpu/hotplug: Cache number of online CPUs
-In-Reply-To: <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com>
-Message-ID: <alpine.DEB.2.21.1907052246220.3648@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de> <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de> <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com>
- <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de> <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com> <20190705084910.GA6592@gmail.com> <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Jul 2019 16:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbfGEU7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 16:59:12 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E33A92133F;
+        Fri,  5 Jul 2019 20:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562360351;
+        bh=blb3ParGsikEh+pFK9nY3PgBtuvBfyUvOjCyCqbNYME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lK5T1WpJIKPq7+htupiCX8IYnFYw2prXmCoNV96uroJmlSbcnoPtKp+RvmwaYA1lL
+         b4Hmcg2m7pxxkjXucAEuovmcYqd9bD9GO4DPOP+KMKQCVrE2ixVY4GQY3EK+hD3u5q
+         9/467hFwZ3d49hmMAPVzOy6ksur+rDfhCIFE13l0=
+Date:   Fri, 5 Jul 2019 16:59:09 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     stable@kernel.org, Sasha Levin <alexander.levin@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jisheng Zhang <jszhang@marvell.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [STABLE backport 4.9] arm64, vdso: Define
+ vdso_{start,end} as array
+Message-ID: <20190705205909.GJ10104@sasha-vm>
+References: <20190705184726.3221252-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190705184726.3221252-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jul 2019, Mathieu Desnoyers wrote:
-> ----- On Jul 5, 2019, at 4:49 AM, Ingo Molnar mingo@kernel.org wrote:
-> > * Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> >> The semantic I am looking for here is C11's relaxed atomics.
-> > 
-> > What does this mean?
-> 
-> C11 states:
-> 
-> "Atomic operations specifying memory_order_relaxed are  relaxed  only  with  respect
-> to memory ordering.  Implementations must still guarantee that any given atomic access
-> to a particular atomic object be indivisible with respect to all other atomic accesses
-> to that object."
-> 
-> So I am concerned that num_online_cpus() as proposed in this patch
-> try to access __num_online_cpus non-atomically, and without using
-> READ_ONCE().
+On Fri, Jul 05, 2019 at 08:47:20PM +0200, Arnd Bergmann wrote:
+>From: Kees Cook <keescook@chromium.org>
 >
-> 
-> Similarly, the update-side should use WRITE_ONCE(). Protecting with a mutex
-> does not provide mutual exclusion against concurrent readers of that variable.
+>Commit dbbb08f500d6146398b794fdc68a8e811366b451 upstream.
+>
+>Adjust vdso_{start|end} to be char arrays to avoid compile-time analysis
+>that flags "too large" memcmp() calls with CONFIG_FORTIFY_SOURCE.
+>
+>Cc: Jisheng Zhang <jszhang@marvell.com>
+>Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+>Suggested-by: Mark Rutland <mark.rutland@arm.com>
+>Signed-off-by: Kees Cook <keescook@chromium.org>
+>Signed-off-by: Will Deacon <will.deacon@arm.com>
+>Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>---
+>Backported to 4.9, which is lacking the rework from
+>2077be6783b5 ("arm64: Use __pa_symbol for kernel symbols")
 
-Again. This is nothing new. The current implementation of num_online_cpus()
-has no guarantees whatsoever. 
+I've queued both this and the 4.4 backport, thanks!
 
-bitmap_hweight() can be hit by a concurrent update of the mask it is
-looking at.
-
-num_online_cpus() gives you only the correct number if you invoke it inside
-a cpuhp_lock held section. So why do we need that fuzz about atomicity now?
-
-It's racy and was racy forever and even if we add that READ/WRITE_ONCE muck
-then it still wont give you a reliable answer unless you hold cpuhp_lock at
-least for read. So fore me that READ/WRITE_ONCE is just a cosmetic and
-misleading reality distortion.
-
+--
 Thanks,
-
-	tglx
-
-
-
-
+Sasha
