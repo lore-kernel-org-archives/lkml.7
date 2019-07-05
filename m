@@ -2,80 +2,164 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D31C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E282FC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4A12133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B968620989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfGEK0K (ORCPT
+        id S1728089AbfGEK1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:26:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54147 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfGEK0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:26:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 03:26:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="363564024"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Jul 2019 03:26:07 -0700
-Message-ID: <fcf497b7aa95cd6915986bc4581f10814c4d5341.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jordan Hand <jorhand@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Fri, 05 Jul 2019 13:26:06 +0300
-In-Reply-To: <dacf145d-49e0-16e5-5963-415bab1884e1@linux.microsoft.com>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-         <dacf145d-49e0-16e5-5963-415bab1884e1@linux.microsoft.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 5 Jul 2019 06:27:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8710 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbfGEK1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:27:00 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 80567AD3204B4059DCDA;
+        Fri,  5 Jul 2019 18:26:43 +0800 (CST)
+Received: from localhost.localdomain (10.175.34.53) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 5 Jul 2019 18:26:36 +0800
+From:   Xue Chaojing <xuechaojing@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <xuechaojing@huawei.com>, <chiqijun@huawei.com>,
+        <wulike1@huawei.com>
+Subject: [PATCH net-next] hinic: add fw version query
+Date:   Fri, 5 Jul 2019 02:36:35 +0000
+Message-ID: <20190705023635.5614-1-xuechaojing@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.34.53]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-03 at 10:08 -0700, Jordan Hand wrote:
-> > +This introduces another problem: nothing guarantees that it is not
-> > +called before the stub gets to run. Thus, it needs to copy the final
-> > +events table preboot size to the custom configuration table so that
-> > +kernel offset it later on.
-> 
-> This doesn't really explain what the size will be used for. Matthew's 
-> patch description for "tpm: Don't duplicate events from the final event 
-> log in the TCG2 log" outlines this well. You could maybe word it 
-> differently but I think the information is necessary:
-> 
-> "We can avoid this problem by looking at the size of the Final Event Log 
-> just before we call ExitBootServices() and exporting this to the main 
-> kernel. The kernel can then skip over all events that occured before
-> ExitBootServices() and only append events that were not also logged to 
-> the main log."
+This patch adds firmware version query in ethtool -i.
 
-Not exactly sure what is missing from my paragraph. The way I see it has
-more information as it states what is used at as the vessel for
-exportation (the custom configuration table).
+Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+---
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c |  8 +++++
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  2 ++
+ .../net/ethernet/huawei/hinic/hinic_port.c    | 30 +++++++++++++++++++
+ .../net/ethernet/huawei/hinic/hinic_port.h    | 13 ++++++++
+ 4 files changed, 53 insertions(+)
 
-Maybe something like:
-
-"Thus, it nees to save the final events table size at the time to the
-custom configuration table so that the TPM driver can later on skip the
-events generated during the preboot time."
-
-/Jarkko
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+index 73a20f01ad4c..60ec48fe4144 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
+@@ -117,11 +117,19 @@ static void hinic_get_drvinfo(struct net_device *netdev,
+ 			      struct ethtool_drvinfo *info)
+ {
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
++	u8 mgmt_ver[HINIC_MGMT_VERSION_MAX_LEN] = {0};
+ 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
+ 	struct hinic_hwif *hwif = hwdev->hwif;
++	int err;
+ 
+ 	strlcpy(info->driver, HINIC_DRV_NAME, sizeof(info->driver));
+ 	strlcpy(info->bus_info, pci_name(hwif->pdev), sizeof(info->bus_info));
++
++	err = hinic_get_mgmt_version(nic_dev, mgmt_ver);
++	if (err)
++		return;
++
++	snprintf(info->fw_version, sizeof(info->fw_version), "%s", mgmt_ver);
+ }
+ 
+ static void hinic_get_ringparam(struct net_device *netdev,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+index 984c98f33258..b069045de416 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+@@ -77,6 +77,8 @@ enum hinic_port_cmd {
+ 
+ 	HINIC_PORT_CMD_FWCTXT_INIT      = 69,
+ 
++	HINIC_PORT_CMD_GET_MGMT_VERSION = 88,
++
+ 	HINIC_PORT_CMD_SET_FUNC_STATE   = 93,
+ 
+ 	HINIC_PORT_CMD_GET_GLOBAL_QPN   = 102,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+index 1bbeb91be808..1e389a004e50 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+@@ -1038,3 +1038,33 @@ int hinic_get_phy_port_stats(struct hinic_dev *nic_dev,
+ 
+ 	return err;
+ }
++
++int hinic_get_mgmt_version(struct hinic_dev *nic_dev, u8 *mgmt_ver)
++{
++	struct hinic_hwdev *hwdev = nic_dev->hwdev;
++	struct hinic_version_info up_ver = {0};
++	struct hinic_hwif *hwif;
++	struct pci_dev *pdev;
++	u16 out_size;
++	int err;
++
++	if (!hwdev)
++		return -EINVAL;
++
++	hwif = hwdev->hwif;
++	pdev = hwif->pdev;
++
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_MGMT_VERSION,
++				 &up_ver, sizeof(up_ver), &up_ver,
++				 &out_size);
++	if (err || !out_size || up_ver.status) {
++		dev_err(&pdev->dev,
++			"Failed to get mgmt version, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, up_ver.status, out_size);
++		return -EINVAL;
++	}
++
++	snprintf(mgmt_ver, HINIC_MGMT_VERSION_MAX_LEN, "%s", up_ver.ver);
++
++	return 0;
++}
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
+index 1bc47c7a5c00..56df6c21ca4a 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
+@@ -16,7 +16,18 @@
+ #define HINIC_RSS_KEY_SIZE	40
+ #define HINIC_RSS_INDIR_SIZE	256
+ #define HINIC_PORT_STATS_VERSION	0
++#define HINIC_FW_VERSION_NAME	16
++#define HINIC_COMPILE_TIME_LEN	20
++#define HINIC_MGMT_VERSION_MAX_LEN	32
+ 
++struct hinic_version_info {
++	u8 status;
++	u8 version;
++	u8 rsvd[6];
++
++	u8 ver[HINIC_FW_VERSION_NAME];
++	u8 time[HINIC_COMPILE_TIME_LEN];
++};
+ enum hinic_rx_mode {
+ 	HINIC_RX_MODE_UC        = BIT(0),
+ 	HINIC_RX_MODE_MC        = BIT(1),
+@@ -571,4 +582,6 @@ int hinic_get_vport_stats(struct hinic_dev *nic_dev,
+ 
+ int hinic_set_rx_vlan_offload(struct hinic_dev *nic_dev, u8 en);
+ 
++int hinic_get_mgmt_version(struct hinic_dev *nic_dev, u8 *mgmt_ver);
++
+ #endif
+-- 
+2.17.1
 
