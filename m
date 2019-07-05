@@ -2,144 +2,94 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4A9C468AA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6F0C468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B3D216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562359210;
-	bh=3rNzLuURIot9kjZOouo8mpgcH2k7Tx+lkD/aZzwEAaQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EddM2+N6o+t4QJ/yA+y7WSLcZn9CtfEJksrPLe1iRdmQOGZpJmx70hAijwKM9NoyZ
-	 HnbD40KSzZEm9TarQAmhHxOTJbmU1F6D/xQTXmJYbYEJgo2MKhbms1Q+R0hrPvqo3N
-	 liwHk7jwYJn8nuwM5TLzVyJ6tk/0xO4uLJo1A/gs=
+	by mail.kernel.org (Postfix) with ESMTP id BAE1A216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTJhy59O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfGEUkJ (ORCPT
+        id S1728047AbfGEUlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbfGEUkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:40:09 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A97A216FD
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2019 20:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562359207;
-        bh=3rNzLuURIot9kjZOouo8mpgcH2k7Tx+lkD/aZzwEAaQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lMXbFdQ54rR/dKtXF5R72dQoV+V9vHUXz3N9RZXXoKmh1I07WVMJBVIKmNFV5wDRl
-         vs1r+/AklWuPuI9JIZWYSNBqg/UMVaLC0lKuRzBLQZDh1b9qy70UVBkeCmu1MCixVQ
-         DesmFg4y1MALHJl5wXn1dwEQXZegoN01tx/DD4HI=
-Received: by mail-wr1-f49.google.com with SMTP id z1so6423183wru.13
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 13:40:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+9G0VEizjYP1Yt9cPPIUvg73xUrCO3k2aSZpP0Nur7ofeBJ96
-        9PtT8k4yhj3E236BhzG9aUjiNJ8JxMYmGnepj8Ch1A==
-X-Google-Smtp-Source: APXvYqxtiocly/BYYea3ro/QNS5JGxuLXt7ZZrobIITcEb2FsllteUnfu94+coqcz/AYUlZ/0EtAA4+jedjrgvTRJpI=
-X-Received: by 2002:adf:dd0f:: with SMTP id a15mr4974171wrm.265.1562359206078;
- Fri, 05 Jul 2019 13:40:06 -0700 (PDT)
+        Fri, 5 Jul 2019 16:41:20 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35488 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfGEUlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 16:41:20 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a127so7999729oii.2;
+        Fri, 05 Jul 2019 13:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D9oh07kJUZMEQmkUtGac/tlJsPmWRKPEi2PyfWbAHi8=;
+        b=lTJhy59O+20pFN9B4Svqv+YZgf0KaSBDMDlj2ZWFRBZHMcFDiFtaG3eniahJbcjGLM
+         aQw22L3Hud9w+a/aN7M0Y2falUKTp+0rrt+jruekyl6jvBQC/cCgux9lvjAekPiWM05L
+         xfGhzT0y/ert8q5BaG7ie6kYCqVIJ2pbdJ/Mnc2UcZCaQJCrc259PTi0LI4ymWToOtvH
+         3YsY74YwjFilXvJ++ODqbfUCMG4CwzIcdFfmsRDncGReeRGwp92mj9U4468UKjLn+IjA
+         A+3hEF70rS7Myj0gTQhuemYy2VuIE4PRmaXpOutVJZtd+y6M3Rk+QOJu62pfpxHZT5KI
+         ufHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D9oh07kJUZMEQmkUtGac/tlJsPmWRKPEi2PyfWbAHi8=;
+        b=BWedCazLGhR5Osqt+Gnwj1FFIl9R2kf0PJFUtEpH4E9lkPCe3F5j4k2/HhTZ6hTyOx
+         gnQulXILqw1eBt84MA7CnyerbwIaxr0y4PkExS0N16as/7VZNrTrzoSOZx5tmigiorwH
+         4LqmAVDezEYjT/JbZ8QNXntWBMLmCmjrUGWtMsQXkG1T7MTzKtaDaZo30DxBdEGHpsIO
+         Jq/V5ATjsSrQsuwjiW56/PxZZc8UEsz1WQ9DigtEhAPCT8m/CJedd5ZMCGWdaOben5re
+         NxK2HaE+BPH60QLLSvGQ0RzaJ8vGEsTjA9J7RYNrDrONhSQPyKaPJDYCZp1mgsr6zkJl
+         NQIA==
+X-Gm-Message-State: APjAAAU7SBmohYWRqfbu2V60Wr4bm8kJfdWxEIVtJCQED7qLx9svapxy
+        P8PL0UUdxvRm5BpD5qU2boo=
+X-Google-Smtp-Source: APXvYqyJKpL6z8YsY5rdCCHBSSU5cC7EMVZ74+PzMgEm/GJ5faCwzUqYBruyMY3eRr7/BbQ1RXj18A==
+X-Received: by 2002:aca:b788:: with SMTP id h130mr3202843oif.85.1562359279480;
+        Fri, 05 Jul 2019 13:41:19 -0700 (PDT)
+Received: from localhost.members.linode.com ([2600:3c00::f03c:91ff:fe99:7fe5])
+        by smtp.gmail.com with ESMTPSA id q82sm3059229oif.30.2019.07.05.13.41.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 13:41:19 -0700 (PDT)
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Anton Protopopov <a.s.protopopov@gmail.com>
+Subject: [PATCH bpf-next 0/2]  libbpf: add an option to reuse maps when loading a program
+Date:   Fri,  5 Jul 2019 20:40:37 +0000
+Message-Id: <cover.1562359091.git.a.s.protopopov@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20190704155145.617706117@linutronix.de> <20190704155608.636478018@linutronix.de>
- <958a67c2-4dc0-52e6-43b2-1ebd25a59232@citrix.com> <CALCETrVomGF-OmWxdaX9axih1kz345rEFop=vZtcKwGR8U-gwQ@mail.gmail.com>
- <alpine.DEB.2.21.1907052227140.3648@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907052227140.3648@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 5 Jul 2019 13:39:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrXPX5CXOOVHhN2Npvxh=ZRSA4ttC+VaNekF1W13Z=FLkA@mail.gmail.com>
-Message-ID: <CALCETrXPX5CXOOVHhN2Npvxh=ZRSA4ttC+VaNekF1W13Z=FLkA@mail.gmail.com>
-Subject: Re: [patch V2 04/25] x86/apic: Make apic_pending_intr_clear() more robust
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 1:36 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Fri, 5 Jul 2019, Andy Lutomirski wrote:
-> > On Fri, Jul 5, 2019 at 8:47 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> > > Because TPR is 0, an incoming IPI can trigger #AC, #CP, #VC or #SX
-> > > without an error code on the stack, which results in a corrupt pt_regs
-> > > in the exception handler, and a stack underflow on the way back out,
-> > > most likely with a fault on IRET.
-> > >
-> > > These can be addressed by setting TPR to 0x10, which will inhibit
-> > > delivery of any errant IPIs in this range, but some extra sanity logic
-> > > may not go amiss.  An error code on a 64bit stack can be spotted with
-> > > `testb $8, %spl` due to %rsp being aligned before pushing the exception
-> > > frame.
-> >
-> > Several years ago, I remember having a discussion with someone (Jan
-> > Beulich, maybe?) about how to efficiently make the entry code figure
-> > out the error code situation automatically.  I suspect it was on IRC
-> > and I can't find the logs.  I'm thinking that maybe we should just
-> > make Linux's idtentry code do something like this.
-> >
-> > If nothing else, we could make idtentry do:
-> >
-> > testl $8, %esp   /* shorter than testb IIRC */
-> > jz 1f  /* or jnz -- too lazy to figure it out */
-> > pushq $-1
-> > 1:
->
-> Errm, no. We should not silently paper over it. If we detect that this came
-> in with a wrong stack frame, i.e. not from a CPU originated exception, then
-> we truly should yell loud. Also in that case you want to check the APIC:ISR
-> and issue an EOI to clear it.
+The following two patches add an option for users to reuse existing maps when
+loading a program using the bpf_prog_load_xattr function.  A user can specify a
+directory containing pinned maps inside the bpf_prog_load_attr structure, and in
+this case the bpf_prog_load_xattr function will replace (bpf_map__reuse_fd) all
+maps defined in the object with file descriptors obtained from corresponding
+entries from the specified directory.
 
-It gives us the option to replace idtentry with something
-table-driven.  I don't think I love it, but it's not an awful idea.
+Anton Protopopov (2):
+  bpf, libbpf: add a new API bpf_object__reuse_maps()
+  bpf, libbpf: add an option to reuse existing maps in bpf_prog_load_xattr
 
+ tools/lib/bpf/libbpf.c   | 42 ++++++++++++++++++++++++++++++++++++++++
+ tools/lib/bpf/libbpf.h   |  3 +++
+ tools/lib/bpf/libbpf.map |  1 +
+ 3 files changed, 46 insertions(+)
 
-
->
-> > > Another interesting problem is an IPI which its vector 0x80.  A cunning
-> > > attacker can use this to simulate system calls from unsuspecting
-> > > positions in userspace, or for interrupting kernel context.  At the very
-> > > least the int0x80 path does an unconditional swapgs, so will try to run
-> > > with the user gs, and I expect things will explode quickly from there.
-> >
-> > At least SMAP helps here on non-FSGSBASE systems.  With FSGSBASE, I
->
-> How does it help? It still crashes the kernel.
->
-> > suppose we could harden this by adding a special check to int $0x80 to
-> > validate GSBASE.
->
-> > > One option here is to look at ISR and complain if it is found to be set.
-> >
-> > Barring some real hackery, we're toast long before we get far enough to
-> > do that.
->
-> No. We can map the APIC into the user space visible page tables for PTI
-> without compromising the PTI isolation and it can be read very early on
-> before SWAPGS. All you need is a register to clobber not more. It the ISR
-> is set, then go into an error path, yell loudly, issue EOI and return.
-> The only issue I can see is: It's slow :)
->
->
-
-I think this will be really extremely slow.  If we can restrict this
-to x2apic machines, then maybe it's not so awful.
-
-FWIW, if we just patch up the GS thing, then we are still vulnerable:
-the bad guy can arrange for a privileged process to have register
-state corresponding to a dangerous syscall and then send an int $0x80
-via the APIC.
+--
+2.19.1
