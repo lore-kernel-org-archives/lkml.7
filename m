@@ -2,139 +2,159 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0167AC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1CBC4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0133216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YG9T06k7";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="nFUkHaBh"
+	by mail.kernel.org (Postfix) with ESMTP id 5D83E2184C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfGEPVZ (ORCPT
+        id S1727945AbfGEPVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:21:25 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:54038 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbfGEPVZ (ORCPT
+        Fri, 5 Jul 2019 11:21:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56616 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726302AbfGEPVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:21:25 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2D403C2989;
-        Fri,  5 Jul 2019 15:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562340084; bh=6FwTzznIm5VxdWt8YvDaLCoruf9DPPYcOfNGobwK6c0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=YG9T06k7vNSUPcedznjKtYfUtAUCyrYNksPL5ReQ4z1+XvCyESivNGmpSsAJzTNZx
-         q3IkbrcEglrmuSwM2rrqJ6tuEqyQCZY4K7KS1Gun9I8EWqeJKqj1ksFrYeGVKUduBE
-         C5ltTRSl/SV7NTRy9E9mXq7UiM12Us0QSJHxUiDbam5EhGwWSDAJ8glV2FqXzI00zf
-         YNd2d41Riy5yY1cVJ0hZe8A9cdcRCunBbfqoGGkZjJ0beTZfE9odyPAWpseH6M7M/Z
-         SfMp/KaPLRL+2Pj37e9DYDdACLkBn6Lfw4Gmqg6RUtkoR8JFQih2mT7f6QUNzjR5mO
-         AsDyuergumwPg==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 2254BA09BA;
-        Fri,  5 Jul 2019 15:21:19 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 5 Jul 2019 08:21:19 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 5 Jul 2019 08:21:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6FwTzznIm5VxdWt8YvDaLCoruf9DPPYcOfNGobwK6c0=;
- b=nFUkHaBhCqYNATY5U9E7ahyahFCz1FiO/T+QXUP51uaNbOyJ4B0XcvhteXMKDcULW0TX76yECOl1nsUIl1zzmzgkNQaaXM8t2qDizOp8WG6RrNzdSxp8mUh78dqLS2veS8aZzLRd5EQsMof9eYbgCIo4rRqEBmfTK8ZrSB8VEqI=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB2867.namprd12.prod.outlook.com (20.179.66.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Fri, 5 Jul 2019 15:21:17 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2052.019; Fri, 5 Jul 2019
- 15:21:17 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: RE: [PATCH net-next v3 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next v3 3/3] net: stmmac: Introducing support for
- Page Pool
-Thread-Index: AQHVMwKNzVmUsJPJMUCkE31Cd4D9oqa8BTaAgAAezsA=
-Date:   Fri, 5 Jul 2019 15:21:16 +0000
-Message-ID: <BN8PR12MB32666359FABD7D7E55FE4761D3F50@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562311299.git.joabreu@synopsys.com>
- <384dab52828c4b65596ef4202562a574eed93b91.1562311299.git.joabreu@synopsys.com>
- <20190705132905.GA15433@apalos>
-In-Reply-To: <20190705132905.GA15433@apalos>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c9c6aa2-e217-4d18-7ea2-08d7015c6cf2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB2867;
-x-ms-traffictypediagnostic: BN8PR12MB2867:
-x-microsoft-antispam-prvs: <BN8PR12MB286730AAC5030FD80D56DE5BD3F50@BN8PR12MB2867.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 008960E8EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39850400004)(396003)(136003)(366004)(376002)(189003)(51914003)(199004)(81166006)(8676002)(305945005)(7736002)(14444005)(256004)(81156014)(8936002)(6116002)(486006)(476003)(73956011)(446003)(4744005)(14454004)(11346002)(52536014)(66946007)(5660300002)(66476007)(76116006)(66556008)(64756008)(3846002)(66446008)(7696005)(99286004)(102836004)(25786009)(229853002)(7416002)(54906003)(2906002)(6506007)(76176011)(66066001)(316002)(86362001)(186003)(110136005)(33656002)(26005)(478600001)(6636002)(53936002)(4326008)(74316002)(6246003)(6436002)(71200400001)(71190400001)(9686003)(68736007)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2867;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vwRtHQPX4tuAtcOOGnjc+YEjQgIWT6FCHQ2QyQoGGZGFNoSgOspzlROo39Pf679N7nhJFdoX4A+GY3c2U9jR6qD+IMpuTeLa3uSrRr3JZ2I1DetGj6tYckfIORQX4vCDpW7v5B+pvCmyH9LY4ZVXLM1euGxz1Ox6vsmtrF5yrwey1imu7MtILLyzRZSz3U0oGHt5UT1i89jurVPsoQFJliEMoiV9gCXyZjhcdyeId+3GY97/aVPnpMKf44elNiznKmmAfi1+z8Ijyy28lk5n3DRwkeM+yH6VSt8vIKoS/p6t0yepCVtoAmnhV5OYiltYKI5GmK9zSumbH37+g9OcGgzQNCTpPdTKDXp/+d1JAz+5XAnQebJb1M2cg/HRWmQSGIuVjP7MquW2s00fap/3E8J/RWwcXPXjEyHiOSl/fK0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 5 Jul 2019 11:21:34 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65FHEwU139689;
+        Fri, 5 Jul 2019 11:20:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tj80kaywk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jul 2019 11:20:58 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x65FKvOt003765;
+        Fri, 5 Jul 2019 11:20:57 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tj80kayw2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jul 2019 11:20:57 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x65FEcfC024677;
+        Fri, 5 Jul 2019 15:20:56 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03dal.us.ibm.com with ESMTP id 2tdym7mvjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jul 2019 15:20:56 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x65FKtnE52625730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jul 2019 15:20:55 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F7AD124053;
+        Fri,  5 Jul 2019 15:20:55 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BB1F124052;
+        Fri,  5 Jul 2019 15:20:54 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.133.199])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jul 2019 15:20:53 +0000 (GMT)
+Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
+ structures to tpm_pcr_extend()"
+To:     Tyler Hicks <tyhicks@canonical.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+References: <20190701131505.17759-1-msuchanek@suse.de>
+ <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
+ <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
+ <1562240882.6165.78.camel@linux.ibm.com>
+ <1562255201.6165.143.camel@linux.ibm.com> <20190704195857.GB6105@elm>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <abcc3748-8471-8965-046e-9d9431b4f0e9@linux.vnet.ibm.com>
+Date:   Fri, 5 Jul 2019 11:20:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c9c6aa2-e217-4d18-7ea2-08d7015c6cf2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 15:21:17.1455
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2867
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20190704195857.GB6105@elm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907050186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Hi Tyler,
 
-> I think this look ok for now. One request though, on page_pool_free=20
 
-Thanks for the review!
+On 07/04/2019 03:58 PM, Tyler Hicks wrote:
+> Hey Mimi!
+>
+> On 2019-07-04 11:46:41, Mimi Zohar wrote:
+>> Hi Jarkko,
+>>
+>> On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
+>>> On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
+>>>> On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
+>>>>> On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
+>>>>>> This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
+>>>>>> following crash:
+>>>>> Thank you. I think this the right choice for the moment. I fixed
+>>>>> a trivial checkpatch.pl error and added the mandatory tags. Can
+>>>>> you check quickly v2 (just posted)?
+>>>>>
+>>>>> I already made it available in my master and next.
+>>>> Could you please wait few days? I would prefer to fix this issue instead
+>>>> of reverting the whole patch.
+>>> Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
+>>> allocated banks for IBM vtpm driver", which addresses this bug.
+>> Now with my review, and with Sachin Sant's and Michal Suchánek
+>> testing, instead of reverting this patch could you pick up Nayna's
+>> patch instead?
+> It looks to me like the revert would also fix a bug that is keeping the
+> eCryptfs module from loading when the TPM is in an "inactive" state:
+>
+>    https://bugzilla.kernel.org/show_bug.cgi?id=203953
+>
+> I just noticed that it was recently discussed here, too:
+>
+>    https://lore.kernel.org/linux-integrity/1562244125.6165.95.camel@linux.ibm.com/T/#t
+>
+> I believe that the revert would fix it because the call to
+> init_digests()/tpm_get_random() would no longer be in the path of
+> loading ecryptfs.ko (which depends on encrypted-keys.ko, which depends
+> on trusted.ko).
+>
+> If the revert isn't used, we'll need a different fix for bug 203953. It
+> should be an easy fix but I don't want it to be forgotten.
 
-> A patch currently under review will slightly change that [1] and [2]
-> Can you defer this a bit till that one gets merged?
-> The only thing you'll have to do is respin this and replace page_pool_fre=
-e()
-> with page_pool_destroy()
 
-As we are in end of release cycle net-next may close soon so maybe this=20
-can be merged and I can send a follow-up patch later if that's okay by=20
-you and David ?
+I think if TPM is inactive/disabled, it needs to be handled during 
+tpm_chip_register() itself. However, probably that needs more analysis 
+and discussion. For now, in context of the trusted.ko module, it seems 
+init_trusted() should "put_device", but continue even if init_digests() 
+fails, that will fix the issue.
+
+
+Thanks & Regards,
+         - Nayna
