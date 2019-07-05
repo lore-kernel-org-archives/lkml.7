@@ -2,56 +2,106 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3179C468A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E66C468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FED2089C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC7B2089C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfGERki (ORCPT
+        id S1726696AbfGERuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 13:40:38 -0400
-Received: from fieldses.org ([173.255.197.46]:35736 "EHLO fieldses.org"
+        Fri, 5 Jul 2019 13:50:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:8637 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfGERki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 13:40:38 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A4D0D1D27; Fri,  5 Jul 2019 13:40:37 -0400 (EDT)
-Date:   Fri, 5 Jul 2019 13:40:37 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: [GIT PULL] nfsd bugfixes for 5.2
-Message-ID: <20190705174037.GA4203@fieldses.org>
+        id S1725730AbfGERuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 13:50:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 10:50:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
+   d="scan'208";a="175559214"
+Received: from hsolima-mobl1.ger.corp.intel.com ([10.252.48.252])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jul 2019 10:50:28 -0700
+Message-ID: <1270cd6ab2ceae1ad01e4b83b75fc4c6fc70027d.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
+ driver
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nayna <nayna@linux.vnet.ibm.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        George Wilson <gcwilson@linux.ibm.com>
+Date:   Fri, 05 Jul 2019 20:50:27 +0300
+In-Reply-To: <164b9c6e-9b6d-324d-9df8-d2f7d1ac8cfc@linux.vnet.ibm.com>
+References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
+         <1998ebcf-1521-778f-2c80-55ad2c855023@linux.ibm.com>
+         <164b9c6e-9b6d-324d-9df8-d2f7d1ac8cfc@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull:
+On Fri, 2019-07-05 at 11:32 -0400, Nayna wrote:
+> I am not sure of the purpose of tpm_stop_chip(), so I have left it as it 
+> is. Jarkko, what do you think about the change ?
 
-  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.2-2
+Stefan right. Your does not work, or will randomly work or not work
+depending on the chip.
 
-Two more quick bugfixes for nfsd, fixing a regression causing mount
-failures on high-memory machines and fixing the DRC over RDMA.
+You need to turn the TPM on with tpm_chip_start() and turn it off with
+tpm_chip_stop() once you are done. This is done in tpm_chip_register()
+before calling tpm_auto_startup().
 
---b.
+TPM power management was once in tpm_transmit() but not anymore after my
+patch set that removed nested tpm_transmit() calls.
 
-Chuck Lever (1):
-      svcrdma: Ignore source port when computing DRC hash
+While you're on it please take into account my earlier feedback.
 
-Paul Menzel (1):
-      nfsd: Fix overflow causing non-working mounts on 1 TB machines
+Also, short summary could be "tpm: tpm_ibm_vtpm: Fix unallocated banks"
 
- fs/nfsd/nfs4state.c                      | 2 +-
- net/sunrpc/xprtrdma/svc_rdma_transport.c | 7 ++++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+Some oddballs in your patch that I have to ask.
+
+if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+	rc = tpm2_get_pcr_allocation(chip);
+	if (rc)
+		goto out;
+}
+
+chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
+		GFP_KERNEL);
+if (!chip->allocated_banks) {
+	rc = -ENOMEM;
+	goto out;
+}
+
+Why you don't return on site and instead jump somewhere? Also the
+2nd line for kcalloc() is misaligned.
+
+out:
+	if (rc < 0)
+		rc = -ENODEV;
+
+This will cause a new regression i.e. you let TPM error codes
+through.
+
+To summarize this patch fixes one regression and introduces two
+completely new ones...
+
+/Jarkko`
+
