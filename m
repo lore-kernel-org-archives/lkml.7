@@ -2,89 +2,103 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5079EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4D7218BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D40A218BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfGEIxh (ORCPT
+        id S1728057AbfGEIz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:53:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54488 "EHLO mx1.redhat.com"
+        Fri, 5 Jul 2019 04:55:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:33262 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfGEIxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:53:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3AE463079B68;
-        Fri,  5 Jul 2019 08:53:26 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-90.ams2.redhat.com [10.36.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D935C1001B20;
-        Fri,  5 Jul 2019 08:53:25 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 10B3216E32; Fri,  5 Jul 2019 10:53:25 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 10:53:25 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 06/18] drm/virtio: remove ttm calls from in
- virtio_gpu_object_{reserve,unreserve}
-Message-ID: <20190705085325.am2reucblvxc6qpg@sirius.home.kraxel.org>
-References: <20190702141903.1131-1-kraxel@redhat.com>
- <20190702141903.1131-7-kraxel@redhat.com>
- <CAPaKu7RfLoB=K__wQd92=S20Mt0uqsfyU9oigr8CQ-=gH6OUuA@mail.gmail.com>
- <20190704111043.5ubc2yjrjphj2iec@sirius.home.kraxel.org>
- <CAPaKu7S4Og7kda2ZjFtuRv=_W8gpFbD5y7s==0JB5Z34S4Hsjw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7S4Og7kda2ZjFtuRv=_W8gpFbD5y7s==0JB5Z34S4Hsjw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 05 Jul 2019 08:53:36 +0000 (UTC)
+        id S1726116AbfGEIz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:55:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C87EA2B;
+        Fri,  5 Jul 2019 01:55:55 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B67B3F246;
+        Fri,  5 Jul 2019 01:55:54 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [PATCH v2 0/5] arm64: Enable access to pmu registers by user-space
+Date:   Fri,  5 Jul 2019 09:55:36 +0100
+Message-Id: <20190705085541.9356-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 12:17:48PM -0700, Chia-I Wu wrote:
-> On Thu, Jul 4, 2019 at 4:10 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> >   Hi,
-> >
-> > > > -       r = ttm_bo_reserve(&bo->tbo, true, false, NULL);
-> > > > +       r = reservation_object_lock_interruptible(bo->gem_base.resv, NULL);
-> > > Can you elaborate a bit about how TTM keeps the BOs alive in, for
-> > > example, virtio_gpu_transfer_from_host_ioctl?  In that function, only
-> > > three TTM functions are called: ttm_bo_reserve, ttm_bo_validate, and
-> > > ttm_bo_unreserve.  I am curious how they keep the BO alive.
-> >
-> > It can't go away between reserve and unreserve, and I think it also
-> > can't be evicted then.  Havn't checked how ttm implements that.
-> Hm, but the vbuf using the BO outlives the reserve/unreserve section.
-> The NO_EVICT flag applies only when the BO is still alive.  Someone
-> needs to hold a reference to the BO to keep it alive, otherwise the BO
-> can go away before the vbuf is retired.
+The perf user-space tool relies on the PMU to monitor events. It offers an
+abstraction layer over the hardware counters since the underlying
+implementation is cpu-dependent. We want to allow userspace tools to have
+access to the registers storing the hardware counters' values directly.
+This targets specifically self-monitoring tasks in order to reduce the
+overhead by directly accessing the registers without having to go
+through the kernel.
+In order to do this we need to setup the pmu so that it exposes its registers
+to userspace access.
 
-Note that patches 14+15 rework virtio_gpu_transfer_*_ioctl to keep
-gem reference until the command is finished and patch 17 drops
-virtio_gpu_object_{reserve,unreserve} altogether.
+The first patch add a test to the perf tool so that we can test that the
+access to the registers works correctly from userspace.
 
-Maybe I should try to reorder the series, then squash 6+17 to reduce
-confusion.  I suspect that'll cause quite a few conflicts though ...
+The second patch add a capability in the arm64 cpufeatures framework in
+order to detect when we are running on a heterogeneous system.
 
-cheers,
-  Gerd
+The third patch focuses on the armv8 pmuv3 PMU support and makes sure that
+the access to the pmu registers is enable and that the userspace have
+access to the relevent information in order to use them.
+
+The fourth patch put in place callbacks to enable access to the hardware
+counters from userspace when a compatible event is opened using the perf
+API.
+
+The fifth patch adds a short documentation about PMU counters direct
+access from userspace.
+
+**Changes since v1**
+
+* Rebased on linux-next/master
+* Do not include RSEQs materials (test and utilities) since we want to
+  enable direct access to counters only on homogeneous systems.
+* Do not include the hook defitinions for the same reason as above.
+* Add a cpu feature/capability to detect heterogeneous systems.
+
+Raphael Gault (5):
+  perf: arm64: Add test to check userspace access to hardware counters.
+  arm64: cpufeature: Add feature to detect heterogeneous systems
+  arm64: pmu: Add function implementation to update event index in
+    userpage.
+  arm64: perf: Enable pmu counter direct access for perf event on armv8
+  Documentation: arm64: Document PMU counters access from userspace
+
+ .../arm64/pmu_counter_user_access.txt         |  42 +++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/mmu.h                  |   6 +
+ arch/arm64/include/asm/mmu_context.h          |   2 +
+ arch/arm64/include/asm/perf_event.h           |  14 +
+ arch/arm64/kernel/cpufeature.c                |  20 ++
+ arch/arm64/kernel/perf_event.c                |  23 ++
+ drivers/perf/arm_pmu.c                        |  38 +++
+ include/linux/perf/arm_pmu.h                  |   2 +
+ tools/perf/arch/arm64/include/arch-tests.h    |   6 +
+ tools/perf/arch/arm64/tests/Build             |   1 +
+ tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
+ tools/perf/arch/arm64/tests/user-events.c     | 255 ++++++++++++++++++
+ 13 files changed, 415 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+ create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+
+-- 
+2.17.1
 
