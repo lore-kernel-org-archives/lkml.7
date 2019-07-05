@@ -2,152 +2,94 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA3C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9937C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B0F20843
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A7520843
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OF53/H53"
+	dkim=pass (1024-bit key) header.d=vivotek.com header.i=@vivotek.com header.b="MJA5M0X5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfGEJhR (ORCPT
+        id S1728278AbfGEJie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:37:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35529 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfGEJhQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:37:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so8391263ioo.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4vw6dqlz5AQh19iWs1fP2phxHi5N3sf2U6HwsMEsBlk=;
-        b=OF53/H53SyjrSxyvxkDBRDfFDFAUB2gg1hcwYrfTdFZaXJdoM1qVsKz4m81GNdidUu
-         ZHCiVKGRuD4WU6kedY9yzgvOON+PMisJ4rSEUKjG84R7xQNS5p4Ixz1WMXfHituVBPcD
-         /ENmGWPzVvmqnjbJ1VjyDnJP2HhhztJUOM1cBGWQC/7jdXwGSaQgyL28xsJlySqUha3w
-         JWRNPuQBgl/HXAzF9WlDSaxtKh0Z221w6Q29ZYgwPMvn97MH5bLvM+noJ3A+K3YQi0CO
-         UyjdSy/NwxWMUw49vOyZE5QkH1IEz3XBuia8OmmUeAfK1iO0OEaoSf+oq94jEAjIKl2A
-         /Y2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4vw6dqlz5AQh19iWs1fP2phxHi5N3sf2U6HwsMEsBlk=;
-        b=OeX5+J9T6mb54tPjx5nVHu53P7kgGF/QG9ecWxRTgZpnQFn68epaNvMvAcbpnkTZWW
-         roSKoBAvnUdzFsICvJ6OB6p1d824svmRnYbcy5bKXQ+Vpx69I6EX73xuuzVWnJTDEmGz
-         JC0RBriTZLB8KjbFQLCo0emMfBkfWTT+N/F6c60T8jhfVLAws3YqVoRgJRF0onRn6g6j
-         W6HgNe/zqlUhOMyXRKLRBNp3rbqcl+LOuUb4Kl9ysQ4ApndHxXy60AiNUOPNQLQSEtas
-         rlB1uHBam8rdgUhT3hu1GTDLLNE1gtNfM4QpzzhsnXuB7fBi+yoB/OmGPcrzi78PwXJb
-         qxlA==
-X-Gm-Message-State: APjAAAWTiZDjTAyMsPUO+dEUmrdvpXSXCrHfKSdh/BMTBy6tiiRjqkYI
-        GV/1LwshmrCitMAegOyf34VbBQRrV4OgVjgQNO719A==
-X-Google-Smtp-Source: APXvYqyf6YyPZzEuLuWMf/F9c1sfpHKI5GlN48qxjg5Wdx5RmM8EI1GripT73jsGQuvPk60GnwxLSk3+OQeF8FCS+1c=
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr2959734iop.58.1562319435635;
- Fri, 05 Jul 2019 02:37:15 -0700 (PDT)
+        Fri, 5 Jul 2019 05:38:34 -0400
+Received: from mail.vivotek.com ([60.248.39.150]:57218 "EHLO mail.vivotek.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727506AbfGEJie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:38:34 -0400
+X-Greylist: delayed 462 seconds by postgrey-1.27 at vger.kernel.org; Fri, 05 Jul 2019 05:38:33 EDT
+Received: from pps.filterd (vivotekpps.vivotek.com [127.0.0.1])
+        by vivotekpps.vivotek.com (8.16.0.22/8.16.0.22) with SMTP id x659SCfH015165;
+        Fri, 5 Jul 2019 17:30:41 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivotek.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=dkim;
+ bh=2KaC+3HJMJrzgfZPSWLrMHYp5NlQD1jIP6KCA5l1j4k=;
+ b=MJA5M0X5SbZ8w3EK6kIpRFJbhbqPmgXsudaZJpiP/w7YN7dWurUCaZXIKaFcqJsTsE3a
+ q7oNu5vcFlOOykIxtLjvXIIYkgMptDoIyNB6WKbZQeu4nDYcUvS0CbjUwxCH0x2z6RMW
+ hmrjgJGnl+U7ekp2GeH/4BIfocVmJ2JVDG4= 
+Received: from cas01.vivotek.tw ([192.168.0.58])
+        by vivotekpps.vivotek.com with ESMTP id 2tj3w0g0a1-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 05 Jul 2019 17:30:41 +0800
+Received: from localhost.localdomain (192.168.17.134) by CAS01.vivotek.tw
+ (192.168.0.58) with Microsoft SMTP Server (TLS) id 14.3.319.2; Fri, 5 Jul
+ 2019 17:30:40 +0800
+From:   Michael Wu <michael.wu@vatics.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <mvp.kutali@gmail.com>
+Subject: [PATCH] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+Date:   Fri, 5 Jul 2019 17:30:31 +0800
+Message-ID: <20190705093031.18182-1-michael.wu@vatics.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <0000000000005bf6c3058cde49a7@google.com> <8755905.1UUJr7qOyo@kreacher>
-In-Reply-To: <8755905.1UUJr7qOyo@kreacher>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 5 Jul 2019 11:37:04 +0200
-Message-ID: <CACT4Y+awzZOSAseosiUDvs_zk7hFRuQrrr0LjRmVwesVbF_+aQ@mail.gmail.com>
-Subject: Re: linux-next boot error: WARNING in corrupted
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     syzbot <syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [192.168.17.134]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_04:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 11:23 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Thursday, July 4, 2019 7:27:04 PM CEST syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    16c474c9 Add linux-next specific files for 20190704
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=17f8b463a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=983f02aae1ef31b6
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=de771ae9390dffed7266
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com
-> >
-...
-> > ------------[ cut here ]------------
-> > __dev_pm_qos_remove_request() called for unknown object
-> > WARNING: CPU: 1 PID: 1 at drivers/base/power/qos.c:486
-> > __dev_pm_qos_remove_request+0x3d3/0x4d0 drivers/base/power/qos.c:486
->
-> Viresh, any chance to look at this?
->
-> I'm a bit concerned about the freq QoS series at this point, may defer pushing it.
+When a pin is active-low, logical trigger edge should be inverted
+to match the same interrupt opportunity.
 
-FWIW here is full WARNING since I am hitting it locally too:
+For example, a button pushed trigger falling edge in ACTIVE_HIGH
+case; in ACTIVE_LOW case, the button pushed trigger rising edge.
+For user space the IRQ requesting doesn't need to do any
+modification except to configuring GPIOHANDLE_REQUEST_ACTIVE_LOW.
 
-commit 16c474c9ba39ede5fd1cd835ac52b3760d7820b7 (HEAD, tag:
-next-20190704, next/master)
-    Add linux-next specific files for 20190704
+Signed-off-by: Michael Wu <michael.wu@vatics.com>
+---
+ drivers/gpio/gpiolib.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-------------[ cut here ]------------
-__dev_pm_qos_remove_request() called for unknown object
-WARNING: CPU: 3 PID: 1 at drivers/base/power/qos.c:486
-__dev_pm_qos_remove_reques0
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc7-next-20190704 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- panic+0x2dc/0x755 kernel/panic.c:219
- __warn.cold+0x20/0x4c kernel/panic.c:576
- report_bug+0x263/0x2b0 lib/bug.c:186
- fixup_bug arch/x86/kernel/traps.c:179 [inline]
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
- invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:1008
-RIP: 0010:__dev_pm_qos_remove_request+0x3d3/0x4d0 drivers/base/power/qos.c:486
-Code: 09 fd e9 9a fd ff ff 41 bd ed ff ff ff e9 b8 fd ff ff e8 d0 c9
-7b fd 48 c7 2
-RSP: 0000:ffff88806c27fac8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815cae36 RDI: ffffed100d84ff4b
-RBP: ffff88806c27faf8 R08: ffff88806c276000 R09: fffffbfff14a6b45
-R10: fffffbfff14a6b44 R11: ffffffff8a535a27 R12: ffff8880664cf0f8
-R13: ffff88806ae4c000 R14: 0000000000000004 R15: ffff88806ae4c008
- dev_pm_qos_remove_request+0x24/0x40 drivers/base/power/qos.c:520
- cpufreq_policy_free+0x2b7/0x3d0 drivers/cpufreq/cpufreq.c:1282
- cpufreq_online+0x239/0x17a0 drivers/cpufreq/cpufreq.c:1482
- cpufreq_add_dev+0x119/0x160 drivers/cpufreq/cpufreq.c:1500
- subsys_interface_register+0x2fc/0x470 drivers/base/bus.c:1081
- cpufreq_register_driver+0x331/0x570 drivers/cpufreq/cpufreq.c:2669
- acpi_cpufreq_init+0x579/0x5ff drivers/cpufreq/acpi-cpufreq.c:966
- do_one_initcall+0x120/0x81a init/main.c:939
- do_initcall_level init/main.c:1007 [inline]
- do_initcalls init/main.c:1015 [inline]
- do_basic_setup init/main.c:1033 [inline]
- kernel_init_freeable+0x4d4/0x5c3 init/main.c:1193
- kernel_init+0x12/0x1c5 init/main.c:1111
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e013d417a936..b98466a05091 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	}
+ 
+ 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+-		irqflags |= IRQF_TRIGGER_RISING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+ 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
+-		irqflags |= IRQF_TRIGGER_FALLING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQ_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+ 	irqflags |= IRQF_ONESHOT;
+ 
+ 	INIT_KFIFO(le->events);
+-- 
+2.17.1
+
