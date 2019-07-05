@@ -2,89 +2,62 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB93FC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00821C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CC52082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89382082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfGEKJR (ORCPT
+        id S1728639AbfGEKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:09:17 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47822 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbfGEKHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:07:08 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5254D200E79;
-        Fri,  5 Jul 2019 12:07:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C88102006F8;
-        Fri,  5 Jul 2019 12:06:57 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5970D402E5;
-        Fri,  5 Jul 2019 18:06:47 +0800 (SGT)
-From:   Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        l.subrahmanya@mobiveil.co.in, shawnguo@kernel.org,
-        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com
-Cc:     Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv6 02/28] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
-Date:   Fri,  5 Jul 2019 17:56:30 +0800
-Message-Id: <20190705095656.19191-3-Zhiqiang.Hou@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
-References: <20190705095656.19191-1-Zhiqiang.Hou@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 5 Jul 2019 06:09:29 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42342 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfGEKJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:09:29 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id d4b39f5ac838d316; Fri, 5 Jul 2019 12:09:26 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PM: sleep: Drop dev_pm_skip_next_resume_phases()
+Date:   Fri, 05 Jul 2019 12:09:26 +0200
+Message-ID: <1670687.Ukx42KFMcm@kreacher>
+In-Reply-To: <20190704080120.GH2640@lahna.fi.intel.com>
+References: <2100414.Plmip0uhM5@kreacher> <20190704080120.GH2640@lahna.fi.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Mobiveil internal MSI controller requires separate target addresses,
-one per MSI vector; this is clearly incompatible with the Multiple MSI
-feature, which requires the same target address for all vectors
-requested by an endpoint (ie the Message Address field in the MSI
-Capability structure), so the multi MSI feature is clearly not
-supported by the host controller driver.
+On Thursday, July 4, 2019 10:01:20 AM CEST Mika Westerberg wrote:
+> On Thu, Jul 04, 2019 at 01:05:38AM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > 
+> > After recent hibernation-related changes, there are no more callers
+> > of dev_pm_skip_next_resume_phases() except for the PM core itself
+> > in which it is more straightforward to run the statements from
+> > that function directly, so do that and drop it.
+> > 
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
 
-Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
-fixing the misconfiguration.
+Thanks!
 
-Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
----
-V6:
- - Rebased the patch, no functional change.
+Patch queued for 5.3.
 
- drivers/pci/controller/pcie-mobiveil.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index d55c7e7..e581902 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -692,7 +692,7 @@ static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
- 
- static struct msi_domain_info mobiveil_msi_domain_info = {
- 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+		   MSI_FLAG_PCI_MSIX),
- 	.chip	= &mobiveil_msi_irq_chip,
- };
- 
--- 
-1.7.1
+
 
