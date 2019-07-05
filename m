@@ -2,128 +2,108 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597CFC468A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1461DC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9B721738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E240521738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:14:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AVLZNY7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfGEVNi convert rfc822-to-8bit (ORCPT
+        id S1728197AbfGEVOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:13:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41820 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfGEVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:13:37 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B2C1330260;
-        Fri,  5 Jul 2019 21:13:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B35C719692;
-        Fri,  5 Jul 2019 21:13:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, jmorris@namei.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Keys: Set 2 - request_key() improvements for 5.3
+        Fri, 5 Jul 2019 17:14:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38402 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfGEVOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:14:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z75so4786089pgz.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 14:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/7sZUFxUANgrKwZaqSwAspZ8SITW9fKQroiR42hBGA4=;
+        b=AVLZNY7HvgtTqG8qSJ8rrlHa6oPWCJbGkOo2mbSBAGR2f037N3nHVrdjVzuX1S3EjU
+         ZQ0sZZzZiuI0eTwfKkwAu/jq5b9Dkt8JOEY7zZO4mw56goXGRJuw326D4ul2HF9s5lV8
+         dMGcw+enhA0P7CfZo4PmKHtSDbz2gwMH3eiuKQMh55jEFwBAHg58IfM2LqDIx/w4F17T
+         wrXqlFBgLUc41rP45OXQDJ/RvQe2NsZD4qI32c2Z8j9bdJxpp3noP2NhIdCPARd9XZiA
+         4sRaNU9lQ3TOZxB6YYQLXxGY73v25TbRHPk20KaJKGnn/4sVKjKUGctf1l1G94rdkjBv
+         kBiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/7sZUFxUANgrKwZaqSwAspZ8SITW9fKQroiR42hBGA4=;
+        b=gNExdGjeBNWrlb5n1AUDhka9zJYtfgadXYeMmrYODzcqaE4FRlIhZ0xVPjJcrmv9rA
+         lmOVy9dbaiqoFvekOw2BsDjElyF22dS1M8hUpblmiEAGGvL7v18OGif6e/SjlIOjmJhC
+         n3FH3IdX1Mdr4+M2q5kQ/iQJOzRRfrxN383zI31IoJX+GbjaUxXCN6r/cUQdda1NtZq6
+         t+o1gQ2YzQQo0L6ylXvE37HNVkeVAtO2gw4rwopsh5h1lGRR/c6LR3lGsWedIX8vlcLy
+         Qk5u1wmqwO1A2PDhGENMBUDL/2WjL43Fx8xB8sxoSpWRTp6yHJKgp29BkZtyBzIglB40
+         fQ/A==
+X-Gm-Message-State: APjAAAVQz9QWZL5ulz4sdaW5Nk+WPvMhckSRqm3PsRoLMJm6Hy3F4VX/
+        x3UT0GQc88471FNIfl7BnToXOetZrdBpmw==
+X-Google-Smtp-Source: APXvYqz6BDQH4rK2bc0RJgE080Jy2A3c3I0cjWgbYCmxihXtOHdmNBVtvaFKJmtLBWrjVwyQzuR8gw==
+X-Received: by 2002:a17:90a:c481:: with SMTP id j1mr7869857pjt.96.1562361288894;
+        Fri, 05 Jul 2019 14:14:48 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id 27sm8845789pgt.6.2019.07.05.14.14.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 14:14:48 -0700 (PDT)
+Subject: Re: [PATCH v2] blk-iolatency: fix STS_AGAIN handling
+To:     Dennis Zhou <dennis@kernel.org>, Josef Bacik <josef@toxicpanda.com>
+Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190705210909.82263-1-dennis@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <084ad6be-7bef-4cf4-eefc-41359a880f01@kernel.dk>
+Date:   Fri, 5 Jul 2019 15:14:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27326.1562361214.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 05 Jul 2019 22:13:34 +0100
-Message-ID: <27327.1562361214@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 05 Jul 2019 21:13:37 +0000 (UTC)
+In-Reply-To: <20190705210909.82263-1-dennis@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 7/5/19 3:09 PM, Dennis Zhou wrote:
+> The iolatency controller is based on rq_qos. It increments on
+> rq_qos_throttle() and decrements on either rq_qos_cleanup() or
+> rq_qos_done_bio(). a3fb01ba5af0 fixes the double accounting issue where
+> blk_mq_make_request() may call both rq_qos_cleanup() and
+> rq_qos_done_bio() on REQ_NO_WAIT. So checking STS_AGAIN prevents the
+> double decrement.
+> 
+> The above works upstream as the only way we can get STS_AGAIN is from
+> blk_mq_get_request() failing. The STS_AGAIN handling isn't a real
+> problem as bio_endio() skipping only happens on reserved tag allocation
+> failures which can only be caused by driver bugs and already triggers
+> WARN.
+> 
+> However, the fix creates a not so great dependency on how STS_AGAIN can
+> be propagated. Internally, we (Facebook) carry a patch that kills read
+> ahead if a cgroup is io congested or a fatal signal is pending. This
+> combined with chained bios progagate their bi_status to the parent is
+> not already set can can cause the parent bio to not clean up properly
+> even though it was successful. This consequently leaks the inflight
+> counter and can hang all IOs under that blkg.
+> 
+> To nip the adverse interaction early, this removes the rq_qos_cleanup()
+> callback in iolatency in favor of cleaning up always on the
+> rq_qos_done_bio() path.
 
-Here's my second block of keyrings changes for the next merge window.
+Looks good, applied for 5.3. Thanks Dennis.
 
-These are all request_key()-related, including a fix and some improvements:
+-- 
+Jens Axboe
 
- (1) Fix the lack of a Link permission check on a key found by
-     request_key(), thereby enabling request_key() to link keys that don't
-     grant this permission to the target keyring (which must still grant
-     Write permission).
-
-     Note that the key must be in the caller's keyrings already to be
-     found.
-
- (2) Invalidate used request_key authentication keys rather than revoking
-     them, so that they get cleaned up immediately rather than hanging
-     around till the expiry time is passed.
-
- (3) Move the RCU locks outwards from the keyring search functions so that
-     a request_key_rcu() can be provided.  This can be called in RCU mode,
-     so it can't sleep and can't upcall - but it can be called from
-     LOOKUP_RCU pathwalk mode.
-
- (4) Cache the latest positive result of request_key*() temporarily in
-     task_struct so that filesystems that make a lot of request_key() calls
-     during pathwalk can take advantage of it to avoid having to redo the
-     searching.  This requires CONFIG_KEYS_REQUEST_CACHE=y.
-
-     It is assumed that the key just found is likely to be used multiple
-     times in each step in an RCU pathwalk, and is likely to be reused for
-     the next step too.
-
-     Note that the cleanup of the cache is done on TIF_NOTIFY_RESUME, just
-     before userspace resumes, and on exit.
-
-David
----
-The following changes since commit 45e0f30c30bb131663fbe1752974d6f2e39611e2:
-
-  keys: Add capability-checking keyctl function (2019-06-19 13:27:45 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-request-20190626
-
-for you to fetch changes up to 3b8c4a08a471d56ecaaca939c972fdf5b8255629:
-
-  keys: Kill off request_key_async{,_with_auxdata} (2019-06-26 20:58:13 +0100)
-
-----------------------------------------------------------------
-request_key improvements
-
-----------------------------------------------------------------
-David Howells (6):
-      keys: Fix request_key() lack of Link perm check on found key
-      keys: Invalidate used request_key authentication keys
-      keys: Move the RCU locks outwards from the keyring search functions
-      keys: Provide request_key_rcu()
-      keys: Cache result of request_key*() temporarily in task_struct
-      keys: Kill off request_key_async{,_with_auxdata}
-
- Documentation/security/keys/core.rst        |  38 ++------
- Documentation/security/keys/request-key.rst |  33 +++----
- include/keys/request_key_auth-type.h        |   1 +
- include/linux/key.h                         |  14 +--
- include/linux/sched.h                       |   5 +
- include/linux/tracehook.h                   |   7 ++
- kernel/cred.c                               |   9 ++
- security/keys/Kconfig                       |  18 ++++
- security/keys/internal.h                    |   6 +-
- security/keys/key.c                         |   4 +-
- security/keys/keyring.c                     |  16 ++--
- security/keys/proc.c                        |   4 +-
- security/keys/process_keys.c                |  41 ++++-----
- security/keys/request_key.c                 | 137 ++++++++++++++++++----------
- security/keys/request_key_auth.c            |  60 +++++++-----
- 15 files changed, 229 insertions(+), 164 deletions(-)
