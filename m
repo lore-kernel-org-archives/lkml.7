@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A6EC0651F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D94C0651F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6093B20828
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F21E21873
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hc5L71Dy"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GExcANG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfGEDGr (ORCPT
+        id S1727726AbfGEDJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:06:47 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:22653 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGEDGr (ORCPT
+        Thu, 4 Jul 2019 23:09:56 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:40556 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfGEDJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:06:47 -0400
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x6536QDq030981;
-        Fri, 5 Jul 2019 12:06:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6536QDq030981
+        Thu, 4 Jul 2019 23:09:55 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x6539lW1011775;
+        Fri, 5 Jul 2019 12:09:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x6539lW1011775
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562295987;
-        bh=PUF8lDa4vdReIoKmN9yFODRcREJp8yLKeKn0eH+L6bE=;
+        s=dec2015msa; t=1562296188;
+        bh=wWYGFUb+P+k+0keFxKdK3YKZmXuC4tWs7ONW753LY34=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hc5L71DyP571OH1ILbrgsHHQpZxhkuz18yBJhiWyhTAww3ze+ztOro/wGz1TDYFUE
-         /Si8hBWyn/V+Wg7PcYBWYxq1n2b2lpdpZvozLTunEj/uzkQ6RFOunckU0TuUzz9m2O
-         RXMPcf27hMNI6zqtIhJMXDYJTJ3SOPQKOXPt5xrHNYe/6sLud/g+w7+4NbpxrT/Grd
-         8MDTyD1iqfPBs9CuK/ynHGls1pUT/6NeGMZXtHG9zbpUfsfYbzST09seR6N/R3uVix
-         7kKWqrwbGRnDtZYlfOtqiGntTGk7sXKjNMyFI00Ibkod/cTVCg9158ANjrjUuw9/GO
-         cblKP9Jp4wGZg==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id m17so928117vkl.2;
-        Thu, 04 Jul 2019 20:06:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAU17ju3mm7hjXpDiz3pGo9cKFRt36qoDYtim3S0HzvvYNMhJO2a
-        Bpgq0CHDmEABnC9r364BJ/FJekSY1Fu+MN8PelU=
-X-Google-Smtp-Source: APXvYqx1fdfrytc0sWZZM6lY9Xdz+SAPqK6SCnajdY9dWkz6Qp9Uyw0DqKq3G8QmllDHQmgVXa6JS9tx5ersEEn+inM=
-X-Received: by 2002:a1f:728b:: with SMTP id n133mr313496vkc.84.1562295985842;
- Thu, 04 Jul 2019 20:06:25 -0700 (PDT)
+        b=GExcANG0Z97hoM5QYgPCfde3YccjeMehq5mCWvt/5h4kJNxx+OjGc61n7hj8dd2hg
+         q87bAV+yWBT6/zOxz2WaYYAd53hzVNTHHnDjnWJzq5ZWDM8cAOwp/8HA+bDpjTiY0r
+         VDumQ8H5Npn76tylIUohWQ01JaAgemwrwhpCVFcDQc4tKi4BWUSYjoBI0l93jza4F3
+         HkViyfsUL8AxqBFNPOGmcy03qX+vI005RHQke68u/LaZpclB3KHq7DJKiWqTXOmsnM
+         p543YvXKEKzyfH9KSIbWGLE9UVppdiHdRIu35XrHbhBD9eTwAafhzmU1c5ufWtaqQy
+         KD+AOv6OL4WwQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id m8so2970945vsj.0;
+        Thu, 04 Jul 2019 20:09:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWbxvOXeLxHlo+RSZzS+jPNj+/yHhV/dR/n/U50BzuaUhdYyw67
+        1W3tkrAEN+nnFDqZfzewwsS6738dv2LEHZuBiG4=
+X-Google-Smtp-Source: APXvYqw5G5WuXtiZ+BxbjorgiCdXG7sWfLwHDfJHFK2DwoaScCECOi9EMClzttvllquxBbPayOf6C0yRlBt7hXWgkXI=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr774753vsn.54.1562296187154;
+ Thu, 04 Jul 2019 20:09:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org> <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
-In-Reply-To: <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
+References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
+ <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org> <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 5 Jul 2019 12:05:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
-Message-ID: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
+Date:   Fri, 5 Jul 2019 12:09:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASLfyreDPvNuL1svvHPC0woKnXO_bsNku4DMK6UNn4oHw@mail.gmail.com>
+Message-ID: <CAK7LNASLfyreDPvNuL1svvHPC0woKnXO_bsNku4DMK6UNn4oHw@mail.gmail.com>
 Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
 To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -67,34 +68,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, Jul 5, 2019 at 12:05 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+> On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
 > >
-> >    http://www.ozlabs.org/~akpm/mmotm/
+> > On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
+> > > The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+> > >
+> > >    http://www.ozlabs.org/~akpm/mmotm/
+> > >
+> > > mmotm-readme.txt says
+> > >
+> > > README for mm-of-the-moment:
+> > >
+> > > http://www.ozlabs.org/~akpm/mmotm/
 > >
-> > mmotm-readme.txt says
+> > I get a lot of these but don't see/know what causes them:
 > >
-> > README for mm-of-the-moment:
+> > ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
+> > make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
+> > ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
+> > make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
+> > ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
 > >
-> > http://www.ozlabs.org/~akpm/mmotm/
 >
-> I get a lot of these but don't see/know what causes them:
+> I checked next-20190704 tag.
 >
-> ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
-> make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
-> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
-> make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
-> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
+> I see the empty file
+> drivers/gpu/drm/i915/oa/Makefile
+>
+> Did someone delete it?
 >
 
-I checked next-20190704 tag.
 
-I see the empty file
-drivers/gpu/drm/i915/oa/Makefile
+I think "obj-y += oa/"
+in drivers/gpu/drm/i915/Makefile
+is redundant.
 
-Did someone delete it?
 
 
 -- 
