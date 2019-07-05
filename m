@@ -2,171 +2,103 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B39C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C34C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C436218A0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:37:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Xl/ZiR/M"
+	by mail.kernel.org (Postfix) with ESMTP id A530C21721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbfGEEht (ORCPT
+        id S1726085AbfGEEiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 00:37:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36444 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfGEEhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 00:37:48 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z4so6502137qtc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 21:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E4tQKZ7fykfnk1s1sWexseP5zItY8m/Ql+ltT8MN+jU=;
-        b=Xl/ZiR/Mp0004403KKrucoOknyIq+kZO0YDx1/1QqKpPxzJ8bpDgbLOGxx0cN8uTgd
-         1RJaxqCE6MylJZh/aTj6LPKB4Rs3veAbHfpLyprVgWAzTRRT6lwZspe1f5hdtp+DYK4z
-         GjH4XKyXEGxm1SF/P/aHRGqNOXrtRrOGZQBulAoAeCiYN6Cr9pf8zV2rQRiFurLn9mA8
-         Nzh484YnMLerf7ORWMlhdJizA31Be4fy6NdYsokCTaIgMjsn1uZlk/4y1FtsBLcyxtB0
-         gqP6gnDfEz9Yu1E+xN4JqdyQyIMa/13kLt0tlWmEufEyrW/fY3AdiyG7ihVwTG5plaEl
-         UC7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E4tQKZ7fykfnk1s1sWexseP5zItY8m/Ql+ltT8MN+jU=;
-        b=ibRfVzIqgIoyiYTXWw0D3dwqQtFXWa2WQC9gtSUN8aTBLhgOi+WVJnuMBFxSmq9xhS
-         OBToDXpqE/aSNiCYme61ry7G2Oledizymrb846brgs3jkAjreVgwFDxw5txlISk8kNhw
-         G+4yU6hAtJ/mmDEj/MyS5PLXYQlm0SmTVVvR1I2yQLylh76i80AWxCmWkJNzIZjridr/
-         DyNkAd9ECstHgzli0ObitwBnD0DFZiF7ffrjDJBG5wXW8BqFASUZSdGNkauCqrK5pz5f
-         w7Wb6sNHOygtXg/ckmGKgBmnjM6Hth/07lit/Am7hy4fQCwHUrkhsX8LLnXc8PmfJv4C
-         R6cw==
-X-Gm-Message-State: APjAAAWVN2bbcsJc0p6Rf0otRNTb9Odz3pzk/pcOObxug2DSTGnf7Q/u
-        QlRMSC7iu5GYz278Cpt/7m/BQACNL1oVbdbSyoworUtO5oI=
-X-Google-Smtp-Source: APXvYqz3TKMBMrMdGFslZiseysb5WUOqwB2TRyRUBYzEK5BDFN/m7nW9LC+nIyAZ5zFnmJJ8bMVSGpr7cgak70nnEYk=
-X-Received: by 2002:a0c:ae5a:: with SMTP id z26mr1466461qvc.65.1562301466888;
- Thu, 04 Jul 2019 21:37:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190704105528.74028-1-chiu@endlessm.com> <CAD8Lp45rYuE5WHx4vSbUhF10hOHam1aBLd52_aDKP8z2eeL4vA@mail.gmail.com>
-In-Reply-To: <CAD8Lp45rYuE5WHx4vSbUhF10hOHam1aBLd52_aDKP8z2eeL4vA@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Fri, 5 Jul 2019 12:37:34 +0800
-Message-ID: <CAB4CAwd1N=eZaVTSu8CdDTSyw7+gwriJ866t9AoP5YEoHbjEvw@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 5 Jul 2019 00:38:50 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:49102 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfGEEit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 00:38:49 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 0161A50E364A3B65FA7B;
+        Fri,  5 Jul 2019 12:38:48 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x654c6d6013878;
+        Fri, 5 Jul 2019 12:38:06 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070512384263-2103364 ;
+          Fri, 5 Jul 2019 12:38:42 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     mingo@redhat.com
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH v2] sched: fix unlikely use of sched_info_on()
+Date:   Fri, 5 Jul 2019 12:35:07 +0800
+Message-Id: <1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-05 12:38:42,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-05 12:38:12,
+        Serialize complete at 2019-07-05 12:38:12
+X-MAIL: mse-fl2.zte.com.cn x654c6d6013878
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 11:41 AM Daniel Drake <drake@endlessm.com> wrote:
->
-> On Thu, Jul 4, 2019 at 6:55 PM Chris Chiu <chiu@endlessm.com> wrote:
-> > The WiFi tx power of RTL8723BU is extremely low after booting. So
-> > the WiFi scan gives very limited AP list and it always fails to
-> > connect to the selected AP. This module only supports 1x1 antenna
-> > and the antenna is switched to bluetooth due to some incorrect
-> > register settings.
-> >
-> > Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
-> > we realized that the 8723bu's enable_rf() does the same thing as
-> > rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
-> > sets the antenna path to BTC_ANT_PATH_BT which we verified it's
-> > the cause of the wifi weak tx power. The vendor driver will set
-> > the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
-> > mechanism, by the function halbtc8723b1ant_PsTdma.
->
-> Checking these details in the vendor driver:
-> EXhalbtc8723b1ant_PowerOnSetting sets:
->         pBoardInfo->btdmAntPos = BTC_ANTENNA_AT_AUX_PORT;
->
-> Following the code flow from rtw_btcoex_HAL_Initialize(), this has a
-> bWifiOnly parameter which will ultimately influence the final register
-> value.
-> Continuing the flow, we reach halbtc8723b1ant_SetAntPath() with
-> bInitHwCfg=TRUE, bWifiOff=FALSE. antPosType is set to WIFI in the
-> bWifiOnly case, and BT otherwise.
->
-> I'm assuming that bUseExtSwitch = FALSE (existing rtl8xxxu code also
-> seems to make the same assumption).
-> For the bWifiOnly=FALSE case, it uses BT,
->                     pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x948, 0x0);
-> and rtl8xxxu seems to do the same - seemingly routing the antenna path
-> for BT only.
->
-> As for halbtc8723b1ant_PsTdma() then being called in a way that causes
-> it to switch to the PTA path a little later, it's more difficult to
-> point out how that happens in an email, but I thin kwe can trust you
-> on that :) There are certainly many callsites that would pass those
-> parameters.
->
-> > +        * Different settings per different antenna position.
-> > +        *      Antenna Position:   | Normal   Inverse
-> > +        * --------------------------------------------------
-> > +        * Antenna switch to BT:    |  0x280,   0x00
-> > +        * Antenna switch to WiFi:  |  0x0,     0x280
-> > +        * Antenna switch to PTA:   |  0x200,   0x80
-> >          */
-> > -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-> > +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
->
-> I don't really understand what we mean by an "inverse" antenna and my
-> reading of the vendor driver leads me to another interpretation.
->
-> The logic is based around an antenna position - btdmAntPos. It takes
-> one of two values:
->     BTC_ANTENNA_AT_MAIN_PORT                = 0x1,
->     BTC_ANTENNA_AT_AUX_PORT                = 0x2,
->
-> So the chip has pins to support two antennas - a "main" antenna and an
-> "aux" one.
->
-> We know we're dealing with a single antenna, so the actual module is
-> going to only be using one of those antenna interfaces. If the chip
-> tries to use the other antenna interface, it's effectively not using
-> the antenna. So it's rather important to tell the chip to use the
-> right interface.
->
-> And that's exactly what happens here. btdmAntPos is hardcoded that the
-> antenna is on the aux port for these devices, and this code is telling
-> the chip that this is how things are wired up.
->
-> The alternative way of calling this an antenna inverse (which the
-> vendor driver also does in another section), i.e. "antenna is not
-> connected to the main port but instead it's connected to the other
-> one", seems less clear to me.
->
-I agree with this part. From my past experience working on drivers for
-WiFi access point, there's always a board config to describe how the
-antenna wired up. The driver or firmware will select antennas from
-something like txchainmask/rxchainmask to perform some smart
-antenna and MIMO features. So The antenna position setting is quite
-important for each wifi(MIMO) product because it could have impact on
-the coverage and throughput. Back to the 1x1 rtl8723bu here, I think
-it's the same thing. The antenna position is fixed in the factory and wired
-to the AUX port. Maybe we can just take this antenna settings as the
-default for 8723bu based on the assumption that there will be no other
-antenna configuration.
+sched_info_on() is called with unlikely hint, however, the test
+is to be a constant(1) on which compiler will do nothing when
+make defconfig, so remove the hint.
 
-Chris
+Also, fix a lack of {}.
 
-> Even if we don't fully understand what's going on here, I'm convinced
-> that your code change is fixing an inconsistency with the vendor
-> driver, and most significantly, making the signal level actually
-> usable on our devices. But if you agree with my interpretation of
-> these values then maybe you could update the comment here!
->
-> Daniel
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+v2: remove the hint rather than replace with likely, and fix a
+coding style.
+
+ kernel/sched/stats.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
+index aa0de24..ba683fe 100644
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -157,9 +157,10 @@ static inline void sched_info_dequeued(struct rq *rq, struct task_struct *t)
+ {
+ 	unsigned long long now = rq_clock(rq), delta = 0;
+ 
+-	if (unlikely(sched_info_on()))
++	if (sched_info_on()) {
+ 		if (t->sched_info.last_queued)
+ 			delta = now - t->sched_info.last_queued;
++	}
+ 	sched_info_reset_dequeued(t);
+ 	t->sched_info.run_delay += delta;
+ 
+@@ -192,7 +193,7 @@ static void sched_info_arrive(struct rq *rq, struct task_struct *t)
+  */
+ static inline void sched_info_queued(struct rq *rq, struct task_struct *t)
+ {
+-	if (unlikely(sched_info_on())) {
++	if (sched_info_on()) {
+ 		if (!t->sched_info.last_queued)
+ 			t->sched_info.last_queued = rq_clock(rq);
+ 	}
+@@ -239,7 +240,7 @@ static inline void sched_info_depart(struct rq *rq, struct task_struct *t)
+ static inline void
+ sched_info_switch(struct rq *rq, struct task_struct *prev, struct task_struct *next)
+ {
+-	if (unlikely(sched_info_on()))
++	if (sched_info_on())
+ 		__sched_info_switch(rq, prev, next);
+ }
+ 
+-- 
+1.8.3.1
+
