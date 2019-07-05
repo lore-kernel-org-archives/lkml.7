@@ -5,132 +5,75 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6CAC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75605C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BF3218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5812C2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfGEGNB (ORCPT
+        id S1727972AbfGEGNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 02:13:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45796 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727749AbfGEGM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 02:13:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:58598 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727753AbfGEGM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jul 2019 02:12:59 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 15964AC643E195250C36;
-        Fri,  5 Jul 2019 14:12:57 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 5 Jul 2019
- 14:12:48 +0800
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-        <dingtianhong@huawei.com>, <xiaojiangfeng@huawei.com>
-CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leeyou.li@huawei.com>, <xiekunxun@huawei.com>,
-        <jianping.liu@huawei.com>, <nixiaoming@huawei.com>
-Subject: [PATCH 10/10] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-Date:   Fri, 5 Jul 2019 14:12:42 +0800
-Message-ID: <1562307162-103916-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.167]
-X-CFilter-Loop: Reflected
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE148360;
+        Thu,  4 Jul 2019 23:12:58 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.41.127])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7B6353F246;
+        Thu,  4 Jul 2019 23:14:50 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/isolate: Drop pre-validating migrate type in undo_isolate_page_range()
+Date:   Fri,  5 Jul 2019 11:42:41 +0530
+Message-Id: <1562307161-30554-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI13X1 changed the offsets and bitmaps for tx_desc
-registers in the same peripheral device on different
-models of the hip04_eth.
+unset_migratetype_isolate() already validates under zone lock that a given
+page has already been isolated as MIGRATE_ISOLATE. There is no need for
+another check before. Hence just drop this redundant validation.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 34 +++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Is there any particular reason to do this migratetype pre-check without zone
+lock before calling unsert_migrate_isolate() ? If not this should be removed.
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 780fc46..6256357 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -76,8 +76,15 @@
- /* TX descriptor config */
- #define TX_FREE_MEM			BIT(0)
- #define TX_READ_ALLOC_L3		BIT(1)
--#define TX_FINISH_CACHE_INV		BIT(2)
-+#if defined(CONFIG_HI13X1_GMAC)
-+#define TX_CLEAR_WB			BIT(7)
-+#define TX_RELEASE_TO_PPE		BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(6)
-+#define TX_POOL_SHIFT			16
-+#else
- #define TX_CLEAR_WB			BIT(4)
-+#define TX_FINISH_CACHE_INV		BIT(2)
-+#endif
- #define TX_L3_CHECKSUM			BIT(5)
- #define TX_LOOP_BACK			BIT(11)
- 
-@@ -124,6 +131,7 @@
- /* buf unit size is cache_line_size, which is 64, so the shift is 6 */
- #define PPE_BUF_SIZE_SHIFT		6
- #define PPE_TX_BUF_HOLD			BIT(31)
-+#define CACHE_LINE_MASK			0x3F
- #else
- #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
- #define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
-@@ -163,11 +171,22 @@
- #define HIP04_MIN_TX_COALESCE_FRAMES	100
- 
- struct tx_desc {
-+#if defined(CONFIG_HI13X1_GMAC)
-+	u32 reserved1[2];
-+	u32 send_addr;
-+	u16 send_size;
-+	u16 data_offset;
-+	u32 reserved2[7];
-+	u32 cfg;
-+	u32 wb_addr;
-+	u32 reserved3[3];
-+#else
- 	u32 send_addr;
- 	u32 send_size;
- 	u32 next_addr;
- 	u32 cfg;
- 	u32 wb_addr;
-+#endif
- } __aligned(64);
- 
- struct rx_desc {
-@@ -505,11 +524,20 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 
- 	priv->tx_skb[tx_head] = skb;
- 	priv->tx_phys[tx_head] = phys;
--	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+
- 	desc->send_size = (__force u32)cpu_to_be32(skb->len);
-+#if defined(CONFIG_HI13X1_GMAC)
-+	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV
-+		| TX_RELEASE_TO_PPE | priv->port << TX_POOL_SHIFT);
-+	desc->data_offset = (__force u32)cpu_to_be32(phys & CACHE_LINE_MASK);
-+	desc->send_addr =  (__force u32)cpu_to_be32(phys & ~CACHE_LINE_MASK);
-+#else
- 	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-+	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+#endif
- 	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
--	desc->wb_addr = (__force u32)cpu_to_be32(phys);
-+	desc->wb_addr = (__force u32)cpu_to_be32(phys +
-+		offsetof(struct tx_desc, send_addr));
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
+ mm/page_isolation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index e3638a5bafff..f529d250c8a5 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -243,7 +243,7 @@ int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 	     pfn < end_pfn;
+ 	     pfn += pageblock_nr_pages) {
+ 		page = __first_valid_page(pfn, pageblock_nr_pages);
+-		if (!page || !is_migrate_isolate_page(page))
++		if (!page)
+ 			continue;
+ 		unset_migratetype_isolate(page, migratetype);
+ 	}
 -- 
-1.8.5.6
+2.20.1
 
