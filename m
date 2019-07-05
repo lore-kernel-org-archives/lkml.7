@@ -2,115 +2,115 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73372C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B02DC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562E621738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DF621738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2RTEoHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfGEOzI (ORCPT
+        id S1727090AbfGEO4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:55:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:40668 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725813AbfGEOzH (ORCPT
+        Fri, 5 Jul 2019 10:56:34 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46086 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfGEO4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:55:07 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hjPc7-0008KK-7y; Fri, 05 Jul 2019 15:55:03 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hjPc6-0007ht-Pm; Fri, 05 Jul 2019 15:55:02 +0100
-Message-ID: <7b5ed02b408123b4faf1d25cca141c147431cfc5.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 08/10] tcp: tcp_fragment() should apply sane memory
- limits
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jonathan Looney <jtl@netflix.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Bruce Curtis <brucec@netflix.com>
-Date:   Fri, 05 Jul 2019 15:54:57 +0100
-In-Reply-To: <37926faa-0f7f-621c-8ee6-ba46d34c8cfc@gmail.com>
-References: <lsq.1560868082.489417250@decadent.org.uk>
-         <37926faa-0f7f-621c-8ee6-ba46d34c8cfc@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-knK/NfaM1EwGjQg9NetO"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 5 Jul 2019 10:56:33 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so6491510lfh.13;
+        Fri, 05 Jul 2019 07:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zpw4LgWQl3djVQ004uCiznSAE3f2lS3lt+2VhGBgUdM=;
+        b=K2RTEoHWrkysJOEr8bRg39piVLUBiEwgZmyaDLiNcAoFoS7hFr1DUiw7+TjeoWI13M
+         SWzay62c5nkIPTR7tjhpRtDbmikzkcjcPmFr139zY4uI8p/Car0kUx6daJ1Ut/ES9se3
+         yjmqUum/Z4D7Xj8O+prZzkJj11uR/xO3Vu66JfTP4+CG4D1LXEKM5UcpnoYhoVFb4zcS
+         uZNYC+HY9Eyp4NdE43/yULha9sMWLx0oLNrm89Riy95vlN485/OG1S9wy4DEpQnhujrO
+         v3VKJ1KueIvt+3md+es1oqTif2TzVR6DRYr2P1eju3HdBVgNy1VN7GXy1htNi8iS9+Cz
+         s22Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zpw4LgWQl3djVQ004uCiznSAE3f2lS3lt+2VhGBgUdM=;
+        b=ovM9liesw69qoiJnIOvBv01vC203gMpnebCSqGex7IMOVq1FJXvgEeqXf5h8Xy1mAH
+         WWBDUJFL4UvyX5cqDvUlAXl7PX9mjP8gi6/lw8xfylJC1kV3Zb4rDv+/nxEz3Vi3qPTi
+         z6mezmo7Q2DSXz4f0K+uIFvW6H/ZMnp6g+b5v2lPCHKdJG00dbGNbS6toQ2qbpzuDAPg
+         FUODyqF7kdDyxaSN2pfa3Lf9MU/Iga1henqGdpISv6RYWSpTAAVtEVLFw2jrpDUfW/KL
+         aPTt3as/sAw6e1sL0xRp/FqueOrhTJUWycdstMMvhiemuXKohFBj66wzw8/qa9/KyMlX
+         RviQ==
+X-Gm-Message-State: APjAAAVURBODjI3TBcZFRXTj8Cvl3mP5MyVtevgiqTQKpz3LBmbxWf/C
+        hn7mRzrngEKoR29zMqbKZMEKi7dmbb09AmU1qE0=
+X-Google-Smtp-Source: APXvYqyNSqy5Xj1GQHiytKh7BGJ72lnNUhK9BSvrm53RpANaw+wUHPvfD4Lq7KetpxgyRB9gb5T59LFa+sfv/cehRko=
+X-Received: by 2002:ac2:4c84:: with SMTP id d4mr2213498lfl.1.1562338591550;
+ Fri, 05 Jul 2019 07:56:31 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com> <20190705103314.GS2640@lahna.fi.intel.com>
+In-Reply-To: <20190705103314.GS2640@lahna.fi.intel.com>
+From:   Yehezkel Bernat <yehezkelshb@gmail.com>
+Date:   Fri, 5 Jul 2019 17:56:15 +0300
+Message-ID: <CA+CmpXsfSQ3hVW4cAM2ixOm4C8yVLOzxXMM2ow1GVwkQpgAbWw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] thunderbolt: Intel Ice Lake support
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-acpi@vger.kernel.org,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 5, 2019 at 1:33 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Fri, Jul 05, 2019 at 12:57:52PM +0300, Mika Westerberg wrote:
+> > Hi all,
+> >
+> > With the exception of the first patch which is fix, this series enables
+> > Thunderbolt on Intel Ice Lake. Biggest difference from the previous
+> > controllers is that the Thunderbolt controller is now integrated as part of
+> > the SoC. The firmware messages pretty much follow Titan Ridge but there are
+> > some differences as well (such as the new RTD3 veto notification). Also Ice
+> > Lake does not implement security levels so DMA protection is handled by IOMMU.
+> >
+> > This is v5.4 material but I'm sending it out now because I will be on
+> > vacation next 4 weeks mostly without internet access. When I get back I'll
+> > gather all the comments and update the series accordingly.
+> >
+> > Thanks!
+> >
+> > Mika Westerberg (8):
+> >   thunderbolt: Correct path indices for PCIe tunnel
+> >   thunderbolt: Move NVM upgrade support flag to struct icm
+> >   thunderbolt: Use 32-bit writes when writing ring producer/consumer
+> >   thunderbolt: Do not fail adding switch if some port is not implemented
+> >   thunderbolt: Hide switch attributes that are not set
+> >   thunderbolt: Expose active parts of NVM even if upgrade is not supported
+> >   thunderbolt: Add support for Intel Ice Lake
+> >   ACPI / property: Add two new Thunderbolt property GUIDs to the list
+>
+> Forgot to Cc Raanan and Raj, now added. Sorry about that. The patch
+> series can also be viewed here:
+>
+>   https://lore.kernel.org/lkml/20190705095800.43534-1-mika.westerberg@linux.intel.com/T/#m9cb5a393dfc79f1c2212d0787b6bad5b689db6bd
 
---=-knK/NfaM1EwGjQg9NetO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Besides a few comments, LGTM.
 
-On Mon, 2019-07-01 at 19:51 -0700, Florian Fainelli wrote:
-> Hi Ben,
->=20
-> On 6/18/2019 7:28 AM, Ben Hutchings wrote:
-> > 3.16.69-rc1 review patch.  If anyone has any objections, please let me =
-know.
-> >=20
-> > ------------------
-> >=20
-> > From: Eric Dumazet <edumazet@google.com>
-> >=20
-> > commit f070ef2ac66716357066b683fb0baf55f8191a2e upstream.
-[...]
-> Don't we also need this patch to be backported:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
-id=3Db6653b3629e5b88202be3c9abc44713973f5c4b4
-
-I've queued that up for the next 3.16 update, thanks.
-
-Ben.
-
---=20
-Ben Hutchings
-Quantity is no substitute for quality, but it's the only one we've got.
-
-
-
---=-knK/NfaM1EwGjQg9NetO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0fZMEACgkQ57/I7JWG
-EQlcvxAAza50SJJcvSL4WeB8ppVmSav9xe/XkpDyFyvrC+WpurjvMB0y5kKLFWF6
-JKfS3M8nK1PX+5oWnBaSVHg1serv+Z/AXtCBprPjyyd2wG90ikR4h3EjeCyHKnuQ
-8lw1f4PUypMHUq1WJDIt8i62pcU6nSwelUPGZbSLcNQpbRJNjSkstb0Lw7lv0xPB
-OUlWvkUPiIgbJDqTeP6LoiLY0UKbHdMbzlGx/yrOO9NythJ5s+G58pe5I4URULq7
-D6aIqA0jFkwgJV0/TAUG6dnJwkzrVfxmEh4ZwJ+ngP3/sCLUredWPW5qFMJX5Qr3
-UsmdrHvtHlpsJoGjHz0CyFdEPJu66f3Zl8JwAWbRzUbf1yjK6lUbjQpRU29E7EXj
-a24zURk9L6TjKx56rdVgGsEKTmSmTgo2XEPCVO1kWu427Wpf/RX1RxoQICndO+Ba
-GCXTv1YqJxct2ft5Wz9QCydJhpVu+GRh44hQRmk2FAXHfutnJt5DS8bGtr4HQqxD
-Uv+JaYkNS+GWVubm2p75Qk7AS97tQ4Rka3TTa8xeuqI48PpibvtOUABLKDiiD8kQ
-xWHD1YZcEU+J19iRlRevy4LPo0gA1HTImnPTCwNsuDa37D8Fgs4t4/F/eCBNXg1C
-wsq39rF+sbcx+g1xp9sZnfxTzjVG+RkKjinZJu/WssemRktxIsk=
-=Ud+D
------END PGP SIGNATURE-----
-
---=-knK/NfaM1EwGjQg9NetO--
+For Thunderbolt patches,
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
