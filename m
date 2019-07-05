@@ -2,109 +2,141 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36517C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50500C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1574121721
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F5B21721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfGEOvE (ORCPT
+        id S1727510AbfGEOvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:51:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36268 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfGEOvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:51:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 77FA928B494
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 0/4] RK3288 VP8 decoding support
-Date:   Fri,  5 Jul 2019 11:50:46 -0300
-Message-Id: <20190705145050.25911-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 5 Jul 2019 10:51:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25617 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbfGEOvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:51:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 07:51:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
+   d="scan'208";a="185201897"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 05 Jul 2019 07:51:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 05 Jul 2019 17:51:06 +0300
+Date:   Fri, 5 Jul 2019 17:51:06 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Yehezkel Bernat <yehezkelshb@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-acpi@vger.kernel.org, raanan.avargil@intel.com
+Subject: Re: [PATCH 7/8] thunderbolt: Add support for Intel Ice Lake
+Message-ID: <20190705145106.GA2640@lahna.fi.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-8-mika.westerberg@linux.intel.com>
+ <CA+CmpXsak9Rvkq_RNzoxRecMercUPKqdK+KzbHv_fJC59inaHA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CmpXsak9Rvkq_RNzoxRecMercUPKqdK+KzbHv_fJC59inaHA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for Hantro G1 VP8 stateless decoding,
-as available on RK3288 SoC.
+On Fri, Jul 05, 2019 at 05:44:01PM +0300, Yehezkel Bernat wrote:
+> On Fri, Jul 5, 2019 at 12:58 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > +static void icm_icl_rtd3_veto(struct tb *tb, const struct icm_pkg_header *hdr)
+> > +{
+> > +       const struct icm_icl_event_rtd3_veto *pkg =
+> > +               (const struct icm_icl_event_rtd3_veto *)hdr;
+> > +       struct icm *icm = tb_priv(tb);
+> > +
+> > +       tb_dbg(tb, "ICM rtd3 veto=0x%08x\n", pkg->veto_reason);
+> > +
+> > +       if (pkg->veto_reason) {
+> > +               if (!icm->veto) {
+> > +                       icm->veto = true;
+> > +                       /* Keep the domain powered while veto is in effect */
+> > +                       pm_runtime_get(&tb->dev);
+> > +               }
+> > +       } else {
+> > +               if (icm->veto) {
+> > +                       icm->veto = false;
+> > +                       /* Allow the domain suspend now */
+> > +                       pm_runtime_mark_last_busy(&tb->dev);
+> > +                       pm_runtime_put_autosuspend(&tb->dev);
+> 
+> Handling the removal of the veto is duplicated below. Worth introducing as a
+> helper function?
+> 
+> > +               }
+> > +       }
+> > +}
+> > +
+> 
+> ...
+> 
+> > @@ -1853,6 +1943,18 @@ static void icm_complete(struct tb *tb)
+> >         if (tb->nhi->going_away)
+> >                 return;
+> >
+> > +       /*
+> > +        * If RTD3 was vetoed before we entered system suspend allow it
+> > +        * again now before driver ready is sent. Firmware sends a new RTD3
+> > +        * veto if it is still the case after we have sent it driver ready
+> > +        * command.
+> > +        */
+> > +       if (icm->veto) {
+> > +               icm->veto = false;
+> > +               pm_runtime_mark_last_busy(&tb->dev);
+> > +               pm_runtime_put_autosuspend(&tb->dev);
+> > +       }
+> > +
+> 
+> Here is the duplication.
 
-In order to support VP8 stateless decoding, a new pixel format
-is introduced V4L2_PIX_FMT_VP8_FRAME, to be used with a new control
-V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER.
+Indeed, I'll put it to a helper function.
 
-Changes in v3:
+> > +static int nhi_suspend_power_down(struct tb *tb)
+> > +{
+> > +       int ret;
+> > +
+> > +       /*
+> > +        * If there is no device connected we need to perform an additional
+> > +        * handshake through LC mailbox and force power down before
+> > +        * entering D3.
+> > +        */
+> > +       ret = device_for_each_child(&tb->root_switch->dev, NULL,
+> > +                                   nhi_device_connected);
+> > +       if (!ret) {
+> > +               lc_mailbox_cmd(tb->nhi, LC_PREPARE_FOR_RESET);
+> > +               ret = lc_mailbox_cmd_complete(tb->nhi,
+> > +                                             LC_MAILBOX_TIMEOUT);
+> > +               if (ret)
+> > +                       return ret;
+> > +
+> > +               return nhi_power_down(tb->nhi);
+> 
+> Just to be sure: unforce power is done only if no device is connected?
+> My understanding of the comment above was that unforce power should be done
+> anyway (so it should be outside of this if block), and the difference between
+> the cases is only about the additional LC mailbox message. I guess I misread it.
 
-* Validate num_dct_parts field, as suggested by Philipp.
-  This fixes the kernel oops reported by Philipp.
-* Add documentation for num_dct_parts constraint.
-* Renamed macroblock_bit_offset to first_part_header_bits
-  and fixed its documentation.
-
-Changes in v2:
-
-* Verified that all the fields in the uAPI come from the spec [1].
-* Structures and fields have 8-bytes alignment and sizes,
-  as suggested by Boris.
-* Moved 1-bit fields to a bit in the appropriate flags fields.
-* Dropped dequant_factors[4][3][2], I really couldn't find this field
-  or anything similar in the spec. It's not mentioned anywhere in
-  Chromium or FFMPEG, so I decided to drop it.
-
-[1] https://www.rfc-editor.org/rfc/rfc6386.html
-
-Ezequiel Garcia (2):
-  media: v4l2-ctrl: Move compound control validation
-  media: v4l2-ctrl: Validate VP8 stateless decoder controls
-
-Pawel Osciak (1):
-  media: uapi: Add VP8 stateless decoder API
-
-ZhiChao Yu (1):
-  media: hantro: Add support for VP8 decoding on rk3288
-
- Documentation/media/uapi/v4l/biblio.rst       |  10 +
- .../media/uapi/v4l/ext-ctrls-codec.rst        | 323 +++++++++++
- .../media/uapi/v4l/pixfmt-compressed.rst      |  20 +
- drivers/media/v4l2-core/v4l2-ctrls.c          | 148 +++--
- drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
- drivers/staging/media/hantro/Makefile         |   4 +-
- drivers/staging/media/hantro/hantro.h         |   9 +
- drivers/staging/media/hantro/hantro_drv.c     |   6 +
- .../staging/media/hantro/hantro_g1_vp8_dec.c  | 543 ++++++++++++++++++
- drivers/staging/media/hantro/hantro_hw.h      |  17 +
- drivers/staging/media/hantro/hantro_v4l2.c    |   1 +
- drivers/staging/media/hantro/hantro_vp8.c     | 188 ++++++
- drivers/staging/media/hantro/rk3288_vpu_hw.c  |  22 +-
- include/media/v4l2-ctrls.h                    |   3 +
- include/media/vp8-ctrls.h                     | 110 ++++
- 15 files changed, 1346 insertions(+), 59 deletions(-)
- create mode 100644 drivers/staging/media/hantro/hantro_g1_vp8_dec.c
- create mode 100644 drivers/staging/media/hantro/hantro_vp8.c
- create mode 100644 include/media/vp8-ctrls.h
-
--- 
-2.20.1
-
+nhi_power_down() should be only called if no device was connected so it
+should be in correct place. I can try to clarify the comment a bit,
+though.
