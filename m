@@ -2,141 +2,120 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81404C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA8DC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53ED7218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B9F218CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBaJj5t9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nBNukwLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfGENYP (ORCPT
+        id S1728992AbfGENYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:24:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44999 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727638AbfGENYO (ORCPT
+        Fri, 5 Jul 2019 09:24:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40205 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728849AbfGENYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:24:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b2so8709321wrx.11;
-        Fri, 05 Jul 2019 06:24:13 -0700 (PDT)
+        Fri, 5 Jul 2019 09:24:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id h6so10904072iom.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=TJB2RTWPulLTRLLXY7TRiipk7F2VO6sEuWjT2mECMZc=;
-        b=eBaJj5t9Vh7vXV+6/AWcm3bcSY6qaQpVxzf5xY0+RCnz9c6aW0RbG5zntpnmE8/lKh
-         vm18z1/ac0HjV6KPkcJGv4T7XB/2/rzVVeqvXKo5CqlGMvsxE/DLC0MAd6qSGteSPF5P
-         ggOKk4R9cebWHOAseQroACiL9Xr9iDk/TXWyH7qsjjM9BzcPMTLQKwsRdErjr8RkeJBj
-         CKAH6H5sH3ijZHpD4tM3KEBLt9zcLN5YS1teO5LMSK+8/J1VIKzY3XlnXXVrSGK6imAe
-         5vJIf1+h3tGfrw7xGbKnTqJnrBiA67ZYMiAVXCfEngxVrq7IRasgGrPhfwj7+FZaPewh
-         D6xA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=wP9NlDr6bD2aoiL7N4bfYIJ/HvdrRGHcleGNGuB8Lwo=;
+        b=nBNukwLBUd5AQhriWQmUXLkxZbfqi6PZ4W3zlMZkZG/1YOHx7j4znzzYNMVhLCYk3A
+         ud+0nMr53C/I3MkH4eic+fx740oYIWYW6lTwugV//iXUd3Ftl+NpHzT5RXoO1K00AzUR
+         3L5mbruThN+Et7gXXFdd7ATCYHy21DXF3WDwfdPqym8yPbidBs8jZcRWOKpEIc1QOQLv
+         4oU69IY5aobjQEhkFK/TyPgGhI/cfHQV81VEB4tdyGynxlEdomG068JRJwm6sPjlo5zJ
+         NUnp0H1Z5IhnPiEfC168MlrWYaXg3sTEOXtTCrW6Ad7qT56KRyucMW+6lY17LEFmOA9V
+         Srkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=TJB2RTWPulLTRLLXY7TRiipk7F2VO6sEuWjT2mECMZc=;
-        b=EfiSv9nAjpgVZQUPNLfr/PQRxmdb5gIde9pMz2Q4ywJEiEp6Si+ogSHoIsjSBS6400
-         gJpi1/6CkYbJzgP6Lmi2dXbQziBaeTpyCccB+YTN0ZYET9D8zbbkcU+iMebC5JMH86Tg
-         RgUnAbBVe0NWc9vrctsyt5lcOgReeSAmq4l8x0bnozcZqftgKZ+bP1YYYyDzyleRyrtN
-         oBPl4jfrdCPnjXgC7r3+HuSNdcXU4XU5DgcuMDDyrI6Hq3BCe5+vMl/pevf8hiOjpz0E
-         VHtshk/Ok7VGVAKELbcNorIRUWEShaJeMkOmUdKN84iij76OOCHvyKp5c27LWsNNK+Co
-         4wHg==
-X-Gm-Message-State: APjAAAUSYGYeNOW2xMT5ZksFkO2+ijHLW0w8qrO4DLw9IUIRYFA9SYCn
-        PkvOBdHiY1TN9p9Bxi4aBGs+HS+/WaY=
-X-Google-Smtp-Source: APXvYqztVaMAws9Nkb+c/1WXl9AxD1Zq34BWkiRhVLpdovI5Ur6r8SsqGJqDgtDNcJ8fVlAD/dxbhg==
-X-Received: by 2002:adf:e588:: with SMTP id l8mr2570227wrm.139.1562333052230;
-        Fri, 05 Jul 2019 06:24:12 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id y7sm3649664wmm.19.2019.07.05.06.24.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 06:24:11 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     liran.alon@oracle.com
-Subject: [PATCH] kvm: LAPIC: write down valid APIC registers
-Date:   Fri,  5 Jul 2019 15:24:10 +0200
-Message-Id: <1562333050-4745-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=wP9NlDr6bD2aoiL7N4bfYIJ/HvdrRGHcleGNGuB8Lwo=;
+        b=Z+QTlcyy1gfhgU017y6TDeuDfPGb8FqI3nv8WkoNadSmbIgvoVFGaW0MaGss8A56yM
+         njvl9ijlI+Tjyuj9KASUVnIlrVJmw5zjZEYgneV9V15SIJw5SJ2h+xBfhvWCY1Wr/+6r
+         a5IMiREuPHPYYT5Rzv9bgxoFLOXgB+zV/lWoIytvY+KtdgpU8SJI0UG7xEmPrVqmwwJj
+         sgZ8lk/1FPETi3xcbSZ8uAbYafBhs/QIzDJSC7E2tcvZlheJU4qeQ85IRkjmpAQ1EQU3
+         xwOvqALdJ5+pz7pJwv9BTtiRIa4JXmD40Omf1Ji/H6gQeBFHBlTMY7N7lf1g6QDFdyDu
+         U53A==
+X-Gm-Message-State: APjAAAUQPbvA910j3vy6xTZq6AUKvFieE0TH0XilNMUFqMA1WkwAHaXj
+        9OlSl1xK6KpEJt5p5x3Wl97FITl5gXD9z0wx8vskFw==
+X-Google-Smtp-Source: APXvYqwOfWMpuGkg9RKdi1dW9m3N/UTu38SQFu4df6Dl5WRhRKX6+Q2277z0Av7zSHTMO8XgkKHfaRS0fHak0CXooIs=
+X-Received: by 2002:a5d:80d6:: with SMTP id h22mr4158590ior.231.1562333077745;
+ Fri, 05 Jul 2019 06:24:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000d3f34b058c3d5a4f@google.com> <20190626184251.GE3116@mit.edu>
+ <20190626210351.GF3116@mit.edu> <20190626224709.GH3116@mit.edu>
+In-Reply-To: <20190626224709.GH3116@mit.edu>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 5 Jul 2019 15:24:26 +0200
+Message-ID: <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace a magic 64-bit mask with a list of valid registers, computing
-the same mask in the end.
+On Thu, Jun 27, 2019 at 12:47 AM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> More details about what is going on.  First, it requires root, because
+> one of that is required is using sched_setattr (which is enough to
+> shoot yourself in the foot):
+>
+> sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_??? */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=2251799813724439, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
+>
+> This is setting the scheduler policy to be SCHED_DEADLINE, with a
+> runtime parameter of 2251799.813724439 seconds (or 26 days) and a
+> deadline of 4611686018.427453437 seconds (or 146 *years*).  This means
+> a particular kernel thread can run for up to 26 **days** before it is
+> scheduled away, and if a kernel reads gets woken up or sent a signal,
+> no worries, it will wake up roughly seven times the interval that Rip
+> Van Winkle spent snoozing in a cave in the Catskill Mountains (in
+> Washington Irving's short story).
+>
+> We then kick off a half-dozen threads all running:
+>
+>    sendfile(fd, fd, &pos, 0x8080fffffffe);
+>
+> (and since count is a ridiculously large number, this gets cut down to):
+>
+>    sendfile(fd, fd, &pos, 2147479552);
+>
+> Is it any wonder that we are seeing RCU stalls?   :-)
 
-Suggested-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/lapic.c | 44 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 32 insertions(+), 12 deletions(-)
++Peter, Ingo for sched_setattr and +Paul for rcu
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 2e4470f2685a..e4227ceab0c6 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1312,25 +1312,45 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
- 	return container_of(dev, struct kvm_lapic, dev);
- }
- 
-+#define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
-+#define APIC_REGS_MASK(first, count) \
-+	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
-+
- int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
- 		void *data)
- {
- 	unsigned char alignment = offset & 0xf;
- 	u32 result;
- 	/* this bitmask has a bit cleared for each reserved register */
--	u64 rmask = 0x43ff01ffffffe70cULL;
--
--	if ((alignment + len) > 4) {
--		apic_debug("KVM_APIC_READ: alignment error %x %d\n",
--			   offset, len);
--		return 1;
--	}
--
--	/* ARBPRI is also reserved on x2APIC */
--	if (apic_x2apic_mode(apic))
--		rmask &= ~(1 << (APIC_ARBPRI >> 4));
-+	u64 valid_reg_mask =
-+		APIC_REG_MASK(APIC_ID) |
-+		APIC_REG_MASK(APIC_LVR) |
-+		APIC_REG_MASK(APIC_TASKPRI) |
-+		APIC_REG_MASK(APIC_PROCPRI) |
-+		APIC_REG_MASK(APIC_LDR) |
-+		APIC_REG_MASK(APIC_DFR) |
-+		APIC_REG_MASK(APIC_SPIV) |
-+		APIC_REGS_MASK(APIC_ISR, APIC_ISR_NR) |
-+		APIC_REGS_MASK(APIC_TMR, APIC_ISR_NR) |
-+		APIC_REGS_MASK(APIC_IRR, APIC_ISR_NR) |
-+		APIC_REG_MASK(APIC_ESR) |
-+		APIC_REG_MASK(APIC_ICR) |
-+		APIC_REG_MASK(APIC_ICR2) |
-+		APIC_REG_MASK(APIC_LVTT) |
-+		APIC_REG_MASK(APIC_LVTTHMR) |
-+		APIC_REG_MASK(APIC_LVTPC) |
-+		APIC_REG_MASK(APIC_LVT0) |
-+		APIC_REG_MASK(APIC_LVT1) |
-+		APIC_REG_MASK(APIC_LVTERR) |
-+		APIC_REG_MASK(APIC_TMICT) |
-+		APIC_REG_MASK(APIC_TMCCT) |
-+		APIC_REG_MASK(APIC_TDCR);
-+
-+	/* ARBPRI is not valid on x2APIC */
-+	if (!apic_x2apic_mode(apic))
-+		valid_reg_mask |= APIC_REG_MASK(APIC_ARBPRI);
- 
--	if (offset > 0x3f0 || !(rmask & (1ULL << (offset >> 4)))) {
-+	if (offset > 0x3f0 || !(valid_reg_mask & APIC_REG_MASK(offset))) {
- 		apic_debug("KVM_APIC_READ: read reserved register %x\n",
- 			   offset);
- 		return 1;
--- 
-1.8.3.1
+First of all: is it a semi-intended result of a root (CAP_SYS_NICE)
+doing local DoS abusing sched_setattr? It would perfectly reasonable
+to starve other processes, but I am not sure about rcu. In the end the
+high prio process can use rcu itself, and then it will simply blow
+system memory by stalling rcu. So it seems that rcu stalls should not
+happen as a result of weird sched_setattr values. If that is the case,
+what needs to be fixed? sched_setattr? rcu? sendfile?
 
+If this is semi-intended, the only option I see is to disable
+something in syzkaller: sched_setattr entirely, or drop CAP_SYS_NICE,
+or ...? Any preference either way?
