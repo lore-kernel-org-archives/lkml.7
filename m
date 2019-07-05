@@ -2,181 +2,80 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54B9C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBEBC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6AE20828
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0E20828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbfGENAO (ORCPT
+        id S1728946AbfGENAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:00:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728625AbfGENAO (ORCPT
+        Fri, 5 Jul 2019 09:00:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51956 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGENAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:00:14 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65CvDIx052837
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Jul 2019 09:00:13 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tj6fu1fu6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 09:00:13 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Fri, 5 Jul 2019 14:00:10 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 5 Jul 2019 14:00:03 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x65D025O43581636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jul 2019 13:00:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29A68A4040;
-        Fri,  5 Jul 2019 13:00:02 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99C9DA404D;
-        Fri,  5 Jul 2019 13:00:01 +0000 (GMT)
-Received: from laptop-ibm (unknown [9.152.212.201])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jul 2019 13:00:01 +0000 (GMT)
-Date:   Fri, 5 Jul 2019 15:00:00 +0200
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "James Morris" <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "David Howells" <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
-In-Reply-To: <874l41ocf5.fsf@morokweng.localdomain>
-References: <20190628021934.4260-1-bauerman@linux.ibm.com>
-        <20190628021934.4260-2-bauerman@linux.ibm.com>
-        <20190701144752.GC25484@linux-8ccs>
-        <87lfxel2q6.fsf@morokweng.localdomain>
-        <20190704125427.31146026@laptop-ibm>
-        <874l41ocf5.fsf@morokweng.localdomain>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 5 Jul 2019 09:00:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so8802435wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:00:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LkjJN9pn3JzWHjcbg2XmZ5SMAe2wfwVxdSS9lT7yctY=;
+        b=Tp4yauVQsJw3MR51+tyMY1d1RDA46X5Qn43nnhBuzPgYPKymN1Tt3BWELZGV6dMXsS
+         iZ5A825w2o6xM/mbhT2svWkVZ0NwySwUMAyCQdVSPROTli11xYDkbx9zRr02XcfJwCvK
+         oEkKiRDwqs2W0IYv3mSiEEu+U5N0+k4+8cuL2m5i7n+vT4vrHOaZATadFcW2eIyDA0yl
+         s0xR896BMxoiJRFTUowtFVJI1kN7LJmOxHsTMpxp3POUicT1NVFfDLCVD7Z5MIfO0R5P
+         xZeWchhEM+zg7YTmSJgW/xM9Vupqdnhgw8P8+Xwa6QHyN+g5/YC9QnZ/cWYEOlJOTsHP
+         x1WA==
+X-Gm-Message-State: APjAAAUFIJaPDt6s5BHW0AnjM1Rk6Vz3mY1ZyvTzZpOEb58iYYaRPtSY
+        V52yHv4nHMZAv4DNdqEUjQiyvA==
+X-Google-Smtp-Source: APXvYqy0PtZB/6YxP9lkmvnMNPYrehBnhSukC5m5JWWRYdRBvtZJYSigB53fBVEQSPMi4BkFUu/fIA==
+X-Received: by 2002:a1c:4803:: with SMTP id v3mr3562900wma.49.1562331644991;
+        Fri, 05 Jul 2019 06:00:44 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e943:5a4e:e068:244a? ([2001:b07:6468:f312:e943:5a4e:e068:244a])
+        by smtp.gmail.com with ESMTPSA id m24sm7280293wmi.39.2019.07.05.06.00.44
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:00:44 -0700 (PDT)
+Subject: Re: [PATCH v5 2/4] KVM: LAPIC: Inject timer interrupt via posted
+ interrupt
+To:     Wanpeng Li <wanpeng.li@hotmail.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+ <1561110002-4438-3-git-send-email-wanpengli@tencent.com>
+ <587f329a-4920-fcbf-b2b1-9265a1d6d364@redhat.com>
+ <HK2PR02MB4145E122DC5AC2445137A10F80F50@HK2PR02MB4145.apcprd02.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8e57b9a2-28e3-13b9-969a-ef1e3f55067e@redhat.com>
+Date:   Fri, 5 Jul 2019 15:00:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <HK2PR02MB4145E122DC5AC2445137A10F80F50@HK2PR02MB4145.apcprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070513-0028-0000-0000-000003812FA9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070513-0029-0000-0000-0000244131CF
-Message-Id: <20190705150000.372345b0@laptop-ibm>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907050156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thiago,
+On 05/07/19 14:52, Wanpeng Li wrote:
+>> Also, do you want to disable the preemption timer if pi_inject_timer and
+>> enable_apicv are both true?
+> 
+> I have already done this in vmx_set_hv_timer().
 
-On Thu, 04 Jul 2019 15:57:34 -0300
-Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
+Right, sorry!
 
-> Hello Philipp,
-> 
-> Philipp Rudo <prudo@linux.ibm.com> writes:
-> 
-> > Hi Thiago,
-> >
-> >
-> > On Thu, 04 Jul 2019 03:42:57 -0300
-> > Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
-> >  
-> >> Jessica Yu <jeyu@kernel.org> writes:
-> >>   
-> >> > +++ Thiago Jung Bauermann [27/06/19 23:19 -0300]:    
-> >> >>IMA will use the module_signature format for append signatures, so export
-> >> >>the relevant definitions and factor out the code which verifies that the
-> >> >>appended signature trailer is valid.
-> >> >>
-> >> >>Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
-> >> >>and be able to use mod_check_sig() without having to depend on either
-> >> >>CONFIG_MODULE_SIG or CONFIG_MODULES.
-> >> >>
-> >> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> >> >>Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> >> >>Cc: Jessica Yu <jeyu@kernel.org>
-> >> >>---
-> >> >> include/linux/module.h           |  3 --
-> >> >> include/linux/module_signature.h | 44 +++++++++++++++++++++++++
-> >> >> init/Kconfig                     |  6 +++-
-> >> >> kernel/Makefile                  |  1 +
-> >> >> kernel/module.c                  |  1 +
-> >> >> kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
-> >> >> kernel/module_signing.c          | 56 +++++---------------------------
-> >> >> scripts/Makefile                 |  2 +-
-> >> >> 8 files changed, 106 insertions(+), 53 deletions(-)
-> >> >>
-> >> >>diff --git a/include/linux/module.h b/include/linux/module.h
-> >> >>index 188998d3dca9..aa56f531cf1e 100644
-> >> >>--- a/include/linux/module.h
-> >> >>+++ b/include/linux/module.h
-> >> >>@@ -25,9 +25,6 @@
-> >> >> #include <linux/percpu.h>
-> >> >> #include <asm/module.h>
-> >> >>
-> >> >>-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
-> >> >>-#define MODULE_SIG_STRING "~Module signature appended~\n"
-> >> >>-    
-> >> >
-> >> > Hi Thiago, apologies for the delay.    
-> >> 
-> >> Hello Jessica, thanks for reviewing the patch!
-> >>   
-> >> > It looks like arch/s390/kernel/machine_kexec_file.c also relies on
-> >> > MODULE_SIG_STRING being defined, so module_signature.h will need to be
-> >> > included there too, otherwise we'll run into a compilation error.    
-> >> 
-> >> Indeed. Thanks for spotting that. The patch below fixes it. It's
-> >> identical to the previous version except for the changes in 
-> >> arch/s390/kernel/machine_kexec_file.c and their description in the
-> >> commit message. I'm also copying some s390 people in this email.  
-> >
-> > to me the s390 part looks good but for one minor nit.  
-> 
-> Thanks for the prompt review!
-> 
-> > In arch/s390/Kconfig KEXEC_VERIFY_SIG currently depends on
-> > SYSTEM_DATA_VERIFICATION. I'd prefer when you update this to the new
-> > MODULE_SIG_FORMAT. It shouldn't make any difference right now, as we don't
-> > use mod_check_sig in our code path. But it could cause problems in the future,
-> > when more code might be shared.  
-> 
-> Makes sense. Here is the updated patch with the Kconfig change.
-> 
-
-The patch looks good now.
-
-Thanks a lot
-PHilipp
-
+Paolo
