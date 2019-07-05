@@ -2,138 +2,127 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8A4C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844BFC0651F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B9121852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1jq75dx"
+	by mail.kernel.org (Postfix) with ESMTP id 59D612189E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562299811;
+	bh=o3nJicTy+Qjp7G09STgRNAO/lzLw5iVeuJIFKu6cNw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zYtutEmPKUQOv38zePLQmvp8ohSc3Vdm9pMofi3pKvMJhTS0I48C5aEYq72uMIYt9
+	 VwckCWk2Xn/8Dj9LfzV7W+Uzrl9Zb7AW07V29OiPz9IOrHaiblK7MF6JUEzF2EAC1X
+	 rbQDii9ck9gYByeYnHfswvVapIWcUMoktw4cxq/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbfGEEJV (ORCPT
+        id S1725983AbfGEEKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 00:09:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60406 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfGEEJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 00:09:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EpLpp6d5ev9UdUsgMU6f1l10/dE3Pg2qZg1140QaSWM=; b=b1jq75dxQbtB+7a65u6Rylo1L
-        01T+/tPNKG4kAsias6gKT+e74KMYqsNVmHNpVUoATOVU43k0Q/oYEhbxb7uASluBzw9t31DXxOL4F
-        VX9z+yb05Q+x9j+UVT6qB5SgP2QBi4gKgLvzIk7PpgKOFDOM75PF44vgjqpqzs1tXlSKHC82n/NJR
-        mcjMdya35Mmn8wRdnCrJX1ijkuZzv7v7xGKF4UDt8ePkXqFbZInlYET+gWKS5rEU+CyZuoTWm3XSc
-        Hk7S9UcSvq651qhTErC6lu0KudmoNoOKgrdnKQPc+r9geI20Fp6U2sgvPOInrz+2PZxT+v0SZsNyA
-        uxb8DneeQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjFXC-0007w4-C8; Fri, 05 Jul 2019 04:09:18 +0000
-Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
- <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
- <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
- <CAK7LNASLfyreDPvNuL1svvHPC0woKnXO_bsNku4DMK6UNn4oHw@mail.gmail.com>
- <5e5353e2-bfab-5360-26b2-bf8c72ac7e70@infradead.org>
- <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8868b3fc-ba16-2b01-4ebb-4bdefc2f9e18@infradead.org>
-Date:   Thu, 4 Jul 2019 21:09:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 00:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfGEEKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 00:10:08 -0400
+Received: from localhost (unknown [37.142.3.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC53A21852;
+        Fri,  5 Jul 2019 04:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562299807;
+        bh=o3nJicTy+Qjp7G09STgRNAO/lzLw5iVeuJIFKu6cNw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uxQMNM/AZcsCbdxpbp3iTVv59AZe9WzAV267s8w8FeqzB4qpzHnMfsWwyvaylHTxS
+         NTFaOoU3gAihbyOE8cqchTWA8I7Bfbt7lMA7ZGrY3eAv8ZxfFZXUQbN9ovcR3HRCx/
+         JTNiGdwc1QRvZv5pPJodfrmIIzWPs1nBVeWpJHO4=
+Date:   Fri, 5 Jul 2019 07:09:50 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Parav Pandit <pandit.parav@gmail.com>
+Cc:     Dag Moxnes <dag.moxnes@oracle.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Parav Pandit <parav@mellanox.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] RDMA/core: Fix race when resolving IP address
+Message-ID: <20190705040950.GO7212@mtr-leonro.mtl.com>
+References: <1561711763-24705-1-git-send-email-dag.moxnes@oracle.com>
+ <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNATF+D5TgTZijG3EPBVON5NmN+JcwmCBvnvkMFyR+3wF2A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/19 8:44 PM, Masahiro Yamada wrote:
-> On Fri, Jul 5, 2019 at 12:23 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 7/4/19 8:09 PM, Masahiro Yamada wrote:
->>> On Fri, Jul 5, 2019 at 12:05 PM Masahiro Yamada
->>> <yamada.masahiro@socionext.com> wrote:
->>>>
->>>> On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>>>>
->>>>> On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
->>>>>> The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
->>>>>>
->>>>>>    http://www.ozlabs.org/~akpm/mmotm/
->>>>>>
->>>>>> mmotm-readme.txt says
->>>>>>
->>>>>> README for mm-of-the-moment:
->>>>>>
->>>>>> http://www.ozlabs.org/~akpm/mmotm/
->>>>>
->>>>> I get a lot of these but don't see/know what causes them:
->>>>>
->>>>> ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
->>>>> make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
->>>>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
->>>>> make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
->>>>> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
->>>>>
->>>>
->>>> I checked next-20190704 tag.
->>>>
->>>> I see the empty file
->>>> drivers/gpu/drm/i915/oa/Makefile
->>>>
->>>> Did someone delete it?
->>>>
->>>
->>>
->>> I think "obj-y += oa/"
->>> in drivers/gpu/drm/i915/Makefile
->>> is redundant.
->>
->> Thanks.  It seems to be working after deleting that line.
-> 
-> 
-> Could you check whether or not
-> drivers/gpu/drm/i915/oa/Makefile exists in your source tree?
+On Fri, Jul 05, 2019 at 07:49:06AM +0530, Parav Pandit wrote:
+> On Fri, Jun 28, 2019 at 2:20 PM Dag Moxnes <dag.moxnes@oracle.com> wrote:
+> >
+> > Use neighbour lock when copying MAC address from neighbour data struct
+> > in dst_fetch_ha.
+> >
+> > When not using the lock, it is possible for the function to race with
+> > neigh_update, causing it to copy an invalid MAC address.
+> >
+> > It is possible to provoke this error by calling rdma_resolve_addr in a
+> > tight loop, while deleting the corresponding ARP entry in another tight
+> > loop.
+> >
+> > Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+> > Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+> >
+> > ---
+> > v1 -> v2:
+> >    * Modified implementation to improve readability
+> > ---
+> >  drivers/infiniband/core/addr.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+> > index 2f7d141598..51323ffbc5 100644
+> > --- a/drivers/infiniband/core/addr.c
+> > +++ b/drivers/infiniband/core/addr.c
+> > @@ -333,11 +333,14 @@ static int dst_fetch_ha(const struct dst_entry *dst,
+> >         if (!n)
+> >                 return -ENODATA;
+> >
+> > -       if (!(n->nud_state & NUD_VALID)) {
+> > +       read_lock_bh(&n->lock);
+> > +       if (n->nud_state & NUD_VALID) {
+> > +               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+> > +               read_unlock_bh(&n->lock);
+> > +       } else {
+> > +               read_unlock_bh(&n->lock);
+> >                 neigh_event_send(n, NULL);
+> >                 ret = -ENODATA;
+> > -       } else {
+> > -               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+> >         }
+> >
+> >         neigh_release(n);
+> > --
+> > 2.20.1
+> >
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+>
+> A sample trace such as below in commit message would be good to have.
+> Or the similar one that you noticed with ARP delete sequence.
+>
+> neigh_changeaddr()
+>   neigh_flush_dev()
+>    n->nud_state = NUD_NOARP;
+>
+> Having some issues with office outlook, so replying via gmail.
 
-It does not.
+Your replies from gmail looks much better when you used Outlook - proper
+spacing between quoted text and your reply.
 
-> Your build log says it was missing.
-> 
-> But, commit 5ed7a0cf3394 ("drm/i915: Move OA files to separate folder")
-> added it.  (It is just an empty file)
-> 
-> I am just wondering why.
-
-I am not using any git tree(s) for this.  Just patches.
-
-That Makefile is in patch-v5.2-rc7-next-20190704.xz.
-
-I don't know how Andrew generates the linux-next.patch file for mmotm,
-but I don't see that Makefile anywhere in mmotm, although the rest of
-the i915/oa/ files seems to be there.
-
-Maybe diff skips empty files unless told to save them?
-
--- 
-~Randy
+Thanks
