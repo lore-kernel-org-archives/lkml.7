@@ -2,136 +2,101 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D366C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A6EC0651F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0355720828
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6093B20828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hc5L71Dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfGEDFv convert rfc822-to-8bit (ORCPT
+        id S1727687AbfGEDGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:05:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:39441 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfGEDFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:05:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 20:05:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,453,1557212400"; 
-   d="scan'208";a="155180636"
-Received: from pgsmsx105.gar.corp.intel.com ([10.221.44.96])
-  by orsmga007.jf.intel.com with ESMTP; 04 Jul 2019 20:05:48 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.4]) by
- PGSMSX105.gar.corp.intel.com ([169.254.4.2]) with mapi id 14.03.0439.000;
- Fri, 5 Jul 2019 11:02:50 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Topic: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
-Thread-Index: AQHVMUGmUw8CyhUBakCg51utnm9b/6a4aBMAgAFBlaD//59qAIAArWRQgAAA3wCAAJ+BsP//gXOAgAE5twA=
-Date:   Fri, 5 Jul 2019 03:02:49 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814738B36@PGSMSX103.gar.corp.intel.com>
-References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
- <20190703140520.GA18473@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
- <20190704033038.GA6276@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
- <20190704135420.GD13859@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
- <20190704155217.GI18473@lunn.ch>
-In-Reply-To: <20190704155217.GI18473@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 4 Jul 2019 23:06:47 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22653 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfGEDGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 23:06:47 -0400
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x6536QDq030981;
+        Fri, 5 Jul 2019 12:06:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x6536QDq030981
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562295987;
+        bh=PUF8lDa4vdReIoKmN9yFODRcREJp8yLKeKn0eH+L6bE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hc5L71DyP571OH1ILbrgsHHQpZxhkuz18yBJhiWyhTAww3ze+ztOro/wGz1TDYFUE
+         /Si8hBWyn/V+Wg7PcYBWYxq1n2b2lpdpZvozLTunEj/uzkQ6RFOunckU0TuUzz9m2O
+         RXMPcf27hMNI6zqtIhJMXDYJTJ3SOPQKOXPt5xrHNYe/6sLud/g+w7+4NbpxrT/Grd
+         8MDTyD1iqfPBs9CuK/ynHGls1pUT/6NeGMZXtHG9zbpUfsfYbzST09seR6N/R3uVix
+         7kKWqrwbGRnDtZYlfOtqiGntTGk7sXKjNMyFI00Ibkod/cTVCg9158ANjrjUuw9/GO
+         cblKP9Jp4wGZg==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id m17so928117vkl.2;
+        Thu, 04 Jul 2019 20:06:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAU17ju3mm7hjXpDiz3pGo9cKFRt36qoDYtim3S0HzvvYNMhJO2a
+        Bpgq0CHDmEABnC9r364BJ/FJekSY1Fu+MN8PelU=
+X-Google-Smtp-Source: APXvYqx1fdfrytc0sWZZM6lY9Xdz+SAPqK6SCnajdY9dWkz6Qp9Uyw0DqKq3G8QmllDHQmgVXa6JS9tx5ersEEn+inM=
+X-Received: by 2002:a1f:728b:: with SMTP id n133mr313496vkc.84.1562295985842;
+ Thu, 04 Jul 2019 20:06:25 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org> <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
+In-Reply-To: <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 5 Jul 2019 12:05:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
+Message-ID: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
+Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        mhocko@suse.cz, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I think there is too much passing variables around by reference than by
-> value, to make this code easy to understand.
-> 
-> Maybe a better structure would be
-> 
-> static int stmmac_mdion_c45_read(struct stmmac_priv *priv, int phyaddr,
-> int phyreg) {
-> 
-> 	unsigned int reg_shift = priv->hw->mii.reg_shift;
-> 	unsigned int reg_mask = priv->hw->mii.reg_mask;
-> 	u32 mii_addr_val, mii_data_val;
-> 
-> 	mii_addr_val = MII_GMAC4_C45E |
->                        ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift)
-> & reg_mask;
->         mii_data_val = (phyreg & MII_REGADDR_C45_MASK) <<
-> MII_GMAC4_REG_ADDR_SHIFT;
-> 
-> 	writel(mii_data_val, priv->ioaddr + priv->hw->mii_data);
-> 	writel(mii_addr_val, priv->ioaddr + priv->hw->mii_addrress);
-> 
-> 	return (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
-> }
-> 
-> static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
-> {
-> 
-> ...
-> 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
-> MII_BUSY),
->  	   		      100, 10000))
->  		return -EBUSY;
-> 
->       if (priv->plat->has_gmac4 && phyreg & MII_ADDR_C45)
->       	return stmmac_mdio_c45_read(priv, phyaddr, phyreg);
-> 
-> 	Andrew
+On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+> >
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > mmotm-readme.txt says
+> >
+> > README for mm-of-the-moment:
+> >
+> > http://www.ozlabs.org/~akpm/mmotm/
+>
+> I get a lot of these but don't see/know what causes them:
+>
+> ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No such file or directory
+> make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefile'.  Stop.
+> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/oa' failed
+> make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
+> ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915' failed
+>
 
-Both c45 read/write needs to set c45 enable bit(MII_ADDR_C45) in mii_adrress
-and set the register address in mii_data. Besides this, the whole programming
-flow will be the same as c22. With the current design, user can easily know
-that the different between c22 and c45 is just in stmmac_mdio_c45_setup(). 
+I checked next-20190704 tag.
 
-If the community prefers readability, I will suggest to do the c45 setup in
-both stmmac_mdio_read() and stmmac_mdio_write() 's if(C45) condition rather
-than splitting into 2 new c45_read() and c45_write() functions.     
+I see the empty file
+drivers/gpu/drm/i915/oa/Makefile
 
-static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
-{
-
-...
-	if (phyreg & MII_ADDR_C45)
-       *val |= MII_GMAC4_C45E;
-       *val &= ~reg_mask;
-       *val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
-
-       *data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
-
-Weifeng
+Did someone delete it?
 
 
+-- 
+Best Regards
+Masahiro Yamada
