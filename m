@@ -2,82 +2,98 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA0C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6413C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC28218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D2621850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfGEJui (ORCPT
+        id S1728368AbfGEJut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:50:38 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42261 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfGEJui (ORCPT
+        Fri, 5 Jul 2019 05:50:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43772 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbfGEJut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:50:38 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 46046217919f682c; Fri, 5 Jul 2019 11:50:35 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>,
-        "Robert R. Howell" <RHowell@uwyo.edu>
-Subject: Re: [PATCH v2 0/5] PM: PCI/ACPI: Hibernation handling fixes
-Date:   Fri, 05 Jul 2019 11:50:35 +0200
-Message-ID: <3380486.WkxyVYbAKD@kreacher>
-In-Reply-To: <20190701162017.GB2640@lahna.fi.intel.com>
-References: <4976412.ihyb9sT5jY@kreacher> <20190701162017.GB2640@lahna.fi.intel.com>
+        Fri, 5 Jul 2019 05:50:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so9235515wru.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:50:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YUgV9oyAP3Ji8jA9MSEhvMmGZhPCnmuMeRDLIoIYTW0=;
+        b=hA81FD+HlYB6kqeHOeqpFItjrKxIL+OtIMgtISvfoeyLVY4OFPoFSXHj1YpRgNdmaX
+         IxRZ4O9LdW6AZP18T87E0Creq6J/aWsagnTXWYM4MdjuhWHxlVE7zTU1lI+cPXKFV4wU
+         ZVt6+0wDJNG+RloHH3f31gYwq1nUFmejyvNo7nzI2s+CziA0n6kV55xHnB94ZpbEjIin
+         5b1U5DDZxY5mpyYKExRxXY+Gn9JgZqvd1wZeNVLeRKRe7RNyLfqqmZudbajFiZRYTLKX
+         gZ28ClBeWIBOLb/4RabwxKg4Kw1wc8nQe0H9xy5N5nlBZMhLDguKFcGJ02d/R/RkkwX9
+         iQDg==
+X-Gm-Message-State: APjAAAWAMWfg4+A5OVKjxHkdkqZgYoypXz9ogQHPUjYE+e/5LW8tFPoH
+        vTeKk1CQu1WK00IsxmyGO0bLLg==
+X-Google-Smtp-Source: APXvYqypJu/BEjih6IidHXtaQ3xrNB0U+85zf/Y9MMWD6a3bCmLx/E4SeqEvaBrNU348XT146MdsGQ==
+X-Received: by 2002:a5d:5492:: with SMTP id h18mr3261472wrv.212.1562320246561;
+        Fri, 05 Jul 2019 02:50:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:19db:ad53:90ea:9423? ([2001:b07:6468:f312:19db:ad53:90ea:9423])
+        by smtp.gmail.com with ESMTPSA id z1sm8749189wrv.90.2019.07.05.02.50.45
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 02:50:46 -0700 (PDT)
+Subject: Re: [PATCH] KVM: LAPIC: Reset timer_advance_ns to 1000 after adaptive
+ tuning goes insane
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1562319651-6992-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dfdce82d-7cea-9b8d-0187-906b777d494d@redhat.com>
+Date:   Fri, 5 Jul 2019 11:50:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1562319651-6992-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 1, 2019 6:20:17 PM CEST Mika Westerberg wrote:
-> On Mon, Jul 01, 2019 at 12:42:14PM +0200, Rafael J. Wysocki wrote:
-> > Hi All,
-> > 
-> > This series of patches addresses a few issues related to the handling of
-> > hibernation in the PCI bus type and the ACPI PM domain and ACPI LPSS driver.
-> > 
-> > The v2 addresses Hans' concerns regarding the LPSS changes.
-> > 
-> > First of all, all of the runtime-suspended PCI devices and devices in the ACPI PM and LPSS
-> > PM domains will be resumed during hibernation (first patch).  This appears to be the
-> > only way to avoid weird corner cases and the benefit from avoiding to resume those
-> > devices during hibernation is questionable.
-> > 
-> > That change allows the the hibernation callbacks in all of the involved subsystems to be
-> > simplified (patches 2 and 3).
-> > 
-> > Moreover, reusing bus-level suspend callbacks for the "poweroff" transition during
-> > hibernation (which is the case for the ACPI PM domain and LPSS) is incorrect, so patch 4
-> > fixes that.
-> > 
-> > Finally, there are some leftover items in linux/acpi.h that can be dropped (patch 5).
+On 05/07/19 11:40, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> For the whole series,
+> Reset timer_advance_ns to the default value 1000ns after adaptive tuning 
+> goes insane which can happen sporadically in product environment.
 > 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 05d8934..454d3dd 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1549,7 +1549,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>  	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+>  		apic->lapic_timer.timer_advance_adjust_done = true;
+>  	if (unlikely(timer_advance_ns > 5000)) {
+> -		timer_advance_ns = 0;
+> +		timer_advance_ns = 1000;
+>  		apic->lapic_timer.timer_advance_adjust_done = true;
 
-Thanks!
+Do you also want to reset timer_advance_adjust_done to false?
 
-Queued for 5.3 with the tags from you and Hans (I've fixed up comments in the first patch while applying it).
+Paolo
 
-
-
+>  	}
+>  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> 
 
