@@ -2,177 +2,66 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39DCC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78ACC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91AD218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:03:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="G5mHWkqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 95E84218D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfGEKDQ (ORCPT
+        id S1727674AbfGEKDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:03:16 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:38967 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfGEKDQ (ORCPT
+        Fri, 5 Jul 2019 06:03:55 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48121 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfGEKDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:03:16 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x65A1j3M018855;
-        Fri, 5 Jul 2019 19:01:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x65A1j3M018855
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562320908;
-        bh=c40ebdQGyZ/hZreWO45KBSfAn6dKspavgReY8ujfFGE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5mHWkqQk66xKntbKGNRpKasDoMOcuLlCrRWOrvZ3NQXVq6RXSHit8Mv0fYBgh6Ot
-         kuUGKXiXI7LRGxqjwyqAEGDmfpldBTPjdwhBLW5Wo0stUrrWdJTmH++IhfNRZpk0Dy
-         PH/GaQveKnPu0xaZnsgD5FWvhhQ1IdLPv0cNVZZyG2yYx9Fj0X1n7z9RG5laoknOH8
-         i+gkq9kdv5OAL2nHWLd+mapqIa4TQK6S9GOHPLjeSts+o9KbSU+8stJzMiJnUAxEQh
-         cdHvgU6dvlaVFHrtqnsgREfe337E+aE2ZkpuXYsDuiVBc0b6SmJQi6qyyyybknAGv7
-         DZnUK0j2cXY6g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org,
-        "Rodrigo R. Galvao" <rosattig@linux.vnet.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v3 2/2] powerpc/boot: pass CONFIG options in a simpler and more robust way
-Date:   Fri,  5 Jul 2019 19:01:44 +0900
-Message-Id: <20190705100144.28785-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190705100144.28785-1-yamada.masahiro@socionext.com>
-References: <20190705100144.28785-1-yamada.masahiro@socionext.com>
+        Fri, 5 Jul 2019 06:03:55 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 244761C0005;
+        Fri,  5 Jul 2019 10:03:48 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH] checkpatch: DT bindings vendor prefixes file yas been translated into yaml
+Date:   Fri,  5 Jul 2019 12:03:45 +0200
+Message-Id: <20190705100345.29269-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5e9dcb6188a4 ("powerpc/boot: Expose Kconfig symbols to wrapper")
-was wrong, but commit e41b93a6be57 ("powerpc/boot: Fix build failures
-with -j 1") was also wrong.
+The extension is now .yaml instead of .txt.
 
-The correct dependency is:
-
-  $(obj)/serial.o: $(obj)/autoconf.h
-
-However, I do not see the reason why we need to copy autoconf.h to
-arch/power/boot/. Nor do I see consistency in the way of passing
-CONFIG options.
-
-decompress.c references CONFIG_KERNEL_GZIP and CONFIG_KERNEL_XZ, which
-are passed via the command line.
-
-serial.c includes autoconf.h to reference a couple of CONFIG options,
-but this is fragile because we often forget to include "autoconf.h"
-from source files.
-
-In fact, it is already broken.
-
-ppc_asm.h references CONFIG_PPC_8xx, but utils.S is not given any way
-to access CONFIG options. So, CONFIG_PPC_8xx is never defined here.
-
-Pass $(LINUXINCLUDE) to make sure CONFIG options are accessible from
-all .c and .S files in arch/powerpc/boot/.
-
-I also removed the -traditional flag to make include/linux/kconfig.h
-work. This flag makes the preprocessor imitate the behavior of the
-pre-standard C compiler, but I do not understand why it is necessary.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
+ scripts/checkpatch.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v3: None
-Changes in v2:
-  - reword commit log
-
- arch/powerpc/boot/.gitignore |  2 --
- arch/powerpc/boot/Makefile   | 14 +++-----------
- arch/powerpc/boot/serial.c   |  1 -
- 3 files changed, 3 insertions(+), 14 deletions(-)
-
-diff --git a/arch/powerpc/boot/.gitignore b/arch/powerpc/boot/.gitignore
-index 32034a0cc554..6610665fcf5e 100644
---- a/arch/powerpc/boot/.gitignore
-+++ b/arch/powerpc/boot/.gitignore
-@@ -44,5 +44,3 @@ fdt_sw.c
- fdt_wip.c
- libfdt.h
- libfdt_internal.h
--autoconf.h
--
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 73d1f3562978..b8a82be2af2a 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -20,9 +20,6 @@
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..9a3163020d67 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3027,7 +3027,7 @@ sub process {
+ 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
  
- all: $(obj)/zImage
+ 			my $dt_path = $root . "/Documentation/devicetree/bindings/";
+-			my $vp_file = $dt_path . "vendor-prefixes.txt";
++			my $vp_file = $dt_path . "vendor-prefixes.yaml";
  
--compress-$(CONFIG_KERNEL_GZIP) := CONFIG_KERNEL_GZIP
--compress-$(CONFIG_KERNEL_XZ)   := CONFIG_KERNEL_XZ
--
- ifdef CROSS32_COMPILE
-     BOOTCC := $(CROSS32_COMPILE)gcc
-     BOOTAR := $(CROSS32_COMPILE)ar
-@@ -34,7 +31,7 @@ endif
- BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
- 		 -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx \
- 		 -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
--		 -D$(compress-y)
-+		 $(LINUXINCLUDE)
- 
- ifdef CONFIG_PPC64_BOOT_WRAPPER
- BOOTCFLAGS	+= -m64
-@@ -51,7 +48,7 @@ BOOTCFLAGS	+= -mlittle-endian
- BOOTCFLAGS	+= $(call cc-option,-mabi=elfv2)
- endif
- 
--BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -traditional -nostdinc
-+BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -nostdinc
- 
- BOOTARFLAGS	:= -cr$(KBUILD_ARFLAGS)
- 
-@@ -202,14 +199,9 @@ $(obj)/empty.c:
- $(obj)/zImage.coff.lds $(obj)/zImage.ps3.lds : $(obj)/%: $(srctree)/$(src)/%.S
- 	$(Q)cp $< $@
- 
--$(srctree)/$(src)/serial.c: $(obj)/autoconf.h
--
--$(obj)/autoconf.h: $(obj)/%: $(objtree)/include/generated/%
--	$(Q)cp $< $@
--
- clean-files := $(zlib-) $(zlibheader-) $(zliblinuxheader-) \
- 		$(zlib-decomp-) $(libfdt) $(libfdtheader) \
--		autoconf.h empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
-+		empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
- 
- quiet_cmd_bootcc = BOOTCC  $@
-       cmd_bootcc = $(BOOTCC) -Wp,-MD,$(depfile) $(BOOTCFLAGS) -c -o $@ $<
-diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
-index b0491b8c0199..9457863147f9 100644
---- a/arch/powerpc/boot/serial.c
-+++ b/arch/powerpc/boot/serial.c
-@@ -18,7 +18,6 @@
- #include "stdio.h"
- #include "io.h"
- #include "ops.h"
--#include "autoconf.h"
- 
- static int serial_open(void)
- {
+ 			foreach my $compat (@compats) {
+ 				my $compat2 = $compat;
 -- 
-2.17.1
+2.19.1
 
