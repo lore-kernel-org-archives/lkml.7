@@ -2,68 +2,67 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A54AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8517C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CE120856
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94DA20856
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4niO4pw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGDGDqvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfGEVxj (ORCPT
+        id S1727842AbfGEV4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:53:39 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:36720 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEVxj (ORCPT
+        Fri, 5 Jul 2019 17:56:05 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43834 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfGEV4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:53:39 -0400
-Received: by mail-lj1-f182.google.com with SMTP id i21so10507119ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 14:53:37 -0700 (PDT)
+        Fri, 5 Jul 2019 17:56:05 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c19so1537326lfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 14:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RVhp9sD9l1Fh7vJIHE7psd1pUKNZ7W5F8oACMY7W1Ao=;
-        b=c4niO4pwvEQah4Pqnn/zl8+RVdfUUI7KIaDriNJQXwu/NGLs+eKeEfhNIT5aKEFnpU
-         8dKRem6sGATIv5K6eC5hslEcP89oNCvTA9tQjCFQP3c+ZsOeZBRr4xoGHdnap7qYt40+
-         RSEFWpx1kIpDnp44Xq1yGGB1hPu8ZFWLi6D/PzEbrpcRUWgc+bVuMUXe2SJIaFSmmG80
-         AIQWTczh30g4eDExPEn5Fy+v40KPPncvAG1TIGbeGm4Y7Muij2PeOgZwMWUiiVf1h9ON
-         EwtL/Zhhg8C1NL02TPLu3uy5e9L21J3977O1+lFWXijJLztCXwe8qeO+ckjktx3NWXZ4
-         x2dg==
+        bh=XgKC08iiEaNapEt8oecESiRwrLkTQTJmIfIX4GB6LAo=;
+        b=MGDGDqvlWi1VmpjxiAjxE8n12n9Zt/Hu1m/27IujOA15048scaVNqKGwFrfcu5/97S
+         arY+icppvf6BGGkP3fZXw4APZBKgnCVYTwzXU7pQAKIhBESuKgT0CMHHskpH0VAn0xjq
+         dGeK5Czy7CocvUPvqAgQyCl3l7yc7SOJb7BbNSAkPjvwa83cELO0xt0Bt5IZOFgw1cQH
+         MNyRr002c46SDSVziYSlDsQguBEwJib/Y/ApMu+wJhLo6Kt/o2EvPJhhsjTm2eJMH8O0
+         e8DtWK5V+f4y/bZm36kxr4mtv2niMywmiF8DaC/UOyH9CIhkAhtH6Z9S2i/TQIyP5nt8
+         UW5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RVhp9sD9l1Fh7vJIHE7psd1pUKNZ7W5F8oACMY7W1Ao=;
-        b=IgtAZbwlo2iQEqCHCH9kN/eRaqietBAk4R4ksDyOGefL1AawJyIp5ruuNGsePQ8ZL6
-         kiWX65DnB5MvUhj58Vs6Eq/wFDUPpdG31+ti8nGc2GQiEWx5is8OmRBQiJaqesJhUdoq
-         AeBJcVUpkwrpGg6FlZk0ZtQZXdby5EhMz4FyTfsqIWx8t41qNswh+0XIOwC6486crfwF
-         04z4zDXQAkauAraR/TZbSPquNHy0vezsCBc4RSPfn4BHfEHiHDqPu4/UEjDWtJVJzpv3
-         7EV+lN1TjwcAiDYrir50K6s674+iuonX5ymy5nWU5TZPROCnGm1cs6kalMhdL6L+wkcx
-         H4FA==
-X-Gm-Message-State: APjAAAWzrCjYtjG5eQRvgqoVc8ndq5X6LSrnPmDPZCuDtICcXb7Hs7IF
-        0HQyiVZplieUN2yfBL76NtYuKlBmor/c3ZPw/PrmOA==
-X-Google-Smtp-Source: APXvYqwaGrH2h+Z98/ELblKzu4yMSF6RGFMj6RI688gHIeWsG2kw7fK8UUVt72WdXfpVrC4bXciBwl2IVtwAYJ/zDKs=
-X-Received: by 2002:a2e:650a:: with SMTP id z10mr3282903ljb.28.1562363617011;
- Fri, 05 Jul 2019 14:53:37 -0700 (PDT)
+        bh=XgKC08iiEaNapEt8oecESiRwrLkTQTJmIfIX4GB6LAo=;
+        b=cnF8se1eb+jBopEH/ls66mHcl05LgyU7jczCony54jK34A+a47FOXbqpG2EU/xywu2
+         Q0Mdi0yGlG0yzDsl+TvQWat8cdIumN3wsIMnc5Zhg1lVHE/6B5AfcckxYeYUfRKSuTj8
+         hVtUjtCG1W6cklZ0DefJDjzA6D5fqsPPsTzkSa/LGWKJ1kgSmaQ4e7BO7OeNGRKQXgll
+         tO4JMuQOmFy4+0gOzEAxKkk8BN0riT8SWIrIv3J6kTCXv6wPR8dEz+mxVJ9miENe380O
+         /Rwh5KbMjk+oDTw+8msz5shhDFK3NfioeUDyY97wfzA+SYX7iL4tNmhEVtngtHEPdFvm
+         wTrA==
+X-Gm-Message-State: APjAAAWbgL3ef02xM9M70BpvX/o7ndJgnTgAsU46EgNUrRWRVo1E234m
+        H/4ZW0SRBKr3rtQQF5A/g01ueQtBhdMt6CTWGinHhQ==
+X-Google-Smtp-Source: APXvYqwMkXMyOGNxusvNtzdRCvnI5J43hplKIhDlLunGWI5KYF1VSpVsFZX9oMXvfjTIHq2L2mfIqHeqxPVAqPcbsK8=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr3096454lfc.60.1562363762981;
+ Fri, 05 Jul 2019 14:56:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
- <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
- <f9eb3387ed384676b0b298e4da7eeaf0@svr-chch-ex1.atlnz.lc> <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
-In-Reply-To: <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
+References: <20190704042027.18966-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190704042027.18966-1-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 5 Jul 2019 23:53:25 +0200
-Message-ID: <CACRpkdYzXEKVzmq_wimvbeMmOqnW8okyK09V-RpzdoesmC4P7Q@mail.gmail.com>
-Subject: Re: gpio desc flags being lost
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+Date:   Fri, 5 Jul 2019 23:55:51 +0200
+Message-ID: <CACRpkdbWWWhQ5V5tc0FkQSx80ZXZ+ki-mn9Cc_Vm-jOwVu0R3A@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: Preserve desc->flags when setting state
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,30 +70,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 11:30 PM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
+Hi Chris,
 
-> The problem is caused by commit 3edfb7bd76bd1cba ("gpiolib: Show correct
-> direction from the beginning"). I'll see if I can whip up a patch to fix it.
+thanks for your patch!
 
-Oh. I think:
+On Thu, Jul 4, 2019 at 6:21 AM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
 
-               if (chip->get_direction && gpiochip_line_is_valid(chip, i))
-                        desc->flags = !chip->get_direction(chip, i) ?
-                                        (1 << FLAG_IS_OUT) : 0;
-                else
-                        desc->flags = !chip->direction_input ?
-                                        (1 << FLAG_IS_OUT) : 0;
+> desc->flags may already have values set by of_gpiochip_add() so make
+> sure that this isn't undone when setting the initial direction.
+>
+> Fixes: 3edfb7bd76bd1cba ("gpiolib: Show correct direction from the beginning")
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>     Changes in v2:
+>     - add braces to avoid ambiguious else warning
 
+This is almost the solution!
 
-Needs to have desc->flags |=  ... &= ~
+> -               if (chip->get_direction && gpiochip_line_is_valid(chip, i))
+> -                       desc->flags = !chip->get_direction(chip, i) ?
+> -                                       (1 << FLAG_IS_OUT) : 0;
+> -               else
+> -                       desc->flags = !chip->direction_input ?
+> -                                       (1 << FLAG_IS_OUT) : 0;
+> +               if (chip->get_direction && gpiochip_line_is_valid(chip, i)) {
+> +                       if (!chip->get_direction(chip, i))
+> +                               set_bit(FLAG_IS_OUT, &desc->flags);
 
-if (!chip->get_direction(chip, i))
-    desc->flags |= (1 << FLAG_IS_OUT);
-else
-    desc->flags &= ~(1 << FLAG_IS_OUT);
+You need to clear_bit() in the reverse case. We just learned we can't
+assume anything about the flags here, like just assign them.
 
-And the same for direction_input()
+> +               } else {
+> +                       if (!chip->direction_input)
+> +                               set_bit(FLAG_IS_OUT, &desc->flags);
+
+Same here.
 
 Yours,
 Linus Walleij
