@@ -2,131 +2,130 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D17C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6454AC4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C096218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562331009;
-	bh=SkovIuVVyMzxFaOZoi3i2O3ZZrHSAu1M22ejXxbkKQw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AiiSw0AfqVhuK7kBcDUpj54yUxZL9knFqZsjb6Kz3yG8zLfl/PFduzedaIyhzUxFx
-	 TDVUGpeWMiHEzmc+Ny0OicSCOwziuoV1V784JyT/dlmTSXRcFeo4laCRMkVx9GaaKD
-	 SLf9xycNAjYfCXv58Kswd0I6Pqh1gqo5XCeWj+4M=
+	by mail.kernel.org (Postfix) with ESMTP id 3D928218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HWfTtuHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfGEMuH (ORCPT
+        id S1728895AbfGEMug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727991AbfGEMuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:50:07 -0400
-Received: from localhost (unknown [122.167.76.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2E62184C;
-        Fri,  5 Jul 2019 12:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562331006;
-        bh=SkovIuVVyMzxFaOZoi3i2O3ZZrHSAu1M22ejXxbkKQw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bCrhMQNjtA9DVZoUzobukEaip6FmeXbLASfbZAuxtV8yRQgYaUCv6wTUQMIYNZgGU
-         tfrpEoPDeuagdnvy4wjXW5nsfjkaVrp72kkqyPXvjJjXphh2ei+eBpCPsofGJGhILQ
-         XOdUk4T3JIfbFC4y2LBBSZGE4lVYSsAhDg8Obk5w=
-Date:   Fri, 5 Jul 2019 18:16:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error
- path
-Message-ID: <20190705124646.GD2911@vkoul-mobl>
+        Fri, 5 Jul 2019 08:50:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40944 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbfGEMug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:50:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e8so8937617otl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FIkr57DGKA3Q6AfbFJSXSoEMY5we+AeS4yYazxarf0U=;
+        b=HWfTtuHJMeQk3WvwzFgJoUDwPeD2L4gyga5Xe0xi2YqSuTWn5BVGPJlg2A3PKVFSGs
+         4NqeXFE/HRzmVmEWZ6HQDeUchtRIjOu4tN5al3dn9ALxyP5fhPhl8jcLvdUOEUMfN+lU
+         8kfLtM6THhpejbrgtZcCTyiYN3vsG73/vXLuctjR1EZ9s9Q4QJ/YgkQngN5UiGgk2iJy
+         deKfQDtBeUEaS7z9MRb11IE+Fndmb1bmjWv/ABhaBL/l2cIdVYzwWlbhxIhs+h/xsXNY
+         rLa9VpMH+ncbm5BpfAHsXYaJYSqnYedT+E1MGkByGbH8uQQBwpIBhIG6Wr5jz9d5K2yn
+         vaGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FIkr57DGKA3Q6AfbFJSXSoEMY5we+AeS4yYazxarf0U=;
+        b=lIMqHIoGDp2Lq1N2HQL9iaIF6sejz1m5pZLt3WoD1l9xnSLqJayT1SIeq1ZkCwnpiL
+         g41801/vNmYMgkfHWP+aIRmcKL+lItAvGSg12gZhXhIAk2Oj3IybGLL1uGa3bBHNkg0b
+         GA3yCLDTNg/3avyHY5JHcf6o6LDxmaP0yl3fWhtYjXzj1v4LWx5X5BDQqoAu62yiHl2U
+         /f4DYwTdJzUiIj9ev69p8cFw6EHBIgE7Kr0vz4RX5kjDrAwLtqzoBoZ6BaKWmW3ouqAQ
+         VVVddrA0euae4oZ2hJy5g6bTD7ONipqv5XbdQRFDbYrtqU8pz/c4/9oSa3sWfIMM5/5O
+         Vcbw==
+X-Gm-Message-State: APjAAAUKZVEcrFCJlWHuu5KaTNPKZtt99z5nfX6h6I8rloLleQQUIDEl
+        r8IR1jTlkyrZ9e1+B4uejvg9V9KTjXQ1TKb8EFpdFg==
+X-Google-Smtp-Source: APXvYqyj3P6SvTAvEnVCM85tldcabDwB2YoCwofDk7jcXord3thnCYIP7vt/wN10NBUwzFT3suk99YuEgagp0UNfLTY=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr2713379otc.250.1562331035267;
+ Fri, 05 Jul 2019 05:50:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGngYiVsUZwCUEsqRk-YtZPGYxsqzHzD7U5GeeHyAa2Yw9Z6WA@mail.gmail.com>
- <20190624140731.24080-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190705093031.18182-1-michael.wu@vatics.com> <CAMpxmJUzaEREeUxCu2BCV12Huv7K=yeUSKntA5RGMfOQbnxaFg@mail.gmail.com>
+ <5DB475451BAA174CB158B5E897FC1525920E9FD0@MBS-6F-DAG.vivotek.tw>
+In-Reply-To: <5DB475451BAA174CB158B5E897FC1525920E9FD0@MBS-6F-DAG.vivotek.tw>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 5 Jul 2019 14:50:24 +0200
+Message-ID: <CAMpxmJVQhTeMa1dA+3ikW0Lbsp0BSajN=tO3VcQ3_GLt-=8OOw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+To:     Michael Wu <Michael.Wu@vatics.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mvp.kutali@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-06-19, 10:07, Sven Van Asbroeck wrote:
+pt., 5 lip 2019 o 12:35 <Michael.Wu@vatics.com> napisa=C5=82(a):
+>
+> Hi Bartosz,
+>
+> For example, there is a button which drives level to be low when it is pu=
+shed, and drivers level to be high when it is released.
+> We want to catch the event when the button is pushed.
+>
+> In user space we configure a line event with the following code:
+>
+> req.handleflags =3D GPIOHANDLE_REQUEST_INPUT;
+> req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
+>
+> and we hope to get "falling" events by reading the device node:
+>
+> while (1) {
+>         read(fd, &dat,sizeof(dat));
+>         if (dat.id =3D=3D 0) {
+>                 printf("button pushed\n");
+>         }
+> }
+>
+> Run the same logic on another board which the polarity of the button is i=
+nverted. The button drives level to be high when it is pushed.
+> For the inverted level case, we have to add flag GPIOHANDLE_REQUEST_ACTIV=
+E_LOW:
+>
+> req.handleflags =3D GPIOHANDLE_REQUEST_INPUT | GPIOHANDLE_REQUEST_ACTIVE_=
+LOW;
+> req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
+>
+> At the result, there are no any events been caught when the button is pus=
+hed.
+> By the way, button releasing will emit a "falling" event.
+>
+>
+> Sincerely,
+>
+> Michael Wu
 
-Quoting orignal patch for better context:
+First: please don't top-post on the mailing list.
 
-> +	if (pdata) {
-> +		ret = sdma_get_firmware(sdma, pdata->fw_name);
-> +		if (ret)
-> +			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-> +	} else {
-> +		/*
-> +		 * Because that device tree does not encode ROM script address,
-> +		 * the RAM script in firmware is mandatory for device tree
-> +		 * probe, otherwise it fails.
-> +		 */
-> +		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-> +					      &fw_name);
-> +		if (ret)
-> +			dev_warn(&pdev->dev, "failed to get firmware name\n");
-> +		else {
-> +			ret = sdma_get_firmware(sdma, fw_name);
-> +			if (ret)
-> +				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-> +		}
-> +	}
-> +
+Second: have you even built the version you sent? Because I'm getting this:
 
-On 05-07-19, 08:26, Sven Van Asbroeck wrote:
-> Hi Vinod,
-> 
-> On Fri, Jul 5, 2019 at 3:32 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > > +             if (ret)
-> > > +                     dev_warn(&pdev->dev, "failed to get firmware name\n");
-> >
-> > if should have braces!
-> > Applied after fixing braces!
-> 
-> checkpatch.pl output after adding braces:
-> 
-> WARNING: braces {} are not necessary for single statement blocks
-> #102: FILE: drivers/dma/imx-sdma.c:2165:
-> + if (ret) {
-> + dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-> + }
+drivers/gpio/gpiolib.c: In function =E2=80=98lineevent_create=E2=80=99:
+drivers/gpio/gpiolib.c:963:4: error: =E2=80=98IRQ_TRIGGER_RISING=E2=80=99 u=
+ndeclared
+(first use in this function)
+    IRQ_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+    ^~~~~~~~~~~~~~~~~~
 
-there is an else here too!
+And third: after fixing the define, this indeed looks like a bug and
+I'll need to add a test for that to libgpiod once it's upstream.
+Strange we didn't catch it before.
 
-With the patch the checkpatch warns:
+Please send a fixed version and add a Cc tag for stable. Nice catch!
 
-CHECK: braces {} should be used on all arms of this statement
-#201: FILE: drivers/dma/imx-sdma.c:2161:
-+		if (ret)
-[...]
-+		else {
-[...]
-
-
-Even if the if is a single block and else being multi block, if would
-need matching brances. With the change pushed:
-
-total: 0 errors, 0 warnings, 0 checks, 60 lines checked
-
-
--- 
-~Vinod
+Best regards
+Bartosz Golaszewski
