@@ -2,115 +2,131 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C92C4649A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B1FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4380A21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0990721738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mJAWtXLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfGEIs7 (ORCPT
+        id S1728001AbfGEItG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:48:59 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41281 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfGEIs7 (ORCPT
+        Fri, 5 Jul 2019 04:49:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8397 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfGEItG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:48:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p15so7539922eds.8;
-        Fri, 05 Jul 2019 01:48:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DrtkCOU3d35z8J32aN8s3zZgpzBWbHJuGIW4lFwRsYw=;
-        b=XrtSRwSHZloS2G5Heluef/b7vZruYDB/jfr5+ZMhwOsj1gnjx56ZJhW5HQ7OrrWzMx
-         4cfKp3M2DF2i9gBvDefGKhK5Vub75xsel3BWI3MiqjXCRQAZSeuT0UPSg19ziVaxMWOG
-         F+FMt9PcsbdxgG/lBhIu93ehH4hYMSdB/CSQg790jbIz0bGwW83FFegsM7DucUNxeDYP
-         Imuwn0GxCvXYKPHS7E0f4BE/RduVDseOPEa0nvS63Tu+8bkFkMEDuB51+CUkI1zT4VnX
-         Ca+SBNBEBrEK2ieUkT60fOB6SaSviGaDPAv7f0Egm+6pwVS/8almxhxfJXvdOKqVWcE9
-         BX+w==
-X-Gm-Message-State: APjAAAUmjJEDFX34nsWb8c3H4cOgiL3kNEJ/GmEUCqnL4uSTl0CNc4hm
-        r4iBh4eKEQ3uNjikeSDjZiNs9nn3JsE=
-X-Google-Smtp-Source: APXvYqwu+bxllRyOqly7Q+oL0fEOlMYhSGmI+6IFW1TpYlK7nJPYua/M0lZo8p1L/k1DbOthpzHkeQ==
-X-Received: by 2002:a50:a485:: with SMTP id w5mr3138570edb.277.1562316536934;
-        Fri, 05 Jul 2019 01:48:56 -0700 (PDT)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
-        by smtp.gmail.com with ESMTPSA id d4sm2456460edb.4.2019.07.05.01.48.55
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 01:48:55 -0700 (PDT)
-Received: by mail-wr1-f44.google.com with SMTP id n4so9088509wrs.3;
-        Fri, 05 Jul 2019 01:48:55 -0700 (PDT)
-X-Received: by 2002:a5d:568e:: with SMTP id f14mr2777076wrv.167.1562316534957;
- Fri, 05 Jul 2019 01:48:54 -0700 (PDT)
+        Fri, 5 Jul 2019 04:49:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1f0f050001>; Fri, 05 Jul 2019 01:49:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 05 Jul 2019 01:49:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 05 Jul 2019 01:49:05 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
+ 2019 08:49:05 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 5 Jul 2019 08:49:04 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.26.11.221]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d1f0eff0002>; Fri, 05 Jul 2019 01:49:04 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] PCI: tegra: Fix support for GPIO based PERST#
+Date:   Fri, 5 Jul 2019 09:48:50 +0100
+Message-ID: <20190705084850.30777-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190513142410.9299-1-um@mutluit.com>
-In-Reply-To: <20190513142410.9299-1-um@mutluit.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 5 Jul 2019 16:48:44 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67OEa+ge7qpbNa5R7DCpgwKfs4T8KHTKe4fnuQYwzJURQ@mail.gmail.com>
-Message-ID: <CAGb2v67OEa+ge7qpbNa5R7DCpgwKfs4T8KHTKe4fnuQYwzJURQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v3] drivers: ata: ahci_sunxi: Increased
- SATA/AHCI DMA TX/RX FIFOs
-To:     Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-ide@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Uenal Mutlu <um@mutluit.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Pablo Greco <pgreco@centosproject.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Oliver Schinagl <oliver@schinagl.nl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        FUKAUMI Naoki <naobsd@gmail.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Stefan Monnier <monnier@iro.umontreal.ca>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562316549; bh=tBHCslONGNXrTuqR08BQriljhrvSbQNaMiL9a/TIMAo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=mJAWtXLuY1JNrR9BMi1//luoq7N7RQzV7q4o2a8v/v9v1QaqQkNEVTrOdJkZyYWzN
+         Bzizezio0/QJN6c1IDzuk1IuqK0EfHChlCErUvY+domCQXoS4JCMwOlaCutYlg+9yG
+         H0OVifUDuhYmON08B9tW0YDOctONAb8JcZnhliFI+QzSOtIoxObXOMrhQqCZz9Dnx9
+         QlKEYZRPco8SWFYg2cUNWa0NIO1zsqZ8KuG4u9nSIt0Y6H/7lKX0G81/6Wzl7hfCt1
+         TnFr/kHpaOnpH0+nyn5IyYskyB2V8wflU2jOrFfAIMQlUCJc1vGBnuebN1zqr0Nue9
+         68PX0w28Noe7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 10:24 PM Uenal Mutlu <um@mutluit.com> wrote:
->
-> Increasing the SATA/AHCI DMA TX/RX FIFOs (P0DMACR.TXTS and .RXTS, ie.
-> TX_TRANSACTION_SIZE and RX_TRANSACTION_SIZE) from default 0x0 each
-> to 0x3 each, gives a write performance boost of 120 MiB/s to 132 MiB/s
-> from lame 36 MiB/s to 45 MiB/s previously.
-> Read performance is above 200 MiB/s.
-> [tested on SSD using dd bs=4K/8K/12K/16K/20K/24K/32K: peak-perf at 12K]
->
-> Tested on the SBCs Banana Pi R1 (aka Lamobo R1) and Banana Pi M1 which
-> are based on the Allwinner A20 32bit-SoC (ARMv7-a / arm-linux-gnueabihf).
-> These devices are RaspberryPi-like small devices.
->
-> This problem of slow SATA write-speed with these small devices lasts
-> for about 7 years now (beginning with the A10 SoC). Many commentators
-> throughout the years wrongly assumed the slow write speed was a
-> hardware limitation. This patch finally solves the problem, which
-> in fact was just a hard-to-find software problem due to lack of
-> SATA/AHCI documentation by the SoC-maker Allwinner Technology.
->
-> Lists of the affected sunxi and other boards and SoCs with SATA using
-> the ahci_sunxi driver:
->   $ grep -i -e "^&ahci" arch/arm/boot/dts/sun*dts
->   and http://linux-sunxi.org/SATA#Devices_with_SATA_ports
->   See also http://linux-sunxi.org/Category:Devices_with_SATA_port
->
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Uenal Mutlu <um@mutluit.com>
+Commit 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
+calls the function devm_gpiod_get_from_of_node() to request a GPIO.
+Unfortunately, around the same time this was merged, commit 025bf37725f1
+("gpio: Fix return value mismatch of function gpiod_get_from_of_node()")
+was also merged to fix the return value of the function
+devm_gpiod_get_from_of_node() that was incorrectly returning NULL
+instead of an error pointer encoded with -ENOENT if no GPIO was found.
+When this fix for the GPIO subsystem was merged, PCI support for Tegra
+devices that did not provide a GPIO for the PERST# (which is optional)
+broke because the Tegra PCI driver was expecting NULL to be returned if
+no GPIO was present and not -ENOENT.
 
-Tested-by: Chen-Yu Tsai <wens@csie.org>
+Fix this by checking to see if -ENOENT is returned from the function
+devm_gpiod_get_from_of_node(), to indicate there is no GPIO for PERST#
+present, and if this is the case set the variable 'reset_gpio' to NULL.
+If the variable 'reset_gpio' is NULL then the Tegra PCI driver will
+fallback to using the AFI register to toggle the PERST#. Finally,
+correct the comment now that NULL is no longer returned from
+devm_gpiod_get_from_of_node().
 
-on a Lamabo R1 as well.
+Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/pci/controller/pci-tegra.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Maybe we could merge this soon so it makes the next merge window?
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 9cc03a2549c0..ff8a346f3e04 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2295,18 +2295,22 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 		}
+ 
+ 		/*
+-		 * Returns null if reset-gpios property is not populated and
+-		 * fall back to using AFI per port register to toggle PERST#
+-		 * SFIO line.
++		 * Returns -ENOENT if reset-gpios property is not populated
++		 * and in this case fall back to using AFI per port register
++		 * to toggle PERST# SFIO line.
+ 		 */
+ 		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
+ 							     "reset-gpios", 0,
+ 							     GPIOD_OUT_LOW,
+ 							     label);
+ 		if (IS_ERR(rp->reset_gpio)) {
+-			err = PTR_ERR(rp->reset_gpio);
+-			dev_err(dev, "failed to get reset GPIO: %d\n", err);
+-			return err;
++			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
++				rp->reset_gpio = NULL;
++			} else {
++				dev_err(dev, "failed to get reset GPIO: %d\n",
++					err);
++				return PTR_ERR(rp->reset_gpio);
++			}
+ 		}
+ 
+ 		list_add_tail(&rp->list, &pcie->ports);
+-- 
+2.17.1
 
-Thanks.
