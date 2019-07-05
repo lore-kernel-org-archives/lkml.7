@@ -2,143 +2,68 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D65C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5C7C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BF121850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562327356;
-	bh=wKj2+prk7mS4NOrXmVTjVpgQi+0EdZmxKsCZK4x2xj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ca8okcCqmZpeR+TDGaYffLaJKLKQ57FSQVzO19YkuvuU6aHJ8bA3yZcxbmBMdV9T4
-	 2LzMXRt+D5GuvRlxF1O8XVnAV3n5OHhzKHlG//5qAh7SXlb4gnbHSxAzAKDQ8eZcql
-	 vX61Y54OWX5HKucUlz2K9FhflK/qUggziYEIvn/4=
+	by mail.kernel.org (Postfix) with ESMTP id 656CC20828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjzciPUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfGELtP (ORCPT
+        id S1728879AbfGELt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfGELtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:49:15 -0400
-Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9325E20828;
-        Fri,  5 Jul 2019 11:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562327354;
-        bh=wKj2+prk7mS4NOrXmVTjVpgQi+0EdZmxKsCZK4x2xj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BnNkGwLeQ4mmrtfMkcYD171d2LV8PC52F6EQsHUdTHEZ3CV31bN9gRDCLzyGDwxcN
-         KV8pA5E38hYpMzNYl3OW8MYs9pMI7frL9ikDh+u1BCRi1tzrj8g24p/+EBXyS3NMLI
-         +e2Y4VYwrxdA8sN2fekdHbye3ukBMA9pN5uESa5w=
-Date:   Fri, 5 Jul 2019 13:49:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: Re: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3
- driver.
-Message-ID: <20190705114911.GA31190@kroah.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
- <1562324238-16655-3-git-send-email-pawell@cadence.com>
- <20190705112724.GA4294@kroah.com>
- <BYAPR07MB4709AAF54E7C58B51FC26D20DDF50@BYAPR07MB4709.namprd07.prod.outlook.com>
+        Fri, 5 Jul 2019 07:49:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34112 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfGELt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:49:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MnDS828v/2vRSZdCCvSvB68MtPRTzNjF7AtDIX61mDQ=; b=RjzciPUCuY7PxiOgfr28PhK4j
+        g9VVWePCxtpJm2lpWr8f5xQIympzlYuIKN2mkfZm6ioGReWyPBO7xRR4QRO2h2UGKSxEJNtWM74oG
+        X+4L2lfE/Nko4Ab7v8LiNSX1JdhvXDuTp4Bf2Lo91oU9Ndabxe5zOYsEchsIImuYGqIJyu9XNl2DG
+        kzT5wuTQ/0t0VbiMGrA+1fHFb0266FZmM7QrkFDEor6mX2KdqDtCkygclWNpYTc3xTJiqh4zQI2e4
+        sG0Rrv6ue6G86etxZlnxVliP1/0HhYldR0s+gg3tWz/mw3gCRU3C4Pbi+MKH6BuAbxee4ox6XsFAp
+        iLj2ejbeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hjMiK-0001Rj-Q4; Fri, 05 Jul 2019 11:49:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7C8772026E806; Fri,  5 Jul 2019 13:48:45 +0200 (CEST)
+Date:   Fri, 5 Jul 2019 13:48:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: Re: [PATCH v2] sched: fix unlikely use of sched_info_on()
+Message-ID: <20190705114845.GS3402@hirez.programming.kicks-ass.net>
+References: <1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR07MB4709AAF54E7C58B51FC26D20DDF50@BYAPR07MB4709.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1562301307-43002-1-git-send-email-wang.yi59@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:39:57AM +0000, Pawel Laszczak wrote:
+On Fri, Jul 05, 2019 at 12:35:07PM +0800, Yi Wang wrote:
+> sched_info_on() is called with unlikely hint, however, the test
+> is to be a constant(1) on which compiler will do nothing when
+> make defconfig, so remove the hint.
 > 
-> >On Fri, Jul 05, 2019 at 11:57:14AM +0100, Pawel Laszczak wrote:
-> >> Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
-> >> to driver/usb/gadget/debug.c file. These moved functions include:
-> >>     dwc3_decode_get_status
-> >>     dwc3_decode_set_clear_feature
-> >>     dwc3_decode_set_address
-> >>     dwc3_decode_get_set_descriptor
-> >>     dwc3_decode_get_configuration
-> >>     dwc3_decode_set_configuration
-> >>     dwc3_decode_get_intf
-> >>     dwc3_decode_set_intf
-> >>     dwc3_decode_synch_frame
-> >>     dwc3_decode_set_sel
-> >>     dwc3_decode_set_isoch_delay
-> >>     dwc3_decode_ctrl
-> >>
-> >> These functions are used also in inroduced cdns3 driver.
-> >>
-> >> All functions prefixes were changed from dwc3 to usb.
-> >> Also, function's parameters has been extended according to the name
-> >> of fields in standard SETUP packet.
-> >> Additionally, patch adds usb_decode_ctrl function to
-> >> include/linux/usb/gadget.h file.
-> >
-> >No it does not :(
+> Also, fix a lack of {}.
 > 
-> I've forgot about this :( 
-> 
-> It should be include/linux/usb/ch.9.h
-> 
-> >
-> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> >> ---
-> >>  drivers/usb/common/Makefile |   5 +
-> >>  drivers/usb/common/debug.c  | 268 ++++++++++++++++++++++++++++++++++++
-> >>  drivers/usb/dwc3/debug.h    | 252 ---------------------------------
-> >>  drivers/usb/dwc3/trace.h    |   2 +-
-> >>  include/linux/usb/ch9.h     |  25 ++++
-> >>  5 files changed, 299 insertions(+), 253 deletions(-)
-> >>  create mode 100644 drivers/usb/common/debug.c
-> >>
-> >> diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-> >> index 0a7c45e85481..cdc66b59a6f0 100644
-> >> --- a/drivers/usb/common/Makefile
-> >> +++ b/drivers/usb/common/Makefile
-> >> @@ -5,6 +5,11 @@
-> >>
-> >>  obj-$(CONFIG_USB_COMMON)	  += usb-common.o
-> >>  usb-common-y			  += common.o
-> >> +
-> >> +ifneq ($(CONFIG_TRACING),)
-> >> +	usb-common-y		  += debug.o
-> >> +endif
-> >
-> >So only enable this if tracing is not emabled?  Or if enabled?  I'm
-> >confused, isn't there an easier way to write this?
-> 
-> It's checks if CONFIG_TRACING is enable. 
-> It's a common way checking if option is enabled in usb subsystem. 
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 
-Why not just write this as:
-	usb-common-$(CONFIG_TRACING)	+= debug.o
-?
-
-thanks,
-
-greg k-h
+Thanks!
