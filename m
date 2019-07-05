@@ -2,80 +2,92 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA8C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A25AC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBEB21852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4FA218CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucPR/0qu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3GP3RPKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbfGENS2 (ORCPT
+        id S1729045AbfGENT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:18:28 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42461 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbfGENS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:18:27 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l15so9010400otn.9
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nzoXo3/htFR31LA8s3Fj/XgdNRyw0c3OLiqfSUlNP70=;
-        b=ucPR/0quxKGLxIUb9Fysde/5/WskQOU1F7/mjtGZ3gpanKQW8COcu7UBrVGoJr1jPa
-         IO41prY3nvOiDU2Y9rIHe2xtUipl4sR2OfvQNFp7V3xnRT4WBsFfFKQyv1rjmgDLiT9d
-         IdHgdL0EhF+0uV3DKuO84sFyoFFg9zH3yNe9yI9MdHCl/cQpwF8Hc8DL9HFMle0F34xD
-         TfkuxKGJ9pnOdqxjVQ83heK+wKEyI2Nwrv/bAgRLZJ5lJg2O0bjCbm23g+1ysHzS/DQ4
-         eE03+ELaSa4dylEDoSSXeKtD9S6nDBl6JFst3lPJSf3Yfm4BUdjYpk/cJZTiz1oOhUCG
-         VeAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nzoXo3/htFR31LA8s3Fj/XgdNRyw0c3OLiqfSUlNP70=;
-        b=Ehc43Bjzh0VvbaajUHo4y7Rvt+bSsWkVyg9fBvHhqehQiecKZTnP/z7oTv7pV1WVmu
-         KTa68M2v79s4lA9V+4+W6JJApWdCGY8RzSSY9W9rLhc/9Ko47RRbhFXfmmZ/8tEvDE04
-         PIo4kndlYru8O/Ab3BRzLGz5jQjs2xxtjJnzL5Og+6jj95ozeLaXW+DUSRq3zKBckOeQ
-         HOydYSfDEbwJOTeMEZ0gyBiivbITF290IGfr8tP/GJFySNR86RFSXxZPk3pdEuW3JCHW
-         13AHBX5tvShR+YtMfMAVsYlGQtrcn1PkvymPyVPkvy1wrVcmYKyXiv5HoQhd9zBr2GrP
-         Yy1A==
-X-Gm-Message-State: APjAAAUYdgfLpPG69jXK8jx3sL1R5aMllVOAETUfyJYqr+QRuWVSI15O
-        nqyCDGZPOvI1yt09CWaPmpFMei+9Xk/+3rM1TTE=
-X-Google-Smtp-Source: APXvYqxFkYTLtJ5jfERlyBEPVUyKkNbQC9gBFh5BnS2AudwX6DCwCumL1SMCveo3Ef87ZvF5C3kVRU1B+91dGKp+K2E=
-X-Received: by 2002:a05:6830:1319:: with SMTP id p25mr2936371otq.224.1562332706828;
- Fri, 05 Jul 2019 06:18:26 -0700 (PDT)
+        Fri, 5 Jul 2019 09:19:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55782 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfGENT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:19:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nWbKLFHL+b+hFBq0825QJ0Fh8N/yT85HADdlrJpqwCQ=; b=3GP3RPKu7ZpFV7+cfZjE+vohUc
+        Bex/2CpZC7Ala0E0eG4LZVetEHQEb/pfJHowfchWGZpWrdgaXwHw7j7iVZVhdnGDzqhJtwb9f/Eeo
+        KLOig8uZwjFnSMbwTDYL8WRA0Mk0Pe6SrZtuUPnX5rsJaDgQ9SE3ZqwIKhT9NdjVOm9A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hjO7O-0001Br-S6; Fri, 05 Jul 2019 15:19:14 +0200
+Date:   Fri, 5 Jul 2019 15:19:14 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190705131914.GA4428@lunn.ch>
+References: <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch>
+ <20190624182614.GC5690@piout.net>
+ <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
+ <20190705044945.GA30115@lunn.ch>
+ <VI1PR04MB4880DEA9D7836A68E0EE141396F50@VI1PR04MB4880.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <CAGngYiVsUZwCUEsqRk-YtZPGYxsqzHzD7U5GeeHyAa2Yw9Z6WA@mail.gmail.com>
- <20190624140731.24080-1-TheSven73@gmail.com> <20190705124646.GD2911@vkoul-mobl>
- <CAGngYiW2+sBv1WqB8+csb=mZm2owziJ5wWcWLNPy7=m72ppypw@mail.gmail.com> <20190705131049.GF2911@vkoul-mobl>
-In-Reply-To: <20190705131049.GF2911@vkoul-mobl>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Fri, 5 Jul 2019 09:18:15 -0400
-Message-ID: <CAGngYiWrKSaNHMjh6n8Aoy7VfUVe3p9469YcL9hB0FZXwZLzLw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB4880DEA9D7836A68E0EE141396F50@VI1PR04MB4880.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 9:13 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> To quote David you need to move to 21st century (like me).
+> Nice discussion, again, but there's a missing point that has not been
+> brought up yet.  We actually intend to support the following hardware
+> configuration: a single PCI device consisting of the Microsemi's switch core
+> and our DMA rings.
+> The hardware supports this configuration into a single PCI function (PF), 
+> with a unique PCI function id (0xe111), so that the same driver has access to 
+> both switch registers and DMA rings connected to the CPU port.  This device
+> would qualify  as a  switchdev device, and we can simply reuse the existing
+> ocelot code for the switch core part.  The initial patch set was the first step in
+> supporting the switch core on our platform, we just need to add the support
+> for the DMA rings part, to make it a complete switchdev solution.
 
-So true :)
+Hi Claudiu
 
-Your MAINTAINERS entry in linux-next is still pointing to
-infradead, though. But that's becoming less and less useful,
-now that most developers are moving to kernel.org ...
+It sound like in the end you will have a core library and then two
+drivers wrapped around it, giving a pure switchdev device with polled
+IO or DMA, and a DSA driver using a CPU port.
+
+   Andrew
