@@ -2,91 +2,113 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA78C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E96CC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F0F21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nX1TZpQU"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFF021670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfGEUfL (ORCPT
+        id S1727994AbfGEUgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:35:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36528 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfGEUfK (ORCPT
+        Fri, 5 Jul 2019 16:36:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36072 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfGEUgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:35:10 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so11073402wrs.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 13:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k4BDG3Gb73jNiTZtUtMpfoGK9P735tSlZRxVBA+5Xuo=;
-        b=nX1TZpQU+TbhqeOxzhSX4XmNGFaXHjLcXDfAjecwM99P/9gcUkcZDA2xYl/mGET6EB
-         4haXduw99strraMo4+Ckg4vPzdkgMw8l9MXuV9Q5g2QxNEoprNRn8FFTKPBpcvjOhcDJ
-         HMuiTPtI7+OHJV6/a5oGZwA8aYpXwy+dVAogdGAxngs1OIG8eqOAOxbjjRNcp+LduAuS
-         xdqXVZNZhwn/wLh8w6YT2IYXIt0J3jJoaY39Sz6x7IJJ+VE8wHu7a7+RxJp68MsNCpVP
-         ctPZsRbu+L5tfaDSiKV9sO/8urpNSVwCf+ygtaXQ7+hkEw0KuviPK6GLVf9Jc7mM48du
-         3elQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k4BDG3Gb73jNiTZtUtMpfoGK9P735tSlZRxVBA+5Xuo=;
-        b=M9nYuBUBc+JObFVTL5V3V8bWE3SXhPnUrnW87w/kP+FCmb5FxaxaTTTjj+0LGy+CkN
-         hvdcf00+1jg0Q+Cg182pBoFivL/gdthAlmnxugxlIXjr7GXQsHcrHVXEQ401jQdwmFBT
-         0Jz+D8nP05ie1LUNseeGvdxwRz9iMKnLmYf2MthAHYf+oTlacbTfPNNQkmkE8WFDBH/c
-         QBzfjN7IDkM05ZJsmSaQEbP7AwGxiC7grwMJnnYSU3SwfTP3m5xAYlr50CQc6oRA1CfH
-         /mWfh8Dla9YkQlMUXW5Zhl/STbiTNMfAlGr6m5xYH3p2Tj8rEEb2XFNfvqlyQdnE6zo/
-         GC8Q==
-X-Gm-Message-State: APjAAAWm7Dsf3Yj4hxring9vD3oL18pz1hW5KKnRakmeG1YNhmiJ24L7
-        KD6U/cbKspoY/QmyTZEQSw9dzNy3XTsz2uXjHJI=
-X-Google-Smtp-Source: APXvYqylofBLb1zWU/YUKF/s0FvCOodi1bulZJCl9uZLM9sGngoWbxuKh3qcs9cAqp86dnu11iDr4FNC6I1CcmwPjBM=
-X-Received: by 2002:adf:d847:: with SMTP id k7mr2848276wrl.74.1562358908599;
- Fri, 05 Jul 2019 13:35:08 -0700 (PDT)
+        Fri, 5 Jul 2019 16:36:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hjUwb-0007Ma-LP; Fri, 05 Jul 2019 22:36:33 +0200
+Date:   Fri, 5 Jul 2019 22:36:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>
+Subject: Re: [patch V2 04/25] x86/apic: Make apic_pending_intr_clear() more
+ robust
+In-Reply-To: <CALCETrVomGF-OmWxdaX9axih1kz345rEFop=vZtcKwGR8U-gwQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907052227140.3648@nanos.tec.linutronix.de>
+References: <20190704155145.617706117@linutronix.de> <20190704155608.636478018@linutronix.de> <958a67c2-4dc0-52e6-43b2-1ebd25a59232@citrix.com> <CALCETrVomGF-OmWxdaX9axih1kz345rEFop=vZtcKwGR8U-gwQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190530000819.GA25416@obi-wan> <20190604202149.GA20116@obi-wan>
- <CADnq5_OqVSz7Vfo0zP88i=wJur=wtz6Jd99ZTiQSbFNBcc3j7w@mail.gmail.com>
- <20190616144309.GA8174@obi-wan> <20190704201535.GA21911@obi-wan>
-In-Reply-To: <20190704201535.GA21911@obi-wan>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 5 Jul 2019 16:34:57 -0400
-Message-ID: <CADnq5_Oh76ABprkBrnJBaamv4gi15szfkJi8hM_Ys=d_4xTr+g@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/powerplay/smu7_hwmgr: replace blocking delay with non-blocking
-To:     Yrjan Skrimstad <yrjan@skrimstad.net>
-Cc:     David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 4:15 PM Yrjan Skrimstad <yrjan@skrimstad.net> wrote:
->
-> On Sun, Jun 16, 2019 at 04:43:10PM +0200, Yrjan Skrimstad wrote:
-> > That is an interesting observation to me. I am actually running
-> > lm-sensors, although only every 15 seconds. I suppose that this might
-> > be the reason this happens to me.
->
-> Though I don't think this should reasonably cause problems with the
-> system, even if it does here. Is there an update on the status of this
-> patch?
+On Fri, 5 Jul 2019, Andy Lutomirski wrote:
+> On Fri, Jul 5, 2019 at 8:47 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+> > Because TPR is 0, an incoming IPI can trigger #AC, #CP, #VC or #SX
+> > without an error code on the stack, which results in a corrupt pt_regs
+> > in the exception handler, and a stack underflow on the way back out,
+> > most likely with a fault on IRET.
+> >
+> > These can be addressed by setting TPR to 0x10, which will inhibit
+> > delivery of any errant IPIs in this range, but some extra sanity logic
+> > may not go amiss.  An error code on a 64bit stack can be spotted with
+> > `testb $8, %spl` due to %rsp being aligned before pushing the exception
+> > frame.
+> 
+> Several years ago, I remember having a discussion with someone (Jan
+> Beulich, maybe?) about how to efficiently make the entry code figure
+> out the error code situation automatically.  I suspect it was on IRC
+> and I can't find the logs.  I'm thinking that maybe we should just
+> make Linux's idtentry code do something like this.
+> 
+> If nothing else, we could make idtentry do:
+> 
+> testl $8, %esp   /* shorter than testb IIRC */
+> jz 1f  /* or jnz -- too lazy to figure it out */
+> pushq $-1
+> 1:
 
-Applied.  sorry for the delay.
+Errm, no. We should not silently paper over it. If we detect that this came
+in with a wrong stack frame, i.e. not from a CPU originated exception, then
+we truly should yell loud. Also in that case you want to check the APIC:ISR
+and issue an EOI to clear it.
 
-Alex
+> > Another interesting problem is an IPI which its vector 0x80.  A cunning
+> > attacker can use this to simulate system calls from unsuspecting
+> > positions in userspace, or for interrupting kernel context.  At the very
+> > least the int0x80 path does an unconditional swapgs, so will try to run
+> > with the user gs, and I expect things will explode quickly from there.
+> 
+> At least SMAP helps here on non-FSGSBASE systems.  With FSGSBASE, I
+
+How does it help? It still crashes the kernel.
+
+> suppose we could harden this by adding a special check to int $0x80 to
+> validate GSBASE.
+
+> > One option here is to look at ISR and complain if it is found to be set.
+> 
+> Barring some real hackery, we're toast long before we get far enough to
+> do that.
+
+No. We can map the APIC into the user space visible page tables for PTI
+without compromising the PTI isolation and it can be read very early on
+before SWAPGS. All you need is a register to clobber not more. It the ISR
+is set, then go into an error path, yell loudly, issue EOI and return.
+The only issue I can see is: It's slow :)
+
+Thanks,
+
+	tglx
+
+
