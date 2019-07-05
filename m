@@ -2,132 +2,163 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEDDC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F42DC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4030420989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cC3vcStQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6455C20989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfGERx2 (ORCPT
+        id S1727369AbfGERx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 13:53:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52359 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727294AbfGERx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jul 2019 13:53:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so9984874wms.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 10:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wKrn7NJ/yuO5P8NQh8suLObB71KcTMq7kM1FIw6E7Nw=;
-        b=cC3vcStQETpWhXWzAhUNLY1eaYOSk9YIysUj1Djqjcnb3G0BljbEd30FM5m43neEF+
-         zqsC12XaEL/Y2+b+C1Ad2nmZ5wqvAge27sUZf7NecIbk60qV3xyVwLnelPyn6JLahgA9
-         lcNihAxRda9tvTkbCrg8dvpCpWA8uX4B/V7ETwA2D/tm7vZnl9/43baDeTFfmK2Rx/e0
-         2zAzCR7m8RrfXi/yb9uNRuXYdFzj8aHhTJP1t5UWOUSkoElSL5mKb1mcO3RR1tjmerOP
-         ckhDRjzpdIk8TICT3ookIaCG1+udzvoe262FIa9BP9AMEYsW4u5V9kC75Lp7vl8J0cYR
-         vZEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wKrn7NJ/yuO5P8NQh8suLObB71KcTMq7kM1FIw6E7Nw=;
-        b=DrGsUfSOOmswg3pk9dhGOi8iNOlTsm1rjFVJ07pD3/wdiUabgBt8TFf0ZvoYeym+gG
-         KqzrMVykeg2Rm8vSV61mC2dTX3veu7lWnyOFcYHiqfAa8LKliiIzkKr3MgIpZd95s3Mx
-         tXDkurgl8ybnCzOQ4HUAHgIABNOBw2uo+QzCeadfpLugu7pwS5UM9IXtP32vtfoU4xfI
-         WFZVcdm1xF9xSXCqZTsgUKgM6AfzsX7GBCqtGX8fPRtOrHWBY8Dkzw/7QEz6hs9quCwT
-         7gf6I3XsTIJUq3xA4LgzgYDsM2UTJQbkM6osD/wNExfruaaBAIkdHDVF93cwB1jKcfgx
-         9eUA==
-X-Gm-Message-State: APjAAAXmoQIkZkR/Ajx/cGcMacJYlk2nuKE9qZ8nd2Jg4s+yeCL15Q0J
-        1nW1AR95CHw+Jx23sQxhPWMkfyrJPwBURP7WWVYyYA==
-X-Google-Smtp-Source: APXvYqxwAYfnATNzFUJ0N7VQQjEFwIpmRpJ+VVRt/JsQO3D53mfQH7iQLrqEQIiKNSe7NMEwlms7IinwvccYMA3EI54=
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr4166562wmf.119.1562349205298;
- Fri, 05 Jul 2019 10:53:25 -0700 (PDT)
+Received: from smtp.infotech.no ([82.134.31.41]:56627 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726743AbfGERx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 13:53:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id E4702204199;
+        Fri,  5 Jul 2019 19:53:23 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ISHY-xOxtrmM; Fri,  5 Jul 2019 19:53:17 +0200 (CEST)
+Received: from [192.168.48.23] (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id 6983E204145;
+        Fri,  5 Jul 2019 19:53:15 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
+To:     Hannes Reinecke <hare@suse.de>,
+        "Elliott, Robert (Servers)" <elliott@hpe.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Martin Petersen <martin.petersen@oracle.com>
+Cc:     SCSI <linux-scsi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
+ <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
+ <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
+ <da579578-349e-1320-0867-14fde659733e@acm.org>
+ <AT5PR8401MB11695CC7286B2D2F98FB9EADABEA0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
+ <1ad3e7ba-008d-31ad-89a0-b118b36e14e2@suse.de>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <e2469890-e0ae-fb79-4aa9-125cdaeedb2b@interlog.com>
+Date:   Fri, 5 Jul 2019 13:53:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
- <CACRpkdboWWKfaTu=TKqnZgjy4HNWr+fjmQXLBBmePsaDihkbSA@mail.gmail.com>
- <be57afd0-5a81-4d79-3ee4-1fb23644f424@arm.com> <CACRpkdbgyWmMM+3L6rjpWr4Z=qu4w6cri3cv0DG51JpFd9Ej4g@mail.gmail.com>
- <CAKv+Gu_=4P=caK4mFiAf+sqnKSZciCH0w8wUp19ef4xDVLH9-w@mail.gmail.com> <CACRpkdZTkMzEBX5b8LCdxkSPoY2pTcTZWEPTHuS3WpX6a5=cnA@mail.gmail.com>
-In-Reply-To: <CACRpkdZTkMzEBX5b8LCdxkSPoY2pTcTZWEPTHuS3WpX6a5=cnA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 5 Jul 2019 19:53:14 +0200
-Message-ID: <CAKv+Gu9cZamcgFgzQP7ZX27jYNnFJG8XDPy+RwsZB_zfWsGNAw@mail.gmail.com>
-Subject: Re: [tip:irq/core] gpio: mb86s7x: Enable ACPI support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-tip-commits@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1ad3e7ba-008d-31ad-89a0-b118b36e14e2@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jul 2019 at 10:58, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Thu, Jul 4, 2019 at 8:18 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> > On Thu, 4 Jul 2019 at 09:52, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >
-> > > On Wed, Jul 3, 2019 at 3:50 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > > > On 03/07/2019 13:26, Linus Walleij wrote:
-> > > > > On Wed, Jul 3, 2019 at 11:24 AM tip-bot for Ard Biesheuvel
-> > > > > <tipbot@zytor.com> wrote:
-> > > > >
-> > > > >> Committer:  Marc Zyngier <marc.zyngier@arm.com>
-> > > > >> CommitDate: Wed, 29 May 2019 10:42:19 +0100
-> > > > >>
-> > > > >> gpio: mb86s7x: Enable ACPI support
-> > > > >>
-> > > > >> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
-> > > > >> support for ACPI GPIO interrupts routed via platform interrupts, by
-> > > > >> wiring the two together via the to_irq() gpiochip callback.
-> > > > >>
-> > > > >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > >> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > > >> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> > > > >
-> > > > > OK!
-> > > > >
-> > > > >> +#include "gpiolib.h"
-> > > > >> +
-> > > > >
-> > > > > But this isn't needed anymore, is it?
-> > > >
-> > > > You tell me! ;-)
-> > > >
-> > > > > I can try to remember to remove it later though.
-> > > >
-> > > > Yeah, please send a separate patch. tip is stable, and we can't roll
-> > > > this back.
-> > >
-> > > I'll just fix it in the GPIO tree after -rc1.
-> > > Made a personal TODO note!
-> >
-> > Why wouldn't it be needed anymore?
->
-> I looked over the code like 5 times and I can't see it touching any
-> gpiolib internals anymore, but maybe I'm still wrong?
->
-> Normally GPIO drivers should get all symbols it needs from
-> <linux/gpio/driver.h> and "gpiolib.h" is not something drivers
-> should include.
->
-> Anyways I will get to know from compile tests if I'm wrong.
->
+On 2019-07-05 3:22 a.m., Hannes Reinecke wrote:
+> On 6/18/19 7:43 PM, Elliott, Robert (Servers) wrote:
+>>
+>>
+>>> -----Original Message-----
+>>> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Bart
+>>> Van Assche
+>>> Sent: Monday, June 17, 2019 10:28 PM
+>>> To: dgilbert@interlog.com; Marc Gonzalez <marc.w.gonzalez@free.fr>; James Bottomley
+>>> <jejb@linux.ibm.com>; Martin Petersen <martin.petersen@oracle.com>
+>>> Cc: SCSI <linux-scsi@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Christoph Hellwig
+>>> <hch@lst.de>
+>>> Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
+>>>
+>>> On 6/17/19 5:35 PM, Douglas Gilbert wrote:
+>>>> For sg3_utils:
+>>>>
+>>>> $ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
+>>>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>>>> ./src/sg_read.c
+>>>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>>>> ./src/sgp_dd.c
+>>>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>>>> ./src/sgm_dd.c
+>>>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>>>> ./src/sg_dd.c
+>>>>                   "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len,
+>>>> dirio_count);
+>>>> ./testing/sg_tst_bidi.c
+>>>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>>>> ./examples/sgq_dd.c
+>>>>
+>>>> That is 6 (not 38) by my count.
+>>>
+>>> Hi Doug,
+>>>
+>>> This is the command I ran:
+>>>
+>>> $ git grep /proc/scsi | wc -l
+>>> 38
+>>>
+>>> I think your query excludes scripts/rescan-scsi-bus.sh.
+>>>
+>>> Bart.
+>>
+>> Here's the full list to ensure the discussion doesn't overlook anything:
+>>
+>> sg3_utils-1.44$ grep -R /proc/scsi .
+>> ./src/sg_read.c:static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>> ./src/sgp_dd.c:static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>> ./src/sgm_dd.c:static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>> ./src/sg_dd.c:static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>> ./scripts/rescan-scsi-bus.sh:# Return hosts. /proc/scsi/HOSTADAPTER/? must exist
+>> ./scripts/rescan-scsi-bus.sh:  for driverdir in /proc/scsi/*; do
+>> ./scripts/rescan-scsi-bus.sh:    driver=${driverdir#/proc/scsi/}
+>> ./scripts/rescan-scsi-bus.sh:      name=${hostdir#/proc/scsi/*/}
+>> ./scripts/rescan-scsi-bus.sh:# Get /proc/scsi/scsi info for device $host:$channel:$id:$lun
+>> ./scripts/rescan-scsi-bus.sh:    SCSISTR=$(grep -A "$LN" -e "$grepstr" /proc/scsi/scsi)
+>> ./scripts/rescan-scsi-bus.sh:    DRV=`grep 'Attached drivers:' /proc/scsi/scsi 2>/dev/null`
+>> ./scripts/rescan-scsi-bus.sh:      echo "scsi report-devs 1" >/proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:      DRV=`grep 'Attached drivers:' /proc/scsi/scsi 2>/dev/null`
+>> ./scripts/rescan-scsi-bus.sh:      echo "scsi report-devs 0" >/proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:# Outputs description from /proc/scsi/scsi (unless arg passed)
+>> ./scripts/rescan-scsi-bus.sh:        echo "scsi remove-single-device $devnr" > /proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:          echo "scsi add-single-device $devnr" > /proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:      echo "scsi add-single-device $devnr" > /proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:      echo "scsi add-single-device $devnr" > /proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:      echo "scsi add-single-device $host $channel $id $SCAN_WILD_CARD" > /proc/scsi/scsi
+>> ./scripts/rescan-scsi-bus.sh:if test ! -d /sys/class/scsi_host/ -a ! -d /proc/scsi/; then
+>> ./ChangeLog:    /proc/scsi/sg/allow_dio is '0'
+>> ./ChangeLog:  - change sg_debug to call system("cat /proc/scsi/sg/debug");
+>> ./suse/sg3_utils.changes:  * Support systems without /proc/scsi
+>> ./examples/sgq_dd.c:static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+>> ./doc/sg_read.8:If direct IO is selected and /proc/scsi/sg/allow_dio
+>> ./doc/sg_read.8:"echo 1 > /proc/scsi/sg/allow_dio". An alternate way to avoid the
+>> ./doc/sg_map.8:observing the output of the command: "cat /proc/scsi/scsi".
+>> ./doc/sgp_dd.8:at completion. If direct IO is selected and /proc/scsi/sg/allow_dio
+>> ./doc/sgp_dd.8:this at completion. If direct IO is selected and /proc/scsi/sg/allow_dio
+>> ./doc/sgp_dd.8:mapping to SCSI block devices should be checked with 'cat /proc/scsi/scsi'
+>> ./doc/sg_dd.8:notes this at completion. If direct IO is selected and /proc/scsi/sg/allow_dio
+>> ./doc/sg_dd.8:this at completion. If direct IO is selected and /proc/scsi/sg/allow_dio
+>> ./doc/sg_dd.8:with 'echo 1 > /proc/scsi/sg/allow_dio'.
+>> ./doc/sg_dd.8:mapping to SCSI block devices should be checked with 'cat /proc/scsi/scsi',
+>>
+>>
+> As mentioned, rescan-scsi-bus.sh is keeping references to /proc/scsi as
+> a fall back only, as it's meant to work kernel independent. Per default
+> it'll be using /sys, and will happily work without /proc/scsi.
+> 
+> So it's really only /proc/scsi/sg which carries some meaningful
+> information; maybe we should move/copy it to somewhere else.
+> 
+> I personally like getting rid of /proc/scsi.
 
-IIRC it had something to do with the ACPI helpers that this driver
-calls directly.
+/proc/scsi/device_info doesn't seem to be in sysfs.
+
+Could the contents of /proc/scsi/sg/* be placed in
+/sys/class/scsi_generic/* ? Currently that directory only has symlinks
+to the sg devices.
+
+Doug Gilbert
