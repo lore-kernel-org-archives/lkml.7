@@ -2,89 +2,91 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8041DC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C11C4649E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637AB218CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFC7218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfGELQR (ORCPT
+        id S1728657AbfGELRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:16:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:36334 "EHLO foss.arm.com"
+        Fri, 5 Jul 2019 07:17:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51990 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbfGELQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:16:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 070222B;
-        Fri,  5 Jul 2019 04:16:16 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A6613F703;
-        Fri,  5 Jul 2019 04:16:14 -0700 (PDT)
-Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <cover.1558547956.git.robin.murphy@arm.com>
- <20190626073533.GA24199@infradead.org>
- <20190626123139.GB20635@lakrids.cambridge.arm.com>
- <20190626153829.GA22138@infradead.org> <20190626154532.GA3088@mellanox.com>
- <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
- <20190704115324.c9780d01ef6938ab41403bf9@linux-foundation.org>
- <20190704195934.GA23542@mellanox.com>
- <de2286d9-6f5c-a79c-dcee-de4225aca58a@arm.com>
- <20190704141358.495791a385f7dd762cb749c2@linux-foundation.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <63abcc24-2b2d-b148-36bf-01dd730948c6@arm.com>
-Date:   Fri, 5 Jul 2019 12:16:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726851AbfGELRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:17:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:17:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="339808382"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2019 04:16:59 -0700
+Message-ID: <a976eae5b9ace7a03eb18e5f7a1e9ff0059559ca.camel@linux.intel.com>
+Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
+ structures to tpm_pcr_extend()"
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linux-integrity@vger.kernel.org
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 05 Jul 2019 14:16:58 +0300
+In-Reply-To: <1562240882.6165.78.camel@linux.ibm.com>
+References: <20190701131505.17759-1-msuchanek@suse.de>
+         <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
+         <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
+         <1562240882.6165.78.camel@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20190704141358.495791a385f7dd762cb749c2@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/2019 22:13, Andrew Morton wrote:
-> On Thu, 4 Jul 2019 21:54:36 +0100 Robin Murphy <robin.murphy@arm.com> wrote:
+On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
+> On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
+> > On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
+> > > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
+> > > > This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
+> > > > following crash:
+> > > 
+> > > Thank you. I think this the right choice for the moment. I fixed
+> > > a trivial checkpatch.pl error and added the mandatory tags. Can
+> > > you check quickly v2 (just posted)?
+> > > 
+> > > I already made it available in my master and next.
+> > 
+> > Could you please wait few days? I would prefer to fix this issue instead
+> > of reverting the whole patch.
 > 
->>>> mm-clean-up-is_device__page-definitions.patch
->>>> mm-introduce-arch_has_pte_devmap.patch
->>>> arm64-mm-implement-pte_devmap-support.patch
->>>> arm64-mm-implement-pte_devmap-support-fix.patch
->>>
->>> This one we discussed, and I thought we agreed would go to your 'stage
->>> after linux-next' flow (see above). I think the conflict was minor
->>> here.
->>
->> I can rebase and resend tomorrow if there's an agreement on what exactly
->> to base it on - I'd really like to get this ticked off for 5.3 if at all
->> possible.
-> 
-> I took another look.  Yes, it looks like the repairs were simple.
-> 
-> Let me now try to compile all this...
+> Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
+> allocated banks for IBM vtpm driver", which addresses this bug.
 
-Thanks, the revised patches look OK to me, and I've confirmed that 
-today's -next builds and boots for arm64.
+With some minor changes it should be fine.
 
-Cheers,
-Robin.
+/Jarkko
+
