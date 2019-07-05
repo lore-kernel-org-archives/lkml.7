@@ -2,97 +2,59 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABF4C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C935C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68BB2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773242147A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfGEWgY (ORCPT
+        id S1726523AbfGEWit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 18:36:24 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:53881 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGEWgX (ORCPT
+        Fri, 5 Jul 2019 18:38:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:43700 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGEWis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 18:36:23 -0400
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7A95A200006;
-        Fri,  5 Jul 2019 22:36:17 +0000 (UTC)
-Date:   Sat, 6 Jul 2019 00:36:17 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Michal Simek <michal.simek@xilinx.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] rtc: zynqmp: One function call less in
- xlnx_rtc_alarm_irq_enable()
-Message-ID: <20190705223617.GC12409@piout.net>
-References: <6f1db217-cb0a-9f6c-0e2e-5d932103f6ef@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f1db217-cb0a-9f6c-0e2e-5d932103f6ef@web.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Fri, 5 Jul 2019 18:38:48 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EA2ED150428B0;
+        Fri,  5 Jul 2019 15:38:47 -0700 (PDT)
+Date:   Fri, 05 Jul 2019 15:38:45 -0700 (PDT)
+Message-Id: <20190705.153845.1823378152620818460.davem@davemloft.net>
+To:     hayeswang@realtek.com
+Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH net] r8152: set RTL8152_UNPLUG only for real
+ disconnection
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1394712342-15778-288-albertk@realtek.com>
+References: <1394712342-15778-288-albertk@realtek.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 05 Jul 2019 15:38:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2019 22:45:39+0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 5 Jul 2019 22:37:58 +0200
-> 
-> Avoid an extra function call by using a ternary operator instead of
-> a conditional statement for a setting selection.
-> 
+From: Hayes Wang <hayeswang@realtek.com>
+Date: Thu, 4 Jul 2019 17:36:32 +0800
 
-Please elaborate on why this is a good thing.
-
-> This issue was detected by using the Coccinelle software.
+> Set the flag of RTL8152_UNPLUG if and only if the device is unplugged.
+> Some error codes sometimes don't mean the real disconnection of usb device.
+> For those situations, set the flag of RTL8152_UNPLUG causes the driver skips
+> some flows of disabling the device, and it let the device stay at incorrect
+> state.
 > 
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 
-Unless you use an upstream coccinelle script or you share the one you
-are using, this is not a useful information.
-
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/rtc/rtc-zynqmp.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-> index 00639594de0c..4631019a54e2 100644
-> --- a/drivers/rtc/rtc-zynqmp.c
-> +++ b/drivers/rtc/rtc-zynqmp.c
-> @@ -124,11 +124,8 @@ static int xlnx_rtc_alarm_irq_enable(struct device *dev, u32 enabled)
->  {
->  	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
-> 
-> -	if (enabled)
-> -		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_EN);
-> -	else
-> -		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_DIS);
-> -
-> +	writel(RTC_INT_ALRM,
-> +	       xrtcdev->reg_base + (enabled ? RTC_INT_EN : RTC_INT_DIS));
-
-This makes the code less readable.
-
->  	return 0;
->  }
-> 
-> --
-> 2.22.0
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied.
