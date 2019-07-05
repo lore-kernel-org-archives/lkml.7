@@ -2,107 +2,95 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF16C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B594C468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FA72133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562358055;
-	bh=MFYUFHxCNCNAmDOQhw8XPpluM4Sf6bPUEsgZBMV00bQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r4DTtXezAa37vRq5wX9cwQYhDhWNRTGEtAg+u8WFn8ybOLc1kTqiu7cSilPqTP9c3
-	 KPN/npkzmQxELeC/CjORZ/m3a0nNDrk1FKYPzh1EZ5Bi7HZ6dUEJVICsUsyjZ1C5xx
-	 ieM7W5e8aWtNJdErP9jF6f0eYob/+XgsSCIm/GWk=
+	by mail.kernel.org (Postfix) with ESMTP id 7F9EF216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfGEUUy (ORCPT
+        id S1727559AbfGEUXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:20:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37090 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEUUy (ORCPT
+        Fri, 5 Jul 2019 16:23:21 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37477 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfGEUXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:20:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so4749447pfa.4;
-        Fri, 05 Jul 2019 13:20:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=25Gxg4cOnHkRGBzoLvP39q6ZGr7xTfO8zZqC3Dmp4ao=;
-        b=RyziFGzHWyWzlikAwjp9TuEqufKplQPckAT9Ps87VZr4SMqKSJ/UQS4CSZI6Z21S93
-         w2laJ6Ts4yyGPTXs9IGqz337Cjn0f/2fvkfpMuo9/Zk/op4ADRld25AqmX4gbpn/b439
-         oFc6WzpyxqwuQa392FOjGrkGT0JHeEZjnXelRFeYhWjNfTAD4niMxk4GNky7HJ0vRDYm
-         pH5QcSnU6gRfzU8XW6AdB4rl53KysAKal9zHEHX32AEqOm29zoQDnrq/WSA3AWqJs4+3
-         9FE/BEjWVyGpweAZdaQwAVKfw9tE0zrR5ZHvJ5ezUMssVHy6x0LJzWHIZUZRFlHqKWrW
-         KQQQ==
-X-Gm-Message-State: APjAAAVwvZDbOEmdQXmo3iHAUqKLmwgr4iSaIH+53hQCnWo9ShlHpEJK
-        crI2JupPweDGKXAd/Ja4XQc=
-X-Google-Smtp-Source: APXvYqzDgP2UvvEnLjwLbSAV5+PRQhqdSDKK5VAZmMuJMa1jdDqx9hxhnLoRC5+cLLJisPXah8LMOQ==
-X-Received: by 2002:a63:e506:: with SMTP id r6mr7427654pgh.324.1562358053447;
-        Fri, 05 Jul 2019 13:20:53 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id r188sm18308824pfr.16.2019.07.05.13.20.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 13:20:52 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id A47FE40190; Fri,  5 Jul 2019 20:20:51 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 20:20:51 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, peterz@infradead.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
-        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v6 01/18] kunit: test: add KUnit test runner core
-Message-ID: <20190705202051.GB19023@42.do-not-panic.com>
-References: <20190704003615.204860-1-brendanhiggins@google.com>
- <20190704003615.204860-2-brendanhiggins@google.com>
+        Fri, 5 Jul 2019 16:23:20 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 67D6480594; Fri,  5 Jul 2019 22:23:07 +0200 (CEST)
+Date:   Fri, 5 Jul 2019 22:23:17 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] leds: as3645a: Fix misuse of strlcpy
+Message-ID: <20190705202317.GA5445@amd>
+References: <cover.1562283944.git.joe@perches.com>
+ <79fe35321ff794dccf1d08b415cee40636fa5fce.1562283944.git.joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
 Content-Disposition: inline
-In-Reply-To: <20190704003615.204860-2-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <79fe35321ff794dccf1d08b415cee40636fa5fce.1562283944.git.joe@perches.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 05:35:58PM -0700, Brendan Higgins wrote:
-> +struct kunit {
-> +	void *priv;
-> +
-> +	/* private: internal use only. */
-> +	const char *name; /* Read only after initialization! */
-> +	bool success; /* Read only after test_case finishes! */
-> +};
 
-No lock attribute above.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +void kunit_init_test(struct kunit *test, const char *name)
-> +{
-> +	spin_lock_init(&test->lock);
-> +	test->name = name;
-> +	test->success = true;
-> +}
+On Thu 2019-07-04 16:57:42, Joe Perches wrote:
+> Probable cut&paste typo - use the correct field size.
+>=20
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-And yet here you initialize a spin lock... This won't compile. Seems
-you forgot to remove this line. So I guess a re-spin is better.
+Ack.
+									Pavel
+> ---
+>  drivers/leds/leds-as3645a.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
+> index 14ab6b0e4de9..050088dff8dd 100644
+> --- a/drivers/leds/leds-as3645a.c
+> +++ b/drivers/leds/leds-as3645a.c
+> @@ -668,7 +668,7 @@ static int as3645a_v4l2_setup(struct as3645a *flash)
+>  	};
+> =20
+>  	strlcpy(cfg.dev_name, led->name, sizeof(cfg.dev_name));
+> -	strlcpy(cfgind.dev_name, flash->iled_cdev.name, sizeof(cfg.dev_name));
+> +	strlcpy(cfgind.dev_name, flash->iled_cdev.name, sizeof(cfgind.dev_name)=
+);
+> =20
+>  	flash->vf =3D v4l2_flash_init(
+>  		&flash->client->dev, flash->flash_node, &flash->fled, NULL,
 
-  Luis
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0fsbUACgkQMOfwapXb+vIanwCguZhbbEab7n2anLambt3YwIU5
+BnkAoLc4SKnIko69xeOf6HmHCL495jOx
+=S9vd
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
