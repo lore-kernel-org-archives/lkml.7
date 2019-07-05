@@ -3,156 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAD2C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD39C468AB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96E1216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B744A216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GAynKJI6"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="CK1eajRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfGEUqE (ORCPT
+        id S1728267AbfGEUqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:46:04 -0400
-Received: from mout.web.de ([212.227.15.3]:33019 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbfGEUqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:46:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562359542;
-        bh=KmnE4fAAIZ6JB39FlpC/FKOeG4jUpG0pyrFXxMQV2xE=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=GAynKJI6Rip3yOv1g8ymskGTNlzwH/i8slxxv3UyO7sX+3HE4wF4DbTRBGXLULUy8
-         bLBfvzQCRCBF3P8Gmv2B/oMjzmsoIakXgGxfml4HBt2SU3qjkLhF/ILB++F/G65TZb
-         T+5LUtPai3OnVr0zJOhcBqgfSdqIikM9j7Xd/UmQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.45.164]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LkhQi-1iHSKI116K-00aR1D; Fri, 05
- Jul 2019 22:45:42 +0200
-To:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] rtc: zynqmp: One function call less in
- xlnx_rtc_alarm_irq_enable()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6f1db217-cb0a-9f6c-0e2e-5d932103f6ef@web.de>
-Date:   Fri, 5 Jul 2019 22:45:39 +0200
+        Fri, 5 Jul 2019 16:46:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40984 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbfGEUqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 16:46:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q4so4757721pgj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 13:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XzzO0Y0muxyCTarasdfBqM0rZwh4sARbpmUi8znvM5U=;
+        b=CK1eajRF2s8dzkxA8XOhzyOHOTdlg8IsG1U0nKowEtjkv/luoRcDfrvBCi1ptCB7lf
+         nqIWQ3vZiMQFGAA7rM0hrvrTSr2McuT3mZcN+0YEBNY+bzqwsJMmZv6sCH9C0X7r4smm
+         y0ZTgMxLTkoZ9iJIJRemj+C1qNGSbkUIF7zzpq1xvT2FrGmZ1f5bGqxYsks+1pEyKwCg
+         ROXFJYRPRvzt9QypZGqGTgYiSi1WakADWTXP875T4snIWk1tNx7auJyCNnnoewlyJOLL
+         cGxBViOTsastUdTD2AYmhYe8K5TwJIQFmLrLL2LpxFBhdWH7hX1YUDnFNjUAWlZI4Bdo
+         xqhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XzzO0Y0muxyCTarasdfBqM0rZwh4sARbpmUi8znvM5U=;
+        b=MCFMv0Kj14etpiv/pByF3x40DDtD9ecPrx4/KDUwbx+h4v45DFZ+TfZnOcbdSqRYrN
+         DSeR+PdGBbP5Y7jOpDc8nj+I7hiaolb83aJNJoRUqzecFy7v/cHZ/zFwZsVQJH7v/3YO
+         bSDeNaB+HFXPco9CpVxk6wd3EwsXifLEIA6SWPAXm8fmXBKUczwZmPzXDCf4MChL5djj
+         CJYG4qDRY3nf51Q7u1yAikjxHhZENdjIOgzeugstM+bZC6EWYMqcuSaXM+VbEk4FLxA5
+         C6jKDZ4ntPas4BXJQOVEVWW+hk/8g33R1Crq0wPC9CYwZBJa2kxqbyoh0pxw4idCL1W/
+         nt2w==
+X-Gm-Message-State: APjAAAWBZujsWIWnNnYutWyAQ6PwgZ8kqGY+Aly1HEidaxLF2OL/zWcW
+        ND3uCSQbSA04lgrGMCKZTmA99UeDGkn0nQ==
+X-Google-Smtp-Source: APXvYqxj0MTQu3wfzOdQPSFs4pUyKTyHmwh8PkyMVVx1JRzdA3p+f7ccJapheXoAu6Pho6wWqW6WRg==
+X-Received: by 2002:a63:1a03:: with SMTP id a3mr7079078pga.397.1562359568697;
+        Fri, 05 Jul 2019 13:46:08 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id k3sm8705352pgo.81.2019.07.05.13.46.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 13:46:07 -0700 (PDT)
+Subject: Re: [PATCH] blk-iolatency: fix STS_AGAIN handling
+To:     Dennis Zhou <dennis@kernel.org>, Josef Bacik <josef@toxicpanda.com>
+Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190705203228.77695-1-dennis@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4558ef3a-bc60-aa56-8aa4-4427206e2864@kernel.dk>
+Date:   Fri, 5 Jul 2019 14:46:05 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190705203228.77695-1-dennis@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UupEyaN0IiJ9PZk2+h9eYsKtAQY7pJzNgUPnwbpvJ1Ic2DIwktL
- GD3/CY0CFxxoNrh0CLkifleMWPhDssJhu+oMiTVHCiSgdpqTQPjAZboa2ZnwbBJuJNVoMP4
- QB6ct3zqygwJm2a01G48Z5+C7Bo8GQNJdQEiqD6RddZxnyZ3nwSm9Ca67apcaBYBgWG7vPl
- 4qHuhTs4kgRfdmqtpXmtw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KobCKjFU9UM=:ATFrkdPR4OqEsBEZp60Ipj
- b7lls44D1hh148HBtyCAikBb8NiC9TbokjCr5zcYuASuypIEnGtuW499JnjSDC0h57WM5VB36
- L62SEaJrnxOnn8YWueHdT7P35W86NM1eh4xvoPrMvf2CtMu1tBMZtnxAC21m71XTZ25CdwvdF
- qYwVDrRJ59X2V6vjsTb9KtjD74f8KLP771eWmEj5Nfkqlems3BSaIO91llfoPRub9iOwXWjhq
- BupyNkeoaUrzoUu7yvqZLqXBLUUl1jEn0AlGpoMJ5SHZff09mg9UEgb3YfAzFNASmFHKu+ft7
- hXjC8dPZL39xpz3E+mnvA6B7E0tUzwM+89ZT7cf7LAy6vcEP6dzZ64RTHFlEvC2U8Vwzj60cx
- QkZa0+mpFGaB4hBI4zOiirVzjCBXpPEKH4dIyA5Xa+ujEcNT7Glpj0HdcFDKUzMPtCuxIR7ig
- OzMsMrYLEmVBefuARpCe9rPhhXf6cy97K/QPRqlj7OKJ1X6rcO6DmkxXvNyMCZswaoAlxSpjZ
- 6Ws8Pn7q7/0bVrwPq9C7mqr0jcwhdnYdXamb0/gHlxll2YXZl4ZIiVQofm8m8K0//68sJeijN
- NEFm19f+LrtQzACt3DN0z6+qCeLdR5HEgdYh7fFYHbPXDyGgPZju6mrHC9OaKH8IQ2RRoVo1L
- sXX9D3euxJJTpc0xy9uq1V7w1Bc92rygcg+/LMWWFMRs7ZVn4uywddSt6j+thKLTXi5X/7Z09
- lol60jsDtIcdVTjzGpojswfEuNirPsynYrUq65ZuclMipf83brDgG5NjRynSLP8rsyfDeaH0I
- U7KfDCPvAWI1v1JNQXRUx/Z4B3rHHnsOaTaj78aC+FXyf/7e6uQycJB8jJ5B3id68DNUBHTya
- GQ90px6UXyBbPiyuY79b1ZFG5fNc71wtB3jKGiiu54ObZxD0qwt2tJu1bdUpWIajPjoE3SHLN
- mCN7pVUzhaKMPtXEcXRWD0YESw7XvfC4JfCaMOXMJy2VMkNp/DtvTL5ZKbbYQx7QdWnXEhASB
- FuuWg3BkhX6qLJw9ihDkOEJ1tyKsYnNyEZMCOsMLXDCv2VSprNrb/PcCzdrrvimtDZnUuMd+V
- KYYr4Pkl/ITtRcSjpCmLtILSo6gmjVH9oMO
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 5 Jul 2019 22:37:58 +0200
+On 7/5/19 2:32 PM, Dennis Zhou wrote:
+> The iolatency controller is based on rq_qos. It increments on
+> rq_qos_throttle() and decrements on either rq_qos_cleanup() or
+> rq_qos_done_bio(). a3fb01ba5af0 fixes the double accounting issue where
+> blk_mq_make_request() may call both rq_qos_cleanup() and
+> rq_qos_done_bio() on REQ_NO_WAIT. So checking STS_AGAIN prevents the
+> double decrement.
+> 
+> The above works upstream as the only way we can get STS_AGAIN is from
+> blk_mq_get_request() failing. The STS_AGAIN handling isn't a real
+> problem as bio_endio() skipping only happens on reserved tag allocation
+> failures which can only be caused by driver bugs and already triggers
+> WARN.
+> 
+> However, the fix creates a not so great dependency on how STS_AGAIN can
+> be propagated. Internally, we (Facebook) carry a patch that kills read
+> ahead if a cgroup is io congested or a fatal signal is pending. This
+> combined with chained bios progagate their bi_status to the parent is
+> not already set can can cause the parent bio to not clean up properly
+> even though it was successful. This consequently leaks the inflight
+> counter and can hang all IOs under that blkg.
+> 
+> To nip the adverse interaction early, this removes the rq_qos_cleanup()
+> callback in iolatency in favor of cleaning up always on the
+> rq_qos_done_bio() path.
+> 
+> Fixes: a3fb01ba5af0 ("blk-iolatency: only account submitted bios")
+> Debugged-by: Tejun Heo <tj@kernel.org>
+> Debugged-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Dennis Zhou <dennis@kernel.org>
+> ---
+>   block/blk-iolatency.c | 29 +++--------------------------
+>   1 file changed, 3 insertions(+), 26 deletions(-)
+> 
+> diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+> index e8859350ab6e..c956eebf2d97 100644
+> --- a/block/blk-iolatency.c
+> +++ b/block/blk-iolatency.c
+> @@ -600,10 +600,6 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+>   	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
+>   		return;
+>   
+> -	/* We didn't actually submit this bio, don't account it. */
+> -	if (bio->bi_status == BLK_STS_AGAIN)
+> -		return;
+> -
+>   	iolat = blkg_to_lat(bio->bi_blkg);
+>   	if (!iolat)
+>   		return;
+> @@ -622,6 +618,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+>   
+>   		inflight = atomic_dec_return(&rqw->inflight);
+>   		WARN_ON_ONCE(inflight < 0);
+> +		/* We didn't actually submit this bio, don't account for it. */
+> +		if (bio->bi_status == BLK_STS_AGAIN)
+> +			goto next;
+>   		if (iolat->min_lat_nsec == 0)
+>   			goto next;
+>   		iolatency_record_time(iolat, &bio->bi_issue, now,
 
-Avoid an extra function call by using a ternary operator instead of
-a conditional statement for a setting selection.
+Patch in general looks fine to me, but let's get rid of this next label,
+it's pretty silly. Only one use of it, why not just make it a nested if?
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/rtc/rtc-zynqmp.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-index 00639594de0c..4631019a54e2 100644
-=2D-- a/drivers/rtc/rtc-zynqmp.c
-+++ b/drivers/rtc/rtc-zynqmp.c
-@@ -124,11 +124,8 @@ static int xlnx_rtc_alarm_irq_enable(struct device *d=
-ev, u32 enabled)
- {
- 	struct xlnx_rtc_dev *xrtcdev =3D dev_get_drvdata(dev);
-
--	if (enabled)
--		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_EN);
--	else
--		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_DIS);
--
-+	writel(RTC_INT_ALRM,
-+	       xrtcdev->reg_base + (enabled ? RTC_INT_EN : RTC_INT_DIS));
- 	return 0;
- }
-
-=2D-
-2.22.0
+-- 
+Jens Axboe
 
