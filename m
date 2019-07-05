@@ -2,179 +2,119 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BC3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F48C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7244218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B622218C5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="yp5yQJh8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="mUAngV3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfGEJY3 (ORCPT
+        id S1728244AbfGEJYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:24:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfGEJY2 (ORCPT
+        Fri, 5 Jul 2019 05:24:36 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:2164 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726107AbfGEJYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:24:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so23862wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:24:27 -0700 (PDT)
+        Fri, 5 Jul 2019 05:24:35 -0400
+X-Greylist: delayed 3037 seconds by postgrey-1.27 at vger.kernel.org; Fri, 05 Jul 2019 05:24:34 EDT
+Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x659LCdb013931;
+        Fri, 5 Jul 2019 04:24:33 -0500
+Received: from nam05-by2-obe.outbound.protection.outlook.com (mail-by2nam05lp2052.outbound.protection.outlook.com [104.47.50.52])
+        by mx0a-00010702.pphosted.com with ESMTP id 2thbqmm5d3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jul 2019 04:24:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=HHbqpLTt/UqK8u8skkn9x9YIdY8wkJ4ttRxZXF6EinY=;
-        b=yp5yQJh8jtfYUPLuGlLq2DfqpPBdGGO494xChqpf9zNWBSsXLE5a0248/NAxkoBO4/
-         0BsVaDdF03YgBQ/EiWOMx+7i4XiuJ0zQf7XlokIV1VYWJHiMZ3PDkE/KfYOab4VzMB+J
-         f/pVJLRXx+gS9twTb1Pgz2EXRdaLuXqYybXQVVic64Dl6MDkktWQB7g1huoxjSF5Uleo
-         KWEaVwh/WkLIXcfSUgaE+apFuFz8i+7Qp7PYmwtsyWVa2Ym0Ym+UO3OF2ienlhikB0yc
-         b4nd6B6ytLHgVQbS9mVjQWCRJczLAl4BYGmiNDVXuTYnaPhD6JUOdm5tiGTCbXBzkVMF
-         YL4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=HHbqpLTt/UqK8u8skkn9x9YIdY8wkJ4ttRxZXF6EinY=;
-        b=YqfNHTCXsH7cBtLetFNTYBaauHTJ6plQmtKMWn8J6kThw4EQ9FX8/1gCCtG9Huc8wa
-         g9WiuM38kKzKeYSBn8oiIaHdWtiyeziqVztuLwcM0f5sc9GAellvrHuYuyWAfEQcaC9L
-         etCK8P8qK5avNI6c+YCmTwBMzsaE08SMZMfr9KuZ20p8G3R7EkM+NjFzNHIYAxNgB/1D
-         G1kwdPjUrrJt8U3Ck52aNipqYMJus7ZslSTCu5vLGSpV8vsy4NbjnI9qywjk7ne5AFoU
-         Asrba5Y9gP+lrNXoSN8oAMWgV7oEzrekHypMJorr+Feapm8W1A96yY5wOodJiU2oGg4s
-         Hdfg==
-X-Gm-Message-State: APjAAAXkL1f0ivUlRuBlkMTzrWRJiCbR+O1xSu6O4lkP7OfVQVdUvYQY
-        X3P5v792M6bdb51+7EeEzos86w==
-X-Google-Smtp-Source: APXvYqwfVWZ2uyQrHtW79irxr4cfhJhTkvjPeAqMQ25Qa5108rnUpXmlpdEPv1K0U4PAXpWDPp+JbQ==
-X-Received: by 2002:adf:e50c:: with SMTP id j12mr3191191wrm.117.1562318666604;
-        Fri, 05 Jul 2019 02:24:26 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id o126sm7447501wmo.1.2019.07.05.02.24.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Jul 2019 02:24:25 -0700 (PDT)
-References: <20190705001803.30094-1-luke.r.nels@gmail.com>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     linux-kernel@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
-        Song Liu <liu.song.a23@gmail.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next] Enable zext optimization for more RV64G ALU ops
-In-reply-to: <20190705001803.30094-1-luke.r.nels@gmail.com>
-Date:   Fri, 05 Jul 2019 10:24:22 +0100
-Message-ID: <8736jk4ywp.fsf@netronome.com>
+ d=nio365.onmicrosoft.com; s=selector1-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdUifmnF9e8rsAtVGDvK7PFzpG0jGdCLVsIDBBO2odM=;
+ b=mUAngV3xwDU2u9eQ665S+7vep55qGtwVzxcdwmba+9vTuV5BQXonf2Ovi2Rj4k0L/POYNfLFIjLL+si3DN0HWlC6I9cg2iWdh/FZK7CGS7rp+VWf05Q8oxEeTyTCjVcLiadVitVDUceTOprHOsEG5wf6VxTOnDrgXfSWMy3Od5s=
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com (20.179.21.161) by
+ MN2PR04MB6686.namprd04.prod.outlook.com (10.186.147.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Fri, 5 Jul 2019 09:24:31 +0000
+Received: from MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7]) by MN2PR04MB5920.namprd04.prod.outlook.com
+ ([fe80::7ca2:1dbc:355d:64c7%5]) with mapi id 15.20.2052.010; Fri, 5 Jul 2019
+ 09:24:31 +0000
+From:   Je Yen Tam <je.yen.tam@ni.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Thread-Topic: [EXTERNAL] Re: [PATCH v3] serial/8250: Add support for NI-Serial
+ PXI/PXIe+485 devices
+Thread-Index: AQHVMwxiepuXonzYy0u12ekosjeaz6a7uywAgAAFgdA=
+Date:   Fri, 5 Jul 2019 09:24:31 +0000
+Message-ID: <MN2PR04MB592075355D90BC59B79DFCF8B7F50@MN2PR04MB5920.namprd04.prod.outlook.com>
+References: <20190705083349.44047-1-je.yen.tam@ni.com>
+ <20190705090422.GA32289@kroah.com>
+In-Reply-To: <20190705090422.GA32289@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [115.164.187.157]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: faa3cb9b-399c-435f-7764-08d7012a962c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB6686;
+x-ms-traffictypediagnostic: MN2PR04MB6686:
+x-microsoft-antispam-prvs: <MN2PR04MB6686022DDA92CF9AA814D26BB7F50@MN2PR04MB6686.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(136003)(366004)(346002)(376002)(39860400002)(189003)(199004)(86362001)(8936002)(9686003)(55016002)(26005)(186003)(53936002)(256004)(4744005)(76176011)(7736002)(6246003)(305945005)(74316002)(81156014)(81166006)(446003)(6436002)(229853002)(71200400001)(71190400001)(8676002)(11346002)(476003)(55236004)(102836004)(6506007)(7696005)(99286004)(3846002)(6116002)(478600001)(66066001)(68736007)(486006)(4326008)(25786009)(33656002)(5660300002)(2906002)(14454004)(54906003)(316002)(66446008)(52536014)(66946007)(66556008)(73956011)(76116006)(64756008)(66476007)(6916009)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6686;H:MN2PR04MB5920.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7Ru6Jaa5crwpzQUsnpCzTGUmerYvmvAJIQFXCrG17WEYMKK57hnO/gVNuO9SIuWed4IqfZad1u1RDNg12LrGLzpy5bfVLNTZnEl4txe9JRl7f3fEgFSWS+o8yryFNWOsfyCT5B+a0LvGWZp66zWjVPjpGYzh5ZiUEDWLuAVQhEe0yCGXjLjpVVesrC3HMUttJh60HBG+OwH67GcKfSJjwXH9AR2Ch301HlKcNlX5rBGLqUl/bvq5Gf2hXzx2i8ChQUoV3uRr2AbiDgWRp9TZGEEddtq3LTYSzxqv80hZvi0PlWplaEGrSL/oQAoMDVLwGaExRdrya+PeRAJSsyQuBUuF76dB9fkR3FINWYob5CYjLA8lTq0rlFjkdTc+xt6HH1gJQ0V2eYOushY7JtGQPverOyJGeHV/HzUWVtnSHVA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: faa3cb9b-399c-435f-7764-08d7012a962c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 09:24:31.5415
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: je.yen.tam@ni.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6686
+Subject: RE: Re: [PATCH v3] serial/8250: Add support for NI-Serial PXI/PXIe+485
+ devices
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907050120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> On Fri, Jul 05, 2019 at 01:33:49AM -0700, jeyentam wrote:
+> > Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
+> >
+> > Signed-off-by: Je Yen Tam <je.yen.tam@ni.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_pci.c | 298 ++++++++++++++++++++++++++++-
+> >  1 file changed, 294 insertions(+), 4 deletions(-)
+>=20
+> What changed from the previous versions?
+>=20
+> Always put that below the --- line.
+>=20
+> Please fix up and send a v4 with that information.
 
-Luke Nelson writes:
+Ok, will do so.
 
-> commit 66d0d5a854a6 ("riscv: bpf: eliminate zero extension code-gen")
-> added the new zero-extension optimization for some BPF ALU operations.
->
-> Since then, bugs in the JIT that have been fixed in the bpf tree require
-> this optimization to be added to other operations: commit 1e692f09e091
-> ("bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh"),
-> and commit fe121ee531d1 ("bpf, riscv: clear target register high 32-bits
-> for and/or/xor on ALU32")
->
-> Now that these have been merged to bpf-next, the zext optimization can
-> be enabled for the fixed operations.
-
-LGTM, thanks.
-
-Acked-by: Jiong Wang <jiong.wang@netronome.com>
-
->
-> Cc: Song Liu <liu.song.a23@gmail.com>
-> Cc: Jiong Wang <jiong.wang@netronome.com>
-> Cc: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-> ---
->  arch/riscv/net/bpf_jit_comp.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-> index 876cb9c705ce..5451ef3845f2 100644
-> --- a/arch/riscv/net/bpf_jit_comp.c
-> +++ b/arch/riscv/net/bpf_jit_comp.c
-> @@ -757,31 +757,31 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU | BPF_ADD | BPF_X:
->  	case BPF_ALU64 | BPF_ADD | BPF_X:
->  		emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_SUB | BPF_X:
->  	case BPF_ALU64 | BPF_SUB | BPF_X:
->  		emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_AND | BPF_X:
->  	case BPF_ALU64 | BPF_AND | BPF_X:
->  		emit(rv_and(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_OR | BPF_X:
->  	case BPF_ALU64 | BPF_OR | BPF_X:
->  		emit(rv_or(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_XOR | BPF_X:
->  	case BPF_ALU64 | BPF_XOR | BPF_X:
->  		emit(rv_xor(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_MUL | BPF_X:
-> @@ -811,13 +811,13 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU | BPF_RSH | BPF_X:
->  	case BPF_ALU64 | BPF_RSH | BPF_X:
->  		emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  	case BPF_ALU | BPF_ARSH | BPF_X:
->  	case BPF_ALU64 | BPF_ARSH | BPF_X:
->  		emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
->  
-> @@ -826,7 +826,7 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->  	case BPF_ALU64 | BPF_NEG:
->  		emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
->  		     rv_subw(rd, RV_REG_ZERO, rd), ctx);
-> -		if (!is64)
-> +		if (!is64 && !aux->verifier_zext)
->  			emit_zext_32(rd, ctx);
->  		break;
-
+>=20
+> thanks,
+>=20
+> greg k-h
