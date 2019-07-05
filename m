@@ -2,141 +2,154 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50500C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ED4C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F5B21721
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E925921721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GuKnXgcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfGEOvM (ORCPT
+        id S1727443AbfGEOv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:51:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25617 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbfGEOvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:51:11 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 07:51:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
-   d="scan'208";a="185201897"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 05 Jul 2019 07:51:07 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 05 Jul 2019 17:51:06 +0300
-Date:   Fri, 5 Jul 2019 17:51:06 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Yehezkel Bernat <yehezkelshb@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-acpi@vger.kernel.org, raanan.avargil@intel.com
-Subject: Re: [PATCH 7/8] thunderbolt: Add support for Intel Ice Lake
-Message-ID: <20190705145106.GA2640@lahna.fi.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-8-mika.westerberg@linux.intel.com>
- <CA+CmpXsak9Rvkq_RNzoxRecMercUPKqdK+KzbHv_fJC59inaHA@mail.gmail.com>
+        Fri, 5 Jul 2019 10:51:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43219 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGEOv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:51:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so886694lfm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 07:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3MvpTP2fFCaQkoA+f5/CTtpJaXvZZnBt/GIh5Twe+DA=;
+        b=GuKnXgcdfHnBxseTuVOzqohK5pv/apckKuFKURCRMLJHjFBV2NQfMuVvKSTB6LCf9I
+         EmUwt7JSggxOQtq0bV8q2RFTsgqCpMyKQy47G1kVTeJvvUSKlw/2VkjXhKRn6IweN6gB
+         rZmgpyBI4B7GD4oZ7BoblZ5DVyQfETZZYytzmKlARlAEQ883E2xtewsSG+aMNUT8Svf4
+         rxqOTALu0JFeC7OewPOQx5UdYy8trHGaVogPvlPMo/Y2D1OY8yC/Yy1p/HCXpGSHuWZw
+         kCLaU2PN1LVIS3nXoO+VHkSVU4Z4/WTcPlyuEoWYs7j+c/KgvVuMPaZFIH5qg632VUYi
+         9gdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3MvpTP2fFCaQkoA+f5/CTtpJaXvZZnBt/GIh5Twe+DA=;
+        b=KrAcFZb+G6lLVlS3jqgHxSKmYSAahMYn7f2oD0I68v1STYBB3yVkH8sP9UZaYpcCvK
+         0rtFqr73DaihM2CcOvElOtwU9RDAPAXZXY48uAIDEkj/pq2G5zdoBThsFpxbZolJNegE
+         kNGOiYPASY9s0pZPAwh4yuWBTDIcBxBrkwHbD+9OBWCgJhrKp2etY0mDOELh9ncxBsGO
+         8gMFeDFuYteAEa0untyW9VK1qpHYLVgIxU0j9K5yxGesnOGB/H+SUf4DQlTmZcfgcvxp
+         hlLwjQmrU+HZapj2m855+zbfyRCsVhG54vxCKhOBolPmGBOPV6R6nVo//7SLvfF1WvQZ
+         FSuw==
+X-Gm-Message-State: APjAAAUSsqbYlZFEMfO/b+urdMK0EfpX/IuOAwuCgWHul2zMTWx8rCL6
+        zy5bVJdyQ7blBDmfhb0eIFd8P/s+7rwaBvRtW9XejQ==
+X-Google-Smtp-Source: APXvYqyzZ2RdpWIm41fdspUWEa7a3dG7kLIi7ZNR4yCPceZiMZz18vLnqCz+08XeeHZZipwHv+607sTcpv5raV0oZp8=
+X-Received: by 2002:ac2:4a78:: with SMTP id q24mr2086995lfp.59.1562338316187;
+ Fri, 05 Jul 2019 07:51:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CmpXsak9Rvkq_RNzoxRecMercUPKqdK+KzbHv_fJC59inaHA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190628204913.10287-1-riel@surriel.com> <20190628204913.10287-8-riel@surriel.com>
+In-Reply-To: <20190628204913.10287-8-riel@surriel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 5 Jul 2019 16:51:45 +0200
+Message-ID: <CAKfTPtDsh-VxTrwuhb88fi-L4j0ODnNOqhoQ=ZC6E8FVV7Kmkw@mail.gmail.com>
+Subject: Re: [PATCH 07/10] sched,cfs: fix zero length timeslice calculation
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mel Gorman <mgorman@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 05:44:01PM +0300, Yehezkel Bernat wrote:
-> On Fri, Jul 5, 2019 at 12:58 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > +static void icm_icl_rtd3_veto(struct tb *tb, const struct icm_pkg_header *hdr)
-> > +{
-> > +       const struct icm_icl_event_rtd3_veto *pkg =
-> > +               (const struct icm_icl_event_rtd3_veto *)hdr;
-> > +       struct icm *icm = tb_priv(tb);
-> > +
-> > +       tb_dbg(tb, "ICM rtd3 veto=0x%08x\n", pkg->veto_reason);
-> > +
-> > +       if (pkg->veto_reason) {
-> > +               if (!icm->veto) {
-> > +                       icm->veto = true;
-> > +                       /* Keep the domain powered while veto is in effect */
-> > +                       pm_runtime_get(&tb->dev);
-> > +               }
-> > +       } else {
-> > +               if (icm->veto) {
-> > +                       icm->veto = false;
-> > +                       /* Allow the domain suspend now */
-> > +                       pm_runtime_mark_last_busy(&tb->dev);
-> > +                       pm_runtime_put_autosuspend(&tb->dev);
-> 
-> Handling the removal of the veto is duplicated below. Worth introducing as a
-> helper function?
-> 
-> > +               }
-> > +       }
-> > +}
-> > +
-> 
-> ...
-> 
-> > @@ -1853,6 +1943,18 @@ static void icm_complete(struct tb *tb)
-> >         if (tb->nhi->going_away)
-> >                 return;
-> >
-> > +       /*
-> > +        * If RTD3 was vetoed before we entered system suspend allow it
-> > +        * again now before driver ready is sent. Firmware sends a new RTD3
-> > +        * veto if it is still the case after we have sent it driver ready
-> > +        * command.
-> > +        */
-> > +       if (icm->veto) {
-> > +               icm->veto = false;
-> > +               pm_runtime_mark_last_busy(&tb->dev);
-> > +               pm_runtime_put_autosuspend(&tb->dev);
-> > +       }
-> > +
-> 
-> Here is the duplication.
+On Fri, 28 Jun 2019 at 22:49, Rik van Riel <riel@surriel.com> wrote:
+>
+> The way the time slice length is currently calculated, not only do high
+> priority tasks get longer time slices than low priority tasks, but due
+> to fixed point math, low priority tasks could end up with a zero length
+> time slice. This can lead to cache thrashing and other inefficiencies.
+>
+> Simplify the logic a little bit, and cap the minimum time slice length
+> to sysctl_sched_min_granularity.
+>
+> Tasks that end up getting a time slice length too long for their relative
+> priority will simply end up having their vruntime advanced much faster than
+> other tasks, resulting in them receiving time slices less frequently.
+>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  kernel/sched/fair.c | 25 ++++++++-----------------
+>  1 file changed, 8 insertions(+), 17 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d48bff5118fc..8da2823401ca 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -671,22 +671,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
+>         return delta;
+>  }
+>
+> -/*
+> - * The idea is to set a period in which each task runs once.
+> - *
+> - * When there are too many tasks (sched_nr_latency) we have to stretch
+> - * this period because otherwise the slices get too small.
+> - *
+> - * p = (nr <= nl) ? l : l*nr/nl
+> - */
+> -static u64 __sched_period(unsigned long nr_running)
+> -{
+> -       if (unlikely(nr_running > sched_nr_latency))
+> -               return nr_running * sysctl_sched_min_granularity;
+> -       else
+> -               return sysctl_sched_latency;
+> -}
+> -
+>  /*
+>   * We calculate the wall-time slice from the period by taking a part
+>   * proportional to the weight.
+> @@ -695,7 +679,7 @@ static u64 __sched_period(unsigned long nr_running)
+>   */
+>  static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> -       u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+> +       u64 slice = sysctl_sched_latency;
 
-Indeed, I'll put it to a helper function.
+Is the change above and the remove of __sched_period() really needed
+for fixing the null time slice problem ?
+This change impacts how tasks will preempt each other and as a result
+the throughput. It should have it dedicated patch so we can evaluate
+its impact
 
-> > +static int nhi_suspend_power_down(struct tb *tb)
-> > +{
-> > +       int ret;
-> > +
-> > +       /*
-> > +        * If there is no device connected we need to perform an additional
-> > +        * handshake through LC mailbox and force power down before
-> > +        * entering D3.
-> > +        */
-> > +       ret = device_for_each_child(&tb->root_switch->dev, NULL,
-> > +                                   nhi_device_connected);
-> > +       if (!ret) {
-> > +               lc_mailbox_cmd(tb->nhi, LC_PREPARE_FOR_RESET);
-> > +               ret = lc_mailbox_cmd_complete(tb->nhi,
-> > +                                             LC_MAILBOX_TIMEOUT);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               return nhi_power_down(tb->nhi);
-> 
-> Just to be sure: unforce power is done only if no device is connected?
-> My understanding of the comment above was that unforce power should be done
-> anyway (so it should be outside of this if block), and the difference between
-> the cases is only about the additional LC mailbox message. I guess I misread it.
-
-nhi_power_down() should be only called if no device was connected so it
-should be in correct place. I can try to clarify the comment a bit,
-though.
+>
+>         for_each_sched_entity(se) {
+>                 struct load_weight *load;
+> @@ -712,6 +696,13 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>                 }
+>                 slice = __calc_delta(slice, se->load.weight, load);
+>         }
+> +
+> +       /*
+> +        * To avoid cache thrashing, run at least sysctl_sched_min_granularity.
+> +        * The vruntime of a low priority task advances faster; those tasks
+> +        * will simply get time slices less frequently.
+> +        */
+> +       slice = max_t(u64, slice, sysctl_sched_min_granularity);
+>         return slice;
+>  }
+>
+> --
+> 2.20.1
+>
