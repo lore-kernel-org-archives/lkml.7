@@ -2,191 +2,94 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC9C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE0C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF37221850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1430218A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfGEAaX (ORCPT
+        id S1727727AbfGEAmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 20:30:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45362 "EHLO mx1.redhat.com"
+        Thu, 4 Jul 2019 20:42:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:40861 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfGEAaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 20:30:22 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81A66308FE9A;
-        Fri,  5 Jul 2019 00:30:20 +0000 (UTC)
-Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E2F499391;
-        Fri,  5 Jul 2019 00:30:08 +0000 (UTC)
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com
-References: <20190703091339.1847-1-tiwei.bie@intel.com>
- <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
- <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com> <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___>
- <c67f628f-e0c1-9a41-6c5d-b6bbda31467d@redhat.com>
- <20190704070242.GA27369@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <513c62ba-3f44-f4cf-3b3d-e0e03b6a6de1@redhat.com>
-Date:   Fri, 5 Jul 2019 08:30:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190704070242.GA27369@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 05 Jul 2019 00:30:22 +0000 (UTC)
+        id S1727348AbfGEAmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 20:42:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 17:41:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,453,1557212400"; 
+   d="scan'208";a="185074652"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jul 2019 17:41:57 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     gregkh@linuxfoundation.org, mdf@kernel.org,
+        linux-fpga@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v2 00/11] FPGA DFL updates
+Date:   Fri,  5 Jul 2019 08:23:47 +0800
+Message-Id: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg / Moritz
 
-On 2019/7/4 下午3:02, Tiwei Bie wrote:
-> On Thu, Jul 04, 2019 at 02:35:20PM +0800, Jason Wang wrote:
->> On 2019/7/4 下午2:21, Tiwei Bie wrote:
->>> On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
->>>> On 2019/7/3 下午9:08, Tiwei Bie wrote:
->>>>> On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
->>>>>> On 2019/7/3 下午7:52, Tiwei Bie wrote:
->>>>>>> On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
->>>>>>>> On 2019/7/3 下午5:13, Tiwei Bie wrote:
->>>>>>>>> Details about this can be found here:
->>>>>>>>>
->>>>>>>>> https://lwn.net/Articles/750770/
->>>>>>>>>
->>>>>>>>> What's new in this version
->>>>>>>>> ==========================
->>>>>>>>>
->>>>>>>>> A new VFIO device type is introduced - vfio-vhost. This addressed
->>>>>>>>> some comments from here:https://patchwork.ozlabs.org/cover/984763/
->>>>>>>>>
->>>>>>>>> Below is the updated device interface:
->>>>>>>>>
->>>>>>>>> Currently, there are two regions of this device: 1) CONFIG_REGION
->>>>>>>>> (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
->>>>>>>>> device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
->>>>>>>>> can be used to notify the device.
->>>>>>>>>
->>>>>>>>> 1. CONFIG_REGION
->>>>>>>>>
->>>>>>>>> The region described by CONFIG_REGION is the main control interface.
->>>>>>>>> Messages will be written to or read from this region.
->>>>>>>>>
->>>>>>>>> The message type is determined by the `request` field in message
->>>>>>>>> header. The message size is encoded in the message header too.
->>>>>>>>> The message format looks like this:
->>>>>>>>>
->>>>>>>>> struct vhost_vfio_op {
->>>>>>>>> 	__u64 request;
->>>>>>>>> 	__u32 flags;
->>>>>>>>> 	/* Flag values: */
->>>>>>>>>       #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
->>>>>>>>> 	__u32 size;
->>>>>>>>> 	union {
->>>>>>>>> 		__u64 u64;
->>>>>>>>> 		struct vhost_vring_state state;
->>>>>>>>> 		struct vhost_vring_addr addr;
->>>>>>>>> 	} payload;
->>>>>>>>> };
->>>>>>>>>
->>>>>>>>> The existing vhost-kernel ioctl cmds are reused as the message
->>>>>>>>> requests in above structure.
->>>>>>>> Still a comments like V1. What's the advantage of inventing a new protocol?
->>>>>>> I'm trying to make it work in VFIO's way..
->>>>>>>
->>>>>>>> I believe either of the following should be better:
->>>>>>>>
->>>>>>>> - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
->>>>>>>> extend it with e.g notify region. The advantages is that all exist userspace
->>>>>>>> program could be reused without modification (or minimal modification). And
->>>>>>>> vhost API hides lots of details that is not necessary to be understood by
->>>>>>>> application (e.g in the case of container).
->>>>>>> Do you mean reusing vhost's ioctl on VFIO device fd directly,
->>>>>>> or introducing another mdev driver (i.e. vhost_mdev instead of
->>>>>>> using the existing vfio_mdev) for mdev device?
->>>>>> Can we simply add them into ioctl of mdev_parent_ops?
->>>>> Right, either way, these ioctls have to be and just need to be
->>>>> added in the ioctl of the mdev_parent_ops. But another thing we
->>>>> also need to consider is that which file descriptor the userspace
->>>>> will do the ioctl() on. So I'm wondering do you mean let the
->>>>> userspace do the ioctl() on the VFIO device fd of the mdev
->>>>> device?
->>>>>
->>>> Yes.
->>> Got it! I'm not sure what's Alex opinion on this. If we all
->>> agree with this, I can do it in this way.
->>>
->>>> Is there any other way btw?
->>> Just a quick thought.. Maybe totally a bad idea.
->>
->> It's not for sure :)
-> Thanks!
->
->>
->>>    I was thinking
->>> whether it would be odd to do non-VFIO's ioctls on VFIO's device
->>> fd. So I was wondering whether it's possible to allow binding
->>> another mdev driver (e.g. vhost_mdev) to the supported mdev
->>> devices. The new mdev driver, vhost_mdev, can provide similar
->>> ways to let userspace open the mdev device and do the vhost ioctls
->>> on it. To distinguish with the vfio_mdev compatible mdev devices,
->>> the device API of the new vhost_mdev compatible mdev devices
->>> might be e.g. "vhost-net" for net?
->>>
->>> So in VFIO case, the device will be for passthru directly. And
->>> in VHOST case, the device can be used to accelerate the existing
->>> virtualized devices.
->>>
->>> How do you think?
->>
->> If my understanding is correct, there will be no VFIO ioctl if we go for
->> vhost_mdev?
-> Yeah, exactly. If we go for vhost_mdev, we may have some vhost nodes
-> in /dev similar to what /dev/vfio/* does to handle the $UUID and open
-> the device (e.g. similar to VFIO_GROUP_GET_DEVICE_FD in VFIO). And
-> to setup the device, we can try to reuse the ioctls of the existing
-> kernel vhost as much as possible.
+This is v2 patchset which adds more features to FPGA DFL. This patchset
+is made on top of patch[1] and char-misc-next tree. Documentation patch
+for DFL is dropped from this patchset, and will resubmit it later to
+avoid conflict.
 
+Main changes from v1:
+  - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
+  - remove argsz from new ioctls. (patch #2)
+  - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
+    (patch #5, #8, #11)
 
-Interesting, actually, I've considered something similar. I think there 
-should be no issues other than DMA:
+[1] [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
+    https://lkml.org/lkml/2019/7/4/36
 
-- Need to invent new API for DMA mapping other than SET_MEM_TABLE? 
-(Which is too heavyweight).
+Wu Hao (11):
+  fpga: dfl: fme: support 512bit data width PR
+  fpga: dfl: fme: add DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+  fpga: dfl: pci: enable SRIOV support.
+  fpga: dfl: afu: add AFU state related sysfs interfaces
+  fpga: dfl: afu: add userclock sysfs interfaces.
+  fpga: dfl: add id_table for dfl private feature driver
+  fpga: dfl: afu: export __port_enable/disable function.
+  fpga: dfl: afu: add error reporting support.
+  fpga: dfl: afu: add STP (SignalTap) support
+  fpga: dfl: fme: add capability sysfs interfaces
+  fpga: dfl: fme: add global error reporting support
 
-- Need to consider a way to co-work with both on chip IOMMU (your 
-proposal should be fine) and scalable IOV.
+ Documentation/ABI/testing/sysfs-platform-dfl-fme  |  98 ++++++
+ Documentation/ABI/testing/sysfs-platform-dfl-port | 104 ++++++
+ drivers/fpga/Makefile                             |   3 +-
+ drivers/fpga/dfl-afu-error.c                      | 225 +++++++++++++
+ drivers/fpga/dfl-afu-main.c                       | 328 +++++++++++++++++-
+ drivers/fpga/dfl-afu.h                            |   7 +
+ drivers/fpga/dfl-fme-error.c                      | 385 ++++++++++++++++++++++
+ drivers/fpga/dfl-fme-main.c                       |  93 +++++-
+ drivers/fpga/dfl-fme-mgr.c                        | 110 ++++++-
+ drivers/fpga/dfl-fme-pr.c                         |  50 ++-
+ drivers/fpga/dfl-fme.h                            |   7 +-
+ drivers/fpga/dfl-pci.c                            |  39 +++
+ drivers/fpga/dfl.c                                | 166 +++++++++-
+ drivers/fpga/dfl.h                                |  54 ++-
+ include/uapi/linux/fpga-dfl.h                     |  19 ++
+ 15 files changed, 1617 insertions(+), 71 deletions(-)
+ create mode 100644 drivers/fpga/dfl-afu-error.c
+ create mode 100644 drivers/fpga/dfl-fme-error.c
 
-Thanks
+-- 
+1.8.3.1
 
-
->
-> Thanks,
-> Tiwei
->
->> Thanks
->>
->>
->>> Thanks,
->>> Tiwei
->>>> Thanks
->>>>
