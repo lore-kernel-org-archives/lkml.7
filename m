@@ -2,164 +2,305 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E70C4649D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD09C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888AB218D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:05:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="LyLd99Vz"
+	by mail.kernel.org (Postfix) with ESMTP id 7E56A218CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfGEOFP (ORCPT
+        id S1727692AbfGEOFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:05:15 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:59548 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbfGEOFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:05:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id EBB9027F8F09;
-        Fri,  5 Jul 2019 16:05:12 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id nv28oveJJWmP; Fri,  5 Jul 2019 16:05:12 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 7002D27F8BF5;
-        Fri,  5 Jul 2019 16:05:12 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 7002D27F8BF5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1562335512;
-        bh=fbpiTuSNeqW8w3jWmq2tRRtqzaFo3ZHuIyQcxnq4s6c=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=LyLd99Vz+to+JD8mv/IGi3VLtOz6h+44fkTgbnwxvu9NY/UJbua5g5K0unApac75E
-         N5krwMEj1bRNhoeSf/0DweH5w+8SdsjlX9GkdR4Vr3LcA5QkF1ipLn9ywsuONMJFBK
-         Ja8ZP66SpVMZbvkq3IgzmShOVGxd11xE4B3cnuv8=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5QyuWIOAEMpk; Fri,  5 Jul 2019 16:05:12 +0200 (CEST)
-Received: from zimbra2.kalray.eu (zimbra2.kalray.eu [192.168.40.202])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5524E27F8BE4;
-        Fri,  5 Jul 2019 16:05:12 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 16:05:12 +0200 (CEST)
-From:   Marta Rybczynska <mrybczyn@kalray.eu>
-To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jean-Baptiste Riaux <jbriaux@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>
-Message-ID: <1575872828.30576006.1562335512322.JavaMail.zimbra@kalray.eu>
-Subject: [PATCH v2] nvme: fix multipath crash when ANA desactivated
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
-Thread-Index: 765tNWerV/iaZsWbFobuqYFnkx/0Vg==
-Thread-Topic: nvme: fix multipath crash when ANA desactivated
+        Fri, 5 Jul 2019 10:05:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57589 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfGEOFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:05:45 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10DD337F43;
+        Fri,  5 Jul 2019 14:05:40 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-58.sin2.redhat.com [10.67.116.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C97486420;
+        Fri,  5 Jul 2019 14:04:48 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
+        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
+        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
+Subject: [PATCH v15 1/7] libnvdimm: nd_region flush callback support
+Date:   Fri,  5 Jul 2019 19:33:22 +0530
+Message-Id: <20190705140328.20190-2-pagupta@redhat.com>
+In-Reply-To: <20190705140328.20190-1-pagupta@redhat.com>
+References: <20190705140328.20190-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 05 Jul 2019 14:05:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a crash with multipath activated. It happends when ANA log
-page is larger than MDTS and because of that ANA is disabled.
-The driver then tries to access unallocated buffer when connecting
-to a nvme target. The signature is as follows:
+This patch adds functionality to perform flush from guest
+to host over VIRTIO. We are registering a callback based
+on 'nd_region' type. virtio_pmem driver requires this special
+flush function. For rest of the region types we are registering
+existing flush function. Report error returned by host fsync
+failure to userspace.
 
-[  300.433586] nvme nvme0: ANA log page size (8208) larger than MDTS (8192).
-[  300.435387] nvme nvme0: disabling ANA support.
-[  300.437835] nvme nvme0: creating 4 I/O queues.
-[  300.459132] nvme nvme0: new ctrl: NQN "nqn.0.0.0", addr 10.91.0.1:8009
-[  300.464609] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  300.466342] #PF error: [normal kernel read fault]
-[  300.467385] PGD 0 P4D 0
-[  300.467987] Oops: 0000 [#1] SMP PTI
-[  300.468787] CPU: 3 PID: 50 Comm: kworker/u8:1 Not tainted 5.0.20kalray+ #4
-[  300.470264] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-[  300.471532] Workqueue: nvme-wq nvme_scan_work [nvme_core]
-[  300.472724] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.474038] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.477374] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.478334] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.479784] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.481488] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.483203] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.484928] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.486626] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.488538] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.489907] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.491612] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.493303] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.494991] Call Trace:
-[  300.495645]  nvme_mpath_add_disk+0x5c/0xb0 [nvme_core]
-[  300.496880]  nvme_validate_ns+0x2ef/0x550 [nvme_core]
-[  300.498105]  ? nvme_identify_ctrl.isra.45+0x6a/0xb0 [nvme_core]
-[  300.499539]  nvme_scan_work+0x2b4/0x370 [nvme_core]
-[  300.500717]  ? __switch_to_asm+0x35/0x70
-[  300.501663]  process_one_work+0x171/0x380
-[  300.502340]  worker_thread+0x49/0x3f0
-[  300.503079]  kthread+0xf8/0x130
-[  300.503795]  ? max_active_store+0x80/0x80
-[  300.504690]  ? kthread_bind+0x10/0x10
-[  300.505502]  ret_from_fork+0x35/0x40
-[  300.506280] Modules linked in: nvme_tcp nvme_rdma rdma_cm iw_cm ib_cm ib_core nvme_fabrics nvme_core xt_physdev ip6table_raw ip6table_mangle ip6table_filter ip6_tables xt_comment iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_CHECKSUM iptable_mangle iptable_filter veth ebtable_filter ebtable_nat ebtables iptable_raw vxlan ip6_udp_tunnel udp_tunnel sunrpc joydev pcspkr virtio_balloon br_netfilter bridge stp llc ip_tables xfs libcrc32c ata_generic pata_acpi virtio_net virtio_console net_failover virtio_blk failover ata_piix serio_raw libata virtio_pci virtio_ring virtio
-[  300.514984] CR2: 0000000000000008
-[  300.515569] ---[ end trace faa2eefad7e7f218 ]---
-[  300.516354] RIP: 0010:nvme_parse_ana_log+0x21/0x140 [nvme_core]
-[  300.517330] Code: 45 01 d2 d8 48 98 c3 66 90 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48 89 fb 48 83 ec 08 48 8b af 20 0a 00 00 48 89 34 24 <66> 83 7d 08 00 0f 84 c6 00 00 00 44 8b 7d 14 49 89 d5 8b 55 10 48
-[  300.520353] RSP: 0018:ffffa50e80fd7cb8 EFLAGS: 00010296
-[  300.521229] RAX: 0000000000000001 RBX: ffff9130f1872258 RCX: 0000000000000000
-[  300.522399] RDX: ffffffffc06c4c30 RSI: ffff9130edad4280 RDI: ffff9130f1872258
-[  300.523560] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000044
-[  300.524734] R10: 0000000000000220 R11: 0000000000000040 R12: ffff9130f18722c0
-[  300.525915] R13: ffff9130f18722d0 R14: ffff9130edad4280 R15: ffff9130f18722c0
-[  300.527084] FS:  0000000000000000(0000) GS:ffff9130f7b80000(0000) knlGS:0000000000000000
-[  300.528396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  300.529440] CR2: 0000000000000008 CR3: 00000002365e6000 CR4: 00000000000006e0
-[  300.530739] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  300.531989] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  300.533264] Kernel panic - not syncing: Fatal exception
-[  300.534338] Kernel Offset: 0x17c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  300.536227] ---[ end Kernel panic - not syncing: Fatal exception ]---
-
-Signed-off-by: Marta Rybczynska <marta.rybczynska@kalray.eu>
-Tested-by: Jean-Baptiste Riaux <jbriaux@kalray.eu>
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 ---
- drivers/nvme/host/multipath.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/acpi/nfit/core.c     |  4 ++--
+ drivers/nvdimm/claim.c       |  6 ++++--
+ drivers/nvdimm/nd.h          |  1 +
+ drivers/nvdimm/pmem.c        | 13 ++++++++-----
+ drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
+ include/linux/libnvdimm.h    |  9 ++++++++-
+ 6 files changed, 47 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 499acf0..5ba982b 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -14,7 +14,8 @@
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index f1ed0befe303..9ddd8667153e 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk, unsigned int bw,
+ 		offset = to_interleave_offset(offset, mmio);
  
- inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+ 	writeq(cmd, mmio->addr.base + offset);
+-	nvdimm_flush(nfit_blk->nd_region);
++	nvdimm_flush(nfit_blk->nd_region, NULL);
+ 
+ 	if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
+ 		readq(mmio->addr.base + offset);
+@@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk *nfit_blk,
+ 	}
+ 
+ 	if (rw)
+-		nvdimm_flush(nfit_blk->nd_region);
++		nvdimm_flush(nfit_blk->nd_region, NULL);
+ 
+ 	rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
+ 	return rc;
+diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
+index fb667bf469c7..13510bae1e6f 100644
+--- a/drivers/nvdimm/claim.c
++++ b/drivers/nvdimm/claim.c
+@@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
+ 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+ 	unsigned int sz_align = ALIGN(size + (offset & (512 - 1)), 512);
+ 	sector_t sector = offset >> 9;
+-	int rc = 0;
++	int rc = 0, ret = 0;
+ 
+ 	if (unlikely(!size))
+ 		return 0;
+@@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
+ 	}
+ 
+ 	memcpy_flushcache(nsio->addr + offset, buf, size);
+-	nvdimm_flush(to_nd_region(ndns->dev.parent));
++	ret = nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
++	if (ret)
++		rc = ret;
+ 
+ 	return rc;
+ }
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index a5ac3b240293..0c74d2428bd7 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -159,6 +159,7 @@ struct nd_region {
+ 	struct badblocks bb;
+ 	struct nd_interleave_set *nd_set;
+ 	struct nd_percpu_lane __percpu *lane;
++	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+ 	struct nd_mapping mapping[0];
+ };
+ 
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 0279eb1da3ef..c757a47183b8 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -192,6 +192,7 @@ static blk_status_t pmem_do_bvec(struct pmem_device *pmem, struct page *page,
+ 
+ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
  {
--	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
-+	return multipath && ctrl->ana_log_buf && ctrl->subsys &&
-+		(ctrl->subsys->cmic & (1 << 3));
++	int ret = 0;
+ 	blk_status_t rc = 0;
+ 	bool do_acct;
+ 	unsigned long start;
+@@ -201,7 +202,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
+ 	struct nd_region *nd_region = to_region(pmem);
+ 
+ 	if (bio->bi_opf & REQ_PREFLUSH)
+-		nvdimm_flush(nd_region);
++		ret = nvdimm_flush(nd_region, bio);
+ 
+ 	do_acct = nd_iostat_start(bio, &start);
+ 	bio_for_each_segment(bvec, bio, iter) {
+@@ -216,7 +217,10 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
+ 		nd_iostat_end(bio, start);
+ 
+ 	if (bio->bi_opf & REQ_FUA)
+-		nvdimm_flush(nd_region);
++		ret = nvdimm_flush(nd_region, bio);
++
++	if (ret)
++		bio->bi_status = errno_to_blk_status(ret);
+ 
+ 	bio_endio(bio);
+ 	return BLK_QC_T_NONE;
+@@ -469,7 +473,6 @@ static int pmem_attach_disk(struct device *dev,
+ 	}
+ 	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
+ 	pmem->dax_dev = dax_dev;
+-
+ 	gendev = disk_to_dev(disk);
+ 	gendev->groups = pmem_attribute_groups;
+ 
+@@ -527,14 +530,14 @@ static int nd_pmem_remove(struct device *dev)
+ 		sysfs_put(pmem->bb_state);
+ 		pmem->bb_state = NULL;
+ 	}
+-	nvdimm_flush(to_nd_region(dev->parent));
++	nvdimm_flush(to_nd_region(dev->parent), NULL);
+ 
+ 	return 0;
  }
  
- /*
-@@ -614,7 +615,10 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ static void nd_pmem_shutdown(struct device *dev)
  {
- 	int error;
+-	nvdimm_flush(to_nd_region(dev->parent));
++	nvdimm_flush(to_nd_region(dev->parent), NULL);
+ }
  
--	if (!nvme_ctrl_use_ana(ctrl))
-+	/* check if multipath is enabled and we have the capability */
-+	if (!multipath)
-+		return 0;
-+	if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) != 0))
- 		return 0;
+ static void nd_pmem_notify(struct device *dev, enum nvdimm_event event)
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index b4ef7d9ff22e..e5b59708865e 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -295,7 +295,9 @@ static ssize_t deep_flush_store(struct device *dev, struct device_attribute *att
+ 		return rc;
+ 	if (!flush)
+ 		return -EINVAL;
+-	nvdimm_flush(nd_region);
++	rc = nvdimm_flush(nd_region, NULL);
++	if (rc)
++		return rc;
  
- 	ctrl->anacap = id->anacap;
+ 	return len;
+ }
+@@ -1085,6 +1087,11 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+ 	dev->of_node = ndr_desc->of_node;
+ 	nd_region->ndr_size = resource_size(ndr_desc->res);
+ 	nd_region->ndr_start = ndr_desc->res->start;
++	if (ndr_desc->flush)
++		nd_region->flush = ndr_desc->flush;
++	else
++		nd_region->flush = NULL;
++
+ 	nd_device_register(dev);
+ 
+ 	return nd_region;
+@@ -1125,11 +1132,24 @@ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
+ }
+ EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
+ 
++int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
++{
++	int rc = 0;
++
++	if (!nd_region->flush)
++		rc = generic_nvdimm_flush(nd_region);
++	else {
++		if (nd_region->flush(nd_region, bio))
++			rc = -EIO;
++	}
++
++	return rc;
++}
+ /**
+  * nvdimm_flush - flush any posted write queues between the cpu and pmem media
+  * @nd_region: blk or interleaved pmem region
+  */
+-void nvdimm_flush(struct nd_region *nd_region)
++int generic_nvdimm_flush(struct nd_region *nd_region)
+ {
+ 	struct nd_region_data *ndrd = dev_get_drvdata(&nd_region->dev);
+ 	int i, idx;
+@@ -1153,6 +1173,8 @@ void nvdimm_flush(struct nd_region *nd_region)
+ 		if (ndrd_get_flush_wpq(ndrd, i, 0))
+ 			writeq(1, ndrd_get_flush_wpq(ndrd, i, idx));
+ 	wmb();
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(nvdimm_flush);
+ 
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index feb342d026f2..5a4f7b13574d 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -19,6 +19,7 @@
+ #include <linux/types.h>
+ #include <linux/uuid.h>
+ #include <linux/spinlock.h>
++#include <linux/bio.h>
+ 
+ struct badrange_entry {
+ 	u64 start;
+@@ -65,6 +66,9 @@ enum {
+ 	 */
+ 	ND_REGION_PERSIST_MEMCTRL = 2,
+ 
++	/* Platform provides asynchronous flush mechanism */
++	ND_REGION_ASYNC = 3,
++
+ 	/* mark newly adjusted resources as requiring a label update */
+ 	DPA_RESOURCE_ADJUSTED = 1 << 0,
+ };
+@@ -121,6 +125,7 @@ struct nd_mapping_desc {
+ 	int position;
+ };
+ 
++struct nd_region;
+ struct nd_region_desc {
+ 	struct resource *res;
+ 	struct nd_mapping_desc *mapping;
+@@ -133,6 +138,7 @@ struct nd_region_desc {
+ 	int target_node;
+ 	unsigned long flags;
+ 	struct device_node *of_node;
++	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+ };
+ 
+ struct device;
+@@ -260,7 +266,8 @@ unsigned long nd_blk_memremap_flags(struct nd_blk_region *ndbr);
+ unsigned int nd_region_acquire_lane(struct nd_region *nd_region);
+ void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane);
+ u64 nd_fletcher64(void *addr, size_t len, bool le);
+-void nvdimm_flush(struct nd_region *nd_region);
++int nvdimm_flush(struct nd_region *nd_region, struct bio *bio);
++int generic_nvdimm_flush(struct nd_region *nd_region);
+ int nvdimm_has_flush(struct nd_region *nd_region);
+ int nvdimm_has_cache(struct nd_region *nd_region);
+ int nvdimm_in_overwrite(struct nvdimm *nvdimm);
 -- 
-1.8.3.1
+2.20.1
 
