@@ -2,108 +2,113 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6846CC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353F3C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A28218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yF9Y4TXd"
+	by mail.kernel.org (Postfix) with ESMTP id 09ECC216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562320801;
+	bh=gD1JfL6KGBucWzfJkxt81SZz5oT3ZBzVq/AefEUmECY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=umFu46U08R19s9i4VwEbF9cq9Ot6rcs3pUIHJTL1jt92STcYkpRGfqgmZG597ZWXt
+	 2XbHMqMrv0cZjxGfhctNR1MfrtUT1DstKncuzNxZoTQmL86J7/BzmZ2ju0dXy18oAg
+	 fMdPpIVNlCq3dw2PURKcGVLPMWwJ+dWokXkKOWsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfGEJ7Y (ORCPT
+        id S1727955AbfGEKAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:59:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39595 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbfGEJ6F (ORCPT
+        Fri, 5 Jul 2019 06:00:00 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37670 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727599AbfGEJ77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:58:05 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v18so8673502ljh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VUCWK2MsD9fKCW5H56U5T5vRzO2k7QDz1z157zPKgz4=;
-        b=yF9Y4TXdbukUm95Tym+SSRRKXOgy30rcUTY/I/w2ob/pI2Xk6mM2EFws9z/z9Jy5cn
-         5yH51ejAX7BSHtxlej6Sietfapi0cefT59q9jJN1ifMQjBqWA/apLst7ul9igPrQzDk2
-         drpnxdar+aTtUDEWi3y8Cvaxy3V5c8w9TqANXQggoaL7EEGMCiDWenolNKnmfMlIz6hF
-         LA7dy1MeKgwm/taneDq3mE/Cww1ynKWrGI+PksCPx8K3tIZOtjsxbHUhCVxP0us659eW
-         TmBrcMnTRQnSIVFZY+/4qysi0crgRy02/xmt3FLPdAsn0bXiaXQyjMv1jXGLbzNsj4go
-         eyAg==
+        Fri, 5 Jul 2019 05:59:59 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s20so8533173otp.4;
+        Fri, 05 Jul 2019 02:59:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VUCWK2MsD9fKCW5H56U5T5vRzO2k7QDz1z157zPKgz4=;
-        b=QGPDMyYtZThJf5mQI5UC3IaFxMe5Yvu3iwJf7bt6s/wJrUgtswkYRpKU3BOfvPryzg
-         5HA0ARpQo7UMvpnV+35egqz33CQMXwn+RO8ldWepohjcj32ROtlMIPkrJo6SRbSpFS5v
-         zH1OsA2NvADMh3kExqPjaaN0ppxgBTmYE1X7jBQrRO1XxwV5xUcZaqdZ6JZogZMleBmc
-         Yjaw2UtRE5jBrSqpF6wsSVWTNFZvNSZgEanygGx3Nd2wWTAjT5KUkJ+d9cOZeI4oHRCi
-         YBriTFvU/WZ/iqCul1Xk7NFAQBWuJC1/DeMAKHS+hMEBBqxN/PgnJhF0Ulx4Q4z4c2LQ
-         YcMA==
-X-Gm-Message-State: APjAAAVwJ7HHvjYuEJUnBashl3/lvSG8l/fm4gyg2XF5U7nynodAHgkb
-        KOXd8QJRSPKNUZ2MgpFf/lI4aQ==
-X-Google-Smtp-Source: APXvYqx0ZiI7NUTcCSAcDJg+m43On7JBoo/yMllTvC1H2ViTfIYfM/r31p51tmof/TzmGg/DplB8aw==
-X-Received: by 2002:a2e:9758:: with SMTP id f24mr1723330ljj.58.1562320683615;
-        Fri, 05 Jul 2019 02:58:03 -0700 (PDT)
-Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
-        by smtp.gmail.com with ESMTPSA id 25sm1692704ljn.62.2019.07.05.02.58.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 02:58:02 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/13] dt-bindings: cpufreq: qcom-nvmem: Make speedbin related properties optional
-Date:   Fri,  5 Jul 2019 11:57:14 +0200
-Message-Id: <20190705095726.21433-4-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=beyRNtev5O4mJWjS70eIztB/Qoa+o9lbeo95E6keUJY=;
+        b=GxO/ukHzNFjQIbGBKy0lXvUbXviEoFbVcVPa7cV0LfgltvNpIbW+Pm0wNq2hqS9UpD
+         i6xWvMqQnEV0OX7/0EM1islIOzCiS/tPTCkUDE77zTX8sJuS6bbPfZVJdBgS9hnQWX0K
+         Cdo38cEFpIs7p+LHrGwe0mLRNTcCSdAIFFwGVMXk5U6vK4mhqTGAEUvM3oBaPFWguDqa
+         i6a08A+BAv7SwXYjChRYG/Pm2tkoM5RupvFlzH/Z2pylMx+VWadkeR61jQecVl4wa8lW
+         Fmo+4/YPnVHVbeyqbL2H9T38m7EeR2Nyly5ietvR3GVjNEw8Zz+e+Cs4cLPoOyIoXVs6
+         z3iA==
+X-Gm-Message-State: APjAAAXqdwIMiOLDqO68Z/+Jz6WjIk/jKIMOOiGbVwEAcTtbsKkcDgVw
+        4+qOtLUwViLZz68rsB7U73QEmyilY1UL2XoT3jM=
+X-Google-Smtp-Source: APXvYqw67TEYIC1UMzAsnjpjPZTeCtDomLNpsuRUXUnwN0RZoLylieiwvy4aa0ev1vzibsf4I9hvGEWjVJgwD2Kllx0=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr2039247oto.167.1562320798736;
+ Fri, 05 Jul 2019 02:59:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <0000000000005bf6c3058cde49a7@google.com> <8755905.1UUJr7qOyo@kreacher>
+ <CACT4Y+awzZOSAseosiUDvs_zk7hFRuQrrr0LjRmVwesVbF_+aQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+awzZOSAseosiUDvs_zk7hFRuQrrr0LjRmVwesVbF_+aQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 5 Jul 2019 11:59:47 +0200
+Message-ID: <CAJZ5v0h7O7Rpkf1ShV1PphqB__9EQ2MPkZwrU=x_iDvTn+9bQw@mail.gmail.com>
+Subject: Re: linux-next boot error: WARNING in corrupted
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        syzbot <syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all Qualcomm platforms need to care about the speedbin efuse,
-nor the value blown into the speedbin efuse.
-Therefore, make the nvmem-cells and opp-supported-hw properties
-optional.
+On Fri, Jul 5, 2019 at 11:37 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, Jul 5, 2019 at 11:23 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Thursday, July 4, 2019 7:27:04 PM CEST syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    16c474c9 Add linux-next specific files for 20190704
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=17f8b463a00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=983f02aae1ef31b6
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=de771ae9390dffed7266
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com
+> > >
+> ...
+> > > ------------[ cut here ]------------
+> > > __dev_pm_qos_remove_request() called for unknown object
+> > > WARNING: CPU: 1 PID: 1 at drivers/base/power/qos.c:486
+> > > __dev_pm_qos_remove_request+0x3d3/0x4d0 drivers/base/power/qos.c:486
+> >
+> > Viresh, any chance to look at this?
+> >
+> > I'm a bit concerned about the freq QoS series at this point, may defer pushing it.
+>
+> FWIW here is full WARNING since I am hitting it locally too:
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+So can you try to revert commits between
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index 198441e80ba8..c5ea8b90e35d 100644
---- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -20,6 +20,10 @@ In 'cpus' nodes:
- In 'operating-points-v2' table:
- - compatible: Should be
- 	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
-+
-+Optional properties:
-+--------------------
-+In 'operating-points-v2' table:
- - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
- 		efuse registers that has information about the
- 		speedbin that is used to select the right frequency/voltage
--- 
-2.21.0
+0b07ee944701 PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()
 
+and
+
+95c7e46c0f80 cpufreq: Add QoS requests for userspace constraints
+
+inclusive from linux-next (they should revert cleanly) and see if that
+makes the issue go away?
