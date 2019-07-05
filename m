@@ -2,116 +2,89 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037CAC0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD48C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B352189E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B1021852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfGEBfi (ORCPT
+        id S1727521AbfGEBlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 21:35:38 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:51577 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727345AbfGEBfh (ORCPT
+        Thu, 4 Jul 2019 21:41:05 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:57257 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726871AbfGEBlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 21:35:37 -0400
-X-UUID: 27620e949d0c4445b1dce6282ae5c56c-20190704
-X-UUID: 27620e949d0c4445b1dce6282ae5c56c-20190704
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1737695922; Thu, 04 Jul 2019 17:35:33 -0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 4 Jul 2019 18:35:32 -0700
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 5 Jul 2019 09:35:30 +0800
-Message-ID: <1562290530.10428.6.camel@mtksdaap41>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Ulrich Hecht <uli@fpond.eu>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <matthias.bgg@kernel.org>,
-        "Ulrich Hecht" <ulrich.hecht+renesas@gmail.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Date:   Fri, 5 Jul 2019 09:35:30 +0800
-In-Reply-To: <100944512.353257.1562254420397@webmail.strato.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
-         <20181116125449.23581-9-matthias.bgg@kernel.org>
-         <20181116231522.GA18006@bogus>
-         <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
-         <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
-         <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
-         <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
-         <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
-         <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
-         <1561953318.25914.9.camel@mtksdaap41>
-         <84d1c444-d6cb-9537-1bf5-b4e736443239@gmail.com>
-         <100944512.353257.1562254420397@webmail.strato.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 4 Jul 2019 21:41:05 -0400
+Received: (qmail 1325 invoked by uid 500); 4 Jul 2019 21:41:04 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 Jul 2019 21:41:04 -0400
+Date:   Thu, 4 Jul 2019 21:41:04 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Suwan Kim <suwan.kim027@gmail.com>
+cc:     shuah@kernel.org, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usbip: Implement SG support to vhci
+In-Reply-To: <20190704172435.GA11673@localhost.localdomain>
+Message-ID: <Pine.LNX.4.44L0.1907042138091.840-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Uli:
+On Fri, 5 Jul 2019, Suwan Kim wrote:
 
-On Thu, 2019-07-04 at 17:33 +0200, Ulrich Hecht wrote:
-> > On July 4, 2019 at 11:08 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
-> > You are right, it took far too long for me to respond with a new version of the
-> > series. The problem I face is, that I use my mt8173 based chromebook for
-> > testing. It needs some downstream patches and broke somewhere between my last
-> > email and a few month ago.
+> On Mon, Jun 24, 2019 at 01:24:15PM -0400, Alan Stern wrote:
+> > On Mon, 24 Jun 2019, Suwan Kim wrote:
+> > 
+> > > > > +	hcd->self.sg_tablesize = ~0;
+> > > > > +	hcd->self.no_sg_constraint = 1;
+> > > > 
+> > > > You probably shouldn't do this, for two reasons.  First, sg_tablesize
+> > > > of the server's HCD may be smaller than ~0.  If the client's value is
+> > > > larger than the server's, a transfer could be accepted on the client
+> > > > but then fail on the server because the SG list was too big.
+> > 
+> > On the other hand, I don't know of any examples where an HCD has 
+> > sg_tablesize set to anything other than 0 or ~0.  vhci-hcd might end up 
+> > being the only one.
+> > 
+> > > > Also, you may want to restrict the size of SG transfers even further,
+> > > > so that you don't have to allocate a tremendous amount of memory all at
+> > > > once on the server.  An SG transfer can be quite large.  I don't know 
+> > > > what a reasonable limit would be -- 16 perhaps?
+> > > 
+> > > Is there any reason why you think that 16 is ok? Or Can I set this
+> > > value as the smallest value of all HC? I think that sg_tablesize
+> > > cannot be a variable value because vhci interacts with different
+> > > machines and all machines has different sg_tablesize value.
+> > 
+> > I didn't have any good reason for picking 16.  Using the smallest value 
+> > of all the HCDs seems like a good idea.
 > 
-> If that Chromebook is an Acer R13 and you need a working kernel, you may want to have a look at https://github.com/uli/kernel/tree/elm-working-5.2 .
-
-Thanks for your sample code, and your implementation is different than
-Matthias' version. In your version, mmsys is a single device which has
-clock function and display function, the clock function is placed in
-clock driver folder and display function is placed in drm driver folder.
-In Matthias' version, clock function is a sub device of mmsys. I've no
-idea of which one is better. I would get more information to make better
-decision.
-
-Regards,
-CK
-
+> I also have not seen an HCD with a value other than ~0 or 0 except for
+> whci which uses 2048, but is not 2048 the maximum value of sg_tablesize?
+> If so, ~0 is the minimum value of sg_tablesize that supports SG. Then
+> can vhci use ~0 if we don't consider memory pressure of the server?
 > 
-> CU
-> Uli
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> If all of the HCDs supporting SG have ~0 as sg_tablesize value, I
+> think that whether we use an HCD locally or remotely, the degree of
+> memory pressure is same in both local and remote usage.
 
+You have a lot of leeway.  For example, there's no reason a single SG
+transfer on the client has to correspond to a single SG transfer on the
+host.  In theory the client's vhci-hcd can break a large SG transfer up
+into a bunch of smaller pieces and send them to the host one by one,
+then reassemble the results to complete the original transfer.  That
+way the memory pressure on the host would be a lot smaller than on the
+client.
+
+Alan Stern
 
