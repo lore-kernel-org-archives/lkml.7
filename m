@@ -2,168 +2,115 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCF5C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94A5C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B08C2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4z590x8"
+	by mail.kernel.org (Postfix) with ESMTP id 7B6972082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562328949;
+	bh=2lOkk2WrCmEuGNSloYfpFkod1yrqn2kQgwbDSSnvXkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=173QTQw1jE4duEAWZq5oyykbyO9JIcadvyg9hYBm4Kz5TRpphlMHEj7N0R5TtfqmP
+	 ftw8/ZBYutctBlo5jqaFoMYvhCBejrm7+9oV0dj1AtUKXq9x4KUeFk0Tn3z9UdVamo
+	 ik8q6iyu4bbk98njpI1/Qa4C8AYcC7YMkjaj/3Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfGEMPY (ORCPT
+        id S1728739AbfGEMPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:15:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36755 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbfGEMPY (ORCPT
+        Fri, 5 Jul 2019 08:15:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39184 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfGEMPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:15:24 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so3103063iom.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wy7q/lSghMGgYWHueYARtusrEUxHAAv3+Vmwv4lPLPc=;
-        b=Y4z590x8zZjU+nw79DHqFjYhZKANayNJIXz4wQb9+25F1kH3RJO2RBCpfGERgAZsAn
-         ow2HKsxnsP1XGzDlaetFz86AnclIWeQxCeo3Oq1XylC9c3bhuRdEIY+A3pozwPPQ2gFm
-         fAItExXm2FysS43TIjvUmCWMj6uF/QwUfqw/iobtpJWztRQ9fI8Nf/FdiMuBQrA9N/J2
-         1Ddf9MJO9ZxoTDbUQnLef1m4aPO587Ce7W0qMy0q+buIjxarGoZCoZED/1KyktHkOEFT
-         tLxBclUeZhEEetau9xtJQaDV99Hs9o+mXDylVSpCjyVxvsMbK7UGd/eEQjSz8hCzR2pI
-         jHUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wy7q/lSghMGgYWHueYARtusrEUxHAAv3+Vmwv4lPLPc=;
-        b=fHKkj/CtAvnqAqu5Olzgd0tB8sP7aEtZ529yza65nBh9khbzP0VR4HdIjHBf/6MatY
-         u34T+9XAU/KXGwbXmTTx/7Z+3w/E331xUrHUBgCn5I9TfI0NuLCjj5MIHTRLT8HDToVn
-         /u/NEDAhfpeYetTJBm+a4CJtbmLV5c+l0tBHh+vDnaKNNKdTa0i1/+3UilZrLoYGPOuM
-         nWPDaM+AxT1/NWjuuwSb+u0cfECaHjWDP85K2kpJNT2Mcqrcw/Ni1Xd55qyKALk89TrV
-         A/TtSyiAIS5p0Y+xFe5z2/uk4pvTHomQ3KHDaUABoZ0US8hSPYb/uZZV9beLHSQXPrTS
-         NNbg==
-X-Gm-Message-State: APjAAAWR7+vTgUUArJawLUaM46Isy+pUqym8Y+bnx16sdjaFzzxuVQ49
-        kla0BBSYo5HTFyxrLgdzmiacTOaivDFy5p/D4OzvOw==
-X-Google-Smtp-Source: APXvYqyNXAq6nNsn9MmE6y5O/LjdJEBIfuNPjZaUyp9GKnMkhxnB7VfGHsToH8TlsqDqXKgSCIgDjZabfk2Ai7eg4Ms=
-X-Received: by 2002:a6b:fb0f:: with SMTP id h15mr3834536iog.266.1562328922761;
- Fri, 05 Jul 2019 05:15:22 -0700 (PDT)
+        Fri, 5 Jul 2019 08:15:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=j3lgZr5PhIwsop5RCxeelLiraufpXEP7Y5EXfLHxN4Y=; b=hAYQlw4PRYrgwlGaAkQ/4wA7G
+        TP0lpCsujJkEtK292CBw1OMzakLEIfE/1kBviVMFeBl1bil5alPmT7CwQVE0scMA2Yt8zitziOyKx
+        Twvf//bKTdx4ML8P8uJ6VDrcVYIerXzo8AUOHz3OOtquKv+chJ5C+U9LMFILUwu2uDO2M=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hjN4z-0003hS-E5; Fri, 05 Jul 2019 12:12:41 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 459BD2742B0F; Fri,  5 Jul 2019 13:12:40 +0100 (BST)
+Date:   Fri, 5 Jul 2019 13:12:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
+        linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/4] ASoC: hdmi-codec: Add an op to set callback function
+ for plug event
+Message-ID: <20190705121240.GA20625@sirena.org.uk>
+References: <20190705042623.129541-1-cychiang@chromium.org>
+ <20190705042623.129541-2-cychiang@chromium.org>
+ <CA+Px+wXtmf9dQQP7ywPLp7Qbbvqau=WnO3qhZ8+qmbJD1gjx+A@mail.gmail.com>
 MIME-Version: 1.0
-References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
- <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 5 Jul 2019 14:15:11 +0200
-Message-ID: <CACT4Y+YOFjyYeKv1M8QL8fHF+zuGKRJrTs78hSTxZ1hPjNR5JA@mail.gmail.com>
-Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
-To:     David Howells <dhowells@redhat.com>
-Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <CA+Px+wXtmf9dQQP7ywPLp7Qbbvqau=WnO3qhZ8+qmbJD1gjx+A@mail.gmail.com>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 2:12 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com> wrote:
-> >
-> > I *think* the reproducer boils down to the attached, but I can't get syzkaller
-> > to work and the attached sample does not cause the oops to occur.  Can you try
-> > it in your environment?
-> >
-> > > The bug was bisected to:
-> > >
-> > > commit 46894a13599a977ac35411b536fb3e0b2feefa95
-> > > Author: David Howells <dhowells@redhat.com>
-> > > Date:   Thu Oct 4 08:32:28 2018 +0000
-> > >
-> > >     rxrpc: Use IPv4 addresses throught the IPv6
-> >
-> > This might not be the correct bisection point.  If you look at the attached
-> > sample, you're mixing AF_INET and AF_INET6.  If you try AF_INET throughout,
-> > that might get a different point.  On the other hand, since you've bound the
-> > socket, the AF_INET6 passed to socket() should be ignored.
-> >
-> > David
-> > ---
-> > #include <stdio.h>
-> > #include <stdlib.h>
-> > #include <string.h>
-> > #include <unistd.h>
-> > #include <sys/socket.h>
-> > #include <arpa/inet.h>
-> > #include <linux/rxrpc.h>
-> >
-> > static const unsigned char inet4_addr[4] = {
-> >         0xe0, 0x00, 0x00, 0x01
-> > };
-> >
-> > int main(void)
-> > {
-> >         struct sockaddr_rxrpc srx;
-> >         int fd;
-> >
-> >         memset(&srx, 0, sizeof(srx));
-> >         srx.srx_family                  = AF_RXRPC;
-> >         srx.srx_service                 = 0;
-> >         srx.transport_type              = AF_INET;
-> >         srx.transport_len               = sizeof(srx.transport.sin);
-> >         srx.transport.sin.sin_family    = AF_INET;
-> >         srx.transport.sin.sin_port      = htons(0x4e21);
-> >         memcpy(&srx.transport.sin.sin_addr, inet4_addr, 4);
-> >
-> >         fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
-> >         if (fd == -1) {
-> >                 perror("socket");
-> >                 exit(1);
-> >         }
-> >
-> >         if (bind(fd, (struct sockaddr *)&srx, sizeof(srx)) == -1) {
-> >                 perror("bind");
-> >                 exit(1);
-> >         }
-> >
-> >         sleep(20);
-> >
-> >         // Whilst sleeping, hit with:
-> >         // echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only 224.0.0.1 20001
-> >
-> >         return 0;
-> > }
->
-> Hi David,
->
-> I can't re-reproduce it locally in qemu either. Though, syzbot managed
-> to re-reproduce it reliably during bisection (maybe there is some
-> difference in hardware and as the result the injected ethernet packet
-> would need some different values). Let's try to ask it again to make
-> sure:
-> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> master
->
-> Re bisection, I don't know if there are some more subtle things as
-> play (you are in the better position to judge that), but bisection log
-> looks good, it tracked the target crash throughout and wasn't
-> distracted by any unrelated bugs, etc. So I don't see any obvious
-> reasons to not trust it.
 
-FWIW here is a more complete translation of the syzkaller repro to C using:
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-$ syz-prog2c -prog /tmp/prog -threaded -collide -repeat=0 -procs=6
--sandbox=namespace -enable=tun,net_dev,net_reset,cgroups,close_fds
--tmpdir -segv
+On Fri, Jul 05, 2019 at 03:08:37PM +0800, Tzung-Bi Shih wrote:
+> On Fri, Jul 5, 2019 at 12:26 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
 
-https://gist.githubusercontent.com/dvyukov/f712ca7c3a0d355ce63823d7882c2934/raw/7a72635b99e5a85599a6bcf9b7901fa9d8c494d4/repro.c
+> > +typedef void (*hdmi_codec_plugged_cb)(struct platform_device *dev,
+> > +                                     bool plugged);
+> > +
 
-However, both syzbot and me won't able to repro with this C program,
-so it is expected that it does not reproduce the crash for some
-reason.
+> The callback prototype is "weird" by struct platform_device.  Is it
+> possible to having snd_soc_component instead of platform_device?
+
+Or if it's got to be a device why not just a generic device so
+we're not tied to a particular bus here?
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0fPrcACgkQJNaLcl1U
+h9CqOgf+J1iCd1w3ReqbJfzVnRPz1davoLs8e6k9u638UeMZX3sVMS9fyeTcQtrX
+XpRecrQsk7CUGoFb2ji0GxnHSXWnEwnIPCRmBzoDwSmsX+33TYQI1aH+m2ZeAgjv
+QqHqk0vNtFAlsttbNMTvbkkkSYAAbOPW8K8AEL54U1X8EJBpqV8ljUj85yDazCou
+SCsQUj0LlLqN6+Gm1LmXH81KdHY06t8i7yxPATgspDLgEJYi4WwdrIyqKAtl+k92
+iAuK8BXYQJO14ZrV/8f0TJbHnrszfO3RJw0UqXdZ4YMvsw0KmrNj9jYv/cL7yD8F
+AUeTwhBtKU+Jd353cqjNMhjYBXwEUg==
+=+Q0m
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
