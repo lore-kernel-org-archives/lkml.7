@@ -4,100 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7953C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C2AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5903218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6226B218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfGEH7I (ORCPT
+        id S1728100AbfGEICo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:59:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36382 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727506AbfGEH7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:59:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1F7BACD4;
-        Fri,  5 Jul 2019 07:59:06 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 09:59:04 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/isolate: Drop pre-validating migrate type in
- undo_isolate_page_range()
-Message-ID: <20190705075857.GA28725@linux>
-References: <1562307161-30554-1-git-send-email-anshuman.khandual@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562307161-30554-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 5 Jul 2019 04:02:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59333 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfGEICn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:02:43 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hjJAu-0001cv-SN; Fri, 05 Jul 2019 10:02:32 +0200
+Message-ID: <1562313748.4291.3.camel@pengutronix.de>
+Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Date:   Fri, 05 Jul 2019 10:02:28 +0200
+In-Reply-To: <DB3PR0402MB39167B9A3CFAE6D8798B3CAEF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190704094416.4757-1-Anson.Huang@nxp.com>
+         <1562235363.6641.10.camel@pengutronix.de>
+         <DB3PR0402MB39167B9A3CFAE6D8798B3CAEF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:42:41AM +0530, Anshuman Khandual wrote:
-> unset_migratetype_isolate() already validates under zone lock that a given
-> page has already been isolated as MIGRATE_ISOLATE. There is no need for
-> another check before. Hence just drop this redundant validation.
+Hi Anson,
+
+On Fri, 2019-07-05 at 00:26 +0000, Anson Huang wrote:
+> Hi, Philipp
 > 
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+> > On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
+> > > From: Anson Huang <Anson.Huang@nxp.com>
+> > > 
+> > > i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
+> > > property and related info to support i.MX8MM.
+> > > 
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V2:
+> > > 	- Add separate line for i.MX8MM in case anything different later for
+> > 
+> > i.MX8MM.
+> > > ---
+> > >  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> > > b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> > > index 13e0951..c2489e4 100644
+> > > --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> > > +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> > > @@ -8,6 +8,7 @@ Required properties:
+> > >  - compatible:
+> > >  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+> > >  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+> > > +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src",
+> > 
+> > "syscon"
+> > >  - reg: should be register base and length as documented in the
+> > >    datasheet
+> > >  - interrupts: Should contain SRC interrupt @@ -46,5 +47,6 @@ Example:
+> > > 
+> > > 
+> > >  For list of all valid reset indices see
+> > > -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
+> > > -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
+> > > +<dt-bindings/reset/imx7-reset.h> for i.MX7,
+> > > +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+> > > +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
+> > 
+> > The last line is misleading, as that file contains reset indices that are invalid
+> > for i.MX8MM.
 > 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Is there any particular reason to do this migratetype pre-check without zone
-> lock before calling unsert_migrate_isolate() ? If not this should be removed.
+> What is your suggestion about this line?
 
-I have seen this kinda behavior-checks all over the kernel.
-I guess that one of the main goals is to avoid lock contention, so we check
-if the page has the right migratetype, and then we check it again under the lock
-to see whether that has changed.
+I would prefer to add an imx8mm-reset.h with only the existing reset
+bits, using the IMX8MM_RESET_ prefix. That would make it easy to spot
+errors in the dtsi (anything starting with IMX8MQ_ is potentially
+wrong).
 
-e.g: simultaneous calls to undo_isolate_page_range
+> Just NOT change it?
 
-But I am not sure if the motivation behind was something else, as the changelog
-that added this code was quite modest.
+The change is good in principle. It just should point to an imx8mm-
+reset.h with only the existing resets on i.MX8MM, or imx8mq-reset.h
+should be modified to actually make clear which resets are valid on
+i.MX8MM.
 
-Anyway, how did you come across with this?
-Do things get speed up without this check? Or what was the motivation to remove it?
+> Or adding a new file imx8mm-reset.h but still use the IMX8MQ_RESET_ as
+> prefix ?
 
-thanks
+I don't think you should redefine the same macros in imx8mm-reset.h. In
+this case using IMX8MM_RESET_ would be better.
 
+> Or keep what I changed, but adding some comments in those macros that
+> i.MX8MM does NOT support?
 
-> 
->  mm/page_isolation.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index e3638a5bafff..f529d250c8a5 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -243,7 +243,7 @@ int undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
->  	     pfn < end_pfn;
->  	     pfn += pageblock_nr_pages) {
->  		page = __first_valid_page(pfn, pageblock_nr_pages);
-> -		if (!page || !is_migrate_isolate_page(page))
-> +		if (!page)
->  			continue;
->  		unset_migratetype_isolate(page, migratetype);
->  	}
-> -- 
-> 2.20.1
-> 
+That would be acceptable as well.
 
--- 
-Oscar Salvador
-SUSE L3
+regards
+Philipp
