@@ -2,123 +2,176 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82900C468A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C11AC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C720218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsGlQ4mo"
+	by mail.kernel.org (Postfix) with ESMTP id DAA8121738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfGEVUr (ORCPT
+        id S1728277AbfGEVUy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:20:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39104 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfGEVUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:20:47 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so4305654pgi.6;
-        Fri, 05 Jul 2019 14:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zw1DqtEpgkxDHmdzTS2NeIepAYygAlaNpdKUQpiKqlw=;
-        b=AsGlQ4morK3OgoGmmt8vFhPKAFfSqQyaA+hVQnhbkc2Zxe2xANbmhH+umGAH+oTpTe
-         vp1nWCsjXA6E4mFzplxKxTn4PEp3cD80Zs6WDr7eyiLvrLfpwCo+dXxFJAJoJ/6oZLUm
-         iAoB6MhyNyW7S2sAqT1WZMWRnJg/a9pIkFPyHuBYO4ynKPiH3w9dvEUk543BQGI8NctJ
-         upBSuwtrSSPAr+SGlT1ci+rEkAWZWGJK8CpGNVyQWv8aP0PJ4YJ651fRPQZBVkndjfEL
-         2PTgcj3z+HFVffpEUR7lXKNgqqEzzPtaopAScKwWrfL/zymQsvVZZRWu6fQsiDYf9rMv
-         f5MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zw1DqtEpgkxDHmdzTS2NeIepAYygAlaNpdKUQpiKqlw=;
-        b=I/CTaDwTHAqHequv1A/WP8ayM9h0CoULaV3/9xnohkw86f3/l7KG+FwFFVShTepyME
-         jkVRw9HPXJFn0NaVt4zpb8F77SiYk2hIBTBt/Yf3jb4lga5qR+qYP0646Mjzx9LWnWR4
-         qg7c9wSHDxeeixVTa5tQdFCxQRDF28tGo11x8mMUzCxnmaPP8EkmhxOYjjUZFsKOUzdI
-         5s9zQBMAkT1Z2MgtIE/0JruB8+k6tZ441BHf9CZRB5rBubik0PVbBbzuPg2Qsvp39KEX
-         GcYzNezN4zzoDrcBBxXuft7FuVm0gBeCKy4+LmO95U/fTlT7X/C28n90IyBnGAqiI7ov
-         ck7A==
-X-Gm-Message-State: APjAAAVP4Wm0fIDvKSOtPSR4c+VtsGitTBf96S+I+FbZvb0BBshDUQln
-        I1YP/Aid2R+k2D391EwvPQHOVBEEvgyfyA==
-X-Google-Smtp-Source: APXvYqx0BWoplT5Y09tbWUDPjb14Vy2lFmdjL2HEsUFvct/Pr1kXbJw/95+8w8eaaJelmb893E2+8Q==
-X-Received: by 2002:a63:360d:: with SMTP id d13mr7683690pga.80.1562361646433;
-        Fri, 05 Jul 2019 14:20:46 -0700 (PDT)
-Received: from Gentoo ([103.231.91.70])
-        by smtp.gmail.com with ESMTPSA id r15sm10160847pfh.121.2019.07.05.14.20.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 14:20:45 -0700 (PDT)
-Date:   Sat, 6 Jul 2019 02:50:35 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-trace-users@vger.kernel.org" 
-        <linux-trace-users@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Subject: Re: [ANNOUNCE] trace-cmd v2.8.1
-Message-ID: <20190705212031.GA17046@Gentoo>
-References: <20190705123411.4285e625@gandalf.local.home>
+        Fri, 5 Jul 2019 17:20:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726505AbfGEVUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:20:54 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 573CA87628;
+        Fri,  5 Jul 2019 21:20:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D6354C7;
+        Fri,  5 Jul 2019 21:20:44 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jmorris@namei.org, ebiederm@xmission.com,
+        dwalsh@redhat.com, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-afs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Keys: Set 3 - Keyrings namespacing for 5.3
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <20190705123411.4285e625@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27849.1562361644.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 05 Jul 2019 22:20:44 +0100
+Message-ID: <27850.1562361644@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 05 Jul 2019 21:20:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Here's my third block of keyrings changes for the next merge window.
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+These patches help make keys and keyrings more namespace aware.  Firstly
+some miscellaneous patches to make the process easier:
 
+ (1) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
 
-Cool !!
+ (2) Cache the hash value in the key so that we don't have to calculate on
+     every key we examine during a search (it involves a bunch of
+     multiplications).
 
-On 12:34 Fri 05 Jul , Steven Rostedt wrote:
->
->Just after releasing 2.8, some bugs were found (isn't that always the
->case?). Now we have 2.8.1 stable release:
->
->  http://trace-cmd.org
->
->-- Steve
->
->Short log here:
->
->Greg Thelen (2):
->      trace-cmd: Always initialize write_record() len
->      trace-cmd: Avoid using uninitialized handle
->
->Steven Rostedt (VMware) (1):
->      trace-cmd: Version 2.8.1
->
->Tzvetomir Stoyanov (VMware) (1):
->      trace-cmd: Do not free pages from the lookup table in struct cpu_data in case trace file is loaded.
+ (3) Allow keying_search() to search non-recursively.
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
+Then the main patches:
 
------BEGIN PGP SIGNATURE-----
+ (4) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0fvxsACgkQsjqdtxFL
-KRXR8ggAvaGgxhwLVezX3ugzwXNOd5beJKNDQjoIq3XWe22ThZtVzgc5U2dUnPO2
-H4npYnDMhJvh0nBOQnvm6da0MI1pYPn8wioRnnFoGWNDD14aHebUVpTzmnh8mone
-YzWFJJrFVISJmuWbmQSgzvfPCnfLaeU0xeC7ysBT5/yrijMEeoE48EuWoPWcesE1
-ljDGVphR0pZSq2FzIQY/2bppcykX/JgVXZ8gwbOXWuCJj9div+nluq9O2xzZHQ8f
-wtQBmEXfekHl1+rMznAAvv4BrFuGoxRf2cWZ6XDt56WDpyUBp+/daOctdNQs947r
-MeYEyFTd+k5WrSKyGYLvKKSKPHnMyA==
-=DG65
------END PGP SIGNATURE-----
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEYRING_NAME for this.
 
---2oS5YaxWCcQjTEyO--
+ (5) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (6) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEY_TAG for this.
+
+ (7) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+ (8) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+ (9) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good, whilst CIFS and Ceph are not.  Other
+     cache keyrings, such as idmapper keyrings, also need to set the domain
+     tag - for which they need access to the network namespace of the
+     superblock.
+
+David
+---
+The following changes since commit 3b8c4a08a471d56ecaaca939c972fdf5b8255629:
+
+  keys: Kill off request_key_async{,_with_auxdata} (2019-06-26 20:58:13 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-namespace-20190627
+
+for you to fetch changes up to a58946c158a040068e7c94dc1d58bbd273258068:
+
+  keys: Pass the network namespace into request_key mechanism (2019-06-27 23:02:12 +0100)
+
+----------------------------------------------------------------
+Keyrings namespacing
+
+----------------------------------------------------------------
+David Howells (9):
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
+
+ Documentation/security/keys/core.rst        |  38 ++--
+ Documentation/security/keys/request-key.rst |  29 ++-
+ certs/blacklist.c                           |   2 +-
+ crypto/asymmetric_keys/asymmetric_type.c    |   2 +-
+ fs/afs/addr_list.c                          |   4 +-
+ fs/afs/dynroot.c                            |   8 +-
+ fs/cifs/dns_resolve.c                       |   3 +-
+ fs/nfs/dns_resolve.c                        |   3 +-
+ fs/nfs/nfs4idmap.c                          |   2 +-
+ include/linux/dns_resolver.h                |   3 +-
+ include/linux/key-type.h                    |   3 +
+ include/linux/key.h                         |  81 ++++++++-
+ include/linux/sched/user.h                  |  14 --
+ include/linux/user_namespace.h              |  12 +-
+ include/net/net_namespace.h                 |   3 +
+ include/uapi/linux/keyctl.h                 |   2 +
+ kernel/user.c                               |   8 +-
+ kernel/user_namespace.c                     |   9 +-
+ lib/digsig.c                                |   2 +-
+ net/ceph/messenger.c                        |   3 +-
+ net/core/net_namespace.c                    |  20 +++
+ net/dns_resolver/dns_key.c                  |   1 +
+ net/dns_resolver/dns_query.c                |   7 +-
+ net/rxrpc/key.c                             |   6 +-
+ net/rxrpc/security.c                        |   2 +-
+ security/integrity/digsig_asymmetric.c      |   4 +-
+ security/keys/gc.c                          |   2 +-
+ security/keys/internal.h                    |  10 +-
+ security/keys/key.c                         |   5 +-
+ security/keys/keyctl.c                      |   8 +-
+ security/keys/keyring.c                     | 263 ++++++++++++++++------------
+ security/keys/persistent.c                  |  10 +-
+ security/keys/proc.c                        |   3 +-
+ security/keys/process_keys.c                | 262 +++++++++++++++++----------
+ security/keys/request_key.c                 |  62 ++++---
+ security/keys/request_key_auth.c            |   3 +-
+ 36 files changed, 589 insertions(+), 310 deletions(-)
