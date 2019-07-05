@@ -2,137 +2,103 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEDFC4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C834C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B2C20843
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E391420843
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBd6ONFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfGEJkh (ORCPT
+        id S1728313AbfGEJlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:40:37 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49389 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfGEJkh (ORCPT
+        Fri, 5 Jul 2019 05:41:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41589 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728297AbfGEJlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:40:37 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id c1519e1ec2a27edb; Fri, 5 Jul 2019 11:40:34 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH] ACPI: PM: Make acpi_sleep_state_supported() non-static
-Date:   Fri, 05 Jul 2019 11:40:33 +0200
-Message-ID: <1656981.zhPPi4nNQI@kreacher>
-In-Reply-To: <PU1P153MB0169A260911AACDA861F0029BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB0169A260911AACDA861F0029BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Fri, 5 Jul 2019 05:41:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q4so4060434pgj.8;
+        Fri, 05 Jul 2019 02:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gErflyqehGD0sY8p/Fmz9ZhIWtAMGhTaOwLvVAXdYkQ=;
+        b=oBd6ONFXQPL1sC/m7kSQNNC4AGu1AnVJHpUuLq1hj+Jx6Jze/Dc29bIvEylmTA7JLZ
+         sslJWE8VclaRnWjs98KVbCeUWDmnJeKDnrvVignVkC17co4esfmHnQ+TnSMUVD2QHS8K
+         kv5c/eguiFujpRFACPnJpQYY/TuS8Xo/XrD7VtLqI1et7w4tFaF0IMSyxhsVGSrILCak
+         PLQxuX0sHT78Kbx4DMpSRAcxEP+Pmz7InIQL8vzTgYK6yr0DgkJV1ERGTGZlOQ5pnF8w
+         /paUhE5nG4TV2j0W3zJZ0obPkC8qSIs1KF/bOpR3caUbsad1ZKBE7WTfJ57QphdkPtTh
+         YHyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gErflyqehGD0sY8p/Fmz9ZhIWtAMGhTaOwLvVAXdYkQ=;
+        b=mlVFw5PV0EynEIR6HOsHDmq6r1/GF/xeK0JF/P4AOqqVcyLYDPhfN4f48x/IUCbdND
+         vD49rx882UosJY7nbBZoU+yrBMKmsWiIBoq3ZYNEOsSSFTwYD/tFp9tvyoqLIpOYv9RQ
+         Cd7m8b8Dz/77DJGKnJeXHSJ1LxzV8ZKHDJxZTcn5c4QeglWT7CqjOEuIhd9AzB0Gmrb4
+         QckIbbDblxW+cFqpIT4+2kMcHx/uV2A5GC2wg/jem2ijDVsHXJV/f2J+Ym1/TfTm4BFG
+         AvQReZpXpMcEw1EnJg0mTEbOpt8l3B9XrkDDD9Xtvpyj1Q6Kuj+ozXQu4K4+BG4Y0/wQ
+         cn9g==
+X-Gm-Message-State: APjAAAVOU6m6g5a8wuUyuYMmRLRDW/pLREsiabvnU0N5waXfi/TNmqbD
+        yIAmS8vEsw7m3d5i4iGHCEmTvQerxSg=
+X-Google-Smtp-Source: APXvYqyEyy3haoucnzMEm3SvjxWvnWO7frvWk+0jC8LnlTLVN5QJBuxe6s3pUM46EV7SPaTeJ1BSRA==
+X-Received: by 2002:a63:2326:: with SMTP id j38mr4384426pgj.134.1562319659550;
+        Fri, 05 Jul 2019 02:40:59 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id i1sm11298877pjt.3.2019.07.05.02.40.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 05 Jul 2019 02:40:59 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH] KVM: LAPIC: Reset timer_advance_ns to 1000 after adaptive tuning goes insane
+Date:   Fri,  5 Jul 2019 17:40:51 +0800
+Message-Id: <1562319651-6992-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 4, 2019 4:43:32 AM CEST Dexuan Cui wrote:
-> 
-> With some upcoming patches to save/restore the Hyper-V drivers related
-> states, a Linux VM running on Hyper-V will be able to hibernate. When
-> a Linux VM hibernates, unluckily we must disable the memory hot-add/remove
-> and balloon up/down capabilities in the hv_balloon driver
-> (drivers/hv/hv_balloon.c), because these can not really work according to
-> the design of the related back-end driver on the host.
-> 
-> By default, Hyper-V does not enable the virtual ACPI S4 state for a VM;
-> on recent Hyper-V hosts, the administrator is able to enable the virtual
-> ACPI S4 state for a VM, so we hope to use the presence of the virtual ACPI
-> S4 state as a hint for hv_balloon to disable the aforementioned
-> capabilities. In this way, hibernation will work more reliably, from the
-> user's perspective.
-> 
-> By marking acpi_sleep_state_supported() non-static, we'll be able to
-> implement a hv_is_hibernation_supported() API in the always-built-in
-> module arch/x86/hyperv/hv_init.c, and the API will be called by hv_balloon.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Previously I posted a version that tries to export the function:
-> https://lkml.org/lkml/2019/6/14/1077, which may be an overkill.
-> 
-> So I proposed a second patch (which covers this patch and shows how this
-> patch will be used): https://lkml.org/lkml/2019/6/19/861
-> 
-> I explained the situation in detail here: https://lkml.org/lkml/2019/6/21/63
-> (a correction: old Hyper-V hosts can support guest hibernation, but some
-> important functionalities in the host's management tool stack are missing).
-> 
-> There is no further reply in that discussion, so I'm sending this patch to
-> draw people's attention again. :-)
-> 
->  drivers/acpi/sleep.c    | 2 +-
->  include/acpi/acpi_bus.h | 6 ++++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 8ff08e531443..d1ff303a857a 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -77,7 +77,7 @@ static int acpi_sleep_prepare(u32 acpi_state)
->  	return 0;
->  }
->  
-> -static bool acpi_sleep_state_supported(u8 sleep_state)
-> +bool acpi_sleep_state_supported(u8 sleep_state)
->  {
->  	acpi_status status;
->  	u8 type_a, type_b;
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 31b6c87d6240..3e6563e1a2c0 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -651,6 +651,12 @@ static inline int acpi_pm_set_bridge_wakeup(struct device *dev, bool enable)
->  }
->  #endif
->  
-> +#ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
-> +bool acpi_sleep_state_supported(u8 sleep_state);
-> +#else
-> +bool acpi_sleep_state_supported(u8 sleep_state) { return false; }
-> +#endif
-> +
->  #ifdef CONFIG_ACPI_SLEEP
->  u32 acpi_target_system_state(void);
->  #else
-> 
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Applied, thanks!
+Reset timer_advance_ns to the default value 1000ns after adaptive tuning 
+goes insane which can happen sporadically in product environment.
 
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 05d8934..454d3dd 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1549,7 +1549,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+ 		apic->lapic_timer.timer_advance_adjust_done = true;
+ 	if (unlikely(timer_advance_ns > 5000)) {
+-		timer_advance_ns = 0;
++		timer_advance_ns = 1000;
+ 		apic->lapic_timer.timer_advance_adjust_done = true;
+ 	}
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+-- 
+2.7.4
 
