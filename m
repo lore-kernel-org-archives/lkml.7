@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D31C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6493AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20946218A6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442DA21852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfGEFFl (ORCPT
+        id S1727515AbfGEFFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 01:05:41 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51412 "EHLO inva021.nxp.com"
+        Fri, 5 Jul 2019 01:05:53 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51620 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfGEFFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 01:05:39 -0400
+        id S1727369AbfGEFFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 01:05:51 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B19042002AA;
-        Fri,  5 Jul 2019 07:05:37 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CDE72002AA;
+        Fri,  5 Jul 2019 07:05:49 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 340CF20018A;
-        Fri,  5 Jul 2019 07:05:25 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3DE5A2002B0;
+        Fri,  5 Jul 2019 07:05:37 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CBCAC402C0;
-        Fri,  5 Jul 2019 13:05:11 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05140402E5;
+        Fri,  5 Jul 2019 13:05:15 +0800 (SGT)
 From:   Anson.Huang@nxp.com
 To:     rui.zhang@intel.com, edubezval@gmail.com,
         daniel.lezcano@linaro.org, robh+dt@kernel.org,
@@ -40,9 +40,9 @@ To:     rui.zhang@intel.com, edubezval@gmail.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/6] dt-bindings: thermal: qoriq: Add optional clocks property
-Date:   Fri,  5 Jul 2019 12:56:09 +0800
-Message-Id: <20190705045612.27665-3-Anson.Huang@nxp.com>
+Subject: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for IMX8MQ_CLK_TMU_ROOT
+Date:   Fri,  5 Jul 2019 12:56:11 +0800
+Message-Id: <20190705045612.27665-5-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <20190705045612.27665-1-Anson.Huang@nxp.com>
 References: <20190705045612.27665-1-Anson.Huang@nxp.com>
@@ -54,26 +54,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Some platforms have clock control for TMU, add optional
-clocks property to the binding doc.
+IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+should manage this clock, so no need to have CLK_IS_CRITICAL flag
+set.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/imx/clk-imx8mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-index 04cbb90..28f2cba 100644
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-@@ -23,6 +23,7 @@ Required properties:
- Optional property:
- - little-endian : If present, the TMU registers are little endian. If absent,
- 	the default is big endian.
-+- clocks : the clock for clocking the TMU silicon.
- 
- Example:
- 
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index d407a07..91de69a 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  = imx_clk_gate2_shared2("disp_axi_root_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
+ 	clks[IMX8MQ_CLK_DISP_APB_ROOT]  = imx_clk_gate2_shared2("disp_apb_root_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
+ 	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] = imx_clk_gate2_shared2("disp_rtrm_root_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
+-	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4_flags("tmu_root_clk", "ipg_root", base + 0x4620, 0, CLK_IS_CRITICAL);
++	clks[IMX8MQ_CLK_TMU_ROOT] = imx_clk_gate4("tmu_root_clk", "ipg_root", base + 0x4620, 0);
+ 	clks[IMX8MQ_CLK_VPU_DEC_ROOT] = imx_clk_gate2_flags("vpu_dec_root_clk", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
+ 	clks[IMX8MQ_CLK_CSI1_ROOT] = imx_clk_gate4("csi1_root_clk", "csi1_core", base + 0x4650, 0);
+ 	clks[IMX8MQ_CLK_CSI2_ROOT] = imx_clk_gate4("csi2_root_clk", "csi2_core", base + 0x4660, 0);
 -- 
 2.7.4
 
