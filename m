@@ -2,131 +2,158 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594B4C4649A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAADC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F83218BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6BD218E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QpX6MdG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfGEJDU (ORCPT
+        id S1728206AbfGEJDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:03:20 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60780 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbfGEJDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:03:20 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BCC04200BE1;
-        Fri,  5 Jul 2019 11:03:17 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 05681200E68;
-        Fri,  5 Jul 2019 11:03:10 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B7C75402DF;
-        Fri,  5 Jul 2019 17:03:00 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, leonard.crestez@nxp.com,
-        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-Date:   Fri,  5 Jul 2019 16:54:05 +0800
-Message-Id: <20190705085406.22483-1-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 5 Jul 2019 05:03:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45520 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728003AbfGEJDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:03:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x658xWvl187487;
+        Fri, 5 Jul 2019 09:03:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=1g1pDf5Otmvxw/VYPR3CC5244T59MboONzYhSU/S7LA=;
+ b=QpX6MdG+eGOdrPIHnITLpxK1JW0TBiUfePLdu+fVR6qlR1oHg6f43StMcycND18fcTIS
+ pxNZz3LMYUDiUl0iixVsip36/x3vjNsy9FdAWH0scxs39jUZukr4jGUdVC6q3Pdo5KxM
+ dFIFy8uATPsmmIclFjN2Mu1vgaW55p/nhDQ1CXoezeehavSkskgXIk9AY+jzfaT6KeMO
+ IO3qylfY9VnLTH6oxUYRdTfeWdw8TyYASirkf5FoXSJMcNjz0w5rj4QqibJZem8bPe6v
+ UI1fscDMgUzVjEBjOPq6CNNnjbRO1pgIr+s8iNv6dowHnQPGg1e1mKXD51O79f2Byyd1 rw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2te61qa109-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jul 2019 09:03:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65933R7010009;
+        Fri, 5 Jul 2019 09:03:15 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2th5qmdr72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jul 2019 09:03:15 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6593DPs021563;
+        Fri, 5 Jul 2019 09:03:13 GMT
+Received: from [192.168.1.14] (/109.189.94.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Jul 2019 02:03:13 -0700
+Subject: Re: [PATCH v2] RDMA/core: Fix race when resolving IP address
+To:     Parav Pandit <pandit.parav@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1561711763-24705-1-git-send-email-dag.moxnes@oracle.com>
+ <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+Message-ID: <4e46889a-0b13-fa9b-fe8e-d9f6a44d714a@oracle.com>
+Date:   Fri, 5 Jul 2019 11:03:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907050117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907050117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
 
-i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-property and related info to support i.MX8MM.
+Den 05.07.2019 04:19, skrev Parav Pandit:
+> On Fri, Jun 28, 2019 at 2:20 PM Dag Moxnes <dag.moxnes@oracle.com> wrote:
+>> Use neighbour lock when copying MAC address from neighbour data struct
+>> in dst_fetch_ha.
+>>
+>> When not using the lock, it is possible for the function to race with
+>> neigh_update, causing it to copy an invalid MAC address.
+>>
+>> It is possible to provoke this error by calling rdma_resolve_addr in a
+>> tight loop, while deleting the corresponding ARP entry in another tight
+>> loop.
+>>
+>> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+>> Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+>>
+>> ---
+>> v1 -> v2:
+>>     * Modified implementation to improve readability
+>> ---
+>>   drivers/infiniband/core/addr.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+>> index 2f7d141598..51323ffbc5 100644
+>> --- a/drivers/infiniband/core/addr.c
+>> +++ b/drivers/infiniband/core/addr.c
+>> @@ -333,11 +333,14 @@ static int dst_fetch_ha(const struct dst_entry *dst,
+>>          if (!n)
+>>                  return -ENODATA;
+>>
+>> -       if (!(n->nud_state & NUD_VALID)) {
+>> +       read_lock_bh(&n->lock);
+>> +       if (n->nud_state & NUD_VALID) {
+>> +               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+>> +               read_unlock_bh(&n->lock);
+>> +       } else {
+>> +               read_unlock_bh(&n->lock);
+>>                  neigh_event_send(n, NULL);
+>>                  ret = -ENODATA;
+>> -       } else {
+>> -               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+>>          }
+>>
+>>          neigh_release(n);
+>> --
+>> 2.20.1
+>>
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+>
+> A sample trace such as below in commit message would be good to have.
+> Or the similar one that you noticed with ARP delete sequence.
+>
+> neigh_changeaddr()
+>    neigh_flush_dev()
+>     n->nud_state = NUD_NOARP;
+>
+> Having some issues with office outlook, so replying via gmail.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V3:
-	- Add comments to those reset indices to indicate which are NOT supported on i.MX8MM.
----
- .../devicetree/bindings/reset/fsl,imx7-src.txt     |  6 +++--
- include/dt-bindings/reset/imx8mq-reset.h           | 28 +++++++++++-----------
- 2 files changed, 18 insertions(+), 16 deletions(-)
+Hi Parav,
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-index 13e0951..c2489e4 100644
---- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-@@ -8,6 +8,7 @@ Required properties:
- - compatible:
- 	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
- 	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-+	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
- - reg: should be register base and length as documented in the
-   datasheet
- - interrupts: Should contain SRC interrupt
-@@ -46,5 +47,6 @@ Example:
- 
- 
- For list of all valid reset indices see
--<dt-bindings/reset/imx7-reset.h> for i.MX7 and
--<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
-+<dt-bindings/reset/imx7-reset.h> for i.MX7,
-+<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
-+<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
-diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
-index 57c5924..f17ef2a 100644
---- a/include/dt-bindings/reset/imx8mq-reset.h
-+++ b/include/dt-bindings/reset/imx8mq-reset.h
-@@ -38,26 +38,26 @@
- #define IMX8MQ_RESET_PCIEPHY_PERST		27
- #define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28
- #define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29
--#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30
-+#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30	/* i.MX8MM does NOT support */
- #define IMX8MQ_RESET_DISP_RESET			31
- #define IMX8MQ_RESET_GPU_RESET			32
- #define IMX8MQ_RESET_VPU_RESET			33
--#define IMX8MQ_RESET_PCIEPHY2			34
--#define IMX8MQ_RESET_PCIEPHY2_PERST		35
--#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36
--#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37
--#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38
--#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39
--#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40
--#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41
--#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42
--#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43
-+#define IMX8MQ_RESET_PCIEPHY2			34	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_PCIEPHY2_PERST		35	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43	/* i.MX8MM does NOT support */
- #define IMX8MQ_RESET_DDRC1_PRST			44
- #define IMX8MQ_RESET_DDRC1_CORE_RESET		45
- #define IMX8MQ_RESET_DDRC1_PHY_RESET		46
--#define IMX8MQ_RESET_DDRC2_PRST			47
--#define IMX8MQ_RESET_DDRC2_CORE_RESET		48
--#define IMX8MQ_RESET_DDRC2_PHY_RESET		49
-+#define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM does NOT support */
-+#define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM does NOT support */
- 
- #define IMX8MQ_RESET_NUM			50
- 
--- 
-2.7.4
+Thanks for your review. I'll add a sample trace to the commit message as
+
+you suggest.
+
+
+Regards,
+
+-Dag
 
