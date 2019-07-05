@@ -2,111 +2,74 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CE5C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58280C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E38218B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q6cuV4FV"
+	by mail.kernel.org (Postfix) with ESMTP id 295B02089C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfGETKH (ORCPT
+        id S1727834AbfGETKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 15:10:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35942 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfGETKG (ORCPT
+        Fri, 5 Jul 2019 15:10:34 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:47682 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725778AbfGETKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 15:10:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EGciiAfUZu4b3fEglw6XcqsQQG6KIsG3g+Abpu+FGcc=; b=q6cuV4FVyerS5GtL9eE2t1Nrc
-        NCb2xvPEOSjtUeGat2omaXxzniC8otZYUiJ9T6jRU2MInCad8e2nCezr03HZfIJelfo3jpGz7yiV7
-        Ug0wR2FkRVL5Hg1ZhkNSPfsnDvpKTFFgSMArsoma17ZgsW6sWCtFV1xJR15S9amNN/VPb16jbY/t1
-        Bg0J94kosDhKMjvKhCx6IxrJpsIWWd7+iQn5oU/NUUtibo5cRF+FgoGxkF3dBdSBALUDwVgS82S/t
-        a7ynl4PnoHLGfG7p4FojGP3dmOSKJG3z3z6sXM9rKcBADT+PVdxthlzletU8vfazaMoQX9p68L7sn
-        NkmNoa+vg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjTau-0001Z3-OR; Fri, 05 Jul 2019 19:10:04 +0000
-Date:   Fri, 5 Jul 2019 12:10:04 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Boaz Harrosh <openosd@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dax: Fix missed PMD wakeups
-Message-ID: <20190705191004.GC32320@bombadil.infradead.org>
-References: <156213869409.3910140.7715747316991468148.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190703121743.GH1729@bombadil.infradead.org>
- <CAPcyv4jgs5LTtTXR+2CyfbjJE85B_eoPFuXQsGBDnVMo41Jawg@mail.gmail.com>
- <20190703195302.GJ1729@bombadil.infradead.org>
- <CAPcyv4iPNz=oJyc_EoE-mC11=gyBzwMKbmj1ZY_Yna54=cC=Mg@mail.gmail.com>
- <20190704032728.GK1729@bombadil.infradead.org>
- <20190704165450.GH31037@quack2.suse.cz>
- <20190704191407.GM1729@bombadil.infradead.org>
- <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
+        Fri, 5 Jul 2019 15:10:33 -0400
+Received: (qmail 5585 invoked by uid 2102); 5 Jul 2019 15:10:32 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 5 Jul 2019 15:10:32 -0400
+Date:   Fri, 5 Jul 2019 15:10:32 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Ryan Kennedy <ryan5544@gmail.com>
+cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usb: pci-quirks: Minor cleanup for AMD PLL quirk
+In-Reply-To: <20190704153529.9429-3-ryan5544@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1907051504310.1606-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gUiDw8Ma9mvbW5BamQtGZxWVuvBW7UrOLa2uijrXUWaw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 04:27:14PM -0700, Dan Williams wrote:
-> On Thu, Jul 4, 2019 at 12:14 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Jul 04, 2019 at 06:54:50PM +0200, Jan Kara wrote:
-> > > On Wed 03-07-19 20:27:28, Matthew Wilcox wrote:
-> > > > So I think we're good for all current users.
-> > >
-> > > Agreed but it is an ugly trap. As I already said, I'd rather pay the
-> > > unnecessary cost of waiting for pte entry and have an easy to understand
-> > > interface. If we ever have a real world use case that would care for this
-> > > optimization, we will need to refactor functions to make this possible and
-> > > still keep the interfaces sane. For example get_unlocked_entry() could
-> > > return special "error code" indicating that there's no entry with matching
-> > > order in xarray but there's a conflict with it. That would be much less
-> > > error-prone interface.
-> >
-> > This is an internal interface.  I think it's already a pretty gnarly
-> > interface to use by definition -- it's going to sleep and might return
-> > almost anything.  There's not much scope for returning an error indicator
-> > either; value entries occupy half of the range (all odd numbers between 1
-> > and ULONG_MAX inclusive), plus NULL.  We could use an internal entry, but
-> > I don't think that makes the interface any easier to use than returning
-> > a locked entry.
-> >
-> > I think this iteration of the patch makes it a little clearer.  What do you
-> > think?
-> >
+On Thu, 4 Jul 2019, Ryan Kennedy wrote:
+
+> usb_amd_find_chipset_info() is used for chipset detection for
+> several quirks. It is strange that its return value indicates
+> the need for the PLL quirk, which means it is often ignored.
+> This patch adds a function specifically for checking the PLL
+> quirk like the other ones. Additionally, rename probe_result to
+> something more appropriate.
 > 
-> Not much clearer to me. get_unlocked_entry() is now misnamed and this
+> Signed-off-by: Ryan Kennedy <ryan5544@gmail.com>
 
-misnamed?  You'd rather it was called "try_get_unlocked_entry()"?
+> @@ -322,6 +317,13 @@ bool usb_amd_prefetch_quirk(void)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_amd_prefetch_quirk);
+>  
+> +bool usb_amd_quirk_pll_check(void)
+> +{
+> +	usb_amd_find_chipset_info();
+> +	return amd_chipset.need_pll_quirk;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_amd_quirk_pll_check);
 
-> arrangement allows for mismatches of @order argument vs @xas
-> configuration.
+I really don't see the point of separating out all but one line into a
+different function.  You might as well just rename 
+usb_amd_find_chipset_info to usb_amd_quirk_pll_check (along with the 
+other code adjustments) and be done with it.
 
-> Can you describe, or even better demonstrate with
-> numbers, why it's better to carry this complication than just
-> converging the waitqueues between the types?
+However, in the end I don't care if you still want to do this.  Either 
+way:
 
-You've got the reproducer ;-)  It seems quite wrong to make a page fault
-stall just because another task is working on a different page in the
-same 2MB chunk.
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+Alan Stern
+
