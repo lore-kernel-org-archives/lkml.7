@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E233FC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C61C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03D4218B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571EB218A6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfGEO1a (ORCPT
+        id S1727673AbfGEO1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:27:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:36128 "EHLO inva020.nxp.com"
+        Fri, 5 Jul 2019 10:27:39 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50614 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbfGEO1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:27:21 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C56611A07CE;
-        Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
+        id S1725813AbfGEO1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:27:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CB791200762;
+        Fri,  5 Jul 2019 16:27:18 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B92EA1A07CD;
-        Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BEA5E20076A;
+        Fri,  5 Jul 2019 16:27:18 +0200 (CEST)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 78BAC204D6;
-        Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 455B2204D6;
+        Fri,  5 Jul 2019 16:27:18 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     ruxandra.radulescu@nxp.com,
         Razvan Stefanescu <razvan.stefanescu@nxp.com>,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v2 6/6] staging: fsl-dpaa2/ethsw: Add comments to ETHSW_VLAN flags
-Date:   Fri,  5 Jul 2019 17:27:16 +0300
-Message-Id: <1562336836-17119-7-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH v2 3/6] staging: fsl-dpaa2/ethsw: Remove netdevice on port probing error
+Date:   Fri,  5 Jul 2019 17:27:13 +0300
+Message-Id: <1562336836-17119-4-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
@@ -49,7 +49,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Razvan Stefanescu <razvan.stefanescu@nxp.com>
 
-Document each ETHSW_VLAN flag with the appropriate comment.
+If the ethsw_port_init() call failed, the netdevice remains registered in
+the system.
+
+Use labels to ensure that netdevice is unregistered and freed in this case.
 
 Signed-off-by: Razvan Stefanescu <razvan.stefanescu@nxp.com>
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
@@ -57,27 +60,40 @@ Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 Changes in v2:
  - none
 
- drivers/staging/fsl-dpaa2/ethsw/ethsw.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-index c48783680a05..3ea8a0ad8c10 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-@@ -23,9 +23,13 @@
- /* Number of IRQs supported */
- #define DPSW_IRQ_NUM	2
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index b2273f840813..9f1617164865 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1460,13 +1460,23 @@ static int ethsw_probe_port(struct ethsw_core *ethsw, u16 port_idx)
+ 	err = register_netdev(port_netdev);
+ 	if (err < 0) {
+ 		dev_err(dev, "register_netdev error %d\n", err);
+-		free_netdev(port_netdev);
+-		return err;
++		goto err_register_netdev;
+ 	}
  
-+/* Port is member of VLAN */
- #define ETHSW_VLAN_MEMBER	1
-+/* VLAN to be treated as untagged on egress */
- #define ETHSW_VLAN_UNTAGGED	2
-+/* Untagged frames will be assigned to this VLAN */
- #define ETHSW_VLAN_PVID		4
-+/* VLAN configured on the switch */
- #define ETHSW_VLAN_GLOBAL	8
+ 	ethsw->ports[port_idx] = port_priv;
  
- /* Maximum Frame Length supported by HW (currently 10k) */
+-	return ethsw_port_init(port_priv, port_idx);
++	err = ethsw_port_init(port_priv, port_idx);
++	if (err)
++		goto err_ethsw_port_init;
++
++	return 0;
++
++err_ethsw_port_init:
++	unregister_netdev(port_netdev);
++err_register_netdev:
++	free_netdev(port_netdev);
++
++	return err;
+ }
+ 
+ static int ethsw_probe(struct fsl_mc_device *sw_dev)
 -- 
 1.9.1
 
