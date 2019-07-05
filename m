@@ -2,151 +2,242 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE82C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245C1C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666B921670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F3EJXJly"
+	by mail.kernel.org (Postfix) with ESMTP id EECD321670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfGEHBO (ORCPT
+        id S1727767AbfGEHCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:01:14 -0400
-Received: from mail-eopbgr20078.outbound.protection.outlook.com ([40.107.2.78]:11654
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726012AbfGEHBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s7Sb5iXnQeq6a4whQIZqloWLVF73UJr240vQ6vJkYPY=;
- b=F3EJXJly6N0kYOQvvHDl7H0nhoHJK0dMcCZMVg0jozw+OiLOonNPnxYqMTezEpJW70wtuMnGBDrCCUcxjreXrMcm1/3GdrpMYRnoHbfag4b/dpGkEz8ftZnn+RjClRXYAt28/54E40JRYzp2+1KYp/sAsNNfmnIIbfFgNQu3mNw=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB6467.eurprd04.prod.outlook.com (20.179.253.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Fri, 5 Jul 2019 07:01:08 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::a126:d121:200:367]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::a126:d121:200:367%7]) with mapi id 15.20.2032.019; Fri, 5 Jul 2019
- 07:01:08 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>
-CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Thread-Topic: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
- IMX8MQ_CLK_TMU_ROOT
-Thread-Index: AQHVMu9QFutD3B96ckCJ5EoT7khMLqa7mPeA
-Date:   Fri, 5 Jul 2019 07:01:08 +0000
-Message-ID: <20190705070107.xsxvnh7b36w4q4c6@fsr-ub1664-175>
-References: <20190705045612.27665-1-Anson.Huang@nxp.com>
- <20190705045612.27665-5-Anson.Huang@nxp.com>
-In-Reply-To: <20190705045612.27665-5-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7684758f-e8cb-482a-b8b0-08d701168e4d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6467;
-x-ms-traffictypediagnostic: AM0PR04MB6467:
-x-microsoft-antispam-prvs: <AM0PR04MB646733A05AF6FEDFEC7A1F12F6F50@AM0PR04MB6467.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 008960E8EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(396003)(366004)(346002)(136003)(39860400002)(189003)(199004)(6116002)(99286004)(14444005)(102836004)(256004)(5660300002)(6506007)(64756008)(66446008)(66556008)(6486002)(3846002)(2906002)(229853002)(6862004)(76176011)(6436002)(26005)(4326008)(71200400001)(86362001)(14454004)(6512007)(25786009)(71190400001)(9686003)(53546011)(186003)(66066001)(44832011)(54906003)(305945005)(476003)(11346002)(8936002)(1076003)(7736002)(486006)(478600001)(8676002)(81166006)(33716001)(81156014)(6636002)(68736007)(66946007)(6246003)(66476007)(316002)(73956011)(446003)(7416002)(91956017)(76116006)(53936002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6467;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yRndkOOzP1IjQoa9e0O0lRa0djhHRhUDJq9EGcWsEGysrDhAt9g97LiiFDlaUTNV35w4x2m7hzeObgcG9fNNXRgKxEQmNTjGBja9Ep96602mspQ8bPCA7Xf+5pITd1YbQ4Ij6izQEFW1l3TpcJwCjYfMBZwLp134XRodxcXyQ9vpqFS52jqjcUF4+IahWizFAHvZrG4dTRxuybJtyyerT+Yl3AZUgTVengyOkMrVqprAv5Fm4O1RTEyGoVS6JpKyaaQHhals2BIO5e8skwACooRmsJPzENZ5fhM4n3TK1Vnjdib6EUxOiJmXlMxO6C00i70hIoD0c5SMXsdGc9ICgonlRc3/nopnYd+8ZU/VwthieYmp0REPkJEh5ciduW6EJwmMJUS4iiCTQcJ//TrpnZPYNygN0x0uDQAHjSCUNSk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F7A714F4FD2FF54F9AF66368F4FEFA79@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7684758f-e8cb-482a-b8b0-08d701168e4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 07:01:08.2502
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6467
+        Fri, 5 Jul 2019 03:02:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36682 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbfGEHCJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:02:09 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hjIEQ-0006n2-J4
+        for linux-kernel@vger.kernel.org; Fri, 05 Jul 2019 07:02:06 +0000
+Received: by mail-pg1-f200.google.com with SMTP id h5so1796461pgq.23
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 00:02:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6A/z/6gCXRgu4Sew2nX566i24DxAdSKJXVRbLCiJwfw=;
+        b=ZSPEfHb4b4dv5e4hncY+azf+Xaj7xMIn47yTFlaI8vKf8baxWrumkN7GZ1Eu9kZgME
+         Oct71Zs34pWSc7u6okg6Hl+X+3cBYdU1Z6IdFYgg+GVfU5GSminVluyTCH/TAhj2Kh5/
+         nyuZmRNynYmpbTCxWgQh5oqij+QBhi7HdPRfu76gCdG/4BNp9sP49ZwoftcHFOiFN7Va
+         Eo68V4m0xESNR4l5V6RsPDVrljE/4BtDdjHungx8MRBaYVsjryzdx+x75g8zhvypPy9s
+         jAYMewP3joyhvUTbzbpF4VM8vFXVbe0P0MfinNhZUVyKWrrl0OHy3C38U3+rrrujhjOQ
+         AktQ==
+X-Gm-Message-State: APjAAAVxDlAQfn+A9tdW9dB2scP1v5bvOTtQoLOS1qQuIWISSqSm5jgY
+        zOqN3XbfmLst4WQ48RkV1iqazITbDv9x5fiE/zLhHQ+EJRAwi68IRRpsdz/h0U+at8aZcg/Xse1
+        jUxdUZDxxY8QwvxbFf4xuxFMN1OaJY5utuV6Njswevg==
+X-Received: by 2002:a17:90a:3401:: with SMTP id o1mr3064617pjb.7.1562310125178;
+        Fri, 05 Jul 2019 00:02:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwUboE066orKSpevR1TBn0H9YLC+Bxt7bXZJ/p1ZiNiELvTVihG0yXhNZKBMU9rZwSHG0arYQ==
+X-Received: by 2002:a17:90a:3401:: with SMTP id o1mr3064567pjb.7.1562310124901;
+        Fri, 05 Jul 2019 00:02:04 -0700 (PDT)
+Received: from 2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net (2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net. [2001:b011:380f:3511:154d:4126:51e3:28cb])
+        by smtp.gmail.com with ESMTPSA id c8sm15620361pjq.2.2019.07.05.00.02.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 00:02:04 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190605115724.GE84290@google.com>
+Date:   Fri, 5 Jul 2019 15:02:01 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+References: <20190522181157.GC79339@google.com>
+ <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+ <20190522205231.GD79339@google.com>
+ <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
+ <20190527165747.GF79339@google.com> <20190605115724.GE84290@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-07-05 12:56:11, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
->=20
-> IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
-> should manage this clock, so no need to have CLK_IS_CRITICAL flag
-> set.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
+>> On Thu, May 23, 2019 at 12:39:23PM +0800, Kai-Heng Feng wrote:
+>>> at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+>>>>> On Wed, 22 May 2019, Bjorn Helgaas wrote:
+>>>>>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+>>>>>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org>  
+>>>>>>>> wrote:
+>>>>>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+>>>>>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+>>>>>>>>>>> There's an xHC device that doesn't wake when
+>>>>>>>>>>> a USB device gets plugged
+>>>>>>>>>>> to its USB port. The driver's own runtime
+>>>>>>>>>>> suspend callback was called,
+>>>>>>>>>>> PME signaling was enabled, but it stays at PCI D0.
+>>>>>>
+>>>>>>>> ...
+>>>>>>>> And I guess this patch basically means we wouldn't call
+>>>>>>>> the driver's suspend callback if we're merely going to
+>>>>>>>> stay at D0, so the driver would have no idea anything
+>>>>>>>> happened.  That might match Documentation/power/pci.txt
+>>>>>>>> better, because it suggests that the suspend callback is
+>>>>>>>> related to putting a device in a low-power state, and D0
+>>>>>>>> is not a low-power state.
+>>>>>>>
+>>>>>>> Yes, the patch is to let the device stay at D0 and don’t run
+>>>>>>> driver’s own runtime suspend routine.
+>>>>>>>
+>>>>>>> I guess I’ll just proceed to send a V2 with updated commit message?
+>>>>>>
+>>>>>> Now that I understand what "runtime suspended to D0" means, help me
+>>>>>> understand what's actually wrong.
+>>>>>
+>>>>> Kai's point is that the xhci-hcd driver thinks the device is now
+>>>>> in runtime suspend, because the runtime_suspend method has been
+>>>>> executed.  But in fact the device is still in D0, and as a
+>>>>> result, PME signalling may not work correctly.
+>>>>
+>>>> The device claims to be able to signal PME from D0 (this is from the  
+>>>> lspci
+>>>> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+>>>>
+>>>>   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
+>>>>     Capabilities: [50] Power Management version 3
+>>>>       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>>>>
+>>>> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
+>>>> detected while in D0 should assert PME# if enabled (and WCE is
+>>>> set).
+>>>
+>>> I think section 4.15.2.3 is about S3 wake up, no S0 we are
+>>> discussing here.
+>>
+>> S0 and S3 are system-level ideas and have no meaning to an individual
+>> PCI device.  The xHC is a PCI device and can't tell whether the system
+>> as a whole is in S0 or S3.  If a PCI device claims to be able to
+>> generate PME while in D0, that applies regardless of the system state.
+>>
+>> xHCI r1.0, sec A.1 says "The host controller should be capable of
+>> asserting PME# when in any supported device state."  In sec 4.19.2,
+>> Figure 42 says PME# should be asserted whenever PMCSR.PME_En=1 and
+>> WCE=1 and a connection is detected.
+>>
+>> Figure 42 also shows that CSC (Connect Status Change) and related bits
+>> feed into Port Status Change Event Generation.  So I assume the xhci
+>> driver normally detects connect/disconnect via CSC, but the runtime
+>> suspend method makes it use PME# instead?
+>>
+>> And the way your patch works is by avoiding that xhci runtime suspend
+>> method, so it *always* uses CSC and never uses PME#?  If that's the
+>> case, we're just papering over a problem without really understanding
+>> it.
+>>
+>> I'm wondering if this platform has a firmware defect.  Here's my
+>> thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
+>> signaling is a little unusual.
+>>
+>> The typical scenario is that a PCIe device is below a Root Port.  In
+>> that case, it would send a PME Message upstream to the Root Port.  Per
+>> PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
+>> systems, I assume this means "when firmware has granted PME control to
+>> the OS via _OSC"), the Root Port would generate a normal PCI INTx or
+>> MSI interrupt:
+>>
+>>   PCI Express-aware software can enable a mode where the Root Complex
+>>   signals PME via an interrupt. When configured for native PME
+>>   support, a Root Port receives the PME Message and sets the PME
+>>   Status bit in its Root Status register. If software has set the PME
+>>   Interrupt Enable bit in the Root Control register to 1b, the Root
+>>   Port then generates an interrupt.
+>>
+>> But on this platform the xHC is a Root Complex Integrated Endpoint, so
+>> there is no Root Port upstream from it, and that mechanism can't be
+>> used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
+>> mechanism as PCI systems" or via Root Complex Event Collectors:
+>>
+>>   An RCiEP must signal PME and error conditions through the same
+>>   mechanisms used on PCI systems. If a Root Complex Event Collector is
+>>   implemented, an RCiEP may optionally signal PME and error conditions
+>>   through a Root Complex Event Collector.
+>>
+>> This platform has no Root Complex Event Collectors, so the xHC should
+>> signal PME via the same mechanism as PCI systems, i.e., asserting a
+>> PME# signal.  I think this means the OS cannot use native PCIe PME
+>> control because it doesn't know what interrupt PME# is connected to.
+>> The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
+>> 6.2.11.3), says:
+>>
+>>   PCI Express Native Power Management Events control
+>>
+>>   The firmware sets this bit to 1 to grant control over PCI Express
+>>   native power management event interrupts (PMEs). If firmware
+>>   allows the operating system control of this feature, then in the
+>>   context of the _OSC method, it must ensure that all PMEs are
+>>   routed to root port interrupts as described in the PCI Express
+>>   Base Specification.
+>>
+>> This platform cannot route all PMEs to Root Port interrupts because
+>> the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
+>> method should not grant control of PCIe Native Power Management Events
+>> to the OS, and I think that would mean we have to use the ACPI
+>> mechanism for PME on this platform.
+>>
+>> Can you confirm or deny any of this line of reasoning?  I'm wondering
+>> if there's something wrong with the platform's _OSC, so Linux thinks
+>> it can use native PME, but that doesn't work for this device.
+>>
+>>> It’s a platform in development so the name can’t be disclosed.
+>>
+>> Please attach a complete dmesg log to the bugzilla.  You can remove
+>> identifying details like the platform name, but I want to see the
+>> results of the _OSC negotiation.
+>
+> Thanks for the dmesg log
+> (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
+>
+>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+>   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
+>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
+>
+> I think it is incorrect for the platform to give the OS native control
+> over PME because the OS has no way to know how the RCiEP PMEs are
+> routed.  But it would be interesting to know how BIOSes on other
+> platforms with RCiEPs handle this, and I did post a question to the
+> PCI-SIG to see if there's any guidance there.
 
-> ---
->  drivers/clk/imx/clk-imx8mq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-> index d407a07..91de69a 100644
-> --- a/drivers/clk/imx/clk-imx8mq.c
-> +++ b/drivers/clk/imx/clk-imx8mq.c
-> @@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device=
- *pdev)
->  	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  =3D imx_clk_gate2_shared2("disp_axi_roo=
-t_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
->  	clks[IMX8MQ_CLK_DISP_APB_ROOT]  =3D imx_clk_gate2_shared2("disp_apb_roo=
-t_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
->  	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] =3D imx_clk_gate2_shared2("disp_rtrm_ro=
-ot_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
-> -	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4_flags("tmu_root_clk", "ipg_=
-root", base + 0x4620, 0, CLK_IS_CRITICAL);
-> +	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4("tmu_root_clk", "ipg_root",=
- base + 0x4620, 0);
->  	clks[IMX8MQ_CLK_VPU_DEC_ROOT] =3D imx_clk_gate2_flags("vpu_dec_root_clk=
-", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE=
-);
->  	clks[IMX8MQ_CLK_CSI1_ROOT] =3D imx_clk_gate4("csi1_root_clk", "csi1_cor=
-e", base + 0x4650, 0);
->  	clks[IMX8MQ_CLK_CSI2_ROOT] =3D imx_clk_gate4("csi2_root_clk", "csi2_cor=
-e", base + 0x4660, 0);
-> --=20
-> 2.7.4
-> =
+Is there any update from PCI-SIG?
+
+I really think we don’t need wakeup capability in D0 because D0 is a  
+working state.
+Also, is there any real hardware which depends on D0 PME?
+
+Kai-Heng
+
+>
+> Bjorn
+
+
