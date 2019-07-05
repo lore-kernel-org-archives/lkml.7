@@ -2,225 +2,253 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D578C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E41C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC8C20856
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qqcv+JAC"
+	by mail.kernel.org (Postfix) with ESMTP id B2BD2218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfGENus (ORCPT
+        id S1728407AbfGENvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:50:48 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35494 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfGENur (ORCPT
+        Fri, 5 Jul 2019 09:51:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33469 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfGENvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:50:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3aOmf4wG24KSuD0s327KTluB/ek7l1O+tQrwGfYOZew=; b=Qqcv+JAC02xbIHnUp/YzYVXZn
-        Y52cIwuqLCFJ1vfCSH+qgZZCZqVvQ59bTdj5E0Vlr750CU+DwFuVVzUK5lG7WGR5ueC6BMJKzoSyo
-        XIfJPDL3K23uV+FIVk1L97gOhfI1iDTV+F0y8gcie3T1fU6j67uw3b22TyTrF2C5mWTqiact/Zk9T
-        uWcmd/fTRDUKGavWhkiyMtEJIuG7elZTwr4s7V9DtY9Spx57emXs5IbBbxJRNDIGj/YKtkDNXB2oA
-        PsUymVnOyEsWMpR00WxWSB9nBnR+t4vQ5YLxdQK43k0wCzq+b6RwvstoWnorCcturtLyshin8s/zx
-        lX9b5z7pg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjOax-0002Mf-Hq; Fri, 05 Jul 2019 13:49:47 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 112A120AF24BF; Fri,  5 Jul 2019 15:49:16 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 15:49:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
-Message-ID: <20190705134916.GU3402@hirez.programming.kicks-ass.net>
-References: <20190704195555.580363209@infradead.org>
- <20190704200050.534802824@infradead.org>
- <CAHk-=wiJ4no+TW-8KTfpO-Q5+aaTGVoBJzrnFTvj_zGpVbrGfA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiJ4no+TW-8KTfpO-Q5+aaTGVoBJzrnFTvj_zGpVbrGfA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 5 Jul 2019 09:51:47 -0400
+Received: from mail-pf1-f198.google.com ([209.85.210.198])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hjOcq-0002Ow-4K
+        for linux-kernel@vger.kernel.org; Fri, 05 Jul 2019 13:51:44 +0000
+Received: by mail-pf1-f198.google.com with SMTP id 145so5614398pfv.18
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:51:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YNguRT3VdYqQwZjKNQS52cI6hAGLZ3x6rPPYR/rKEKA=;
+        b=LqvUVg7qS2guKeRbOeX06anBhWKRxf4Gbt/Qytt4qjRzsLYcsz/IOOJ6mPaG/s3/xA
+         M/Shsa/lheullpVd2VdBOI/9GVEr28Vhaw57WkSRKO1e4mUq0NE37gwBniaG2MlKEVyl
+         fBaeYzME/P68eJuB2DC53a2p0G1BnDhhboVxfAiRtMTzJUylkDR6boX/A5ShiKKgm684
+         3dtN7pZHaiuz8S+84K6ViLpRBNPP+FV4sWQBObqiIOXBR1LxuZY8KsqrpAYe1GlyAFCM
+         oPqRx4a2UOBypT4RykN8GeNdOREv0nd35ocmSJ/uqa0MOK5Y45ROHVB9RU9L3GaPqqLh
+         KVaA==
+X-Gm-Message-State: APjAAAViwYNsOwbKIDwQhdqSpNiSAvqIltK5tRB6ZTs3KF6nqZYGSV3t
+        pLP/OyU2PT28+jEdXi2NbpXpPPw7TK+oO2ZK38WKCSBnnS5L/JKlzOOSxloQK3DEvZ3tH5Oew+n
+        +5rhQVQD+DLAR5EWXXD4XEWzTqCnUzxD8IeOpAazaWA==
+X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899665pgc.325.1562334702786;
+        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz1NYy+OXhkmgOsgIAs7QkwNkkbjEIdrxYNXrmiO+nSeuTs0BUjocoDARsdAgBemJLpGveq5g==
+X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899635pgc.325.1562334702413;
+        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
+Received: from 2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net (2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net. [2001:b011:380f:3511:154d:4126:51e3:28cb])
+        by smtp.gmail.com with ESMTPSA id a25sm8766164pfn.1.2019.07.05.06.51.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:51:41 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <2067449.jKPth8Qelp@kreacher>
+Date:   Fri, 5 Jul 2019 21:51:39 +0800
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <3EF5C3B9-F7D0-49C3-9CC0-88DDDDAF4616@canonical.com>
+References: <20190522181157.GC79339@google.com>
+ <20190605115724.GE84290@google.com>
+ <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+ <2067449.jKPth8Qelp@kreacher>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:18:51AM +0900, Linus Torvalds wrote:
-> On Fri, Jul 5, 2019 at 5:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Despire the current efforts to read CR2 before tracing happens there
-> > still exist a number of possible holes:
-> 
-> So this whole series disturbs me for the simple reason that I thought
-> tracing was supposed to save/restore cr2 and make it unnecessary to
-> worry about this in non-tracing code.
-> 
-> That is very much what the NMI code explicitly does. Why shouldn't all
-> the other tracing code do the same thing in case they can take page
-> faults?
-> 
-> So I don't think the patches are wrong per se, but this seems to solve
-> it at the wrong level.
+at 17:39, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 
-My thinking is that that results in far too many sites which we have to
-fix and a possibly fragility of interface. Invariably we'll get multiple
-interface for the same thing, one which preserves CR2 and one which
-doesn't -- in the name of performance. And then someone uses the wrong
-one, and we're back where we started.
+> On Friday, July 5, 2019 9:02:01 AM CEST Kai-Heng Feng wrote:
+>> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>>> On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
+>>>> On Thu, May 23, 2019 at 12:39:23PM +0800, Kai-Heng Feng wrote:
+>>>>> at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+>>>>>>> On Wed, 22 May 2019, Bjorn Helgaas wrote:
+>>>>>>>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+>>>>>>>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org>
+>>>>>>>>>> wrote:
+>>>>>>>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+>>>>>>>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+>>>>>>>>>>>>> There's an xHC device that doesn't wake when
+>>>>>>>>>>>>> a USB device gets plugged
+>>>>>>>>>>>>> to its USB port. The driver's own runtime
+>>>>>>>>>>>>> suspend callback was called,
+>>>>>>>>>>>>> PME signaling was enabled, but it stays at PCI D0.
+>>>>>>>>
+>>>>>>>>>> ...
+>>>>>>>>>> And I guess this patch basically means we wouldn't call
+>>>>>>>>>> the driver's suspend callback if we're merely going to
+>>>>>>>>>> stay at D0, so the driver would have no idea anything
+>>>>>>>>>> happened.  That might match Documentation/power/pci.txt
+>>>>>>>>>> better, because it suggests that the suspend callback is
+>>>>>>>>>> related to putting a device in a low-power state, and D0
+>>>>>>>>>> is not a low-power state.
+>>>>>>>>>
+>>>>>>>>> Yes, the patch is to let the device stay at D0 and don’t run
+>>>>>>>>> driver’s own runtime suspend routine.
+>>>>>>>>>
+>>>>>>>>> I guess I’ll just proceed to send a V2 with updated commit message?
+>>>>>>>>
+>>>>>>>> Now that I understand what "runtime suspended to D0" means, help me
+>>>>>>>> understand what's actually wrong.
+>>>>>>>
+>>>>>>> Kai's point is that the xhci-hcd driver thinks the device is now
+>>>>>>> in runtime suspend, because the runtime_suspend method has been
+>>>>>>> executed.  But in fact the device is still in D0, and as a
+>>>>>>> result, PME signalling may not work correctly.
+>>>>>>
+>>>>>> The device claims to be able to signal PME from D0 (this is from the
+>>>>>> lspci
+>>>>>> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+>>>>>>
+>>>>>>   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
+>>>>>>     Capabilities: [50] Power Management version 3
+>>>>>>       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>>>>>>
+>>>>>> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
+>>>>>> detected while in D0 should assert PME# if enabled (and WCE is
+>>>>>> set).
+>>>>>
+>>>>> I think section 4.15.2.3 is about S3 wake up, no S0 we are
+>>>>> discussing here.
+>>>>
+>>>> S0 and S3 are system-level ideas and have no meaning to an individual
+>>>> PCI device.  The xHC is a PCI device and can't tell whether the system
+>>>> as a whole is in S0 or S3.  If a PCI device claims to be able to
+>>>> generate PME while in D0, that applies regardless of the system state.
+>>>>
+>>>> xHCI r1.0, sec A.1 says "The host controller should be capable of
+>>>> asserting PME# when in any supported device state."  In sec 4.19.2,
+>>>> Figure 42 says PME# should be asserted whenever PMCSR.PME_En=1 and
+>>>> WCE=1 and a connection is detected.
+>>>>
+>>>> Figure 42 also shows that CSC (Connect Status Change) and related bits
+>>>> feed into Port Status Change Event Generation.  So I assume the xhci
+>>>> driver normally detects connect/disconnect via CSC, but the runtime
+>>>> suspend method makes it use PME# instead?
+>>>>
+>>>> And the way your patch works is by avoiding that xhci runtime suspend
+>>>> method, so it *always* uses CSC and never uses PME#?  If that's the
+>>>> case, we're just papering over a problem without really understanding
+>>>> it.
+>>>>
+>>>> I'm wondering if this platform has a firmware defect.  Here's my
+>>>> thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
+>>>> signaling is a little unusual.
+>>>>
+>>>> The typical scenario is that a PCIe device is below a Root Port.  In
+>>>> that case, it would send a PME Message upstream to the Root Port.  Per
+>>>> PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
+>>>> systems, I assume this means "when firmware has granted PME control to
+>>>> the OS via _OSC"), the Root Port would generate a normal PCI INTx or
+>>>> MSI interrupt:
+>>>>
+>>>>   PCI Express-aware software can enable a mode where the Root Complex
+>>>>   signals PME via an interrupt. When configured for native PME
+>>>>   support, a Root Port receives the PME Message and sets the PME
+>>>>   Status bit in its Root Status register. If software has set the PME
+>>>>   Interrupt Enable bit in the Root Control register to 1b, the Root
+>>>>   Port then generates an interrupt.
+>>>>
+>>>> But on this platform the xHC is a Root Complex Integrated Endpoint, so
+>>>> there is no Root Port upstream from it, and that mechanism can't be
+>>>> used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
+>>>> mechanism as PCI systems" or via Root Complex Event Collectors:
+>>>>
+>>>>   An RCiEP must signal PME and error conditions through the same
+>>>>   mechanisms used on PCI systems. If a Root Complex Event Collector is
+>>>>   implemented, an RCiEP may optionally signal PME and error conditions
+>>>>   through a Root Complex Event Collector.
+>>>>
+>>>> This platform has no Root Complex Event Collectors, so the xHC should
+>>>> signal PME via the same mechanism as PCI systems, i.e., asserting a
+>>>> PME# signal.  I think this means the OS cannot use native PCIe PME
+>>>> control because it doesn't know what interrupt PME# is connected to.
+>>>> The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
+>>>> 6.2.11.3), says:
+>>>>
+>>>>   PCI Express Native Power Management Events control
+>>>>
+>>>>   The firmware sets this bit to 1 to grant control over PCI Express
+>>>>   native power management event interrupts (PMEs). If firmware
+>>>>   allows the operating system control of this feature, then in the
+>>>>   context of the _OSC method, it must ensure that all PMEs are
+>>>>   routed to root port interrupts as described in the PCI Express
+>>>>   Base Specification.
+>>>>
+>>>> This platform cannot route all PMEs to Root Port interrupts because
+>>>> the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
+>>>> method should not grant control of PCIe Native Power Management Events
+>>>> to the OS, and I think that would mean we have to use the ACPI
+>>>> mechanism for PME on this platform.
+>>>>
+>>>> Can you confirm or deny any of this line of reasoning?  I'm wondering
+>>>> if there's something wrong with the platform's _OSC, so Linux thinks
+>>>> it can use native PME, but that doesn't work for this device.
+>>>>
+>>>>> It’s a platform in development so the name can’t be disclosed.
+>>>>
+>>>> Please attach a complete dmesg log to the bugzilla.  You can remove
+>>>> identifying details like the platform name, but I want to see the
+>>>> results of the _OSC negotiation.
+>>>
+>>> Thanks for the dmesg log
+>>> (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
+>>>
+>>>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+>>>   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
+>>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
+>>>
+>>> I think it is incorrect for the platform to give the OS native control
+>>> over PME because the OS has no way to know how the RCiEP PMEs are
+>>> routed.  But it would be interesting to know how BIOSes on other
+>>> platforms with RCiEPs handle this, and I did post a question to the
+>>> PCI-SIG to see if there's any guidance there.
+>>
+>> Is there any update from PCI-SIG?
+>>
+>> I really think we don’t need wakeup capability in D0 because D0 is a
+>> working state.
+>
+> Well, in theory, devices may stay in D0 over suspend-to-idle and they may  
+> need to
+> signal wakeup then.  Using PME for that would be kind of handy (if it  
+> worked) as it
+> would allow special handling of in-band IRQs to be avoided in that case.
 
-Conversely, this way we get to fix it in one place.
+That makes sense but doesn’t apply to this case.
+This patch only avoids D0 runtime suspend, suspend-to-idle will call  
+system-wide suspend routine which still enables D0 PME.
 
-Also; all previous attempts at fixing this have been about pushing the
-read_cr2() earlier; notably:
+It’ll be great if you can review my v3 patch here:
+https://patchwork.kernel.org/patch/10960271/
 
-  0ac09f9f8cd1 ("x86, trace: Fix CR2 corruption when tracing page faults")
-  d4078e232267 ("x86, trace: Further robustify CR2 handling vs tracing")
+Kai-Heng
 
-And I'm thinking that with exception of this patch, the rest are
-worthwhile cleanups regardless.
-
-Also; while looking at this, if we do continue with the C wrappers from
-the very last patch, we can do horrible things like this on top and move
-the read_cr2() back into C code.
-
-
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -826,7 +826,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  */
- #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
- 
--.macro idtentry_part do_sym, has_error_code:req, read_cr2:req, paranoid:req, shift_ist=-1, ist_offset=0
-+.macro idtentry_part do_sym, has_error_code:req, paranoid:req, shift_ist=-1, ist_offset=0
- 
- 	.if \paranoid
- 	call	paranoid_entry
-@@ -836,10 +836,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
- 	.endif
- 	UNWIND_HINT_REGS
- 
--	.if \read_cr2
--	GET_CR2_INTO(%rdx);			/* can clobber %rax */
--	.endif
--
- 	.if \has_error_code
- 	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
- 	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
-@@ -885,7 +881,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  *			fresh stack.  (This is for #DB, which has a nasty habit
-  *			of recursing.)
-  * @create_gap:		create a 6-word stack gap when coming from kernel mode.
-- * @read_cr2:		load CR2 into the 3rd argument; done before calling any C code
-  *
-  * idtentry generates an IDT stub that sets up a usable kernel context,
-  * creates struct pt_regs, and calls @do_sym.  The stub has the following
-@@ -910,7 +905,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  * @paranoid == 2 is special: the stub will never switch stacks.  This is for
-  * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
-  */
--.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0 read_cr2=0
-+.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 ist_offset=0 create_gap=0
- ENTRY(\sym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
- 
-@@ -948,7 +943,7 @@ ENTRY(\sym)
- .Lfrom_usermode_no_gap_\@:
- 	.endif
- 
--	idtentry_part \do_sym, \has_error_code, \read_cr2, \paranoid, \shift_ist, \ist_offset
-+	idtentry_part \do_sym, \has_error_code, \paranoid, \shift_ist, \ist_offset
- 
- 	.if \paranoid == 1
- 	/*
-@@ -957,7 +952,7 @@ ENTRY(\sym)
- 	 * run in real process context if user_mode(regs).
- 	 */
- .Lfrom_usermode_switch_stack_\@:
--	idtentry_part \do_sym, \has_error_code, \read_cr2, 0
-+	idtentry_part \do_sym, \has_error_code, paranoid=0
- 	.endif
- 
- _ASM_NOKPROBE(\sym)
-@@ -969,7 +964,7 @@ idtentry overflow			do_overflow			has_er
- idtentry bounds				do_bounds			has_error_code=0
- idtentry invalid_op			do_invalid_op			has_error_code=0
- idtentry device_not_available		do_device_not_available		has_error_code=0
--idtentry double_fault			do_double_fault			has_error_code=1 paranoid=2 read_cr2=1
-+idtentry double_fault			do_double_fault			has_error_code=1 paranoid=2
- idtentry coprocessor_segment_overrun	do_coprocessor_segment_overrun	has_error_code=0
- idtentry invalid_TSS			do_invalid_TSS			has_error_code=1
- idtentry segment_not_present		do_segment_not_present		has_error_code=1
-@@ -1142,10 +1137,10 @@ idtentry xenint3		do_int3			has_error_co
- #endif
- 
- idtentry general_protection	do_general_protection	has_error_code=1
--idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
-+idtentry page_fault		do_page_fault		has_error_code=1
- 
- #ifdef CONFIG_KVM_GUEST
--idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
-+idtentry async_page_fault	do_async_page_fault	has_error_code=1
- #endif
- 
- #ifdef CONFIG_X86_MCE
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -22,20 +22,34 @@
- #define CALL_enter_from_user_mode(_regs)
- #endif
- 
-+#define __IDT_NR1 1
-+#define __IDT_NR2 2
-+#define __IDT_NR3 2
-+
-+#define IDT_NR(n) __IDT_NR##n
-+
-+#define __IDT_TRAP1(t1,a1)
-+#define __IDT_TRAP2(t1,a1,t2,a2)
-+#define __IDT_TRAP3(t1,a1,t2,a2,t3,a3)	t3 a3 = read_cr2()
-+
-+#define IDT_TRAP(n,...) __IDT_TRAP##n(__VA_ARGS__)
-+
- #define IDTENTRYx(n, name, ...)	\
- 	static notrace void __idt_##name(__IDT_MAP(n, __IDT_DECL, __VA_ARGS__)); \
- 	NOKPROBE_SYMBOL(__idt_##name); \
--	dotraplinkage notrace void name(__IDT_MAP(n, __IDT_DECL, __VA_ARGS__)) \
-+	dotraplinkage notrace void name(__IDT_MAP(__IDT_NR(n), __IDT_DECL, __VA_ARGS__)) \
- 	{ \
- 		__IDT_MAP(n, __IDT_TEST, __VA_ARGS__); \
-+		__IDT_TRAP(n, __VA_ARGS__); \
- 		trace_hardirqs_off(); \
- 		CALL_enter_from_user_mode(regs); \
- 		__idt_##name(__IDT_MAP(n, __IDT_ARGS, __VA_ARGS__)); \
- 	} \
- 	NOKPROBE_SYMBOL(name); \
--	dotraplinkage notrace void name##_paranoid(__IDT_MAP(n, __IDT_DECL, __VA_ARGS__)) \
-+	dotraplinkage notrace void name##_paranoid(__IDT_MAP(__IDT_NR(n), __IDT_DECL, __VA_ARGS__)) \
- 	{ \
- 		__IDT_MAP(n, __IDT_TEST, __VA_ARGS__); \
-+		__IDT_TRAP(n, __VA_ARGS__); \
- 		trace_hardirqs_off(); \
- 		__idt_##name(__IDT_MAP(n, __IDT_ARGS, __VA_ARGS__)); \
- 	} \
