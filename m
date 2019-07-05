@@ -2,102 +2,134 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A210AC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD55BC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B05E218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E2E218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WcHpYZjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfGEMmX (ORCPT
+        id S1728945AbfGEMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:42:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:4897 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfGEMmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:42:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 05:41:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
-   d="scan'208";a="248182207"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga001.jf.intel.com with SMTP; 05 Jul 2019 05:41:52 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 05 Jul 2019 15:41:51 +0300
-Date:   Fri, 5 Jul 2019 15:41:51 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        imre.deak@intel.com, dhinakaran.pandiyan@intel.com,
-        chris@chris-wilson.co.uk, manasi.d.navare@intel.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] drm/i915: Remove set but not used variable
- 'encoder'
-Message-ID: <20190705124151.GN5942@intel.com>
-References: <20190705113112.64715-1-yuehaibing@huawei.com>
+        Fri, 5 Jul 2019 08:42:36 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3216 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728063AbfGEMmf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:42:35 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65CbDxP001281;
+        Fri, 5 Jul 2019 14:41:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=qh28dI5DvFVPJdueAPSh1Hk6ECUAJ6MLaEbc5I2IPDs=;
+ b=WcHpYZjYL64+yCVvOf1KAWbOCHMXUugif32Iyp6Dx0GO5T1alRnS5102dKuCLa/vY/Jh
+ 4RtA46QSdUmF/7miKyJ6CZ3zS4d/0yxAh9bjUblx02BIlT02CJ5lt6uOoXrcQhQBUYoM
+ u/yKBA9ZzVk3JTl74xYHJdt3omDCYcdgth0PR4OhZ4AUtyPnvPEQ4F4OW3LB7fz47VWt
+ GF6SAF7vPuWYMVIK9K3HTUM76veghmNsD+WqswgJZDnannj90aPPvBr4bSb+SLxOe6/g
+ 0bYsT8Fv+gEgQypIcr5PaI0SVufEOw3Ou8CeiltVAMGvlVCMkw5kMFUha6xppJWLW+FT pA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tdwf1jjjq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 05 Jul 2019 14:41:05 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CB5F731;
+        Fri,  5 Jul 2019 12:41:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9F3182CC3;
+        Fri,  5 Jul 2019 12:41:03 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 5 Jul
+ 2019 14:41:03 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 5 Jul 2019 14:41:03 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Olivier MOYSAN <olivier.moysan@st.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "jsarha@ti.com" <jsarha@ti.com>
+Subject: Re: [PATCH] drm/bridge: sii902x: add audio graph card support
+Thread-Topic: [PATCH] drm/bridge: sii902x: add audio graph card support
+Thread-Index: AQHVMXX5EUvh0puEZ0ygMEtXg5C9Kaa72VsA
+Date:   Fri, 5 Jul 2019 12:41:03 +0000
+Message-ID: <7c17b3f2-afee-7548-7620-b67d11d09b24@st.com>
+References: <1562141052-26221-1-git-send-email-olivier.moysan@st.com>
+In-Reply-To: <1562141052-26221-1-git-send-email-olivier.moysan@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <019DC7758BBDE148B1C01A127A8F5761@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190705113112.64715-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:31:12AM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/gpu/drm/i915/display/intel_dp.c: In function 'intel_dp_set_drrs_state':
-> drivers/gpu/drm/i915/display/intel_dp.c:6623:24: warning:
->  variable 'encoder' set but not used [-Wunused-but-set-variable]
-> 
-> It's never used, so can be removed.Also remove related
-> variable 'dig_port'
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Applied to drm-intel-next-queued. Thanks for the patch.
-
-> ---
->  drivers/gpu/drm/i915/display/intel_dp.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 8f7188d71d08..0bdb7ecc5a81 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -6620,8 +6620,6 @@ static void intel_dp_set_drrs_state(struct drm_i915_private *dev_priv,
->  				    const struct intel_crtc_state *crtc_state,
->  				    int refresh_rate)
->  {
-> -	struct intel_encoder *encoder;
-> -	struct intel_digital_port *dig_port = NULL;
->  	struct intel_dp *intel_dp = dev_priv->drrs.dp;
->  	struct intel_crtc *intel_crtc = to_intel_crtc(crtc_state->base.crtc);
->  	enum drrs_refresh_rate_type index = DRRS_HIGH_RR;
-> @@ -6636,9 +6634,6 @@ static void intel_dp_set_drrs_state(struct drm_i915_private *dev_priv,
->  		return;
->  	}
->  
-> -	dig_port = dp_to_dig_port(intel_dp);
-> -	encoder = &dig_port->base;
-> -
->  	if (!intel_crtc) {
->  		DRM_DEBUG_KMS("DRRS: intel_crtc not initialized\n");
->  		return;
-> 
-> 
-
--- 
-Ville Syrjälä
-Intel
+SGkgT2xpdmllciwNCmFuZCBtYW55IHRoYW5rcyBmb3IgeW91ciBwYXRjaC4NCkdvb2QgdG8gaGF2
+ZSB0aGUgYXVkaW8gZ3JhcGggY2FyZCBzdXBwb3J0LCBsb29rcyBvay4NClJldmlld2VkLWJ5OiBQ
+aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KUGhpbGlwcGUgOi0pDQoNCk9u
+IDcvMy8xOSAxMDowNCBBTSwgT2xpdmllciBNb3lzYW4gd3JvdGU6DQo+IEltcGxlbWVudCBnZXRf
+ZGFpX2lkIGNhbGxiYWNrIG9mIGF1ZGlvIEhETUkgY29kZWMNCj4gdG8gc3VwcG9ydCBBU29DIGF1
+ZGlvIGdyYXBoIGNhcmQuDQo+IEhETUkgYXVkaW8gb3V0cHV0IGhhcyB0byBiZSBjb25uZWN0ZWQg
+dG8gc2lpOTAyeCBwb3J0IDMuDQo+IGdldF9kYWlfaWQgY2FsbGJhY2sgbWFwcyB0aGlzIHBvcnQg
+dG8gQVNvQyBEQUkgaW5kZXggMC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9saXZpZXIgTW95c2Fu
+IDxvbGl2aWVyLm1veXNhbkBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2Uvc2lpOTAyeC5jIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hh
+bmdlZCwgMjMgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2Uvc2lpOTAyeC5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MDJ4LmMNCj4g
+aW5kZXggZGQ3YWE0NjZiMjgwLi5kYWY5ZWYzY2Q4MTcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2Uvc2lpOTAyeC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+c2lpOTAyeC5jDQo+IEBAIC0xNTgsNiArMTU4LDggQEANCj4gICANCj4gICAjZGVmaW5lIFNJSTkw
+MlhfSTJDX0JVU19BQ1FVSVNJVElPTl9USU1FT1VUX01TCTUwMA0KPiAgIA0KPiArI2RlZmluZSBT
+SUk5MDJYX0FVRElPX1BPUlRfSU5ERVgJCTMNCj4gKw0KPiAgIHN0cnVjdCBzaWk5MDJ4IHsNCj4g
+ICAJc3RydWN0IGkyY19jbGllbnQgKmkyYzsNCj4gICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOw0K
+PiBAQCAtNjkwLDExICs2OTIsMzIgQEAgc3RhdGljIGludCBzaWk5MDJ4X2F1ZGlvX2dldF9lbGQo
+c3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhLA0KPiAgIAlyZXR1cm4gMDsNCj4gICB9DQo+
+ICAgDQo+ICtzdGF0aWMgaW50IHNpaTkwMnhfYXVkaW9fZ2V0X2RhaV9pZChzdHJ1Y3Qgc25kX3Nv
+Y19jb21wb25lbnQgKmNvbXBvbmVudCwNCj4gKwkJCQkgICAgc3RydWN0IGRldmljZV9ub2RlICpl
+bmRwb2ludCkNCj4gK3sNCj4gKwlzdHJ1Y3Qgb2ZfZW5kcG9pbnQgb2ZfZXA7DQo+ICsJaW50IHJl
+dDsNCj4gKw0KPiArCXJldCA9IG9mX2dyYXBoX3BhcnNlX2VuZHBvaW50KGVuZHBvaW50LCAmb2Zf
+ZXApOw0KPiArCWlmIChyZXQgPCAwKQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJLyoNCj4g
+KwkgKiBIRE1JIHNvdW5kIHNob3VsZCBiZSBsb2NhdGVkIGF0IHJlZyA9IDwzPg0KPiArCSAqIFJl
+dHVybiBleHBlY3RlZCBEQUkgaW5kZXggMC4NCj4gKwkgKi8NCj4gKwlpZiAob2ZfZXAucG9ydCA9
+PSBTSUk5MDJYX0FVRElPX1BPUlRfSU5ERVgpDQo+ICsJCXJldHVybiAwOw0KPiArDQo+ICsJcmV0
+dXJuIC1FSU5WQUw7DQo+ICt9DQo+ICsNCj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IGhkbWlfY29k
+ZWNfb3BzIHNpaTkwMnhfYXVkaW9fY29kZWNfb3BzID0gew0KPiAgIAkuaHdfcGFyYW1zID0gc2lp
+OTAyeF9hdWRpb19od19wYXJhbXMsDQo+ICAgCS5hdWRpb19zaHV0ZG93biA9IHNpaTkwMnhfYXVk
+aW9fc2h1dGRvd24sDQo+ICAgCS5kaWdpdGFsX211dGUgPSBzaWk5MDJ4X2F1ZGlvX2RpZ2l0YWxf
+bXV0ZSwNCj4gICAJLmdldF9lbGQgPSBzaWk5MDJ4X2F1ZGlvX2dldF9lbGQsDQo+ICsJLmdldF9k
+YWlfaWQgPSBzaWk5MDJ4X2F1ZGlvX2dldF9kYWlfaWQsDQo+ICAgfTsNCj4gICANCj4gICBzdGF0
+aWMgaW50IHNpaTkwMnhfYXVkaW9fY29kZWNfaW5pdChzdHJ1Y3Qgc2lpOTAyeCAqc2lpOTAyeCwN
+Cj4g
