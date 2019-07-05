@@ -2,108 +2,134 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AC5C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441C6C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F295218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEA0218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y78t9ohm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfGEMoQ (ORCPT
+        id S1728738AbfGEMpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:44:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8146 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727665AbfGEMoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:44:16 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1D377A7AB501FDE1A7EA;
-        Fri,  5 Jul 2019 20:44:13 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 5 Jul 2019
- 20:44:12 +0800
-Subject: Re: [PATCH] gpio: tegra: Fix build error without CONFIG_DEBUG_FS
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190705123220.54008-1-yuehaibing@huawei.com>
- <CAMpxmJVZHJKQ7bbHo=T9R99qguF315bZ=YVRrCdqti2SyzAnDg@mail.gmail.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <74ffe8ea-e6fb-bd2a-42bd-08392eb27c69@huawei.com>
-Date:   Fri, 5 Jul 2019 20:44:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 5 Jul 2019 08:45:10 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44806 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfGEMpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:45:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so1490534plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:45:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dF5ldfW86FJCU5Kc3o1c+7BuYCZNz4gnsUxsM2MILhg=;
+        b=Y78t9ohm9IjqJTYbAV0G0UpCaRpc5X9RScVdIdmz4eqVB1CtoQpRVENQv5H9OJB6u3
+         IHW38yAnNbwzW6vcGSiPkXs9kW4CnIKtbKQQihf+CPDRaHhL04ZyRYbRyfKQffGvavIp
+         D8IdAu4ImWWGg3ot7QhkuD+LT+WNmRKXlpEXE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dF5ldfW86FJCU5Kc3o1c+7BuYCZNz4gnsUxsM2MILhg=;
+        b=I9ujp4KkW1XcW5pTsdi6bMmDsd3BK83LxcLkrT7JK8jSEELJUshWlIpE640q/oa89u
+         aRBfuVtcIbwh1T1bWFpoV7KqN8oftBuX3gAWyLkGTZo1foAEQbQ7b+8poQ7LplGt8DWs
+         9VvKwPdAhZXPezFugIq07B1u6QbMh9ndiKoT6PbYvQem3KEP1Cp9hKaq3K7Dv7l/n0Pi
+         YKE+AOv83b6MlEvW4AG3yY23ZBpwAtKDxOLnItVx305DaJS1+B188MAWCUOSYEjZ7374
+         AsjI2pARxMahU7ya3JpOfQpW8XwCG8D+NupnmX496D3M5YsZ66UNTTraHQY4eq0sC8x7
+         5eVw==
+X-Gm-Message-State: APjAAAXvIkASRjDEk4SLFEWjirBi1QAOHWn/cK+aMhisI3AZbNylLoKH
+        ZpbnKbjxipRjsh6I+werBBKS
+X-Google-Smtp-Source: APXvYqxMUTixTbN+cdcvlkTjbvWDrPyHAWnhOqeIT0sxQ7x+/ZOrGTKueCUPUnH3QwRNCyffO+Wgnw==
+X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr5266993plb.139.1562330709214;
+        Fri, 05 Jul 2019 05:45:09 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:b:d89e:cfa6:3c8:e61b])
+        by smtp.gmail.com with ESMTPSA id y22sm8626527pgj.38.2019.07.05.05.45.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 05:45:08 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 20:45:05 +0800
+From:   Kuo-Hsin Yang <vovoy@chromium.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: scan anonymous pages on file refaults
+Message-ID: <20190705124505.GA173726@google.com>
+References: <20190628111627.GA107040@google.com>
+ <20190701081038.GA83398@google.com>
+ <20190703143057.GQ978@dhcp22.suse.cz>
+ <20190704094716.GA245276@google.com>
+ <20190704110425.GD5620@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJVZHJKQ7bbHo=T9R99qguF315bZ=YVRrCdqti2SyzAnDg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704110425.GD5620@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/5 20:40, Bartosz Golaszewski wrote:
-> pt., 5 lip 2019 o 14:34 YueHaibing <yuehaibing@huawei.com> napisał(a):
->>
->> If CONFIG_DEBUG_FS is not set, building fails:
->>
->> drivers/gpio/gpio-tegra.c: In function tegra_gpio_probe:
->> drivers/gpio/gpio-tegra.c:665:2: error: implicit declaration of function debugfs_create_file;
->>  did you mean bus_create_file? [-Werror=implicit-function-declaration]
->>   debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
->>   ^~~~~~~~~~~~~~~~~~~
->>   bus_create_file
->> drivers/gpio/gpio-tegra.c:666:9: error: tegra_dbg_gpio_fops undeclared (first use in this function);
->>  did you mean tegra_gpio_pm_ops?
->>         &tegra_dbg_gpio_fops);
->>          ^~~~~~~~~~~~~~~~~~~
->>          tegra_gpio_pm_ops
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: a4de43049a1d ("gpio: tegra: Clean-up debugfs initialisation")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/gpio/gpio-tegra.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
->> index 59b99d8..40fd6bd 100644
->> --- a/drivers/gpio/gpio-tegra.c
->> +++ b/drivers/gpio/gpio-tegra.c
->> @@ -662,8 +662,10 @@ static int tegra_gpio_probe(struct platform_device *pdev)
->>                 }
->>         }
->>
->> +#ifdef CONFIG_DEBUG_FS
->>         debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
->>                             &tegra_dbg_gpio_fops);
->> +#endif
->>
->>         return 0;
->>  }
->> --
->> 2.7.4
->>
->>
+On Thu, Jul 04, 2019 at 01:04:25PM +0200, Michal Hocko wrote:
+> On Thu 04-07-19 17:47:16, Kuo-Hsin Yang wrote:
+> > On Wed, Jul 03, 2019 at 04:30:57PM +0200, Michal Hocko wrote:
+> > > 
+> > > How does the reclaim behave with workloads with file backed data set
+> > > not fitting into the memory? Aren't we going to to swap a lot -
+> > > something that the heuristic is protecting from?
+> > > 
+> > 
+> > In common case, most of the pages in a large file backed data set are
+> > non-executable. When there are a lot of non-executable file pages,
+> > usually more file pages are scanned because of the recent_scanned /
+> > recent_rotated ratio.
+> > 
+> > I modified the test program to set the accessed sizes of the executable
+> > and non-executable file pages respectively. The test program runs on 2GB
+> > RAM VM with kernel 5.2.0-rc7 and this patch, allocates 2000 MB anonymous
+> > memory, then accesses 100 MB executable file pages and 2100 MB
+> > non-executable file pages for 10 times. The test also prints the file
+> > and anonymous page sizes in kB from /proc/meminfo. There are not too
+> > many swaps in this test case. I got similar test result without this
+> > patch.
 > 
-> Nack, there are inline stubs for all debugfs functions in
-> ./include/linux/debugfs.h if CONFIG_DEBUG_FS is not selected. Just
-> move the #include <linux/debugfs.h> to the top of the source file.
+> Could you record swap out stats please? Also what happens if you have
+> multiple readers?
 
-yes, agree this, but 'tegra_dbg_gpio_fops' is still undeclared.
+Checked the swap out stats during the test [1], 19006 pages swapped out
+with this patch, 3418 pages swapped out without this patch. There are
+more swap out, but I think it's within reasonable range when file backed
+data set doesn't fit into the memory.
 
-> 
-> Bart
-> 
-> .
-> 
+$ ./thrash 2000 100 2100 5 1 # ANON_MB FILE_EXEC FILE_NOEXEC ROUNDS PROCESSES
+Allocate 2000 MB anonymous pages
+active_anon: 1613644, inactive_anon: 348656, active_file: 892, inactive_file: 1384 (kB)
+pswpout: 7972443, pgpgin: 478615246
+Access 100 MB executable file pages
+Access 2100 MB regular file pages
+File access time, round 0: 12.165, (sec)
+active_anon: 1433788, inactive_anon: 478116, active_file: 17896, inactive_file: 24328 (kB)
+File access time, round 1: 11.493, (sec)
+active_anon: 1430576, inactive_anon: 477144, active_file: 25440, inactive_file: 26172 (kB)
+File access time, round 2: 11.455, (sec)
+active_anon: 1427436, inactive_anon: 476060, active_file: 21112, inactive_file: 28808 (kB)
+File access time, round 3: 11.454, (sec)
+active_anon: 1420444, inactive_anon: 473632, active_file: 23216, inactive_file: 35036 (kB)
+File access time, round 4: 11.479, (sec)
+active_anon: 1413964, inactive_anon: 471460, active_file: 31728, inactive_file: 32224 (kB)
+pswpout: 7991449 (+ 19006), pgpgin: 489924366 (+ 11309120)
 
+With 4 processes accessing non-overlapping parts of a large file, 30316
+pages swapped out with this patch, 5152 pages swapped out without this
+patch. The swapout number is small comparing to pgpgin.
+
+[1]: https://github.com/vovo/testing/blob/master/mem_thrash.c
