@@ -2,95 +2,131 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12216C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3B7C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE5B218CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562332441;
-	bh=4Ax4YHT9pSOfjjpXXhaL2jL94bL31h816GZtxYru400=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AbjS74zZv9szRf/nPtBBbSMin8KOb/yXXJKdbbU7M54tSMDVu8dM1niMPfe4kcdLx
-	 Holm9c1/YfPosdzUSgd4yCJxmQ9C5E0cvEBnixDIPBarRm1JMFshs7/7DQQDZs/duW
-	 oBQsjHWHoPvQiE/Go9yEof8cLUEjSNP+yVnvRuE8=
+	by mail.kernel.org (Postfix) with ESMTP id 342CF21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TI2oXeHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfGENOA (ORCPT
+        id S1728992AbfGENO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbfGENN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:13:59 -0400
-Received: from localhost (unknown [49.207.59.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7589B21850;
-        Fri,  5 Jul 2019 13:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562332439;
-        bh=4Ax4YHT9pSOfjjpXXhaL2jL94bL31h816GZtxYru400=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=btwexLJg3kxAdxu2/nhXrlxBb1eB9ovzxeZoIukphlXXmuThG6+a7UmKKXTXXZKV5
-         Rj/5A+nuFNluNKXQEx67FC7VlUTYscurOjjF05FdRi40H++FOcDj66rXJvMhbuFlKZ
-         A6jGbKGgBlCxBwWRds42zRK38fBBWe8MEmqynafI=
-Date:   Fri, 5 Jul 2019 18:40:49 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error
- path
-Message-ID: <20190705131049.GF2911@vkoul-mobl>
-References: <CAGngYiVsUZwCUEsqRk-YtZPGYxsqzHzD7U5GeeHyAa2Yw9Z6WA@mail.gmail.com>
- <20190624140731.24080-1-TheSven73@gmail.com>
- <20190705124646.GD2911@vkoul-mobl>
- <CAGngYiW2+sBv1WqB8+csb=mZm2owziJ5wWcWLNPy7=m72ppypw@mail.gmail.com>
+        Fri, 5 Jul 2019 09:14:58 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54004 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbfGENO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:14:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so8831816wmj.3;
+        Fri, 05 Jul 2019 06:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=uKHlyYqeBe/wr2Z6y/4QEC6iNmM7p3qNFfwocSVjlzw=;
+        b=TI2oXeHxE6ls97h79boFzA2LWTSYa38A/hKErXCD0RLcVlfTSwZUXZpqLpZcApd2va
+         9wQWnJEZOvkVY2u7M3dDSohts9W7HNNTdJfAbADUeTdPcxZNAI826D49rHcsQY2j1Jz3
+         BN9rz/diTDaogPeH6qSE68liL+Hpttkraz7WjJOdVRtvD8KkL+cbQ/H4I67BTznrUMIa
+         vHJdg6ht7ZtC0+aRbe9MOkpk1rvWzuMO9BwuP3etul8ldPyGakaI63NnHng3OhMHwo2Z
+         2L64Ekv8+A8eHTjNRa7WIV8wJEt6XQ8iKu+Yq0cS3aPB7XvsYNssHYbbpPCN1pZqdRal
+         BRwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=uKHlyYqeBe/wr2Z6y/4QEC6iNmM7p3qNFfwocSVjlzw=;
+        b=itLXyXvNDqIHnkTsGFROQcE5/unMwmoWGd+ALpm+YeeRoaOmkjocF0XjjXgLcjFzMC
+         HjjrKdEmPnF2b3fAxqkD8FA0k1JZN2qHbPhouNv3sIduLt3jiOSzmWkBknWBM/WkedSA
+         NeGTrYV67K48+RVmygYne7Uy6ELcjhyx3U6JOP+xLcoLqqlmIVQkaZ2iqrj6FAmz+M1N
+         mXITYFyUVDfxfWnTi+LzKIcmb121YnfsNC7Y1ANPVihE2y/rsX7ix8Yq3VL4FQP4fdDw
+         finPKu51sMQ2UipMwQuHtdFEn8P8TZhLZcYEMpGkO63xfG6g2xkOFccVrKWInOx4rSvs
+         +CMQ==
+X-Gm-Message-State: APjAAAX4fhhChGkoMWCvt0BvF/rCuXThfp6+TFeKeGAI3Rv+dgypp9gP
+        hyejb1kDiOhteRtuwlRB85w=
+X-Google-Smtp-Source: APXvYqz6Wsj+WSkcyjldVf7IO4jtX/1Mh29toF52fpe+NyS5xVO1cls2rUCVEZ49MgE+mZ0HkKrxzw==
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr3372835wme.173.1562332495330;
+        Fri, 05 Jul 2019 06:14:55 -0700 (PDT)
+Received: from localhost ([41.220.75.172])
+        by smtp.gmail.com with ESMTPSA id l13sm3335034wrt.16.2019.07.05.06.14.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 06:14:53 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 14:14:46 +0100
+From:   Sheriff Esseson <sheriffesseson@gmail.com>
+To:     skhan@linuxfoundation.org
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [Linux-kernel-mentees] [PATCH] Doc : fs : move xfs.txt to admin-guide
+Message-ID: <20190705131446.GA10045@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGngYiW2+sBv1WqB8+csb=mZm2owziJ5wWcWLNPy7=m72ppypw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-07-19, 09:08, Sven Van Asbroeck wrote:
-> Hi Vinod,
-> 
-> On Fri, Jul 5, 2019 at 8:50 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > there is an else here too!
-> >
-> 
-> You are of course right, I was looking at the wrong if.
+As suggested by Matthew Wilcox, xfs.txt is primarily a guide on available
+options when setting up an XFS. This makes it appropriate to be placed under
+the admin-guide tree.
 
-NO issues :)
-> 
-> Apologies for the confusion, I did try to look at what you
-> changed, but your git repo listed in MAINTAINERS appears
-> unresponsive for me?
+Thus, move xfs.txt to admin-guide and fix broken references.
 
-To quote David you need to move to 21st century (like me). IPv4 switch
-for infradead is down so...
+Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
+---
 
-meanwhile this would work too:
-git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git
+The reference to xfs.txt from dax.txt in itself is not looking good. Maybe, we
+need something more inspirational.
 
--- 
-~Vinod
+ Documentation/{filesystems => admin-guide}/xfs.txt | 0
+ Documentation/filesystems/dax.txt                  | 2 +-
+ MAINTAINERS                                        | 2 +-
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename Documentation/{filesystems => admin-guide}/xfs.txt (100%)
+
+diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.txt
+similarity index 100%
+rename from Documentation/filesystems/xfs.txt
+rename to Documentation/admin-guide/xfs.txt
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+index 6d2c0d340..b2b19738b 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.txt
+@@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
+ These filesystems may be used for inspiration:
+ - ext2: see Documentation/filesystems/ext2.txt
+ - ext4: see Documentation/filesystems/ext4/
+-- xfs:  see Documentation/filesystems/xfs.txt
++- xfs:  see Documentation/admin-guide/xfs.txt
+
+
+ Handling Media Errors
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01a52fc96..fc309b0a1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17374,7 +17374,7 @@ L:	linux-xfs@vger.kernel.org
+ W:	http://xfs.org/
+ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ S:	Supported
+-F:	Documentation/filesystems/xfs.txt
++F:	Documentation/admin-guide/xfs.txt
+ F:	fs/xfs/
+
+ XILINX AXI ETHERNET DRIVER
+--
+_______________________________________________
+Linux-kernel-mentees mailing list
+Linux-kernel-mentees@lists.linuxfoundation.org
+https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+
+2.22.0
+
