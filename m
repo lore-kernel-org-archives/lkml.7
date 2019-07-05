@@ -2,83 +2,148 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094C3C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3FCC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88DE218C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh6G9QxS"
+	by mail.kernel.org (Postfix) with ESMTP id 9FAFC218C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfGENj4 (ORCPT
+        id S1728625AbfGENlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:39:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35192 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728244AbfGENj4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:39:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so4348984pgl.2;
-        Fri, 05 Jul 2019 06:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Yz/bvXxfkDYqJoVFft3aC1vVTiMIeTWz1wlVELmSGYQ=;
-        b=Kh6G9QxSOQPflRqPMW3xsfPNqflJLlV0SWqmKw3ii2M4XMDwfbCD5fGl/ryOMj7bpq
-         cDcKcB39t8nsxr/eJeoxTU4YXhaQnkfQZHb14mcyAxjpXaMSBahlof31ZonHhSZ40NPk
-         Ftfnj3/OlRjMN1HRNEvGRzORywGU8owZ0nG6zrFDPiXhacpZDD44hwY89bLBMuBFHIJi
-         5D0SKKqAICvhT/WpDstuV1/+1bQqI5x+hisWHSFuvyJdyyhV4j7eJNyRIg+KoA3mPXNp
-         aOhw2e68JnxXXePgqe9+pVxS/RhkbLXvypLGnIhWdNh/+w0j2DQ272lJoX3Aszeu6uu8
-         T6bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Yz/bvXxfkDYqJoVFft3aC1vVTiMIeTWz1wlVELmSGYQ=;
-        b=NqLl6EYB2D4Uo3ufpHNLJcjpPH5ba0skgmsSzuIoje/276MVF5KYlSQ+5tUL4ULACx
-         OVyQ2uR4ZhOrhKi/p93n7+4ADd0DUZlOFCA3IDfg43Eczpikn0WSMQ3adruf+t+7qQFH
-         ji40d/I4A0qbzgizWJmj23AwSqQmSI/dqZaUVxuwdDZoZiYJftNCLTYJ1OJLoLLJUobM
-         2VSjlqtV9QmUkp9B/z7r4QHweho6K00laSgcHoxPqNoKXcm5yJx7toC6QA5G2o/lVaJX
-         X5apghF88BAY+Yfkf/JgFXYOBtANWpZkPqhnUKp+YvX0kK9ea8onPnkZHtXefJE/eklj
-         zIpw==
-X-Gm-Message-State: APjAAAUNilD8vFlrQPCLzOhwY95igSIaCD9gKfQOyt1XhoX2frle5FNK
-        6awSBjOJPJO0/jVQHkb8iTs=
-X-Google-Smtp-Source: APXvYqyRcWrfurmLqtOm81P0n5PYS395MdcibqcOdy+Y59FXFo4mkF7bmglv+2to5uKrUa1fFZH+bA==
-X-Received: by 2002:a65:6406:: with SMTP id a6mr5494274pgv.393.1562333994885;
-        Fri, 05 Jul 2019 06:39:54 -0700 (PDT)
-Received: from ?IPv6:2601:647:4580:b719:ac8c:5fbe:1262:33d4? ([2601:647:4580:b719:ac8c:5fbe:1262:33d4])
-        by smtp.gmail.com with ESMTPSA id v10sm9676088pfe.163.2019.07.05.06.39.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 06:39:54 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] KVM: LAPIC: ARBPRI is a reserved register for x2APIC
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
-Date:   Fri, 5 Jul 2019 06:37:30 -0700
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <2624F5BF-1601-4A7B-8CA2-7D3328184E46@gmail.com>
-References: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 5 Jul 2019 09:41:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:38504 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727702AbfGENlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:41:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C082360;
+        Fri,  5 Jul 2019 06:41:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0AF3F718;
+        Fri,  5 Jul 2019 06:41:40 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 14:41:38 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>
+Subject: Re: [PATCH v2] PCI: hv: Fix a use-after-free bug in
+ hv_eject_device_work()
+Message-ID: <20190705134138.GB31464@e121166-lin.cambridge.arm.com>
+References: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jul 5, 2019, at 5:14 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Fri, Jun 21, 2019 at 11:45:23PM +0000, Dexuan Cui wrote:
 > 
-> kvm-unit-tests were adjusted to match bare metal behavior, but KVM
-> itself was not doing what bare metal does; fix that.
+> The commit 05f151a73ec2 itself is correct, but it exposes this
+> use-after-free bug, which is caught by some memory debug options.
 > 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Add a Fixes tag to indicate the dependency.
+> 
+> Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
+> ---
+> 
+> In v2:
+> Replaced "hpdev->hbus" with "hbus", since we have the new "hbus" variable. [Michael Kelley]
+> 
+>  drivers/pci/controller/pci-hyperv.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 
-Reported-by ?
+Applied to pci/hv for v5.3, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 808a182830e5..5dadc964ad3b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+>  static void hv_eject_device_work(struct work_struct *work)
+>  {
+>  	struct pci_eject_response *ejct_pkt;
+> +	struct hv_pcibus_device *hbus;
+>  	struct hv_pci_dev *hpdev;
+>  	struct pci_dev *pdev;
+>  	unsigned long flags;
+> @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	} ctxt;
+>  
+>  	hpdev = container_of(work, struct hv_pci_dev, wrk);
+> +	hbus = hpdev->hbus;
+>  
+>  	WARN_ON(hpdev->state != hv_pcichild_ejecting);
+>  
+> @@ -1900,8 +1902,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	 * because hbus->pci_bus may not exist yet.
+>  	 */
+>  	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
+> -	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
+> -					   wslot);
+> +	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
+>  	if (pdev) {
+>  		pci_lock_rescan_remove();
+>  		pci_stop_and_remove_bus_device(pdev);
+> @@ -1909,9 +1910,9 @@ static void hv_eject_device_work(struct work_struct *work)
+>  		pci_unlock_rescan_remove();
+>  	}
+>  
+> -	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
+> +	spin_lock_irqsave(&hbus->device_list_lock, flags);
+>  	list_del(&hpdev->list_entry);
+> -	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
+> +	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+>  
+>  	if (hpdev->pci_slot)
+>  		pci_destroy_slot(hpdev->pci_slot);
+> @@ -1920,7 +1921,7 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
+>  	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+>  	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+> -	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
+> +	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+>  			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+>  			 VM_PKT_DATA_INBAND, 0);
+>  
+> @@ -1929,7 +1930,9 @@ static void hv_eject_device_work(struct work_struct *work)
+>  	/* For the two refs got in new_pcichild_device() */
+>  	put_pcichild(hpdev);
+>  	put_pcichild(hpdev);
+> -	put_hvpcibus(hpdev->hbus);
+> +	/* hpdev has been freed. Do not use it any more. */
+> +
+> +	put_hvpcibus(hbus);
+>  }
+>  
+>  /**
+> -- 
+> 2.17.1
+> 
