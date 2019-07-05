@@ -2,128 +2,122 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30569C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A593C4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DCF2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495E0218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LRqAfRzK"
+	dkim=pass (1024-bit key) header.d=vivotek.com header.i=@vivotek.com header.b="BQyJxYrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfGEKdv (ORCPT
+        id S1728490AbfGEKgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:33:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49188 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbfGEKdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:33:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x65AXdMJ045769;
-        Fri, 5 Jul 2019 05:33:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562322819;
-        bh=a+9kqxFBb4ONOgcxUqkn+qLv8UCr52lzZuc0RccW2Xw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LRqAfRzKxnl2Xipdm3VYCpApjQIdqkeD3HVFzK3CMyriOURvthKE7CBvCshT8CPUs
-         Dt82c+aEXJXv3DOLCQY5F2is2/Qv/i1CG16L38FsjLfJH4wYPcgghxh1lQQi0yOfxz
-         T46mSNHK/la9A84zPIDoWZ+iMD8wfHKvnjw6eNr4=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x65AXdgj019071
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Jul 2019 05:33:39 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Jul
- 2019 05:33:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Jul 2019 05:33:38 -0500
-Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x65AXa3F125307;
-        Fri, 5 Jul 2019 05:33:36 -0500
-Subject: Re: [PATCH 3/4] backlight: add led-backlight driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Daniel Thompson <daniel.thompson@linaro.org>,
-        <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <jingoohan1@gmail.com>, <dmurphy@ti.com>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ti.com>
-References: <20190701151423.30768-1-jjhiblot@ti.com>
- <20190701151423.30768-4-jjhiblot@ti.com>
- <20190702095434.d426lichmaffz7a5@holly.lan>
- <531e237c-b570-5270-6fc3-6629a8bf7acd@ti.com>
- <20190702130434.frbx7jkec27ejbpo@holly.lan>
- <72c45311-c710-dc2d-a6de-68e44ea8436a@ti.com>
- <20190703094457.etmbbjhhssbdkveo@holly.lan>
- <a8886ae9-31ec-de4c-0a83-5f681582a0b9@ti.com>
- <20190705100851.zn2jkipj4fxq5we6@devuan>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <6c21af33-8c3b-58a8-0a1b-f85fb9f80050@ti.com>
-Date:   Fri, 5 Jul 2019 12:33:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 5 Jul 2019 06:36:03 -0400
+Received: from mail.vivotek.com ([60.248.39.150]:38268 "EHLO mail.vivotek.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbfGEKgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:36:03 -0400
+Received: from pps.filterd (vivotekpps.vivotek.com [127.0.0.1])
+        by vivotekpps.vivotek.com (8.16.0.22/8.16.0.22) with SMTP id x65AZspl008944;
+        Fri, 5 Jul 2019 18:35:54 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivotek.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=dkim;
+ bh=szkQ+8wAhdF2atU4GXas+uCFEomDFJslqNNhXjmvN1o=;
+ b=BQyJxYrLgq/3q6jrLywtqdKmanzL6QSvnn4A1KgvKa3Bj99CXfLVZ1wJdXUnN2nBMTP0
+ SNDwuzfmz9yXrJNSUdVJ4pca5XxpAIfDCbNY9oCG1RH8d78UYS9kxQi60icq6ORpjoAE
+ TSuznnVxFp4II/xqgy+sAt2fq1FqIdybpOI= 
+Received: from cas01.vivotek.tw ([192.168.0.58])
+        by vivotekpps.vivotek.com with ESMTP id 2tj3w0g4su-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 05 Jul 2019 18:35:54 +0800
+Received: from MBS-6F-DAG.vivotek.tw ([fe80::9001:3cd7:4ddb:c4ca]) by
+ CAS01.vivotek.tw ([::1]) with mapi id 14.03.0319.002; Fri, 5 Jul 2019
+ 18:35:53 +0800
+From:   <Michael.Wu@vatics.com>
+To:     <bgolaszewski@baylibre.com>
+CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mvp.kutali@gmail.com>
+Subject: RE: [PATCH] gpiolib: fix incorrect IRQ requesting of an active-low
+ lineevent
+Thread-Topic: [PATCH] gpiolib: fix incorrect IRQ requesting of an active-low
+ lineevent
+Thread-Index: AQHVMxS2opuBZKJbbUCrIFX8Aoy3qKa7xiDw
+Date:   Fri, 5 Jul 2019 10:35:52 +0000
+Message-ID: <5DB475451BAA174CB158B5E897FC1525920E9FD0@MBS-6F-DAG.vivotek.tw>
+References: <20190705093031.18182-1-michael.wu@vatics.com>
+ <CAMpxmJUzaEREeUxCu2BCV12Huv7K=yeUSKntA5RGMfOQbnxaFg@mail.gmail.com>
+In-Reply-To: <CAMpxmJUzaEREeUxCu2BCV12Huv7K=yeUSKntA5RGMfOQbnxaFg@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.17.134]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190705100851.zn2jkipj4fxq5we6@devuan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_04:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 05/07/2019 12:08, Pavel Machek wrote:
-> Hi!
->
->>>>> Also still relevant is whether the LED device is being correctly
->>>>> modelled if the act of turning on the LED doesn't, in fact, turn the LED
->>>>> on. Is it *really* a correct implementation of an LED device that
->>>>> setting it to LED_FULL using sysfs doesn't cause it to light up?
->>>> What I understood from the discussion between Rob and Tomi is that the
->>>> child-node of the LED controller should be considered a backlight device,
->>>> not a simple LED. I'm not sure if the sysfs interface is still relevant in
->>>> that case. Maybe it should just be disabled by the backlight driver
->>>> (possible with led_sysfs_disable())
->>> led_sysfs_disable() sounds like a sensible change but that's not quite
->>> what I mean.
->>>
->>> It is more a thought experiment to see if the power control *should* be
->>> implemented by the backlight. Consider what happens if we *don't*
->>> enable CONFIG_BACKLIGHT_LED in the kernel: we would still have an LED
->>> device and it would not work correctly.
->>>
->>> In other words I naively expect turning on an LED using the LED API
->>> (any of them, sysfs or kernel) to result in the LED turning on.
->>> Implementing a workaround in the client for what appears to be
->>> something missing in the LED driver strikes me as odd. Why shouldn't
->>> the regulator be managed in the LED driver?
->> I see your point. Indeed having the regulator handled in the LED-core makes
->> sense in a lot of situations
->>
->> I'll think about it.
-> For the record, I also believe regulator and enable gpio should be
-> handled in the core.
-
-I am working on adding the regulator to the led core.
-
-I don't really want to add a GPIO enable to the core though. If needed 
-it can be described as a GPIO-enabled regulator up(/down)stream the 
-regular regulator.
-
-JJ
-
-
->
-> 									Pavel
-> PS please trim down the quoted text.									
+SGkgQmFydG9zeiwNCg0KRm9yIGV4YW1wbGUsIHRoZXJlIGlzIGEgYnV0dG9uIHdoaWNoIGRyaXZl
+cyBsZXZlbCB0byBiZSBsb3cgd2hlbiBpdCBpcyBwdXNoZWQsIGFuZCBkcml2ZXJzIGxldmVsIHRv
+IGJlIGhpZ2ggd2hlbiBpdCBpcyByZWxlYXNlZC4NCldlIHdhbnQgdG8gY2F0Y2ggdGhlIGV2ZW50
+IHdoZW4gdGhlIGJ1dHRvbiBpcyBwdXNoZWQuDQoNCkluIHVzZXIgc3BhY2Ugd2UgY29uZmlndXJl
+IGEgbGluZSBldmVudCB3aXRoIHRoZSBmb2xsb3dpbmcgY29kZToNCg0KcmVxLmhhbmRsZWZsYWdz
+ID0gR1BJT0hBTkRMRV9SRVFVRVNUX0lOUFVUOw0KcmVxLmV2ZW50ZmxhZ3MgPSBHUElPRVZFTlRf
+UkVRVUVTVF9GQUxMSU5HX0VER0U7DQoNCmFuZCB3ZSBob3BlIHRvIGdldCAiZmFsbGluZyIgZXZl
+bnRzIGJ5IHJlYWRpbmcgdGhlIGRldmljZSBub2RlOg0KDQp3aGlsZSAoMSkgew0KCXJlYWQoZmQs
+ICZkYXQsc2l6ZW9mKGRhdCkpOw0KCWlmIChkYXQuaWQgPT0gMCkgew0KCQlwcmludGYoImJ1dHRv
+biBwdXNoZWRcbiIpOw0KCX0NCn0NCg0KUnVuIHRoZSBzYW1lIGxvZ2ljIG9uIGFub3RoZXIgYm9h
+cmQgd2hpY2ggdGhlIHBvbGFyaXR5IG9mIHRoZSBidXR0b24gaXMgaW52ZXJ0ZWQuIFRoZSBidXR0
+b24gZHJpdmVzIGxldmVsIHRvIGJlIGhpZ2ggd2hlbiBpdCBpcyBwdXNoZWQuDQpGb3IgdGhlIGlu
+dmVydGVkIGxldmVsIGNhc2UsIHdlIGhhdmUgdG8gYWRkIGZsYWcgR1BJT0hBTkRMRV9SRVFVRVNU
+X0FDVElWRV9MT1c6DQoNCnJlcS5oYW5kbGVmbGFncyA9IEdQSU9IQU5ETEVfUkVRVUVTVF9JTlBV
+VCB8IEdQSU9IQU5ETEVfUkVRVUVTVF9BQ1RJVkVfTE9XOw0KcmVxLmV2ZW50ZmxhZ3MgPSBHUElP
+RVZFTlRfUkVRVUVTVF9GQUxMSU5HX0VER0U7DQoNCkF0IHRoZSByZXN1bHQsIHRoZXJlIGFyZSBu
+byBhbnkgZXZlbnRzIGJlZW4gY2F1Z2h0IHdoZW4gdGhlIGJ1dHRvbiBpcyBwdXNoZWQuDQpCeSB0
+aGUgd2F5LCBidXR0b24gcmVsZWFzaW5nIHdpbGwgZW1pdCBhICJmYWxsaW5nIiBldmVudC4NCg0K
+DQpTaW5jZXJlbHksDQoNCk1pY2hhZWwgV3UgDQoNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCkZyb206IEJhcnRvc3ogR29sYXN6ZXdza2kgW21haWx0bzpiZ29sYXN6ZXdza2lAYmF5bGli
+cmUuY29tXSANClNlbnQ6IEZyaWRheSwgSnVseSAwNSwgMjAxOSA1OjMzIFBNDQpUbzogTWljaGFl
+bC5XdSjlkLPlv6Dnm4opDQpDYzogTGludXMgV2FsbGVpajsgbGludXgtZ3BpbzsgTEtNTDsgbXZw
+Lmt1dGFsaUBnbWFpbC5jb20NClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGdwaW9saWI6IGZpeCBpbmNv
+cnJlY3QgSVJRIHJlcXVlc3Rpbmcgb2YgYW4gYWN0aXZlLWxvdyBsaW5lZXZlbnQNCg0KcHQuLCA1
+IGxpcCAyMDE5IG8gMTE6MzAgTWljaGFlbCBXdSA8bWljaGFlbC53dUB2YXRpY3MuY29tPiBuYXBp
+c2HFgihhKToNCj4NCj4gV2hlbiBhIHBpbiBpcyBhY3RpdmUtbG93LCBsb2dpY2FsIHRyaWdnZXIg
+ZWRnZSBzaG91bGQgYmUgaW52ZXJ0ZWQNCj4gdG8gbWF0Y2ggdGhlIHNhbWUgaW50ZXJydXB0IG9w
+cG9ydHVuaXR5Lg0KPg0KPiBGb3IgZXhhbXBsZSwgYSBidXR0b24gcHVzaGVkIHRyaWdnZXIgZmFs
+bGluZyBlZGdlIGluIEFDVElWRV9ISUdIDQo+IGNhc2U7IGluIEFDVElWRV9MT1cgY2FzZSwgdGhl
+IGJ1dHRvbiBwdXNoZWQgdHJpZ2dlciByaXNpbmcgZWRnZS4NCj4gRm9yIHVzZXIgc3BhY2UgdGhl
+IElSUSByZXF1ZXN0aW5nIGRvZXNuJ3QgbmVlZCB0byBkbyBhbnkNCj4gbW9kaWZpY2F0aW9uIGV4
+Y2VwdCB0byBjb25maWd1cmluZyBHUElPSEFORExFX1JFUVVFU1RfQUNUSVZFX0xPVy4NCj4NCj4g
+U2lnbmVkLW9mZi1ieTogTWljaGFlbCBXdSA8bWljaGFlbC53dUB2YXRpY3MuY29tPg0KPiAtLS0N
+Cj4gIGRyaXZlcnMvZ3Bpby9ncGlvbGliLmMgfCA2ICsrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3Bpby9ncGlvbGliLmMgYi9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi5jDQo+IGluZGV4IGUwMTNk
+NDE3YTkzNi4uYjk4NDY2YTA1MDkxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpb2xp
+Yi5jDQo+ICsrKyBiL2RyaXZlcnMvZ3Bpby9ncGlvbGliLmMNCj4gQEAgLTk1Niw5ICs5NTYsMTEg
+QEAgc3RhdGljIGludCBsaW5lZXZlbnRfY3JlYXRlKHN0cnVjdCBncGlvX2RldmljZSAqZ2Rldiwg
+dm9pZCBfX3VzZXIgKmlwKQ0KPiAgICAgICAgIH0NCj4NCj4gICAgICAgICBpZiAoZWZsYWdzICYg
+R1BJT0VWRU5UX1JFUVVFU1RfUklTSU5HX0VER0UpDQo+IC0gICAgICAgICAgICAgICBpcnFmbGFn
+cyB8PSBJUlFGX1RSSUdHRVJfUklTSU5HOw0KPiArICAgICAgICAgICAgICAgaXJxZmxhZ3MgfD0g
+dGVzdF9iaXQoRkxBR19BQ1RJVkVfTE9XLCAmZGVzYy0+ZmxhZ3MpID8NCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgSVJRRl9UUklHR0VSX0ZBTExJTkcgOiBJUlFGX1RSSUdHRVJfUklTSU5HOw0K
+PiAgICAgICAgIGlmIChlZmxhZ3MgJiBHUElPRVZFTlRfUkVRVUVTVF9GQUxMSU5HX0VER0UpDQo+
+IC0gICAgICAgICAgICAgICBpcnFmbGFncyB8PSBJUlFGX1RSSUdHRVJfRkFMTElORzsNCj4gKyAg
+ICAgICAgICAgICAgIGlycWZsYWdzIHw9IHRlc3RfYml0KEZMQUdfQUNUSVZFX0xPVywgJmRlc2Mt
+PmZsYWdzKSA/DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIElSUV9UUklHR0VSX1JJU0lORyA6
+IElSUUZfVFJJR0dFUl9GQUxMSU5HOw0KPiAgICAgICAgIGlycWZsYWdzIHw9IElSUUZfT05FU0hP
+VDsNCj4NCj4gICAgICAgICBJTklUX0tGSUZPKGxlLT5ldmVudHMpOw0KPiAtLQ0KPiAyLjE3LjEN
+Cj4NCg0KSXMgdGhpcyBzb21ldGhpbmcgdGhhdCBjYXVzZXMgYSBidWcgaW4gdXNlci1zcGFjZT8g
+QW55IHNjZW5hcmlvIHRvIHJlcHJvZHVjZSBpdD8NCg0KQmFydA0K
