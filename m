@@ -2,35 +2,34 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F9BC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8752C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747DD218C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA05216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfGEJ6W (ORCPT
+        id S1728538AbfGEJ6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:58:22 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60661 "EHLO mga14.intel.com"
+        Fri, 5 Jul 2019 05:58:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16861 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbfGEJ6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:58:08 -0400
+        id S1728431AbfGEJ6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:58:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:58:08 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:58:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="339795702"
+   d="scan'208";a="316054682"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2019 02:58:05 -0700
+  by orsmga004.jf.intel.com with ESMTP; 05 Jul 2019 02:58:01 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1689F4C6; Fri,  5 Jul 2019 12:58:01 +0300 (EEST)
+        id BE499254; Fri,  5 Jul 2019 12:58:00 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -42,12 +41,10 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Anthony Wong <anthony.wong@canonical.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org
-Subject: [PATCH 6/8] thunderbolt: Expose active parts of NVM even if upgrade is not supported
-Date:   Fri,  5 Jul 2019 12:57:58 +0300
-Message-Id: <20190705095800.43534-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH 0/8] thunderbolt: Intel Ice Lake support
+Date:   Fri,  5 Jul 2019 12:57:52 +0300
+Message-Id: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,84 +52,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ice Lake Thunderbolt controller NVM firmware is part of the BIOS image
-which means it is not writable through the DMA port anymore. However, we
-can still read it so we can keep nvm_version and active parts of NVM.
-This way users still can find out the active NVM version and other
-potentially useful information directly from Linux.
+Hi all,
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/thunderbolt/switch.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+With the exception of the first patch which is fix, this series enables
+Thunderbolt on Intel Ice Lake. Biggest difference from the previous
+controllers is that the Thunderbolt controller is now integrated as part of
+the SoC. The firmware messages pretty much follow Titan Ridge but there are
+some differences as well (such as the new RTD3 veto notification). Also Ice
+Lake does not implement security levels so DMA protection is handled by IOMMU.
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index e84067084dcd..e318e9714a38 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -364,12 +364,14 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
- 		nvm->active = nvm_dev;
- 	}
- 
--	nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
--	if (IS_ERR(nvm_dev)) {
--		ret = PTR_ERR(nvm_dev);
--		goto err_nvm_active;
-+	if (!sw->no_nvm_upgrade) {
-+		nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
-+		if (IS_ERR(nvm_dev)) {
-+			ret = PTR_ERR(nvm_dev);
-+			goto err_nvm_active;
-+		}
-+		nvm->non_active = nvm_dev;
- 	}
--	nvm->non_active = nvm_dev;
- 
- 	sw->nvm = nvm;
- 	return 0;
-@@ -398,7 +400,8 @@ static void tb_switch_nvm_remove(struct tb_switch *sw)
- 	if (!nvm->authenticating)
- 		nvm_clear_auth_status(sw);
- 
--	nvmem_unregister(nvm->non_active);
-+	if (nvm->non_active)
-+		nvmem_unregister(nvm->non_active);
- 	if (nvm->active)
- 		nvmem_unregister(nvm->active);
- 	ida_simple_remove(&nvm_ida, nvm->id);
-@@ -1355,8 +1358,11 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
- 		    sw->security_level == TB_SECURITY_SECURE)
- 			return attr->mode;
- 		return 0;
--	} else if (attr == &dev_attr_nvm_authenticate.attr ||
--		   attr == &dev_attr_nvm_version.attr) {
-+	} else if (attr == &dev_attr_nvm_authenticate.attr) {
-+		if (sw->dma_port && !sw->no_nvm_upgrade)
-+			return attr->mode;
-+		return 0;
-+	} else if (attr == &dev_attr_nvm_version.attr) {
- 		if (sw->dma_port)
- 			return attr->mode;
- 		return 0;
-@@ -1707,13 +1713,17 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
- 		break;
- 	}
- 
--	if (sw->no_nvm_upgrade)
-+	/* Root switch DMA port requires running firmware */
-+	if (!tb_route(sw) && sw->config.enabled)
- 		return 0;
- 
- 	sw->dma_port = dma_port_alloc(sw);
- 	if (!sw->dma_port)
- 		return 0;
- 
-+	if (sw->no_nvm_upgrade)
-+		return 0;
-+
- 	/*
- 	 * Check status of the previous flash authentication. If there
- 	 * is one we need to power cycle the switch in any case to make
+This is v5.4 material but I'm sending it out now because I will be on
+vacation next 4 weeks mostly without internet access. When I get back I'll
+gather all the comments and update the series accordingly.
+
+Thanks!
+
+Mika Westerberg (8):
+  thunderbolt: Correct path indices for PCIe tunnel
+  thunderbolt: Move NVM upgrade support flag to struct icm
+  thunderbolt: Use 32-bit writes when writing ring producer/consumer
+  thunderbolt: Do not fail adding switch if some port is not implemented
+  thunderbolt: Hide switch attributes that are not set
+  thunderbolt: Expose active parts of NVM even if upgrade is not supported
+  thunderbolt: Add support for Intel Ice Lake
+  ACPI / property: Add two new Thunderbolt property GUIDs to the list
+
+ drivers/acpi/property.c        |   6 +
+ drivers/thunderbolt/ctl.c      |  23 ++-
+ drivers/thunderbolt/icm.c      | 169 +++++++++++++++++--
+ drivers/thunderbolt/nhi.c      | 300 ++++++++++++++++++++++++++++++++-
+ drivers/thunderbolt/nhi.h      |   2 +
+ drivers/thunderbolt/nhi_regs.h |  25 +++
+ drivers/thunderbolt/switch.c   |  52 ++++--
+ drivers/thunderbolt/tb_msgs.h  |  16 +-
+ drivers/thunderbolt/tunnel.c   |   4 +-
+ include/linux/thunderbolt.h    |   2 +
+ 10 files changed, 553 insertions(+), 46 deletions(-)
+
 -- 
 2.20.1
 
