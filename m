@@ -6,82 +6,101 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18309C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62CFC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2FC2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8624F2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfGELDP (ORCPT
+        id S1728428AbfGELFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:03:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51250 "EHLO mga06.intel.com"
+        Fri, 5 Jul 2019 07:05:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45470 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfGELDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:03:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:03:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="316065024"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by orsmga004.jf.intel.com with ESMTP; 05 Jul 2019 04:03:09 -0700
-Message-ID: <1b890d9a1a949683fdb7104e395c7f92022772fe.camel@linux.intel.com>
-Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
- structures to tpm_pcr_extend()"
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        linux-integrity@vger.kernel.org
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 05 Jul 2019 14:03:08 +0300
-In-Reply-To: <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
-References: <20190701131505.17759-1-msuchanek@suse.de>
-         <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
-         <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1726116AbfGELFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:05:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9CD825945D;
+        Fri,  5 Jul 2019 11:05:03 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-149.ams2.redhat.com [10.36.117.149])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 044211BC40;
+        Fri,  5 Jul 2019 11:04:55 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [PATCH v3 0/3] vsock/virtio: several fixes in the .probe() and .remove()
+Date:   Fri,  5 Jul 2019 13:04:51 +0200
+Message-Id: <20190705110454.95302-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 05 Jul 2019 11:05:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
-> On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
-> > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
-> > > This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
-> > > following crash:
-> > 
-> > Thank you. I think this the right choice for the moment. I fixed
-> > a trivial checkpatch.pl error and added the mandatory tags. Can
-> > you check quickly v2 (just posted)?
-> > 
-> > I already made it available in my master and next.
-> 
-> Could you please wait few days? I would prefer to fix this issue instead
-> of reverting the whole patch.
+During the review of "[PATCH] vsock/virtio: Initialize core virtio vsock
+before registering the driver", Stefan pointed out some possible issues
+in the .probe() and .remove() callbacks of the virtio-vsock driver.
 
-Nayna provided a fix should be ok.
+This series tries to solve these issues:
+- Patch 1 adds RCU critical sections to avoid use-after-free of
+  'the_virtio_vsock' pointer.
+- Patch 2 stops workers before to call vdev->config->reset(vdev) to
+  be sure that no one is accessing the device.
+- Patch 3 moves the works flush at the end of the .remove() to avoid
+  use-after-free of 'vsock' object.
 
-/Jarkko
+v3:
+- Patch 1: use rcu_dereference_protected() to get the_virtio_vosck value in
+           the virtio_vsock_probe() [Jason]
+
+v2: https://patchwork.kernel.org/cover/11022343/
+
+v1: https://patchwork.kernel.org/cover/10964733/
+
+Before this series the guest crashes in a few second. After this series the
+test runs (~12h) without issues.
+Tested on an SMP guest (-smp 4 -monitor tcp:127.0.0.1:1234,server,nowait)
+with these scripts to stress the .probe()/.remove() path:
+
+- guest
+  while true; do
+      cat /dev/urandom | nc-vsock -l 4321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 5321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 6321 > /dev/null &
+      cat /dev/urandom | nc-vsock -l 7321 > /dev/null &
+      wait
+  done
+
+- host
+  while true; do
+      cat /dev/urandom | nc-vsock 3 4321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 5321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 6321 > /dev/null &
+      cat /dev/urandom | nc-vsock 3 7321 > /dev/null &
+      sleep 2
+      echo "device_del v1" | nc 127.0.0.1 1234
+      sleep 1
+      echo "device_add vhost-vsock-pci,id=v1,guest-cid=3" | nc 127.0.0.1 1234
+      sleep 1
+  done
+
+Stefano Garzarella (3):
+  vsock/virtio: use RCU to avoid use-after-free on the_virtio_vsock
+  vsock/virtio: stop workers during the .remove()
+  vsock/virtio: fix flush of works during the .remove()
+
+ net/vmw_vsock/virtio_transport.c | 134 ++++++++++++++++++++++++-------
+ 1 file changed, 104 insertions(+), 30 deletions(-)
+
+-- 
+2.20.1
 
