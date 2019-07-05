@@ -2,87 +2,90 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86435C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7875C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7232083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A072083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:44:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="O/DCTkUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGEDnu (ORCPT
+        id S1727868AbfGEDoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:43:50 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:55201 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727661AbfGEDnt (ORCPT
+        Thu, 4 Jul 2019 23:44:24 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41561 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbfGEDoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:43:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0TW3yoR-_1562298218;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TW3yoR-_1562298218)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 05 Jul 2019 11:43:39 +0800
-Subject: Re: [PATCH 18/39] docs: admin-guide: add kdump documentation into it
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
- <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <6911b74c-848f-0060-3db5-b5d7e8061cb5@linux.alibaba.com>
-Date:   Fri, 5 Jul 2019 11:43:38 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Thu, 4 Jul 2019 23:44:24 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d17so8470080qtj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 20:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0jLoib/76z+a4Uh7/LsBpEPX0BL6i8Jdhu/hAQPYPrA=;
+        b=O/DCTkUDdY+wbbpdsZYAXMEMVdAJtjxZHI7FGfZy0aB/PXCqJ1F5avEAZlTw53jodY
+         UAT61lYIAqvWHL5heS7408Etm3ii9Wvj+Vdr/cn8IBElD5xnRuMrKYCAWAdiBcB2+KsW
+         z+n0QXKtjZR7K2mRFocZEZId79xyRFfMxZvbdbsyl1AYCk+JfaPW6FBmpGIZ+/J0/YFN
+         Uxu0xpFg/QWHTcxeCsQ0lUvm3AMS/urc4EmpPwXoTTL5BegQs0+JGHr9/oCJkALzUWju
+         0gxviEsWn/26DcxyxvqzYH0ci2D0msOynX/hoSZrk/tsTSNexN3rkQLPilyj3sZJLLco
+         6/pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0jLoib/76z+a4Uh7/LsBpEPX0BL6i8Jdhu/hAQPYPrA=;
+        b=gXkFQRnJHHSF75G+GtPYIbzemxv3UnEESoBI/bkYISyNjhRD5DB+VTY9IlXc5jbUjK
+         CF1EefMZJ/ru0GhbPocg+7HQL5qlT/VcYffBYro+qmV54T+nvAqWZR3TrXkR9wUxXhle
+         3vtFSZBODHhCSmIcDWdBJWNrLrRRb908tCb1s9ZGkxcoSDrPcpijwgZYINrIUDH/Dfbx
+         UxyXSFZ3A/7NzEcNjxdZRGG7QFnhCE3399BIUuiScOKUv2c6SEGBT/nhGUk3xL8KbXOa
+         k8qmpjAhi3t62Q29+TRzGuSjuufak6qd+2sID3LSJXgy0eGM2Kgt1HiYOQOqaZn8dwgC
+         ISjg==
+X-Gm-Message-State: APjAAAUbHLdNWeUS4meOOWZmEBw2W31fV1lZa9Gv6ePHCclfWjWZ5Ovp
+        S40P/nITMZdwA6sMf+dfs/RoeMUiv5hydrhkXdJwWg==
+X-Google-Smtp-Source: APXvYqzkRImLdcMS1R/EG/cD8XC3hs3YLweRnOSx3fVIiN/Nrm5xsEgOLDOVwZpEwVllOZkZpHdsZcxvp449KvZXL+g=
+X-Received: by 2002:a0c:c688:: with SMTP id d8mr1368862qvj.86.1562298263141;
+ Thu, 04 Jul 2019 20:44:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20190627095247.8792-1-chiu@endlessm.com> <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
+ <4c99866e-55b7-8852-c078-6b31dce21ee4@gmail.com> <CAD8Lp47mWH1-VsZaHr6_qmSU2EEOr9tQJ3CUhfi_JkQGgKpegA@mail.gmail.com>
+ <89dbfb9d-a31a-9ecb-66bd-42ac0fc49e70@gmail.com>
+In-Reply-To: <89dbfb9d-a31a-9ecb-66bd-42ac0fc49e70@gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 5 Jul 2019 11:44:12 +0800
+Message-ID: <CAD8Lp44HLPgOU+Z+w4Pq6ukLjZv2hM0=uBL7pWzQp+RsdRgG6Q@mail.gmail.com>
+Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     Chris Chiu <chiu@endlessm.com>, Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 3, 2019 at 8:59 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+> My point is this seems to be very dongle dependent :( We have to be
+> careful not breaking it for some users while fixing it for others.
 
+Do you still have your device?
 
-在 2019/6/28 下午8:30, Mauro Carvalho Chehab 写道:
-> The Kdump documentation describes procedures with admins use
-> in order to solve issues on their systems.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  Documentation/admin-guide/bug-hunting.rst            | 4 ++--
->  Documentation/admin-guide/index.rst                  | 1 +
->  Documentation/{ => admin-guide}/kdump/gdbmacros.txt  | 0
->  Documentation/{ => admin-guide}/kdump/index.rst      | 1 -
->  Documentation/{ => admin-guide}/kdump/kdump.rst      | 0
->  Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst | 0
+Once we get to the point when you are happy with Chris's two patches
+here on a code review level, we'll reach out to other driver
+contributors plus people who previously complained about these types
+of problems, and see if we can get some wider testing.
 
-I am not sure if it's convenience for people to have more levels in docs.
-
-But I guess, move archs into a Documentation/arch/ dir should be fine. like Documentation/arch/{x86,arm,arm64,ia64,m68k,s390,powerpc,...}
+Larry, do you have these devices, can you help with testing too?
 
 Thanks
-Alex
+Daniel
