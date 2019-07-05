@@ -2,193 +2,110 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DEFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F19C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF369218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63A8218BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mpEnVSRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfGEJdm (ORCPT
+        id S1728277AbfGEJeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:33:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:53937 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbfGEJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:33:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:33:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="167014252"
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga003.jf.intel.com with ESMTP; 05 Jul 2019 02:33:28 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH v2 net-next] net: stmmac: enable clause 45 mdio support
-Date:   Sat,  6 Jul 2019 01:33:27 +0800
-Message-Id: <1562348007-12263-1-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 5 Jul 2019 05:34:01 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35398 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfGEJeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:34:01 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a127so6736887oii.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k7JeaJZT9YLEJlXuKXiJcbNBJ0svwTrsoQVxCOdP3dc=;
+        b=mpEnVSRnmeyi+d9CXxwfr5p0t/UtYdJ8mHFSB1cfOuZbfj98idtIUKu9MXbcplNKVm
+         Mb5R7Wmsww3eqzijwq/psqqW3JWGMe3WRYcyQDusKrzaKjotLc/mXzF7sSq/HeMz751a
+         mgKUnUsKzIRJfTnMY3LKNeSUUjr6kyHsPFP3uL7+QPKuhWDonVt3mQk2sM7Ma4nH3g6o
+         CmEkCHrxBn5WM7nvbNXYn8sfPsEY49vZ6+BMTnmOL4ShhnMTfeU584fxtXeBHU5ck1/O
+         4xH/B0kknxH/8HHXnb3kqFSSmbuIakpGcyEa7crP9P+SiqcXM+By/0bDicdQOKYNtuup
+         EjCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k7JeaJZT9YLEJlXuKXiJcbNBJ0svwTrsoQVxCOdP3dc=;
+        b=o8ZTSIaOP9H9L+n/ZLH6pqxg91cWfB8D380ftVCOk3NDrbZVtfrQkDaHXqEhovLbEz
+         3ARHIYBkghYApHE0Kf9QKFLOKEYrpCu9WmQnIwb07R2rt6XKalaPjGjgX2iz3nYzGBBk
+         k1b0D/P034lU4M0PC4L730rrnINaMic+1C/H2y3zKILWjFsYdfljQM0dUoULLwPXlNEu
+         kqCD0sDXlW/BjvhBO1sWjwoZ502DIOcRDy0L8bwrNKT8hIR8hrmMWTSskGaF2IN4Y6Cu
+         jZYc96nFIbs4v4Mkeo0nyopCE9/A8LNFUxjCvEhY3U+3feOA2LYr5gWWqlS7optd/yg+
+         13gA==
+X-Gm-Message-State: APjAAAX+ixzrylImiqU9SSV2VBD9Ls0nYQlGlkDqTfJKDaQnkPfMW3L3
+        8L47bJG6HrA8tzqSgqloOD1GMEuhlssp1RO4scX62w==
+X-Google-Smtp-Source: APXvYqxqzTa/ARUTZ5WSojLnyWSxsdX9n6tGNrUqj5cuuqMryH0l/dHnjFBS3EoEGSLjPcrj4i0sVSlI+tSZEvL0CxU=
+X-Received: by 2002:aca:b58b:: with SMTP id e133mr1432573oif.147.1562319240426;
+ Fri, 05 Jul 2019 02:34:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190704153803.12739-1-bigeasy@linutronix.de> <20190704153803.12739-8-bigeasy@linutronix.de>
+In-Reply-To: <20190704153803.12739-8-bigeasy@linutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 5 Jul 2019 11:33:49 +0200
+Message-ID: <CAMpxmJXZy6S8OLb9iD6zfoFHnhZT4Nc0baxR1hH8YgphaEFOOw@mail.gmail.com>
+Subject: Re: [PATCH 7/7] gpiolib: Use spinlock_t instead of struct spinlock
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kweh Hock Leong <hock.leong.kweh@intel.com>
+czw., 4 lip 2019 o 17:38 Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> napisa=C5=82(a):
+>
+> For spinlocks the type spinlock_t should be used instead of "struct
+> spinlock".
+>
+> Use spinlock_t for spinlock's definition.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  drivers/gpio/gpiolib.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 7a65dad43932c..7c52c2442173e 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -210,7 +210,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_=
+sleep,
+>                                   struct gpio_array *array_info,
+>                                   unsigned long *value_bitmap);
+>
+> -extern struct spinlock gpio_lock;
+> +extern spinlock_t gpio_lock;
+>  extern struct list_head gpio_devices;
+>
+>  struct gpio_desc {
+> --
+> 2.20.1
+>
 
-DWMAC4 is capable to support clause 45 mdio communication.
-This patch enable the feature on stmmac_mdio_write() and
-stmmac_mdio_read() by following phy_write_mmd() and
-phy_read_mmd() mdiobus read write implementation format.
+Thanks for spotting that!
 
-Reviewed-by: Li, Yifan <yifan2.li@intel.com>
-Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 18cadf0b0d66..4304c1abc5d1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -24,11 +24,14 @@
- 
- #define MII_BUSY 0x00000001
- #define MII_WRITE 0x00000002
-+#define MII_DATA_MASK GENMASK(15, 0)
- 
- /* GMAC4 defines */
- #define MII_GMAC4_GOC_SHIFT		2
-+#define MII_GMAC4_REG_ADDR_SHIFT	16
- #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
- #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
-+#define MII_GMAC4_C45E			BIT(1)
- 
- /* XGMAC defines */
- #define MII_XGMAC_SADDR			BIT(18)
-@@ -155,22 +158,34 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
--	u32 v;
--	int data;
- 	u32 value = MII_BUSY;
-+	int data = 0;
-+	u32 v;
- 
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
- 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
- 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
- 		& priv->hw->mii.clk_csr_mask;
--	if (priv->plat->has_gmac4)
-+	if (priv->plat->has_gmac4) {
- 		value |= MII_GMAC4_READ;
-+		if (phyreg & MII_ADDR_C45) {
-+			value |= MII_GMAC4_C45E;
-+			value &= ~priv->hw->mii.reg_mask;
-+			value |= ((phyreg >> MII_DEVADDR_C45_SHIFT) <<
-+			       priv->hw->mii.reg_shift) &
-+			       priv->hw->mii.reg_mask;
-+
-+			data |= (phyreg & MII_REGADDR_C45_MASK) <<
-+				MII_GMAC4_REG_ADDR_SHIFT;
-+		}
-+	}
- 
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
- 			       100, 10000))
- 		return -EBUSY;
- 
-+	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
-@@ -178,7 +193,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 		return -EBUSY;
- 
- 	/* Read the data from the MII data register */
--	data = (int)readl(priv->ioaddr + mii_data);
-+	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
- 
- 	return data;
- }
-@@ -198,8 +213,9 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
--	u32 v;
- 	u32 value = MII_BUSY;
-+	int data = phydata;
-+	u32 v;
- 
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
-@@ -207,10 +223,21 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 
- 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
- 		& priv->hw->mii.clk_csr_mask;
--	if (priv->plat->has_gmac4)
-+	if (priv->plat->has_gmac4) {
- 		value |= MII_GMAC4_WRITE;
--	else
-+		if (phyreg & MII_ADDR_C45) {
-+			value |= MII_GMAC4_C45E;
-+			value &= ~priv->hw->mii.reg_mask;
-+			value |= ((phyreg >> MII_DEVADDR_C45_SHIFT) <<
-+			       priv->hw->mii.reg_shift) &
-+			       priv->hw->mii.reg_mask;
-+
-+			data |= (phyreg & MII_REGADDR_C45_MASK) <<
-+				MII_GMAC4_REG_ADDR_SHIFT;
-+		}
-+	} else {
- 		value |= MII_WRITE;
-+	}
- 
- 	/* Wait until any existing MII operation is complete */
- 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
-@@ -218,7 +245,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 		return -EBUSY;
- 
- 	/* Set the MII address register to write */
--	writel(phydata, priv->ioaddr + mii_data);
-+	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
- 	/* Wait until any existing MII operation is complete */
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index d0af7d37fdf9..1739c6dc470e 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -195,6 +195,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
-    IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
- #define MII_ADDR_C45 (1<<30)
-+#define MII_DEVADDR_C45_SHIFT	16
-+#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
- 
- struct device;
- struct phylink;
---
-Changelog v2
-*Merge c45_setup() into stmmac_mdio_read() and stmmac_mdio_write()
-to increase readability
-1.9.1
-
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
