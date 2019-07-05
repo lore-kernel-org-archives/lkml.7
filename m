@@ -2,104 +2,117 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D72C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14551C4649E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E0A21721
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A8F216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uMOv6YBQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WkkUt0Ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfGEQ3f (ORCPT
+        id S1727988AbfGEQal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:29:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57088 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfGEQ3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:29:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=/ataEGZSOL+nuZDsLx0axzYzlb6dLsffIscARtjpMwE=; b=uMOv6YBQleUehDC8E/SOVWjyJS
-        Wii3q3OARflhOtXeZa+aiBZYZK+aofCJl6HFvrF4fXPKzNO2RI3rHBsVZN2DygUnKXH0pQjhXKb6B
-        6+SZVAJblx5bQyYmySDtrtmBB79iDtH2r/i6MMz5WnuVYPCXnqkeR5UA2khh+47WzHiA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hjR5S-00035G-B0; Fri, 05 Jul 2019 18:29:26 +0200
-Date:   Fri, 5 Jul 2019 18:29:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
-Message-ID: <20190705162926.GM18473@lunn.ch>
-References: <20190703193724.246854-1-mka@chromium.org>
- <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
- <20190703213327.GH18473@lunn.ch>
- <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 5 Jul 2019 12:30:41 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:57202 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfGEQal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 12:30:41 -0400
+Received: by mail-yb1-f201.google.com with SMTP id w6so4581065ybe.23
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 09:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=HGTWQFDxYVMCMUJdNYUyNG/FKXXlxIV2zrqsyrgnOLI=;
+        b=WkkUt0LyKQsbN0xk0dY4mHPc1O2nPXbz7w2egGziV95fDI3u52YGBpBbdpMZwBKO3W
+         YS2xFk7//eojhE6wXj4v15i7Cj4aW7vrYtSE23eu+l4owgufAQL0XLoSCmgwTokx431L
+         2RyF/pKgRn7U1+2mD+hmWu+voWoEXttPq2PkZJGvgGNk7mIt1wT3MUliG2orf2xiWfCH
+         35TjLUvNDF4EzaIr7FgAleR1nZsR9+L6pB97hwmhJnsp47P2DPSS1jJoFKU2AlO8rRg2
+         cftwue0TmYGDKiQ47L32Ip0RIjt8L6xhGWiklPkU4I7aHVucarWEQBBxMt4SZzU2BSE/
+         ylQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=HGTWQFDxYVMCMUJdNYUyNG/FKXXlxIV2zrqsyrgnOLI=;
+        b=n7GqmqKzSgvzeVe4n7IlKUpru5g5PTjIl3zvRW1Q3BIN4nX/zDNnVrXinJStr/9+v1
+         WhyEZrRCqR1gg6V6ghyxOmWFR96V92g9PRmeNZ3tR343WXdibKGE0SLiVfXfspZoMDE4
+         HWuXFW9Mxt4hkx+WH5Vsqf2NhkEoAUzDxlG0OXSFgMV0vbuPhWwnI0reqmHfMjOTvSPy
+         a0uVQJ14AfQzXRNblYGx+F12GHYjjfltcu4A/ob91jPLc5TYGYqTRvZAoMzG1jzaIqQb
+         4rpMM1HZbAnRFOU7LuIy7lH2ATBI8egxYbnHQpD9T5gEQuLbNOB0B0UNSh+/Zgv5ToY5
+         ZdfQ==
+X-Gm-Message-State: APjAAAWsZON4Q1p2zHKaNw1D5IOaDcYyRjoGls0EPwwmAXWSliPtuccy
+        aCrqzitZg8/RZQSdWxqvaZYoIUYU4fg=
+X-Google-Smtp-Source: APXvYqwZ4OKhEzX5lujcHH6VcKquOZyDhPFBRHBTWl6GHZ0kfdO/wP1Swcx12SgftW+x+Rv7faRgM6uFwOc=
+X-Received: by 2002:a81:f012:: with SMTP id p18mr2538485ywm.375.1562344240222;
+ Fri, 05 Jul 2019 09:30:40 -0700 (PDT)
+Date:   Fri,  5 Jul 2019 18:30:21 +0200
+Message-Id: <20190705163021.142924-1-rburny@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v2] fs: Fix the default values of i_uid/i_gid on /proc/sys inodes.
+From:   Radoslaw Burny <rburny@google.com>
+To:     "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Seth Forshee <seth.forshee@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jsperbeck@google.com, Radoslaw Burny <rburny@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:17:16AM -0600, Rob Herring wrote:
-> On Wed, Jul 3, 2019 at 3:33 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > I think if we're going to have custom properties for phys, we should
-> > > have a compatible string to at least validate whether the custom
-> > > properties are even valid for the node.
-> >
-> > Hi Rob
-> >
-> > What happens with other enumerable busses where a compatible string is
-> > not used?
-> 
-> We usually have a compatible. USB and PCI both do. Sometimes it is a
-> defined format based on VID/PID.
+This also fixes a problem where, in a user namespace without root user
+mapping, it is not possible to write to /proc/sys/kernel/shmmax.
 
-Hi Rob
+The problem was introduced by the combination of the two commits:
+* 81754357770ebd900801231e7bc8d151ddc00498: fs: Update
+  i_[ug]id_(read|write) to translate relative to s_user_ns
+    - this caused the kernel to write INVALID_[UG]ID to i_uid/i_gid
+    members of /proc/sys inodes if a containing userns does not have
+    entries for root in the uid/gid_map.
+* 0bd23d09b874e53bd1a2fe2296030aa2720d7b08: vfs: Don't modify inodes
+  with a uid or gid unknown to the vfs
+    - changed the kernel to prevent opens for write if the i_uid/i_gid
+    field in the inode is invalid
 
-Is it defined what to do with this compatible? Just totally ignore it?
-Validate it against the hardware and warning if it is wrong? Force
-load the driver that implements the compatible, even thought bus
-enumeration says it is the wrong driver?
+This commit fixes the issue by defaulting i_uid/i_gid to
+GLOBAL_ROOT_UID/GID. Note that these values are not used for /proc/sys
+access checks, so the change does not otherwise affect /proc semantics.
 
-> > The Ethernet PHY subsystem will ignore the compatible string and load
-> > the driver which fits the enumeration data. Using the compatible
-> > string only to get the right YAML validator seems wrong. I would
-> > prefer adding some other property with a clear name indicates its is
-> > selecting the validator, and has nothing to do with loading the
-> > correct driver. And it can then be used as well for USB and PCI
-> > devices etc.
-> 
-> Just because Linux happens to not use compatible really has nothing to
-> do with whether or not the nodes should have a compatible. What does
-> FreeBSD want? U-boot?
-> 
-> I don't follow how adding a validate property would help. It would
-> need to be 'validate-node-as-a-realtek-phy'.
+Tested: Used a repro program that creates a user namespace without any
+mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
+Before the change, it shows the overflow uid, with the change it's 0.
 
-This makes it clear it is all about validating the DT, and nothing
-about the actual running hardware. What i don't really want to see is
-the poorly defined situation that DT contains a compatible string, but
-we have no idea what it is actually used for. See the question above.
+Signed-off-by: Radoslaw Burny <rburny@google.com>
+---
+Changelog since v1:
+- Updated the commit title and description.
 
-     Andrew
+ fs/proc/proc_sysctl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index c74570736b24..36ad1b0d6259 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -499,6 +499,10 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+ 
+ 	if (root->set_ownership)
+ 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
++	else {
++		inode->i_uid = GLOBAL_ROOT_UID;
++		inode->i_gid = GLOBAL_ROOT_GID;
++	}
+ 
+ 	return inode;
+ }
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
