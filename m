@@ -2,133 +2,205 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D28C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DCCC0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24F520B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/4eqnPX"
+	by mail.kernel.org (Postfix) with ESMTP id 9BEA321852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfGECTS (ORCPT
+        id S1727516AbfGECYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 22:19:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37245 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGECTS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 22:19:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so11691468iok.4;
-        Thu, 04 Jul 2019 19:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qk2//h2D34hxgiSXW2dV6ayNgCS4DN9Pcd0bjNc8T14=;
-        b=k/4eqnPXmvuJt4S26AnW4sZ9spsOUER10IC3IAOmmIe/lkWqvSTSB7mFLcxFoxl+OI
-         hEatzLQM99Q/U0verRfdZRXYMCE0E041igoz+u78i+RA7szMvLxuRp8E8zcnGkyKOioK
-         PxnX8YDbeJ7lETII83tfsmexFKsCYb9GAHLwN3hKR/xVQSfRk700JKPxp9MvGbmWDx/v
-         hx+imqPwvHAggwi2mBWeNwzgJPrwpghzPqaiLT88uxM0IpIQrdEi2G7K4/Ql/ubKXfn5
-         yFCes3LmCPwDgJeY4X7hYVEWLb5a29FVu306GYMGTLKXg8l2Np7VgkMmCDCEOE1p23cZ
-         0+qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qk2//h2D34hxgiSXW2dV6ayNgCS4DN9Pcd0bjNc8T14=;
-        b=EvvEjatB5wI2Jnobm2xPz1yhhdzmbimm5Yp488+V9950PPv+crr0C37++fw1k7YCeE
-         ueTOFkBE1sDOaFI+zcI+fsWWk+rBidydl4d/KlUYqnS8mRaE2S0EzjlJSC64SPZZkeN6
-         4Vf7WGGWx8vzvXc/7bRJGezkEmUXL6903T0dNQgt0Z78eHY3Jo9dVmjoS3R+s8YFn43Q
-         WhuPVI44bj/KbEZk6fYsklE2WnBHa7dBMBSPkBBpnPAeYkgR1D7f6QtWAU5ZDugmasoy
-         ibVjajxB9hcydA/Y5R2cA0DfZb1gRtMuk6s4wb6ERijAHB4L5KKFeemHKxo2Yz1oAe5o
-         OazA==
-X-Gm-Message-State: APjAAAX36Y5XISMTpimg4A0XPYuHKsP457t0sQJkAgtLNs0+hhuvDaih
-        agz0Iz5w+DktqcdJu/S9+1SGYzmpLAEdOP9TVXUXxf2B
-X-Google-Smtp-Source: APXvYqyuVXO6nUUU3KDsJ2cq/+XZFLt+HvdkmxPLjVip5YJIhgnjkHZTG5y0OqoSLAkSE44MVLIgaD3LZeXZNm+LAwI=
-X-Received: by 2002:a5d:968b:: with SMTP id m11mr1472848ion.16.1562293157370;
- Thu, 04 Jul 2019 19:19:17 -0700 (PDT)
+        Thu, 4 Jul 2019 22:24:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:3030 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbfGECYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 22:24:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 19:24:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,453,1557212400"; 
+   d="scan'208";a="191500375"
+Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.151])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Jul 2019 19:24:31 -0700
+Date:   Fri, 5 Jul 2019 10:23:07 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com
+Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
+Message-ID: <20190705022307.GA8263@___>
+References: <20190703091339.1847-1-tiwei.bie@intel.com>
+ <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
+ <20190703115245.GA22374@___>
+ <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
+ <20190703130817.GA1978@___>
+ <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
+ <20190704062134.GA21116@___>
+ <c67f628f-e0c1-9a41-6c5d-b6bbda31467d@redhat.com>
+ <20190704070242.GA27369@___>
+ <513c62ba-3f44-f4cf-3b3d-e0e03b6a6de1@redhat.com>
 MIME-Version: 1.0
-References: <1561711763-24705-1-git-send-email-dag.moxnes@oracle.com>
-In-Reply-To: <1561711763-24705-1-git-send-email-dag.moxnes@oracle.com>
-From:   Parav Pandit <pandit.parav@gmail.com>
-Date:   Fri, 5 Jul 2019 07:49:06 +0530
-Message-ID: <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
-Subject: Re: [PATCH v2] RDMA/core: Fix race when resolving IP address
-To:     Dag Moxnes <dag.moxnes@oracle.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <513c62ba-3f44-f4cf-3b3d-e0e03b6a6de1@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 2:20 PM Dag Moxnes <dag.moxnes@oracle.com> wrote:
->
-> Use neighbour lock when copying MAC address from neighbour data struct
-> in dst_fetch_ha.
->
-> When not using the lock, it is possible for the function to race with
-> neigh_update, causing it to copy an invalid MAC address.
->
-> It is possible to provoke this error by calling rdma_resolve_addr in a
-> tight loop, while deleting the corresponding ARP entry in another tight
-> loop.
->
-> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
->
-> ---
-> v1 -> v2:
->    * Modified implementation to improve readability
-> ---
->  drivers/infiniband/core/addr.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/add=
-r.c
-> index 2f7d141598..51323ffbc5 100644
-> --- a/drivers/infiniband/core/addr.c
-> +++ b/drivers/infiniband/core/addr.c
-> @@ -333,11 +333,14 @@ static int dst_fetch_ha(const struct dst_entry *dst=
-,
->         if (!n)
->                 return -ENODATA;
->
-> -       if (!(n->nud_state & NUD_VALID)) {
-> +       read_lock_bh(&n->lock);
-> +       if (n->nud_state & NUD_VALID) {
-> +               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-> +               read_unlock_bh(&n->lock);
-> +       } else {
-> +               read_unlock_bh(&n->lock);
->                 neigh_event_send(n, NULL);
->                 ret =3D -ENODATA;
-> -       } else {
-> -               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
->         }
->
->         neigh_release(n);
-> --
-> 2.20.1
->
-Reviewed-by: Parav Pandit <parav@mellanox.com>
+On Fri, Jul 05, 2019 at 08:30:00AM +0800, Jason Wang wrote:
+> On 2019/7/4 下午3:02, Tiwei Bie wrote:
+> > On Thu, Jul 04, 2019 at 02:35:20PM +0800, Jason Wang wrote:
+> > > On 2019/7/4 下午2:21, Tiwei Bie wrote:
+> > > > On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
+> > > > > On 2019/7/3 下午9:08, Tiwei Bie wrote:
+> > > > > > On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
+> > > > > > > On 2019/7/3 下午7:52, Tiwei Bie wrote:
+> > > > > > > > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
+> > > > > > > > > On 2019/7/3 下午5:13, Tiwei Bie wrote:
+> > > > > > > > > > Details about this can be found here:
+> > > > > > > > > > 
+> > > > > > > > > > https://lwn.net/Articles/750770/
+> > > > > > > > > > 
+> > > > > > > > > > What's new in this version
+> > > > > > > > > > ==========================
+> > > > > > > > > > 
+> > > > > > > > > > A new VFIO device type is introduced - vfio-vhost. This addressed
+> > > > > > > > > > some comments from here:https://patchwork.ozlabs.org/cover/984763/
+> > > > > > > > > > 
+> > > > > > > > > > Below is the updated device interface:
+> > > > > > > > > > 
+> > > > > > > > > > Currently, there are two regions of this device: 1) CONFIG_REGION
+> > > > > > > > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
+> > > > > > > > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
+> > > > > > > > > > can be used to notify the device.
+> > > > > > > > > > 
+> > > > > > > > > > 1. CONFIG_REGION
+> > > > > > > > > > 
+> > > > > > > > > > The region described by CONFIG_REGION is the main control interface.
+> > > > > > > > > > Messages will be written to or read from this region.
+> > > > > > > > > > 
+> > > > > > > > > > The message type is determined by the `request` field in message
+> > > > > > > > > > header. The message size is encoded in the message header too.
+> > > > > > > > > > The message format looks like this:
+> > > > > > > > > > 
+> > > > > > > > > > struct vhost_vfio_op {
+> > > > > > > > > > 	__u64 request;
+> > > > > > > > > > 	__u32 flags;
+> > > > > > > > > > 	/* Flag values: */
+> > > > > > > > > >       #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
+> > > > > > > > > > 	__u32 size;
+> > > > > > > > > > 	union {
+> > > > > > > > > > 		__u64 u64;
+> > > > > > > > > > 		struct vhost_vring_state state;
+> > > > > > > > > > 		struct vhost_vring_addr addr;
+> > > > > > > > > > 	} payload;
+> > > > > > > > > > };
+> > > > > > > > > > 
+> > > > > > > > > > The existing vhost-kernel ioctl cmds are reused as the message
+> > > > > > > > > > requests in above structure.
+> > > > > > > > > Still a comments like V1. What's the advantage of inventing a new protocol?
+> > > > > > > > I'm trying to make it work in VFIO's way..
+> > > > > > > > 
+> > > > > > > > > I believe either of the following should be better:
+> > > > > > > > > 
+> > > > > > > > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
+> > > > > > > > > extend it with e.g notify region. The advantages is that all exist userspace
+> > > > > > > > > program could be reused without modification (or minimal modification). And
+> > > > > > > > > vhost API hides lots of details that is not necessary to be understood by
+> > > > > > > > > application (e.g in the case of container).
+> > > > > > > > Do you mean reusing vhost's ioctl on VFIO device fd directly,
+> > > > > > > > or introducing another mdev driver (i.e. vhost_mdev instead of
+> > > > > > > > using the existing vfio_mdev) for mdev device?
+> > > > > > > Can we simply add them into ioctl of mdev_parent_ops?
+> > > > > > Right, either way, these ioctls have to be and just need to be
+> > > > > > added in the ioctl of the mdev_parent_ops. But another thing we
+> > > > > > also need to consider is that which file descriptor the userspace
+> > > > > > will do the ioctl() on. So I'm wondering do you mean let the
+> > > > > > userspace do the ioctl() on the VFIO device fd of the mdev
+> > > > > > device?
+> > > > > > 
+> > > > > Yes.
+> > > > Got it! I'm not sure what's Alex opinion on this. If we all
+> > > > agree with this, I can do it in this way.
+> > > > 
+> > > > > Is there any other way btw?
+> > > > Just a quick thought.. Maybe totally a bad idea.
+> > > 
+> > > It's not for sure :)
+> > Thanks!
+> > 
+> > > 
+> > > >    I was thinking
+> > > > whether it would be odd to do non-VFIO's ioctls on VFIO's device
+> > > > fd. So I was wondering whether it's possible to allow binding
+> > > > another mdev driver (e.g. vhost_mdev) to the supported mdev
+> > > > devices. The new mdev driver, vhost_mdev, can provide similar
+> > > > ways to let userspace open the mdev device and do the vhost ioctls
+> > > > on it. To distinguish with the vfio_mdev compatible mdev devices,
+> > > > the device API of the new vhost_mdev compatible mdev devices
+> > > > might be e.g. "vhost-net" for net?
+> > > > 
+> > > > So in VFIO case, the device will be for passthru directly. And
+> > > > in VHOST case, the device can be used to accelerate the existing
+> > > > virtualized devices.
+> > > > 
+> > > > How do you think?
+> > > 
+> > > If my understanding is correct, there will be no VFIO ioctl if we go for
+> > > vhost_mdev?
+> > Yeah, exactly. If we go for vhost_mdev, we may have some vhost nodes
+> > in /dev similar to what /dev/vfio/* does to handle the $UUID and open
+> > the device (e.g. similar to VFIO_GROUP_GET_DEVICE_FD in VFIO). And
+> > to setup the device, we can try to reuse the ioctls of the existing
+> > kernel vhost as much as possible.
+> 
+> 
+> Interesting, actually, I've considered something similar. I think there
+> should be no issues other than DMA:
 
-A sample trace such as below in commit message would be good to have.
-Or the similar one that you noticed with ARP delete sequence.
+Yeah, that's something we need to optimize to make it more
+lightweight and efficient. How about allowing userspace to
+do map/unmap operations like what VFIO provides?
 
-neigh_changeaddr()
-  neigh_flush_dev()
-   n->nud_state =3D NUD_NOARP;
+> 
+> - Need to invent new API for DMA mapping other than SET_MEM_TABLE? (Which is
+> too heavyweight).
+> 
+> - Need to consider a way to co-work with both on chip IOMMU (your proposal
+> should be fine) and scalable IOV.
 
-Having some issues with office outlook, so replying via gmail.
+Maybe we can make it possible to let the parent device know
+the mappings (mapping events) if they need (it would be helpful
+for software-based device as well).
+
+Thanks,
+Tiwei
+
+> 
+> Thanks
+> 
+> 
+> > 
+> > Thanks,
+> > Tiwei
+> > 
+> > > Thanks
+> > > 
+> > > 
+> > > > Thanks,
+> > > > Tiwei
+> > > > > Thanks
+> > > > > 
