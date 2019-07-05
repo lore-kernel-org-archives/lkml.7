@@ -2,104 +2,101 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49338C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294E5C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E33B21852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Csg0RK3g"
+	by mail.kernel.org (Postfix) with ESMTP id ED9D621852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 00:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfGEAL1 (ORCPT
+        id S1727440AbfGEAQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 20:11:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35879 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbfGEAL1 (ORCPT
+        Thu, 4 Jul 2019 20:16:02 -0400
+Received: from smtprelay0248.hostedemail.com ([216.40.44.248]:38772 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726404AbfGEAQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 20:11:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w7so5972542oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 17:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=+KUa/pKnTzDUY8iKea0h5ooJheLbdX4Z7I3oB9ImT1k=;
-        b=Csg0RK3gwejbtYn9Bb96veoScBvqb+LsOvHsMSjOVUfAQG6kL/HEasbVW03BPfrMDM
-         ZeuMYi7iMCiXFYjKO7NNNvzX383rUBtSgQ7jb3iBxp0V4Cn64eMPQKIQJKzoxBXC7f46
-         yq3qgX3oNi7KDe8mpw9URsinu3RdiHrxyNpf36txzLyNzX72aa5f/LyG71Vb4G3+ESVY
-         3yFaL+JvV4wjgoWuBheorPaqmTVmjQj7WTkiaYl9yFoJInHv5PTAvYtbG+mrvIC1dO3T
-         8UwG5AR2e7+7Lz/RRbqy9+ghEdHrOmb7R1lfER1Z2hAF8juynW3DZExwrjdWUIE5cTZd
-         5pgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=+KUa/pKnTzDUY8iKea0h5ooJheLbdX4Z7I3oB9ImT1k=;
-        b=Z0Buj4IvR4GR9Pq3dURCJzWtpXGy4qrznN3vPMIzBjJt9pJWx0bOaTT2D6niEHbrlG
-         JJKCHaD+0Nzg7B8I7iGoz3nZoUpi/h+2wIcy74kEYPKu2hdBQFYBfOMaqx+/kE5LVdNS
-         Cn6foWxg/1JD8YhqpNPH7X3h0d1jt3nKmZBU/ypBXP3rb0OKB/geMbuRz8Bc2JNRO0/X
-         dAJ4nIcZNd8rJ9MzpDzvJFPrfbC3lNAYH8gxMwSdVmB9Zv3olMPyETdLCbJxL0yOACZE
-         pEjhVU9HSjSPP4RqfaI7hrKYO4hvLkotAy/yNQHXFBOEfA65S/oK8DE7dD6tgPuJmTUQ
-         gzsw==
-X-Gm-Message-State: APjAAAWh9u+C0o00ERdRirpuHXNS4hiFCr9htSrvNXa2t/MCcO7mIkOk
-        qYDU/4ciFJ0EiDX/zklhNtutVJRbbgTD5trBMmWUgg==
-X-Google-Smtp-Source: APXvYqzlFmpt61vIj6L8l0EpOJd4L4Dl2URxNXWw5ml57YfYsXHkMntq9TesGECcSO3CKqdxrpnlkYkyniCr9rxgMas=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr461198oih.73.1562285486732;
- Thu, 04 Jul 2019 17:11:26 -0700 (PDT)
+        Thu, 4 Jul 2019 20:16:02 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 6C2E7181D3377;
+        Fri,  5 Jul 2019 00:16:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lace17_6e747616f8753
+X-Filterd-Recvd-Size: 2600
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  5 Jul 2019 00:15:58 +0000 (UTC)
+Message-ID: <d1524130f91d7cfd61bc736623409693d2895f57.camel@perches.com>
+Subject: [RFC PATCH] string.h: Add stracpy/stracpy_pad (was: Re: [PATCH]
+ checkpatch: Added warnings in favor of strscpy().)
+From:   Joe Perches <joe@perches.com>
+To:     Nitin Gote <nitin.r.gote@intel.com>, akpm@linux-foundation.org
+Cc:     corbet@lwn.net, apw@canonical.com, keescook@chromium.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Date:   Thu, 04 Jul 2019 17:15:57 -0700
+In-Reply-To: <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
+References: <1562219683-15474-1-git-send-email-nitin.r.gote@intel.com>
+         <f6a4c2b601bb59179cb2e3b8f4d836a1c11379a3.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 4 Jul 2019 17:11:16 -0700
-Message-ID: <CAPcyv4hs6bncxc3_vOKYYc-XdL+-dv_dJkmV8EduRrshv3rBgQ@mail.gmail.com>
-Subject: [GIT PULL] dax fix for v5.2-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, please pull from:
+On Thu, 2019-07-04 at 13:46 -0700, Joe Perches wrote:
+> On Thu, 2019-07-04 at 11:24 +0530, Nitin Gote wrote:
+> > Added warnings in checkpatch.pl script to :
+> > 
+> > 1. Deprecate strcpy() in favor of strscpy().
+> > 2. Deprecate strlcpy() in favor of strscpy().
+> > 3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+> > 
+> > Updated strncpy() section in Documentation/process/deprecated.rst
+> > to cover strscpy_pad() case.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/dax-fix-5.2-rc8
+[]
 
-...to receive a single dax fix that has been soaking awaiting other
-fixes under discussion to join it. As it is getting late in the cycle
-lets proceed with this fix and save follow-on changes for
-post-v5.3-rc1.
+I sent a patch series for some strscpy/strlcpy misuses.
 
+How about adding a macro helper to avoid the misuses like:
 ---
+ include/linux/string.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 4deb11f7976b..ef01bd6f19df 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
+ /* Wraps calls to strscpy()/memset(), no arch specific code required */
+ ssize_t strscpy_pad(char *dest, const char *src, size_t count);
+ 
++#define stracpy(to, from)					\
++({								\
++	size_t size = ARRAY_SIZE(to);				\
++	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
++								\
++	strscpy(to, from, size);				\
++})
++
++#define stracpy_pad(to, from)					\
++({								\
++	size_t size = ARRAY_SIZE(to);				\
++	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
++								\
++	strscpy_pad(to, from, size);				\
++})
++
+ #ifndef __HAVE_ARCH_STRCAT
+ extern char * strcat(char *, const char *);
+ #endif
 
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-tags/dax-fix-5.2-rc8
-
-for you to fetch changes up to 1571c029a2ff289683ddb0a32253850363bcb8a7:
-
-  dax: Fix xarray entry association for mixed mappings (2019-06-06
-22:18:49 -0700)
-
-----------------------------------------------------------------
-dax fix v5.2-rc8
-
-- Ensure proper accounting page->index and page->mapping, needed for
-  memory error handling, when downgrading a PMD mapping/entry to PTE size.
-
-----------------------------------------------------------------
-Jan Kara (1):
-      dax: Fix xarray entry association for mixed mappings
-
- fs/dax.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
