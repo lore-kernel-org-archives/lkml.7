@@ -2,113 +2,193 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CF7C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DEFC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDF1218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bcXmhFmt"
+	by mail.kernel.org (Postfix) with ESMTP id CF369218BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfGEJdY (ORCPT
+        id S1728261AbfGEJdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:33:24 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40439 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfGEJdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:33:24 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so8445572otl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HROQIJhsY4TQuJdqnfvqx5TwTIiaIY9u98AqrzcTE1U=;
-        b=bcXmhFmtX81Q+N9rH9dDCAKUMfDnSZyX8tMy4JwVU0I03xUNM4oWkTkS9xnhR5KGkA
-         GOEL35PULJqihGmen0bInboR/NNRs7FKMm8H8jxjc9RbPcEOykxXFZPxMKwBsyptaEF+
-         cyucE0b/7d6US6oV2mD0/EP+bXd23muODKzcU6U4dbJKcu9kJoHssSVBeLLElWjn88tJ
-         gFAlZkRMo4WThpBknpJ+KmKpDfH805IS5jRqRGDRIiM67O4hAGel/poQQKDv72w1g7Ui
-         uTzOUQ7GaKJE82xZtRq4D9/axEvuRRDfI3hGCqeMn+jCX+LXlewpOZLL+4/O6BdmKE+y
-         t9rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HROQIJhsY4TQuJdqnfvqx5TwTIiaIY9u98AqrzcTE1U=;
-        b=uW9xy6QtMXk0c0ekdlmWEJhqhrJF38xMfUHSYBG0BgTmZ4HQYL3JEy3QVXxzm8KXNY
-         OzQyQp801z7MW8zvFsroXItMFodC6V5YdtegdvfydLlFAtzC7xN2VZz7DpydrGI09i7e
-         pQaXGbH6PbXNHwpl7In+Jg6tAUvA1MRzMkmAC5SIcsKggIH9cgdSjVbJ9464YSG/l65e
-         msFwm5LQVodbgM6LpJiqoLvD9WD69cDnrn9w2bW/vy5aB6p/WMP2LcjfyAeQA460NDVl
-         AsIbDzbCBTPLWSNWQNmFn1KSLVnSjU5/8WSwZj9oCqmYUpr1kme1/UPrRx3QMFM/elOi
-         aQ0A==
-X-Gm-Message-State: APjAAAXxb0aK0RobG89g5r9CalQhHLmqOH8hpx8tm2oo3BEs3ka4Obqd
-        M8qnWJBycgBzqpF0zteIC9I1q6e1IE6KSlhX8gFwyA==
-X-Google-Smtp-Source: APXvYqw/93nr/E5l0p2Rqtw78pD8KO36CuASALI3gbDEnX3dng9qRsUPVaIkDy3GbV4sAr9h6a1SE2DYzahy++A3mqw=
-X-Received: by 2002:a9d:2969:: with SMTP id d96mr2138546otb.85.1562319203458;
- Fri, 05 Jul 2019 02:33:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190705093031.18182-1-michael.wu@vatics.com>
-In-Reply-To: <20190705093031.18182-1-michael.wu@vatics.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 5 Jul 2019 11:33:12 +0200
-Message-ID: <CAMpxmJUzaEREeUxCu2BCV12Huv7K=yeUSKntA5RGMfOQbnxaFg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-To:     Michael Wu <michael.wu@vatics.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mvp.kutali@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 5 Jul 2019 05:33:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53937 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727907AbfGEJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:33:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:33:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="167014252"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga003.jf.intel.com with ESMTP; 05 Jul 2019 02:33:28 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v2 net-next] net: stmmac: enable clause 45 mdio support
+Date:   Sat,  6 Jul 2019 01:33:27 +0800
+Message-Id: <1562348007-12263-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 5 lip 2019 o 11:30 Michael Wu <michael.wu@vatics.com> napisa=C5=82(a):
->
-> When a pin is active-low, logical trigger edge should be inverted
-> to match the same interrupt opportunity.
->
-> For example, a button pushed trigger falling edge in ACTIVE_HIGH
-> case; in ACTIVE_LOW case, the button pushed trigger rising edge.
-> For user space the IRQ requesting doesn't need to do any
-> modification except to configuring GPIOHANDLE_REQUEST_ACTIVE_LOW.
->
-> Signed-off-by: Michael Wu <michael.wu@vatics.com>
-> ---
->  drivers/gpio/gpiolib.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e013d417a936..b98466a05091 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev=
-, void __user *ip)
->         }
->
->         if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_RISING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
->         if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_FALLING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQ_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
->         irqflags |=3D IRQF_ONESHOT;
->
->         INIT_KFIFO(le->events);
-> --
-> 2.17.1
->
+From: Kweh Hock Leong <hock.leong.kweh@intel.com>
 
-Is this something that causes a bug in user-space? Any scenario to reproduc=
-e it?
+DWMAC4 is capable to support clause 45 mdio communication.
+This patch enable the feature on stmmac_mdio_write() and
+stmmac_mdio_read() by following phy_write_mmd() and
+phy_read_mmd() mdiobus read write implementation format.
 
-Bart
+Reviewed-by: Li, Yifan <yifan2.li@intel.com>
+Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 18cadf0b0d66..4304c1abc5d1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -24,11 +24,14 @@
+ 
+ #define MII_BUSY 0x00000001
+ #define MII_WRITE 0x00000002
++#define MII_DATA_MASK GENMASK(15, 0)
+ 
+ /* GMAC4 defines */
+ #define MII_GMAC4_GOC_SHIFT		2
++#define MII_GMAC4_REG_ADDR_SHIFT	16
+ #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
+ #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
++#define MII_GMAC4_C45E			BIT(1)
+ 
+ /* XGMAC defines */
+ #define MII_XGMAC_SADDR			BIT(18)
+@@ -155,22 +158,34 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+-	u32 v;
+-	int data;
+ 	u32 value = MII_BUSY;
++	int data = 0;
++	u32 v;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_READ;
++		if (phyreg & MII_ADDR_C45) {
++			value |= MII_GMAC4_C45E;
++			value &= ~priv->hw->mii.reg_mask;
++			value |= ((phyreg >> MII_DEVADDR_C45_SHIFT) <<
++			       priv->hw->mii.reg_shift) &
++			       priv->hw->mii.reg_mask;
++
++			data |= (phyreg & MII_REGADDR_C45_MASK) <<
++				MII_GMAC4_REG_ADDR_SHIFT;
++		}
++	}
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+ 			       100, 10000))
+ 		return -EBUSY;
+ 
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -178,7 +193,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 		return -EBUSY;
+ 
+ 	/* Read the data from the MII data register */
+-	data = (int)readl(priv->ioaddr + mii_data);
++	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+ 
+ 	return data;
+ }
+@@ -198,8 +213,9 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+-	u32 v;
+ 	u32 value = MII_BUSY;
++	int data = phydata;
++	u32 v;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+@@ -207,10 +223,21 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_WRITE;
+-	else
++		if (phyreg & MII_ADDR_C45) {
++			value |= MII_GMAC4_C45E;
++			value &= ~priv->hw->mii.reg_mask;
++			value |= ((phyreg >> MII_DEVADDR_C45_SHIFT) <<
++			       priv->hw->mii.reg_shift) &
++			       priv->hw->mii.reg_mask;
++
++			data |= (phyreg & MII_REGADDR_C45_MASK) <<
++				MII_GMAC4_REG_ADDR_SHIFT;
++		}
++	} else {
+ 		value |= MII_WRITE;
++	}
+ 
+ 	/* Wait until any existing MII operation is complete */
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -218,7 +245,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 		return -EBUSY;
+ 
+ 	/* Set the MII address register to write */
+-	writel(phydata, priv->ioaddr + mii_data);
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	/* Wait until any existing MII operation is complete */
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index d0af7d37fdf9..1739c6dc470e 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -195,6 +195,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
+    IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
+ #define MII_ADDR_C45 (1<<30)
++#define MII_DEVADDR_C45_SHIFT	16
++#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+ 
+ struct device;
+ struct phylink;
+--
+Changelog v2
+*Merge c45_setup() into stmmac_mdio_read() and stmmac_mdio_write()
+to increase readability
+1.9.1
+
