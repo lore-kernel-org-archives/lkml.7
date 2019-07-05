@@ -2,193 +2,155 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0BDC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272E6C468AA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29F42133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:00:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aL5g/htZ"
+	by mail.kernel.org (Postfix) with ESMTP id 03DAD2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562356944;
+	bh=cy8/U5u2Flg5d2wkRH7K8wVgxpZSuGjyuvQ8HPLjC7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0W1TPGFdYVwuj2G2RiSV23N5mplEIZK0HXxnKxOfc8SDzoYqcoFPP8SMTtiRrEQEH
+	 XFEVPdAh1oVCub7T9qrUIfx4WOVvpYiFg+V6oqwUq8yQhuPxwhT9ZQKdKJG3MHGVtc
+	 J2GvyV35eduVQYiu225lp3lG+nun/aB44bLpBXHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfGEUAH (ORCPT
+        id S1727482AbfGEUCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:00:07 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36331 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfGEUAH (ORCPT
+        Fri, 5 Jul 2019 16:02:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43740 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfGEUCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:00:07 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so5054324plt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 13:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OPAXAnhkT4uZSctQZWV1C46mb9I9NT/kztcwNDiggR4=;
-        b=aL5g/htZRlrExROSvMSyc7IoQawmcZBzqQ1QXr+jI6w+an8O5JeLOtzhgx0liosdmZ
-         ZqMaJgfyMR7GUq+OQwh9jmlw5EBkSG3WmUMVQ8vXqg9U/CleOoQk/r0/qXq+tXDQx1zJ
-         c40N8zuZhbkyznqguXC2dtjemBs0gvTgNR60M=
+        Fri, 5 Jul 2019 16:02:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so4719404pgv.10;
+        Fri, 05 Jul 2019 13:02:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OPAXAnhkT4uZSctQZWV1C46mb9I9NT/kztcwNDiggR4=;
-        b=O2cgHOfvwdrT0fy1flP7sVUw/rTW0Ra25gUJCj4HzPQR8+FvAxF15TES/eqJV9fz+Y
-         pBKrzpB89QFUjD/GQpdyTMQrOj8YLRrsKJjsr4/qx0BM2DqDfayfr4mvouwom+t6quWZ
-         xGKhlEB5ftEmNfYzbSvh3el7LgzVlKlu8SAtCrwUJzj9hVNNWhopjZ0LdzHtUSFkSdey
-         mwUwA80zlgAHHZz+rpVex8oGu6AWaDY62CedOjBdvtcqfkrTUNyW4NmW5LuTCeCEvfEk
-         Ke8Z2ItUy+ragCcpt+J0goeBv9ueRyNKnkEiACpiK30m54N2Ah6bEzSsLr4UxR5juE+3
-         eCxQ==
-X-Gm-Message-State: APjAAAVS9s/ZnzOA7UnaCDd4MZpocbUYpmLtkhCbYhVtHitU91H7JhuC
-        M6qWrRDUhmQ4seyDEXTFlaEnzw2Wef4=
-X-Google-Smtp-Source: APXvYqxW6nCn29Nvym1Fo35HLgteQzwq1tpxscj8RCQfX4kSwdj2jd1uyXxG1H60u35FxFcc89ZY+w==
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr7127331pll.298.1562356806046;
-        Fri, 05 Jul 2019 13:00:06 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d16sm3195281pgb.4.2019.07.05.13.00.04
+        bh=r8Uj2TrxMvX9FMZc0qIgrfsrFsHthGELHTkxlQxnkf8=;
+        b=PWCtZQW6fTr0iUKXggptIBXHYHWR5oFCYhzHDo3JJn4dwDQXOCdDdHPnHSB/ix1mdZ
+         l0lKI6YaHLLwLYZxCAsglZ8p8f6pyeFGophvT5g+mB5vRAIVKxQO6/tYzaZFhkslGX+k
+         LIFJLJXU0/hQ75DBw5WovnLnDdxQu7DwCcO/lF0vL/dg6P6Vm/5M9P//c/timnb7UOX/
+         2GPC30kW2X788fZ86abTe/uViE/eeRo6cIR5Jd8hxUU2f1wO+i4m3DYUIeTMpYGbNTeF
+         TBaEXWhFfPNkHDfNGwFpIzSGmvTCdg7Fww7PUNlsjo+UFH2YbYe+hCjzzaMCC/p/RK5r
+         xW1A==
+X-Gm-Message-State: APjAAAUfXw9RURb8syL8UagSBUdKlcf3fzvBiJN+7gsvyfC14Xf/ekV0
+        aJvXhhx+0bVQoaxB4tguYPA=
+X-Google-Smtp-Source: APXvYqyJG3mTorxX3XFRdW7UrvsJCMFWBq38zgWQTER5lzb182pfPi87fC1YdCbeF+ZDpqMCrnIggQ==
+X-Received: by 2002:a65:4507:: with SMTP id n7mr7021343pgq.86.1562356940742;
+        Fri, 05 Jul 2019 13:02:20 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id l4sm6256039pff.50.2019.07.05.13.02.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 13:00:05 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 16:00:03 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH] rcuperf: Make rcuperf kernel test more robust for
- !expedited mode
-Message-ID: <20190705200003.GB134527@google.com>
-References: <20190704043431.208689-1-joel@joelfernandes.org>
- <20190704174044.GK26519@linux.ibm.com>
- <20190705035231.GA31088@X58A-UD3R>
- <20190705122450.GA82532@google.com>
- <20190705150932.GO26519@linux.ibm.com>
+        Fri, 05 Jul 2019 13:02:19 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BA9A640190; Fri,  5 Jul 2019 20:02:18 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 20:02:18 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Radoslaw Burny <rburny@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jsperbeck@google.com
+Subject: Re: [PATCH v2] fs: Fix the default values of i_uid/i_gid on
+ /proc/sys inodes.
+Message-ID: <20190705200218.GZ19023@42.do-not-panic.com>
+References: <20190705163021.142924-1-rburny@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190705150932.GO26519@linux.ibm.com>
+In-Reply-To: <20190705163021.142924-1-rburny@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 08:09:32AM -0700, Paul E. McKenney wrote:
-> On Fri, Jul 05, 2019 at 08:24:50AM -0400, Joel Fernandes wrote:
-> > On Fri, Jul 05, 2019 at 12:52:31PM +0900, Byungchul Park wrote:
-> > > On Thu, Jul 04, 2019 at 10:40:44AM -0700, Paul E. McKenney wrote:
-> > > > On Thu, Jul 04, 2019 at 12:34:30AM -0400, Joel Fernandes (Google) wrote:
-> > > > > It is possible that the rcuperf kernel test runs concurrently with init
-> > > > > starting up.  During this time, the system is running all grace periods
-> > > > > as expedited.  However, rcuperf can also be run for normal GP tests.
-> > > > > Right now, it depends on a holdoff time before starting the test to
-> > > > > ensure grace periods start later. This works fine with the default
-> > > > > holdoff time however it is not robust in situations where init takes
-> > > > > greater than the holdoff time to finish running. Or, as in my case:
-> > > > > 
-> > > > > I modified the rcuperf test locally to also run a thread that did
-> > > > > preempt disable/enable in a loop. This had the effect of slowing down
-> > > > > init. The end result was that the "batches:" counter in rcuperf was 0
-> > > > > causing a division by 0 error in the results. This counter was 0 because
-> > > > > only expedited GPs seem to happen, not normal ones which led to the
-> > > > > rcu_state.gp_seq counter remaining constant across grace periods which
-> > > > > unexpectedly happen to be expedited. The system was running expedited
-> > > > > RCU all the time because rcu_unexpedited_gp() would not have run yet
-> > > > > from init.  In other words, the test would concurrently with init
-> > > > > booting in expedited GP mode.
-> > > > > 
-> > > > > To fix this properly, let us check if system_state if SYSTEM_RUNNING
-> > > > > is set before starting the test. The system_state approximately aligns
-> > > 
-> > > Just minor typo..
-> > > 
-> > > To fix this properly, let us check if system_state if SYSTEM_RUNNING
-> > > is set before starting the test. ...
-> > > 
-> > > Should be
-> > > 
-> > > To fix this properly, let us check if system_state is set to
-> > > SYSTEM_RUNNING before starting the test. ...
-> > 
-> > That's a fair point. I wonder if Paul already fixed it up in his tree,
-> > however I am happy to resend if he hasn't. Paul, how would you like to handle
-> > this commit log nit?
-> > 
-> > it is just 'if ..' to 'is SYSTEM_RUNNING'
-> 
-> It now reads as follows:
-> 
-> 	To fix this properly, this commit waits until system_state is
-> 	set to SYSTEM_RUNNING before starting the test.  This change is
-> 	made just before kernel_init() invokes rcu_end_inkernel_boot(),
-> 	and this latter is what turns off boot-time expediting of RCU
-> 	grace periods.
 
-Ok, looks good to me, thanks.
+Please re-state the main fix in the commit log, not just the subject.
 
-And for below patch,
+Also, this does not explain why the current values are and the impact to
+systems / users. This would help in determine and evaluating if this
+deserves to be a stable fix.
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Fri, Jul 05, 2019 at 06:30:21PM +0200, Radoslaw Burny wrote:
+> This also fixes a problem where, in a user namespace without root user
+> mapping, it is not possible to write to /proc/sys/kernel/shmmax.
 
+This does not explain why that should be possible and what impact this
+limitation has.
 
-> I dropped the last paragraph about late_initcall().  And I suspect that
-> the last clause from rcu_gp_is_expedited() can be dropped:
+> The problem was introduced by the combination of the two commits:
+> * 81754357770ebd900801231e7bc8d151ddc00498: fs: Update
+>   i_[ug]id_(read|write) to translate relative to s_user_ns
+>     - this caused the kernel to write INVALID_[UG]ID to i_uid/i_gid
+>     members of /proc/sys inodes if a containing userns does not have
+>     entries for root in the uid/gid_map.
+This is 2014 commit merged as of v4.8.
+
+> * 0bd23d09b874e53bd1a2fe2296030aa2720d7b08: vfs: Don't modify inodes
+>   with a uid or gid unknown to the vfs
+>     - changed the kernel to prevent opens for write if the i_uid/i_gid
+>     field in the inode is invalid
+
+This is a 2016 commit merged as of v4.8 as well...
+
+So regardless of the dates of the commits, are you saying this is a
+regression you can confirm did not exist prior to v4.8? Did you test
+v4.7 to confirm?
+
+> This commit fixes the issue by defaulting i_uid/i_gid to
+> GLOBAL_ROOT_UID/GID.
+
+Why is this right?
+
+> Note that these values are not used for /proc/sys
+> access checks, so the change does not otherwise affect /proc semantics.
 > 
-> bool rcu_gp_is_expedited(void)
-> {
-> 	return rcu_expedited || atomic_read(&rcu_expedited_nesting) ||
-> 	       rcu_scheduler_active == RCU_SCHEDULER_INIT;
-> }
+> Tested: Used a repro program that creates a user namespace without any
+> mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
+> Before the change, it shows the overflow uid, with the change it's 0.
+
+Why is the overflow uid bad for user experience? Did you test prior to
+v4.8, ie on v4.7 to confirm this is indeed a regression?
+
+You'd want then to also ammend in the commit log a Fixes:  tag with both
+commits listed. If this is a stable fix (criteria yet to be determined),
+then we'd need a stable tag.
+
+  Luis
+
+> Signed-off-by: Radoslaw Burny <rburny@google.com>
+> ---
+> Changelog since v1:
+> - Updated the commit title and description.
 > 
-> This is because rcu_expedited_nesting is initialized to 1, and is
-> decremented in rcu_end_inkernel_boot(), which is called long after
-> rcu_scheduler_active has been set to RCU_SCHEDULER_RUNNING, which
-> happens at core_initcall() time.  So if the last clause says "true",
-> so does the second-to-last clause.
+>  fs/proc/proc_sysctl.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> The similar check in rcu_gp_is_normal() is still need, however, to allow
-> the power-management subsystem to invoke synchronize_rcu() just after
-> the scheduler has been initialized, but before RCU is aware of this.
-> 
-> So, how about the commit shown below?
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 1f7e72efe3c761c2b34da7b59e01ad69c657db10
-> Author: Paul E. McKenney <paulmck@linux.ibm.com>
-> Date:   Fri Jul 5 08:05:10 2019 -0700
-> 
->     rcu: Remove redundant "if" condition from rcu_gp_is_expedited()
->     
->     Because rcu_expedited_nesting is initialized to 1 and not decremented
->     until just before init is spawned, rcu_expedited_nesting is guaranteed
->     to be non-zero whenever rcu_scheduler_active == RCU_SCHEDULER_INIT.
->     This commit therefore removes this redundant "if" equality test.
->     
->     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> 
-> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-> index 249517058b13..64e9cc8609e7 100644
-> --- a/kernel/rcu/update.c
-> +++ b/kernel/rcu/update.c
-> @@ -136,8 +136,7 @@ static atomic_t rcu_expedited_nesting = ATOMIC_INIT(1);
->   */
->  bool rcu_gp_is_expedited(void)
->  {
-> -	return rcu_expedited || atomic_read(&rcu_expedited_nesting) ||
-> -	       rcu_scheduler_active == RCU_SCHEDULER_INIT;
-> +	return rcu_expedited || atomic_read(&rcu_expedited_nesting);
->  }
->  EXPORT_SYMBOL_GPL(rcu_gp_is_expedited);
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index c74570736b24..36ad1b0d6259 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -499,6 +499,10 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
 >  
+>  	if (root->set_ownership)
+>  		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
+> +	else {
+> +		inode->i_uid = GLOBAL_ROOT_UID;
+> +		inode->i_gid = GLOBAL_ROOT_GID;
+> +	}
+>  
+>  	return inode;
+>  }
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
 > 
