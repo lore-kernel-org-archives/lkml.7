@@ -1,132 +1,152 @@
 Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B1FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB0BC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0990721738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mJAWtXLu"
+	by mail.kernel.org (Postfix) with ESMTP id A1A37218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562316557;
+	bh=vfS7nPLg6sCrL2B+rt8skra+G0NbSflpV/OTg6/QuYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TKEjpEY0hB4BD7Y2LuRye+OHGfxCZilrbTdenUAqiGAbOzdi/qyP7dbRk492ixfBN
+	 q/9367xgrEIOl6TQspKPzN3U2JW5wZoIOrT6KXvjmuKmNHeAqSl9LBSJ1pcasV0JO0
+	 6E3eefwIRuusjdB2znbnfqsIci9sJtX3XiqvF6FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfGEItG (ORCPT
+        id S1728053AbfGEItQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:49:06 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8397 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfGEItG (ORCPT
+        Fri, 5 Jul 2019 04:49:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54087 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfGEItP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:49:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1f0f050001>; Fri, 05 Jul 2019 01:49:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Jul 2019 01:49:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Jul 2019 01:49:05 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 08:49:05 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 5 Jul 2019 08:49:04 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.11.221]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d1f0eff0002>; Fri, 05 Jul 2019 01:49:04 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] PCI: tegra: Fix support for GPIO based PERST#
-Date:   Fri, 5 Jul 2019 09:48:50 +0100
-Message-ID: <20190705084850.30777-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Fri, 5 Jul 2019 04:49:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x15so7996929wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 01:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Lc4vFjLeaNpLcmbkEFfbqTJWOFEN/FjHGXndTctO/zI=;
+        b=BVjqtNL/NGugxe7A7Bz+NjfTLwK7CGKp4EZlZ4i34oBk8OVulQiD/+kEN3b/XtSQCA
+         JtKBFXh6BLGNU2FGRmc4i5IeK/1BAQDwKib/3iBbCbmbx8h/gaC+PHA85txuEdyjeh9y
+         824RWH7F8j2+4AT0ZWyq5ulRDMO/uyztxCaA3qi3qu6dxn5ECCOqWzRHkPCWpuHyYz++
+         2g+Z2a/IAhaZI7CCj/7p3nNHWgHdfW1Sp4dYu/wLnT4Xph4OKdwDWJPnkevZl2vmobAw
+         /9aY9Y3AQoyCg/pOytBTZtxsxAOJbg8bDuthURVioS05VgmcVU2kzIfNxLQXBCDoccuL
+         hUHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lc4vFjLeaNpLcmbkEFfbqTJWOFEN/FjHGXndTctO/zI=;
+        b=gP7pOVPR2ZHvQtNVBaeU/eFFqJskQJoWQmC1qBywdCpn+5Y/ET9bJueGYwaV2qPMHk
+         UTuZwWebMANYtoOmh0rhbUuT47Ve0gAjgSxEdv/NfcRm+/VIpzTib5UKhrTawQ8p7V+2
+         xkNHgKQwXEFbn1+0YYqXCjD4PZf/5DQ5qXqYq6yrZDjuky0f7F38k8KJwVD4Wq3a5Qao
+         /W9kEABRgj7OHOI6Vm/JrP60IqhO2YM1nCMSMGqIIX46hsnEFyj4chBq2YSLme3I9EBo
+         OcGO2Pn+EvKMlmVOadE23eD9FPWRhK6zoczv4xNgv45li+TpWwFRvrPzK3kMALoduJPa
+         dSeQ==
+X-Gm-Message-State: APjAAAWrdR8n8387rOW70wCDmZ1L+eL8VAH2aOd8DNIhW4sg3XYS8Ril
+        mbSbRPbNoJ964tJTwXL7tuPG+Wru
+X-Google-Smtp-Source: APXvYqz3r6zkDg40vRnke1vGHLJE2LBf0Lcdp9dwZrstzO5snRKoGYTOxmKLXbo8oqjC5Mcn/o+2PQ==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr2427367wmg.48.1562316553295;
+        Fri, 05 Jul 2019 01:49:13 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id e7sm7656666wmd.0.2019.07.05.01.49.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 01:49:12 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 10:49:10 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH] cpu/hotplug: Cache number of online CPUs
+Message-ID: <20190705084910.GA6592@gmail.com>
+References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de>
+ <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com>
+ <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de>
+ <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com>
+ <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de>
+ <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562316549; bh=tBHCslONGNXrTuqR08BQriljhrvSbQNaMiL9a/TIMAo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=mJAWtXLuY1JNrR9BMi1//luoq7N7RQzV7q4o2a8v/v9v1QaqQkNEVTrOdJkZyYWzN
-         Bzizezio0/QJN6c1IDzuk1IuqK0EfHChlCErUvY+domCQXoS4JCMwOlaCutYlg+9yG
-         H0OVifUDuhYmON08B9tW0YDOctONAb8JcZnhliFI+QzSOtIoxObXOMrhQqCZz9Dnx9
-         QlKEYZRPco8SWFYg2cUNWa0NIO1zsqZ8KuG4u9nSIt0Y6H/7lKX0G81/6Wzl7hfCt1
-         TnFr/kHpaOnpH0+nyn5IyYskyB2V8wflU2jOrFfAIMQlUCJc1vGBnuebN1zqr0Nue9
-         68PX0w28Noe7w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-calls the function devm_gpiod_get_from_of_node() to request a GPIO.
-Unfortunately, around the same time this was merged, commit 025bf37725f1
-("gpio: Fix return value mismatch of function gpiod_get_from_of_node()")
-was also merged to fix the return value of the function
-devm_gpiod_get_from_of_node() that was incorrectly returning NULL
-instead of an error pointer encoded with -ENOENT if no GPIO was found.
-When this fix for the GPIO subsystem was merged, PCI support for Tegra
-devices that did not provide a GPIO for the PERST# (which is optional)
-broke because the Tegra PCI driver was expecting NULL to be returned if
-no GPIO was present and not -ENOENT.
 
-Fix this by checking to see if -ENOENT is returned from the function
-devm_gpiod_get_from_of_node(), to indicate there is no GPIO for PERST#
-present, and if this is the case set the variable 'reset_gpio' to NULL.
-If the variable 'reset_gpio' is NULL then the Tegra PCI driver will
-fallback to using the AFI register to toggle the PERST#. Finally,
-correct the comment now that NULL is no longer returned from
-devm_gpiod_get_from_of_node().
+* Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Fixes: 5e5e9c23f82a ("PCI: tegra: Add support for GPIO based PERST#")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/pci/controller/pci-tegra.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+> ----- On Jul 4, 2019, at 6:33 PM, Thomas Gleixner tglx@linutronix.de wrote:
+> 
+> > On Thu, 4 Jul 2019, Mathieu Desnoyers wrote:
+> >> ----- On Jul 4, 2019, at 5:10 PM, Thomas Gleixner tglx@linutronix.de wrote:
+> >> >
+> >> > num_online_cpus() is racy today vs. CPU hotplug operations as
+> >> > long as you don't hold the hotplug lock.
+> >> 
+> >> Fair point, AFAIU none of the loads performed within num_online_cpus()
+> >> seem to rely on atomic nor volatile accesses. So not using a volatile
+> >> access to load the cached value should not introduce any regression.
+> >> 
+> >> I'm concerned that some code may rely on re-fetching of the cached
+> >> value between iterations of a loop. The lack of READ_ONCE() would
+> >> let the compiler keep a lifted load within a register and never
+> >> re-fetch, unless there is a cpu_relax() or a barrier() within the
+> >> loop.
+> > 
+> > If someone really wants to write code which can handle concurrent CPU
+> > hotplug operations and rely on that information, then it's probably better
+> > to write out:
+> > 
+> >     ncpus = READ_ONCE(__num_online_cpus);
+> > 
+> > explicitely along with a big fat comment.
+> > 
+> > I can't figure out why one wants to do that and how it is supposed to work,
+> > but my brain is in shutdown mode already :)
+> > 
+> > I'd rather write a proper kernel doc comment for num_online_cpus() which
+> > explains what the constraints are instead of pretending that the READ_ONCE
+> > in the inline has any meaning.
+> 
+> The other aspect I am concerned about is freedom given to the compiler 
+> to perform the store to __num_online_cpus non-atomically, or the load 
+> non-atomically due to memory pressure.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 9cc03a2549c0..ff8a346f3e04 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2295,18 +2295,22 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		}
- 
- 		/*
--		 * Returns null if reset-gpios property is not populated and
--		 * fall back to using AFI per port register to toggle PERST#
--		 * SFIO line.
-+		 * Returns -ENOENT if reset-gpios property is not populated
-+		 * and in this case fall back to using AFI per port register
-+		 * to toggle PERST# SFIO line.
- 		 */
- 		rp->reset_gpio = devm_gpiod_get_from_of_node(dev, port,
- 							     "reset-gpios", 0,
- 							     GPIOD_OUT_LOW,
- 							     label);
- 		if (IS_ERR(rp->reset_gpio)) {
--			err = PTR_ERR(rp->reset_gpio);
--			dev_err(dev, "failed to get reset GPIO: %d\n", err);
--			return err;
-+			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
-+				rp->reset_gpio = NULL;
-+			} else {
-+				dev_err(dev, "failed to get reset GPIO: %d\n",
-+					err);
-+				return PTR_ERR(rp->reset_gpio);
-+			}
- 		}
- 
- 		list_add_tail(&rp->list, &pcie->ports);
--- 
-2.17.1
+What connection does "memory pressure" have to what the compiler does? 
 
+Did you confuse it with "register pressure"?
+
+> Is that something we should be concerned about ?
+
+Once I understand it :)
+
+> I thought we had WRITE_ONCE and READ_ONCE to take care of that kind of 
+> situation.
+
+Store and load tearing is one of the minor properties of READ_ONCE() and 
+WRITE_ONCE() - the main properties are the ordering guarantees.
+
+Since __num_online_cpus is neither weirdly aligned nor is it written via 
+constants I don't see how load/store tearing could occur. Can you outline 
+such a scenario?
+
+> The semantic I am looking for here is C11's relaxed atomics.
+
+What does this mean?
+
+Thanks,
+
+	Ingo
