@@ -2,128 +2,114 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1434DC0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2117DC0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A2720B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E110620659
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqWT4LSE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KxxQ/EOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfGEC5k (ORCPT
+        id S1727642AbfGEDBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 22:57:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39433 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGEC5k (ORCPT
+        Thu, 4 Jul 2019 23:01:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57538 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfGEDBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 22:57:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so3878544pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 19:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=69PbiH2nDR6ENHSGX1SX7mzvg/IBEPNGwMUur8Ydn8Y=;
-        b=SqWT4LSERE8Un8SWCqBPl/lVC2TctRHJRA1BoSQhQc5vj+N/jt/q4KhEf46vCMxZk3
-         V2gCn6rw1ZFYzREXuMI3pQIJO2pj0Gtxn/gaYGDp5uxhQHfUEpp2rfEq7R5uzFsPuC+z
-         DHcAe8p5OcS5nbRZkEtbO6XOGTpo2/KPkIr0PGjiumUrEI8ZvaXXqn4cgRlAWBAOo6kW
-         f5LsQpa1dPTVmIEwTxCA1fFRORx0oimeDAh4JH0HRjHD/kBF3YvCaukTg9u1mkTurrBK
-         ekUnp0wg57nyKXmbNvF6cfZMzKbcyU5hv7Bn5bOgRosNcvTUnMeu0N1IBF7wWvwtQm5m
-         E7aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=69PbiH2nDR6ENHSGX1SX7mzvg/IBEPNGwMUur8Ydn8Y=;
-        b=odwfVR3+Z8udJlwEXI4qAg2pGbPOf32GLLUfqTxVNhoPvMe7Ceyn1ejfirMaq3OeXD
-         T0cEl5y6VxWTtSVx9lqSBusuBMjCQ0eZ5Okkq8Ob2S/EOcGqqPEdCAgZZE9VcnbeVLuf
-         X2I8rpih/n2FC/NftStq7VwHL6TLIWujF4PS/dOIArf/0RVBX3q5lCZTpG7XKjWcvsZn
-         lxVLpOQWB0cWwkNvlOoCYNQnRX46pzm/N63FC1kFlp0YA1rH4mV8PfSUAHDYZP8ojKTV
-         E5odkALkU4qTHxXXb5DOpXNx2zxlJkrFCRuiT0xHjtY3papCaHjiHZEBMdmlDZMQhn4j
-         idJA==
-X-Gm-Message-State: APjAAAU7a4cJJ5srNsDSd/E0beul3yqJPH6BRqfS/RJZgAHQq/lEkvc+
-        H08JIQJzNY5Uimu7A96w3Yw=
-X-Google-Smtp-Source: APXvYqyd7c2Qd36MrpCqmvjc2EFmVYZhzaqZVpuSiaYh28oJzh0oZwYb7iFcyt+x1y2ppJ3DZSVrtA==
-X-Received: by 2002:a17:902:e613:: with SMTP id cm19mr1648503plb.299.1562295459717;
-        Thu, 04 Jul 2019 19:57:39 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.81.29])
-        by smtp.gmail.com with ESMTPSA id h14sm5944246pgn.51.2019.07.04.19.57.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 19:57:39 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 08:27:33 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sound: pci: asihpi: Remove unneeded variable change
-Message-ID: <20190705025733.GA26285@hari-Inspiron-1545>
+        Thu, 4 Jul 2019 23:01:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=clMDBr0VH7M11Amw0B3Ri/sIv+DBHpDPWFocL6b0RWI=; b=KxxQ/EOQrixPXe7WpCSxNyecNu
+        ou7W9wMn/5tSGt9EiUzbFPZmmXzPOlV/lF0IdeZFJsJVc/dwXq8Iw/fPPvCcb+Yg3MDGptSBjJ+cS
+        1IfnAHgJmmclULvexo48g0cubarcVOznsqZHs0UoglMrBPHeUHgRmtcan+WzIonpUSZ1IEcshWQAr
+        P5ielI9z2OAukUBQWXSNGPFVRxCTPWIPE//nlqO8F+lLDa0j0Whf57onB5xYFzoCN3tK+BZJ+sGlb
+        dPgpEPd+Lir60dUQ7L1iFTtdjksURL91i9fSoVwvvFwjz69tGIkHE2Ql9YiMumPw9/jLEN6pagl86
+        WoQnlhXA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hjETE-00077l-Nd; Fri, 05 Jul 2019 03:01:08 +0000
+Subject: Re: mmotm 2019-07-04-15-01 uploaded (mm/vmscan.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9cbdb785-b51d-9419-6b9a-ec282a4e4fa2@infradead.org>
+Date:   Thu, 4 Jul 2019 20:01:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch fixes below issue reported by coccicheck
-sound/pci/asihpi/asihpi.c:1558:5-11: Unneeded variable: "change". Return
-"1" on line 1564
+On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- sound/pci/asihpi/asihpi.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
-index e7234f3..2a21a3d 100644
---- a/sound/pci/asihpi/asihpi.c
-+++ b/sound/pci/asihpi/asihpi.c
-@@ -1519,7 +1519,6 @@ static int snd_asihpi_volume_get(struct snd_kcontrol *kcontrol,
- static int snd_asihpi_volume_put(struct snd_kcontrol *kcontrol,
- 				 struct snd_ctl_elem_value *ucontrol)
- {
--	int change;
- 	u32 h_control = kcontrol->private_value;
- 	short an_gain_mB[HPI_MAX_CHANNELS];
- 
-@@ -1530,9 +1529,8 @@ static int snd_asihpi_volume_put(struct snd_kcontrol *kcontrol,
- 	/*  change = asihpi->mixer_volume[addr][0] != left ||
- 	   asihpi->mixer_volume[addr][1] != right;
- 	 */
--	change = 1;
- 	hpi_handle_error(hpi_volume_set_gain(h_control, an_gain_mB));
--	return change;
-+	return 1;
- }
- 
- static const DECLARE_TLV_DB_SCALE(db_scale_100, -10000, VOL_STEP_mB, 0);
-@@ -1555,13 +1553,12 @@ static int snd_asihpi_volume_mute_put(struct snd_kcontrol *kcontrol,
- 				 struct snd_ctl_elem_value *ucontrol)
- {
- 	u32 h_control = kcontrol->private_value;
--	int change = 1;
- 	/* HPI currently only supports all or none muting of multichannel volume
- 	ALSA Switch element has opposite sense to HPI mute: on==unmuted, off=muted
- 	*/
- 	int mute =  ucontrol->value.integer.value[0] ? 0 : HPI_BITMASK_ALL_CHANNELS;
- 	hpi_handle_error(hpi_volume_set_mute(h_control, mute));
--	return change;
-+	return 1;
- }
- 
- static int snd_asihpi_volume_add(struct snd_card_asihpi *asihpi,
+on i386:
+CONFIG_SLOB=y <<<<<<<<<<
+
+
+../mm/vmscan.c: In function ‘prealloc_memcg_shrinker’:
+../mm/vmscan.c:220:3: error: implicit declaration of function ‘memcg_expand_shrinker_maps’ [-Werror=implicit-function-declaration]
+   if (memcg_expand_shrinker_maps(id)) {
+   ^
+In file included from ../include/linux/rbtree.h:22:0,
+                 from ../include/linux/mm_types.h:10,
+                 from ../include/linux/mmzone.h:21,
+                 from ../include/linux/gfp.h:6,
+                 from ../include/linux/mm.h:10,
+                 from ../mm/vmscan.c:17:
+../mm/vmscan.c: In function ‘shrink_slab_memcg’:
+../mm/vmscan.c:608:54: error: ‘struct mem_cgroup_per_node’ has no member named ‘shrinker_map’
+  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+                                                      ^
+../include/linux/rcupdate.h:321:12: note: in definition of macro ‘__rcu_dereference_protected’
+  ((typeof(*p) __force __kernel *)(p)); \
+            ^
+../mm/vmscan.c:608:8: note: in expansion of macro ‘rcu_dereference_protected’
+  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+        ^
+../mm/vmscan.c:608:54: error: ‘struct mem_cgroup_per_node’ has no member named ‘shrinker_map’
+  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+                                                      ^
+../include/linux/rcupdate.h:321:35: note: in definition of macro ‘__rcu_dereference_protected’
+  ((typeof(*p) __force __kernel *)(p)); \
+                                   ^
+../mm/vmscan.c:608:8: note: in expansion of macro ‘rcu_dereference_protected’
+  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+        ^
+
+
+
+
 -- 
-2.7.4
-
+~Randy
