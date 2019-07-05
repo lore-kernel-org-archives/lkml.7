@@ -2,91 +2,99 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304FC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A54AC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF03A21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CE120856
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="WSx2lsXJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4niO4pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfGEVtz (ORCPT
+        id S1727321AbfGEVxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:49:55 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43179 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbfGEVtz (ORCPT
+        Fri, 5 Jul 2019 17:53:39 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:36720 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfGEVxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:49:55 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w17so9399457qto.10
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 14:49:54 -0700 (PDT)
+        Fri, 5 Jul 2019 17:53:39 -0400
+Received: by mail-lj1-f182.google.com with SMTP id i21so10507119ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 14:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=h/A4tEl2mtBha7cHiuEYdkY3q6oP12EZ6C0/Om+AD10=;
-        b=WSx2lsXJMKNctZUo8/bf87Uvk5Fi7zcXw+qV0e6Q8AQjzRrwOAT528YRawwec7hge7
-         mVfSRjx3YMBkeTx24cG51ppvVAONcixhZgueA7zPAJYNLo1l8mtOvZT00ESxovvB9rfU
-         a5I50JSemGPaPw5hbCg61YbXa83GNjX8pWkpr8S6bySjaysb++e8WyOfrbAn/43XZwvg
-         DRUgbYcSEXRlJWM7/cQiIh6d4/a2IQdwhOMBSi//5JKIPKQpuuTKf8ZAcXr/nvftPYPj
-         OdKpHerRNb5SMMggJfG2ZVdyU8MUDdeZws0SbOF7JdZSnBEkJrLTMkbym1Y1uRtsSSgX
-         nQ9w==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RVhp9sD9l1Fh7vJIHE7psd1pUKNZ7W5F8oACMY7W1Ao=;
+        b=c4niO4pwvEQah4Pqnn/zl8+RVdfUUI7KIaDriNJQXwu/NGLs+eKeEfhNIT5aKEFnpU
+         8dKRem6sGATIv5K6eC5hslEcP89oNCvTA9tQjCFQP3c+ZsOeZBRr4xoGHdnap7qYt40+
+         RSEFWpx1kIpDnp44Xq1yGGB1hPu8ZFWLi6D/PzEbrpcRUWgc+bVuMUXe2SJIaFSmmG80
+         AIQWTczh30g4eDExPEn5Fy+v40KPPncvAG1TIGbeGm4Y7Muij2PeOgZwMWUiiVf1h9ON
+         EwtL/Zhhg8C1NL02TPLu3uy5e9L21J3977O1+lFWXijJLztCXwe8qeO+ckjktx3NWXZ4
+         x2dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=h/A4tEl2mtBha7cHiuEYdkY3q6oP12EZ6C0/Om+AD10=;
-        b=Jgo+9VgVYFVx32Y8rjfrBAOOF8A8zYL6MBa7l4sqx/dRhQ7YI2LrS974mq5xnTKQHy
-         793LE430FK4Yr4NxEShF4IxG6DySnS5dG6e4y2no/5PU/nqR5wFSo+QONylrb3GBoEjm
-         7JjZ2pmGUEzgo0BBBlgMVy+F/dEBt0IUCopXczQOb+RkhR32F6nAibe9OjB/yoqr1ICq
-         mIe1fbAWTTtRDPTXG3nVMwWpUz+v4oMlNJtvdDTAjah71wEDJK0M5ugJyf0IzmdRhjB6
-         iuqCTlWazizRwoiT2cI6iM6g0RON8567xIRjUNpAt99uYPuyXrEjPDg/N/DW5MnK6CGz
-         89jg==
-X-Gm-Message-State: APjAAAVmgsYdXsQlgnTmTl0KxqWARGRUfmz6j6Dd0SQRW10Fh5rAt6dO
-        6BqHbxSEIs+NMHAir2xHUxjUgA==
-X-Google-Smtp-Source: APXvYqwBlDfCbZo7ZTpdIz2bIqflSAvvdtH0vqRV0LSfiC8SoRw/HCmTSvtjef6ryWsNF3JJv6vNYw==
-X-Received: by 2002:ac8:24b8:: with SMTP id s53mr4592196qts.276.1562363394280;
-        Fri, 05 Jul 2019 14:49:54 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id t29sm4699697qtt.42.2019.07.05.14.49.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 14:49:54 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 14:49:49 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        mw@semihalf.com
-Subject: Re: [PATCH net-next 0/2] net: mvpp2: Add classification based on
- the ETHER flow
-Message-ID: <20190705144949.1799b20a@cakuba.netronome.com>
-In-Reply-To: <20190705120913.25013-1-maxime.chevallier@bootlin.com>
-References: <20190705120913.25013-1-maxime.chevallier@bootlin.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RVhp9sD9l1Fh7vJIHE7psd1pUKNZ7W5F8oACMY7W1Ao=;
+        b=IgtAZbwlo2iQEqCHCH9kN/eRaqietBAk4R4ksDyOGefL1AawJyIp5ruuNGsePQ8ZL6
+         kiWX65DnB5MvUhj58Vs6Eq/wFDUPpdG31+ti8nGc2GQiEWx5is8OmRBQiJaqesJhUdoq
+         AeBJcVUpkwrpGg6FlZk0ZtQZXdby5EhMz4FyTfsqIWx8t41qNswh+0XIOwC6486crfwF
+         04z4zDXQAkauAraR/TZbSPquNHy0vezsCBc4RSPfn4BHfEHiHDqPu4/UEjDWtJVJzpv3
+         7EV+lN1TjwcAiDYrir50K6s674+iuonX5ymy5nWU5TZPROCnGm1cs6kalMhdL6L+wkcx
+         H4FA==
+X-Gm-Message-State: APjAAAWzrCjYtjG5eQRvgqoVc8ndq5X6LSrnPmDPZCuDtICcXb7Hs7IF
+        0HQyiVZplieUN2yfBL76NtYuKlBmor/c3ZPw/PrmOA==
+X-Google-Smtp-Source: APXvYqwaGrH2h+Z98/ELblKzu4yMSF6RGFMj6RI688gHIeWsG2kw7fK8UUVt72WdXfpVrC4bXciBwl2IVtwAYJ/zDKs=
+X-Received: by 2002:a2e:650a:: with SMTP id z10mr3282903ljb.28.1562363617011;
+ Fri, 05 Jul 2019 14:53:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <d4724d7ec8ab4f95884ea947d9467e26@svr-chch-ex1.atlnz.lc>
+ <CACRpkdZD7x1eeatXRTtU5k7Zoj5tfG8V98SjaO=xubwaa9teTQ@mail.gmail.com>
+ <f9eb3387ed384676b0b298e4da7eeaf0@svr-chch-ex1.atlnz.lc> <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
+In-Reply-To: <755abbb5b984414a966367c323f62e59@svr-chch-ex1.atlnz.lc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 5 Jul 2019 23:53:25 +0200
+Message-ID: <CACRpkdYzXEKVzmq_wimvbeMmOqnW8okyK09V-RpzdoesmC4P7Q@mail.gmail.com>
+Subject: Re: gpio desc flags being lost
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  5 Jul 2019 14:09:11 +0200, Maxime Chevallier wrote:
-> Hello everyone,
-> 
-> This series adds support for classification of the ETHER flow in the
-> mvpp2 driver.
-> 
-> The first patch allows detecting when a user specifies a flow_type that
-> isn't supported by the driver, while the second adds support for this
-> flow_type by adding the mapping between the ETHER_FLOW enum value and
-> the relevant classifier flow entries.
+On Wed, Jul 3, 2019 at 11:30 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
 
-LGTM
+> The problem is caused by commit 3edfb7bd76bd1cba ("gpiolib: Show correct
+> direction from the beginning"). I'll see if I can whip up a patch to fix it.
+
+Oh. I think:
+
+               if (chip->get_direction && gpiochip_line_is_valid(chip, i))
+                        desc->flags = !chip->get_direction(chip, i) ?
+                                        (1 << FLAG_IS_OUT) : 0;
+                else
+                        desc->flags = !chip->direction_input ?
+                                        (1 << FLAG_IS_OUT) : 0;
+
+
+Needs to have desc->flags |=  ... &= ~
+
+if (!chip->get_direction(chip, i))
+    desc->flags |= (1 << FLAG_IS_OUT);
+else
+    desc->flags &= ~(1 << FLAG_IS_OUT);
+
+And the same for direction_input()
+
+Yours,
+Linus Walleij
