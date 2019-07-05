@@ -2,1016 +2,158 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D9C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E500DC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0818621738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2932184C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:52:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiM+ok+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfGEOw3 (ORCPT
+        id S1727800AbfGEOwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:52:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36346 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfGEOw1 (ORCPT
+        Fri, 5 Jul 2019 10:52:54 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46975 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfGEOwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:52:27 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id ABCA928B4DC
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        ZhiChao Yu <zhichao.yu@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 4/4] media: hantro: Add support for VP8 decoding on rk3288
-Date:   Fri,  5 Jul 2019 11:50:50 -0300
-Message-Id: <20190705145050.25911-5-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190705145050.25911-1-ezequiel@collabora.com>
-References: <20190705145050.25911-1-ezequiel@collabora.com>
+        Fri, 5 Jul 2019 10:52:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c2so3152502plz.13;
+        Fri, 05 Jul 2019 07:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xoxhzo3l05k4IgMr6KE3jnu38RTpgjmGvrGCZA3aEcA=;
+        b=LiM+ok+EGFwhkgz82cP/xLLUElt29O345EseznN/MicVHLl/MNWEYKBjpRfYghG8XW
+         Wch/ETz/pu7mlwBYV7kuEhZFJmYr2ktXNTk4tak9WlnWJ8cagrTFDXWN8C1xR9Pgb0WY
+         2mxOYAVVyLUwqVj+SDdY2NDr14rWlK7F7XX9WLwpc8Ubj9dajW6KPYBKXfR8b9GdVFpu
+         cNSxd8tZKYRaNTF/OuLbjRPbkRPJmLdubm9GJp36zbyr4E8zo6gRPc2/d+zobn7TWZTj
+         WHKHiH+khH20Mljs8V3ETec/Xxc6fE8NcOt4W+oYrNSIXOotIIWjkilQDWLj5prNPRx5
+         l0tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xoxhzo3l05k4IgMr6KE3jnu38RTpgjmGvrGCZA3aEcA=;
+        b=IUTmY6Ok+ZbPUdMUdUGUtPAX0zfKlZ4UaDgJ2SNClMqEH/LIyDKiBKgMQYqK+NhoOE
+         ifY42/vmE0Hb/sbcEoqXya69KMo9f6HCgG5Io5SCp7dt+pxM1fPy+gZtE2MjDjet3IBU
+         oLHd7SZmKuZb9op9v0YPtWuBin6O82xiQBuYY8zpUpuA6QAqcRVhY8QLo5NSLswGQIPM
+         jCW4AEU15n6AuDwOqfHY2da0T72plHHu7Ur+vrQ4poOo9JoGBK8Ioon4aMtJrapmuBM/
+         CqwgDJCfJK7J9Fh4DuUSx9/sdxQm6qRcB4UlojXMHOz2JTxymMXxoxfSVXQ7MTeyF9Uz
+         c7Bg==
+X-Gm-Message-State: APjAAAUtQsaudLlplOi7EjZZYaaub5zwqhRr+bIs1v6yMywPOjEmygU9
+        XF9svnAugY6wpCOVbg/JfNoj5qSB
+X-Google-Smtp-Source: APXvYqzElcWjWSfQhJjSDaEtp89wjoYoNl78H4pTfWBIIXo+tGVP/gByEaS8foCoXUJyemmTnmGG/g==
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr6258798plc.78.1562338373216;
+        Fri, 05 Jul 2019 07:52:53 -0700 (PDT)
+Received: from localhost ([2409:8a00:7815:93e0:4a4d:7eff:feb0:5c9a])
+        by smtp.gmail.com with ESMTPSA id f17sm7755070pgv.16.2019.07.05.07.52.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 07:52:52 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH v6 0/2] KVM: LAPIC: Implement Exitless Timer
+Date:   Fri,  5 Jul 2019 22:52:43 +0800
+Message-Id: <1562338365-22789-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhiChao Yu <zhichao.yu@rock-chips.com>
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
-Introduce VP8 decoding support in RK3288.
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit
+9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit 
+444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However, 
+KVM always makes lapic timer pinned to the pCPU which vCPU residents, the 
+reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer 
+pinned). Actually, these emulated timers can be offload to the housekeeping 
+cpus since APICv is really common in recent years. The guest timer interrupt 
+is injected by posted-interrupt which is delivered by housekeeping cpu 
+once the emulated timer fires. 
 
-Signed-off-by: ZhiChao Yu <zhichao.yu@rock-chips.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-Changes from v2:
-* Minor cosmetic cleanups in variable declarations
-  and comments.
-* Add MB_WIDTH and MB_HEIGHT macros.
+The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
+mode, ~3% redis performance benefit can be observed on Skylake server.
 
-Changes from v1:
-* Place operators at the end of each line.
-* Update to uAPI changes.
----
- drivers/staging/media/hantro/Makefile         |   4 +-
- drivers/staging/media/hantro/hantro.h         |   9 +
- drivers/staging/media/hantro/hantro_drv.c     |   6 +
- .../staging/media/hantro/hantro_g1_vp8_dec.c  | 543 ++++++++++++++++++
- drivers/staging/media/hantro/hantro_hw.h      |  17 +
- drivers/staging/media/hantro/hantro_v4l2.c    |   1 +
- drivers/staging/media/hantro/hantro_vp8.c     | 188 ++++++
- drivers/staging/media/hantro/rk3288_vpu_hw.c  |  22 +-
- 8 files changed, 788 insertions(+), 2 deletions(-)
- create mode 100644 drivers/staging/media/hantro/hantro_g1_vp8_dec.c
- create mode 100644 drivers/staging/media/hantro/hantro_vp8.c
+w/o patchset:
 
-diff --git a/drivers/staging/media/hantro/Makefile b/drivers/staging/media/hantro/Makefile
-index 1584acdbf4a3..a627aee77f75 100644
---- a/drivers/staging/media/hantro/Makefile
-+++ b/drivers/staging/media/hantro/Makefile
-@@ -5,10 +5,12 @@ hantro-vpu-y += \
- 		hantro_v4l2.o \
- 		hantro_h1_jpeg_enc.o \
- 		hantro_g1_mpeg2_dec.o \
-+		hantro_g1_vp8_dec.o \
- 		rk3399_vpu_hw_jpeg_enc.o \
- 		rk3399_vpu_hw_mpeg2_dec.o \
- 		hantro_jpeg.o \
--		hantro_mpeg2.o
-+		hantro_mpeg2.o \
-+		hantro_vp8.o
- 
- hantro-vpu-$(CONFIG_VIDEO_HANTRO_ROCKCHIP) += \
- 		rk3288_vpu_hw.o \
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index 62dcca9ff19c..ac04b74bc7c1 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -25,6 +25,10 @@
- 
- #include "hantro_hw.h"
- 
-+#define VP8_MB_DIM			16
-+#define VP8_MB_WIDTH(w)			DIV_ROUND_UP(w, VP8_MB_DIM)
-+#define VP8_MB_HEIGHT(h)		DIV_ROUND_UP(h, VP8_MB_DIM)
-+
- #define MPEG2_MB_DIM			16
- #define MPEG2_MB_WIDTH(w)		DIV_ROUND_UP(w, MPEG2_MB_DIM)
- #define MPEG2_MB_HEIGHT(h)		DIV_ROUND_UP(h, MPEG2_MB_DIM)
-@@ -40,6 +44,7 @@ struct hantro_codec_ops;
- #define HANTRO_ENCODERS		0x0000ffff
- 
- #define HANTRO_MPEG2_DECODER	BIT(16)
-+#define HANTRO_VP8_DECODER	BIT(17)
- #define HANTRO_DECODERS		0xffff0000
- 
- /**
-@@ -97,11 +102,13 @@ struct hantro_variant {
-  * @HANTRO_MODE_NONE:  No operating mode. Used for RAW video formats.
-  * @HANTRO_MODE_JPEG_ENC: JPEG encoder.
-  * @HANTRO_MODE_MPEG2_DEC: MPEG-2 decoder.
-+ * @HANTRO_MODE_VP8_DEC: VP8 decoder.
-  */
- enum hantro_codec_mode {
- 	HANTRO_MODE_NONE = -1,
- 	HANTRO_MODE_JPEG_ENC,
- 	HANTRO_MODE_MPEG2_DEC,
-+	HANTRO_MODE_VP8_DEC,
- };
- 
- /*
-@@ -215,6 +222,7 @@ struct hantro_dev {
-  * @codec_ops:		Set of operations related to codec mode.
-  * @jpeg_enc:		JPEG-encoding context.
-  * @mpeg2_dec:		MPEG-2-decoding context.
-+ * @vp8_dec:		VP8-decoding context.
-  */
- struct hantro_ctx {
- 	struct hantro_dev *dev;
-@@ -241,6 +249,7 @@ struct hantro_ctx {
- 	union {
- 		struct hantro_jpeg_enc_hw_ctx jpeg_enc;
- 		struct hantro_mpeg2_dec_hw_ctx mpeg2_dec;
-+		struct hantro_vp8_dec_hw_ctx vp8_dec;
- 	};
- };
- 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index c3665f0e87a2..839f3f470811 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -284,6 +284,12 @@ static struct hantro_ctrl controls[] = {
- 		.cfg = {
- 			.elem_size = sizeof(struct v4l2_ctrl_mpeg2_quantization),
- 		},
-+	}, {
-+		.id = V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER,
-+		.codec = HANTRO_VP8_DECODER,
-+		.cfg = {
-+			.elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header),
-+		},
- 	},
- };
- 
-diff --git a/drivers/staging/media/hantro/hantro_g1_vp8_dec.c b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-new file mode 100644
-index 000000000000..5cc434dba223
---- /dev/null
-+++ b/drivers/staging/media/hantro/hantro_g1_vp8_dec.c
-@@ -0,0 +1,543 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Hantro VP8 codec driver
-+ *
-+ * Copyright (C) 2019 Rockchip Electronics Co., Ltd.
-+ *	ZhiChao Yu <zhichao.yu@rock-chips.com>
-+ *
-+ * Copyright (C) 2019 Google, Inc.
-+ *	Tomasz Figa <tfiga@chromium.org>
-+ */
-+
-+#include <media/v4l2-mem2mem.h>
-+#include <media/vp8-ctrls.h>
-+
-+#include "hantro_hw.h"
-+#include "hantro.h"
-+#include "hantro_g1_regs.h"
-+
-+#define DEC_8190_ALIGN_MASK	0x07U
-+
-+struct vp8_dec_reg {
-+	u32 base;
-+	u32 shift;
-+	u32 mask;
-+};
-+
-+/* DCT partition base address regs */
-+static const struct vp8_dec_reg vp8_dec_dct_base[8] = {
-+	{ G1_REG_ADDR_STR, 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(8), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(9), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(10), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(11), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(12), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(14), 0, 0xffffffff },
-+	{ G1_REG_ADDR_REF(15), 0, 0xffffffff },
-+};
-+
-+/* Loop filter level regs */
-+static const struct vp8_dec_reg vp8_dec_lf_level[4] = {
-+	{ G1_REG_REF_PIC(2), 18, 0x3f },
-+	{ G1_REG_REF_PIC(2), 12, 0x3f },
-+	{ G1_REG_REF_PIC(2), 6, 0x3f },
-+	{ G1_REG_REF_PIC(2), 0, 0x3f },
-+};
-+
-+/* Macroblock loop filter level adjustment regs */
-+static const struct vp8_dec_reg vp8_dec_mb_adj[4] = {
-+	{ G1_REG_REF_PIC(0), 21, 0x7f },
-+	{ G1_REG_REF_PIC(0), 14, 0x7f },
-+	{ G1_REG_REF_PIC(0), 7, 0x7f },
-+	{ G1_REG_REF_PIC(0), 0, 0x7f },
-+};
-+
-+/* Reference frame adjustment regs */
-+static const struct vp8_dec_reg vp8_dec_ref_adj[4] = {
-+	{ G1_REG_REF_PIC(1), 21, 0x7f },
-+	{ G1_REG_REF_PIC(1), 14, 0x7f },
-+	{ G1_REG_REF_PIC(1), 7, 0x7f },
-+	{ G1_REG_REF_PIC(1), 0, 0x7f },
-+};
-+
-+/* Quantizer */
-+static const struct vp8_dec_reg vp8_dec_quant[4] = {
-+	{ G1_REG_REF_PIC(3), 11, 0x7ff },
-+	{ G1_REG_REF_PIC(3), 0, 0x7ff },
-+	{ G1_REG_BD_REF_PIC(4), 11, 0x7ff },
-+	{ G1_REG_BD_REF_PIC(4), 0, 0x7ff },
-+};
-+
-+/* Quantizer delta regs */
-+static const struct vp8_dec_reg vp8_dec_quant_delta[5] = {
-+	{ G1_REG_REF_PIC(3), 27, 0x1f },
-+	{ G1_REG_REF_PIC(3), 22, 0x1f },
-+	{ G1_REG_BD_REF_PIC(4), 27, 0x1f },
-+	{ G1_REG_BD_REF_PIC(4), 22, 0x1f },
-+	{ G1_REG_BD_P_REF_PIC, 27, 0x1f },
-+};
-+
-+/* DCT partition start bits regs */
-+static const struct vp8_dec_reg vp8_dec_dct_start_bits[8] = {
-+	{ G1_REG_DEC_CTRL2, 26, 0x3f }, { G1_REG_DEC_CTRL4, 26, 0x3f },
-+	{ G1_REG_DEC_CTRL4, 20, 0x3f }, { G1_REG_DEC_CTRL7, 24, 0x3f },
-+	{ G1_REG_DEC_CTRL7, 18, 0x3f }, { G1_REG_DEC_CTRL7, 12, 0x3f },
-+	{ G1_REG_DEC_CTRL7, 6, 0x3f },  { G1_REG_DEC_CTRL7, 0, 0x3f },
-+};
-+
-+/* Precision filter tap regs */
-+static const struct vp8_dec_reg vp8_dec_pred_bc_tap[8][4] = {
-+	{
-+		{ G1_REG_PRED_FLT, 22, 0x3ff },
-+		{ G1_REG_PRED_FLT, 12, 0x3ff },
-+		{ G1_REG_PRED_FLT, 2, 0x3ff },
-+		{ G1_REG_REF_PIC(4), 22, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_REF_PIC(4), 12, 0x3ff },
-+		{ G1_REG_REF_PIC(4), 2, 0x3ff },
-+		{ G1_REG_REF_PIC(5), 22, 0x3ff },
-+		{ G1_REG_REF_PIC(5), 12, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_REF_PIC(5), 2, 0x3ff },
-+		{ G1_REG_REF_PIC(6), 22, 0x3ff },
-+		{ G1_REG_REF_PIC(6), 12, 0x3ff },
-+		{ G1_REG_REF_PIC(6), 2, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_REF_PIC(7), 22, 0x3ff },
-+		{ G1_REG_REF_PIC(7), 12, 0x3ff },
-+		{ G1_REG_REF_PIC(7), 2, 0x3ff },
-+		{ G1_REG_LT_REF, 22, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_LT_REF, 12, 0x3ff },
-+		{ G1_REG_LT_REF, 2, 0x3ff },
-+		{ G1_REG_VALID_REF, 22, 0x3ff },
-+		{ G1_REG_VALID_REF, 12, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_VALID_REF, 2, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(0), 22, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(0), 12, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(0), 2, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_BD_REF_PIC(1), 22, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(1), 12, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(1), 2, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(2), 22, 0x3ff },
-+	},
-+	{
-+		{ G1_REG_BD_REF_PIC(2), 12, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(2), 2, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(3), 22, 0x3ff },
-+		{ G1_REG_BD_REF_PIC(3), 12, 0x3ff },
-+	},
-+};
-+
-+/*
-+ * filter taps taken to 7-bit precision,
-+ * reference RFC6386#Page-16, filters[8][6]
-+ */
-+static const u32 vp8_dec_mc_filter[8][6] = {
-+	{ 0, 0, 128, 0, 0, 0 },
-+	{ 0, -6, 123, 12, -1, 0 },
-+	{ 2, -11, 108, 36, -8, 1 },
-+	{ 0, -9, 93, 50, -6, 0 },
-+	{ 3, -16, 77, 77, -16, 3 },
-+	{ 0, -6, 50, 93, -9, 0 },
-+	{ 1, -8, 36, 108, -11, 2 },
-+	{ 0, -1, 12, 123, -6, 0 }
-+};
-+
-+static inline void vp8_dec_reg_write(struct hantro_dev *vpu,
-+				     const struct vp8_dec_reg *reg, u32 val)
-+{
-+	u32 v;
-+
-+	v = vdpu_read(vpu, reg->base);
-+	v &= ~(reg->mask << reg->shift);
-+	v |= ((val & reg->mask) << reg->shift);
-+	vdpu_write_relaxed(vpu, v, reg->base);
-+}
-+
-+/*
-+ * Set loop filters
-+ */
-+static void cfg_lf(struct hantro_ctx *ctx,
-+		   const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	const struct v4l2_vp8_segment_header *seg = &hdr->segment_header;
-+	const struct v4l2_vp8_loopfilter_header *lf = &hdr->lf_header;
-+	struct hantro_dev *vpu = ctx->dev;
-+	unsigned int i;
-+	u32 reg;
-+
-+	if (!(seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_ENABLED)) {
-+		vp8_dec_reg_write(vpu, &vp8_dec_lf_level[0], lf->level);
-+	} else if (seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_DELTA_VALUE_MODE) {
-+		for (i = 0; i < 4; i++) {
-+			u32 lf_level = clamp(lf->level + seg->lf_update[i],
-+					     0, 63);
-+
-+			vp8_dec_reg_write(vpu, &vp8_dec_lf_level[i], lf_level);
-+		}
-+	} else {
-+		for (i = 0; i < 4; i++)
-+			vp8_dec_reg_write(vpu, &vp8_dec_lf_level[i],
-+					  seg->lf_update[i]);
-+	}
-+
-+	reg = G1_REG_REF_PIC_FILT_SHARPNESS(lf->sharpness_level);
-+	if (lf->flags & V4L2_VP8_LF_FILTER_TYPE_SIMPLE)
-+		reg |= G1_REG_REF_PIC_FILT_TYPE_E;
-+	vdpu_write_relaxed(vpu, reg, G1_REG_REF_PIC(0));
-+
-+	if (lf->flags & V4L2_VP8_LF_HEADER_ADJ_ENABLE) {
-+		for (i = 0; i < 4; i++) {
-+			vp8_dec_reg_write(vpu, &vp8_dec_mb_adj[i],
-+					  lf->mb_mode_delta[i]);
-+			vp8_dec_reg_write(vpu, &vp8_dec_ref_adj[i],
-+					  lf->ref_frm_delta[i]);
-+		}
-+	}
-+}
-+
-+/*
-+ * Set quantization parameters
-+ */
-+static void cfg_qp(struct hantro_ctx *ctx,
-+		   const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	const struct v4l2_vp8_quantization_header *q = &hdr->quant_header;
-+	const struct v4l2_vp8_segment_header *seg = &hdr->segment_header;
-+	struct hantro_dev *vpu = ctx->dev;
-+	unsigned int i;
-+
-+	if (!(seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_ENABLED)) {
-+		vp8_dec_reg_write(vpu, &vp8_dec_quant[0], q->y_ac_qi);
-+	} else if (seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_DELTA_VALUE_MODE) {
-+		for (i = 0; i < 4; i++) {
-+			u32 quant = clamp(q->y_ac_qi + seg->quant_update[i],
-+					  0, 127);
-+
-+			vp8_dec_reg_write(vpu, &vp8_dec_quant[i], quant);
-+		}
-+	} else {
-+		for (i = 0; i < 4; i++)
-+			vp8_dec_reg_write(vpu, &vp8_dec_quant[i],
-+					  seg->quant_update[i]);
-+	}
-+
-+	vp8_dec_reg_write(vpu, &vp8_dec_quant_delta[0], q->y_dc_delta);
-+	vp8_dec_reg_write(vpu, &vp8_dec_quant_delta[1], q->y2_dc_delta);
-+	vp8_dec_reg_write(vpu, &vp8_dec_quant_delta[2], q->y2_ac_delta);
-+	vp8_dec_reg_write(vpu, &vp8_dec_quant_delta[3], q->uv_dc_delta);
-+	vp8_dec_reg_write(vpu, &vp8_dec_quant_delta[4], q->uv_ac_delta);
-+}
-+
-+/*
-+ * set control partition and DCT partition regs
-+ *
-+ * VP8 frame stream data layout:
-+ *
-+ *	                     first_part_size          parttion_sizes[0]
-+ *                              ^                     ^
-+ * src_dma                      |                     |
-+ * ^                   +--------+------+        +-----+-----+
-+ * |                   | control part  |        |           |
-+ * +--------+----------------+------------------+-----------+-----+-----------+
-+ * | tag 3B | extra 7B | hdr | mb_data | DCT sz | DCT part0 | ... | DCT partn |
-+ * +--------+-----------------------------------+-----------+-----+-----------+
-+ *                           |         |        |                             |
-+ *                           v         +----+---+                             v
-+ *                           mb_start       |                       src_dma_end
-+ *                                          v
-+ *                                       DCT size part
-+ *                                      (num_dct-1)*3B
-+ * Note:
-+ *   1. only key-frames have extra 7-bytes
-+ *   2. all offsets are base on src_dma
-+ *   3. number of DCT parts is 1, 2, 4 or 8
-+ *   4. the addresses set to the VPU must be 64-bits aligned
-+ */
-+static void cfg_parts(struct hantro_ctx *ctx,
-+		      const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+	struct vb2_v4l2_buffer *vb2_src;
-+	u32 first_part_offset = VP8_FRAME_IS_KEY_FRAME(hdr) ? 10 : 3;
-+	u32 mb_size, mb_offset_bytes, mb_offset_bits, mb_start_bits;
-+	u32 dct_size_part_size, dct_part_offset;
-+	struct vp8_dec_reg reg;
-+	dma_addr_t src_dma;
-+	u32 dct_part_total_len = 0;
-+	u32 count = 0;
-+	unsigned int i;
-+
-+	vb2_src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	src_dma = vb2_dma_contig_plane_dma_addr(&vb2_src->vb2_buf, 0);
-+
-+	/*
-+	 * Calculate control partition mb data info
-+	 * @first_part_header_bits:	bits offset of mb data from first
-+	 *				part start pos
-+	 * @mb_offset_bits:		bits offset of mb data from src_dma
-+	 *				base addr
-+	 * @mb_offset_byte:		bytes offset of mb data from src_dma
-+	 *				base addr
-+	 * @mb_start_bits:		bits offset of mb data from mb data
-+	 *				64bits alignment addr
-+	 */
-+	mb_offset_bits = first_part_offset * 8 +
-+			 hdr->first_part_header_bits + 8;
-+	mb_offset_bytes = mb_offset_bits / 8;
-+	mb_start_bits = mb_offset_bits -
-+			(mb_offset_bytes & (~DEC_8190_ALIGN_MASK)) * 8;
-+	mb_size = hdr->first_part_size -
-+		  (mb_offset_bytes - first_part_offset) +
-+		  (mb_offset_bytes & DEC_8190_ALIGN_MASK);
-+
-+	/* Macroblock data aligned base addr */
-+	vdpu_write_relaxed(vpu, (mb_offset_bytes & (~DEC_8190_ALIGN_MASK))
-+				+ src_dma, G1_REG_ADDR_REF(13));
-+
-+	/* Macroblock data start bits */
-+	reg.base = G1_REG_DEC_CTRL2;
-+	reg.mask = 0x3f;
-+	reg.shift = 18;
-+	vp8_dec_reg_write(vpu, &reg, mb_start_bits);
-+
-+	/* Macroblock aligned data length */
-+	reg.base = G1_REG_DEC_CTRL6;
-+	reg.mask = 0x3fffff;
-+	reg.shift = 0;
-+	vp8_dec_reg_write(vpu, &reg, mb_size + 1);
-+
-+	/*
-+	 * Calculate DCT partition info
-+	 * @dct_size_part_size: Containing sizes of DCT part, every DCT part
-+	 *			has 3 bytes to store its size, except the last
-+	 *			DCT part
-+	 * @dct_part_offset:	bytes offset of DCT parts from src_dma base addr
-+	 * @dct_part_total_len: total size of all DCT parts
-+	 */
-+	dct_size_part_size = (hdr->num_dct_parts - 1) * 3;
-+	dct_part_offset = first_part_offset + hdr->first_part_size;
-+	for (i = 0; i < hdr->num_dct_parts; i++)
-+		dct_part_total_len += hdr->dct_part_sizes[i];
-+	dct_part_total_len += dct_size_part_size;
-+	dct_part_total_len += (dct_part_offset & DEC_8190_ALIGN_MASK);
-+
-+	/* Number of DCT partitions */
-+	reg.base = G1_REG_DEC_CTRL6;
-+	reg.mask = 0xf;
-+	reg.shift = 24;
-+	vp8_dec_reg_write(vpu, &reg, hdr->num_dct_parts - 1);
-+
-+	/* DCT partition length */
-+	vdpu_write_relaxed(vpu,
-+			   G1_REG_DEC_CTRL3_STREAM_LEN(dct_part_total_len),
-+			   G1_REG_DEC_CTRL3);
-+
-+	/* DCT partitions base address */
-+	for (i = 0; i < hdr->num_dct_parts; i++) {
-+		u32 byte_offset = dct_part_offset + dct_size_part_size + count;
-+		u32 base_addr = byte_offset + src_dma;
-+
-+		vp8_dec_reg_write(vpu, &vp8_dec_dct_base[i],
-+				  base_addr & (~DEC_8190_ALIGN_MASK));
-+
-+		vp8_dec_reg_write(vpu, &vp8_dec_dct_start_bits[i],
-+				  (byte_offset & DEC_8190_ALIGN_MASK) * 8);
-+
-+		count += hdr->dct_part_sizes[i];
-+	}
-+}
-+
-+/*
-+ * prediction filter taps
-+ * normal 6-tap filters
-+ */
-+static void cfg_tap(struct hantro_ctx *ctx,
-+		    const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+	struct vp8_dec_reg reg;
-+	u32 val = 0;
-+	int i, j;
-+
-+	reg.base = G1_REG_BD_REF_PIC(3);
-+	reg.mask = 0xf;
-+
-+	if ((hdr->version & 0x03) != 0)
-+		return; /* Tap filter not used. */
-+
-+	for (i = 0; i < 8; i++) {
-+		val = (vp8_dec_mc_filter[i][0] << 2) | vp8_dec_mc_filter[i][5];
-+
-+		for (j = 0; j < 4; j++)
-+			vp8_dec_reg_write(vpu, &vp8_dec_pred_bc_tap[i][j],
-+					  vp8_dec_mc_filter[i][j + 1]);
-+
-+		switch (i) {
-+		case 2:
-+			reg.shift = 8;
-+			break;
-+		case 4:
-+			reg.shift = 4;
-+			break;
-+		case 6:
-+			reg.shift = 0;
-+			break;
-+		default:
-+			continue;
-+		}
-+
-+		vp8_dec_reg_write(vpu, &reg, val);
-+	}
-+}
-+
-+static void cfg_ref(struct hantro_ctx *ctx,
-+		    const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
-+	struct hantro_dev *vpu = ctx->dev;
-+	struct vb2_v4l2_buffer *vb2_dst;
-+	u32 reg;
-+
-+	vb2_dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-+
-+	reg = hantro_get_ref(cap_q, hdr->last_frame_ts);
-+	if (!reg)
-+		reg = vb2_dma_contig_plane_dma_addr(&vb2_dst->vb2_buf, 0);
-+	vdpu_write_relaxed(vpu, reg, G1_REG_ADDR_REF(0));
-+
-+	reg = hantro_get_ref(cap_q, hdr->golden_frame_ts);
-+	WARN_ON(!reg && hdr->golden_frame_ts);
-+	if (!reg)
-+		reg = vb2_dma_contig_plane_dma_addr(&vb2_dst->vb2_buf, 0);
-+	if (hdr->flags & V4L2_VP8_FRAME_HEADER_FLAG_SIGN_BIAS_GOLDEN)
-+		reg |= G1_REG_ADDR_REF_TOPC_E;
-+	vdpu_write_relaxed(vpu, reg, G1_REG_ADDR_REF(4));
-+
-+	reg = hantro_get_ref(cap_q, hdr->alt_frame_ts);
-+	WARN_ON(!reg && hdr->alt_frame_ts);
-+	if (!reg)
-+		reg = vb2_dma_contig_plane_dma_addr(&vb2_dst->vb2_buf, 0);
-+	if (hdr->flags & V4L2_VP8_FRAME_HEADER_FLAG_SIGN_BIAS_ALT)
-+		reg |= G1_REG_ADDR_REF_TOPC_E;
-+	vdpu_write_relaxed(vpu, reg, G1_REG_ADDR_REF(5));
-+}
-+
-+static void cfg_buffers(struct hantro_ctx *ctx,
-+			const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	const struct v4l2_vp8_segment_header *seg = &hdr->segment_header;
-+	struct hantro_dev *vpu = ctx->dev;
-+	struct vb2_v4l2_buffer *vb2_dst;
-+	dma_addr_t dst_dma;
-+	u32 reg;
-+
-+	vb2_dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-+
-+	/* Set probability table buffer address */
-+	vdpu_write_relaxed(vpu, ctx->vp8_dec.prob_tbl.dma,
-+			   G1_REG_ADDR_QTABLE);
-+
-+	/* Set segment map address */
-+	reg = G1_REG_FWD_PIC1_SEGMENT_BASE(ctx->vp8_dec.segment_map.dma);
-+	if (seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_ENABLED) {
-+		reg |= G1_REG_FWD_PIC1_SEGMENT_E;
-+		if (seg->flags & V4L2_VP8_SEGMENT_HEADER_FLAG_UPDATE_MAP)
-+			reg |= G1_REG_FWD_PIC1_SEGMENT_UPD_E;
-+	}
-+	vdpu_write_relaxed(vpu, reg, G1_REG_FWD_PIC(0));
-+
-+	dst_dma = vb2_dma_contig_plane_dma_addr(&vb2_dst->vb2_buf, 0);
-+	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
-+}
-+
-+void hantro_g1_vp8_dec_run(struct hantro_ctx *ctx)
-+{
-+	const struct v4l2_ctrl_vp8_frame_header *hdr;
-+	struct hantro_dev *vpu = ctx->dev;
-+	size_t height = ctx->dst_fmt.height;
-+	size_t width = ctx->dst_fmt.width;
-+	struct vb2_v4l2_buffer *vb2_src;
-+	u32 mb_width, mb_height;
-+	u32 reg;
-+
-+	vb2_src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	v4l2_ctrl_request_setup(vb2_src->vb2_buf.req_obj.req,
-+				&ctx->ctrl_handler);
-+
-+	hdr = hantro_get_ctrl(ctx, V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER);
-+	if (WARN_ON(!hdr))
-+		return;
-+
-+	/* Reset segment_map buffer in keyframe */
-+	if (VP8_FRAME_IS_KEY_FRAME(hdr) && ctx->vp8_dec.segment_map.cpu)
-+		memset(ctx->vp8_dec.segment_map.cpu, 0,
-+		       ctx->vp8_dec.segment_map.size);
-+
-+	hantro_vp8_prob_update(ctx, hdr);
-+
-+	reg = G1_REG_CONFIG_DEC_TIMEOUT_E |
-+	      G1_REG_CONFIG_DEC_STRENDIAN_E |
-+	      G1_REG_CONFIG_DEC_INSWAP32_E |
-+	      G1_REG_CONFIG_DEC_STRSWAP32_E |
-+	      G1_REG_CONFIG_DEC_OUTSWAP32_E |
-+	      G1_REG_CONFIG_DEC_CLK_GATE_E |
-+	      G1_REG_CONFIG_DEC_IN_ENDIAN |
-+	      G1_REG_CONFIG_DEC_OUT_ENDIAN |
-+	      G1_REG_CONFIG_DEC_MAX_BURST(16);
-+	vdpu_write_relaxed(vpu, reg, G1_REG_CONFIG);
-+
-+	reg = G1_REG_DEC_CTRL0_DEC_MODE(10);
-+	if (!VP8_FRAME_IS_KEY_FRAME(hdr))
-+		reg |= G1_REG_DEC_CTRL0_PIC_INTER_E;
-+	if (!(hdr->flags & V4L2_VP8_FRAME_HEADER_FLAG_MB_NO_SKIP_COEFF))
-+		reg |= G1_REG_DEC_CTRL0_SKIP_MODE;
-+	if (hdr->lf_header.level == 0)
-+		reg |= G1_REG_DEC_CTRL0_FILTERING_DIS;
-+	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
-+
-+	/* Frame dimensions */
-+	mb_width = VP8_MB_WIDTH(width);
-+	mb_height = VP8_MB_HEIGHT(height);
-+	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(mb_width) |
-+	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(mb_height) |
-+	      G1_REG_DEC_CTRL1_PIC_MB_W_EXT(mb_width >> 9) |
-+	      G1_REG_DEC_CTRL1_PIC_MB_H_EXT(mb_height >> 8);
-+	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
-+
-+	/* Boolean decoder */
-+	reg = G1_REG_DEC_CTRL2_BOOLEAN_RANGE(hdr->coder_state.range)
-+		| G1_REG_DEC_CTRL2_BOOLEAN_VALUE(hdr->coder_state.value);
-+	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL2);
-+
-+	reg = 0;
-+	if (hdr->version != 3)
-+		reg |= G1_REG_DEC_CTRL4_VC1_HEIGHT_EXT;
-+	if (hdr->version & 0x3)
-+		reg |= G1_REG_DEC_CTRL4_BILIN_MC_E;
-+	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL4);
-+
-+	cfg_lf(ctx, hdr);
-+	cfg_qp(ctx, hdr);
-+	cfg_parts(ctx, hdr);
-+	cfg_tap(ctx, hdr);
-+	cfg_ref(ctx, hdr);
-+	cfg_buffers(ctx, hdr);
-+
-+	/* Controls no longer in-use, we can complete them */
-+	v4l2_ctrl_request_complete(vb2_src->vb2_buf.req_obj.req,
-+				   &ctx->ctrl_handler);
-+
-+	schedule_delayed_work(&vpu->watchdog_work, msecs_to_jiffies(2000));
-+
-+	vdpu_write(vpu, G1_REG_INTERRUPT_DEC_E, G1_REG_INTERRUPT);
-+}
-diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-index 3c361c2e9b88..7849852affde 100644
---- a/drivers/staging/media/hantro/hantro_hw.h
-+++ b/drivers/staging/media/hantro/hantro_hw.h
-@@ -12,6 +12,7 @@
- #include <linux/interrupt.h>
- #include <linux/v4l2-controls.h>
- #include <media/mpeg2-ctrls.h>
-+#include <media/vp8-ctrls.h>
- #include <media/videobuf2-core.h>
- 
- struct hantro_dev;
-@@ -47,6 +48,16 @@ struct hantro_mpeg2_dec_hw_ctx {
- 	struct hantro_aux_buf qtable;
- };
- 
-+/**
-+ * struct hantro_vp8d_hw_ctx
-+ * @segment_map:	Segment map buffer.
-+ * @prob_tbl:		Probability table buffer.
-+ */
-+struct hantro_vp8_dec_hw_ctx {
-+	struct hantro_aux_buf segment_map;
-+	struct hantro_aux_buf prob_tbl;
-+};
-+
- /**
-  * struct hantro_codec_ops - codec mode specific operations
-  *
-@@ -99,4 +110,10 @@ void hantro_mpeg2_dec_copy_qtable(u8 *qtable,
- int hantro_mpeg2_dec_init(struct hantro_ctx *ctx);
- void hantro_mpeg2_dec_exit(struct hantro_ctx *ctx);
- 
-+void hantro_g1_vp8_dec_run(struct hantro_ctx *ctx);
-+int hantro_vp8_dec_init(struct hantro_ctx *ctx);
-+void hantro_vp8_dec_exit(struct hantro_ctx *ctx);
-+void hantro_vp8_prob_update(struct hantro_ctx *ctx,
-+			    const struct v4l2_ctrl_vp8_frame_header *hdr);
-+
- #endif /* HANTRO_HW_H_ */
-diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-index 68f45ee66821..cd4eaa256e8b 100644
---- a/drivers/staging/media/hantro/hantro_v4l2.c
-+++ b/drivers/staging/media/hantro/hantro_v4l2.c
-@@ -344,6 +344,7 @@ hantro_update_requires_request(struct hantro_ctx *ctx, u32 fourcc)
- 		ctx->fh.m2m_ctx->out_q_ctx.q.requires_requests = false;
- 		break;
- 	case V4L2_PIX_FMT_MPEG2_SLICE:
-+	case V4L2_PIX_FMT_VP8_FRAME:
- 		ctx->fh.m2m_ctx->out_q_ctx.q.requires_requests = true;
- 		break;
- 	default:
-diff --git a/drivers/staging/media/hantro/hantro_vp8.c b/drivers/staging/media/hantro/hantro_vp8.c
-new file mode 100644
-index 000000000000..66c45335d871
---- /dev/null
-+++ b/drivers/staging/media/hantro/hantro_vp8.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Hantro VPU codec driver
-+ *
-+ * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
-+ */
-+
-+#include "hantro.h"
-+
-+/*
-+ * probs table with packed
-+ */
-+struct vp8_prob_tbl_packed {
-+	u8 prob_mb_skip_false;
-+	u8 prob_intra;
-+	u8 prob_ref_last;
-+	u8 prob_ref_golden;
-+	u8 prob_segment[3];
-+	u8 padding0;
-+
-+	u8 prob_luma_16x16_pred_mode[4];
-+	u8 prob_chroma_pred_mode[3];
-+	u8 padding1;
-+
-+	/* mv prob */
-+	u8 prob_mv_context[2][19];
-+	u8 padding2[2];
-+
-+	/* coeff probs */
-+	u8 prob_coeffs[4][8][3][11];
-+	u8 padding3[96];
-+};
-+
-+void hantro_vp8_prob_update(struct hantro_ctx *ctx,
-+			    const struct v4l2_ctrl_vp8_frame_header *hdr)
-+{
-+	const struct v4l2_vp8_entropy_header *entropy = &hdr->entropy_header;
-+	u32 i, j, k;
-+	u8 *dst;
-+
-+	/* first probs */
-+	dst = ctx->vp8_dec.prob_tbl.cpu;
-+
-+	dst[0] = hdr->prob_skip_false;
-+	dst[1] = hdr->prob_intra;
-+	dst[2] = hdr->prob_last;
-+	dst[3] = hdr->prob_gf;
-+	dst[4] = hdr->segment_header.segment_probs[0];
-+	dst[5] = hdr->segment_header.segment_probs[1];
-+	dst[6] = hdr->segment_header.segment_probs[2];
-+	dst[7] = 0;
-+
-+	dst += 8;
-+	dst[0] = entropy->y_mode_probs[0];
-+	dst[1] = entropy->y_mode_probs[1];
-+	dst[2] = entropy->y_mode_probs[2];
-+	dst[3] = entropy->y_mode_probs[3];
-+	dst[4] = entropy->uv_mode_probs[0];
-+	dst[5] = entropy->uv_mode_probs[1];
-+	dst[6] = entropy->uv_mode_probs[2];
-+	dst[7] = 0; /*unused */
-+
-+	/* mv probs */
-+	dst += 8;
-+	dst[0] = entropy->mv_probs[0][0]; /* is short */
-+	dst[1] = entropy->mv_probs[1][0];
-+	dst[2] = entropy->mv_probs[0][1]; /* sign */
-+	dst[3] = entropy->mv_probs[1][1];
-+	dst[4] = entropy->mv_probs[0][8 + 9];
-+	dst[5] = entropy->mv_probs[0][9 + 9];
-+	dst[6] = entropy->mv_probs[1][8 + 9];
-+	dst[7] = entropy->mv_probs[1][9 + 9];
-+	dst += 8;
-+	for (i = 0; i < 2; ++i) {
-+		for (j = 0; j < 8; j += 4) {
-+			dst[0] = entropy->mv_probs[i][j + 9 + 0];
-+			dst[1] = entropy->mv_probs[i][j + 9 + 1];
-+			dst[2] = entropy->mv_probs[i][j + 9 + 2];
-+			dst[3] = entropy->mv_probs[i][j + 9 + 3];
-+			dst += 4;
-+		}
-+	}
-+	for (i = 0; i < 2; ++i) {
-+		dst[0] = entropy->mv_probs[i][0 + 2];
-+		dst[1] = entropy->mv_probs[i][1 + 2];
-+		dst[2] = entropy->mv_probs[i][2 + 2];
-+		dst[3] = entropy->mv_probs[i][3 + 2];
-+		dst[4] = entropy->mv_probs[i][4 + 2];
-+		dst[5] = entropy->mv_probs[i][5 + 2];
-+		dst[6] = entropy->mv_probs[i][6 + 2];
-+		dst[7] = 0;	/*unused */
-+		dst += 8;
-+	}
-+
-+	/* coeff probs (header part) */
-+	dst = ctx->vp8_dec.prob_tbl.cpu;
-+	dst += (8 * 7);
-+	for (i = 0; i < 4; ++i) {
-+		for (j = 0; j < 8; ++j) {
-+			for (k = 0; k < 3; ++k) {
-+				dst[0] = entropy->coeff_probs[i][j][k][0];
-+				dst[1] = entropy->coeff_probs[i][j][k][1];
-+				dst[2] = entropy->coeff_probs[i][j][k][2];
-+				dst[3] = entropy->coeff_probs[i][j][k][3];
-+				dst += 4;
-+			}
-+		}
-+	}
-+
-+	/* coeff probs (footer part) */
-+	dst = ctx->vp8_dec.prob_tbl.cpu;
-+	dst += (8 * 55);
-+	for (i = 0; i < 4; ++i) {
-+		for (j = 0; j < 8; ++j) {
-+			for (k = 0; k < 3; ++k) {
-+				dst[0] = entropy->coeff_probs[i][j][k][4];
-+				dst[1] = entropy->coeff_probs[i][j][k][5];
-+				dst[2] = entropy->coeff_probs[i][j][k][6];
-+				dst[3] = entropy->coeff_probs[i][j][k][7];
-+				dst[4] = entropy->coeff_probs[i][j][k][8];
-+				dst[5] = entropy->coeff_probs[i][j][k][9];
-+				dst[6] = entropy->coeff_probs[i][j][k][10];
-+				dst[7] = 0;	/*unused */
-+				dst += 8;
-+			}
-+		}
-+	}
-+}
-+
-+int hantro_vp8_dec_init(struct hantro_ctx *ctx)
-+{
-+	struct hantro_dev *vpu = ctx->dev;
-+	struct hantro_aux_buf *aux_buf;
-+	unsigned int mb_width, mb_height;
-+	size_t segment_map_size;
-+	int ret;
-+
-+	/* segment map table size calculation */
-+	mb_width = DIV_ROUND_UP(ctx->dst_fmt.width, 16);
-+	mb_height = DIV_ROUND_UP(ctx->dst_fmt.height, 16);
-+	segment_map_size = round_up(DIV_ROUND_UP(mb_width * mb_height, 4), 64);
-+
-+	/*
-+	 * In context init the dma buffer for segment map must be allocated.
-+	 * And the data in segment map buffer must be set to all zero.
-+	 */
-+	aux_buf = &ctx->vp8_dec.segment_map;
-+	aux_buf->size = segment_map_size;
-+	aux_buf->cpu = dma_alloc_coherent(vpu->dev, aux_buf->size,
-+					  &aux_buf->dma, GFP_KERNEL);
-+	if (!aux_buf->cpu)
-+		return -ENOMEM;
-+
-+	memset(aux_buf->cpu, 0, aux_buf->size);
-+
-+	/*
-+	 * Allocate probability table buffer,
-+	 * total 1208 bytes, 4K page is far enough.
-+	 */
-+	aux_buf = &ctx->vp8_dec.prob_tbl;
-+	aux_buf->size = sizeof(struct vp8_prob_tbl_packed);
-+	aux_buf->cpu = dma_alloc_coherent(vpu->dev, aux_buf->size,
-+					  &aux_buf->dma, GFP_KERNEL);
-+	if (!aux_buf->cpu) {
-+		ret = -ENOMEM;
-+		goto err_free_seg_map;
-+	}
-+
-+	return 0;
-+
-+err_free_seg_map:
-+	dma_free_coherent(vpu->dev, ctx->vp8_dec.segment_map.size,
-+			  ctx->vp8_dec.segment_map.cpu,
-+			  ctx->vp8_dec.segment_map.dma);
-+
-+	return ret;
-+}
-+
-+void hantro_vp8_dec_exit(struct hantro_ctx *ctx)
-+{
-+	struct hantro_vp8_dec_hw_ctx *vp8_dec = &ctx->vp8_dec;
-+	struct hantro_dev *vpu = ctx->dev;
-+
-+	dma_free_coherent(vpu->dev, vp8_dec->segment_map.size,
-+			  vp8_dec->segment_map.cpu, vp8_dec->segment_map.dma);
-+	dma_free_coherent(vpu->dev, vp8_dec->prob_tbl.size,
-+			  vp8_dec->prob_tbl.cpu, vp8_dec->prob_tbl.dma);
-+}
-diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-index bcacc4f51093..f1b573a006ae 100644
---- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-@@ -74,6 +74,19 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
- 			.step_height = MPEG2_MB_DIM,
- 		},
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_VP8_FRAME,
-+		.codec_mode = HANTRO_MODE_VP8_DEC,
-+		.max_depth = 2,
-+		.frmsize = {
-+			.min_width = 48,
-+			.max_width = 3840,
-+			.step_width = VP8_MB_DIM,
-+			.min_height = 48,
-+			.max_height = 2160,
-+			.step_height = VP8_MB_DIM,
-+		},
-+	},
- };
- 
- static irqreturn_t rk3288_vepu_irq(int irq, void *dev_id)
-@@ -155,6 +168,12 @@ static const struct hantro_codec_ops rk3288_vpu_codec_ops[] = {
- 		.init = hantro_mpeg2_dec_init,
- 		.exit = hantro_mpeg2_dec_exit,
- 	},
-+	[HANTRO_MODE_VP8_DEC] = {
-+		.run = hantro_g1_vp8_dec_run,
-+		.reset = rk3288_vpu_dec_reset,
-+		.init = hantro_vp8_dec_init,
-+		.exit = hantro_vp8_dec_exit,
-+	},
- };
- 
- /*
-@@ -177,7 +196,8 @@ const struct hantro_variant rk3288_vpu_variant = {
- 	.dec_offset = 0x400,
- 	.dec_fmts = rk3288_vpu_dec_fmts,
- 	.num_dec_fmts = ARRAY_SIZE(rk3288_vpu_dec_fmts),
--	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER,
-+	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER |
-+		 HANTRO_VP8_DECODER,
- 	.codec_ops = rk3288_vpu_codec_ops,
- 	.irqs = rk3288_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
+
+EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
+
+w/ patchset:
+
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
+
+EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+
+v5 -> v6:
+ * don't overwrites whatever the user specified
+ * introduce kvm_can_post_timer_interrupt and kvm_use_posted_timer_interrupt
+ * remove kvm_hlt_in_guest() condition
+ * squash all of 2/3/4 together
+
+v4 -> v5:
+ * update patch description in patch 1/4
+ * feed latest apic->lapic_timer.expired_tscdeadline to kvm_wait_lapic_expire()
+ * squash advance timer handling to patch 2/4
+
+v3 -> v4:
+ * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
+ * don't posted inject already-expired timer
+
+v2 -> v3:
+ * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
+ * check kvm_hlt_in_guest instead
+
+v1 -> v2:
+ * check vcpu_halt_in_guest
+ * move module parameter from kvm-intel to kvm
+ * add housekeeping_enabled
+ * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+
+
+
+Wanpeng Li (2):
+  KVM: LAPIC: Make lapic timer unpinned
+  KVM: LAPIC: Inject timer interrupt via posted interrupt
+
+ arch/x86/kvm/lapic.c            | 60 +++++++++++++++++++++++++++++------------
+ arch/x86/kvm/lapic.h            |  3 ++-
+ arch/x86/kvm/svm.c              |  2 +-
+ arch/x86/kvm/vmx/vmx.c          |  5 ++--
+ arch/x86/kvm/x86.c              | 12 +++++----
+ arch/x86/kvm/x86.h              |  2 ++
+ include/linux/sched/isolation.h |  2 ++
+ kernel/sched/isolation.c        |  6 +++++
+ 8 files changed, 66 insertions(+), 26 deletions(-)
+
 -- 
-2.20.1
+1.8.3.1
 
