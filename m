@@ -2,176 +2,129 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C11AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B68AC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA8121738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7936B216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfGEVUy convert rfc822-to-8bit (ORCPT
+        id S1728137AbfGEVZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:20:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50928 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbfGEVUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:20:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 573CA87628;
-        Fri,  5 Jul 2019 21:20:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D6354C7;
-        Fri,  5 Jul 2019 21:20:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, jmorris@namei.org, ebiederm@xmission.com,
-        dwalsh@redhat.com, keyrings@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Keys: Set 3 - Keyrings namespacing for 5.3
+        Fri, 5 Jul 2019 17:25:01 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58063 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfGEVZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:25:01 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 5B1981C0003;
+        Fri,  5 Jul 2019 21:24:48 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 23:24:48 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Josef Friedl <josef.friedl@speed.at>
+Subject: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Message-ID: <20190705212448.GB12409@piout.net>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-4-frank-w@public-files.de>
+ <20190704204336.GJ3692@piout.net>
+ <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27849.1562361644.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Fri, 05 Jul 2019 22:20:44 +0100
-Message-ID: <27850.1562361644@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 05 Jul 2019 21:20:53 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here's my third block of keyrings changes for the next merge window.
+On 05/07/2019 17:35:46+0200, Frank Wunderlich wrote:
+> Hi Alexander,
+> 
+> thank you for the Review
+> 
+> > Gesendet: Donnerstag, 04. Juli 2019 um 22:43 Uhr
+> > Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+> > > -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
+> > > -	if (IS_ERR(rtc->rtc_dev))
+> > > -		return PTR_ERR(rtc->rtc_dev);
+> > > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> > > +					mtk_rtc_irq_handler_thread,
+> > > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > > +					"mt6397-rtc", rtc);
+> > >
+> >
+> > This change may lead to a crash and the allocation was intentionally
+> > placed before the irq request.
+> 
+> i got no crash till now, but i will try to move the allocation before irq-request
+> 
 
-These patches help make keys and keyrings more namespace aware.  Firstly
-some miscellaneous patches to make the process easier:
+Let's say the RTC has been used to start your platform, then the irq
+handler will be called as soon as the irq is requested, leading to a
+null pointer dereference.
 
- (1) Simplify key index_key handling so that the word-sized chunks
-     assoc_array requires don't have to be shifted about, making it easier
-     to add more bits into the key.
+> > > -	ret = request_threaded_irq(rtc->irq, NULL,
+> > > -				   mtk_rtc_irq_handler_thread,
+> > > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > > -				   "mt6397-rtc", rtc);
+> > >  	if (ret) {
+> > >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+> > >  			rtc->irq, ret);
+> > > @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> > >
+> > >  	device_init_wakeup(&pdev->dev, 1);
+> > >
+> > > +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+> > > +	if (IS_ERR(rtc->rtc_dev))
+> > > +		return PTR_ERR(rtc->rtc_dev);
+> > > +
+> > >  	rtc->rtc_dev->ops = &mtk_rtc_ops;
+> 
+> 
+> > >  static const struct of_device_id mt6397_rtc_of_match[] = {
+> > > +	{ .compatible = "mediatek,mt6323-rtc", },
+> >
+> > Unrelated change, this is not an improvement and must be accompanied by
+> > a documentation change.
+> 
+> documentation is changed in 1/7 defining this compatible. i called it improvement because existing driver now supports another chip
+> 
 
- (2) Cache the hash value in the key so that we don't have to calculate on
-     every key we examine during a search (it involves a bunch of
-     multiplications).
+Yes and IIRC, I did comment that the rtc change also had to be separated
+from 1/7.
 
- (3) Allow keying_search() to search non-recursively.
+Also, I really doubt this new compatible is necessary at all as you
+could simply directly use mediatek,mt6397-rtc.
 
-Then the main patches:
-
- (4) Make it so that keyring names are per-user_namespace from the point of
-     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
-     cross-user_namespace.
-
-     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEYRING_NAME for this.
-
- (5) Move the user and user-session keyrings to the user_namespace rather
-     than the user_struct.  This prevents them propagating directly across
-     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
-     from the current user_namespace).
-
- (6) Make it possible to include the target namespace in which the key shall
-     operate in the index_key.  This will allow the possibility of multiple
-     keys with the same description, but different target domains to be held
-     in the same keyring.
-
-     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEY_TAG for this.
-
- (7) Make it so that keys are implicitly invalidated by removal of a domain
-     tag, causing them to be garbage collected.
-
- (8) Institute a network namespace domain tag that allows keys to be
-     differentiated by the network namespace in which they operate.  New keys
-     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
-     domain in force when they are created.
-
- (9) Make it so that the desired network namespace can be handed down into the
-     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
-     specific to the network namespace of the superblock.
-
-     This also means that the keys in the DNS record cache are thenceforth
-     namespaced, provided network filesystems pass the appropriate network
-     namespace down into dns_query().
-
-     For DNS, AFS and NFS are good, whilst CIFS and Ceph are not.  Other
-     cache keyrings, such as idmapper keyrings, also need to set the domain
-     tag - for which they need access to the network namespace of the
-     superblock.
-
-David
----
-The following changes since commit 3b8c4a08a471d56ecaaca939c972fdf5b8255629:
-
-  keys: Kill off request_key_async{,_with_auxdata} (2019-06-26 20:58:13 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-namespace-20190627
-
-for you to fetch changes up to a58946c158a040068e7c94dc1d58bbd273258068:
-
-  keys: Pass the network namespace into request_key mechanism (2019-06-27 23:02:12 +0100)
-
-----------------------------------------------------------------
-Keyrings namespacing
-
-----------------------------------------------------------------
-David Howells (9):
-      keys: Simplify key description management
-      keys: Cache the hash value to avoid lots of recalculation
-      keys: Add a 'recurse' flag for keyring searches
-      keys: Namespace keyring names
-      keys: Move the user and user-session keyrings to the user_namespace
-      keys: Include target namespace in match criteria
-      keys: Garbage collect keys for which the domain has been removed
-      keys: Network namespace domain tag
-      keys: Pass the network namespace into request_key mechanism
-
- Documentation/security/keys/core.rst        |  38 ++--
- Documentation/security/keys/request-key.rst |  29 ++-
- certs/blacklist.c                           |   2 +-
- crypto/asymmetric_keys/asymmetric_type.c    |   2 +-
- fs/afs/addr_list.c                          |   4 +-
- fs/afs/dynroot.c                            |   8 +-
- fs/cifs/dns_resolve.c                       |   3 +-
- fs/nfs/dns_resolve.c                        |   3 +-
- fs/nfs/nfs4idmap.c                          |   2 +-
- include/linux/dns_resolver.h                |   3 +-
- include/linux/key-type.h                    |   3 +
- include/linux/key.h                         |  81 ++++++++-
- include/linux/sched/user.h                  |  14 --
- include/linux/user_namespace.h              |  12 +-
- include/net/net_namespace.h                 |   3 +
- include/uapi/linux/keyctl.h                 |   2 +
- kernel/user.c                               |   8 +-
- kernel/user_namespace.c                     |   9 +-
- lib/digsig.c                                |   2 +-
- net/ceph/messenger.c                        |   3 +-
- net/core/net_namespace.c                    |  20 +++
- net/dns_resolver/dns_key.c                  |   1 +
- net/dns_resolver/dns_query.c                |   7 +-
- net/rxrpc/key.c                             |   6 +-
- net/rxrpc/security.c                        |   2 +-
- security/integrity/digsig_asymmetric.c      |   4 +-
- security/keys/gc.c                          |   2 +-
- security/keys/internal.h                    |  10 +-
- security/keys/key.c                         |   5 +-
- security/keys/keyctl.c                      |   8 +-
- security/keys/keyring.c                     | 263 ++++++++++++++++------------
- security/keys/persistent.c                  |  10 +-
- security/keys/proc.c                        |   3 +-
- security/keys/process_keys.c                | 262 +++++++++++++++++----------
- security/keys/request_key.c                 |  62 ++++---
- security/keys/request_key_auth.c            |   3 +-
- 36 files changed, 589 insertions(+), 310 deletions(-)
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
