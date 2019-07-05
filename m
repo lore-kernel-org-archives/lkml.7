@@ -2,133 +2,156 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F6BC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B9EC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79938218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDC72147A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tgep8XUS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bV5DgE/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfGEJHQ (ORCPT
+        id S1728172AbfGEJI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:07:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33742 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfGEJHP (ORCPT
+        Fri, 5 Jul 2019 05:08:59 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35713 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfGEJI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:07:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m4so4035221pgk.0;
-        Fri, 05 Jul 2019 02:07:15 -0700 (PDT)
+        Fri, 5 Jul 2019 05:08:58 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w20so7624342edd.2;
+        Fri, 05 Jul 2019 02:08:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oAbtO0VVEgPrns4ECpP/l7PElOulKUdNK8WJ9smHNMY=;
-        b=Tgep8XUSV0dm/4njOv+mq3T9bmSTqiX2/FXEOlNqGtx6ARJjfBTy7NN3QIRxz+fDwf
-         a5nYIv9Z26yE+U4P8icDrSSzw2c33eauBtLiQkMaOwZSW14zK21kIsQHZT/gPkHMGlQU
-         sWme3teVQ7zob+AJqr3DZIV5TaJHR6Vo1cm6mjfjPcoWq28iB54FPan93CNGTzLgUiVK
-         Jurj+8efcZJSx0U4m7zoZYxeNpMDkvyktFmW+RjxOe3hVAGD4yI0EOL1Q+d0KWZASk6Z
-         QbpLmcrgRhHTC3LZ2KX2Ri9NtzBXM1VsnxZreuqJxgeA0DeJxl9oYN/Q+hbaCplVXpIh
-         iiQg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kSiMC23ISGGQqVJSQMfXoclzcfCXE9jKziQow8Aqu58=;
+        b=bV5DgE/awiZCo70PJlZnyqIWgNigM3VnXItEoGqIjp2VwZAjg1Xtuv4hQpPEB0Jt6F
+         Fq5BSo7B/rY4PMP/4Nwu27G69SQWZt+J6PAH2WXApCEy7ZPAb3tfWAIIP1vcjgWxUGlW
+         eNQwjSrBPEfkUsBUD50OmCAvjzjhzwnTWIysIdTelYTQHmRPPTMScD6/trE7whDBf6HV
+         G2WCWOFKxTlOoQwaIFS2Tr5i7U7WxlJCtJalVwHV9bXmlsNH/BVDB9FOg1yy7PB5xxRR
+         H9Q5HcXpRB4X31oxQyBpicdAK4o0cRVRE8CevPbt2rFH5oT+MCW3xSEYts34UIcnBtz0
+         GbAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oAbtO0VVEgPrns4ECpP/l7PElOulKUdNK8WJ9smHNMY=;
-        b=WO62YA4W7nU9TrxrqKxXvP+oecgqnQllLhxRSXjiHxIapJmVK9fEJw9Ksm82RZZHgq
-         /cgvPZiHiyV+ThxHOFXZxffxS2ioAL+elOUKOz+QBX44C5Bz/tceTATr5KHDgbMMiw6e
-         dCucNwDWsXThS5qWJ5my+hDcv2v48GyCgQkBwzRon65BByi5ImlU0XqPpHqDkbNEVvPT
-         rzR4f8YRp58hZfe2hGNZMpDQ84bJmJXV1oilBjZX2jIoHqrfQvwv53rPhOjQqQqzIPO3
-         Y2Ah9HHx1Lnaf4ee2PEvK1W0q+4waUc8/g4AloZwMD+7QgSnMwV777yR+/AgafXA/BSS
-         O8SA==
-X-Gm-Message-State: APjAAAV4+yZj4/JslhZ9t4SeSblG9VDB45HA93kPfwMqOqzoBWF85Ggk
-        12IGLHx2v02jdypXuHmL1AA=
-X-Google-Smtp-Source: APXvYqyCLI0BwJN0qCmMnQOPG1rfLeBXg7tea+um46myS9fGSPFJ6NaKneXX18rGafWT/n39F5kHYw==
-X-Received: by 2002:a17:90a:1aa4:: with SMTP id p33mr4012219pjp.27.1562317634927;
-        Fri, 05 Jul 2019 02:07:14 -0700 (PDT)
-Received: from localhost.localdomain ([163.152.162.99])
-        by smtp.gmail.com with ESMTPSA id x26sm8587339pfq.69.2019.07.05.02.07.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 02:07:14 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 18:07:09 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     shuah@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] usbip: Implement SG support to vhci
-Message-ID: <20190705090708.GA3251@localhost.localdomain>
-References: <20190704172435.GA11673@localhost.localdomain>
- <Pine.LNX.4.44L0.1907042138091.840-100000@netrider.rowland.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kSiMC23ISGGQqVJSQMfXoclzcfCXE9jKziQow8Aqu58=;
+        b=JHHPGUKSpXxpFwYBds1FPWCCwK+2aq3Ggph5/1/HQAvPFPzB3qBnwRMoM0EAjPhQf6
+         oTyN3fEuUuXJul5RhFfohiIQRj/NwVxuHCfIcnzciwuKbo1CnWm/+jhZPnp3qqnL/70b
+         fj+Mhg2ghHlEsAuAc+dsz+kYrCym7wDtIxdH/3Z/ti9nVHlWhvAWMlOBCu/DhgXzZd1r
+         +vD+PM/C7Ram3ZUs6jAvbHbIQUDmLZlwEucmQcBGzwDzJzujDeSqVWq9QILdMFNGmFPB
+         bxIMtXlvHyloBh5491/pmM+NGCe1g3YjTaQLhk9j4Dph6Ph0oIp3JNRIFDa5fJxOzcWI
+         4mHw==
+X-Gm-Message-State: APjAAAVHZoJdrNDHXvy62olkreQfsn95/LJ53GiDfeQMxl/DUFHAnQF9
+        XXgxWr5kG43loH2EDzlkdK7GNLRnPklTFHCK2Bg=
+X-Google-Smtp-Source: APXvYqx22fS+pUeLNsjnHvqrFs6EQGY5EsmKNI1CNKh15QT+gqZBMDoV2f19y7PER6ojlIisVn9BH1EpPtvyAEyWL8k=
+X-Received: by 2002:a17:906:b7d8:: with SMTP id fy24mr2518380ejb.230.1562317736258;
+ Fri, 05 Jul 2019 02:08:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1907042138091.840-100000@netrider.rowland.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
+ <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com> <20190705044945.GA30115@lunn.ch>
+In-Reply-To: <20190705044945.GA30115@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 5 Jul 2019 12:08:45 +0300
+Message-ID: <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 09:41:04PM -0400, Alan Stern wrote:
-> On Fri, 5 Jul 2019, Suwan Kim wrote:
-> 
-> > On Mon, Jun 24, 2019 at 01:24:15PM -0400, Alan Stern wrote:
-> > > On Mon, 24 Jun 2019, Suwan Kim wrote:
-> > > 
-> > > > > > +	hcd->self.sg_tablesize = ~0;
-> > > > > > +	hcd->self.no_sg_constraint = 1;
-> > > > > 
-> > > > > You probably shouldn't do this, for two reasons.  First, sg_tablesize
-> > > > > of the server's HCD may be smaller than ~0.  If the client's value is
-> > > > > larger than the server's, a transfer could be accepted on the client
-> > > > > but then fail on the server because the SG list was too big.
-> > > 
-> > > On the other hand, I don't know of any examples where an HCD has 
-> > > sg_tablesize set to anything other than 0 or ~0.  vhci-hcd might end up 
-> > > being the only one.
-> > > 
-> > > > > Also, you may want to restrict the size of SG transfers even further,
-> > > > > so that you don't have to allocate a tremendous amount of memory all at
-> > > > > once on the server.  An SG transfer can be quite large.  I don't know 
-> > > > > what a reasonable limit would be -- 16 perhaps?
-> > > > 
-> > > > Is there any reason why you think that 16 is ok? Or Can I set this
-> > > > value as the smallest value of all HC? I think that sg_tablesize
-> > > > cannot be a variable value because vhci interacts with different
-> > > > machines and all machines has different sg_tablesize value.
-> > > 
-> > > I didn't have any good reason for picking 16.  Using the smallest value 
-> > > of all the HCDs seems like a good idea.
-> > 
-> > I also have not seen an HCD with a value other than ~0 or 0 except for
-> > whci which uses 2048, but is not 2048 the maximum value of sg_tablesize?
-> > If so, ~0 is the minimum value of sg_tablesize that supports SG. Then
-> > can vhci use ~0 if we don't consider memory pressure of the server?
-> > 
-> > If all of the HCDs supporting SG have ~0 as sg_tablesize value, I
-> > think that whether we use an HCD locally or remotely, the degree of
-> > memory pressure is same in both local and remote usage.
-> 
-> You have a lot of leeway.  For example, there's no reason a single SG
-> transfer on the client has to correspond to a single SG transfer on the
-> host.  In theory the client's vhci-hcd can break a large SG transfer up
-> into a bunch of smaller pieces and send them to the host one by one,
-> then reassemble the results to complete the original transfer.  That
-> way the memory pressure on the host would be a lot smaller than on the
-> client.
+Hi Andrew,
 
-Thank you for the feedback, Alan. I understood your comment. It
-seems to be a good idea to use sg_tablesize to alleviate the memory
-pressure of the host. But I think 16 is too small for USB 3.0 device
-because USB 3.0 storage device in my machine usually uses more than
-30 SG entries. So, I will set sg_tablesize to 32.
+On Fri, 5 Jul 2019 at 07:49, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> Hi Vladimir
+>
+> > - DSA is typically used for discrete switches, switchdev is typically
+> > used for embedded ones.
+>
+> Typically DSA is for discrete switches, but not exclusively. The
+> b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
+> different to Ocelot, except ARM vs MIPS. Also, i would disagree that
+> switchdev is used for embedded ones. Mellonex devices are discrete, on
+> a PCIe bus. I believe Netronome devices are also discrete PCIe
+> devices. In fact, i think ocelot is the only embedded switchdev
+> switch.
+>
+> So embedded vs discrete plays no role here at all.
+>
 
-Regards
+drivers/staging/fsl-dpaa2/ethsw/ is another example of switchdev
+driver for an embedded switch.
+I would give it to you that the sample size is probably too small to
+say 'typically', but my point was that in order to support cascaded
+switches it makes more sense for those to be discrete.
 
-Suwan Kim
+> > - The D in DSA is for cascaded switches. Apart from the absence of
+> > such a "Ocelot SoC" driver (which maybe can be written, I don't know),
+> > I think the switching core itself has some fundamental limitations
+> > that make a DSA implementation questionable:
+>
+> There is no requirement to implement D in DSA. In fact, only Marvell
+> does. None of the other switches do. And you will also find that most
+> boards with a Marvell switch use a single device. D in DSA is totally
+> optional. In fact, DSA is built from the ground up that nearly
+> everything is optional. Take a look at mv88e6060, as an example. It
+> implements nearly nothing. It cannot even offload a bridge to the
+> switch.
+>
+
+Let me see if I get your point.
+The D is optional, and the S is optional. So what's left? :)
+Also, there's a big difference between "the hardware can't do it" and
+"the driver doesn't implement it". If I follow your argument, would
+you write a DSA driver for a device that doesn't do L2 switching?
+Along that same line, what benefit does the DSA model bring to a
+switch that can't do cascading, compared to switchdev? I'm asking this
+as a user, not as a developer.
+
+> > So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
+> > sense if the whole purpose is to hide the CPU-facing netdev.
+>
+> You actually convinced me the exact opposite. You described the
+> headers which are needed to implement DSA. The switch sounds like it
+> can do what DSA requires. So DSA is the correct model.
+>
+>      Andrew
+
+Somebody actually asked, with the intention of building a board, if
+it's possible to cascade the LS1028A embedded switch (Felix) with
+discrete SJA1105 devices - Felix being at the top of the switch tree.
+Does the DSA model support heterogeneous setups (parsing stacked
+headers)? I can't tell if that's how EDSA tags work. With switchdev
+for Felix there wouldn't be any problem - it just wouldn't be part of
+the DSA tree and its own driver would remove its tags before DSA would
+look at the rest.
+
+Regards,
+-Vladimir
