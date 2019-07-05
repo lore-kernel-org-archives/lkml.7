@@ -2,203 +2,130 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1D8C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797F6C4649F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E2A20856
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DF520856
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVbjMfv4"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="I/9cvSKF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hw+amZCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfGEQDU (ORCPT
+        id S1728210AbfGEQDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:03:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43071 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfGEQDU (ORCPT
+        Fri, 5 Jul 2019 12:03:24 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38929 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725791AbfGEQDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:03:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so4779986plb.10;
-        Fri, 05 Jul 2019 09:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Tpm/49CMge9GGSgW5OlmplqW6PGiorTO4o8V9fLZ7hE=;
-        b=ZVbjMfv4tekvvXfIui1y1EotpSdh0IvEFyS/dHxd0l1Qx63+wLnBabygQzc0U1Fz/G
-         ETJ0SI8RS/UaEKKH5+pk9PguG9pYwxhppYGHvKcEg7oGOa+CpxN1+IqYrmp22Xuu5l5T
-         a4bcsWAW5Rf835AsHzlgv1qsWDBzKqRtKCSq9I9qOfL2dAVXpI13p0woJOdtjQkil6EA
-         iske6VhLtgmOl6P2vDZHsWdbi23HmdoDu4y3h9JPIEu366d81joZFconmiLUUogsjrmN
-         7PxDecJyrECO88iNV4/rPMFqHuK3++7udWJmlC7dTTQWPF6tiVCvKVcICeucbcD+cYjy
-         vn6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Tpm/49CMge9GGSgW5OlmplqW6PGiorTO4o8V9fLZ7hE=;
-        b=KQqDnFnhAFKlXau5aQRqIqjQuCRefaXOZp7n6NP7P0tuaGVMlkDAv+Qh66JwZSEFdY
-         HuwKlkWqn2t4Y+x6KT8DwXE60ucdxhilVdGduDtfTjHqbB/5HAFks7zoEV5i8K+Hu2jW
-         kZAuqzCP0yYEM1oV/xFH8F7dLbsl9UvMl7NDRObN5CUqupJ1cbXyKPa6LZkSf4BKLo/Y
-         2ox9+6X8yAJcj4EIWPYvi+eA5MtugifPRQgmb3oMVHbR6+FrOiY1UB50SrTErapuk7iU
-         1K3hZw5tYOwm6xdPoKNmGOc638SxSxla7/14OSMuMiHXxGT/ZHgcsJeIhUKOnWsZmSw9
-         neew==
-X-Gm-Message-State: APjAAAV9LfQKPYQcVb6XJ6eUFtwkwVD8lr53bv4s98N4LydeEB18L3kP
-        +zRAloyjj500ThYrXwYHhwE=
-X-Google-Smtp-Source: APXvYqxGzCdLXelAJUEGE3ud5sNVpGihTJoNCAeK33dQhBfTKH/g3SgJIePXQFNOshDssjw1qneJBw==
-X-Received: by 2002:a17:902:a714:: with SMTP id w20mr6485494plq.127.1562342599378;
-        Fri, 05 Jul 2019 09:03:19 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id b36sm22013156pjc.16.2019.07.05.09.03.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 09:03:18 -0700 (PDT)
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
- <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
- <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
- <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
- <20190705044945.GA30115@lunn.ch>
- <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <c60df66a-b3c9-1445-36c6-cad7c6b75550@gmail.com>
-Date:   Fri, 5 Jul 2019 09:03:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 12:03:22 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id E434F21BF9;
+        Fri,  5 Jul 2019 12:03:20 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 05 Jul 2019 12:03:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=nxXsrBvSCyfZn7lvsUnCveEU0u1
+        qRR/TUCZV5FoBGPw=; b=I/9cvSKFgp4r/1SqBkTpdd3ht7IToDsDIMuw32MM9kf
+        x580JDtAMKwkK0T3mmgL0JEhKLa6UouMTedsaxmZTR1K3ch4X+A3vn0q9M/XiYNO
+        DDBSwIaDPshSzvOuNtX1T2QQgLFq7440Ppz+sJ4A6vUyHLYoH7OBb4KwbeC7v6b+
+        yavdbhrwnEsYhOG4K9Wb2YcpW1VwSdZHrgXSg87m6bDgpgerPCg5hZre7NVcDDy+
+        ZIdev1QbGVXtQzCIvYMF0ZpU2JaBD3w4NWTWipFYKyINtBfBrpkG/yA2J4unEX/K
+        A0c5eCgOy0n7OpnX0b9Kd+QdLKdcXVt32jsdnEE743w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=nxXsrB
+        vSCyfZn7lvsUnCveEU0u1qRR/TUCZV5FoBGPw=; b=Hw+amZCXOUBtTBXNBl8Nm0
+        h38hg4kgl4n1+zZ3UXylSlGZzUuziDkwYTr0AFNXbRbs7KXJcpvcQ18OSsb+W6tR
+        DY6kfRT67vwn6dC7bmpuekuCpbSa8NFGZMt5qSpOeLSxJgwGlGob/nWx7rzhjTMz
+        E0/PDeZA5opQ40vrXjkNx1b5JfIvkMTBjFIIgfZVU4QDn/j+Y9nyvCsUEdrvj60X
+        Gk4AL1f6xZ6/iBUu9x9SQouOgdGwbKjgecTQ2L4jHNMlgIj7MaZcAa11mTOHU8WH
+        VffW3zzZzIz6uw9JCvLZnwuMaQSEJN13YycYjraHSwkVtorPbBAuuHG9Pyq779fg
+        ==
+X-ME-Sender: <xms:yHQfXT7Z4_kTN8UqwTFZmfrkg_Tr3iubnc18i-nwgZQtwNDkwe6Ydg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrfeeggdeljecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesthdtre
+    dttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:yHQfXdwKK6GcjoaGCRS5n8a83Rm7TUt6qhPdgP780elqnH7sizu4eA>
+    <xmx:yHQfXTCQMUlX8_R4_hSmDPw6gTifccnkE0Jk4UZZ8V0P3GZJ5grALw>
+    <xmx:yHQfXVbT6BmgthCH2eetW_2EYRpYaW8_aU497nqaayLsSH7ynrykYA>
+    <xmx:yHQfXTwDg7E-eQq2P8FQgqJOM9FfN55OlWksKH0M13AxCqTPCVKFCA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1ADCB380074;
+        Fri,  5 Jul 2019 12:03:20 -0400 (EDT)
+Date:   Fri, 5 Jul 2019 18:03:18 +0200
+From:   Greg KH <greg@kroah.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gnault@redhat.com, stable-commits@vger.kernel.org
+Subject: Re: Patch "netfilter: ipv6: nf_defrag: accept duplicate fragments
+ again" has been added to the 4.19-stable tree
+Message-ID: <20190705160318.GA632@kroah.com>
+References: <20190705140421.28F82218D2@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705140421.28F82218D2@mail.kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/5/2019 2:08 AM, Vladimir Oltean wrote:
-> Hi Andrew,
+On Fri, Jul 05, 2019 at 10:04:20AM -0400, Sasha Levin wrote:
+> This is a note to let you know that I've just added the patch titled
 > 
-> On Fri, 5 Jul 2019 at 07:49, Andrew Lunn <andrew@lunn.ch> wrote:
->>
->> Hi Vladimir
->>
->>> - DSA is typically used for discrete switches, switchdev is typically
->>> used for embedded ones.
->>
->> Typically DSA is for discrete switches, but not exclusively. The
->> b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
->> different to Ocelot, except ARM vs MIPS. Also, i would disagree that
->> switchdev is used for embedded ones. Mellonex devices are discrete, on
->> a PCIe bus. I believe Netronome devices are also discrete PCIe
->> devices. In fact, i think ocelot is the only embedded switchdev
->> switch.
->>
->> So embedded vs discrete plays no role here at all.
->>
+>     netfilter: ipv6: nf_defrag: accept duplicate fragments again
 > 
-> drivers/staging/fsl-dpaa2/ethsw/ is another example of switchdev
-> driver for an embedded switch.
-> I would give it to you that the sample size is probably too small to
-> say 'typically', but my point was that in order to support cascaded
-> switches it makes more sense for those to be discrete.
+> to the 4.19-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 > 
->>> - The D in DSA is for cascaded switches. Apart from the absence of
->>> such a "Ocelot SoC" driver (which maybe can be written, I don't know),
->>> I think the switching core itself has some fundamental limitations
->>> that make a DSA implementation questionable:
->>
->> There is no requirement to implement D in DSA. In fact, only Marvell
->> does. None of the other switches do. And you will also find that most
->> boards with a Marvell switch use a single device. D in DSA is totally
->> optional. In fact, DSA is built from the ground up that nearly
->> everything is optional. Take a look at mv88e6060, as an example. It
->> implements nearly nothing. It cannot even offload a bridge to the
->> switch.
->>
+> The filename of the patch is:
+>      netfilter-ipv6-nf_defrag-accept-duplicate-fragments-.patch
+> and it can be found in the queue-4.19 subdirectory.
 > 
-> Let me see if I get your point.
-> The D is optional, and the S is optional. So what's left? :)
-> Also, there's a big difference between "the hardware can't do it" and
-> "the driver doesn't implement it". If I follow your argument, would
-> you write a DSA driver for a device that doesn't do L2 switching?
-> Along that same line, what benefit does the DSA model bring to a
-> switch that can't do cascading, compared to switchdev? I'm asking this
-> as a user, not as a developer.
-
-As an user, I don't think there are compelling arguments to either
-switchdev or DSA because the end result is the same: network devices
-that can offload "stuff". As a developer though, there is much less code
-to write with DSA than with switchdev to get your HW live.
-
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
 > 
->>> So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
->>> sense if the whole purpose is to hide the CPU-facing netdev.
->>
->> You actually convinced me the exact opposite. You described the
->> headers which are needed to implement DSA. The switch sounds like it
->> can do what DSA requires. So DSA is the correct model.
->>
->>      Andrew
 > 
-> Somebody actually asked, with the intention of building a board, if
-> it's possible to cascade the LS1028A embedded switch (Felix) with
-> discrete SJA1105 devices - Felix being at the top of the switch tree.
-> Does the DSA model support heterogeneous setups (parsing stacked
-> headers)? I can't tell if that's how EDSA tags work. With switchdev
-> for Felix there wouldn't be any problem - it just wouldn't be part of
-> the DSA tree and its own driver would remove its tags before DSA would
-> look at the rest.
+> 
+> commit 447d05e723b06f8aa1a9cba0f7b4c0029924663c
+> Author: Guillaume Nault <gnault@redhat.com>
+> Date:   Thu Jun 6 18:04:00 2019 +0200
+> 
+>     netfilter: ipv6: nf_defrag: accept duplicate fragments again
+>     
+>     [ Upstream commit 8a3dca632538c550930ce8bafa8c906b130d35cf ]
+>     
+>     When fixing the skb leak introduced by the conversion to rbtree, I
+>     forgot about the special case of duplicate fragments. The condition
+>     under the 'insert_error' label isn't effective anymore as
+>     nf_ct_frg6_gather() doesn't override the returned value anymore. So
+>     duplicate fragments now get NF_DROP verdict.
+>     
+>     To accept duplicate fragments again, handle them specially as soon as
+>     inet_frag_queue_insert() reports them. Return -EINPROGRESS which will
+>     translate to NF_STOLEN verdict, like any accepted fragment. However,
+>     such packets don't carry any new information and aren't queued, so we
+>     just drop them immediately.
+>     
+>     Fixes: a0d56cb911ca ("netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments")
+>     Signed-off-by: Guillaume Nault <gnault@redhat.com>
+>     Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+>     Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-DSA not does not make any particular assumptions about how the stacking
-is done actually because each slave network device is expected to
-provided standard Ethernet frames to the network stack. How you get to
-that point is entirely specific to what the hardware can do.
+Why not add this to 5.1.y as well?
 
-You do what Andrew described about one of my setup (bcm_sf2 w/ tagging
-enabled and b53 w/o tagging, see more below why [1]]) and both being
-discrete switch trees, with the master netdev of the b53 being a slave
-netdev provided by bcm_sf2. If your tagging protocol supports it you can
-make them part of the same DSA switch tree and just have them have
-different switch identifiers, that is what Marvell switches do and it
-works just great. In your case, I suppose you could even use double VLAN
-tagging to get such cascading to work, that would limit you to a two
-level of cascading, unless you invent something custom.
+thanks,
 
-[1]: The original Broadcom tag format introduced with BCM5325/5365 did
-support cascading in the same way that Marvell did where a switch
-identifier can be added in addition to a port number within the tag. The
-newest Broadcom tag that was introduced with 5395 and newer dropped
-support for the switch identifier and the switch will "terminate" the
-first (from start of Ethernet frame) tag that it receives. This is the
-reason why we need to disable tagging on the outermost B53 device that
-we are connected to. This means those network devices are mainly
-configuration endpoints and not passing data (DSA_TAG_PROTO_NONE),
-though we could use DSA_TAG_PROTO_8021Q and resolve that now.
--- 
-Florian
+greg k-h
