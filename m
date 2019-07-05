@@ -2,229 +2,159 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C1AC46495
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E69C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104432184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BA42184C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BcqlkG8x"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="GmPJjx4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfGEBYc (ORCPT
+        id S1727560AbfGEB0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 21:24:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41357 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfGEBYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 21:24:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45fxvx15YQz9sND;
-        Fri,  5 Jul 2019 11:24:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562289869;
-        bh=4bgrb582kH0+3Ea497TRX+KVASI61SRUslWR4D3Raj8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BcqlkG8xdGCqP5+rr4sXG9T5yqPGtCWCgN/I1kxl+HbmrAIvUHwf2syuESch0pwST
-         aC0rF5jTWffwwRTGXr/oQk2hWZCRyPYpFrWgPvXs6se+x+p/7vqcCCPu3kQK5yqE8i
-         bknn46BuLWVKly9vo/XJWQHxTs26Q2ui+CdHWOVojHOOdLGOg3S+7P0LYKqhYI3z7Z
-         wmVy98ijWfZnVoJ4i/zkqCIJriiwL0+NK6m583YiO8VvmNmZDk9vpVum7VjFvyB5W8
-         Hq0VqV6bIqMg8MSB9FJ1edC6xGws/wwGjxFQbMi3KUWwbX7Guu0kgEK8TqUIY2YJfA
-         qYppyTP2byLtA==
-Date:   Fri, 5 Jul 2019 11:24:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the clk tree
-Message-ID: <20190705112422.3e150954@canb.auug.org.au>
-In-Reply-To: <20190702120350.7029b623@canb.auug.org.au>
-References: <20190702100103.12c132da@canb.auug.org.au>
-        <20190702111455.4ef3494f@canb.auug.org.au>
-        <20190702120350.7029b623@canb.auug.org.au>
+        Thu, 4 Jul 2019 21:26:14 -0400
+Received: from mail-eopbgr810084.outbound.protection.outlook.com ([40.107.81.84]:51520
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbfGEB0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 21:26:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iyr8N5nE5x00DAeGSch/zm71Lo4/OR1ezRx5J/vmHYc=;
+ b=GmPJjx4UH9+mer7OAMxQjnvkxAZ3IF0qp3irVUXvCXgXzKYhVy86/j90DIBZdeLG5/2XQMhWQS9rj776H6NF/f/Ji3LhRPZEWE1IvtZy6a1yh0HfNdh0Wgqc9q+3NIUoWV8V/P8/Afc4/XE9kVNXZV1VK+qDyqIXUwbJ0oAZ+mI=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5864.namprd05.prod.outlook.com (20.178.50.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.14; Fri, 5 Jul 2019 01:26:10 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2052.010; Fri, 5 Jul 2019
+ 01:26:10 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Feng Tang <feng.tang@intel.com>
+Subject: Re: [patch V2 21/25] x86/smp: Enhance native_send_call_func_ipi()
+Thread-Topic: [patch V2 21/25] x86/smp: Enhance native_send_call_func_ipi()
+Thread-Index: AQHVMoZQ1wtoUEJrLk6xt836w3tppqa7PDEA
+Date:   Fri, 5 Jul 2019 01:26:10 +0000
+Message-ID: <C77F4C58-9CA3-4784-AE98-A9D6EDD4A788@vmware.com>
+References: <20190704155145.617706117@linutronix.de>
+ <20190704155610.325211809@linutronix.de>
+In-Reply-To: <20190704155610.325211809@linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [73.93.152.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e246ec79-79f4-410c-b700-08d700e7c2f2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5864;
+x-ms-traffictypediagnostic: BYAPR05MB5864:
+x-microsoft-antispam-prvs: <BYAPR05MB58644DE11D037A1EDABF73FAD0F50@BYAPR05MB5864.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(376002)(136003)(39860400002)(189003)(199004)(6436002)(7736002)(14454004)(54906003)(36756003)(71200400001)(2906002)(6486002)(71190400001)(316002)(66066001)(73956011)(53936002)(305945005)(99286004)(76176011)(6512007)(5660300002)(486006)(4326008)(256004)(26005)(478600001)(6116002)(66946007)(186003)(102836004)(8676002)(66446008)(68736007)(66556008)(66476007)(3846002)(81156014)(81166006)(64756008)(11346002)(53546011)(6246003)(6916009)(33656002)(86362001)(2616005)(446003)(25786009)(476003)(229853002)(6506007)(76116006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5864;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hZoYc1UCnTmTnMIGAEoKZS8V9qjBg53AQPoVxicnu12xg+1D3rMtnGyBMylFphiOwwP1mz5+rKwAT9/g5rmDxKXaBHHtaTumfjRWuhFwaTUqDcgPabr4Yc7WRW7gqGccW0Tp8IX6HD5viVraCVRZ8scAv91ti5qiwrRdL4Mz+pSGjhbaVJFkEU0qxB76wWfEdYMkR50zGgJzMP47qbz1FEob36LRBvKrPOn5n2HpudAFpN+IcR6lFNVY48WgFZFVGXzqS6/9euc4KV7GMvT6JM7Vyt8D3PYJnkZZwlX683Wta5BzQ5fq+JL3iEFpNxXjvvTdgRqddronl7SdYRdvGUVgGNuhDae1aQci+lYaXKg+kZR3DZeWkjQ80hBHyQra828Pfs58sD5hiw5VtRE+YDDD0zG1oFkK0wNBKIXUfTM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E9DC42EBEF48FC4794CF1D7AB2C3AEEB@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/6QOZ4An.xqIdJ/6Iwugb8Y_"; protocol="application/pgp-signature"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e246ec79-79f4-410c-b700-08d700e7c2f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 01:26:10.2257
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6QOZ4An.xqIdJ/6Iwugb8Y_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 2 Jul 2019 12:03:50 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> This at least passes my (few) build tests (this will be in linux-next
-> today):
+> On Jul 4, 2019, at 8:52 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
 >=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 2 Jul 2019 11:53:07 +1000
-> Subject: [PATCH] clk: consoldiate the __clk_get_hw() declarations
+> Nadav noticed that the cpumask allocations in native_send_call_func_ipi()
+> are noticeable in microbenchmarks.
 >=20
-> Without this we were getting errors like:
+> Use the new cpumask_or_equal() function to simplify the decision whether
+> the supplied target CPU mask is either equal to cpu_online_mask or equal =
+to
+> cpu_online_mask except for the CPU on which the function is invoked.
 >=20
-> In file included from drivers/clk/clkdev.c:22:0:
-> drivers/clk/clk.h:36:23: error: static declaration of '__clk_get_hw' foll=
-ows non-static declaration
-> include/linux/clk-provider.h:808:16: note: previous declaration of '__clk=
-_get_hw' was here
+> cpumask_or_equal() or's the target mask and the cpumask of the current CP=
+U
+> together and compares it to cpu_online_mask.
 >=20
-> Fixes: 59fcdce425b7 ("clk: Remove ifdef for COMMON_CLK in clk-provider.h")
-> fixes: 73e0e496afda ("clkdev: Always allocate a struct clk and call __clk=
-_get() w/ CCF")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> If the result is false, use the mask based IPI function, otherwise check
+> whether the current CPU is set in the target mask and invoke either the
+> send_IPI_all() or the send_IPI_allbutselt() APIC callback.
+>=20
+> Make the shorthand decision also depend on the static key which enables
+> shorthand mode. That allows to remove the extra cpumask comparison with
+> cpu_callout_mask.
+>=20
+> Reported-by: Nadav Amit <namit@vmware.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  drivers/clk/clk.h             | 4 ----
->  drivers/clk/imx/clk-imx6q.c   | 1 +
->  drivers/clk/imx/clk-imx6sll.c | 1 +
->  drivers/clk/imx/clk-imx6sx.c  | 1 +
->  drivers/clk/imx/clk-imx6ul.c  | 1 +
->  drivers/clk/imx/clk-imx7d.c   | 1 +
->  drivers/clk/imx/clk.c         | 1 +
->  include/linux/clk-provider.h  | 7 +++++++
->  8 files changed, 13 insertions(+), 4 deletions(-)
+> V2: New patch
+> ---
+> arch/x86/kernel/apic/ipi.c |   24 +++++++++++-------------
+> 1 file changed, 11 insertions(+), 13 deletions(-)
 >=20
-> diff --git a/drivers/clk/clk.h b/drivers/clk/clk.h
-> index d8400d623b34..2d801900cad5 100644
-> --- a/drivers/clk/clk.h
-> +++ b/drivers/clk/clk.h
-> @@ -33,10 +33,6 @@ clk_hw_create_clk(struct device *dev, struct clk_hw *h=
-w, const char *dev_id,
->  {
->  	return (struct clk *)hw;
->  }
-> -static struct clk_hw *__clk_get_hw(struct clk *clk)
-> -{
-> -	return (struct clk_hw *)clk;
-> -}
->  static inline void __clk_put(struct clk *clk) { }
-> =20
->  #endif
-> diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-> index 4e61f5189a1f..466561fb8925 100644
-> --- a/drivers/clk/imx/clk-imx6q.c
-> +++ b/drivers/clk/imx/clk-imx6q.c
-> @@ -14,6 +14,7 @@
->  #include <linux/types.h>
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> diff --git a/drivers/clk/imx/clk-imx6sll.c b/drivers/clk/imx/clk-imx6sll.c
-> index 342dcc58ac16..5f3e92c09a5e 100644
-> --- a/drivers/clk/imx/clk-imx6sll.c
-> +++ b/drivers/clk/imx/clk-imx6sll.c
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/clock/imx6sll-clock.h>
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> diff --git a/drivers/clk/imx/clk-imx6sx.c b/drivers/clk/imx/clk-imx6sx.c
-> index fb58479eaa68..2ada63e6ba16 100644
-> --- a/drivers/clk/imx/clk-imx6sx.c
-> +++ b/drivers/clk/imx/clk-imx6sx.c
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/clock/imx6sx-clock.h>
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> diff --git a/drivers/clk/imx/clk-imx6ul.c b/drivers/clk/imx/clk-imx6ul.c
-> index 95ca895c8776..d860a244363a 100644
-> --- a/drivers/clk/imx/clk-imx6ul.c
-> +++ b/drivers/clk/imx/clk-imx6ul.c
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/clock/imx6ul-clock.h>
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-> index c6d86700a080..c1efb061d237 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/clock/imx7d-clock.h>
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
-> diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
-> index 76457b2bd7f0..f628071f6605 100644
-> --- a/drivers/clk/imx/clk.c
-> +++ b/drivers/clk/imx/clk.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/clk.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 0fbf3ccad849..2ae7604783dd 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -805,7 +805,14 @@ void devm_clk_hw_unregister(struct device *dev, stru=
-ct clk_hw *hw);
->  /* helper functions */
->  const char *__clk_get_name(const struct clk *clk);
->  const char *clk_hw_get_name(const struct clk_hw *hw);
-> +#ifdef CONFIG_COMMON_CLK
->  struct clk_hw *__clk_get_hw(struct clk *clk);
-> +#else
-> +static inline struct clk_hw *__clk_get_hw(struct clk *clk)
-> +{
-> +	return (struct clk_hw *)clk;
-> +}
-> +#endif
->  unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
->  struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
->  struct clk_hw *clk_hw_get_parent_by_index(const struct clk_hw *hw,
+> --- a/arch/x86/kernel/apic/ipi.c
+> +++ b/arch/x86/kernel/apic/ipi.c
+> @@ -83,23 +83,21 @@ void native_send_call_func_single_ipi(in
+>=20
+> void native_send_call_func_ipi(const struct cpumask *mask)
+> {
+> -	cpumask_var_t allbutself;
+> +	if (static_branch_likely(&apic_use_ipi_shorthand)) {
+> +		unsigned int cpu =3D smp_processor_id();
+>=20
+> -	if (!alloc_cpumask_var(&allbutself, GFP_ATOMIC)) {
+> -		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+> +		if (!cpumask_or_equal(mask, cpumask_of(cpu), cpu_online_mask))
+> +			goto sendmask;
+> +
+> +		if (cpumask_test_cpu(cpu, mask))
+> +			apic->send_IPI_all(CALL_FUNCTION_VECTOR);
+> +		else if (num_online_cpus() > 1)
+> +			apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+> 		return;
+> 	}
+>=20
+> -	cpumask_copy(allbutself, cpu_online_mask);
+> -	cpumask_clear_cpu(smp_processor_id(), allbutself);
+> -
+> -	if (cpumask_equal(mask, allbutself) &&
+> -	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
+> -		apic->send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+> -	else
+> -		apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+> -
+> -	free_cpumask_var(allbutself);
+> +sendmask:
+> +	apic->send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+> }
+>=20
+> #endif /* CONFIG_SMP */
 
-I am still applying this ...
+It does look better and simpler than my solution.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/6QOZ4An.xqIdJ/6Iwugb8Y_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0epsYACgkQAVBC80lX
-0GzQewf+J1IeJSTrm+hdq/9rHnclnvcVHqoJUDNuwk7nmfS+8brFlaZ00/ya6CpI
-6OjWSgp/KI6Be+3ChoZ2j4XOFGhVAmiq7LYOTXnmg3zhiuYiWmO9sn6cGOQehFc4
-HCtAR+FssD/x/wvQty77lEEgX5W0i+QGGctLmeKN5w2no9U9bKo8lNZs/wk4gjT9
-3ui6i4T9WoR5S1JAe0PQvl+luDAmWTWvGI3pJzAZh9QHLjS7bb8MZj3DJxitWLlW
-hIGcv2zQL+d2KBRPpGfGgxUT23xlAA4LiXAynKblnteUYh/kKAviTc/84y4a3Y3z
-y26tpV7iWZ7tBit8nwXv5GW1rVz/ug==
-=RxIK
------END PGP SIGNATURE-----
-
---Sig_/6QOZ4An.xqIdJ/6Iwugb8Y_--
