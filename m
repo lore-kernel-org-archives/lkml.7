@@ -2,105 +2,125 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCD3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC160C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5692147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEp2s5uA"
+	by mail.kernel.org (Postfix) with ESMTP id AD03221738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfGEX0f (ORCPT
+        id S1726698AbfGEXdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 19:26:35 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38720 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGEX0e (ORCPT
+        Fri, 5 Jul 2019 19:33:13 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48665 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726038AbfGEXdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 19:26:34 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v186so8228978oie.5;
-        Fri, 05 Jul 2019 16:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RDHkAL5+81gThLREJaNuWCVQauiOUimJVkLgM6dqKxY=;
-        b=vEp2s5uAib6vygLi+FJJ6pyP5iundGHkbOdCWadGu/vKDHQnGg1QQOLtOCh8PxsqRL
-         B2wsDToi21EEyAs9QeOraEUNXE1MSbZa6u3dUZ8bn8CeOpNP8/dpjwwZW2pFQZLStYoD
-         JluH59avU35WJGjh0TLOzvCBgxvR+6cx7zA8zfPTTd/HSu7nzBZc7GxE52Hfi9tTOhxa
-         4DzxxDiryBG8KWNyRtndrz6qLU6ZwMnaiwFKIeqGla8MeOErtlQwNQhMOVnB3CMbHuCd
-         blozyx6XQqhRUvRD8ZxlGW7AeJ5voydR3hf1cOnv3xlO2V7qg9andMlG71LRcxlnXBbN
-         TnFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RDHkAL5+81gThLREJaNuWCVQauiOUimJVkLgM6dqKxY=;
-        b=sOK6vQBSMvRD1VWyIGlK+vobTPom27nbipVwLLbGu+Es+Ej2dDN7uE23N7uuVO2LOQ
-         DUFRGdPWlY7mwhgcsm1NxlMwPBa4hCMut7TNr6X8hkiMyYDg4DIJFNJNX3FoizPPVsEG
-         pORrCA08oo9PKGqet4xo5pnUHT7QpYFcIIv0d7/BKnbubcDuDp9Hw7B0kT343oic9JEq
-         Ree0vPWOQzGCO5vP4bnRUYD9uZbR7iPj5flyZjy7WYwpYcrtqWzTx4q2KbQsx0ib39Pe
-         9ELF1O0gvP5ea9pX5+JUonYdoegGWOVX3UhAMeiD1u0wNuswuoz2m/pS42yxx+xyKW3a
-         8Nzg==
-X-Gm-Message-State: APjAAAUtAF+uT7hzNPS2CyTuBC6NeMawN+0ubKJD4Oz2TKPyhTLJDGSF
-        YnMzEK6pykQlR1x5kTZxcPI=
-X-Google-Smtp-Source: APXvYqxnii7fWR3s2Uk+hj3yn4LOBzoBEINspVwAJ2tiZpMXWznA2/cwuQGEnt/x+QUcMguav+qJXQ==
-X-Received: by 2002:aca:7507:: with SMTP id q7mr3307633oic.87.1562369194071;
-        Fri, 05 Jul 2019 16:26:34 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id w3sm3564349otb.55.2019.07.05.16.26.32
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 16:26:33 -0700 (PDT)
-Subject: Re: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Daniel Drake <drake@endlessm.com>,
-        Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     Chris Chiu <chiu@endlessm.com>, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-References: <20190627095247.8792-1-chiu@endlessm.com>
- <CAD8Lp44R0a1=fVi=fGv69w1ppdcaFV01opkdkhaX-eJ=K=tYeA@mail.gmail.com>
- <4c99866e-55b7-8852-c078-6b31dce21ee4@gmail.com>
- <CAD8Lp47mWH1-VsZaHr6_qmSU2EEOr9tQJ3CUhfi_JkQGgKpegA@mail.gmail.com>
- <89dbfb9d-a31a-9ecb-66bd-42ac0fc49e70@gmail.com>
- <CAD8Lp44HLPgOU+Z+w4Pq6ukLjZv2hM0=uBL7pWzQp+RsdRgG6Q@mail.gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <b6d12ff5-2ef4-a0aa-5741-7e5446a7119b@lwfinger.net>
-Date:   Fri, 5 Jul 2019 18:26:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 19:33:12 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 98FE814A6E7;
+        Sat,  6 Jul 2019 09:33:05 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hjXgL-0005yO-Jj; Sat, 06 Jul 2019 09:31:57 +1000
+Date:   Sat, 6 Jul 2019 09:31:57 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Boaz Harrosh <openosd@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking
+Message-ID: <20190705233157.GD7689@dread.disaster.area>
+References: <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
+ <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+ <20190617224714.GR14363@dread.disaster.area>
+ <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
+ <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+ <20190619103838.GB32409@quack2.suse.cz>
+ <20190619223756.GC26375@dread.disaster.area>
+ <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp44HLPgOU+Z+w4Pq6ukLjZv2hM0=uBL7pWzQp+RsdRgG6Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=VP1V1_vrrUTVS67bY_cA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/19 10:44 PM, Daniel Drake wrote:
-> On Wed, Jul 3, 2019 at 8:59 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
->> My point is this seems to be very dongle dependent :( We have to be
->> careful not breaking it for some users while fixing it for others.
+On Wed, Jul 03, 2019 at 03:04:45AM +0300, Boaz Harrosh wrote:
+> On 20/06/2019 01:37, Dave Chinner wrote:
+> <>
+> > 
+> > I'd prefer it doesn't get lifted to the VFS because I'm planning on
+> > getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
+> > likely to go away in the near term because a range lock can be
+> > taken on either side of the mmap_sem in the page fault path.
+> > 
+> <>
+> Sir Dave
 > 
-> Do you still have your device?
+> Sorry if this was answered before. I am please very curious. In the zufs
+> project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
+> (Read & writes all take read-locks ...)
+> The only reason I have it is because of lockdep actually.
 > 
-> Once we get to the point when you are happy with Chris's two patches
-> here on a code review level, we'll reach out to other driver
-> contributors plus people who previously complained about these types
-> of problems, and see if we can get some wider testing.
+> Specifically for those xfstests that mmap a buffer then direct_IO in/out
+> of that buffer from/to another file in the same FS or the same file.
+> (For lockdep its the same case).
+
+Which can deadlock if the same inode rwsem is taken on both sides of
+the mmap_sem, as lockdep tells you...
+
+> I would be perfectly happy to recursively _read_lock both from the top
+> of the page_fault at the DIO path, and under in the page_fault. I'm
+> _read_locking after all. But lockdep is hard to convince. So I stole the
+> xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
+> truncate/punch/clone time when all mapping traversal needs to stop for
+> the destructive change to take place. (Allocations are done another way
+> and are race safe with traversal)
 > 
-> Larry, do you have these devices, can you help with testing too?
+> How do you intend to address this problem with range-locks? ie recursively
+> taking the same "lock"? because if not for the recursive-ity and lockdep I would
+> not need the extra lock-object per inode.
 
-I have some of the devices, and I can help with the testing.
+As long as the IO ranges to the same file *don't overlap*, it should
+be perfectly safe to take separate range locks (in read or write
+mode) on either side of the mmap_sem as non-overlapping range locks
+can be nested and will not self-deadlock.
 
-Larry
+The "recursive lock problem" still arises with DIO and page faults
+inside gup, but it only occurs when the user buffer range overlaps
+the DIO range to the same file. IOWs, the application is trying to
+do something that has an undefined result and is likely to result in
+data corruption. So, in that case I plan to have the gup page faults
+fail and the DIO return -EDEADLOCK to userspace....
 
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
