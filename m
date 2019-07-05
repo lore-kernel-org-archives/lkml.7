@@ -2,114 +2,136 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2117DC0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D366C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E110620659
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:01:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KxxQ/EOQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0355720828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfGEDBL (ORCPT
+        id S1727612AbfGEDFv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:01:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57538 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGEDBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:01:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=clMDBr0VH7M11Amw0B3Ri/sIv+DBHpDPWFocL6b0RWI=; b=KxxQ/EOQrixPXe7WpCSxNyecNu
-        ou7W9wMn/5tSGt9EiUzbFPZmmXzPOlV/lF0IdeZFJsJVc/dwXq8Iw/fPPvCcb+Yg3MDGptSBjJ+cS
-        1IfnAHgJmmclULvexo48g0cubarcVOznsqZHs0UoglMrBPHeUHgRmtcan+WzIonpUSZ1IEcshWQAr
-        P5ielI9z2OAukUBQWXSNGPFVRxCTPWIPE//nlqO8F+lLDa0j0Whf57onB5xYFzoCN3tK+BZJ+sGlb
-        dPgpEPd+Lir60dUQ7L1iFTtdjksURL91i9fSoVwvvFwjz69tGIkHE2Ql9YiMumPw9/jLEN6pagl86
-        WoQnlhXA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjETE-00077l-Nd; Fri, 05 Jul 2019 03:01:08 +0000
-Subject: Re: mmotm 2019-07-04-15-01 uploaded (mm/vmscan.c)
-To:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9cbdb785-b51d-9419-6b9a-ec282a4e4fa2@infradead.org>
-Date:   Thu, 4 Jul 2019 20:01:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
+        Thu, 4 Jul 2019 23:05:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39441 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfGEDFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 23:05:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 20:05:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,453,1557212400"; 
+   d="scan'208";a="155180636"
+Received: from pgsmsx105.gar.corp.intel.com ([10.221.44.96])
+  by orsmga007.jf.intel.com with ESMTP; 04 Jul 2019 20:05:48 -0700
+Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.4]) by
+ PGSMSX105.gar.corp.intel.com ([169.254.4.2]) with mapi id 14.03.0439.000;
+ Fri, 5 Jul 2019 11:02:50 +0800
+From:   "Voon, Weifeng" <weifeng.voon@intel.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Subject: RE: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Thread-Topic: [PATCH v1 net-next] net: stmmac: enable clause 45 mdio support
+Thread-Index: AQHVMUGmUw8CyhUBakCg51utnm9b/6a4aBMAgAFBlaD//59qAIAArWRQgAAA3wCAAJ+BsP//gXOAgAE5twA=
+Date:   Fri, 5 Jul 2019 03:02:49 +0000
+Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814738B36@PGSMSX103.gar.corp.intel.com>
+References: <1562147404-4371-1-git-send-email-weifeng.voon@intel.com>
+ <20190703140520.GA18473@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147384B6@PGSMSX103.gar.corp.intel.com>
+ <20190704033038.GA6276@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC81473862D@PGSMSX103.gar.corp.intel.com>
+ <20190704135420.GD13859@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC8147388E0@PGSMSX103.gar.corp.intel.com>
+ <20190704155217.GI18473@lunn.ch>
+In-Reply-To: <20190704155217.GI18473@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/4/19 3:01 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2019-07-04-15-01 has been uploaded to
+> I think there is too much passing variables around by reference than by
+> value, to make this code easy to understand.
 > 
->    http://www.ozlabs.org/~akpm/mmotm/
+> Maybe a better structure would be
 > 
-> mmotm-readme.txt says
+> static int stmmac_mdion_c45_read(struct stmmac_priv *priv, int phyaddr,
+> int phyreg) {
 > 
-> README for mm-of-the-moment:
+> 	unsigned int reg_shift = priv->hw->mii.reg_shift;
+> 	unsigned int reg_mask = priv->hw->mii.reg_mask;
+> 	u32 mii_addr_val, mii_data_val;
 > 
-> http://www.ozlabs.org/~akpm/mmotm/
+> 	mii_addr_val = MII_GMAC4_C45E |
+>                        ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift)
+> & reg_mask;
+>         mii_data_val = (phyreg & MII_REGADDR_C45_MASK) <<
+> MII_GMAC4_REG_ADDR_SHIFT;
 > 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
+> 	writel(mii_data_val, priv->ioaddr + priv->hw->mii_data);
+> 	writel(mii_addr_val, priv->ioaddr + priv->hw->mii_addrress);
 > 
+> 	return (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+> }
+> 
+> static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+> {
+> 
+> ...
+> 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v &
+> MII_BUSY),
+>  	   		      100, 10000))
+>  		return -EBUSY;
+> 
+>       if (priv->plat->has_gmac4 && phyreg & MII_ADDR_C45)
+>       	return stmmac_mdio_c45_read(priv, phyaddr, phyreg);
+> 
+> 	Andrew
+
+Both c45 read/write needs to set c45 enable bit(MII_ADDR_C45) in mii_adrress
+and set the register address in mii_data. Besides this, the whole programming
+flow will be the same as c22. With the current design, user can easily know
+that the different between c22 and c45 is just in stmmac_mdio_c45_setup(). 
+
+If the community prefers readability, I will suggest to do the c45 setup in
+both stmmac_mdio_read() and stmmac_mdio_write() 's if(C45) condition rather
+than splitting into 2 new c45_read() and c45_write() functions.     
+
+static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+{
+
+...
+	if (phyreg & MII_ADDR_C45)
+       *val |= MII_GMAC4_C45E;
+       *val &= ~reg_mask;
+       *val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
+
+       *data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
+
+Weifeng
 
 
-on i386:
-CONFIG_SLOB=y <<<<<<<<<<
-
-
-../mm/vmscan.c: In function ‘prealloc_memcg_shrinker’:
-../mm/vmscan.c:220:3: error: implicit declaration of function ‘memcg_expand_shrinker_maps’ [-Werror=implicit-function-declaration]
-   if (memcg_expand_shrinker_maps(id)) {
-   ^
-In file included from ../include/linux/rbtree.h:22:0,
-                 from ../include/linux/mm_types.h:10,
-                 from ../include/linux/mmzone.h:21,
-                 from ../include/linux/gfp.h:6,
-                 from ../include/linux/mm.h:10,
-                 from ../mm/vmscan.c:17:
-../mm/vmscan.c: In function ‘shrink_slab_memcg’:
-../mm/vmscan.c:608:54: error: ‘struct mem_cgroup_per_node’ has no member named ‘shrinker_map’
-  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-                                                      ^
-../include/linux/rcupdate.h:321:12: note: in definition of macro ‘__rcu_dereference_protected’
-  ((typeof(*p) __force __kernel *)(p)); \
-            ^
-../mm/vmscan.c:608:8: note: in expansion of macro ‘rcu_dereference_protected’
-  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-        ^
-../mm/vmscan.c:608:54: error: ‘struct mem_cgroup_per_node’ has no member named ‘shrinker_map’
-  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-                                                      ^
-../include/linux/rcupdate.h:321:35: note: in definition of macro ‘__rcu_dereference_protected’
-  ((typeof(*p) __force __kernel *)(p)); \
-                                   ^
-../mm/vmscan.c:608:8: note: in expansion of macro ‘rcu_dereference_protected’
-  map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-        ^
-
-
-
-
--- 
-~Randy
