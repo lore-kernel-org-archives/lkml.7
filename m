@@ -2,73 +2,52 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC828C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F9BC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5370218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7ANQjbz"
+	by mail.kernel.org (Postfix) with ESMTP id 747DD218C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfGEJ6d (ORCPT
+        id S1728429AbfGEJ6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:58:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45914 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbfGEJ6Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:58:24 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u10so5921672lfm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3d7DZVDxTF+1P1r04sZgrqNLdKAcaTJiZmOQo0Hf0lo=;
-        b=A7ANQjbzgETo8bypTd7CTupdPefiX80rr3iB1lplbcFGJ6Lj/pEend7B5Yar5Obj58
-         b9syE3gDdc0YxdFoY7jgQ4YuhUJsSAIMW4t/iN2py89kVd5pmUYKfHiEVbIzJodiEFY9
-         REW23yadtF1F9/NphlTSuc9JY4ds7EUyt9t6OgqYh/3aZU+P93J/bZevFJYs9xu+PFov
-         Trbk5dYDBDS550f6U/ryk9FiTqppLaFfXAHeHSvpDXaZEMrIf8k0GEZaQiYFKh0bk4cb
-         lEwDZ6EN1CZI0y4fr3RkOMzfStU4VYn5NcRXBxW5cxO3GJ0T+nmsEXtC8qmAFITi9D67
-         oeHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3d7DZVDxTF+1P1r04sZgrqNLdKAcaTJiZmOQo0Hf0lo=;
-        b=kk3PZ1Vb8Z7yJ8YVdD1ewY+9hb6/VfIJbwudd7vDZjinuY/BWqjDp1KB5oTYhAIzpD
-         rgG5RcVGiv5fb52FVKYglNk1dGann/RBP0gR/kLMw2XxPcIljsxL6bgFHRT5tVGTo60r
-         MCWEcLOp5ZHO8U5FHNzE+g60dLRePp/Bd70CEZBryKOYclMjR84XUD8p9R63N9hHstZc
-         siJMszAhR+6Uf3UovwVCQfbt0S2DEIiGN/CgyhMt81zGWHWPEunL+r8cwdrViroVA1J9
-         sCqOojAbcxPJelqnQqFBOggetxxFiyUNNMQW9AsLQge3bUpthauwyacW4hi1yEczfjW3
-         jSpw==
-X-Gm-Message-State: APjAAAVnog62Cn05I2ZPrfaYIOA4kLVP/pEPTPhr+4DEJWQW2GGjvnr4
-        +9dDM/R2f1CzR22jTHpyg0iBUg==
-X-Google-Smtp-Source: APXvYqwjbM7AX8hHIJs5YC6nRjkyBuavTgd0+gyyiJpufgKhogx9bn+W5bDoNQhNintlVXWZmy1smg==
-X-Received: by 2002:a19:8c57:: with SMTP id i23mr1531184lfj.192.1562320703024;
-        Fri, 05 Jul 2019 02:58:23 -0700 (PDT)
-Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
-        by smtp.gmail.com with ESMTPSA id o24sm1674955ljg.6.2019.07.05.02.58.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 02:58:22 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/13] cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
-Date:   Fri,  5 Jul 2019 11:57:18 +0200
-Message-Id: <20190705095726.21433-8-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+        Fri, 5 Jul 2019 05:58:22 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60661 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728458AbfGEJ6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:58:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:58:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="339795702"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2019 02:58:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 1689F4C6; Fri,  5 Jul 2019 12:58:01 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH 6/8] thunderbolt: Expose active parts of NVM even if upgrade is not supported
+Date:   Fri,  5 Jul 2019 12:57:58 +0300
+Message-Id: <20190705095800.43534-7-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,29 +55,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Ice Lake Thunderbolt controller NVM firmware is part of the BIOS image
+which means it is not writable through the DMA port anymore. However, we
+can still read it so we can keep nvm_version and active parts of NVM.
+This way users still can find out the active NVM version and other
+potentially useful information directly from Linux.
 
-Add qcs404 to cpufreq-dt-platdev blacklist.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thunderbolt/switch.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 03dc4244ab00..ec6ef996e637 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -123,6 +123,7 @@ static const struct of_device_id blacklist[] __initconst = {
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index e84067084dcd..e318e9714a38 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -364,12 +364,14 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
+ 		nvm->active = nvm_dev;
+ 	}
  
- 	{ .compatible = "qcom,apq8096", },
- 	{ .compatible = "qcom,msm8996", },
-+	{ .compatible = "qcom,qcs404", },
+-	nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
+-	if (IS_ERR(nvm_dev)) {
+-		ret = PTR_ERR(nvm_dev);
+-		goto err_nvm_active;
++	if (!sw->no_nvm_upgrade) {
++		nvm_dev = register_nvmem(sw, nvm->id, NVM_MAX_SIZE, false);
++		if (IS_ERR(nvm_dev)) {
++			ret = PTR_ERR(nvm_dev);
++			goto err_nvm_active;
++		}
++		nvm->non_active = nvm_dev;
+ 	}
+-	nvm->non_active = nvm_dev;
  
- 	{ .compatible = "st,stih407", },
- 	{ .compatible = "st,stih410", },
+ 	sw->nvm = nvm;
+ 	return 0;
+@@ -398,7 +400,8 @@ static void tb_switch_nvm_remove(struct tb_switch *sw)
+ 	if (!nvm->authenticating)
+ 		nvm_clear_auth_status(sw);
+ 
+-	nvmem_unregister(nvm->non_active);
++	if (nvm->non_active)
++		nvmem_unregister(nvm->non_active);
+ 	if (nvm->active)
+ 		nvmem_unregister(nvm->active);
+ 	ida_simple_remove(&nvm_ida, nvm->id);
+@@ -1355,8 +1358,11 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
+ 		    sw->security_level == TB_SECURITY_SECURE)
+ 			return attr->mode;
+ 		return 0;
+-	} else if (attr == &dev_attr_nvm_authenticate.attr ||
+-		   attr == &dev_attr_nvm_version.attr) {
++	} else if (attr == &dev_attr_nvm_authenticate.attr) {
++		if (sw->dma_port && !sw->no_nvm_upgrade)
++			return attr->mode;
++		return 0;
++	} else if (attr == &dev_attr_nvm_version.attr) {
+ 		if (sw->dma_port)
+ 			return attr->mode;
+ 		return 0;
+@@ -1707,13 +1713,17 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
+ 		break;
+ 	}
+ 
+-	if (sw->no_nvm_upgrade)
++	/* Root switch DMA port requires running firmware */
++	if (!tb_route(sw) && sw->config.enabled)
+ 		return 0;
+ 
+ 	sw->dma_port = dma_port_alloc(sw);
+ 	if (!sw->dma_port)
+ 		return 0;
+ 
++	if (sw->no_nvm_upgrade)
++		return 0;
++
+ 	/*
+ 	 * Check status of the previous flash authentication. If there
+ 	 * is one we need to power cycle the switch in any case to make
 -- 
-2.21.0
+2.20.1
 
