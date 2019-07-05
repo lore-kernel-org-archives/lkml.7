@@ -2,71 +2,128 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C349C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D31C468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0762133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB792133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfGEVAi (ORCPT
+        id S1727642AbfGEVDt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:00:38 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50779 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbfGEVAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:00:37 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id AB3C720004;
-        Fri,  5 Jul 2019 21:00:32 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "emil.lenngren@gmail.com" <emil.lenngren@gmail.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH] mtd: spinand: Fix max_bad_eraseblocks_per_lun info in memorg
-Date:   Fri,  5 Jul 2019 23:00:26 +0200
-Message-Id: <20190705210026.13420-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190606170754.6531-1-frieder.schrempf@kontron.de>
-References: 
+        Fri, 5 Jul 2019 17:03:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60240 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfGEVDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:03:49 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0861E307D840;
+        Fri,  5 Jul 2019 21:03:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B046945A8;
+        Fri,  5 Jul 2019 21:03:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jmorris@namei.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Keys: Set 1 - Miscellany for 5.3
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: a126483e82957172b8a93ebb1d30fb2b1df3cbbc
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <26701.1562360619.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 05 Jul 2019 22:03:39 +0100
+Message-ID: <26702.1562360619@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 05 Jul 2019 21:03:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 17:07:55 UTC, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> The 1Gb Macronix chip can have a maximum of 20 bad blocks, while
-> the 2Gb version has twice as many blocks and therefore the maximum
-> number of bad blocks is 40.
-> 
-> The 4Gb GigaDevice GD5F4GQ4xA has twice as many blocks as its 2Gb
-> counterpart and therefore a maximum of 80 bad blocks.
-> 
-> Fixes: 377e517b5fa5 ("mtd: nand: Add max_bad_eraseblocks_per_lun info to memorg")
-> Reported-by: Emil Lenngren <emil.lenngren@gmail.com>
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Hi Linus,
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes, thanks.
+Here's my first block of keyrings changes for the next merge window.  I've
+divided up the set into four blocks, but they need to be applied in order
+as they would otherwise conflict with each other.
 
-Miquel
+These are some miscellaneous keyrings fixes and improvements:
+
+ (1) Fix a bunch of warnings from sparse, including missing RCU bits and
+     kdoc-function argument mismatches
+
+ (2) Implement a keyctl to allow a key to be moved from one keyring to
+     another, with the option of prohibiting key replacement in the
+     destination keyring.
+
+ (3) Grant Link permission to possessors of request_key_auth tokens so that
+     upcall servicing daemons can more easily arrange things such that only
+     the necessary auth key is passed to the actual service program, and
+     not all the auth keys a daemon might possesss.
+
+ (4) Improvement in lookup_user_key().
+
+ (5) Implement a keyctl to allow keyrings subsystem capabilities to be
+     queried.
+
+The keyutils next branch has commits to make available, document and test
+the move-key and capabilities code:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log
+
+They're currently on the 'next' branch.
+
+David
+---
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-misc-20190619
+
+for you to fetch changes up to 45e0f30c30bb131663fbe1752974d6f2e39611e2:
+
+  keys: Add capability-checking keyctl function (2019-06-19 13:27:45 +0100)
+
+----------------------------------------------------------------
+Keyrings miscellany
+
+----------------------------------------------------------------
+David Howells (9):
+      keys: sparse: Fix key_fs[ug]id_changed()
+      keys: sparse: Fix incorrect RCU accesses
+      keys: sparse: Fix kdoc mismatches
+      keys: Change keyring_serialise_link_sem to a mutex
+      keys: Break bits out of key_unlink()
+      keys: Hoist locking out of __key_link_begin()
+      keys: Add a keyctl to move a key between keyrings
+      keys: Grant Link permission to possessers of request_key auth keys
+      keys: Add capability-checking keyctl function
+
+Eric Biggers (1):
+      keys: Reuse keyring_index_key::desc_len in lookup_user_key()
+
+ Documentation/security/keys/core.rst |  21 +++
+ include/linux/key.h                  |  13 +-
+ include/uapi/linux/keyctl.h          |  17 +++
+ kernel/cred.c                        |   4 +-
+ security/keys/compat.c               |   6 +
+ security/keys/internal.h             |   7 +
+ security/keys/key.c                  |  27 +++-
+ security/keys/keyctl.c               |  90 +++++++++++-
+ security/keys/keyring.c              | 278 ++++++++++++++++++++++++++++-------
+ security/keys/process_keys.c         |  26 ++--
+ security/keys/request_key.c          |   9 +-
+ security/keys/request_key_auth.c     |   4 +-
+ 12 files changed, 418 insertions(+), 84 deletions(-)
