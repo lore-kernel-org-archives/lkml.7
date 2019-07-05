@@ -2,95 +2,140 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A7BC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992B5C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB7420828
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7612A20828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfGEOLC (ORCPT
+        id S1726555AbfGEONR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:11:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53028 "EHLO mx1.redhat.com"
+        Fri, 5 Jul 2019 10:13:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59526 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbfGEOLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:11:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1725788AbfGEONQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:13:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 11A9B3084034;
-        Fri,  5 Jul 2019 14:10:51 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-58.sin2.redhat.com [10.67.116.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D5AB860F4;
-        Fri,  5 Jul 2019 14:10:04 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id 9DF9B3082135;
+        Fri,  5 Jul 2019 14:13:11 +0000 (UTC)
+Received: from krava (unknown [10.43.17.81])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B97B782297;
+        Fri,  5 Jul 2019 14:13:06 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 16:13:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v15 7/7] xfs: disable map_sync for async flush
-Date:   Fri,  5 Jul 2019 19:33:28 +0530
-Message-Id: <20190705140328.20190-8-pagupta@redhat.com>
-In-Reply-To: <20190705140328.20190-1-pagupta@redhat.com>
-References: <20190705140328.20190-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 05 Jul 2019 14:10:56 +0000 (UTC)
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/7] perf: propagate perf_install_in_context errors up
+Message-ID: <20190705141306.GB10777@krava>
+References: <20190702065955.165738-1-irogers@google.com>
+ <20190702065955.165738-2-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702065955.165738-2-irogers@google.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 05 Jul 2019 14:13:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dont support 'MAP_SYNC' with non-DAX files and DAX files
-with asynchronous dax_device. Virtio pmem provides
-asynchronous host page cache flush mechanism. We don't
-support 'MAP_SYNC' with virtio pmem and xfs.
+On Mon, Jul 01, 2019 at 11:59:49PM -0700, Ian Rogers wrote:
+> The current __perf_install_in_context can fail and the error is ignored.
+> Changing __perf_install_in_context can add new failure modes that need
+> errors propagating up. This change prepares for this.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  kernel/events/core.c | 38 +++++++++++++++++++++++++-------------
+>  1 file changed, 25 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 785d708f8553..4faa90f5a934 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2558,11 +2558,12 @@ static int  __perf_install_in_context(void *info)
+>   *
+>   * Very similar to event_function_call, see comment there.
+>   */
+> -static void
+> +static int
+>  perf_install_in_context(struct perf_event_context *ctx,
+>  			struct perf_event *event,
+>  			int cpu)
+>  {
+> +	int err;
+>  	struct task_struct *task = READ_ONCE(ctx->task);
+>  
+>  	lockdep_assert_held(&ctx->mutex);
+> @@ -2577,15 +2578,15 @@ perf_install_in_context(struct perf_event_context *ctx,
+>  	smp_store_release(&event->ctx, ctx);
+>  
+>  	if (!task) {
+> -		cpu_function_call(cpu, __perf_install_in_context, event);
+> -		return;
+> +		err = cpu_function_call(cpu, __perf_install_in_context, event);
+> +		return err;
+>  	}
+>  
+>  	/*
+>  	 * Should not happen, we validate the ctx is still alive before calling.
+>  	 */
+>  	if (WARN_ON_ONCE(task == TASK_TOMBSTONE))
+> -		return;
+> +		return 0;
+>  
+>  	/*
+>  	 * Installing events is tricky because we cannot rely on ctx->is_active
+> @@ -2619,8 +2620,9 @@ perf_install_in_context(struct perf_event_context *ctx,
+>  	 */
+>  	smp_mb();
+>  again:
+> -	if (!task_function_call(task, __perf_install_in_context, event))
+> -		return;
+> +	err = task_function_call(task, __perf_install_in_context, event);
+> +	if (err)
+> +		return err;
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+you need to return in here if task_function_call succeeds and
+continue in case of error, not the other way round, otherwise
+bad things will happen ;-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index a7ceae90110e..f17652cca5ff 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1203,11 +1203,14 @@ xfs_file_mmap(
- 	struct file	*filp,
- 	struct vm_area_struct *vma)
- {
-+	struct dax_device 	*dax_dev;
-+
-+	dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
- 	/*
--	 * We don't support synchronous mappings for non-DAX files. At least
--	 * until someone comes with a sensible use case.
-+	 * We don't support synchronous mappings for non-DAX files and
-+	 * for DAX files if underneath dax_device is not synchronous.
- 	 */
--	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
-+	if (!daxdev_mapping_supported(vma, dax_dev))
- 		return -EOPNOTSUPP;
- 
- 	file_accessed(filp);
--- 
-2.20.1
+jirka
 
+>  
+>  	raw_spin_lock_irq(&ctx->lock);
+>  	task = ctx->task;
+> @@ -2631,7 +2633,7 @@ perf_install_in_context(struct perf_event_context *ctx,
+>  		 * against perf_event_exit_task_context().
+>  		 */
+>  		raw_spin_unlock_irq(&ctx->lock);
+> -		return;
+> +		return 0;
+>  	}
+>  	/*
+>  	 * If the task is not running, ctx->lock will avoid it becoming so,
+> @@ -2643,6 +2645,7 @@ perf_install_in_context(struct perf_event_context *ctx,
+>  	}
+>  	add_event_to_ctx(event, ctx);
+>  	raw_spin_unlock_irq(&ctx->lock);
+> +	return 0;
+>  }
+>  
+>  /*
+
+SNIP
