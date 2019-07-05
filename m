@@ -2,79 +2,152 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582FEC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0A7C468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361912133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8812133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfGEVnw (ORCPT
+        id S1728284AbfGEVow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:43:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36198 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfGEVnv (ORCPT
+        Fri, 5 Jul 2019 17:44:52 -0400
+Received: from www62.your-server.de ([213.133.104.62]:49732 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbfGEVow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:43:51 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hjVzd-0008F6-2f; Fri, 05 Jul 2019 23:43:45 +0200
-Date:   Fri, 5 Jul 2019 23:43:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>
-Subject: Re: [patch V2 01/25] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
-In-Reply-To: <20190704155608.347938562@linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907052342250.3648@nanos.tec.linutronix.de>
-References: <20190704155145.617706117@linutronix.de> <20190704155608.347938562@linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Jul 2019 17:44:52 -0400
+Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hjW0b-0002eV-FV; Fri, 05 Jul 2019 23:44:45 +0200
+Received: from [178.193.45.231] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hjW0b-0000iX-6b; Fri, 05 Jul 2019 23:44:45 +0200
+Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API
+ bpf_object__reuse_maps()
+To:     Anton Protopopov <a.s.protopopov@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriin@fb.com
+References: <cover.1562359091.git.a.s.protopopov@gmail.com>
+ <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
+Date:   Fri, 5 Jul 2019 23:44:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25501/Fri Jul  5 10:01:52 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019, Thomas Gleixner wrote:
+On 07/05/2019 10:44 PM, Anton Protopopov wrote:
+> Add a new API bpf_object__reuse_maps() which can be used to replace all maps in
+> an object by maps pinned to a directory provided in the path argument.  Namely,
+> each map M in the object will be replaced by a map pinned to path/M.name.
+> 
+> Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+> ---
+>  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
+>  tools/lib/bpf/libbpf.h   |  2 ++
+>  tools/lib/bpf/libbpf.map |  1 +
+>  3 files changed, 37 insertions(+)
+> 
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 4907997289e9..84c9e8f7bfd3 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object *obj, const char *path)
+>  	return 0;
+>  }
+>  
+> +int bpf_object__reuse_maps(struct bpf_object *obj, const char *path)
+> +{
+> +	struct bpf_map *map;
+> +
+> +	if (!obj)
+> +		return -ENOENT;
+> +
+> +	if (!path)
+> +		return -EINVAL;
+> +
+> +	bpf_object__for_each_map(map, obj) {
+> +		int len, err;
+> +		int pinned_map_fd;
+> +		char buf[PATH_MAX];
 
-> apic->send_IPI_allbutself() takes a vector number as argument.
-> 
-> APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
-> outside the vector space.
-> 
-> Use NMI_VECTOR instead as that's what it is intended to be.
-> 
-> Fixes: 82da3ff89dc2 ("x86: kgdb support")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: New patch
-> ---
->  arch/x86/kernel/kgdb.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/arch/x86/kernel/kgdb.c
-> +++ b/arch/x86/kernel/kgdb.c
-> @@ -424,7 +424,7 @@ static void kgdb_disable_hw_debug(struct
->   */
->  void kgdb_roundup_cpus(void)
+We'd need to skip the case of bpf_map__is_internal(map) since they are always
+recreated for the given object.
+
+> +		len = snprintf(buf, PATH_MAX, "%s/%s", path, bpf_map__name(map));
+> +		if (len < 0) {
+> +			return -EINVAL;
+> +		} else if (len >= PATH_MAX) {
+> +			return -ENAMETOOLONG;
+> +		}
+> +
+> +		pinned_map_fd = bpf_obj_get(buf);
+> +		if (pinned_map_fd < 0)
+> +			return pinned_map_fd;
+
+Should we rather have a new map definition attribute that tells to reuse
+the map if it's pinned in bpf fs, and if not, we create it and later on
+pin it? This is what iproute2 is doing and which we're making use of heavily.
+In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is perhaps
+too limiting for a generic API as new version of an object file may contain
+new maps which are not yet present in bpf fs at that point.
+
+> +		err = bpf_map__reuse_fd(map, pinned_map_fd);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int bpf_object__pin_programs(struct bpf_object *obj, const char *path)
 >  {
-> -	apic->send_IPI_allbutself(APIC_DM_NMI);
-> +	apic->send_IPI_allbutself(VECTOR_NMI);
-
-The changelog got it right, but this here needs to be VECTOR_NMI. While I
-didn't 0-day was able to find and turn on the config option ...
-
-/blush
+>  	struct bpf_program *prog;
+> diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> index d639f47e3110..7fe465a1be76 100644
+> --- a/tools/lib/bpf/libbpf.h
+> +++ b/tools/lib/bpf/libbpf.h
+> @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_object *obj, const char *name,
+>  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const char *path);
+>  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
+>  				      const char *path);
+> +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
+> +				      const char *path);
+>  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
+>  					const char *path);
+>  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
+> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> index 2c6d835620d2..66a30be6696c 100644
+> --- a/tools/lib/bpf/libbpf.map
+> +++ b/tools/lib/bpf/libbpf.map
+> @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
+>  		btf_dump__new;
+>  		btf__parse_elf;
+>  		bpf_object__load_xattr;
+> +		bpf_object__reuse_maps;
+>  		libbpf_num_possible_cpus;
+>  } LIBBPF_0.0.3;
+> 
 
