@@ -2,144 +2,276 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C49CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685DDC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EEC218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331DB218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NCAVIjM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfGEHaw (ORCPT
+        id S1727952AbfGEHbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:30:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59314 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbfGEHaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:30:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D87F6AFF3;
-        Fri,  5 Jul 2019 07:30:49 +0000 (UTC)
-Subject: Re: [PATCH][next][V3] btrfs: fix memory leak of path on error return
- path
-To:     Colin King <colin.king@canonical.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190705072624.14163-1-colin.king@canonical.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <baaeb457-d592-df65-51a6-762747943dbd@suse.com>
-Date:   Fri, 5 Jul 2019 10:30:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 03:31:53 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46127 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfGEHbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:31:53 -0400
+Received: by mail-vs1-f68.google.com with SMTP id r3so3262968vsr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 00:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rMd1u8f9GUtGM2BNqO4dxPBPUfEK4qgo6+64JcBSfZo=;
+        b=NCAVIjM5oXEoOyTfLc1j5S059x2rfCv7/17EWp9Et1EVImM8xhz2b6qhUPm19tM+aD
+         3+ZVdwnBS+Jajb4BoM70kV1GQ47wbUmxTn50xE4ev9Bx8gVtRLhl8fBx3ZksvBDiuqrQ
+         xUg2H8J4gy8WPGrDWXxNkCsWaztk5/XXtdEP4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rMd1u8f9GUtGM2BNqO4dxPBPUfEK4qgo6+64JcBSfZo=;
+        b=uCsA/pq3N3LMnv1zjtAK5FKr4ekYE347D5vjpaMCQ42VC8sQC499eUq5J2IjtOt7+u
+         Q94nxE3aGSRbC7Ev9Z8qy9LuLsOEqmbkYq+mamQcgeN2T1ND73N2uxw6G1GkaNnsVoGx
+         VTOqaaVgI39OsOGo9m02qhwtRuQoUXJRJJJ/lBVW4X3o02Ro8Z9Eov+M51k2zWrz7hWR
+         L+pC8/CT7bi7ZKF8vkP2619Ii7ZwJHH7slih87OZtvViexlirFMbzYoln0SH3bScTUQ5
+         6cugZcrdzLG0SMxa1ghEkLy5uaI5+fKj6EkeYyKoD0WYVAVKuY/VEQJIaZdX0X7BvL38
+         /DJQ==
+X-Gm-Message-State: APjAAAXwgKSgWbNbJnYuh+IVrfyh20KooQF885g5PP/5r3Y+dY4ZIwR8
+        tXes+3tqgA8L0Mqq6SIENeoqVYZeH80GwDbkPsuQOw==
+X-Google-Smtp-Source: APXvYqz5mVOrkTHRsNytg+i93CjQ2GDoPSDWloDYQwydMlp+jUPs4nifh/0Ua8DYEXIwTxR4ajiGrHIn+cmJ3Pylqm0=
+X-Received: by 2002:a67:eada:: with SMTP id s26mr1279515vso.163.1562311911794;
+ Fri, 05 Jul 2019 00:31:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190705072624.14163-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190705042623.129541-1-cychiang@chromium.org>
+ <20190705042623.129541-3-cychiang@chromium.org> <VI1PR06MB41425D1F24AC653F08AFA463ACF50@VI1PR06MB4142.eurprd06.prod.outlook.com>
+In-Reply-To: <VI1PR06MB41425D1F24AC653F08AFA463ACF50@VI1PR06MB4142.eurprd06.prod.outlook.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Fri, 5 Jul 2019 15:31:24 +0800
+Message-ID: <CAFv8NwJXbJo=z_NDj+JQHD9LOmnbfM8v_N1uHn4sdBzF-FZQfA@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH 2/4] drm: bridge: dw-hdmi: Report connector
+ status using callback
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "tzungbi@chromium.org" <tzungbi@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dgreid@chromium.org" <dgreid@chromium.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 5, 2019 at 1:45 PM Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> On 2019-07-05 06:26, Cheng-Yi Chiang wrote:
+> > Allow codec driver register callback function for plug event.
+> >
+> > The callback registration flow:
+> > dw-hdmi <--- hw-hdmi-i2s-audio <--- hdmi-codec
+> >
+> > dw-hdmi-i2s-audio implements hook_plugged_cb op
+> > so codec driver can register the callback.
+> >
+> > dw-hdmi implements set_plugged_cb op so platform device can register the
+> > callback.
+> >
+> > When connector plug/unplug event happens, report this event using the
+> > callback.
+> >
+> > Make sure that audio and drm are using the single source of truth for
+> > connector status.
+>
+> I have a similar notification need for making a snd_ctl_notify() call from hdmi-codec when ELD changes,
+> see [1] for work in progress patches (part of a dw-hdmi multi-channel lpcm series I am preparing).
+>
+> Any suggestions on how to handle a ELD change notification?
+> Should I use a similar pattern as in this series?
 
+Hi Jonas, I think we are using a very similar pattern.
+The difference is that in my series the function is not exposed on hdmi-codec.h.
+I think your method makes sense for your case because
+dw-hdmi-i2s-audio.c needs to access and update data inside
+dw_hdmi_i2s_audio_data,
+while in my use case it is only a thin layer setting up the callback
+for jack status.
 
-On 5.07.19 г. 10:26 ч., Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently if the allocation of roots or tmp_ulist fails the error handling
-> does not free up the allocation of path causing a memory leak. Fix this and
-> other similar leaks by moving the call of btrfs_free_path from label out
-> to label out_free_ulist.
-> 
-> Kudos to David Sterba for spotting the issue in my original fix and suggesting
-> the correct way to fix the leak and Anand Jain for spotting a double free
-> issue.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 5911c8fe05c5 ("btrfs: fiemap: preallocate ulists for btrfs_check_shared")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> (I lost track of the hdmi-notifier/drm_audio_component discussion)
+>
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+It was a long discussion.
+I think the conclusion was that if we are only talking about
+hdmi-codec, then we just need to extend the ops exposed in hdmi-codec
+and don't need to use
+hdmi-notifier or drm_audio_component.
 
-> ---
-> V2: move the btrfs_free_path to the out_free_ulist label as suggested by
->      David Sterba as the correct fix.
-> V3: fix double free as identified Anand Jain
-> ---
-> 
->  fs/btrfs/extent_io.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 1eb671c16ff1..9de119194f8e 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4613,7 +4613,6 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->  	ret = btrfs_lookup_file_extent(NULL, root, path,
->  			btrfs_ino(BTRFS_I(inode)), -1, 0);
->  	if (ret < 0) {
-> -		btrfs_free_path(path);
->  		goto out_free_ulist;
->  	} else {
->  		WARN_ON(!ret);
-> @@ -4766,11 +4765,11 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->  		ret = emit_last_fiemap_cache(fieinfo, &cache);
->  	free_extent_map(em);
->  out:
-> -	btrfs_free_path(path);
->  	unlock_extent_cached(&BTRFS_I(inode)->io_tree, start, start + len - 1,
->  			     &cached_state);
->  
->  out_free_ulist:
-> +	btrfs_free_path(path);
->  	ulist_free(roots);
->  	ulist_free(tmp_ulist);
->  	return ret;
-> 
+> [1] https://github.com/Kwiboo/linux-rockchip/compare/54b40fdd264c7ed96017271eb6524cca4ff755ab...9c17284e8a8657e8b1da53a1c7ff056cbd8ce43c
+>
+> Best regards,
+> Jonas
+>
+> >
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >  .../gpu/drm/bridge/synopsys/dw-hdmi-audio.h   |  3 ++
+> >  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 10 ++++++
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 34 ++++++++++++++++++-
+> >  3 files changed, 46 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > index 63b5756f463b..f523c590984e 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > @@ -2,6 +2,8 @@
+> >  #ifndef DW_HDMI_AUDIO_H
+> >  #define DW_HDMI_AUDIO_H
+> >
+> > +#include <sound/hdmi-codec.h>
+> > +
+> >  struct dw_hdmi;
+> >
+> >  struct dw_hdmi_audio_data {
+> > @@ -17,6 +19,7 @@ struct dw_hdmi_i2s_audio_data {
+> >
+> >       void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
+> >       u8 (*read)(struct dw_hdmi *hdmi, int offset);
+> > +     int (*set_plugged_cb)(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn);
+> >  };
+> >
+> >  #endif
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > index 5cbb71a866d5..7b93cf05c985 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > @@ -104,10 +104,20 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+> >       return -EINVAL;
+> >  }
+> >
+> > +static int dw_hdmi_i2s_hook_plugged_cb(struct device *dev, void *data,
+> > +                                    hdmi_codec_plugged_cb fn)
+> > +{
+> > +     struct dw_hdmi_i2s_audio_data *audio = data;
+> > +     struct dw_hdmi *hdmi = audio->hdmi;
+> > +
+> > +     return audio->set_plugged_cb(hdmi, fn);
+> > +}
+> > +
+> >  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
+> >       .hw_params      = dw_hdmi_i2s_hw_params,
+> >       .audio_shutdown = dw_hdmi_i2s_audio_shutdown,
+> >       .get_dai_id     = dw_hdmi_i2s_get_dai_id,
+> > +     .hook_plugged_cb = dw_hdmi_i2s_hook_plugged_cb,
+> >  };
+> >
+> >  static int snd_dw_hdmi_probe(struct platform_device *pdev)
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > index 045b1b13fd0e..c69a399fc7ca 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -26,6 +26,8 @@
+> >  #include <drm/drm_probe_helper.h>
+> >  #include <drm/bridge/dw_hdmi.h>
+> >
+> > +#include <sound/hdmi-codec.h>
+> > +
+> >  #include <uapi/linux/media-bus-format.h>
+> >  #include <uapi/linux/videodev2.h>
+> >
+> > @@ -185,6 +187,9 @@ struct dw_hdmi {
+> >       void (*disable_audio)(struct dw_hdmi *hdmi);
+> >
+> >       struct cec_notifier *cec_notifier;
+> > +
+> > +     hdmi_codec_plugged_cb plugged_cb;
+> > +     enum drm_connector_status last_connector_result;
+> >  };
+> >
+> >  #define HDMI_IH_PHY_STAT0_RX_SENSE \
+> > @@ -209,6 +214,17 @@ static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
+> >       return val;
+> >  }
+> >
+> > +static int hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn)
+> > +{
+> > +     mutex_lock(&hdmi->mutex);
+> > +     hdmi->plugged_cb = fn;
+> > +     if (hdmi->audio && !IS_ERR(hdmi->audio))
+> > +             fn(hdmi->audio,
+> > +                hdmi->last_connector_result == connector_status_connected);
+> > +     mutex_unlock(&hdmi->mutex);
+> > +     return 0;
+> > +}
+> > +
+> >  static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
+> >  {
+> >       regmap_update_bits(hdmi->regm, reg << hdmi->reg_shift, mask, data);
+> > @@ -2044,6 +2060,7 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> >  {
+> >       struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> >                                            connector);
+> > +     enum drm_connector_status result;
+> >
+> >       mutex_lock(&hdmi->mutex);
+> >       hdmi->force = DRM_FORCE_UNSPECIFIED;
+> > @@ -2051,7 +2068,20 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> >       dw_hdmi_update_phy_mask(hdmi);
+> >       mutex_unlock(&hdmi->mutex);
+> >
+> > -     return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> > +     result = hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> > +
+> > +     mutex_lock(&hdmi->mutex);
+> > +     if (result != hdmi->last_connector_result) {
+> > +             dev_dbg(hdmi->dev, "read_hpd result: %d", result);
+> > +             if (hdmi->plugged_cb && hdmi->audio && !IS_ERR(hdmi->audio)) {
+> > +                     hdmi->plugged_cb(hdmi->audio,
+> > +                                      result == connector_status_connected);
+> > +                     hdmi->last_connector_result = result;
+> > +             }
+> > +     }
+> > +     mutex_unlock(&hdmi->mutex);
+> > +
+> > +     return result;
+> >  }
+> >
+> >  static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> > @@ -2460,6 +2490,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >       hdmi->rxsense = true;
+> >       hdmi->phy_mask = (u8)~(HDMI_PHY_HPD | HDMI_PHY_RX_SENSE);
+> >       hdmi->mc_clkdis = 0x7f;
+> > +     hdmi->last_connector_result = connector_status_disconnected;
+> >
+> >       mutex_init(&hdmi->mutex);
+> >       mutex_init(&hdmi->audio_mutex);
+> > @@ -2653,6 +2684,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >               audio.hdmi      = hdmi;
+> >               audio.write     = hdmi_writeb;
+> >               audio.read      = hdmi_readb;
+> > +             audio.set_plugged_cb = hdmi_set_plugged_cb;
+> >               hdmi->enable_audio = dw_hdmi_i2s_audio_enable;
+> >               hdmi->disable_audio = dw_hdmi_i2s_audio_disable;
+> >
+>
