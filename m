@@ -6,153 +6,95 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF4C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2D3C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032BF218CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73297218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfGEMkb (ORCPT
+        id S1728934AbfGEMmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:40:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39471 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbfGEMka (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:40:30 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so9779861wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:40:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l8x9dhvz7TMokwr3sn5UWhMUIMcQlqc6m7Wb8cBeajU=;
-        b=YEV039cONOTmKiznvjq3miKaRWH8rzVwsTADe8OAEKQiXULEQzZ+grjX1O6c+7Gsy8
-         YVvn+X42tPNfgeX2YJmQBsX9WzmvVFu2Au1K+FO31j0ieg6Qvn5/suNnGJZrOKMTwWzr
-         OkwKv8FtcWheBsA+mNy3ejB5a4XRUSccNZfNb3GnuvcDWHh87oEmP16870K/jGeHTmhO
-         3G7kWBPdtCmwBA73DyUNRYs0ucddHpNsOj9NdasV7STo167sTu4I/j0lCBHOezp4TdeP
-         4YhheS74a9gE3upG5dAAAUC/keP54D7jO+efNT9I8pf7YvGjmdLfCTX7uOXJBH7UQvbZ
-         0hbA==
-X-Gm-Message-State: APjAAAVzsQu6wcYtULDrW/gwmmlJ9mUYiMJgavBwYXl9JPZQdecAKXL1
-        dt/Q12GBEVQc60ET1rmDjnQ13Q==
-X-Google-Smtp-Source: APXvYqzsvfIgDRLDpqO1yoitLvd8abmdL76b4tnZhwgDNNS9W39D4awx5a3XB+tWwAH1tYKngkhEjQ==
-X-Received: by 2002:adf:ab1d:: with SMTP id q29mr4339062wrc.18.1562330428452;
-        Fri, 05 Jul 2019 05:40:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e943:5a4e:e068:244a? ([2001:b07:6468:f312:e943:5a4e:e068:244a])
-        by smtp.gmail.com with ESMTPSA id n2sm7067453wmi.38.2019.07.05.05.40.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 05:40:27 -0700 (PDT)
-Subject: Re: [PATCH v5 4/4] KVM: LAPIC: Don't inject already-expired timer via
- posted interrupt
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
- <1561110002-4438-5-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <67fad01b-8a77-5892-d963-77a3d321bb65@redhat.com>
-Date:   Fri, 5 Jul 2019 14:40:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 08:42:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:5662 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbfGEMmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:42:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 05:42:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
+   d="scan'208";a="169667533"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 05 Jul 2019 05:42:05 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 05 Jul 2019 15:42:04 +0300
+Date:   Fri, 5 Jul 2019 15:42:04 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        lucas.demarchi@intel.com, imre.deak@intel.com,
+        jose.souza@intel.com, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] drm/i915: Remove set but not used variable
+ 'intel_dig_port'
+Message-ID: <20190705124204.GO5942@intel.com>
+References: <20190705113138.65880-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1561110002-4438-5-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190705113138.65880-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/19 11:40, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On Fri, Jul 05, 2019 at 11:31:38AM +0000, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> already-expired timer interrupt can be injected to guest when vCPU who 
-> arms the lapic timer re-vmentry, don't posted inject in this case.
+> drivers/gpu/drm/i915/display/intel_ddi.c: In function 'intel_ddi_get_config':
+> drivers/gpu/drm/i915/display/intel_ddi.c:3774:29: warning:
+>  variable 'intel_dig_port' set but not used [-Wunused-but-set-variable]
+>   struct intel_digital_port *intel_dig_port;
 > 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krƒçm√°≈ô <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> It is never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Applied to drm-intel-next-queued. Thanks for the patch.
+
 > ---
->  arch/x86/kvm/lapic.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  drivers/gpu/drm/i915/display/intel_ddi.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index ae575c0..7cd95ea 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1452,7 +1452,7 @@ static void kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
->  	}
->  }
+> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+> index a4172595c8d8..30e48609db1d 100644
+> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+> @@ -3771,7 +3771,6 @@ void intel_ddi_get_config(struct intel_encoder *encoder,
+>  	struct drm_i915_private *dev_priv = to_i915(encoder->base.dev);
+>  	struct intel_crtc *intel_crtc = to_intel_crtc(pipe_config->base.crtc);
+>  	enum transcoder cpu_transcoder = pipe_config->cpu_transcoder;
+> -	struct intel_digital_port *intel_dig_port;
+>  	u32 temp, flags = 0;
 >  
-> -static void apic_timer_expired(struct kvm_lapic *apic)
-> +static void apic_timer_expired(struct kvm_lapic *apic, bool can_pi_inject)
->  {
->  	struct kvm_vcpu *vcpu = apic->vcpu;
->  	struct swait_queue_head *q = &vcpu->wq;
-> @@ -1464,7 +1464,7 @@ static void apic_timer_expired(struct kvm_lapic *apic)
->  	if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
->  		ktimer->expired_tscdeadline = ktimer->tscdeadline;
+>  	/* XXX: DSI transcoder paranoia */
+> @@ -3810,7 +3809,6 @@ void intel_ddi_get_config(struct intel_encoder *encoder,
+>  	switch (temp & TRANS_DDI_MODE_SELECT_MASK) {
+>  	case TRANS_DDI_MODE_SELECT_HDMI:
+>  		pipe_config->has_hdmi_sink = true;
+> -		intel_dig_port = enc_to_dig_port(&encoder->base);
 >  
-> -	if (posted_interrupt_inject_timer(apic->vcpu)) {
-> +	if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
-
-Perhaps it should use a posted interrupt if kvm_arch_should_kick(vcpu),
-i.e. just add kvm_arch_vcpu_should_kick(apic->vcpu) to
-posted_interrupt_inject_timer?
-
-Paolo
-
->  		if (apic->lapic_timer.timer_advance_ns)
->  			kvm_wait_lapic_expire(vcpu, true);
->  		kvm_apic_inject_pending_timer_irqs(apic);
-> @@ -1607,7 +1607,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
->  		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
->  		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS);
->  	} else
-> -		apic_timer_expired(apic);
-> +		apic_timer_expired(apic, false);
->  
->  	local_irq_restore(flags);
->  }
-> @@ -1697,7 +1697,7 @@ static void start_sw_period(struct kvm_lapic *apic)
->  
->  	if (ktime_after(ktime_get(),
->  			apic->lapic_timer.target_expiration)) {
-> -		apic_timer_expired(apic);
-> +		apic_timer_expired(apic, false);
->  
->  		if (apic_lvtt_oneshot(apic))
->  			return;
-> @@ -1759,7 +1759,7 @@ static bool start_hv_timer(struct kvm_lapic *apic)
->  		if (atomic_read(&ktimer->pending)) {
->  			cancel_hv_timer(apic);
->  		} else if (expired) {
-> -			apic_timer_expired(apic);
-> +			apic_timer_expired(apic, false);
->  			cancel_hv_timer(apic);
->  		}
->  	}
-> @@ -1809,7 +1809,7 @@ void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu)
->  		goto out;
->  	WARN_ON(swait_active(&vcpu->wq));
->  	cancel_hv_timer(apic);
-> -	apic_timer_expired(apic);
-> +	apic_timer_expired(apic, false);
->  
->  	if (apic_lvtt_period(apic) && apic->lapic_timer.period) {
->  		advance_periodic_target_expiration(apic);
-> @@ -2312,7 +2312,7 @@ static enum hrtimer_restart apic_timer_fn(struct hrtimer *data)
->  	struct kvm_timer *ktimer = container_of(data, struct kvm_timer, timer);
->  	struct kvm_lapic *apic = container_of(ktimer, struct kvm_lapic, lapic_timer);
->  
-> -	apic_timer_expired(apic);
-> +	apic_timer_expired(apic, true);
->  
->  	if (lapic_is_periodic(apic)) {
->  		advance_periodic_target_expiration(apic);
+>  		pipe_config->infoframes.enable |=
+>  			intel_hdmi_infoframes_enabled(encoder, pipe_config);
+> 
 > 
 
+-- 
+Ville Syrj‰l‰
+Intel
