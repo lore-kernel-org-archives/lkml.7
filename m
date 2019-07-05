@@ -2,99 +2,161 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F57C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E180C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9ED216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A4A216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLp+9NqH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P5AKdrd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfGEPPa (ORCPT
+        id S1727843AbfGEPQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:15:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35675 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbfGEPP2 (ORCPT
+        Fri, 5 Jul 2019 11:16:29 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58022 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfGEPQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:15:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so4455736pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 08:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=W3shWyjUMuq9t5Vu5n5b4WyN7Fp07Hz5BxwWZP81hBQ=;
-        b=GLp+9NqHTitbzc/EsYIplus2wwytDD1COg7tthvJ2z5C8u6TdKlK6E52+9zQmpo/WA
-         vr2Ea2RI3BbF84Mjk8+R3Ql1MGPwxtXnLPOc0v6pelHEkoPT1mrL1wgi6ZR6EmyyHvAI
-         jS8p0xLZHL2Pkqpa341OyGhxtca7Ga12OwWYTVagEvFpGj5CIhDJxSCMW0JasKA5K9mG
-         ZyaqF8WakEI2giuswI29XVelWqw+Jy+oFJ+0oIeFIF5mADrGyv8nsL0DG5Vn1F3pE01R
-         Hb10poYOGOSaXMvo7zwOHatpZhAqtyIwKRaMsnKjgtURH+zuyJLF2xJcCEC/5xNRlbOG
-         mLdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=W3shWyjUMuq9t5Vu5n5b4WyN7Fp07Hz5BxwWZP81hBQ=;
-        b=IMSA7Z4f0Gj8WaTp5TnMrtbbMD6YH2DltgthKclj5WM7stih4Xp4NMgJEOlBqEWTVo
-         4GV+vugS377ZSCi5quJC+5KjAsiRMB2i45cIXYaD9MPy9zkBbQQZFlq1eQQuq40AfVpv
-         03BG8A8PkS2X1MfGKy4ofvwPJc0ybsbYvhdSnfIdsjctHGRAbvdI03O3EDRGJT3BiYSR
-         yMMh3VjVP3kOV1f8LP/f5OPqaWK1ez/Vsq5vjvHolQ2pUg9yJ7SLX+CU11+sCrBtKPCt
-         z4uMsSObDi+cM21UlxTyzcvEHI8aEOGWeGq0VKZYP+V1clSM/M1SAYraBcFLYZH4Eluw
-         bcNQ==
-X-Gm-Message-State: APjAAAVCnsZxJwYpZyIIWlyk1zwDipCf9lfH8qeXsbSviokc+xq48Eef
-        Q3Dcq4lvnBY2Jc568memUKMi
-X-Google-Smtp-Source: APXvYqw6EQk4uR8VqbeRigjfRsmWR1YAaEHXOOQRQW99S4UWiNDtnjOUj1yeXWg4KdwRNP1FZyRfPw==
-X-Received: by 2002:a17:90a:25e6:: with SMTP id k93mr6322707pje.100.1562339727172;
-        Fri, 05 Jul 2019 08:15:27 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:916:7317:a59d:72b6:ef7f:a938])
-        by smtp.gmail.com with ESMTPSA id w3sm8248778pgl.31.2019.07.05.08.15.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 08:15:26 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/5] MAINTAINERS: Add entry for Bitmain BM1880 SoC clock driver
-Date:   Fri,  5 Jul 2019 20:44:40 +0530
-Message-Id: <20190705151440.20844-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
-References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
+        Fri, 5 Jul 2019 11:16:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190705151626euoutp01488ec5f4b72f14cd13fe969ace664a5c~ui8IMt3O-0131101311euoutp01Y
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jul 2019 15:16:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190705151626euoutp01488ec5f4b72f14cd13fe969ace664a5c~ui8IMt3O-0131101311euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562339786;
+        bh=MtNtGRdGYlJXyRRrGWSLm9dBjD9CzU/0eY5SDO5caDI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=P5AKdrd3BOx1Hvh/1nkZcY8lx5IH28H3j888RCrTffAr2ZH9xiFnBg79yz/03sXqt
+         jSkorBtH6V4mm/aSjHpK8Xzq4DME+vv/l8qRMcVnGMmRTZnqe3mb5e70K1x1H8+Rg0
+         PrdoqqgHeZBYwMtJZjKwcjZ9Oj2xKZ+h7eUUazrw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190705151625eucas1p2229fd74627829fcc1d0b400988efa3e3~ui8HtvFVC0423204232eucas1p2x;
+        Fri,  5 Jul 2019 15:16:25 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 67.5B.04298.9C96F1D5; Fri,  5
+        Jul 2019 16:16:25 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190705151624eucas1p1cc3747c06ef51edab7a7e83a7f3ef057~ui8Gx4xEL0380803808eucas1p1b;
+        Fri,  5 Jul 2019 15:16:24 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190705151624eusmtrp2e980ee27e8f6641c9c722f0919b648b8~ui8Gj4cbc3106131061eusmtrp2y;
+        Fri,  5 Jul 2019 15:16:24 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-43-5d1f69c9fe07
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 37.77.04146.8C96F1D5; Fri,  5
+        Jul 2019 16:16:24 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190705151624eusmtip1e8a679db120447f67385f93fb2bb9a39~ui8GP1GrP2671826718eusmtip17;
+        Fri,  5 Jul 2019 15:16:24 +0000 (GMT)
+Subject: Re: [PATCH] video: fbdev: s3c-fb: Mark expected switch
+ fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <4771baff-b157-2416-d43b-bf6d8980fbb3@samsung.com>
+Date:   Fri, 5 Jul 2019 17:16:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190625160103.GA13133@embeddedor>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djP87onM+VjDZa/lrS48vU9m8XWPaoW
+        K77MZLc4051rcaLvA6vF5V1z2BzYPGY3XGTxWHdQ1WPnrLvsHve7jzN5fN4kF8AaxWWTkpqT
+        WZZapG+XwJXRtewWU8EU3orjs6azNDB+4+pi5OCQEDCROHJaoYuRi0NIYAWjxKHjd1ggnC+M
+        Emu2vmXvYuQEcj4zSszpNwKxQRpuHvvMBFG0nFFixv5jzBDOW0aJxa0vWEGqhAX8JVqa7jGB
+        2CICRhKzZ3SzghQxg+w4fPM1G0iCTcBKYmL7KkYQm1fATuLU406wZhYBFYmZ84+DrRYViJC4
+        f2wDK0SNoMTJmU9YQGxOAQOJbdc2gC1gFhCXuPVkPpQtL9G8dTYzxKmr2CXubIE620Xi7aOF
+        LBC2sMSr41vYIWwZif8754O9IyGwjlHib8cLZghnO6PE8sn/2CCqrCUOH7/ICgoxZgFNifW7
+        9CHCjhIHNzQyQwKST+LGW0GIG/gkJm2bDhXmlehoE4KoVpPYsGwDG8zarp0rmScwKs1C8tks
+        JN/MQvLNLIS9CxhZVjGKp5YW56anFhvmpZbrFSfmFpfmpesl5+duYgSmnNP/jn/awfj1UtIh
+        RgEORiUe3hNO8rFCrIllxZW5hxglOJiVRHgTg4BCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeasZ
+        HkQLCaQnlqRmp6YWpBbBZJk4OKUaGGO3qJ/ZESqlIyW97ePfuGCLO3PU9ogeCtL1+n73TfIz
+        i80Zy+qlpASip7S2fQ7cYmv4T+v9bIlPR+orrO5sbLRkzprU9+qMXqpOo673d8/ahdP4neXW
+        TMlher65s9jk4IxKXz1+Df0Gk93nwk7eX7Oa/67tjDu7K0qW6/CJ9vTM3BddVXd5lhJLcUai
+        oRZzUXEiALxjRfM1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xu7onMuVjDT5+lrW48vU9m8XWPaoW
+        K77MZLc4051rcaLvA6vF5V1z2BzYPGY3XGTxWHdQ1WPnrLvsHve7jzN5fN4kF8AapWdTlF9a
+        kqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRtewWU8EU3orj
+        s6azNDB+4+pi5OSQEDCRuHnsM1MXIxeHkMBSRokru/ewdTFyACVkJI6vL4OoEZb4c62LDaLm
+        NaNE15cb7CAJYQFfiZkN35hBbBEBI4nZM7pZQYqYBVYwSixb95kVoqOZUeLRi4NgVWwCVhIT
+        21cxgti8AnYSpx53soLYLAIqEjPnHwebKioQIXHm/QoWiBpBiZMzn4DZnAIGEtuubWACsZkF
+        1CX+zLvEDGGLS9x6Mh8qLi/RvHU28wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWK
+        E3OLS/PS9ZLzczcxAuNs27Gfm3cwXtoYfIhRgINRiYf3hJN8rBBrYllxZe4hRgkOZiUR3sQg
+        oBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NAXkm8oamhuYWlobmxubGZhZI4b4fAwRgh
+        gfTEktTs1NSC1CKYPiYOTqkGxqoYNt8zzB0/lopu5l0u/cXXfjfXw5fmzaqRxh9+TS+eKCO8
+        XNTMdbNh+Qfhe5IPJv89krnN6KhSyytu1t039s9r/vXMOqzh9yLLgNOxRzd//tfcNeW0XsDW
+        RnVBIQ4Nv80OJ1QEBMMNnzG5JAXuW2k47e2SJZ3W3SEfFO06zzJolzE+PzFltxJLcUaioRZz
+        UXEiAEIxPL/JAgAA
+X-CMS-MailID: 20190705151624eucas1p1cc3747c06ef51edab7a7e83a7f3ef057
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190625160111epcas3p162f3d789c6219e679d9fd30c6a6b3d51
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190625160111epcas3p162f3d789c6219e679d9fd30c6a6b3d51
+References: <CGME20190625160111epcas3p162f3d789c6219e679d9fd30c6a6b3d51@epcas3p1.samsung.com>
+        <20190625160103.GA13133@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for Bitmain BM1880 SoC clock driver.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On 6/25/19 6:01 PM, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/video/fbdev/s3c-fb.c: In function ‘s3c_fb_blank’:
+> drivers/video/fbdev/s3c-fb.c:811:16: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    sfb->enabled &= ~(1 << index);
+>    ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+> drivers/video/fbdev/s3c-fb.c:814:2: note: here
+>   case FB_BLANK_NORMAL:
+>   ^~~~
+>   LD [M]  drivers/staging/greybus/gb-light.o
+>   CC [M]  drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gp10b.o
+> drivers/video/fbdev/s3c-fb.c: In function ‘s3c_fb_check_var’:
+> drivers/video/fbdev/s3c-fb.c:286:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    var->transp.length = 1;
+>    ~~~~~~~~~~~~~~~~~~~^~~
+> drivers/video/fbdev/s3c-fb.c:288:2: note: here
+>   case 18:
+>   ^~~~
+> drivers/video/fbdev/s3c-fb.c:314:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    var->transp.offset = 24;
+>    ~~~~~~~~~~~~~~~~~~~^~~~
+> drivers/video/fbdev/s3c-fb.c:316:2: note: here
+>   case 24:
+>   ^~~~
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> Notice that, in this particular case, the code comments are modified
+> in accordance with what GCC is expecting to find.
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 01a52fc964da..f9259161cb5c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1464,8 +1464,10 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/bitmain/
-+F:	drivers/clk/clk-bm1880.c
- F:	drivers/pinctrl/pinctrl-bm1880.c
- F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-+F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
- F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
- ARM/CALXEDA HIGHBANK ARCHITECTURE
--- 
-2.17.1
+Patch queued for v5.3, thanks.
 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
