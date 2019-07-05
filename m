@@ -2,81 +2,97 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BEEC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1785EC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D91E21850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E185721850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ckYufb+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfGEMdO (ORCPT
+        id S1728722AbfGEMdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:33:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8712 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbfGEMdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:33:14 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 02C3EBD676E72E9322B4;
-        Fri,  5 Jul 2019 20:33:12 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 5 Jul 2019
- 20:33:05 +0800
-Subject: Re: [PATCH] time: compat settimeofday: Validate the values of tv from
- user
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <john.stultz@linaro.org>, <sboyd@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>
-References: <1562318088-37669-1-git-send-email-zhengbin13@huawei.com>
- <alpine.DEB.2.21.1907051230340.1802@nanos.tec.linutronix.de>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <39dd218b-4fc1-83bd-df2a-3cd69cc90c72@huawei.com>
-Date:   Fri, 5 Jul 2019 20:32:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 5 Jul 2019 08:33:39 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38717 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbfGEMdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:33:39 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a27so7737051qkk.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=SM8/4exhoEHGZvFQb+ptk62AOWI2rKv8kDwMIolo8dI=;
+        b=ckYufb+JTejpyz8pDQLhV2fiq+FAfmAMJXOQOHzRQuW89WYkHU4Lnaf8DM+LDzsQly
+         7DR9KgHXKyZJ5SQnARXpB7b0GDPR+IzumhAhjFElKZoaWbVQqBzOGuOt2mXTD7nzuXt5
+         rht4Mpc03KaerdCaAGd9Zz+VR1Rrl9rREPc+1J7nPBLLCwdHhPvxkD51oec3BWxH/q5A
+         8y8smn0+FXxH8Gikf6Oak6WiJwqqFwAOKVh2vW+4toDJIiGZgqAhD4f+Uc2n5IztDsqL
+         u3oZpE+TduYcqojeNfFd5skXHK2hBtPlP72gQxG0RENMyEEMZ5xl0dJFmnFf9EpIr4ix
+         WIHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SM8/4exhoEHGZvFQb+ptk62AOWI2rKv8kDwMIolo8dI=;
+        b=ts9BNZEqlQGPpIt3qyM+qW9nMSqN/Pb/eh6RsvXnbwHmLrNGnq8Ng6OOv7JXvIC40N
+         bPf42qBdPJL4h+mzgOsQHD6ttAOcaXkRzm0nGwspQBI1AAZUQrmM49YZbtkULChGG6J9
+         R8K5iwwCZ2SpYt71uc4vEW/nYSH4vXb9icW7NTfH8VWVc/z6zhVquAh0taNJOHEZWD4+
+         /izUX5KPZ5bn9E0TR1UDaRIlfEWCvbv1yL17TG/JVHyg3UDWMH69GbseywCYD0L0O6Ko
+         IpPBAmCOX/vmvrtnLkzhIYa5ENHxiAZf3XRIEwUnGJfOtCfT554PdXqzs6GRUBQdT1wh
+         WACA==
+X-Gm-Message-State: APjAAAWrscDdju1LBUnBdWCpy9QsaXwRBwdY+1Br+glVcB8tz3X6iySk
+        pHmRzL2sMkjLyn0bwOIHCHjdAA==
+X-Google-Smtp-Source: APXvYqyX4DTV+YYFhT5OJ/l0wgbSemi0wOkZLMZP/Jtfy+M9HG6Dx7KgQV0v8jgq8UDEfu8Mwq0uQg==
+X-Received: by 2002:a37:a1d6:: with SMTP id k205mr2848006qke.171.1562330018204;
+        Fri, 05 Jul 2019 05:33:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id z33sm2504614qtc.56.2019.07.05.05.33.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Jul 2019 05:33:37 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hjNPE-0008UP-St; Fri, 05 Jul 2019 09:33:36 -0300
+Date:   Fri, 5 Jul 2019 09:33:36 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: hmm_range_fault related fixes and legacy API removal v2
+Message-ID: <20190705123336.GA31543@ziepe.ca>
+References: <20190703220214.28319-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907051230340.1802@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190703220214.28319-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/5 20:14, Thomas Gleixner wrote:
-> Zhengbin,
->
-> On Fri, 5 Jul 2019, zhengbin wrote:
->
->> Similar to commit 6ada1fc0e1c4
->> ("time: settimeofday: Validate the values of tv from user"),
->> an unvalidated user input is multiplied by a constant, which can result
->> in an undefined behaviour for large values. While this is validated
->> later, we should avoid triggering undefined behaviour.
-> I surely agree with the patch, but the argument that this is validated
-> later and we just should avoid UB in general is just wrong.
->
-> For a wide range of negative tv_usec values the multiplication overflow
-> turns them in positive numbers. So the 'validated later' is not catching
-> the invalid input.
->
-> So 'should avoid ....' is just the wrong argument here.
->
-> Validation _is_ required before the multiplication so UB won't turn an
-> invalid value into a valid one.
->
-> Thanks,
->
-> 	tglx
-Strongly agree with this, I send a v2 patch, modify the comment?
->
-> .
->
+On Wed, Jul 03, 2019 at 03:02:08PM -0700, Christoph Hellwig wrote:
+> Hi Jérôme, Ben and Jason,
+> 
+> below is a series against the hmm tree which fixes up the mmap_sem
+> locking in nouveau and while at it also removes leftover legacy HMM APIs
+> only used by nouveau.
 
+As much as I like this series, it won't make it to this merge window,
+sorry.
+
+Let's revisit it in a few weeks at rc1.
+
+Regards,
+Jason
