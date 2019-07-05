@@ -2,91 +2,88 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C11C4649E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB561C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFC7218BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48A5218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562325473;
+	bh=R1sj1bx4I6icVEG6mopi9eD0wUvGfiJm70JG+okMaaM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=joDnsAtvFVfusvjN0enfIg45Xf+YuvTCwD40ldwjOW29hn1XJGFB73KnXE/SKdKrK
+	 XfBXaO5wytUtIyLXcxuCy6LYVKRlex/jhqypiSaocpLa9PIEcftp9ckc3DKi2uoUZX
+	 mRwcE6tjeQJakMvy7z4VeET4acVlyN/iF0lV6nrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfGELRH (ORCPT
+        id S1728673AbfGELRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:17:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51990 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfGELRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:17:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:17:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="339808382"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2019 04:16:59 -0700
-Message-ID: <a976eae5b9ace7a03eb18e5f7a1e9ff0059559ca.camel@linux.intel.com>
-Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
- structures to tpm_pcr_extend()"
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        linux-integrity@vger.kernel.org
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Fri, 05 Jul 2019 14:16:58 +0300
-In-Reply-To: <1562240882.6165.78.camel@linux.ibm.com>
-References: <20190701131505.17759-1-msuchanek@suse.de>
-         <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
-         <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
-         <1562240882.6165.78.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 5 Jul 2019 07:17:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37173 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfGELRw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:17:52 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t76so6909196oih.4;
+        Fri, 05 Jul 2019 04:17:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uJykiUYFj6hzG7xUJGriRTMCMv/u4A8O1aHCnEkl0w0=;
+        b=eFlv+G3qbY1HGuPxHLPxDh0TGeXEOCmFgtQE/OTBenfXytrW8KjhugOviYvx2Et6FH
+         bGg6tbjZf176yR4EyREsBJ4hm4h2unwoVbNeagOe2UxGU91wba8H3BrTa65CnQ7lZOun
+         aTiyowJ31OsVN22GSyvbzvdTC0c55EVHW9SrhB+69GOxzFXs0sA78gIzOqVbwwzCZCzd
+         gIkNMigNknqnGduysM5EIBqfelHaxfgWWOa8mxPb+ahWMEL9nCu11GF8oH9VYwmpdcy5
+         zDI+qw6R4aD6QvARs5zTATJbaojaIBY/Ocdt3NOrdj/TajF9f8JYKvU+VtNpn4+nH7H9
+         NR1g==
+X-Gm-Message-State: APjAAAVTJKWYhBH8DlHoxl7Lhaj38FxvLbCFjfdEq5DLa1/6yHAxeVx1
+        GL6kCO8DFFSjfhlvLMd8Qp6Ctfludke5fvfLzoU=
+X-Google-Smtp-Source: APXvYqyA4zxAOi+yjyxTVf3p2c2E7VT6zUb8ULRSkez1ua3b/aYJNXRlSKGyy6dqbLT6ZO99XyiRYU0sfcXqY+GVzGs=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr1690147oih.103.1562325471384;
+ Fri, 05 Jul 2019 04:17:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <0d4c2a013b32bf18d45817011b028918220580f5.1562210705.git.viresh.kumar@linaro.org>
+ <7589f158a5522ff04ba2b63daca77bcdd4952f74.1562323803.git.viresh.kumar@linaro.org>
+In-Reply-To: <7589f158a5522ff04ba2b63daca77bcdd4952f74.1562323803.git.viresh.kumar@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 5 Jul 2019 13:17:40 +0200
+Message-ID: <CAJZ5v0h+wm5d4d3_NfYp-LY=oaJkTZaMMfdR=EjTOOkhw9PFZw@mail.gmail.com>
+Subject: Re: [PATCH V7 7/7] cpufreq: Add QoS requests for userspace constraints
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
-> On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
-> > On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
-> > > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
-> > > > This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
-> > > > following crash:
-> > > 
-> > > Thank you. I think this the right choice for the moment. I fixed
-> > > a trivial checkpatch.pl error and added the mandatory tags. Can
-> > > you check quickly v2 (just posted)?
-> > > 
-> > > I already made it available in my master and next.
-> > 
-> > Could you please wait few days? I would prefer to fix this issue instead
-> > of reverting the whole patch.
-> 
-> Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
-> allocated banks for IBM vtpm driver", which addresses this bug.
+On Fri, Jul 5, 2019 at 12:52 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> This implements QoS requests to manage userspace configuration of min
+> and max frequency.
+>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> V6->V7:
+> - We can't call dev_pm_qos_remove_request() for a request which was
+>   never added. This happened in one of the error paths. Fixed that by
+>   allocating the requests only right before we try to add them and also
+>   take care of things properly during errors.
+>
+> @Rafael: Please apply this version instead of the diff I supplied on the
+> WARN email earlier. This has proper protection in place at many places.
 
-With some minor changes it should be fine.
-
-/Jarkko
-
+Applied, thanks!
