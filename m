@@ -2,99 +2,107 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F6BC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D45C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1066F218A0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 05:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA65218A0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfGEF7T (ORCPT
+        id S1727702AbfGEGCD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 01:59:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55298 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfGEF7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 01:59:19 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BE7D813A98;
-        Fri,  5 Jul 2019 05:59:17 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-83.pek2.redhat.com [10.72.12.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 073FB60BF1;
-        Fri,  5 Jul 2019 05:59:07 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 13:59:04 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
-Subject: Re: [PATCH 18/39] docs: admin-guide: add kdump documentation into it
-Message-ID: <20190705055904.GB2790@localhost.localdomain>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
- <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
- <6911b74c-848f-0060-3db5-b5d7e8061cb5@linux.alibaba.com>
+        Fri, 5 Jul 2019 02:02:03 -0400
+Received: from mail.windriver.com ([147.11.1.11]:44326 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfGEGCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 02:02:03 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x65620xC012341
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 4 Jul 2019 23:02:00 -0700 (PDT)
+Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.194]) by
+ ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0439.000; Thu, 4
+ Jul 2019 23:02:00 -0700
+From:   "Hallsmark, Per" <Per.Hallsmark@windriver.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v2] let proc net directory inodes reflect to active net
+ namespace
+Thread-Topic: [PATCH v2] let proc net directory inodes reflect to active net
+ namespace
+Thread-Index: AQHVL/ymVpzynCXU5k63SMVA/ahJHqa6ioEAgAD/xW0=
+Date:   Fri, 5 Jul 2019 06:02:00 +0000
+Message-ID: <B7B4BB465792624BAF51F33077E99065DC5DA1B0@ALA-MBD.corp.ad.wrs.com>
+References: <B7B4BB465792624BAF51F33077E99065DC5D8E5D@ALA-MBD.corp.ad.wrs.com>,<20190704073200.GA2165@avx2>
+In-Reply-To: <20190704073200.GA2165@avx2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [128.224.18.249]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6911b74c-848f-0060-3db5-b5d7e8061cb5@linux.alibaba.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 05 Jul 2019 05:59:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/19 at 11:43am, Alex Shi wrote:
-> 
-> 
-> 在 2019/6/28 下午8:30, Mauro Carvalho Chehab 写道:
-> > The Kdump documentation describes procedures with admins use
-> > in order to solve issues on their systems.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  Documentation/admin-guide/bug-hunting.rst            | 4 ++--
-> >  Documentation/admin-guide/index.rst                  | 1 +
-> >  Documentation/{ => admin-guide}/kdump/gdbmacros.txt  | 0
-> >  Documentation/{ => admin-guide}/kdump/index.rst      | 1 -
-> >  Documentation/{ => admin-guide}/kdump/kdump.rst      | 0
-> >  Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst | 0
-> 
-> I am not sure if it's convenience for people to have more levels in docs.
-> 
-> But I guess, move archs into a Documentation/arch/ dir should be fine. like Documentation/arch/{x86,arm,arm64,ia64,m68k,s390,powerpc,...}
+Hello Alexey,
 
-Alex, moving kdump to admin-guide sounds reasonable to me.  I also agree
-with you for those arch dependent files can be moved to
-Documentation/arch/, maybe you are talking about some other patches in
-the series for the arch/? 
+Sounds excellent! Could you please drop a notifier of such?
 
-Thanks
-dave
+For our usecase, the ipv6 is statically linked (=y) and then this happens way before
+userland starts (thus no access to procfs) so I believe we should be able to continue
+as is until we can replace with your proper patch. Agree?
+
+Also still wonder about the others that creates directories in procfs net, that do not
+call proc_net_mkdir().
+My second patch changed to use proc_net_mkdir for dev_snmp6 directory, so if proc_net_mkdir is fixed
+it should cover at least the ipv6 snmp counters. But I think there's other that could benefit of same?
+Like :
+
+net/netfilter/xt_hashlimit.c:   hashlimit_net->ipt_hashlimit = proc_mkdir("ipt_hashlimit", net->proc_net);
+net/netfilter/xt_hashlimit.c:   hashlimit_net->ip6t_hashlimit = proc_mkdir("ip6t_hashlimit", net->proc_net);
+
+Wouldn't those also want to be reflected by a net namespace change?
+Just an example, there are others too.
+
+BR,
+Per
+
+--
+Per Hallsmark                        per.hallsmark@windriver.com
+Senior Member Technical Staff        Wind River AB
+Mobile: +46733249340                 Office: +46859461127
+Torshamnsgatan 27                    164 40 Kista
+________________________________________
+From: Alexey Dobriyan [adobriyan@gmail.com]
+Sent: Thursday, July 04, 2019 09:32
+To: Hallsmark, Per
+Cc: David S. Miller; linux-kernel@vger.kernel.org; netdev@vger.kernel.org
+Subject: Re: [PATCH v2] let proc net directory inodes reflect to active net namespace
+
+On Mon, Jul 01, 2019 at 11:06:34AM +0000, Hallsmark, Per wrote:
+
+> +struct proc_dir_entry *proc_net_mkdir(struct net *net, const char *name,
+> +                                   struct proc_dir_entry *parent)
+> +{
+> +     struct proc_dir_entry *pde;
+> +
+> +     pde = proc_mkdir_data(name, 0, parent, net);
+> +     if (!pde)
+> +             return NULL;
+> +     pde->proc_dops = &proc_net_dentry_ops;
+
+OK, this is buggy in a different way:
+once proc_mkdir_data() returns, proc entry is live and should be fully
+ready, so dentry operations should be glued before that.
+
+I'll send proper patch.
