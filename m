@@ -2,148 +2,83 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725D9C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094C3C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF11218D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88DE218C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STNcuqyr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh6G9QxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfGENhu (ORCPT
+        id S1728827AbfGENj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:37:50 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:53805 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfGENht (ORCPT
+        Fri, 5 Jul 2019 09:39:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35192 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfGENj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:37:49 -0400
-Received: by mail-wm1-f42.google.com with SMTP id x15so8904353wmj.3;
-        Fri, 05 Jul 2019 06:37:47 -0700 (PDT)
+        Fri, 5 Jul 2019 09:39:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so4348984pgl.2;
+        Fri, 05 Jul 2019 06:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=3zwEJgoSUmVe32byVQps8G3aTPiQXc6LZjBXABq8q44=;
-        b=STNcuqyr8wjN732QQ0JivchA5zRC+5J+onxTxiBuN7J+QzTvHanCgqQMz7SL4ebKBJ
-         nW+FcY4gANgnOt2uyCG2gpmNyaPMmKlcEaYQKdL8DCiBt/E56gISV9uj/9lhBzogXBdX
-         vP28nHvBi8ZZWpDn5VSVR+SbQ90gxCuDbBciGz0+Jxe2FL5V4SC6xADlE1qZvFtflqAD
-         ZrzFJ2d19yWB1BuhliMAgvgvyM8I9YOjNQx/5qejTZ39xb1FtjOSZKdu0L8DOo/bDPNR
-         3u6uVJPIOKPdonFoxLggidgGcwryaw0ZA9XmZwZLIs9Bobfm/6g4vfytqYor/ZGLUASC
-         +OJQ==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Yz/bvXxfkDYqJoVFft3aC1vVTiMIeTWz1wlVELmSGYQ=;
+        b=Kh6G9QxSOQPflRqPMW3xsfPNqflJLlV0SWqmKw3ii2M4XMDwfbCD5fGl/ryOMj7bpq
+         cDcKcB39t8nsxr/eJeoxTU4YXhaQnkfQZHb14mcyAxjpXaMSBahlof31ZonHhSZ40NPk
+         Ftfnj3/OlRjMN1HRNEvGRzORywGU8owZ0nG6zrFDPiXhacpZDD44hwY89bLBMuBFHIJi
+         5D0SKKqAICvhT/WpDstuV1/+1bQqI5x+hisWHSFuvyJdyyhV4j7eJNyRIg+KoA3mPXNp
+         aOhw2e68JnxXXePgqe9+pVxS/RhkbLXvypLGnIhWdNh/+w0j2DQ272lJoX3Aszeu6uu8
+         T6bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=3zwEJgoSUmVe32byVQps8G3aTPiQXc6LZjBXABq8q44=;
-        b=WXZA4F3I6a1BUpcT5rwlHe1h6NsVWLkRlkK2vBZvz6LfeZwcIOzLxsApjJJ5tSJ13Y
-         ZIpJJ4Ab8aec+bweiqe9R8dkLGe8o8Jh1svtvX7NuBa8Qt2VS9f/4DMVUQCBcnm4eGgI
-         B+RyRRj4ZwaqKJIw87iUc8ZDO7MEv4m0zHt2NR1md/v96iTPnnp43joX7OSQPC8PDgwE
-         u2GcCLBTOIzx2DDhkJcWAtYIVu13gLi+CLlBl+GnvyYEYY1MTngXybBwgx6FNVCD17aG
-         ++qOyCvD+oPScEKaMjD9FJRvR+C0XcSyTqjGunKwNE+jT6D0aHxa6hhoqkcOg9I/ZZF+
-         eLow==
-X-Gm-Message-State: APjAAAVrlxNgFH0NdVqCI/1dPyDqWOd7b2KKAalJOiTXIe4MtF3opKGe
-        sLbyOYPd0MoD59dnWZE6MZPv9knc
-X-Google-Smtp-Source: APXvYqxwPvjEjuUDkC6y/r7CpVN0m1xZdHiGATz+YFalWzlBkPKAZZPnQEe4s/ybG6e4VkQaIHNfMA==
-X-Received: by 2002:a1c:2314:: with SMTP id j20mr3610354wmj.152.1562333867056;
-        Fri, 05 Jul 2019 06:37:47 -0700 (PDT)
-Received: from [172.16.8.139] (host-89-243-246-11.as13285.net. [89.243.246.11])
-        by smtp.gmail.com with ESMTPSA id z25sm9958744wmf.38.2019.07.05.06.37.45
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 06:37:45 -0700 (PDT)
-Subject: Re: iowait v.s. idle accounting is "inconsistent" - iowait is too low
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Doug Smythies <dsmythies@telus.net>, linux-pm@vger.kernel.org
-References: <2ff025f1-9a3e-3eae-452b-ef84824009b4@gmail.com>
- <000001d531a8$8931b2a0$9b9517e0$@net>
- <e82b9d7c-81e5-dd80-b9c0-f5f065344e2f@gmail.com>
- <20190705113806.GP3402@hirez.programming.kicks-ass.net>
-From:   Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Message-ID: <26e7faef-7223-3ef8-d09c-e382223ce4fa@gmail.com>
-Date:   Fri, 5 Jul 2019 14:37:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190705113806.GP3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Yz/bvXxfkDYqJoVFft3aC1vVTiMIeTWz1wlVELmSGYQ=;
+        b=NqLl6EYB2D4Uo3ufpHNLJcjpPH5ba0skgmsSzuIoje/276MVF5KYlSQ+5tUL4ULACx
+         OVyQ2uR4ZhOrhKi/p93n7+4ADd0DUZlOFCA3IDfg43Eczpikn0WSMQ3adruf+t+7qQFH
+         ji40d/I4A0qbzgizWJmj23AwSqQmSI/dqZaUVxuwdDZoZiYJftNCLTYJ1OJLoLLJUobM
+         2VSjlqtV9QmUkp9B/z7r4QHweho6K00laSgcHoxPqNoKXcm5yJx7toC6QA5G2o/lVaJX
+         X5apghF88BAY+Yfkf/JgFXYOBtANWpZkPqhnUKp+YvX0kK9ea8onPnkZHtXefJE/eklj
+         zIpw==
+X-Gm-Message-State: APjAAAUNilD8vFlrQPCLzOhwY95igSIaCD9gKfQOyt1XhoX2frle5FNK
+        6awSBjOJPJO0/jVQHkb8iTs=
+X-Google-Smtp-Source: APXvYqyRcWrfurmLqtOm81P0n5PYS395MdcibqcOdy+Y59FXFo4mkF7bmglv+2to5uKrUa1fFZH+bA==
+X-Received: by 2002:a65:6406:: with SMTP id a6mr5494274pgv.393.1562333994885;
+        Fri, 05 Jul 2019 06:39:54 -0700 (PDT)
+Received: from ?IPv6:2601:647:4580:b719:ac8c:5fbe:1262:33d4? ([2601:647:4580:b719:ac8c:5fbe:1262:33d4])
+        by smtp.gmail.com with ESMTPSA id v10sm9676088pfe.163.2019.07.05.06.39.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:39:54 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] KVM: LAPIC: ARBPRI is a reserved register for x2APIC
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
+Date:   Fri, 5 Jul 2019 06:37:30 -0700
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <2624F5BF-1601-4A7B-8CA2-7D3328184E46@gmail.com>
+References: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2019 12:38, Peter Zijlstra wrote:
-> On Fri, Jul 05, 2019 at 12:25:46PM +0100, Alan Jenkins wrote:
->> Hi, scheduler experts!
->>
->> My cpu "iowait" time appears to be reported incorrectly.  Do you know why
->> this could happen?
-> Because iowait is a magic random number that has no sane meaning.
-> Personally I'd prefer to just delete the whole thing, except ABI :/
->
-> Also see the comment near nr_iowait():
->
-> /*
->   * IO-wait accounting, and how its mostly bollocks (on SMP).
->   *
->   * The idea behind IO-wait account is to account the idle time that we could
->   * have spend running if it were not for IO. That is, if we were to improve the
->   * storage performance, we'd have a proportional reduction in IO-wait time.
->   *
->   * This all works nicely on UP, where, when a task blocks on IO, we account
->   * idle time as IO-wait, because if the storage were faster, it could've been
->   * running and we'd not be idle.
->   *
->   * This has been extended to SMP, by doing the same for each CPU. This however
->   * is broken.
->   *
->   * Imagine for instance the case where two tasks block on one CPU, only the one
->   * CPU will have IO-wait accounted, while the other has regular idle. Even
->   * though, if the storage were faster, both could've ran at the same time,
->   * utilising both CPUs.
->   *
->   * This means, that when looking globally, the current IO-wait accounting on
->   * SMP is a lower bound, by reason of under accounting.
->   *
->   * Worse, since the numbers are provided per CPU, they are sometimes
->   * interpreted per CPU, and that is nonsensical. A blocked task isn't strictly
->   * associated with any one particular CPU, it can wake to another CPU than it
->   * blocked on. This means the per CPU IO-wait number is meaningless.
->   *
->   * Task CPU affinities can make all that even more 'interesting'.
->   */
+> On Jul 5, 2019, at 5:14 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> 
+> kvm-unit-tests were adjusted to match bare metal behavior, but KVM
+> itself was not doing what bare metal does; fix that.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Thanks. I take those as being different problems, but you mean there is 
-not much demand (or point) to "fix" my issue.
-
->  (2) Compare running "dd" with "taskset -c 1":
->
-> %Cpu1  :  0.3 us,  3.0 sy,  0.0 ni, 83.7 id, 12.6 wa,  0.0 hi,  0.3 si,  0.0 st 
-
-                                       ^ non-zero idle time for Cpu1, despite the pinned IO hog.
-
-
-The block layer recently decided they could break "disk busy%" reporting 
-for slow devices (mechanical HDD), in order to reduce overheads for fast 
-devices.  This means the summary view in "atop" now lacks any reliable 
-indicator.
-
-I suppose I need to look in "iotop".
-
-The new /proc/pressure/io seems to have caveats related to the iowait 
-issues... it seems even more complex to interpret for this case, and it 
-does not seem to work how I think it does.[1]
-
-Regards
-Alan
-
-[1] 
-https://unix.stackexchange.com/questions/527342/why-does-the-new-linux-pressure-stall-information-for-io-not-show-as-100/
+Reported-by ?
