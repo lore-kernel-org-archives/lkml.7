@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E875C468A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7F3C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03CF021670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D2421670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562344964;
-	bh=oBT4PNyR8IyFASpe0MpI3X6hgCdwHaBZcjL4oz4D5J4=;
+	s=default; t=1562344967;
+	bh=+gH+iPznLoQGMC9CZAFqzj9/kzBSbOHF4Khg4V48hYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1s+H6aW3nQmwGToj+SDvtduV//zh3zWqFNFPmXrfxFavL0XkUpw2W+h6ogehWj/i4
-	 rj+T4Lguk1duEgRj6xIS+AWfDOjyTIwOh9SlbdGns+GnTSxXE5t4SgB46ozld92abi
-	 oCqpNNgTErrMKfc+4uV5fDfg556Y+7cGho5UeOOg=
+	b=F1I+0u26E/+pRTfCimOiJvriquEwRm6g1Mh4hyj8OJoOCMVeZa3XX2XkDk3aRxFq9
+	 W4NEDW3E/2YQSTf3eCTuWZdSKgtOuJatRZUqLhbJVfQLtrly/hIGFOZsEtqgplaKCy
+	 VDDIZfooK1JZkFv2GGqPm3BGBnQm85uE+/adMF4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfGEQmm (ORCPT
+        id S1728767AbfGEQmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:42:42 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:40940 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728717AbfGEQml (ORCPT
+        Fri, 5 Jul 2019 12:42:46 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46680 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728730AbfGEQmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:42:41 -0400
-Received: by mail-io1-f53.google.com with SMTP id h6so12148451iom.7;
-        Fri, 05 Jul 2019 09:42:40 -0700 (PDT)
+        Fri, 5 Jul 2019 12:42:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so20266010iol.13;
+        Fri, 05 Jul 2019 09:42:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G+s42jlOutJVoH3ChTzadVhi4SKC/zB2mUxbB3XIwJ8=;
-        b=cTqpZrhaHWM4t2E7n83Ul/6Qb/xL+GWqqRw2+BYWpQ/SAxLRFg3bTc729G0zvuRxQ0
-         16gVUJ4kMwL2ujNpDBQF+YCJfu2uny/DhQ+ABl0D+RSd7up5SDxd9pYufhbv1hAGnw7O
-         hnpGmk3w6Qd5uqj/FW73pWv24D3m4KQqR5E+St9E+8SV9AHP1WnPsnwgPyo1GitivfJP
-         I0hw+06uVMKlDhq5cGEXXHPTxwO/O9sldaQeUk6VOYcJqN2WGx3fxzVnf/YZK0pGzayW
-         MrZkDSbVYKPjARusFuV6xsIBdJRwknhTtXsGCkn6b0rrfRgV1rTBxubHkntK5tYRUCE4
-         l0Rg==
-X-Gm-Message-State: APjAAAXjN0/Bjsj4W0u2UITdBLQkLoQauok1KlSbj/AGHfW3VxWnkvzy
-        3V4o7LTA7YKAiQ1d6S+AUA==
-X-Google-Smtp-Source: APXvYqwGNPUHEHrglu58RGWNkyoAcEnVvlRnh2kl4GxL2inAXcTrpoHiv/y4WMUHnSaXu+zFsd32Ig==
-X-Received: by 2002:a5e:a708:: with SMTP id b8mr5374635iod.25.1562344959777;
-        Fri, 05 Jul 2019 09:42:39 -0700 (PDT)
+        bh=FoIk+rbFwPJ/lDbdbtoXks82bIuWeLHVYlyQ0/EsZZU=;
+        b=gQ48gEWFaEHTqV2CjE1K+Lww6iSTwGpdJKYJmocvP4wqhTJ0YcN9GX3AFT53+yhMCh
+         kUXNCs7uqy+2l7JQP50Wjkd20jhK8rYwE723YcCH79KGQ52FyX3mPWOBFbv6FHDM2ls2
+         /yznS/Cn1c5P5BpDVxCp0Te3C6R+cc0MiX8CaOuZKTc3aoCNJGcHgely1UJn+A7iqi7d
+         Lz4ycGUGeYXAKpFkXMbPnpQxik8S7FjHngHK6fkn73f1w+ayPI6I6+769E3BrPHdk8G2
+         dq9TQ8CwbLDob1pBIa7Svj8T2BJDHxREajFKWLmo1KgBr2jDOn7pXMPCCBMi6Qr9gGFR
+         RhQg==
+X-Gm-Message-State: APjAAAWwojJQltwYjN0FChfK4C2xER+SOHEWhF5PKQscCuaj0KVVlNNt
+        rlvtXs8MRd4qLtFxsOIb9w==
+X-Google-Smtp-Source: APXvYqyUJoGqrhu1jI2/dAFKaqMmF6AV+orNNmKQ/l+hsXENx8O/XWHlmlUk7xd29jsQqHmFggBF+g==
+X-Received: by 2002:a5d:9f4a:: with SMTP id u10mr4984238iot.243.1562344961433;
+        Fri, 05 Jul 2019 09:42:41 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.38
+        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 09:42:39 -0700 (PDT)
+        Fri, 05 Jul 2019 09:42:40 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -58,9 +58,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Thierry Reding <treding@nvidia.com>
-Subject: [PATCH v3 09/13] dt-bindings: display: Convert panel-lvds to DT schema
-Date:   Fri,  5 Jul 2019 10:42:17 -0600
-Message-Id: <20190705164221.4462-10-robh@kernel.org>
+Subject: [PATCH v3 10/13] dt-bindings: display: Convert innolux,ee101ia-01 panel to DT schema
+Date:   Fri,  5 Jul 2019 10:42:18 -0600
+Message-Id: <20190705164221.4462-11-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
 References: <20190705164221.4462-1-robh@kernel.org>
@@ -71,9 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the panel-lvds binding to use DT schema. The panel-lvds schema
-inherits from the panel-common.yaml schema and specific LVDS panel
-bindings should inherit from this schema.
+Convert the innolux,ee101ia-01 LVDS panel binding to DT schema.
 
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
@@ -83,252 +81,62 @@ Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/display/panel/lvds.yaml          | 107 ++++++++++++++++
- .../bindings/display/panel/panel-lvds.txt     | 121 ------------------
- 2 files changed, 107 insertions(+), 121 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/lvds.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+ .../display/panel/innolux,ee101ia-01d.txt     |  7 -----
+ .../display/panel/innolux,ee101ia-01d.yaml    | 31 +++++++++++++++++++
+ 2 files changed, 31 insertions(+), 7 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
+deleted file mode 100644
+index e5ca4ccd55ed..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
+-
+-Required properties:
+-- compatible: should be "innolux,ee101ia-01d"
+-
+-This binding is compatible with the lvds-panel binding, which is specified
+-in panel-lvds.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
 new file mode 100644
-index 000000000000..d0083301acbe
+index 000000000000..a69681e724cb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
-@@ -0,0 +1,107 @@
++++ b/Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.yaml
+@@ -0,0 +1,31 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/lvds.yaml#
++$id: http://devicetree.org/schemas/display/panel/innolux,ee101ia-01d.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: LVDS Display Panel
++title: Innolux Corporation 10.1" EE101IA-01D WXGA (1280x800) LVDS panel
 +
 +maintainers:
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++  - Heiko Stuebner <heiko.stuebner@bq.com>
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
-+description: |+
-+  LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-+  incompatible data link layers have been used over time to transmit image data
-+  to LVDS panels. This bindings supports display panels compatible with the
-+  following specifications.
-+
-+  [JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
-+  1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
-+  [LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-+  Semiconductor
-+  [VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-+  Electronics Standards Association (VESA)
-+
-+  Device compatible with those specifications have been marketed under the
-+  FPD-Link and FlatLink brands.
-+
 +allOf:
-+  - $ref: panel-common.yaml#
++  - $ref: lvds.yaml#
 +
 +properties:
 +  compatible:
-+    contains:
-+      const: panel-lvds
-+    description:
-+      Shall contain "panel-lvds" in addition to a mandatory panel-specific
-+      compatible string defined in individual panel bindings. The "panel-lvds"
-+      value shall never be used on its own.
++    items:
++      - const: innolux,ee101ia-01d
++      - {} # panel-lvds, but not listed here to avoid false select
 +
-+  data-mapping:
-+    enum:
-+      - jeida-18
-+      - jeida-24
-+      - vesa-24
-+    description: |
-+      The color signals mapping order.
++  backlight: true
++  enable-gpios: true
++  power-supply: true
++  width-mm: true
++  height-mm: true
++  panel-timing: true
++  port: true
 +
-+      LVDS data mappings are defined as follows.
-+
-+      - "jeida-18" - 18-bit data mapping compatible with the [JEIDA], [LDI] and
-+        [VESA] specifications. Data are transferred as follows on 3 LVDS lanes.
-+
-+      Slot	    0       1       2       3       4       5       6
-+            ________________                         _________________
-+      Clock	                \_______________________/
-+              ______  ______  ______  ______  ______  ______  ______
-+      DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
-+      DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
-+      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
-+
-+      - "jeida-24" - 24-bit data mapping compatible with the [DSIM] and [LDI]
-+        specifications. Data are transferred as follows on 4 LVDS lanes.
-+
-+      Slot	    0       1       2       3       4       5       6
-+            ________________                         _________________
-+      Clock	                \_______________________/
-+              ______  ______  ______  ______  ______  ______  ______
-+      DATA0	><__G2__><__R7__><__R6__><__R5__><__R4__><__R3__><__R2__><
-+      DATA1	><__B3__><__B2__><__G7__><__G6__><__G5__><__G4__><__G3__><
-+      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B7__><__B6__><__B5__><__B4__><
-+      DATA3	><_CTL3_><__B1__><__B0__><__G1__><__G0__><__R1__><__R0__><
-+
-+      - "vesa-24" - 24-bit data mapping compatible with the [VESA] specification.
-+        Data are transferred as follows on 4 LVDS lanes.
-+
-+      Slot	    0       1       2       3       4       5       6
-+            ________________                         _________________
-+      Clock	                \_______________________/
-+              ______  ______  ______  ______  ______  ______  ______
-+      DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
-+      DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
-+      DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
-+      DATA3	><_CTL3_><__B7__><__B6__><__G7__><__G6__><__R7__><__R6__><
-+
-+      Control signals are mapped as follows.
-+
-+      CTL0: HSync
-+      CTL1: VSync
-+      CTL2: Data Enable
-+      CTL3: 0
-+
-+  data-mirror:
-+    type: boolean
-+    description:
-+      If set, reverse the bit order described in the data mappings below on all
-+      data lanes, transmitting bits for slots 6 to 0 instead of 0 to 6.
-+
-+required:
-+  - compatible
-+  - data-mapping
-+  - width-mm
-+  - height-mm
-+  - panel-timing
-+  - port
-+
++additionalProperties: false
 +...
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-deleted file mode 100644
-index 250850a2150b..000000000000
---- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-+++ /dev/null
-@@ -1,121 +0,0 @@
--LVDS Display Panel
--==================
--
--LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
--incompatible data link layers have been used over time to transmit image data
--to LVDS panels. This bindings supports display panels compatible with the
--following specifications.
--
--[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
--1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
--[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
--Semiconductor
--[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
--Electronics Standards Association (VESA)
--
--Device compatible with those specifications have been marketed under the
--FPD-Link and FlatLink brands.
--
--
--Required properties:
--
--- compatible: Shall contain "panel-lvds" in addition to a mandatory
--  panel-specific compatible string defined in individual panel bindings. The
--  "panel-lvds" value shall never be used on its own.
--- width-mm: See panel-common.txt.
--- height-mm: See panel-common.txt.
--- data-mapping: The color signals mapping order, "jeida-18", "jeida-24"
--  or "vesa-24".
--
--Optional properties:
--
--- label: See panel-common.txt.
--- gpios: See panel-common.txt.
--- backlight: See panel-common.txt.
--- power-supply: See panel-common.txt.
--- data-mirror: If set, reverse the bit order described in the data mappings
--  below on all data lanes, transmitting bits for slots 6 to 0 instead of
--  0 to 6.
--
--Required nodes:
--
--- panel-timing: See panel-common.txt.
--- ports: See panel-common.txt. These bindings require a single port subnode
--  corresponding to the panel LVDS input.
--
--
--LVDS data mappings are defined as follows.
--
--- "jeida-18" - 18-bit data mapping compatible with the [JEIDA], [LDI] and
--  [VESA] specifications. Data are transferred as follows on 3 LVDS lanes.
--
--Slot	    0       1       2       3       4       5       6
--	________________                         _________________
--Clock	                \_______________________/
--	  ______  ______  ______  ______  ______  ______  ______
--DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
--DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
--DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
--
--- "jeida-24" - 24-bit data mapping compatible with the [DSIM] and [LDI]
--  specifications. Data are transferred as follows on 4 LVDS lanes.
--
--Slot	    0       1       2       3       4       5       6
--	________________                         _________________
--Clock	                \_______________________/
--	  ______  ______  ______  ______  ______  ______  ______
--DATA0	><__G2__><__R7__><__R6__><__R5__><__R4__><__R3__><__R2__><
--DATA1	><__B3__><__B2__><__G7__><__G6__><__G5__><__G4__><__G3__><
--DATA2	><_CTL2_><_CTL1_><_CTL0_><__B7__><__B6__><__B5__><__B4__><
--DATA3	><_CTL3_><__B1__><__B0__><__G1__><__G0__><__R1__><__R0__><
--
--- "vesa-24" - 24-bit data mapping compatible with the [VESA] specification.
--  Data are transferred as follows on 4 LVDS lanes.
--
--Slot	    0       1       2       3       4       5       6
--	________________                         _________________
--Clock	                \_______________________/
--	  ______  ______  ______  ______  ______  ______  ______
--DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
--DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
--DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
--DATA3	><_CTL3_><__B7__><__B6__><__G7__><__G6__><__R7__><__R6__><
--
--Control signals are mapped as follows.
--
--CTL0: HSync
--CTL1: VSync
--CTL2: Data Enable
--CTL3: 0
--
--
--Example
---------
--
--panel {
--	compatible = "mitsubishi,aa121td01", "panel-lvds";
--
--	width-mm = <261>;
--	height-mm = <163>;
--
--	data-mapping = "jeida-24";
--
--	panel-timing {
--		/* 1280x800 @60Hz */
--		clock-frequency = <71000000>;
--		hactive = <1280>;
--		vactive = <800>;
--		hsync-len = <70>;
--		hfront-porch = <20>;
--		hback-porch = <70>;
--		vsync-len = <5>;
--		vfront-porch = <3>;
--		vback-porch = <15>;
--	};
--
--	port {
--		panel_in: endpoint {
--			remote-endpoint = <&lvds_encoder>;
--		};
--	};
--};
 -- 
 2.20.1
 
