@@ -2,85 +2,139 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC3DC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A66C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD08218BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562316308;
-	bh=GEwAZHym+11LpGma3a5nx4N6HauXHp3MSbJ/q/jAOEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F8xPY2vHYrrA1MJeqILO02dvxk4RD7y8H7p0Nlh/NvSfA6wqVKAxln8JQNc6sQgZs
-	 FDuvVaJDsl3Hv2EcgAPvAdMzgfPfHMGUx5G1KEsWldo0kDrxtxTwO0eBHJKv0KccUa
-	 5Ra9rZZvab3SVOy7VdXYPiT9N/w6MavE6BAsKqVg=
+	by mail.kernel.org (Postfix) with ESMTP id B3063218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfGEIpF (ORCPT
+        id S1727565AbfGEIpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
+        Fri, 5 Jul 2019 04:45:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54746 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbfGEIpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:45:04 -0400
-Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726116AbfGEIpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:45:50 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957A2218BB;
-        Fri,  5 Jul 2019 08:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562316303;
-        bh=GEwAZHym+11LpGma3a5nx4N6HauXHp3MSbJ/q/jAOEw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YApoGUclFpP3s8P76l8Ct6nQ8/oePFNV0NdE/Ky3oj1SjfBC+vbkLWNxamKeWEg6x
-         DteXHG3yqymcD+ap9nKVpnCGYfwZRVEBrc8foKpH9LSTxPP2g9QMe7sYqN4WJLfgyv
-         9/aOdXmdGl3a5ugl0NkXNwaHIAeflVGaXXVCOexA=
-Date:   Fri, 5 Jul 2019 10:44:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] Add a general, global device notification watch list
- [ver #5]
-Message-ID: <20190705084459.GA2579@kroah.com>
-References: <20190705051733.GA15821@kroah.com>
- <20190703190846.GA15663@kroah.com>
- <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
- <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk>
- <10295.1562256260@warthog.procyon.org.uk>
- <12946.1562313857@warthog.procyon.org.uk>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B858356F5;
+        Fri,  5 Jul 2019 08:45:44 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8DFA68226B;
+        Fri,  5 Jul 2019 08:45:44 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2E56241F53;
+        Fri,  5 Jul 2019 08:45:44 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 04:45:43 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jakub Staron <jstaron@google.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Message-ID: <616554090.39241752.1562316343431.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190705172025.46abf71e@canb.auug.org.au>
+References: <20190705172025.46abf71e@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the nvdimm tree
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12946.1562313857@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.94, 10.4.195.8]
+Thread-Topic: linux-next: build failure after merge of the nvdimm tree
+Thread-Index: Op/Rg61sZFtHh9tTxUrITohvbGX3Ig==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 05 Jul 2019 08:45:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 09:04:17AM +0100, David Howells wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+Hi Stephen,
 > 
-> > Hm, good point, but there should be some way to test this to verify it
-> > works.  Maybe for the other types of events?
+> Hi all,
 > 
-> Keyrings is the simplest.  keyutils's testsuite will handle that.  I'm trying
-> to work out if I can simply make every macro in there that does a modification
-> perform a watch automatically to make sure the appropriate events happen.
+> After merging the nvdimm tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> In file included from :32:
+> ./usr/include/linux/virtio_pmem.h:19:2: error: unknown type name 'uint64_t'
+>   uint64_t start;
+>   ^~~~~~~~
+> ./usr/include/linux/virtio_pmem.h:20:2: error: unknown type name 'uint64_t'
+>   uint64_t size;
+>   ^~~~~~~~
+> 
+> Caused by commit
+> 
+>   403b7f973855 ("virtio-pmem: Add virtio pmem driver")
+> 
+> I have used the nvdimm tree from next-20190704 for today.
 
-That should be good enough to test the basic functionality.  After this
-gets merged I'll see if I can come up with a way to test the USB
-stuff...
+Thank you for the report.
 
-thanks,
+Can we apply below patch [1] on top to complete linux-next build for today.
+I have tested this locally.
 
-greg k-h
+Thanks,
+Pankaj
+
+========
+
+[1]
+
+diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+index 998efbc7660c..dbc12dfe8067 100644
+--- a/drivers/nvdimm/virtio_pmem.h
++++ b/drivers/nvdimm/virtio_pmem.h
+@@ -46,8 +46,8 @@ struct virtio_pmem {
+        spinlock_t pmem_lock;
+ 
+        /* Memory region information */
+-       uint64_t start;
+-       uint64_t size;
++       u64 start;
++       u64 size;
+ };
+ 
+ void virtio_pmem_host_ack(struct virtqueue *vq);
+diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
+index 379861f114f1..efcd72f2d20d 100644
+--- a/include/uapi/linux/virtio_pmem.h
++++ b/include/uapi/linux/virtio_pmem.h
+@@ -11,25 +11,24 @@
+ #define _UAPI_LINUX_VIRTIO_PMEM_H
+ 
+ #include <linux/types.h>
+-#include <linux/virtio_types.h>
+ #include <linux/virtio_ids.h>
+ #include <linux/virtio_config.h>
+ 
+ struct virtio_pmem_config {
+-       uint64_t start;
+-       uint64_t size;
++       __u64 start;
++       __u64 size;
+ };
+ 
+ #define VIRTIO_PMEM_REQ_TYPE_FLUSH      0
+ 
+ struct virtio_pmem_resp {
+        /* Host return status corresponding to flush request */
+-       __virtio32 ret;
++       __u32 ret;
+ };
+ 
+ struct virtio_pmem_req {
+        /* command type */
+-       __virtio32 type;
++       __u32 type;
+ };
