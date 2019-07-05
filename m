@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E211CC0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B57CC0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BD52184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1021821852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562295308;
-	bh=ubec7ywyoQorfw3Qnn+xnNovpvxUzVu/hsZbOEAwmt4=;
+	s=default; t=1562295312;
+	bh=g1fh37E3g0Ecbtf1QI1mp3LBnuqqRLs7j77IMJR3zJE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=baPL/nmVf4Soospi5yjVVZwSUzOpTdAj376J/Fx+Sf/5Ruir76RUS4JnrBGSUJu6Q
-	 OslP31/5lptKrs080A03es1rPCEHrWUW7KoVXsMhBhjHHv/QcOnxUx7MWWtAczEwOO
-	 z+YqWafoK8hgBMlfTP52ncEpOkfPFtzzJEpgmERk=
+	b=SbPV4+b3xZOyEkJPEjURudU2kWAbCQRw2YHXwGHwICmgBoeQxSIWmZ7MIqtVqAUls
+	 1EWdQc1TY3Upwu9p16/OCLsqAPsIht01ywRZlyzPgEzCIY5IU/qKLJCQ3RWgz1ltFn
+	 jCMnGeae0JYOtbZEyTZTWP/UZ7FMc5qlf28/UC44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfGECzH (ORCPT
+        id S1727816AbfGECzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 4 Jul 2019 22:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfGECzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 22:55:06 -0400
-Subject: Re: [GIT PULL] ARM: SoC fixes
+        id S1727320AbfGECzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 22:55:05 -0400
+Subject: Re: [GIT PULL] dax fix for v5.2-rc8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1562295305;
-        bh=ubec7ywyoQorfw3Qnn+xnNovpvxUzVu/hsZbOEAwmt4=;
+        bh=g1fh37E3g0Ecbtf1QI1mp3LBnuqqRLs7j77IMJR3zJE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mYyOIYgoyUrgQf/p+Rl6x2vgk/ax2wgo2e/5UccRRFSbeQeqibPaHFaFFTgBY23Vz
-         Cek4BSZDPntaggYF77ssQxndK3mjCbiuoWpj9ORbWPycjSWzhu3Q+PKUWgvJ4w/q3+
-         3fSpaahkmIG1ICiu10kElaZKpss+ED83lVcXd3So=
+        b=1v7oDAA161pWOrObNe2BSha2K2jtt1dt7wbwQJ9he5t68nfWl/Z8FXZd4xnlvM/Yt
+         mB21vby6qB6+M5Vme0rsh0ijYhKKXaft0j+4Xt8LfrKdvvkCFKUd5moaslFpr0f2bP
+         YZ5q7KbUuBZDwiJY/tWVDmRVDZNrlo1FIQoMmd3U=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190705002223.wmc5ge5jszy4z6vc@localhost>
-References: <20190705002223.wmc5ge5jszy4z6vc@localhost>
+In-Reply-To: <CAPcyv4hs6bncxc3_vOKYYc-XdL+-dv_dJkmV8EduRrshv3rBgQ@mail.gmail.com>
+References: <CAPcyv4hs6bncxc3_vOKYYc-XdL+-dv_dJkmV8EduRrshv3rBgQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190705002223.wmc5ge5jszy4z6vc@localhost>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-X-PR-Tracked-Commit-Id: 2659dc8d225c956b91d8a8e4ef05d91b2e985c02
+X-PR-Tracked-Message-Id: <CAPcyv4hs6bncxc3_vOKYYc-XdL+-dv_dJkmV8EduRrshv3rBgQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+ tags/dax-fix-5.2-rc8
+X-PR-Tracked-Commit-Id: 1571c029a2ff289683ddb0a32253850363bcb8a7
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ecbe5086adc2876b22c898987d8a20f932de87a9
-Message-Id: <156229530529.12956.10924276549414473102.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: cde357c392e93aa7fcfc019403e0d1792081d634
+Message-Id: <156229530511.12956.15338596813183151186.pr-tracker-bot@kernel.org>
 Date:   Fri, 05 Jul 2019 02:55:05 +0000
-To:     Olof Johansson <olof@lixom.net>
-Cc:     torvalds@linux-foundation.org, olof@lixom.net, arm@kernel.org,
-        soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, greg@linuxfoundation.org
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 4 Jul 2019 17:22:23 -0700:
+The pull request you sent on Thu, 4 Jul 2019 17:11:16 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-fix-5.2-rc8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ecbe5086adc2876b22c898987d8a20f932de87a9
+https://git.kernel.org/torvalds/c/cde357c392e93aa7fcfc019403e0d1792081d634
 
 Thank you!
 
