@@ -2,141 +2,171 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46683C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B39C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B41120856
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C436218A0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 04:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hbexc+aC"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Xl/ZiR/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfGEE1E (ORCPT
+        id S1725926AbfGEEht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 00:27:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42379 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfGEE1E (ORCPT
+        Fri, 5 Jul 2019 00:37:49 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36444 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfGEEhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 00:27:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t132so3685719pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 21:27:04 -0700 (PDT)
+        Fri, 5 Jul 2019 00:37:48 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z4so6502137qtc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 21:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Mt+OhzkdZXuABUeOm3oIQQxV+A0uMRzmq60uCRJmAJE=;
-        b=Hbexc+aCBum/RZ12dI3r5/XyzyiK+MvJQgQ2XO3/HVioP3PM/nCddAlz1xrMohN7M1
-         S0TUfchH1at/5Y1i17XhZAcSUqCKCip2aybO7YsuTVjIwJXSYImaa+d0n/+JHH0FYNkL
-         NI0/aW8eXuQCvg6kpGPrNaIfIBqJ7QUDBMvFM=
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E4tQKZ7fykfnk1s1sWexseP5zItY8m/Ql+ltT8MN+jU=;
+        b=Xl/ZiR/Mp0004403KKrucoOknyIq+kZO0YDx1/1QqKpPxzJ8bpDgbLOGxx0cN8uTgd
+         1RJaxqCE6MylJZh/aTj6LPKB4Rs3veAbHfpLyprVgWAzTRRT6lwZspe1f5hdtp+DYK4z
+         GjH4XKyXEGxm1SF/P/aHRGqNOXrtRrOGZQBulAoAeCiYN6Cr9pf8zV2rQRiFurLn9mA8
+         Nzh484YnMLerf7ORWMlhdJizA31Be4fy6NdYsokCTaIgMjsn1uZlk/4y1FtsBLcyxtB0
+         gqP6gnDfEz9Yu1E+xN4JqdyQyIMa/13kLt0tlWmEufEyrW/fY3AdiyG7ihVwTG5plaEl
+         UC7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Mt+OhzkdZXuABUeOm3oIQQxV+A0uMRzmq60uCRJmAJE=;
-        b=FtaXE/yQEiSDhqispDFZYWqn6WF7cMbVUXeqt5cij0AgEQGP88P2koWJvfMv69mmYb
-         NqPzd7YlcmuLXUFxB2SH4tPhPNePWx0zVYtCgO3cNd1euUfHVmrMbLc6wawEULX2xl9f
-         G2hMl2QJwWVdw9cWcp6brchgY6uQDaGyZgxVluZzPv22uXiHed79961aSZ/75vyyZTc/
-         jCbGqpWLTkRDroYdyI25jXFlFvBit1bVM4PgqmFb5r+6kmwKjCvpB2XvzkbBOEW4nl4B
-         Cs8keeDa3mNqtBxw4jawkjz++TrA5A+3GwaCujULM14S/MI1q88aOeasT4/UFlTlSzJu
-         l0Bg==
-X-Gm-Message-State: APjAAAU8+njoTh0Qgms7M5GK8rUsWj4j7rCPVQz7sYImKUaZ2SYQ3W0H
-        kt3n0s3Uf8kvTljYfpaeg+fuA7JmRX0=
-X-Google-Smtp-Source: APXvYqywd4tkamYO1Fai6BvXNjXkhsYojIRkBX4/rKYkl5GdlfV7TnbJIDpy2ZVfWAPldm8d1RwzHA==
-X-Received: by 2002:a17:90a:8d86:: with SMTP id d6mr2081909pjo.94.1562300823498;
-        Thu, 04 Jul 2019 21:27:03 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:b:e688:dfd2:a1a7:2956])
-        by smtp.gmail.com with ESMTPSA id t10sm6811920pjr.13.2019.07.04.21.27.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 21:27:02 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH 4/4] ASoC: rockchip_max98090: Add HDMI jack support
-Date:   Fri,  5 Jul 2019 12:26:23 +0800
-Message-Id: <20190705042623.129541-5-cychiang@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190705042623.129541-1-cychiang@chromium.org>
-References: <20190705042623.129541-1-cychiang@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E4tQKZ7fykfnk1s1sWexseP5zItY8m/Ql+ltT8MN+jU=;
+        b=ibRfVzIqgIoyiYTXWw0D3dwqQtFXWa2WQC9gtSUN8aTBLhgOi+WVJnuMBFxSmq9xhS
+         OBToDXpqE/aSNiCYme61ry7G2Oledizymrb846brgs3jkAjreVgwFDxw5txlISk8kNhw
+         G+4yU6hAtJ/mmDEj/MyS5PLXYQlm0SmTVVvR1I2yQLylh76i80AWxCmWkJNzIZjridr/
+         DyNkAd9ECstHgzli0ObitwBnD0DFZiF7ffrjDJBG5wXW8BqFASUZSdGNkauCqrK5pz5f
+         w7Wb6sNHOygtXg/ckmGKgBmnjM6Hth/07lit/Am7hy4fQCwHUrkhsX8LLnXc8PmfJv4C
+         R6cw==
+X-Gm-Message-State: APjAAAWVN2bbcsJc0p6Rf0otRNTb9Odz3pzk/pcOObxug2DSTGnf7Q/u
+        QlRMSC7iu5GYz278Cpt/7m/BQACNL1oVbdbSyoworUtO5oI=
+X-Google-Smtp-Source: APXvYqz3TKMBMrMdGFslZiseysb5WUOqwB2TRyRUBYzEK5BDFN/m7nW9LC+nIyAZ5zFnmJJ8bMVSGpr7cgak70nnEYk=
+X-Received: by 2002:a0c:ae5a:: with SMTP id z26mr1466461qvc.65.1562301466888;
+ Thu, 04 Jul 2019 21:37:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190704105528.74028-1-chiu@endlessm.com> <CAD8Lp45rYuE5WHx4vSbUhF10hOHam1aBLd52_aDKP8z2eeL4vA@mail.gmail.com>
+In-Reply-To: <CAD8Lp45rYuE5WHx4vSbUhF10hOHam1aBLd52_aDKP8z2eeL4vA@mail.gmail.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Fri, 5 Jul 2019 12:37:34 +0800
+Message-ID: <CAB4CAwd1N=eZaVTSu8CdDTSyw7+gwriJ866t9AoP5YEoHbjEvw@mail.gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In machine driver, create a jack and let hdmi-codec report jack status.
+On Fri, Jul 5, 2019 at 11:41 AM Daniel Drake <drake@endlessm.com> wrote:
+>
+> On Thu, Jul 4, 2019 at 6:55 PM Chris Chiu <chiu@endlessm.com> wrote:
+> > The WiFi tx power of RTL8723BU is extremely low after booting. So
+> > the WiFi scan gives very limited AP list and it always fails to
+> > connect to the selected AP. This module only supports 1x1 antenna
+> > and the antenna is switched to bluetooth due to some incorrect
+> > register settings.
+> >
+> > Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
+> > we realized that the 8723bu's enable_rf() does the same thing as
+> > rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
+> > sets the antenna path to BTC_ANT_PATH_BT which we verified it's
+> > the cause of the wifi weak tx power. The vendor driver will set
+> > the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
+> > mechanism, by the function halbtc8723b1ant_PsTdma.
+>
+> Checking these details in the vendor driver:
+> EXhalbtc8723b1ant_PowerOnSetting sets:
+>         pBoardInfo->btdmAntPos = BTC_ANTENNA_AT_AUX_PORT;
+>
+> Following the code flow from rtw_btcoex_HAL_Initialize(), this has a
+> bWifiOnly parameter which will ultimately influence the final register
+> value.
+> Continuing the flow, we reach halbtc8723b1ant_SetAntPath() with
+> bInitHwCfg=TRUE, bWifiOff=FALSE. antPosType is set to WIFI in the
+> bWifiOnly case, and BT otherwise.
+>
+> I'm assuming that bUseExtSwitch = FALSE (existing rtl8xxxu code also
+> seems to make the same assumption).
+> For the bWifiOnly=FALSE case, it uses BT,
+>                     pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x948, 0x0);
+> and rtl8xxxu seems to do the same - seemingly routing the antenna path
+> for BT only.
+>
+> As for halbtc8723b1ant_PsTdma() then being called in a way that causes
+> it to switch to the PTA path a little later, it's more difficult to
+> point out how that happens in an email, but I thin kwe can trust you
+> on that :) There are certainly many callsites that would pass those
+> parameters.
+>
+> > +        * Different settings per different antenna position.
+> > +        *      Antenna Position:   | Normal   Inverse
+> > +        * --------------------------------------------------
+> > +        * Antenna switch to BT:    |  0x280,   0x00
+> > +        * Antenna switch to WiFi:  |  0x0,     0x280
+> > +        * Antenna switch to PTA:   |  0x200,   0x80
+> >          */
+> > -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+> > +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+>
+> I don't really understand what we mean by an "inverse" antenna and my
+> reading of the vendor driver leads me to another interpretation.
+>
+> The logic is based around an antenna position - btdmAntPos. It takes
+> one of two values:
+>     BTC_ANTENNA_AT_MAIN_PORT                = 0x1,
+>     BTC_ANTENNA_AT_AUX_PORT                = 0x2,
+>
+> So the chip has pins to support two antennas - a "main" antenna and an
+> "aux" one.
+>
+> We know we're dealing with a single antenna, so the actual module is
+> going to only be using one of those antenna interfaces. If the chip
+> tries to use the other antenna interface, it's effectively not using
+> the antenna. So it's rather important to tell the chip to use the
+> right interface.
+>
+> And that's exactly what happens here. btdmAntPos is hardcoded that the
+> antenna is on the aux port for these devices, and this code is telling
+> the chip that this is how things are wired up.
+>
+> The alternative way of calling this an antenna inverse (which the
+> vendor driver also does in another section), i.e. "antenna is not
+> connected to the main port but instead it's connected to the other
+> one", seems less clear to me.
+>
+I agree with this part. From my past experience working on drivers for
+WiFi access point, there's always a board config to describe how the
+antenna wired up. The driver or firmware will select antennas from
+something like txchainmask/rxchainmask to perform some smart
+antenna and MIMO features. So The antenna position setting is quite
+important for each wifi(MIMO) product because it could have impact on
+the coverage and throughput. Back to the 1x1 rtl8723bu here, I think
+it's the same thing. The antenna position is fixed in the factory and wired
+to the AUX port. Maybe we can just take this antenna settings as the
+default for 8723bu based on the assumption that there will be no other
+antenna configuration.
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
- sound/soc/rockchip/rockchip_max98090.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Chris
 
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index 195309d1225a..c0e430ca4d12 100644
---- a/sound/soc/rockchip/rockchip_max98090.c
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -15,6 +15,7 @@
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-+#include <sound/hdmi-codec.h>
- 
- #include "rockchip_i2s.h"
- #include "../codecs/ts3a227e.h"
-@@ -129,6 +130,25 @@ enum {
- 	DAILINK_HDMI,
- };
- 
-+static struct snd_soc_jack rk_hdmi_jack;
-+
-+static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	struct snd_soc_card *card = runtime->card;
-+	struct snd_soc_component *component = runtime->codec_dai->component;
-+	int ret;
-+
-+	/* enable jack detection */
-+	ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
-+				    &rk_hdmi_jack, NULL, 0);
-+	if (ret) {
-+		dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
-+		return ret;
-+	}
-+
-+	return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
-+}
-+
- /* max98090 and HDMI codec dai_link */
- static struct snd_soc_dai_link rk_dailinks[] = {
- 	[DAILINK_MAX98090] = {
-@@ -146,6 +166,7 @@ static struct snd_soc_dai_link rk_dailinks[] = {
- 		.ops = &rk_aif1_ops,
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
-+		.init = rk_hdmi_init,
- 		SND_SOC_DAILINK_REG(hdmi),
- 	}
- };
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+> Even if we don't fully understand what's going on here, I'm convinced
+> that your code change is fixing an inconsistency with the vendor
+> driver, and most significantly, making the signal level actually
+> usable on our devices. But if you agree with my interpretation of
+> these values then maybe you could update the comment here!
+>
+> Daniel
