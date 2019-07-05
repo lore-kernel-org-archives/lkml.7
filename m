@@ -2,103 +2,86 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634A8C468A0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2A6C468A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A85020989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8901A21670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TH1cOfk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfGERVM (ORCPT
+        id S1728109AbfGERWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 13:21:12 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:41740 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGERVL (ORCPT
+        Fri, 5 Jul 2019 13:22:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35123 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfGERWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 13:21:11 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 5CCDD803B4;
-        Fri,  5 Jul 2019 19:21:06 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 19:20:58 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Sharp
- LD-D5116Z01B panel
-Message-ID: <20190705172058.GA2788@ravnborg.org>
-References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
- <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
+        Fri, 5 Jul 2019 13:22:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x25so3192186ljh.2;
+        Fri, 05 Jul 2019 10:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=lT49eBtmE30QT+N0LpenHBVtCzyNDyCGeA0xIY9l0tk=;
+        b=TH1cOfk7h7XdTuH/U8jqosVLTVKqq3nVANlSKgBsXnDb19Bj07zotkkXWGko5UjXte
+         +GAE7pWx4g3csHgt9q7+ze2QC4u2QUhVH03dxA2PWhq4Rm2I17tWoAlW9dUZNxBAp3Dg
+         aciXgHWRHP/FT+SZK1BZpT7vPLoH1r+ySJ5K8tobYqWGnu0Ezcel/H4+fnu7nQyKdQt8
+         sxtTWcpGYMG9SsumQf4ZdsVRZepSjvTPzuRR9hP5BPiJm6WvhexuJB3Eyp1UgGFCmAQf
+         pDkT6cxe0YjzUkrktUep0A2WIkhwZkLLG9bSEQdUYg9noOhDcwJvGiMJ17KoMKs4xcAz
+         9yAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=lT49eBtmE30QT+N0LpenHBVtCzyNDyCGeA0xIY9l0tk=;
+        b=gSOZ4SKZVwm2EmZ5bbnVbEQZP3xDmsMYhcYankbqZbDpN/X22BAczuxEpDfc6Ro8Lw
+         Cl73yl5Zwl4V1k5v/F8S0jFx/1dWos5qO3z+ttma6/rjOsCVByZNYIo6X+fxUlLFDeNU
+         q7CU6B83erITBdnYAo/eMYy3zYIvwfa0vOH7+ZbzGuY5l7NFtG7G9AKb/YL7zrbiQ0/1
+         BkzfV1PSipwkx7CRuQ4rAqhQOiPmBzQNVuBFNMlEOjQGCvfpDnyYX3Cry+4nxMYUb45h
+         tz1uhNAD7UFKeFWLwjaFdZ2UKu1IgJJK7RSSreEUYjuxiOeRhbuL+iDY7Y6JAY19yjrA
+         Cb2g==
+X-Gm-Message-State: APjAAAVez9SiKX/+Z/DJM5+c7TOUBW9CJq5Ewzul/UiOQiQKVet90uk4
+        kKeOYLF3HRponhfRtaDjUzZQ9trQ
+X-Google-Smtp-Source: APXvYqw7Qm+qEYpk3A3RJry+Amj8SF4cm9oidAvxOjWwZNzOcNeOFGY1EtmC8fT+i6z9xursIIRYLg==
+X-Received: by 2002:a2e:25a:: with SMTP id 87mr2830557ljc.183.1562347356709;
+        Fri, 05 Jul 2019 10:22:36 -0700 (PDT)
+Received: from [84.217.171.228] (c-74afd954.51034-0-757473696b74.bbcust.telenor.se. [84.217.171.228])
+        by smtp.gmail.com with ESMTPSA id 27sm1852775ljw.97.2019.07.05.10.22.35
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 10:22:36 -0700 (PDT)
+To:     linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+From:   Thomas Lindroth <thomas.lindroth@gmail.com>
+Subject: The tick is active on idle adaptive-tick CPUs when
+ /dev/cpu_dma_latency is used
+Message-ID: <79b247b3-e056-610e-9a07-e685dfdaa6c9@gmail.com>
+Date:   Fri, 5 Jul 2019 19:22:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=OJLUmJNqMcVkCySmTlIA:9 a=CjuIK1q_8ugA:10
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey.
+On recent kernels the tick remains active on idle adaptive-tick CPUs when a small value is written to /dev/cpu_dma_latency to restrict the highest C-state. Before the idle loop redesign in 4.17 idle CPUs had the tick disabled even when C-state were restricted. Is this change intentional or a regression?
 
-Patch looks good, but there is a few fields that are not initialized.
-Did you forget them, or are they not needed?
+I use an x86_64 system built with CONFIG_NO_HZ_FULL that I recently upgraded to the 4.19 series from the 4.14 series. I noticed that adaptive-tick CPUs (nohz_full=1-7) still fire timer interrupts about 1000 times/s (CONFIG_HZ_1000=y) even when they are mostly idle. Some debugging showed that this only happens when a program is writing to /dev/cpu_dma_latency to restrict C-states. The old 4.14 kernel only have around 10 timer interrupts per second on idle adaptive-tick CPU even when C-states are restricted that way.
 
-On Fri, Jul 05, 2019 at 09:57:55AM -0700, Jeffrey Hugo wrote:
-> The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 5a93c4edf1e4..e6f578667324 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2354,6 +2354,29 @@ static const struct panel_desc samsung_ltn140at29_301 = {
->  	},
->  };
->  
-> +static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
-> +	.clock = 168480,
-> +	.hdisplay = 1920,
-> +	.hsync_start = 1920 + 48,
-> +	.hsync_end = 1920 + 48 + 32,
-> +	.htotal = 1920 + 48 + 32 + 80,
-> +	.vdisplay = 1280,
-> +	.vsync_start = 1280 + 3,
-> +	.vsync_end = 1280 + 3 + 10,
-> +	.vtotal = 1280 + 3 + 10 + 57,
-> +	.vrefresh = 60,
-> +};
-No .flags? Is it not needed for an eDP panel?
+I would expect an adaptive-tick CPU to turn off the tick when it has 0 or 1 processes to run and enable the tick for >2 processes. Kernels after 4.17 instead have the tick on when 0 or >2 processes are running and the tick off in the 1 process case. Since the tick is off when a single process is running that workload isn't directly harmed by the change but if the CPU use hyperthreading the constant wakeups on an idle HT sibling will reduce performance on the other sibling.
 
-> +
-> +static const struct panel_desc sharp_ld_d5116z01b = {
-> +	.modes = &sharp_ld_d5116z01b_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 260,
-> +		.height = 120,
-> +	},
-> +};
-No .bus_format?
-No .bus_flags?
+They way I look for timer interrupts is by comparing the LOC line in /proc/interrupts or using the hrtimer_expire_entry tracepoint when function=tick_sched_timer. Both methods seem to give the same results.
 
-	Sam
+I can reproduce the problem using an i7-4790K CPU with /sys/devices/system/cpu/cpuidle/current_driver:intel_idle. I can also reproduce the problem on an old core2duo laptop with current_driver:acpi_idle but I can't reproduce the problem in a virtual machine where current_driver:none. I also can't reproduce the problem if C-states are restricted using the intel_idle.max_cstate=1 kernel argument instead of /dev/cpu_dma_latency.
+
+The commit that introduced the change is 554c8aa8ec "sched: idle: Select idle state before stopping the tick" in v4.17 and the problem exists at least up to kernel 5.1 using the menu cpuidle governor.
